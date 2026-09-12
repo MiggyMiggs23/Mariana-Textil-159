@@ -437,7 +437,7 @@ El costo de las salidas extraordinarias es **pérdida de inventario, no costo de
 
 - Refrescar desde cero después de cambios incompatibles de esquema o cuando los fixtures acumulados impidan resultados repetibles: crear una base vacía en la misma rama, aplicar esquema y seed, cambiar el Secret y retirar la base anterior después de verificar.
 - Para cambios compatibles, aplicar el flujo normal de esquema y volver a ejecutar el seed, que conserva personalizaciones explícitas.
-- Cada suite debe crear fixtures con identificadores únicos y limpiar solo sus propias filas. Una suite fallida nunca autoriza limpieza amplia.
+- Los datos y las identidades de prueba deben proceder exclusivamente del seed autorizado. No crear fixtures adicionales por cuenta propia: si faltan datos o referencias, detenerse y comunicarlo al propietario para resolverlo antes de continuar. Una suite fallida nunca autoriza limpieza amplia.
 - Toda prueba debe abortar si falta `TEST_DATABASE_URL`, si coincide con `DATABASE_URL` o si `current_database()` no coincide con el nombre seguro esperado.
 
 ### Ventajas y costos
@@ -447,6 +447,13 @@ El costo de las salidas extraordinarias es **pérdida de inventario, no costo de
 - Riesgo operativo: al ser persistente, una prueba puede depender accidentalmente de residuos anteriores; por eso no sustituye fixtures aislados ni las guardias de identidad.
 
 Mientras esta decisión siga pendiente, continúa vigente el procedimiento de rama Neon desechable: base vacía con esquema y seed actuales, `current_database()` confirmado, `TEST_DATABASE_URL` distinta de `DATABASE_URL`, prohibición de crear ADMIN o sesiones de prueba en development y eliminación completa de la rama al terminar.
+
+### Regla obligatoria — población de bases desechables
+
+- Las bases desechables, tanto locales como en Neon, se pueblan **solo con lo que genera el seed autorizado**.
+- **Está prohibido copiar, clonar, importar o restaurar usuarios o identidades reales del sistema a una base de pruebas**, incluso desde respaldos locales, aunque sea para satisfacer llaves foráneas y aunque la base se elimine después. Tampoco se usan otros datos reales para completar el seed.
+- Si el seed no genera los actores, datos o referencias necesarios para una prueba, **detenerse, informar exactamente qué falta y esperar la decisión del propietario**. No copiar identidades, insertar fixtures alternativos ni ampliar el seed por cuenta propia para eludir ese bloqueo.
+- La copia de un actor desde un respaldo realizada durante la verificación histórica del caché **no es una práctica autorizada ni un precedente reutilizable**. Su evidencia se conserva como registro de lo ejecutado, no como procedimiento permitido.
 
 ## Cierre del plan de cinco partes
 

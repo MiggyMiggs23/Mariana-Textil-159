@@ -448,3 +448,17 @@ mtime_ms = 1789181860822
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/53790503-64ba-48b2-8596-d854d20b2f96/e8bd1c5d-5156-4836-a07b-df3a8c5d4c67"
 storage_version_token = "1789182653395357"
 content_type = "text/html"
+
+[[outputs]]
+id = "kULcDInBVqhip7dMinTK0"
+uri = "file://reports/restricciones-por-rol-clasificadas.html"
+type = "text"
+title = "Restricciones clasificadas y lista completa por rol"
+description = "Las 130 referencias reconciliadas: 32 territoriales, 13 de ocultamiento sensible, 69 de vetos para revisión y 16 fuera de esas categorías. Lista íntegra de acciones por rol con archivo y línea; ninguna restricción modificada."
+logical_id = "f813945c-3a64-4efe-8fc1-3c74bc46f379"
+content_hash = "sha256:bf21f2f36eaefb2ea732155cc7aaa38561c283b85d16e1fec1a76ca38534f581"
+size = 187326
+mtime_ms = 1789188625545
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f813945c-3a64-4efe-8fc1-3c74bc46f379/b0d005bd-be2b-47fb-92b1-2e34b0aadbb4"
+storage_version_token = "1789188655552993"
+content_type = "text/html"

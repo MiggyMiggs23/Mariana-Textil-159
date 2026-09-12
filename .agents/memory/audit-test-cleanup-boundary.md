@@ -7,4 +7,4 @@ La auditoría permanece append-only también en pruebas. Las suites no deben ins
 
 **Why:** Cualquier mecanismo activable por un rol con DDL o ajustes de sesión puede recrearse en una base no desechable y anular la integridad del historial.
 
-**How to apply:** Usar una rama temporal, fixtures únicos y pruebas repetibles. Decidir qué registros se retienen antes de mutarlos; eliminar la rama completa al terminar.
+**How to apply:** Usar una rama temporal, datos preparados conforme a `replit.md` y pruebas repetibles. Decidir qué registros se retienen antes de mutarlos; eliminar la rama completa al terminar.
