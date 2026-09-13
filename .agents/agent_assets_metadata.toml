@@ -672,3 +672,31 @@ mtime_ms = 1789328498059
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/fef3a453-7e37-4522-b569-72cafdd5cd39/32a3e87c-2034-4e28-8068-9bdca6051362"
 storage_version_token = "1789328502565959"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "Zqf1r3qnXo5mXf7VKqaDq"
+uri = "file://reports/laser-safe-area/salida-un-producto.pdf"
+type = "pdf"
+title = "Salida — un producto"
+description = "PDF de prueba: una página A5 horizontal, contenido completo y margen de tinta mínimo de 5 mm."
+logical_id = "ff4c553c-38dd-45b9-a0c0-3223d5122de8"
+content_hash = "sha256:ef8ba9765f292768f1dc3273e6f27fb5f68b362b5d04e9ca2fe239a7262a0cff"
+size = 1059901
+mtime_ms = 1789335955370
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ff4c553c-38dd-45b9-a0c0-3223d5122de8/e49c5925-a5dd-4885-b306-3638b1bfbb4d"
+storage_version_token = "1789336480864034"
+content_type = "application/pdf"
+
+[[outputs]]
+id = "Hp6QzjCnQOoE8Ru3R7s7B"
+uri = "file://reports/laser-safe-area/salida-diez-productos.pdf"
+type = "pdf"
+title = "Salida — diez productos"
+description = "PDF de prueba: una sola página con diez productos, observaciones, totales y tres firmas. Datos simulados."
+logical_id = "c0b772b7-f65e-4513-81c1-5c95af95700e"
+content_hash = "sha256:01b54661dd58dd0e9361f62a2d6238621730e04a6b5ba0ea8d25d241a7cc3816"
+size = 1089499
+mtime_ms = 1789335955374
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c0b772b7-f65e-4513-81c1-5c95af95700e/facc7c12-92b0-4907-9315-d8a7ac869907"
+storage_version_token = "1789336481483242"
+content_type = "application/pdf"

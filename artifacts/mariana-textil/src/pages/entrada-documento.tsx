@@ -33,9 +33,19 @@ export default function EntradaDocumento() {
   const createdAt = new Date(entrada.createdAt);
   const documentUrl = absoluteAppUrl(`/entradas/${entrada.id}/documento`);
 
-  // Medición Chromium a 96 dpi: caja útil 278.5 mm = 1052.6 px.
-  // 162 header + 139 datos + 32.5 cabecera + (23 × 25) filas + 96 pie + 16 franja = 1020.5 px.
-  const rowsPerPage = 23;
+  /*
+   * Under the fixture's existing product truncation, the long SKU/Sitio labels
+   * wrap into multiple lines (up to three in a measured cell), making each
+   * populated bordered global row 54 px tall. That is fixture-specific rather
+   * than a universal maximum for shorter site labels. At 96 CSS px/in the
+   * 5.25 mm inset leaves a 774.828125 × 1012.9375 px frame. The full 10-row
+   * table occupies 590 px (y=329.828125 to 919.828125), followed by the
+   * 96 px footer and 16 px bottom strip; all fit before frame y=1032.765625.
+   * An eleventh 54 px row exceeds that full-footer reserve. PDF probes
+   * 1/10/11/12 preserve all content, including dedicated series sheets,
+   * with ink at least 5.2917 mm from every physical PDF edge.
+   */
+  const rowsPerPage = 10;
   const globalPageCount = Math.max(1, Math.ceil(entrada.lineas.length / rowsPerPage));
   const globalPages = Array.from({ length: globalPageCount }).map((_, i) =>
     entrada.lineas.slice(i * rowsPerPage, (i + 1) * rowsPerPage),
@@ -59,16 +69,30 @@ export default function EntradaDocumento() {
     }));
   });
 
-  // Medición Chromium a 96 dpi: 40 filas × 24 px dejan 13.59 px libres dentro
-  // de la caja fija de 1052.59 px; 41 filas rebasan la hoja por 10.41 px.
-  const seriesRowsPerPage = 40;
-  // En la última hoja global, cada fila global no usada libera 25 px. La
-  // sección incrustada necesita 68 px fijos (separación, título y cabecera)
-  // más 24 px por fila. Se incrusta completa o pasa completa a hojas propias.
+  // Laser PDF validation: 22 compact series rows fit on one standalone sheet.
+  // With the 5.25 mm inset, its frame is 1012.9375 CSS px high at 96 px/in.
+  // The 40/41-row PDFs contain 22 + 18/19 complete rows on their series sheets,
+  // with all serials present and ink clearance >=5.2917 mm on every edge.
+  const seriesRowsPerPage = 22;
+  // Cada fila global medida libera 54 px. La sección incrustada necesita 68 px
+  // fijos (separación, título y cabecera) más 24 px por fila.
+  const measuredGlobalRowHeightPx = 54;
+  const measuredSeriesRowHeightPx = 24;
+  const embeddedSeriesOverheadPx = 68;
   const lastGlobalLineCount = globalPages.at(-1)?.length ?? 0;
-  const embeddedSeriesRowsCapacity = Math.max(
-    0,
-    Math.floor(((rowsPerPage - lastGlobalLineCount) * 25 - 68) / 24),
+  // The full-footer raster probe validates only one embedded series row;
+  // larger lists stay on dedicated series sheets instead of crowding footer
+  // ink into the lower safe band.
+  const embeddedSeriesRowsCapacity = Math.min(
+    1,
+    Math.max(
+      0,
+      Math.floor(
+        ((rowsPerPage - lastGlobalLineCount) * measuredGlobalRowHeightPx -
+          embeddedSeriesOverheadPx) /
+          measuredSeriesRowHeightPx,
+      ),
+    ),
   );
   const embedsAllSeries =
     seriesRows.length > 0 && seriesRows.length <= embeddedSeriesRowsCapacity;
@@ -125,8 +149,9 @@ export default function EntradaDocumento() {
           <div
             key={`global-${pageIndex}`}
             data-page-kind="global"
-            className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0"
+            className="document-page entrada-page-print w-[216mm] h-[279mm] p-[5.25mm] relative box-border flex flex-col overflow-visible shrink-0"
           >
+            <div className="document-page-frame relative min-h-0 min-w-0 flex-1 border border-gray-200 bg-white shadow-xl print:shadow-none flex flex-col overflow-visible">
 
             {/* Header */}
             {renderGlobalHeader(pageIndex + 1)}
@@ -275,6 +300,7 @@ export default function EntradaDocumento() {
 
             <div className="h-4 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
 
+            </div>
           </div>
           );
         })}
@@ -284,11 +310,12 @@ export default function EntradaDocumento() {
             <div
               key={`series-${seriesPageIndex}`}
               data-page-kind="series"
-              className="document-page entrada-page-print bg-white shadow-xl print:shadow-none w-[216mm] h-[279mm] relative box-border flex flex-col overflow-hidden shrink-0"
+               className="document-page entrada-page-print w-[216mm] h-[279mm] p-[5.25mm] relative box-border flex flex-col overflow-visible shrink-0"
             >
+              <div className="document-page-frame relative min-h-0 min-w-0 flex-1 border border-gray-200 bg-white shadow-xl print:shadow-none flex flex-col overflow-visible">
               {renderSeriesHeader(pageNumber)}
 
-              <div className="series-table min-h-0 overflow-hidden px-8 py-2 flex-1 relative z-10">
+               <div className="series-table min-h-0 overflow-visible px-8 py-2 flex-1 relative z-10">
                 <table className="w-full table-fixed text-left border-collapse border border-gray-300">
                   <thead>
                     <tr className="bg-[#1e3a8a] text-white">
@@ -319,6 +346,7 @@ export default function EntradaDocumento() {
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             </div>
           );

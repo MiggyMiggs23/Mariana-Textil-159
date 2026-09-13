@@ -384,6 +384,13 @@ body.measure-thermal-ticket .tabular-strip-page {
     margin: 0;
     padding: 0;
   }
+  body.print-entrada #root,
+  body.print-entrada #root *:has(.entrada-print-root) {
+    display: contents !important;
+  }
+  body.print-entrada #root *:not(:has(.entrada-print-root)):not(.entrada-print-root):not(.entrada-print-root *) {
+    display: none !important;
+  }
   @page salida-page {
     size: 210mm 148mm;
     margin: 0;
@@ -683,7 +690,10 @@ body.measure-thermal-ticket .tabular-strip-page {
     width: 215.5mm !important;
     height: 278.5mm !important;
     margin: 0 !important;
-    overflow: clip !important;
+    /* 0.25 mm extra protects collapsed table borders and raster rounding. */
+    padding: 5.25mm !important;
+    box-sizing: border-box;
+    overflow: visible !important;
   }
 
   .entrada-page-print .series-table,
@@ -706,7 +716,9 @@ body.measure-thermal-ticket .tabular-strip-page {
     width: 210mm !important;
     height: 148mm !important;
     margin: 0 !important;
-    overflow: clip !important;
+    padding: 5.25mm !important;
+    box-sizing: border-box;
+    overflow: visible !important;
   }
 
   .salida-page-print .salida-qr-white-pad {
@@ -722,7 +734,9 @@ body.measure-thermal-ticket .tabular-strip-page {
     width: 148mm !important;
     height: 210mm !important;
     margin: 0 !important;
-    overflow: clip !important;
+    padding: 5.25mm !important;
+    box-sizing: border-box;
+    overflow: visible !important;
   }
 
   /*

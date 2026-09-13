@@ -46,3 +46,26 @@ test("Block 4 functionality in cobros", async () => {
   assert.doesNotMatch(cobros, /<Link href=\{`\/tickets\/\$\{nota\.ticketFolio\}`\}/);
   assert.match(cobros, /\{nota\.ticketFolio\}/);
 });
+
+test("Nota keeps the 5.25mm root safe area and uses an inner ink frame", async () => {
+  const ticketDetail = await readFile(new URL("artifacts/mariana-textil/src/pages/ticket-detail.tsx", root), "utf8");
+  const notaPrint = ticketDetail.slice(
+    ticketDetail.indexOf("{/* Nota Print Pages */}"),
+    ticketDetail.indexOf("<Dialog open={cancelOpen}"),
+  );
+
+  assert.match(
+    notaPrint,
+    /credito-page-print w-\[148mm\] h-\[210mm\] p-\[5\.25mm\][\s\S]*overflow-visible/,
+  );
+  assert.match(
+    notaPrint,
+    /nota-page-frame relative[\s\S]*border border-gray-200 bg-white/,
+  );
+  assert.doesNotMatch(notaPrint, /credito-page-print bg-white/);
+  assert.match(notaPrint, /Laser PDF validation: eight complete product rows/);
+  assert.match(notaPrint, /ninth row starts the next sheet/);
+  assert.match(notaPrint, /document-product-grid/);
+  assert.match(notaPrint, /data-testid="note-legal-block"/);
+  assert.match(notaPrint, /data-testid="note-signature-block"/);
+});

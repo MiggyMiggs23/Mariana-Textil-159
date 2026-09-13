@@ -754,10 +754,17 @@ export default function TicketDetailPage() {
           const paymentDate = printData.fechaVencimiento;
           const termDays = printData.diasPlazo;
 
-          // Chromium PDF raster at 120dpi: header, credit data and table header end
-          // at ~375px; the totals/footer reserve begins at ~635px.  Eight complete
-          // bordered rows occupy ~225px and end at ~600px.  Row nine crosses the
-          // reserve and is clipped, so the safe credit capacity is eight.
+          /*
+           * Laser PDF validation: eight complete product rows fit on one
+           * Nota sheet for each copy; the ninth row starts the next sheet.
+           * At 96 CSS px/in with the 5.25 mm inset, the inner frame is
+           * 519.703125 × 754.03125 px. The table starts at y=257.828125;
+           * legal text/totals start at y=486.859375 (229.03125 px available).
+           * Header plus 8 × 24 px rows occupies 215.5 px, leaving 13.53125 px.
+           * A ninth complete row needs 239.5 px and exceeds that reserve.
+           * PDF probes 1/8/9 yield 1/1/2 sheets per copy with no table/footer
+           * overlap and at least 5.101 mm actual ink clearance on every edge.
+           */
           const NOTE_PRODUCT_ROWS_PER_PAGE = 8;
 
           // Group lines according to the print data
@@ -774,8 +781,9 @@ export default function TicketDetailPage() {
             {notePages.map((pageLines, pageIndex) => (
             <div
               key={`${idx}-${pageIndex}`}
-              className="credito-page-print bg-white print:shadow-none w-[148mm] h-[210mm] relative box-border flex flex-col overflow-hidden shrink-0"
+              className="credito-page-print w-[148mm] h-[210mm] p-[5.25mm] relative box-border flex flex-col overflow-visible shrink-0"
             >
+              <div className="nota-page-frame relative min-h-0 min-w-0 flex-1 border border-gray-200 bg-white shadow-xl print:shadow-none flex flex-col overflow-visible">
               {printData.estado === EstadoTicket.CANCELADO && (
                 <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none opacity-10">
                   <span className="text-9xl font-black text-red-600 rotate-[-30deg] tracking-widest border-8 border-red-600 p-8 rounded-3xl">
@@ -785,14 +793,14 @@ export default function TicketDetailPage() {
               )}
               {/* Header */}
               <PrintableDocumentHeader
-                className="shrink-0 p-4"
+                className="shrink-0 p-1"
                 qrUrl={isInternal ? qrUrl : undefined}
                 qrLabel={isInternal ? `QR para abrir nota ${printData.folio}` : undefined}
                 logoClassName="h-[72px] w-[72px]"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-2 h-12 bg-[#1e3a8a] mr-2"></div>
-                  <div className="flex flex-col">
+                <div className="flex min-w-0 items-start gap-2">
+                  <div className="w-2 h-12 shrink-0 bg-[#1e3a8a]"></div>
+                  <div className="flex min-w-0 flex-col">
                     <h1 className="text-2xl font-black text-[#1e3a8a] tracking-tighter uppercase leading-none">
                       {pageTitle}
                     </h1>
@@ -800,9 +808,9 @@ export default function TicketDetailPage() {
                       {isInternal ? "COPIA INTERNA" : "COPIA CLIENTE"}
                       {" · "}Pág. {pageIndex + 1}/{notePageCount}
                     </span>
-                  </div>
-                  <div className="ml-4 text-[#1e3a8a] font-bold text-lg leading-tight border-l-2 pl-4 border-gray-300">
-                    MARIANA<br />TEXTIL
+                    <div className="mt-1 text-[#1e3a8a] font-bold text-xs leading-tight">
+                      MARIANA TEXTIL
+                    </div>
                   </div>
                 </div>
               </PrintableDocumentHeader>
@@ -866,7 +874,7 @@ export default function TicketDetailPage() {
 
               {/* Items Table */}
               <div className="px-6 mt-1 flex-1 relative z-10 flex flex-col min-h-0">
-                <div className="flex-1 overflow-hidden border border-gray-200 flex flex-col">
+                <div className="flex-1 overflow-visible border border-gray-200 flex flex-col">
                     <table className="document-product-grid w-full table-fixed text-left border-collapse">
                     <thead className="sticky top-0 bg-[#1e3a8a] text-white">
                       <tr>
@@ -881,7 +889,7 @@ export default function TicketDetailPage() {
                         )}
                       </tr>
                     </thead>
-                    <tbody className="overflow-y-auto block h-full w-full bg-white" style={{ display: "table-row-group" }}>
+                    <tbody className="overflow-visible block h-full w-full bg-white" style={{ display: "table-row-group" }}>
                       {pageLines.map((linea, lineIndex) => (
                         <tr key={linea.key} className="h-[24px]">
                           <td className="py-0.5 px-2 text-[10px] text-gray-800 truncate">
@@ -964,6 +972,7 @@ export default function TicketDetailPage() {
               </div>
 
               <div className="h-1.5 bg-[#1e3a8a] w-full shrink-0 mt-auto"></div>
+              </div>
             </div>
             ))}
             </Fragment>

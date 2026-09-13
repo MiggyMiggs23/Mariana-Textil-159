@@ -1,0 +1,3351 @@
+{
+  "status": "passed",
+  "scenarios": [
+    {
+      "name": "viaje-count-1",
+      "kind": "viaje",
+      "fixtureName": "count1",
+      "configuredRowCount": 1,
+      "route": "/viajes/73001/documento",
+      "expectedPageCount": 1,
+      "expectedDomPageCount": 1,
+      "dimensionsMm": {
+        "width": 216,
+        "height": 279,
+        "safe": 5
+      },
+      "requestedRequests": [
+        "GET /api/auth/me",
+        "GET /api/viajes/73001"
+      ],
+      "status": "passed",
+      "mounted": {
+        "pageCount": 1,
+        "rowCount": 1,
+        "buttonText": "Imprimir"
+      },
+      "print": {
+        "printCalls": 1,
+        "bodyClass": "print-viaje"
+      },
+      "layout": {
+        "pages": [
+          {
+            "x": 0,
+            "y": 0,
+            "right": 814.484375,
+            "bottom": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375
+          }
+        ],
+        "frames": [],
+        "rows": [
+          {
+            "x": 53.40625,
+            "y": 452.40625,
+            "right": 761.078125,
+            "bottom": 473.40625,
+            "width": 707.671875,
+            "height": 21
+          }
+        ],
+        "pageCount": 1,
+        "rowCount": 1
+      },
+      "pdfPath": "/tmp/laser-other-documents-pdf-regression/viaje-count-1.pdf",
+      "pdf": {
+        "pageCount": 1,
+        "pageSize": "612 x 791.04 pts (letter)",
+        "pageSizePoints": {
+          "width": 612,
+          "height": 791.04
+        },
+        "pages": [
+          "HOJA DE VIAJE QA-VIAJE-73001 Origen: Sitio PDF fixture Salida: 1/1/2026, 12:00:00 p.m. Camioneta: Camioneta PDF fixture Chofer: Chofer PDF fixture Destinos: Destino PDF fixture Documentos NOTA #82001 · Destinatario PDF fixture SALIDA #83001 · Destino PDF fixture Serie Documento Producto Cantidad SERIE-VIAJE-0001 NOTA #82001 Tela viaje 0001 Azul viaje 1.00 Mts. Totales: 2 documentos · 1 rollos · 1.00 Mts. · 0.00 Kg."
+        ],
+        "bboxPages": [
+          [
+            {
+              "text": "HOJA",
+              "xMin": 39.679686,
+              "xMax": 103.334468,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "DE",
+              "xMin": 108.662837,
+              "xMax": 138.578607,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "VIAJE",
+              "xMin": 143.906976,
+              "xMax": 210.63793,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "QA-VIAJE-73001",
+              "xMin": 39.679686,
+              "xMax": 151.270883,
+              "yMin": 64.917185,
+              "yMax": 87.951559
+            },
+            {
+              "text": "Origen:",
+              "xMin": 39.679686,
+              "xMax": 77.871377,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Sitio",
+              "xMin": 80.835934,
+              "xMax": 102.389644,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "PDF",
+              "xMin": 105.342769,
+              "xMax": 125.824946,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "fixture",
+              "xMin": 128.778071,
+              "xMax": 160.688226,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Salida:",
+              "xMin": 309.925772,
+              "xMax": 344.80956,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "1/1/2026,",
+              "xMin": 347.765611,
+              "xMax": 392.488021,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "12:00:00",
+              "xMin": 395.441146,
+              "xMax": 438.661359,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "p.m.",
+              "xMin": 441.614484,
+              "xMax": 463.29124,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Camioneta:",
+              "xMin": 39.679686,
+              "xMax": 98.701168,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Camioneta",
+              "xMin": 101.660152,
+              "xMax": 154.970208,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 157.923333,
+              "xMax": 178.40551,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 181.358635,
+              "xMax": 213.26879,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer:",
+              "xMin": 309.925772,
+              "xMax": 348.660931,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer",
+              "xMin": 351.621083,
+              "xMax": 385.448718,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 388.401843,
+              "xMax": 408.88402,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 411.837145,
+              "xMax": 443.7473,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Destinos:",
+              "xMin": 39.679686,
+              "xMax": 88.452389,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Destino",
+              "xMin": 91.406246,
+              "xMax": 129.125239,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "PDF",
+              "xMin": 132.078364,
+              "xMax": 152.560541,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "fixture",
+              "xMin": 155.513665,
+              "xMax": 187.42382,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Documentos",
+              "xMin": 39.679686,
+              "xMax": 104.853511,
+              "yMin": 264.407801,
+              "yMax": 282.323426
+            },
+            {
+              "text": "NOTA",
+              "xMin": 54.679685,
+              "xMax": 83.436764,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "#82001",
+              "xMin": 86.389889,
+              "xMax": 123.465083,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "·",
+              "xMin": 126.42187,
+              "xMax": 129.446772,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "Destinatario",
+              "xMin": 132.410154,
+              "xMax": 192.005855,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "PDF",
+              "xMin": 194.95898,
+              "xMax": 215.441157,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "fixture",
+              "xMin": 218.394282,
+              "xMax": 250.304437,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "SALIDA",
+              "xMin": 54.679685,
+              "xMax": 91.880856,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "#83001",
+              "xMin": 94.83398,
+              "xMax": 131.984614,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "·",
+              "xMin": 134.941404,
+              "xMax": 137.966307,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Destino",
+              "xMin": 140.929682,
+              "xMax": 178.648674,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "PDF",
+              "xMin": 181.601799,
+              "xMax": 202.083976,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "fixture",
+              "xMin": 205.037101,
+              "xMax": 236.947256,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Serie",
+              "xMin": 105.691402,
+              "xMax": 132.24491,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "SERIE-VIAJE-0001",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 341.508531,
+              "yMax": 353.403061
+            },
+            {
+              "text": "Documento",
+              "xMin": 221.390616,
+              "xMax": 280.683826,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "NOTA",
+              "xMin": 197.519527,
+              "xMax": 226.276606,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "#82001",
+              "xMin": 229.230463,
+              "xMax": 266.304924,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Totales:",
+              "xMin": 39.679686,
+              "xMax": 80.787594,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "2",
+              "xMin": 83.742184,
+              "xMax": 90.145748,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "documentos",
+              "xMin": 93.105465,
+              "xMax": 154.731439,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "·",
+              "xMin": 157.684564,
+              "xMax": 160.709466,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "1",
+              "xMin": 163.664056,
+              "xMax": 167.934807,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "rollos",
+              "xMin": 170.894528,
+              "xMax": 197.893062,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "·",
+              "xMin": 200.846187,
+              "xMax": 203.871089,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "1.00",
+              "xMin": 206.824214,
+              "xMax": 227.101313,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "Mts.",
+              "xMin": 230.06249,
+              "xMax": 251.60082,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "·",
+              "xMin": 254.554677,
+              "xMax": 257.579579,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "0.00",
+              "xMin": 260.542962,
+              "xMax": 282.90673,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "Kg.",
+              "xMin": 285.867176,
+              "xMax": 301.970935,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "Producto",
+              "xMin": 377.871082,
+              "xMax": 424.64837,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "Tela",
+              "xMin": 304.558585,
+              "xMax": 325.07665,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 328.029775,
+              "xMax": 351.034413,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "0001",
+              "xMin": 353.987538,
+              "xMax": 378.130359,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.093734,
+              "xMax": 402.888411,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 405.841536,
+              "xMax": 428.846174,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Cantidad",
+              "xMin": 510.984354,
+              "xMax": 557.408912,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "1.00",
+              "xMin": 497.964827,
+              "xMax": 518.241926,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.203103,
+              "xMax": 542.741432,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            }
+          ]
+        ],
+        "fontBboxPages": [
+          [
+            {
+              "text": "HOJA",
+              "xMin": 39.679686,
+              "xMax": 103.334468,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "DE",
+              "xMin": 108.662837,
+              "xMax": 138.578607,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "VIAJE",
+              "xMin": 143.906976,
+              "xMax": 210.63793,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "QA-VIAJE-73001",
+              "xMin": 39.679686,
+              "xMax": 151.270883,
+              "yMin": 64.917185,
+              "yMax": 87.951559
+            },
+            {
+              "text": "Origen:",
+              "xMin": 39.679686,
+              "xMax": 77.871377,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Sitio",
+              "xMin": 80.835934,
+              "xMax": 102.389644,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "PDF",
+              "xMin": 105.342769,
+              "xMax": 125.824946,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "fixture",
+              "xMin": 128.778071,
+              "xMax": 160.688226,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Salida:",
+              "xMin": 309.925772,
+              "xMax": 344.80956,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "1/1/2026,",
+              "xMin": 347.765611,
+              "xMax": 392.488021,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "12:00:00",
+              "xMin": 395.441146,
+              "xMax": 438.661359,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "p.m.",
+              "xMin": 441.614484,
+              "xMax": 463.29124,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Camioneta:",
+              "xMin": 39.679686,
+              "xMax": 98.701168,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Camioneta",
+              "xMin": 101.660152,
+              "xMax": 154.970208,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 157.923333,
+              "xMax": 178.40551,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 181.358635,
+              "xMax": 213.26879,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer:",
+              "xMin": 309.925772,
+              "xMax": 348.660931,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer",
+              "xMin": 351.621083,
+              "xMax": 385.448718,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 388.401843,
+              "xMax": 408.88402,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 411.837145,
+              "xMax": 443.7473,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Destinos:",
+              "xMin": 39.679686,
+              "xMax": 88.452389,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Destino",
+              "xMin": 91.406246,
+              "xMax": 129.125239,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "PDF",
+              "xMin": 132.078364,
+              "xMax": 152.560541,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "fixture",
+              "xMin": 155.513665,
+              "xMax": 187.42382,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Documentos",
+              "xMin": 39.679686,
+              "xMax": 104.853511,
+              "yMin": 264.407801,
+              "yMax": 282.323426
+            },
+            {
+              "text": "NOTA",
+              "xMin": 54.679685,
+              "xMax": 83.436764,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "#82001",
+              "xMin": 86.389889,
+              "xMax": 123.465083,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "·",
+              "xMin": 126.42187,
+              "xMax": 129.446772,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "Destinatario",
+              "xMin": 132.410154,
+              "xMax": 192.005855,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "PDF",
+              "xMin": 194.95898,
+              "xMax": 215.441157,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "fixture",
+              "xMin": 218.394282,
+              "xMax": 250.304437,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "SALIDA",
+              "xMin": 54.679685,
+              "xMax": 91.880856,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "#83001",
+              "xMin": 94.83398,
+              "xMax": 131.984614,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "·",
+              "xMin": 134.941404,
+              "xMax": 137.966307,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Destino",
+              "xMin": 140.929682,
+              "xMax": 178.648674,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "PDF",
+              "xMin": 181.601799,
+              "xMax": 202.083976,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "fixture",
+              "xMin": 205.037101,
+              "xMax": 236.947256,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Serie",
+              "xMin": 105.691402,
+              "xMax": 132.24491,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "SERIE-VIAJE-0001",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 341.508531,
+              "yMax": 353.403061
+            },
+            {
+              "text": "Documento",
+              "xMin": 221.390616,
+              "xMax": 280.683826,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "NOTA",
+              "xMin": 197.519527,
+              "xMax": 226.276606,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "#82001",
+              "xMin": 229.230463,
+              "xMax": 266.304924,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Totales:",
+              "xMin": 39.679686,
+              "xMax": 80.787594,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "2",
+              "xMin": 83.742184,
+              "xMax": 90.145748,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "documentos",
+              "xMin": 93.105465,
+              "xMax": 154.731439,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "·",
+              "xMin": 157.684564,
+              "xMax": 160.709466,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "1",
+              "xMin": 163.664056,
+              "xMax": 167.934807,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "rollos",
+              "xMin": 170.894528,
+              "xMax": 197.893062,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "·",
+              "xMin": 200.846187,
+              "xMax": 203.871089,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "1.00",
+              "xMin": 206.824214,
+              "xMax": 227.101313,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "Mts.",
+              "xMin": 230.06249,
+              "xMax": 251.60082,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "·",
+              "xMin": 254.554677,
+              "xMax": 257.579579,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "0.00",
+              "xMin": 260.542962,
+              "xMax": 282.90673,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "Kg.",
+              "xMin": 285.867176,
+              "xMax": 301.970935,
+              "yMin": 378.407797,
+              "yMax": 396.323421
+            },
+            {
+              "text": "Producto",
+              "xMin": 377.871082,
+              "xMax": 424.64837,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "Tela",
+              "xMin": 304.558585,
+              "xMax": 325.07665,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 328.029775,
+              "xMax": 351.034413,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "0001",
+              "xMin": 353.987538,
+              "xMax": 378.130359,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.093734,
+              "xMax": 402.888411,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 405.841536,
+              "xMax": 428.846174,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Cantidad",
+              "xMin": 510.984354,
+              "xMax": 557.408912,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "1.00",
+              "xMin": 497.964827,
+              "xMax": 518.241926,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.203103,
+              "xMax": 542.741432,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            }
+          ]
+        ]
+      },
+      "pdfTextSafeArea": {
+        "authority": "diagnostic-only-font-boxes",
+        "widthMm": 216,
+        "heightMm": 279,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "fontBoxOverlaps": [
+          {
+            "pageNumber": 1,
+            "count": 0,
+            "words": []
+          }
+        ]
+      },
+      "raster": {
+        "dpi": 96,
+        "widthMm": 216,
+        "heightMm": 279,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "pageSizePoints": {
+          "width": 612,
+          "height": 791.04
+        },
+        "pages": [
+          {
+            "pageNumber": 1,
+            "imagePath": "/tmp/laser-other-documents-pdf-regression/viaje-count-1-1.png",
+            "width": 816,
+            "height": 1055,
+            "inkBoundsPx": {
+              "x": 52,
+              "y": 53,
+              "width": 710,
+              "height": 472
+            },
+            "inkBoundsMm": {
+              "x": 13.758333333333331,
+              "y": 14.022916666666667,
+              "width": 187.85416666666666,
+              "height": 124.88333333333334
+            },
+            "borderBandMm": 5,
+            "edgeClearanceMm": {
+              "left": 13.758333333333331,
+              "top": 14.022916666666667,
+              "right": 14.287499999999994,
+              "bottom": 140.15508333333332
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "viaje-ten-rows",
+      "kind": "viaje",
+      "fixtureName": "max",
+      "configuredRowCount": 10,
+      "route": "/viajes/73010/documento",
+      "expectedPageCount": 1,
+      "expectedDomPageCount": 1,
+      "dimensionsMm": {
+        "width": 216,
+        "height": 279,
+        "safe": 5
+      },
+      "requestedRequests": [
+        "GET /api/auth/me",
+        "GET /api/viajes/73010"
+      ],
+      "status": "passed",
+      "mounted": {
+        "pageCount": 1,
+        "rowCount": 10,
+        "buttonText": "Imprimir"
+      },
+      "print": {
+        "printCalls": 1,
+        "bodyClass": "print-viaje"
+      },
+      "layout": {
+        "pages": [
+          {
+            "x": 0,
+            "y": 0,
+            "right": 814.484375,
+            "bottom": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375
+          }
+        ],
+        "frames": [],
+        "rows": [
+          {
+            "x": 53.40625,
+            "y": 452.40625,
+            "right": 761.078125,
+            "bottom": 473.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 473.40625,
+            "right": 761.078125,
+            "bottom": 494.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 494.40625,
+            "right": 761.078125,
+            "bottom": 515.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 515.40625,
+            "right": 761.078125,
+            "bottom": 536.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 536.40625,
+            "right": 761.078125,
+            "bottom": 557.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 557.40625,
+            "right": 761.078125,
+            "bottom": 578.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 578.40625,
+            "right": 761.078125,
+            "bottom": 599.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 599.40625,
+            "right": 761.078125,
+            "bottom": 620.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 620.40625,
+            "right": 761.078125,
+            "bottom": 641.40625,
+            "width": 707.671875,
+            "height": 21
+          },
+          {
+            "x": 53.40625,
+            "y": 641.40625,
+            "right": 761.078125,
+            "bottom": 662.40625,
+            "width": 707.671875,
+            "height": 21
+          }
+        ],
+        "pageCount": 1,
+        "rowCount": 10
+      },
+      "pdfPath": "/tmp/laser-other-documents-pdf-regression/viaje-ten-rows.pdf",
+      "pdf": {
+        "pageCount": 1,
+        "pageSize": "612 x 791.04 pts (letter)",
+        "pageSizePoints": {
+          "width": 612,
+          "height": 791.04
+        },
+        "pages": [
+          "HOJA DE VIAJE QA-VIAJE-73010 Origen: Sitio PDF fixture Salida: 1/1/2026, 12:00:00 p.m. Camioneta: Camioneta PDF fixture Chofer: Chofer PDF fixture Destinos: Destino PDF fixture Documentos NOTA #82001 · Destinatario PDF fixture SALIDA #83001 · Destino PDF fixture Serie Documento Producto Cantidad SERIE-VIAJE-0001 NOTA #82001 Tela viaje 0001 Azul viaje 1.00 Mts. SERIE-VIAJE-0002 NOTA #82001 Tela viaje 0002 Azul viaje 1.00 Mts. SERIE-VIAJE-0003 NOTA #82001 Tela viaje 0003 Azul viaje 1.00 Mts. SERIE-VIAJE-0004 NOTA #82001 Tela viaje 0004 Azul viaje 1.00 Mts. SERIE-VIAJE-0005 NOTA #82001 Tela viaje 0005 Azul viaje 1.00 Mts. SERIE-VIAJE-0006 NOTA #82001 Tela viaje 0006 Azul viaje 1.00 Mts. SERIE-VIAJE-0007 NOTA #82001 Tela viaje 0007 Azul viaje 1.00 Mts. SERIE-VIAJE-0008 NOTA #82001 Tela viaje 0008 Azul viaje 1.00 Mts. SERIE-VIAJE-0009 NOTA #82001 Tela viaje 0009 Azul viaje 1.00 Mts. SERIE-VIAJE-0010 NOTA #82001 Tela viaje 0010 Azul viaje 1.00 Mts. Totales: 2 documentos · 10 rollos · 10.00 Mts. · 0.00 Kg."
+        ],
+        "bboxPages": [
+          [
+            {
+              "text": "HOJA",
+              "xMin": 39.679686,
+              "xMax": 103.334468,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "DE",
+              "xMin": 108.662837,
+              "xMax": 138.578607,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "VIAJE",
+              "xMin": 143.906976,
+              "xMax": 210.63793,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "QA-VIAJE-73010",
+              "xMin": 39.679686,
+              "xMax": 151.270883,
+              "yMin": 64.917185,
+              "yMax": 87.951559
+            },
+            {
+              "text": "Origen:",
+              "xMin": 39.679686,
+              "xMax": 77.871377,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Sitio",
+              "xMin": 80.835934,
+              "xMax": 102.389644,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "PDF",
+              "xMin": 105.342769,
+              "xMax": 125.824946,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "fixture",
+              "xMin": 128.778071,
+              "xMax": 160.688226,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Salida:",
+              "xMin": 309.925772,
+              "xMax": 344.80956,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "1/1/2026,",
+              "xMin": 347.765611,
+              "xMax": 392.488021,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "12:00:00",
+              "xMin": 395.441146,
+              "xMax": 438.661359,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "p.m.",
+              "xMin": 441.614484,
+              "xMax": 463.29124,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Camioneta:",
+              "xMin": 39.679686,
+              "xMax": 98.701168,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Camioneta",
+              "xMin": 101.660152,
+              "xMax": 154.970208,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 157.923333,
+              "xMax": 178.40551,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 181.358635,
+              "xMax": 213.26879,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer:",
+              "xMin": 309.925772,
+              "xMax": 348.660931,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer",
+              "xMin": 351.621083,
+              "xMax": 385.448718,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 388.401843,
+              "xMax": 408.88402,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 411.837145,
+              "xMax": 443.7473,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Destinos:",
+              "xMin": 39.679686,
+              "xMax": 88.452389,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Destino",
+              "xMin": 91.406246,
+              "xMax": 129.125239,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "PDF",
+              "xMin": 132.078364,
+              "xMax": 152.560541,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "fixture",
+              "xMin": 155.513665,
+              "xMax": 187.42382,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Documentos",
+              "xMin": 39.679686,
+              "xMax": 104.853511,
+              "yMin": 264.407801,
+              "yMax": 282.323426
+            },
+            {
+              "text": "NOTA",
+              "xMin": 54.679685,
+              "xMax": 83.436764,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "#82001",
+              "xMin": 86.389889,
+              "xMax": 123.465083,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "·",
+              "xMin": 126.42187,
+              "xMax": 129.446772,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "Destinatario",
+              "xMin": 132.410154,
+              "xMax": 192.005855,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "PDF",
+              "xMin": 194.95898,
+              "xMax": 215.441157,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "fixture",
+              "xMin": 218.394282,
+              "xMax": 250.304437,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "SALIDA",
+              "xMin": 54.679685,
+              "xMax": 91.880856,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "#83001",
+              "xMin": 94.83398,
+              "xMax": 131.984614,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "·",
+              "xMin": 134.941404,
+              "xMax": 137.966307,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Destino",
+              "xMin": 140.929682,
+              "xMax": 178.648674,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "PDF",
+              "xMin": 181.601799,
+              "xMax": 202.083976,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "fixture",
+              "xMin": 205.037101,
+              "xMax": 236.947256,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Serie",
+              "xMin": 105.117183,
+              "xMax": 131.670691,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "SERIE-VIAJE-0001",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 341.508531,
+              "yMax": 353.403061
+            },
+            {
+              "text": "SERIE-VIAJE-0002",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 357.25853,
+              "yMax": 369.153061
+            },
+            {
+              "text": "SERIE-VIAJE-0003",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 373.008529,
+              "yMax": 384.90306
+            },
+            {
+              "text": "SERIE-VIAJE-0004",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 388.758529,
+              "yMax": 400.653059
+            },
+            {
+              "text": "SERIE-VIAJE-0005",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 404.508528,
+              "yMax": 416.403059
+            },
+            {
+              "text": "SERIE-VIAJE-0006",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 420.258527,
+              "yMax": 432.153058
+            },
+            {
+              "text": "SERIE-VIAJE-0007",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 436.008527,
+              "yMax": 447.903058
+            },
+            {
+              "text": "SERIE-VIAJE-0008",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 451.758526,
+              "yMax": 463.653057
+            },
+            {
+              "text": "SERIE-VIAJE-0009",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 467.508525,
+              "yMax": 479.403056
+            },
+            {
+              "text": "SERIE-VIAJE-0010",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 483.258525,
+              "yMax": 495.153056
+            },
+            {
+              "text": "Documento",
+              "xMin": 219.843741,
+              "xMax": 279.136951,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Producto",
+              "xMin": 377.167957,
+              "xMax": 423.945245,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "0001",
+              "xMin": 352.05394,
+              "xMax": 376.196762,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Azul",
+              "xMin": 379.160144,
+              "xMax": 400.954821,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 403.907946,
+              "xMax": 426.912584,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "0002",
+              "xMin": 352.05394,
+              "xMax": 378.329574,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.292957,
+              "xMax": 403.087633,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.040758,
+              "xMax": 429.045396,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "0003",
+              "xMin": 352.05394,
+              "xMax": 378.411605,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.374984,
+              "xMax": 403.169661,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.122786,
+              "xMax": 429.127424,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "0004",
+              "xMin": 352.05394,
+              "xMax": 378.708969,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.667957,
+              "xMax": 403.462633,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.415758,
+              "xMax": 429.420396,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "0005",
+              "xMin": 352.05394,
+              "xMax": 378.155258,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.117172,
+              "xMax": 402.911848,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "viaje",
+              "xMin": 405.864973,
+              "xMax": 428.869611,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "0006",
+              "xMin": 352.05394,
+              "xMax": 378.43724,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.398422,
+              "xMax": 403.193098,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.146223,
+              "xMax": 429.150861,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "0007",
+              "xMin": 352.05394,
+              "xMax": 377.66307,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "Azul",
+              "xMin": 380.624984,
+              "xMax": 402.419661,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "viaje",
+              "xMin": 405.372786,
+              "xMax": 428.377424,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "0008",
+              "xMin": 352.05394,
+              "xMax": 378.421859,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.374984,
+              "xMax": 403.169661,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.122786,
+              "xMax": 429.127424,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "0009",
+              "xMin": 352.05394,
+              "xMax": 378.43724,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.398422,
+              "xMax": 403.193098,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.146223,
+              "xMax": 429.150861,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "0010",
+              "xMin": 352.05394,
+              "xMax": 376.196762,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Azul",
+              "xMin": 379.160144,
+              "xMax": 400.954821,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "viaje",
+              "xMin": 403.907946,
+              "xMax": 426.912584,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Totales:",
+              "xMin": 39.679686,
+              "xMax": 80.787594,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "2",
+              "xMin": 83.742184,
+              "xMax": 90.145748,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "documentos",
+              "xMin": 93.105465,
+              "xMax": 154.731439,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "·",
+              "xMin": 157.684564,
+              "xMax": 160.709466,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "10",
+              "xMin": 163.664056,
+              "xMax": 174.558831,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "rollos",
+              "xMin": 177.515618,
+              "xMax": 204.514152,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "·",
+              "xMin": 207.467277,
+              "xMax": 210.492179,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "10.00",
+              "xMin": 213.445304,
+              "xMax": 240.079824,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "Mts.",
+              "xMin": 243.03515,
+              "xMax": 264.573479,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "·",
+              "xMin": 267.527336,
+              "xMax": 270.552239,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "0.00",
+              "xMin": 273.515614,
+              "xMax": 295.879382,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "Kg.",
+              "xMin": 298.839835,
+              "xMax": 314.943594,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "Cantidad",
+              "xMin": 511.242166,
+              "xMax": 557.666725,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            }
+          ]
+        ],
+        "fontBboxPages": [
+          [
+            {
+              "text": "HOJA",
+              "xMin": 39.679686,
+              "xMax": 103.334468,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "DE",
+              "xMin": 108.662837,
+              "xMax": 138.578607,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "VIAJE",
+              "xMin": 143.906976,
+              "xMax": 210.63793,
+              "yMin": 33.445311,
+              "yMax": 71.835935
+            },
+            {
+              "text": "QA-VIAJE-73010",
+              "xMin": 39.679686,
+              "xMax": 151.270883,
+              "yMin": 64.917185,
+              "yMax": 87.951559
+            },
+            {
+              "text": "Origen:",
+              "xMin": 39.679686,
+              "xMax": 77.871377,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Sitio",
+              "xMin": 80.835934,
+              "xMax": 102.389644,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "PDF",
+              "xMin": 105.342769,
+              "xMax": 125.824946,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "fixture",
+              "xMin": 128.778071,
+              "xMax": 160.688226,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Salida:",
+              "xMin": 309.925772,
+              "xMax": 344.80956,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "1/1/2026,",
+              "xMin": 347.765611,
+              "xMax": 392.488021,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "12:00:00",
+              "xMin": 395.441146,
+              "xMax": 438.661359,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "p.m.",
+              "xMin": 441.614484,
+              "xMax": 463.29124,
+              "yMin": 186.407805,
+              "yMax": 204.323429
+            },
+            {
+              "text": "Camioneta:",
+              "xMin": 39.679686,
+              "xMax": 98.701168,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Camioneta",
+              "xMin": 101.660152,
+              "xMax": 154.970208,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 157.923333,
+              "xMax": 178.40551,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 181.358635,
+              "xMax": 213.26879,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer:",
+              "xMin": 309.925772,
+              "xMax": 348.660931,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Chofer",
+              "xMin": 351.621083,
+              "xMax": 385.448718,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "PDF",
+              "xMin": 388.401843,
+              "xMax": 408.88402,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "fixture",
+              "xMin": 411.837145,
+              "xMax": 443.7473,
+              "yMin": 210.407804,
+              "yMax": 228.323428
+            },
+            {
+              "text": "Destinos:",
+              "xMin": 39.679686,
+              "xMax": 88.452389,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Destino",
+              "xMin": 91.406246,
+              "xMax": 129.125239,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "PDF",
+              "xMin": 132.078364,
+              "xMax": 152.560541,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "fixture",
+              "xMin": 155.513665,
+              "xMax": 187.42382,
+              "yMin": 234.407803,
+              "yMax": 252.323427
+            },
+            {
+              "text": "Documentos",
+              "xMin": 39.679686,
+              "xMax": 104.853511,
+              "yMin": 264.407801,
+              "yMax": 282.323426
+            },
+            {
+              "text": "NOTA",
+              "xMin": 54.679685,
+              "xMax": 83.436764,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "#82001",
+              "xMin": 86.389889,
+              "xMax": 123.465083,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "·",
+              "xMin": 126.42187,
+              "xMax": 129.446772,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "Destinatario",
+              "xMin": 132.410154,
+              "xMax": 192.005855,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "PDF",
+              "xMin": 194.95898,
+              "xMax": 215.441157,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "fixture",
+              "xMin": 218.394282,
+              "xMax": 250.304437,
+              "yMin": 279.407801,
+              "yMax": 297.323425
+            },
+            {
+              "text": "SALIDA",
+              "xMin": 54.679685,
+              "xMax": 91.880856,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "#83001",
+              "xMin": 94.83398,
+              "xMax": 131.984614,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "·",
+              "xMin": 134.941404,
+              "xMax": 137.966307,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Destino",
+              "xMin": 140.929682,
+              "xMax": 178.648674,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "PDF",
+              "xMin": 181.601799,
+              "xMax": 202.083976,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "fixture",
+              "xMin": 205.037101,
+              "xMax": 236.947256,
+              "yMin": 294.4078,
+              "yMax": 312.323424
+            },
+            {
+              "text": "Serie",
+              "xMin": 105.117183,
+              "xMax": 131.670691,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "SERIE-VIAJE-0001",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 341.508531,
+              "yMax": 353.403061
+            },
+            {
+              "text": "SERIE-VIAJE-0002",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 357.25853,
+              "yMax": 369.153061
+            },
+            {
+              "text": "SERIE-VIAJE-0003",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 373.008529,
+              "yMax": 384.90306
+            },
+            {
+              "text": "SERIE-VIAJE-0004",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 388.758529,
+              "yMax": 400.653059
+            },
+            {
+              "text": "SERIE-VIAJE-0005",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 404.508528,
+              "yMax": 416.403059
+            },
+            {
+              "text": "SERIE-VIAJE-0006",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 420.258527,
+              "yMax": 432.153058
+            },
+            {
+              "text": "SERIE-VIAJE-0007",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 436.008527,
+              "yMax": 447.903058
+            },
+            {
+              "text": "SERIE-VIAJE-0008",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 451.758526,
+              "yMax": 463.653057
+            },
+            {
+              "text": "SERIE-VIAJE-0009",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 467.508525,
+              "yMax": 479.403056
+            },
+            {
+              "text": "SERIE-VIAJE-0010",
+              "xMin": 40.429686,
+              "xMax": 141.246088,
+              "yMin": 483.258525,
+              "yMax": 495.153056
+            },
+            {
+              "text": "Documento",
+              "xMin": 219.843741,
+              "xMax": 279.136951,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "NOTA",
+              "xMin": 196.371089,
+              "xMax": 225.128168,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "#82001",
+              "xMin": 228.082025,
+              "xMax": 265.156487,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Producto",
+              "xMin": 377.167957,
+              "xMax": 423.945245,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "0001",
+              "xMin": 352.05394,
+              "xMax": 376.196762,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Azul",
+              "xMin": 379.160144,
+              "xMax": 400.954821,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "viaje",
+              "xMin": 403.907946,
+              "xMax": 426.912584,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "0002",
+              "xMin": 352.05394,
+              "xMax": 378.329574,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.292957,
+              "xMax": 403.087633,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.040758,
+              "xMax": 429.045396,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "0003",
+              "xMin": 352.05394,
+              "xMax": 378.411605,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.374984,
+              "xMax": 403.169661,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.122786,
+              "xMax": 429.127424,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "0004",
+              "xMin": 352.05394,
+              "xMax": 378.708969,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.667957,
+              "xMax": 403.462633,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.415758,
+              "xMax": 429.420396,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "0005",
+              "xMin": 352.05394,
+              "xMax": 378.155258,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.117172,
+              "xMax": 402.911848,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "viaje",
+              "xMin": 405.864973,
+              "xMax": 428.869611,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "0006",
+              "xMin": 352.05394,
+              "xMax": 378.43724,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.398422,
+              "xMax": 403.193098,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.146223,
+              "xMax": 429.150861,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "0007",
+              "xMin": 352.05394,
+              "xMax": 377.66307,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "Azul",
+              "xMin": 380.624984,
+              "xMax": 402.419661,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "viaje",
+              "xMin": 405.372786,
+              "xMax": 428.377424,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "0008",
+              "xMin": 352.05394,
+              "xMax": 378.421859,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.374984,
+              "xMax": 403.169661,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.122786,
+              "xMax": 429.127424,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "0009",
+              "xMin": 352.05394,
+              "xMax": 378.43724,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "Azul",
+              "xMin": 381.398422,
+              "xMax": 403.193098,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "viaje",
+              "xMin": 406.146223,
+              "xMax": 429.150861,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "Tela",
+              "xMin": 302.624987,
+              "xMax": 323.143053,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "viaje",
+              "xMin": 326.096178,
+              "xMax": 349.100816,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "0010",
+              "xMin": 352.05394,
+              "xMax": 376.196762,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Azul",
+              "xMin": 379.160144,
+              "xMax": 400.954821,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "viaje",
+              "xMin": 403.907946,
+              "xMax": 426.912584,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Totales:",
+              "xMin": 39.679686,
+              "xMax": 80.787594,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "2",
+              "xMin": 83.742184,
+              "xMax": 90.145748,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "documentos",
+              "xMin": 93.105465,
+              "xMax": 154.731439,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "·",
+              "xMin": 157.684564,
+              "xMax": 160.709466,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "10",
+              "xMin": 163.664056,
+              "xMax": 174.558831,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "rollos",
+              "xMin": 177.515618,
+              "xMax": 204.514152,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "·",
+              "xMin": 207.467277,
+              "xMax": 210.492179,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "10.00",
+              "xMin": 213.445304,
+              "xMax": 240.079824,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "Mts.",
+              "xMin": 243.03515,
+              "xMax": 264.573479,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "·",
+              "xMin": 267.527336,
+              "xMax": 270.552239,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "0.00",
+              "xMin": 273.515614,
+              "xMax": 295.879382,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "Kg.",
+              "xMin": 298.839835,
+              "xMax": 314.943594,
+              "yMin": 520.157791,
+              "yMax": 538.073415
+            },
+            {
+              "text": "Cantidad",
+              "xMin": 511.242166,
+              "xMax": 557.666725,
+              "yMin": 322.157799,
+              "yMax": 340.073423
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 337.907798,
+              "yMax": 355.823423
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 353.657798,
+              "yMax": 371.573422
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 369.407797,
+              "yMax": 387.323421
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 385.157796,
+              "yMax": 403.073421
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 400.907796,
+              "yMax": 418.82342
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 416.657795,
+              "yMax": 434.573419
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 432.407794,
+              "yMax": 450.323419
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 448.157794,
+              "yMax": 466.073418
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 463.907793,
+              "yMax": 481.823417
+            },
+            {
+              "text": "1.00",
+              "xMin": 498.492167,
+              "xMax": 518.769266,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            },
+            {
+              "text": "Mts.",
+              "xMin": 521.730451,
+              "xMax": 543.26878,
+              "yMin": 479.657793,
+              "yMax": 497.573417
+            }
+          ]
+        ]
+      },
+      "pdfTextSafeArea": {
+        "authority": "diagnostic-only-font-boxes",
+        "widthMm": 216,
+        "heightMm": 279,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "fontBoxOverlaps": [
+          {
+            "pageNumber": 1,
+            "count": 0,
+            "words": []
+          }
+        ]
+      },
+      "raster": {
+        "dpi": 96,
+        "widthMm": 216,
+        "heightMm": 279,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "pageSizePoints": {
+          "width": 612,
+          "height": 791.04
+        },
+        "pages": [
+          {
+            "pageNumber": 1,
+            "imagePath": "/tmp/laser-other-documents-pdf-regression/viaje-ten-rows-1.png",
+            "width": 816,
+            "height": 1055,
+            "inkBoundsPx": {
+              "x": 52,
+              "y": 53,
+              "width": 710,
+              "height": 661
+            },
+            "inkBoundsMm": {
+              "x": 13.758333333333331,
+              "y": 14.022916666666667,
+              "width": 187.85416666666666,
+              "height": 174.88958333333332
+            },
+            "borderBandMm": 5,
+            "edgeClearanceMm": {
+              "left": 13.758333333333331,
+              "top": 14.022916666666667,
+              "right": 14.287499999999994,
+              "bottom": 90.14883333333333
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

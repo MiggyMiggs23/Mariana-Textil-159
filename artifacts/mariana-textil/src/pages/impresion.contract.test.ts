@@ -12,7 +12,7 @@ test("Entrada keeps 216x279mm paper and uses its measured safe content box", asy
   assert.match(css, /@page entrada-page\s*\{[\s\S]*size:\s*216mm 279mm;/);
   assert.match(css, /\.entrada-page-print\s*\{[\s\S]*page:\s*entrada-page;/);
   assert.match(entrada, /className=[\s\S]*?entrada-page-print[\s\S]*?w-\[216mm\]\s*h-\[279mm\]/);
-  assert.match(entrada, /const rowsPerPage = 23;/);
+  assert.match(entrada, /const rowsPerPage = 10;/);
   assert.match(entrada, /Math\.max\(0, rowsPerPage - pageLineas\.length\)/);
   assert.match(entrada, /RECIBIDO POR/i);
   assert.match(entrada, /REVISADO POR/i);
@@ -22,7 +22,7 @@ test("Entrada keeps 216x279mm paper and uses its measured safe content box", asy
   assert.match(entrada, /qrLabel=\{`QR para ver entrada/);
   assert.match(entrada, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(entrada, /const seriesPerRow = 4;/);
-  assert.match(entrada, /const seriesRowsPerPage = 40;/);
+  assert.match(entrada, /const seriesRowsPerPage = 22;/);
   assert.match(entrada, /const totalPages = globalPages\.length \+ seriesPages\.length;/);
   assert.match(entrada, /pageIndex === globalPages\.length - 1/);
   assert.match(entrada, />Listado de series</);
@@ -145,7 +145,7 @@ test("Credit notes print exactly A5 portrait in two copies with internal QR", as
   assert.match(detail, /noteLines\.slice\(pageIndex \* noteRowsPerPage/);
   assert.match(detail, /noteRowsPerPage - pageLines\.length/);
   assert.match(detail, /pageIndex \* noteRowsPerPage \+ lineIndex \+ 1/);
-  assert.match(css, /\.credito-page-print\s*\{[\s\S]*height:\s*210mm !important;[\s\S]*overflow:\s*clip !important;/);
+  assert.match(css, /\.credito-page-print\s*\{[\s\S]*height:\s*210mm !important;[\s\S]*padding:\s*5\.25mm !important;[\s\S]*overflow:\s*visible !important;/);
   assert.match(css, /\.document-product-grid tr\s*\{[\s\S]*break-inside:\s*avoid-page !important;[\s\S]*page-break-inside:\s*avoid !important;/);
 
   // Caja prints cuts only; sale-document printing remains outside Caja.
@@ -221,7 +221,7 @@ test("Credit-note pagination keeps eight complete rows with its measured readabl
   assert.match(detail, /const NOTE_PRODUCT_ROWS_PER_PAGE = 8;/);
   assert.match(
     detail,
-    /Chromium PDF raster at 120dpi[\s\S]*Eight complete[\s\S]*Row nine crosses the[\s\S]*safe credit capacity is eight/,
+    /Laser PDF validation: eight complete[\s\S]*8 × 24 px rows occupies 215\.5 px[\s\S]*A ninth complete row needs 239\.5 px/,
   );
   assert.match(
     detail,

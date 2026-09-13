@@ -9,8 +9,10 @@ const [documentPage, entryList, styles] = await Promise.all([
 ]);
 
 test("la entrada conserva su formato global y firma solo la última hoja global", () => {
-  assert.match(documentPage, /const rowsPerPage = 23/);
-  assert.match(documentPage, /23 × 25/);
+  assert.match(documentPage, /const rowsPerPage = 10/);
+  assert.match(documentPage, /54 px tall/);
+  assert.match(documentPage, /590 px/);
+  assert.match(documentPage, /An eleventh 54 px row exceeds/);
   assert.match(documentPage, /logoSize=\{DOCUMENT_QR_SIZE\}/);
   assert.match(documentPage, /pageIndex === globalPages\.length - 1/);
   assert.match(documentPage, /document-footer/);
@@ -18,13 +20,13 @@ test("la entrada conserva su formato global y firma solo la última hoja global"
   assert.match(styles, /\.document-product-grid th,[\s\S]*border:\s*0\.35mm solid #000 !important;/);
   assert.match(styles, /\.entrada-page-print \.document-footer\s*\{[\s\S]*break-inside:\s*avoid-page/);
   assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*width:\s*215\.5mm !important;[\s\S]*height:\s*278\.5mm !important;/);
+  assert.match(styles, /body\.print-entrada #root[\s\S]*display:\s*contents !important/);
 });
 
 test("la entrada agrega un listado compacto de todas las series por producto", () => {
   assert.match(documentPage, /const seriesPerRow = 4/);
-  assert.match(documentPage, /const seriesRowsPerPage = 40/);
-  assert.match(documentPage, /40 filas × 24 px dejan 13\.59 px/);
-  assert.match(documentPage, /41 filas rebasan la hoja por 10\.41 px/);
+  assert.match(documentPage, /const seriesRowsPerPage = 22/);
+  assert.match(documentPage, /Laser PDF validation: 22 compact series rows/);
   assert.match(documentPage, /const embeddedSeriesRowsCapacity/);
   assert.match(documentPage, /seriesRows\.length <= embeddedSeriesRowsCapacity/);
   assert.match(documentPage, /const standaloneSeriesRows = embedsAllSeries \? \[\] : seriesRows/);
@@ -45,7 +47,7 @@ test("la entrada agrega un listado compacto de todas las series por producto", (
   assert.doesNotMatch(seriesSection, /document-footer/);
   assert.doesNotMatch(seriesSection, /PrintableDocumentHeader|DOCUMENT_QR_SIZE|Agrupado por producto/);
   assert.doesNotMatch(seriesSection, /h-4 bg-\[#1e3a8a\] w-full shrink-0 mt-auto/);
-  assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*overflow:\s*clip !important/);
+  assert.match(styles, /\.entrada-page-print\s*\{[\s\S]*overflow:\s*visible !important/);
   assert.match(styles, /\.entrada-page-print \+ \.entrada-page-print\s*\{[\s\S]*break-before:\s*page/);
   assert.doesNotMatch(styles, /\.entrada-page-print\s*\{[^}]*break-after:\s*page/);
   assert.match(styles, /body\.print-entrada \.entrada-print-root\s*\{[\s\S]*page:\s*entrada-page/);
@@ -65,6 +67,21 @@ test("la entrada se aísla para impresión sin ocultar su contenido", () => {
   assert.match(styles, /body\.print-entrada \.entrada-print-root \*/);
   assert.match(styles, /visibility:\s*visible/);
   assert.match(styles, /height:\s*278\.5mm !important/);
+});
+
+test("la entrada conserva una caja de página segura y traslada fondo y borde al frame interior", () => {
+  assert.match(
+    documentPage,
+    /className="document-page entrada-page-print w-\[216mm\] h-\[279mm\] p-\[5\.25mm\][\s\S]*overflow-visible/,
+  );
+  assert.match(
+    documentPage,
+    /document-page-frame relative[\s\S]*border border-gray-200 bg-white/,
+  );
+  assert.doesNotMatch(
+    documentPage,
+    /document-page entrada-page-print bg-white|document-page entrada-page-print border/,
+  );
 });
 
 test("la lista conserva enlaces permanentes y visibles al documento", () => {
