@@ -36,3 +36,24 @@ test("realtime detail stays in a responsive dialog with folio as its only row li
   assert.match(dialog, /href=\{`\/tickets\/\$\{item\.id\}`\}/);
   assert.match(dialog, /href=\{item\.href\}/);
 });
+
+test("salida cards show counts only; cancelled tickets and all detail rows retain amounts", async () => {
+  const source = await readFile(new URL("./tiempo-real.tsx", import.meta.url), "utf8");
+  const cards = [...source.matchAll(/<Card\b[\s\S]*?<\/Card>/g)].map(([card]) => card);
+  for (const [label, field] of [
+    ["Salidas en tránsito", "salidasEnTransito"],
+    ["Salidas canceladas", "salidasCanceladas"],
+  ]) {
+    const card = cards.find((value) => value.includes(label));
+    assert.ok(card, `${label} must exist`);
+    assert.ok(card.includes(`formatCountLabel(dashboard.${field}.conteo, "salida", "salidas")`));
+    assert.ok(!card.includes(`dashboard.${field}.importe`), `${label} must not display an amount`);
+    assert.doesNotMatch(card, /kind: "money"/);
+  }
+  const cancelled = cards.find((value) => value.includes("Tickets cancelados"));
+  assert.ok(cancelled);
+  assert.match(cancelled, /formatCountLabel\(dashboard\.cancelaciones\.tickets/);
+  assert.match(cancelled, /formatNumber\(dashboard\.cancelaciones\.importe, \{ kind: "money" \}\)/);
+  const dialog = source.slice(source.indexOf("<Dialog"), source.lastIndexOf("</Dialog>"));
+  assert.equal((dialog.match(/formatNumber\(item\.importe, \{ kind: "money" \}\)/g) ?? []).length, 2);
+});

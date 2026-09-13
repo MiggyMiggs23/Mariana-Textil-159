@@ -525,20 +525,10 @@ if (!testDatabaseUrl) {
         const transit = await allDetailPages(analytics, filters, "SALIDAS_EN_TRANSITO");
         const cancelledOutputs = await allDetailPages(analytics, filters, "SALIDAS_CANCELADAS");
         const salidaCards = await analytics.getRealtimeSalidaSummaries(filters);
-        assert.deepEqual(
-          {
-            count: salidaCards.salidasEnTransito.conteo,
-            amount: salidaCards.salidasEnTransito.importe,
-          },
-          { count: transit.total, amount: transit.amount },
-        );
-        assert.deepEqual(
-          {
-            count: salidaCards.salidasCanceladas.conteo,
-            amount: salidaCards.salidasCanceladas.importe,
-          },
-          { count: cancelledOutputs.total, amount: cancelledOutputs.amount },
-        );
+        // Salida cards expose document counts only, not a financial valuation.
+        // Their details still retain and reconcile amounts across all pages.
+        assert.equal(salidaCards.salidasEnTransito.conteo, transit.total);
+        assert.equal(salidaCards.salidasCanceladas.conteo, cancelledOutputs.total);
         assert.equal(transit.amount, "340.00");
         assert.equal(cancelledOutputs.amount, "175.00");
 
@@ -599,10 +589,8 @@ if (!testDatabaseUrl) {
           },
           { count: 3, amount: "230.00" },
         );
-        assert.deepEqual(mainSalidaCards, {
-          salidasEnTransito: { conteo: 2, importe: "300.00" },
-          salidasCanceladas: { conteo: 2, importe: "75.00" },
-        });
+        assert.equal(mainSalidaCards.salidasEnTransito.conteo, 2);
+        assert.equal(mainSalidaCards.salidasCanceladas.conteo, 2);
 
         const mainStore = stores.find((store) => store.ubicacionId === 1)!;
         const cancelledOnlyStore = stores.find((store) => store.ubicacionId === 2)!;

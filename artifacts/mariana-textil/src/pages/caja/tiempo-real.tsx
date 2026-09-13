@@ -336,7 +336,7 @@ export default function CajaTiempoReal() {
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   <div className={`text-xl font-black ${transitTone.text}`}>
-                    {formatCountLabel(dashboard.salidasEnTransito.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasEnTransito.importe, { kind: "money" })}
+                    {formatCountLabel(dashboard.salidasEnTransito.conteo, "salida", "salidas")}
                   </div>
                 </CardContent>
               </Card>
@@ -383,7 +383,7 @@ export default function CajaTiempoReal() {
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
                   <div className={`text-xl font-black ${cancelledExitsTone.text}`}>
-                    {formatCountLabel(dashboard.salidasCanceladas.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasCanceladas.importe, { kind: "money" })}
+                    {formatCountLabel(dashboard.salidasCanceladas.conteo, "salida", "salidas")}
                   </div>
                 </CardContent>
               </Card>
