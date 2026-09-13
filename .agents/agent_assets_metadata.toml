@@ -658,3 +658,17 @@ mtime_ms = 1789326840813
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/35a20a44-835c-4812-aa20-69799919d60c/3f9397aa-bade-4f69-a2de-e5033d6d7be2"
 storage_version_token = "1789326856811691"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "DyraANCdv250Ip--3Clyt"
+uri = "file://reports/diagnostico-etiquetas/conteo-25-etiquetas.pdf"
+type = "pdf"
+title = "Prueba de conteo: 25 etiquetas / 25 páginas"
+description = "PDF de Chromium/Linux, con datos de prueba interceptados y sin cambios de impresión. No reproduce el diálogo ni el controlador Wasp WPL308."
+logical_id = "fef3a453-7e37-4522-b569-72cafdd5cd39"
+content_hash = "sha256:88ac86cfcac65fefdd5c860ebff433f9d6e9584911a17188c1dbb26041d31b11"
+size = 544695
+mtime_ms = 1789328498059
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/fef3a453-7e37-4522-b569-72cafdd5cd39/32a3e87c-2034-4e28-8068-9bdca6051362"
+storage_version_token = "1789328502565959"
+content_type = "application/pdf"

@@ -7,7 +7,7 @@ Las vistas imprimibles deben verificarse con el mismo estado corporal que activa
 
 **Why:** Comprobar solo el DOM o exportar sin el estado real de impresión produjo falsos positivos: contenido supuestamente visible con geometría 0×0, una hoja adicional, tamaños físicos incorrectos y un PDF vacío cuyo QR parecía fallar.
 
-**How to apply:** Activar manualmente el mismo estado que el botón y mantenerlo hasta que `page.pdf` termine; no hacer clic en `window.print`, porque su limpieza puede ejecutarse antes de exportar. Esperar recursos y dos frames, comprobar que el nodo imprimible sea visible y que el raster no esté vacío, y exportar todas las páginas. Confirmar cantidad, tamaño físico, geometría y recortes; renderizar el PDF y decodificar sus QR, no limitarse a verificar que exista un SVG. Si el layout principal contamina la paginación, portar la copia imprimible directamente al `body` y ocultar `#root` durante impresión. Antes de exportar formatos nombrados, comprobar el valor computado de `page`: una regla genérica posterior puede sobrescribir el formato específico aunque ambos contratos existan en el CSS.
+**How to apply:** Para probar el flujo, pulsar el botón real e interceptar únicamente la invocación nativa de impresión para exportar antes de su limpieza; verificar que el estado imprimible siga activo. La activación manual de clases es un diagnóstico de layout, no una prueba del botón ni de sus tiempos de espera. Exportar todas las páginas, sin rangos. Confirmar cantidad, tamaño físico y contenido según el fallo investigado; renderizar el PDF cuando se necesite verificar visibilidad y decodificar sus QR, no limitarse a verificar que exista un SVG. Antes de exportar formatos nombrados, comprobar el valor computado de `page`: una regla genérica posterior puede sobrescribir el formato específico aunque ambos contratos existan en el CSS.
 
 Cuando un modo oculta globalmente con `visibility`, también debe colapsar los hermanos corporales ajenos a la raíz de la aplicación; la invisibilidad conserva su caja y puede crear un margen superior en el PDF. Los portales que contienen el documento imprimible deben restituirse de forma explícita y más específica.
 
@@ -22,3 +22,9 @@ Cuando se informa una entrada concreta, verificar sus campos imprimibles mediant
 **Why:** Un montaje de la ruta correcta con texto, serie, cantidad o unidad diferentes no descarta un problema de ajuste del documento informado.
 
 **How to apply:** Comparar los campos reales mínimos con la respuesta simulada, sin crear documentos ni autenticar usuarios de prueba en development. Informar por separado si se probó el flujo con datos simulados equivalentes o mediante una lectura autenticada real.
+
+Un reporte de N etiquetas y N+1 páginas requiere contar el PDF completo y verificar qué serie y campos aparecen en cada página, especialmente la primera; no sustituir esa comprobación por mediciones de altura.
+
+**Why:** Una página inicial adicional y una etiqueta partida no son equivalentes a una página final vacía, y un PDF de Chromium sin interfaz no reproduce necesariamente la ruta del diálogo con controlador físico.
+
+**How to apply:** Ejecutar el conteo antes de modificar impresión y registrar navegador, sistema y parámetros de exportación. Si el baseline pasa, declararlo no reproducido, no como evidencia de un arreglo ni de un defecto del controlador.
