@@ -765,6 +765,14 @@ Se eligió **A5 y no media carta** porque las bandejas de las impresoras láser 
 
 El respaldo cuando falla la impresora térmica consiste en mandar el mismo Ticket de 80 mm a otra impresora desde el diálogo del navegador. No existe ni debe crearse un segundo diseño en papel para ese respaldo.
 
+### Diagnóstico de impresoras de tienda: Epson y Wasp
+
+**Si una tienda reporta una hoja de más o una etiqueta partida, lo primero que se revisa es el controlador y el tamaño de papel, no el código.** Verificar el tamaño configurado tanto en el controlador como en el diálogo de impresión, los márgenes y la escala. Comparar el mismo documento con Microsoft Print to PDF usando el mismo tamaño y márgenes antes de atribuir el problema al CSS o modificar la impresión.
+
+**Caso confirmado el 2026-09-13 — Wasp WPL308:** con 25 etiquetas, papel de 100 × 70 mm, márgenes Ninguno y escala 100 %, el controlador Wasp producía 26 páginas; la primera etiqueta se partía entre una página inicial adicional y la siguiente. Con Microsoft Print to PDF, el mismo documento y ajustes produjeron 25 páginas para 25 etiquetas. El usuario confirmó que el problema era el controlador, no el código; no modificar la impresión para compensar este caso.
+
+**Conservar la prueba automatizada de conteo de páginas:** debe exigir tantas páginas como etiquetas y comprobar los campos completos de cada etiqueta en su página, sin páginas adicionales iniciales o finales. Sirve para detectar una regresión futura introducida por el código; que pase en Chromium/PDF no certifica el comportamiento de un controlador físico.
+
 **Los documentos no se diseñan para monocromático.** El color lo aporta el papel de la bandeja y la impresora convierte a grises por su cuenta. Un logo azul impreso en negro se ve bien; un logo dibujado en gris plano se ve mal en color y en negro. La Salida conserva su diseño a color aunque se imprima en monocromático sobre papel de color.
 
 **El QR de la Salida lleva recuadro blanco detrás.** Sobre papel de color el contraste puede caer y el código deja de leerse; si el QR no escanea, se rompe el flujo de recepción. Es una regla operativa, no estética, y aplica a cualquier color de papel presente o futuro.
