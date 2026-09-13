@@ -10,8 +10,8 @@ test("realtime cards have fixed order and only the three component cards open de
     "Ventas a crédito",
     "Utilidad",
     "Ventas pendientes de cobro o autorización",
-    "Tickets cancelados",
     "Salidas en tránsito",
+    "Tickets cancelados",
     "Salidas canceladas",
   ];
   const positions = labels.map((label) => source.indexOf(label));

@@ -212,7 +212,7 @@ export default function CajaTiempoReal() {
         ) : totals ? (
           <div className="space-y-6 animate-in fade-in duration-500">
             <div className="flex flex-col gap-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card className="border-sidebar/10 shadow-sm">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Ventas (Total)</CardTitle>
@@ -287,7 +287,7 @@ export default function CajaTiempoReal() {
               </Card>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card
                 className={`${pendingTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
                 data-attention={pendingTone.state}
@@ -318,6 +318,31 @@ export default function CajaTiempoReal() {
               </Card>
 
               <Card
+                className={`${transitTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+                data-attention={transitTone.state}
+                role="button"
+                tabIndex={0}
+                onClick={() => openBreakdown("SALIDAS_EN_TRANSITO")}
+                onKeyDown={(event) => event.key === "Enter" && openBreakdown("SALIDAS_EN_TRANSITO")}
+              >
+                {/* Amber indicates pending operational attention, such as items in transit. */}
+                {transitTone.active && (
+                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-500" />
+                )}
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
+                  <CardTitle className={`text-xs font-semibold ${transitTone.title} uppercase line-clamp-2`}>
+                    Salidas en tránsito
+                  </CardTitle>
+                  <Clock className={`h-4 w-4 ${transitTone.icon}`} />
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <div className={`text-xl font-black ${transitTone.text}`}>
+                    {formatCountLabel(dashboard.salidasEnTransito.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasEnTransito.importe, { kind: "money" })}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card
                 className={`${cancelledTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
                 data-attention={cancelledTone.state}
                 role="button"
@@ -344,31 +369,6 @@ export default function CajaTiempoReal() {
                        Tasa de cancelación: {formatNumber(dashboard.cancelaciones.tasaCancelacion, { kind: "percentage", percentageInput: "percent" })}
                      </p>
                    )}
-                </CardContent>
-              </Card>
-
-              <Card
-                className={`${transitTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
-                data-attention={transitTone.state}
-                role="button"
-                tabIndex={0}
-                onClick={() => openBreakdown("SALIDAS_EN_TRANSITO")}
-                onKeyDown={(event) => event.key === "Enter" && openBreakdown("SALIDAS_EN_TRANSITO")}
-              >
-                {/* Amber indicates pending operational attention, such as items in transit. */}
-                {transitTone.active && (
-                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-500" />
-                )}
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
-                  <CardTitle className={`text-xs font-semibold ${transitTone.title} uppercase line-clamp-2`}>
-                    Salidas en tránsito
-                  </CardTitle>
-                  <Clock className={`h-4 w-4 ${transitTone.icon}`} />
-                </CardHeader>
-                <CardContent className="p-4 pt-0">
-                  <div className={`text-xl font-black ${transitTone.text}`}>
-                    {formatCountLabel(dashboard.salidasEnTransito.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasEnTransito.importe, { kind: "money" })}
-                  </div>
                 </CardContent>
               </Card>
 

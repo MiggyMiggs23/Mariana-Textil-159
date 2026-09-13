@@ -11,7 +11,12 @@ describe("Tiempo Real Contract", () => {
     assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4[\s\S]*Ventas \(Total\)[\s\S]*Cobrado \(Caja\)[\s\S]*Ventas a crédito[\s\S]*Utilidad/);
 
     // Secondary row reuses the same four-column grid.
-    assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4[\s\S]*Ventas pendientes de cobro o autorización[\s\S]*Tickets cancelados[\s\S]*Salidas en tránsito[\s\S]*Salidas canceladas/);
+    assert.match(page, /grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4[\s\S]*Ventas pendientes de cobro o autorización[\s\S]*Salidas en tránsito[\s\S]*Tickets cancelados[\s\S]*Salidas canceladas/);
+    assert.equal(
+      (page.match(/className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4"/g) ?? []).length,
+      2,
+      "Both rows share full width, breakpoints, equal columns and spacing",
+    );
     assert.doesNotMatch(page, /xl:col-start-2/);
   });
 
