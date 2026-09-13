@@ -601,6 +601,37 @@ async function captureDomLabels(page, labels) {
   });
 }
 
+function extractPdfBboxPages(pdfPath) {
+  const extracted = execFileSync("pdftotext", ["-bbox", pdfPath, "-"], {
+    encoding: "utf8",
+  });
+  const pages = [];
+  const pagePattern = /<page\b[^>]*>([\s\S]*?)<\/page>/gu;
+  let pageMatch;
+  while ((pageMatch = pagePattern.exec(extracted)) !== null) {
+    const words = [];
+    const wordPattern = /<word\b([^>]*)>([\s\S]*?)<\/word>/gu;
+    let wordMatch;
+    while ((wordMatch = wordPattern.exec(pageMatch[1])) !== null) {
+      const text = normalizedText(wordMatch[2].replace(/<[^>]*>/gu, ""));
+      const yMinMatch = /\byMin="([^"]+)"/u.exec(wordMatch[1]);
+      const yMaxMatch = /\byMax="([^"]+)"/u.exec(wordMatch[1]);
+      const yMin = Number(yMinMatch?.[1]);
+      const yMax = Number(yMaxMatch?.[1]);
+      if (!text || !Number.isFinite(yMin) || !Number.isFinite(yMax)) continue;
+      words.push({ text, yMin, yMax });
+    }
+    const contentStartY = words.length
+      ? Math.min(...words.map((word) => word.yMin))
+      : null;
+    pages.push({
+      contentStartY,
+      wordCount: words.length,
+    });
+  }
+  return pages;
+}
+
 function extractPdfPages(pdfPath) {
   const info = execFileSync("pdfinfo", [pdfPath], { encoding: "utf8" });
   const infoLines = info.split(/\r?\n/u);
@@ -624,6 +655,12 @@ function extractPdfPages(pdfPath) {
       `pdftotext yielded ${pages.length} page segments but pdfinfo reported ${pageCount}`,
     );
   }
+  const bboxPages = extractPdfBboxPages(pdfPath);
+  if (bboxPages.length !== pageCount) {
+    throw new Error(
+      `pdftotext -bbox yielded ${bboxPages.length} pages but pdfinfo reported ${pageCount}`,
+    );
+  }
   return {
     pageCount,
     pdfMetadata: {
@@ -633,6 +670,7 @@ function extractPdfPages(pdfPath) {
       pdfVersion: field("PDF version"),
     },
     pages: pages.map(normalizedText),
+    bboxPages,
   };
 }
 
@@ -644,6 +682,24 @@ function assertPdfLabels(pdf, labels) {
   );
   assert(pdf.pages[0]?.length > 0, "PDF must not begin with a blank page");
   assert(pdf.pages.at(-1)?.length > 0, "PDF must not end with a blank page");
+  assert.equal(
+    pdf.bboxPages.length,
+    labels.length,
+    "PDF bbox output must have one coordinate page per label",
+  );
+  const contentStarts = pdf.bboxPages.map((page, index) => {
+    assert(
+      Number.isFinite(page.contentStartY),
+      `PDF page ${index + 1} has no text content start coordinate`,
+    );
+    return page.contentStartY;
+  });
+  const firstContentY = contentStarts[0];
+  const contentStartSpread = Math.max(...contentStarts) - Math.min(...contentStarts);
+  assert(
+    contentStartSpread <= 0.5,
+    `PDF per-page content start Y must be equal (first=${firstContentY}, starts=${contentStarts.join(", ")})`,
+  );
 
   for (const [index, label] of labels.entries()) {
     const page = pdf.pages[index];
@@ -668,6 +724,40 @@ function assertPdfLabels(pdf, labels) {
       );
     }
   }
+}
+
+async function mountSimulatedInactivePrintPortal(page) {
+  return evaluate(page, function mountSimulatedInactivePrintPortalInPage() {
+    const routeRoots = Array.from(document.querySelectorAll(".etiquetas-print"));
+    const routeRoot = routeRoots[0];
+    if (!routeRoot) {
+      throw new Error("Could not find the real EntradaEtiquetas portal to duplicate");
+    }
+
+    /*
+     * This is a mounted-portal scenario, not a fake offset: duplicate the
+     * fully-rendered portal exactly as another body portal could be mounted by
+     * a still-open print surface.  No margin, transform, height, or visibility
+     * is injected.  The report keeps this separate from the actual user route.
+     */
+    const inactiveRoot = routeRoot.cloneNode(true);
+    if (!(inactiveRoot instanceof HTMLElement)) {
+      throw new Error("Could not clone the real EntradaEtiquetas portal");
+    }
+    inactiveRoot.removeAttribute("data-print-target");
+    inactiveRoot.setAttribute(
+      "data-print-regression-scenario",
+      "simulated-inactive-mounted-portal",
+    );
+    routeRoot.before(inactiveRoot);
+
+    return {
+      actualRouteContainerCount: routeRoots.length,
+      simulatedAdditionalContainerCount: 1,
+      mountedContainerCount: document.querySelectorAll(".etiquetas-print").length,
+      artificialOffsetInjected: false,
+    };
+  });
 }
 
 async function collectLogicalDiagnosis(page) {
@@ -731,12 +821,27 @@ async function collectLogicalDiagnosis(page) {
   });
 }
 
-async function runScenario(browser, fixture, artifactDir) {
-  const scenarioName = fixture.id === 9100 ? "baseline-1-label" : "regression-25-labels";
+async function runScenario(
+  browser,
+  fixture,
+  artifactDir,
+  { simulateInactivePortal = false } = {},
+) {
+  const baseScenarioName =
+    fixture.id === 9100 ? "baseline-1-label" : "regression-25-labels";
+  const scenarioName = simulateInactivePortal
+    ? `${baseScenarioName}-simulated-mounted-portal`
+    : baseScenarioName;
   const expectedLabels = expectedLabelsForFixture(fixture);
   const report = {
     name: scenarioName,
     route: `/entradas/${fixture.id}/etiquetas`,
+    scenarioType: simulateInactivePortal
+      ? "simulated-mounted-container-regression"
+      : "actual-route-baseline",
+    actualUserReproduction: false,
+    distinction:
+      "The browser follows the real EntradaEtiquetas route and real print button. The additional portal scenario is simulated by duplicating the fully-rendered mounted portal without injecting an offset; it is not evidence that this exact DOM is the user's Wasp or Microsoft Print to PDF reproduction.",
     expectedLabelCount: expectedLabels.length,
     expectedSeries: expectedLabels.map((label) => label.serie),
     requestedApiPaths: [],
@@ -753,11 +858,38 @@ async function runScenario(browser, fixture, artifactDir) {
     );
     await waitForLabels(page, expectedLabels.length);
     report.dom = await captureDomLabels(page, expectedLabels);
+    if (simulateInactivePortal) {
+      report.mountedScenario = await mountSimulatedInactivePrintPortal(page);
+    } else {
+      report.mountedScenario = await evaluate(
+        page,
+        function countActualMountedPrintPortalsInPage() {
+          return {
+            actualRouteContainerCount:
+              document.querySelectorAll(".etiquetas-print").length,
+            simulatedAdditionalContainerCount: 0,
+            mountedContainerCount:
+              document.querySelectorAll(".etiquetas-print").length,
+            artificialOffsetInjected: false,
+          };
+        },
+      );
+    }
+    report.actualMountedContainerCount = report.mountedScenario.mountedContainerCount;
     report.printState = await installPrintSignal(page);
     report.printState = {
       ...report.printState,
       ...(await clickPrintSelection(page, expectedLabels.length)),
     };
+    report.printState.mountedContainerCount = report.mountedScenario.mountedContainerCount;
+    report.printState.activePrintContainerCount = await evaluate(
+      page,
+      function countActivePrintTargetsInPage() {
+        return document.querySelectorAll(
+          '.etiquetas-print[data-print-target="active"]',
+        ).length;
+      },
+    );
     report.browserContext = await evaluate(page, function browserContextInPage() {
       return {
         userAgent: navigator.userAgent,
@@ -809,6 +941,15 @@ async function runScenario(browser, fixture, artifactDir) {
     await writeFile(pdfPath, Buffer.from(pdfResult.data, "base64"));
     report.pdfPath = pdfPath;
     report.pdf = extractPdfPages(pdfPath);
+    report.pdf.firstContentY = report.pdf.bboxPages[0]?.contentStartY ?? null;
+    report.pdf.contentStartY = report.pdf.bboxPages.map(
+      (page) => page.contentStartY,
+    );
+    report.pdf.contentStartYSpread =
+      report.pdf.contentStartY.length > 0
+        ? Math.max(...report.pdf.contentStartY) -
+          Math.min(...report.pdf.contentStartY)
+        : null;
 
     try {
       const allowedApiPaths = new Set([
@@ -825,6 +966,13 @@ async function runScenario(browser, fixture, artifactDir) {
         );
       }
       report.phase = "pdf-assertion";
+      if (simulateInactivePortal) {
+        assert.equal(
+          report.printState.activePrintContainerCount,
+          1,
+          "the simulated mounted-container run must scope printing to exactly one active portal",
+        );
+      }
       assertPdfLabels(report.pdf, expectedLabels);
       report.status = "passed";
     } catch (error) {
@@ -920,6 +1068,15 @@ async function main() {
         if (error.scenarioReport) report.scenarios.push(error.scenarioReport);
         throw error;
       }
+    }
+    try {
+      const scenario = await runScenario(browser, fixtures[1], ARTIFACT_DIR, {
+        simulateInactivePortal: true,
+      });
+      report.scenarios.push(scenario);
+    } catch (error) {
+      if (error.scenarioReport) report.scenarios.push(error.scenarioReport);
+      throw error;
     }
     report.status = "passed";
   } catch (error) {

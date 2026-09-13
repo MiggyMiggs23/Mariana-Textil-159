@@ -15,3 +15,26 @@ test("la aplicación uniforme no está disponible cuando no quedan rollos en bla
   assert.match(applyButton, /Aplicar a los \$\{blankRollCount\} rollos restantes/);
   assert.match(source, /if \(blankCount === 0\) \{\s*toast\.info\("No hay rollos en blanco por completar\."\);\s*return;/);
 });
+
+test("reserva espacios separados para cantidad, unidad y cámara en la captura", () => {
+  assert.match(source, /const formatCaptureUnit = \(unit: string \| null \| undefined\): string =>/);
+  assert.match(source, /unit\?\.trim\(\)\.toUpperCase\(\) === "PIEZA" \? "Piezas" : formatUnit\(unit\)/);
+
+  const uniformField = source.slice(
+    source.indexOf('data-testid="input-uniform-qty"') - 800,
+    source.indexOf('data-testid="input-uniform-qty"') + 550,
+  );
+  assert.match(uniformField, /flex min-w-0 flex-1 items-center/);
+  assert.match(uniformField, /data-testid="uniform-qty-unit"/);
+  assert.doesNotMatch(uniformField, /absolute/);
+
+  const perRollField = source.slice(
+    source.indexOf('data-testid="input-capture-qty"') - 900,
+    source.indexOf('data-testid="input-capture-qty"') + 900,
+  );
+  assert.match(perRollField, /className="h-20 min-w-0 flex-1 px-3 text-center text-2xl font-black sm:text-4xl"/);
+  assert.match(perRollField, /containerClassName="h-20 min-w-0 flex-1"/);
+  assert.match(perRollField, /trailingContent=\{\(/);
+  assert.match(perRollField, /data-testid="capture-qty-unit"/);
+  assert.doesNotMatch(perRollField, /absolute/);
+});

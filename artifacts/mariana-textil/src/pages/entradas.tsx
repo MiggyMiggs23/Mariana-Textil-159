@@ -81,6 +81,10 @@ const isValidUnitCost = (value: string): boolean => {
   );
 };
 
+const formatCaptureUnit = (unit: string | null | undefined): string => (
+  unit?.trim().toUpperCase() === "PIEZA" ? "Piezas" : formatUnit(unit)
+);
+
 export default function Entradas() {
   const queryClient = useQueryClient();
 
@@ -305,6 +309,7 @@ export default function Entradas() {
   );
   const capturedRollCount = capCantidades.filter((qty) => qty.trim() !== "").length;
   const captureCounts = getRollCaptureCounts(capCantidades, uniformBaseline, editedQtyIndexes);
+  const captureUnitLabel = formatCaptureUnit(selectedProduct?.unidad);
   const blankRollCount = captureCounts.blank;
   const adjustedRollCount = captureCounts.adjusted;
   const uniformRollCount = captureCounts.uniform;
@@ -1220,7 +1225,7 @@ export default function Entradas() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
-                  <div className="relative flex-1">
+                  <div className="flex min-w-0 flex-1 items-center rounded-md border border-input bg-background shadow-sm focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                     <Input
                       type="number"
                       min={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
@@ -1228,11 +1233,11 @@ export default function Entradas() {
                       value={uniformQty}
                       onChange={(event) => setUniformQty(event.target.value)}
                       placeholder="0.00"
-                      className="bg-background pr-14 text-lg font-bold"
+                      className="h-10 min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-lg font-bold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
                       data-testid="input-uniform-qty"
                     />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
-                      {formatUnit(selectedProduct?.unidad)}
+                    <span className="shrink-0 whitespace-nowrap px-3 text-xs font-bold text-muted-foreground" data-testid="uniform-qty-unit">
+                      {captureUnitLabel}
                     </span>
                   </div>
                   <Button
@@ -1282,25 +1287,25 @@ export default function Entradas() {
                 )}
               </div>
 
-              <div className="flex gap-3 items-start flex-col sm:flex-row">
-                <div className="relative flex-1 w-full">
-                  <CampoEscaneo
-                    ref={qtyInputRef}
-                    type="number"
-                    step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
-                    placeholder={selectedProduct?.unidad === "BOLSA" ? "0" : "0.00"}
-                    value={capCurrentQty}
-                    onChange={setCapCurrentQty}
-                    onScan={handleAddQty}
-                    interpretRollCode={false}
-                    className="text-4xl h-20 font-black text-center pr-16"
-                    containerClassName="h-20"
-                    data-testid="input-capture-qty"
-                  />
-                  <div className="absolute right-4 top-1/2 -translate-y-1/2 font-bold text-muted-foreground text-xl">
-                    {formatUnit(selectedProduct?.unidad)}
-                  </div>
-                </div>
+              <div className="flex min-w-0 flex-col items-stretch gap-3 sm:flex-row">
+                <CampoEscaneo
+                  ref={qtyInputRef}
+                  type="number"
+                  step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
+                  placeholder={selectedProduct?.unidad === "BOLSA" ? "0" : "0.00"}
+                  value={capCurrentQty}
+                  onChange={setCapCurrentQty}
+                  onScan={handleAddQty}
+                  interpretRollCode={false}
+                  className="h-20 min-w-0 flex-1 px-3 text-center text-2xl font-black sm:text-4xl"
+                  containerClassName="h-20 min-w-0 flex-1"
+                  trailingContent={(
+                    <span className="flex h-20 shrink-0 items-center whitespace-nowrap px-2 text-xl font-bold text-muted-foreground" data-testid="capture-qty-unit">
+                      {captureUnitLabel}
+                    </span>
+                  )}
+                  data-testid="input-capture-qty"
+                />
 
                 {pisosActivos.length > 0 && (
                   <Select value={capCurrentPiso || "none"} onValueChange={(v) => setCapCurrentPiso(v === "none" ? null : v)}>
@@ -1356,12 +1361,12 @@ export default function Entradas() {
                       }`}
                       data-testid={`row-captured-roll-${idx}`}
                     >
-                      <div className="flex items-center gap-4">
-                        <span className="w-8 h-8 rounded bg-muted/50 flex items-center justify-center text-xs font-mono font-bold text-muted-foreground border">
+                      <div className="flex min-w-0 items-center gap-4">
+                        <span className="w-8 h-8 shrink-0 rounded bg-muted/50 flex items-center justify-center text-xs font-mono font-bold text-muted-foreground border">
                           {idx+1}
                         </span>
                         {editingQtyIndex === idx ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
                             <Input
                               type="number"
                               min={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
@@ -1374,12 +1379,12 @@ export default function Entradas() {
                                   handleSaveCapturedQty();
                                 }
                               }}
-                              className="h-10 w-24 text-lg font-bold"
+                              className="h-10 w-24 min-w-0 text-lg font-bold"
                               autoFocus
                               data-testid={`input-edit-roll-${idx}`}
                             />
-                            <span className="text-sm font-bold text-muted-foreground">
-                              {formatUnit(selectedProduct?.unidad)}
+                            <span className="shrink-0 whitespace-nowrap text-sm font-bold text-muted-foreground">
+                              {captureUnitLabel}
                             </span>
                             {pisosActivos.length > 0 && (
                               <Select value={editingPisoValue || "none"} onValueChange={(v) => handleChangeCapturedPiso(v === "none" ? null : v)}>
@@ -1400,9 +1405,9 @@ export default function Entradas() {
                             Pendiente de captura
                           </span>
                         ) : (
-                          <div className="flex items-center gap-4">
-                            <span className="text-2xl font-black tabular-nums">
-                              {qty} <span className="text-sm font-bold text-muted-foreground">{formatUnit(selectedProduct?.unidad)}</span>
+                          <div className="flex min-w-0 flex-wrap items-center gap-4">
+                            <span className="min-w-0 break-words text-2xl font-black tabular-nums">
+                              {qty} <span className="text-sm font-bold text-muted-foreground">{captureUnitLabel}</span>
                             </span>
                             {pisosActivos.length > 0 && capPisos[idx] && (
                               <Badge variant="outline" className="text-[10px]">

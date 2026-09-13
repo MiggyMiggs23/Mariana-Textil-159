@@ -44,11 +44,22 @@ export async function waitForPrintableAssets(
   await nextPaint();
 }
 
-export async function printWhenReady(bodyClass?: string): Promise<void> {
+export async function printWhenReady(
+  bodyClass?: string,
+  printRoot?: HTMLElement | null,
+): Promise<void> {
   if (bodyClass) document.body.classList.add(bodyClass);
+  if (printRoot) {
+    printRoot.setAttribute("data-print-target", "active");
+    document.body.classList.add("print-target-scoped");
+  }
 
   const cleanup = () => {
     if (bodyClass) document.body.classList.remove(bodyClass);
+    if (printRoot) {
+      printRoot.removeAttribute("data-print-target");
+      document.body.classList.remove("print-target-scoped");
+    }
   };
 
   try {

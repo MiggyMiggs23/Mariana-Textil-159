@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useParams, Link } from "wouter";
 import { useGetEntrada, getGetEntradaQueryKey, EntradaRollo } from "@workspace/api-client-react";
@@ -18,6 +18,7 @@ export default function EntradaEtiquetas() {
 
   const [selectedRollos, setSelectedRollos] = useState<Set<number>>(new Set());
   const [printMode, setPrintMode] = useState<"thermal" | "sheet">("thermal");
+  const printRootRef = useRef<HTMLDivElement>(null);
 
   // Initialize selection once when data arrives
   useEffect(() => {
@@ -45,6 +46,7 @@ export default function EntradaEtiquetas() {
   const handlePrint = () => {
     void printWhenReady(
       printMode === "thermal" ? "printing-labels" : "printing-label-sheet",
+      printRootRef.current,
     );
   };
 
@@ -140,7 +142,10 @@ export default function EntradaEtiquetas() {
         {/* Print area is portaled to body so named physical pages are not
             affected by the screen layout's flex/overflow containers. */}
         {createPortal(
-          <div className={`print-only flex gap-[4mm] justify-center ${printMode === 'thermal' ? 'etiquetas-print flex-wrap print:block print:p-0' : 'etiquetas-print etiquetas-sheet-print flex-wrap max-w-[8.5in] mx-auto print:max-w-none print:w-[8.5in] bg-white p-8 print:p-4 shadow-xl print:shadow-none print:m-0'}`}>
+          <div
+            ref={printRootRef}
+            className={`print-only flex gap-[4mm] justify-center ${printMode === 'thermal' ? 'etiquetas-print flex-wrap print:block print:p-0' : 'etiquetas-print etiquetas-sheet-print flex-wrap max-w-[8.5in] mx-auto print:max-w-none print:w-[8.5in] bg-white p-8 print:p-4 shadow-xl print:shadow-none print:m-0'}`}
+          >
             {rollosToPrint.map(rollo => (
               <LabelPrint
                 key={rollo.id}

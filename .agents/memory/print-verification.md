@@ -28,3 +28,9 @@ Un reporte de N etiquetas y N+1 páginas requiere contar el PDF completo y verif
 **Why:** Una página inicial adicional y una etiqueta partida no son equivalentes a una página final vacía, y un PDF de Chromium sin interfaz no reproduce necesariamente la ruta del diálogo con controlador físico.
 
 **How to apply:** Ejecutar el conteo antes de modificar impresión y registrar navegador, sistema y parámetros de exportación. Si el baseline pasa, declararlo no reproducido, no como evidencia de un arreglo ni de un defecto del controlador.
+
+Al aislar un portal de impresión, comprobar la especificidad de todas las excepciones que lo vuelven a mostrar; añadir otra regla más abajo no basta cuando ambas son `!important`.
+
+**Why:** Un selector con `:not(#root)` aporta especificidad de ID. Una regla de aislamiento compuesta solo por clases y atributos puede perder frente a esa excepción y seguir imprimiendo portales inactivos.
+
+**How to apply:** Verificar con más de un portal montado que los ajenos realmente quedan fuera del layout y del PDF; no conformarse con que exista el atributo que identifica al activo.

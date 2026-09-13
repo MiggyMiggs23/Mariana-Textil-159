@@ -23,3 +23,12 @@ test("los colores y logos se conservan en todos los medios impresos", () => {
   assert.match(styles, /img\[data-logo-variant\]/);
   assert.match(styles, /img\[data-logo-source\]/);
 });
+
+test("la impresión de etiquetas puede limitarse al portal activo sin cambiar los demás callers", () => {
+  assert.match(helper, /printRoot\?: HTMLElement \| null/);
+  assert.match(helper, /data-print-target/);
+  assert.match(helper, /print-target-scoped/);
+  assert.match(styles, /print-target-scoped/);
+  assert.match(styles, /etiquetas-print:not\(#root\):not\(\[data-print-target="active"\]\)/);
+  assert.match(styles, /etiquetas-print\[data-print-target="active"\]/);
+});

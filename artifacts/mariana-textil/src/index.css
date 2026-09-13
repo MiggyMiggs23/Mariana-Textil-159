@@ -478,6 +478,41 @@ body.measure-thermal-ticket .tabular-strip-page {
     top: auto;
   }
 
+  /*
+   * EntradaEtiquetas passes its portal explicitly to printWhenReady.  Keep
+   * the old all-portals behavior for callers that do not pass a target, but
+   * when a target is present hide every other mounted label portal.
+   */
+  body.printing-labels.print-target-scoped
+    > .etiquetas-print:not(#root):not([data-print-target="active"]),
+  body.printing-label-sheet.print-target-scoped
+    > .etiquetas-print:not(#root):not([data-print-target="active"]) {
+    display: none !important;
+  }
+  body.printing-labels.print-target-scoped
+    > .etiquetas-print:not(#root)[data-print-target="active"] {
+    display: block !important;
+  }
+  body.printing-label-sheet.print-target-scoped
+    > .etiquetas-print:not(#root)[data-print-target="active"] {
+    display: grid !important;
+  }
+
+  body.printing-labels.print-target-scoped .etiquetas-print,
+  body.printing-label-sheet.print-target-scoped .etiquetas-print {
+    visibility: hidden !important;
+  }
+  body.printing-labels.print-target-scoped
+    .etiquetas-print[data-print-target="active"],
+  body.printing-labels.print-target-scoped
+    .etiquetas-print[data-print-target="active"] *,
+  body.printing-label-sheet.print-target-scoped
+    .etiquetas-print[data-print-target="active"],
+  body.printing-label-sheet.print-target-scoped
+    .etiquetas-print[data-print-target="active"] * {
+    visibility: visible !important;
+  }
+
   body.printing-label-sheet {
     background: white;
     margin: 0;

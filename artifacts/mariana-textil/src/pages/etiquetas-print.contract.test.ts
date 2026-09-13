@@ -25,6 +25,8 @@ test("la reimpresión espera a que los datos estén montados antes de imprimir",
   assert.doesNotMatch(reprintDialog, /requestAnimationFrame\(\(\) => window\.print/);
   assert.doesNotMatch(entryLabelsPage, /classList\.add\('printing-labels'\)/);
   assert.match(entryLabelsPage, /createPortal/);
+  assert.match(entryLabelsPage, /printRootRef/);
+  assert.match(entryLabelsPage, /printWhenReady\([\s\S]*printRootRef\.current/);
 });
 
 test("la acción superior imprime toda la selección y la acción por renglón se conserva", () => {

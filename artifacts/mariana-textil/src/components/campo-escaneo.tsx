@@ -65,6 +65,8 @@ export type CampoEscaneoProps = Omit<
   /** @deprecated Prefer scanMode. Kept for existing raw document/quantity fields. */
   interpretRollCode?: boolean;
   containerClassName?: string;
+  /** Optional content between the input and the camera action. */
+  trailingContent?: React.ReactNode;
 };
 
 export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
@@ -77,6 +79,7 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
       scanMode,
       interpretRollCode = true,
       containerClassName,
+      trailingContent,
       disabled,
       className,
       ...inputProps
@@ -296,7 +299,13 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
 
     return (
       <>
-        <div className={cn("flex items-stretch gap-2", containerClassName)}>
+        <div
+          className={cn(
+            "flex items-stretch gap-2",
+            trailingContent && "min-w-0",
+            containerClassName,
+          )}
+        >
           <Input
             {...inputProps}
             ref={inputRef}
@@ -325,8 +334,9 @@ export const CampoEscaneo = forwardRef<HTMLInputElement, CampoEscaneoProps>(
               event.preventDefault();
               submit();
             }}
-            className={className}
+            className={cn(trailingContent && "min-w-0 flex-1", className)}
           />
+          {trailingContent}
           {cameraCapable && (
             <Button
               type="button"
