@@ -10,3 +10,9 @@ Las vistas imprimibles deben verificarse con el mismo estado corporal que activa
 **How to apply:** Activar manualmente el mismo estado que el botón y mantenerlo hasta que `page.pdf` termine; no hacer clic en `window.print`, porque su limpieza puede ejecutarse antes de exportar. Esperar recursos y dos frames, comprobar que el nodo imprimible sea visible y que el raster no esté vacío, y exportar todas las páginas. Confirmar cantidad, tamaño físico, geometría y recortes; renderizar el PDF y decodificar sus QR, no limitarse a verificar que exista un SVG. Si el layout principal contamina la paginación, portar la copia imprimible directamente al `body` y ocultar `#root` durante impresión. Antes de exportar formatos nombrados, comprobar el valor computado de `page`: una regla genérica posterior puede sobrescribir el formato específico aunque ambos contratos existan en el CSS.
 
 Cuando un modo oculta globalmente con `visibility`, también debe colapsar los hermanos corporales ajenos a la raíz de la aplicación; la invisibilidad conserva su caja y puede crear un margen superior en el PDF. Los portales que contienen el documento imprimible deben restituirse de forma explícita y más específica.
+
+Un PDF correcto al montar el componente aisladamente no descarta un defecto del flujo completo de impresión o reimpresión.
+
+**Why:** La ruta, los portales, el estado del diálogo y el momento de invocar la impresión pueden diferir del montaje diagnóstico, aunque compartan componente y CSS.
+
+**How to apply:** Identificar el flujo a partir de la evidencia del usuario; distinguir siempre pruebas del componente de pruebas del flujo real. Si no se reproduce la fragmentación, no atribuirla a un contenedor o al controlador sin evidencia; solicitar el PDF defectuoso y los ajustes de impresión antes de corregir.
