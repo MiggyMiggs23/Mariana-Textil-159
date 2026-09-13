@@ -602,3 +602,17 @@ mtime_ms = 1789286421447
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3b503a35-4180-4811-9bf7-4212dbbbd650/61d4a264-42b2-46f4-abe0-dc88868c034d"
 storage_version_token = "1789286639899295"
 content_type = "text/html"
+
+[[outputs]]
+id = "i0AsxriVcH9Yl1jwWXht1"
+uri = "file://reports/reconstruccion-atomica-2026-09-13.html"
+type = "text"
+title = "Reconstrucción atómica — Resultados y límites"
+description = "24 pruebas aprobadas, cero fallos; rollback real con filas del seed y transacción compartida. Incluye la prueba omitida y la limitación de inventario vacío."
+logical_id = "e72014b7-7223-48bc-a219-f9acc54ae612"
+content_hash = "sha256:d346473b45e9af30716d149b2fe7f7e63194591a6fc8105b9e8137a92021d77d"
+size = 3630
+mtime_ms = 1789311485922
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e72014b7-7223-48bc-a219-f9acc54ae612/2c76714e-1ea5-4904-922e-22606829f53d"
+storage_version_token = "1789311486494794"
+content_type = "text/html"

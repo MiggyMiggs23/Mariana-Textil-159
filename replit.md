@@ -551,6 +551,10 @@ Decisión conservadora: CONTADOR tiene `crear` en `cobros_pagos` y en `proveedor
 
 ### Limpieza para el piloto
 
+**Pendiente separado — defaults de folios por sitio (2026-09-13):** el preflight encontró defaults PostgreSQL de `99` en `entrada_folio.ultimo_folio` y `499` en `salida_folio.ultimo_folio`, mientras la regla vigente por sitio y el esquema de código parten de `0` (primer folio `1`). Corregir estos defaults en un trabajo posterior para que una inserción que omita el valor no herede el arranque antiguo. No se corrigen como parte de la purga ni de la mejora de atomicidad; los reinicios de la futura purga serían explícitos a `0`.
+
+**Reconstrucción atómica (2026-09-13):** `reconstruirCacheExistencias(tx)` usa la transacción recibida, incluidos los bloqueos y la reconstrucción. Los flujos que combinen borrado y reconstrucción deben abrir una sola transacción, pasarla a ambas operaciones y propagar cualquier error para revertir todo. Sin parámetro conserva su uso independiente con una transacción propia. Esto no autoriza la Fase 2 de la purga.
+
 La limpieza autorizada dejó vacíos los datos operativos y conservó clientes, proveedores, sitios, usuarios reales, permisos y los 154 productos del catálogo aprobado. Ese conteo corresponde al momento de la limpieza y no representa el tamaño vigente del catálogo. Los usuarios y sitios generados por pruebas que siguen referenciados por la bitácora inmutable se conservaron completos; nunca se fuerza su eliminación ni se altera la auditoría para borrarlos.
 
 **Purga operativa del 7 de septiembre de 2026:** antes de borrar se creó y restauró para verificar el respaldo completo de `heliumdb` llamado `mariana-textil-heliumdb-antes-purga-2026-09-08.dump`, conservado en Google Drive con SHA-256 `89403da91a677b30b3acbfbdf2b550b2008893d8e7dae0c2612c7acedf4b791a`. No se usó una rama Neon porque el proyecto conectado no contenía la base real.

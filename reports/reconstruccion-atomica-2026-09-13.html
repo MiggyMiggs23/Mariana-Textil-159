@@ -1,0 +1,43 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Verificación de reconstrucción atómica</title><style>body{max-width:1000px;margin:40px auto;padding:0 24px;font:16px/1.6 system-ui;color:#172033}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.5 monospace;background:#f3f5f8;padding:20px}li{margin:8px 0}</style><h1>Reconstrucción dentro de una transacción existente</h1><ul><li>reconstruirCacheExistencias(tx) usa el mismo ejecutor para bloqueos y reconstrucción; no abre otra transacción. Sin parámetro conserva una única transacción propia.</li><li>SQL de reconstrucción idéntico al anterior, comprobado ignorando solo espacios.</li><li>24 pruebas aprobadas, cero fallidas y una prueba previamente omitida. Además, la rama de inyección de fallo de bloqueo real no se ejercitó porque el seed no tiene pares de inventario.</li><li>Prueba PostgreSQL: borrado de filas de permisos del seed, reconstrucción y fallo intencional; rollback exacto de las filas. Sin fixtures adicionales y con limpieza de la base local desechable.</li><li>Typecheck completo aprobado; API compilada y reiniciada correctamente. No se ejecutó la purga ni se crearon mínimos. Defaults 99/499 anotados en replit.md como pendiente separado, sin modificarlos.</li></ul><h2>Comandos de reproducción</h2><pre>pnpm run typecheck
+pnpm --filter @workspace/api-server exec tsx src/scripts/reconstruir-cache-local-runner.ts
+NODE_ENV=test pnpm --filter @workspace/api-server exec tsx --test src/lib/inventario-reconstruir-cache.unit.test.ts src/lib/inventory-status-semantics.test.ts src/lib/stock-minimos-engine.test.ts</pre><h2>Detalle técnico y límites de cobertura</h2><pre># `reconstruirCacheExistencias` regression report
+
+## Result
+
+- Unit coverage: **5 passed, 0 failed, 0 skipped**.
+- Canonical-seed PostgreSQL regression: **1 passed, 0 failed**.
+- API-server TypeScript check: **passed**.
+- No runner allowlist or database-policy files were changed.
+
+## PostgreSQL scope and guards
+
+The regression used the existing `DisposablePostgresRunner`, a fresh local
+cluster, the canonical schema/seed, and the runner's identity checks. The
+cluster was cleaned up after the test. No application, development, production,
+backup, user, session, product, or inventory fixture was inserted or modified.
+The application database was used only for the runner's existing read-only
+identity isolation check.
+
+Inside one real `db.transaction`, the test:
+
+1. Snapshotted all seeded `permisos_rol` rows from a separate connection.
+2. Deleted those existing rows and asserted that the affected row count was
+   greater than zero.
+3. Called the real `reconstruirCacheExistencias(tx)`.
+4. Threw an intentional sentinel to force rollback.
+5. Used a newly acquired connection to assert that every permission row was
+   restored exactly.
+
+The real PostgreSQL rebuild-failure injection replaced only the selected
+function SQL execution with `SELECT 1 / 0` on the real caller transaction. The
+database error propagated through Drizzle and the transaction rejected. The
+canonical seed contains no inventory pairs, so lock-failure injection was
+reported as skipped rather than represented as no-op lock coverage.
+
+## Related explicit test paths
+
+- `inventory-status-semantics.test.ts`: **6 passed**.
+- `stock-minimos-engine.test.ts`: **12 passed, 1 existing skipped**. The
+  skipped test is the pre-existing “mocked DB (blocked: no injectable
+  executor; never run real DB rebuild)” test; the new dedicated unit test
+  supplies executable transaction coverage.</pre></html>
