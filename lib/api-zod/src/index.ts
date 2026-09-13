@@ -426,6 +426,7 @@ export * from "./generated/types/listViajesEligibleDocumentsParams";
 export * from "./generated/types/listViajesParams";
 export * from "./generated/types/listarHistorialEtiquetas200";
 export * from "./generated/types/listarHistorialEtiquetasParams";
+export * from "./generated/types/listarRevisionesEtiquetaRollo200";
 export * from "./generated/types/listarTicketsCajaParams";
 export * from "./generated/types/listarTicketsParams";
 export * from "./generated/types/listarTicketsPendientesParams";
@@ -574,6 +575,7 @@ export * from "./generated/types/reportesCatalogosUsersItem";
 export * from "./generated/types/resumenPrecioModo";
 export * from "./generated/types/reversoSalidaExtraordinariaInput";
 export * from "./generated/types/revertirMovimientoInput";
+export * from "./generated/types/revisionEtiqueta";
 export * from "./generated/types/role";
 export * from "./generated/types/rolloBloqueadoDetalle";
 export * from "./generated/types/rolloBloqueadoError";
@@ -709,6 +711,7 @@ export type { ListCajaTiendaVentasParams as ListCajaTiendaVentasClientParams } f
 export type { ListComprasProveedorParams as ListComprasProveedorQueryParams } from "./generated/types/listComprasProveedorParams";
 export type { ListProveedorPagosParams as ListProveedorPagosQueryParams } from "./generated/types/listProveedorPagosParams";
 export type { ObtenerDocumentoImpresionTicketParams as ObtenerDocumentoImpresionTicketClientParams } from "./generated/types/obtenerDocumentoImpresionTicketParams";
+export type { RevisarEtiquetaRolloBody as RevisarEtiquetaRolloBodyType } from "./generated/types/revisarEtiquetaRolloBody";
 export type { UpdateStockMinimoParams as UpdateStockMinimoQueryParams } from "./generated/types/updateStockMinimoParams";
 
 export * from "./salida-estado-presentation";

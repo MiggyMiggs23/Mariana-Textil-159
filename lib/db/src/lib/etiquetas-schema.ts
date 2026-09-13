@@ -63,6 +63,57 @@ export async function ensureEtiquetasSchema(pool: Pool): Promise<void> {
         ALTER COLUMN solicitante_usuario_snapshot SET NOT NULL,
         ALTER COLUMN sitio_nombre_snapshot SET NOT NULL;
 
+      -- A review is a separate append-only control event.  It never marks a
+      -- reprint row as mutable or deletes/replaces audit evidence.
+      CREATE TABLE IF NOT EXISTS revisiones_etiqueta (
+        id serial PRIMARY KEY,
+        rollo_id integer NOT NULL REFERENCES rollos(id),
+        reimpresion_id integer NOT NULL REFERENCES reimpresiones_etiqueta(id),
+        usuario_id integer NOT NULL REFERENCES usuarios(id),
+        revisor_nombre_snapshot text NOT NULL,
+        revisor_usuario_snapshot text NOT NULL,
+        created_at timestamptz NOT NULL DEFAULT now()
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS revisiones_etiqueta_rollo_reimpresion_uidx
+        ON revisiones_etiqueta (rollo_id, reimpresion_id);
+      CREATE INDEX IF NOT EXISTS revisiones_etiqueta_rollo_idx
+        ON revisiones_etiqueta (rollo_id);
+      CREATE INDEX IF NOT EXISTS revisiones_etiqueta_created_at_idx
+        ON revisiones_etiqueta (created_at);
+      CREATE INDEX IF NOT EXISTS revisiones_etiqueta_usuario_idx
+        ON revisiones_etiqueta (usuario_id);
+
+      CREATE OR REPLACE FUNCTION validar_revision_etiqueta_reimpresion()
+      RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1
+          FROM reimpresiones_etiqueta re
+          WHERE re.id = NEW.reimpresion_id
+            AND re.rollo_id = NEW.rollo_id
+        ) THEN
+          RAISE EXCEPTION 'La revisión no corresponde a la última reimpresión del rollo';
+        END IF;
+        RETURN NEW;
+      END;
+      $$;
+      DROP TRIGGER IF EXISTS revisiones_etiqueta_reimpresion_fk_check
+        ON revisiones_etiqueta;
+      CREATE TRIGGER revisiones_etiqueta_reimpresion_fk_check
+        BEFORE INSERT OR UPDATE ON revisiones_etiqueta
+        FOR EACH ROW EXECUTE FUNCTION validar_revision_etiqueta_reimpresion();
+
+      CREATE OR REPLACE FUNCTION bloquear_mutacion_revision_etiqueta()
+      RETURNS trigger LANGUAGE plpgsql AS $$
+      BEGIN
+        RAISE EXCEPTION 'revisiones_etiqueta es un historial append-only';
+      END;
+      $$;
+      DROP TRIGGER IF EXISTS revisiones_etiqueta_inmutable ON revisiones_etiqueta;
+      CREATE TRIGGER revisiones_etiqueta_inmutable
+        BEFORE UPDATE OR DELETE ON revisiones_etiqueta
+        FOR EACH ROW EXECUTE FUNCTION bloquear_mutacion_revision_etiqueta();
+
       CREATE OR REPLACE FUNCTION bloquear_mutacion_reimpresion_etiqueta()
       RETURNS trigger LANGUAGE plpgsql AS $$
       BEGIN

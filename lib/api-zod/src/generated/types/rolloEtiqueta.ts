@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { EstadoRollo } from './estadoRollo';
+import type { RevisionEtiqueta } from './revisionEtiqueta';
 import type { RolloEtiquetaUnidad } from './rolloEtiquetaUnidad';
 
 export interface RolloEtiqueta {
@@ -28,6 +29,10 @@ export interface RolloEtiqueta {
   folioEntrada?: number | null;
   reimpresionesCount: number;
   /** @nullable */
-  ultimaReimpresion?: Date | null;
+  ultimaReimpresionId: number | null;
+  /** @nullable */
+  ultimaReimpresion: Date | null;
   alertaReimpresiones: boolean;
+  revisionPendiente: boolean;
+  revisiones: RevisionEtiqueta[];
 }

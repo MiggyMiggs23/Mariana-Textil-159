@@ -23,6 +23,13 @@ const searchQuery = z.object({
   fechaDesde: dateText,
   fechaHasta: dateText,
   folio: z.coerce.number().int().positive().optional(),
+  page: z.coerce.number().int().min(1).max(100_000).default(1),
+  pageSize: z.coerce.number().int().min(1).max(50).default(50),
+  /**
+   * The normal search remains backwards compatible.  The labels page opts
+   * into this predicate for its default pending-control view.
+   */
+  pendientesRevision: z.enum(["true", "false"]).transform((value) => value === "true").default(false),
 });
 
 const historyQuery = z.object({
@@ -43,6 +50,11 @@ const reprintBody = z.object({
   adminPassword: z.string().min(1).optional(),
 }).strict();
 
+const reviewBody = z.object({
+  /** Exact immutable reprint row covered by this review. */
+  ultimaReimpresionId: z.number().int().positive(),
+}).strict();
+
 type DbRow = Record<string, unknown>;
 
 function scopedSite(auth: NonNullable<Express.Request["auth"]>, requested?: number) {
@@ -60,6 +72,89 @@ function dateConditions(q: { fechaDesde?: string; fechaHasta?: string }, column:
   if (q.fechaDesde) conditions.push(sql`${column} >= ${`${q.fechaDesde}T00:00:00-06:00`}::timestamptz`);
   if (q.fechaHasta) conditions.push(sql`${column} < (${`${q.fechaHasta}T00:00:00-06:00`}::timestamptz + interval '1 day')`);
   return conditions;
+}
+
+/**
+ * One predicate is shared by the page list and the navigation badge.  A rollo
+ * stays pending once it has reached three reprints until an ADMIN review
+ * covers the exact latest reprint row.  A later reprint gets a new watermark
+ * and therefore makes the same rollo pending again.
+ */
+function pendingReviewPredicate() {
+  const latestReprint = sql`
+    (
+      SELECT latest.id
+      FROM reimpresiones_etiqueta latest
+      WHERE latest.rollo_id = r.id
+      ORDER BY latest.id DESC
+      LIMIT 1
+    )
+  `;
+  return sql`(
+    (
+      SELECT COUNT(*)
+      FROM reimpresiones_etiqueta pending_count
+      WHERE pending_count.rollo_id = r.id
+    ) >= 3
+    AND NOT EXISTS (
+      SELECT 1
+      FROM revisiones_etiqueta pending_review
+      WHERE pending_review.rollo_id = r.id
+        AND pending_review.reimpresion_id = ${latestReprint}
+    )
+  )`;
+}
+
+type ReviewHistoryItem = {
+  id: number;
+  rolloId: number;
+  reimpresionId: number;
+  revisadoPorId: number;
+  revisadoPor: string;
+  revisadoPorUsuario: string;
+  revisadoEn: string;
+};
+
+function parseReviewHistory(value: unknown): ReviewHistoryItem[] {
+  if (!Array.isArray(value)) return [];
+  return value.map((item) => {
+    const row = item as Record<string, unknown>;
+    return {
+      id: Number(row.id),
+      rolloId: Number(row.rolloId ?? row.rollo_id),
+      reimpresionId: Number(row.reimpresionId ?? row.reimpresion_id),
+      revisadoPorId: Number(row.revisadoPorId ?? row.revisado_por_id),
+      revisadoPor: String(row.revisadoPor ?? row.revisor_nombre_snapshot),
+      revisadoPorUsuario: String(
+        row.revisadoPorUsuario ?? row.revisor_usuario_snapshot,
+      ),
+      revisadoEn: new Date(
+        String(row.revisadoEn ?? row.created_at),
+      ).toISOString(),
+    };
+  });
+}
+
+function reviewHistoryJsonSql() {
+  return sql`COALESCE(
+    (
+      SELECT json_agg(
+        json_build_object(
+          'id', revision.id,
+          'rolloId', revision.rollo_id,
+          'reimpresionId', revision.reimpresion_id,
+          'revisadoPorId', revision.usuario_id,
+          'revisadoPor', revision.revisor_nombre_snapshot,
+          'revisadoPorUsuario', revision.revisor_usuario_snapshot,
+          'revisadoEn', revision.created_at
+        )
+        ORDER BY revision.created_at DESC, revision.id DESC
+      )
+      FROM revisiones_etiqueta revision
+      WHERE revision.rollo_id = r.id
+    ),
+    '[]'::json
+  )`;
 }
 
 function label(row: DbRow, reprintDate: Date) {
@@ -96,6 +191,7 @@ router.get(
       if (q.productoId) conditions.push(sql`r.producto_id = ${q.productoId}`);
       if (q.folio) conditions.push(sql`e.folio = ${q.folio}`);
       conditions.push(...dateConditions(q, sql.raw("r.created_at")));
+      if (q.pendientesRevision) conditions.push(pendingReviewPredicate());
       if (q.q) {
         const term = q.q.trim();
         const codigo = interpretarCodigoEscaneado(term);
@@ -114,7 +210,11 @@ router.get(
         SELECT r.id, r.serie, r.producto_id, p.sku, p.tela, p.color, p.unidad, r.created_at,
           r.cantidad_actual, r.ubicacion_id AS sitio_id, u.nombre AS sitio,
           r.estado, r.created_at, e.id AS entrada_id, e.folio,
-          COUNT(re.id)::int AS reimpresiones_count, MAX(re.created_at) AS ultima_reimpresion,
+           COUNT(re.id)::int AS reimpresiones_count,
+           (ARRAY_AGG(re.id ORDER BY re.id DESC))[1] AS ultima_reimpresion_id,
+           MAX(re.created_at) AS ultima_reimpresion,
+           ${reviewHistoryJsonSql()} AS revisiones,
+           ${pendingReviewPredicate()} AS revision_pendiente,
           COUNT(*) OVER()::int AS total
         FROM rollos r
         JOIN productos p ON p.id = r.producto_id
@@ -124,7 +224,9 @@ router.get(
         ${where}
         GROUP BY r.id, p.id, u.id, e.id
         ORDER BY r.created_at DESC, r.id DESC
-        LIMIT 50
+           -- LIMIT 50 is the backwards-compatible default; callers may page
+           LIMIT ${q.pageSize}
+           OFFSET ${(q.page - 1) * q.pageSize}
       `);
       res.json({
         items: (result.rows as DbRow[]).map((row) => ({
@@ -136,10 +238,19 @@ router.get(
           folioEntrada: row.folio == null ? null : Number(row.folio),
           createdAt: new Date(String(row.created_at)).toISOString(),
           reimpresionesCount: Number(row.reimpresiones_count),
+           ultimaReimpresionId: row.ultima_reimpresion_id == null
+             ? null
+             : Number(row.ultima_reimpresion_id),
           ultimaReimpresion: row.ultima_reimpresion == null ? null : new Date(String(row.ultima_reimpresion)).toISOString(),
           alertaReimpresiones: Number(row.reimpresiones_count) >= 3,
+           revisionPendiente: row.revision_pendiente === true ||
+             row.revision_pendiente === "t" ||
+             row.revision_pendiente === 1,
+           revisiones: parseReviewHistory(row.revisiones),
         })),
-        limit: 50,
+        limit: q.pageSize,
+        page: q.page,
+        pageSize: q.pageSize,
         total: Number((result.rows[0] as DbRow | undefined)?.total ?? 0),
       });
     } catch (error) {
@@ -162,7 +273,11 @@ router.get(
       const result = await db.execute(sql`
         SELECT r.id, r.serie, r.producto_id, p.sku, p.tela, p.color, p.unidad,
           r.cantidad_actual, r.created_at, r.ubicacion_id AS sitio_id, u.nombre AS sitio, r.estado,
-          COUNT(re.id)::int AS reimpresiones_count, MAX(re.created_at) AS ultima_reimpresion
+           COUNT(re.id)::int AS reimpresiones_count,
+           (ARRAY_AGG(re.id ORDER BY re.id DESC))[1] AS ultima_reimpresion_id,
+           MAX(re.created_at) AS ultima_reimpresion,
+           ${reviewHistoryJsonSql()} AS revisiones,
+           ${pendingReviewPredicate()} AS revision_pendiente
         FROM rollos r JOIN productos p ON p.id=r.producto_id
         JOIN ubicaciones u ON u.id=r.ubicacion_id
         LEFT JOIN reimpresiones_etiqueta re ON re.rollo_id=r.id
@@ -184,10 +299,259 @@ router.get(
         sitioId: Number(row.sitio_id), sitio: row.sitio, estado: row.estado,
         createdAt: new Date(String(row.created_at)).toISOString(),
         reimpresionesCount: Number(row.reimpresiones_count),
+         ultimaReimpresionId: row.ultima_reimpresion_id == null
+           ? null
+           : Number(row.ultima_reimpresion_id),
         ultimaReimpresion: row.ultima_reimpresion == null ? null : new Date(String(row.ultima_reimpresion)).toISOString(),
         alertaReimpresiones: Number(row.reimpresiones_count) >= 3,
+         revisionPendiente: row.revision_pendiente === true ||
+           row.revision_pendiente === "t" ||
+           row.revision_pendiente === 1,
+         revisiones: parseReviewHistory(row.revisiones),
       });
     } catch (error) { next(error); }
+  },
+);
+
+/**
+ * Review one pending roll.  The row lock deliberately conflicts with the
+ * reprint endpoint's FOR SHARE lock.  Whichever transaction wins establishes
+ * a stable watermark; the losing request re-reads the latest reprint and
+ * returns 409 instead of acknowledging a stale screen.
+ */
+router.post(
+  "/etiquetas/rollos/:id/revisar",
+  requireSession,
+  requierePermiso("etiquetas", "editar"),
+  async (req, res, next) => {
+    try {
+      const rolloId = id.parse(req.params.id);
+      const body = reviewBody.parse(req.body);
+      const auth = req.auth!;
+      if (auth.user.rol !== "ADMIN") {
+        res.status(403).json({ error: "Marcar etiquetas como revisadas requiere rol ADMIN." });
+        return;
+      }
+      const site = scopedSite(auth);
+      const result = await db.transaction(async (tx) => {
+        const selected = await tx.execute(sql`
+          SELECT r.id, r.serie, r.ubicacion_id
+          FROM rollos r
+          WHERE r.id=${rolloId}
+            ${site ? sql`AND r.ubicacion_id=${site}` : sql``}
+          FOR UPDATE OF r
+        `);
+        const row = selected.rows[0] as DbRow | undefined;
+        if (!row) throw new Error("ROLLO_NOT_FOUND");
+
+        // This is intentionally a second statement.  A SELECT ... FOR UPDATE
+        // can wait for a concurrent reprint's FOR SHARE lock; its original
+        // statement snapshot would otherwise be too old to see that insert.
+        const watermark = await tx.execute(sql`
+          SELECT
+            (
+              SELECT latest.id
+              FROM reimpresiones_etiqueta latest
+              WHERE latest.rollo_id=${rolloId}
+              ORDER BY latest.id DESC
+              LIMIT 1
+            ) AS ultima_reimpresion_id,
+            (
+              SELECT COUNT(*)::int
+              FROM reimpresiones_etiqueta count_reprints
+              WHERE count_reprints.rollo_id=${rolloId}
+            ) AS reimpresiones_count
+        `);
+        const watermarkRow = watermark.rows[0] as DbRow | undefined;
+        const latestReprintId = watermarkRow?.ultima_reimpresion_id == null
+          ? null
+          : Number(watermarkRow.ultima_reimpresion_id);
+        if (
+          latestReprintId == null ||
+          latestReprintId !== body.ultimaReimpresionId
+        ) {
+          throw new Error("REPRINT_WATERMARK_MISMATCH");
+        }
+        if (Number(watermarkRow?.reimpresiones_count ?? 0) < 3) {
+          throw new Error("REVIEW_NOT_PENDING");
+        }
+
+        const existing = await tx.execute(sql`
+          SELECT id, rollo_id, reimpresion_id, usuario_id,
+            revisor_nombre_snapshot, revisor_usuario_snapshot, created_at
+          FROM revisiones_etiqueta
+          WHERE rollo_id=${rolloId}
+            AND reimpresion_id=${body.ultimaReimpresionId}
+          ORDER BY id DESC
+          LIMIT 1
+        `);
+        const existingRow = existing.rows[0] as DbRow | undefined;
+        if (existingRow) {
+          return {
+            status: 200 as const,
+            review: {
+              id: Number(existingRow.id),
+              rolloId: Number(existingRow.rollo_id),
+              reimpresionId: Number(existingRow.reimpresion_id),
+              revisadoPorId: Number(existingRow.usuario_id),
+              revisadoPor: String(existingRow.revisor_nombre_snapshot),
+              revisadoPorUsuario: String(existingRow.revisor_usuario_snapshot),
+              revisadoEn: new Date(String(existingRow.created_at)).toISOString(),
+              idempotente: true,
+            },
+          };
+        }
+
+        const now = new Date();
+        const inserted = await tx.execute(sql`
+          INSERT INTO revisiones_etiqueta
+            (rollo_id, reimpresion_id, usuario_id,
+             revisor_nombre_snapshot, revisor_usuario_snapshot, created_at)
+          VALUES (
+            ${rolloId}, ${body.ultimaReimpresionId}, ${auth.user.id},
+            ${auth.user.nombre}, ${auth.user.usuario}, ${now}
+          )
+          ON CONFLICT (rollo_id, reimpresion_id) DO NOTHING
+          RETURNING id, rollo_id, reimpresion_id, usuario_id,
+            revisor_nombre_snapshot, revisor_usuario_snapshot, created_at
+        `);
+        const insertedRow = inserted.rows[0] as DbRow | undefined;
+        if (!insertedRow) {
+          // This is only reachable if another transaction inserted the same
+          // watermark between the read and insert.  Return its durable event,
+          // never fabricate a new actor/date.
+          const retry = await tx.execute(sql`
+            SELECT id, rollo_id, reimpresion_id, usuario_id,
+              revisor_nombre_snapshot, revisor_usuario_snapshot, created_at
+            FROM revisiones_etiqueta
+            WHERE rollo_id=${rolloId}
+              AND reimpresion_id=${body.ultimaReimpresionId}
+            ORDER BY id DESC
+            LIMIT 1
+          `);
+          const retryRow = retry.rows[0] as DbRow | undefined;
+          if (!retryRow) throw new Error("REVIEW_INSERT_FAILED");
+          return {
+            status: 200 as const,
+            review: {
+              id: Number(retryRow.id),
+              rolloId: Number(retryRow.rollo_id),
+              reimpresionId: Number(retryRow.reimpresion_id),
+              revisadoPorId: Number(retryRow.usuario_id),
+              revisadoPor: String(retryRow.revisor_nombre_snapshot),
+              revisadoPorUsuario: String(retryRow.revisor_usuario_snapshot),
+              revisadoEn: new Date(String(retryRow.created_at)).toISOString(),
+              idempotente: true,
+            },
+          };
+        }
+
+        await tx.execute(sql`
+          INSERT INTO auditoria
+            (usuario_id, accion, entidad, entidad_id, sitio_id, datos_despues, ip)
+          VALUES (
+            ${auth.user.id}, 'REVISAR_ETIQUETA', 'revisiones_etiqueta',
+            ${String(insertedRow.id)}, ${Number(row.ubicacion_id)},
+            ${JSON.stringify({
+              rolloId,
+              reimpresionId: body.ultimaReimpresionId,
+            })}::jsonb,
+            ${getRequestIp(req)}
+          )
+        `);
+
+        return {
+          status: 201 as const,
+          review: {
+            id: Number(insertedRow.id),
+            rolloId: Number(insertedRow.rollo_id),
+            reimpresionId: Number(insertedRow.reimpresion_id),
+            revisadoPorId: Number(insertedRow.usuario_id),
+            revisadoPor: String(insertedRow.revisor_nombre_snapshot),
+            revisadoPorUsuario: String(insertedRow.revisor_usuario_snapshot),
+            revisadoEn: new Date(String(insertedRow.created_at)).toISOString(),
+            idempotente: false,
+          },
+        };
+      });
+      res.status(result.status).json(result.review);
+    } catch (error) {
+      if (error instanceof Error && error.message === "ROLLO_NOT_FOUND") {
+        res.status(404).json({ error: "Rollo no encontrado." });
+        return;
+      }
+      if (error instanceof Error && error.message === "REPRINT_WATERMARK_MISMATCH") {
+        res.status(409).json({
+          error: "El rollo tiene una reimpresión nueva; actualiza la vista antes de marcarlo.",
+          code: "REPRINT_WATERMARK_MISMATCH",
+        });
+        return;
+      }
+      if (error instanceof Error && error.message === "REVIEW_NOT_PENDING") {
+        res.status(409).json({
+          error: "El rollo todavía no tiene tres reimpresiones pendientes de revisión.",
+          code: "REVIEW_NOT_PENDING",
+        });
+        return;
+      }
+      if (error instanceof Error && error.message === "SCOPE_WITHOUT_SITE") {
+        res.status(403).json({ error: "No tienes un sitio asignado." });
+        return;
+      }
+      next(error);
+    }
+  },
+);
+
+router.get(
+  "/etiquetas/rollos/:id/revisiones",
+  requireSession,
+  requierePermiso("etiquetas", "ver"),
+  async (req, res, next) => {
+    try {
+      const rolloId = id.parse(req.params.id);
+      const site = scopedSite(req.auth!);
+      const result = await db.execute(sql`
+        SELECT revision.id, revision.rollo_id, revision.reimpresion_id,
+          revision.usuario_id, revision.revisor_nombre_snapshot,
+          revision.revisor_usuario_snapshot, revision.created_at
+        FROM revisiones_etiqueta revision
+        JOIN rollos r ON r.id=revision.rollo_id
+        WHERE revision.rollo_id=${rolloId}
+          ${site ? sql`AND r.ubicacion_id=${site}` : sql``}
+        ORDER BY revision.created_at DESC, revision.id DESC
+      `);
+      if (result.rows.length === 0) {
+        const rollo = await db.execute(sql`
+          SELECT r.id
+          FROM rollos r
+          WHERE r.id=${rolloId}
+            ${site ? sql`AND r.ubicacion_id=${site}` : sql``}
+          LIMIT 1
+        `);
+        if (rollo.rows.length === 0) {
+          res.status(404).json({ error: "Rollo no encontrado." });
+          return;
+        }
+      }
+      res.json({
+        items: (result.rows as DbRow[]).map((row) => ({
+          id: Number(row.id),
+          rolloId: Number(row.rollo_id),
+          reimpresionId: Number(row.reimpresion_id),
+          revisadoPorId: Number(row.usuario_id),
+          revisadoPor: String(row.revisor_nombre_snapshot),
+          revisadoPorUsuario: String(row.revisor_usuario_snapshot),
+          revisadoEn: new Date(String(row.created_at)).toISOString(),
+        })),
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message === "SCOPE_WITHOUT_SITE") {
+        res.status(403).json({ error: "No tienes un sitio asignado." });
+        return;
+      }
+      next(error);
+    }
   },
 );
 
@@ -371,9 +735,15 @@ router.get("/etiquetas/alertas/count", requireSession, async (req, res, next) =>
   try {
     if (req.auth!.user.rol !== "ADMIN") { res.status(403).json({ error: "Las alertas requieren rol ADMIN." }); return; }
     const result = await db.execute(sql`
-      SELECT COUNT(*)::int AS count FROM (
-        SELECT rollo_id FROM reimpresiones_etiqueta GROUP BY rollo_id HAVING COUNT(*) >= 3
-      ) repeated
+      SELECT COUNT(*)::int AS count
+      FROM (
+        SELECT r.id
+        FROM rollos r
+        LEFT JOIN reimpresiones_etiqueta re ON re.rollo_id = r.id
+        GROUP BY r.id
+        HAVING COUNT(*) >= 3
+          AND ${pendingReviewPredicate()}
+      ) pending
     `);
     res.json({ count: Number((result.rows[0] as DbRow | undefined)?.count ?? 0), threshold: 3 });
   } catch (error) { next(error); }

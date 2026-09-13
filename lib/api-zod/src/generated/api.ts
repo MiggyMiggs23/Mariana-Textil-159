@@ -9955,9 +9955,15 @@ export const ExportAdminCuentasDestinoPdfResponse = zod.unknown()
 
 
 /**
- * @summary Busca hasta 50 rollos respetando el alcance de sitio
+ * @summary Busca rollos paginados respetando el alcance de sitio (50 por página)
  */
 export const buscarRollosEtiquetasQueryQMax = 150;
+
+export const buscarRollosEtiquetasQueryPendientesRevisionDefault = false;
+export const buscarRollosEtiquetasQueryPageDefault = 1;
+
+export const buscarRollosEtiquetasQueryPageSizeDefault = 50;
+export const buscarRollosEtiquetasQueryPageSizeMax = 50;
 
 
 
@@ -9968,10 +9974,18 @@ export const BuscarRollosEtiquetasQueryParams = zod.object({
   "productoId": zod.coerce.number().optional(),
   "fechaDesde": zod.date().optional(),
   "fechaHasta": zod.date().optional(),
-  "folio": zod.coerce.number().optional()
+  "folio": zod.coerce.number().optional(),
+  "pendientesRevision": zod.coerce.boolean().default(buscarRollosEtiquetasQueryPendientesRevisionDefault).describe('Solo rollos con tres o más reimpresiones cuyo último evento aún no cubre una revisión ADMIN'),
+  "page": zod.coerce.number().min(1).default(buscarRollosEtiquetasQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(buscarRollosEtiquetasQueryPageSizeMax).default(buscarRollosEtiquetasQueryPageSizeDefault)
 })
 
 export const buscarRollosEtiquetasResponseItemsMax = 50;
+
+export const buscarRollosEtiquetasResponseLimitMax = 50;
+
+
+export const buscarRollosEtiquetasResponsePageSizeMax = 50;
 
 
 
@@ -9993,10 +10007,24 @@ export const BuscarRollosEtiquetasResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folioEntrada": zod.number().nullish(),
   "reimpresionesCount": zod.number(),
-  "ultimaReimpresion": zod.coerce.date().nullish(),
-  "alertaReimpresiones": zod.boolean()
+  "ultimaReimpresionId": zod.number().nullable(),
+  "ultimaReimpresion": zod.coerce.date().nullable(),
+  "alertaReimpresiones": zod.boolean(),
+  "revisionPendiente": zod.boolean(),
+  "revisiones": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "reimpresionId": zod.number(),
+  "revisadoPorId": zod.number(),
+  "revisadoPor": zod.string(),
+  "revisadoPorUsuario": zod.string(),
+  "revisadoEn": zod.coerce.date(),
+  "idempotente": zod.boolean().optional()
+}))
 })).max(buscarRollosEtiquetasResponseItemsMax),
-  "limit": zod.literal(50),
+  "limit": zod.number().min(1).max(buscarRollosEtiquetasResponseLimitMax),
+  "page": zod.number().min(1),
+  "pageSize": zod.number().min(1).max(buscarRollosEtiquetasResponsePageSizeMax),
   "total": zod.number()
 })
 
@@ -10025,8 +10053,67 @@ export const ObtenerRolloEtiquetaResponse = zod.object({
   "entradaId": zod.number().nullish(),
   "folioEntrada": zod.number().nullish(),
   "reimpresionesCount": zod.number(),
-  "ultimaReimpresion": zod.coerce.date().nullish(),
-  "alertaReimpresiones": zod.boolean()
+  "ultimaReimpresionId": zod.number().nullable(),
+  "ultimaReimpresion": zod.coerce.date().nullable(),
+  "alertaReimpresiones": zod.boolean(),
+  "revisionPendiente": zod.boolean(),
+  "revisiones": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "reimpresionId": zod.number(),
+  "revisadoPorId": zod.number(),
+  "revisadoPor": zod.string(),
+  "revisadoPorUsuario": zod.string(),
+  "revisadoEn": zod.coerce.date(),
+  "idempotente": zod.boolean().optional()
+}))
+})
+
+
+/**
+ * @summary Marca un rollo como revisado por ADMIN contra un watermark exacto
+ */
+export const RevisarEtiquetaRolloParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+
+
+export const RevisarEtiquetaRolloBody = zod.object({
+  "ultimaReimpresionId": zod.number().min(1)
+})
+
+export const RevisarEtiquetaRolloResponse = zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "reimpresionId": zod.number(),
+  "revisadoPorId": zod.number(),
+  "revisadoPor": zod.string(),
+  "revisadoPorUsuario": zod.string(),
+  "revisadoEn": zod.coerce.date(),
+  "idempotente": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Historial append-only de revisiones del rollo
+ */
+export const ListarRevisionesEtiquetaRolloParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const ListarRevisionesEtiquetaRolloResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "reimpresionId": zod.number(),
+  "revisadoPorId": zod.number(),
+  "revisadoPor": zod.string(),
+  "revisadoPorUsuario": zod.string(),
+  "revisadoEn": zod.coerce.date(),
+  "idempotente": zod.boolean().optional()
+}))
 })
 
 

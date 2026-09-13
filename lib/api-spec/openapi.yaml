@@ -5055,7 +5055,7 @@ paths:
     get:
       operationId: buscarRollosEtiquetas
       tags: [etiquetas]
-      summary: Busca hasta 50 rollos respetando el alcance de sitio
+      summary: Busca rollos paginados respetando el alcance de sitio (50 por página)
       parameters:
         - { in: query, name: q, schema: { type: string, maxLength: 150 } }
         - { in: query, name: sitioId, schema: { type: number } }
@@ -5076,6 +5076,22 @@ paths:
             schema: { type: string, format: date },
           }
         - { in: query, name: folio, schema: { type: number } }
+        - {
+            in: query,
+            name: pendientesRevision,
+            schema: { type: boolean, default: false },
+            description: "Solo rollos con tres o más reimpresiones cuyo último evento aún no cubre una revisión ADMIN",
+          }
+        - {
+            in: query,
+            name: page,
+            schema: { type: number, minimum: 1, default: 1 },
+          }
+        - {
+            in: query,
+            name: pageSize,
+            schema: { type: number, minimum: 1, maximum: 50, default: 50 },
+          }
       responses:
         "200":
           description: Resultados de búsqueda
@@ -5083,7 +5099,7 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [items, limit, total]
+                required: [items, limit, page, pageSize, total]
                 properties:
                   items:
                     {
@@ -5091,7 +5107,9 @@ paths:
                       maxItems: 50,
                       items: { $ref: "#/components/schemas/RolloEtiqueta" },
                     }
-                  limit: { type: number, const: 50 }
+                  limit: { type: number, minimum: 1, maximum: 50 }
+                  page: { type: number, minimum: 1 }
+                  pageSize: { type: number, minimum: 1, maximum: 50 }
                   total: { type: number }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -5110,6 +5128,65 @@ paths:
               application/json:
                 { schema: { $ref: "#/components/schemas/RolloEtiqueta" } },
             }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /etiquetas/rollos/{id}/revisar:
+    post:
+      operationId: revisarEtiquetaRollo
+      tags: [etiquetas]
+      summary: Marca un rollo como revisado por ADMIN contra un watermark exacto
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [ultimaReimpresionId]
+              properties:
+                ultimaReimpresionId: { type: number, minimum: 1 }
+      responses:
+        "201":
+          description: Revisión append-only creada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RevisionEtiqueta" }
+        "200":
+          description: El mismo watermark ya estaba revisado; respuesta idempotente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RevisionEtiqueta" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409":
+          description: El rollo cambió o ya no está pendiente con ese watermark
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+  /etiquetas/rollos/{id}/revisiones:
+    get:
+      operationId: listarRevisionesEtiquetaRollo
+      tags: [etiquetas]
+      summary: Historial append-only de revisiones del rollo
+      parameters:
+        - { in: path, name: id, required: true, schema: { type: number } }
+      responses:
+        "200":
+          description: Revisiones históricas
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: "#/components/schemas/RevisionEtiqueta" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
@@ -6841,7 +6918,11 @@ components:
           estado,
           createdAt,
           reimpresionesCount,
+          ultimaReimpresionId,
+          ultimaReimpresion,
           alertaReimpresiones,
+          revisionPendiente,
+          revisiones,
         ]
       properties:
         id: { type: number }
@@ -6860,8 +6941,13 @@ components:
         entradaId: { type: [number, "null"] }
         folioEntrada: { type: [number, "null"] }
         reimpresionesCount: { type: number }
+        ultimaReimpresionId: { type: [number, "null"] }
         ultimaReimpresion: { type: [string, "null"], format: date-time }
         alertaReimpresiones: { type: boolean }
+        revisionPendiente: { type: boolean }
+        revisiones:
+          type: array
+          items: { $ref: "#/components/schemas/RevisionEtiqueta" }
     EtiquetaImprimible:
       type: object
       required:
@@ -6933,6 +7019,27 @@ components:
         autorizo: { type: [string, "null"] }
         motivo: { type: string }
         createdAt: { type: string, format: date-time }
+    RevisionEtiqueta:
+      type: object
+      required:
+        [
+          id,
+          rolloId,
+          reimpresionId,
+          revisadoPorId,
+          revisadoPor,
+          revisadoPorUsuario,
+          revisadoEn,
+        ]
+      properties:
+        id: { type: number }
+        rolloId: { type: number }
+        reimpresionId: { type: number }
+        revisadoPorId: { type: number }
+        revisadoPor: { type: string }
+        revisadoPorUsuario: { type: string }
+        revisadoEn: { type: string, format: date-time }
+        idempotente: { type: boolean }
     AnalyticsMoneyTotals:
       type: object
       required:

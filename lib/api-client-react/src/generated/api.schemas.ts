@@ -816,6 +816,17 @@ export const EstadoRollo = {
   BAJA: 'BAJA',
 } as const;
 
+export interface RevisionEtiqueta {
+  id: number;
+  rolloId: number;
+  reimpresionId: number;
+  revisadoPorId: number;
+  revisadoPor: string;
+  revisadoPorUsuario: string;
+  revisadoEn: string;
+  idempotente?: boolean;
+}
+
 export interface RolloEtiqueta {
   id: number;
   serie: string;
@@ -836,8 +847,12 @@ export interface RolloEtiqueta {
   folioEntrada?: number | null;
   reimpresionesCount: number;
   /** @nullable */
-  ultimaReimpresion?: string | null;
+  ultimaReimpresionId: number | null;
+  /** @nullable */
+  ultimaReimpresion: string | null;
   alertaReimpresiones: boolean;
+  revisionPendiente: boolean;
+  revisiones: RevisionEtiqueta[];
 }
 
 export type EtiquetaImprimibleUnidad = typeof EtiquetaImprimibleUnidad[keyof typeof EtiquetaImprimibleUnidad];
@@ -7569,13 +7584,46 @@ productoId?: number;
 fechaDesde?: string;
 fechaHasta?: string;
 folio?: number;
+/**
+ * Solo rollos con tres o más reimpresiones cuyo último evento aún no cubre una revisión ADMIN
+ */
+pendientesRevision?: boolean;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 50
+ */
+pageSize?: number;
 };
 
 export type BuscarRollosEtiquetas200 = {
   /** @maxItems 50 */
   items: RolloEtiqueta[];
-  limit: 50;
+  /**
+     * @minimum 1
+     * @maximum 50
+     */
+  limit: number;
+  /** @minimum 1 */
+  page: number;
+  /**
+     * @minimum 1
+     * @maximum 50
+     */
+  pageSize: number;
   total: number;
+};
+
+export type RevisarEtiquetaRolloBody = {
+  /** @minimum 1 */
+  ultimaReimpresionId: number;
+};
+
+export type ListarRevisionesEtiquetaRollo200 = {
+  items: RevisionEtiqueta[];
 };
 
 export type CrearReimpresionEtiquetasBody = {

@@ -17,12 +17,27 @@ export type EtiquetaRollo = {
   entradaFolio?: string | number | null;
   fechaAlta: string;
   reimpresiones: number;
+  ultimaReimpresionId?: number | null;
   ultimaReimpresion?: string | null;
+  revisionPendiente: boolean;
+  revisiones: RevisionEtiqueta[];
+};
+
+export type RevisionEtiqueta = {
+  id: number;
+  rolloId: number;
+  reimpresionId: number;
+  revisadoPorId: number;
+  revisadoPor: string;
+  revisadoPorUsuario: string;
+  revisadoEn: string;
 };
 
 export type EtiquetasResultado = {
   items: EtiquetaRollo[];
   total: number;
+  page: number;
+  pageSize: number;
 };
 
 export type ReimpresionRequest = {
@@ -63,6 +78,11 @@ export type ResumenReimpresiones = {
 
 export type AlertasEtiquetas = {
   count: number;
+  threshold?: number;
+};
+
+export type RevisionEtiquetaRequest = {
+  ultimaReimpresionId: number;
 };
 
 type RawRollo = {
@@ -83,7 +103,10 @@ type RawRollo = {
   folioEntrada?: string | number | null;
   createdAt?: string;
   reimpresionesCount?: number;
+  ultimaReimpresionId?: number | null;
   ultimaReimpresion?: string | null;
+  revisionPendiente?: boolean;
+  revisiones?: RevisionEtiqueta[];
 };
 
 function normalizeRollo(row: RawRollo): EtiquetaRollo {
@@ -104,7 +127,10 @@ function normalizeRollo(row: RawRollo): EtiquetaRollo {
     entradaFolio: row.folioEntrada,
     fechaAlta: row.createdAt ?? "",
     reimpresiones: row.reimpresionesCount ?? 0,
+    ultimaReimpresionId: row.ultimaReimpresionId,
     ultimaReimpresion: row.ultimaReimpresion,
+    revisionPendiente: row.revisionPendiente ?? false,
+    revisiones: row.revisiones ?? [],
   };
 }
 
@@ -119,8 +145,30 @@ function queryString(values: Record<string, string | number | null | undefined>)
 
 export const etiquetasApi = {
   buscar: async (params: Record<string, string | number | null | undefined>) => {
-    const result = await customFetch<{ items: RawRollo[]; total?: number }>(`/api/etiquetas/rollos${queryString(params)}`);
-    return { items: result.items.map(normalizeRollo), total: result.total ?? result.items.length };
+    const result = await customFetch<{
+      items: RawRollo[];
+      total?: number;
+      page?: number;
+      pageSize?: number;
+      limit?: number;
+    }>(`/api/etiquetas/rollos${queryString(params)}`);
+    return {
+      items: result.items.map(normalizeRollo),
+      total: result.total ?? result.items.length,
+      page: result.page ?? Number(params.page ?? 1),
+      pageSize: result.pageSize ?? result.limit ?? Number(params.pageSize ?? 50),
+    };
+  },
+  pendientes: async (params: Record<string, string | number | null | undefined> = {}) => {
+    const result = await customFetch<{ items: RawRollo[]; total?: number }>(
+      `/api/etiquetas/rollos${queryString({ ...params, pendientesRevision: "true" })}`,
+    );
+    return {
+      items: result.items.map(normalizeRollo),
+      total: result.total ?? result.items.length,
+      page: Number(params.page ?? 1),
+      pageSize: Number(params.pageSize ?? 50),
+    };
   },
   obtenerRollo: async (rolloId: number) => normalizeRollo(await customFetch<RawRollo>(`/api/etiquetas/rollos/${rolloId}`)),
   reimprimir: async (body: ReimpresionRequest) => {
@@ -156,6 +204,16 @@ export const etiquetasApi = {
     const row = await customFetch<RawRollo>(`/api/etiquetas/rollos/${rolloId}`);
     return { count: row.reimpresionesCount ?? 0, ultimaReimpresion: row.ultimaReimpresion } satisfies ResumenReimpresiones;
   },
+  revisar: async (rolloId: number, body: RevisionEtiquetaRequest) =>
+    customFetch<RevisionEtiqueta>(`/api/etiquetas/rollos/${rolloId}/revisar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }),
+  revisiones: async (rolloId: number) =>
+    customFetch<{ items: RevisionEtiqueta[] }>(
+      `/api/etiquetas/rollos/${rolloId}/revisiones`,
+    ),
   alertas: () => customFetch<AlertasEtiquetas>("/api/etiquetas/alertas/count"),
   exportUrl: (params: Record<string, string | number | null | undefined>) =>
     `/api/etiquetas/historial/export.xlsx${queryString(params)}`,

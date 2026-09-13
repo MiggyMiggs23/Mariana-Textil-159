@@ -10,6 +10,17 @@ import type { RolloEtiqueta } from './rolloEtiqueta';
 export type BuscarRollosEtiquetas200 = {
   /** @maxItems 50 */
   items: RolloEtiqueta[];
-  limit: 50;
+  /**
+     * @minimum 1
+     * @maximum 50
+     */
+  limit: number;
+  /** @minimum 1 */
+  page: number;
+  /**
+     * @minimum 1
+     * @maximum 50
+     */
+  pageSize: number;
   total: number;
 };

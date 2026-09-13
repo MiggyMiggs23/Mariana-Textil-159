@@ -644,3 +644,17 @@ mtime_ms = 1789318090588
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/17553a54-12a6-41f0-8ab1-772e55e6a9fc/86471303-0262-4803-93af-6c7a6bbec650"
 storage_version_token = "1789318100744475"
 content_type = "text/html"
+
+[[outputs]]
+id = "KXdAf8PpGgnIW82WzHYJY"
+uri = "file://reports/diagnostico-etiquetas/entrada-429-sin-correccion.pdf"
+type = "pdf"
+title = "Entrada 429 — PDF diagnóstico, sin corrección"
+description = "Flujo de entrada con campos equivalentes a los leídos en development: una etiqueta y una página. No reproduce el corte informado ni acredita un arreglo."
+logical_id = "35a20a44-835c-4812-aa20-69799919d60c"
+content_hash = "sha256:1098be7b783747f413b9cf2058d32d3b6a290b51ad54b6d630f351dbe636e4d6"
+size = 330186
+mtime_ms = 1789326840813
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/35a20a44-835c-4812-aa20-69799919d60c/3f9397aa-bade-4f69-a2de-e5033d6d7be2"
+storage_version_token = "1789326856811691"
+content_type = "application/pdf"

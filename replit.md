@@ -404,6 +404,12 @@ El bloque se llama **TABULAR**; el nombre anterior era un error de captura.
 - **Reimpresión múltiple desde Inventario:** Detalle de Rollos reutiliza las casillas y los helpers de selección de Etiquetas. Seleccionar todos opera solo sobre los resultados visibles, nunca sobre el total del catálogo, con máximo 50 etiquetas por tanda y aviso si los visibles superan ese límite. Los cambios de filtros limpian la selección. Individual y múltiple comparten motivo obligatorio de al menos 10 caracteres, autorización y el mismo formato de 100 × 70 mm. Antes de imprimir se consultan los contadores actuales y se exige confirmación explícita de cada serie con tres o más reimpresiones. El servidor conserva un registro en `reimpresiones_etiqueta` y su auditoría por rollo, con el mismo solicitante y motivo; nunca se sustituye por un registro de tanda. El umbral de alerta sigue siendo tres por rollo.
 
 
+## Controles pendientes: Etiquetas y costos de Entradas
+
+- **No uniformar estos contadores como notificaciones leídas.** Abrir una pantalla o consultar un historial nunca atiende ninguno de los dos controles.
+- **Etiquetas:** control de merma por rollo con al menos tres reimpresiones. La atención es explícita, inicialmente por ADMIN, y registra quién, cuándo y hasta qué reimpresión concreta se revisó. Los históricos sin revisión comienzan pendientes. Una reimpresión posterior vuelve a señalar el rollo; varias reimpresiones aún pendientes del mismo rollo cuentan como un solo caso. Conservar íntegros los historiales de reimpresión, revisión y auditoría. Lista y contador deben compartir el mismo criterio y las revisiones concurrentes no pueden ocultar reimpresiones nuevas.
+- **Entradas pendientes de costo:** estado operativo, no revisión administrativa. Una entrada sigue pendiente mientras tenga algún rollo sin costo capturado; sale del contador al capturar los costos faltantes. No agregar un botón «revisado», ni permitir descartarla por verla o reconocerla. La revisión de Etiquetas no debe modificar este flujo.
+
 ## Permission modules (32 total)
 
 `dashboard`, `pos`, `entradas`, `salidas`, `movimientos`, `etiquetas`, `inventario`, `auditoria_inventario`, `productos`, `precios`, `ajustes`, `clientes`, `clientes_credito`, `clientes_precios`, `clientes_finanzas`, `proveedores`, `proveedores_finanzas`, `contenedores`, `ubicaciones`, `usuarios`, `permisos`, `resumen_caja`, `cortes`, `cobros_pagos`, `reportes`, `conciliacion`, `auditoria`, `camionetas`, `choferes`, `viajes`, `salidas_venta`, `equipos`

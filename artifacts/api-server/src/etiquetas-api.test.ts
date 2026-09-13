@@ -77,5 +77,13 @@ test("23 cada rollo se inserta individualmente dentro de la transacción", () =>
 test("24 límite de operación y búsqueda es 50", () => {
   assert.match(route, /\.max\(50\)/);
   assert.match(route, /LIMIT 50/);
+  assert.match(route, /pageSize: z\.coerce\.number\(\)\.int\(\)\.min\(1\)\.max\(50\)/);
   assert.match(permissions, /"etiquetas"/);
+});
+
+test("25 búsqueda de rollos valida y expone paginación", () => {
+  assert.match(route, /page: z\.coerce\.number\(\)\.int\(\)\.min\(1\)\.max\(100_000\)\.default\(1\)/);
+  assert.match(route, /OFFSET \$\{\(q\.page - 1\) \* q\.pageSize\}/);
+  assert.match(route, /page: q\.page/);
+  assert.match(route, /pageSize: q\.pageSize/);
 });

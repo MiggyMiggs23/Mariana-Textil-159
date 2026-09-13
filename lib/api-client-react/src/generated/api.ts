@@ -200,6 +200,7 @@ import type {
   ListViajesParams,
   ListarHistorialEtiquetas200,
   ListarHistorialEtiquetasParams,
+  ListarRevisionesEtiquetaRollo200,
   ListarTicketsCajaParams,
   ListarTicketsParams,
   ListarTicketsPendientesParams,
@@ -270,6 +271,8 @@ import type {
   ReportesCatalogos,
   ReversoSalidaExtraordinariaInput,
   RevertirMovimientoInput,
+  RevisarEtiquetaRolloBody,
+  RevisionEtiqueta,
   Role,
   RolloBloqueadoError,
   RolloDetail,
@@ -17350,7 +17353,7 @@ export const getBuscarRollosEtiquetasUrl = (params?: BuscarRollosEtiquetasParams
 }
 
 /**
- * @summary Busca hasta 50 rollos respetando el alcance de sitio
+ * @summary Busca rollos paginados respetando el alcance de sitio (50 por página)
  */
 export const buscarRollosEtiquetas = async (params?: BuscarRollosEtiquetasParams, options?: Parameters<typeof customFetch>[1]): Promise<BuscarRollosEtiquetas200> => {
 
@@ -17397,7 +17400,7 @@ export type BuscarRollosEtiquetasQueryError = ErrorType<UnauthorizedResponse | F
 
 
 /**
- * @summary Busca hasta 50 rollos respetando el alcance de sitio
+ * @summary Busca rollos paginados respetando el alcance de sitio (50 por página)
  */
 
 export function useBuscarRollosEtiquetas<TData = Awaited<ReturnType<typeof buscarRollosEtiquetas>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
@@ -17483,6 +17486,155 @@ export function useObtenerRolloEtiqueta<TData = Awaited<ReturnType<typeof obtene
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getObtenerRolloEtiquetaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRevisarEtiquetaRolloUrl = (id: number,) => {
+
+
+
+
+  return `/api/etiquetas/rollos/${id}/revisar`
+}
+
+/**
+ * @summary Marca un rollo como revisado por ADMIN contra un watermark exacto
+ */
+export const revisarEtiquetaRollo = async (id: number,
+    revisarEtiquetaRolloBody: RevisarEtiquetaRolloBody, options?: Parameters<typeof customFetch>[1]): Promise<RevisionEtiqueta> => {
+
+  return customFetch<RevisionEtiqueta>(getRevisarEtiquetaRolloUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(revisarEtiquetaRolloBody)
+  }
+);}
+
+
+
+
+
+export const getRevisarEtiquetaRolloMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revisarEtiquetaRollo>>, TError,{id: number;data: BodyType<RevisarEtiquetaRolloBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof revisarEtiquetaRollo>>, TError,{id: number;data: BodyType<RevisarEtiquetaRolloBody>}, TContext> => {
+
+const mutationKey = ['revisarEtiquetaRollo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof revisarEtiquetaRollo>>, {id: number;data: BodyType<RevisarEtiquetaRolloBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  revisarEtiquetaRollo(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RevisarEtiquetaRolloMutationResult = NonNullable<Awaited<ReturnType<typeof revisarEtiquetaRollo>>>
+    export type RevisarEtiquetaRolloMutationBody = BodyType<RevisarEtiquetaRolloBody>
+    export type RevisarEtiquetaRolloMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | Error>
+
+    /**
+ * @summary Marca un rollo como revisado por ADMIN contra un watermark exacto
+ */
+export const useRevisarEtiquetaRollo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | Error>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revisarEtiquetaRollo>>, TError,{id: number;data: BodyType<RevisarEtiquetaRolloBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof revisarEtiquetaRollo>>,
+        TError,
+        {id: number;data: BodyType<RevisarEtiquetaRolloBody>},
+        TContext
+      > => {
+      return useMutation(getRevisarEtiquetaRolloMutationOptions(options));
+    }
+
+export const getListarRevisionesEtiquetaRolloUrl = (id: number,) => {
+
+
+
+
+  return `/api/etiquetas/rollos/${id}/revisiones`
+}
+
+/**
+ * @summary Historial append-only de revisiones del rollo
+ */
+export const listarRevisionesEtiquetaRollo = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ListarRevisionesEtiquetaRollo200> => {
+
+  return customFetch<ListarRevisionesEtiquetaRollo200>(getListarRevisionesEtiquetaRolloUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListarRevisionesEtiquetaRolloQueryKey = (id: number,) => {
+    return [
+    `/api/etiquetas/rollos/${id}/revisiones`
+    ] as const;
+    }
+
+
+export const getListarRevisionesEtiquetaRolloQueryOptions = <TData = Awaited<ReturnType<typeof listarRevisionesEtiquetaRollo>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarRevisionesEtiquetaRollo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListarRevisionesEtiquetaRolloQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listarRevisionesEtiquetaRollo>>> = ({ signal }) => listarRevisionesEtiquetaRollo(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listarRevisionesEtiquetaRollo>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListarRevisionesEtiquetaRolloQueryResult = NonNullable<Awaited<ReturnType<typeof listarRevisionesEtiquetaRollo>>>
+export type ListarRevisionesEtiquetaRolloQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Historial append-only de revisiones del rollo
+ */
+
+export function useListarRevisionesEtiquetaRollo<TData = Awaited<ReturnType<typeof listarRevisionesEtiquetaRollo>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listarRevisionesEtiquetaRollo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListarRevisionesEtiquetaRolloQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

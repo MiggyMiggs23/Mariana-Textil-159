@@ -18,4 +18,17 @@ productoId?: number;
 fechaDesde?: Date;
 fechaHasta?: Date;
 folio?: number;
+/**
+ * Solo rollos con tres o más reimpresiones cuyo último evento aún no cubre una revisión ADMIN
+ */
+pendientesRevision?: boolean;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 50
+ */
+pageSize?: number;
 };

@@ -35,6 +35,7 @@ import {
 } from "@/lib/label-selection";
 
 const ESTADOS = ["DISPONIBLE", "VENDIDO", "MOSTRADOR", "EN_TRANSITO", "BAJA", "PROGRAMADO"];
+const ROLLOS_PAGE_SIZE = 50;
 const estadoClass: Record<string, string> = {
   DISPONIBLE: "bg-emerald-100 text-emerald-800 border-emerald-200",
   VENDIDO: "bg-slate-100 text-slate-700 border-slate-200",
@@ -62,6 +63,9 @@ export default function Etiquetas() {
   const fitReportEnabled = new URLSearchParams(window.location.search).get("fitReport") === "1";
 
   const [tab, setTab] = useState(initialTab);
+  // Controls are the first view on entry.  The search tab can still opt into
+  // the complete historical catalog without changing the server predicate.
+  const [pendingOnly, setPendingOnly] = useState(initialTab === "buscar");
   const [searchDraft, setSearchDraft] = useState("");
   const [search, setSearch] = useState("");
   const [lastScannedCode, setLastScannedCode] =
@@ -73,8 +77,10 @@ export default function Etiquetas() {
   const [fechaDesde, setFechaDesde] = useState("");
   const [fechaHasta, setFechaHasta] = useState("");
   const [folioEntrada, setFolioEntrada] = useState("");
+  const [rollosPage, setRollosPage] = useState(1);
   const [selected, setSelected] = useState<Map<number, EtiquetaRollo>>(new Map());
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [reviewingRolloId, setReviewingRolloId] = useState<number | null>(null);
 
   const [hDesde, setHDesde] = useState("");
   const [hHasta, setHHasta] = useState("");
@@ -104,14 +110,54 @@ export default function Etiquetas() {
     fechaDesde,
     fechaHasta,
     folio: folioEntrada,
+    pendientesRevision: pendingOnly ? "true" : undefined,
+    page: rollosPage,
+    pageSize: ROLLOS_PAGE_SIZE,
   };
+  const searchFilterKey = [
+    search,
+    sitioId,
+    estado,
+    productoId,
+    fechaDesde,
+    fechaHasta,
+    folioEntrada,
+    pendingOnly,
+  ].join("\u0000");
   const rollosQuery = useQuery({
     queryKey: ["etiquetas", "rollos", searchParams],
     queryFn: () => preselectedId && !search
-      ? etiquetasApi.obtenerRollo(preselectedId).then((item) => ({ items: [item], total: 1 }))
+      ? etiquetasApi.obtenerRollo(preselectedId).then((item) => ({
+        items: [item],
+        total: 1,
+        page: 1,
+        pageSize: ROLLOS_PAGE_SIZE,
+      }))
       : etiquetasApi.buscar(searchParams),
     retry: false,
+    refetchInterval: pendingOnly ? 30_000 : false,
   });
+
+  const totalRollos = rollosQuery.data?.total ?? 0;
+  const totalRollosPages = Math.max(1, Math.ceil(totalRollos / ROLLOS_PAGE_SIZE));
+  const firstVisibleRollo = totalRollos === 0 ? 0 : (rollosPage - 1) * ROLLOS_PAGE_SIZE + 1;
+  const lastVisibleRollo = Math.min(rollosPage * ROLLOS_PAGE_SIZE, totalRollos);
+
+  const previousSearchFilterKey = useRef(searchFilterKey);
+  useEffect(() => {
+    if (previousSearchFilterKey.current === searchFilterKey) return;
+    previousSearchFilterKey.current = searchFilterKey;
+    setRollosPage(1);
+    setSelected(new Map());
+  }, [searchFilterKey]);
+
+  useEffect(() => {
+    if (!rollosQuery.data || rollosPage <= totalRollosPages) return;
+    // A review can remove the last pending row on this page. Move back to the
+    // last available page instead of leaving an empty, unreachable view.
+    setRollosPage(totalRollosPages);
+    setSelected(new Map());
+  }, [rollosPage, rollosQuery.data, totalRollosPages]);
 
   useEffect(() => {
     if (
@@ -206,9 +252,48 @@ export default function Etiquetas() {
     }
   };
 
+  const markReviewed = async (rollo: EtiquetaRollo) => {
+    if (!isAdmin || !rollo.ultimaReimpresionId || !rollo.revisionPendiente) return;
+    const confirmed = window.confirm(
+      `¿Marcar revisada la serie ${rollo.serie}?\n\n` +
+      `Se cubrirá únicamente la última reimpresión (${rollo.ultimaReimpresionId}). ` +
+      "Una reimpresión posterior volverá a dejarla pendiente.",
+    );
+    if (!confirmed) return;
+    setReviewingRolloId(rollo.id);
+    try {
+      await etiquetasApi.revisar(rollo.id, {
+        ultimaReimpresionId: rollo.ultimaReimpresionId,
+      });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["etiquetas"] }),
+        queryClient.invalidateQueries({ queryKey: ["etiquetas", "rollo", rollo.id] }),
+        queryClient.invalidateQueries({ queryKey: ["etiquetas", "rollo", rollo.id, "resumen"] }),
+      ]);
+      toast({
+        title: "Etiqueta marcada como revisada",
+        description: `La serie ${rollo.serie} ya no aparece como pendiente con esta reimpresión.`,
+      });
+    } catch (error) {
+      toast({
+        title: "No se pudo marcar como revisada",
+        description: getApiErrorMessage(error),
+        variant: "destructive",
+      });
+    } finally {
+      setReviewingRolloId(null);
+    }
+  };
+
   const clearFilters = () => {
     setSitioId("todos"); setEstado("todos"); setProductoId("todos");
     setFechaDesde(""); setFechaHasta(""); setFolioEntrada("");
+  };
+
+  const changeRollosPage = (nextPage: number) => {
+    if (nextPage < 1 || nextPage > totalRollosPages || nextPage === rollosPage) return;
+    setRollosPage(nextPage);
+    setSelected(new Map());
   };
 
   if (fitReportEnabled && products) {
@@ -222,7 +307,11 @@ export default function Etiquetas() {
           <div>
             <div className="mb-1 flex items-center gap-2 text-sm font-semibold text-primary"><Tags className="h-4 w-4" /> OPERACIÓN</div>
             <h1 className="text-3xl font-bold tracking-tight text-sidebar">Etiquetas</h1>
-            <p className="mt-1 text-muted-foreground">Busca rollos y solicita reimpresiones con trazabilidad.</p>
+            <p className="mt-1 text-muted-foreground">
+              {pendingOnly
+                ? "Pendientes de revisión: todas las series con tres o más reimpresiones aún no cubiertas."
+                : "Busca rollos y solicita reimpresiones con trazabilidad."}
+            </p>
           </div>
           <Button
             size="lg"
@@ -235,7 +324,7 @@ export default function Etiquetas() {
 
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList>
-            <TabsTrigger value="buscar"><Search className="mr-2 h-4 w-4" />Buscar rollos</TabsTrigger>
+             <TabsTrigger value="buscar"><Search className="mr-2 h-4 w-4" />Buscar rollos</TabsTrigger>
             {isAdmin && <TabsTrigger value="historial"><History className="mr-2 h-4 w-4" />Historial de reimpresiones</TabsTrigger>}
           </TabsList>
 
@@ -263,7 +352,16 @@ export default function Etiquetas() {
                   <DateInput label="Alta hasta" value={fechaHasta} onChange={setFechaHasta} />
                   <div className="space-y-1.5"><Label>Folio de entrada</Label><Input value={folioEntrada} onChange={(e) => setFolioEntrada(e.target.value)} placeholder="Ej. 000123" /></div>
                 </div>
-                <Button variant="ghost" size="sm" className="mt-3" onClick={clearFilters}><X className="mr-1 h-4 w-4" />Limpiar filtros</Button>
+                 <div className="mt-3 flex flex-wrap items-center gap-2">
+                   <Button variant="ghost" size="sm" onClick={clearFilters}><X className="mr-1 h-4 w-4" />Limpiar filtros</Button>
+                   <Button
+                     variant={pendingOnly ? "secondary" : "outline"}
+                     size="sm"
+                     onClick={() => setPendingOnly((current) => !current)}
+                   >
+                     {pendingOnly ? "Mostrar todos los rollos" : "Mostrar solo pendientes"}
+                   </Button>
+                 </div>
               </CardContent>
             </Card>
 
@@ -277,7 +375,10 @@ export default function Etiquetas() {
             {rollosQuery.isError && <Alert variant="destructive"><AlertTriangle className="h-4 w-4" /><AlertTitle>No se pudieron cargar los rollos</AlertTitle><AlertDescription>{getApiErrorMessage(rollosQuery.error)}</AlertDescription></Alert>}
             <Card>
               <CardHeader className="flex-row items-center justify-between">
-                <CardTitle>Resultados <span className="ml-2 text-sm font-normal text-muted-foreground">{formatNumber(rollosQuery.data?.total ?? 0, { kind: "count" })} rollos</span></CardTitle>
+                 <CardTitle>
+                   {pendingOnly ? "Pendientes de revisión" : "Resultados"}
+                   <span className="ml-2 text-sm font-normal text-muted-foreground">{formatNumber(rollosQuery.data?.total ?? 0, { kind: "count" })} rollos</span>
+                 </CardTitle>
                 <span className="text-sm text-muted-foreground">{selected.size}/50 seleccionados</span>
               </CardHeader>
               <CardContent className="p-0">
@@ -287,8 +388,9 @@ export default function Etiquetas() {
                     <TableHeader><TableRow>
                       <TableHead className="w-10"><Checkbox aria-label="Seleccionar resultados" checked={rollosQuery.data.items.length > 0 && rollosQuery.data.items.every((x) => selected.has(x.id))}
                         onCheckedChange={(checked) => setSelected((current) => updateVisibleLabelSelection(current, rollosQuery.data.items, checked === true))} /></TableHead>
-                      <TableHead>Serie</TableHead><TableHead>Producto</TableHead><TableHead>Color</TableHead><TableHead>SKU</TableHead>
-                      <TableHead className="text-right">Cantidad</TableHead><TableHead>Unidad</TableHead><TableHead>Sitio</TableHead>
+                       <TableHead>Serie</TableHead><TableHead>Producto</TableHead><TableHead>Color</TableHead><TableHead>SKU</TableHead>
+                       <TableHead className="text-right">Cantidad</TableHead><TableHead>Unidad</TableHead><TableHead>Ubicación</TableHead>
+                       <TableHead>Reimpresiones</TableHead><TableHead>Última reimpresión</TableHead><TableHead>Revisión</TableHead>
                       <TableHead>Estado</TableHead><TableHead>Entrada</TableHead><TableHead className="text-right">Acción</TableHead>
                     </TableRow></TableHeader>
                     <TableBody>{rollosQuery.data.items.map((rollo) => (
@@ -301,7 +403,54 @@ export default function Etiquetas() {
                         <TableCell className="max-w-56 font-medium">{rollo.producto || rollo.tela}</TableCell>
                         <TableCell>{rollo.color}</TableCell><TableCell className="font-mono text-xs">{rollo.sku}</TableCell>
                         <TableCell className="text-right font-semibold tabular-nums">{formatNumber(rollo.cantidad, { kind: "quantity" })}</TableCell>
-                        <TableCell>{formatUnit(rollo.unidad)}</TableCell><TableCell>{rollo.sitio}</TableCell>
+                         <TableCell>{formatUnit(rollo.unidad)}</TableCell><TableCell>{rollo.sitio}</TableCell>
+                         <TableCell className="text-center font-semibold tabular-nums">{rollo.reimpresiones}</TableCell>
+                         <TableCell className="whitespace-nowrap text-xs">{formatDate(rollo.ultimaReimpresion, true)}</TableCell>
+                         <TableCell className="min-w-52">
+                           {rollo.revisionPendiente ? (
+                             <div className="space-y-2">
+                               <Badge variant="outline" className="border-amber-300 bg-amber-50 text-amber-800">Pendiente</Badge>
+                               {isAdmin && (
+                                 <Button
+                                   size="sm"
+                                   variant="outline"
+                                   disabled={reviewingRolloId === rollo.id}
+                                   onClick={() => void markReviewed(rollo)}
+                                 >
+                                   {reviewingRolloId === rollo.id && <Loader2 className="mr-2 h-3 w-3 animate-spin" />}
+                                   Marcar revisado
+                                 </Button>
+                               )}
+                               {rollo.revisiones.length > 0 && (
+                                 <details className="text-xs">
+                                   <summary className="cursor-pointer text-muted-foreground">
+                                     Historial ({rollo.revisiones.length})
+                                   </summary>
+                                   <div className="mt-1 space-y-1 text-muted-foreground">
+                                     {rollo.revisiones.map((revision) => (
+                                       <div key={revision.id}>
+                                         {revision.revisadoPor} · {formatDate(revision.revisadoEn, true)}
+                                         <span className="block">Reimpresión #{revision.reimpresionId}</span>
+                                       </div>
+                                     ))}
+                                   </div>
+                                 </details>
+                               )}
+                             </div>
+                           ) : rollo.revisiones.length ? (
+                             <details className="text-xs">
+                               <summary className="cursor-pointer text-emerald-700">Revisado ({rollo.revisiones.length})</summary>
+                               <div className="mt-1 space-y-1 text-muted-foreground">
+                                 {rollo.revisiones.map((revision) => (
+                                   <div key={revision.id}>
+                                     {revision.revisadoPor} · {formatDate(revision.revisadoEn, true)}
+                                     <span className="block">Reimpresión #{revision.reimpresionId}</span>
+                                   </div>
+                                 ))}
+                               </div>
+                             </details>
+                           ) : <span className="text-xs text-muted-foreground">Sin revisión</span>}
+                         </TableCell>
                         <TableCell><Badge variant="outline" className={estadoClass[rollo.estado]}>{rollo.estado.replace("_", " ")}</Badge></TableCell>
                         <TableCell>{rollo.entradaId ? <Link className="font-medium text-primary hover:underline" href={`/entradas/${rollo.entradaId}/documento`}>{rollo.entradaFolio ?? rollo.entradaId}</Link> : "—"}</TableCell>
                         <TableCell className="text-right"><Button size="sm" variant="outline" disabled={!canPrint} onClick={() => openPrintDialog(rollo)}><Printer className="mr-2 h-4 w-4" />Reimprimir etiqueta</Button></TableCell>
@@ -310,6 +459,34 @@ export default function Etiquetas() {
                   </Table>
                 )}
               </CardContent>
+              {totalRollos > 0 && (
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
+                  <span className="text-sm text-muted-foreground">
+                    Mostrando {formatNumber(firstVisibleRollo, { kind: "count" })}–{formatNumber(lastVisibleRollo, { kind: "count" })} de {formatNumber(totalRollos, { kind: "count" })}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={rollosPage <= 1 || rollosQuery.isFetching}
+                      onClick={() => changeRollosPage(rollosPage - 1)}
+                    >
+                      Anterior
+                    </Button>
+                    <span className="min-w-24 text-center text-sm text-muted-foreground">
+                      Página {rollosPage} de {totalRollosPages}
+                    </span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={rollosPage >= totalRollosPages || rollosQuery.isFetching}
+                      onClick={() => changeRollosPage(rollosPage + 1)}
+                    >
+                      Siguiente
+                    </Button>
+                  </div>
+                </div>
+              )}
             </Card>
           </TabsContent>
 
@@ -337,6 +514,10 @@ export default function Etiquetas() {
         onSuccess={() => {
           setSelected(new Map());
           queryClient.invalidateQueries({ queryKey: ["etiquetas"] });
+           for (const rollo of selectedRollos) {
+             void queryClient.invalidateQueries({ queryKey: ["etiquetas", "rollo", rollo.id] });
+             void queryClient.invalidateQueries({ queryKey: ["etiquetas", "rollo", rollo.id, "resumen"] });
+           }
         }}
       />
     </AppLayout>

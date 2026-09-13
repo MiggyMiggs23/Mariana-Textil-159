@@ -496,3 +496,26 @@ test("prior two reprints become the third and activate both read thresholds", as
     "global alert query must retain the threshold of three",
   );
 });
+
+test("rollo search emits validated page and offset so rows after 50 remain reachable", async () => {
+  const rows = Array.from({ length: 120 }, (_, index) => rollo(6000 + index));
+  const { scenario, db } = createScenario(rows);
+  const compiled = compileRoutes(db);
+
+  const result = await invoke(
+    compiled,
+    "get",
+    "/etiquetas/rollos",
+    request(undefined, { query: { page: "3", pageSize: "50" } }),
+  );
+
+  assert.equal(result.status, 200);
+  assert.equal((result.body as any).page, 3);
+  assert.equal((result.body as any).pageSize, 50);
+  assert.equal((result.body as any).total, 120);
+  const searchQuery = scenario.dbQueries.find((query) => hasText(query, "COUNT(*) OVER()"));
+  assert.ok(searchQuery, "the paginated rollo query must execute");
+  assert.match(queryText(searchQuery), /LIMIT/);
+  assert.match(queryText(searchQuery), /OFFSET/);
+  assert.deepEqual(searchQuery.values.slice(-2), [50, 100]);
+});

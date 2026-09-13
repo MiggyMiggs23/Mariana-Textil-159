@@ -16,3 +16,9 @@ Un PDF correcto al montar el componente aisladamente no descarta un defecto del 
 **Why:** La ruta, los portales, el estado del diálogo y el momento de invocar la impresión pueden diferir del montaje diagnóstico, aunque compartan componente y CSS.
 
 **How to apply:** Identificar el flujo a partir de la evidencia del usuario; distinguir siempre pruebas del componente de pruebas del flujo real. Si no se reproduce la fragmentación, no atribuirla a un contenedor o al controlador sin evidencia; solicitar el PDF defectuoso y los ajustes de impresión antes de corregir.
+
+Cuando se informa una entrada concreta, verificar sus campos imprimibles mediante lectura antes de construir la respuesta simulada. Reutilizar el identificador de la ruta no convierte datos inventados en los datos de esa entrada.
+
+**Why:** Un montaje de la ruta correcta con texto, serie, cantidad o unidad diferentes no descarta un problema de ajuste del documento informado.
+
+**How to apply:** Comparar los campos reales mínimos con la respuesta simulada, sin crear documentos ni autenticar usuarios de prueba en development. Informar por separado si se probó el flujo con datos simulados equivalentes o mediante una lectura autenticada real.
