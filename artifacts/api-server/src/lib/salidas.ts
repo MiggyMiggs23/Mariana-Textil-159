@@ -215,13 +215,19 @@ export async function crearEnviarSalidaVentaCliente(tx: Tx, input: CrearSalidaVe
 /** Consume the rolls linked to a deferred customer-sale document. */
 export async function consumirRollosSalidaVenta(tx: Tx, ticketId: number, usuarioId: number) {
   const [ticket] = await tx.select({ documentoTipo: ticketsTable.documentoTipo }).from(ticketsTable).where(eq(ticketsTable.id, ticketId)).limit(1);
+  if (!ticket) {
+    throw new InventarioError(
+      "No se encontró el documento de venta ligado a la salida.",
+      "TICKET_NOT_FOUND",
+    );
+  }
   const rows = await tx.select({ salidaId: salidasTable.id, rolloId: salidaRollosTable.rolloId, productoId: rollosTable.productoId, origenId: salidasTable.origenId })
     .from(salidasTable).innerJoin(salidaRollosTable, eq(salidaRollosTable.salidaId, salidasTable.id))
     .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
     .where(and(eq(salidasTable.ticketId, ticketId), eq(salidasTable.modalidad, "VENTA_CLIENTE"), eq(salidasTable.estado, "RECIBIDA"))).orderBy(asc(salidasTable.origenId), asc(salidaRollosTable.rolloId));
   if (!rows.length) return;
   await lockInventoryPairs(tx, rows.map(r => ({ productoId: r.productoId, ubicacionId: r.origenId })));
-  for (const r of rows) await venderRollo(tx, { rolloId: r.rolloId, usuarioId, justificacion: `Venta salida para cliente ticket ${ticketId}`, documentoTipo: ticket?.documentoTipo ?? "TICKET", documentoId: String(ticketId), salidaId: r.salidaId, vaciarCantidadActual: true, owningSalidaIds: [r.salidaId] });
+  for (const r of rows) await venderRollo(tx, { rolloId: r.rolloId, usuarioId, justificacion: `Venta salida para cliente ticket ${ticketId}`, documentoTipo: ticket.documentoTipo, documentoId: String(ticketId), salidaId: r.salidaId, vaciarCantidadActual: true, owningSalidaIds: [r.salidaId] });
 }
 
 export async function entregarSalidaVenta(tx: Tx, salidaId: number, usuarioId: number, series: string[], nota?: string | null) {

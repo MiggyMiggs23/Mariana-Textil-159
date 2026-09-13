@@ -142,7 +142,7 @@ export default function CajaTiempoReal() {
 
   const totals = dashboard?.totales;
   const mergedPendingAmount = pending?.importe ?? totals?.pendiente ?? "0";
-  const mergedPendingCount = pending?.tickets ?? totals?.ticketsPendientes ?? 0;
+  const mergedPendingCount = pending?.tickets ?? totals?.documentosPendientes ?? 0;
   const pendingTickets = pending?.ticketsSinCobrar
     ?? dashboard?.pendientes.ticketsSinCobrar
     ?? mergedPendingCount;

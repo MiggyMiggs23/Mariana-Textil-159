@@ -209,7 +209,7 @@ if (!testUrl) {
       assert.match(response.headers.get("cache-control") ?? "", /no-store/);
       const body = (await response.json()) as {
         total: number;
-        ticketsPendientes: Array<{
+         documentosPendientes: Array<{
           id: number;
           minutosTranscurridos: number;
           nombreUbicacion: string;
@@ -234,8 +234,8 @@ if (!testUrl) {
           enviadaAt: string;
         }>;
       };
-       assert.equal(body.total, body.ticketsPendientes.length + body.creditos.length + body.salidasEnTransito.length);
-      const fixtureTickets = body.ticketsPendientes.filter(({ id }) =>
+       assert.equal(body.total, body.documentosPendientes.length + body.creditos.length + body.salidasEnTransito.length);
+       const fixtureTickets = body.documentosPendientes.filter(({ id }) =>
         ids.tickets.includes(id),
       );
       assert.deepEqual(fixtureTickets.map(({ id }) => id), [
@@ -287,15 +287,15 @@ if (!testUrl) {
       const afterSettlementResponse = await request(ids.sessions[0]!);
       assert.equal(afterSettlementResponse.status, 200);
       const afterSettlement = (await afterSettlementResponse.json()) as {
-        ticketsPendientes: Array<{ id: number }>;
+         documentosPendientes: Array<{ id: number }>;
         creditos: Array<{ movimientoId: number }>;
       };
       assert.ok(
-        !afterSettlement.ticketsPendientes.some(({ id }) => id === Number(oldest.id)),
+         !afterSettlement.documentosPendientes.some(({ id }) => id === Number(oldest.id)),
         "A collected ticket must disappear from the live alerts response",
       );
       assert.ok(
-        afterSettlement.ticketsPendientes.some(({ id }) => id === Number(old.id)),
+         afterSettlement.documentosPendientes.some(({ id }) => id === Number(old.id)),
         "Other unpaid old tickets must remain visible",
       );
       assert.ok(

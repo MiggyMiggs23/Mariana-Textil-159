@@ -8,7 +8,7 @@
 
 export interface SesionCajaResumen {
   ticketsCobrados: number;
-  ticketsPendientes: number;
+  documentosPendientes: number;
   totalCobrado: string;
   efectivoEsperado: string;
 }

@@ -337,7 +337,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           action: null,
         });
       }
-      for (const row of alerts.ticketsPendientes) {
+      for (const row of alerts.documentosPendientes) {
         events.set(`ticket-ready:${row.id}`, {
           id: `ticket-ready:${row.id}`,
           kind: "TICKET_READY",

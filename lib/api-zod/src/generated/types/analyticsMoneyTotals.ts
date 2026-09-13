@@ -20,7 +20,7 @@ export interface AnalyticsMoneyTotals {
   margenPorcentaje: string | null;
   tickets: number;
   ticketsCobrados: number;
-  ticketsPendientes: number;
+  documentosPendientes: number;
   cancelaciones: number;
   lineasExcluidasMargen: number;
 }

@@ -388,7 +388,7 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
        COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND
          ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA')))::int tickets,
        COUNT(p.ticket_id)::int "ticketsCobrados",
-       (SELECT tickets FROM pending) "ticketsPendientes",
+       (SELECT tickets FROM pending) "documentosPendientes",
        COUNT(*) FILTER (WHERE f.estado='CANCELADO')::int cancelaciones,
        COALESCE(SUM(f.total) FILTER (WHERE f.estado='CANCELADO'),0)::text "importeCancelaciones",
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen"
@@ -411,7 +411,7 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
     margenPorcentaje: margin == null ? null : decimal(subtotal === 0 ? 0 : (margin / subtotal) * 100),
     tickets: Number(row.tickets),
     ticketsCobrados: Number(row.ticketsCobrados),
-    ticketsPendientes: Number(row.ticketsPendientes),
+    documentosPendientes: Number(row.documentosPendientes),
     cancelaciones: Number(row.cancelaciones),
     importeCancelaciones: decimal(row.importeCancelaciones),
     lineasExcluidasMargen: Number(row.lineasExcluidasMargen),
@@ -635,7 +635,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
          COALESCE(SUM(p.cobrado),0)::text cobrado,
        COALESCE(pending.importe,0)::text pendiente,
        COUNT(*) FILTER (WHERE ${accountedDocumentPredicate("t")})::int tickets,
-       COALESCE(pending.tickets,0)::int "ticketsPendientes",
+       COALESCE(pending.tickets,0)::int "documentosPendientes",
         COUNT(p.id)::int "ticketsCobrados",
         CASE WHEN COALESCE(SUM(m.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(m.margen),0)::text END margen,
         COALESCE(SUM(m.subtotal),0)::text subtotal,

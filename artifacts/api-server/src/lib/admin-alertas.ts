@@ -94,7 +94,7 @@ export async function getAdminAlertas() {
     `, [SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS]),
   ]);
 
-  const ticketsPendientes = pendingResult.rows.map((row) => ({
+  const documentosPendientes = pendingResult.rows.map((row) => ({
     ...row,
     id: Number(row.id),
     folio: Number(row.folio),
@@ -161,8 +161,8 @@ export async function getAdminAlertas() {
 
   return {
     generatedAt: new Date().toISOString(),
-    total: ticketsPendientes.length + creditos.length + salidasEnTransito.length + ventasAutorizadasSinEntregar.length,
-    ticketsPendientes,
+    total: documentosPendientes.length + creditos.length + salidasEnTransito.length + ventasAutorizadasSinEntregar.length,
+    documentosPendientes,
     creditos,
     salidasEnTransito,
     ventasAutorizadasSinEntregar,

@@ -2199,7 +2199,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
         .filter((pago) => pago.estado === "CANCELADO")
         .map((pago) => pago.ticketId),
     ).size,
-    ticketsPendientes: pendientes.length,
+    documentosPendientes: pendientes.length,
     totalCobrado: decimalMoney(totalCobrado),
     ivaCobrado: decimalMoney(ivaCobrado),
     formasPago: (["EFECTIVO", "TRANSFERENCIA", "FACTURADO", "CREDITO"] as const).map(

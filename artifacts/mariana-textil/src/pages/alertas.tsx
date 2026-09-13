@@ -40,7 +40,7 @@ export default function Alertas() {
       refetchInterval: 30000,
     }
   });
-  const visibleTickets = typeFilter === "creditos" || typeFilter === "salidas" ? [] : alertas?.ticketsPendientes ?? [];
+  const visibleTickets = typeFilter === "creditos" || typeFilter === "salidas" ? [] : alertas?.documentosPendientes ?? [];
   const visibleCredits = useMemo(() => {
     if (typeFilter === "tickets" || typeFilter === "salidas") return [];
     const creditos = alertas?.creditos ?? [];

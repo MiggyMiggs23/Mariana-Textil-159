@@ -877,7 +877,7 @@ router.get(
           resumen: corte
             ? {
                 ticketsCobrados: corte.ticketsCobrados,
-                ticketsPendientes: corte.ticketsPendientes,
+                documentosPendientes: corte.documentosPendientes,
                 totalCobrado: corte.totalCobrado,
                 efectivoEsperado: corte.efectivoEsperado,
               }

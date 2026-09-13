@@ -15,7 +15,7 @@ router.get(
     res.json({
       ...parsed,
       generatedAt: parsed.generatedAt.toISOString(),
-      ticketsPendientes: parsed.ticketsPendientes.map((ticket) => ({
+      documentosPendientes: parsed.documentosPendientes.map((ticket) => ({
         ...ticket,
         createdAt: ticket.createdAt.toISOString(),
       })),

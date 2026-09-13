@@ -11,7 +11,7 @@ test("authorization verification parses authorized and pending contracts", () =>
 
 test("admin alerts parse ordinary and customer-sale arrays without null destinations", () => {
   GetAdminAlertasResponse.parse({
-    generatedAt: new Date(), total: 2, ticketsPendientes: [], creditos: [],
+    generatedAt: new Date(), total: 2, documentosPendientes: [], creditos: [],
     salidasEnTransito: [{ id: 1, folio: 1, enviadaAt: new Date().toISOString(), horasEnTransito: 25, origenId: 1, nombreOrigen: "A", destinoId: 2, nombreDestino: "B" }],
     ventasAutorizadasSinEntregar: [{ ticketId: 9, ticketFolio: 1009, salidaId: 4, salidaFolio: 4, horasSinEntregar: 25, ticketHref: "/tickets/9", salidaHref: "/salidas/4" }],
   });

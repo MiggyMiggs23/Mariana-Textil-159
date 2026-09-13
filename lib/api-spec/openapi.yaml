@@ -6947,7 +6947,7 @@ components:
           margenPorcentaje,
           tickets,
           ticketsCobrados,
-          ticketsPendientes,
+          documentosPendientes,
           cancelaciones,
           lineasExcluidasMargen,
         ]
@@ -6962,7 +6962,7 @@ components:
         margenPorcentaje: { type: ["string", "null"] }
         tickets: { type: number }
         ticketsCobrados: { type: number }
-        ticketsPendientes: { type: number }
+        documentosPendientes: { type: number }
         cancelaciones: { type: number }
         lineasExcluidasMargen: { type: number }
     AnalyticsQuantity:
@@ -7282,13 +7282,13 @@ components:
     AdminAlertas:
       type: object
       required:
-        [generatedAt, total, ticketsPendientes, creditos, salidasEnTransito, ventasAutorizadasSinEntregar]
+        [generatedAt, total, documentosPendientes, creditos, salidasEnTransito, ventasAutorizadasSinEntregar]
       properties:
         generatedAt: { type: string, format: date-time }
         total:
           type: number
-          description: Suma de ticketsPendientes, creditos y salidasEnTransito.
-        ticketsPendientes:
+          description: Suma de documentosPendientes, creditos y salidasEnTransito.
+        documentosPendientes:
           type: array
           items: { $ref: "#/components/schemas/AdminAlertaTicket" }
         creditos:
@@ -12304,10 +12304,10 @@ components:
     SesionCajaResumen:
       type: object
       required:
-        [ticketsCobrados, ticketsPendientes, totalCobrado, efectivoEsperado]
+        [ticketsCobrados, documentosPendientes, totalCobrado, efectivoEsperado]
       properties:
         ticketsCobrados: { type: number }
-        ticketsPendientes: { type: number }
+        documentosPendientes: { type: number }
         totalCobrado: { type: string }
         efectivoEsperado: { type: string }
     SesionCajaHistorialItem:

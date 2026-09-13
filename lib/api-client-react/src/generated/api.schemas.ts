@@ -905,7 +905,7 @@ export interface AnalyticsMoneyTotals {
   margenPorcentaje: string | null;
   tickets: number;
   ticketsCobrados: number;
-  ticketsPendientes: number;
+  documentosPendientes: number;
   cancelaciones: number;
   lineasExcluidasMargen: number;
 }
@@ -1219,9 +1219,9 @@ export type AdminAlertasVentasAutorizadasSinEntregarItem = {
 
 export interface AdminAlertas {
   generatedAt: string;
-  /** Suma de ticketsPendientes, creditos y salidasEnTransito. */
+  /** Suma de documentosPendientes, creditos y salidasEnTransito. */
   total: number;
-  ticketsPendientes: AdminAlertaTicket[];
+  documentosPendientes: AdminAlertaTicket[];
   creditos: AdminAlertaCredito[];
   /** Salidas EN_TRANSITO que superan el umbral operativo sin recepción. */
   salidasEnTransito: AdminAlertaSalida[];
@@ -5959,7 +5959,7 @@ export interface SesionCajaCierreInput {
 
 export interface SesionCajaResumen {
   ticketsCobrados: number;
-  ticketsPendientes: number;
+  documentosPendientes: number;
   totalCobrado: string;
   efectivoEsperado: string;
 }

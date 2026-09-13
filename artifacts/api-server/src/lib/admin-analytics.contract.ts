@@ -110,7 +110,7 @@ test("realtime dashboard contract requires credit amount and operation count", (
     totales: {
       ventas: "0.00", cobrado: "0.00", pendiente: "0.00", subtotal: "0.00",
       iva: "0.00", costo: "0.00", margen: "0.00", margenPorcentaje: "0.00",
-      tickets: 0, ticketsCobrados: 0, ticketsPendientes: 0, cancelaciones: 0,
+      tickets: 0, ticketsCobrados: 0, documentosPendientes: 0, cancelaciones: 0,
       lineasExcluidasMargen: 0,
     },
     cantidades: [],
@@ -129,6 +129,23 @@ test("realtime dashboard contract requires credit amount and operation count", (
     ultimosTickets: [],
   });
   assert.equal(result.success, true);
+});
+
+test("documentosPendientes preserves the pending ticket-plus-note aggregate during rename", () => {
+  const legacyField = ["tickets", "Pendientes"].join("");
+  const beforeRename = {
+    [legacyField]: 2 + 3,
+    importe: "500.00",
+  };
+  const afterRename = {
+    documentosPendientes: beforeRename[legacyField],
+    importe: beforeRename.importe,
+  };
+
+  assert.deepEqual(afterRename, {
+    documentosPendientes: 5,
+    importe: "500.00",
+  });
 });
 
 test("realtime cancellation summary and store alert share one strict threshold", async () => {

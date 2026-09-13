@@ -1,0 +1,79 @@
+# Prompt para Replit Agent — Deuda pendiente acumulada
+
+Cinco pendientes que se fueron apartando durante la semana. **Ninguno cambia reglas de negocio ni cálculos de dinero.** No toques la base por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+**Los bloques 1 y 2 son de diagnóstico: se reportan y se detienen.** Los bloques 3, 4 y 5 sí se ejecutan.
+
+---
+
+## Bloque 1 — Vetos de acción por rol: la clasificación pendiente
+
+Del informe de restricciones por rol con sus 130 referencias, quedó pendiente la clasificación. Dámela en tres grupos, con archivo, línea y conteo de cada uno:
+
+- **Alcance territorial:** dónde se puede operar. Son legítimas y se quedan.
+- **Ocultamiento de datos sensibles:** costo, margen y campos financieros que se omiten por rol. También legítimas.
+- **Vetos de acción:** un rol no puede hacer algo **aunque la matriz de permisos se lo conceda**. Estas contradicen que ADMIN tenga la última palabra.
+
+Del tercer grupo dame la **lista completa ordenada por rol**, con qué veta cada una. Ya conozco tres: SUPERVISOR no puede dar de baja clientes ni reactivarlos aunque tenga `clientes:editar`, y no puede capturar días ni límite de crédito al crear uno.
+
+**No modifiques ninguna.** Con la lista decido cuáles se retiran y cuáles se convierten en permisos de la matriz. La regla de fondo ya quedó establecida al retirar el techo de SUPERVISOR: **la matriz decide qué acción, el alcance decide dónde, y no debe existir una tercera capa que vete lo concedido.**
+
+## Bloque 2 — Pantallas que escanean sin la función compartida
+
+Cuando se corrigió el escaneo de QR en la salida para venta, la normalización del valor escaneado se extrajo a una función compartida **precisamente para que el error no se repitiera**. Después reapareció en la pantalla de entrega, lo que significa que las pantallas nuevas no la están usando.
+
+1. **Enlístame todas las pantallas y componentes que reciben un valor escaneado** —pistola o cámara— y di cuáles usan la función compartida y cuáles hacen su propio tratamiento, con archivo y línea.
+2. Dime **qué contiene exactamente el QR** que imprime la etiqueta de rollo, y cómo lo interpreta cada una de esas rutas.
+3. **No corrijas todavía**: repórtame la lista y espera.
+
+Cuando la apruebe, la corrección incluirá una prueba que verifique que **todas** las rutas de escaneo resuelven el mismo QR a la misma serie, para que la próxima pantalla nazca cubierta.
+
+---
+
+## Bloque 3 — Movimientos sin su documento
+
+Reportaste huecos de trazabilidad en **bolsas, piezas y venta directa**: movimientos de inventario que no llevan el documento que los originó. Se corrigió el caso de la salida para venta y estos quedaron pendientes.
+
+Corrígelos con el mismo criterio: **todo movimiento generado por un documento debe llevar ese documento y enlazar a él.** Un movimiento que no dice de dónde salió rompe la trazabilidad de la pantalla de Movimientos, que es donde se investiga cuando algo no cuadra.
+
+Si al revisarlos encuentras **algún caso donde el movimiento legítimamente no tiene documento**, no lo fuerces: repórtamelo y explícame por qué. Prefiero un hueco entendido que un dato inventado.
+
+## Bloque 4 — Renombrar `ticketsPendientes`
+
+El campo `ticketsPendientes` cuenta hoy **tickets sin cobrar y notas sin autorizar**, desde que se amplió el predicado de pendientes. El nombre miente y el próximo que lo lea lo va a usar mal.
+
+Renómbralo a **`documentosPendientes`** en el servidor, en OpenAPI y en todos sus consumidores; son alrededor de 39 referencias. Ejecuta `codegen`. Si el desglose por tienda tiene el mismo campo, renómbralo también.
+
+Este bloque **regenera el cliente de la API, que comparten todas las pantallas**. El typecheck atrapa cualquier consumidor que se quede atrás, pero corre la verificación completa antes de darlo por bueno.
+
+## Bloque 5 — `TEST_DATABASE_URL`
+
+La falta de esa variable bloqueó tres suites de integración. **Dime qué es y cómo se resuelve:**
+
+- Si es un secreto que yo debo crear, pídemelo por el formulario seguro, como hiciste con `ADMIN_SEED_PASSWORD`.
+- Si se deriva de la rama Neon desechable que tú creas en cada corrida, corrígelo tú para que se resuelva solo.
+
+No lo dejes como un paso manual que haya que recordar: es exactamente el tipo de cosa que después bloquea una verificación a media noche.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de inventario, POS, caja, salidas, analytics y permisos.
+3. Abre Movimientos y confirma que las líneas de **bolsas, piezas y venta directa** muestran su documento y enlazan a él.
+4. Confirma que no quedó ninguna referencia a `ticketsPendientes` fuera del historial, y que la tarjeta de pendientes del tablero sigue mostrando el mismo número que antes del renombre.
+5. Con `TEST_DATABASE_URL` resuelta, corre las tres suites de integración que estaban bloqueadas y reporta el resultado.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- Que `documentosPendientes` cuenta tickets sin cobrar y notas sin autorizar, y que su nombre anterior mentía.
+- Que **todo movimiento generado por un documento lleva ese documento**, y cuáles fueron los casos corregidos.
+- Cómo se resuelve `TEST_DATABASE_URL` en adelante.
+- Un renglón con la fecha y qué se hizo.
+
+**Los bloques 1 y 2 no se documentan todavía**: son diagnósticos que espero por escrito antes de decidir nada.

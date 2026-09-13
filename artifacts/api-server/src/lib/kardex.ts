@@ -48,6 +48,22 @@ export const TODO_LO_QUE_SALIO_TIPOS = [
   "SALIDA_MOSTRADOR",
 ] as const satisfies readonly TipoMovimiento[];
 
+// These values are stored in movimientos.documento_tipo for sales made from
+// the POS.  They all point at the same tickets row; the suffix only describes
+// how inventory was consumed.  Keep this list in one place so folio searches,
+// ticket loading, and link enrichment cannot drift apart.
+const TICKET_DOCUMENT_TYPES = [
+  "TICKET",
+  "NOTA",
+  "TICKET_BOLSA_NORMAL",
+  "TICKET_PIEZA_NORMAL",
+  "TICKET_BOLSA_METREADO",
+] as const;
+
+function isTicketDocumentType(tipo: string | null): boolean {
+  return tipo != null && (TICKET_DOCUMENT_TYPES as readonly string[]).includes(tipo);
+}
+
 type JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];
 
 export function resolveKardexTipos(filters: KardexFiltersInput) {
@@ -83,6 +99,10 @@ function whereConditions(filters: KardexFiltersInput): SQL[] {
   const term = filters.buscar?.trim();
   if (term) {
     const pattern = `%${term}%`;
+    const ticketDocumentTypesSql = sql.join(
+      TICKET_DOCUMENT_TYPES.map((tipo) => sql`${tipo}`),
+      sql`, `,
+    );
     conditions.push(
       or(
         ilike(rollosTable.serie, pattern),
@@ -98,7 +118,7 @@ function whereConditions(filters: KardexFiltersInput): SQL[] {
         sql`exists (
           select 1
           from tickets kardex_ticket
-          where ${movimientosTable.documentoTipo} in ('TICKET', 'NOTA')
+          where ${movimientosTable.documentoTipo} in (${ticketDocumentTypesSql})
             and kardex_ticket.id = case
               when ${movimientosTable.documentoId} ~ '^[0-9]+$'
               then ${movimientosTable.documentoId}::integer
@@ -125,7 +145,7 @@ function whereConditions(filters: KardexFiltersInput): SQL[] {
             end
           where ${movimientosTable.tipo} = 'CANCELACION'
             and kardex_origen.id = ${movimientosTable.movimientoOrigenId}
-            and kardex_origen.documento_tipo in ('TICKET', 'NOTA')
+            and kardex_origen.documento_tipo in (${ticketDocumentTypesSql})
             and kardex_ticket.folio::text ilike ${pattern}
         )`,
         sql`exists (
@@ -267,7 +287,7 @@ async function enrichDocuments(rows: JoinedMovement[]) {
     }),
   );
   const ticketIds = references
-    .filter((reference) => (reference.tipo === "TICKET" || reference.tipo === "NOTA") && reference.id)
+    .filter((reference) => isTicketDocumentType(reference.tipo) && reference.id)
     .map((reference) => Number(reference.id))
     .filter(Number.isSafeInteger);
   const salidaIds = references
@@ -334,7 +354,7 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       (reference.tipo === "SALIDA" || reference.tipo === "RECEPCION_SALIDA") &&
       (row.tipo === "TRANSFERENCIA_SALIDA" || row.tipo === "TRANSFERENCIA_ENTRADA");
     const referencedTicketId =
-      (reference.tipo === "TICKET" || reference.tipo === "NOTA") &&
+      isTicketDocumentType(reference.tipo) &&
       reference.id &&
       ticketMap.has(Number(reference.id))
         ? Number(reference.id)
@@ -354,7 +374,10 @@ async function enrichDocuments(rows: JoinedMovement[]) {
         : document.label,
       documentoRuta: salidaInmediata && reference.id ? `/salidas/${reference.id}` : document.route,
       destinoEtiqueta:
-        row.tipo === "VENTA" && reference.tipo === "TICKET" && reference.id
+        row.tipo === "VENTA" &&
+        isTicketDocumentType(reference.tipo) &&
+        reference.tipo !== "NOTA" &&
+        reference.id
           ? (ticketClientMap.get(Number(reference.id)) ?? null)
           : row.tipo === "TRANSFERENCIA_SALIDA" &&
               reference.tipo === "SALIDA" &&
@@ -384,7 +407,7 @@ function resolveDocument(
           route: `/entradas/${entry.id}/documento`,
         };
   }
-  if (reference.tipo === "TICKET" || reference.tipo === "NOTA") {
+  if (isTicketDocumentType(reference.tipo)) {
     const ticketId = Number(reference.id);
     const folio = ticketMap.get(ticketId);
     if (folio == null) return { label: null, route: null };

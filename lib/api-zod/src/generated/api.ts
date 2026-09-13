@@ -6576,7 +6576,7 @@ export const ObtenerSesionCajaActualResponse = zod.object({
 }),zod.null()]),
   "resumen": zod.union([zod.object({
   "ticketsCobrados": zod.number(),
-  "ticketsPendientes": zod.number(),
+  "documentosPendientes": zod.number(),
   "totalCobrado": zod.string(),
   "efectivoEsperado": zod.string()
 }),zod.null()])
@@ -8777,7 +8777,7 @@ export const GetAdminRealtimeDashboardResponse = zod.object({
   "margenPorcentaje": zod.string().nullable(),
   "tickets": zod.number(),
   "ticketsCobrados": zod.number(),
-  "ticketsPendientes": zod.number(),
+  "documentosPendientes": zod.number(),
   "cancelaciones": zod.number(),
   "lineasExcluidasMargen": zod.number()
 }),
@@ -9113,8 +9113,8 @@ export const GetCajaTiendaVentasGlobalResponse = zod.object({
  */
 export const GetAdminAlertasResponse = zod.object({
   "generatedAt": zod.coerce.date(),
-  "total": zod.number().describe('Suma de ticketsPendientes, creditos y salidasEnTransito.'),
-  "ticketsPendientes": zod.array(zod.object({
+  "total": zod.number().describe('Suma de documentosPendientes, creditos y salidasEnTransito.'),
+  "documentosPendientes": zod.array(zod.object({
   "id": zod.number(),
   "folio": zod.number(),
   "createdAt": zod.coerce.date(),
