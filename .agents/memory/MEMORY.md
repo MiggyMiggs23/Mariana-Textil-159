@@ -46,3 +46,4 @@
 - [Argumentos del MCP Neon](neon-mcp-argument-names.md) — si la firma documentada falla, usar los nombres snake_case exigidos por el proveedor.
 - [Sitio operativo y consultas](operational-site-vs-query-scope.md) — PROPIA usa asignación; ADMIN global conserva selección; resolver sitio no autoriza acciones.
 - [Preservación al reconstruir cachés](cache-rebuild-preservation.md) — ejecutar la función real en DB desechable; probar que cambió el caché y conservó exactamente la configuración.
+- [Integración local sin clonar Neon](local-disposable-integration.md) — automatizar sin otra credencial ni copiar actores; no extiende la decisión a E2E.

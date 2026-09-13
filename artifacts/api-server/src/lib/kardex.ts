@@ -27,6 +27,12 @@ import {
   usuariosTable,
   type TipoMovimiento,
 } from "@workspace/db";
+import {
+  isTicketDocumentType,
+  resolveDocument,
+  TICKET_DOCUMENT_TYPES,
+  type DocumentReference,
+} from "./kardex-document";
 
 const destinoUbicacion = alias(ubicacionesTable, "destino");
 
@@ -47,22 +53,6 @@ export const TODO_LO_QUE_SALIO_TIPOS = [
   "TRANSFERENCIA_SALIDA",
   "SALIDA_MOSTRADOR",
 ] as const satisfies readonly TipoMovimiento[];
-
-// These values are stored in movimientos.documento_tipo for sales made from
-// the POS.  They all point at the same tickets row; the suffix only describes
-// how inventory was consumed.  Keep this list in one place so folio searches,
-// ticket loading, and link enrichment cannot drift apart.
-const TICKET_DOCUMENT_TYPES = [
-  "TICKET",
-  "NOTA",
-  "TICKET_BOLSA_NORMAL",
-  "TICKET_PIEZA_NORMAL",
-  "TICKET_BOLSA_METREADO",
-] as const;
-
-function isTicketDocumentType(tipo: string | null): boolean {
-  return tipo != null && (TICKET_DOCUMENT_TYPES as readonly string[]).includes(tipo);
-}
 
 type JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];
 
@@ -218,11 +208,6 @@ async function selectMovements(
     ? query.limit(pagination.limit).offset(pagination.offset)
     : query;
 }
-
-type DocumentReference = {
-  tipo: string | null;
-  id: string | null;
-};
 
 async function enrichDocuments(rows: JoinedMovement[]) {
   const originIds = rows
@@ -389,52 +374,6 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       referenciaRolloRuta: `/inventario/rollos/${row.rolloId}`,
     };
   });
-}
-
-function resolveDocument(
-  reference: DocumentReference,
-  entradaMap: Map<number, { id: number; label: string }>,
-  ticketMap: Map<number, number>,
-  salidaMap: Map<number, string>,
-): { label: string | null; route: string | null } {
-  if (!reference.tipo || !reference.id) return { label: null, route: null };
-  if (reference.tipo === "ENTRADA") {
-    const entry = entradaMap.get(Number(reference.id));
-    return entry == null
-      ? { label: null, route: null }
-      : {
-          label: `Entrada ${entry.label}`,
-          route: `/entradas/${entry.id}/documento`,
-        };
-  }
-  if (isTicketDocumentType(reference.tipo)) {
-    const ticketId = Number(reference.id);
-    const folio = ticketMap.get(ticketId);
-    if (folio == null) return { label: null, route: null };
-    return {
-      label: `${reference.tipo === "NOTA" ? "Nota" : "Ticket"} ${folio}`,
-      route: `/tickets/${ticketId}`,
-    };
-  }
-  if (reference.tipo === "SALIDA") {
-    const salidaId = Number(reference.id);
-    const folio = salidaMap.get(salidaId);
-    if (folio == null) return { label: null, route: null };
-    return {
-      label: `Salida ${folio}`,
-      route: `/salidas/${salidaId}`,
-    };
-  }
-  if (reference.tipo === "RECEPCION_SALIDA") {
-    const salidaId = Number(reference.id);
-    const folio = salidaMap.get(salidaId);
-    if (folio == null) return { label: null, route: null };
-    return {
-      label: `Recepción de salida ${folio}`,
-      route: `/salidas/${salidaId}/documento/recepcion`,
-    };
-  }
-  return { label: null, route: null };
 }
 
 export async function getKardex(

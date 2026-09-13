@@ -15,6 +15,7 @@
     "seed": "node ./src/seed.mjs",
     "prepare:test": "node ./src/prepare-test-database.mjs",
     "test:guard": "pnpm --filter @workspace/api-server exec tsx --test ../../lib/db/src/lib/test-database-guard.test.ts && node --test ./src/prepare-test-database.test.mjs",
+    "test:runner": "node --test ./src/run-isolated-tests.test.mjs",
     "verify-connection": "node ./src/verify-connection.mjs",
     "cleanup:bloque-7": "node ./src/scripts/cleanup-bloque-7.mjs",
     "normalize:base-colors": "node ./src/scripts/normalize-base-colors.mjs --dry-run",

@@ -462,3 +462,17 @@ mtime_ms = 1789188625545
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f813945c-3a64-4efe-8fc1-3c74bc46f379/7ce2034a-e089-4b43-a19d-783c53296ea9"
 storage_version_token = "1789272643011273"
 content_type = "text/html"
+
+[[outputs]]
+id = "zU-NJAl2NsME_8P38w-MF"
+uri = "file://reports/auditoria-suites-base-pruebas.html"
+type = "text"
+title = "Auditoría de suites: usuarios, datos y aislamiento"
+description = "Informe por archivo y comando, con líneas de evidencia: usuarios creados o reutilizados, sesiones, datos operativos, limpieza y compatibilidad con el seed autorizado. Revisa 65 archivos y distingue los 34 comandos que exigen TEST_DATABASE_URL."
+logical_id = "57e0d52d-0605-4da6-a455-f4b75c478d12"
+content_hash = "sha256:f5f001ff39d7282767cf079ebfcfdd19b1a57cd4377a423d7db6db890b5f3cdb"
+size = 54679
+mtime_ms = 1789274068127
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/57e0d52d-0605-4da6-a455-f4b75c478d12/1ada4435-c920-4e6d-b50e-578440dc762f"
+storage_version_token = "1789274252969785"
+content_type = "text/html"
