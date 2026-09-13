@@ -630,3 +630,17 @@ mtime_ms = 1789313227985
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d8d8ba65-4659-4db2-8320-c4093942fa62/da5c50a9-239d-4c4c-9274-87ad63968284"
 storage_version_token = "1789313228852068"
 content_type = "text/html"
+
+[[outputs]]
+id = "5kjBTCqEE8k3rGOxTwmZs"
+uri = "file://reports/fase2-purga-2026-09-13.html"
+type = "text"
+title = "Purga de development — informe de 11 puntos"
+description = "Conteos antes/después de las 18 tablas protegidas, mínimos, contadores, triggers, respaldo y limitaciones de validación."
+logical_id = "17553a54-12a6-41f0-8ab1-772e55e6a9fc"
+content_hash = "sha256:c206d7883f84639b641e694e904e4f26ab0e3b0113360b8d9450fa0215415200"
+size = 20120
+mtime_ms = 1789318090588
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/17553a54-12a6-41f0-8ab1-772e55e6a9fc/86471303-0262-4803-93af-6c7a6bbec650"
+storage_version_token = "1789318100744475"
+content_type = "text/html"

@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Fase 2 — purga operativa</title>
+<style>body{font:14px system-ui,sans-serif;max-width:1200px;margin:2rem auto;padding:0 1rem;color:#17202a}pre{white-space:pre-wrap;background:#f4f6f7;padding:1rem;border-radius:8px}h1{color:#7b241c}</style>
+</head><body><h1>Fase 2 — purga operativa</h1><p><strong>Estado:</strong> PURGE_COMMITTED_WITH_VALIDATION_LIMITATIONS</p><pre># Fase 2 — purga operativa (generador de evidencia)
+
+**Estado del reporte:** `PURGE_COMMITTED_WITH_VALIDATION_LIMITATIONS`
+
+La purga de development quedó confirmada. Esto no equivale a una validación totalmente aprobada: las limitaciones de pruebas y acceso visual se detallan por separado.
+
+## Entradas explícitas
+
+| entrada | ruta | estado |
+| --- | --- | --- |
+| Preflight read-only | .local/phase2-purge-evidence-20260913163342450.json | PASS |
+| Rehearsal disposable | .local/phase2-purge-evidence-20260913162034228.json | PASS |
+| State JSON | .local/phase2-purge-state.json | PASS |
+| Respaldo | scripts/.local/backups/respaldo-antes-de-purga-2026-09-13-101833 | PASS |
+| Prueba disposable | .local/phase2-ui-rehearsal/phase2-disposable-postpurge-proof.json | PASS |
+| Aclaración UI disposable | .local/phase2-ui-rehearsal/ui-clarification.json | PASS |
+| Pruebas reales | reports/fase2-cinco-suites-aisladas-2026-09-13.json | WITH_OBSERVATIONS |
+| Evidencia LIVE | .local/phase2-purge-evidence-20260913163631333.json | PASS |
+| LIVE postcommit independiente | .local/phase2-live-postcommit.json | PASS |
+| LIVE postrestart independiente | .local/phase2-live-postrestart.json | OBSERVED |
+| UI LIVE | .local/phase2-live-ui-evidence.json | BLOCKED |
+
+API de source: **running limpio después del reinicio**.
+
+## Respaldo verificado
+
+- Commit acompañado: `b36b9a4eac11b3e630a84f775f71c597618b4f60`
+- Dump SHA-256: `b2e0ad1765da065cdd5d4f7dbd609eeb7c0fc31dd0b2e53c70d1360806cb22c6`
+- Drive: archivo `1Wxa6y332PLPfWNZ3sEkUlYVEZZ7XW3kb` (https://drive.google.com/file/d/1Wxa6y332PLPfWNZ3sEkUlYVEZZ7XW3kb/view?usp=drivesdk); owner-only=true; descarga=PASS.
+- Conteos/restauración y catálogo: `PASS`.
+
+## Clasificación de los 11 puntos
+
+| punto | disposable | live | final | evidencia |
+| --- | --- | --- | --- | --- |
+| 1 | PASS | PASS | PASS | A33 after=0; post-login sesiones is a separate runtime effect |
+| 2 | PASS | PASS | PASS | C18 count/hash comparison |
+| 3 | PASS | PASS | PASS | Independent LIVE postcommit values/dates/authors and enabled switch |
+| 4 | PASS | PASS | PASS | reconstructed existencias invariant |
+| 5 | PASS | PASS | PASS | execution.triggersFinal |
+| 6 | WITH_OBSERVATIONS | NOT_RUN | WITH_OBSERVATIONS | explicit actual test report |
+| 7 | PASS | NOT_RUN | PASS | Ticket folio 1000 comprobado solo en base desechable; no se creó ticket en development |
+| 8 | PASS | BLOCKED | BLOCKED | Live UI BLOCKED by safe credential bridge; disposable empty-UI proof PASS only |
+| 9 | PASS | BLOCKED | BLOCKED | Live UI BLOCKED by safe credential bridge; disposable Precios proof PASS only |
+| 10 | PASS | BLOCKED | BLOCKED | Live UI BLOCKED by safe credential bridge; disposable Clientes/Proveedores/Equipos proof PASS only |
+| 11 | PASS | PASS | PASS | C18 auditoria baseline plus separate login effect |
+
+## Listas y estado al commit
+
+List A: **33 tablas**. List B: **7 tablas** más `public.contenedores_folio_seq`. List C: **18 tablas**.
+
+### A — antes/después
+
+| tabla | antes | después |
+| --- | --- | --- |
+| tickets | 7 | 0 |
+| ticket_lineas | 61 | 0 |
+| ticket_pagos | 4 | 0 |
+| autorizaciones_nota | 2 | 0 |
+| movimientos_credito | 3 | 0 |
+| aplicaciones_credito | 1 | 0 |
+| notificaciones_credito | 2 | 0 |
+| sesiones_caja | 3 | 0 |
+| sesiones_caja_dias | 3 | 0 |
+| salidas_dinero_caja | 0 | 0 |
+| cuadre_fiscal_registros | 0 | 0 |
+| salidas | 8 | 0 |
+| salida_lineas | 8 | 0 |
+| salida_rollos | 42 | 0 |
+| viajes | 0 | 0 |
+| viaje_salidas | 0 | 0 |
+| viaje_tickets | 0 | 0 |
+| entradas | 2 | 0 |
+| contenedores | 0 | 0 |
+| contenedor_lineas | 0 | 0 |
+| pagos_proveedor | 4 | 0 |
+| aplicaciones_pago_proveedor | 2 | 0 |
+| movimientos | 259 | 0 |
+| rollos | 80 | 0 |
+| reimpresiones_etiqueta | 9 | 0 |
+| auditorias_inventario | 0 | 0 |
+| auditoria_inventario_escaneos | 0 | 0 |
+| auditoria_inventario_participantes | 0 | 0 |
+| auditoria_inventario_snapshot | 0 | 0 |
+| solicitudes_pago_dirigido | 0 | 0 |
+| notificaciones_sistema | 12 | 0 |
+| stock_minimo_episodios | 3 | 0 |
+| sesiones | 151 | 0 |
+
+### C — conteos y hashes antes/después
+
+| tabla | antes | después | hashAntes | hashDespués |
+| --- | --- | --- | --- | --- |
+| productos | 1234 | 1234 | 134d15726b0063cba05208a09c5217e9b9e1a8c0314bd9210ad2c5d5f3c918f6 | 134d15726b0063cba05208a09c5217e9b9e1a8c0314bd9210ad2c5d5f3c918f6 |
+| precio_historial | 1016 | 1016 | ad7d6f4c7c84fb34096cf482d8e416f05446ffbe83e5ce446eb6ab10634693c8 | ad7d6f4c7c84fb34096cf482d8e416f05446ffbe83e5ce446eb6ab10634693c8 |
+| clientes | 7 | 7 | eefa470b3f2e51e356fd0b47788d23c9983936f7bf73012a907f4397eb60162d | eefa470b3f2e51e356fd0b47788d23c9983936f7bf73012a907f4397eb60162d |
+| cliente_documentos | 0 | 0 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| proveedores | 27 | 27 | b48987a88d80479cf30cadf008ecef74cfdb75301c923feb750cf819fae3e6dc | b48987a88d80479cf30cadf008ecef74cfdb75301c923feb750cf819fae3e6dc |
+| usuarios | 31 | 31 | d8dc27a1375c92a270169822d453917fa37e28fcc375b6d594d67700d3678b32 | d8dc27a1375c92a270169822d453917fa37e28fcc375b6d594d67700d3678b32 |
+| ubicaciones | 11 | 11 | 36c7fa0049d12e27333daa26e74c3c77cf6423e8cbd47ff40c45d2102981a5bb | 36c7fa0049d12e27333daa26e74c3c77cf6423e8cbd47ff40c45d2102981a5bb |
+| pisos | 0 | 0 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| permisos_rol | 192 | 192 | 5bb3147310e8057b3314703d766cad10704acc8825fd33970e5f2c61a35466b4 | 5bb3147310e8057b3314703d766cad10704acc8825fd33970e5f2c61a35466b4 |
+| permisos_usuario | 0 | 0 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| permisos_ubicacion | 54 | 54 | 4ffcce13a8d6ec1e81af0985c2a0873d7c3484afd2fbb1980d148025327cbfc7 | 4ffcce13a8d6ec1e81af0985c2a0873d7c3484afd2fbb1980d148025327cbfc7 |
+| camionetas | 0 | 0 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| choferes | 0 | 0 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| equipos | 0 | 0 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| equipos_checklist | 0 | 0 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 | e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 |
+| stock_minimo_sitios | 1 | 1 | af7dfb9179704644825b3c9050a75f13f7e20a6e4b7428840cc60334d3876b2b | af7dfb9179704644825b3c9050a75f13f7e20a6e4b7428840cc60334d3876b2b |
+| stock_minimos | 3 | 3 | 1c5fda3f5408166833c0be8434c30861f710e5727696e30ae5771acc34bb4fb9 | 1c5fda3f5408166833c0be8434c30861f710e5727696e30ae5771acc34bb4fb9 |
+| auditoria | 3045 | 3045 | 2726bb29daabb723dc0b54b8530bbda9a166031d3268f171916181ddde831196 | 2726bb29daabb723dc0b54b8530bbda9a166031d3268f171916181ddde831196 |
+
+### B — contadores, secuencia y caché
+
+| table | beforeCount | afterCount | resetColumn | resetValue |
+| --- | --- | --- | --- | --- |
+| ticket_folio | 1 | 1 | ultimo_folio | 999 |
+| entrada_folio | 11 | 11 | ultimo_folio | 0 |
+| salida_folio | 11 | 11 | ultimo_folio | 0 |
+| viaje_folio | 11 | 11 | ultimo_folio | 0 |
+| auditoria_inventario_folio | 11 | 11 | ultimo_folio | 0 |
+| series_consecutivo | 1 | 1 | ultimo_numero | 1000000 |
+
+Secuencia `public.contenedores_folio_seq`: {&quot;derivedName&quot;:&quot;public.contenedores_folio_seq&quot;,&quot;afterReset&quot;:{&quot;last_value&quot;:&quot;1&quot;,&quot;is_called&quot;:false},&quot;isCalledFalse&quot;:true}.
+
+Invariante de caché: {&quot;badPairs&quot;:0,&quot;existenciasRows&quot;:30,&quot;movimientosRows&quot;:0,&quot;rollosRows&quot;:0}.
+
+### Mínimos (valor, fecha y autor)
+
+| producto | ubicación | valor | fecha | autor |
+| --- | --- | --- | --- | --- |
+| 1374 | 2 | 2500.000 | 2026-09-13T15:21:35.374Z | 1 |
+| 1389 | 2 | 5000.000 | 2026-09-13T15:21:40.979Z | 1 |
+| 1390 | 2 | 5000.000 | 2026-09-13T15:21:56.751Z | 1 |
+
+### Triggers finales — consulta exacta, los 11 deben ser `O`
+
+| tabla | trigger | tgenabled | interno |
+| --- | --- | --- | --- |
+| aplicaciones_credito | aplicaciones_credito_inmutables | O | false |
+| aplicaciones_credito | aplicaciones_credito_validas | O | false |
+| aplicaciones_pago_proveedor | aplicaciones_pago_proveedor_append_only | O | false |
+| aplicaciones_pago_proveedor | aplicaciones_pago_proveedor_validar_insert | O | false |
+| auditoria | auditoria_append_only | O | false |
+| auditoria | auditoria_enriquecer_insert | O | false |
+| movimientos_credito | movimientos_credito_inmutables | O | false |
+| movimientos_credito | movimientos_credito_reversos_validos | O | false |
+| pagos_proveedor | pagos_proveedor_inmutables | O | false |
+| reimpresiones_etiqueta | reimpresiones_etiqueta_inmutable | O | false |
+| ticket_pagos | ticket_pagos_inmutables | O | false |
+
+## Pruebas reales y UI
+
+Typecheck/suites/UI/ticket: {&quot;status&quot;:&quot;WITH_OBSERVATIONS&quot;,&quot;statuses&quot;:{&quot;typecheck&quot;:&quot;PASS&quot;,&quot;suites&quot;:&quot;FAIL&quot;,&quot;ui&quot;:&quot;NOT_RUN&quot;,&quot;ticket&quot;:&quot;NOT_RUN&quot;},&quot;observations&quot;:{&quot;scenarioPassed&quot;:75,&quot;scenarioFailed&quot;:0,&quot;cleanupFailures&quot;:2,&quot;observations&quot;:[&quot;scenario assertions: 75 passed, 0 failed&quot;,&quot;2 fixture cleanup failure(s); not scenario assertion failures&quot;,&quot;test:inventario cleanup: append_only_protection (P0001)&quot;,&quot;test:salidas cleanup: fixture_cleanup_foreign_key (23503)&quot;]}}.
+
+Prueba disposable: {&quot;status&quot;:&quot;PASS&quot;,&quot;operation&quot;:&quot;phase2-disposable-postpurge-probe&quot;,&quot;evidencePath&quot;:&quot;.local/phase2-ui-rehearsal/phase2-disposable-postpurge-proof.json&quot;,&quot;sha256&quot;:&quot;cf41530d9b3b6923c80247cccd2f9947819c61194b4e9acd4d06a8cf7dfed88c&quot;,&quot;emptyUi&quot;:{&quot;status&quot;:&quot;PASS&quot;,&quot;route&quot;:&quot;/login?returnTo=/&quot;,&quot;checks&quot;:[&quot;Normal login UI completed with synthetic ADMIN; all API traffic was routed to the disposable harness and no credentials were recorded.&quot;,&quot;/caja/tiempo-real prior check passed: zero financial totals, closed stores, no recent tickets, no error/blank/crash.&quot;,&quot;/caja/cuentas-destino prior check passed: all financial totals $0.00, no movements, no error/blank/crash.&quot;,&quot;/reportes prior check passed via /reportes/ventas: zero KPIs and No hay datos disponibles, no error/blank/crash.&quot;,&quot;Mariana stock-minimum diagnostic was a site-selection misconfiguration, not an app failure: Mariana correctly had no settings and Apagado.&quot;,&quot;Configured site Cruces (ubicacion_id 2) verified: exactly 3 non-empty minimum settings and enabled switch aria-checked=true.&quot;,&quot;/precios passed: preserved product catalog rendered; visible cost/price/margin/status cells were no-cost/null-margin represented by —, with no error/blank/crash.&quot;,&quot;/clientes passed: 7 restored active client rows rendered with zero balances/null contact fields represented by —.&quot;,&quot;/proveedores passed: restored catalog rendered with Total Proveedores 27 and zero financial totals.&quot;,&quot;/equipos passed: all 9 restored site groups rendered intentional zero-equipment empty states.&quot;,&quot;No create/edit/save/logout actions performed; no development API/workflow/config/app code touched.&quot;]},&quot;ticket&quot;:{&quot;status&quot;:&quot;PASS&quot;,&quot;folio&quot;:1000,&quot;created&quot;:true,&quot;documentoTipo&quot;:&quot;TICKET&quot;,&quot;tipo&quot;:&quot;METREADO&quot;}}.
+
+Aclaración UI disposable: {&quot;status&quot;:&quot;PASS&quot;,&quot;path&quot;:&quot;.local/phase2-ui-rehearsal/ui-clarification.json&quot;,&quot;sha256&quot;:&quot;54465f1d733fa8ce307279fd4636738a3f046543e3ca9f3af10c661943b234e1&quot;,&quot;operation&quot;:&quot;phase2-ui-clarification&quot;,&quot;checks&quot;:[&quot;Stock deep-link query ubicacionId=2 selected Cruces (configured site id 2).&quot;,&quot;Effective GET stock-minimos/config returned ubicacionId 2 and habilitado true.&quot;,&quot;Same rendered config state showed status Activo, switch aria-checked true, and exactly 3 populated minimum values; prior Apagado observation was stale Mariana explanatory copy and is corrected.&quot;,&quot;Read-only Precios check expanded restored product group Alaska and row ALA-BEI.&quot;,&quot;ALA-BEI retained Precio Lista $85.00; Costo base and both Margen fields rendered — (null/empty); row status rendered literal Sin costo.&quot;,&quot;No synthetic product was used for the price check; no PATCH/save/edit/logout actions were performed.&quot;],&quot;stock&quot;:{&quot;route&quot;:&quot;/inventario/stock-minimos?ubicacionId=2&quot;,&quot;configuredSite&quot;:&quot;Cruces&quot;,&quot;ubicacionId&quot;:2,&quot;configGet&quot;:{&quot;habilitado&quot;:true},&quot;renderedLabel&quot;:&quot;Activo&quot;,&quot;switchChecked&quot;:true,&quot;populatedMinimumCount&quot;:3},&quot;price&quot;:{&quot;route&quot;:&quot;/precios&quot;,&quot;productGroup&quot;:&quot;Alaska&quot;,&quot;sku&quot;:&quot;ALA-BEI&quot;,&quot;listPrice&quot;:&quot;$85.00&quot;,&quot;costRendered&quot;:&quot;—&quot;,&quot;marginDollarRendered&quot;:&quot;—&quot;,&quot;marginPercentRendered&quot;:&quot;—&quot;,&quot;status&quot;:&quot;Sin costo&quot;}}.
+
+Evidencia LIVE: {&quot;status&quot;:&quot;PASS&quot;,&quot;path&quot;:&quot;.local/phase2-purge-evidence-20260913163631333.json&quot;,&quot;sha256&quot;:&quot;2e46ff45a8c89160f410f3f35def6afabeeec95b48360711c846b9897b3ae56f&quot;,&quot;operation&quot;:&quot;Phase 2 operational purge rehearsal&quot;,&quot;capturedAtUtc&quot;:null,&quot;pointStatuses&quot;:{&quot;1&quot;:&quot;PASS&quot;,&quot;2&quot;:&quot;PASS&quot;,&quot;3&quot;:&quot;PASS&quot;,&quot;4&quot;:&quot;PASS&quot;,&quot;5&quot;:&quot;PASS&quot;,&quot;7&quot;:&quot;PASS&quot;,&quot;8&quot;:&quot;BLOCKED&quot;,&quot;9&quot;:&quot;BLOCKED&quot;,&quot;10&quot;:&quot;BLOCKED&quot;,&quot;11&quot;:&quot;PASS&quot;}}.
+
+Consulta LIVE independiente postcommit (capturada 2026-09-13T16:37:38.810Z): {&quot;status&quot;:&quot;PASS&quot;,&quot;stage&quot;:&quot;after_commit_before_restart&quot;,&quot;path&quot;:&quot;.local/phase2-live-postcommit.json&quot;,&quot;sha256&quot;:&quot;e31f6fda34fae70656f29746748b7e368a2400902c499486e1cb2b99aa7a66f4&quot;,&quot;capturedAtUtc&quot;:&quot;2026-09-13T16:37:38.810Z&quot;,&quot;identity&quot;:&quot;heliumdb&quot;,&quot;minimums&quot;:[{&quot;id&quot;:1,&quot;producto_id&quot;:1374,&quot;ubicacion_id&quot;:2,&quot;cantidad&quot;:2500,&quot;updated_by&quot;:1,&quot;updated_at&quot;:&quot;2026-09-13T15:21:35.374621+00:00&quot;},{&quot;id&quot;:2,&quot;producto_id&quot;:1389,&quot;ubicacion_id&quot;:2,&quot;cantidad&quot;:5000,&quot;updated_by&quot;:1,&quot;updated_at&quot;:&quot;2026-09-13T15:21:40.979699+00:00&quot;},{&quot;id&quot;:3,&quot;producto_id&quot;:1390,&quot;ubicacion_id&quot;:2,&quot;cantidad&quot;:5000,&quot;updated_by&quot;:1,&quot;updated_at&quot;:&quot;2026-09-13T15:21:56.751931+00:00&quot;}],&quot;switches&quot;:[{&quot;ubicacion_id&quot;:2,&quot;habilitado&quot;:true,&quot;updated_by&quot;:1,&quot;updated_at&quot;:&quot;2026-09-13T15:12:35.721+00:00&quot;}],&quot;invariant&quot;:{&quot;bad_pairs&quot;:0},&quot;sequence&quot;:{&quot;last_value&quot;:&quot;1&quot;,&quot;is_called&quot;:false},&quot;triggers&quot;:[{&quot;tabla&quot;:&quot;aplicaciones_credito&quot;,&quot;trigger&quot;:&quot;aplicaciones_credito_inmutables&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;aplicaciones_credito&quot;,&quot;trigger&quot;:&quot;aplicaciones_credito_validas&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;aplicaciones_pago_proveedor&quot;,&quot;trigger&quot;:&quot;aplicaciones_pago_proveedor_append_only&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;aplicaciones_pago_proveedor&quot;,&quot;trigger&quot;:&quot;aplicaciones_pago_proveedor_validar_insert&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;auditoria&quot;,&quot;trigger&quot;:&quot;auditoria_append_only&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;auditoria&quot;,&quot;trigger&quot;:&quot;auditoria_enriquecer_insert&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;movimientos_credito&quot;,&quot;trigger&quot;:&quot;movimientos_credito_inmutables&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;movimientos_credito&quot;,&quot;trigger&quot;:&quot;movimientos_credito_reversos_validos&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;pagos_proveedor&quot;,&quot;trigger&quot;:&quot;pagos_proveedor_inmutables&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;reimpresiones_etiqueta&quot;,&quot;trigger&quot;:&quot;reimpresiones_etiqueta_inmutable&quot;,&quot;tgenabled&quot;:&quot;O&quot;},{&quot;tabla&quot;:&quot;ticket_pagos&quot;,&quot;trigger&quot;:&quot;ticket_pagos_inmutables&quot;,&quot;tgenabled&quot;:&quot;O&quot;}]}.
+
+Consulta LIVE independiente postrestart (capturada 2026-09-13T16:44:33.894Z): A después del reinicio conserva tickets=0 y sesiones=0; solo aparecen stock_minimo_episodios=3 y notificaciones_sistema=12. Cambios C separados del baseline: [{&quot;table&quot;:&quot;permisos_rol&quot;,&quot;before&quot;:192,&quot;after&quot;:192,&quot;changedColumns&quot;:{&quot;updated_at&quot;:72}},{&quot;table&quot;:&quot;permisos_ubicacion&quot;,&quot;before&quot;:54,&quot;after&quot;:54,&quot;changedColumns&quot;:{&quot;updated_at&quot;:54}}]; los conteos de filas, flags y autores permanecen sin cambios fuera de esos updated_at; auditoría original preservada=true; sin datos de prueba en development=true.
+
+UI LIVE: {&quot;status&quot;:&quot;BLOCKED&quot;,&quot;path&quot;:&quot;.local/phase2-live-ui-evidence.json&quot;,&quot;sha256&quot;:&quot;1bc051c461773c9f3870e998535682412a59fb8d9c58dd9e3c3acfa0deb65ad7&quot;,&quot;authAttempted&quot;:false,&quot;reason&quot;:&quot;Single trusted-shell native login bridge could not transfer a server-issued cookie into the browser context: the ephemeral pipe produced no readable cookie before timeout. No fresh authenticated live browser context was created; no route checks were performed.&quot;,&quot;routeResults&quot;:[],&quot;checks&quot;:[&quot;No live UI checks completed because the safe in-memory authentication bridge was unavailable.&quot;,&quot;No password, token, cookie, username, URL query credential, workspace secret, or screenshot credential was recorded.&quot;,&quot;No logout, reset, seed, create, edit, save, direct insert, app change, workflow change, or API interception performed.&quot;]}. No se simula éxito de pantallas autenticadas cuando el puente seguro de credenciales está bloqueado.
+
+## Efectos runtime posteriores al reinicio (separados de la línea base transaccional)
+
+- Login normal: actualiza `usuarios.ultimo_acceso` y agrega `auditoria.LOGIN_EXITOSO`; no se mezcla con la comparación C pre-login.
+- Inicializador de API: actualiza `permissionupdated_at`; no se mezcla con la transacción de purga.
+- Poller de stock mínimo: al reiniciar evalúa sitios habilitados y puede crear episodios/notificaciones; se verifica aparte en UI/notificaciones.
+
+## Estado de aplicación
+
+Este generador no ejecuta la purga LIVE, no reinicia el API, no modifica `replit.md` y no crea tickets, usuarios, sesiones ni avisos.
+</pre></body></html>

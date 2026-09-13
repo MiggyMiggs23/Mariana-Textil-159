@@ -4,20 +4,26 @@
  * This file is deliberately not imported by the API and has no seed/migration
  * path.  It defaults to no operation.  A real development run requires the
  * exact authorization phrase, the development environment, heliumdb as the
- * server identity, the verified 2026-09-13-092331 restore as the immutable
+ * server identity, the verified 2026-09-13-101833 restore as the immutable
  * baseline, and an explicit parent workflow-pause acknowledgement.
  *
  * Modes:
  *   pnpm --filter @workspace/scripts exec tsx src/purge-operational-phase2.mts --preflight
  *   PHASE2_REHEARSAL=1 NODE_ENV=test TEST_DATABASE_URL=<metadata restored url> \
  *     pnpm --filter @workspace/scripts exec tsx src/purge-operational-phase2.mts --rehearse
- *   REQUIRE_PHASE2_AUTHORIZATION=PURGE_LISTS_A32_B7_C19_HELIUMDB \
+ *   REQUIRE_PHASE2_AUTHORIZATION=PURGE_LISTS_A33_B7_C18_HELIUMDB \
  *   PHASE2_BACKGROUND_WORKFLOWS_PAUSED=1 NODE_ENV=development \
  *     pnpm --filter @workspace/scripts exec tsx src/purge-operational-phase2.mts --apply
  *
+ * The committed disposable post-purge/UI/ticket proof is a separate harness:
+ * scripts/src/disposable-phase2-ui-harness.mts (never used by --apply).
+ *
  * Re-restore the disposable cluster from the verified dump before --apply
  * (the helper can advance nontransactional sequences), then set
- * PHASE2_REHEARSAL_RESTORED=1.
+ * PHASE2_REHEARSAL_RESTORED=1.  Apply also requires the separate disposable
+ * postpurge proof:
+ *   PHASE2_DISPOSABLE_PROOF_PATH=.local/<proof>.json
+ *   PHASE2_DISPOSABLE_PROOF_SHA256=<sha256-of-proof>
  *
  * If the backup commit differs only outside the protected application source
  * trees, review the recorded source fingerprint before --apply and add:
@@ -28,7 +34,7 @@
  * arbitrary target URL is not accepted.  No backup is created here.
  */
 import assert from "node:assert/strict";
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { execFile as execFileCallback } from "node:child_process";
 import {
   chmod,
@@ -69,7 +75,7 @@ const scriptPath = fileURLToPath(import.meta.url);
 const repositoryRoot = resolve(dirname(scriptPath), "../..");
 const backupDirectory = resolve(
   repositoryRoot,
-  ".local/backups/respaldo-antes-de-purga-2026-09-13-092331",
+  "scripts/.local/backups/respaldo-antes-de-purga-2026-09-13-101833",
 );
 const manifestPath = resolve(backupDirectory, "manifest.json");
 const sourceSnapshotPath = resolve(backupDirectory, "source-snapshot.json");
@@ -80,7 +86,7 @@ const driveVerificationPath = resolve(backupDirectory, "drive-verification.json"
 const backupStatePath = resolve(backupDirectory, "state.json");
 const expectedArchivePath = resolve(
   backupDirectory,
-  "respaldo-antes-de-purga-2026-09-13-092331.dump",
+  "respaldo-antes-de-purga-2026-09-13-101833.dump",
 );
 const evidencePath = resolve(
   repositoryRoot,
@@ -88,8 +94,8 @@ const evidencePath = resolve(
 );
 const statePath = resolve(repositoryRoot, ".local/phase2-purge-state.json");
 
-const PHASE2_AUTHORIZATION = "PURGE_LISTS_A32_B7_C19_HELIUMDB";
-const REHEARSAL_AUTHORIZATION = "REHEARSE_LISTS_A32_B7_C19_RESTORE";
+const PHASE2_AUTHORIZATION = "PURGE_LISTS_A33_B7_C18_HELIUMDB";
+const REHEARSAL_AUTHORIZATION = "REHEARSE_LISTS_A33_B7_C18_RESTORE";
 const COMMIT_DRIFT_ACK = "ACK_BACKUP_COMMIT_DRIFT_REVIEWED";
 
 const LIST_A = [
@@ -125,6 +131,7 @@ const LIST_A = [
   "solicitudes_pago_dirigido",
   "notificaciones_sistema",
   "stock_minimo_episodios",
+  "sesiones",
 ] as const;
 
 // Lista B has seven tables: six row-backed counters plus the cache, which is
@@ -154,7 +161,6 @@ const LIST_C = [
   "permisos_ubicacion",
   "camionetas",
   "choferes",
-  "sesiones",
   "equipos",
   "equipos_checklist",
   "stock_minimo_sitios",
@@ -231,6 +237,7 @@ const DELETE_ORDER = [
   "salidas",
   "tickets",
   "sesiones_caja",
+  "sesiones",
 ] as const;
 
 const expectedTableSet = new Set<string>([
@@ -243,13 +250,6 @@ class GuardFailure extends Error {
   constructor(message: string) {
     super(message);
     this.name = "GuardFailure";
-  }
-}
-
-class RehearsalRollback extends Error {
-  constructor(public readonly result: Row) {
-    super("rehearsal validation complete; outer transaction rolled back");
-    this.name = "RehearsalRollback";
   }
 }
 
@@ -329,6 +329,45 @@ async function writePrivateJson(path: string, value: unknown): Promise<void> {
 
 async function readJson(path: string): Promise<any> {
   return JSON.parse(await readFile(path, "utf8"));
+}
+
+async function loadDisposableProof(expectedDatabase: string): Promise<Row> {
+  const rawPath = process.env.PHASE2_DISPOSABLE_PROOF_PATH;
+  const expectedSha = process.env.PHASE2_DISPOSABLE_PROOF_SHA256;
+  if (!rawPath || !expectedSha) {
+    throw new GuardFailure(
+      "apply requires PHASE2_DISPOSABLE_PROOF_PATH and PHASE2_DISPOSABLE_PROOF_SHA256",
+    );
+  }
+  const proofPath = resolve(repositoryRoot, rawPath);
+  if (relative(repositoryRoot, proofPath).startsWith("..")) {
+    throw new GuardFailure("disposable proof must be inside the workspace");
+  }
+  const actualSha = await sha256File(proofPath);
+  if (actualSha !== expectedSha) {
+    throw new GuardFailure("disposable proof SHA-256 does not match reviewed evidence");
+  }
+  const proof = await readJson(proofPath);
+  if (
+    proof.status !== "PASS" ||
+    proof.operation !== "phase2-disposable-postpurge-probe" ||
+    proof.targetDatabase !== expectedDatabase ||
+    proof.emptyUi?.status !== "PASS" ||
+    Number(proof.ticket?.folio) !== 1000 ||
+    proof.ticket?.created !== true
+  ) {
+    throw new GuardFailure(
+      "disposable proof must contain PASS empty-UI checks and a committed ticket folio 1000",
+    );
+  }
+  return {
+    path: relative(repositoryRoot, proofPath),
+    sha256: actualSha,
+    operation: proof.operation,
+    targetDatabase: proof.targetDatabase,
+    emptyUi: proof.emptyUi,
+    ticket: proof.ticket,
+  };
 }
 
 async function sha256File(path: string): Promise<string> {
@@ -467,7 +506,7 @@ async function loadBackupArtifacts(): Promise<Row> {
   }
   const snapshotTables = sourceSnapshot.catalogue.tables.map((row: Row) => String(row.table));
   if (!setEqual(snapshotTables, expectedTableSet)) {
-    throw new GuardFailure("backup table catalogue does not equal exact Lists A32/B7/C19");
+    throw new GuardFailure("backup table catalogue does not equal exact Lists A33/B7/C18");
   }
   if (
     sourceMinimums.counts?.stock_minimos !== 3 ||
@@ -476,7 +515,7 @@ async function loadBackupArtifacts(): Promise<Row> {
   ) {
     throw new GuardFailure("backup minimum evidence is not exactly 3 minima, 1 site, 1 active site");
   }
-  if (metadata.database !== "restore_disposable_2026-09-13-092331") {
+  if (metadata.database !== "restore_disposable_2026-09-13-101833") {
     throw new GuardFailure("restore metadata database is not the fixed verified restore");
   }
   return {
@@ -887,218 +926,7 @@ async function txInvariant(
   };
 }
 
-async function runTicketProbe(
-  tx: unknown,
-  sqlRuntime: DrizzleRuntime,
-  createTicket: (tx: unknown, input: Row, includeCosts: boolean) => Promise<Row>,
-): Promise<Row> {
-  await txRows(tx, sqlRuntime, "SAVEPOINT phase2_ticket_probe");
-  const auditBefore = await txTableSnapshot(tx, sqlRuntime, "auditoria");
-  const ticketBefore = await txCount(tx, sqlRuntime, "tickets");
-  const ticketFolioBefore = (
-    await txRows(
-      tx,
-      sqlRuntime,
-      `SELECT ultimo_folio FROM ${tableRef("ticket_folio")} WHERE id = 1`,
-    )
-  )[0]?.ultimo_folio;
-  const ticketSequenceName = String(
-    (
-      await txRows(
-        tx,
-        sqlRuntime,
-        `SELECT pg_get_serial_sequence('public.tickets', 'id') AS sequence_name`,
-      )
-    )[0]?.sequence_name ?? "",
-  );
-  if (!/^public\.[a-zA-Z0-9_]+$/.test(ticketSequenceName)) {
-    throw new GuardFailure("tickets.id serial sequence could not be safely resolved");
-  }
-  const ticketSequenceBefore = await txSequenceState(tx, sqlRuntime, ticketSequenceName);
-  let probeResult: Row;
-  let probeError: string | undefined;
-  try {
-    const [user] = await txRows(
-      tx,
-      sqlRuntime,
-      `SELECT id FROM ${tableRef("usuarios")} WHERE activo = true ORDER BY id LIMIT 1`,
-    );
-    const [site] = await txRows(
-      tx,
-      sqlRuntime,
-      `SELECT id FROM ${tableRef("ubicaciones")} WHERE activa = true AND tipo = 'TIENDA' ORDER BY id LIMIT 1`,
-    );
-    const [client] = await txRows(
-      tx,
-      sqlRuntime,
-      `SELECT id FROM ${tableRef("clientes")} WHERE activo = true ORDER BY id LIMIT 1`,
-    );
-    const [product] = await txRows(
-      tx,
-      sqlRuntime,
-      `
-        SELECT id, precio_sugerido
-        FROM ${tableRef("productos")}
-        WHERE activo = true AND se_vende_por_metro = true
-          AND unidad = 'METRO' AND precio_sugerido IS NOT NULL
-        ORDER BY id
-        LIMIT 1
-      `,
-    );
-    if (!user || !site || !client || !product) {
-      throw new GuardFailure(
-        "ticket verification is blocked: no existing active user/site/client/metered product is available",
-      );
-    }
-    const uuid = randomUUID();
-    probeResult = await createTicket(
-      tx,
-      {
-        ubicacionId: Number(site.id),
-        usuarioTerminalId: Number(user.id),
-        clienteId: Number(client.id),
-        documentoTipo: "TICKET",
-        tipo: "METREADO",
-        facturado: false,
-        uuidCliente: uuid,
-        ip: "127.0.0.1",
-        lineas: [
-          {
-            productoId: Number(product.id),
-            tipo: "METREADO",
-            cantidad: "1.000",
-            precioUnitario: String(product.precio_sugerido),
-          },
-        ],
-      },
-      false,
-    );
-    if (Number(probeResult?.folio) !== 1000) {
-      throw new GuardFailure(`ticket helper returned unexpected folio ${String(probeResult?.folio)}`);
-    }
-    const stored = (
-      await txRows(
-        tx,
-        sqlRuntime,
-        `SELECT id, folio FROM ${tableRef("tickets")} WHERE uuid_cliente = '${uuid}'::uuid`,
-      )
-    )[0];
-    if (!stored || Number(stored.folio) !== 1000) {
-      throw new GuardFailure("ticket helper did not store the expected folio inside savepoint");
-    }
-  } catch (error) {
-    probeError = redactError(error);
-    await txRows(tx, sqlRuntime, "ROLLBACK TO SAVEPOINT phase2_ticket_probe");
-    throw new GuardFailure(`ticket verification helper failed; purge rolled back: ${probeError}`);
-  }
-  await txRows(tx, sqlRuntime, "ROLLBACK TO SAVEPOINT phase2_ticket_probe");
-  const ticketAfter = await txCount(tx, sqlRuntime, "tickets");
-  const ticketFolioAfter = (
-    await txRows(
-      tx,
-      sqlRuntime,
-      `SELECT ultimo_folio FROM ${tableRef("ticket_folio")} WHERE id = 1`,
-    )
-  )[0]?.ultimo_folio;
-  const auditAfter = await txTableSnapshot(tx, sqlRuntime, "auditoria");
-  const ticketSequenceAfter = await txSequenceState(tx, sqlRuntime, ticketSequenceName);
-  await txRows(tx, sqlRuntime, "RELEASE SAVEPOINT phase2_ticket_probe");
-  if (
-    ticketAfter !== ticketBefore ||
-    Number(ticketFolioAfter) !== Number(ticketFolioBefore) ||
-    auditAfter.hash !== auditBefore.hash ||
-    auditAfter.count !== auditBefore.count
-  ) {
-    throw new GuardFailure("ticket savepoint did not restore ticket_folio/tickets/auditoria exactly");
-  }
-  return {
-    helper: "artifacts/api-server/src/lib/pos.ts::crearTicket",
-    helperFolio: Number(probeResult!.folio),
-    storedTicketFolio: 1000,
-    ticketRowsBefore: ticketBefore,
-    ticketRowsAfterRollback: ticketAfter,
-    ticketFolioBefore: Number(ticketFolioBefore),
-    ticketFolioAfterRollback: Number(ticketFolioAfter),
-    ticketIdSequenceName: ticketSequenceName,
-    ticketIdSequenceBefore: ticketSequenceBefore,
-    ticketIdSequenceAfter: ticketSequenceAfter,
-    ticketIdSequenceConsumed:
-      stableJson(ticketSequenceBefore) !== stableJson(ticketSequenceAfter),
-    auditRowsBefore: auditBefore.count,
-    auditRowsAfterRollback: auditAfter.count,
-    auditHashRestored: true,
-    probeError: probeError ?? null,
-    rehearsalOnlyDisposable: true,
-    actualValidTicketCreated: true,
-    actualValidTicketReverted: true,
-  };
-}
-
-async function runLiveTicketAllocatorProbe(
-  tx: unknown,
-  sqlRuntime: DrizzleRuntime,
-): Promise<Row> {
-  await txRows(tx, sqlRuntime, "SAVEPOINT phase2_ticket_allocator_probe");
-  const auditBefore = await txTableSnapshot(tx, sqlRuntime, "auditoria");
-  const ticketBefore = await txCount(tx, sqlRuntime, "tickets");
-  const folioBefore = (await txRows(
-    tx,
-    sqlRuntime,
-    `SELECT ultimo_folio FROM ${tableRef("ticket_folio")} WHERE id = 1 FOR UPDATE`,
-  ))[0]?.ultimo_folio;
-  if (Number(folioBefore) !== 999) {
-    throw new GuardFailure(`live allocator requires ticket_folio=999, found ${String(folioBefore)}`);
-  }
-  try {
-    const allocated = (await txRows(
-      tx,
-      sqlRuntime,
-      `UPDATE ${tableRef("ticket_folio")}
-       SET ultimo_folio = ultimo_folio + 1
-       WHERE id = 1
-       RETURNING ultimo_folio`,
-    ))[0]?.ultimo_folio;
-    if (Number(allocated) !== 1000) {
-      throw new GuardFailure(`live allocator returned unexpected folio ${String(allocated)}`);
-    }
-  } catch (error) {
-    await txRows(tx, sqlRuntime, "ROLLBACK TO SAVEPOINT phase2_ticket_allocator_probe");
-    throw new GuardFailure(`live allocator probe failed; purge rolled back: ${redactError(error)}`);
-  }
-  await txRows(tx, sqlRuntime, "ROLLBACK TO SAVEPOINT phase2_ticket_allocator_probe");
-  const folioAfter = (await txRows(
-    tx,
-    sqlRuntime,
-    `SELECT ultimo_folio FROM ${tableRef("ticket_folio")} WHERE id = 1`,
-  ))[0]?.ultimo_folio;
-  const ticketAfter = await txCount(tx, sqlRuntime, "tickets");
-  const auditAfter = await txTableSnapshot(tx, sqlRuntime, "auditoria");
-  await txRows(tx, sqlRuntime, "RELEASE SAVEPOINT phase2_ticket_allocator_probe");
-  if (Number(folioAfter) !== Number(folioBefore) ||
-      ticketAfter !== ticketBefore ||
-      auditAfter.count !== auditBefore.count ||
-      auditAfter.hash !== auditBefore.hash) {
-    throw new GuardFailure("live allocator savepoint did not restore ticket_folio/tickets/auditoria");
-  }
-  return {
-    scope: "live",
-    allocatorFolioBefore: Number(folioBefore),
-    allocatorFolioAllocated: 1000,
-    allocatorFolioAfterRollback: Number(folioAfter),
-    allocatorRolledBack: true,
-    liveFullTicketNotCreated: true,
-    ticketsBefore: ticketBefore,
-    ticketsAfterRollback: ticketAfter,
-    auditoriaBefore: auditBefore.count,
-    auditoriaAfterRollback: auditAfter.count,
-    auditoriaUntouched: true,
-    actualValidTicketCreated: false,
-    actualValidTicketReverted: false,
-  };
-}
-
 async function executePurge(
-  mode: "rehearse" | "apply",
   artifacts: Row,
   baseline: Row,
   preflight: Row,
@@ -1264,20 +1092,6 @@ async function executePurge(
         throw new GuardFailure("existencias invariant failed after real cache rebuild");
       }
 
-      const ticketProbe = mode === "rehearse"
-        ? await runTicketProbe(
-            tx,
-            sqlRuntime,
-            (
-              await import("../../artifacts/api-server/src/lib/pos.ts")
-            ).crearTicket as unknown as (
-              tx: unknown,
-              input: Row,
-              includeCosts: boolean,
-            ) => Promise<Row>,
-          )
-        : await runLiveTicketAllocatorProbe(tx, sqlRuntime);
-
       const afterA: Record<string, number> = {};
       for (const table of LIST_A) afterA[table] = await txCount(tx, sqlRuntime, table);
       if (Object.values(afterA).some((count) => count !== 0)) {
@@ -1350,6 +1164,7 @@ async function executePurge(
         disabledTriggers: FIVE_DELETE_BLOCKERS.map(([table, trigger]) => `${table}.${trigger}`),
         afterA,
         afterC,
+        postPurgeChecksBeforeFixturesOrTicket: true,
         counters: counterVerification,
         sequence: {
           derivedName: sequenceName,
@@ -1357,12 +1172,8 @@ async function executePurge(
           isCalledFalse: sequenceAfterReset.is_called === false,
         },
         invariant,
-        ticketProbe,
         triggersFinal: finalTriggers,
       };
-      if (mode === "rehearse") {
-        throw new RehearsalRollback(transactionEvidence);
-      }
       return transactionEvidence;
     });
     return {
@@ -1370,38 +1181,29 @@ async function executePurge(
       rollbackOnError: true,
       ...result,
     };
-  } catch (error) {
-      if (error instanceof RehearsalRollback) {
-        return {
-          transaction: "single db.transaction rolled back (rehearsal)",
-          rollbackOnError: true,
-          rehearsalOuterRollback: true,
-          requiresReRestoreBeforeApply: true,
-          ...error.result,
-        };
-      }
-      throw error;
   } finally {
     await dbModule.pool.end();
   }
 }
 
-function parseMode(): "preflight" | "rehearse" | "apply" {
+type Mode = "preflight" | "rehearse" | "apply";
+
+function parseMode(): Mode {
   const args = process.argv.slice(2);
   const known = new Set(["--preflight", "--rehearse", "--apply"]);
   if (args.length !== 1 || !known.has(args[0]!)) {
     throw new GuardFailure("exactly one of --preflight, --rehearse, or --apply is required");
   }
-  return args[0]!.slice(2) as "preflight" | "rehearse" | "apply";
+  return args[0]!.slice(2) as Mode;
 }
 
 async function resolveTarget(
-  mode: "preflight" | "rehearse" | "apply",
+  mode: Mode,
   metadata: Row,
 ): Promise<{ targetUrl: string; expectedDatabase: string; expectedPort?: number }> {
   if (mode === "rehearse") {
     if (process.env.PHASE2_REHEARSAL !== "1") {
-      throw new GuardFailure("rehearsal requires PHASE2_REHEARSAL=1");
+      throw new GuardFailure("disposable rehearsal/probe requires PHASE2_REHEARSAL=1");
     }
     if (process.env.REQUIRE_PHASE2_AUTHORIZATION !== REHEARSAL_AUTHORIZATION) {
       throw new GuardFailure(
@@ -1487,6 +1289,11 @@ async function main(): Promise<void> {
       cloudReceiptStatus: "PASS",
       restoreComparisonStatus: artifacts.restoreComparison.status,
     };
+    if (mode === "apply") {
+      evidence.disposableProof = await loadDisposableProof(
+        String(artifacts.metadata.database),
+      );
+    }
     const sourceFingerprint = await verifySourceFingerprint(
       String(artifacts.manifest.commit),
     );
@@ -1596,7 +1403,6 @@ async function main(): Promise<void> {
         process.env.NODE_ENV = "development";
       }
       evidence.execution = await executePurge(
-        mode,
         artifacts,
         baselineSnapshot,
         targetSnapshot,

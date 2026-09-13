@@ -1,0 +1,1099 @@
+{
+  "status": "PURGE_COMMITTED_WITH_VALIDATION_LIMITATIONS",
+  "generatedAtUtc": "2026-09-13T16:48:10.586Z",
+  "finalEligible": false,
+  "inputs": {
+    "readonlyEvidence": ".local/phase2-purge-evidence-20260913163342450.json",
+    "readonlyStatus": "PASS",
+    "rehearseEvidence": ".local/phase2-purge-evidence-20260913162034228.json",
+    "rehearseStatus": "PASS",
+    "state": ".local/phase2-purge-state.json",
+    "stateStatus": "PASS",
+    "backupDirectory": "scripts/.local/backups/respaldo-antes-de-purga-2026-09-13-101833",
+    "disposableProof": ".local/phase2-ui-rehearsal/phase2-disposable-postpurge-proof.json",
+    "uiClarification": ".local/phase2-ui-rehearsal/ui-clarification.json",
+    "testReport": "reports/fase2-cinco-suites-aisladas-2026-09-13.json",
+    "liveEvidence": ".local/phase2-purge-evidence-20260913163631333.json",
+    "postcommitEvidence": ".local/phase2-live-postcommit.json",
+    "postrestartEvidence": ".local/phase2-live-postrestart.json",
+    "liveUiEvidence": ".local/phase2-live-ui-evidence.json"
+  },
+  "runtime": {
+    "sourceApiStatus": "PASS_RESTARTED_RUNNING",
+    "sourceApiPaused": "NOT_PAUSED",
+    "liveApply": "PASS_COMMITTED"
+  },
+  "backup": {
+    "status": "PASS",
+    "directory": "scripts/.local/backups/respaldo-antes-de-purga-2026-09-13-101833",
+    "commit": "b36b9a4eac11b3e630a84f775f71c597618b4f60",
+    "capturedAtUtc": "2026-09-13T16:18:33.654Z",
+    "archive": {
+      "path": "scripts/.local/backups/respaldo-antes-de-purga-2026-09-13-101833/respaldo-antes-de-purga-2026-09-13-101833.dump",
+      "sha256": "b2e0ad1765da065cdd5d4f7dbd609eeb7c0fc31dd0b2e53c70d1360806cb22c6",
+      "sizeBytes": 416626
+    },
+    "verification": {
+      "manifest": "PASS",
+      "driveDownload": "PASS",
+      "driveFileId": "1Wxa6y332PLPfWNZ3sEkUlYVEZZ7XW3kb",
+      "driveWebViewLink": "https://drive.google.com/file/d/1Wxa6y332PLPfWNZ3sEkUlYVEZZ7XW3kb/view?usp=drivesdk",
+      "driveOwnerOnly": true,
+      "restoreComparison": "PASS",
+      "categories": {
+        "tables": {
+          "sourceCount": 58,
+          "restoredCount": 58,
+          "mismatchCount": 0
+        },
+        "columns": {
+          "sourceCount": 583,
+          "restoredCount": 583,
+          "mismatchCount": 0
+        },
+        "constraints": {
+          "sourceCount": 270,
+          "restoredCount": 270,
+          "mismatchCount": 0
+        },
+        "indexes": {
+          "sourceCount": 205,
+          "restoredCount": 205,
+          "mismatchCount": 0
+        },
+        "triggers": {
+          "sourceCount": 11,
+          "restoredCount": 11,
+          "mismatchCount": 0
+        },
+        "sequences": {
+          "sourceCount": 43,
+          "restoredCount": 43,
+          "mismatchCount": 0
+        },
+        "foreign_key_edges": {
+          "sourceCount": 146,
+          "restoredCount": 146,
+          "mismatchCount": 0
+        },
+        "serial_sequence": {
+          "sourceCount": 1,
+          "restoredCount": 1,
+          "mismatchCount": 0
+        },
+        "foreign_key_cycles": {
+          "sourceCount": 2,
+          "restoredCount": 2,
+          "mismatchCount": 0
+        }
+      }
+    },
+    "sourceMutationPolicy": {
+      "sourceTransaction": "REPEATABLE READ READ ONLY",
+      "defaultTransactionReadOnly": true,
+      "phase2Executed": false,
+      "sourceMutated": false
+    },
+    "state": "PASS"
+  },
+  "lists": {
+    "A": [
+      "tickets",
+      "ticket_lineas",
+      "ticket_pagos",
+      "autorizaciones_nota",
+      "movimientos_credito",
+      "aplicaciones_credito",
+      "notificaciones_credito",
+      "sesiones_caja",
+      "sesiones_caja_dias",
+      "salidas_dinero_caja",
+      "cuadre_fiscal_registros",
+      "salidas",
+      "salida_lineas",
+      "salida_rollos",
+      "viajes",
+      "viaje_salidas",
+      "viaje_tickets",
+      "entradas",
+      "contenedores",
+      "contenedor_lineas",
+      "pagos_proveedor",
+      "aplicaciones_pago_proveedor",
+      "movimientos",
+      "rollos",
+      "reimpresiones_etiqueta",
+      "auditorias_inventario",
+      "auditoria_inventario_escaneos",
+      "auditoria_inventario_participantes",
+      "auditoria_inventario_snapshot",
+      "solicitudes_pago_dirigido",
+      "notificaciones_sistema",
+      "stock_minimo_episodios",
+      "sesiones"
+    ],
+    "B": [
+      "ticket_folio",
+      "entrada_folio",
+      "salida_folio",
+      "viaje_folio",
+      "auditoria_inventario_folio",
+      "series_consecutivo",
+      "existencias"
+    ],
+    "C": [
+      "productos",
+      "precio_historial",
+      "clientes",
+      "cliente_documentos",
+      "proveedores",
+      "usuarios",
+      "ubicaciones",
+      "pisos",
+      "permisos_rol",
+      "permisos_usuario",
+      "permisos_ubicacion",
+      "camionetas",
+      "choferes",
+      "equipos",
+      "equipos_checklist",
+      "stock_minimo_sitios",
+      "stock_minimos",
+      "auditoria"
+    ]
+  },
+  "transactionBaseline": {
+    "transaction": "single db.transaction committed",
+    "rollbackOnError": true,
+    "listA": [
+      {
+        "table": "tickets",
+        "before": 7,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "ticket_lineas",
+        "before": 61,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "ticket_pagos",
+        "before": 4,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "autorizaciones_nota",
+        "before": 2,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "movimientos_credito",
+        "before": 3,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "aplicaciones_credito",
+        "before": 1,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "notificaciones_credito",
+        "before": 2,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "sesiones_caja",
+        "before": 3,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "sesiones_caja_dias",
+        "before": 3,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "salidas_dinero_caja",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "cuadre_fiscal_registros",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "salidas",
+        "before": 8,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "salida_lineas",
+        "before": 8,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "salida_rollos",
+        "before": 42,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "viajes",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "viaje_salidas",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "viaje_tickets",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "entradas",
+        "before": 2,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "contenedores",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "contenedor_lineas",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "pagos_proveedor",
+        "before": 4,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "before": 2,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "movimientos",
+        "before": 259,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "rollos",
+        "before": 80,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "reimpresiones_etiqueta",
+        "before": 9,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "auditorias_inventario",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "auditoria_inventario_escaneos",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "auditoria_inventario_participantes",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "auditoria_inventario_snapshot",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "solicitudes_pago_dirigido",
+        "before": 0,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "notificaciones_sistema",
+        "before": 12,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "stock_minimo_episodios",
+        "before": 3,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      },
+      {
+        "table": "sesiones",
+        "before": 151,
+        "after": 0,
+        "beforeHash": null,
+        "afterHash": null
+      }
+    ],
+    "listC": [
+      {
+        "table": "productos",
+        "beforeCount": 1234,
+        "afterCount": 1234,
+        "beforeHash": "134d15726b0063cba05208a09c5217e9b9e1a8c0314bd9210ad2c5d5f3c918f6",
+        "afterHash": "134d15726b0063cba05208a09c5217e9b9e1a8c0314bd9210ad2c5d5f3c918f6",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "precio_historial",
+        "beforeCount": 1016,
+        "afterCount": 1016,
+        "beforeHash": "ad7d6f4c7c84fb34096cf482d8e416f05446ffbe83e5ce446eb6ab10634693c8",
+        "afterHash": "ad7d6f4c7c84fb34096cf482d8e416f05446ffbe83e5ce446eb6ab10634693c8",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "clientes",
+        "beforeCount": 7,
+        "afterCount": 7,
+        "beforeHash": "eefa470b3f2e51e356fd0b47788d23c9983936f7bf73012a907f4397eb60162d",
+        "afterHash": "eefa470b3f2e51e356fd0b47788d23c9983936f7bf73012a907f4397eb60162d",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "cliente_documentos",
+        "beforeCount": 0,
+        "afterCount": 0,
+        "beforeHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "proveedores",
+        "beforeCount": 27,
+        "afterCount": 27,
+        "beforeHash": "b48987a88d80479cf30cadf008ecef74cfdb75301c923feb750cf819fae3e6dc",
+        "afterHash": "b48987a88d80479cf30cadf008ecef74cfdb75301c923feb750cf819fae3e6dc",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "usuarios",
+        "beforeCount": 31,
+        "afterCount": 31,
+        "beforeHash": "d8dc27a1375c92a270169822d453917fa37e28fcc375b6d594d67700d3678b32",
+        "afterHash": "d8dc27a1375c92a270169822d453917fa37e28fcc375b6d594d67700d3678b32",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "ubicaciones",
+        "beforeCount": 11,
+        "afterCount": 11,
+        "beforeHash": "36c7fa0049d12e27333daa26e74c3c77cf6423e8cbd47ff40c45d2102981a5bb",
+        "afterHash": "36c7fa0049d12e27333daa26e74c3c77cf6423e8cbd47ff40c45d2102981a5bb",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "pisos",
+        "beforeCount": 0,
+        "afterCount": 0,
+        "beforeHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "permisos_rol",
+        "beforeCount": 192,
+        "afterCount": 192,
+        "beforeHash": "5bb3147310e8057b3314703d766cad10704acc8825fd33970e5f2c61a35466b4",
+        "afterHash": "5bb3147310e8057b3314703d766cad10704acc8825fd33970e5f2c61a35466b4",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "permisos_usuario",
+        "beforeCount": 0,
+        "afterCount": 0,
+        "beforeHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "permisos_ubicacion",
+        "beforeCount": 54,
+        "afterCount": 54,
+        "beforeHash": "4ffcce13a8d6ec1e81af0985c2a0873d7c3484afd2fbb1980d148025327cbfc7",
+        "afterHash": "4ffcce13a8d6ec1e81af0985c2a0873d7c3484afd2fbb1980d148025327cbfc7",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "camionetas",
+        "beforeCount": 0,
+        "afterCount": 0,
+        "beforeHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "choferes",
+        "beforeCount": 0,
+        "afterCount": 0,
+        "beforeHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "equipos",
+        "beforeCount": 0,
+        "afterCount": 0,
+        "beforeHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "equipos_checklist",
+        "beforeCount": 0,
+        "afterCount": 0,
+        "beforeHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "afterHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "stock_minimo_sitios",
+        "beforeCount": 1,
+        "afterCount": 1,
+        "beforeHash": "af7dfb9179704644825b3c9050a75f13f7e20a6e4b7428840cc60334d3876b2b",
+        "afterHash": "af7dfb9179704644825b3c9050a75f13f7e20a6e4b7428840cc60334d3876b2b",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "stock_minimos",
+        "beforeCount": 3,
+        "afterCount": 3,
+        "beforeHash": "1c5fda3f5408166833c0be8434c30861f710e5727696e30ae5771acc34bb4fb9",
+        "afterHash": "1c5fda3f5408166833c0be8434c30861f710e5727696e30ae5771acc34bb4fb9",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      },
+      {
+        "table": "auditoria",
+        "beforeCount": 3045,
+        "afterCount": 3045,
+        "beforeHash": "2726bb29daabb723dc0b54b8530bbda9a166031d3268f171916181ddde831196",
+        "afterHash": "2726bb29daabb723dc0b54b8530bbda9a166031d3268f171916181ddde831196",
+        "countUnchanged": true,
+        "hashUnchanged": true
+      }
+    ],
+    "counters": {
+      "ticket_folio": {
+        "beforeCount": 1,
+        "afterCount": 1,
+        "resetColumn": "ultimo_folio",
+        "resetValue": 999
+      },
+      "entrada_folio": {
+        "beforeCount": 11,
+        "afterCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": 0
+      },
+      "salida_folio": {
+        "beforeCount": 11,
+        "afterCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": 0
+      },
+      "viaje_folio": {
+        "beforeCount": 11,
+        "afterCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": 0
+      },
+      "auditoria_inventario_folio": {
+        "beforeCount": 11,
+        "afterCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": 0
+      },
+      "series_consecutivo": {
+        "beforeCount": 1,
+        "afterCount": 1,
+        "resetColumn": "ultimo_numero",
+        "resetValue": 1000000
+      }
+    },
+    "sequence": {
+      "derivedName": "public.contenedores_folio_seq",
+      "afterReset": {
+        "last_value": "1",
+        "is_called": false
+      },
+      "isCalledFalse": true
+    },
+    "invariant": {
+      "badPairs": 0,
+      "existenciasRows": 30,
+      "movimientosRows": 0,
+      "rollosRows": 0
+    },
+    "triggersFinal": [
+      {
+        "table": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_inmutables",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_validas",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_append_only",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_validar_insert",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "auditoria",
+        "trigger": "auditoria_append_only",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "auditoria",
+        "trigger": "auditoria_enriquecer_insert",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "movimientos_credito",
+        "trigger": "movimientos_credito_inmutables",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "movimientos_credito",
+        "trigger": "movimientos_credito_reversos_validos",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "pagos_proveedor",
+        "trigger": "pagos_proveedor_inmutables",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "reimpresiones_etiqueta",
+        "trigger": "reimpresiones_etiqueta_inmutable",
+        "tgenabled": "O",
+        "tgisinternal": false
+      },
+      {
+        "table": "ticket_pagos",
+        "trigger": "ticket_pagos_inmutables",
+        "tgenabled": "O",
+        "tgisinternal": false
+      }
+    ],
+    "triggersAllO": true,
+    "auditPreserved": true
+  },
+  "minimums": {
+    "counts": {
+      "stock_minimos": 3,
+      "stock_minimo_sitios": 1,
+      "active_sites": 1
+    },
+    "values": [
+      {
+        "productoId": 1374,
+        "ubicacionId": 2,
+        "cantidad": "2500.000",
+        "updatedAt": "2026-09-13T15:21:35.374Z",
+        "updatedBy": 1
+      },
+      {
+        "productoId": 1389,
+        "ubicacionId": 2,
+        "cantidad": "5000.000",
+        "updatedAt": "2026-09-13T15:21:40.979Z",
+        "updatedBy": 1
+      },
+      {
+        "productoId": 1390,
+        "ubicacionId": 2,
+        "cantidad": "5000.000",
+        "updatedAt": "2026-09-13T15:21:56.751Z",
+        "updatedBy": 1
+      }
+    ],
+    "sites": [
+      {
+        "ubicacion_id": 2,
+        "habilitado": true,
+        "updated_by": 1,
+        "updated_at": "2026-09-13T15:12:35.721Z"
+      }
+    ]
+  },
+  "disposableProof": {
+    "status": "PASS",
+    "operation": "phase2-disposable-postpurge-probe",
+    "evidencePath": ".local/phase2-ui-rehearsal/phase2-disposable-postpurge-proof.json",
+    "sha256": "cf41530d9b3b6923c80247cccd2f9947819c61194b4e9acd4d06a8cf7dfed88c",
+    "emptyUi": {
+      "status": "PASS",
+      "route": "/login?returnTo=/",
+      "checks": [
+        "Normal login UI completed with synthetic ADMIN; all API traffic was routed to the disposable harness and no credentials were recorded.",
+        "/caja/tiempo-real prior check passed: zero financial totals, closed stores, no recent tickets, no error/blank/crash.",
+        "/caja/cuentas-destino prior check passed: all financial totals $0.00, no movements, no error/blank/crash.",
+        "/reportes prior check passed via /reportes/ventas: zero KPIs and No hay datos disponibles, no error/blank/crash.",
+        "Mariana stock-minimum diagnostic was a site-selection misconfiguration, not an app failure: Mariana correctly had no settings and Apagado.",
+        "Configured site Cruces (ubicacion_id 2) verified: exactly 3 non-empty minimum settings and enabled switch aria-checked=true.",
+        "/precios passed: preserved product catalog rendered; visible cost/price/margin/status cells were no-cost/null-margin represented by —, with no error/blank/crash.",
+        "/clientes passed: 7 restored active client rows rendered with zero balances/null contact fields represented by —.",
+        "/proveedores passed: restored catalog rendered with Total Proveedores 27 and zero financial totals.",
+        "/equipos passed: all 9 restored site groups rendered intentional zero-equipment empty states.",
+        "No create/edit/save/logout actions performed; no development API/workflow/config/app code touched."
+      ]
+    },
+    "ticket": {
+      "status": "PASS",
+      "folio": 1000,
+      "created": true,
+      "documentoTipo": "TICKET",
+      "tipo": "METREADO"
+    }
+  },
+  "uiClarification": {
+    "status": "PASS",
+    "path": ".local/phase2-ui-rehearsal/ui-clarification.json",
+    "sha256": "54465f1d733fa8ce307279fd4636738a3f046543e3ca9f3af10c661943b234e1",
+    "operation": "phase2-ui-clarification",
+    "checks": [
+      "Stock deep-link query ubicacionId=2 selected Cruces (configured site id 2).",
+      "Effective GET stock-minimos/config returned ubicacionId 2 and habilitado true.",
+      "Same rendered config state showed status Activo, switch aria-checked true, and exactly 3 populated minimum values; prior Apagado observation was stale Mariana explanatory copy and is corrected.",
+      "Read-only Precios check expanded restored product group Alaska and row ALA-BEI.",
+      "ALA-BEI retained Precio Lista $85.00; Costo base and both Margen fields rendered — (null/empty); row status rendered literal Sin costo.",
+      "No synthetic product was used for the price check; no PATCH/save/edit/logout actions were performed."
+    ],
+    "stock": {
+      "route": "/inventario/stock-minimos?ubicacionId=2",
+      "configuredSite": "Cruces",
+      "ubicacionId": 2,
+      "configGet": {
+        "habilitado": true
+      },
+      "renderedLabel": "Activo",
+      "switchChecked": true,
+      "populatedMinimumCount": 3
+    },
+    "price": {
+      "route": "/precios",
+      "productGroup": "Alaska",
+      "sku": "ALA-BEI",
+      "listPrice": "$85.00",
+      "costRendered": "—",
+      "marginDollarRendered": "—",
+      "marginPercentRendered": "—",
+      "status": "Sin costo"
+    }
+  },
+  "actualTests": {
+    "path": "reports/fase2-cinco-suites-aisladas-2026-09-13.json",
+    "sha256": "1b2ff7afcfc78587293afed511c001e98d6af7733568651a8d7d22c6382dd467",
+    "format": "json",
+    "statuses": {
+      "typecheck": "PASS",
+      "suites": "FAIL",
+      "ui": "NOT_RUN",
+      "ticket": "NOT_RUN"
+    },
+    "status": "WITH_OBSERVATIONS",
+    "observations": {
+      "scenarioPassed": 75,
+      "scenarioFailed": 0,
+      "cleanupFailures": 2,
+      "observations": [
+        "scenario assertions: 75 passed, 0 failed",
+        "2 fixture cleanup failure(s); not scenario assertion failures",
+        "test:inventario cleanup: append_only_protection (P0001)",
+        "test:salidas cleanup: fixture_cleanup_foreign_key (23503)"
+      ]
+    }
+  },
+  "live": {
+    "status": "PASS",
+    "path": ".local/phase2-purge-evidence-20260913163631333.json",
+    "sha256": "2e46ff45a8c89160f410f3f35def6afabeeec95b48360711c846b9897b3ae56f",
+    "operation": "Phase 2 operational purge rehearsal",
+    "capturedAtUtc": null,
+    "pointStatuses": {
+      "1": "PASS",
+      "2": "PASS",
+      "3": "PASS",
+      "4": "PASS",
+      "5": "PASS",
+      "7": "PASS",
+      "8": "BLOCKED",
+      "9": "BLOCKED",
+      "10": "BLOCKED",
+      "11": "PASS"
+    }
+  },
+  "postcommit": {
+    "status": "PASS",
+    "stage": "after_commit_before_restart",
+    "path": ".local/phase2-live-postcommit.json",
+    "sha256": "e31f6fda34fae70656f29746748b7e368a2400902c499486e1cb2b99aa7a66f4",
+    "capturedAtUtc": "2026-09-13T16:37:38.810Z",
+    "identity": "heliumdb",
+    "minimums": [
+      {
+        "id": 1,
+        "producto_id": 1374,
+        "ubicacion_id": 2,
+        "cantidad": 2500,
+        "updated_by": 1,
+        "updated_at": "2026-09-13T15:21:35.374621+00:00"
+      },
+      {
+        "id": 2,
+        "producto_id": 1389,
+        "ubicacion_id": 2,
+        "cantidad": 5000,
+        "updated_by": 1,
+        "updated_at": "2026-09-13T15:21:40.979699+00:00"
+      },
+      {
+        "id": 3,
+        "producto_id": 1390,
+        "ubicacion_id": 2,
+        "cantidad": 5000,
+        "updated_by": 1,
+        "updated_at": "2026-09-13T15:21:56.751931+00:00"
+      }
+    ],
+    "switches": [
+      {
+        "ubicacion_id": 2,
+        "habilitado": true,
+        "updated_by": 1,
+        "updated_at": "2026-09-13T15:12:35.721+00:00"
+      }
+    ],
+    "invariant": {
+      "bad_pairs": 0
+    },
+    "sequence": {
+      "last_value": "1",
+      "is_called": false
+    },
+    "triggers": [
+      {
+        "tabla": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_inmutables",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_validas",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_append_only",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_validar_insert",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "auditoria",
+        "trigger": "auditoria_append_only",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "auditoria",
+        "trigger": "auditoria_enriquecer_insert",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "movimientos_credito",
+        "trigger": "movimientos_credito_inmutables",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "movimientos_credito",
+        "trigger": "movimientos_credito_reversos_validos",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "pagos_proveedor",
+        "trigger": "pagos_proveedor_inmutables",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "reimpresiones_etiqueta",
+        "trigger": "reimpresiones_etiqueta_inmutable",
+        "tgenabled": "O"
+      },
+      {
+        "tabla": "ticket_pagos",
+        "trigger": "ticket_pagos_inmutables",
+        "tgenabled": "O"
+      }
+    ]
+  },
+  "postrestart": {
+    "status": "OBSERVED",
+    "stage": "after_restart",
+    "path": ".local/phase2-live-postrestart.json",
+    "sha256": "45480039f54fb61adf96ceefb6ad1981dd3723871f1199c03f160f590eaf5cf2",
+    "capturedAtUtc": "2026-09-13T16:44:33.894Z",
+    "A": {
+      "tickets": 0,
+      "ticket_lineas": 0,
+      "ticket_pagos": 0,
+      "autorizaciones_nota": 0,
+      "movimientos_credito": 0,
+      "aplicaciones_credito": 0,
+      "notificaciones_credito": 0,
+      "sesiones_caja": 0,
+      "sesiones_caja_dias": 0,
+      "salidas_dinero_caja": 0,
+      "cuadre_fiscal_registros": 0,
+      "salidas": 0,
+      "salida_lineas": 0,
+      "salida_rollos": 0,
+      "viajes": 0,
+      "viaje_salidas": 0,
+      "viaje_tickets": 0,
+      "entradas": 0,
+      "contenedores": 0,
+      "contenedor_lineas": 0,
+      "pagos_proveedor": 0,
+      "aplicaciones_pago_proveedor": 0,
+      "movimientos": 0,
+      "rollos": 0,
+      "reimpresiones_etiqueta": 0,
+      "auditorias_inventario": 0,
+      "auditoria_inventario_escaneos": 0,
+      "auditoria_inventario_participantes": 0,
+      "auditoria_inventario_snapshot": 0,
+      "solicitudes_pago_dirigido": 0,
+      "notificaciones_sistema": 12,
+      "stock_minimo_episodios": 3,
+      "sesiones": 0
+    },
+    "changedC": [
+      {
+        "table": "permisos_rol",
+        "before": 192,
+        "after": 192,
+        "changedColumns": {
+          "updated_at": 72
+        }
+      },
+      {
+        "table": "permisos_ubicacion",
+        "before": 54,
+        "after": 54,
+        "changedColumns": {
+          "updated_at": 54
+        }
+      }
+    ],
+    "originalAuditPreserved": true,
+    "sourceUiStatus": "BLOCKED",
+    "noSourceFixtures": true
+  },
+  "liveUi": {
+    "status": "BLOCKED",
+    "path": ".local/phase2-live-ui-evidence.json",
+    "sha256": "1bc051c461773c9f3870e998535682412a59fb8d9c58dd9e3c3acfa0deb65ad7",
+    "authAttempted": false,
+    "reason": "Single trusted-shell native login bridge could not transfer a server-issued cookie into the browser context: the ephemeral pipe produced no readable cookie before timeout. No fresh authenticated live browser context was created; no route checks were performed.",
+    "routeResults": [],
+    "checks": [
+      "No live UI checks completed because the safe in-memory authentication bridge was unavailable.",
+      "No password, token, cookie, username, URL query credential, workspace secret, or screenshot credential was recorded.",
+      "No logout, reset, seed, create, edit, save, direct insert, app change, workflow change, or API interception performed."
+    ]
+  },
+  "checklist": [
+    {
+      "point": 1,
+      "disposableStatus": "PASS",
+      "liveStatus": "PASS",
+      "status": "PASS",
+      "evidence": "A33 after=0; post-login sesiones is a separate runtime effect"
+    },
+    {
+      "point": 2,
+      "disposableStatus": "PASS",
+      "liveStatus": "PASS",
+      "status": "PASS",
+      "evidence": "C18 count/hash comparison"
+    },
+    {
+      "point": 3,
+      "disposableStatus": "PASS",
+      "liveStatus": "PASS",
+      "status": "PASS",
+      "evidence": "Independent LIVE postcommit values/dates/authors and enabled switch"
+    },
+    {
+      "point": 4,
+      "disposableStatus": "PASS",
+      "liveStatus": "PASS",
+      "status": "PASS",
+      "evidence": "reconstructed existencias invariant"
+    },
+    {
+      "point": 5,
+      "disposableStatus": "PASS",
+      "liveStatus": "PASS",
+      "status": "PASS",
+      "evidence": "execution.triggersFinal"
+    },
+    {
+      "point": 6,
+      "disposableStatus": "WITH_OBSERVATIONS",
+      "liveStatus": "NOT_RUN",
+      "status": "WITH_OBSERVATIONS",
+      "evidence": "explicit actual test report"
+    },
+    {
+      "point": 7,
+      "disposableStatus": "PASS",
+      "liveStatus": "NOT_RUN",
+      "status": "PASS",
+      "evidence": "Ticket folio 1000 comprobado solo en base desechable; no se creó ticket en development"
+    },
+    {
+      "point": 8,
+      "disposableStatus": "PASS",
+      "liveStatus": "BLOCKED",
+      "status": "BLOCKED",
+      "evidence": "Live UI BLOCKED by safe credential bridge; disposable empty-UI proof PASS only"
+    },
+    {
+      "point": 9,
+      "disposableStatus": "PASS",
+      "liveStatus": "BLOCKED",
+      "status": "BLOCKED",
+      "evidence": "Live UI BLOCKED by safe credential bridge; disposable Precios proof PASS only"
+    },
+    {
+      "point": 10,
+      "disposableStatus": "PASS",
+      "liveStatus": "BLOCKED",
+      "status": "BLOCKED",
+      "evidence": "Live UI BLOCKED by safe credential bridge; disposable Clientes/Proveedores/Equipos proof PASS only"
+    },
+    {
+      "point": 11,
+      "disposableStatus": "PASS",
+      "liveStatus": "PASS",
+      "status": "PASS",
+      "evidence": "C18 auditoria baseline plus separate login effect"
+    }
+  ],
+  "postRestartRuntimeEffects": [
+    "Normal login updates usuarios.ultimo_acceso and appends auditoria.LOGIN_EXITOSO.",
+    "API startup initializer updates permissionupdated_at.",
+    "Stock-minimum poller evaluates enabled sites on restart and may create episodes/notificaciones."
+  ]
+}

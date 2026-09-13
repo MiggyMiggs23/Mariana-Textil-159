@@ -1,0 +1,128 @@
+{
+  "status": "FAIL",
+  "scope": "phase2-five-isolated-suites",
+  "wrapper": {
+    "status": "FAIL",
+    "terminal": true,
+    "exitCode": 0,
+    "logPath": "/tmp/replit-shell-output-logs/HOKJ0SGBB8SCBCT3NZ2EM/log",
+    "reason": "Two disposable-fixture cleanup failures were absorbed by existing suite scripts; process exit 0 is not promoted to PASS."
+  },
+  "typecheck": {
+    "status": "PASS",
+    "command": "pnpm run typecheck",
+    "freshForThisWrapperRun": false,
+    "note": "Previously completed real root typecheck; not rerun after the wrapper execution."
+  },
+  "suites": {
+    "status": "FAIL",
+    "terminalCount": 5,
+    "expectedCount": 5,
+    "scenarioAssertions": {
+      "passed": 75,
+      "failed": 0
+    },
+    "results": {
+      "test:inventario": {
+        "status": "FAIL",
+        "exitCode": 0,
+        "scenario": {
+          "status": "PASS",
+          "passed": 25,
+          "failed": 0
+        },
+        "cleanup": {
+          "status": "FAIL",
+          "kind": "append_only_protection",
+          "sqlState": "P0001",
+          "message": "auditoria es append-only",
+          "queryTarget": "auditoria",
+          "scenarioImpact": "none",
+          "purgeImpact": "does_not_directly_block_empty_ui_or_ticket"
+        }
+      },
+      "test:pos": {
+        "status": "PASS",
+        "exitCode": 0,
+        "scenario": {
+          "status": "PASS",
+          "passed": 36,
+          "failed": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "scenarioImpact": "none"
+        }
+      },
+      "test:cuadre-fiscal-integration": {
+        "status": "PASS",
+        "exitCode": 0,
+        "scenario": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "scenarioImpact": "none"
+        }
+      },
+      "test:salidas": {
+        "status": "FAIL",
+        "exitCode": 0,
+        "scenario": {
+          "status": "PASS",
+          "passed": 12,
+          "failed": 0
+        },
+        "cleanup": {
+          "status": "FAIL",
+          "kind": "fixture_cleanup_foreign_key",
+          "sqlState": "23503",
+          "constraint": "movimientos_salida_id_salidas_id_fk",
+          "message": "delete from salidas was rejected while movimientos still referenced a salida",
+          "scenarioImpact": "none",
+          "purgeImpact": "does_not_directly_block_empty_ui_or_ticket"
+        }
+      },
+      "test:admin-analytics-integration": {
+        "status": "PASS",
+        "exitCode": 0,
+        "scenario": {
+          "status": "PASS",
+          "passed": 1,
+          "failed": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "scenarioImpact": "none"
+        }
+      }
+    }
+  },
+  "ui": {
+    "status": "NOT_RUN",
+    "reason": "This wrapper run covered only the five API/database suites."
+  },
+  "ticket": {
+    "status": "NOT_RUN",
+    "reason": "No ticket/UI acceptance operation was part of this wrapper run."
+  },
+  "isolation": {
+    "freshClusterPerSuite": true,
+    "schemaSeedInitializersCompleted": 5,
+    "ownedClustersCleaned": 5,
+    "ownedRootsRemaining": 0,
+    "ownedSuiteProcessesRemaining": 0,
+    "protectedSourcesTouched": false
+  },
+  "interpretation": {
+    "overallAllPass": false,
+    "scenarioAssertionFailures": 0,
+    "cleanupFailures": 2,
+    "cleanupFailuresAreFixtureOnly": true,
+    "appendOnlyProtectionPreserved": true,
+    "blocksEmptyUiOrTicketDirectly": false,
+    "blocksGlobalPurgeAcceptance": true
+  }
+}
