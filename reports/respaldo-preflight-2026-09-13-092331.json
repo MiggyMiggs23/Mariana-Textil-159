@@ -1,0 +1,472 @@
+{
+  "status": "PASS",
+  "phase": 1,
+  "block": 1,
+  "operation": "full custom pg_dump, disposable restore, semantic verification",
+  "warning": "Sanitized report: no live row data, dump content, URI, or credentials.",
+  "backup": {
+    "directory": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331",
+    "archive": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331/respaldo-antes-de-purga-2026-09-13-092331.dump",
+    "sha256": "f39951acc3bbeeff60a3007806b9f05b6a36b21299c586f9f0829bc54d4b0f67",
+    "sizeBytes": 416627,
+    "format": "custom",
+    "includesAcl": true,
+    "includesOwnership": true
+  },
+  "commit": "e1e714adffb0ced5763407f757422270c939c13c",
+  "capturedAtUtc": "2026-09-13T15:23:31.710Z",
+  "capturedAtMexico": "2026-09-13 09:23:31",
+  "sourceDatabase": {
+    "name": "heliumdb",
+    "serverVersion": "16.10",
+    "sourceDatabaseSizeBytes": "19780067"
+  },
+  "tableCountsCompared": 58,
+  "tableCountMismatches": [],
+  "tableCounts": [
+    {
+      "schema": "public",
+      "table": "aplicaciones_credito",
+      "source": "1",
+      "restored": "1"
+    },
+    {
+      "schema": "public",
+      "table": "aplicaciones_pago_proveedor",
+      "source": "2",
+      "restored": "2"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria",
+      "source": "3045",
+      "restored": "3045"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_escaneos",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_folio",
+      "source": "11",
+      "restored": "11"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_participantes",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_snapshot",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "auditorias_inventario",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "autorizaciones_nota",
+      "source": "2",
+      "restored": "2"
+    },
+    {
+      "schema": "public",
+      "table": "camionetas",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "choferes",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "cliente_documentos",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "clientes",
+      "source": "7",
+      "restored": "7"
+    },
+    {
+      "schema": "public",
+      "table": "contenedor_lineas",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "contenedores",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "cuadre_fiscal_registros",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "entrada_folio",
+      "source": "11",
+      "restored": "11"
+    },
+    {
+      "schema": "public",
+      "table": "entradas",
+      "source": "2",
+      "restored": "2"
+    },
+    {
+      "schema": "public",
+      "table": "equipos",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "equipos_checklist",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "existencias",
+      "source": "30",
+      "restored": "30"
+    },
+    {
+      "schema": "public",
+      "table": "movimientos",
+      "source": "259",
+      "restored": "259"
+    },
+    {
+      "schema": "public",
+      "table": "movimientos_credito",
+      "source": "3",
+      "restored": "3"
+    },
+    {
+      "schema": "public",
+      "table": "notificaciones_credito",
+      "source": "2",
+      "restored": "2"
+    },
+    {
+      "schema": "public",
+      "table": "notificaciones_sistema",
+      "source": "12",
+      "restored": "12"
+    },
+    {
+      "schema": "public",
+      "table": "pagos_proveedor",
+      "source": "4",
+      "restored": "4"
+    },
+    {
+      "schema": "public",
+      "table": "permisos_rol",
+      "source": "192",
+      "restored": "192"
+    },
+    {
+      "schema": "public",
+      "table": "permisos_ubicacion",
+      "source": "54",
+      "restored": "54"
+    },
+    {
+      "schema": "public",
+      "table": "permisos_usuario",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "pisos",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "precio_historial",
+      "source": "1016",
+      "restored": "1016"
+    },
+    {
+      "schema": "public",
+      "table": "productos",
+      "source": "1234",
+      "restored": "1234"
+    },
+    {
+      "schema": "public",
+      "table": "proveedores",
+      "source": "27",
+      "restored": "27"
+    },
+    {
+      "schema": "public",
+      "table": "reimpresiones_etiqueta",
+      "source": "9",
+      "restored": "9"
+    },
+    {
+      "schema": "public",
+      "table": "rollos",
+      "source": "80",
+      "restored": "80"
+    },
+    {
+      "schema": "public",
+      "table": "salida_folio",
+      "source": "11",
+      "restored": "11"
+    },
+    {
+      "schema": "public",
+      "table": "salida_lineas",
+      "source": "8",
+      "restored": "8"
+    },
+    {
+      "schema": "public",
+      "table": "salida_rollos",
+      "source": "42",
+      "restored": "42"
+    },
+    {
+      "schema": "public",
+      "table": "salidas",
+      "source": "8",
+      "restored": "8"
+    },
+    {
+      "schema": "public",
+      "table": "salidas_dinero_caja",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "series_consecutivo",
+      "source": "1",
+      "restored": "1"
+    },
+    {
+      "schema": "public",
+      "table": "sesiones",
+      "source": "151",
+      "restored": "151"
+    },
+    {
+      "schema": "public",
+      "table": "sesiones_caja",
+      "source": "3",
+      "restored": "3"
+    },
+    {
+      "schema": "public",
+      "table": "sesiones_caja_dias",
+      "source": "3",
+      "restored": "3"
+    },
+    {
+      "schema": "public",
+      "table": "solicitudes_pago_dirigido",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "stock_minimo_episodios",
+      "source": "3",
+      "restored": "3"
+    },
+    {
+      "schema": "public",
+      "table": "stock_minimo_sitios",
+      "source": "1",
+      "restored": "1"
+    },
+    {
+      "schema": "public",
+      "table": "stock_minimos",
+      "source": "3",
+      "restored": "3"
+    },
+    {
+      "schema": "public",
+      "table": "ticket_folio",
+      "source": "1",
+      "restored": "1"
+    },
+    {
+      "schema": "public",
+      "table": "ticket_lineas",
+      "source": "61",
+      "restored": "61"
+    },
+    {
+      "schema": "public",
+      "table": "ticket_pagos",
+      "source": "4",
+      "restored": "4"
+    },
+    {
+      "schema": "public",
+      "table": "tickets",
+      "source": "7",
+      "restored": "7"
+    },
+    {
+      "schema": "public",
+      "table": "ubicaciones",
+      "source": "11",
+      "restored": "11"
+    },
+    {
+      "schema": "public",
+      "table": "usuarios",
+      "source": "31",
+      "restored": "31"
+    },
+    {
+      "schema": "public",
+      "table": "viaje_folio",
+      "source": "11",
+      "restored": "11"
+    },
+    {
+      "schema": "public",
+      "table": "viaje_salidas",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "viaje_tickets",
+      "source": "0",
+      "restored": "0"
+    },
+    {
+      "schema": "public",
+      "table": "viajes",
+      "source": "0",
+      "restored": "0"
+    }
+  ],
+  "catalogueSummary": {
+    "source": {
+      "tables": 58,
+      "columns": 583,
+      "constraints": 270,
+      "foreignKeys": 146,
+      "foreignKeyCycles": 2,
+      "indexes": 205,
+      "triggers": 11,
+      "triggerFunctionsWithDefinitions": 9,
+      "sequences": 43
+    },
+    "restored": {
+      "tables": 58,
+      "columns": 583,
+      "constraints": 270,
+      "foreignKeys": 146,
+      "foreignKeyCycles": 2,
+      "indexes": 205,
+      "triggers": 11,
+      "triggerFunctionsWithDefinitions": 9,
+      "sequences": 43
+    }
+  },
+  "categoryComparisons": {
+    "tables": {
+      "sourceCount": 58,
+      "restoredCount": 58,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "columns": {
+      "sourceCount": 583,
+      "restoredCount": 583,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "constraints": {
+      "sourceCount": 270,
+      "restoredCount": 270,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "indexes": {
+      "sourceCount": 205,
+      "restoredCount": 205,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "triggers": {
+      "sourceCount": 11,
+      "restoredCount": 11,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "sequences": {
+      "sourceCount": 43,
+      "restoredCount": 43,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "foreign_key_edges": {
+      "sourceCount": 146,
+      "restoredCount": 146,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "serial_sequence": {
+      "sourceCount": 1,
+      "restoredCount": 1,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    },
+    "foreign_key_cycles": {
+      "sourceCount": 2,
+      "restoredCount": 2,
+      "mismatchCount": 0,
+      "mismatchKeys": []
+    }
+  },
+  "databaseMetadataMatch": true,
+  "restored": {
+    "clusterDirectory": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331/restore-cluster-verified",
+    "socketDirectory": "/tmp/respaldo-purge-2026-09-13-092331-3371",
+    "port": 43335,
+    "database": "restore_disposable_2026-09-13-092331",
+    "adminDatabase": "restore_admin_2026-09-13-092331",
+    "adminUrl": "postgresql://runner@127.0.0.1:43335/restore_admin_2026-09-13-092331",
+    "restoredDatabaseUrl": "postgresql://runner@127.0.0.1:43335/restore_disposable_2026-09-13-092331"
+  },
+  "machineReadableFiles": {
+    "sourceSnapshot": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331/source-snapshot.json",
+    "sourceMinimumEvidence": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331/source-minimums.json",
+    "restoreComparison": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331/restore-comparison.json",
+    "manifest": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331/manifest.json"
+  }
+}

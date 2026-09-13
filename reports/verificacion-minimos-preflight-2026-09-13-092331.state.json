@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "phase": 1,
+  "operation": "real reconstruirCacheExistencias minimum-preservation verification",
+  "stage": "completed PASS",
+  "exitCode": 0,
+  "childExitCode": 0,
+  "report": "/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13-092331.json",
+  "html": "/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13-092331.html",
+  "updatedAtUtc": "2026-09-13T15:24:14.651Z",
+  "currentDatabase": "restore_disposable_2026-09-13-092331",
+  "dataDirectory": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-092331/restore-cluster-verified",
+  "minimumTablesPopulatedCaseExercised": true,
+  "minimumPreservationProven": true,
+  "activeSites": 1,
+  "cacheWriteProven": true,
+  "cacheXminChangedCount": 30
+}

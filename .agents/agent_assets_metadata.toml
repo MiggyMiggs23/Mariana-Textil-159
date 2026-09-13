@@ -616,3 +616,17 @@ mtime_ms = 1789311485922
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e72014b7-7223-48bc-a219-f9acc54ae612/2c76714e-1ea5-4904-922e-22606829f53d"
 storage_version_token = "1789311486494794"
 content_type = "text/html"
+
+[[outputs]]
+id = "S2O_0BnNIuJfXrJiuaun4"
+uri = "file://reports/verificacion-minimos-preflight-2026-09-13-092331.html"
+type = "text"
+title = "Preflight final aprobado: mínimos y respaldo en Drive"
+description = "Conservación exacta de valores, fechas, autores e interruptor; restauración completa y copia privada descargada de Drive para verificar su SHA-256."
+logical_id = "d8d8ba65-4659-4db2-8320-c4093942fa62"
+content_hash = "sha256:2cbc767d33fdc3d5651c3fea18b5288254721d697e67c2457ad33c0106b111f0"
+size = 52062
+mtime_ms = 1789313227985
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d8d8ba65-4659-4db2-8320-c4093942fa62/da5c50a9-239d-4c4c-9274-87ad63968284"
+storage_version_token = "1789313228852068"
+content_type = "text/html"

@@ -50,3 +50,4 @@
 - [Aislamiento de líneas base](regression-baseline-isolation.md) — probar código anterior en copia temporal, nunca sustituyendo módulos vigilados por workflows activos.
 - [Manifiestos explícitos de pruebas](explicit-test-manifests.md) — abortar ante selección vacía; un runner sin rutas descubre suites fuera del alcance y env limpio no bloquea HTTP.
 - [Estado de verificaciones largas](long-running-verification-status.md) — exigir estado terminal, salida y comparaciones; desaparición del proceso no demuestra éxito.
+- [Respaldos binarios en Drive](drive-resumable-backups.md) — ante bloqueos multipart, usar carga reanudable; verificar permisos y SHA-256 de la descarga.
