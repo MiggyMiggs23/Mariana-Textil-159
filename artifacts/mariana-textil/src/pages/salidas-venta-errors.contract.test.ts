@@ -54,11 +54,16 @@ test("ENTREGADA is present in salida maps, generated state filter, and closed-de
 });
 
 test("linked cancellation explicitly invokes generated salida cancellation atomically", async () => {
+  const dialog = await readFile(
+    new URL("../components/salida-cancel-dialog.tsx", import.meta.url),
+    "utf8",
+  );
   const detail = await readFile(new URL("./salida-detail.tsx", import.meta.url), "utf8");
 
-  assert.match(detail, /useCancelarSalida\(\)/);
-  assert.match(detail, /cancelMutation\.mutate\(\{\s*id,/);
-  assert.match(detail, /operación es atómica/);
-  assert.match(detail, /todas las salidas agrupadas vinculadas, no únicamente esta salida/);
-  assert.match(detail, /Cancelar documento y todas sus salidas/);
+  assert.match(dialog, /useCancelarSalida\(\)/);
+  assert.match(dialog, /cancelMutation\.mutate\([\s\S]*id: freshSalida\.id/);
+  assert.match(dialog, /operación es atómica/);
+  assert.match(dialog, /todas las salidas agrupadas vinculadas, no únicamente esta salida/);
+  assert.match(dialog, /Cancelar documento y todas sus salidas/);
+  assert.match(detail, /<SalidaCancelDialog/);
 });

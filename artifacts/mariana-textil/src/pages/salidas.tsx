@@ -30,7 +30,8 @@ import {
   Filter,
   Download,
   Calendar as CalendarIcon,
-  X
+  X,
+  XSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,6 +49,8 @@ import { SalidaMostrador } from "@/components/salida-mostrador";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getSalidaEstadoLabel, SalidaEstadoBadge } from "@/components/salida-estado-badge";
 import { SalidaVentaEntrega } from "@/components/salida-venta-entrega";
+import { SalidaCancelDialog } from "@/components/salida-cancel-dialog";
+import { canCancelSalidaHistory } from "@/lib/salida-cancelacion";
 
 import { SalidasExtraordinarias } from "@/components/salidas-extraordinarias";
 
@@ -396,59 +399,84 @@ export default function Salidas() {
                 </div>
               ) : (
               <div className="divide-y divide-slate-100">
-                {displayItems.map((salida) => (
-                  <div
-                    key={salida.id}
-                    data-testid={`row-salida-${salida.id}`}
-                    className={`flex flex-col sm:flex-row sm:items-center p-4 hover:bg-slate-50 transition-colors gap-4 group ${salida.estado === 'CANCELADA' ? 'opacity-60' : ''}`}
-                  >
-                    <div className="w-20 shrink-0">
-                      <p className="text-xs font-semibold text-slate-500 mb-1">FOLIO</p>
-                      <Link href={`/salidas/${salida.id}`} className={`text-lg font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${salida.estado === 'CANCELADA' ? 'line-through' : ''}`} data-testid={`mobile-link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
-                    </div>
-
-                    <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className={salida.estado === 'CANCELADA' ? 'line-through' : ''}>
-                        <div className="flex items-center gap-2 mb-1">
-                          <p className="font-medium text-slate-900 truncate">{salida.nombreOrigen}</p>
-                          <ArrowRight className="w-4 h-4 text-slate-300 shrink-0" />
-                          <p className="font-medium text-slate-900 truncate">{salida.nombreDestino}</p>
-                        </div>
-                         <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-600">
-                           <span className="font-semibold">{salida.modalidad === "VENTA_CLIENTE" ? "Venta a cliente" : "Traslado"}</span>
-                           {salida.modalidad === "VENTA_CLIENTE" && <span>Cliente: {salida.nombreCliente || `#${salida.clienteId}`}</span>}
-                           {salida.documentoVenta && <Link className="text-primary underline" href={salida.documentoVenta.href}>Documento {salida.documentoVenta.folio}</Link>}
-                         </div>
-                        <div className="flex items-center gap-3 text-xs text-slate-500">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {format(new Date(salida.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}
-                          </span>
-                          <span>•</span>
-                          <span className="truncate">{salida.nombreArmadoPor}</span>
-                        </div>
+                {displayItems.map((salida) => {
+                  const canCancel = canCancelSalidaHistory(salida, user);
+                  return (
+                    <div
+                      key={salida.id}
+                      data-testid={`row-salida-${salida.id}`}
+                      className={`flex flex-col gap-4 p-4 transition-colors hover:bg-slate-50 group sm:flex-row sm:items-center ${salida.estado === 'CANCELADA' ? 'opacity-60' : ''}`}
+                    >
+                      <div className="w-20 shrink-0">
+                        <p className="mb-1 text-xs font-semibold text-slate-500">FOLIO</p>
+                        <Link href={`/salidas/${salida.id}`} className={`text-lg font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${salida.estado === 'CANCELADA' ? 'line-through' : ''}`} data-testid={`mobile-link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
                       </div>
 
-                      <div className="flex items-center justify-start sm:justify-end gap-6">
-                        <div className="text-left sm:text-right">
-                          <p className="text-xs font-semibold text-slate-500 mb-1">CANTIDAD</p>
-                          <p className="text-sm font-medium text-slate-900">
-                             {formatNumber(salida.totalCantidadSolicitada, { kind: "quantity" })} <span className="text-slate-400 font-normal">solicitada</span>
-                          </p>
-                          {Number(salida.totalCantidadEnviada) > 0 && (
-                             <p className="text-xs text-amber-600 mt-0.5">{formatNumber(salida.totalCantidadEnviada, { kind: "quantity" })} enviada</p>
-                          )}
+                      <div className="grid min-w-0 flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div className={salida.estado === 'CANCELADA' ? 'line-through' : ''}>
+                          <div className="mb-1 flex items-center gap-2">
+                            <p className="truncate font-medium text-slate-900">{salida.nombreOrigen}</p>
+                            <ArrowRight className="h-4 w-4 shrink-0 text-slate-300" />
+                            <p className="truncate font-medium text-slate-900">{salida.nombreDestino}</p>
+                          </div>
+                           <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-600">
+                             <span className="font-semibold">{salida.modalidad === "VENTA_CLIENTE" ? "Venta a cliente" : "Traslado"}</span>
+                             {salida.modalidad === "VENTA_CLIENTE" && <span>Cliente: {salida.nombreCliente || `#${salida.clienteId}`}</span>}
+                             {salida.documentoVenta && <Link className="text-primary underline" href={salida.documentoVenta.href}>Documento {salida.documentoVenta.folio}</Link>}
+                           </div>
+                          <div className="flex items-center gap-3 text-xs text-slate-500">
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {format(new Date(salida.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}
+                            </span>
+                            <span>•</span>
+                            <span className="truncate">{salida.nombreArmadoPor}</span>
+                          </div>
                         </div>
-                         <div className="flex items-center justify-end gap-2 sm:min-w-[180px]">
-                            <SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} />
-                            {salida.modalidad === "VENTA_CLIENTE" && (
-                              <SalidaVentaEntrega salidaId={salida.id} estado={salida.estado} />
+
+                        <div className="flex flex-wrap items-center justify-start gap-3 sm:justify-end sm:gap-6">
+                          <div className="text-left sm:text-right">
+                            <p className="mb-1 text-xs font-semibold text-slate-500">CANTIDAD</p>
+                            <p className="text-sm font-medium text-slate-900">
+                               {formatNumber(salida.totalCantidadSolicitada, { kind: "quantity" })} <span className="font-normal text-slate-400">solicitada</span>
+                            </p>
+                            {Number(salida.totalCantidadEnviada) > 0 && (
+                               <p className="mt-0.5 text-xs text-amber-600">{formatNumber(salida.totalCantidadEnviada, { kind: "quantity" })} enviada</p>
                             )}
+                          </div>
+                           <div className="flex flex-wrap items-center justify-start gap-2 sm:min-w-[180px] sm:justify-end">
+                              <SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} />
+                              {salida.modalidad === "VENTA_CLIENTE" && (
+                                <SalidaVentaEntrega salidaId={salida.id} estado={salida.estado} />
+                              )}
+                              {canCancel && (
+                                <SalidaCancelDialog
+                                  salida={salida}
+                                  user={user}
+                                  canCancel={canCancel}
+                                  isHistory
+                                  renderTrigger={({ onClick }) => (
+                                    <Button
+                                      type="button"
+                                      size="sm"
+                                      variant="outline"
+                                      data-testid={`btn-history-cancel-${salida.id}`}
+                                      aria-label={`Cancelar salida ${salida.folioFormateado}`}
+                                      onClick={onClick}
+                                      className="gap-1.5 whitespace-nowrap border-red-200 text-red-600 hover:bg-red-50"
+                                    >
+                                      <XSquare className="h-4 w-4" />
+                                      Cancelar Salida
+                                    </Button>
+                                  )}
+                                />
+                              )}
+                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               )
             )}

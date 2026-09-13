@@ -1,17 +1,13 @@
-import { useState } from "react";
 import { useRoute, Link } from "wouter";
 import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useGetSalida,
-  useCancelarSalida,
   getGetSalidaQueryKey,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
   Role,
-  getListSalidasQueryKey,
 } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import {
@@ -22,7 +18,6 @@ import {
   Package,
   AlertCircle,
   Loader2,
-  Lock,
   User,
   Truck,
   FileText
@@ -30,28 +25,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { hasPermission, Modules } from "@/lib/permisos";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { SalidaEstadoBadge } from "@/components/salida-estado-badge";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { SalidaCancelDialog } from "@/components/salida-cancel-dialog";
 
 export default function SalidaDetail() {
   const [, params] = useRoute("/salidas/:id");
   const id = Number(params?.id);
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
 
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const { data: salida, isLoading, error } = useGetSalida(id, {
@@ -62,16 +44,6 @@ export default function SalidaDetail() {
       refetchOnWindowFocus: true,
     }
   });
-
-  const cancelMutation = useCancelarSalida();
-  const [dialogState, setDialogState] = useState<{
-    type: 'cancel' | null;
-  }>({ type: null });
-
-  const [motivo, setMotivo] = useState("");
-  const [adminUsername, setAdminUsername] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
-  const [passwordVisibilityResetKey, setPasswordVisibilityResetKey] = useState(0);
 
   if (isLoading) {
     return (
@@ -135,39 +107,6 @@ export default function SalidaDetail() {
     ? salida.estado !== "ENTREGADA" && salida.estado !== "CANCELADA" && (isAdmin || (canAuthorize && atOrigin))
     : salida.estado === 'ARMANDO' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
   const canPrint = salida.estado === 'EN_TRANSITO' || salida.estado === 'RECIBIDA' || salida.estado === 'ENTREGADA';
-
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: getGetSalidaQueryKey(id) });
-    queryClient.invalidateQueries({ queryKey: getListSalidasQueryKey() });
-  };
-
-  const onCancel = () => {
-    setPasswordVisibilityResetKey((current) => current + 1);
-    if (motivo.trim().length < 10) {
-      toast({ title: "Atención", description: "El motivo debe tener al menos 10 caracteres", variant: "destructive" });
-      return;
-    }
-    cancelMutation.mutate({
-      id,
-      data: {
-        motivo,
-        ...( !isAdmin ? { adminUsuario: adminUsername, adminPassword } : {} )
-      }
-    }, {
-      onSuccess: () => {
-        toast({
-          title: salida.documentoVenta ? "Documento y salidas vinculadas cancelados" : "Salida cancelada",
-          description: salida.documentoVenta
-            ? "La operación atómica canceló el documento completo y todas sus salidas agrupadas."
-            : undefined,
-        });
-        setAdminPassword("");
-        setDialogState({ type: null });
-        invalidate();
-      },
-      onError: (err) => toast({ title: "Error", description: getApiErrorMessage(err), variant: "destructive" })
-    });
-  };
 
   return (
     <AppLayout>
@@ -402,9 +341,21 @@ export default function SalidaDetail() {
                 <p className="text-sm text-red-600 font-medium">
                   Si hubo un error y esta salida no debe proceder, puedes cancelarla.
                 </p>
-                <Button data-testid="btn-action-cancel" onClick={() => { setMotivo(""); setAdminUsername(""); setAdminPassword(""); setPasswordVisibilityResetKey((current) => current + 1); setDialogState({ type: 'cancel' }); }} variant="outline" className="w-full justify-start text-red-600 border-red-200 hover:bg-red-50 bg-white">
-                  <XSquare className="w-4 h-4 mr-2" /> Cancelar Salida
-                </Button>
+                <SalidaCancelDialog
+                  salida={salida}
+                  user={user}
+                  canCancel={canCancel}
+                  renderTrigger={({ onClick }) => (
+                    <Button
+                      data-testid="btn-action-cancel"
+                      onClick={onClick}
+                      variant="outline"
+                      className="w-full justify-start border-red-200 bg-white text-red-600 hover:bg-red-50"
+                    >
+                      <XSquare className="mr-2 h-4 w-4" /> Cancelar Salida
+                    </Button>
+                  )}
+                />
               </CardContent>
             </Card>
           )}
@@ -427,58 +378,6 @@ export default function SalidaDetail() {
           )}
         </div>
       </div>
-
-      <Dialog open={dialogState.type === 'cancel'} onOpenChange={(o) => {
-        if (!o) {
-          setAdminPassword("");
-          setPasswordVisibilityResetKey((current) => current + 1);
-          setDialogState({ type: null });
-        }
-      }}>
-        <DialogContent>
-          <DialogHeader><DialogTitle>{salida.documentoVenta ? "Cancelar documento y salidas vinculadas" : "Cancelar Salida"}</DialogTitle></DialogHeader>
-          <div className="space-y-4 pt-4">
-             <p className="text-sm text-slate-500">
-               {salida.documentoVenta
-                 ? "Esta operación es atómica: cancelará el documento de venta completo y todas las salidas agrupadas vinculadas, no únicamente esta salida. Se liberarán los bloqueos en cada origen y el documento dejará de autorizar entregas. La cancelación no borra el historial."
-                 : `¿Estás seguro de cancelar esta salida? ${salida.modalidad === "VENTA_CLIENTE" ? "Se liberará el bloqueo en el origen; la cancelación no borra el historial." : "Los rollos seguirán disponibles en el origen."}`}
-             </p>
-            <Textarea data-testid="input-cancel-motivo" placeholder="Motivo de la cancelación (Mínimo 10 caracteres)..." value={motivo} onChange={e => setMotivo(e.target.value)} />
-
-            {!isAdmin && (
-              <div className="pt-4 border-t border-slate-100 space-y-3">
-                <p className="text-sm font-semibold text-slate-700 flex items-center gap-2">
-                  <Lock className="w-4 h-4" /> Autorización Requerida
-                </p>
-                <Input
-                  data-testid="input-cancel-username"
-                  placeholder="Usuario Admin"
-                  value={adminUsername}
-                  onChange={e => setAdminUsername(e.target.value)}
-                />
-                <PasswordInput
-                  id="salida-admin-password"
-                  data-testid="input-cancel-password"
-                  placeholder="Contraseña Admin"
-                  aria-label="Contraseña ADMIN"
-                  value={adminPassword}
-                  onChange={e => setAdminPassword(e.target.value)}
-                  autoComplete="current-password"
-                  visibilityResetKey={`${dialogState.type}:${passwordVisibilityResetKey}`}
-                  toggleTestId="toggle-salida-admin-password"
-                />
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => { setAdminPassword(""); setPasswordVisibilityResetKey((current) => current + 1); setDialogState({ type: null }); }}>Cerrar</Button>
-            <Button data-testid="btn-submit-cancel" variant="destructive" onClick={onCancel} disabled={cancelMutation.isPending || motivo.length < 10 || (!isAdmin && (!adminUsername || !adminPassword))}>
-              {cancelMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-               {salida.documentoVenta ? "Cancelar documento y todas sus salidas" : "Confirmar Cancelación"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
     </div>
     </AppLayout>
