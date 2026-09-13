@@ -1,0 +1,12 @@
+{
+  "status": "FAIL",
+  "phase": 1,
+  "block": 1,
+  "operation": "full custom pg_dump and disposable restore verification",
+  "backupDirectory": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-090322",
+  "reason": "Source minimum evidence is empty: stock_minimos, site switches, and at least one active site are required.",
+  "sourceMutationPolicy": {
+    "sourceMutated": false,
+    "phase2Executed": false
+  }
+}

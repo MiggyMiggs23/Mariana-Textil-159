@@ -76,6 +76,16 @@ interface Snapshot {
   };
 }
 
+interface MinimumEvidence {
+  stock_minimos: Row[];
+  stock_minimo_sitios: Row[];
+  counts: {
+    stock_minimos: number;
+    stock_minimo_sitios: number;
+    active_sites: number;
+  };
+}
+
 interface ComparisonCategory {
   sourceCount: number;
   restoredCount: number;
@@ -833,6 +843,87 @@ async function sha256AndSize(path: string): Promise<{ sha256: string; sizeBytes:
   return { sha256: hash.digest("hex"), sizeBytes: content.byteLength };
 }
 
+function privateMinimumRow(row: Row): Row {
+  const author =
+    row.updated_by === null || row.updated_by === undefined
+      ? null
+      : Number(row.updated_by);
+  return {
+    id: Number(row.id),
+    producto_id: Number(row.producto_id),
+    ubicacion_id: Number(row.ubicacion_id),
+    cantidad: String(row.cantidad),
+    updated_by: Number.isInteger(author) ? author : null,
+    updated_at:
+      row.updated_at instanceof Date
+        ? row.updated_at.toISOString()
+        : row.updated_at === null || row.updated_at === undefined
+          ? null
+          : String(row.updated_at),
+  };
+}
+
+function privateSiteRow(row: Row): Row {
+  const author =
+    row.updated_by === null || row.updated_by === undefined
+      ? null
+      : Number(row.updated_by);
+  return {
+    ubicacion_id: Number(row.ubicacion_id),
+    habilitado: Boolean(row.habilitado),
+    updated_by: Number.isInteger(author) ? author : null,
+    updated_at:
+      row.updated_at instanceof Date
+        ? row.updated_at.toISOString()
+        : row.updated_at === null || row.updated_at === undefined
+          ? null
+          : String(row.updated_at),
+  };
+}
+
+async function readMinimumEvidence(client: Queryable): Promise<MinimumEvidence> {
+  const stockMinimos = (
+    await queryRows(
+      client,
+      `
+        SELECT id, producto_id, ubicacion_id, cantidad::text AS cantidad,
+               updated_by, updated_at
+        FROM public.stock_minimos
+        ORDER BY producto_id, ubicacion_id, id
+      `,
+      [],
+      "Reading source minimum values",
+    )
+  ).map(privateMinimumRow);
+  const stockMinimoSitios = (
+    await queryRows(
+      client,
+      `
+        SELECT ubicacion_id, habilitado, updated_by, updated_at
+        FROM public.stock_minimo_sitios
+        ORDER BY ubicacion_id
+      `,
+      [],
+      "Reading source minimum-site switches",
+    )
+  ).map(privateSiteRow);
+  const activeSites = stockMinimoSitios.filter((row) => row.habilitado === true).length;
+  if (stockMinimos.length === 0 || stockMinimoSitios.length === 0) {
+    throw new Error(
+      "Source minimum evidence is empty: populated stock_minimos and site switches are required (switches may be on or off).",
+    );
+  }
+  return {
+    stock_minimos: stockMinimos,
+    stock_minimo_sitios: stockMinimoSitios,
+    counts: {
+      stock_minimos: stockMinimos.length,
+      stock_minimo_sitios: stockMinimoSitios.length,
+      active_sites: activeSites,
+    },
+  };
+}
+
 async function restoreAndCompare(
   sourceSnapshot: Snapshot,
   dumpPath: string,
@@ -1076,6 +1167,7 @@ function sanitizedReport(
     backupDirectory: string;
     dumpPath: string;
     sourceSnapshotPath: string;
+    sourceMinimumPath: string;
     comparisonPath: string;
     manifestPath: string;
   },
@@ -1171,6 +1263,7 @@ function sanitizedReport(
     },
     machineReadableFiles: {
       sourceSnapshot: paths.sourceSnapshotPath,
+      sourceMinimumEvidence: paths.sourceMinimumPath,
       restoreComparison: paths.comparisonPath,
       manifest: paths.manifestPath,
     },
@@ -1195,21 +1288,27 @@ async function main(): Promise<void> {
   const backupDirectory =
     resumeDirectory ?? `${backupRoot}/respaldo-antes-de-purga-${stamp}`;
   activeBackupDirectory = backupDirectory;
-  reportPath = `${reportsRoot}/respaldo-preflight-${localDate}.json`;
+  reportPath =
+    process.env.BACKUP_REPORT_PATH?.trim() ||
+    `${reportsRoot}/respaldo-preflight-${stamp}.json`;
   const dumpPath = resumeDirectory
     ? `${backupDirectory}/${readdirSync(backupDirectory).find((file) => file.endsWith(".dump")) ?? ""}`
     : `${backupDirectory}/respaldo-antes-de-purga-${stamp}.dump`;
   const sourceSnapshotPath = `${backupDirectory}/source-snapshot.json`;
+  const sourceMinimumPath = `${backupDirectory}/source-minimums.json`;
   const comparisonPath = `${backupDirectory}/restore-comparison.json`;
   const manifestPath = `${backupDirectory}/manifest.json`;
   stateFilePath = `${backupDirectory}/state.json`;
   mkdirSync(backupRoot, { recursive: true, mode: 0o700 });
+  if (!resumeDirectory && existsSync(backupDirectory) && readdirSync(backupDirectory).length > 0) {
+    throw new Error("A backup directory already exists for this capture timestamp.");
+  }
   if (!resumeDirectory) mkdirSync(backupDirectory, { recursive: true, mode: 0o700 });
   if (!existsSync(backupDirectory)) {
     throw new Error("The requested backup directory does not exist.");
   }
   chmodSync(backupDirectory, 0o700);
-  if (!dumpPath.endsWith(".dump") || !existsSync(dumpPath)) {
+  if (resumeDirectory && (!dumpPath.endsWith(".dump") || !existsSync(dumpPath))) {
     throw new Error("The requested backup directory does not contain a custom dump.");
   }
   await writeState({
@@ -1275,6 +1374,14 @@ async function main(): Promise<void> {
       if (!snapshotId) throw new Error("PostgreSQL did not export a snapshot.");
       const catalogue = await readCatalogue(source);
       progress(`captured source snapshot catalogs (${catalogue.tableCounts.length} tables)`);
+       const minimumEvidence = await readMinimumEvidence(source);
+       await writePrivateJson(sourceMinimumPath, {
+         capturedAtUtc: captured.toISOString(),
+         capturedAtMexico: localTimestamp(captured),
+         counts: minimumEvidence.counts,
+         stock_minimos: minimumEvidence.stock_minimos,
+         stock_minimo_sitios: minimumEvidence.stock_minimo_sitios,
+       });
       const roles = (
         await queryRows<{ rolname: string }>(
           source,
@@ -1334,7 +1441,13 @@ async function main(): Promise<void> {
       } catch (error) {
         if (sourceTransactionOpen) await source.query("ROLLBACK").catch(() => undefined);
         sourceTransactionOpen = false;
-        if (error instanceof Error && error.message.includes("not enabled")) throw error;
+        if (
+          error instanceof Error &&
+          (error.message.includes("not enabled") ||
+            error.message.includes("Source minimum evidence"))
+        ) {
+          throw error;
+        }
         throw new Error("Source snapshot or custom dump failed.");
       } finally {
         await source.end().catch(() => undefined);
@@ -1358,6 +1471,7 @@ async function main(): Promise<void> {
           backupDirectory,
           dumpPath,
           sourceSnapshotPath,
+          sourceMinimumPath,
           comparisonPath,
           manifestPath,
         },
@@ -1382,6 +1496,7 @@ async function main(): Promise<void> {
       },
       archive: sourceSnapshot.archive,
       sourceSnapshot: sourceSnapshotPath,
+      sourceMinimumEvidence: sourceMinimumPath,
       restoreComparison: comparisonPath,
       restoreMetadata: `${backupDirectory}/restore-metadata.json`,
       verification: {
@@ -1419,6 +1534,7 @@ async function main(): Promise<void> {
           backupDirectory,
           dumpPath,
           sourceSnapshotPath,
+          sourceMinimumPath,
           comparisonPath,
           manifestPath,
         },

@@ -17,31 +17,34 @@
  */
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFile, writeFile, mkdir, realpath } from "node:fs/promises";
-import { resolve, dirname } from "node:path";
+import { chmod, readFile, writeFile, mkdir, realpath } from "node:fs/promises";
+import { basename, resolve, dirname } from "node:path";
 
 type Row = Record<string, unknown>;
 
 const repositoryRoot = resolve(process.cwd());
-const backupDirectory = resolve(
-  process.env.VERIFICATION_BACKUP_DIRECTORY ??
-    ".local/backups/respaldo-antes-de-purga-2026-09-13-014514",
-);
+const configuredBackupDirectory = process.env.VERIFICATION_BACKUP_DIRECTORY?.trim();
+if (!configuredBackupDirectory) {
+  throw new Error("VERIFICATION_BACKUP_DIRECTORY is required for a dedicated verified restore.");
+}
+const backupDirectory = resolve(repositoryRoot, configuredBackupDirectory);
+const backupStamp = basename(backupDirectory).replace(/^respaldo-antes-de-purga-/, "");
 const reportPath = resolve(
   process.env.VERIFICATION_REPORT_PATH ??
-    "reports/verificacion-minimos-preflight-2026-09-13.json",
+    `reports/verificacion-minimos-preflight-${backupStamp}.json`,
 );
 const htmlPath = resolve(
   process.env.VERIFICATION_HTML_PATH ??
-    "reports/verificacion-minimos-preflight-2026-09-13.html",
+    `reports/verificacion-minimos-preflight-${backupStamp}.html`,
 );
 const statePath = resolve(
   process.env.VERIFICATION_STATE_PATH ??
-    "reports/verificacion-minimos-preflight-2026-09-13.state.json",
+    `reports/verificacion-minimos-preflight-${backupStamp}.state.json`,
 );
 const metadataPath = resolve(backupDirectory, "restore-metadata.json");
 const manifestPath = resolve(backupDirectory, "manifest.json");
 const backupStatePath = resolve(backupDirectory, "state.json");
+const sourceMinimumPath = resolve(backupDirectory, "source-minimums.json");
 
 const listCTables = [
   "productos",
@@ -102,6 +105,16 @@ interface CoverageSnapshot {
   coverage_percent: number | null;
 }
 
+interface SourceMinimumEvidence {
+  counts: {
+    stock_minimos: number;
+    stock_minimo_sitios: number;
+    active_sites: number;
+  };
+  stock_minimos: Row[];
+  stock_minimo_sitios: Row[];
+}
+
 let latestStage = "initializing";
 
 function json(value: unknown): string {
@@ -111,6 +124,7 @@ function json(value: unknown): string {
 async function writeJson(path: string, value: unknown): Promise<void> {
   await mkdir(dirname(path), { recursive: true, mode: 0o700 });
   await writeFile(path, json(value), { encoding: "utf8", mode: 0o600 });
+  await chmod(path, 0o600);
 }
 
 async function writeState(
@@ -266,6 +280,7 @@ async function assertVerifiedRestore(
   metadata: Row;
   manifest: Row;
   backupState: Row;
+  sourceMinimums: SourceMinimumEvidence;
   testTarget: ReturnType<typeof parseDatabaseUrl>;
   applicationTarget: ReturnType<typeof parseDatabaseUrl>;
   clusterDirectory: string;
@@ -273,6 +288,7 @@ async function assertVerifiedRestore(
   const metadata = await readObject(metadataPath);
   const manifest = await readObject(manifestPath);
   const backupState = await readObject(backupStatePath);
+  const sourceMinimums = (await readObject(sourceMinimumPath)) as unknown as SourceMinimumEvidence;
   const testTarget = parseDatabaseUrl("TEST_DATABASE_URL", testUrl);
   const applicationTarget = parseDatabaseUrl(
     "APPLICATION_DATABASE_URL",
@@ -312,10 +328,23 @@ async function assertVerifiedRestore(
   if (backupState.status !== "PASS" || Number(backupState.exitCode) !== 0) {
     throw new Error("The verified-backup state file is not PASS with exitCode 0.");
   }
+  if (
+    !Number.isInteger(sourceMinimums.counts?.stock_minimos) ||
+    Number(sourceMinimums.counts.stock_minimos) <= 0 ||
+    !Number.isInteger(sourceMinimums.counts?.stock_minimo_sitios) ||
+    Number(sourceMinimums.counts.stock_minimo_sitios) <= 0 ||
+    !Number.isInteger(sourceMinimums.counts?.active_sites) ||
+    Number(sourceMinimums.counts.active_sites) < 0 ||
+    sourceMinimums.stock_minimos.length === 0 ||
+    sourceMinimums.stock_minimo_sitios.length === 0
+  ) {
+    throw new Error("The source minimum evidence does not contain populated minima and site switches.");
+  }
   return {
     metadata,
     manifest,
     backupState,
+    sourceMinimums,
     testTarget,
     applicationTarget,
     clusterDirectory,
@@ -462,6 +491,21 @@ async function capturePairs(
     movement_count: numberValue(row.movement_count),
     roll_count: numberValue(row.roll_count),
     cache_present: row.cache_present === true,
+  }));
+}
+
+async function captureCacheTupleEvidence(
+  query: (text: string, values?: unknown[]) => Promise<{ rows: Row[] }>,
+): Promise<Row[]> {
+  const result = await query(`
+    SELECT producto_id, ubicacion_id, xmin::text AS xmin
+    FROM existencias
+    ORDER BY producto_id, ubicacion_id
+  `);
+  return result.rows.map((row) => ({
+    producto_id: numberValue(row.producto_id),
+    ubicacion_id: numberValue(row.ubicacion_id),
+    xmin: String(row.xmin),
   }));
 }
 
@@ -634,7 +678,7 @@ async function main(): Promise<void> {
   // to TEST_DATABASE_URL.  The source value is never read or used.
   process.env.DATABASE_URL = testUrl;
   latestStage = "importing real function with isolated database guard";
-  const { pool } = await import("../../lib/db/src/index.ts");
+  const { db, pool } = await import("../../lib/db/src/index.ts");
   const { reconstruirCacheExistencias } = await import(
     "../../artifacts/api-server/src/lib/inventario.ts"
   );
@@ -682,10 +726,13 @@ async function main(): Promise<void> {
     const beforeMinimums = await captureMinimums(query);
     const beforeCoverage = await captureCoverage(query);
     const beforePairs = await capturePairs(query);
+    const beforeCacheTupleEvidence = await captureCacheTupleEvidence(query);
     const beforeCounts = await counts();
 
     latestStage = "invoking actual reconstruirCacheExistencias";
-    await reconstruirCacheExistencias();
+    await db.transaction(async (tx) => {
+      await reconstruirCacheExistencias(tx);
+    });
 
     latestStage = "capturing after snapshots and checking preservation";
     const afterIdentity = await identity();
@@ -704,10 +751,15 @@ async function main(): Promise<void> {
     const afterMinimums = await captureMinimums(query);
     const afterCoverage = await captureCoverage(query);
     const afterPairs = await capturePairs(query);
+    const afterCacheTupleEvidence = await captureCacheTupleEvidence(query);
     const afterCounts = await counts();
 
     const listCComparison = comparisonForTables(beforeListC, afterListC);
     const protectedComparison = comparisonForTables(beforeProtected, afterProtected);
+    const sourceMinimums = minimumComparison(
+      verified.sourceMinimums,
+      beforeMinimums,
+    );
     const minimums = minimumComparison(beforeMinimums, afterMinimums);
     const beforeInvariant = invariantRows(beforePairs);
     const afterInvariant = invariantRows(afterPairs);
@@ -723,6 +775,21 @@ async function main(): Promise<void> {
     );
     const afterCacheRowsByKey = new Map(
       afterPairs.map((row) => [`${row.producto_id}:${row.ubicacion_id}`, row]),
+    );
+    const beforeXminByKey = new Map(
+      beforeCacheTupleEvidence.map((row) => [
+        `${row.producto_id}:${row.ubicacion_id}`,
+        String(row.xmin),
+      ]),
+    );
+    const afterXminByKey = new Map(
+      afterCacheTupleEvidence.map((row) => [
+        `${row.producto_id}:${row.ubicacion_id}`,
+        String(row.xmin),
+      ]),
+    );
+    const cacheXminChangedKeys = [...afterXminByKey.keys()].filter(
+      (key) => beforeXminByKey.get(key) !== afterXminByKey.get(key),
     );
     const updatedTimestampChangedCount = afterCache?.rows.filter((row) => {
       const beforeRow = beforeCache?.rows.find(
@@ -758,7 +825,9 @@ async function main(): Promise<void> {
       afterInvariant.equal &&
       afterInvariant.rows.length > 0 &&
       countsStable &&
-      noForbiddenDataMutation;
+      noForbiddenDataMutation &&
+      sourceMinimums.exact &&
+      cacheXminChangedKeys.length > 0;
     if (!status) {
       throw new Error("One or more cache, invariant, or preservation assertions failed.");
     }
@@ -799,6 +868,14 @@ async function main(): Promise<void> {
         server_port_before: beforeIdentity.server_port,
         server_port_after: afterIdentity.server_port,
         cache_value_changed: cacheValueChanged,
+        cache_tuple_xmin_changed_count: cacheXminChangedKeys.length,
+        cache_tuple_xmin_changed_keys: cacheXminChangedKeys,
+        cache_tuple_xmin_before: beforeCacheTupleEvidence,
+        cache_tuple_xmin_after: afterCacheTupleEvidence,
+        actual_write_proof:
+          cacheXminChangedKeys.length > 0
+            ? "PASS: existencias xmin changed after the real transactional rebuild."
+            : "FAIL: no existencias xmin changed after the real transactional rebuild.",
         cache_updated_timestamp_changed_count: updatedTimestampChangedCount,
         cache_timestamp_note:
           updatedTimestampChangedCount > 0
@@ -885,10 +962,13 @@ async function main(): Promise<void> {
         active_coverage_before: beforeCoverage,
         active_coverage_after: afterCoverage,
         exact_field_for_field_preservation: minimums.exact,
+        source_to_restored_before_exact: sourceMinimums.exact,
+        source_counts: verified.sourceMinimums.counts,
         coverage_status:
           afterCoverage.possible_active_pairs === 0
             ? "EMPTY_RESTORED_CONFIGURATION_NO_ACTIVE_SITE_PRODUCT_PAIRS"
             : "CONFIGURED_ACTIVE_SITE_PRODUCT_PAIRS_PRESENT",
+        rows_source: publicMinimumRows(verified.sourceMinimums),
         rows_before: minimums.before,
         rows_after: minimums.after,
         numeric_amounts_dates_and_author_ids_only: true,
@@ -896,12 +976,14 @@ async function main(): Promise<void> {
       assertions: {
         cache_after_equals_movement_sums_and_available_roll_counts: afterInvariant.equal,
         minimum_configuration_deep_equal_before_after: minimums.exact,
+        source_minimum_configuration_matches_restored_before: sourceMinimums.exact,
         list_c_rows_deep_equal_before_after: listCComparison.allEqual,
         movements_and_rollos_unchanged: protectedComparison.rows
           .filter((row) => row.table !== "existencias")
           .every((row) => row.field_for_field_equal === true),
         counts_unchanged: countsStable,
         actual_function_invoked: true,
+        actual_cache_write_proven: cacheXminChangedKeys.length > 0,
       },
       reports: {
         json: reportPath,
@@ -916,6 +998,11 @@ async function main(): Promise<void> {
       childExitCode: 0,
       currentDatabase: beforeIdentity.current_database,
       dataDirectory: beforeIdentity.data_directory,
+      minimumTablesPopulatedCaseExercised: true,
+      minimumPreservationProven: sourceMinimums.exact && minimums.exact,
+      activeSites: afterCoverage.active_sites,
+      cacheWriteProven: cacheXminChangedKeys.length > 0,
+      cacheXminChangedCount: cacheXminChangedKeys.length,
       report: reportPath,
       html: htmlPath,
     });
@@ -928,6 +1015,13 @@ async function main(): Promise<void> {
           state: statePath,
           counts: afterCounts,
           activeMinimumCoverage: afterCoverage,
+          sourceMinimumCounts: verified.sourceMinimums.counts,
+          restoredMinimumCounts: {
+            stock_minimos: beforeMinimums.stock_minimos.length,
+            stock_minimo_sitios: beforeMinimums.stock_minimo_sitios.length,
+          },
+          cacheWriteProven: cacheXminChangedKeys.length > 0,
+          cacheXminChangedCount: cacheXminChangedKeys.length,
           anyEmptyTables: listCComparison.emptyTablesAfter.length > 0,
           emptyTableCount: listCComparison.emptyTablesAfter.length,
           childExitCode: 0,
