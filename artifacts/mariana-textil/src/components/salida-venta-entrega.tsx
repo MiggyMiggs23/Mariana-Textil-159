@@ -30,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 type SalidaVentaEntregaProps = {
   salidaId: number;
   estado: string;
+  historyOnly?: boolean;
 };
 
 function isTerminalSalida(estado: string | undefined): boolean {
@@ -41,7 +42,7 @@ function isTerminalSalida(estado: string | undefined): boolean {
  * through the general salida detail page. The detail query is intentionally
  * enabled only while this dialog is open.
  */
-export function SalidaVentaEntrega({ salidaId, estado }: SalidaVentaEntregaProps) {
+export function SalidaVentaEntrega({ salidaId, estado, historyOnly }: SalidaVentaEntregaProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const scanRef = useRef<HTMLInputElement>(null);
@@ -146,23 +147,27 @@ export function SalidaVentaEntrega({ salidaId, estado }: SalidaVentaEntregaProps
     );
   };
 
+  if (historyOnly && isTerminalSalida(estado)) {
+    return null;
+  }
+
   return (
     <>
       <Button
         type="button"
         size="sm"
-        variant="outline"
+        variant={historyOnly ? "ghost" : "outline"}
         data-testid={`btn-entregar-salida-${salidaId}`}
         disabled={isTerminalSalida(estado)}
         onClick={() => setOpen(true)}
-        className="gap-1.5 whitespace-nowrap"
+        className={historyOnly ? "h-7 px-2.5 text-xs font-medium text-slate-500 hover:text-slate-900" : "gap-1.5 whitespace-nowrap"}
         aria-label={
           isTerminalSalida(estado)
             ? `Salida ${salidaId} cerrada`
             : `Verificar y entregar salida ${salidaId}`
         }
       >
-        <PackageCheck className="h-4 w-4" />
+        {!historyOnly && <PackageCheck className="h-4 w-4" />}
         Entregar
       </Button>
 

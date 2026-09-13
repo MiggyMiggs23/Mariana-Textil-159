@@ -355,130 +355,107 @@ export default function Salidas() {
                 <p className="text-sm">Ajusta los filtros para ver más resultados.</p>
               </div>
             ) : (
-              isCaja ? (
-                <div className="overflow-x-auto">
-                   <div className="grid min-w-[1280px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px_130px] gap-4 border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                    <span>Folio</span>
-                    <span>Fecha y hora</span>
-                    <span>Origen</span>
-                    <span className="text-right">Rollos</span>
-                    <span className="text-right">{formatUnit("METRO")}</span>
-                    <span className="text-right">{formatUnit("KILO")}</span>
-                    <span className="text-right">{formatUnit("BOLSA")}</span>
-                    <span>Transportista</span>
-                    <span>Estado</span>
-                     <span className="text-right">Acción</span>
-                  </div>
-                  <div className="divide-y divide-slate-100">
-                    {displayItems.map((salida) => {
-                      const cancelled = salida.estado === "CANCELADA";
-                      return (
-                        <div
-                          key={salida.id}
-                          data-testid={`row-salida-${salida.id}`}
-                           className={`grid min-w-[1280px] grid-cols-[80px_150px_160px_80px_100px_100px_100px_1fr_120px_130px] items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 ${cancelled ? "text-slate-500 opacity-70 line-through" : "text-slate-900"}`}
-                        >
-                          <Link href={`/salidas/${salida.id}`} className="font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2" data-testid={`link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
-                          <span className="text-sm">{format(new Date(salida.createdAt), "dd/MM/yyyy HH:mm", { locale: es })}</span>
-                          <span className="truncate font-medium">{salida.nombreOrigen}</span>
-                          <span className="text-right font-semibold tabular-nums">{formatNumber(salida.totalRollos ?? 0, { kind: "count" })}</span>
-                          <span className="text-right tabular-nums">{formatNumber(salida.totalMetros, { kind: "quantity" })}</span>
-                          <span className="text-right tabular-nums">{formatNumber(salida.totalKilos, { kind: "quantity" })}</span>
-                           <span className="text-right tabular-nums">{formatNumber(salida.totalBolsas, { kind: "quantity" })}</span>
-                          <span className="truncate">{salida.transportista || "—"}</span>
-                           <span className={cancelled ? "no-underline" : ""}><SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} /></span>
-                            <span className="flex justify-end no-underline">
-                              {salida.modalidad === "VENTA_CLIENTE" && (
-                                <SalidaVentaEntrega salidaId={salida.id} estado={salida.estado} />
-                              )}
-                            </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : (
               <div className="divide-y divide-slate-100">
                 {displayItems.map((salida) => {
                   const canCancel = canCancelSalidaHistory(salida, user);
+                  const isCancelled = salida.estado === 'CANCELADA';
+                  const qtySolicitada = Number(salida.totalCantidadSolicitada);
+                  const qtyEnviada = Number(salida.totalCantidadEnviada);
+                  const isSameQty = qtySolicitada === qtyEnviada;
+
                   return (
                     <div
                       key={salida.id}
                       data-testid={`row-salida-${salida.id}`}
-                      className={`flex flex-col gap-4 p-4 transition-colors hover:bg-slate-50 group sm:flex-row sm:items-center ${salida.estado === 'CANCELADA' ? 'opacity-60' : ''}`}
+                      className={`p-3 sm:p-5 transition-colors hover:bg-slate-50/80 ${
+                        isCancelled ? 'bg-slate-100/70 [&_a]:text-slate-600 [&_p]:text-slate-600' : ''
+                      }`}
                     >
-                      <div className="w-20 shrink-0">
-                        <p className="mb-1 text-xs font-semibold text-slate-500">FOLIO</p>
-                        <Link href={`/salidas/${salida.id}`} className={`text-lg font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${salida.estado === 'CANCELADA' ? 'line-through' : ''}`} data-testid={`mobile-link-salida-${salida.id}`}>{salida.folioFormateado}</Link>
-                      </div>
-
-                      <div className="grid min-w-0 flex-1 grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div className={salida.estado === 'CANCELADA' ? 'line-through' : ''}>
-                          <div className="mb-1 flex items-center gap-2">
-                            <p className="truncate font-medium text-slate-900">{salida.nombreOrigen}</p>
-                            <ArrowRight className="h-4 w-4 shrink-0 text-slate-300" />
-                            <p className="truncate font-medium text-slate-900">{salida.nombreDestino}</p>
-                          </div>
-                           <div className="mt-1 flex flex-wrap gap-2 text-xs text-slate-600">
-                             <span className="font-semibold">{salida.modalidad === "VENTA_CLIENTE" ? "Venta a cliente" : "Traslado"}</span>
-                             {salida.modalidad === "VENTA_CLIENTE" && <span>Cliente: {salida.nombreCliente || `#${salida.clienteId}`}</span>}
-                             {salida.documentoVenta && <Link className="text-primary underline" href={salida.documentoVenta.href}>Documento {salida.documentoVenta.folio}</Link>}
-                           </div>
-                          <div className="flex items-center gap-3 text-xs text-slate-500">
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {format(new Date(salida.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}
+                      <div className="grid grid-cols-[minmax(0,1fr)_64px_92px] sm:grid-cols-[minmax(0,1fr)_112px_136px] md:grid-cols-[minmax(0,1fr)_160px_180px] gap-2 sm:gap-6 items-start">
+                        {/* LEFT: Folio + Date + Origin -> Destination/Client */}
+                        <div className="min-w-0 flex flex-col gap-1.5">
+                          <div className="flex flex-col items-start gap-1">
+                            <Link
+                              href={`/salidas/${salida.id}`}
+                              className="max-w-full break-words text-sm sm:text-base font-bold text-primary hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+                              data-testid={`link-salida-${salida.id}`}
+                            >
+                              {salida.folioFormateado}
+                            </Link>
+                            <span className="text-[11px] sm:text-xs text-slate-500">
+                              {format(new Date(salida.createdAt), "dd MMM yyyy", { locale: es })}
                             </span>
-                            <span>•</span>
-                            <span className="truncate">{salida.nombreArmadoPor}</span>
+                          </div>
+                          <div className="flex flex-col items-start gap-1 sm:flex-row sm:flex-wrap text-xs sm:text-sm text-slate-700">
+                            <span className="max-w-full break-words font-medium">{salida.nombreOrigen}</span>
+                            <ArrowRight aria-hidden="true" className="w-3 h-3 text-slate-400 shrink-0 rotate-90 sm:rotate-0 sm:mt-1" />
+                            <span className="max-w-full break-words font-medium">
+                              {salida.modalidad === "VENTA_CLIENTE"
+                                ? (salida.nombreCliente || (salida.clienteId ? `Cliente #${salida.clienteId}` : "Cliente de venta"))
+                                : salida.nombreDestino}
+                            </span>
                           </div>
                         </div>
 
-                        <div className="flex flex-wrap items-center justify-start gap-3 sm:justify-end sm:gap-6">
-                          <div className="text-left sm:text-right">
-                            <p className="mb-1 text-xs font-semibold text-slate-500">CANTIDAD</p>
-                            <p className="text-sm font-medium text-slate-900">
-                               {formatNumber(salida.totalCantidadSolicitada, { kind: "quantity" })} <span className="font-normal text-slate-400">solicitada</span>
-                            </p>
-                            {Number(salida.totalCantidadEnviada) > 0 && (
-                               <p className="mt-0.5 text-xs text-amber-600">{formatNumber(salida.totalCantidadEnviada, { kind: "quantity" })} enviada</p>
+                        {/* CENTER: Quantity */}
+                        <div className="min-w-0 text-left tabular-nums [overflow-wrap:anywhere]">
+                          {isSameQty ? (
+                            <div className="text-sm font-medium text-slate-900">
+                              {formatNumber(qtySolicitada, { kind: "quantity" })}
+                            </div>
+                          ) : (
+                            <div className="flex flex-col gap-1.5">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2">
+                                <span className="text-[10px] sm:text-xs font-semibold text-slate-400 tracking-wide uppercase sm:w-20">SOLICITADA</span>
+                                <span className="text-xs sm:text-sm font-medium text-slate-500">{formatNumber(qtySolicitada, { kind: "quantity" })}</span>
+                              </div>
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2">
+                                <span className="text-[10px] sm:text-xs font-bold text-amber-600 tracking-wide uppercase sm:w-20">ENVIADA</span>
+                                <span className="text-xs sm:text-sm font-bold text-amber-700 bg-amber-50 px-1 py-0.5 rounded -ml-1 sm:ml-0">{formatNumber(qtyEnviada, { kind: "quantity" })}</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* RIGHT: Status + Actions */}
+                        <div className="flex flex-col items-end gap-3 text-right">
+                          <SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} className="max-w-full whitespace-normal justify-center px-2 py-1 text-center text-xs sm:text-sm !font-bold leading-tight" />
+                          <div className="flex flex-col items-end gap-1.5">
+                            {salida.modalidad === "VENTA_CLIENTE" && (
+                              <SalidaVentaEntrega
+                                salidaId={salida.id}
+                                estado={salida.estado}
+                                historyOnly
+                              />
+                            )}
+                            {canCancel && !isCaja && (
+                              <SalidaCancelDialog
+                                salida={salida}
+                                user={user}
+                                canCancel={canCancel}
+                                isHistory
+                                renderTrigger={({ onClick }) => (
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="ghost"
+                                    data-testid={`btn-history-cancel-${salida.id}`}
+                                    aria-label={`Cancelar salida ${salida.folioFormateado}`}
+                                    onClick={onClick}
+                                    className="h-7 px-2.5 text-xs font-medium text-slate-500 hover:text-red-700 hover:bg-red-50/80 transition-colors"
+                                  >
+                                    Cancelar
+                                  </Button>
+                                )}
+                              />
                             )}
                           </div>
-                           <div className="flex flex-wrap items-center justify-start gap-2 sm:min-w-[180px] sm:justify-end">
-                              <SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} />
-                              {salida.modalidad === "VENTA_CLIENTE" && (
-                                <SalidaVentaEntrega salidaId={salida.id} estado={salida.estado} />
-                              )}
-                              {canCancel && (
-                                <SalidaCancelDialog
-                                  salida={salida}
-                                  user={user}
-                                  canCancel={canCancel}
-                                  isHistory
-                                  renderTrigger={({ onClick }) => (
-                                    <Button
-                                      type="button"
-                                      size="sm"
-                                      variant="outline"
-                                      data-testid={`btn-history-cancel-${salida.id}`}
-                                      aria-label={`Cancelar salida ${salida.folioFormateado}`}
-                                      onClick={onClick}
-                                      className="gap-1.5 whitespace-nowrap border-red-200 text-red-600 hover:bg-red-50"
-                                    >
-                                      <XSquare className="h-4 w-4" />
-                                      Cancelar Salida
-                                    </Button>
-                                  )}
-                                />
-                              )}
-                           </div>
                         </div>
                       </div>
                     </div>
                   );
                 })}
               </div>
-              )
             )}
           </div>
 

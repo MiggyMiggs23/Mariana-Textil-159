@@ -19,7 +19,7 @@ export function getSalidaEstadoLabel(estado: string) {
   return getSalidaEstadoPresentation({ estado }).label;
 }
 
-export function SalidaEstadoBadge(props: SalidaEstadoPresentationInput) {
+export function SalidaEstadoBadge(props: SalidaEstadoPresentationInput & { className?: string }) {
   const presentation = getSalidaEstadoPresentation(props);
   const classNameByLabel: Record<string, string> = {
     [SALIDA_ESTADO_LABELS.ARMANDO]: "bg-blue-100 text-blue-800 border-blue-200",
@@ -35,7 +35,7 @@ export function SalidaEstadoBadge(props: SalidaEstadoPresentationInput) {
   return (
     <Badge
       variant="outline"
-      className={`font-medium ${classNameByLabel[presentation.label] ?? "bg-slate-100 text-slate-800 border-slate-200"}`}
+      className={`font-medium ${classNameByLabel[presentation.label] ?? "bg-slate-100 text-slate-800 border-slate-200"} ${props.className || ""}`}
       data-testid={`salida-estado-${props.estado.toLowerCase()}`}
     >
       {presentation.label}
