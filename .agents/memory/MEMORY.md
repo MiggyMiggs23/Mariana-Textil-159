@@ -51,3 +51,5 @@
 - [Manifiestos explícitos de pruebas](explicit-test-manifests.md) — abortar ante selección vacía; un runner sin rutas descubre suites fuera del alcance y env limpio no bloquea HTTP.
 - [Estado de verificaciones largas](long-running-verification-status.md) — exigir estado terminal, salida y comparaciones; desaparición del proceso no demuestra éxito.
 - [Respaldos binarios en Drive](drive-resumable-backups.md) — ante bloqueos multipart, usar carga reanudable; verificar permisos y SHA-256 de la descarga.
+- [Savepoints y secuencias](savepoint-sequence-effects.md) — revertir un documento no revierte sus nextval ni los de auditoría.
+- [Hashes entre clientes PostgreSQL](database-snapshot-client-parsers.md) — comparar representaciones SQL uniformes, no fechas decodificadas de forma distinta por pg y Drizzle.
