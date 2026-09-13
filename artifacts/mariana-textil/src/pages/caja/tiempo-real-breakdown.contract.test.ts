@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("realtime cards have fixed order and only the three component cards open detail", async () => {
+test("realtime cards have fixed order and exactly six cards open their own detail", async () => {
   const source = await readFile(new URL("./tiempo-real.tsx", import.meta.url), "utf8");
   const labels = [
     "Ventas (Total)",
@@ -18,8 +18,13 @@ test("realtime cards have fixed order and only the three component cards open de
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
   assert.equal((source.match(/openBreakdown\("/g) ?? []).length, 12);
-  const ventasCardEnd = source.indexOf("</Card>", source.indexOf("Ventas (Total)"));
-  assert.doesNotMatch(source.slice(source.indexOf("Ventas (Total)"), ventasCardEnd), /openBreakdown/);
+  // These two cards have no detail: do not invent reconciliation coverage for them.
+  const cards = [...source.matchAll(/<Card\b[\s\S]*?<\/Card>/g)].map(([card]) => card);
+  for (const label of ["Ventas (Total)", "Utilidad"]) {
+    const card = cards.find((value) => value.includes(label));
+    assert.ok(card, `${label} must exist`);
+    assert.doesNotMatch(card, /openBreakdown/);
+  }
 });
 
 test("realtime detail stays in a responsive dialog with folio as its only row link", async () => {

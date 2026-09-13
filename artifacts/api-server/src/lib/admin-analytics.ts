@@ -13,6 +13,11 @@ import {
 } from "@workspace/number-format";
 import { parseMexicoDateQuery } from "./mexico-date";
 import { orderStores } from "./store-order";
+import {
+  buildRealtimeCancellationReadModel,
+  calculateRealtimeCancellationRate,
+  realtimeCancellationWindow,
+} from "./realtime-cancellations";
 
 export const ANALYTICS_TIME_ZONE = "America/Mexico_City";
 export const CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT = 10;
@@ -353,6 +358,9 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
        SELECT COUNT(*)::int tickets,COALESCE(SUM(t.total),0)::text importe
        FROM tickets t
        WHERE ${pendingCondition.text} AND ${pendingTicketPredicate("t")}
+     ), cancellations AS (
+       ${buildRealtimeCancellationReadModel("c")}
+       AND ${realtimeCancellationWindow("c")}
      ), caja_payments AS (
        SELECT p.ticket_id,
          COALESCE(SUM(p.importe),0) cobrado
@@ -389,8 +397,8 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
          ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA')))::int tickets,
        COUNT(p.ticket_id)::int "ticketsCobrados",
        (SELECT tickets FROM pending) "documentosPendientes",
-       COUNT(*) FILTER (WHERE f.estado='CANCELADO')::int cancelaciones,
-       COALESCE(SUM(f.total) FILTER (WHERE f.estado='CANCELADO'),0)::text "importeCancelaciones",
+       (SELECT COUNT(*)::int FROM cancellations) cancelaciones,
+       (SELECT COALESCE(SUM(c.importe),0)::text FROM cancellations c) "importeCancelaciones",
        COALESCE(SUM(l.excluidas),0)::int "lineasExcluidasMargen"
      FROM filtered f
      LEFT JOIN lines l ON l.ticket_id=f.id
@@ -493,10 +501,10 @@ export function summarizeRealtimeCredit(
 export function summarizeRealtimeCancellations(
   totals: { tickets: number; cancelaciones: number; importeCancelaciones: string },
 ) {
-  const denominator = totals.tickets + totals.cancelaciones;
-  const cancellationRate = denominator === 0
-    ? 0
-    : (totals.cancelaciones / denominator) * 100;
+  const cancellationRate = calculateRealtimeCancellationRate(
+    totals.tickets,
+    totals.cancelaciones,
+  );
   return {
     tickets: totals.cancelaciones,
     importe: decimal(totals.importeCancelaciones),
@@ -598,6 +606,9 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        SELECT t.* FROM tickets t WHERE ${condition.text}
      ), operational AS (
        SELECT t.* FROM tickets t WHERE ${operationalCondition.text}
+     ), cancellations AS (
+       ${buildRealtimeCancellationReadModel("c")}
+       AND ${realtimeCancellationWindow("c")}
      ), line_margin AS (
        SELECT l.ticket_id,
           CASE WHEN COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)>0 THEN NULL
@@ -643,19 +654,23 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
         COALESCE(cs.credito,0)::text credito,
         COALESCE(cs.credito_operaciones,0)::int "creditoOperaciones",
        COALESCE(pending.antiguos,0)::int "pendientes30Min",
-       COALESCE(pending.cancelaciones,0)::int cancelaciones
+       COALESCE(cancelled.cancelaciones,0)::int cancelaciones
      FROM ubicaciones u
      LEFT JOIN filtered t ON t.ubicacion_id=u.id
      LEFT JOIN line_margin m ON m.ticket_id=t.id
      LEFT JOIN payment p ON p.id=t.id
        LEFT JOIN credit_sales cs ON cs.ubicacion_id=u.id
+     LEFT JOIN LATERAL (
+       SELECT COUNT(*)::int cancelaciones
+       FROM cancellations c
+       WHERE c.ubicacion_id=u.id
+     ) cancelled ON true
       LEFT JOIN LATERAL (
          SELECT COALESCE(SUM(ot.total) FILTER (WHERE ${pendingTicketPredicate("ot")}),0) importe,
           COUNT(*) FILTER (WHERE ${pendingTicketPredicate("ot")})::int tickets,
            -- The 30-minute alert is a counter-service urgency for unpaid Tickets;
            -- authorization of a credit Note intentionally has no time alert.
-           COUNT(*) FILTER (WHERE ${unpaidTicketPredicate("ot")} AND ot.created_at < now()-interval '30 minutes')::int antiguos,
-          COUNT(*) FILTER (WHERE ot.estado='CANCELADO')::int cancelaciones
+          COUNT(*) FILTER (WHERE ${unpaidTicketPredicate("ot")} AND ot.created_at < now()-interval '30 minutes')::int antiguos
         FROM operational ot WHERE ot.ubicacion_id=u.id
       ) pending ON true
      LEFT JOIN LATERAL (
@@ -668,7 +683,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
        WHERE ft.ubicacion_id=u.id ORDER BY ft.created_at DESC LIMIT 1
      ) term ON true
      WHERE u.tipo='TIENDA' AND u.activa
-       GROUP BY u.id,u.nombre,s.id,s.abierta_at,caj.nombre,term.nombre,cs.credito,cs.credito_operaciones,pending.importe,pending.tickets,pending.antiguos,pending.cancelaciones
+       GROUP BY u.id,u.nombre,s.id,s.abierta_at,caj.nombre,term.nombre,cs.credito,cs.credito_operaciones,pending.importe,pending.tickets,pending.antiguos,cancelled.cancelaciones
      ORDER BY u.nombre`,
     condition.values,
   );
@@ -678,8 +693,7 @@ export async function getRealtimeStores(filters: AnalyticsFilters) {
     const subtotal = Number(row.subtotal);
     const tickets = Number(row.tickets);
     const ticketsCollected = Number(row.ticketsCobrados);
-    const cancellationRate = tickets + Number(row.cancelaciones) === 0 ? 0 :
-      (Number(row.cancelaciones) / (tickets + Number(row.cancelaciones))) * 100;
+    const cancellationRate = calculateRealtimeCancellationRate(tickets, Number(row.cancelaciones));
     const alerts: string[] = [];
     if (Number(row.pendientes30Min) > 0) alerts.push("PENDIENTE_MAS_30_MIN");
     const mexicoHour = mexicoCityHour();
@@ -775,17 +789,18 @@ export async function listRealtimeBreakdown(
   if (concepto === "SALIDAS_EN_TRANSITO" || concepto === "SALIDAS_CANCELADAS") {
     return listRealtimeSalidaBreakdown(filters, concepto, page, pageSize);
   }
+  const cancellation = concepto === "CANCELADAS";
   const predicate = concepto === "COBRADO"
     ? collectedTicketPredicate("t")
     : concepto === "CREDITO"
       ? authorizedCreditPredicate("t")
-      : concepto === "CANCELADAS"
-        ? "t.estado='CANCELADO'"
+      : cancellation
+        ? ""
         : pendingTicketPredicate("t");
   const timestamp = concepto === "PENDIENTE"
     ? "t.created_at"
-    : concepto === "CANCELADAS"
-      ? "t.cancelado_at"
+    : cancellation
+      ? "cancellation.cancelado_at"
       : accountedDocumentAt("t");
   const creditSource = concepto === "CREDITO"
     ? `JOIN (
@@ -795,7 +810,15 @@ export async function listRealtimeBreakdown(
         GROUP BY m.ticket_id
       ) credit ON credit.ticket_id=t.id`
     : "";
-  const amount = concepto === "CREDITO" ? "credit.importe" : "t.total";
+  const cancellationSource = cancellation
+    ? `JOIN (${buildRealtimeCancellationReadModel("cancellation")}) cancellation
+       ON cancellation.id=t.id`
+    : "";
+  const amount = concepto === "CREDITO"
+    ? "credit.importe"
+    : cancellation
+      ? "cancellation.importe"
+      : "t.total";
   const values = [
     filters.desde?.toISOString() ?? null,
     filters.hasta?.toISOString() ?? null,
@@ -803,11 +826,14 @@ export async function listRealtimeBreakdown(
     pageSize,
     (page - 1) * pageSize,
   ];
-  const condition = `($1::timestamptz IS NULL OR ${timestamp} >= $1)
-    AND ($2::timestamptz IS NULL OR ${timestamp} <= $2)
-    AND ($3::int IS NULL OR t.ubicacion_id=$3)
-    AND ${predicate}`;
+  const condition = cancellation
+    ? realtimeCancellationWindow("cancellation")
+    : `($1::timestamptz IS NULL OR ${timestamp} >= $1)
+      AND ($2::timestamptz IS NULL OR ${timestamp} <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)
+      AND ${predicate}`;
   const base = `FROM tickets t
+    ${cancellationSource}
     ${creditSource}
     LEFT JOIN clientes c ON c.id=t.cliente_id
     LEFT JOIN usuarios cancelador ON cancelador.id=t.cancelado_por
@@ -822,7 +848,7 @@ export async function listRealtimeBreakdown(
         ${amount}::text importe,t.documento_tipo "documentoTipo",t.facturado,
         t.dias_plazo "diasPlazo",t.fecha_vencimiento "fechaVencimiento",pagos.formas,
          cancelador.nombre "nombreUsuarioCancelacion",
-         t.cancelado_at "canceladoAt",t.motivo_cancelacion "motivoCancelacion",
+         ${cancellation ? "cancellation.cancelado_at" : "t.cancelado_at"} "canceladoAt",t.motivo_cancelacion "motivoCancelacion",
         GREATEST(0,FLOOR(EXTRACT(EPOCH FROM (now()-t.created_at))/60))::int "minutosEspera"
        ${base}
        ORDER BY ${timestamp} DESC,t.id DESC LIMIT $4 OFFSET $5`,

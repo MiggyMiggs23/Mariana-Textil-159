@@ -434,10 +434,10 @@ if (!testUrl) {
        );
       assert.ok(Number(summary.margen) > 0);
        assert.equal(
-         summary.cancelaciones,
-         0,
-         "un documento sin procesamiento financiero no entra al rango contable",
-       );
+          summary.cancelaciones,
+          2,
+          "cancelaciones usan su evento operativo aunque el documento no tenga procesamiento financiero",
+        );
       assert.equal(pending.tickets, 2);
       assert.equal(pending.importe, "125.00");
       assert.ok(cards.some((card) => card.alertas.includes("PENDIENTE_MAS_30_MIN")));

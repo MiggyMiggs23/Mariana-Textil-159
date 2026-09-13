@@ -149,9 +149,8 @@ export default function CajaTiempoReal() {
   const pendingNotes = pending?.notasSinAutorizar
     ?? dashboard?.pendientes.notasSinAutorizar
     ?? 0;
-  const hasCancellationRateBase = (totals?.tickets ?? 0) > 0;
   const pendingTone = attentionCardTone("amber", mergedPendingCount, mergedPendingAmount);
-  const cancelledTone = attentionCardTone("red", dashboard?.cancelaciones.tickets, dashboard?.cancelaciones.importe, dashboard?.cancelaciones.excedeUmbral);
+  const cancelledTone = attentionCardTone("red", dashboard?.cancelaciones.tickets, dashboard?.cancelaciones.importe);
   const transitTone = attentionCardTone("amber", dashboard?.salidasEnTransito.conteo, dashboard?.salidasEnTransito.importe);
   const cancelledExitsTone = attentionCardTone("red", dashboard?.salidasCanceladas.conteo, dashboard?.salidasCanceladas.importe);
   const isSalidaBreakdown = breakdownConcept === "SALIDAS_EN_TRANSITO" || breakdownConcept === "SALIDAS_CANCELADAS";
@@ -351,9 +350,6 @@ export default function CajaTiempoReal() {
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("CANCELADAS")}
               >
                 {/* Red means "revisa esto", not error, because cancellation is legitimate but merits review. */}
-                {cancelledTone.state === "elevated" && (
-                  <div className="absolute top-0 right-0 w-1 h-full bg-red-700" />
-                )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
                   <CardTitle className={`text-xs font-semibold ${cancelledTone.title} uppercase line-clamp-2`}>
                     Tickets cancelados
@@ -364,11 +360,9 @@ export default function CajaTiempoReal() {
                   <div className={`text-xl font-black ${cancelledTone.text}`}>
                      {formatCountLabel(dashboard.cancelaciones.tickets, "ticket", "tickets")} · {formatNumber(dashboard.cancelaciones.importe, { kind: "money" })}
                   </div>
-                   {hasCancellationRateBase && (
                     <p className={`text-xs ${cancelledTone.text} mt-1 font-bold`}>
                        Tasa de cancelación: {formatNumber(dashboard.cancelaciones.tasaCancelacion, { kind: "percentage", percentageInput: "percent" })}
                      </p>
-                   )}
                 </CardContent>
               </Card>
 

@@ -47,17 +47,21 @@ describe("Tiempo Real Contract", () => {
 
   it("shared boolean use for cancellation", () => {
     const page = readPage("./tiempo-real.tsx");
-    assert.match(page, /attentionCardTone\("red", dashboard\?\.cancelaciones\.tickets, dashboard\?\.cancelaciones\.importe, dashboard\?\.cancelaciones\.excedeUmbral\)/);
+    assert.match(page, /attentionCardTone\("red", dashboard\?\.cancelaciones\.tickets, dashboard\?\.cancelaciones\.importe\)/);
+    assert.match(page, /attentionCardTone\("red", dashboard\?\.salidasCanceladas\.conteo, dashboard\?\.salidasCanceladas\.importe\)/);
+    assert.doesNotMatch(page, /cancelledTone\.state === "elevated"/);
     assert.doesNotMatch(page, /tasaCancelacion\)\s*>\s*10|tasaCancelacion\s*>\s*10/);
   });
 
-  it("pluralizes dashboard counts and hides a cancellation rate without a sales base", () => {
+  it("pluralizes dashboard counts and always shows the server cancellation rate, even without sales", () => {
     const page = readPage("./tiempo-real.tsx");
     assert.match(page, /value === 1 \? singular : plural/);
     assert.match(page, /formatCountLabel\(dashboard\.cancelaciones\.tickets, "ticket", "tickets"\)/);
     assert.match(page, /formatCountLabel\(pendingTickets, "ticket", "tickets"\)/);
     assert.match(page, /formatCountLabel\(pendingNotes, "nota", "notas"\)/);
-    assert.match(page, /hasCancellationRateBase = \(totals\?\.tickets \?\? 0\) > 0/);
-    assert.match(page, /\{hasCancellationRateBase && \([\s\S]*Tasa de cancelación:/);
+    assert.doesNotMatch(page, /hasCancellationRateBase/);
+    assert.match(page, /Tasa de cancelación: \{formatNumber\(dashboard\.cancelaciones\.tasaCancelacion/);
+    const cardContent = page.slice(page.indexOf('{formatCountLabel(dashboard.cancelaciones.tickets'), page.indexOf("</CardContent>", page.indexOf('{formatCountLabel(dashboard.cancelaciones.tickets')));
+    assert.doesNotMatch(cardContent, /&&|\?\s*\(/);
   });
 });

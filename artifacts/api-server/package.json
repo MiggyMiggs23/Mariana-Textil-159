@@ -40,6 +40,7 @@
     "test:clientes-ajustes:unit": "tsx --test src/lib/spanish-order.test.ts",
     "test:admin-analytics": "tsx --test src/lib/admin-analytics.contract.ts src/lib/admin-analytics-active-stores.contract.ts src/lib/store-order.test.ts",
     "test:admin-analytics-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/admin-analytics.integration.test.ts",
+    "test:admin-realtime-reconciliation": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/admin-realtime-reconciliation.integration.test.ts",
     "test:store-sales-global-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/store-sales-global.integration.test.ts",
     "test:admin-alertas-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/admin-alertas.integration.test.ts",
     "test:etiquetas": "NODE_ENV=test tsx --test src/etiquetas-api.test.ts",
