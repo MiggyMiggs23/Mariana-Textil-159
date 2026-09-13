@@ -10,6 +10,7 @@ import {
   AdminPendingSummaryTiendasItem
 } from "@workspace/api-client-react";
 import { useLocationScope } from "@/lib/location-scope";
+import { attentionCardTone } from "./attention-card-tone";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
@@ -149,6 +150,10 @@ export default function CajaTiempoReal() {
     ?? dashboard?.pendientes.notasSinAutorizar
     ?? 0;
   const hasCancellationRateBase = (totals?.tickets ?? 0) > 0;
+  const pendingTone = attentionCardTone("amber", mergedPendingCount, mergedPendingAmount);
+  const cancelledTone = attentionCardTone("red", dashboard?.cancelaciones.tickets, dashboard?.cancelaciones.importe, dashboard?.cancelaciones.excedeUmbral);
+  const transitTone = attentionCardTone("amber", dashboard?.salidasEnTransito.conteo, dashboard?.salidasEnTransito.importe);
+  const cancelledExitsTone = attentionCardTone("red", dashboard?.salidasCanceladas.conteo, dashboard?.salidasCanceladas.importe);
   const isSalidaBreakdown = breakdownConcept === "SALIDAS_EN_TRANSITO" || breakdownConcept === "SALIDAS_CANCELADAS";
   const openBreakdown = (concepto: BreakdownConcept) => {
     setBreakdownPage(1);
@@ -282,29 +287,30 @@ export default function CajaTiempoReal() {
               </Card>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 saturate-[0.60]">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card
-                className={`border-amber-300/25 bg-amber-50/30 dark:bg-amber-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${mergedPendingCount > 0 ? "ring-1 ring-amber-300/30" : ""}`}
+                className={`${pendingTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+                data-attention={pendingTone.state}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("PENDIENTE")}
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("PENDIENTE")}
               >
                 {/* Amber indicates pending operational attention, such as items in transit. */}
-                {mergedPendingCount > 0 && (
-                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-300/50" />
+                {pendingTone.active && (
+                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-500" />
                 )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
-                  <CardTitle className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase line-clamp-2">
+                  <CardTitle className={`text-xs font-semibold ${pendingTone.title} uppercase line-clamp-2`}>
                     Ventas pendientes de cobro o autorización
                   </CardTitle>
-                  <Clock className="h-4 w-4 text-amber-600" />
+                  <Clock className={`h-4 w-4 ${pendingTone.icon}`} />
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
-                  <div className="text-xl font-black text-amber-700 dark:text-amber-400">
+                  <div className={`text-xl font-black ${pendingTone.text}`}>
                     {formatNumber(mergedPendingAmount, { kind: "money" })}
                   </div>
-                  <p className="text-xs text-amber-700/80 dark:text-amber-400/80 mt-1 font-bold">
+                  <p className={`text-xs ${pendingTone.text} mt-1 font-bold`}>
                      {formatCountLabel(pendingTickets, "ticket", "tickets")} ·{" "}
                      {formatCountLabel(pendingNotes, "nota", "notas")}
                   </p>
@@ -312,28 +318,29 @@ export default function CajaTiempoReal() {
               </Card>
 
               <Card
-                className={`border-red-200/30 bg-red-50/20 dark:bg-red-950/5 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.cancelaciones.excedeUmbral ? "ring-1 ring-red-200/30" : ""}`}
+                className={`${cancelledTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+                data-attention={cancelledTone.state}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("CANCELADAS")}
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("CANCELADAS")}
               >
                 {/* Red means "revisa esto", not error, because cancellation is legitimate but merits review. */}
-                {dashboard.cancelaciones.excedeUmbral && (
-                  <div className="absolute top-0 right-0 w-1 h-full bg-red-200/50" />
+                {cancelledTone.state === "elevated" && (
+                  <div className="absolute top-0 right-0 w-1 h-full bg-red-700" />
                 )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
-                  <CardTitle className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase line-clamp-2">
+                  <CardTitle className={`text-xs font-semibold ${cancelledTone.title} uppercase line-clamp-2`}>
                     Tickets cancelados
                   </CardTitle>
-                  <Ban className="h-4 w-4 text-red-500" />
+                  <Ban className={`h-4 w-4 ${cancelledTone.icon}`} />
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
-                  <div className="text-xl font-black text-red-600 dark:text-red-400">
+                  <div className={`text-xl font-black ${cancelledTone.text}`}>
                      {formatCountLabel(dashboard.cancelaciones.tickets, "ticket", "tickets")} · {formatNumber(dashboard.cancelaciones.importe, { kind: "money" })}
                   </div>
                    {hasCancellationRateBase && (
-                    <p className="text-xs text-red-600/80 dark:text-red-400/80 mt-1 font-bold">
+                    <p className={`text-xs ${cancelledTone.text} mt-1 font-bold`}>
                        Tasa de cancelación: {formatNumber(dashboard.cancelaciones.tasaCancelacion, { kind: "percentage", percentageInput: "percent" })}
                      </p>
                    )}
@@ -341,31 +348,33 @@ export default function CajaTiempoReal() {
               </Card>
 
               <Card
-                className={`border-amber-300/25 bg-amber-50/30 dark:bg-amber-950/10 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${dashboard.salidasEnTransito.conteo > 0 ? "ring-1 ring-amber-300/30" : ""}`}
+                className={`${transitTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+                data-attention={transitTone.state}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("SALIDAS_EN_TRANSITO")}
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("SALIDAS_EN_TRANSITO")}
               >
                 {/* Amber indicates pending operational attention, such as items in transit. */}
-                {dashboard.salidasEnTransito.conteo > 0 && (
-                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-300/50" />
+                {transitTone.active && (
+                  <div className="absolute top-0 right-0 w-1 h-full bg-amber-500" />
                 )}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
-                  <CardTitle className="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase line-clamp-2">
+                  <CardTitle className={`text-xs font-semibold ${transitTone.title} uppercase line-clamp-2`}>
                     Salidas en tránsito
                   </CardTitle>
-                  <Clock className="h-4 w-4 text-amber-600" />
+                  <Clock className={`h-4 w-4 ${transitTone.icon}`} />
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
-                  <div className="text-xl font-black text-amber-700 dark:text-amber-400">
+                  <div className={`text-xl font-black ${transitTone.text}`}>
                     {formatCountLabel(dashboard.salidasEnTransito.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasEnTransito.importe, { kind: "money" })}
                   </div>
                 </CardContent>
               </Card>
 
               <Card
-                className="border-red-200/30 bg-red-50/20 dark:bg-red-950/5 shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className={`${cancelledExitsTone.card} shadow-sm relative overflow-hidden cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
+                data-attention={cancelledExitsTone.state}
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("SALIDAS_CANCELADAS")}
@@ -373,13 +382,13 @@ export default function CajaTiempoReal() {
               >
                 {/* Red means "revisa esto", not error, because cancellation is legitimate but merits review. */}
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2">
-                  <CardTitle className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase line-clamp-2">
+                  <CardTitle className={`text-xs font-semibold ${cancelledExitsTone.title} uppercase line-clamp-2`}>
                     Salidas canceladas
                   </CardTitle>
-                  <Ban className="h-4 w-4 text-red-500" />
+                  <Ban className={`h-4 w-4 ${cancelledExitsTone.icon}`} />
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
-                  <div className="text-xl font-black text-red-600 dark:text-red-400">
+                  <div className={`text-xl font-black ${cancelledExitsTone.text}`}>
                     {formatCountLabel(dashboard.salidasCanceladas.conteo, "salida", "salidas")} · {formatNumber(dashboard.salidasCanceladas.importe, { kind: "money" })}
                   </div>
                 </CardContent>

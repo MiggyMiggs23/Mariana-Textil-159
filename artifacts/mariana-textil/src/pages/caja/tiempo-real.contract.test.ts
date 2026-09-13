@@ -42,7 +42,7 @@ describe("Tiempo Real Contract", () => {
 
   it("shared boolean use for cancellation", () => {
     const page = readPage("./tiempo-real.tsx");
-    assert.match(page, /dashboard\.cancelaciones\.excedeUmbral/);
+    assert.match(page, /attentionCardTone\("red", dashboard\?\.cancelaciones\.tickets, dashboard\?\.cancelaciones\.importe, dashboard\?\.cancelaciones\.excedeUmbral\)/);
     assert.doesNotMatch(page, /tasaCancelacion\)\s*>\s*10|tasaCancelacion\s*>\s*10/);
   });
 
