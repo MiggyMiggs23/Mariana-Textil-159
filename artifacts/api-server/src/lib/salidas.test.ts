@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test, { after, before } from "node:test";
 import { randomUUID } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
-import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pool, productosTable, rollosTable, salidaFolioTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
+import { auditoriaTable, db, ensureSalidasSchema, existenciasTable, movimientosTable, notificacionesSistemaTable, pisosTable, pool, productosTable, rollosTable, salidaFolioTable, salidaLineasTable, salidaRollosTable, salidasTable, ubicacionesTable, usuariosTable } from "@workspace/db";
 import { crearRollo, InventarioError, recibirTransferencia } from "./inventario";
 import {
   agregarRolloBorradorSalida,
@@ -21,7 +21,7 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   test("salidas DB suite is guarded", { skip: "TEST_DATABASE_URL required" }, () => {});
 } else {
   const tag = `P7-${Date.now()}`;
-  const products: number[] = [], locations: number[] = [], rolls: number[] = [], docs: number[] = [];
+  const products: number[] = [], locations: number[] = [], floors: number[] = [], rolls: number[] = [], docs: number[] = [];
   let user = 0;
   before(async () => {
     await ensureSalidasSchema(pool);
@@ -256,7 +256,7 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     assert.ok(one.folio > 0);
     assert.ok(two.folio > 0);
   });
-  test("only ARMANDO can be cancelled and cancellation never moves inventory", async () => {
+  test("ARMANDO cancellation leaves inventory untouched and EN_TRANSITO traslado cancellation compensates every roll once", async () => {
     const f = await fx(); const r = await roll(f.productoId, f.origenId, "20"); const s = await create(f.origenId, f.destinoId, [r.id]);
     await assert.rejects(db.transaction((tx) => cancelarSalida(tx, s.id, user, "corto")), (e: unknown) => e instanceof InventarioError && e.code === "REASON_REQUIRED");
     await db.transaction((tx) => cancelarSalida(tx, s.id, user, "Motivo válido de cancelación"));
@@ -279,7 +279,182 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
     );
     const changed = await roll(f.productoId, f.origenId, "21"); const s2 = await create(f.origenId, f.destinoId, [changed.id]);
     await db.transaction((tx) => enviarSalida(tx, { salidaId: s2.id, usuarioId: user, transportista: "Prueba" }));
-    await assert.rejects(db.transaction((tx) => cancelarSalida(tx, s2.id, user, "Motivo válido de cancelación")), (e: unknown) => e instanceof InventarioError && e.code === "INVALID_SALIDA_STATE");
+    const originals = await db.select({
+      id: movimientosTable.id,
+      tipo: movimientosTable.tipo,
+      cantidad: movimientosTable.cantidad,
+      documentoTipo: movimientosTable.documentoTipo,
+    }).from(movimientosTable).where(and(
+      eq(movimientosTable.rolloId, changed.id),
+      eq(movimientosTable.documentoTipo, "SALIDA"),
+      eq(movimientosTable.documentoId, String(s2.id)),
+    ));
+    assert.equal(originals.length, 2);
+    const cancelledTransit = await db.transaction((tx) =>
+      cancelarSalida(tx, s2.id, user, "Motivo válido de cancelación"),
+    );
+    assert.equal(cancelledTransit.estado, "CANCELADA");
+    const [returned] = await db.select().from(rollosTable).where(eq(rollosTable.id, changed.id));
+    assert.deepEqual(
+      { ubicacionId: returned?.ubicacionId, estado: returned?.estado, cantidadActual: returned?.cantidadActual },
+      { ubicacionId: f.origenId, estado: "DISPONIBLE", cantidadActual: "21.000" },
+    );
+    const compensation = await db.select({
+      id: movimientosTable.id,
+      tipo: movimientosTable.tipo,
+      cantidad: movimientosTable.cantidad,
+      documentoTipo: movimientosTable.documentoTipo,
+      salidaId: movimientosTable.salidaId,
+    }).from(movimientosTable).where(and(
+      eq(movimientosTable.rolloId, changed.id),
+      eq(movimientosTable.documentoId, String(s2.id)),
+    )).orderBy(movimientosTable.id);
+    assert.equal(compensation.length, 4);
+    assert.deepEqual(
+      compensation.slice(0, 2).map((movement) => movement.id),
+      originals.map((movement) => movement.id),
+      "Los movimientos de envío originales permanecen inmutables.",
+    );
+    assert.ok(
+      compensation.slice(2).every((movement) =>
+        movement.documentoTipo === "CANCELACION_SALIDA" &&
+        movement.salidaId === s2.id,
+      ),
+    );
+    await assert.rejects(
+      db.transaction((tx) =>
+        cancelarSalida(tx, s2.id, user, "Reintento de cancelación duplicado"),
+      ),
+      (e: unknown) => e instanceof InventarioError && e.code === "INVALID_SALIDA_STATE",
+    );
+    assert.equal(
+      await db.$count(
+        movimientosTable,
+        and(eq(movimientosTable.rolloId, changed.id), eq(movimientosTable.documentoId, String(s2.id))),
+      ),
+      4,
+      "El reintento no puede acreditar el inventario una segunda vez.",
+    );
+  });
+  test("EN_TRANSITO cancellation is atomic when any outgoing roll changed", async () => {
+    const f = await fx();
+    const [first, second] = await Promise.all([
+      roll(f.productoId, f.origenId, "23"),
+      roll(f.productoId, f.origenId, "24"),
+    ]);
+    const salida = await create(f.origenId, f.destinoId, [first.id, second.id]);
+    await db.transaction((tx) => enviarSalida(tx, {
+      salidaId: salida.id, usuarioId: user, transportista: "Prueba",
+    }));
+    // Simulate an independently changed in-transit roll. Cancellation must not
+    // compensate the still-pending roll before rejecting the complete batch.
+    await db.update(rollosTable).set({ estado: "BAJA" }).where(eq(rollosTable.id, second.id));
+    await assert.rejects(
+      db.transaction((tx) =>
+        cancelarSalida(tx, salida.id, user, "Cancelar lote con serie modificada"),
+      ),
+      (error: unknown) =>
+        error instanceof InventarioError &&
+        error.code === "INVENTORY_CHANGED_RETRY",
+    );
+    const [header] = await db.select({ estado: salidasTable.estado })
+      .from(salidasTable).where(eq(salidasTable.id, salida.id));
+    const [unchanged] = await db.select({
+      ubicacionId: rollosTable.ubicacionId, estado: rollosTable.estado,
+    }).from(rollosTable).where(eq(rollosTable.id, first.id));
+    const [changedSecond] = await db.select({
+      ubicacionId: rollosTable.ubicacionId,
+    }).from(rollosTable).where(eq(rollosTable.id, second.id));
+    assert.equal(header?.estado, "EN_TRANSITO");
+    assert.deepEqual(unchanged, {
+      ubicacionId: changedSecond?.ubicacionId,
+      estado: "EN_TRANSITO",
+    });
+    assert.equal(
+      await db.$count(
+        movimientosTable,
+        and(
+          eq(movimientosTable.documentoTipo, "CANCELACION_SALIDA"),
+          eq(movimientosTable.documentoId, String(salida.id)),
+        ),
+      ),
+      0,
+    );
+  });
+  test("EN_TRANSITO cancellation requires and uses the explicit active origin return floor", async () => {
+    const f = await fx();
+    const [floor] = await db.insert(pisosTable)
+      .values({ ubicacionId: f.origenId, nombre: `P-${tag}-${floors.length}` })
+      .returning({ id: pisosTable.id });
+    floors.push(floor!.id);
+    const item = await roll(f.productoId, f.origenId, "26");
+    await db.update(rollosTable).set({ pisoId: floor!.id }).where(eq(rollosTable.id, item.id));
+    const salida = await create(f.origenId, f.destinoId, [item.id]);
+    await db.transaction((tx) => enviarSalida(tx, {
+      salidaId: salida.id, usuarioId: user, transportista: "Prueba",
+    }));
+    await assert.rejects(
+      db.transaction((tx) =>
+        cancelarSalida(tx, salida.id, user, "Falta seleccionar el piso de retorno"),
+      ),
+      (error: unknown) =>
+        error instanceof InventarioError &&
+        error.code === "INVALID_FLOOR",
+    );
+    const cancelled = await db.transaction((tx) =>
+      cancelarSalida(
+        tx,
+        salida.id,
+        user,
+        "Devolver al piso de origen seleccionado",
+        floor!.id,
+      ),
+    );
+    assert.equal(cancelled.estado, "CANCELADA");
+    const [returned] = await db.select({
+      ubicacionId: rollosTable.ubicacionId,
+      pisoId: rollosTable.pisoId,
+      estado: rollosTable.estado,
+    }).from(rollosTable).where(eq(rollosTable.id, item.id));
+    assert.deepEqual(returned, {
+      ubicacionId: f.origenId,
+      pisoId: floor!.id,
+      estado: "DISPONIBLE",
+    });
+  });
+  test("cancel and receive serialize on transit inventory pairs without double credit", async () => {
+    const f = await fx();
+    const item = await roll(f.productoId, f.origenId, "25");
+    const salida = await create(f.origenId, f.destinoId, [item.id]);
+    await db.transaction((tx) => enviarSalida(tx, {
+      salidaId: salida.id, usuarioId: user, transportista: "Prueba",
+    }));
+    const attempts = await Promise.allSettled([
+      db.transaction((tx) =>
+        cancelarSalida(tx, salida.id, user, "Cancelación concurrente de traslado"),
+      ),
+      db.transaction((tx) => recibirSalida(tx, {
+        salidaId: salida.id, usuarioId: user, completa: true, ip: "127.0.0.1",
+      })),
+    ]);
+    assert.equal(attempts.filter((result) => result.status === "fulfilled").length, 1);
+    const [finalHeader] = await db.select({ estado: salidasTable.estado })
+      .from(salidasTable).where(eq(salidasTable.id, salida.id));
+    const [finalRollo] = await db.select({
+      ubicacionId: rollosTable.ubicacionId, estado: rollosTable.estado,
+    }).from(rollosTable).where(eq(rollosTable.id, item.id));
+    assert.ok(["CANCELADA", "RECIBIDA"].includes(finalHeader?.estado ?? ""));
+    assert.equal(finalRollo?.estado, "DISPONIBLE");
+    assert.ok([f.origenId, f.destinoId].includes(finalRollo?.ubicacionId ?? 0));
+    const transferMovements = await db.select({ cantidad: movimientosTable.cantidad })
+      .from(movimientosTable)
+      .where(and(eq(movimientosTable.rolloId, item.id), eq(movimientosTable.documentoId, String(salida.id))));
+    assert.equal(transferMovements.length, 4);
+    assert.equal(
+      transferMovements.reduce((sum, movement) => sum + Number(movement.cantidad), 0),
+      0,
+      "La carrera conserva una sola salida y una sola contraparte.",
+    );
   });
   test("one-step reception lands every roll, rejects duplicates, audits, and alerts ADMIN when incomplete", async () => {
     const f = await fx();
@@ -310,6 +485,14 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
       })),
       (error: unknown) =>
         error instanceof InventarioError && error.code === "INVALID_SALIDA_STATE",
+    );
+    await assert.rejects(
+      db.transaction((tx) =>
+        cancelarSalida(tx, salida.id, user, "No debe cancelarse una salida recibida"),
+      ),
+      (error: unknown) =>
+        error instanceof InventarioError &&
+        error.code === "INVALID_SALIDA_STATE",
     );
     const [audit] = await db.select().from(auditoriaTable).where(and(
       eq(auditoriaTable.entidad, "salidas"),
@@ -473,6 +656,7 @@ if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
       await tx.delete(salidasTable).where(inArray(salidasTable.id, docs));
     }
     if (rolls.length) { await tx.delete(movimientosTable).where(inArray(movimientosTable.rolloId, rolls)); await tx.delete(rollosTable).where(inArray(rollosTable.id, rolls)); }
+    if (floors.length) { await tx.delete(pisosTable).where(inArray(pisosTable.id, floors)); }
     if (products.length) { await tx.delete(existenciasTable).where(inArray(existenciasTable.productoId, products)); await tx.delete(productosTable).where(inArray(productosTable.id, products)); }
     if (locations.length) {
       await tx.delete(salidaFolioTable).where(inArray(salidaFolioTable.ubicacionId, locations));

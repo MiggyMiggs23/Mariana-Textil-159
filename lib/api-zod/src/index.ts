@@ -584,6 +584,7 @@ export * from "./generated/types/rolloListResult";
 export * from "./generated/types/rolloPisoUpdate";
 export * from "./generated/types/rolloSummary";
 export * from "./generated/types/salidaDetail";
+export * from "./generated/types/salidaDetailPisosRetornoItem";
 export * from "./generated/types/salidaDetailResponseResponse";
 export * from "./generated/types/salidaDineroCaja";
 export * from "./generated/types/salidaDineroCajaInput";

@@ -131,6 +131,37 @@ test("Salida document exposes full location names without a separate initials fi
   assert.doesNotMatch(service, /inicialesSitio:/);
 });
 
+test("authorized salida detail supplies scoped transit return floors without ubicaciones.ver", async () => {
+  const [route, service, spec] = await Promise.all([
+    readFile(routeFile, "utf8"),
+    readFile(serviceFile, "utf8"),
+    readFile(specFile, "utf8"),
+  ]);
+  const detailRoute = route.slice(
+    route.indexOf('router.get(\n  "/salidas/:id",'),
+    route.indexOf('router.get(\n  "/salidas/:id/documento",'),
+  );
+  const detailBuilder = service.slice(
+    service.indexOf("export async function buildSalidaDetail"),
+    service.indexOf("async function requireSalidaDetail"),
+  );
+  const detailSchema = spec.slice(
+    spec.indexOf("    SalidaDetail:"),
+    spec.indexOf("    NotificacionSistema:"),
+  );
+
+  assert.match(detailRoute, /resolvePermiso\(auth\.user\.id, auth\.user\.rol, "salidas"\)/);
+  assert.match(detailRoute, /requireSalidaAccess\(auth, id, "read"\)/);
+  assert.doesNotMatch(detailRoute, /ubicaciones/);
+  assert.doesNotMatch(detailRoute, /requierePermiso\("ubicaciones", "ver"\)/);
+  assert.match(detailSchema, /pisosRetorno/);
+  assert.match(detailSchema, /required: \[id, nombre\]/);
+  assert.match(detailBuilder, /salida\.modalidad === "TRASLADO" && salida\.estado === "EN_TRANSITO"/);
+  assert.match(detailBuilder, /eq\(pisosTable\.ubicacionId, salida\.origenId\)/);
+  assert.match(detailBuilder, /eq\(pisosTable\.activo, true\)/);
+  assert.match(detailBuilder, /orderBy\(asc\(pisosTable\.id\)\)/);
+});
+
 test("Block 1 counter exit is one-step, site-scoped, persisted and printable", async () => {
   const documentPageFile = new URL("artifacts/mariana-textil/src/pages/salida-documento.tsx", root);
   const [route, inventoryRoute, service, spec, listPage, counterPage, documentPage, schema] =

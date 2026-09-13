@@ -7110,6 +7110,10 @@ export const GetBorradorSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -7226,6 +7230,10 @@ export const AgregarRolloBorradorSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -7345,6 +7353,10 @@ export const CrearSalidaMostradorResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -7467,6 +7479,10 @@ export const CrearEnviarSalidaVentaClienteResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -7855,6 +7871,10 @@ export const GetSalidaRecepcionResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -7963,6 +7983,10 @@ export const GetSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -8071,6 +8095,10 @@ export const GetDocumentoSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -8180,6 +8208,10 @@ export const QuitarRolloBorradorSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -8230,8 +8262,10 @@ export const cancelarSalidaBodyMotivoMin = 10;
 
 
 
+
 export const CancelarSalidaBody = zod.object({
   "motivo": zod.string().min(cancelarSalidaBodyMotivoMin),
+  "pisoRetornoId": zod.number().min(1).optional(),
   "adminUsuario": zod.string().optional(),
   "adminPassword": zod.string().optional()
 })
@@ -8298,6 +8332,10 @@ export const CancelarSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -8414,6 +8452,10 @@ export const EnviarSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -8536,6 +8578,10 @@ export const RecibirSalidaResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),
@@ -8656,6 +8702,10 @@ export const EntregarSalidaVentaClienteResponse = zod.object({
   "nombreCanceladoPor": zod.string().nullable(),
   "fechaCancelacion": zod.coerce.date().nullable(),
   "motivoCancelacion": zod.string().nullable(),
+  "pisosRetorno": zod.array(zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})).describe('Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.'),
   "entregadoPorId": zod.number().nullish(),
   "nombreEntregadoPor": zod.string().nullish(),
   "fechaEntrega": zod.coerce.date().nullish(),

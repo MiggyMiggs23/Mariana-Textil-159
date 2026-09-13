@@ -9,6 +9,8 @@
 export interface MotivoSalidaInput {
   /** @minLength 10 */
   motivo: string;
+  /** @minimum 1 */
+  pisoRetornoId?: number;
   adminUsuario?: string;
   adminPassword?: string;
 }

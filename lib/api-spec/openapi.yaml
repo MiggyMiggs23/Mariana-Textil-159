@@ -10798,6 +10798,7 @@ components:
       required: [motivo]
       properties:
         motivo: { type: string, minLength: 10 }
+        pisoRetornoId: { type: number, minimum: 1 }
         adminUsuario: { type: string }
         adminPassword: { type: string }
     EnvioSalidaInput:
@@ -10976,6 +10977,7 @@ components:
               nombreCanceladoPor,
               fechaCancelacion,
               motivoCancelacion,
+              pisosRetorno,
               lineas,
               rollos,
             ]
@@ -10996,6 +10998,15 @@ components:
             nombreCanceladoPor: { type: ["string", "null"] }
             fechaCancelacion: { type: ["string", "null"], format: date-time }
             motivoCancelacion: { type: ["string", "null"] }
+            pisosRetorno:
+              type: array
+              description: Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado.
+              items:
+                type: object
+                required: [id, nombre]
+                properties:
+                  id: { type: number }
+                  nombre: { type: string }
             entregadoPorId: { type: ["number", "null"] }
             nombreEntregadoPor: { type: ["string", "null"] }
             fechaEntrega: { type: ["string", "null"], format: date-time }

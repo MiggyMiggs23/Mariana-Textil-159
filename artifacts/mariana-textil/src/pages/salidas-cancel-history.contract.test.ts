@@ -16,12 +16,29 @@ test("history uses the shared cancellation dialog for its responsive rows", asyn
   assert.match(list, /<SalidaEstadoBadge estado=\{salida\.estado\}/);
   assert.match(dialog, /useGetSalida/);
   assert.match(dialog, /await freshQuery\.refetch\(\)/);
+  assert.match(
+    dialog,
+    /isHistory[\s\S]*canCancelSalidaHistory\(freshSalida, user\)[\s\S]*canCancelSalidaDetail\(freshSalida, user\)/,
+  );
+  assert.doesNotMatch(dialog, /useListPisosLocation|locations\/.*pisos/);
+  assert.match(dialog, /freshSalida\?\.pisosRetorno/);
+  assert.match(dialog, /Array\.isArray\(returnFloorsPayload\)/);
+  assert.match(dialog, /Piso de retorno al origen/);
+  assert.match(dialog, /pisoRetornoId/);
+  assert.match(dialog, /Recargar salida/);
+  assert.match(dialog, /no se asumirá que no\s+hay pisos/);
+  assert.match(dialog, /max-h-\[90vh\] overflow-y-auto/);
   assert.match(dialog, /cancel-refresh-loading/);
   assert.match(dialog, /cancel-refresh-error/);
   assert.match(dialog, /motivo\.trim\(\)\.length < 10/);
+  assert.match(dialog, /freshSalida\.estado === "EN_TRANSITO"/);
+  assert.match(dialog, /Todos los rollos regresarán al origen original/);
+  assert.match(dialog, /movimientos compensatorios trazables/);
   assert.match(dialog, /operación es atómica/);
   assert.match(dialog, /Cancelar documento y todas sus salidas/);
   assert.match(detail, /<SalidaCancelDialog/);
+  assert.match(detail, /canCancelSalidaDetail\(salida, user\)/);
+  assert.doesNotMatch(detail, /const canAuthorize =/);
   assert.doesNotMatch(list, /setLocation\(`\/salidas\/\$\{salida\.id\}`\)/);
 });
 

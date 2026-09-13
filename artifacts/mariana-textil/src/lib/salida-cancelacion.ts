@@ -43,9 +43,10 @@ function isAtDestination(
 }
 
 /**
- * This is the legacy detail predicate from salida-detail.tsx.  It is kept
- * separate from the history predicate because changing the existing detail
- * role behavior would be unrelated to the direct history action.
+ * This is the detail predicate shared by the detail page, history rows, and
+ * the dialog's fresh-query gate.  The CAJA transfer branch intentionally
+ * remains the legacy detail behavior; history applies its explicit
+ * no-CAJA restriction below.
  */
 export function canCancelSalidaDetail(
   salida: SalidaCancellationFacts,
@@ -61,7 +62,7 @@ export function canCancelSalidaDetail(
     ? salida.estado !== "ENTREGADA" &&
         salida.estado !== "CANCELADA" &&
         (actor.rol === "ADMIN" || (authorized && atOrigin))
-    : salida.estado === "ARMANDO" &&
+    : (salida.estado === "ARMANDO" || salida.estado === "EN_TRANSITO") &&
         (actor.rol === "ADMIN" ||
           (authorized && (atOrigin || atDestination)));
 }

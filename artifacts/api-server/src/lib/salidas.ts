@@ -22,6 +22,7 @@ import {
   movimientosTable,
   notificacionesSistemaTable,
   productosTable,
+  pisosTable,
   ticketLineasTable,
   ticketsTable,
   rollosTable,
@@ -87,9 +88,10 @@ export type CrearSalidaVentaClienteInput = {
 
 export async function cancelarSalidaODocumentoLigado<T>(
   header: { salidaId: number; modalidad: string; ticketId: number | null },
-  actions: { cancelarDocumento: (ticketId: number, requestedSalidaId: number) => Promise<void>; cancelarSalida: () => Promise<T>; buildSalida: () => Promise<T> },
+  actions: { cancelarDocumento: (ticketId: number, requestedSalidaId: number) => Promise<void>; cancelarSalida: (pisoRetornoId?: number | null) => Promise<T>; buildSalida: () => Promise<T> },
+  pisoRetornoId?: number | null,
 ): Promise<T> {
-  if (header.modalidad !== "VENTA_CLIENTE" || header.ticketId == null) return actions.cancelarSalida();
+  if (header.modalidad !== "VENTA_CLIENTE" || header.ticketId == null) return actions.cancelarSalida(pisoRetornoId);
   await actions.cancelarDocumento(header.ticketId, header.salidaId);
   return actions.buildSalida();
 }
@@ -475,9 +477,21 @@ export async function buildSalidaDetail(
       .where(eq(salidaRollosTable.salidaId, salida.id))
       .orderBy(salidaRollosTable.id),
   ]);
-  const [cliente, ticket] = await Promise.all([
+  const [cliente, ticket, pisosRetorno] = await Promise.all([
     salida.clienteId == null ? Promise.resolve(null) : database.select({ id: clientesTable.id, nombre: clientesTable.nombre }).from(clientesTable).where(eq(clientesTable.id, salida.clienteId)).limit(1).then(rows => rows[0] ?? null),
     salida.ticketId == null ? Promise.resolve(null) : database.select({ id: ticketsTable.id, folio: ticketsTable.folio, documentoTipo: ticketsTable.documentoTipo, cobrado: ticketsTable.cobrado, autorizacionEstado: ticketsTable.autorizacionEstado, autorizadoAt: ticketsTable.autorizadoAt }).from(ticketsTable).where(eq(ticketsTable.id, salida.ticketId)).limit(1).then(rows => rows[0] ?? null),
+    salida.modalidad === "TRASLADO" && salida.estado === "EN_TRANSITO"
+      ? database
+          .select({ id: pisosTable.id, nombre: pisosTable.nombre })
+          .from(pisosTable)
+          .where(
+            and(
+              eq(pisosTable.ubicacionId, salida.origenId),
+              eq(pisosTable.activo, true),
+            ),
+          )
+          .orderBy(asc(pisosTable.id))
+      : Promise.resolve([]),
   ]);
   const [viaje] = await database.select({
     id: viajesTable.id, folio: viajesTable.folio, nombreCamioneta: camionetasTable.nombre,
@@ -550,6 +564,7 @@ export async function buildSalidaDetail(
     entregadoPorId: salida.usuarioEntregaId ?? null,
     fechaEntrega: iso(salida.entregadaAt),
     motivoCancelacion: salida.motivoCancelacion ?? null,
+    pisosRetorno,
     notaEnvio: salida.notaEnvio ?? null,
     notaRecepcion: salida.notaRecepcion ?? null,
     transportista: salida.transportista ?? null,
@@ -1341,9 +1356,24 @@ export async function enviarSalida(tx: Tx, input: EnviarSalidaInput) {
 }
 
 export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
-  const salida = await getSalidaForUpdate(tx, input.salidaId);
-  const folioFormateado = await getSalidaFolioFormateado(tx, salida);
-  requireState(salida, ["EN_TRANSITO"], "recibir");
+  // Do not take the salida row lock before the inventory-pair locks. A
+  // cancellation locks the same TRANSITO pairs, and all transfer operations
+  // must acquire those advisory locks before document/roll row locks.
+  const [preflightSalida] = await tx
+    .select()
+    .from(salidasTable)
+    .where(eq(salidasTable.id, input.salidaId))
+    .limit(1);
+  if (!preflightSalida) {
+    throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+  }
+  requireState(preflightSalida, ["EN_TRANSITO"], "recibir");
+  if (preflightSalida.destinoId == null) {
+    throw new InventarioError(
+      "La salida no tiene un destino de recepción.",
+      "INVALID_SALIDA_STATE",
+    );
+  }
   const inventoryCandidates = await tx
     .select({
       salidaRolloId: salidaRollosTable.id,
@@ -1351,10 +1381,13 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       productoId: rollosTable.productoId,
       ubicacionId: rollosTable.ubicacionId,
       estado: rollosTable.estado,
+      cantidadEnviada: salidaRollosTable.cantidadEnviada,
+      cantidadActual: rollosTable.cantidadActual,
+      recibido: salidaRollosTable.recibido,
     })
     .from(salidaRollosTable)
     .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
-    .where(eq(salidaRollosTable.salidaId, salida.id))
+    .where(eq(salidaRollosTable.salidaId, input.salidaId))
     .orderBy(asc(salidaRollosTable.id));
   if (!inventoryCandidates.length) {
     throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");
@@ -1364,9 +1397,18 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
     tx,
     inventoryCandidates.flatMap(({ productoId, ubicacionId }) => [
       { productoId, ubicacionId },
-      { productoId, ubicacionId: salida.destinoId! },
+      { productoId, ubicacionId: preflightSalida.destinoId! },
     ]),
   );
+  const salida = await getSalidaForUpdate(tx, input.salidaId);
+  requireState(salida, ["EN_TRANSITO"], "recibir");
+  if (salida.destinoId !== preflightSalida.destinoId) {
+    throw new InventarioError(
+      "La salida cambió mientras se preparaba la recepción. Intenta de nuevo.",
+      "INVENTORY_CHANGED_RETRY",
+    );
+  }
+  const folioFormateado = await getSalidaFolioFormateado(tx, salida);
   const expectedByAssociation = new Map(
     inventoryCandidates.map((item) => [item.salidaRolloId, item]),
   );
@@ -1377,7 +1419,11 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       expected.productoId === item.productoId &&
       expected.ubicacionId === item.ubicacionId &&
       expected.estado === item.estado &&
-      item.estado === "EN_TRANSITO";
+      expected.recibido === item.recibido &&
+      Number(expected.cantidadEnviada) === Number(expected.cantidadActual) &&
+      Number(item.cantidadEnviada) === Number(item.cantidadActual) &&
+      item.estado === "EN_TRANSITO" &&
+      !item.recibido;
   };
   const refreshedCandidates = await tx
     .select({
@@ -1386,6 +1432,9 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       productoId: rollosTable.productoId,
       ubicacionId: rollosTable.ubicacionId,
       estado: rollosTable.estado,
+      cantidadEnviada: salidaRollosTable.cantidadEnviada,
+      cantidadActual: rollosTable.cantidadActual,
+      recibido: salidaRollosTable.recibido,
     })
     .from(salidaRollosTable)
     .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
@@ -1408,6 +1457,9 @@ export async function recibirSalida(tx: Tx, input: RecibirSalidaInput) {
       productoId: rollosTable.productoId,
       ubicacionId: rollosTable.ubicacionId,
       estado: rollosTable.estado,
+      cantidadEnviada: salidaRollosTable.cantidadEnviada,
+      cantidadActual: rollosTable.cantidadActual,
+      recibido: salidaRollosTable.recibido,
     })
     .from(salidaRollosTable)
     .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
@@ -1495,7 +1547,217 @@ export async function cancelarSalida(
   salidaId: number,
   usuarioId: number,
   motivo: string,
+  pisoRetornoId?: number | null,
 ) {
+  // Read candidates without row locks, then acquire product/location locks in
+  // the shared order before locking the document or roll rows. This is the
+  // same order used by recibirSalida, so a cancel and a receive cannot form a
+  // row-before-pair deadlock.
+  const [preflightSalida] = await tx
+    .select()
+    .from(salidasTable)
+    .where(eq(salidasTable.id, salidaId))
+    .limit(1);
+  if (!preflightSalida) {
+    throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
+  }
+  if (
+    preflightSalida.modalidad === "TRASLADO" &&
+    preflightSalida.estado === "EN_TRANSITO"
+  ) {
+    if (motivo.trim().length < 10) {
+      throw new InventarioError("El motivo de cancelación debe tener al menos 10 caracteres.", "REASON_REQUIRED");
+    }
+    const [transito] = await tx
+      .select({ id: ubicacionesTable.id })
+      .from(ubicacionesTable)
+      .where(
+        and(
+          eq(ubicacionesTable.tipo, "TRANSITO"),
+          eq(ubicacionesTable.activa, true),
+        ),
+      )
+      .limit(1);
+    if (!transito) {
+      throw new InventarioError("No existe una ubicación activa de En tránsito.", "TRANSIT_LOCATION_NOT_FOUND");
+    }
+    const candidates = await tx
+      .select({
+        salidaRolloId: salidaRollosTable.id,
+        salidaRollo: salidaRollosTable,
+        rolloId: rollosTable.id,
+        productoId: rollosTable.productoId,
+        ubicacionId: rollosTable.ubicacionId,
+        estado: rollosTable.estado,
+        cantidadEnviada: salidaRollosTable.cantidadEnviada,
+        cantidadActual: rollosTable.cantidadActual,
+        recibido: salidaRollosTable.recibido,
+      })
+      .from(salidaRollosTable)
+      .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+      .where(eq(salidaRollosTable.salidaId, salidaId))
+      .orderBy(asc(salidaRollosTable.id));
+    if (!candidates.length) {
+      throw new InventarioError("La salida no tiene rollos enviados.", "ROLLO_NOT_PENDING");
+    }
+    const isPendingTransit = (item: (typeof candidates)[number]) =>
+      item.ubicacionId === transito.id &&
+      item.estado === "EN_TRANSITO" &&
+      !item.recibido &&
+      Number(item.cantidadEnviada) === Number(item.cantidadActual);
+    if (candidates.some((item) => !isPendingTransit(item))) {
+      throw new InventarioError(
+        "El inventario de la salida cambió; no se puede cancelar el traslado.",
+        "INVENTORY_CHANGED_RETRY",
+      );
+    }
+    await lockInventoryPairs(
+      tx,
+      candidates.flatMap(({ productoId, ubicacionId }) => [
+        { productoId, ubicacionId },
+        { productoId, ubicacionId: preflightSalida.origenId },
+      ]),
+    );
+    const salida = await getSalidaForUpdate(tx, salidaId);
+    requireState(salida, ["EN_TRANSITO"], "cancelar");
+    if (
+      salida.modalidad !== "TRASLADO" ||
+      salida.origenId !== preflightSalida.origenId ||
+      salida.destinoId !== preflightSalida.destinoId
+    ) {
+      throw new InventarioError(
+        "La salida cambió mientras se preparaba la cancelación. Intenta de nuevo.",
+        "INVENTORY_CHANGED_RETRY",
+      );
+    }
+    const expectedByAssociation = new Map(
+      candidates.map((item) => [item.salidaRolloId, item]),
+    );
+    const matchesPrelock = (item: (typeof candidates)[number]) => {
+      const expected = expectedByAssociation.get(item.salidaRolloId);
+      return expected != null &&
+        expected.rolloId === item.rolloId &&
+        expected.productoId === item.productoId &&
+        expected.ubicacionId === item.ubicacionId &&
+        expected.estado === item.estado &&
+        expected.recibido === item.recibido &&
+        Number(expected.cantidadEnviada) === Number(expected.cantidadActual) &&
+        Number(item.cantidadEnviada) === Number(item.cantidadActual) &&
+        isPendingTransit(item);
+    };
+    const refreshedCandidates = await tx
+      .select({
+        salidaRolloId: salidaRollosTable.id,
+        salidaRollo: salidaRollosTable,
+        rolloId: rollosTable.id,
+        productoId: rollosTable.productoId,
+        ubicacionId: rollosTable.ubicacionId,
+        estado: rollosTable.estado,
+        cantidadEnviada: salidaRollosTable.cantidadEnviada,
+        cantidadActual: rollosTable.cantidadActual,
+        recibido: salidaRollosTable.recibido,
+      })
+      .from(salidaRollosTable)
+      .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+      .where(eq(salidaRollosTable.salidaId, salida.id))
+      .orderBy(asc(salidaRollosTable.id));
+    if (
+      refreshedCandidates.length !== candidates.length ||
+      refreshedCandidates.some((item) => !matchesPrelock(item))
+    ) {
+      throw new InventarioError(
+        "El inventario cambió mientras se preparaba la cancelación. Intenta de nuevo.",
+        "INVENTORY_CHANGED_RETRY",
+      );
+    }
+    const lockedCandidates = await tx
+      .select({
+        salidaRolloId: salidaRollosTable.id,
+        salidaRollo: salidaRollosTable,
+        rolloId: rollosTable.id,
+        productoId: rollosTable.productoId,
+        ubicacionId: rollosTable.ubicacionId,
+        estado: rollosTable.estado,
+        cantidadEnviada: salidaRollosTable.cantidadEnviada,
+        cantidadActual: rollosTable.cantidadActual,
+        recibido: salidaRollosTable.recibido,
+      })
+      .from(salidaRollosTable)
+      .innerJoin(rollosTable, eq(salidaRollosTable.rolloId, rollosTable.id))
+      .where(eq(salidaRollosTable.salidaId, salida.id))
+      .orderBy(asc(salidaRollosTable.id))
+      .for("update");
+    if (
+      lockedCandidates.length !== candidates.length ||
+      lockedCandidates.some((item) => !matchesPrelock(item))
+    ) {
+      throw new InventarioError(
+        "El inventario cambió mientras se preparaba la cancelación. Intenta de nuevo.",
+        "INVENTORY_CHANGED_RETRY",
+      );
+    }
+    const pisosOrigen = await tx
+      .select({ id: pisosTable.id })
+      .from(pisosTable)
+      .where(
+        and(
+          eq(pisosTable.ubicacionId, salida.origenId),
+          eq(pisosTable.activo, true),
+        ),
+      );
+    if (pisosOrigen.length && pisoRetornoId == null) {
+      throw new InventarioError(
+        "Selecciona el piso de retorno activo en el origen antes de cancelar el traslado.",
+        "INVALID_FLOOR",
+      );
+    }
+    if (
+      (pisosOrigen.length === 0 && pisoRetornoId != null) ||
+      (pisoRetornoId != null && !pisosOrigen.some((piso) => piso.id === pisoRetornoId))
+    ) {
+      throw new InventarioError(
+        "El piso de retorno no está activo o no pertenece al origen de la salida.",
+        "INVALID_FLOOR",
+      );
+    }
+    const folioFormateado = await getSalidaFolioFormateado(tx, salida);
+    for (const item of lockedCandidates) {
+      await recibirTransferencia(tx, {
+        rolloId: item.rolloId,
+        ubicacionDestinoId: salida.origenId,
+        usuarioId,
+        justificacion: `Cancelación de salida ${folioFormateado}: ${motivo.trim()}`,
+        documentoTipo: "CANCELACION_SALIDA",
+        documentoId: String(salida.id),
+        salidaId: salida.id,
+        pisoDestinoId: pisoRetornoId ?? null,
+      });
+    }
+    await tx
+      .update(salidasTable)
+      .set({
+        estado: "CANCELADA",
+        usuarioCancelaId: usuarioId,
+        canceladaAt: new Date(),
+        motivoCancelacion: motivo.trim(),
+        actividadAt: new Date(),
+      })
+      .where(eq(salidasTable.id, salida.id));
+    await tx.insert(auditoriaTable).values({
+      usuarioId,
+      accion: "CANCELAR",
+      entidad: "salidas",
+      entidadId: String(salida.id),
+      datosDespues: {
+        motivo: motivo.trim(),
+        desde: "EN_TRANSITO",
+        pisoRetornoId: pisoRetornoId ?? null,
+        rolloIds: lockedCandidates.map((item) => item.rolloId),
+      },
+      ip: "desconocida",
+    });
+    return requireSalidaDetail(tx, salida.id);
+  }
   const salida = await getSalidaForUpdate(tx, salidaId);
   requireState(salida, salida.modalidad === "VENTA_CLIENTE" ? ["EN_TRANSITO", "RECIBIDA"] : ["ARMANDO"], "cancelar");
   if (motivo.trim().length < 10) {

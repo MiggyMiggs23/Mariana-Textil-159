@@ -6,7 +6,6 @@ import {
   getGetSalidaQueryKey,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
-  Role,
 } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -26,10 +25,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { hasPermission, Modules } from "@/lib/permisos";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { SalidaEstadoBadge } from "@/components/salida-estado-badge";
 import { SalidaCancelDialog } from "@/components/salida-cancel-dialog";
+import { canCancelSalidaDetail } from "@/lib/salida-cancelacion";
 
 export default function SalidaDetail() {
   const [, params] = useRoute("/salidas/:id");
@@ -69,13 +68,6 @@ export default function SalidaDetail() {
     );
   }
 
-  const isAdmin = user?.rol === Role.ADMIN;
-  const isCaja = user?.rol === Role.CAJA;
-  const canAuthorize = hasPermission(user, Modules.SALIDAS, 'autorizar');
-
-  const atOrigin = isAdmin || user?.ubicacion?.id === salida.origenId;
-  const atDestination = isAdmin || user?.ubicacion?.id === salida.destinoId;
-
   const productSummary = (salida.lineas && salida.lineas.length > 0)
     ? salida.lineas.map(l => ({
         sku: l.skuProducto,
@@ -103,9 +95,7 @@ export default function SalidaDetail() {
         return acc;
       }, new Map<number, { sku: string, tela: string, color: string, unidad: string, rollos: number, cantidad: number }>()).values());
 
-  const canCancel = !isCaja && salida.modalidad === "VENTA_CLIENTE"
-    ? salida.estado !== "ENTREGADA" && salida.estado !== "CANCELADA" && (isAdmin || (canAuthorize && atOrigin))
-    : salida.estado === 'ARMANDO' && (isAdmin || (canAuthorize && (atOrigin || atDestination)));
+  const canCancel = canCancelSalidaDetail(salida, user);
   const canPrint = salida.estado === 'EN_TRANSITO' || salida.estado === 'RECIBIDA' || salida.estado === 'ENTREGADA';
 
   return (

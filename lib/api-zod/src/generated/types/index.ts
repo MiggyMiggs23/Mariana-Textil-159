@@ -603,6 +603,7 @@ export * from './rolloListResult';
 export * from './rolloPisoUpdate';
 export * from './rolloSummary';
 export * from './salidaDetail';
+export * from './salidaDetailPisosRetornoItem';
 export * from './salidaDetailResponseResponse';
 export * from './salidaDineroCaja';
 export * from './salidaDineroCajaInput';

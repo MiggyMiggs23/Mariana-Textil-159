@@ -870,7 +870,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { id } = CancelarSalidaParams.parse(req.params);
-      const body = CancelarSalidaBody.parse(req.body) as { motivo: string; adminUsuario?: string; adminPassword?: string };
+      const body = CancelarSalidaBody.parse(req.body) as { motivo: string; pisoRetornoId?: number; adminUsuario?: string; adminPassword?: string };
       if (rejectCajaMutation(req.auth!)) {
         res.status(403).json({ error: "El rol CAJA no puede cancelar salidas." });
         return;
@@ -906,8 +906,8 @@ router.post(
               }, false);
           },
           buildSalida: () => buildSalidaDetail(tx, id),
-          cancelarSalida: () => cancelarSalida(tx, id, auth.user.id, body.motivo),
-        });
+          cancelarSalida: (pisoRetornoId) => cancelarSalida(tx, id, auth.user.id, body.motivo, pisoRetornoId),
+        }, body.pisoRetornoId ?? null);
         if (autorizadoPorId != null) {
           await tx.update(salidasTable).set({ autorizadoPorId }).where(eq(salidasTable.id, id));
         }

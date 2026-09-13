@@ -5041,6 +5041,11 @@ export interface SalidaRollo {
   unidad?: UnidadProducto;
 }
 
+export type SalidaDetailPisosRetornoItem = {
+  id: number;
+  nombre: string;
+};
+
 export type SalidaDetail = SalidaResumen & ({
   uuidCliente: string;
   /** @nullable */
@@ -5072,6 +5077,8 @@ export type SalidaDetail = SalidaResumen & ({
   fechaCancelacion: string | null;
   /** @nullable */
   motivoCancelacion: string | null;
+  /** Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado. */
+  pisosRetorno: SalidaDetailPisosRetornoItem[];
   /** @nullable */
   entregadoPorId?: number | null;
   /** @nullable */
@@ -5089,6 +5096,8 @@ export interface BorradorSalidaResult {
 export interface MotivoSalidaInput {
   /** @minLength 10 */
   motivo: string;
+  /** @minimum 1 */
+  pisoRetornoId?: number;
   adminUsuario?: string;
   adminPassword?: string;
 }

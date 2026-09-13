@@ -1581,6 +1581,7 @@ export type RecibirTransferenciaInput = {
   justificacion?: string | null;
   documentoTipo?: string | null;
   documentoId?: string | null;
+  salidaId?: number | null;
   uuidCliente?: string | null;
   pisoDestinoId?: number | null;
 };
@@ -1665,6 +1666,7 @@ export async function recibirTransferencia(
     justificacion: input.justificacion ?? null,
     documentoTipo: input.documentoTipo ?? null,
     documentoId: input.documentoId ?? null,
+    salidaId: input.salidaId ?? null,
     uuidCliente: input.uuidCliente ? `${input.uuidCliente}:salida_transito` : null,
   });
 
@@ -1679,6 +1681,7 @@ export async function recibirTransferencia(
     justificacion: input.justificacion ?? null,
     documentoTipo: input.documentoTipo ?? null,
     documentoId: input.documentoId ?? null,
+    salidaId: input.salidaId ?? null,
     uuidCliente: input.uuidCliente ? `${input.uuidCliente}:entrada_destino` : null,
   });
 

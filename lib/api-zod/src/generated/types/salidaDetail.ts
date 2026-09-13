@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { SalidaDetailPisosRetornoItem } from './salidaDetailPisosRetornoItem';
 import type { SalidaLinea } from './salidaLinea';
 import type { SalidaResumen } from './salidaResumen';
 import type { SalidaRollo } from './salidaRollo';
@@ -41,6 +42,8 @@ export type SalidaDetail = SalidaResumen & ({
   fechaCancelacion: Date | null;
   /** @nullable */
   motivoCancelacion: string | null;
+  /** Pisos activos del origen disponibles únicamente para devolver un traslado EN_TRANSITO cancelado. */
+  pisosRetorno: SalidaDetailPisosRetornoItem[];
   /** @nullable */
   entregadoPorId?: number | null;
   /** @nullable */
