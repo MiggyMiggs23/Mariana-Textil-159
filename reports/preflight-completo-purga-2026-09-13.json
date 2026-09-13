@@ -1,0 +1,1016 @@
+{
+  "report": {
+    "status": "PHASE1_PREFLIGHT_COMPLETE",
+    "phase": 1,
+    "phase2Executed": false,
+    "sourceMutated": false,
+    "approvalRequired": "written user approval before phase 2"
+  },
+  "backup": {
+    "name": "respaldo-antes-de-purga-2026-09-13-014514",
+    "directory": ".local/backups/respaldo-antes-de-purga-2026-09-13-014514",
+    "archive": ".local/backups/respaldo-antes-de-purga-2026-09-13-014514/respaldo-antes-de-purga-2026-09-13-014514.dump",
+    "sha256": "aacecd9ca1a0378e684adfdd58afa76156a8b8f1a4cf51966590fbf71fbc89a2",
+    "sizeBytes": 415670,
+    "capturedAtUtc": "2026-09-13T07:45:14.779Z",
+    "capturedAtMexico": "2026-09-13 01:45:14",
+    "commit": "12254d99157d602a4ee8c0f6fc7c563c1e220d9a"
+  },
+  "verification": {
+    "manifest": ".local/backups/respaldo-antes-de-purga-2026-09-13-014514/manifest.json",
+    "restoreComparison": ".local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-comparison.json",
+    "state": ".local/backups/respaldo-antes-de-purga-2026-09-13-014514/state.json",
+    "stateStatus": "PASS",
+    "stateExitCode": 0,
+    "tableCountsCompared": 58,
+    "allTableCountsMatched": true,
+    "metadataMatched": true,
+    "categories": {
+      "tables": {
+        "sourceCount": 58,
+        "restoredCount": 58,
+        "mismatchCount": 0
+      },
+      "columns": {
+        "sourceCount": 583,
+        "restoredCount": 583,
+        "mismatchCount": 0
+      },
+      "constraints": {
+        "sourceCount": 270,
+        "restoredCount": 270,
+        "mismatchCount": 0
+      },
+      "indexes": {
+        "sourceCount": 205,
+        "restoredCount": 205,
+        "mismatchCount": 0
+      },
+      "triggers": {
+        "sourceCount": 11,
+        "restoredCount": 11,
+        "mismatchCount": 0
+      },
+      "sequences": {
+        "sourceCount": 43,
+        "restoredCount": 43,
+        "mismatchCount": 0
+      },
+      "foreign_key_edges": {
+        "sourceCount": 146,
+        "restoredCount": 146,
+        "mismatchCount": 0
+      },
+      "serial_sequence": {
+        "sourceCount": 1,
+        "restoredCount": 1,
+        "mismatchCount": 0
+      },
+      "foreign_key_cycles": {
+        "sourceCount": 2,
+        "restoredCount": 2,
+        "mismatchCount": 0
+      }
+    }
+  },
+  "catalogue": {
+    "tables": 58,
+    "columns": 583,
+    "constraints": 270,
+    "indexes": 205,
+    "foreignKeys": 146,
+    "triggers": 11,
+    "triggerFunctionsWithDefinitions": 9,
+    "sequences": 43,
+    "serialSequence": 1,
+    "foreignKeyCycles": 2
+  },
+  "classification": {
+    "A": {
+      "tableCount": 32,
+      "rowCount": 500,
+      "tables": [
+        "aplicaciones_credito",
+        "aplicaciones_pago_proveedor",
+        "auditoria_inventario_escaneos",
+        "auditoria_inventario_participantes",
+        "auditoria_inventario_snapshot",
+        "auditorias_inventario",
+        "autorizaciones_nota",
+        "contenedor_lineas",
+        "contenedores",
+        "cuadre_fiscal_registros",
+        "entradas",
+        "movimientos",
+        "movimientos_credito",
+        "notificaciones_credito",
+        "notificaciones_sistema",
+        "pagos_proveedor",
+        "reimpresiones_etiqueta",
+        "rollos",
+        "salida_lineas",
+        "salida_rollos",
+        "salidas",
+        "salidas_dinero_caja",
+        "sesiones_caja",
+        "sesiones_caja_dias",
+        "solicitudes_pago_dirigido",
+        "stock_minimo_episodios",
+        "ticket_lineas",
+        "ticket_pagos",
+        "tickets",
+        "viaje_salidas",
+        "viaje_tickets",
+        "viajes"
+      ]
+    },
+    "B": {
+      "tableCount": 7,
+      "rowCount": 76,
+      "tables": [
+        "auditoria_inventario_folio",
+        "entrada_folio",
+        "existencias",
+        "salida_folio",
+        "series_consecutivo",
+        "ticket_folio",
+        "viaje_folio"
+      ]
+    },
+    "C": {
+      "tableCount": 19,
+      "rowCount": 5756,
+      "tables": [
+        "auditoria",
+        "camionetas",
+        "choferes",
+        "cliente_documentos",
+        "clientes",
+        "equipos",
+        "equipos_checklist",
+        "permisos_rol",
+        "permisos_ubicacion",
+        "permisos_usuario",
+        "pisos",
+        "precio_historial",
+        "productos",
+        "proveedores",
+        "sesiones",
+        "stock_minimo_sitios",
+        "stock_minimos",
+        "ubicaciones",
+        "usuarios"
+      ]
+    },
+    "omissions": [],
+    "unexpectedClassification": [],
+    "rationale": {
+      "A": "ventas/crédito, caja, salidas/viajes, compras/entradas, inventario operativo, auditorías físicas y otros operativos; solo las tablas indicadas por el usuario",
+      "B": "seis contadores de folio/consecutivo más existencias; contadores se reinician y existencias se reconstruye",
+      "C": "maestros, configuración, permisos, equipos, mínimos de stock, historial de precios y auditoria; no se toca"
+    }
+  },
+  "counts": [
+    {
+      "schema": "public",
+      "table": "aplicaciones_credito",
+      "count": "1",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "aplicaciones_pago_proveedor",
+      "count": "2",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria",
+      "count": "3035",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_escaneos",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_folio",
+      "count": "11",
+      "classification": "B"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_participantes",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "auditoria_inventario_snapshot",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "auditorias_inventario",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "autorizaciones_nota",
+      "count": "2",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "camionetas",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "choferes",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "cliente_documentos",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "clientes",
+      "count": "7",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "contenedor_lineas",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "contenedores",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "cuadre_fiscal_registros",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "entrada_folio",
+      "count": "11",
+      "classification": "B"
+    },
+    {
+      "schema": "public",
+      "table": "entradas",
+      "count": "2",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "equipos",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "equipos_checklist",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "existencias",
+      "count": "30",
+      "classification": "B"
+    },
+    {
+      "schema": "public",
+      "table": "movimientos",
+      "count": "259",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "movimientos_credito",
+      "count": "3",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "notificaciones_credito",
+      "count": "2",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "notificaciones_sistema",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "pagos_proveedor",
+      "count": "4",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "permisos_rol",
+      "count": "192",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "permisos_ubicacion",
+      "count": "54",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "permisos_usuario",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "pisos",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "precio_historial",
+      "count": "1016",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "productos",
+      "count": "1234",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "proveedores",
+      "count": "27",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "reimpresiones_etiqueta",
+      "count": "9",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "rollos",
+      "count": "80",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "salida_folio",
+      "count": "11",
+      "classification": "B"
+    },
+    {
+      "schema": "public",
+      "table": "salida_lineas",
+      "count": "8",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "salida_rollos",
+      "count": "42",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "salidas",
+      "count": "8",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "salidas_dinero_caja",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "series_consecutivo",
+      "count": "1",
+      "classification": "B"
+    },
+    {
+      "schema": "public",
+      "table": "sesiones",
+      "count": "149",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "sesiones_caja",
+      "count": "3",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "sesiones_caja_dias",
+      "count": "3",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "solicitudes_pago_dirigido",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "stock_minimo_episodios",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "stock_minimo_sitios",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "stock_minimos",
+      "count": "0",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "ticket_folio",
+      "count": "1",
+      "classification": "B"
+    },
+    {
+      "schema": "public",
+      "table": "ticket_lineas",
+      "count": "61",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "ticket_pagos",
+      "count": "4",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "tickets",
+      "count": "7",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "ubicaciones",
+      "count": "11",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "usuarios",
+      "count": "31",
+      "classification": "C"
+    },
+    {
+      "schema": "public",
+      "table": "viaje_folio",
+      "count": "11",
+      "classification": "B"
+    },
+    {
+      "schema": "public",
+      "table": "viaje_salidas",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "viaje_tickets",
+      "count": "0",
+      "classification": "A"
+    },
+    {
+      "schema": "public",
+      "table": "viajes",
+      "count": "0",
+      "classification": "A"
+    }
+  ],
+  "counters": {
+    "tables": [
+      {
+        "table": "ticket_folio",
+        "sourceRowCount": 1,
+        "resetColumn": "ultimo_folio",
+        "resetValue": "999",
+        "sourceDefault": "999",
+        "currentValues": [
+          {
+            "id": 1,
+            "ultimo_folio": 1006
+          }
+        ]
+      },
+      {
+        "table": "entrada_folio",
+        "sourceRowCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": "0",
+        "sourceDefault": "99",
+        "currentValues": [
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 1
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 3
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 4
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 5
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 6
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 7
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 8
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 9
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 458
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 531
+          },
+          {
+            "ultimo_folio": 2,
+            "ubicacion_id": 2
+          }
+        ],
+        "resetBasis": "Current per-site application semantics: new site starts at zero; first entry receives folio 1.",
+        "resetSource": "lib/db/src/schema/entradas.ts:63-71"
+      },
+      {
+        "table": "salida_folio",
+        "sourceRowCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": "0",
+        "sourceDefault": "499",
+        "currentValues": [
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 1
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 3
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 4
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 5
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 6
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 7
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 8
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 9
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 458
+          },
+          {
+            "ultimo_folio": 0,
+            "ubicacion_id": 531
+          },
+          {
+            "ultimo_folio": 8,
+            "ubicacion_id": 2
+          }
+        ],
+        "resetBasis": "Current per-site application semantics: new site starts at zero; first salida receives folio 1.",
+        "resetSource": "lib/db/src/schema/salidas.ts:175-182"
+      },
+      {
+        "table": "viaje_folio",
+        "sourceRowCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": "0",
+        "sourceDefault": "0",
+        "currentValues": [
+          {
+            "ubicacion_id": 1,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 2,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 3,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 4,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 5,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 6,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 7,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 8,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 9,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 458,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 531,
+            "ultimo_folio": 0
+          }
+        ]
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "sourceRowCount": 11,
+        "resetColumn": "ultimo_folio",
+        "resetValue": "0",
+        "sourceDefault": "0",
+        "currentValues": [
+          {
+            "ubicacion_id": 1,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 2,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 3,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 4,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 5,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 6,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 7,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 8,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 9,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 458,
+            "ultimo_folio": 0
+          },
+          {
+            "ubicacion_id": 531,
+            "ultimo_folio": 0
+          }
+        ]
+      },
+      {
+        "table": "series_consecutivo",
+        "sourceRowCount": 1,
+        "resetColumn": "ultimo_numero",
+        "resetValue": "1000000",
+        "sourceDefault": "1000000",
+        "currentValues": [
+          {
+            "id": 1,
+            "ultimo_numero": 1000080
+          }
+        ]
+      }
+    ],
+    "existencias": {
+      "sourceRowCount": 30,
+      "manualZeroing": false,
+      "rebuildRequired": true
+    },
+    "evidence": {
+      "path": "reports/preflight-contadores-2026-09-13.json",
+      "status": "PASS",
+      "exitCode": 0,
+      "readOnly": true,
+      "origin": "Verified restored archive, not a new source snapshot",
+      "archive": "respaldo-antes-de-purga-2026-09-13-014514",
+      "identity": {
+        "database": "restore_disposable_2026-09-13-014514",
+        "directory": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-cluster-verified"
+      },
+      "noSourceQueries": true,
+      "allSixTablesCaptured": true,
+      "earlierAttempt": {
+        "exitCode": 1,
+        "reason": "Start omitted explicit local socket/port; corrected without source access"
+      }
+    },
+    "resetPolicy": {
+      "observedCatalogDefaultsPreserved": {
+        "entrada_folio": "99",
+        "salida_folio": "499"
+      },
+      "proposedResetTargets": {
+        "ticket_folio": "999",
+        "entrada_folio": "0",
+        "salida_folio": "0",
+        "viaje_folio": "0",
+        "auditoria_inventario_folio": "0",
+        "series_consecutivo": "1000000"
+      },
+      "mismatch": {
+        "tables": [
+          "entrada_folio",
+          "salida_folio"
+        ],
+        "explanation": "Catalog defaults 99/499 are stale schema drift. Current per-site application/migration semantics initialize new sites at 0, yielding first folio 1; 0 is the proposed purge reset target, not 99/499.",
+        "applicationSources": [
+          "lib/db/src/schema/entradas.ts:63-71",
+          "lib/db/src/schema/salidas.ts:175-182",
+          "lib/db/src/lib/document-folios-schema.ts:140-141",
+          "lib/db/src/lib/document-folios-schema.ts:209-210"
+        ]
+      },
+      "schemaFixInPhase1": false,
+      "businessRuleChangeInPhase1": false,
+      "note": "Observed source defaults remain reported for evidence; they are not endorsed as reset targets."
+    }
+  },
+  "serialSequence": {
+    "sequenceName": "public.contenedores_folio_seq",
+    "metadata": {
+      "schema": "public",
+      "sequence_name": "contenedores_folio_seq",
+      "data_type": "integer",
+      "start_value": "1",
+      "min_value": "1",
+      "max_value": "2147483647",
+      "increment_by": "1",
+      "cycle": false,
+      "cache_size": "1",
+      "last_value": null
+    },
+    "resetRequired": true,
+    "restoredCurrent": {
+      "last_value": "1",
+      "is_called": false
+    },
+    "evidencePath": "reports/preflight-contadores-2026-09-13.json",
+    "futureReset": {
+      "statement": "ALTER SEQUENCE public.contenedores_folio_seq RESTART WITH 1",
+      "insideSameTransactionAsPurge": true,
+      "setval": false,
+      "setvalReason": "setval is nontransactional",
+      "executed": false,
+      "setvalUsed": false,
+      "setvalForbidden": true
+    }
+  },
+  "foreignKeys": {
+    "sourceEdges": 146,
+    "internalAConstraints": 38,
+    "internalADistinctRelations": 36,
+    "cToA": 0,
+    "aToC": 78,
+    "aToB": 0,
+    "bToA": 0,
+    "cycles": [
+      [
+        "public.movimientos_credito"
+      ],
+      [
+        "public.pagos_proveedor"
+      ]
+    ],
+    "deleteOrder": [
+      "aplicaciones_credito",
+      "aplicaciones_pago_proveedor",
+      "auditoria_inventario_escaneos",
+      "auditoria_inventario_participantes",
+      "auditoria_inventario_snapshot",
+      "autorizaciones_nota",
+      "contenedor_lineas",
+      "cuadre_fiscal_registros",
+      "notificaciones_credito",
+      "notificaciones_sistema",
+      "reimpresiones_etiqueta",
+      "salida_rollos",
+      "salidas_dinero_caja",
+      "sesiones_caja_dias",
+      "solicitudes_pago_dirigido",
+      "stock_minimo_episodios",
+      "ticket_lineas",
+      "ticket_pagos",
+      "viaje_salidas",
+      "viaje_tickets",
+      "auditorias_inventario",
+      "contenedores",
+      "movimientos_credito",
+      "pagos_proveedor",
+      "movimientos",
+      "salida_lineas",
+      "viajes",
+      "entradas",
+      "rollos",
+      "salidas",
+      "tickets",
+      "sesiones_caja"
+    ],
+    "cascadeUsed": false
+  },
+  "triggers": {
+    "total": 11,
+    "deleteOrUpdate": [
+      "aplicaciones_credito_inmutables",
+      "aplicaciones_pago_proveedor_append_only",
+      "auditoria_append_only",
+      "movimientos_credito_inmutables",
+      "pagos_proveedor_inmutables",
+      "reimpresiones_etiqueta_inmutable",
+      "ticket_pagos_inmutables"
+    ],
+    "insertOnly": [
+      "aplicaciones_credito_validas",
+      "aplicaciones_pago_proveedor_validar_insert",
+      "auditoria_enriquecer_insert",
+      "movimientos_credito_reversos_validos"
+    ],
+    "historicalSix": [
+      "aplicaciones_credito_inmutables",
+      "aplicaciones_pago_proveedor_append_only",
+      "movimientos_credito_inmutables",
+      "pagos_proveedor_inmutables",
+      "reimpresiones_etiqueta_inmutable",
+      "ticket_pagos_inmutables"
+    ],
+    "auditoriaNeverDisable": true,
+    "allPhase1EnabledO": true
+  },
+  "functionalNotes": {
+    "precios": {
+      "products": 1234,
+      "priceHistory": 1016,
+      "sourceRollos": 80,
+      "sourceEntradas": 2,
+      "postPurgeUIClaim": false
+    },
+    "cacheProof": "PASS_LIMITED_EMPTY_CONFIGURATION",
+    "cacheVerification": {
+      "status": "PASS_LIMITED",
+      "originalSourceDatabase": "heliumdb",
+      "originalSourceTableCount": 58,
+      "originalActiveProducts": 1234,
+      "restoredDatabase": "restore_disposable_2026-09-13-014514",
+      "functionSource": "artifacts/api-server/src/lib/inventario.ts:2618",
+      "realFunctionInvoked": true,
+      "mocked": false,
+      "sourceDatabaseUrlUsedForMutation": false,
+      "seedExecuted": false,
+      "deleteExecuted": false,
+      "truncateExecuted": false,
+      "manualCacheMutation": false,
+      "countsBefore": {
+        "existencias": 30,
+        "movimientos": 259,
+        "rollos": 80,
+        "stock_minimos": 0,
+        "stock_minimo_sitios": 0
+      },
+      "countsAfter": {
+        "existencias": 30,
+        "movimientos": 259,
+        "rollos": 80,
+        "stock_minimos": 0,
+        "stock_minimo_sitios": 0
+      },
+      "cachePairs": 30,
+      "invariantBefore": {
+        "missingCachePairs": 0,
+        "quantityMismatches": 0,
+        "rollCountMismatches": 0
+      },
+      "invariantAfter": {
+        "missingCachePairs": 0,
+        "quantityMismatches": 0,
+        "rollCountMismatches": 0
+      },
+      "cacheValueChanged": false,
+      "cacheUpdatedTimestampChangedCount": 0,
+      "limitation": "No non-empty minimum values/dates/authors exist in heliumdb; preservation for captured non-empty minima is not proven.",
+      "evidenceJson": "reports/verificacion-minimos-preflight-2026-09-13.json",
+      "evidenceHtml": "reports/verificacion-minimos-preflight-2026-09-13.html",
+      "evidenceState": "reports/verificacion-minimos-preflight-2026-09-13.state.json",
+      "evidenceStateStatus": "PASS",
+      "evidenceStateExitCode": 0,
+      "listCTableCount": 19,
+      "allListCRowsFieldForFieldAndHashEqual": true
+    }
+  },
+  "blockers": [
+    "Phase 2 must use one transaction, disable only the five unconditional DELETE/UPDATE blockers, use the documented reimpresiones cleanup setting, never disable auditoria, and verify all triggers return O.",
+    "Requirement 5 is limited/not proven for non-empty captured stock minima: heliumdb has zero rows in stock_minimos and stock_minimo_sitios, zero active sites, and no configured active pairs; no values/dates/authors may be fabricated.",
+    "Technical all-or-nothing gate before Phase 2: the purge and reconstruirCacheExistencias must share one caller-controlled transaction; the current function at artifacts/api-server/src/lib/inventario.ts:2618 opens its own db.transaction, so orchestration strategy must be designed before purge. Future sequence reset must use ALTER SEQUENCE public.contenedores_folio_seq RESTART WITH 1 inside that transaction, never setval (nontransactional). No implementation in Phase 1."
+  ],
+  "technicalGates": {
+    "phase2AllOrNothing": {
+      "status": "GATE_REQUIRED_BEFORE_PHASE2",
+      "deleteAndReconstructMustShareTransaction": true,
+      "reconstructFunctionSource": "artifacts/api-server/src/lib/inventario.ts:2618",
+      "currentFunctionOpensOwnTransaction": true,
+      "requiredStrategy": "Before Phase 2, design a caller-shared transaction or equivalent orchestration; the current function's internal transaction cannot be assumed to share the purge transaction.",
+      "phase1Implemented": false
+    },
+    "sequenceReset": {
+      "statement": "ALTER SEQUENCE public.contenedores_folio_seq RESTART WITH 1",
+      "mustRunInsideSameTransaction": true,
+      "setvalForbidden": true,
+      "reason": "setval is nontransactional",
+      "phase1Implemented": false
+    },
+    "schemaFixInPhase1": false,
+    "businessRuleChangeInPhase1": false
+  }
+}

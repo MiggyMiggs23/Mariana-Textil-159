@@ -1,0 +1,936 @@
+{
+  "status": "PASS_WITH_LIMITATION",
+  "phase": 1,
+  "operation": "real reconstruirCacheExistencias disposable restored-cluster verification",
+  "result": "EXECUTION_CHECKS_PASS_MINIMUM_PRESERVATION_NOT_PROVEN",
+  "critical_limitation": {
+    "minimum_tables_populated_case_exercised": false,
+    "minimum_preservation_proven": false,
+    "reason": "stock_minimos and stock_minimo_sitios were both empty (0/0) before and after. Equality of two empty sets does not prove preservation of populated minimum values, dates, authors, or site settings.",
+    "no_population_or_manual_mutation_performed": true
+  },
+  "policy": {
+    "source_database_url_imported": false,
+    "source_database_url_used_for_mutation": false,
+    "users_created": false,
+    "seed_executed": false,
+    "delete_executed": false,
+    "truncate_executed": false,
+    "server_started_by_wrapper": false,
+    "database_created_by_wrapper": false,
+    "manual_cache_mutation": false,
+    "restored_cluster_preserved": true
+  },
+  "backup_gate": {
+    "metadata_path": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-metadata.json",
+    "manifest_status": "PASS",
+    "backup_state_status": "PASS",
+    "backup_state_exit_code": 0,
+    "cluster_directory_matches_metadata": true,
+    "restored_database_matches_metadata": true,
+    "admin_database_matches_metadata": true
+  },
+  "execution": {
+    "real_export_invoked": true,
+    "mocked_db": false,
+    "function_source": {
+      "sourcePath": "artifacts/api-server/src/lib/inventario.ts",
+      "startLine": 2618,
+      "sourceSha256": "5fb25b25449e1a42aed2d4ccd8f4f29b937700ebc361f8a4777ffa2139802157"
+    },
+    "current_database_before": "restore_disposable_2026-09-13-014514",
+    "current_database_after": "restore_disposable_2026-09-13-014514",
+    "data_directory_before": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-cluster-verified",
+    "data_directory_after": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-cluster-verified",
+    "server_port_before": 33291,
+    "server_port_after": 33291,
+    "cache_value_changed": false,
+    "cache_updated_timestamp_changed_count": 0,
+    "cache_timestamp_note": "The real function updates quantity/count fields and does not set updated_at; value/invariant evidence is used.",
+    "child_exit_code": 0,
+    "current_wrapper_path": "scripts/src/verification-minimos-preflight.mts",
+    "previous_execution_wrapper_path": "scripts/src/reconstruir-cache-existencias-disposable-verification.mts",
+    "previous_execution_wrapper_path_note": "Execution evidence was produced before the byte-for-byte move; no database rerun was performed after the move.",
+    "same_implementation_execution_evidence": true
+  },
+  "counts": {
+    "before": {
+      "existencias": 30,
+      "movimientos": 259,
+      "rollos": 80,
+      "stock_minimos": 0,
+      "stock_minimo_sitios": 0
+    },
+    "after": {
+      "existencias": 30,
+      "movimientos": 259,
+      "rollos": 80,
+      "stock_minimos": 0,
+      "stock_minimo_sitios": 0
+    },
+    "unchanged_for_protected_and_list_c_rows": true
+  },
+  "summary": {
+    "status": "PASS_WITH_LIMITATION",
+    "counts_before": {
+      "existencias": 30,
+      "movimientos": 259,
+      "rollos": 80,
+      "stock_minimos": 0,
+      "stock_minimo_sitios": 0
+    },
+    "counts_after": {
+      "existencias": 30,
+      "movimientos": 259,
+      "rollos": 80,
+      "stock_minimos": 0,
+      "stock_minimo_sitios": 0
+    },
+    "active_minimum_configuration_coverage": {
+      "active_sites": 0,
+      "active_products": 1234,
+      "possible_active_pairs": 0,
+      "configured_active_pairs": 0,
+      "coverage_percent": null
+    },
+    "any_empty_tables": true,
+    "empty_tables": [
+      "camionetas",
+      "choferes",
+      "cliente_documentos",
+      "equipos",
+      "equipos_checklist",
+      "permisos_usuario",
+      "pisos",
+      "stock_minimo_sitios",
+      "stock_minimos"
+    ],
+    "empty_table_count": 9,
+    "empty_table_limit": "informational only; no empty List C table was created, filled, deleted, or truncated"
+  },
+  "list_c": {
+    "requested_table_count": 19,
+    "requested_tables": [
+      "productos",
+      "precio_historial",
+      "clientes",
+      "cliente_documentos",
+      "proveedores",
+      "usuarios",
+      "ubicaciones",
+      "pisos",
+      "permisos_rol",
+      "permisos_usuario",
+      "permisos_ubicacion",
+      "camionetas",
+      "choferes",
+      "sesiones",
+      "equipos",
+      "equipos_checklist",
+      "stock_minimo_sitios",
+      "stock_minimos",
+      "auditoria"
+    ],
+    "prompt_list_c_count_note": "The supplied prompt enumerates 19 List C table names; no twentieth table name was supplied.",
+    "missing_tables": [],
+    "missing_table_explanation": "A table is reported missing when to_regclass(public.<name>) is null in the verified restore; it was not created by this check.",
+    "rows": [
+      {
+        "table": "auditoria",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 3035,
+        "count_after": 3035,
+        "row_sha256_before": "a7a98b75cd801114f2c1697073df95fb6241e57302f5923b090a4aba28d46342",
+        "row_sha256_after": "a7a98b75cd801114f2c1697073df95fb6241e57302f5923b090a4aba28d46342",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "camionetas",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "choferes",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "cliente_documentos",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "clientes",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 7,
+        "count_after": 7,
+        "row_sha256_before": "23a323a8e0face62eda27bff3680fe7b1e58c4a32a442fd5a09005690aad9865",
+        "row_sha256_after": "23a323a8e0face62eda27bff3680fe7b1e58c4a32a442fd5a09005690aad9865",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "equipos",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "equipos_checklist",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "permisos_rol",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 192,
+        "count_after": 192,
+        "row_sha256_before": "618e5b7792d733969b8d6a2a5b41d2d7bae4fb34c54b2a0d6f0d329d5233a213",
+        "row_sha256_after": "618e5b7792d733969b8d6a2a5b41d2d7bae4fb34c54b2a0d6f0d329d5233a213",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "permisos_ubicacion",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 54,
+        "count_after": 54,
+        "row_sha256_before": "a55d42b23856cfe2e4d960db0bf1fe14ec430263c50d9ef931d260952e22e8f0",
+        "row_sha256_after": "a55d42b23856cfe2e4d960db0bf1fe14ec430263c50d9ef931d260952e22e8f0",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "permisos_usuario",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "pisos",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "precio_historial",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 1016,
+        "count_after": 1016,
+        "row_sha256_before": "6e605749a49f4044491f66ba5c4fffc99cae828099eb4e354016cfb04e18ed37",
+        "row_sha256_after": "6e605749a49f4044491f66ba5c4fffc99cae828099eb4e354016cfb04e18ed37",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "productos",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 1234,
+        "count_after": 1234,
+        "row_sha256_before": "272a3f2a9e00422b76b10235ac6514a4e69eaea5e9d87788e11335c6dfb90af8",
+        "row_sha256_after": "272a3f2a9e00422b76b10235ac6514a4e69eaea5e9d87788e11335c6dfb90af8",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "proveedores",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 27,
+        "count_after": 27,
+        "row_sha256_before": "3bd68ff1dcc462adc21aee4fdc447fafe4d58ff2bcfa35be95592ae0092ed793",
+        "row_sha256_after": "3bd68ff1dcc462adc21aee4fdc447fafe4d58ff2bcfa35be95592ae0092ed793",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "sesiones",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 149,
+        "count_after": 149,
+        "row_sha256_before": "52d06f4cb51b2b9b030d340fa6cbd0867798ffd0c84360c0868dfeb1b425d00c",
+        "row_sha256_after": "52d06f4cb51b2b9b030d340fa6cbd0867798ffd0c84360c0868dfeb1b425d00c",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "stock_minimo_sitios",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "stock_minimos",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 0,
+        "count_after": 0,
+        "row_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "row_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "ubicaciones",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 11,
+        "count_after": 11,
+        "row_sha256_before": "39839e756041c97ea0cff80d3ab1d0be0e123633f7fae3521d2ed8168ae8f8a8",
+        "row_sha256_after": "39839e756041c97ea0cff80d3ab1d0be0e123633f7fae3521d2ed8168ae8f8a8",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "usuarios",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 31,
+        "count_after": 31,
+        "row_sha256_before": "dfc0d059b8dd3142173c24b9b2756aa5dceda5726a3babb0d9c940b72ce01ab9",
+        "row_sha256_after": "dfc0d059b8dd3142173c24b9b2756aa5dceda5726a3babb0d9c940b72ce01ab9",
+        "field_for_field_equal": true
+      }
+    ],
+    "all_rows_field_for_field_identical": true,
+    "any_empty_tables_before": true,
+    "any_empty_tables_after": true,
+    "empty_tables_before": [
+      "camionetas",
+      "choferes",
+      "cliente_documentos",
+      "equipos",
+      "equipos_checklist",
+      "permisos_usuario",
+      "pisos",
+      "stock_minimo_sitios",
+      "stock_minimos"
+    ],
+    "empty_tables_after": [
+      "camionetas",
+      "choferes",
+      "cliente_documentos",
+      "equipos",
+      "equipos_checklist",
+      "permisos_usuario",
+      "pisos",
+      "stock_minimo_sitios",
+      "stock_minimos"
+    ],
+    "empty_table_limit": "reported only; no empty table was created or filled"
+  },
+  "inventory": {
+    "protected_table_rows": [
+      {
+        "table": "existencias",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 30,
+        "count_after": 30,
+        "row_sha256_before": "46ac6b32027cdf6413d5f49857c3c206fc7a92c6c5c2a82b706a539f29c3b306",
+        "row_sha256_after": "46ac6b32027cdf6413d5f49857c3c206fc7a92c6c5c2a82b706a539f29c3b306",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "movimientos",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 259,
+        "count_after": 259,
+        "row_sha256_before": "d3b020a430cb2a5d6c610e0cab21ace13271bc3296feffc305a4a6da51a95f47",
+        "row_sha256_after": "d3b020a430cb2a5d6c610e0cab21ace13271bc3296feffc305a4a6da51a95f47",
+        "field_for_field_equal": true
+      },
+      {
+        "table": "rollos",
+        "present_before": true,
+        "present_after": true,
+        "count_before": 80,
+        "count_after": 80,
+        "row_sha256_before": "5d963c086ee36b38351adfe7e9d59f221687f60fa68d2ae3571f112a76155f19",
+        "row_sha256_after": "5d963c086ee36b38351adfe7e9d59f221687f60fa68d2ae3571f112a76155f19",
+        "field_for_field_equal": true
+      }
+    ],
+    "movements_and_rollos_field_for_field_identical": true,
+    "before_invariant": {
+      "equal": true,
+      "missing_cache_pairs": 0,
+      "quantity_mismatches": 0,
+      "roll_count_mismatches": 0
+    },
+    "after_invariant": {
+      "equal": true,
+      "missing_cache_pairs": 0,
+      "quantity_mismatches": 0,
+      "roll_count_mismatches": 0,
+      "pair_count": 30
+    },
+    "cache_pairs_before": [
+      {
+        "producto_id": 4,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 12,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 13,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 14,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 14,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 14,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 15,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 18,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 3,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 20,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 32,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1071,
+        "ubicacion_id": 1,
+        "movement_total": "500.000",
+        "available_rolls": 10,
+        "cached_total": "500.000",
+        "cached_rolls": 10
+      },
+      {
+        "producto_id": 1071,
+        "ubicacion_id": 2,
+        "movement_total": "650.000",
+        "available_rolls": 13,
+        "cached_total": "650.000",
+        "cached_rolls": 13
+      },
+      {
+        "producto_id": 1071,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1100,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1415,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1415,
+        "ubicacion_id": 2,
+        "movement_total": "1915.000",
+        "available_rolls": 20,
+        "cached_total": "1915.000",
+        "cached_rolls": 20
+      },
+      {
+        "producto_id": 1415,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1426,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1427,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1427,
+        "ubicacion_id": 2,
+        "movement_total": "979.000",
+        "available_rolls": 10,
+        "cached_total": "979.000",
+        "cached_rolls": 10
+      },
+      {
+        "producto_id": 1427,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      }
+    ],
+    "cache_pairs_after": [
+      {
+        "producto_id": 4,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 12,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 13,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 14,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 14,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 14,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 15,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 18,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 3,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 19,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 20,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 32,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 5,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 104,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1071,
+        "ubicacion_id": 1,
+        "movement_total": "500.000",
+        "available_rolls": 10,
+        "cached_total": "500.000",
+        "cached_rolls": 10
+      },
+      {
+        "producto_id": 1071,
+        "ubicacion_id": 2,
+        "movement_total": "650.000",
+        "available_rolls": 13,
+        "cached_total": "650.000",
+        "cached_rolls": 13
+      },
+      {
+        "producto_id": 1071,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1100,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1415,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1415,
+        "ubicacion_id": 2,
+        "movement_total": "1915.000",
+        "available_rolls": 20,
+        "cached_total": "1915.000",
+        "cached_rolls": 20
+      },
+      {
+        "producto_id": 1415,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1426,
+        "ubicacion_id": 2,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1427,
+        "ubicacion_id": 1,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      },
+      {
+        "producto_id": 1427,
+        "ubicacion_id": 2,
+        "movement_total": "979.000",
+        "available_rolls": 10,
+        "cached_total": "979.000",
+        "cached_rolls": 10
+      },
+      {
+        "producto_id": 1427,
+        "ubicacion_id": 8,
+        "movement_total": "0.000",
+        "available_rolls": 0,
+        "cached_total": "0.000",
+        "cached_rolls": 0
+      }
+    ],
+    "cache_row_changed_keys": []
+  },
+  "minimum_configuration": {
+    "active_coverage_before": {
+      "active_sites": 0,
+      "active_products": 1234,
+      "possible_active_pairs": 0,
+      "configured_active_pairs": 0,
+      "coverage_percent": null
+    },
+    "active_coverage_after": {
+      "active_sites": 0,
+      "active_products": 1234,
+      "possible_active_pairs": 0,
+      "configured_active_pairs": 0,
+      "coverage_percent": null
+    },
+    "exact_field_for_field_preservation": true,
+    "coverage_status": "EMPTY_RESTORED_CONFIGURATION_NO_ACTIVE_SITE_PRODUCT_PAIRS",
+        "populated_minimum_case_exercised": false,
+        "minimum_preservation_proven": false,
+        "limitation": "No populated minimum rows existed in the verified restored backup; do not treat this execution as proof of populated-minimum preservation.",
+    "rows_before": {
+      "stock_minimos": [],
+      "stock_minimo_sitios": []
+    },
+    "rows_after": {
+      "stock_minimos": [],
+      "stock_minimo_sitios": []
+    },
+    "numeric_amounts_dates_and_author_ids_only": true
+  },
+  "assertions": {
+    "cache_after_equals_movement_sums_and_available_roll_counts": true,
+    "minimum_configuration_deep_equal_before_after": true,
+      "populated_minimum_case_exercised": false,
+      "minimum_preservation_proven": false,
+    "list_c_rows_deep_equal_before_after": true,
+    "movements_and_rollos_unchanged": true,
+    "counts_unchanged": true,
+    "actual_function_invoked": true
+  },
+  "reports": {
+    "json": "/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.json",
+    "html": "/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.html",
+      "state": "/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.state.json",
+      "wrapper": "scripts/src/verification-minimos-preflight.mts",
+      "previous_execution_wrapper": "scripts/src/reconstruir-cache-existencias-disposable-verification.mts"
+  }
+}

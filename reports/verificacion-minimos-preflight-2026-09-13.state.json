@@ -1,0 +1,21 @@
+{
+  "status": "PASS_WITH_LIMITATION",
+  "phase": 1,
+  "operation": "real reconstruirCacheExistencias minimum-preservation verification",
+  "stage": "execution checks PASS; populated minimum preservation NOT PROVEN",
+  "exitCode": 0,
+  "childExitCode": 0,
+  "executionChecksStatus": "PASS",
+  "minimumTablesPopulatedCaseExercised": false,
+  "minimumPreservationProven": false,
+  "limitation": "stock_minimos and stock_minimo_sitios were empty before and after; no rows were populated.",
+  "wrapper": "scripts/src/verification-minimos-preflight.mts",
+  "previousExecutionWrapper": "scripts/src/reconstruir-cache-existencias-disposable-verification.mts",
+  "previousExecutionWasBeforeWrapperMove": true,
+  "report": "/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.json",
+  "html": "/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.html",
+  "updatedAtUtc": "2026-09-13T07:57:13.408Z",
+  "currentDatabase": "restore_disposable_2026-09-13-014514",
+  "dataDirectory": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-cluster-verified",
+  "clusterStopExitCode": 0
+}

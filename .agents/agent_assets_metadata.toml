@@ -574,3 +574,31 @@ mtime_ms = 1789284061260
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d46d763c-371b-46bd-84c7-dc8a52e97b63/3adb5762-28d4-418a-a8b3-4d64d610e11f"
 storage_version_token = "1789284121421283"
 content_type = "text/html"
+
+[[outputs]]
+id = "DwpXEeIjhNmJFy6g-H9uB"
+uri = "file://reports/preflight-completo-purga-2026-09-13.html"
+type = "text"
+title = "Preflight completo — Respaldo y purga operativa"
+description = "Las 58 tablas con conteos origen/restauración y listas A/B/C; contadores, dependencias, triggers, costos y limitaciones. Fase 2 no ejecutada."
+logical_id = "e27570f4-4fdd-496a-84c6-ef91cc0ca894"
+content_hash = "sha256:62b310151f359818ae1c5cd5fc03843e6d132146ae1acba7023c9694a7bedf61"
+size = 63405
+mtime_ms = 1789286614480
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e27570f4-4fdd-496a-84c6-ef91cc0ca894/9d1d85d1-8138-406e-8ba9-d7cc0849ddc7"
+storage_version_token = "1789286639223980"
+content_type = "text/html"
+
+[[outputs]]
+id = "jVbX16P08F-kGWwSOA1nQ"
+uri = "file://reports/verificacion-minimos-preflight-2026-09-13.html"
+type = "text"
+title = "Reconstrucción de existencias — Evidencia y límite"
+description = "Ejecución real en la restauración: 19 tablas protegidas sin cambios y 30 pares conciliados. No prueba mínimos capturados porque ambas tablas de configuración están vacías."
+logical_id = "3b503a35-4180-4811-9bf7-4212dbbbd650"
+content_hash = "sha256:36cdaadf0e53e379ac57aced476eda0ce7d19cdfe009b760a7f629c65c975b3d"
+size = 39042
+mtime_ms = 1789286421447
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3b503a35-4180-4811-9bf7-4212dbbbd650/61d4a264-42b2-46f4-abe0-dc88868c034d"
+storage_version_token = "1789286639899295"
+content_type = "text/html"

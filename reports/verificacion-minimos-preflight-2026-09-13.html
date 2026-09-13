@@ -1,0 +1,942 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Verificación de mínimos</title>
+<style>body{font-family:system-ui,sans-serif;margin:2rem;line-height:1.4}pre{white-space:pre-wrap;overflow:auto;background:#f5f5f5;padding:1rem;border-radius:.5rem}</style>
+</head><body><h1>Verificación de reconstrucción de caché</h1>
+<p><strong>Status:</strong> PASS_WITH_LIMITATION — execution checks passed, but populated-minimum preservation is NOT PROVEN because both minimum tables were empty (0/0).</p>
+<p><strong>Wrapper:</strong> scripts/src/verification-minimos-preflight.mts. Previous execution evidence used scripts/src/reconstruir-cache-existencias-disposable-verification.mts before the byte-for-byte move; no database rerun was performed after the move.</p>
+<pre>{
+  &quot;status&quot;: &quot;PASS_WITH_LIMITATION&quot;,
+  &quot;phase&quot;: 1,
+  &quot;operation&quot;: &quot;real reconstruirCacheExistencias disposable restored-cluster verification&quot;,
+  &quot;result&quot;: &quot;EXECUTION_CHECKS_PASS_MINIMUM_PRESERVATION_NOT_PROVEN&quot;,
+  &quot;critical_limitation&quot;: {
+    &quot;minimum_tables_populated_case_exercised&quot;: false,
+    &quot;minimum_preservation_proven&quot;: false,
+    &quot;reason&quot;: &quot;stock_minimos and stock_minimo_sitios were both empty (0/0) before and after. Equality of two empty sets does not prove preservation of populated minimum values, dates, authors, or site settings.&quot;,
+    &quot;no_population_or_manual_mutation_performed&quot;: true
+  },
+  &quot;policy&quot;: {
+    &quot;source_database_url_imported&quot;: false,
+    &quot;source_database_url_used_for_mutation&quot;: false,
+    &quot;users_created&quot;: false,
+    &quot;seed_executed&quot;: false,
+    &quot;delete_executed&quot;: false,
+    &quot;truncate_executed&quot;: false,
+    &quot;server_started_by_wrapper&quot;: false,
+    &quot;database_created_by_wrapper&quot;: false,
+    &quot;manual_cache_mutation&quot;: false,
+    &quot;restored_cluster_preserved&quot;: true
+  },
+  &quot;backup_gate&quot;: {
+    &quot;metadata_path&quot;: &quot;/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-metadata.json&quot;,
+    &quot;manifest_status&quot;: &quot;PASS&quot;,
+    &quot;backup_state_status&quot;: &quot;PASS&quot;,
+    &quot;backup_state_exit_code&quot;: 0,
+    &quot;cluster_directory_matches_metadata&quot;: true,
+    &quot;restored_database_matches_metadata&quot;: true,
+    &quot;admin_database_matches_metadata&quot;: true
+  },
+  &quot;execution&quot;: {
+    &quot;real_export_invoked&quot;: true,
+    &quot;mocked_db&quot;: false,
+    &quot;function_source&quot;: {
+      &quot;sourcePath&quot;: &quot;artifacts/api-server/src/lib/inventario.ts&quot;,
+      &quot;startLine&quot;: 2618,
+      &quot;sourceSha256&quot;: &quot;5fb25b25449e1a42aed2d4ccd8f4f29b937700ebc361f8a4777ffa2139802157&quot;
+    },
+    &quot;current_database_before&quot;: &quot;restore_disposable_2026-09-13-014514&quot;,
+    &quot;current_database_after&quot;: &quot;restore_disposable_2026-09-13-014514&quot;,
+    &quot;data_directory_before&quot;: &quot;/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-cluster-verified&quot;,
+    &quot;data_directory_after&quot;: &quot;/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-cluster-verified&quot;,
+    &quot;server_port_before&quot;: 33291,
+    &quot;server_port_after&quot;: 33291,
+    &quot;cache_value_changed&quot;: false,
+    &quot;cache_updated_timestamp_changed_count&quot;: 0,
+    &quot;cache_timestamp_note&quot;: &quot;The real function updates quantity/count fields and does not set updated_at; value/invariant evidence is used.&quot;,
+    &quot;child_exit_code&quot;: 0,
+    &quot;current_wrapper_path&quot;: &quot;scripts/src/verification-minimos-preflight.mts&quot;,
+    &quot;previous_execution_wrapper_path&quot;: &quot;scripts/src/reconstruir-cache-existencias-disposable-verification.mts&quot;,
+    &quot;previous_execution_wrapper_path_note&quot;: &quot;Execution evidence was produced before the byte-for-byte move; no database rerun was performed after the move.&quot;,
+    &quot;same_implementation_execution_evidence&quot;: true
+  },
+  &quot;counts&quot;: {
+    &quot;before&quot;: {
+      &quot;existencias&quot;: 30,
+      &quot;movimientos&quot;: 259,
+      &quot;rollos&quot;: 80,
+      &quot;stock_minimos&quot;: 0,
+      &quot;stock_minimo_sitios&quot;: 0
+    },
+    &quot;after&quot;: {
+      &quot;existencias&quot;: 30,
+      &quot;movimientos&quot;: 259,
+      &quot;rollos&quot;: 80,
+      &quot;stock_minimos&quot;: 0,
+      &quot;stock_minimo_sitios&quot;: 0
+    },
+    &quot;unchanged_for_protected_and_list_c_rows&quot;: true
+  },
+  &quot;summary&quot;: {
+    &quot;status&quot;: &quot;PASS_WITH_LIMITATION&quot;,
+    &quot;counts_before&quot;: {
+      &quot;existencias&quot;: 30,
+      &quot;movimientos&quot;: 259,
+      &quot;rollos&quot;: 80,
+      &quot;stock_minimos&quot;: 0,
+      &quot;stock_minimo_sitios&quot;: 0
+    },
+    &quot;counts_after&quot;: {
+      &quot;existencias&quot;: 30,
+      &quot;movimientos&quot;: 259,
+      &quot;rollos&quot;: 80,
+      &quot;stock_minimos&quot;: 0,
+      &quot;stock_minimo_sitios&quot;: 0
+    },
+    &quot;active_minimum_configuration_coverage&quot;: {
+      &quot;active_sites&quot;: 0,
+      &quot;active_products&quot;: 1234,
+      &quot;possible_active_pairs&quot;: 0,
+      &quot;configured_active_pairs&quot;: 0,
+      &quot;coverage_percent&quot;: null
+    },
+    &quot;any_empty_tables&quot;: true,
+    &quot;empty_tables&quot;: [
+      &quot;camionetas&quot;,
+      &quot;choferes&quot;,
+      &quot;cliente_documentos&quot;,
+      &quot;equipos&quot;,
+      &quot;equipos_checklist&quot;,
+      &quot;permisos_usuario&quot;,
+      &quot;pisos&quot;,
+      &quot;stock_minimo_sitios&quot;,
+      &quot;stock_minimos&quot;
+    ],
+    &quot;empty_table_count&quot;: 9,
+    &quot;empty_table_limit&quot;: &quot;informational only; no empty List C table was created, filled, deleted, or truncated&quot;
+  },
+  &quot;list_c&quot;: {
+    &quot;requested_table_count&quot;: 19,
+    &quot;requested_tables&quot;: [
+      &quot;productos&quot;,
+      &quot;precio_historial&quot;,
+      &quot;clientes&quot;,
+      &quot;cliente_documentos&quot;,
+      &quot;proveedores&quot;,
+      &quot;usuarios&quot;,
+      &quot;ubicaciones&quot;,
+      &quot;pisos&quot;,
+      &quot;permisos_rol&quot;,
+      &quot;permisos_usuario&quot;,
+      &quot;permisos_ubicacion&quot;,
+      &quot;camionetas&quot;,
+      &quot;choferes&quot;,
+      &quot;sesiones&quot;,
+      &quot;equipos&quot;,
+      &quot;equipos_checklist&quot;,
+      &quot;stock_minimo_sitios&quot;,
+      &quot;stock_minimos&quot;,
+      &quot;auditoria&quot;
+    ],
+    &quot;prompt_list_c_count_note&quot;: &quot;The supplied prompt enumerates 19 List C table names; no twentieth table name was supplied.&quot;,
+    &quot;missing_tables&quot;: [],
+    &quot;missing_table_explanation&quot;: &quot;A table is reported missing when to_regclass(public.&lt;name&gt;) is null in the verified restore; it was not created by this check.&quot;,
+    &quot;rows&quot;: [
+      {
+        &quot;table&quot;: &quot;auditoria&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 3035,
+        &quot;count_after&quot;: 3035,
+        &quot;row_sha256_before&quot;: &quot;a7a98b75cd801114f2c1697073df95fb6241e57302f5923b090a4aba28d46342&quot;,
+        &quot;row_sha256_after&quot;: &quot;a7a98b75cd801114f2c1697073df95fb6241e57302f5923b090a4aba28d46342&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;camionetas&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;choferes&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;cliente_documentos&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;clientes&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 7,
+        &quot;count_after&quot;: 7,
+        &quot;row_sha256_before&quot;: &quot;23a323a8e0face62eda27bff3680fe7b1e58c4a32a442fd5a09005690aad9865&quot;,
+        &quot;row_sha256_after&quot;: &quot;23a323a8e0face62eda27bff3680fe7b1e58c4a32a442fd5a09005690aad9865&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;equipos&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;equipos_checklist&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;permisos_rol&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 192,
+        &quot;count_after&quot;: 192,
+        &quot;row_sha256_before&quot;: &quot;618e5b7792d733969b8d6a2a5b41d2d7bae4fb34c54b2a0d6f0d329d5233a213&quot;,
+        &quot;row_sha256_after&quot;: &quot;618e5b7792d733969b8d6a2a5b41d2d7bae4fb34c54b2a0d6f0d329d5233a213&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;permisos_ubicacion&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 54,
+        &quot;count_after&quot;: 54,
+        &quot;row_sha256_before&quot;: &quot;a55d42b23856cfe2e4d960db0bf1fe14ec430263c50d9ef931d260952e22e8f0&quot;,
+        &quot;row_sha256_after&quot;: &quot;a55d42b23856cfe2e4d960db0bf1fe14ec430263c50d9ef931d260952e22e8f0&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;permisos_usuario&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;pisos&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;precio_historial&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 1016,
+        &quot;count_after&quot;: 1016,
+        &quot;row_sha256_before&quot;: &quot;6e605749a49f4044491f66ba5c4fffc99cae828099eb4e354016cfb04e18ed37&quot;,
+        &quot;row_sha256_after&quot;: &quot;6e605749a49f4044491f66ba5c4fffc99cae828099eb4e354016cfb04e18ed37&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;productos&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 1234,
+        &quot;count_after&quot;: 1234,
+        &quot;row_sha256_before&quot;: &quot;272a3f2a9e00422b76b10235ac6514a4e69eaea5e9d87788e11335c6dfb90af8&quot;,
+        &quot;row_sha256_after&quot;: &quot;272a3f2a9e00422b76b10235ac6514a4e69eaea5e9d87788e11335c6dfb90af8&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;proveedores&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 27,
+        &quot;count_after&quot;: 27,
+        &quot;row_sha256_before&quot;: &quot;3bd68ff1dcc462adc21aee4fdc447fafe4d58ff2bcfa35be95592ae0092ed793&quot;,
+        &quot;row_sha256_after&quot;: &quot;3bd68ff1dcc462adc21aee4fdc447fafe4d58ff2bcfa35be95592ae0092ed793&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;sesiones&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 149,
+        &quot;count_after&quot;: 149,
+        &quot;row_sha256_before&quot;: &quot;52d06f4cb51b2b9b030d340fa6cbd0867798ffd0c84360c0868dfeb1b425d00c&quot;,
+        &quot;row_sha256_after&quot;: &quot;52d06f4cb51b2b9b030d340fa6cbd0867798ffd0c84360c0868dfeb1b425d00c&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;stock_minimo_sitios&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;stock_minimos&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 0,
+        &quot;count_after&quot;: 0,
+        &quot;row_sha256_before&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;row_sha256_after&quot;: &quot;4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;ubicaciones&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 11,
+        &quot;count_after&quot;: 11,
+        &quot;row_sha256_before&quot;: &quot;39839e756041c97ea0cff80d3ab1d0be0e123633f7fae3521d2ed8168ae8f8a8&quot;,
+        &quot;row_sha256_after&quot;: &quot;39839e756041c97ea0cff80d3ab1d0be0e123633f7fae3521d2ed8168ae8f8a8&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;usuarios&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 31,
+        &quot;count_after&quot;: 31,
+        &quot;row_sha256_before&quot;: &quot;dfc0d059b8dd3142173c24b9b2756aa5dceda5726a3babb0d9c940b72ce01ab9&quot;,
+        &quot;row_sha256_after&quot;: &quot;dfc0d059b8dd3142173c24b9b2756aa5dceda5726a3babb0d9c940b72ce01ab9&quot;,
+        &quot;field_for_field_equal&quot;: true
+      }
+    ],
+    &quot;all_rows_field_for_field_identical&quot;: true,
+    &quot;any_empty_tables_before&quot;: true,
+    &quot;any_empty_tables_after&quot;: true,
+    &quot;empty_tables_before&quot;: [
+      &quot;camionetas&quot;,
+      &quot;choferes&quot;,
+      &quot;cliente_documentos&quot;,
+      &quot;equipos&quot;,
+      &quot;equipos_checklist&quot;,
+      &quot;permisos_usuario&quot;,
+      &quot;pisos&quot;,
+      &quot;stock_minimo_sitios&quot;,
+      &quot;stock_minimos&quot;
+    ],
+    &quot;empty_tables_after&quot;: [
+      &quot;camionetas&quot;,
+      &quot;choferes&quot;,
+      &quot;cliente_documentos&quot;,
+      &quot;equipos&quot;,
+      &quot;equipos_checklist&quot;,
+      &quot;permisos_usuario&quot;,
+      &quot;pisos&quot;,
+      &quot;stock_minimo_sitios&quot;,
+      &quot;stock_minimos&quot;
+    ],
+    &quot;empty_table_limit&quot;: &quot;reported only; no empty table was created or filled&quot;
+  },
+  &quot;inventory&quot;: {
+    &quot;protected_table_rows&quot;: [
+      {
+        &quot;table&quot;: &quot;existencias&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 30,
+        &quot;count_after&quot;: 30,
+        &quot;row_sha256_before&quot;: &quot;46ac6b32027cdf6413d5f49857c3c206fc7a92c6c5c2a82b706a539f29c3b306&quot;,
+        &quot;row_sha256_after&quot;: &quot;46ac6b32027cdf6413d5f49857c3c206fc7a92c6c5c2a82b706a539f29c3b306&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;movimientos&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 259,
+        &quot;count_after&quot;: 259,
+        &quot;row_sha256_before&quot;: &quot;d3b020a430cb2a5d6c610e0cab21ace13271bc3296feffc305a4a6da51a95f47&quot;,
+        &quot;row_sha256_after&quot;: &quot;d3b020a430cb2a5d6c610e0cab21ace13271bc3296feffc305a4a6da51a95f47&quot;,
+        &quot;field_for_field_equal&quot;: true
+      },
+      {
+        &quot;table&quot;: &quot;rollos&quot;,
+        &quot;present_before&quot;: true,
+        &quot;present_after&quot;: true,
+        &quot;count_before&quot;: 80,
+        &quot;count_after&quot;: 80,
+        &quot;row_sha256_before&quot;: &quot;5d963c086ee36b38351adfe7e9d59f221687f60fa68d2ae3571f112a76155f19&quot;,
+        &quot;row_sha256_after&quot;: &quot;5d963c086ee36b38351adfe7e9d59f221687f60fa68d2ae3571f112a76155f19&quot;,
+        &quot;field_for_field_equal&quot;: true
+      }
+    ],
+    &quot;movements_and_rollos_field_for_field_identical&quot;: true,
+    &quot;before_invariant&quot;: {
+      &quot;equal&quot;: true,
+      &quot;missing_cache_pairs&quot;: 0,
+      &quot;quantity_mismatches&quot;: 0,
+      &quot;roll_count_mismatches&quot;: 0
+    },
+    &quot;after_invariant&quot;: {
+      &quot;equal&quot;: true,
+      &quot;missing_cache_pairs&quot;: 0,
+      &quot;quantity_mismatches&quot;: 0,
+      &quot;roll_count_mismatches&quot;: 0,
+      &quot;pair_count&quot;: 30
+    },
+    &quot;cache_pairs_before&quot;: [
+      {
+        &quot;producto_id&quot;: 4,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 12,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 13,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 14,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 14,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 14,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 15,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 18,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 3,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 20,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 32,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1071,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;500.000&quot;,
+        &quot;available_rolls&quot;: 10,
+        &quot;cached_total&quot;: &quot;500.000&quot;,
+        &quot;cached_rolls&quot;: 10
+      },
+      {
+        &quot;producto_id&quot;: 1071,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;650.000&quot;,
+        &quot;available_rolls&quot;: 13,
+        &quot;cached_total&quot;: &quot;650.000&quot;,
+        &quot;cached_rolls&quot;: 13
+      },
+      {
+        &quot;producto_id&quot;: 1071,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1100,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1415,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1415,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;1915.000&quot;,
+        &quot;available_rolls&quot;: 20,
+        &quot;cached_total&quot;: &quot;1915.000&quot;,
+        &quot;cached_rolls&quot;: 20
+      },
+      {
+        &quot;producto_id&quot;: 1415,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1426,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1427,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1427,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;979.000&quot;,
+        &quot;available_rolls&quot;: 10,
+        &quot;cached_total&quot;: &quot;979.000&quot;,
+        &quot;cached_rolls&quot;: 10
+      },
+      {
+        &quot;producto_id&quot;: 1427,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      }
+    ],
+    &quot;cache_pairs_after&quot;: [
+      {
+        &quot;producto_id&quot;: 4,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 12,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 13,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 14,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 14,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 14,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 15,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 18,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 3,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 19,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 20,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 32,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 5,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 104,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1071,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;500.000&quot;,
+        &quot;available_rolls&quot;: 10,
+        &quot;cached_total&quot;: &quot;500.000&quot;,
+        &quot;cached_rolls&quot;: 10
+      },
+      {
+        &quot;producto_id&quot;: 1071,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;650.000&quot;,
+        &quot;available_rolls&quot;: 13,
+        &quot;cached_total&quot;: &quot;650.000&quot;,
+        &quot;cached_rolls&quot;: 13
+      },
+      {
+        &quot;producto_id&quot;: 1071,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1100,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1415,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1415,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;1915.000&quot;,
+        &quot;available_rolls&quot;: 20,
+        &quot;cached_total&quot;: &quot;1915.000&quot;,
+        &quot;cached_rolls&quot;: 20
+      },
+      {
+        &quot;producto_id&quot;: 1415,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1426,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1427,
+        &quot;ubicacion_id&quot;: 1,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      },
+      {
+        &quot;producto_id&quot;: 1427,
+        &quot;ubicacion_id&quot;: 2,
+        &quot;movement_total&quot;: &quot;979.000&quot;,
+        &quot;available_rolls&quot;: 10,
+        &quot;cached_total&quot;: &quot;979.000&quot;,
+        &quot;cached_rolls&quot;: 10
+      },
+      {
+        &quot;producto_id&quot;: 1427,
+        &quot;ubicacion_id&quot;: 8,
+        &quot;movement_total&quot;: &quot;0.000&quot;,
+        &quot;available_rolls&quot;: 0,
+        &quot;cached_total&quot;: &quot;0.000&quot;,
+        &quot;cached_rolls&quot;: 0
+      }
+    ],
+    &quot;cache_row_changed_keys&quot;: []
+  },
+  &quot;minimum_configuration&quot;: {
+    &quot;active_coverage_before&quot;: {
+      &quot;active_sites&quot;: 0,
+      &quot;active_products&quot;: 1234,
+      &quot;possible_active_pairs&quot;: 0,
+      &quot;configured_active_pairs&quot;: 0,
+      &quot;coverage_percent&quot;: null
+    },
+    &quot;active_coverage_after&quot;: {
+      &quot;active_sites&quot;: 0,
+      &quot;active_products&quot;: 1234,
+      &quot;possible_active_pairs&quot;: 0,
+      &quot;configured_active_pairs&quot;: 0,
+      &quot;coverage_percent&quot;: null
+    },
+    &quot;exact_field_for_field_preservation&quot;: true,
+    &quot;coverage_status&quot;: &quot;EMPTY_RESTORED_CONFIGURATION_NO_ACTIVE_SITE_PRODUCT_PAIRS&quot;,
+    &quot;populated_minimum_case_exercised&quot;: false,
+    &quot;minimum_preservation_proven&quot;: false,
+    &quot;limitation&quot;: &quot;No populated minimum rows existed in the verified restored backup; do not treat this execution as proof of populated-minimum preservation.&quot;,
+    &quot;rows_before&quot;: {
+      &quot;stock_minimos&quot;: [],
+      &quot;stock_minimo_sitios&quot;: []
+    },
+    &quot;rows_after&quot;: {
+      &quot;stock_minimos&quot;: [],
+      &quot;stock_minimo_sitios&quot;: []
+    },
+    &quot;numeric_amounts_dates_and_author_ids_only&quot;: true
+  },
+  &quot;assertions&quot;: {
+    &quot;cache_after_equals_movement_sums_and_available_roll_counts&quot;: true,
+    &quot;minimum_configuration_deep_equal_before_after&quot;: true,
+    &quot;populated_minimum_case_exercised&quot;: false,
+    &quot;minimum_preservation_proven&quot;: false,
+    &quot;list_c_rows_deep_equal_before_after&quot;: true,
+    &quot;movements_and_rollos_unchanged&quot;: true,
+    &quot;counts_unchanged&quot;: true,
+    &quot;actual_function_invoked&quot;: true
+  },
+  &quot;reports&quot;: {
+    &quot;json&quot;: &quot;/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.json&quot;,
+    &quot;html&quot;: &quot;/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.html&quot;,
+    &quot;state&quot;: &quot;/home/runner/workspace/reports/verificacion-minimos-preflight-2026-09-13.state.json&quot;,
+    &quot;wrapper&quot;: &quot;scripts/src/verification-minimos-preflight.mts&quot;,
+    &quot;previous_execution_wrapper&quot;: &quot;scripts/src/reconstruir-cache-existencias-disposable-verification.mts&quot;
+  }
+}</pre></body></html>

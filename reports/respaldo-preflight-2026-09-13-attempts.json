@@ -1,0 +1,34 @@
+{
+  "phase": 1,
+  "block": 1,
+  "sourceMutationPolicy": {
+    "sourceMutated": false,
+    "phase2Executed": false
+  },
+  "attempts": [
+    {
+      "backupDirectory": "scripts/.local/backups/respaldo-antes-de-purga-2026-09-13-013155",
+      "status": "FAIL",
+      "stage": "disposable cluster start",
+      "reason": "The first script revision passed the unsupported pg_ctl --start option. Its source custom archive and catalog were retained; no restore verification was claimed."
+    },
+    {
+      "backupDirectory": ".local/backups/respaldo-antes-de-purga-2026-09-13-013234",
+      "status": "FAIL",
+      "stage": "disposable admin setup",
+      "reason": "The first root-run revision tried to rename postgres while connected to postgres. PostgreSQL rejected that operation; no restore verification was claimed."
+    },
+    {
+      "backupDirectory": ".local/backups/respaldo-antes-de-purga-2026-09-13-013918",
+      "status": "FAIL",
+      "stage": "disposable cluster start",
+      "reason": "pg_ctl inherited the captured stdio pipe because it had no dedicated logfile, so the command wrapper did not observe EOF before timeout. The complete source archive and catalog were retained; no restore verification was claimed."
+    },
+    {
+      "backupDirectory": ".local/backups/respaldo-antes-de-purga-2026-09-13-014514",
+      "status": "PASS",
+      "stage": "resume existing dump restore",
+      "reason": "The existing custom dump checksum/size and TOC were verified, then the restore and semantic comparison completed successfully. No new source dump was taken during this resume."
+    }
+  ]
+}

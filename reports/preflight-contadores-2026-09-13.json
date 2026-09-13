@@ -1,0 +1,217 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "readOnly": true,
+  "origin": "Verified restored archive, not a new source snapshot",
+  "archive": "respaldo-antes-de-purga-2026-09-13-014514",
+  "identity": {
+    "database": "restore_disposable_2026-09-13-014514",
+    "directory": "/home/runner/workspace/.local/backups/respaldo-antes-de-purga-2026-09-13-014514/restore-cluster-verified"
+  },
+  "counters": {
+    "ticket_folio": [
+      {
+        "id": 1,
+        "ultimo_folio": 1006
+      }
+    ],
+    "entrada_folio": [
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 1
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 3
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 4
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 5
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 6
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 7
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 8
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 9
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 458
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 531
+      },
+      {
+        "ultimo_folio": 2,
+        "ubicacion_id": 2
+      }
+    ],
+    "salida_folio": [
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 1
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 3
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 4
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 5
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 6
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 7
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 8
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 9
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 458
+      },
+      {
+        "ultimo_folio": 0,
+        "ubicacion_id": 531
+      },
+      {
+        "ultimo_folio": 8,
+        "ubicacion_id": 2
+      }
+    ],
+    "viaje_folio": [
+      {
+        "ubicacion_id": 1,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 2,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 3,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 4,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 5,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 6,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 7,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 8,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 9,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 458,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 531,
+        "ultimo_folio": 0
+      }
+    ],
+    "auditoria_inventario_folio": [
+      {
+        "ubicacion_id": 1,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 2,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 3,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 4,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 5,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 6,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 7,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 8,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 9,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 458,
+        "ultimo_folio": 0
+      },
+      {
+        "ubicacion_id": 531,
+        "ultimo_folio": 0
+      }
+    ],
+    "series_consecutivo": [
+      {
+        "id": 1,
+        "ultimo_numero": 1000080
+      }
+    ]
+  },
+  "serial": {
+    "last_value": "1",
+    "is_called": false
+  },
+  "earlierAttempt": {
+    "exitCode": 1,
+    "reason": "Start omitted explicit local socket/port; corrected without source access"
+  }
+}
