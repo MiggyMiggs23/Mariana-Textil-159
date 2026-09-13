@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Precisión: usuarios de las suites de inventario</title>
+  <style>
+    :root{color-scheme:light;--ink:#172033;--muted:#56637a;--line:#d9e1ec;--bg:#f5f7fb;--card:#fff;--blue:#175cd3;--red:#b42318;--green:#087443;--amber:#986a00;--violet:#6941c6}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+    main{max-width:1900px;margin:auto;padding:28px}
+    h1{font-size:30px;line-height:1.15;margin:0 0 6px}
+    h2{font-size:21px;margin:30px 0 10px}
+    h3{font-size:16px;margin:22px 0 8px}
+    p{max-width:1400px}
+    .lead,.stamp{color:var(--muted)}
+    .stamp{font-size:12px}
+    code{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:18px 0}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+    .card strong{display:block;font-size:25px}
+    .card span{color:var(--muted);font-size:12px}
+    .notice{background:#fff8e1;border:1px solid #f0c36d;border-left:5px solid #d99000;border-radius:7px;padding:13px 16px;max-width:1500px}
+    .notice.danger{background:#fff5f4;border-color:#f4b4ae;border-left-color:var(--red)}
+    .notice.info{background:#eef5ff;border-color:#b8d1f5;border-left-color:var(--blue)}
+    .ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--amber)}.violet{color:var(--violet)}
+    .scroll{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+    table{border-collapse:collapse;width:100%;min-width:1650px}
+    th,td{border-bottom:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:top}
+    th{position:sticky;top:0;background:#eaf0fa;color:#243b68;font-size:12px;z-index:1}
+    td:nth-child(1){width:36px;text-align:center}
+    td:nth-child(2){min-width:285px;max-width:390px}
+    td:nth-child(3){min-width:300px;max-width:460px}
+    td:nth-child(4){min-width:350px;max-width:550px}
+    td:nth-child(5){min-width:290px;max-width:440px}
+    tr.seed td:nth-child(5){background:#effaf5}
+    tr.mixed td:nth-child(5){background:#fff8e1}
+    tr.own td:nth-child(5){background:#fff3f1}
+    .badge{display:inline-block;border-radius:5px;padding:2px 6px;font-size:11px;font-weight:700;white-space:nowrap}
+    .badge.seed{background:#d9f7e8;color:#086637}
+    .badge.mixed{background:#fff0c2;color:#7d5700}
+    .badge.own{background:#ffe4e1;color:#a32b20}
+    .badge.note{background:#dceaff;color:#164f9d}
+    ul{max-width:1450px}li{margin:5px 0}
+    details{background:var(--card);border:1px solid var(--line);border-radius:8px;margin:12px 0;padding:11px 14px;max-width:1500px}
+    summary{cursor:pointer;font-weight:700;color:#243b68}
+    .columns{columns:3 360px;column-gap:28px}
+    .columns li{break-inside:avoid;font-size:12px}
+    footer{margin:35px 0 10px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Precisión de usuarios en las 28 suites de población</h1>
+  <p class="lead">Análisis estático de las 28 fuentes marcadas como creadoras (o creadoras condicionales) de usuarios en <code>reports/inventario-suites-poblacion.html</code>. La pregunta se responde a nivel de suite: ¿se pueden eliminar todas sus filas de <code>usuarios</code> y operar con el ADMIN canónico, o queda al menos una identidad propia funcionalmente necesaria?</p>
+  <p class="stamp">Revisión de las fuentes actuales, líneas 1-based. No se ejecutaron suites, no se abrió ninguna base y no se modificaron suites, aplicación ni seed.</p>
+
+  <div class="cards">
+    <div class="card"><strong>28</strong><span>suites auditadas exhaustivamente</span></div>
+    <div class="card"><strong>3</strong><span>seed-only: el ADMIN canónico puede cubrir todos los usuarios funcionales</span></div>
+    <div class="card"><strong>18</strong><span>mixtas: seed ADMIN para un slot, pero propia para otros roles/estados</span></div>
+    <div class="card"><strong>4</strong><span>identidad ADMIN adicional/distinta necesaria</span></div>
+    <div class="card"><strong>3</strong><span>sin slot ADMIN: requieren roles propios no ADMIN</span></div>
+    <div class="card"><strong>25</strong><span>requieren al menos un usuario propio más allá del seed</span></div>
+  </div>
+
+  <div class="notice danger">
+    <strong>Respuesta corta.</strong> Bajo la unidad de conteo funcional revisada, <strong>3 suites</strong> pueden ser seed-only y <strong>25 suites</strong> todavía contienen una necesidad de identidad/estado adicional. “Puede reutilizar el ADMIN” no significa que la suite pueda ser aprobada: las 28 siguen teniendo fixtures de negocio, permisos, sesiones o estados fuera del seed según el inventario anterior.
+  </div>
+
+  <h2>Base de comparación y regla de conteo</h2>
+  <ul>
+    <li><strong>Seed ADMIN garantizado:</strong> <code>lib/db/src/seed.mjs:272-277</code> inserta o conserva <code>usuario='admin'</code>, <code>rol='ADMIN'</code> y <code>ubicacion_id=NULL</code>; la contraseña llega por <code>ADMIN_SEED_PASSWORD</code> (<code>:15-24</code>). El seed crea ubicaciones en <code>:175-196</code>, pero no crea usuarios CAJA, BODEGA, TERMINAL, SUPERVISOR, SISTEMAS o CONTADOR.</li>
+    <li><strong>Seed-only (3):</strong> todas las filas de usuario de la suite son sustituibles por el ADMIN canónico sin cambiar una identidad, rol, autorización, alcance o estado que el caso afirme. Esto incluye usuarios usados solo como FK/actor nominal, no como permiso probado.</li>
+    <li><strong>Mixta (17):</strong> el ADMIN de la fuente es conceptualmente sustituible por el seed, pero la suite también autentica y afirma un rol/alcance no ADMIN, o necesita una combinación de identidad, sitio, permiso o estado que el seed no garantiza.</li>
+    <li><strong>Identidad propia (7):</strong> cuatro suites necesitan además un ADMIN distinto por identidad/estado/competencia, y tres no crean ADMIN alguno y prueban roles no ADMIN. En ambos subgrupos la sustitución completa por el seed es imposible.</li>
+    <li>Una fila de usuario insertada para provocar una carrera de unicidad, una confirmación separada, un filtro por actor o un estado inactivo afirmado cuenta como identidad propia aunque también tenga rol ADMIN (o aunque el rol escrito sea solo una convención). No se confunde “rol igual” con “misma identidad”.</li>
+    <li><strong>Prueba mínima de rol:</strong> crear CAJA/BODEGA no basta. Aquí se cuenta como necesidad funcional solo cuando la fuente autentica esa sesión y afirma un <code>403</code>, una respuesta/alcance distinto, una redacción por rol, una autorización, o una relación de auditoría/estado que exige una identidad distinta. Un usuario que solo aparece como <code>usuario_id</code>/<code>FK</code> se trata como nominal y puede mapearse al seed ADMIN.</li>
+  </ul>
+
+  <div class="notice info">
+    <strong>Credenciales y otros usuarios.</strong> “Sustituible” es una conclusión funcional, no un parche mecánico a estas fuentes. Las suites que hoy calculan una contraseña propia necesitarían que el harness conozca la credencial del seed o cree una sesión para el ID canónico. La comparación no presupone usuarios preexistentes fuera del seed canónico: un <code>SELECT</code> del primer usuario activo, o un literal como <code>usuarioId=1</code>, no reduce el conteo ni demuestra qué identidad garantiza el seed.
+  </div>
+
+  <h2 id="table">Tabla exhaustiva</h2>
+  <p>Las líneas citadas son la evidencia directa de la creación o de la llamada al helper. Salvo los dos casos con prefijo <code>lib/</code>, los archivos se encuentran bajo <code>artifacts/api-server/src/</code>. “Por qué” describe el mínimo que debe preservarse para que el escenario siga siendo el mismo, no una aprobación de población.</p>
+  <div class="scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Suite / evidencia</th>
+          <th>Usuarios que crea o reutiliza</th>
+          <th>Por qué existe la identidad</th>
+          <th>Clasificación frente al ADMIN canónico</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="mixed">
+          <td>1</td>
+          <td><code>admin-alertas.integration.test.ts</code><br><small>usuarios: 65-77; sesiones: 86-93</small></td>
+          <td>ADMIN y CAJA; ambos reciben sesión. La salida usa el ADMIN y los tickets usan el CAJA (<code>:99-126</code>).</td>
+          <td>La sesión CAJA recibe <code>403</code> en el endpoint ADMIN-only (<code>:203</code>), mientras la sesión ADMIN recibe <code>200</code> y <code>no-store</code> (<code>:207-209</code>). El cajero y sus filas son por tanto un contraste de autorización real, no solo actores de FK.</td>
+          <td><span class="badge mixed">MIXTA</span><br>Seed ADMIN para el actor global; CAJA propio.</td>
+        </tr>
+        <tr class="own">
+          <td>2</td>
+          <td><code>admin-invariants.integration.test.ts</code><br><small>factory: 62-75; llamadas: 78-81</small></td>
+          <td>ADMIN actor, segundo ADMIN, CAJA y SISTEMAS. Las invariantes de último ADMIN se ejercitan en <code>:232-253</code>.</td>
+          <td>El segundo ADMIN no es un duplicado cosmético: se cambia su rol/estado y se comprueba que queda al menos un ADMIN recuperable (<code>:168-209</code>, <code>:232-253</code>). CAJA/SISTEMAS también disparan rechazos <code>403</code> de gestión (<code>:176-216</code>).</td>
+          <td><span class="badge own">IDENTIDAD PROPIA</span><br>El seed puede ser un actor, pero no elimina el segundo ADMIN ni los roles propios.</td>
+        </tr>
+        <tr class="seed">
+          <td>3</td>
+          <td><code>aplicaciones-pago-proveedor.integration.test.ts</code><br><small>resolución: 42-58</small></td>
+          <td>Busca cualquier usuario activo; solo inserta un ADMIN de fallback si no encuentra ninguno.</td>
+          <td>El ID solo acompaña pagos y aplicaciones proveedor; no se observa una identidad, sesión o rol específico. En una base preparada con el ADMIN activo, la rama INSERT no se alcanza.</td>
+          <td><span class="badge seed">SEED-ONLY</span><br>En el test DB canónico el ADMIN seed activo satisface el primer <code>SELECT</code>; la rama de fallback no cambia el resultado funcional. No se cuenta como necesidad de otro rol: el usuario solo acompaña pagos y aplicaciones.</td>
+        </tr>
+        <tr class="own">
+          <td>4</td>
+          <td><code>auditoria.integration.test.ts</code><br><small>usuarios: 51-74</small></td>
+          <td>ADMIN en sitio, CAJA, SISTEMAS, CONTADOR y ADMIN sin sitio; sesiones y permisos en <code>:84-89</code>, <code>:196-199</code>.</td>
+          <td>La auditoría congela usuario/rol/sitio distintos (<code>:106-148</code>), filtra por actor, sitio y rol (<code>:169-175</code>) y comprueba autorización HTTP: ADMIN <code>200</code>, CAJA <code>403</code>, SISTEMAS <code>200</code> y CONTADOR <code>403</code> (<code>:208-217</code>). El seed sin sitio no puede representar esas identidades simultáneamente.</td>
+          <td><span class="badge own">IDENTIDAD PROPIA</span><br>ADMIN por sitio + identidades no ADMIN.</td>
+        </tr>
+        <tr class="mixed">
+          <td>5</td>
+          <td><code>clientes-ajustes-api.test.ts</code><br><small>INSERT multi-row: 104-113; login: 119-129</small></td>
+          <td>ADMIN y TERMINAL, ambos con contraseña/sesión; el TERMINAL opera como actor restringido.</td>
+          <td>La sesión TERMINAL se usa como sujeto restringido y recibe <code>403</code> al ver el documento del cliente (<code>:404</code>), mientras el flujo ADMIN sigue autorizado. Esa autorización/denegación concreta exige TERMINAL, no solo una fila actora.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN sustituible conceptualmente; TERMINAL propio.</td>
+        </tr>
+        <tr class="mixed">
+          <td>6</td>
+          <td><code>contenedores.integration.test.ts</code><br><small>helper: 68-96; actores: 203-214</small></td>
+          <td>ADMIN, SUPERVISOR, dos BODEGA (uno sin sitio), TERMINAL y CAJA, con permisos por módulo y sesiones.</td>
+          <td>TERMINAL y CAJA reciben <code>403</code> al listar, y BODEGA sin sitio recibe <code>403</code>; BODEGA con sitio recibe <code>200</code> en catálogos (<code>:226-231</code>). Además, SUPERVISOR recibe <code>403</code> al cancelar (<code>:293-300</code>) y BODEGA prueba aislamiento/ausencia económica (<code>:308-318</code>, <code>:405-437</code>).</td>
+          <td><span class="badge mixed">MIXTA</span><br>El ADMIN global puede ser el seed; cinco identidades/estados no ADMIN son propios.</td>
+        </tr>
+        <tr class="mixed">
+          <td>7</td>
+          <td><code>cuadre-fiscal.integration.test.ts</code><br><small>factory: 50-64; llamadas: 66-67</small></td>
+          <td>ADMIN y CONTADOR, cada uno con sesión.</td>
+          <td>El corte fiscal conserva el flujo de aprobación y distingue al CONTADOR del ADMIN: la sesión CONTADOR obtiene <code>200</code> para leer/confirmar (<code>:180-199</code>), pero recibe <code>403</code> al resolver (<code>:254-259</code>); la sesión ADMIN sí resuelve (<code>:260-264</code>).</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN sustituible; CONTADOR propio.</td>
+        </tr>
+        <tr class="own">
+          <td>8</td>
+          <td><code>equipos.integration.test.ts</code><br><small>helper: 61-87; llamadas: 128-145</small></td>
+          <td>Creator/editor/viewer, SUPERVISOR, creator en sitio B y creator en sitio C, y catalog; el helper usa BODEGA por defecto.</td>
+          <td>BODEGA recibe <code>403</code> para inventario de ubicaciones (<code>:207-214</code>), EDITOR recibe <code>403</code> al cambiar de sitio (<code>:252-262</code>) y SUPERVISOR/VIEWER reciben <code>403</code> en consultas fuera de alcance (<code>:294-332</code>). Las creaciones por sitio y la atribución posterior son respuestas afirmadas, no FKs nominales.</td>
+          <td><span class="badge own">IDENTIDAD PROPIA</span><br>Sin slot ADMIN; roles, sitios y permisos propios.</td>
+        </tr>
+        <tr class="mixed">
+          <td>9</td>
+          <td><code>etiquetas-api.integration.test.ts</code><br><small>actor: 62-95; llamadas: 153-159</small></td>
+          <td>ADMIN, BODEGA, SUPERVISOR, TERMINAL, CAJA y otro SUPERVISOR autorizer; sesiones y overrides.</td>
+          <td>BODEGA recibe <code>403</code> en reimpresiones sin autorización y <code>201</code> solo con credenciales válidas (<code>:360-391</code>); INVENTARIOS recibe <code>403</code> (<code>:399-403</code>), y TERMINAL/CAJA reciben <code>403</code> en mutaciones (<code>:501-505</code>). También se afirma el alcance de rollos ajenos (<code>:311-320</code>).</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; seis variantes no ADMIN/identidades propias.</td>
+        </tr>
+        <tr class="mixed">
+          <td>10</td>
+          <td><code>inventory-six-view.integration.test.ts</code><br><small>usuarios: 166-176; sesiones: 177-190</small></td>
+          <td>ADMIN global y BODEGA propia.</td>
+          <td>Las seis vistas se comparan entre alcance global y propio, incluyendo pisos, rollos, movimientos y auditoría. BODEGA propia requiere sitio, sesión y permiso.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; BODEGA propia requerida.</td>
+        </tr>
+        <tr class="mixed">
+          <td>11</td>
+          <td><code>kardex-api.test.ts</code><br><small>helper: 56-92; actores: 124-131</small></td>
+          <td>ADMIN, BODEGA PROPIA, BODEGA TODAS y TERMINAL, con sesiones; BODEGA además recibe permiso de movimientos.</td>
+          <td>La sesión BODEGA PROPIA solo devuelve movimientos de su ubicación, BODEGA TODAS ve la otra y el alcance propio recibe <code>403</code> para incluir ubicaciones inactivas (<code>:427-433</code>). TERMINAL tiene una respuesta <code>200</code> pero filtrada a sus movimientos (<code>:438-445</code>); son diferencias de alcance afirmadas.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; dos alcances BODEGA y TERMINAL propios.</td>
+        </tr>
+        <tr class="mixed">
+          <td>12</td>
+          <td><code>lib/notificaciones-credito.test.ts</code><br><small>INSERT: 78-94; sesiones: 96-103</small></td>
+          <td>ADMIN y BODEGA propia en sitio creado.</td>
+          <td>La sesión BODEGA recibe <code>200</code> pero una lista vacía para notificaciones globales (<code>:191-197</code>), mientras ADMIN recibe la notificación y puede marcarla leída (<code>:199-230</code>). La diferencia de autorización/destinatario exige el perfil no ADMIN.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; BODEGA/sitio propio requerido.</td>
+        </tr>
+        <tr class="mixed">
+          <td>13</td>
+          <td><code>lib/permisos.test.ts</code><br><small>usuarios: 80-143</small></td>
+          <td>ADMIN, TERMINAL, CAJA, SUPERVISOR y BODEGA, con permisos de usuario y roles mutados.</td>
+          <td>Los permisos efectivos se afirman por rol: CAJA no puede ver dashboard/proveedores (<code>:156-180</code>) pero sí cobros, BODEGA no puede POS/clientes (<code>:163-174</code>) y TERMINAL conserva otra matriz (<code>:203-215</code>). Sustituirlos por ADMIN cambiaría precisamente las aserciones.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; cuatro roles propios y sus overrides.</td>
+        </tr>
+        <tr class="seed">
+          <td>14</td>
+          <td><code>metered-reference-cost.integration.test.ts</code><br><small>usuario: 44-49; uso FK: 63-68</small></td>
+          <td>Inserta un ADMIN con sitio y alcance <code>PROPIA</code>, pero solo usa su ID como <code>entradas.usuario_id</code>; no crea sesión ni autentica.</td>
+          <td>El comportamiento observado es el cálculo por fecha y peso de rollos (<code>:87-108</code>), no el rol/sitio del usuario. El ADMIN canónico satisface la FK.</td>
+          <td><span class="badge seed">SEED-ONLY</span><br>El ID es nominal y sustituible; la cadena de costo de negocio sigue siendo fixture propio.</td>
+        </tr>
+        <tr class="mixed">
+          <td>15</td>
+          <td><code>pagos-dirigidos.integration.test.ts</code><br><small>ADMIN seed: 63-66; CAJA: 78-86</small></td>
+          <td>Reutiliza un ADMIN activo existente; crea CAJA propia con permiso y sesión.</td>
+          <td>La sesión CAJA crea una solicitud <code>201 PENDIENTE</code> y el ledger no cambia (<code>:267-285</code>); el ADMIN la aprueba con <code>201</code> y la segunda aprobación da <code>409</code> (<code>:348-372</code>). El feed además distingue eventos por sesión y por sitio (<code>:287-345</code>).</td>
+          <td><span class="badge mixed">MIXTA</span><br>Seed ADMIN explícito; CAJA propio.</td>
+        </tr>
+        <tr class="mixed">
+          <td>16</td>
+          <td><code>pos-location-authorization.integration.test.ts</code><br><small>ADMIN: 154-164; helper: 101-136; llamadas: 166-169</small></td>
+          <td>ADMIN explícito y actores CONTADOR/SISTEMAS con permisos completos, sesiones y sitios distintos.</td>
+          <td>Cada actor lee el ticket/documento fuera de sitio con <code>200</code>, pero sus cuatro operaciones reciben <code>403 LOCATION_FORBIDDEN</code> (<code>:242-303</code>). La sesión/rol/sitio de CONTADOR y SISTEMAS es parte de esa frontera.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN sustituible conceptualmente; CONTADOR y SISTEMAS propios.</td>
+        </tr>
+        <tr class="own">
+          <td>17</td>
+          <td><code>postgres-unique-concurrency.integration.test.ts</code><br><small>actor: 159-172; conflicto usuario: 264-273</small></td>
+          <td>ADMIN inicial para HTTP y una segunda fila ADMIN insertada por la transacción bloqueadora.</td>
+          <td>La segunda fila no es un actor reemplazable: es el competidor que debe existir para provocar la colisión de <code>usuarios.usuario</code> mientras la primera transacción conserva la clave única sin confirmar.</td>
+          <td><span class="badge own">IDENTIDAD PROPIA</span><br>El actor inicial podría ser seed; la fila ADMIN concurrente debe seguir siendo propia.</td>
+        </tr>
+        <tr class="mixed">
+          <td>18</td>
+          <td><code>precios.integration.test.ts</code><br><small>usuarios: 55-64; permiso CAJA: 65-68</small></td>
+          <td>ADMIN y CAJA en el sitio creado, con sesiones; CAJA recibe override de productos.</td>
+          <td>La sesión CAJA recibe las denegaciones <code>403</code> de los endpoints administrativos (<code>:106-114</code>), mientras ADMIN ejecuta las operaciones exitosas desde <code>:115</code>. El rol CAJA y su permiso son observados por autorización, no solo por FK.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; CAJA/permisos propios.</td>
+        </tr>
+        <tr class="mixed">
+          <td>19</td>
+          <td><code>productos-cache.integration.test.ts</code><br><small>usuarios: 190-206; sesiones: 212-216</small></td>
+          <td>ADMIN, BODEGA y TERMINAL.</td>
+          <td>BODEGA recibe <code>403</code> al consultar una ubicación fuera de alcance (<code>:299-301</code>), y TERMINAL obtiene respuestas cuyos campos financieros se comprueban ausentes (<code>:399-406</code>). Son límites de alcance/redacción que ADMIN no reproduce.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; BODEGA y TERMINAL propios.</td>
+        </tr>
+        <tr class="own">
+          <td>20</td>
+          <td><code>productos-purge.integration.test.ts</code><br><small>ADMIN seed consultado: 68-75; confirmador: 76-84</small></td>
+          <td>Usa el ADMIN seed para la sesión solicitante, pero inserta otro ADMIN con usuario/contraseña para confirmar la purga.</td>
+          <td>La auditoría exige <code>usuario_id</code> del solicitante y <code>confirmadorAdmin.id/usuario</code> del segundo actor (<code>:186-209</code>). No son dos usos intercambiables de un mismo ADMIN.</td>
+          <td><span class="badge own">IDENTIDAD PROPIA</span><br>La propia fuente demuestra que el ADMIN seed no elimina al confirmador separado.</td>
+        </tr>
+        <tr class="own">
+          <td>21</td>
+          <td><code>proveedores-alcance-fechas.integration.test.ts</code><br><small>usuario BODEGA: 44-60</small></td>
+          <td>BODEGA PROPIA, asignada al sitio propio, con permiso y sesión.</td>
+          <td>La sesión BODEGA obtiene <code>200</code> y solo la entrada de su sitio (<code>:94-100</code>), recibe <code>404</code> para la entrada ajena (<code>:100-102</code>) y el catálogo lista solo su ubicación (<code>:103-108</code>). Es una aserción de alcance concreta.</td>
+          <td><span class="badge own">IDENTIDAD PROPIA</span><br>Sin ADMIN creado; BODEGA/sitio/alcance propios.</td>
+        </tr>
+        <tr class="seed">
+          <td>22</td>
+          <td><code>reportes.integration.test.ts</code><br><small>usuarios: 64-69</small></td>
+          <td>ADMIN y CAJA, uno por sitio.</td>
+          <td>La fuente importa directamente los motores de reportes y no crea sesiones ni hace login. Los dos usuarios solo aparecen en <code>usuario_id</code>/<code>usuario_terminal_id</code> de las filas (<code>:87-204</code>); las aserciones son cifras, filtros y redacción, no autorización/rol ni nombre de actor.</td>
+          <td><span class="badge seed">SEED-ONLY</span><br>ADMIN canónico puede cubrir los FKs nominales (incluso el supuesto CAJA); las ubicaciones y documentos siguen siendo fixtures de negocio.</td>
+        </tr>
+        <tr class="own">
+          <td>23</td>
+          <td><code>role-access-matrix.integration.test.ts</code><br><small>helper: 105-124; llamadas: 219-226</small></td>
+          <td>TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR.</td>
+          <td>La matriz inicia sesión y exige <code>200</code> en la ruta permitida y <code>403</code> en la denegada para cada rol (<code>:247-277</code>); por ejemplo TERMINAL/BODEGA ocultan dinero y CAJA no ve inventario (<code>:236-244</code>). No se crea ADMIN y ningún rol no ADMIN puede ser representado por el seed.</td>
+          <td><span class="badge own">IDENTIDAD PROPIA</span><br>Sin slot ADMIN; seis roles propios.</td>
+        </tr>
+        <tr class="mixed">
+          <td>24</td>
+          <td><code>security-api.test.ts</code><br><small>factory: 281-303; actores: 408-418</small></td>
+          <td>ADMIN específico, TERMINAL, CAJA, SUPERVISOR, BODEGA PROPIA, BODEGA TODAS y BODEGA de otro sitio; además crea variantes en casos posteriores.</td>
+          <td>Las sesiones TERMINAL/CAJA/SUPERVISOR/BODEGA y las variantes de alcance sí se autentican y afirman fronteras: CAJA comprueba su matriz efectiva (<code>:518-543</code>), BODEGA PROPIA fuerza su sitio (<code>:2065-2110</code>) y otra ubicación recibe <code>403</code> frente al <code>201</code> del ADMIN (<code>:2255-2286</code>). El “test-specific admin” solo se crea para no mutar el seed (<code>:398-418</code>): es aislamiento de fixture, no una separación de identidad que el comportamiento requiera.</td>
+          <td><span class="badge mixed">MIXTA</span><br>Los roles/alcances no ADMIN son funcionales; el ADMIN adicional es conveniencia de aislamiento y puede ser el seed canónico.</td>
+        </tr>
+        <tr class="mixed">
+          <td>25</td>
+          <td><code>store-sales-global.integration.test.ts</code><br><small>addUser: 98-104</small></td>
+          <td>ADMIN global y CAJA propia, con dos tiendas.</td>
+          <td>La sesión CAJA fuera de su tienda recibe <code>403</code> y la sesión SUPERVISOR fuera de alcance también (<code>:213-217</code>); el ADMIN global recibe <code>200</code>. El rol, sitio y alcance CAJA/SUPERVISOR son contrastes HTTP reales.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; CAJA propio.</td>
+        </tr>
+        <tr class="mixed">
+          <td>26</td>
+          <td><code>task57.integration.test.ts</code><br><small>ADMIN/CAJA inactivo: 75-85; segundo actor: 326-330</small></td>
+          <td>ADMIN actor(es) y CAJA inactivo; el CAJA es explícitamente un objetivo de purga.</td>
+          <td>La purga afirma que un registro de usuario <em>inactivo</em> pasa el preflight y se elimina, mientras el activo y el referenciado fallan (<code>:230-256</code>); por eso hace falta una fila propia en ese estado. El rol literal CAJA y los ADMIN actores no se afirman y no son la razón del conteo.</td>
+          <td><span class="badge mixed">MIXTA</span><br>Seed ADMIN posible; CAJA inactivo propio.</td>
+        </tr>
+        <tr class="mixed">
+          <td>27</td>
+          <td><code>task58.integration.test.ts</code><br><small>helper: 95-121; llamadas: 150-157</small></td>
+          <td>ADMIN, BODEGA y CAJA, con permisos por módulo y sesiones.</td>
+          <td>BODEGA recibe <code>403</code> al crear/editar pisos (<code>:182-218</code>), ADMIN recibe <code>201/200</code>, y CAJA de otro sitio recibe <code>403</code> al recibir una salida (<code>:360-365</code>). Son fronteras de rol/sitio afirmadas.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; BODEGA/CAJA propios.</td>
+        </tr>
+        <tr class="mixed">
+          <td>28</td>
+          <td><code>viajes.integration.test.ts</code><br><small>makeUser: 50-58; llamadas: 78-82</small></td>
+          <td>ADMIN y BODEGA; BODEGA recibe permiso de viajes.</td>
+          <td>Ambos logins deben devolver <code>200</code> (<code>:84-87</code>); BODEGA recibe <code>403</code> al mutar catálogo (<code>:89-90</code>) y al consultar/crear fuera de ubicación (<code>:146-150</code>), mientras ADMIN opera. BODEGA es funcional.</td>
+          <td><span class="badge mixed">MIXTA</span><br>ADMIN seed posible; BODEGA propio.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Totales agrupados y lectura estricta</h2>
+  <ul>
+    <li><strong class="ok">3 seed-only:</strong> <code>aplicaciones-pago-proveedor.integration.test.ts</code>, <code>metered-reference-cost.integration.test.ts</code> y <code>reportes.integration.test.ts</code>. En las tres, el ADMIN canónico puede ocupar los IDs funcionalmente observados; reportes es el caso que antes se sobrecontó por confundir el literal CAJA con una autorización probada.</li>
+    <li><strong class="warn">18 mixtas:</strong> <code>admin-alertas</code>, <code>clientes-ajustes-api</code>, <code>contenedores</code>, <code>cuadre-fiscal</code>, <code>etiquetas-api</code>, <code>inventory-six-view</code>, <code>kardex-api</code>, <code>notificaciones-credito</code>, <code>permisos</code>, <code>pagos-dirigidos</code>, <code>pos-location-authorization</code>, <code>precios</code>, <code>productos-cache</code>, <code>security-api</code>, <code>store-sales-global</code>, <code>task57</code>, <code>task58</code> y <code>viajes</code>. Pueden tomar el slot ADMIN del seed, pero cada una conserva otra afirmación funcional o de estado.</li>
+    <li><strong class="bad">4 con ADMIN distinto:</strong> <code>admin-invariants</code>, <code>auditoria</code>, <code>postgres-unique-concurrency</code> y <code>productos-purge</code>. El motivo es segundo actor/objetivo de unicidad, confirmador o filtro por identidad/sitio; el mismo rol no implica la misma fila. <code>security-api</code> queda en mixtas: su ADMIN adicional aísla fixtures, pero no es una identidad separada exigida por una aserción.</li>
+    <li><strong class="bad">3 sin ADMIN:</strong> <code>equipos</code>, <code>proveedores-alcance-fechas</code> y <code>role-access-matrix</code>. Sus escenarios necesitan BODEGA/SUPERVISOR u otros roles no ADMIN.</li>
+    <li><strong>Total:</strong> <code>3 + 18 + 4 + 3 = 28</code>; <code>18 + 4 + 3 = 25</code> suites tienen una necesidad funcional de identidad/estado que el único ADMIN canónico no cubre.</li>
+  </ul>
+
+  <div class="notice">
+    <strong>Criterio aplicado.</strong> El conteo ya usa el seed canónico, no un estado arbitrario de la base: el ADMIN que el seed garantiza permite cubrir el actor/FK nominal de las tres suites seed-only. No se infiere necesidad por el texto <code>CAJA</code>/<code>BODEGA</code> de un INSERT; se exige una aserción concreta de autorización, alcance, redacción, estado o identidad. Tampoco se presenta ninguna de las 25 suites como autorizada a poblar fuera del seed: “necesidad funcional” describe lo que el caso actual afirma, y la regla seed-only sigue bloqueándolo.
+  </div>
+
+  <footer>Informe autocontenido. Evidencia de seed: <code>lib/db/src/seed.mjs:15-24,175-196,272-277</code>. Inventario de población relacionado: <code>reports/inventario-suites-poblacion.html</code>.</footer>
+</main>
+</body>
+</html>

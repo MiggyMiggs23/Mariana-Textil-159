@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Auditoría precisa de guiones en CampoEscaneo</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5d6a80;
+      --line: #dbe3ef;
+      --soft: #f5f8fc;
+      --blue: #1858a8;
+      --blue-soft: #eaf3ff;
+      --green: #11775b;
+      --green-soft: #e8f8f1;
+      --amber: #9a5b00;
+      --amber-soft: #fff5df;
+      --red: #a32828;
+      --red-soft: #fff0f0;
+    }
+    * { box-sizing: border-box; }
+    html { background: #eef2f7; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #eef2f7;
+      font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 1560px; margin: 0 auto; padding: 24px; }
+    header {
+      color: white;
+      padding: 32px 36px;
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 90% 15%, rgba(91, 172, 255, .35), transparent 30%),
+        linear-gradient(125deg, #102b57, #1760a9 58%, #21888a);
+      box-shadow: 0 16px 35px rgba(20, 42, 74, .18);
+    }
+    h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; }
+    h1 { font-size: clamp(28px, 4vw, 46px); letter-spacing: -.035em; }
+    h2 { font-size: 24px; margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--line); }
+    h3 { font-size: 18px; margin-top: 22px; }
+    p { margin: 8px 0 14px; }
+    .eyebrow { margin: 0 0 10px; text-transform: uppercase; letter-spacing: .13em; font-size: 12px; font-weight: 800; opacity: .78; }
+    .lede { max-width: 1050px; font-size: 17px; color: #e7f1ff; }
+    .stamp { display: inline-block; margin-top: 8px; padding: 5px 10px; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; font-size: 12px; }
+    section, .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: 0 5px 18px rgba(27, 49, 80, .055);
+    }
+    section { margin-top: 20px; padding: 23px; }
+    .grid { display: grid; gap: 14px; }
+    .three { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); margin-top: 20px; }
+    .card { padding: 17px; }
+    .metric strong { display: block; font-size: 30px; line-height: 1; color: var(--blue); }
+    .metric span { display: block; margin-top: 6px; color: var(--muted); font-size: 13px; }
+    .callout { padding: 15px 17px; border-left: 5px solid var(--blue); background: var(--blue-soft); border-radius: 8px; }
+    .callout.good { border-color: var(--green); background: var(--green-soft); }
+    .callout.warn { border-color: var(--amber); background: var(--amber-soft); }
+    .callout.risk { border-color: var(--red); background: var(--red-soft); }
+    .scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1260px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 10px 9px; text-align: left; vertical-align: top; }
+    th { color: #33435b; background: var(--soft); font-size: 11px; text-transform: uppercase; letter-spacing: .045em; }
+    tr:last-child td { border-bottom: 0; }
+    code, .mono { font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code { color: #203e69; background: #f0f4f9; border: 1px solid #e1e8f1; padding: 1px 4px; border-radius: 4px; }
+    .path { color: #315986; overflow-wrap: anywhere; }
+    .small { color: var(--muted); font-size: 13px; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 800; white-space: nowrap; }
+    .series { color: var(--green); background: var(--green-soft); }
+    .raw { color: #6941a5; background: #f4efff; }
+    ul, ol { margin: 8px 0 12px 20px; padding: 0; }
+    li { margin: 4px 0; }
+    .foot { color: var(--muted); font-size: 12px; margin-top: 24px; }
+    @media (max-width: 700px) {
+      main { padding: 12px; }
+      header, section { padding: 19px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Mariana Textil · auditoría de código de solo lectura</p>
+    <h1>Guiones en los 12 usos de CampoEscaneo</h1>
+    <p class="lede">Auditoría puntual de qué recibe cada montaje, qué serie extrae el dispatcher compartido y qué llega al consumidor. El payload de una etiqueta de rollo es texto completo <code>${sku}-${serie}</code>; no se asumió un <code>split("-")</code>: se siguió el código real.</p>
+    <span class="stamp">Referencias a líneas actuales del repositorio · sin pruebas, base de datos, workflows ni cambios de aplicación</span>
+  </header>
+
+  <section>
+    <div class="grid three">
+      <div class="card metric"><strong>12</strong><span>montajes JSX auditados</span></div>
+      <div class="card metric"><strong>9</strong><span>en modo serie (9 usan la extracción de rollo)</span></div>
+      <div class="card metric"><strong>3</strong><span>en modo raw (cantidad, folio o URL)</span></div>
+      <div class="card metric"><strong>0</strong><span>usos que dividen SKU con <code>split("-")</code></span></div>
+      <div class="card metric"><strong>0</strong><span>fallos de serie válidos por SKU con guiones</span></div>
+    </div>
+    <div class="callout good" style="margin-top: 18px;">
+      <strong>Conclusión:</strong> para un QR válido como <code>SKU-A-B-1234567</code>, el parser común produce <code>sku = "SKU-A-B"</code> y <code>serie = "1234567"</code>. Los nueve montajes en modo serie reciben/consumen la serie de siete dígitos, no separan el SKU por guiones y no fallan porque el SKU contenga uno o varios guiones.
+    </div>
+    <div class="callout warn" style="margin-top: 12px;">
+      <strong>Distinción importante:</strong> los tres montajes raw no interpretan un QR de rollo como serie. Conservan el texto completo para su propio dominio; por eso un QR <code>SKU-A-B-1234567</code> no sirve allí, pero no es un fallo específico de un SKU con guiones. Entradas intenta leerlo como cantidad con <code>parseFloat</code>; Cobros y Recepción solo buscan URL/folio.
+    </div>
+  </section>
+
+  <section>
+    <h2>1. Veredicto de los 12 montajes</h2>
+    <p>En la columna de entrada se usa el mismo caso de auditoría: <code>rawValue = "SKU-A-B-1234567"</code>. “Recibe” describe el primer argumento de <code>onScan</code>; <code>codigo</code> es la metadata que CampoEscaneo entrega como segundo argumento cuando el callback la declara.</p>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr>
+            <th># / flujo</th>
+            <th>Archivo: línea del montaje y callback</th>
+            <th>Modo real</th>
+            <th>Texto recibido / serie extraída</th>
+            <th>Consumidor downstream observado</th>
+            <th>Comportamiento de guiones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1 · Etiquetas</strong><br><span class="small">búsqueda de rollos</span></td>
+            <td class="path"><code>artifacts/mariana-textil/src/pages/etiquetas.tsx:248-251</code><br>callback <code>:140-147</code></td>
+            <td><span class="tag series">serie predeterminado</span><br>No declara <code>scanMode</code> ni <code>interpretRollCode</code>.</td>
+            <td>CampoEscaneo entrega <code>value="1234567"</code>; <code>codigo.sku="SKU-A-B"</code>, <code>codigo.serie="1234567"</code>. El callback fija <code>search=1234567</code>.</td>
+            <td><code>GET /api/etiquetas/rollos?q=1234567</code>; el servidor vuelve a interpretar <code>q</code> en <code>routes/etiquetas.ts:99-109</code>. La metadata SKU solo se usa para advertencia.</td>
+            <td><strong>Seguro.</strong> No divide el SKU; se conserva en metadata y no viaja como búsqueda.</td>
+          </tr>
+          <tr>
+            <td><strong>2 · Salida nueva</strong><br><span class="small">transferencia general</span></td>
+            <td class="path"><code>artifacts/mariana-textil/src/pages/salida-nueva.tsx:417-427</code><br>callback <code>:139-180</code></td>
+            <td><span class="tag series">serie predeterminado</span></td>
+            <td>Recibe <code>1234567</code> más metadata; <code>normalizarSerieEscaneada(codigo)</code> conserva <code>1234567</code>.</td>
+            <td><code>POST /api/salidas/borrador/rollos</code> con <code>serie=1234567</code>. <code>routes/salidas.ts:595-600</code> reinterpreta el valor; el warning compara el SKU.</td>
+            <td><strong>Seguro.</strong> El SKU con guiones no entra al campo <code>serie</code>; solo se usa para advertir discrepancias.</td>
+          </tr>
+          <tr>
+            <td><strong>3 · Nueva venta a cliente</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/components/salida-venta-cliente-nueva.tsx:63</code><br>callback <code>:34-44</code></td>
+            <td><span class="tag series">serie predeterminado</span></td>
+            <td>Recibe <code>value="1234567"</code> y <code>codigo</code>; el callback normaliza el objeto y agrega solo <code>1234567</code> a <code>series[]</code>.</td>
+            <td><code>POST /api/salidas/venta-cliente</code>. La ruta conserva las series y el dominio hace <code>trim().toUpperCase()</code> en <code>lib/salidas.ts:181-184</code>; la UI ya entregó la serie canónica.</td>
+            <td><strong>Seguro.</strong> No hay split ni comparación del SKU; los guiones del SKU son irrelevantes después de la extracción.</td>
+          </tr>
+          <tr>
+            <td><strong>4 · POS</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/pages/pos.tsx:1133-1146</code><br>callback <code>:629-687</code></td>
+            <td><span class="tag series">serie predeterminado</span></td>
+            <td>Para código reconocido, <code>normalizarSerieEscaneada(codigo)</code> fija búsqueda <code>1234567</code>; conserva <code>codigo.sku="SKU-A-B"</code> para advertencia.</td>
+            <td>El escaneo de serie hace consulta exacta <code>GET /api/pos/buscar?q=1234567</code>. <code>lib/pos.ts:2351-2363</code> también interpreta <code>q</code> si llega un texto completo por búsqueda.</td>
+            <td><strong>Seguro.</strong> La búsqueda exacta usa la serie; la comparación de SKU es por igualdad de strings, no por partes separadas por guion.</td>
+          </tr>
+          <tr>
+            <td><strong>5 · Entradas</strong><br><span class="small">captura de cantidades</span></td>
+            <td class="path"><code>artifacts/mariana-textil/src/pages/entradas.tsx:1287-1299</code><br>callback <code>:373-393</code></td>
+            <td><span class="tag raw">raw explícito</span><br><code>interpretRollCode={false}</code></td>
+            <td>Recibe el texto completo sin cambios: <code>"SKU-A-B-1234567"</code>. No extrae serie; <code>handleAddQty</code> lo manda a <code>parseFloat</code>.</td>
+            <td>Solo estado local <code>capCantidades</code>; al guardar se envían cantidades a <code>POST /api/entradas</code>, no una serie.</td>
+            <td><strong>No es consumidor de SKU-serie.</strong> Un SKU textual produce <code>NaN</code>; si el texto empezara por dígitos, <code>parseFloat</code> podría aceptar solo el prefijo antes de un guion. No hay split.</td>
+          </tr>
+          <tr>
+            <td><strong>6 · Ajustes</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/pages/ajustes.tsx:252-261</code><br>callback <code>:97-104</code></td>
+            <td><span class="tag series">serie predeterminado</span></td>
+            <td>Recibe <code>1234567</code>; fija <code>searchSerie</code> con ese valor. La metadata SKU queda disponible para la advertencia.</td>
+            <td><code>GET /api/rollos?serie=1234567</code>; <code>routes/inventario.ts:1558-1564</code> interpreta de nuevo y el ajuste posterior opera por ID.</td>
+            <td><strong>Seguro.</strong> La consulta no separa SKU; el API recibe la serie extraída.</td>
+          </tr>
+          <tr>
+            <td><strong>7 · Cobros</strong><br><span class="small">ticket/nota o folio</span></td>
+            <td class="path"><code>artifacts/mariana-textil/src/pages/cobros.tsx:205-213</code><br>callback <code>:160-178</code></td>
+            <td><span class="tag raw">raw explícito</span><br><code>interpretRollCode={false}</code></td>
+            <td>Recibe el texto completo. Intenta URL <code>/tickets/{id}</code> o <code>/cobros?ticketId={id}</code>; si no, acepta únicamente <code>/^\d+$/</code> como folio. No extrae serie.</td>
+            <td>URL → ticket por ID; dígitos → <code>GET /api/tickets?folio=...</code>. Un QR de rollo no produce una llamada útil en este flujo.</td>
+            <td><strong>No es consumidor de SKU-serie.</strong> Un payload con guiones falla como documento/folio igual que uno sin guiones; no hay split de SKU. El único <code>split</code> cercano es <code>pathname.split("/")</code> para una URL.</td>
+          </tr>
+          <tr>
+            <td><strong>8 · Recepción de salidas</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/components/recepcion-salidas.tsx:135-143</code><br>callback <code>:102-123</code></td>
+            <td><span class="tag raw">raw explícito</span><br><code>interpretRollCode={false}</code></td>
+            <td>Recibe el QR/folio completo sin cambios. <code>idFromScanUrl</code> busca query <code>id</code>; si no, compara texto exacto contra folio formateado o numérico. No extrae serie.</td>
+            <td>Selecciona <code>salidaId</code> para <code>GET /api/salidas/recepcion/:id</code>; la mutación de recepción no manda el QR.</td>
+            <td><strong>No es consumidor de SKU-serie.</strong> El texto completo de etiqueta no coincide con URL de hoja ni folio; no hay split.</td>
+          </tr>
+          <tr>
+            <td><strong>9 · Salida a mostrador</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/components/salida-mostrador.tsx:150-160</code><br>callback <code>:42-56</code></td>
+            <td><span class="tag series">serie predeterminado</span></td>
+            <td>El callback de una sola entrada recibe ya <code>"1234567"</code>; vuelve a llamar <code>interpretarCodigoEscaneado</code> y <code>normalizarSerieEscaneada</code>, por lo que agrega <code>1234567</code>.</td>
+            <td><code>POST /api/salidas/mostrador</code> con <code>series[]</code>. El servidor vuelve a interpretar cada elemento en <code>routes/salidas.ts:558-565</code>.</td>
+            <td><strong>Seguro.</strong> El segundo parseo ve solo siete dígitos, no el SKU; nunca divide los guiones del SKU original.</td>
+          </tr>
+          <tr>
+            <td><strong>10 · Salidas extraordinarias</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/components/salidas-extraordinarias.tsx:210-219</code><br>callback <code>:65-109</code></td>
+            <td><span class="tag series">serie predeterminado</span></td>
+            <td>Recibe <code>rawValue="1234567"</code> y el <code>codigoEntregado</code> completo; normaliza con el objeto para conservar <code>sku="SKU-A-B"</code> y serie <code>1234567</code>.</td>
+            <td><code>GET /api/rollos?serie=1234567&amp;estado=DISPONIBLE</code>; luego la mutación usa <code>rolloId</code>. La advertencia compara el SKU completo.</td>
+            <td><strong>Seguro.</strong> Los guiones internos sobreviven en la metadata de advertencia; no participan en la selección por serie.</td>
+          </tr>
+          <tr>
+            <td><strong>11 · Entrega de venta a cliente</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/components/salida-venta-entrega.tsx:309-336</code><br>callback <code>:314-331</code></td>
+            <td><span class="tag series">serie explícito</span><br><code>scanMode="serie"</code></td>
+            <td>Entrega <code>value="1234567"</code> y metadata; el callback ignora <code>_value</code>, normaliza el objeto y compara solo <code>1234567</code> contra <code>expectedSeries</code>.</td>
+            <td>Si pertenece, <code>POST /api/salidas/:id/entregar</code> con <code>series[]</code>. El dominio solo recorta/eleva y valida pertenencia; no necesita separar el QR.</td>
+            <td><strong>Seguro.</strong> SKU con guiones no afecta la pertenencia; se compara la serie exacta.</td>
+          </tr>
+          <tr>
+            <td><strong>12 · Auditorías de inventario</strong></td>
+            <td class="path"><code>artifacts/mariana-textil/src/pages/auditorias-inventario.tsx:423-444</code><br>callback <code>:432-443</code></td>
+            <td><span class="tag series">serie predeterminado</span></td>
+            <td>El callback de una entrada recibe la serie ya extraída, <code>"1234567"</code>; no usa directamente la metadata SKU.</td>
+            <td><code>POST /api/auditorias/:id/escaneos</code> con <code>serie=1234567</code>. <code>routes/auditorias-inventario.ts:211-218</code> reinterpreta y conserva texto recortado solo si no hubo serie.</td>
+            <td><strong>Seguro.</strong> El servidor recibe la serie canónica; el SKU con guiones no se divide ni se persiste como serie.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Las rutas de la tabla son relativas a <code>artifacts/mariana-textil/src</code>, salvo las rutas explícitas bajo <code>artifacts/api-server/src</code>. Las líneas son del estado leído para este reporte.</p>
+  </section>
+
+  <section>
+    <h2>2. Qué hace realmente la normalización compartida</h2>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));">
+      <div class="card">
+        <h3>Interpretación</h3>
+        <p class="path"><code>lib/scanned-code/src/index.ts:9-29</code></p>
+        <p><code>interpretarCodigoEscaneado</code> analiza una copia con <code>trim().toUpperCase()</code> y aplica <code>/(?:^|\D)(\d{7})$/</code>. No busca delimitadores ni llama a <code>split</code>.</p>
+        <ul>
+          <li><code>SKU-A-B-1234567</code> → <code>serie="1234567"</code>, <code>sku="SKU-A-B"</code>.</li>
+          <li>El prefijo se obtiene por <code>slice</code> y se quita solo el guion final con <code>endsWith("-")</code>; los guiones internos quedan intactos.</li>
+          <li>La serie debe ser exactamente siete dígitos al final. Un sufijo posterior o una longitud distinta no coincide; eso no es un problema específico de guiones en el SKU.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Normalización / dispatch</h3>
+        <p class="path"><code>lib/scanned-code/src/index.ts:36-67</code><br><code>components/campo-escaneo.tsx:143-161</code></p>
+        <p><code>normalizarSerieEscaneada</code> devuelve la serie reconocida; sin coincidencia devuelve el texto original recortado y en mayúsculas. <code>despacharCodigoEscaneado</code> hace:</p>
+        <ul>
+          <li><strong>serie:</strong> <code>valor=serie</code> cuando existe <code>codigo.serie</code>; si no, conserva el texto original.</li>
+          <li><strong>raw:</strong> <code>valor=textoOriginal</code> siempre, aunque la metadata sí contenga una interpretación.</li>
+          <li>Teclado y cámara convergen en ese mismo <code>deliver</code>; no existe un parser distinto que parta por guiones.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Productores del payload completo</h3>
+        <p>La etiqueta impresa sí contiene el texto completo:</p>
+        <ul>
+          <li><code>components/label-print.tsx:100-101,157-175</code>: <code>qrPayload = `${data.sku}-${data.serie}`</code>.</li>
+          <li><code>pages/rollo-detail.tsx:240-247</code>: <code>`${rollo.skuProducto}-${rollo.serie}`</code>.</li>
+          <li><code>api-server/src/routes/etiquetas.ts:69-79</code>: reimpresión proyecta <code>qr=sku-serie</code>.</li>
+        </ul>
+        <p>“Usar el full QR” significa que el lector lo recibe antes de dispatch; en modo serie el full QR se reduce a la serie antes de llegar al consumidor.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>3. Respuestas directas sobre guiones</h2>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+      <div class="card">
+        <h3>¿Cuáles usan el full <code>${sku}-${serie}</code>?</h3>
+        <p>Los productores de etiqueta generan ese full payload. Los montajes <strong>1, 2, 3, 4, 6, 9, 10, 11 y 12</strong> están en modo serie y aceptan ese payload: el callback recibe la serie extraída y, cuando declara el segundo argumento, también recibe el SKU completo en <code>codigo.sku</code>. Los montajes <strong>5, 7 y 8</strong> están en raw, conservan el texto completo, pero no lo usan como identificador de rollo.</p>
+      </div>
+      <div class="card">
+        <h3>¿Cuáles parten por guiones?</h3>
+        <p><strong>Ninguno de los 12.</strong> La búsqueda estática de los call sites, sus callbacks, el componente compartido y los consumidores server-side no encontró <code>split("-")</code> ni equivalente regex para separar SKU. Cobros usa <code>split("/")</code> únicamente para una ruta URL en <code>pages/cobros.tsx:166</code>; no interviene en SKU-serie.</p>
+      </div>
+      <div class="card">
+        <h3>¿Cuáles fallan si el SKU contiene guiones?</h3>
+        <p><strong>Ninguno de los nueve usos de serie con un QR válido.</strong> <code>SKU-A-B-1234567</code> conserva el SKU completo y extrae la serie. Los tres raw no son una ruta alternativa para etiquetas: Entradas espera una cantidad y Cobros/Recepción esperan documento; rechazan o ignoran el QR de rollo por su dominio, no por contar guiones. El límite real común es “siete dígitos al final”.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. Reinterpretación downstream en servidor</h2>
+    <p>Cuando un flujo de series llega al servidor, estas son las rutas observadas. La reinterpretación usa la misma regla de siete dígitos, no un split de guiones:</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Flujo</th><th>Entrada server-side</th><th>Fuente y efecto</th></tr></thead>
+        <tbody>
+          <tr><td>POS</td><td><code>q</code></td><td><code>artifacts/api-server/src/lib/pos.ts:2356-2363</code> llama al intérprete; serie reconocida → igualdad exacta, sin serie → búsqueda textual.</td></tr>
+          <tr><td>Etiquetas</td><td><code>q</code></td><td><code>routes/etiquetas.ts:99-109</code> interpreta; la rama textual también compara <code>p.sku || '-' || r.serie</code>, pero no separa el término por guiones.</td></tr>
+          <tr><td>Salidas nueva / mostrador</td><td><code>serie</code> / <code>series[]</code></td><td><code>routes/salidas.ts:558-565,595-600</code> interpreta de nuevo y entrega la serie canónica al dominio.</td></tr>
+          <tr><td>Ajustes / extraordinarias</td><td><code>q.serie</code></td><td><code>routes/inventario.ts:1558-1564</code> reconoce la serie; la mutación posterior usa el ID del rollo.</td></tr>
+          <tr><td>Venta a cliente / entrega</td><td><code>series[]</code></td><td>La UI ya entrega series; <code>routes/salidas.ts:97-102,256-270</code> las pasa al dominio, que valida existencia/pertenencia después de <code>trim().toUpperCase()</code>, no por split.</td></tr>
+          <tr><td>Auditoría</td><td><code>body.serie</code></td><td><code>routes/auditorias-inventario.ts:211-218</code> interpreta otra vez; usa serie reconocida o texto recortado como fallback.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Alcance y límites de la conclusión</h2>
+    <div class="callout risk">
+      <strong>No confundir “no falla por guiones” con “acepta cualquier código”.</strong> El formato actual solo reconoce una serie de siete dígitos consecutivos al final. En modo serie, cuando no hay coincidencia, el dispatcher puede dejar pasar el texto original; cada callback/API decide después si ese texto sirve. En modo raw, no hay extracción de serie por diseño.
+    </div>
+    <p class="foot">Reporte autocontenido de análisis estático. No se modificó la aplicación ni se ejecutaron pruebas, workflows, servidor o consultas de base de datos.</p>
+  </section>
+</main>
+</body>
+</html>

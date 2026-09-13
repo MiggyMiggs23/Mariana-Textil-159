@@ -532,3 +532,45 @@ mtime_ms = 1789278718552
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e2ebb396-251b-40ef-bcfd-bdc58bdd85ca/4d647664-5a04-4472-92e0-a2099591c979"
 storage_version_token = "1789278721632196"
 content_type = "text/html"
+
+[[outputs]]
+id = "OKvG9IMGaupdol0paiUIu"
+uri = "file://reports/detalle-siete-pruebas-fallidas.html"
+type = "text"
+title = "Las siete pruebas fallidas, una por una"
+description = "Aserción exacta, resultado observado, causa y límites de lo que demuestra cada fallo. Sin modificar ni volver a ejecutar suites."
+logical_id = "f966045b-9a68-4181-9c72-371afb2769cb"
+content_hash = "sha256:0fbe6d801ca3bdd7c799e993b626b6378550b4313313c9657ea0b9d318f5fbbc"
+size = 20656
+mtime_ms = 1789284108616
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f966045b-9a68-4181-9c72-371afb2769cb/6aac200d-b55c-4860-8558-3e2d23987bcd"
+storage_version_token = "1789284120341194"
+content_type = "text/html"
+
+[[outputs]]
+id = "xzk9UBEHeAW8osg2pBal6"
+uri = "file://reports/precision-escaneo-guiones.html"
+type = "text"
+title = "Los doce lectores y los guiones del SKU"
+description = "Tabla por pantalla y componente: nueve lectores de serie, tres entradas raw y comportamiento exacto del normalizador."
+logical_id = "8d7ff2ef-f07b-4352-96d9-3d077d0d627b"
+content_hash = "sha256:5b9d4ab5e0e2458c2101c0fac103d6eeab4869cb588df47a7e05f445f11f249d"
+size = 24267
+mtime_ms = 1789283728520
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8d7ff2ef-f07b-4352-96d9-3d077d0d627b/5fe2eb41-b248-4b0e-b654-b36545682fb9"
+storage_version_token = "1789284120892202"
+content_type = "text/html"
+
+[[outputs]]
+id = "5MjKGMA_d4HloRTR7dI_Y"
+uri = "file://reports/precision-usuarios-suites.html"
+type = "text"
+title = "Las 28 suites frente al ADMIN del seed"
+description = "Tres pueden usar solo el ADMIN canónico como usuario; 25 necesitan identidades o estados adicionales para conservar sus escenarios. Evidencia individual, sin autorizar población fuera del seed."
+logical_id = "d46d763c-371b-46bd-84c7-dc8a52e97b63"
+content_hash = "sha256:3483a5609984cb0259366dbcb37c9b742706eb3f6caf3691123848e3dcae367f"
+size = 31053
+mtime_ms = 1789284061260
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d46d763c-371b-46bd-84c7-dc8a52e97b63/3adb5762-28d4-418a-a8b3-4d64d610e11f"
+storage_version_token = "1789284121421283"
+content_type = "text/html"

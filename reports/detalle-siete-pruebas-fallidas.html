@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Detalle de siete pruebas fallidas</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #536176;
+      --line: #d9e0ea;
+      --surface: #f7f9fc;
+      --fail: #a61b1b;
+      --fail-bg: #fff1f1;
+      --evidence: #075985;
+      --evidence-bg: #eff8ff;
+      --caution: #854d0e;
+      --caution-bg: #fffbea;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--surface);
+      color: var(--ink);
+      font: 16px/1.55 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 1120px; margin: 0 auto; padding: 34px 20px 64px; }
+    h1 { margin: 0 0 8px; font-size: clamp(1.7rem, 3vw, 2.5rem); line-height: 1.15; }
+    h2 { margin: 0; font-size: 1.22rem; line-height: 1.3; }
+    h3 { margin: 20px 0 6px; font-size: 1rem; }
+    p { margin: 8px 0; }
+    .intro, .entry { background: white; border: 1px solid var(--line); border-radius: 12px; }
+    .intro { padding: 20px 22px; margin-bottom: 18px; }
+    .entry { margin: 16px 0; padding: 20px 22px 22px; box-shadow: 0 1px 2px rgba(23, 32, 51, .04); }
+    .entry-head { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+    .number { color: white; background: var(--fail); border-radius: 999px; padding: 2px 10px; font-weight: 700; }
+    .label { color: var(--fail); font-weight: 700; }
+    .meta { color: var(--muted); font-size: .92rem; margin-top: 5px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .box { border-left: 4px solid var(--evidence); background: var(--evidence-bg); padding: 10px 13px; }
+    .box.fail { border-left-color: var(--fail); background: var(--fail-bg); }
+    .box.caution { border-left-color: var(--caution); background: var(--caution-bg); }
+    .box strong { display: block; margin-bottom: 3px; }
+    code, pre { font: .9em/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code { overflow-wrap: anywhere; }
+    pre { margin: 8px 0 0; padding: 10px 12px; background: #101827; color: #edf4ff; border-radius: 7px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    ul { margin: 7px 0 0; padding-left: 21px; }
+    .foot { color: var(--muted); font-size: .92rem; margin-top: 22px; }
+    @media (max-width: 760px) {
+      main { padding: 22px 12px 42px; }
+      .entry, .intro { padding: 16px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <section class="intro">
+    <h1>Detalle de siete pruebas fallidas</h1>
+    <p>
+      Análisis de lectura del resultado documentado en
+      <code>reports/verificacion-suites-sin-poblacion.md:68-115</code> contra los
+      siete tests y el código actual. No se ejecutaron de nuevo los tests, no se
+      hicieron correcciones y no se conectó a una base de datos. “Observado”
+      significa el texto que la aserción recibe o la ruta de código que explica
+      el fallo; no convierte por sí solo un contrato textual en evidencia de
+      comportamiento en producción.
+    </p>
+  </section>
+
+  <article class="entry">
+    <div class="entry-head">
+      <span class="number">1</span>
+      <h2>Explicación ausente bajo el inventario del dashboard</h2>
+      <span class="label">frontend / contract</span>
+    </div>
+    <p class="meta">
+      Test: <code>artifacts/mariana-textil/src/components/reportes/report-explanations.contract.test.ts:30-44</code>;
+      falla en <code>:36</code>. Resultado resumido: <code>reports/verificacion-suites-sin-poblacion.md:72-76</code>.
+    </p>
+    <div class="grid">
+      <div class="box fail">
+        <strong>Esperado</strong>
+        <code>assert.match(dashboard, /dashboard-inventory-explanation/)</code>.
+        El archivo de dashboard debía contener el identificador de explicación
+        debajo de la superficie auditada.
+      </div>
+      <div class="box">
+        <strong>Observado</strong>
+        <code>dashboard.tsx:97-133</code> sí renderiza la tarjeta “Inventario por
+        Sitio” y la tabla, pero no contiene
+        <code>dashboard-inventory-explanation</code> ni un párrafo equivalente
+        después de la tabla. El <code>CardContent</code> termina en
+        <code>:132</code>.
+      </div>
+    </div>
+    <h3>Por qué falla</h3>
+    <p>
+      La aserción lee el fuente completo y exige una coincidencia literal. El
+      dashboard no importa ni usa el mecanismo de explicaciones de Reportes:
+      sólo cierra la tarjeta después de <code>&lt;/Table&gt;</code>. Por eso el
+      primer requisito de este segundo test falla antes de evaluar sus
+      comprobaciones de comparación, cliente y proveedor.
+    </p>
+    <div class="box caution">
+      <strong>No demostrado</strong>
+      No demuestra que los datos o totales del dashboard sean incorrectos, ni
+      que falte explicación en los componentes de reportes: esos componentes sí
+      generan sus identificadores en
+      <code>report-charts.tsx:137-139</code> y
+      <code>report-table.tsx:232-234</code>. Tampoco es una prueba de renderizado
+      en navegador; demuestra la ausencia textual del contrato en
+      <code>dashboard.tsx</code>.
+    </div>
+  </article>
+
+  <article class="entry">
+    <div class="entry-head">
+      <span class="number">2</span>
+      <h2>Clase exacta del enlace primario de salidas no coincide</h2>
+      <span class="label">frontend / contract</span>
+    </div>
+    <p class="meta">
+      Test: <code>artifacts/mariana-textil/src/pages/detail-link-tables.contract.test.ts:74-107</code>;
+      falla en <code>:103</code>. Resultado resumido:
+      <code>reports/verificacion-suites-sin-poblacion.md:78-82</code>.
+    </p>
+    <div class="grid">
+      <div class="box fail">
+        <strong>Esperado</strong>
+        Para cada fuente de la lista, incluida <code>salidas.tsx</code>, la
+        expresión de <code>:6-7</code> debía encontrar exactamente:
+        <pre>text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2</pre>
+      </div>
+      <div class="box">
+        <strong>Observado</strong>
+        En <code>artifacts/mariana-textil/src/pages/salidas.tsx:378-383</code> el
+        enlace tiene <code>href={`/salidas/${salida.id}`}</code> y muestra
+        <code>salida.folioFormateado</code>, pero su clase termina en
+        <code>focus-visible:ring-offset-1</code>, no en
+        <code>focus-visible:ring-offset-2</code>. Por ello la búsqueda exacta de
+        <code>:103</code> no encuentra la clase en esa fuente.
+      </div>
+    </div>
+    <h3>Por qué falla</h3>
+    <p>
+      No es un fallo de la expresión <code>href</code> ni del identificador:
+      esos dos requisitos se evalúan inmediatamente antes, en
+      <code>:97</code> y <code>:102</code>, y el enlace de salidas los contiene.
+      El fallo es de igualdad textual del conjunto de clases exigido por
+      <code>primaryLinkClass</code>. El enrutamiento correspondiente también está
+      declarado en <code>App.tsx:345-351</code>.
+    </p>
+    <div class="box caution">
+      <strong>No demostrado</strong>
+      No demuestra que el enlace no sea clicable, que la ruta
+      <code>/salidas/:id</code> no funcione, ni que exista una columna
+      “Ver detalle” obsoleta. Tampoco comprueba el DOM final o el foco real:
+      este contrato sólo escanea fuentes buscando una clase literal.
+    </div>
+  </article>
+
+  <article class="entry">
+    <div class="entry-head">
+      <span class="number">3</span>
+      <h2>El contrato busca opciones de unidad explícitas que el código genera</h2>
+      <span class="label">frontend / contract</span>
+    </div>
+    <p class="meta">
+      Test: <code>artifacts/mariana-textil/src/pages/productos.contract.test.ts:5-18</code>;
+      falla en <code>:14</code>. Resultado resumido:
+      <code>reports/verificacion-suites-sin-poblacion.md:84-88</code>.
+    </p>
+    <div class="grid">
+      <div class="box fail">
+        <strong>Esperado</strong>
+        <code>assert.match(source, /value=\{UnidadProducto\.BOLSA\}/)</code>.
+        La misma batería también exige después
+        <code>value={UnidadProducto.PIEZA}</code> en <code>:15</code>.
+      </div>
+      <div class="box">
+        <strong>Observado</strong>
+        No aparece esa forma literal. El filtro usa
+        <code>Object.values(UnidadProducto).map</code> en
+        <code>productos.tsx:288-296</code> y el selector de creación usa el mismo
+        patrón en <code>:633-641</code>; cada opción es
+        <code>&lt;SelectItem key={unidad} value={unidad}&gt;</code>.
+      </div>
+    </div>
+    <h3>Por qué falla</h3>
+    <p>
+      La prueba estática sólo acepta dos JSX escritos con miembros enum
+      explícitos. La implementación actual recorre los valores del enum, por lo
+      que no contiene la cadena <code>value={UnidadProducto.BOLSA}</code>; la
+      primera aserción fallida evita que se evalúe la de <code>PIEZA</code>.
+      El resto del contrato (totales por unidad, especificaciones y formato)
+      aparece en las líneas anteriores, pero no rescata esta coincidencia
+      literal.
+    </p>
+    <div class="box caution">
+      <strong>No demostrado</strong>
+      Corrección del informe anterior: BOLSA sí está incluida por código en ambos
+      selectores. El enum importado desde @workspace/api-client-react la define en
+      lib/api-client-react/src/generated/api.schemas.ts:1325-1333, y los selectores
+      recorren Object.values(UnidadProducto). No fue retirada. La ausencia de la
+      cadena no demuestra que el selector no ofrezca BOLSA o
+      PIEZA en ejecución: ambos pueden estar incluidos por
+      <code>Object.values(UnidadProducto)</code>. Tampoco demuestra un problema
+      de agrupación o de totales; demuestra que la forma de implementación no es
+      la forma textual que el contrato exige.
+    </div>
+  </article>
+
+  <article class="entry">
+    <div class="entry-head">
+      <span class="number">4</span>
+      <h2>El contrato de estado espera dos usos literales y la lista tiene otro formato</h2>
+      <span class="label">frontend / contract</span>
+    </div>
+    <p class="meta">
+      Test: <code>artifacts/mariana-textil/src/pages/salidas-status.contract.test.ts:74-85</code>;
+      falla en <code>:78-81</code>. Resultado resumido:
+      <code>reports/verificacion-suites-sin-poblacion.md:90-94</code>.
+    </p>
+    <div class="grid">
+      <div class="box fail">
+        <strong>Esperado vs. observado</strong>
+        La expresión de <code>:79</code> exige dos coincidencias exactas de
+        <code>&lt;SalidaEstadoBadge estado={salida.estado} modalidad={salida.modalidad} documentoVenta={salida.documentoVenta} autorizada={salida.autorizada} /&gt;</code>.
+        El valor observado es <code>0</code>, por lo que falla
+        <code>assert.equal(0, 2)</code>.
+      </div>
+      <div class="box">
+        <strong>Fuente actual</strong>
+        La lista tiene una sola instancia en
+        <code>salidas.tsx:420-423</code>, pero después de
+        <code>autorizada={salida.autorizada}</code> agrega
+        <code>className=...</code> antes de cerrar el componente. Además, la
+        fila se comparte mediante clases responsive en <code>:374</code>, no
+        mediante dos instancias literales desktop/móvil.
+      </div>
+    </div>
+    <h3>Por qué falla</h3>
+    <p>
+      El regex no permite atributos entre <code>autorizada</code> y
+      <code>/&gt;</code>, así que ni siquiera cuenta la instancia existente. Aun
+      si se permitiera ese atributo, el fuente leído contiene una sola
+      instancia en la lista, no dos. El detalle sí tiene la forma exacta en
+      <code>salida-detail.tsx:116</code>, pero la prueba falla en el conteo de la
+      lista antes de llegar a la aserción del detalle en <code>:82</code>.
+    </p>
+    <div class="box caution">
+      <strong>No demostrado</strong>
+      Las comprobaciones anteriores del mismo archivo sobre las cinco etiquetas y
+      <code>getSalidaEstadoPresentation</code> no son el fallo reportado.
+      Tampoco se demuestra que el móvil no muestre estado: la implementación usa
+      una única fila con clases responsive. El fallo demuestra una diferencia
+      entre la forma/duplicación textual que exige el contrato y la estructura
+      actual.
+    </div>
+  </article>
+
+  <article class="entry">
+    <div class="entry-head">
+      <span class="number">5</span>
+      <h2>La comparación negativa de ENTREGADA está en el helper, no en la página</h2>
+      <span class="label">frontend / contract</span>
+    </div>
+    <p class="meta">
+      Test: <code>artifacts/mariana-textil/src/pages/salidas-venta-errors.contract.test.ts:37-54</code>;
+      falla en <code>:53</code>. Resultado resumido:
+      <code>reports/verificacion-suites-sin-poblacion.md:96-100</code>.
+    </p>
+    <div class="grid">
+      <div class="box fail">
+        <strong>Esperado</strong>
+        Después de comprobar en <code>:52</code>
+        <code>salida.estado === 'ENTREGADA'</code>, el test exige en el propio
+        fuente de <code>salida-detail.tsx</code> la cadena exacta
+        <code>salida.estado !== "ENTREGADA"</code>.
+      </div>
+      <div class="box">
+        <strong>Observado</strong>
+        En <code>salida-detail.tsx:98-99</code> la página calcula
+        <code>canCancel</code> con un helper y usa una lista positiva para
+        imprimir: <code>EN_TRANSITO</code>, <code>RECIBIDA</code> o
+        <code>ENTREGADA</code>. No hay en ese archivo una comparación
+        <code>!== "ENTREGADA"</code>; sí hay otras comprobaciones de
+        <code>ENTREGADA</code> y la comprobación positiva de <code>:99</code>.
+      </div>
+    </div>
+    <h3>Por qué falla</h3>
+    <p>
+      La aserción abre y escanea sólo <code>salida-detail.tsx</code>. La
+      comparación negativa no fue eliminada necesariamente de la lógica: está
+      delegada en <code>lib/salida-cancelacion.ts:61-67</code>, que se invoca
+      desde <code>salida-detail.tsx:98</code>; para venta a cliente excluye
+      <code>ENTREGADA</code> y <code>CANCELADA</code>, y para el resto sólo
+      permite <code>ARMANDO</code> o <code>EN_TRANSITO</code>. El contrato, sin
+      embargo, no inspecciona ese helper y exige la cadena en la página.
+    </p>
+    <div class="box caution">
+      <strong>No demostrado</strong>
+      Este fallo textual no demuestra por sí solo que una salida ENTREGADA pueda
+      cancelarse ni que el detalle abierto esté mal cerrado. Tampoco demuestra
+      que la autorización de entrega o la etiqueta estén mal: las comprobaciones
+      de presentación anteriores pueden pasar. Sí deja sin verificar, bajo este
+      contrato, la ubicación directa de esa condición en la página; no permite
+      declarar el contrato obsoleto sin decidir si el helper delegado satisface
+      el requisito.
+    </div>
+  </article>
+
+  <article class="entry">
+    <div class="entry-head">
+      <span class="number">6</span>
+      <h2>El doble de permisos recibe 32 módulos, pero la aserción conserva 31</h2>
+      <span class="label">lib/db / mock</span>
+    </div>
+    <p class="meta">
+      Test: <code>lib/db/src/lib/caja-permissions-schema.test.ts:5-22</code>;
+      falla en <code>:21</code>. Resultado resumido:
+      <code>reports/verificacion-suites-sin-poblacion.md:102-108</code>.
+    </p>
+    <div class="grid">
+      <div class="box fail">
+        <strong>Esperado vs. observado</strong>
+        El test espera
+        <code>(calls[0].values?.[0] as string[]).length === 31</code>.
+        La llamada a <code>ensureCajaPermissions</code> entrega al doble un
+        arreglo de longitud <code>32</code>; la aserción observa
+        <code>32 !== 31</code>.
+      </div>
+      <div class="box">
+        <strong>Qué agrega la fuente actual</strong>
+        <code>caja-permissions-schema.ts:3-11</code> enumera 32 entradas; la
+        última es <code>"equipos"</code>. La misma definición se usa como
+        <code>MODULES</code> en la consulta de <code>:21-40</code>, que no toca
+        <code>permisos_usuario</code> y sólo actualiza filas heredadas mediante
+        <code>WHERE permisos_rol.updated_por IS NULL</code>.
+      </div>
+    </div>
+    <h3>Por qué falla</h3>
+    <p>
+      La discrepancia es cardinalidad del arreglo que el doble captura, no una
+      excepción de SQL. Hay evidencia interna de que el catálogo vigente de
+      permisos trata 32 como cantidad canónica:
+      <code>lib/db/src/lib/seed-permissions.test.mjs:16-17</code> exige 32 y
+      <code>seed-permissions.mjs:32-33,83-84</code> incluye
+      <code>equipos</code> con permisos CAJA desactivados. Por tanto, la prueba
+      de 31 y la implementación de 32 no están alineadas.
+    </p>
+    <div class="box caution">
+      <strong>No demostrado</strong>
+      Esto no establece por sí solo si el requisito de negocio debe ser 31 o 32:
+      el módulo <code>equipos</code> puede ser una incorporación intencional o
+      una fila que no debía reparar startup. Tampoco prueba el efecto sobre una
+      base real: el pool es un doble local y sólo registra texto y parámetros.
+      No debe concluirse “test obsoleto” ni “bug de permisos” sin resolver esa
+      decisión de alcance.
+    </div>
+  </article>
+
+  <article class="entry">
+    <div class="entry-head">
+      <span class="number">7</span>
+      <h2>El doble del esquema no devuelve la fila de metadatos que el inicializador exige</h2>
+      <span class="label">lib/db / contract mock</span>
+    </div>
+    <p class="meta">
+      Test: <code>lib/db/src/lib/salidas-schema.contract.test.ts:5-32</code>;
+      la invocación falla en <code>:16</code>. Resultado resumido:
+      <code>reports/verificacion-suites-sin-poblacion.md:110-113</code>.
+    </p>
+    <div class="grid">
+      <div class="box fail">
+        <strong>Esperado vs. observado</strong>
+        El test esperaba que <code>ensureSalidasSchema</code> terminara y luego
+        poder inspeccionar <code>ddl</code> para los enlaces de venta/entrega y
+        el <code>COMMIT</code>. En cambio recibe:
+        <pre>Inicializador de Salidas incompleto; faltan: columna movimientos.salida_id, FK movimientos.salida_id → salidas.id, índice sobre movimientos(salida_id).</pre>
+      </div>
+      <div class="box">
+        <strong>Qué devuelve el doble</strong>
+        El <code>client.query</code> del test, en
+        <code>salidas-schema.contract.test.ts:7-11</code>, registra cada texto
+        pero siempre retorna <code>{ rows: [], rowCount: 0 }</code>. El
+        inicializador ejecuta la consulta de metadatos en
+        <code>salidas-schema.ts:336-372</code>, toma
+        <code>structure.rows[0]</code> en <code>:373</code> y lo considera
+        ausente.
+      </div>
+    </div>
+    <h3>Por qué falla</h3>
+    <p>
+      Con <code>applied</code> indefinido, las tres condiciones de
+      <code>salidas-schema.ts:374-380</code> resultan verdaderas y la guardia
+      lanza en <code>:381-385</code>; por eso no se llega a
+      <code>COMMIT</code> en <code>:387</code> ni a las aserciones del test
+      sobre el texto acumulado. La primera sentencia de esquema sí contiene
+      estáticamente los elementos que el contrato busca: columnas de cliente,
+      ticket, entrega en <code>:77-96</code>, modalidad y FK en
+      <code>:120-147</code>, e índices de cliente/ticket en
+      <code>:225-228</code>. Eso explica por qué el error observado es
+      consecuencia inmediata de la respuesta vacía del doble.
+    </p>
+    <div class="box caution">
+      <strong>No demostrado</strong>
+      El análisis estático no prueba que el DDL se aplique correctamente a
+      PostgreSQL: el test no ejecuta SQL real ni simula la respuesta booleana de
+      la consulta de metadatos. Por tanto, el fallo apunta a un mock incompleto
+      frente a la guardia del inicializador, pero no permite excluir un problema
+      real de migración o de esquema sin una verificación de base de datos.
+    </div>
+  </article>
+
+  <p class="foot">
+    Conclusión: los siete fallos son reproducidos aquí como aserciones observadas
+    en la ejecución ya documentada, con la diferencia exacta entre contrato y
+    fuente actual. Dos casos son especialmente sensibles al doble estático
+    (permisos y esquema); los otros cinco son contratos de fuente. Ninguno se
+    corrige ni se reclasifica automáticamente como obsoleto.
+  </p>
+</main>
+</body>
+</html>
