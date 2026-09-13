@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventario de pantallas y flujos de escaneo</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5d6a80;
+      --line: #dbe3ef;
+      --soft: #f5f8fc;
+      --blue: #1858a8;
+      --blue-soft: #eaf3ff;
+      --green: #11775b;
+      --green-soft: #e8f8f1;
+      --amber: #9a5b00;
+      --amber-soft: #fff5df;
+      --red: #a32828;
+      --red-soft: #fff0f0;
+      --purple: #6941a5;
+      --purple-soft: #f4efff;
+    }
+    * { box-sizing: border-box; }
+    html { background: #eef2f7; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: #eef2f7;
+      font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    main { max-width: 1500px; margin: 0 auto; padding: 26px; }
+    header.hero {
+      color: white;
+      padding: 34px 38px;
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 90% 15%, rgba(91, 172, 255, .35), transparent 30%),
+        linear-gradient(125deg, #102b57, #1760a9 58%, #21888a);
+      box-shadow: 0 16px 35px rgba(20, 42, 74, .18);
+    }
+    h1, h2, h3 { line-height: 1.2; margin: 0 0 12px; }
+    h1 { font-size: clamp(28px, 4vw, 46px); letter-spacing: -.035em; }
+    h2 { font-size: 25px; margin-top: 40px; padding-top: 12px; border-top: 1px solid var(--line); }
+    h3 { font-size: 18px; margin-top: 24px; }
+    p { margin: 8px 0 14px; }
+    .eyebrow { margin: 0 0 10px; text-transform: uppercase; letter-spacing: .13em; font-size: 12px; font-weight: 800; opacity: .78; }
+    .lede { max-width: 930px; font-size: 17px; color: #e7f1ff; }
+    .stamp { display: inline-block; margin-top: 10px; padding: 5px 10px; border: 1px solid rgba(255,255,255,.3); border-radius: 999px; font-size: 12px; }
+    section, .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: 0 5px 18px rgba(27, 49, 80, .055);
+    }
+    section { margin-top: 22px; padding: 25px; }
+    .grid { display: grid; gap: 14px; }
+    .metrics { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin-top: 20px; }
+    .metric { padding: 17px; border: 1px solid rgba(255,255,255,.18); border-radius: 12px; background: rgba(255,255,255,.12); }
+    .metric strong { display: block; font-size: 30px; line-height: 1; }
+    .metric span { display: block; margin-top: 6px; color: #d9ebff; font-size: 12px; }
+    .two { grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); }
+    .three { grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
+    .card { padding: 18px; }
+    .callout { padding: 16px 18px; border-left: 5px solid var(--blue); background: var(--blue-soft); border-radius: 8px; }
+    .callout.warn { border-color: var(--amber); background: var(--amber-soft); }
+    .callout.risk { border-color: var(--red); background: var(--red-soft); }
+    .callout.good { border-color: var(--green); background: var(--green-soft); }
+    .tag, .mode, .kind {
+      display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px;
+      font-weight: 800; white-space: nowrap; vertical-align: middle;
+    }
+    .tag { color: var(--blue); background: var(--blue-soft); }
+    .mode.series { color: var(--green); background: var(--green-soft); }
+    .mode.raw { color: var(--purple); background: var(--purple-soft); }
+    .kind.direct { color: var(--blue); background: var(--blue-soft); }
+    .kind.inherited { color: var(--green); background: var(--green-soft); }
+    .kind.custom { color: var(--amber); background: var(--amber-soft); }
+    .kind.absent { color: var(--muted); background: #edf0f5; }
+    .scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 860px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 11px 10px; text-align: left; vertical-align: top; }
+    th { color: #33435b; background: var(--soft); font-size: 12px; text-transform: uppercase; letter-spacing: .045em; }
+    tr:last-child td { border-bottom: 0; }
+    code, .mono { font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code { color: #203e69; background: #f0f4f9; border: 1px solid #e1e8f1; padding: 1px 4px; border-radius: 4px; }
+    .path { color: #315986; overflow-wrap: anywhere; }
+    .small { color: var(--muted); font-size: 13px; }
+    ul { margin: 8px 0 12px 20px; padding: 0; }
+    li { margin: 4px 0; }
+    dl { display: grid; grid-template-columns: minmax(145px, .3fr) 1fr; gap: 8px 18px; margin: 0; }
+    dt { color: #40516b; font-weight: 800; }
+    dd { margin: 0; }
+    .flow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0; }
+    .node { padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: white; }
+    .arrow { color: var(--blue); font-size: 20px; font-weight: 800; }
+    .foot { color: var(--muted); font-size: 12px; margin-top: 26px; }
+    .nowrap { white-space: nowrap; }
+    @media (max-width: 700px) {
+      main { padding: 12px; }
+      header.hero, section { padding: 20px; }
+      dl { display: block; }
+      dt { margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Mariana Textil · inventario de código actual</p>
+    <h1>Inventario de pantallas y flujos de escaneo</h1>
+    <p class="lede">Mapa estático de los lectores de teclado y cámara, la normalización compartida, sus consumidores de API y los QR de rollo frente a los QR documentales. El reporte describe el estado observado; no corrige ni propone cambiar el código.</p>
+    <span class="stamp">Corte de lectura: código presente en el repositorio · rutas montadas por App.tsx</span>
+    <div class="grid metrics">
+      <div class="metric"><strong>12</strong><span>montajes JSX directos de <code>CampoEscaneo</code> verificados</span></div>
+      <div class="metric"><strong>9</strong><span>entradas en modo serie (por defecto)</span></div>
+      <div class="metric"><strong>3</strong><span>entradas explícitas en modo raw</span></div>
+      <div class="metric"><strong>9</strong><span>entradas operativas que esperan series</span></div>
+      <div class="metric"><strong>3</strong><span>entradas raw de documento, cantidad o folio</span></div>
+      <div class="metric"><strong>0</strong><span>lectores montados en Viajes</span></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Conclusión ejecutiva</h2>
+    <div class="callout risk">
+      <strong>Hallazgo principal:</strong> todos los lectores visuales de la aplicación convergen en un solo componente, pero el significado del texto cambia por modo. Las series se identifican por una heurística de exactamente siete dígitos al final; documentos, folios y cantidades deben usar <code>raw</code>. En los modos de serie, un texto que no coincide con esa heurística todavía puede continuar como texto original, por lo que la validación final queda repartida entre callback, consulta y servidor.
+    </div>
+    <p>El inventario de archivos confirma <strong>12 usos directos</strong> de JSX, no 13: siete páginas y cinco componentes reutilizables. La cifra de 13 que aparece en notas previas no se reproduce con una búsqueda de <code>&lt;CampoEscaneo</code> sobre <code>artifacts/mariana-textil/src</code>; el propio componente compartido se cuenta aparte como implementación, no como una pantalla montada.</p>
+    <div class="grid two">
+      <div class="card">
+        <h3>Qué sí recibe códigos</h3>
+        <ul>
+          <li>POS, Etiquetas y Ajustes: búsquedas que aceptan escaneo.</li>
+          <li>Salidas: nueva salida, recepción, mostrador, extraordinaria, venta a cliente y entrega de venta a cliente.</li>
+          <li>Auditoría física: presencia de una serie, con piso opcional/obligatorio según configuración.</li>
+          <li>Entradas: lector raw para capturar cantidades por rollo, no identificadores de rollo.</li>
+          <li>Cobros: lector raw para QR de ticket/nota o folio.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Qué no recibe códigos</h3>
+        <ul>
+          <li>Historial general de Salidas usa un <code>Input</code> ordinario para búsqueda de folio/serie; no tiene transporte de cámara ni dispatch compartido.</li>
+          <li>Viajes, Nuevo viaje, detalle y documento de viaje seleccionan documentos con búsqueda ordinaria; no montan <code>CampoEscaneo</code>.</li>
+          <li>Los QR de documentos se imprimen para navegar a una ruta; no se convierten en una serie de rollo.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>1. Implementación común</h2>
+    <p class="path"><code>lib/scanned-code/src/index.ts:1-78</code> · paquete <code>@workspace/scanned-code</code></p>
+    <div class="grid two">
+      <div class="card">
+        <h3>Interpretación</h3>
+        <p><code>interpretarCodigoEscaneado(textoOriginal)</code> hace <code>trim().toUpperCase()</code> solo para analizar. La expresión <code>/(?:^|\D)(\d{7})$/</code> reconoce siete dígitos consecutivos al final.</p>
+        <ul>
+          <li>Con <code>SKU-DEMO-1234567</code>: <code>serie = "1234567"</code>, <code>sku = "SKU-DEMO"</code>.</li>
+          <li>Con <code>1234567</code>: <code>serie = "1234567"</code>, <code>sku = null</code>.</li>
+          <li>Sin coincidencia: <code>serie = null</code>, <code>sku = null</code> y <code>textoOriginal</code> queda intacto.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Normalización y dispatch</h3>
+        <dl>
+          <dt><code>normalizarSerieEscaneada</code></dt>
+          <dd>Devuelve la serie canónica si fue reconocida; si no, devuelve el original recortado y en mayúsculas.</dd>
+          <dt><code>despacharCodigoEscaneado</code></dt>
+          <dd>En <code>serie</code>, entrega la serie canónica solo cuando existe; en <code>raw</code>, entrega el texto original sin transformarlo.</dd>
+          <dt><code>advertenciaSkuEscaneado</code></dt>
+          <dd>Solo avisa si el QR trae SKU y el SKU del rollo encontrado difiere; no bloquea la operación.</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Transporte de teclado y cámara</h3>
+      <p class="path"><code>artifacts/mariana-textil/src/components/campo-escaneo.tsx:21-24, 48-68, 143-163, 165-278, 280-327</code></p>
+      <div class="flow">
+        <span class="node">teclado / Enter</span><span class="arrow">→</span>
+        <span class="node">cámara</span><span class="arrow">→</span>
+        <span class="node"><code>deliver(rawValue, source)</code></span><span class="arrow">→</span>
+        <span class="node"><code>despacharCodigoEscaneado</code></span><span class="arrow">→</span>
+        <span class="node"><code>onScan(valor, codigo, source)</code></span>
+      </div>
+      <ul>
+        <li>El submit por Enter clasifica como <code>scanner</code> cuando recibió al menos siete caracteres, terminó en 350 ms o menos y la mayor pausa fue de 50 ms o menos; en otro caso clasifica como <code>manual</code>. La clasificación no altera la normalización, pero algunos callbacks sí la consultan.</li>
+        <li>La cámara intenta <code>BarcodeDetector</code> nativo con varios formatos; si no existe, importa dinámicamente <code>@zxing/browser</code>. Ambos caminos entregan el mismo <code>deliver</code>.</li>
+        <li>La prop <code>scanMode</code> domina; si no existe, <code>interpretRollCode={true}</code> implica <code>serie</code> y <code>false</code> implica <code>raw</code>. El valor predeterminado es serie.</li>
+        <li><code>clearOnScan</code> limpia el estado antes del callback cuando está habilitado. El foco vuelve al input después del callback.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. Inventario completo de pantallas y componentes</h2>
+    <p>“Heredido” significa que el callback recibe el resultado de <code>CampoEscaneo → despacharCodigoEscaneado</code>. “Custom” indica una segunda interpretación, normalización, parser de URL/folio o verificación del consumidor. “Ausente” se reserva para los flujos revisados que no montan lector.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th># / ruta</th><th>Archivo y línea actual</th><th>Entrada y modo</th><th>Normalización</th><th>Interpretación y salida</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>1 · /etiquetas</strong></td>
+            <td class="path"><code>pages/etiquetas.tsx:248-251</code></td>
+            <td><span class="mode series">serie heredado</span><br>Teclado, Enter o cámara; búsqueda de rollos.</td>
+            <td><span class="kind inherited">heredida</span><br>El callback usa el <code>value</code> ya despachado y hace <code>trim()</code> antes de fijar <code>search</code>.</td>
+            <td><code>etiquetasApi.buscar</code> → <code>GET /api/etiquetas/rollos?q=...</code>. Mantiene advertencia SKU después de que llega el resultado.</td>
+          </tr>
+          <tr>
+            <td><strong>2 · /salidas/nueva</strong></td>
+            <td class="path"><code>pages/salida-nueva.tsx:139-206, 417-427</code></td>
+            <td><span class="mode series">serie heredado</span><br>Serie de rollo para armar salida.</td>
+            <td><span class="kind custom">heredida + custom</span><br>Vuelve a llamar <code>interpretarCodigoEscaneado</code> y <code>normalizarSerieEscaneada</code>; elimina duplicados en la lista local.</td>
+            <td><code>POST /api/salidas/borrador/rollos</code> con <code>uuidCliente, origenId, destinoId, serie</code>; al confirmar, <code>POST /api/salidas/:id/enviar</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>3 · /salidas/nueva?modalidad=VENTA_CLIENTE</strong></td>
+            <td class="path"><code>components/salida-venta-cliente-nueva.tsx:34-50, 63</code></td>
+            <td><span class="mode series">serie heredado</span><br>Solo rollos identificados por serie.</td>
+            <td><span class="kind custom">heredida + custom</span><br>Usa explícitamente <code>normalizarSerieEscaneada</code>; deduplica.</td>
+            <td><code>POST /api/salidas/venta-cliente</code> con <code>uuidCliente, origenId, clienteId, series, nota</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>4 · /pos</strong></td>
+            <td class="path"><code>pages/pos.tsx:629-687, 1133-1146</code></td>
+            <td><span class="mode series">serie heredado</span><br>Entrada de búsqueda para venta NORMAL o producto METREADO.</td>
+            <td><span class="kind custom">heredida + custom</span><br>Normaliza la serie para el texto de búsqueda; en escaneo de serie NORMAL hace una consulta exacta y advierte SKU.</td>
+            <td><code>GET /api/pos/buscar?q=serie&amp;ubicacionId=...</code>. Después, <code>POST /api/tickets</code> recibe líneas con <code>rolloId</code>, <code>productoId</code>, cantidades y precios; el texto escaneado no viaja en el ticket.</td>
+          </tr>
+          <tr>
+            <td><strong>5 · /entradas</strong></td>
+            <td class="path"><code>pages/entradas.tsx:373-393, 1287-1299</code></td>
+            <td><span class="mode raw">raw</span><br>Teclado/cámara para cantidad de cada rollo; no es identificador.</td>
+            <td><span class="kind direct">raw directo</span><br><code>interpretRollCode={false}</code>; <code>handleAddQty</code> aplica <code>parseFloat</code>.</td>
+            <td>Se agrega a estado local <code>capCantidades</code>; al guardar, <code>POST /api/entradas</code> con <code>lineas[].cantidades</code> y opcionalmente <code>pisosPorCantidad</code>. No se envía una serie escaneada.</td>
+          </tr>
+          <tr>
+            <td><strong>6 · /inventario/ajustes</strong></td>
+            <td class="path"><code>pages/ajustes.tsx:91-104, 252-261</code></td>
+            <td><span class="mode series">serie heredado</span><br>Búsqueda de rollo.</td>
+            <td><span class="kind inherited">heredida</span><br>Fija <code>searchSerie</code> con el valor despachado; la advertencia SKU se calcula contra el resultado.</td>
+            <td><code>GET /api/rollos?serie=...</code>; al seleccionar resultado, <code>POST /api/rollos/:id/ajustar</code> con <code>cantidadNueva</code> y <code>justificacion</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>7 · /cobros</strong></td>
+            <td class="path"><code>pages/cobros.tsx:100-178, 205-213</code></td>
+            <td><span class="mode raw">raw</span><br>QR de nota/ticket o folio digitado.</td>
+            <td><span class="kind custom">raw + parser custom</span><br><code>interpretRollCode={false}</code>; reconoce <code>/tickets/{id}</code>, <code>/cobros?ticketId={id}</code> o solo dígitos.</td>
+            <td>URL → <code>GET /api/tickets/:id</code>; dígitos → <code>GET /api/tickets?folio=...</code>. Luego carga estado de cuenta; el código no se manda como serie ni como línea de venta.</td>
+          </tr>
+          <tr>
+            <td><strong>8 · /salidas?tab=recepcion</strong></td>
+            <td class="path"><code>components/recepcion-salidas.tsx:26-35, 102-143</code></td>
+            <td><span class="mode raw">raw</span><br>QR de hoja de salida o folio.</td>
+            <td><span class="kind custom">raw + parser custom</span><br><code>interpretRollCode={false}</code>; busca query <code>id</code>, luego compara folio formateado o número con pendientes.</td>
+            <td><code>GET /api/salidas/recepcion</code>; ID resuelto → <code>GET /api/salidas/recepcion/:id</code>; confirmar → <code>POST /api/salidas/:id/recibir</code> con <code>completa, nota, pisosPorRollo</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>9 · /salidas?tab=mostrador</strong></td>
+            <td class="path"><code>components/salida-mostrador.tsx:42-57, 150-160</code></td>
+            <td><span class="mode series">serie heredado</span><br>Series completas para salida de mostrador.</td>
+            <td><span class="kind custom">heredida + custom</span><br>Reinterpreta y normaliza; deduplica en <code>series</code>.</td>
+            <td><code>POST /api/salidas/mostrador</code> con <code>uuidCliente, origenId, series, observaciones</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>10 · /salidas?tab=extraordinarias</strong></td>
+            <td class="path"><code>components/salidas-extraordinarias.tsx:65-109, 210-219</code></td>
+            <td><span class="mode series">serie heredado</span><br>Busca un rollo DISPONIBLE para baja total.</td>
+            <td><span class="kind custom">heredida + custom</span><br>Reinterpreta y normaliza; guarda código para advertencia SKU.</td>
+            <td><code>GET /api/rollos?serie=...&amp;estado=DISPONIBLE</code>; confirmar → <code>POST /api/salidas-extraordinarias</code> con <code>rolloId, motivo, justificacion, uuidCliente</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>11 · /salidas (historial, fila VENTA_CLIENTE)</strong></td>
+            <td class="path"><code>components/salida-venta-entrega.tsx:309-336</code>, montado desde <code>pages/salidas.tsx:222, 424-431</code></td>
+            <td><span class="mode series">serie explícito</span><br>Entrega: exige todas las series esperadas.</td>
+            <td><span class="kind custom">explícita + custom</span><br><code>scanMode="serie"</code>; vuelve a normalizar y comprueba pertenencia exacta a <code>expectedSeries</code>.</td>
+            <td>Antes consulta <code>GET /api/salidas/:id</code> y <code>GET /api/salidas/venta-cliente/verificar-autorizacion?folio=...</code>; confirmar → <code>POST /api/salidas/:id/entregar</code> con <code>series</code>.</td>
+          </tr>
+          <tr>
+            <td><strong>12 · /inventario/auditorias</strong></td>
+            <td class="path"><code>pages/auditorias-inventario.tsx:423-443</code></td>
+            <td><span class="mode series">serie heredado</span><br>Conciliación de presencia física.</td>
+            <td><span class="kind inherited">front heredida; servidor custom</span><br>El callback pasa el <code>serie</code> entregado. El endpoint vuelve a interpretar y conserva texto recortado si no hay serie.</td>
+            <td><code>POST /api/auditorias/:id/escaneos</code> con <code>serie, pisoId</code>; respuesta reporta duplicado, clasificación, estado actual y serie.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Los números de línea son referencias al estado leído del repositorio y pueden cambiar cuando se edite el archivo. Los fragmentos <code>pages/</code> y <code>components/</code> dentro de esta tabla son relativos a <code>artifacts/mariana-textil/src</code>.</p>
+  </section>
+
+  <section>
+    <h2>3. APIs y destino del valor</h2>
+    <p>La diferencia importante es entre el valor que llega al callback y el dato que finalmente persiste el servidor. Los endpoints de consulta suelen interpretar de nuevo la cadena; POS, Etiquetas y auditoría también tienen lógica de interpretación server-side.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Flujo</th><th>Operación API</th><th>Campo que recibe el valor</th><th>Tratamiento observado</th></tr></thead>
+        <tbody>
+          <tr><td>POS</td><td><code>GET /api/pos/buscar</code> (<code>routes/pos.ts:286-299</code>)</td><td><code>q</code></td><td><code>buscarPos</code> vuelve a llamar <code>interpretarCodigoEscaneado</code>; una serie reconocida busca igualdad exacta, de otro modo usa coincidencias sobre serie, SKU, tela y color.</td></tr>
+          <tr><td>POS venta</td><td><code>POST /api/tickets</code> (<code>routes/pos.ts:367-432</code>)</td><td><code>lineas[].rolloId</code>, no el texto</td><td>El frontend convierte el resultado de búsqueda en IDs; el servidor valida rollo, producto, ubicación, disponibilidad, cantidad completa y precio.</td></tr>
+          <tr><td>Etiquetas</td><td><code>GET /api/etiquetas/rollos</code> (<code>routes/etiquetas.ts:85-145</code>)</td><td><code>q</code></td><td>El servidor interpreta; serie reconocida filtra igualdad exacta. Sin serie, usa ILIKE sobre serie, SKU, tela, color y concatenación SKU-serie.</td></tr>
+          <tr><td>Armar salida</td><td><code>POST /api/salidas/borrador/rollos</code> (<code>routes/salidas.ts:577-609</code>)</td><td><code>serie</code></td><td>El servidor vuelve a interpretar y usa serie reconocida o texto original recortado; llama a <code>agregarRolloBorradorSalida</code>.</td></tr>
+          <tr><td>Salida mostrador</td><td><code>POST /api/salidas/mostrador</code> (<code>routes/salidas.ts:535-575</code>)</td><td><code>series[]</code></td><td>Mapea cada elemento con la misma interpretación server-side antes de <code>crearSalidaMostrador</code>.</td></tr>
+          <tr><td>Salida venta cliente</td><td><code>POST /api/salidas/venta-cliente</code> (<code>routes/salidas.ts:97-104</code>)</td><td><code>series[]</code></td><td>El body conserva las series entregadas; el dominio valida reserva y pertenencia al origen.</td></tr>
+          <tr><td>Entrega venta cliente</td><td><code>POST /api/salidas/:id/entregar</code> (<code>routes/salidas.ts:256-271</code>)</td><td><code>series[]</code></td><td>Entrega a <code>entregarSalidaVenta</code>; el frontend ya comprobó igualdad contra la lista esperada.</td></tr>
+          <tr><td>Recepción</td><td><code>GET /api/salidas/recepcion/:id</code> y <code>POST /api/salidas/:id/recibir</code> (<code>routes/salidas.ts:674-699, 833-864</code>)</td><td>El escaneo resuelve <code>id</code>; mutación recibe <code>completa, nota, pisosPorRollo</code></td><td>No manda la cadena QR a la mutación; la cadena solo selecciona el documento.</td></tr>
+          <tr><td>Auditoría</td><td><code>POST /api/auditorias/:id/escaneos</code> (<code>routes/auditorias-inventario.ts:193-226</code>)</td><td><code>serie, pisoId</code></td><td>Reinterpreta <code>body.serie</code>; usa la serie reconocida o el texto original recortado al llamar <code>scanAuditoria</code>.</td></tr>
+          <tr><td>Ajuste</td><td><code>GET /api/rollos?serie=...</code>; <code>POST /api/rollos/:id/ajustar</code> (<code>routes/inventario.ts:1302-1358, 1526+</code>)</td><td>Consulta usa <code>serie</code>; mutación usa <code>id</code></td><td>El escaneo solo selecciona el rollo. El ajuste envía nueva cantidad y justificación, no el código.</td></tr>
+          <tr><td>Extraordinaria</td><td><code>GET /api/rollos?serie=...&amp;estado=DISPONIBLE</code>; <code>POST /api/salidas-extraordinarias</code> (<code>routes/inventario.ts:392-531</code>)</td><td>Consulta usa <code>serie</code>; mutación usa <code>rolloId</code></td><td>El código selecciona el rollo disponible; la baja recibe motivo, justificación y UUID.</td></tr>
+          <tr><td>Entrada</td><td><code>POST /api/entradas</code> (<code>routes/inventario.ts:622-793</code>)</td><td><code>lineas[].cantidades[]</code></td><td>El lector raw pasa a <code>parseFloat</code> local; la API no recibe series en este flujo.</td></tr>
+          <tr><td>Cobros</td><td><code>GET /api/tickets?folio=...</code> y <code>GET /api/tickets/:id</code> (<code>routes/pos.ts:435-532, 625-668</code>)</td><td><code>folio</code> o path <code>id</code></td><td>El QR raw se convierte en ID de ticket o en folio; pagos/autorización posteriores operan sobre el ticket cargado.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>4. QR de etiqueta de rollo: productor, esquema y consumidores</h2>
+    <div class="callout good">
+      <strong>Esquema exacto:</strong> el QR de rollo es texto plano <code>${sku}-${serie}</code>. Ejemplo de documentación (ficticio): <code>SKU-DEMO-1234567</code>. No usar IDs reales en esta descripción. La serie mostrada por el estándar actual es de siete dígitos.
+    </div>
+    <div class="grid two">
+      <div class="card">
+        <h3>Productores</h3>
+        <ul>
+          <li><code>components/label-print.tsx:15-24, 100-101, 156-175</code>: <code>LabelData</code> contiene <code>sku, serie, tela, color, cantidad, unidad</code> y opcional <code>reimpresaEn</code>. <code>qrPayload = `${data.sku}-${data.serie}`</code>; <code>QRCodeSVG</code> recibe ese texto.</li>
+          <li><code>pages/rollo-detail.tsx:237-243</code>: QR equivalente con <code>`${rollo.skuProducto}-${rollo.serie}`</code>.</li>
+          <li><code>api-server/src/routes/etiquetas.ts:69-79</code>: el resultado de rollos también proyecta <code>qr: sku-serie</code> en el objeto de etiqueta reimpresa.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Interpretación por consumidor</h3>
+        <ul>
+          <li>POS: reconoce los siete dígitos, consulta la serie exacta en la ubicación y compara el SKU del QR con el SKU del rollo; mismatch produce advertencia, no bloqueo.</li>
+          <li>Etiquetas: reconoce serie para filtrar igualdad exacta; si no reconoce, hace búsqueda textual.</li>
+          <li>Salidas, mostrador, extraordinarias, venta a cliente y entrega: reducen un QR válido a la serie y aplican sus reglas de existencia, duplicado, disponibilidad o pertenencia.</li>
+          <li>Auditoría: envía la serie y registra presencia; el servidor vuelve a interpretar.</li>
+          <li>Ajustes: usa la serie para seleccionar el rollo; el ajuste posterior usa ID.</li>
+        </ul>
+      </div>
+    </div>
+    <h3>El mismo texto en los lectores</h3>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Payload de ejemplo</th><th>Modo serie</th><th>Modo raw</th><th>Resultado observable</th></tr></thead>
+        <tbody>
+          <tr><td><code>SKU-DEMO-1234567</code></td><td><code>valor = 1234567</code>; <code>codigo.sku = SKU-DEMO</code></td><td><code>valor = SKU-DEMO-1234567</code></td><td>Serie: búsqueda/mutación de rollo. Raw: parser del consumidor decide si es URL, folio o cantidad.</td></tr>
+          <tr><td><code>1234567</code></td><td><code>valor = 1234567</code>; sin SKU para advertencia</td><td><code>valor = 1234567</code></td><td>Ambos conservan el texto numérico, aunque la metadata <code>codigo.serie</code> difiere.</td></tr>
+          <tr><td><code>URL-DEMO?id=123</code></td><td>Sin serie reconocida: el callback puede recibir el texto en modo serie</td><td>Texto completo sin cambios</td><td>Recepción/cobros solo tienen parser URL porque están en raw.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. QR documentales y separación de dominios</h2>
+    <p>Los QR documentales son generados por <code>DocumentQrCode</code> y <code>PrintableDocumentHeader</code> (<code>components/document-qr-code.tsx:1-28</code>, <code>components/printable-document-header.tsx:1-49</code>). Codifican una URL absoluta mediante <code>absoluteAppUrl</code> (<code>lib/print.ts:136-139</code>), no una cadena SKU-serie.</p>
+    <div class="scroll">
+      <table>
+        <thead><tr><th>Documento</th><th>Productor / línea</th><th>URL codificada (esquema)</th><th>Consumidor</th></tr></thead>
+        <tbody>
+          <tr><td>Entrada</td><td><code>pages/entrada-documento.tsx:33-35, 83-87</code></td><td><code>/entradas/{entrada.id}/documento</code></td><td>Navegación normal a documento de entrada; no entra al lector de rollos.</td></tr>
+          <tr><td>Salida logística</td><td><code>pages/salida-documento.tsx:42-44, 89-95</code></td><td><code>/salidas?tab=recepcion&amp;id={salida.id}</code>; se omite para <code>VENTA_CLIENTE</code></td><td><code>RecepcionSalidas.idFromScanUrl</code> lee query <code>id</code> y consulta recepción.</td></tr>
+          <tr><td>Viaje</td><td><code>pages/viaje-documento.tsx:16-22</code></td><td><code>/viajes/{id}/documento</code></td><td>Ruta de documento de viaje; las pantallas de Viajes no tienen scanner.</td></tr>
+          <tr><td>Auditoría</td><td><code>pages/auditorias-inventario.tsx:524-530</code></td><td><code>/inventario/auditorias?auditoriaId={id}</code></td><td><code>auditorias-inventario.tsx:77-82</code> lee <code>auditoriaId</code> al montar y carga detalle; luego su lector de series registra presencias.</td></tr>
+          <tr><td>Ticket / nota interno</td><td><code>pages/ticket-detail.tsx:292-293, 742-790</code></td><td><code>/tickets/{ticket.id}</code></td><td><code>/cobros</code> reconoce el path <code>/tickets/{id}</code>; también reconoce <code>/cobros?ticketId={id}</code>. La copia de cliente deliberadamente no muestra QR; el QR está en copia interna.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout warn">
+      <strong>Distinción necesaria:</strong> <code>SKU-DEMO-1234567</code> es un QR de etiqueta y representa una serie de rollo; una URL como <code>https://app.example/cobros?ticketId=123</code> o <code>.../salidas?tab=recepcion&amp;id=123</code> es un QR de documento. Los dos pueden llegar al mismo lector físico, pero solo los componentes raw aplican parser de URL/folio. No existe un discriminador QR global antes del callback.
+    </div>
+  </section>
+
+  <section>
+    <h2>6. Montaje de rutas y cobertura de operación</h2>
+    <p class="path"><code>artifacts/mariana-textil/src/App.tsx:275-381, 312-351, 418-475, 319-324</code></p>
+    <div class="grid three">
+      <div class="card"><h3>Entradas</h3><p><code>/entradas</code> monta la página de captura. El lector es de cantidades, no asigna series. Los documentos y etiquetas de la entrada se abren por URL.</p></div>
+      <div class="card"><h3>Salidas</h3><p><code>/salidas</code> monta pestañas de recepción, mostrador y extraordinarias; su historial monta entrega para filas <code>VENTA_CLIENTE</code>. <code>/salidas/nueva</code> monta transferencia general o, por query, la salida de venta a cliente.</p></div>
+      <div class="card"><h3>POS y cobros</h3><p><code>/pos</code> escanea para buscar rollos/productos; <code>/cobros</code> escanea QR de ticket/nota o folio. Son dominios distintos aunque ambos usan el mismo transporte.</p></div>
+      <div class="card"><h3>Inventario físico</h3><p><code>/inventario/auditorias</code> registra presencia en snapshot. <code>/inventario/ajustes</code> busca un rollo antes de modificar cantidad o darlo de baja.</p></div>
+      <div class="card"><h3>Etiquetas</h3><p><code>/etiquetas</code> usa el lector como búsqueda de rollo para revisar/reimprimir; el QR mostrado en la etiqueta es el productor principal del payload SKU-serie.</p></div>
+      <div class="card"><h3>Viajes</h3><p><code>/viajes</code>, <code>/viajes/nuevo</code>, <code>/viajes/:id</code> y <code>/viajes/:id/documento</code> trabajan con selección/búsqueda ordinaria de documentos y no montan <code>CampoEscaneo</code>.</p></div>
+    </div>
+    <div class="callout">
+      <strong>Detalle sobre búsqueda genérica:</strong> el buscador del historial de Salidas (`pages/salidas.tsx:226-233`) dice “folio o serie”, pero es un <code>Input</code> y no recibe cámara ni dispatch de escaneo. Se incluye como búsqueda intencionada, no como implementación de scanner. POS, Etiquetas y Ajustes sí son búsquedas genéricas con scanner porque montan el componente compartido.
+    </div>
+  </section>
+
+  <section>
+    <h2>7. Metodología y trazabilidad de referencias</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Búsqueda aplicada</h3>
+        <ol>
+          <li>Se buscó la implementación y todas las etiquetas JSX <code>&lt;CampoEscaneo</code> bajo <code>artifacts/mariana-textil/src</code>.</li>
+          <li>Para cada call site se siguió el callback <code>onScan</code>, props de modo, imports de <code>@workspace/scanned-code</code> y mutaciones/queries.</li>
+          <li>Se trazó cada componente a sus importadores y a las rutas de <code>App.tsx</code>, distinguiendo montaje activo de archivo no montado.</li>
+          <li>Se buscaron productores <code>QRCodeSVG/QRCodeCanvas/DocumentQrCode</code>, rutas absolutas y parsers URL.</li>
+          <li>Se verificaron rutas backend y esquemas Zod para identificar el campo exacto recibido.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Qué significa cada tipo de referencia</h3>
+        <dl>
+          <dt>Directa</dt><dd>El archivo contiene el JSX del lector o importa explícitamente la función que normaliza.</dd>
+          <dt>Heredada</dt><dd>El lector recibe la lógica de serie/raw desde <code>CampoEscaneo</code>, aunque el callback no llame al helper.</dd>
+          <dt>Transitiva</dt><dd>Un componente aparece en una página montada; o el frontend entrega un valor a un endpoint que lo reinterpreta server-side.</dd>
+          <dt>Custom</dt><dd>Existe lógica posterior: URL/folio, deduplicación, membership exacto, búsqueda exacta, advertencia SKU o parseo de cantidad.</dd>
+          <dt>Ausente</dt><dd>La pantalla puede buscar/seleccionar documentos, pero no tiene input scanner ni cámara.</dd>
+        </dl>
+      </div>
+    </div>
+    <div class="callout good">
+      <strong>Montado frente a muerto:</strong> los siete archivos de página con lector se importan en <code>App.tsx</code> y se alcanzan desde sus rutas protegidas. Los componentes <code>RecepcionSalidas</code>, <code>SalidaMostrador</code>, <code>SalidasExtraordinarias</code> y <code>SalidaVentaEntrega</code> se importan desde <code>pages/salidas.tsx</code>; <code>SalidaVentaClienteNueva</code> se importa desde <code>pages/salida-nueva.tsx</code> y se selecciona por <code>?modalidad=VENTA_CLIENTE</code>. No quedó un import de <code>CampoEscaneo</code> sin un montaje JSX alcanzable en la búsqueda realizada.
+    </div>
+    <div class="card">
+      <h3>Referencias transversales relevantes</h3>
+      <ul>
+        <li><code>App.tsx</code> es el control de montaje de páginas. Importar un componente no implica por sí solo una pantalla; por eso Salidas se revisó además de las cinco páginas directamente scannerizadas.</li>
+        <li>La normalización del paquete compartido se cuenta como herencia en la tabla; una llamada local a <code>interpretarCodigoEscaneado</code>/<code>normalizarSerieEscaneada</code> se marca como custom aunque sea la misma política.</li>
+        <li>Las llamadas server-side a <code>interpretarCodigoEscaneado</code> son transitive/custom del endpoint, no una segunda pantalla.</li>
+        <li>El reporte de corrección histórica <code>reports/scanned-code-correction-validation-2026-08-26.md</code> no se usó como fuente de estado actual.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>8. Riesgos y comportamientos particulares observados</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Normalización / formato</h3>
+        <ul>
+          <li>La heurística reconoce solo siete dígitos al final. Series con otra longitud o formatos nuevos no se interpretan como serie.</li>
+          <li>En modo serie, un valor no reconocido no queda bloqueado por el helper: puede salir como texto original y llegar a callbacks o APIs que acepten texto.</li>
+          <li><code>normalizarSerieEscaneada</code> eleva a mayúsculas y recorta el fallback; <code>raw</code> conserva el texto original. Dos inputs visualmente iguales pueden llegar con reglas distintas.</li>
+          <li>Varios consumidores reinterpretan el mismo valor en servidor después de normalizarlo en cliente. Hoy es una doble aplicación de la política, no necesariamente un cambio de resultado.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Payload y dominio</h3>
+        <ul>
+          <li>El QR de etiqueta y el QR documental son textos sin un tipo global. La seguridad depende de que cada pantalla haya elegido raw o serie correctamente.</li>
+          <li>El lector raw de Entradas usa <code>parseFloat</code>; una cadena de escaneo inesperada con prefijo numérico puede tener una interpretación parcial.</li>
+          <li>Los parsers de Recepción y Cobros aceptan convenciones URL/folio propias. No comparten un parser documental.</li>
+          <li>Entrega de venta a cliente usa una lista esperada y deduplicada; una serie reconocida pero de otra salida se rechaza en UI antes del endpoint.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Validación UX</h3>
+        <ul>
+          <li>La advertencia de SKU en POS, Salida nueva, Etiquetas, Ajustes y Salida extraordinaria informa mismatch, pero no impide continuar en todos esos flujos.</li>
+          <li>La clasificación scanner/manual depende de tiempos del navegador; el callback no recibe una garantía de que el texto provenga de hardware.</li>
+          <li>La cámara depende de permisos, <code>BarcodeDetector</code> o la importación de ZXing y de que el navegador exponga una entrada de video.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Alcance de negocio</h3>
+        <ul>
+          <li>Entrada no vincula serie con cantidades: captura cantidades por línea y el backend crea rollos.</li>
+          <li>Recepción escanea la hoja/folio, no cada rollo; la mutación recibe pisos y estado completo.</li>
+          <li>Viajes agrupa documentos ya existentes y no ofrece lectura de un documento por cámara.</li>
+          <li>El historial de Salidas anuncia búsqueda por serie, pero no hereda la experiencia scanner.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>9. Resumen para decisión</h2>
+    <div class="grid two">
+      <div class="callout good">
+        <strong>Cobertura:</strong> el transporte compartido cubre teclado y cámara para 12 montajes directos: nueve de series y tres raw. Se encuentran todos los ámbitos solicitados: POS, Salidas, recepción, entregas, auditoría física, Entradas, Etiquetas, Ajustes y transferencias. Viajes queda documentado como ausencia.
+      </div>
+      <div class="callout risk">
+        <strong>Prioridad de revisión:</strong> distinguir de forma inequívoca payload de rollo frente a URL documental y decidir dónde debe bloquearse un valor que no tiene serie reconocida. Actualmente esas decisiones están distribuidas entre el modo del campo, callbacks locales, búsquedas exactas y reinterpretación server-side.
+      </div>
+    </div>
+    <p class="foot">Reporte generado como HTML autocontenido para lectura del código. Las rutas y líneas se conservaron como referencias de navegación; no se ejecutaron workflows, no se consultó la base de datos y no se modificó la aplicación.</p>
+  </section>
+</main>
+</body>
+</html>

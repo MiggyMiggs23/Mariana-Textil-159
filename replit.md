@@ -457,6 +457,7 @@ Mientras esta decisión siga pendiente, continúa vigente el procedimiento de ra
 **Automatización de `TEST_DATABASE_URL` — integración local desechable:** ejecutar `pnpm test:isolated` para preparar esquema, seed autorizado, inicializadores y comprobaciones de identidad. El arnés crea PostgreSQL local nuevo por corrida, accesible solo mediante un socket privado, sin clonar Neon ni cambiar la base de la aplicación. Deriva `TEST_DATABASE_URL` y la inyecta únicamente a los procesos hijos; no se solicita, guarda ni copia manualmente esa conexión. Conserva la conexión real de la aplicación exclusivamente para comprobar su identidad mediante lectura. No aceptar una URL de pruebas externa ni sustituir la identidad de la aplicación por otra ficticia.
 
 - `pnpm test:isolated --suite api-script:test:ticket-iva-schema` prepara la base y ejecuta la suite de esquema IVA revisada, sin usuarios ni fixtures adicionales.
+- `pnpm test:isolated --suite api-script:test:admin-realtime-reconciliation` usa el mismo aprovisionamiento automático y ejecuta consultas de solo lectura con filas virtuales limitadas a cada consulta; no agrega datos persistidos ni usuarios al seed. Ambas suites reciben `TEST_DATABASE_URL` del arnés, sin pasos manuales.
 - `pnpm test:isolated --list` presenta entradas permitidas, bloqueadas y pendientes de revisión, distinguiendo aliases de archivos. El resultado de preparación no equivale a que pasaron todas las integraciones. Los scripts de bajo nivel conservan sus guardias y reciben la conexión desde el arnés.
 - La lista permitida es cerrada: no ejecutar suites que creen usuarios, sesiones o fixtures fuera del seed autorizado. El informe `reports/auditoria-suites-base-pruebas.html` identifica sus escrituras, referencias y comandos. No ampliar el seed ni modificar esas suites por cuenta propia.
 - Al terminar, fallar o recibir una señal, detener los procesos hijos y PostgreSQL antes de eliminar exclusivamente el directorio temporal de esa corrida. Si no puede demostrarse el cierre, conservar el directorio privado y reportar el error, nunca borrarlo bajo un servidor vivo.
@@ -763,6 +764,10 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 **Un renglón de producto es indivisible**: o cabe entero en la hoja o pasa completo a la siguiente, nunca se parte a la mitad. En los documentos impresos por hoja, los renglones se miden contando el renglón completo más todo lo que va debajo de la tabla —totales, leyenda y firma—; cada formato tiene su propia capacidad.
 
 ## Stock mínimo y reporte «Qué comprar»
+
+**Ubicación en el menú:** Stock mínimo vive al final de INVENTARIO, después de Precios, porque es configuración y no operación diaria. Orden: Productos → Inventario → Vista Global → Ajustes → Auditorías → Etiquetas → Precios → Stock mínimo. El orden no cambia permisos ni rutas.
+
+**2026-09-12:** Stock mínimo movido al final de INVENTARIO; comprobados el typecheck completo incluido `scripts`, codegen sin diferencias y las dos suites revisadas con aprovisionamiento automático de `TEST_DATABASE_URL`. Sin cambios de reglas de negocio ni cálculos de tableros.
 
 **Estado al 2026-09-11:** corregidos con autorización los hallazgos de historia, periodo, evidencia, enlaces y notificaciones; verificados con pruebas sin DB y navegador con API simulada. La reconstrucción real del caché se ejecutó en PostgreSQL local desechable: los 2 mínimos y las 2 configuraciones de sitio conservaron conteos y valores mientras se corrigieron las 4 existencias de prueba. La entrega real de alertas y la concurrencia siguen pendientes; no presentarlas como realizadas. Evidencia: `reports/reconstruir-cache-existencias-disposable-evidence.md`.
 

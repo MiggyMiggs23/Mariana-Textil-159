@@ -48,3 +48,4 @@
 - [Preservación al reconstruir cachés](cache-rebuild-preservation.md) — ejecutar la función real en DB desechable; probar que cambió el caché y conservó exactamente la configuración.
 - [Integración local sin clonar Neon](local-disposable-integration.md) — automatizar sin otra credencial ni copiar actores; no extiende la decisión a E2E.
 - [Aislamiento de líneas base](regression-baseline-isolation.md) — probar código anterior en copia temporal, nunca sustituyendo módulos vigilados por workflows activos.
+- [Manifiestos explícitos de pruebas](explicit-test-manifests.md) — abortar ante selección vacía; un runner sin rutas descubre suites fuera del alcance y env limpio no bloquea HTTP.

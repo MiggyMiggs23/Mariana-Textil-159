@@ -476,3 +476,59 @@ mtime_ms = 1789274068127
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/57e0d52d-0605-4da6-a455-f4b75c478d12/1ada4435-c920-4e6d-b50e-578440dc762f"
 storage_version_token = "1789274252969785"
 content_type = "text/html"
+
+[[outputs]]
+id = "0qpbvfIgYi4_xUoMJLO95"
+uri = "file://reports/inventario-suites-poblacion.html"
+type = "text"
+title = "Bloque 4 — Suites que crean datos o usuarios"
+description = "Lista completa: qué crean, por qué, archivos, líneas y distinción entre datos persistidos, seed, dobles y filas virtuales."
+logical_id = "0f314994-ee26-4cf8-bfa1-0da683c28d9d"
+content_hash = "sha256:88cc6bcb37c8e569d891d33b7a88e939d90b18f0cc0337e72fcb36a3a707257d"
+size = 66244
+mtime_ms = 1789278554020
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0f314994-ee26-4cf8-bfa1-0da683c28d9d/2fa17a37-293d-4e4d-853d-7300ab01645c"
+storage_version_token = "1789278719627792"
+content_type = "text/html"
+
+[[outputs]]
+id = "22yovrVgOlcJaNoGQeTN5"
+uri = "file://reports/inventario-pantallas-escaneo.html"
+type = "text"
+title = "Bloque 5 — Pantallas y componentes de escaneo"
+description = "Entradas de pistola/cámara, normalización compartida o propia y contenido e interpretación de los QR."
+logical_id = "8a78870b-2111-48a9-a7dc-032fce09957f"
+content_hash = "sha256:02036e431da3e19cacfa2f26643e4a61db51ea921201d9788009f1a96a41a6ae"
+size = 40568
+mtime_ms = 1789278495680
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8a78870b-2111-48a9-a7dc-032fce09957f/b343358d-b3d8-4485-b215-96de78ac0af6"
+storage_version_token = "1789278720464820"
+content_type = "text/html"
+
+[[outputs]]
+id = "I-HalZiF4Taf0cQlmqKS6"
+uri = "file://reports/inventario-vetos-accion-por-rol.html"
+type = "text"
+title = "Bloque 6 — Vetos de acción por rol"
+description = "Las 69 referencias del grupo histórico, ordenadas por rol y contrastadas con el código actual; referencias nuevas separadas."
+logical_id = "a09a4104-f0bd-48a3-b749-30cf5384e79a"
+content_hash = "sha256:d4874b3ad4ab0141ecde2f5b8b05f7613043d5276b7b3513c02135b155e20051"
+size = 38911
+mtime_ms = 1789278495132
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a09a4104-f0bd-48a3-b749-30cf5384e79a/184a8887-2c1b-45d3-bd38-99ad11682f1c"
+storage_version_token = "1789278721102311"
+content_type = "text/html"
+
+[[outputs]]
+id = "rtSJcEPn3rjRSn3w31FhU"
+uri = "file://reports/verificacion-seis-bloques.html"
+type = "text"
+title = "Verificación — Resultados y siete fallos"
+description = "302 pruebas seleccionadas: 295 aprobadas y 7 fallidas. Incluye comandos, errores, manifiesto y limitaciones."
+logical_id = "e2ebb396-251b-40ef-bcfd-bdc58bdd85ca"
+content_hash = "sha256:3bdf8ef03318aa7a95cbbbe6cd9f2124a6d39c58dac37718f0a372f7df4bcafc"
+size = 26872
+mtime_ms = 1789278718552
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e2ebb396-251b-40ef-bcfd-bdc58bdd85ca/4d647664-5a04-4472-92e0-a2099591c979"
+storage_version_token = "1789278721632196"
+content_type = "text/html"

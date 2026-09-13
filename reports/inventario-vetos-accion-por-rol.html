@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Inventario de vetos de acción por rol</title>
+  <style>
+    :root{color-scheme:light;--ink:#172033;--muted:#5b6475;--line:#d8dee9;--soft:#f5f7fb;--blue:#0b4f8a;--amber:#fff3cd;--red:#fff0f0}
+    *{box-sizing:border-box}body{margin:0;background:#fff;color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+    main{max-width:1800px;margin:auto;padding:28px 32px 64px}h1{margin:.1em 0 .25em;color:#102c4c;font-size:30px}
+    h2{margin:30px 0 10px;color:#123e69;font-size:22px}h3{margin:22px 0 8px;color:#1c4b76;font-size:17px}
+    p{max-width:1100px}small,.muted{color:var(--muted)}.notice{padding:14px 16px;border:1px solid #b9cbe0;border-left:5px solid var(--blue);border-radius:7px;background:#f2f7fc}
+    .warn{padding:14px 16px;border:1px solid #e7cc78;border-left:5px solid #bd8b00;border-radius:7px;background:var(--amber)}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin:16px 0}
+    .card{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--soft)}.card b{display:block;font-size:22px;color:#103d67}.card span{color:var(--muted)}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:7px;margin:10px 0 22px}
+    table{width:100%;border-collapse:collapse;min-width:1050px}th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+    th{position:sticky;top:0;background:#eaf1f8;color:#183e62;z-index:1;font-size:12px;text-transform:uppercase;letter-spacing:.025em}
+    tr:nth-child(even){background:#fbfcfe}code{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:#27364a;white-space:pre-wrap;overflow-wrap:anywhere}
+    .tag{display:inline-block;padding:2px 7px;border-radius:99px;background:#e8eef6;color:#264e74;font-size:11px;font-weight:650;margin:1px 3px 1px 0}
+    .tag.backend{background:#e2f1e9;color:#17623b}.tag.ui{background:#eee8fb;color:#5b378d}.tag.cred{background:#fff0d7;color:#815600}.tag.inv{background:#fce4e4;color:#8a3030}
+    .status{font-weight:650}.gone{color:#9a3e2f}.active{color:#17623b}.new{color:#5b378d}
+    ul{max-width:1120px}li{margin:4px 0}.compact{min-width:0}.compact th,.compact td{padding:6px 8px}.foot{margin-top:35px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    @media print{main{padding:10px}th{position:static}.table-wrap{overflow:visible;border:0}table{font-size:10px}h2{break-before:page}.notice,.warn{break-inside:avoid}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Inventario de vetos de acción por rol</h1>
+  <p class="muted">Inventario estático de la partición canónica documentada y de su evidencia en el código actual. Este archivo no consulta la aplicación, la base de datos ni la matriz de permisos.</p>
+  <div class="notice"><b>Lectura importante.</b> El número histórico <b>130</b> no es el inventario actual: es el universo de referencias de la clasificación de <code>c3a13e6</code>. Aquí se reproducen únicamente sus <b>69 referencias N3</b> de veto de acción, se distinguen sus incidencias repetidas por rol y se señalan las referencias trasladadas y las descubiertas en el árbol actual.</div>
+
+  <h2>Resumen de cortes y conteos</h2>
+  <div class="grid">
+    <div class="card"><b>130</b><span>referencias originales</span></div>
+    <div class="card"><b>32</b><span>N1: alcance territorial / scope</span></div>
+    <div class="card"><b>13</b><span>N2: ocultamiento de datos sensibles</span></div>
+    <div class="card"><b>69</b><span>N3: referencias primarias de acción-veto</span></div>
+    <div class="card"><b>16</b><span>X: excluidas de N1/N2/N3</span></div>
+    <div class="card"><b>367</b><span>incidencias rol × referencia N3</span></div>
+    <div class="card"><b>69</b><span>guardas de código identificadas</span></div>
+    <div class="card"><b>298</b><span>filas extra por repetir una guarda en varios roles</span></div>
+  </div>
+  <p><b>Estado de las 69 filas originales:</b> 68 conservan el mismo control en la ruta/archivo indicado (aunque una línea puede haberse desplazado); 1, <b>R112</b>, perdió su guardia inline en <code>pages/salida-detail.tsx</code> y fue reemplazada por el helper/dialogo compartido de cancelación. Por tanto, el veto semántico de R112 sigue activo, pero su evidencia antigua está <b>gone/moved</b>. Las cuatro rutas de referencia del bloque “nuevas” no se suman a 69: son incidencias actuales de la refactorización de cancelación.</p>
+  <p><b>Duplicación:</b> 62 de las 69 guardas aparecen en más de un rol; representan 360 incidencias. Las 298 filas extra son las incidencias adicionales después de contar una vez cada guarda. Los conteos por rol que siguen son <i>guardas distintas</i> y <i>filas rol×guarda</i>; en esta clasificación cada Rxxx es una ubicación de control distinta, por lo que ambos números coinciden por rol, pero no deben sumarse entre roles.</p>
+
+  <h2>Qué se cuenta y qué queda fuera</h2>
+  <div class="warn"><b>N1, N2 y X no se convierten en vetos N3.</b> Que un rol no pueda consultar otro sitio, que una respuesta redacted/omit campos, o que una regla sea una invariante de datos/notificación no significa por sí solo que exista un veto de acción del mismo tipo. Las etiquetas secundarias de las filas N3 se conservan para evitar mezclar categorías.</div>
+  <ul>
+    <li><b>N1 (32):</b> restricciones de sitio, origen/destino, alcance <code>PROPIA</code> y controles de ubicación. Se muestran en este inventario solamente cuando además bloquean una mutación concreta (por ejemplo R060/R062/R065); el scope puro no incrementa el conteo N3.</li>
+    <li><b>N2 (13):</b> redacción u ocultamiento de costo, margen, datos fiscales u otros campos sensibles. Un botón que además esté oculto se reporta como UI, pero la redacción no se presenta como veto de acción.</li>
+    <li><b>X (16):</b> referencias excluidas por ser bypass ADMIN puro, defaults, audiencia/colas de notificaciones, redirecciones, invariantes no operativas o controles que no prueban un veto de negocio. No se agregan a las tablas N3.</li>
+    <li><b>Matriz de permisos:</b> <code>puedeVer/puedeCrear/puedeEditar/puedeAutorizar</code> puede ser verdadero y aun así perder ante una allowlist literal, <code>adminOnly</code>, una invariante protegida o el segundo factor ADMIN. Eso es precisamente lo que documenta la columna de interacción.</li>
+  </ul>
+
+  <h2>Excepciones y casos compuestos</h2>
+  <ul>
+    <li><b>ADMIN no es un bypass universal en las tablas:</b> los guards con <code>requireRole</code> usan la allowlist de cada ruta; <code>adminOnly</code>/<code>requiereAdmin</code> sí otorgan excepción ADMIN. Para cuentas destino y ticket, la allowlist compuesta es ADMIN/CONTADOR/SISTEMAS.</li>
+    <li><b>Invariantes ADMIN:</b> R023, R026, R027, R030, R031, R032 y R034 protegen la recuperación del sistema, el objetivo ADMIN o el auto-cambio de rol. Pueden afectar a un actor ADMIN cuando el objetivo/invariante se encuentra protegido; no son permisos ordinarios de la matriz.</li>
+    <li><b>R004/R005/R093/R094/R096:</b> son allowlists compuestas. Tener permiso de módulo no vence el literal de roles de la ruta/API/UI; el actor debe satisfacer ambas condiciones.</li>
+    <li><b>Credenciales ADMIN:</b> R022, R035, R066, R072, R112/R113, R115/R116/R120 y R123 tienen un flujo de segundo factor o autorización separada. “No puede sin credencial” no equivale a “puede con su permiso de matriz”.</li>
+    <li><b>Salida:</b> R060/R062/R065 bloquean mutaciones de CAJA incluso en su sitio propio mediante <code>rejectCajaMutation</code>. La venta a cliente tiene un origen/flujo separado y no invoca ese veto de CAJA.</li>
+    <li><b>Frontend vs backend:</b> UI-only oculta o no renderiza la acción; server-side devuelve 403/lanza el error y es la autoridad. Las filas que muestran ambos no cuentan la misma ubicación como dos guardas: una fila Rxxx sigue siendo una referencia primaria.</li>
+  </ul>
+
+  <h2>Conteo por rol</h2>
+  <div id="role-counts" class="table-wrap"></div>
+
+  <h2>Inventario completo N3, agrupado por rol y ordenado por path/línea actual</h2>
+  <p>Cada fila que aparece en más de una sección es una incidencia de la misma referencia/guarda, no una nueva restricción. La columna “roles excluidos / condición” conserva la condición de la clasificación anterior; “evidencia actual” muestra el archivo y líneas que deben inspeccionarse hoy.</p>
+  <div id="inventory"></div>
+
+  <h2>Referencias actuales nuevas o trasladadas</h2>
+  <p>Estas ubicaciones fueron introducidas o quedaron explícitas tras la clasificación original. No se presentan como “130 actuales” ni se suman al conteo de 69 guardas N3. <b>R112</b> conserva su identidad semántica y por eso se marca también en la tabla N3; las demás son incidencias adicionales del guardado/refactorización de cancelación.</p>
+  <div id="new-refs" class="table-wrap"></div>
+
+  <h2>Clasificación original completa (control de cobertura)</h2>
+  <div class="table-wrap compact">
+    <table>
+      <thead><tr><th>Grupo original</th><th>Conteo</th><th>Tratamiento en este informe</th></tr></thead>
+      <tbody>
+        <tr><td>N1 — scope territorial</td><td>32</td><td>Fuera del N3 salvo cuando la misma condición bloquea una mutación identificable; se etiqueta como secundaria.</td></tr>
+        <tr><td>N2 — sensitive-data hiding/redaction</td><td>13</td><td>Fuera del N3; se distingue de un botón oculto o de un 403 de acción.</td></tr>
+        <tr><td>N3 — action veto</td><td>69</td><td>Fuente de las tablas por rol de este informe.</td></tr>
+        <tr><td>X — excluded</td><td>16</td><td>No son vetos de acción clasificables bajo N1/N2/N3 según la documentación canónica.</td></tr>
+        <tr><th>Total</th><th>130</th><th>Baseline histórico; no es un total activo.</th></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="foot">Fuentes de referencia: <code>docs/role-restrictions-classified.md</code>, <code>docs/remaining-role-checks.md</code> y el código bajo <code>artifacts/api-server/src</code> y <code>artifacts/mariana-textil/src</code>. El documento es autocontenido y no depende de hojas de estilo, scripts o servicios externos.</div>
+</main>
+<script>
+const roles = ["ADMIN","SUPERVISOR","BODEGA","CAJA","TERMINAL","CONTADOR","SISTEMAS"];
+const nonAdmin = ["SUPERVISOR","BODEGA","CAJA","TERMINAL","CONTADOR","SISTEMAS"];
+const allRoles = ["ADMIN",...nonAdmin];
+const vetoes = [
+  {id:"R001",r:nonAdmin,a:"Entrar o ejecutar la ruta que invoca requireRole.",x:"Fuera de la allowlist de cada invocación; ADMIN solo si la allowlist concreta lo incluye.",p:"artifacts/api-server/src/middlewares/auth.ts:119-126",g:"!req.auth || !roles.includes(req.auth.user.rol) → 403",t:"backend",m:"La matriz no sustituye la allowlist de la ruta; helper sin equivalente de matriz.",s:"activo"},
+  {id:"R002",r:nonAdmin,a:"Ejecutar una operación protegida por requiereAdmin.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/lib/permisos.ts:297-312",g:'req.auth.user.rol !== "ADMIN" → 403',t:"backend",m:"Permiso previo, si existe, no vence el guard ADMIN.",s:"activo"},
+  {id:"R003",r:nonAdmin,a:"Consultar u operar /admin/alertas.",x:"SUPERVISOR, BODEGA, CAJA, TERMINAL, CONTADOR y SISTEMAS.",p:"artifacts/api-server/src/routes/admin-alertas.ts:11",g:'requireRole("ADMIN")',t:"backend",m:"Guard literal; sin equivalente de matriz.",s:"activo"},
+  {id:"R004",r:nonAdmin,a:"Usar analytics, cortes, diferencias o exportaciones no incluidas en la allowlist.",x:"SUPERVISOR/BODEGA/CAJA/TERMINAL; CONTADOR/SISTEMAS quedan fuera de cuentas destino.",p:"artifacts/api-server/src/routes/admin-analytics.ts:71-83",g:'router.use("/admin", requireRole("ADMIN")); GET cuentas-destino usa ADMIN/CONTADOR/SISTEMAS',t:"backend",m:"Allowlist compuesta; permiso administrativo previo no la supera.",s:"activo"},
+  {id:"R005",r:nonAdmin,a:"Confirmar, capturar o resolver la operación fiscal fuera de su allowlist.",x:"SUPERVISOR, BODEGA, CAJA, TERMINAL y SISTEMAS; CONTADOR solo en la resolución/endpoint permitido.",p:"artifacts/api-server/src/routes/admin-analytics.ts:331,360-362",g:'requireRole("ADMIN","CONTADOR","SISTEMAS") y endpoints más estrechos',t:"backend",m:"La matriz fiscal no amplía el rol literal del endpoint.",s:"activo"},
+  {id:"R006",r:nonAdmin,a:"Listar, cargar, ver o descargar documentos de cliente.",x:"SUPERVISOR, BODEGA, CAJA, TERMINAL, CONTADOR y SISTEMAS.",p:"artifacts/api-server/src/routes/cliente-documentos.ts:40-44,64-69,155-156",g:"requireRole/guard ADMIN en lectura y mutación de documentos",t:"backend",m:"El permiso de documentos puede existir, pero ADMIN adicional prevalece.",s:"activo"},
+  {id:"R007",r:nonAdmin,a:"Consultar /clientes/incobrables.",x:"SUPERVISOR, BODEGA, CAJA, TERMINAL, CONTADOR y SISTEMAS.",p:"artifacts/api-server/src/routes/clientes-admin.ts:22-25",g:'requireRole("ADMIN")',t:"backend",m:"Sin equivalente de matriz.",s:"activo"},
+  {id:"R008",r:["SUPERVISOR"],a:"Dar de baja un cliente.",x:"SUPERVISOR.",p:"artifacts/api-server/src/routes/clientes-admin.ts:63-67",g:'if (req.auth.user.rol === "SUPERVISOR") → rechazo',t:"backend",m:"clientes.editar no vence el veto literal SUPERVISOR.",s:"activo"},
+  {id:"R009",r:["SUPERVISOR"],a:"Reactivar un cliente.",x:"SUPERVISOR.",p:"artifacts/api-server/src/routes/clientes-admin.ts:217-221",g:'if (req.auth.user.rol === "SUPERVISOR") → rechazo',t:"backend",m:"clientes.editar no vence el veto literal SUPERVISOR.",s:"activo"},
+  {id:"R011",r:["SUPERVISOR"],a:"Capturar diasCredito o limiteCredito al crear cliente.",x:"SUPERVISOR.",p:"artifacts/api-server/src/routes/clientes.ts:298-317",g:'rol SUPERVISOR → campos financieros rechazados/neutralizados',t:"backend",m:"clientes.crear puede existir; es veto de acción, no redacción.",s:"activo"},
+  {id:"R012",r:["SUPERVISOR","BODEGA","CAJA","TERMINAL","CONTADOR"],a:"Crear o editar camionetas.",x:"Todos salvo ADMIN/SISTEMAS.",p:"artifacts/api-server/src/routes/camionetas.ts:36-47",g:'rol !== "ADMIN" && rol !== "SISTEMAS" → 403',t:"backend",m:"camionetas.crear/editar no vence la allowlist ADMIN/SISTEMAS.",s:"activo"},
+  {id:"R013",r:["SUPERVISOR","BODEGA","CAJA","TERMINAL","CONTADOR"],a:"Crear o editar choferes.",x:"Todos salvo ADMIN/SISTEMAS.",p:"artifacts/api-server/src/routes/choferes.ts:38-53",g:'rol !== "ADMIN" && rol !== "SISTEMAS" → 403',t:"backend",m:"choferes.crear/editar no vence la allowlist.",s:"activo"},
+  {id:"R015",r:nonAdmin,a:"Crear o editar pisos.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/locations.ts:180-207,209-224",g:'rol !== "ADMIN" → 403 en pisos',t:"backend",m:"ubicaciones.crear/editar no vence ADMIN adicional.",s:"activo"},
+  {id:"R016",r:["CAJA","TERMINAL"],a:"Entrar a auditorías fuera de la allowlist; BODEGA además no puede salir de su sitio.",x:"CAJA y TERMINAL para la allowlist; el caso BODEGA es scope N1 secundario.",p:"artifacts/api-server/src/routes/auditorias-inventario.ts:40-53,55-71,88-134",g:"allowlist de auditoría + comparación de sitio cuando aplica",t:"backend",m:"Permiso de auditoría no vence la allowlist; scope no se cuenta como veto separado.",s:"activo"},
+  {id:"R017",r:nonAdmin,a:"Confirmar o aplicar auditoría.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/auditorias-inventario.ts:276-289",g:'rol !== "ADMIN" → 403',t:"backend",m:"Permiso de auditoría previo no elimina ADMIN-only.",s:"activo"},
+  {id:"R019",r:nonAdmin,a:"Hacer preflight o borrar registros inactivos.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/purga.ts:19-21",g:'requireRole("ADMIN")',t:"backend",m:"Sin equivalente de matriz para /purga.",s:"activo"},
+  {id:"R020",r:nonAdmin,a:"Aprobar o rechazar un pago dirigido.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/pagos-dirigidos.ts:269,304",g:'requireRole("ADMIN") en aprobar/rechazar',t:"backend",m:"Permiso financiero no vence ADMIN adicional.",s:"activo"},
+  {id:"R022",r:nonAdmin,a:"Ver historial, exportar o ver alertas de etiquetas; reimprimir sin credencial ADMIN.",x:"No ADMIN en historial/exportación/alertas; BODEGA/SUPERVISOR requieren credencial para reimpresión.",p:"artifacts/api-server/src/routes/etiquetas.ts:48-56,202-217,238-245,313,342,372",g:'rol !== "ADMIN"; si no ADMIN, credenciales ADMIN activas',t:"backend+cred",m:"Permisos etiquetas.ver/crear no vencen ADMIN ni el segundo factor.",s:"activo"},
+  {id:"R023",r:allRoles,a:"Modificar o vaciar el catálogo de permisos del rol ADMIN.",x:"Actor que intenta modificar el objetivo ADMIN; aplica a los siete roles.",p:"artifacts/api-server/src/routes/permisos.ts:74-109",g:'rol === "ADMIN" protegido como objetivo/invariante',t:"invariante",m:"permisos.editar no vence la protección del objetivo ADMIN.",s:"activo"},
+  {id:"R024",r:["SISTEMAS"],a:"Concederse a sí mismo permisos que no posee.",x:"SISTEMAS.",p:"artifacts/api-server/src/routes/permisos.ts:128-155",g:'actor SISTEMAS y cambios no permitidos → rechazo',t:"invariante",m:"La matriz efectiva de SISTEMAS es una condición adicional.",s:"activo"},
+  {id:"R026",r:allRoles,a:"Dejar al sistema sin un ADMIN activo completo al cambiar la matriz.",x:"Actor de cualquiera de los siete roles cuando la modificación elimina la recuperación.",p:"artifacts/api-server/src/routes/permisos.ts:187-249",g:"comprobación de último ADMIN recuperable → rechazo",t:"invariante",m:"permisos.editar no vence la invariante de recuperación.",s:"activo"},
+  {id:"R027",r:allRoles,a:"Consultar, modificar o eliminar un override explícito de usuario ADMIN.",x:"Objetivo ADMIN protegido; cualquier actor autorizado puede quedar bloqueado.",p:"artifacts/api-server/src/routes/permisos.ts:285-289,352-362,390-426,518-539,542-568",g:'lockedUser.rol === "ADMIN" → rechazo',t:"invariante",m:"Override ADMIN no es configuración ordinaria de la matriz.",s:"activo"},
+  {id:"R030",r:nonAdmin,a:"Crear una cuenta con rol ADMIN.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/users.ts:119-151",g:'role === "ADMIN" && actor !== "ADMIN" → rechazo',t:"invariante",m:"usuarios.crear no vence la creación reservada.",s:"activo"},
+  {id:"R031",r:nonAdmin,a:"Modificar una cuenta ADMIN o promover una cuenta a ADMIN.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/users.ts:227-257",g:'actor !== "ADMIN" && target.rol === "ADMIN" → rechazo',t:"backend",m:"usuarios.editar no vence el actor ADMIN requerido.",s:"activo"},
+  {id:"R032",r:allRoles,a:"Cambiar el propio rol.",x:"Cualquier actor de los siete roles.",p:"artifacts/api-server/src/routes/users.ts:260-275",g:"target.id === actor.id y body.rol → rechazo",t:"invariante",m:"Es una invariante anti-auto-cambio, no una casilla de matriz.",s:"activo"},
+  {id:"R034",r:allRoles,a:"Desactivar, degradar o eliminar la última cuenta ADMIN recuperable.",x:"Cualquier actor cuando la operación deja al sistema sin recuperación.",p:"artifacts/api-server/src/routes/users.ts:324-375",g:"último ADMIN recuperable → rechazo",t:"invariante",m:"usuarios.editar no vence la invariante.",s:"activo"},
+  {id:"R035",r:nonAdmin,a:"Purgar catálogos sin ADMIN recuperable o sin credencial ADMIN activa.",x:"Todo no ADMIN sin segundo factor válido.",p:"artifacts/api-server/src/lib/purga-catalogos.ts:397-405,415-441",g:'actor !== "ADMIN" → verifica credencial ADMIN activa',t:"backend+cred",m:"No hay equivalente de matriz para la condición ADMIN.",s:"activo"},
+  {id:"R043",r:nonAdmin,a:"Activar o desactivar proveedor.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/proveedores.ts:385-390",g:'activo !== undefined && rol !== "ADMIN" → 403',t:"backend",m:"proveedores.editar no vence ADMIN literal.",s:"activo"},
+  {id:"R045",r:nonAdmin,a:"Listar, crear o editar salida extraordinaria.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/inventario.ts:395-399,498-502,537-541",g:"requiereAdmin en las tres rutas",t:"backend",m:"salidas puede existir; requiereAdmin es adicional.",s:"activo"},
+  {id:"R047",r:["BODEGA","SUPERVISOR"],a:"Enviar un costo unitario positivo en una entrada.",x:"BODEGA y SUPERVISOR; el servidor ignora/guarda pendiente o null.",p:"artifacts/api-server/src/routes/inventario.ts:667-684,773-786",g:'rol BODEGA/SUPERVISOR + costo positivo → costo pendiente/null',t:"backend",m:"entradas.crear puede existir; veto financiero literal de rol.",s:"activo"},
+  {id:"R049",r:nonAdmin,a:"Contar, listar o capturar costos pendientes.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/inventario.ts:999-1031,1087-1096",g:'rol !== "ADMIN" → 403',t:"backend",m:"entradas no sustituye ADMIN-only.",s:"activo"},
+  {id:"R050",r:nonAdmin,a:"Vender directamente un rollo fuera del ticket POS.",x:"Todo rol no ADMIN según el flujo de venta directa.",p:"artifacts/api-server/src/routes/inventario.ts:1240-1255",g:"venta directa sin ticket/flujo permitido → rechazo",t:"backend",m:"Inventario/salidas no sustituyen el flujo POS.",s:"activo"},
+  {id:"R051",r:nonAdmin,a:"Revertir un movimiento de salida extraordinaria.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/inventario.ts:1364-1400",g:'rol !== "ADMIN" → rechazo',t:"backend",m:"Permiso de inventario no vence ADMIN adicional.",s:"activo"},
+  {id:"R055",r:nonAdmin,a:"Solicitar incluirUbicacionesInactivas en kardex, filtros o exportación.",x:"Todo rol no ADMIN; el aspecto de ubicación es N1 secundario.",p:"artifacts/api-server/src/routes/inventario.ts:1914-2004",g:'incluirUbicacionesInactivas && rol !== "ADMIN" → 403',t:"backend",m:"movimientos.ver no vence el guard ADMIN; scope/redacción no se mezclan.",s:"activo"},
+  {id:"R060",r:["CAJA"],a:"Mutar una salida propia.",x:"CAJA, incluso con sitio propio; ADMIN no queda sujeto al veto CAJA.",p:"artifacts/api-server/src/routes/salidas.ts:321-337",g:'rejectCajaMutation(auth) { return auth.user.rol === "CAJA" }',t:"backend",m:"salidas puede existir y canOperate permitir el sitio; el veto CAJA prevalece. Scope es secundario N1.",s:"activo"},
+  {id:"R062",r:["CAJA"],a:"Armar borrador o crear salida a mostrador.",x:"CAJA, incluso desde su propio sitio; ADMIN excepción.",p:"artifacts/api-server/src/routes/salidas.ts:505-521,535-557",g:"rejectCajaMutation(auth) antes de canOperate",t:"backend",m:"salidas.crear no vence el veto de mutación CAJA; scope es secundario N1.",s:"activo"},
+  {id:"R065",r:["CAJA"],a:"Quitar rollos de borrador o enviar una salida.",x:"CAJA, incluso desde su propio origen; ADMIN excepción.",p:"artifacts/api-server/src/routes/salidas.ts:783-817",g:"rejectCajaMutation(req.auth) → rechazo",t:"backend",m:"salidas.crear no vence el veto CAJA; origen/scope es secundario N1.",s:"activo"},
+  {id:"R066",r:nonAdmin,a:"Cancelar una salida.",x:"CAJA queda bloqueada; cualquier otro no ADMIN necesita credencial ADMIN válida.",p:"artifacts/api-server/src/routes/salidas.ts:866-893",g:'rejectCajaMutation; rol !== "ADMIN" → adminUsuario/adminPassword + crypt',t:"backend+cred",m:"Permiso de salidas no vence el veto CAJA ni el segundo factor ADMIN.",s:"activo"},
+  {id:"R072",r:nonAdmin,a:"Cancelar un ticket POS.",x:"Cualquier no ADMIN sin credencial ADMIN válida.",p:"artifacts/api-server/src/routes/pos.ts:671-708",g:'rol !== "ADMIN" → verifyAdminCredentials(credencialesAdmin)',t:"backend+cred",m:"Permiso POS/cobros no vence la autorización ADMIN.",s:"activo"},
+  {id:"R073",r:nonAdmin,a:"Consultar el historial de sesiones de caja.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/pos.ts:893-910",g:'rol !== "ADMIN" → 403',t:"backend",m:"Sin equivalente de matriz para el guard literal.",s:"activo"},
+  {id:"R078",r:nonAdmin,a:"Capturar o editar colorHex de producto.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/routes/productos.ts:342-370,764-785",g:"!canEditProductColorHex(rol) → rechazo",t:"backend",m:"productos.crear/editar no vence ADMIN-only.",s:"activo"},
+  {id:"R079",r:nonAdmin,a:"Usar el helper de edición de color fuera de ADMIN.",x:"Todo rol no ADMIN.",p:"artifacts/api-server/src/lib/product-color.ts:1-5",g:'return role === "ADMIN"',t:"backend/helper",m:"Helper refuerza R078; no es una casilla independiente de matriz.",s:"activo"},
+  {id:"R093",r:nonAdmin,a:"Renderizar una ruta protegida aun con permiso de módulo.",x:"Roles fuera de la allowlist de cada ruta; allowedRoles/adminOnly es condición adicional.",p:"artifacts/mariana-textil/src/App.tsx:100-126,148-188",g:"requiredRoles/allowedRoles + modulePermitted; falta → Sin acceso",t:"UI",m:"Permiso de módulo es segunda condición, no bypass de allowlist.",s:"activo"},
+  {id:"R094",r:["SUPERVISOR","BODEGA","CAJA","TERMINAL"],a:"Entrar a la ruta frontend de cuentas destino.",x:"SUPERVISOR, BODEGA, CAJA y TERMINAL; solo ADMIN/CONTADOR/SISTEMAS.",p:"artifacts/mariana-textil/src/App.tsx:518-537",g:'requiredRoles=["ADMIN","CONTADOR","SISTEMAS"]',t:"UI",m:"Permiso COBROS_PAGOS no vence requiredRoles.",s:"activo"},
+  {id:"R095",r:nonAdmin,a:"Renderizar Alertas o Notificaciones desde una ruta adminOnly.",x:"Todo rol no ADMIN.",p:"artifacts/mariana-textil/src/App.tsx:549-559",g:"adminOnly && user.rol !== ADMIN → Sin acceso",t:"UI",m:"No hay equivalente de matriz para adminOnly; API de alertas es R003.",s:"activo"},
+  {id:"R096",r:["SUPERVISOR","BODEGA","CAJA","TERMINAL"],a:"Renderizar la ruta de ticket fuera de ADMIN, CONTADOR o SISTEMAS.",x:"SUPERVISOR, BODEGA, CAJA y TERMINAL.",p:"artifacts/mariana-textil/src/App.tsx:580-587",g:'requiredRoles=["ADMIN","CONTADOR","SISTEMAS"]',t:"UI",m:"POS/caja/salidas no eliminan la allowlist frontend.",s:"activo"},
+  {id:"R097",r:nonAdmin,a:"Llegar a cuentas, alertas o configuración por navegación.",x:"Rol no incluido en item.allowedRoles o group.hiddenForRoles.",p:"artifacts/mariana-textil/src/components/layout/app-navigation.ts:35-43,83-87,111-136",g:"allowedRoles.includes(rol) / hiddenForRoles.includes(rol)",t:"UI",m:"Ocultamiento de navegación no sustituye al guard API.",s:"activo"},
+  {id:"R102",r:nonAdmin,a:"Renderizar o consultar la página de pendientes de costo.",x:"Todo rol no ADMIN.",p:"artifacts/mariana-textil/src/pages/entradas-pendientes-costo.tsx:316-322",g:'enabled: user?.rol === Role.ADMIN; rol !== ADMIN → Acceso Denegado',t:"UI",m:"entradas puede existir; API relacionada es R049.",s:"activo"},
+  {id:"R106",r:nonAdmin,a:"Activar desde UI el filtro de ubicaciones inactivas en movimientos.",x:"Todo rol no ADMIN; filtro de ubicación es N1 secundario.",p:"artifacts/mariana-textil/src/pages/movimientos.tsx:149-161,432",g:'user.rol === "ADMIN" && incluirUbicacionesInactivas',t:"UI",m:"La UI reserva el control; API R055 devuelve 403. Scope se mantiene separado.",s:"activo"},
+  {id:"R108",r:nonAdmin,a:"Abrir pestañas de reportes reservadas a ADMIN.",x:"Todo rol no ADMIN según la pestaña.",p:"artifacts/mariana-textil/src/pages/reportes.tsx:49-76",g:'isAdmin = user?.rol === "ADMIN"; allowed tab → ocultar',t:"UI",m:"Permiso REPORTES no vence allowedTabs.",s:"activo"},
+  {id:"R109",r:nonAdmin,a:"Usar controles de salida ocultos o pestañas extraordinarias no ADMIN.",x:"CAJA para mutaciones; SUPERVISOR/BODEGA/TERMINAL/CONTADOR/SISTEMAS para controles extraordinarios; ADMIN excepción.",p:"artifacts/mariana-textil/src/pages/salidas.tsx:65-121,183-219,250-355",g:'isCaja ? recepción : controles; user.rol === "ADMIN" para extraordinarias',t:"UI",m:"Esconde controles; API concreta está en R045/R060/R062/R065. No es rechazo backend por sí mismo.",s:"activo"},
+  {id:"R112",r:nonAdmin,a:"Usar cancelar desde el detalle de salida.",x:"No ADMIN sin credencial válida; CAJA además queda excluida por el helper actual.",p:"artifacts/mariana-textil/src/lib/salida-cancelacion.ts:19-68; components/salida-cancel-dialog.tsx:126-163,204-210",g:'actor.rol !== "CAJA" && (actor.rol === "ADMIN" || authorized && atOrigin)',t:"UI+cred",m:"La guardia inline de pages/salida-detail.tsx fue removida; helper/dialogo compartido reemplaza la ubicación. API R066 sigue siendo autoridad.",s:"reemplazado/moved"},
+  {id:"R113",r:nonAdmin,a:"Cancelar ticket desde su detalle cuando el servidor pide autorización ADMIN.",x:"Todo no ADMIN sin credencial ADMIN; las tablas económicas son N2 secundaria.",p:"artifacts/mariana-textil/src/pages/ticket-detail.tsx:119-197,420-559,1000-1013",g:'canCancel; user.rol !== Role.ADMIN → adminUser/adminPass',t:"UI+cred",m:"POS/cobros puede existir; credencial ADMIN adicional.",s:"activo"},
+  {id:"R115",r:nonAdmin,a:"Aplicar directamente un pago dirigido en vez de enviar solicitud.",x:"Todo no ADMIN para la acción directa; UI ofrece “Enviar solicitud”.",p:"artifacts/mariana-textil/src/components/solicitud-pago-dirigido-dialog.tsx:310; pages/pagos-dirigidos.tsx:45,176",g:"acción Aplicar solo para rol/estado permitido; botón de solicitud alternativo",t:"UI",m:"Es una acción distinta; autorización real server-side está en R020.",s:"activo"},
+  {id:"R116",r:nonAdmin,a:"Dar de baja cliente desde las acciones administrativas mostradas.",x:"SUPERVISOR para la acción API; no ADMIN cuando la UI solicita credencial.",p:"artifacts/mariana-textil/src/pages/cliente-detail.tsx:103-110,326,434-435",g:"rol/credencial ADMIN antes de acción destructiva",t:"UI+cred",m:"clientes.editar no vence SUPERVISOR/credencial; términos financieros son R011.",s:"activo"},
+  {id:"R117",r:nonAdmin,a:"Abrir incobrables o acciones de administración de cliente desde UI.",x:"Todo rol no ADMIN.",p:"artifacts/mariana-textil/src/pages/clientes.tsx:51-53,111,143,160,230",g:'rol === "ADMIN" para acción administrativa',t:"UI",m:"Permiso clientes no vence allowlist ADMIN.",s:"activo"},
+  {id:"R118",r:nonAdmin,a:"Activar o desactivar proveedor desde UI.",x:"Todo rol no ADMIN.",p:"artifacts/mariana-textil/src/pages/proveedores.tsx:85-86,234,300; pages/proveedor-detail.tsx:138-142",g:'isAdmin/rol ADMIN antes de mutación',t:"UI",m:"La autoridad server-side relacionada es R043.",s:"activo"},
+  {id:"R119",r:nonAdmin,a:"Usar acciones de administración de producto desde UI.",x:"Todo rol no ADMIN para las acciones concretas.",p:"artifacts/mariana-textil/src/pages/productos.tsx:210-212,415,458",g:"isAdmin/permiso antes de controles de administración",t:"UI",m:"productos.crear/editar no vence los guards concretos.",s:"activo"},
+  {id:"R120",r:nonAdmin,a:"Capturar color o borrar producto desde UI.",x:"Todo rol no ADMIN sin credencial cuando corresponde.",p:"artifacts/mariana-textil/src/pages/producto-detail.tsx:173-202,370-466,537-611",g:"isAdmin para color; credencial ADMIN para borrado",t:"UI+cred",m:"Color remite a R078/R079; borrado tiene segundo factor.",s:"activo"},
+  {id:"R121",r:nonAdmin,a:"Usar reversión o historial administrativo de rollo desde UI.",x:"Todo rol no ADMIN.",p:"artifacts/mariana-textil/src/pages/rollo-detail.tsx:32-35,210-220,252-266,299-350",g:'isAdmin = user?.rol === Role.ADMIN para acciones/historial',t:"UI",m:"Permisos inventario/etiquetas no vencen acción ADMIN.",s:"activo"},
+  {id:"R122",r:nonAdmin,a:"Crear, editar o cancelar contenedor desde acciones ADMIN de UI.",x:"Todo rol no ADMIN; sitio es N1 secundario.",p:"artifacts/mariana-textil/src/pages/contenedores/index.tsx:40-41,144-331,575-598,719-828; pages/contenedores/detail.tsx:178-180,531-662",g:"isAdmin antes de crear/editar/cancelar",t:"UI",m:"Permisos de contenedores no vencen ADMIN; ubicación no se mezcla con el veto.",s:"activo"},
+  {id:"R123",r:nonAdmin,a:"Abrir administración de etiquetas no ADMIN; reimpresión BODEGA/SUPERVISOR requiere credencial.",x:"Todo no ADMIN para historial/usuarios/alertas; BODEGA/SUPERVISOR tienen segundo factor para reimpresión.",p:"artifacts/mariana-textil/src/pages/etiquetas.tsx:58,97,172,239-316",g:"isAdmin para historial/alertas + credenciales para reimpresión",t:"UI+cred",m:"La autoridad server-side relacionada es R022.",s:"activo"},
+  {id:"R124",r:nonAdmin,a:"Ver el botón o cerrar auditoría desde UI.",x:"Todo rol no ADMIN.",p:"artifacts/mariana-textil/src/pages/auditorias-inventario.tsx:317,543",g:"isAdmin antes de botón/cierre",t:"UI",m:"Permiso de auditoría no vence cierre ADMIN de R017.",s:"activo"},
+  {id:"R125",r:nonAdmin,a:"Ver o usar controles de ajustes administrativos.",x:"Todo rol no ADMIN.",p:"artifacts/mariana-textil/src/pages/ajustes.tsx:43,126,231,425",g:"isAdmin antes de controles",t:"UI",m:"Permiso de ajustes no vence el guard.",s:"activo"},
+  {id:"R126",r:["SUPERVISOR","BODEGA","CAJA","TERMINAL"],a:"Gestionar camionetas o choferes desde UI.",x:"Todos salvo ADMIN/SISTEMAS/CONTADOR en el índice canónico.",p:"artifacts/mariana-textil/src/pages/configuracion/camionetas.tsx:59,197,251; pages/configuracion/choferes.tsx:67,221,265",g:"allowed role / isAdmin antes de formularios y acciones",t:"UI",m:"Guards server-side relacionados son R012/R013.",s:"activo"},
+  {id:"R127",r:allRoles,a:"Modificar/promover cuenta ADMIN o asignar opciones globales desde UI.",x:"Cualquier no ADMIN para cuenta ADMIN; opciones ADMIN/SISTEMAS también quedan ocultas.",p:"artifacts/mariana-textil/src/pages/usuarios.tsx:46,270-276,363-394",g:'target.rol === "ADMIN" / opciones ADMIN-SISTEMAS → ocultar',t:"UI",m:"usuarios.editar no vence las invariantes server-side R031/R034.",s:"activo"},
+  {id:"R128",r:nonAdmin,a:"Seleccionar ADMIN para overrides o modificar overrides ADMIN.",x:"Objetivo ADMIN excluido; actor que administra permisos puede quedar restringido por la invariante.",p:"artifacts/mariana-textil/src/pages/permisos.tsx:164-168,255",g:'SelectItem ADMIN omitido; selectedRole !== ADMIN',t:"UI",m:"permisos.editar no vence R023/R027.",s:"activo"},
+  {id:"R129",r:["SUPERVISOR","BODEGA","CAJA","TERMINAL"],a:"Resolver diferencia fiscal o ver controles administrativos.",x:"Roles operativos para resolver/controles; ADMIN queda reservado para la parte exclusivamente ADMIN; SISTEMAS no figura en el índice canónico de esta referencia.",p:"artifacts/mariana-textil/src/pages/caja/cuenta-destino-detalle.tsx:407-414",g:'currentUser.rol === "CONTADOR" || currentUser.rol === "ADMIN"',t:"UI",m:"Permiso fiscal puede conceder lectura/captura; resolución ADMIN adicional.",s:"activo"},
+  {id:"R130",r:nonAdmin,a:"Abrir historial de cortes desde caja.",x:"Todo rol no ADMIN para el historial.",p:"artifacts/mariana-textil/src/pages/cobros.tsx:1780-1806",g:'user.rol === "ADMIN" para historial',t:"UI",m:"Permiso de cartera no vence el guard ADMIN.",s:"activo"}
+];
+
+const newRefs = [
+  {id:"NEW-01",r:nonAdmin,a:"Helper compartido de elegibilidad para cancelar detalle.",x:"CAJA queda fuera; ADMIN bypass; los demás requieren permiso de autorización y origen.",p:"artifacts/mariana-textil/src/lib/salida-cancelacion.ts:19-68",g:'actor.rol === "ADMIN" || (authorized && atOrigin); actor.rol !== "CAJA"',t:"UI+cred",s:"ruta nueva; reemplaza la guardia inline R112",m:"Nueva ubicación de la misma semántica, no una 70.ª restricción."},
+  {id:"NEW-02",r:["CAJA"],a:"Exclusión explícita de CAJA en la elegibilidad de historial.",x:"CAJA siempre false para historial.",p:"artifacts/mariana-textil/src/lib/salida-cancelacion.ts:74-80",g:'if (!actor || actor.rol === "CAJA") return false',t:"UI",s:"referencia actual nueva",m:"Refuerza R060/R066 en la superficie de historial; no se suma a N3 original."},
+  {id:"NEW-03",r:nonAdmin,a:"Revalidar elegibilidad desde el dialogo de cancelación antes de iniciar la acción.",x:"Roles que pierden freshCanCancel; CAJA y no autorizados no inician.",p:"artifacts/mariana-textil/src/components/salida-cancel-dialog.tsx:126-163,204-210",g:"freshCanCancel; !canCancel → return antes de abrir/ejecutar",t:"UI",s:"referencia actual nueva",m:"Ocultamiento/revalidación frontend; backend R066 sigue siendo autoridad."},
+  {id:"NEW-04",r:["CAJA"],a:"No renderizar botón de cancelar en la tabla de historial.",x:"CAJA por !isCaja; además canCancel filtra estado/scope.",p:"artifacts/mariana-textil/src/pages/salidas.tsx:360,431-450",g:"canCancel && !isCaja → render Dialog",t:"UI",s:"referencia actual nueva",m:"Hiding frontend, no reemplazo del rechazo API."}
+];
+
+function esc(value){
+  return String(value).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function firstLine(path){const match=path.match(/:(\d+)/);return match?Number(match[1]):0}
+function sortedFor(role){return vetoes.filter(v=>v.r.includes(role)).sort((a,b)=>a.p.localeCompare(b.p)||firstLine(a.p)-firstLine(b.p)||a.id.localeCompare(b.id))}
+function badge(type){
+  const cls=type.includes("UI")?"ui":type.includes("cred")?"cred":type.includes("invariante")?"inv":"backend";
+  return '<span class="tag '+cls+'">'+esc(type)+'</span>';
+}
+function roleCountTable(){
+  const counts=roles.map(role=>{
+    const rows=sortedFor(role), duplicate=rows.filter(v=>v.r.length>1).length;
+    return '<tr><td><b>'+role+'</b></td><td>'+rows.length+'</td><td>'+rows.length+'</td><td>'+duplicate+'</td><td>'+(rows.length-duplicate)+'</td></tr>';
+  }).join("");
+  document.getElementById("role-counts").innerHTML='<table><thead><tr><th>Rol</th><th>Filas rol × referencia</th><th>Guardas distintas</th><th>Filas cuya guarda también aparece en otro rol</th><th>Guardas exclusivas del rol</th></tr></thead><tbody>'+counts+'</tbody></table>';
+}
+function renderInventory(){
+  const html=roles.map(role=>{
+    const rows=sortedFor(role);
+    return '<h3 id="rol-'+role+'">'+role+' <small>('+rows.length+' incidencias, '+new Set(rows.map(v=>v.id)).size+' guardas distintas)</small></h3><div class="table-wrap"><table><thead><tr><th>Ref.</th><th>Acción vetada</th><th>Condición / roles excluidos</th><th>Evidencia actual ordenada por path/línea</th><th>Snippet de condición</th><th>Interacción con matriz / semántica</th><th>Enforcement / estado</th></tr></thead><tbody>'+
+      rows.map(v=>'<tr><td><b>'+v.id+'</b></td><td>'+esc(v.a)+'</td><td>'+esc(v.x)+'</td><td><code>'+esc(v.p)+'</code></td><td><code>'+esc(v.g)+'</code></td><td>'+esc(v.m)+'</td><td>'+badge(v.t)+' <span class="status '+(v.s==="activo"?"active":"gone")+'">'+esc(v.s)+'</span></td></tr>').join("")+
+      '</tbody></table></div>';
+  }).join("");
+  document.getElementById("inventory").innerHTML=html;
+}
+function renderNew(){
+  const html=newRefs.map(v=>'<tr><td><b>'+v.id+'</b></td><td>'+esc(v.a)+'</td><td>'+esc(v.x)+'</td><td><code>'+esc(v.p)+'</code></td><td><code>'+esc(v.g)+'</code></td><td>'+esc(v.m)+'</td><td>'+badge(v.t)+' <span class="status new">'+esc(v.s)+'</span></td></tr>').join("");
+  document.getElementById("new-refs").innerHTML='<table><thead><tr><th>Ref. actual</th><th>Acción/guardia</th><th>Condición / roles excluidos</th><th>Path/línea actual</th><th>Snippet</th><th>Relación con N3</th><th>Tipo / estado</th></tr></thead><tbody>'+html+'</tbody></table>';
+}
+roleCountTable(); renderInventory(); renderNew();
+</script>
+</body>
+</html>

@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventario de población de suites</title>
+  <style>
+    :root{color-scheme:light;--ink:#162033;--muted:#526079;--line:#d8e0eb;--bg:#f5f7fb;--card:#fff;--blue:#175cd3;--red:#b42318;--green:#087443;--amber:#9a6700;--violet:#6941c6}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+    main{max-width:1900px;margin:auto;padding:28px}
+    h1{font-size:30px;line-height:1.15;margin:0 0 5px}
+    h2{font-size:21px;margin:30px 0 10px}
+    h3{font-size:16px;margin:22px 0 8px}
+    p{max-width:1250px}
+    .lead{color:var(--muted);margin-top:0}
+    .stamp{font-size:12px;color:var(--muted)}
+    code{font:12px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:18px 0}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px}
+    .card strong{display:block;font-size:25px}
+    .card span{color:var(--muted);font-size:12px}
+    .notice{background:#fff8e1;border:1px solid #f0c36d;border-left:5px solid #d99000;border-radius:7px;padding:13px 16px;max-width:1450px}
+    .notice.danger{background:#fff5f4;border-color:#f4b4ae;border-left-color:var(--red)}
+    .ok{color:var(--green)}.bad{color:var(--red)}.warn{color:var(--amber)}.violet{color:var(--violet)}
+    .rule{border-top:1px solid var(--line);margin:28px 0}
+    .scroll{overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:8px}
+    table{border-collapse:collapse;width:100%;min-width:1500px}
+    th,td{border-bottom:1px solid var(--line);padding:8px 9px;text-align:left;vertical-align:top}
+    th{position:sticky;top:0;background:#eaf0fa;color:#243b68;font-size:12px;z-index:1}
+    td:nth-child(1){min-width:285px;max-width:390px}
+    td:nth-child(2){min-width:225px;max-width:315px}
+    td:nth-child(3){min-width:170px;max-width:300px}
+    td:nth-child(4){min-width:300px;max-width:470px}
+    td:nth-child(5){min-width:300px;max-width:480px}
+    td:nth-child(6){min-width:270px;max-width:430px}
+    td:nth-child(7){min-width:230px;max-width:380px}
+    tr.persist-user td:nth-child(3){background:#fff3f1}
+    tr.persist-business td:nth-child(3){background:#fffaf0}
+    tr.temporary td:nth-child(3){background:#f6f3ff}
+    tr.ddl td:nth-child(3),tr.readonly td:nth-child(3){background:#effaf5}
+    tr.virtual td:nth-child(3){background:#eef5ff}
+    .badge{display:inline-block;border-radius:5px;padding:2px 6px;font-size:11px;font-weight:700;white-space:nowrap}
+    .badge.user{background:#ffe4e1;color:#a32b20}.badge.business{background:#fff0c2;color:#7d5700}
+    .badge.temp{background:#e9ddff;color:#5c36a4}.badge.ddl{background:#d9f7e8;color:#086637}
+    .badge.virtual{background:#dceaff;color:#164f9d}.badge.readonly{background:#e5f7ee;color:#087443}
+    .compact{min-width:850px}.compact td,.compact th{padding:6px 8px}
+    ul{max-width:1300px}li{margin:5px 0}
+    details{background:var(--card);border:1px solid var(--line);border-radius:8px;margin:12px 0;padding:11px 14px;max-width:1500px}
+    summary{cursor:pointer;font-weight:700;color:#243b68}
+    .columns{columns:3 360px;column-gap:28px}
+    .columns li{break-inside:avoid;font-size:12px}
+    footer{margin:35px 0 10px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Inventario actual: población fuera del seed canónico</h1>
+  <p class="lead">Auditoría estática de las suites del API y de los scripts relacionados. Responde al bloque 4 del prompt conservado: qué fuente crea usuarios o filas adicionales, qué actor reutiliza, por qué necesita el dato y dónde está la evidencia de limpieza. No se ejecutó ninguna suite, no se abrió ninguna base y no se modificó ninguna suite, aplicación, archivo de Replit ni seed.</p>
+  <p class="stamp">Corte revisado: árbol actual, 13 de septiembre de 2026. Archivos de evidencia con ruta relativa y líneas 1-based. “Inferido” identifica el motivo deducido del nombre/comentarios y de las aserciones; no es una declaración de negocio adicional.</p>
+
+  <div class="cards">
+    <div class="card"><strong>124</strong><span>fuentes <code>*.test.*</code> en <code>artifacts/api-server/src</code></span></div>
+    <div class="card"><strong>2</strong><span>scripts API revisados, además de la verificación disposable externa</span></div>
+    <div class="card"><strong>54</strong><span>aliases package: 53 <code>test:</code> + 1 benchmark</span></div>
+    <div class="card"><strong>46</strong><span>fuentes de test que alcanzan DB real; 1 benchmark DB adicional</span></div>
+    <div class="card"><strong>41</strong><span>suites que escriben o intentan escribir filas de fixture fuera del seed</span></div>
+    <div class="card"><strong>28</strong><span>suites que crean o pueden crear usuarios de prueba</span></div>
+    <div class="card"><strong>13</strong><span>suites de filas de negocio sin crear usuario</span></div>
+    <div class="card"><strong>6</strong><span>fuentes DB sin población persistida: rollback/DDL/read-only/CTE</span></div>
+  </div>
+
+  <div class="notice danger">
+    <strong>Resultado de clasificación.</strong> La política disposable es seed-only: <code>lib/db/src/isolated-test-policy.mjs:196-200</code> bloquea población adicional, usuarios persistidos, escrituras de aplicación y destinos externos. Por tanto, las 41 filas de población de la tabla son hallazgos bloqueados, no aprobaciones. La fila de realtime es una excepción explícitamente revisada: sus filas sintéticas viven solo en CTEs de una sentencia y no se persisten. La fila de IVA es DDL de esquema solamente, no una suite de datos.
+  </div>
+
+  <h2>Cómo leer el inventario</h2>
+  <ul>
+    <li><strong>Usuario creado</strong>: hay <code>INSERT INTO usuarios</code>, <code>usuariosTable.insert</code> o un helper que lo ejecuta. “Condicional” significa que el código crea uno solo si no encuentra el seed; no se presume que falte el seed.</li>
+    <li><strong>Seed reutilizado</strong>: solo se afirma cuando la fuente hace un <code>SELECT</code> explícito de un actor/ubicación/cliente seed. Un literal como <code>usuarioId=1</code> se marca como identidad no demostrada.</li>
+    <li><strong>Fila de negocio</strong>: cliente, ubicación, producto, rollo, entrada, ticket, crédito, salida, permisos, sesión u otra fila operacional insertada por la suite o por un servicio que la suite invoca. Las líneas de setup y de la llamada indirecta se conservan juntas.</li>
+    <li><strong>Limpieza</strong>: se reporta el <code>finally</code>/<code>after</code>/DELETE observado. “Frontera disposable” significa que no se vio cleanup por fila y el aislamiento debe retirar la base completa; no se convierte en cleanup inventado.</li>
+    <li>Las fuentes con objetos en memoria, SQL capturado por un mock o lectura de archivos no están en la tabla de población real; aparecen en la cobertura negativa desplegable al final.</li>
+  </ul>
+
+  <h2 id="population">Lista completa de suites con usuarios o datos fuera del seed</h2>
+  <p>Hay 41 filas de población/actores: 28 con usuarios creados por helper o INSERT (una es condicional) y 13 con solo filas de negocio. Las líneas de cada tabla son las operaciones observables; las líneas del cleanup son la evidencia de rollback, borrado o frontera disposable.</p>
+  <div class="scroll">
+    <table>
+      <thead><tr><th>Suite / fuente exacta</th><th>Comando declarado</th><th>Categoría y actor</th><th>Qué crea o muta; evidencia de líneas</th><th>Por qué necesita el dato</th><th>Cleanup observado</th><th>Estado de política</th></tr></thead>
+      <tbody>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/admin-alertas.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:admin-alertas-integration</code><br><small>package:45</small></td>
+          <td><span class="badge user">U+B</span><br>2 usuarios ADMIN y CAJA, tag por corrida: 67-72.</td>
+          <td>Ubicación 61; usuarios 67; cliente 80; sesiones 90,320; salidas 99,317; tickets 117,277; movimientos de crédito 146,163,281; notificaciones 170,312.</td>
+          <td><b>Inferido:</b> construir alertas de crédito con actores, deuda, documentos y salidas para comprobar el feed y sus cambios de estado.</td>
+          <td>DELETE/finally 307,312,317,320; la suite además exige URL aislada en 6,10,13.</td>
+          <td><b class="bad">Bloqueada:</b> usuarios y filas operativas fuera del seed.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/admin-analytics.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:admin-analytics-integration</code><br><small>package:42</small></td>
+          <td><span class="badge business">B + seed</span><br>Reusa el ADMIN activo seleccionado por rol/activo: SELECT 51-55; repite su id en 55.</td>
+          <td>Ubicaciones 46-49; cliente 57-60; productos 62-67; rollos 68-73; sesiones de caja 77-97, 110-129; tickets 142-178 y helper de líneas/pagos 163-176; movimientos de crédito 198-265, 993-1004, 1029-1054; aplicaciones 220-243, 1005-1010; salidas/lineas/rollos 278-305.</td>
+          <td><b>Inferido por aserciones:</b> probar agregados y detalles paginados de analytics, alcance por tienda, cronología de cobros/crédito, cancelaciones y cuentas destino; los comentarios de la fuente explican esos casos en 76-89, 181-197, 212-245 y 1026-1028.</td>
+          <td>No hay DELETE por fila; <code>finally</code> solo cierra pool en 1074-1077. La base disposable es la frontera.</td>
+          <td><b class="bad">Bloqueada:</b> muchas filas de negocio adicionales aunque el actor sea seed.</td>
+        </tr>
+        <tr class="temporary">
+          <td><code>artifacts/api-server/src/admin-bypass-empty-permissions.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:admin-bypass-empty</code><br><small>package:34</small></td>
+          <td><span class="badge temp">TEMP</span><br>SELECT de ADMIN seed por rol: 17-21; no crea usuario.</td>
+          <td>No agrega datos: borra temporalmente <code>permisos_rol</code> y <code>permisos_usuario</code> dentro de transacción 37-39,97-103 y fuerza rollback.</td>
+          <td><b>Inferido:</b> demostrar el bypass de ADMIN cuando la matriz queda vacía sin dejar cambios de permisos.</td>
+          <td>Rollback/finally 15,38-39,97-103,117; no queda fila nueva. Se conserva aquí para no confundir mutación temporal con población adicional.</td>
+          <td><b class="violet">No población:</b> DB mutante temporal; no es allowlist.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/admin-invariants.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:admin-invariants</code><br><small>package:51</small></td>
+          <td><span class="badge user">U+B</span><br>4 actores sintéticos: ADMIN, segundo ADMIN, CAJA y SISTEMAS; helper 62-72, llamadas 78-81.</td>
+          <td>Ubicación 56; usuarios 64,119,339; sesiones 87,92,341; permisos_rol 97; permisos_usuario 274,305,325,342.</td>
+          <td><b>Inferido:</b> contrastar invariantes de identidad, permisos y sesiones entre roles globales y ubicados.</td>
+          <td>Cleanup/finally 325,336,341-342; las filas se identifican por actores de prueba.</td>
+          <td><b class="bad">Bloqueada:</b> 4 usuarios y overrides.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/aplicaciones-credito.integration.test.ts</code></td>
+          <td><small>sin alias package; fuente no declarada como runner</small></td>
+          <td><span class="badge business">B + seed</span><br>SELECT cruzado de cliente y usuario existentes 46-56; no crea usuario.</td>
+          <td>movimientos_credito 59,66,83,120; aplicaciones_credito 71,88,102,107,112,116,140.</td>
+          <td><b>Inferido:</b> recorrer aplicación, reverso y límites de crédito con IDs de cliente/usuario que deben existir en el seed.</td>
+          <td>Cleanup/finally 43,116,145-146; la fuente no presenta un cleanup general de todas las filas, por lo que depende de disposable.</td>
+          <td><b class="bad">Bloqueada:</b> filas financieras adicionales.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts</code></td>
+          <td><small>sin alias package; fuente no declarada como runner</small></td>
+          <td><span class="badge user">U+B</span><br>Reusa ADMIN si existe; si falta, crea 1 ADMIN no-login “Integración Parte 6”: 46-57.</td>
+          <td>usuarios 54; proveedores 60,173; pagos_proveedor 65,71,103,110,185,191; aplicaciones_pago_proveedor 75,84,88,93,97,100,116,122; entradas 178.</td>
+          <td><b>Inferido:</b> probar aplicación/reverso de pagos de proveedor y su vínculo con entrada/proveedor; actor ADMIN habilita la operación.</td>
+          <td>Cleanup/finally 36,100,127-128,209,211,229-230.</td>
+          <td><b class="bad">Bloqueada:</b> creación condicional de usuario y datos financieros.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/auditoria.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:auditoria</code><br><small>package:48</small></td>
+          <td><span class="badge user">U+B</span><br>5 actores: ADMIN, CAJA, SISTEMAS, CONTADOR y ADMIN sin sitio; 52-74.</td>
+          <td>Ubicaciones 43,47; usuarios 52,57,62,67,72,127; permisos_rol 84; auditoria 102,129-132,183,236; sesiones 196,249.</td>
+          <td><b>Inferido:</b> validar quién puede generar/ver auditoría y cómo se filtra por rol, sitio y actor.</td>
+          <td>Cleanup/finally 130,222,225,228,233-234,236,239,241-242.</td>
+          <td><b class="bad">Bloqueada:</b> cinco usuarios y auditoría.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/bloque6-reversos.integration.test.ts</code></td>
+          <td><small>sin alias package; fuente no declarada como runner</small></td>
+          <td><span class="badge business">B + seed</span><br>SELECT del primer usuario activo 35-37; no crea actor.</td>
+          <td>Cliente 38,56; movimientos_credito 40,42,46,49,52,54,58,60; aplicaciones 44; tickets 66; proveedor 81; pagos_proveedor 83-84,86,93-94; aplicaciones_pago_proveedor 85.</td>
+          <td><b>Inferido:</b> generar pares de aplicación/reverso tanto de cliente como de proveedor para probar las reglas contables del bloque 6.</td>
+          <td>Cleanup/finally 30,79,94-95.</td>
+          <td><b class="bad">Bloqueada:</b> documentos y movimientos adicionales.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/clientes-ajustes-api.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:clientes-ajustes</code><br><small>package:39</small></td>
+          <td><span class="badge user">U+B</span><br>2 usuarios sintéticos ADMIN y TERMINAL en INSERT multi-row 105-111.</td>
+          <td>Clientes 58,134,166; movimientos_credito 69,187,212,218,223,228; ubicación 90; productos 97; usuarios 105; tickets 205,321; documentos vía el flujo de API.</td>
+          <td><b>Inferido:</b> verificar ajustes de estado/saldo, permisos por actor y documentos de cliente; el servidor se inicia para probar la API real.</td>
+          <td><code>after</code> cierra storage, servidor y pool en 31-35 del archivo actual; no se observa DELETE de cada fila: depende de disposable.</td>
+          <td><b class="bad">Bloqueada:</b> dos usuarios y filas de clientes/crédito.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/contenedores.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:contenedores-integration</code><br><small>package:56</small></td>
+          <td><span class="badge user">U+B</span><br>Usuario sintético y sesión: 75-90.</td>
+          <td>Usuarios 75; permisos_usuario 83; sesiones 90; ubicaciones 170,174; proveedores 179; productos 191; movimientos 455; existencias 461; rollos 466; contenedores 470,477; pagos 472; entradas 476.</td>
+          <td><b>Inferido:</b> montar una cadena de contenedor/entrada con inventario, proveedor, pago y existencia para validar llegada y reversión.</td>
+          <td>DELETE/UPDATE/finally 446,452,455,461,466,470,472,476-479,482,484.</td>
+          <td><b class="bad">Bloqueada:</b> actor, sesión y cadena logística.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/cuadre-fiscal.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:cuadre-fiscal-integration</code><br><small>package:64</small></td>
+          <td><span class="badge user">U+B</span><br>Factory crea ADMIN y CONTADOR: 50-58; una sesión por actor.</td>
+          <td>Ubicación 45; usuarios 52; sesiones 60; clientes 69; tickets 87; movimientos_credito 119,132,146; aplicaciones 140; ticket_pagos 160,211.</td>
+          <td><b>Inferido:</b> formar cortes y cobros con crédito para conciliar los totales fiscales por rol y período.</td>
+          <td>Cleanup/finally 273,277.</td>
+          <td><b class="bad">Bloqueada:</b> usuarios, sesiones y documentos financieros.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/equipos.integration.test.ts</code></td>
+          <td><small>sin alias package; fuente no declarada como runner</small></td>
+          <td><span class="badge user">U+B</span><br><code>makeUser</code> crea actores BODEGA/roles de catálogo; llamadas creator/editor/viewer/supervisor/creator_b/creator_c/catalogUser: 61-79,128-145.</td>
+          <td>usuarios 70; permisos_usuario 80,146; ubicación 109.</td>
+          <td><b>Inferido:</b> comprobar la matriz de permisos de equipos usando combinaciones de rol y ubicación, no el ADMIN seed.</td>
+          <td>Cleanup/finally 378.</td>
+          <td><b class="bad">Bloqueada:</b> helper de usuarios y permisos fuera del seed.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/etiquetas-api.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:etiquetas-integration</code><br><small>package:47</small></td>
+          <td><span class="badge user">U+B</span><br>Helper Actor inserta usuario por rol; ubicaciones/sesiones UUID: 64-95; INSERT Drizzle 69-79.</td>
+          <td>usuarios 69; sesiones 83; ubicaciones 128; productos 140; permisos_usuario 159; entradas 188; rollos 203,220; reimpresiones y updates 416-441.</td>
+          <td><b>Inferido:</b> probar etiquetas, reimpresiones y alcance de inventario con sesiones y roles distintos.</td>
+          <td>Cleanup/finally 253,257,259,262,265,267,270,272,275,277 y 416,425,431.</td>
+          <td><b class="bad">Bloqueada:</b> actores, inventario y reimpresiones.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/inventory-six-view.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:inventory-six-view-integration</code><br><small>package:61</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN global y BODEGA propia: 166-176; sesiones 190.</td>
+          <td>Ubicaciones 113,117,121,851; productos 144,848; usuarios 167,172,845; permisos_usuario 180,842; sesiones 190,819; rollos 209,311,749,831; movimientos 231,822; pisos 288-300,759,834; existencias 826; auditoría 838.</td>
+          <td><b>Inferido:</b> recorrer las seis vistas de inventario y contrastar alcance global/propio, pisos, rollos, movimientos y auditoría.</td>
+          <td>Cleanup/finally 816,819,822,826,831,834,838,842,845,848,851; updates 624,749,759.</td>
+          <td><b class="bad">Bloqueada:</b> actores y catálogo operacional.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/kardex-api.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:kardex-api</code><br><small>package:33</small></td>
+          <td><span class="badge user">U+B</span><br>Helper crea ADMIN/BODEGA/TERMINAL con alcance/ubicación: 57-69; sesiones/permisos 76-83.</td>
+          <td>usuarios 62; permisos_usuario 76; sesiones 83; ubicaciones 100; productos 111; rollos 134; entradas 152; tickets 170; salidas 186; movimientos 239,249.</td>
+          <td><b>Inferido:</b> verificar kardex y autorización por rol con una cadena de compra/venta y movimientos trazables.</td>
+          <td>Cleanup/finally 314,316,318,320,322,324,326-327,330,332.</td>
+          <td><b class="bad">Bloqueada:</b> usuarios y datos de inventario/documentos.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/clientes-ledger.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:clientes-ledger</code><br><small>package:21</small></td>
+          <td><span class="badge business">B + seed</span><br>SELECT de usuario activo y ubicación activa 10-18; no crea actor.</td>
+          <td>Dentro de transacción: clientes 21, tickets 27 y movimientos_credito 39.</td>
+          <td><b>Inferido:</b> probar el ledger de cliente con documento y movimiento mínimo, conservando el actor/ubicación del seed.</td>
+          <td>Rollback explícito 72-73; no queda población si el rollback completa.</td>
+          <td><b class="bad">Bloqueada:</b> escritura DB aunque sea rollback-safe.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/compras-proveedor.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:proveedores</code><br><small>package:18</small></td>
+          <td><span class="badge business">B + actor no demostrado</span><br>usa <code>usuarioId=1</code> en entradas/pagos 149-158,240-266; no prueba que sea ADMIN seed.</td>
+          <td>Proveedores 101; productos 111; ubicaciones 127; entradas 292; pagos_proveedor 305; clientes 521; tickets 529,549; ticket_lineas 544,555; operaciones indirectas 149-438.</td>
+          <td><b>Inferido:</b> cubrir compras, costos metreados, pagos a proveedor y documentos de venta que consumen ese inventario.</td>
+          <td>Cleanup/finally 586,597-598,609,620,625,629,641,643,646,652,661,663,666,672,678.</td>
+          <td><b class="bad">Bloqueada:</b> filas de compras y el actor literal no validado.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/entradas.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:entradas</code><br><small>package:17</small></td>
+          <td><span class="badge business">B + actor no demostrado</span><br>usa <code>usuarioId=1</code> 136-150,225-241; identidad seed no demostrada.</td>
+          <td>Productos 67; ubicaciones 83; proveedores 97; pagos_proveedor 567; transacciones de entradas/captura de costos 138-465.</td>
+          <td><b>Inferido:</b> probar entrada pendiente, captura de costo y restricciones de compras; requiere productos/proveedor/ubicación válidos.</td>
+          <td>El propio final declara “Cleanup: skipped; append-only purchases remain” en 595-601; depende estrictamente de disposable.</td>
+          <td><b class="bad">Bloqueada:</b> deja compras append-only durante la corrida.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/inventario-lock-barrier.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:inventario-lock-barrier</code><br><small>package:12</small></td>
+          <td><span class="badge business">B + seed</span><br>SELECT del primer usuario seed 51-52; no crea usuario.</td>
+          <td>Ubicación 71; producto 83; dos rollos 104-117; movimientos 129; validación de locks en 70-133.</td>
+          <td><b>Inferido:</b> producir dos candidatos y una barrera para demostrar serialización de inventario bajo concurrencia.</td>
+          <td>Cleanup/finally 183,187,189,193,196,201.</td>
+          <td><b class="bad">Bloqueada:</b> rollos y movimientos adicionales.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/inventario.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:inventario</code><br><small>package:11</small></td>
+          <td><span class="badge business">B + actor no demostrado</span><br>usa <code>USUARIO=1</code> en 154 y usos posteriores; identidad no demostrada.</td>
+          <td>Producto 75; ubicación 91; rollos, movimientos, existencias y auditoría mediante engine 162-1620.</td>
+          <td><b>Inferido:</b> ejercitar el engine completo de entradas/salidas, existencias, auditoría y consistencia del cache.</td>
+          <td>Cleanup/finally 10,1556,1618,1624,1629,1643,1651,1658,1665,1672; borrado por IDs de fixture.</td>
+          <td><b class="bad">Bloqueada:</b> amplia población operacional.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/lib/notificaciones-credito.test.ts</code></td>
+          <td><small>sin alias package; fuente no declarada como runner</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN y BODEGA en INSERT multi-row 79-93; sesiones 99.</td>
+          <td>Ubicaciones 72,181; usuarios 79,176; sesiones 99,171; clientes 106,168; tickets 113,165; notificaciones_credito 125,160.</td>
+          <td><b>Inferido:</b> generar destinatarios y cambios de estado para verificar notificaciones resolubles de crédito.</td>
+          <td>Cleanup/finally 160,165,168,171,176,181.</td>
+          <td><b class="bad">Bloqueada:</b> actores y notificaciones adicionales.</td>
+        </tr>
+        <tr class="temporary">
+          <td><code>artifacts/api-server/src/lib/pending-costs-schema.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:pending-costs-schema</code><br><small>package:28</small></td>
+          <td><span class="badge temp">TEMP</span><br>SELECT de ADMIN seed 21-24; no crea usuario ni fixture de negocio.</td>
+          <td>Modifica permisos_rol en 28,34,41 y restaura backup en 127; no agrega filas de negocio.</td>
+          <td><b>Inferido:</b> comprobar la ampliación de permisos de costos pendientes y la restauración de la matriz original.</td>
+          <td>Backup/restauración/finally 16-51,120-149.</td>
+          <td><b class="violet">No población:</b> mutación temporal de permisos; policy bloquea.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/lib/permisos.test.ts</code></td>
+          <td><small>sin alias package; fuente no declarada como runner</small></td>
+          <td><span class="badge user">U+B</span><br>5 usuarios sintéticos: Admin, Terminal, Caja, Supervisor y Bodega; 81-137.</td>
+          <td>usuarios 81,94,107,120,133; permisos_usuario 273,292,502,522; overrides y matriz temporal.</td>
+          <td><b>Inferido:</b> contrastar permisos efectivos por rol, incluido override de usuario y alcance de ubicación.</td>
+          <td>Cleanup 547,550,556,558,562,568,574; borra overrides y usuarios.</td>
+          <td><b class="bad">Bloqueada:</b> cinco usuarios sintéticos.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/pos.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:pos</code><br><small>package:19</small></td>
+          <td><span class="badge business">B + seed</span><br>SELECT primer usuario activo 48-52; usa <code>USER_ID</code>, no crea actor.</td>
+          <td>Ubicación 107; productos 125; entradas 157; cliente 184; rollos/tickets/sesiones por engine 148-181,803-1611; salidas 573, salida_lineas 586, salida_rollos 594.</td>
+          <td><b>Inferido:</b> recorrer caja/POS, ventas, crédito, notas, devoluciones y movimientos con inventario real de prueba.</td>
+          <td>Cleanup/finally 618,620,623,625; no cubre toda la población por fila, por lo que requiere disposable.</td>
+          <td><b class="bad">Bloqueada:</b> documentos POS e inventario.</td>
+        </tr>
+        <tr class="temporary">
+          <td><code>artifacts/api-server/src/lib/salidas-schema.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:salidas-schema</code><br><small>package:29</small></td>
+          <td><span class="badge temp">TEMP + DDL</span><br>SELECT ADMIN solo para <code>updated_por</code>: 40-43; no crea usuario.</td>
+          <td>Elimina/reinserta/actualiza permisos_rol 18,21,30,35,40,203 y altera enum/índice/DDL en 11-45,210-245.</td>
+          <td><b>Inferido:</b> probar una migración de esquema de salidas y sus permisos heredados, no población de negocio.</td>
+          <td>Restauración/finally 18 y operaciones de rollback 203-245.</td>
+          <td><b class="violet">No población:</b> DDL + filas de permisos; no es schema-only permitido.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/salidas.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:salidas</code><br><small>package:30</small></td>
+          <td><span class="badge business">B + seed</span><br>SELECT usuario activo 28; actor seed reutilizado.</td>
+          <td>Producto 33; ubicación 51; pisos 386; salidas/rollos/movimientos/auditoría/notificaciones mediante helpers 33-644.</td>
+          <td><b>Inferido:</b> probar ciclo de salida, traslado, cancelación, reserva y trazabilidad de rollos.</td>
+          <td>Cleanup/finally 617,650,654-656,658-660,662; borra IDs de fixture cuando aplica.</td>
+          <td><b class="bad">Bloqueada:</b> salida e inventario adicionales.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/ticket-credit-schema.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:ticket-credit-schema</code><br><small>package:26</small></td>
+          <td><span class="badge business">B + SELECT</span><br>No crea usuario; ticket clona IDs obtenidos por SELECT 40-59.</td>
+          <td>INSERT ticket 41 y UPDATE 65; los IDs de cliente/usuario asociados provienen de la consulta, no deben contarse como sintéticos.</td>
+          <td><b>Inferido:</b> verificar columnas/estado de crédito y que la actualización de documento conserva las relaciones.</td>
+          <td>No se observa cleanup por fila en la fuente; depende de la base disposable.</td>
+          <td><b class="bad">Bloqueada:</b> mutación de ticket, aunque no cree usuario.</td>
+        </tr>
+        <tr class="ddl">
+          <td><code>artifacts/api-server/src/lib/ticket-iva-schema.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:ticket-iva-schema</code><br><small>package:25</small></td>
+          <td><span class="badge ddl">DDL ONLY</span><br>No usuarios ni filas.</td>
+          <td><code>ALTER TABLE tickets DROP COLUMN</code> 12-15; <code>ensureTicketIvaSchema</code> dos veces 17-18; metadata <code>information_schema</code> 20-38.</td>
+          <td><b>Declarado:</b> comprobar que una base anterior recibe columnas IVA idempotentes y con precisión/default esperados.</td>
+          <td>No cleanup de filas: el efecto es DDL en la base disposable. El archivo exige test + URL en 5-9.</td>
+          <td><b class="ok">Allowlist explícita:</b> schema-DDL-only, disposable obligatorio; no confundir con población.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/lib/ticket-line-types-schema.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:ticket-line-types-schema</code><br><small>package:27</small></td>
+          <td><span class="badge business">B</span><br>No usuarios; tag y UUID aleatorio para filas.</td>
+          <td>Producto 28; rollo 35; ticket 55; línea 72; cleanup por IDs 137-141.</td>
+          <td><b>Inferido:</b> probar tipos de línea/relaciones ticket-rollo-producto con un fixture mínimo aislable.</td>
+          <td>DELETE por IDs 137-141.</td>
+          <td><b class="bad">Bloqueada:</b> filas de negocio adicionales.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/metered-reference-cost.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:precios-integration</code><br><small>package:58; comparte alias con precios.integration</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN sintético en ubicación nueva 40-49.</td>
+          <td>Ubicación 40,121; usuario 45,119; producto 51,117; entrada 64,114; rollo 71,111.</td>
+          <td><b>Inferido:</b> probar costo de referencia metrado a través de entrada y rollo, con actor que pueda operar el catálogo.</td>
+          <td>Cleanup/finally 109,111,114,117,119,121.</td>
+          <td><b class="bad">Bloqueada:</b> actor, ubicación y cadena de costo.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/pagos-dirigidos.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:pagos-dirigidos-integration</code><br><small>package:62</small></td>
+          <td><span class="badge user">U+B</span><br>CAJA sintética 78-83; sesión 99.</td>
+          <td>Ubicaciones 68,73; usuario 78; permisos 86; sesión 99; clientes 106,156,800; tickets 114,128,162,806,816; crédito 142,149,172,614,826,833,840,874; ticket_pagos 179; proveedor/entrada/pago 185-199; solicitudes_pago_dirigido 854.</td>
+          <td><b>Inferido:</b> probar solicitudes de pago dirigidas y aplicaciones con flujos de cliente/proveedor y sesión de caja.</td>
+          <td>Cleanup/finally 902.</td>
+          <td><b class="bad">Bloqueada:</b> actor y múltiples filas financieras.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/pos-location-authorization.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:pos-location-authorization</code><br><small>package:37</small></td>
+          <td><span class="badge user">U+B</span><br>Helpers de roles, al menos CONTADOR/SISTEMAS y ADMIN explícito: 101-121,157-168.</td>
+          <td>Usuarios 106,157,353; permisos 121,322; sesiones 131,317; ubicaciones 141,146,358; clientes 171,348; productos 177,343; tickets/líneas 186,196,327,330; sesiones_caja 203,338; auditoría 314; días 335.</td>
+          <td><b>Inferido:</b> verificar autorización POS por ubicación, caja abierta/cerrada y rol.</td>
+          <td>Cleanup/finally 307,313-314,317,322,327,330,335,338,343,348,353,358.</td>
+          <td><b class="bad">Bloqueada:</b> actores y caja multi-sitio.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:postgres-unique-concurrency</code><br><small>package:24</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN inicial 160-165 y otro ADMIN en conflicto concurrente 269-273.</td>
+          <td>Usuarios 160,269; sesión 169; cliente 195; producto 212; ubicación 250; operaciones concurrentes del caso 169-250.</td>
+          <td><b>Inferido:</b> provocar una carrera de unicidad entre actores y confirmar el manejo de conflicto de PostgreSQL.</td>
+          <td>Cleanup/finally 82,115,117,127,144,147.</td>
+          <td><b class="bad">Bloqueada:</b> dos usuarios y filas concurrentes.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/precios.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:precios-integration</code><br><small>package:58; comparte alias con metered-reference-cost</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN y CAJA 55-62; sesiones/permisos 63-66.</td>
+          <td>Ubicación 51; usuarios 57; sesiones 63,224; permisos 66,225; productos 70,75,80,135,222; rollos 87,221; cliente 91,223; tickets/líneas 94-99,216-217; precio_historial 219.</td>
+          <td><b>Inferido:</b> comprobar precios por rol, historial, ticket y rollo con productos de varias unidades.</td>
+          <td>Cleanup/finally 32,213,215-217,219,221-225.</td>
+          <td><b class="bad">Bloqueada:</b> actores, catálogo y documentos.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/productos-cache.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:productos-cache-integration</code><br><small>package:59</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN, BODEGA y TERMINAL 190-206; sesiones 216.</td>
+          <td>Ubicaciones 129,133,137,141; productos 152,158; existencias 166; rollos 177; usuarios 192; permisos 206; sesiones 216.</td>
+          <td><b>Inferido:</b> contrastar permisos y consistencia del cache de productos/existencias para tres perfiles.</td>
+          <td>Cleanup/finally 407.</td>
+          <td><b class="bad">Bloqueada:</b> tres usuarios y catálogo/cache adicional.</td>
+        </tr>
+        <tr class="persist-business">
+          <td><code>artifacts/api-server/src/productos-import.integration.test.ts</code></td>
+          <td><small>sin alias package; fuente no declarada como runner</small></td>
+          <td><span class="badge business">B + seed</span><br>Reusa ADMIN seed por SELECT 54-60; no crea usuario.</td>
+          <td>Sesiones 59,177; cuatro productos válidos importados vía CSV 173.</td>
+          <td><b>Inferido:</b> probar importación de catálogo y su sesión autenticada sin fabricar el actor seed.</td>
+          <td>Cleanup/finally 167,173,177.</td>
+          <td><b class="bad">Bloqueada:</b> cuatro productos y sesión.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/productos-purge.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:productos-purge</code><br><small>package:60</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN sintético confirmador 76-80; también SELECT ADMIN/ubicación seed 72-75.</td>
+          <td>Usuario 77; sesión 83,492; existencias 123,299,432; productos 294,331,406,463.</td>
+          <td><b>Inferido:</b> confirmar purga de productos con un actor separado del ADMIN seed y comprobar referencias de existencias.</td>
+          <td>Cleanup/finally 488,492; operaciones auxiliares 140,167,251,315,378,422.</td>
+          <td><b class="bad">Bloqueada:</b> usuario confirmador y catálogo.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:proveedores-alcance-fechas</code><br><small>package:54</small></td>
+          <td><span class="badge user">U+B</span><br>BODEGA propia en sitio propio 44-51; sesión 58.</td>
+          <td>Ubicaciones 37,41; usuario 45; permisos 51; sesión 58; proveedor 63; entrada 71; pago 77.</td>
+          <td><b>Inferido:</b> verificar alcance temporal y territorial de proveedores, entradas y pagos para una bodega asignada.</td>
+          <td>Cleanup/finally 109.</td>
+          <td><b class="bad">Bloqueada:</b> actor, sitio y compra.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/reportes.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:reportes-integration</code><br><small>package:53</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN y CAJA, uno por sitio: 64-69.</td>
+          <td>Ubicación 60; usuarios 66; cliente 72; proveedor 75; productos 82; entrada 87; rollos 101; existencias 107; movimientos 111,118,124,130,135; tickets/líneas/pagos 144,153,159,170,177,185; crédito 190,196,201.</td>
+          <td><b>Inferido:</b> poblar fuentes heterogéneas para reconciliar reportes de ventas, inventario, pagos y crédito por sitio.</td>
+          <td>Cleanup/finally 327.</td>
+          <td><b class="bad">Bloqueada:</b> actores y datos de reporte.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/role-access-matrix.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:role-access-matrix</code><br><small>package:36</small></td>
+          <td><span class="badge user">U+B</span><br>6 actores: TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS, CONTADOR; 220-225.</td>
+          <td>Usuarios 111; productos 191; rollos 204; lecturas/acciones por matriz; cleanup de datos en 142,147,150,153,156,158,165,352,354.</td>
+          <td><b>Inferido:</b> probar la matriz completa contra recursos de inventario y acciones de cada rol.</td>
+          <td>Cleanup/finally 142,147,150,153,156,158,165,352,354.</td>
+          <td><b class="bad">Bloqueada:</b> seis usuarios sintéticos.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/security-api.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:security-api</code> (<small>package:35</small>)<br><code>pnpm --filter @workspace/api-server run test:supervisor-integration</code> (<small>package:38</small>)</td>
+          <td><span class="badge user">U+B</span><br><code>mkUser</code> crea ADMIN, TERMINAL, CAJA, SUPERVISOR, BODEGA, BODEGA TODAS y BODEGA otro sitio 408-417; más actores 581-592,2369,2880,2941-2967.</td>
+          <td>Usuarios 291; ubicaciones 330; productos 344; permisos_usuario 594,1941,2371,2792,2881,2943,2969,3089; permisos_rol 1851,3252; tickets/líneas 2441,2456; proveedor 2531; numerosas operaciones indirectas.</td>
+          <td><b>Inferido:</b> probar autenticación, autorización, alcance y no filtración de datos para la matriz extensa de roles.</td>
+          <td>Cleanup/finally 6,140,1042,1046,1244,1840,1981,2053,2480,2482; no confiar en un cleanup parcial por la amplitud.</td>
+          <td><b class="bad">Bloqueada:</b> población extensa de actores y negocio.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/store-sales-global.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:store-sales-global-integration</code><br><small>package:44</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN global y CAJA propia 98-104; dos tiendas.</td>
+          <td>Ubicaciones 94,96; usuarios 99; clientes 106; productos 108,112; rollos 116; tickets 123; ticket_lineas 133.</td>
+          <td><b>Inferido:</b> comparar venta global y propia con dos tiendas y permisos/alcances distintos.</td>
+          <td>Cleanup/finally 220.</td>
+          <td><b class="bad">Bloqueada:</b> actores y dos catálogos de tienda.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/task57.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:task57-integration</code><br><small>package:49</small></td>
+          <td><span class="badge user">U+B</span><br>ADMIN + CAJA inactivo 75-85; ADMIN segunda fase 327-329; proveedor inactivo.</td>
+          <td>Ubicaciones 67,71,322,417; usuarios 76,81,327; productos 88,93,98; rollos 104,109,114,172-173; auditoría 226; proveedores 332,418; salidas_dinero_caja 412-413; sesiones_caja_dias 414-415; sesiones_caja 416.</td>
+          <td><b>Inferido:</b> probar estados activos/inactivos de caja, proveedor, rollo y auditoría de la tarea 57.</td>
+          <td>Cleanup/finally 262,409,412-418.</td>
+          <td><b class="bad">Bloqueada:</b> múltiples estados y usuarios.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/task58.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:task58-integration</code><br><small>package:50</small></td>
+          <td><span class="badge user">U+B</span><br>Actores ADMIN, BODEGA y CAJA 96-105,150-157; permisos/sesiones por módulo.</td>
+          <td>Usuarios 101; permisos_usuario 108; sesiones 115,572; ubicaciones 126,130,134; productos 144.</td>
+          <td><b>Inferido:</b> verificar la autorización de módulos y sesiones de la tarea 58 con roles contrastados.</td>
+          <td>Cleanup/finally 565,572.</td>
+          <td><b class="bad">Bloqueada:</b> actores, permisos y catálogo.</td>
+        </tr>
+        <tr class="persist-user">
+          <td><code>artifacts/api-server/src/viajes.integration.test.ts</code></td>
+          <td><code>pnpm --filter @workspace/api-server run test:viajes-integration</code><br><small>package:63</small></td>
+          <td><span class="badge user">U+B</span><br><code>makeUser</code> crea ADMIN y BODEGA 50-57.</td>
+          <td>Usuarios 52; ubicación 61; permisos 80; productos 106; tickets 111; rollos 118; ticket_lineas 133; salidas 138,161,165; líneas/rollos de salida 140-141; viaje vía el flujo.</td>
+          <td><b>Inferido:</b> probar viaje con tickets/salidas enlazados y alcance de los dos actores.</td>
+          <td>Cleanup/finally 4,203.</td>
+          <td><b class="bad">Bloqueada:</b> usuarios, documentos y viaje.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="special">Fuentes DB que no agregan población persistida</h2>
+  <p>Estas seis fuentes explican el resto de las 46 fuentes de test con DB real y el benchmark. Se incluyen para que “no crea usuario” no oculte una mutación temporal, DDL o lectura que también exigiría una base disposable.</p>
+  <div class="scroll">
+    <table class="compact">
+      <thead><tr><th>Fuente / comando</th><th>Qué ocurre</th><th>Por qué existe</th><th>Limpieza / clasificación</th></tr></thead>
+      <tbody>
+        <tr><td><code>artifacts/api-server/src/lib/ticket-iva-schema.test.ts</code><br><code>pnpm --filter @workspace/api-server run test:ticket-iva-schema</code> · package:25</td><td>DDL DROP/ensure + <code>information_schema</code>, líneas 5-38; cero INSERT de filas.</td><td>Compatibilidad idempotente de columnas IVA.</td><td><b class="ok">Allowlist schema-DDL-only</b>; disposable obligatorio. No es “datos fuera del seed”.</td></tr>
+        <tr><td><code>artifacts/api-server/src/admin-realtime-reconciliation.integration.test.ts</code><br><code>pnpm --filter @workspace/api-server run test:admin-realtime-reconciliation</code> · package:43</td><td><b class="badge virtual">CTE VIRTUAL</b> El comentario 4-13 declara que no inserta. Los recordsets JSON se convierten en CTEs 298-323; se inyectan solo durante cada SELECT 325-330; el guard rechaza INSERT/UPDATE/DELETE/DDL 333-350. Las listas contienen tickets 51-223, pagos 225-229, crédito 231-236, salidas 244-264, rollos/productos 266-281; no son tablas persistidas.</td><td><b>Declarado/inferido:</b> reconciliar seis tarjetas realtime con detalle paginado, bordes de fecha, sitios y montos sin fabricar filas en la base.</td><td>Restaura <code>pool.query</code> en 346-355 y cierra pool 613-615. <b class="ok">Allowlist read-only-cte</b>; solo schema + seed canónico.</td></tr>
+        <tr><td><code>artifacts/api-server/src/admin-bypass-empty-permissions.test.ts</code><br>package:34</td><td>Ya aparece arriba como TEMP: DELETE de permisos en transacción y rollback; no INSERT.</td><td>Bypass de ADMIN con matriz vacía.</td><td>Rollback/finally; <b class="violet">no población</b>, pero bloqueada para el runner.</td></tr>
+        <tr><td><code>artifacts/api-server/src/lib/pending-costs-schema.test.ts</code><br>package:28</td><td>Ya aparece arriba como TEMP: backup/update/restore de <code>permisos_rol</code>, líneas 16-51,120-149.</td><td>Compatibilidad de permisos de costos pendientes.</td><td>Restauración; <b class="violet">no población</b>, no es DDL-only.</td></tr>
+        <tr><td><code>artifacts/api-server/src/lib/salidas-schema.test.ts</code><br>package:29</td><td>Ya aparece arriba como TEMP+DDL: permisos, enum/índice y ALTER, líneas 11-45,203-245.</td><td>Migración de esquema de salidas.</td><td>Restauración/DDL; <b class="violet">no schema-only-safe</b>.</td></tr>
+        <tr><td><code>artifacts/api-server/src/scripts/benchmark-conciliacion.ts</code><br><code>pnpm --filter @workspace/api-server run benchmark:conciliacion</code> · package:15</td><td>Read-only: importa <code>conciliarTodo</code> 8-10, instrumenta <code>pool.query</code> 20-25 y no contiene INSERT; ejecuta lectura 29-31.</td><td><b>Declarado:</b> benchmark report-only de conciliación sobre catálogo seed.</td><td>Restaura monkey-patch y cierra pool 43-45. No es suite API aprobada ni población.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Scripts de preparación y verificador fuera de la tabla de suites</h2>
+  <div class="scroll">
+    <table class="compact">
+      <thead><tr><th>Script / comando o guard</th><th>Operación observada</th><th>Clasificación</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>artifacts/api-server/src/scripts/initialize-test-database.ts</code><br>Invocado por <code>prepareTestDatabase</code>, no tiene alias propio.</td>
+          <td>Importa <code>ensureStartupSchemas</code>, lo ejecuta y llama <code>assertPreparedTestDatabase</code>: líneas 1-14. El runner lo invoca con schema/seed ya preparados en <code>lib/db/src/prepare-test-database.mjs:290-308</code>.</td>
+          <td><b class="ok">Preparación, no fixture:</b> inicializadores DDL/procedurales y readiness; no crea usuarios ni filas de prueba. La URL de ejecución es la del hijo aislado, aunque el campo <code>DATABASE_URL</code> se conserva como aplicación para la guardia.</td>
+        </tr>
+        <tr>
+          <td><code>scripts/src/reconstruir-cache-existencias-disposable-verification.mts</code><br>Guardas y variables exigidas: 9-16,24-66; no alias package.</td>
+          <td>Importa DB/engine 68-71, toma identidad/cache/conteos 74-87 y llama la reconstrucción real en 98. No crea usuarios, seed, base ni fixtures; exige que la base y fixtures ya existan (4-7).</td>
+          <td><b class="warn">Verificador mutante explícito:</b> puede cambiar la cache <code>existencias</code> (compara antes/después 89-107), pero no agrega población; URL local disposable obligatoria y valores nunca impresos (15-16).</td>
+        </tr>
+        <tr>
+          <td><code>lib/db/src/prepare-test-database.mjs</code><br>Runner interno: no ejecutar como suite.</td>
+          <td>Verifica identidades 240-263, hace push de schema 265-278, ejecuta el seed canónico 280-288 y luego inicializadores/readiness 290-308.</td>
+          <td><b class="ok">Frontera permitida:</b> la única población base es el seed. El script no justifica los fixtures adicionales de las 41 suites.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Seed canónico, guardas y política vigente</h2>
+  <ul>
+    <li><code>lib/db/src/seed.mjs:15-24</code> exige <code>DATABASE_URL</code> y el secreto de seed sin revelar su valor. El seed crea/mantiene ubicaciones canónicas en 175-196, el ADMIN en 272-277, clientes protegidos en 322-340 y permisos/folio en 343-390.</li>
+    <li><code>lib/db/src/prepare-test-database.mjs:250-288</code> obliga a que la base de prueba sea distinta y ejecuta push + seed; <code>:290-308</code> añade solo inicializadores/readiness.</li>
+    <li><code>lib/db/src/run-isolated-tests.mjs:104-117</code> rechaza un <code>TEST_DATABASE_URL</code> heredado y exige derivar el destino local; <code>:810-825</code> prepara schema/seed y solo después ejecuta una suite revisada. No se leyó ninguna credencial ni se mostró ninguna URL.</li>
+    <li><code>lib/db/src/isolated-test-policy.mjs:22-70,127-200</code> permite <code>prepare-smoke</code>, IVA DDL-only y realtime read-only-CTE; todo lo demás queda bloqueado fail-closed. La razón explícita de realtime está en 66-70: filas sintéticas acotadas a la sentencia, sin persistencia. La regla acordada no permite credenciales en fixtures, lecturas de la DB de desarrollo, usuarios temporales ni fixtures persistentes: solo schema/seed canónico, DDL revisado y CTE virtual revisado.</li>
+    <li>El prefijo de aislamiento aparece en los aliases declarados en <code>artifacts/api-server/package.json:11-64</code>. En el corte hay 35 <em>scripts</em> con <code>TEST_DATABASE_URL</code> (34 aliases <code>test:</code> más el benchmark) y 19 aliases <code>test:</code> sin esa inyección; el alias nuevo de realtime es la línea 43.</li>
+  </ul>
+
+  <h2>Comandos actuales y cobertura de aliases</h2>
+  <p>Las filas anteriores muestran el comando de cada suite pobladora cuando package lo declara. Este inventario también verificó los 54 aliases actuales; la división siguiente evita confundir un alias sin URL con una suite segura.</p>
+  <div class="scroll">
+    <table class="compact">
+      <thead><tr><th>Grupo</th><th>Aliases actuales (líneas de package)</th><th>Lectura</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>35 scripts con guard de URL</b><br><small>34 aliases <code>test:</code> + benchmark</small></td>
+          <td><code>test:inventario</code>(11), <code>test:inventario-lock-barrier</code>(12), <code>benchmark:conciliacion</code>(15), <code>test:entradas</code>(17), <code>test:proveedores</code>(18), <code>test:pos</code>(19), <code>test:clientes-ledger</code>(21), <code>test:postgres-unique-concurrency</code>(24), <code>test:ticket-credit-schema</code>(26), <code>test:salidas</code>(30), <code>test:kardex-api</code>(33), <code>test:security-api</code>(35), <code>test:role-access-matrix</code>(36), <code>test:pos-location-authorization</code>(37), <code>test:supervisor-integration</code>(38), <code>test:clientes-ajustes</code>(39), <code>test:admin-analytics-integration</code>(42), <code>test:admin-realtime-reconciliation</code>(43), <code>test:store-sales-global-integration</code>(44), <code>test:admin-alertas-integration</code>(45), <code>test:etiquetas-integration</code>(47), <code>test:auditoria</code>(48), <code>test:task57-integration</code>(49), <code>test:task58-integration</code>(50), <code>test:admin-invariants</code>(51), <code>test:reportes-integration</code>(53), <code>test:proveedores-alcance-fechas</code>(54), <code>test:contenedores-integration</code>(56), <code>test:precios-integration</code>(58), <code>test:productos-cache-integration</code>(59), <code>test:productos-purge</code>(60), <code>test:inventory-six-view-integration</code>(61), <code>test:pagos-dirigidos-integration</code>(62), <code>test:viajes-integration</code>(63), <code>test:cuadre-fiscal-integration</code>(64).</td>
+          <td>35 aliases requieren URL explícita; eso no los aprueba para población. La policy solo revisa dos aliases: IVA y realtime.</td>
+        </tr>
+        <tr>
+          <td><b>19 sin URL en el alias</b></td>
+          <td><code>test:inventario-conciliacion-contract</code>(13), <code>test:inventory-lock-loops-contract</code>(14), <code>test:transferencias-block3</code>(16), <code>test:clientes-aging</code>(20), <code>test:clientes-create</code>(22), <code>test:postgres-errors</code>(23), <code>test:ticket-iva-schema</code>(25), <code>test:ticket-line-types-schema</code>(27), <code>test:pending-costs-schema</code>(28), <code>test:salidas-schema</code>(29), <code>test:salidas-api</code>(31), <code>test:scanned-code-contract</code>(32), <code>test:admin-bypass-empty</code>(34), <code>test:clientes-ajustes:unit</code>(40), <code>test:admin-analytics</code>(41), <code>test:etiquetas</code>(46), <code>test:reportes</code>(52), <code>test:contenedores</code>(55), <code>test:precios</code>(57).</td>
+          <td>Sin URL no significa sin DB: IVA, ticket-line-types, pending-costs, salidas-schema y admin-bypass tienen comportamiento DB observado; el resto se clasificó en la cobertura negativa o requiere revisión al alcanzar código auxiliar.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Auditoría negativa: 78 tests actuales sin DB externa real</h2>
+  <p>Para que la lista sea comprensiva y no solo una repetición del inventario histórico, se escanearon los 124 nombres actuales. Estos 78 no agregan usuarios ni datos en una base: son contratos, unitarios, lectura de fuentes o mocks. Dos casos tienen SQL con INSERT en memoria y se destacan.</p>
+  <details>
+    <summary>Mostrar las 78 fuentes no pobladoras</summary>
+    <ul class="columns">
+      <li><code>artifacts/api-server/src/advisory-locks.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/auditoria.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/auditoria-inventario.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/bloque3-formas-pago.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/bloque6-reversos.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/caja-diaria-block4.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/clientes-bolsa.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/clientes-estado-cuenta.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/clientes-notas-credito.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/clientes-pagos.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/dashboard-pieza.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/entrada-documento-api.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/entry-errors.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/equipos.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/etiquetas-api.test.ts</code></li>
+      <li><code>artifacts/api-server/src/etiquetas-reimpresiones.batch.test.ts</code></li>
+      <li><code>artifacts/api-server/src/historial-compras-proveedores.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/hoja-ventas-dia.test.ts</code></li>
+      <li><code>artifacts/api-server/src/human-text-casing.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/inventario-conciliacion.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/inventory-lock-loops.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/kardex-block2.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/kardex-sale-documents.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/admin-alertas-credit-risk.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/auth-identifiers.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/clientes-aging.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/clientes-create.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/contenedores.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/credit-allocation.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/generacion-venta-idempotency.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/inventory-status-semantics.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/iva.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/linked-cancellation.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/login-lockout.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/metered-reference-cost.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/payment-behavior.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/permisos-matrix.no-db.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/permisos-salidas-venta.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/postgres-errors.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/precios.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/product-color.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/quantity-comparison.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/realtime-cancellations.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/reportes-commercial.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/reportes-inventory.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/reportes-que-comprar.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/reportes-sales.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/reportes.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/report-export.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/salidas-reservation-entrypoints.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/salida-venta-contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/salida-venta-zod.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/sensitive-data.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/server-lifecycle.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/spanish-order.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/stock-minimos-engine.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/store-order.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/ticket-credit-contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/ticket-payment-methods.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/lib/venta-trace-access.test.ts</code></li>
+      <li><code>artifacts/api-server/src/notification-feed.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/pagos-dirigidos-block1.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/pagos-dirigidos.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/pending-entry-costs.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/pos-caja-final.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/precios-null.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/productos-cache.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/productos-task62.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/proveedores-pagos-block5.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/purga-catalogos.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/realtime-breakdown.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/salidas-api.test.ts</code></li>
+      <li><code>artifacts/api-server/src/salidas-extraordinarias.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/scanned-code.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/session-duration.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/transferencias-block3-architecture.test.ts</code></li>
+      <li><code>artifacts/api-server/src/users-create.contract.test.ts</code></li>
+      <li><code>artifacts/api-server/src/user-validation-errors.test.ts</code></li>
+    </ul>
+  </details>
+  <div class="notice">
+    <strong>Fixtures indirectos/mocks.</strong> <code>etiquetas-reimpresiones.batch.test.ts:7-13,109-173,343-498</code> transpila la ruta y captura SQL en un objeto; el <code>INSERT INTO reimpresiones_etiqueta</code> no llega a PostgreSQL. <code>lib/realtime-cancellations.test.ts:31-136</code> importa el pool pero reemplaza <code>pool.query</code> con mock y restaura el método; sus filas 34-101 son respuestas en memoria. Por eso no se cuentan como población DB.
+  </div>
+
+  <h2>Las tres suites históricas bloqueadas: nombres no recuperables</h2>
+  <p>Se buscó el prompt histórico <code>attached_assets/Pasted--Prompt-para-Replit-Agent-Deuda-pendiente-acumulada-Cin_1789272137337.txt:49-68</code> y el prompt actual <code>...Trabajo-sin-puntos-de-decisi...txt:23-29</code>. Ambos dicen “tres suites” pero no nombran ninguna. No se inventan nombres: quedan <strong>desconocidas</strong>. La tabla sí enumera toda fuente actual con DB y los aliases vigentes; no es válido llamar “las tres históricas” a tres candidatas por aproximación.</p>
+
+  <h2>Conclusión para la decisión posterior</h2>
+  <ul>
+    <li><strong>41</strong> suites necesitan datos adicionales para sus escenarios: <strong>28</strong> crean/pueden crear usuarios y <strong>13</strong> crean solo filas de negocio. La necesidad es funcional de prueba, pero contradice la regla seed-only y queda bloqueada sin una decisión posterior.</li>
+    <li><strong>6</strong> fuentes DB no agregan población persistida: cuatro mutan temporalmente/DDL, el benchmark solo lee y realtime usa CTE virtual. Solo IVA DDL y realtime CTE tienen revisión explícita de allowlist.</li>
+    <li>El seed canónico no se amplió y no se creó ningún usuario temporal durante esta auditoría. No hay credenciales, valores de URLs ni lecturas de una base en este documento.</li>
+    <li>No se ejecutaron suites ni se reportan aprobadas/fallidas. Este archivo es únicamente el entregable estático solicitado.</li>
+  </ul>
+
+  <footer>Documento HTML autocontenido; no contiene credenciales, conexiones, resultados de ejecución ni cambios de código.</footer>
+</main>
+</body>
+</html>
