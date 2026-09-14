@@ -7,6 +7,48 @@ export interface DomainReportContext {
   range: { desde: Date; hasta: Date; previousDesde: Date; previousHasta: Date; yearAgoDesde: Date; yearAgoHasta: Date };
 }
 
+export type CancellationReportRow = {
+  ticketId: number;
+  folio: string;
+  motivo: string | null;
+  sitio: string;
+  modalidad: string;
+  lineas: number;
+  importe: number;
+  canceladoAt: string | null;
+  documentoHref: string;
+};
+
+export type CancelledProductReportRow = {
+  sku: string;
+  tela: string;
+  color: string;
+  modalidad: string;
+  unidad: string;
+  lineas: number;
+  cantidad: number;
+  importe: number;
+};
+
+export type CancellationReportData = {
+  summary: Array<{ modalidad: string; tickets: number; importe: number }>;
+  rows: CancellationReportRow[];
+  products: CancelledProductReportRow[];
+};
+
+export function summarizeCancellationRows(
+  rows: CancellationReportRow[],
+): Array<{ modalidad: string; tickets: number; importe: number }> {
+  return [...new Set(rows.map((row) => row.modalidad))].map((modalidad) => {
+    const matching = rows.filter((row) => row.modalidad === modalidad);
+    return {
+      modalidad,
+      tickets: new Set(matching.map((row) => row.ticketId)).size,
+      importe: matching.reduce((sum, row) => sum + row.importe, 0),
+    };
+  });
+}
+
 type Primitive = string | number | boolean | null;
 type Row = Record<string, Primitive>;
 const zone = "America/Mexico_City";
@@ -123,6 +165,56 @@ function where(ctx: DomainReportContext, range = ctx.range, alias = "t") {
   return { text: parts.join(" AND "), values: args };
 }
 
+/**
+ * Canonical cancellation source for the Sales report and Control operativo.
+ *
+ * Keep this query tied to the Sales report's existing normal predicate.  A
+ * cancellation is filtered by the same accounted-document timestamp and the
+ * same transversal filters as V19–V21 have always used; the cancellation
+ * event timestamp is exposed for drill-down only and is not substituted into
+ * the period predicate.
+ */
+export async function loadCancellationRows(
+  ctx: DomainReportContext,
+): Promise<CancellationReportData> {
+  const normal = where(ctx);
+  const [cancelled, cancelledProducts] = await Promise.all([
+    pool.query(`SELECT t.id ticket_id,t.folio,t.motivo_cancelacion motivo,t.cancelado_at,
+        u.nombre sitio,l.tipo,COALESCE(SUM(l.importe),0)::float importe,COUNT(l.id)::int lineas
+      ${joins} WHERE ${normal.text} AND t.estado='CANCELADO'
+      GROUP BY t.id,t.folio,t.motivo_cancelacion,t.cancelado_at,u.nombre,l.tipo
+      ORDER BY t.created_at DESC`, normal.values),
+    pool.query(`SELECT p.sku,p.tela,p.color,l.tipo,p.unidad,COUNT(*)::int lineas,
+        COALESCE(SUM(l.cantidad),0)::float cantidad,COALESCE(SUM(l.importe),0)::float importe
+      ${joins} WHERE ${normal.text} AND t.estado='CANCELADO'
+      GROUP BY p.id,l.tipo,p.unidad ORDER BY importe DESC`, normal.values),
+  ]);
+
+  const rows = cancelled.rows.map((row) => ({
+    ticketId: Number(row.ticket_id),
+    folio: String(row.folio),
+    modalidad: modalityLabel(row.tipo),
+    motivo: row.motivo == null ? null : String(row.motivo),
+    sitio: String(row.sitio),
+    lineas: number(row.lineas),
+    importe: number(row.importe),
+    canceladoAt: row.cancelado_at == null ? null : new Date(row.cancelado_at).toISOString(),
+    documentoHref: `/tickets/${Number(row.ticket_id)}`,
+  }));
+  const products = cancelledProducts.rows.map((row) => ({
+    sku: String(row.sku),
+    tela: String(row.tela),
+    color: String(row.color),
+    modalidad: modalityLabel(row.tipo),
+    unidad: String(row.unidad),
+    lineas: number(row.lineas),
+    cantidad: number(row.cantidad),
+    importe: number(row.importe),
+  }));
+  const summary = summarizeCancellationRows(rows);
+  return { summary, rows, products };
+}
+
 const joins = "FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id JOIN productos p ON p.id=l.producto_id JOIN ubicaciones u ON u.id=t.ubicacion_id LEFT JOIN usuarios vendedor ON vendedor.id=t.usuario_terminal_id LEFT JOIN clientes cliente ON cliente.id=t.cliente_id LEFT JOIN rollos r ON r.id=l.rollo_id";
 const pendingCost = "l.costo_total_congelado IS NULL";
 
@@ -233,20 +325,13 @@ export async function buildSalesReport(section: "ventas" | "utilidad", ctx: Doma
       FROM filtered_lines fl1 JOIN filtered_lines fl2 ON fl2.ticket_id=fl1.ticket_id AND fl1.producto_id<fl2.producto_id
       JOIN productos p1 ON p1.id=fl1.producto_id JOIN productos p2 ON p2.id=fl2.producto_id
       GROUP BY p1.sku,p2.sku,fl1.tipo,fl2.tipo ORDER BY tickets DESC LIMIT 100`, normal.values);
-    const cancelled = await pool.query(`SELECT t.id ticket_id,t.folio,t.motivo_cancelacion motivo,u.nombre sitio,l.tipo,COALESCE(SUM(l.importe),0)::float importe,COUNT(l.id)::int lineas
-      ${joins} WHERE ${normal.text} AND t.estado='CANCELADO' GROUP BY t.id,u.nombre,l.tipo ORDER BY t.created_at DESC`, normal.values);
-    const cancelledProducts = await pool.query(`SELECT p.sku,p.tela,p.color,l.tipo,p.unidad,COUNT(*)::int lineas,COALESCE(SUM(l.cantidad),0)::float cantidad,COALESCE(SUM(l.importe),0)::float importe
-      ${joins} WHERE ${normal.text} AND t.estado='CANCELADO' GROUP BY p.id,l.tipo,p.unidad ORDER BY importe DESC`, normal.values);
+    const cancellationData = await loadCancellationRows(ctx);
     const quantities = await pool.query(`SELECT l.tipo,p.unidad,COALESCE(SUM(l.cantidad),0)::float cantidad
       ${joins} WHERE ${salesWhere} GROUP BY l.tipo,p.unidad ORDER BY l.tipo,p.unidad`, normal.values);
-    const cancellationSummary = [...new Map(cancelled.rows.map((row) => [modalityLabel(row.tipo), modalityLabel(row.tipo)])).values()].map((modalidad) => {
-      const rows = cancelled.rows.filter((row) => modalityLabel(row.tipo) === modalidad);
-      return { modalidad, tickets: new Set(rows.map((row) => String(row.ticket_id))).size, importe: rows.reduce((sum, row) => sum + number(row.importe), 0) };
-    });
     return {
       kpis: [kpi("ventas", "Ventas totales", sales, "money", previous.ventas, yearAgo.ventas, true), kpi("tickets", "Tickets totales", tickets, "count", previous.tickets, yearAgo.tickets), ...modalityKpis, ...quantities.rows.map((r) => ({ id: `cantidad-${String(r.tipo).toLowerCase()}-${String(r.unidad).toLowerCase()}`, label: `${modalityLabel(r.tipo)} · ${r.unidad}`, value: number(r.cantidad), kind: "quantity", unit: String(r.unidad) }))],
       charts: [chart("timeline", "Ventas diarias", "line", "dimension", [{ key: "ventas", label: "Ventas", kind: "money", economic: true }], daily.rows), chart("horas", "Ventas por hora", "bar", "dimension", [{ key: "ventas", label: "Ventas", kind: "money", economic: true }], hour.rows), chart("semana", "Ventas por día", "bar", "dimension", [{ key: "ventas", label: "Ventas", kind: "money", economic: true }], weekday.rows)],
-      tables: [daily, weekday, hour, site, product, fabric, color, seller, client, paymentTable, invoice, table("mejores-productos", "Mejores productos", product.columns as any, ranked.slice(0, 20)), table("peores-productos", "Peores productos", product.columns as any, [...ranked].reverse().slice(0, 20)), table("abc-productos", "Clasificación ABC", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["ventas", "Ventas", "money", true], ["porcentajeAcumulado", "% acumulado", "percentage"], ["clase", "Clase", "text"]], abcRows), table("canasta-pares", "Pares de productos en canasta", [["productoA", "Producto A", "text"], ["modalidadA", "Modalidad A", "text"], ["productoB", "Producto B", "text"], ["modalidadB", "Modalidad B", "text"], ["tickets", "Tickets", "count"]], pairs.rows.map((r) => ({ productoA: String(r.producto_a), modalidadA: modalityLabel(r.tipo_a), productoB: String(r.producto_b), modalidadB: modalityLabel(r.tipo_b), tickets: number(r.tickets) }))), table("resumen-cancelaciones", "Resumen de cancelaciones", [["modalidad", "Modalidad", "text"], ["tickets", "Tickets cancelados", "count"], ["importe", "Subtotal cancelado", "money", true]], cancellationSummary), table("cancelaciones", "Cancelaciones", [["folio", "Folio", "text"], ["modalidad", "Modalidad", "text"], ["motivo", "Motivo", "text"], ["sitio", "Sitio", "text"], ["lineas", "Líneas", "count"], ["importe", "Subtotal cancelado", "money", true]], cancelled.rows.map((r) => ({ folio: String(r.folio), modalidad: modalityLabel(r.tipo), motivo: r.motivo == null ? null : String(r.motivo), sitio: String(r.sitio), lineas: number(r.lineas), importe: number(r.importe) }))), table("productos-cancelados", "Productos cancelados", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["lineas", "Líneas", "count"], ["cantidad", "Cantidad", "quantity"], ["importe", "Importe", "money", true]], cancelledProducts.rows.map((r) => ({ sku: String(r.sku), tela: String(r.tela), color: String(r.color), modalidad: modalityLabel(r.tipo), unidad: String(r.unidad), lineas: number(r.lineas), cantidad: number(r.cantidad), importe: number(r.importe) })))],
+      tables: [daily, weekday, hour, site, product, fabric, color, seller, client, paymentTable, invoice, table("mejores-productos", "Mejores productos", product.columns as any, ranked.slice(0, 20)), table("peores-productos", "Peores productos", product.columns as any, [...ranked].reverse().slice(0, 20)), table("abc-productos", "Clasificación ABC", [["producto", "Producto", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["ventas", "Ventas", "money", true], ["porcentajeAcumulado", "% acumulado", "percentage"], ["clase", "Clase", "text"]], abcRows), table("canasta-pares", "Pares de productos en canasta", [["productoA", "Producto A", "text"], ["modalidadA", "Modalidad A", "text"], ["productoB", "Producto B", "text"], ["modalidadB", "Modalidad B", "text"], ["tickets", "Tickets", "count"]], pairs.rows.map((r) => ({ productoA: String(r.producto_a), modalidadA: modalityLabel(r.tipo_a), productoB: String(r.producto_b), modalidadB: modalityLabel(r.tipo_b), tickets: number(r.tickets) }))), table("resumen-cancelaciones", "Resumen de cancelaciones", [["modalidad", "Modalidad", "text"], ["tickets", "Tickets cancelados", "count"], ["importe", "Subtotal cancelado", "money", true]], cancellationData.summary), table("cancelaciones", "Cancelaciones", [["ticketId", "Ticket", "count"], ["folio", "Folio", "text"], ["modalidad", "Modalidad", "text"], ["motivo", "Motivo", "text"], ["sitio", "Sitio", "text"], ["canceladoAt", "Cancelado", "text"], ["documentoHref", "Documento", "link"], ["lineas", "Líneas", "count"], ["importe", "Subtotal cancelado", "money", true]], cancellationData.rows), table("productos-cancelados", "Productos cancelados", [["sku", "SKU", "text"], ["tela", "Tela", "text"], ["color", "Color", "text"], ["modalidad", "Modalidad", "text"], ["unidad", "Unidad", "text"], ["lineas", "Líneas", "count"], ["cantidad", "Cantidad", "quantity"], ["importe", "Importe", "money", true]], cancellationData.products)],
       warnings,
     };
   }

@@ -5444,6 +5444,7 @@ paths:
                   clientes,
                   pagos-dirigidos,
                   que-comprar,
+                  control-operativo,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -5499,6 +5500,7 @@ paths:
                   clientes,
                   pagos-dirigidos,
                   que-comprar,
+                  control-operativo,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"
@@ -5555,6 +5557,7 @@ paths:
                   clientes,
                   pagos-dirigidos,
                   que-comprar,
+                  control-operativo,
                 ],
             }
         - $ref: "#/components/parameters/ReportePeriodo"

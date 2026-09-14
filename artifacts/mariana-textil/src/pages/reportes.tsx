@@ -11,26 +11,21 @@ import { ReportFilterBar, FilterState, DEFAULT_FILTERS } from "@/components/repo
 import { ReportKpis } from "@/components/reportes/report-kpis";
 import { ReportWarnings } from "@/components/reportes/report-warnings";
 import { ReportCharts } from "@/components/reportes/report-charts";
-import { ReportTable } from "@/components/reportes/report-table";
-import QueComprarReport from "@/components/reportes/que-comprar-report";
-import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { readCombinedFilterCriteria, sanitizeCombinedFilterCriteria, writeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
-import { toast } from "sonner";
+import { VentasTab } from "@/components/reportes/tabs/ventas-tab";
+import { QueComprarTab } from "@/components/reportes/tabs/que-comprar-tab";
+import { UtilidadTab } from "@/components/reportes/tabs/utilidad-tab";
+import { ClientesTab } from "@/components/reportes/tabs/clientes-tab";
+import { ControlOperativoTab } from "@/components/reportes/tabs/control-operativo-tab";
+import { readCombinedFilterCriteria, writeCombinedFilterCriteria, sanitizeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
 import { useLocationScope } from "@/lib/location-scope";
+import { toast } from "sonner";
 
 const TABS = [
   { id: "ventas", label: "Ventas" },
-  { id: "utilidad", label: "Utilidad y Márgenes" },
-  { id: "inventario", label: "Inventario y Rotación" },
-  { id: "mapas-calor", label: "Mapas de Calor" },
-  { id: "color", label: "Análisis de Color" },
-  { id: "compras", label: "Compras" },
   { id: "que-comprar", label: "Qué comprar" },
-  { id: "clientes", label: "Clientes y Crédito" },
-  { id: "pagos-dirigidos", label: "Pagos Dirigidos" },
-  { id: "comparativo", label: "Comparativo entre Sitios" },
-  { id: "diferencias", label: "Diferencias de Caja" },
+  { id: "utilidad", label: "Utilidad y márgenes" },
+  { id: "clientes", label: "Clientes y crédito" },
+  { id: "control-operativo", label: "Control operativo" },
 ];
 
 const REPORT_MIN_DATE = "1900-01-01";
@@ -55,7 +50,7 @@ export default function Reportes() {
 
   const allowedTabs = TABS.filter(tab => {
     if (!isAdmin) {
-      if (["utilidad", "compras", "clientes", "pagos-dirigidos", "comparativo", "diferencias"].includes(tab.id)) {
+      if (["utilidad", "clientes", "control-operativo"].includes(tab.id)) {
         return false;
       }
     }
@@ -72,8 +67,11 @@ export default function Reportes() {
   } else if (allowedTabs.some(t => t.id === lastPart)) {
     activeTab = lastPart;
   } else if (!allowedTabs.some(t => t.id === activeTab)) {
-    activeTab = allowedTabs[0]?.id || "inventario";
+    activeTab = allowedTabs[0]?.id || "ventas";
   }
+
+  // Check if we are in "global" compare mode (no specific location selected)
+  const isGlobalMode = selectedLocationId === null;
 
   // Parse initial state from URL search string
   const [filters, setFilters] = useState<FilterState>(() => {
@@ -174,17 +172,6 @@ export default function Reportes() {
     )
   );
 
-  // Data hook
-  type SectionType = Parameters<typeof useGetReporteSeccion>[0];
-  const isValidSection = !isCajaTab && activeTab as any;
-
-  const { data: reportData, isLoading, isError, refetch } = useGetReporteSeccion(isValidSection as SectionType, apiParams as any, {
-    query: {
-      enabled: !isCajaTab && isDateRangeValid,
-      queryKey: getGetReporteSeccionQueryKey(isValidSection as SectionType, apiParams as any)
-    }
-  });
-
   const handleTabChange = (value: string) => {
     setLocation(`/reportes/${value}${searchString ? '?' + searchString : ''}`);
   };
@@ -275,49 +262,35 @@ export default function Reportes() {
                 <div className="rounded-lg border bg-muted/30 px-4 py-8 text-center text-sm text-muted-foreground" data-testid="report-date-range-prompt">
                   Selecciona un rango entre 1900 y 2999, de hasta 100 años, para generar el reporte.
                 </div>
-              ) : isQueComprar ? (
-                <QueComprarReport
-                  params={apiParams as any}
-                  dateRangeValid={isDateRangeValid}
-                  ubicacionId={selectedLocationId}
+              ) : activeTab === "ventas" ? (
+                <VentasTab 
+                  apiParams={apiParams} 
+                  isDateRangeValid={isDateRangeValid} 
+                  isGlobal={isGlobalMode} 
+                  isAdmin={isAdmin}
                 />
-              ) : isLoading ? (
-                <div className="h-[400px] flex items-center justify-center bg-card rounded-lg border shadow-sm" data-testid="report-loading">
-                  <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary opacity-50" />
-                    <p className="text-sm text-muted-foreground">Analizando datos...</p>
-                  </div>
-                </div>
-              ) : isError ? (
-                <div className="p-10 text-center text-destructive bg-destructive/5 rounded-xl border border-destructive/20" data-testid="report-error">
-                  <AlertCircle className="h-10 w-10 mx-auto mb-2 opacity-80" />
-                  <p className="font-semibold">No se pudo cargar el reporte</p>
-                  <Button variant="outline" className="mt-4" onClick={() => refetch()} data-testid="report-retry">
-                    <RefreshCw className="w-4 h-4 mr-2" /> Intentar de nuevo
-                  </Button>
-                </div>
-              ) : reportData ? (
-                <div className="space-y-6" data-testid={`report-content-${activeTab}`}>
-                  <ReportWarnings warnings={reportData.warnings || []} />
-
-                  <ReportKpis
-                    kpis={reportData.kpis || []}
-                    hasEconomicAccess={reportData.hasEconomicAccess}
-                  />
-
-                  <ReportCharts charts={reportData.charts || []} section={activeTab} />
-
-                  <div className="grid grid-cols-1 gap-6">
-                    {(reportData.tables || []).map((table: any) => (
-                      <ReportTable
-                        key={table.id}
-                        block={table}
-                        hasEconomicAccess={reportData.hasEconomicAccess}
-                        section={activeTab}
-                      />
-                    ))}
-                  </div>
-                </div>
+              ) : activeTab === "que-comprar" ? (
+                <QueComprarTab 
+                  apiParams={apiParams} 
+                  isDateRangeValid={isDateRangeValid} 
+                  ubicacionId={selectedLocationId}
+                  isAdmin={isAdmin}
+                />
+              ) : activeTab === "utilidad" ? (
+                <UtilidadTab 
+                  apiParams={apiParams} 
+                  isDateRangeValid={isDateRangeValid}
+                />
+              ) : activeTab === "clientes" ? (
+                <ClientesTab 
+                  apiParams={apiParams} 
+                  isDateRangeValid={isDateRangeValid}
+                />
+              ) : activeTab === "control-operativo" ? (
+                <ControlOperativoTab 
+                  apiParams={apiParams} 
+                  isDateRangeValid={isDateRangeValid}
+                />
               ) : null}
             </div>
           )}

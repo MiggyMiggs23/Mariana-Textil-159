@@ -8,3 +8,9 @@ Una tarjeta financiera y su desglose deben compartir el mismo predicado de efect
 **Why:** Reutilizar únicamente el predicado no basta: sumar el total del documento en un lado y el movimiento ledger en el otro puede producir diferencias silenciosas aunque ambos conjuntos contengan los mismos folios.
 
 **How to apply:** Al añadir o cambiar un desglose financiero, revisar en conjunto selección, rango temporal, ubicación, cancelaciones, fuente del importe y orden estable. Validar tanto cantidad como suma contra su tarjeta.
+
+Cuando un mismo hecho se presenta intencionalmente en dos pestañas, ambas deben consumir una fuente compartida de consulta y agregación, no dos implementaciones que intenten ser equivalentes.
+
+**Why:** Las divergencias recurrentes entre vistas demostraron que copiar una consulta aparentemente equivalente no conserva una única definición del hecho.
+
+**How to apply:** Reutilizar el resultado o cargador canónico con los mismos filtros y añadir una regresión que ejecute y compare los consumidores reales. Una aserción sobre el texto del código no acredita igualdad de resultados ni autorización.

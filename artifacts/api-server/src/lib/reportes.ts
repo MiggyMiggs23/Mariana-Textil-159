@@ -2,6 +2,7 @@ import { pool } from "@workspace/db";
 import { accountedDocumentPredicate } from "./accounted-document";
 import { parseMexicoDateQuery } from "./mexico-date";
 import { buildCommercialReport } from "./reportes-commercial";
+import { buildControlOperativoReport } from "./reportes-control-operativo";
 import { buildInventoryReport } from "./reportes-inventory";
 import { buildQueComprarReport } from "./reportes-que-comprar";
 import { buildSalesReport } from "./reportes-sales";
@@ -16,6 +17,7 @@ export const REPORT_SECTIONS = [
   "clientes",
   "pagos-dirigidos",
   "que-comprar",
+  "control-operativo",
 ] as const;
 
 export type ReportSection = (typeof REPORT_SECTIONS)[number];
@@ -172,6 +174,8 @@ export async function buildReport(
   const context = { input: reportInput, locations, range };
   const content = section === "pagos-dirigidos"
     ? await buildDirectedPaymentsReport(context)
+    : section === "control-operativo"
+      ? await buildControlOperativoReport(context)
     : section === "ventas" || section === "utilidad"
     ? await buildSalesReport(section, context)
     : section === "inventario" || section === "mapas-calor" || section === "color"

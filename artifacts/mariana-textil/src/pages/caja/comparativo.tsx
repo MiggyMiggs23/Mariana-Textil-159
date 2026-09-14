@@ -31,10 +31,21 @@ import {
 
 type SortKey = "nombreUbicacion" | "participacion" | "ventas" | "margen" | "tickets" | "ticketPromedio" | "metros" | "efectivo" | "transferencia" | "credito" | "diferenciaCaja" | "porcentajeFacturado";
 
-export default function CajaComparativo({ embedded = false }: { embedded?: boolean }) {
-  const [periodo, setPeriodo] = useState<GetAdminComparacionTiendasPeriodo>("mensual");
-  const [desde, setDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
-  const [hasta, setHasta] = useState(format(new Date(), "yyyy-MM-dd"));
+export default function CajaComparativo({ 
+  embedded = false,
+  filters
+}: { 
+  embedded?: boolean;
+  filters?: { periodo: string, desde: string, hasta: string };
+}) {
+  const [internalPeriodo, setInternalPeriodo] = useState<GetAdminComparacionTiendasPeriodo>("mensual");
+  const [internalDesde, setInternalDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
+  const [internalHasta, setInternalHasta] = useState(format(new Date(), "yyyy-MM-dd"));
+
+  const periodo = (filters?.periodo as GetAdminComparacionTiendasPeriodo) || internalPeriodo;
+  const desde = filters?.desde || internalDesde;
+  const hasta = filters?.hasta || internalHasta;
+
 
   const [sortKey, setSortKey] = useState<SortKey>("ventas");
   const [sortAsc, setSortAsc] = useState(false);
@@ -47,14 +58,6 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
       ? { periodo: "personalizado", desde, hasta }
       : { periodo }
   );
-
-  const applyPreset = (val: string) => {
-    if (val === "personalizado") {
-      setPeriodo(val as GetAdminComparacionTiendasPeriodo);
-      return;
-    }
-    setPeriodo(val as GetAdminComparacionTiendasPeriodo);
-  };
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc(!sortAsc);
@@ -123,34 +126,36 @@ export default function CajaComparativo({ embedded = false }: { embedded?: boole
             <p className="text-sm text-muted-foreground">Evaluación de rendimiento, ventas y medios de pago por ubicación.</p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <Select value={periodo} onValueChange={applyPreset}>
-              <SelectTrigger className="w-[150px] h-9 bg-background">
-                <SelectValue placeholder="Periodo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="diario">Hoy</SelectItem>
-                <SelectItem value="semanal">Esta Semana</SelectItem>
-                <SelectItem value="mensual">Este Mes</SelectItem>
-                <SelectItem value="trimestral">Este Trimestre</SelectItem>
-                <SelectItem value="semestral">Este Semestre</SelectItem>
-                <SelectItem value="anual">Este Año</SelectItem>
-                <SelectItem value="personalizado">Personalizado</SelectItem>
-              </SelectContent>
-            </Select>
+          {!filters && (
+            <div className="flex flex-wrap items-center gap-3">
+              <Select value={internalPeriodo} onValueChange={(val: any) => { setInternalPeriodo(val); }}>
+                <SelectTrigger className="w-[150px] h-9 bg-background">
+                  <SelectValue placeholder="Periodo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="diario">Hoy</SelectItem>
+                  <SelectItem value="semanal">Esta Semana</SelectItem>
+                  <SelectItem value="mensual">Este Mes</SelectItem>
+                  <SelectItem value="trimestral">Este Trimestre</SelectItem>
+                  <SelectItem value="semestral">Este Semestre</SelectItem>
+                  <SelectItem value="anual">Este Año</SelectItem>
+                  <SelectItem value="personalizado">Personalizado</SelectItem>
+                </SelectContent>
+              </Select>
 
-            {isCustom && (
-              <div className="flex items-center gap-2 bg-muted/30 p-1.5 rounded-md border">
-                <Input type="date" value={desde} onChange={e => setDesde(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
-                <span className="text-muted-foreground text-sm">-</span>
-                <Input type="date" value={hasta} onChange={e => setHasta(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
-              </div>
-            )}
+              {isCustom && (
+                <div className="flex items-center gap-2 bg-muted/30 p-1.5 rounded-md border">
+                  <Input type="date" value={internalDesde} onChange={e => setInternalDesde(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
+                  <span className="text-muted-foreground text-sm">-</span>
+                  <Input type="date" value={internalHasta} onChange={e => setInternalHasta(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
+                </div>
+              )}
 
-            <Button variant="outline" size="icon" onClick={() => refetch()} title="Actualizar">
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
+              <Button variant="outline" size="icon" onClick={() => refetch()} title="Actualizar">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+          )}
         </div>
 
         {isLoading ? (

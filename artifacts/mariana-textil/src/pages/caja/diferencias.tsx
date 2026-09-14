@@ -32,15 +32,26 @@ import {
 
 type SortKey = "nombre" | "cortes" | "exactos" | "porcentajeExactos" | "diferencia";
 
-export default function CajaDiferencias({ embedded = false }: { embedded?: boolean }) {
+export default function CajaDiferencias({ 
+  embedded = false,
+  filters
+}: { 
+  embedded?: boolean;
+  filters?: { desde: string, hasta: string };
+}) {
   const { selectedLocationId } = useLocationScope();
 
-  const [preset, setPreset] = useState("mes"); // hoy, semana, mes, trimestre, semestre, año, custom
-  const [desde, setDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
-  const [hasta, setHasta] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [internalPreset, setInternalPreset] = useState("mes"); // hoy, semana, mes, trimestre, semestre, año, custom
+  const [internalDesde, setInternalDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
+  const [internalHasta, setInternalHasta] = useState(format(new Date(), "yyyy-MM-dd"));
   const [agrupacion, setAgrupacion] = useState<GetAdminDiferenciasAgrupacion>(GetAdminDiferenciasAgrupacion.semana);
   const [umbralCorte, setUmbralCorte] = useState("0");
   const [umbralTienda, setUmbralTienda] = useState("0");
+
+  const desde = filters?.desde || internalDesde;
+  const hasta = filters?.hasta || internalHasta;
+  const preset = filters ? "custom" : internalPreset;
+
 
   const [sortKeyCajero, setSortKeyCajero] = useState<SortKey>("diferencia");
   const [sortAscCajero, setSortAscCajero] = useState(true);
@@ -58,16 +69,16 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
   });
 
   const applyPreset = (val: string) => {
-    setPreset(val);
+    setInternalPreset(val);
     const today = new Date();
-    setHasta(format(today, "yyyy-MM-dd"));
+    setInternalHasta(format(today, "yyyy-MM-dd"));
     switch (val) {
-      case "hoy": setDesde(format(today, "yyyy-MM-dd")); break;
-      case "semana": setDesde(format(startOfWeek(today, { weekStartsOn: 1 }), "yyyy-MM-dd")); break;
-      case "mes": setDesde(format(startOfMonth(today), "yyyy-MM-dd")); break;
-      case "trimestre": setDesde(format(startOfQuarter(today), "yyyy-MM-dd")); break;
-      case "semestre": setDesde(format(subDays(today, 180), "yyyy-MM-dd")); break;
-      case "ano": setDesde(format(startOfYear(today), "yyyy-MM-dd")); break;
+      case "hoy": setInternalDesde(format(today, "yyyy-MM-dd")); break;
+      case "semana": setInternalDesde(format(startOfWeek(today, { weekStartsOn: 1 }), "yyyy-MM-dd")); break;
+      case "mes": setInternalDesde(format(startOfMonth(today), "yyyy-MM-dd")); break;
+      case "trimestre": setInternalDesde(format(startOfQuarter(today), "yyyy-MM-dd")); break;
+      case "semestre": setInternalDesde(format(subDays(today, 180), "yyyy-MM-dd")); break;
+      case "ano": setInternalDesde(format(startOfYear(today), "yyyy-MM-dd")); break;
     }
   };
 
@@ -118,27 +129,31 @@ export default function CajaDiferencias({ embedded = false }: { embedded?: boole
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <Select value={preset} onValueChange={applyPreset}>
-              <SelectTrigger className="w-[140px] h-9 bg-background">
-                <SelectValue placeholder="Periodo" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hoy">Hoy</SelectItem>
-                <SelectItem value="semana">Esta semana</SelectItem>
-                <SelectItem value="mes">Este mes</SelectItem>
-                <SelectItem value="trimestre">Este trimestre</SelectItem>
-                <SelectItem value="semestre">Últimos 6 meses</SelectItem>
-                <SelectItem value="ano">Este año</SelectItem>
-                <SelectItem value="custom">Personalizado</SelectItem>
-              </SelectContent>
-            </Select>
+            {!filters && (
+              <>
+                <Select value={preset} onValueChange={applyPreset}>
+                  <SelectTrigger className="w-[140px] h-9 bg-background">
+                    <SelectValue placeholder="Periodo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hoy">Hoy</SelectItem>
+                    <SelectItem value="semana">Esta semana</SelectItem>
+                    <SelectItem value="mes">Este mes</SelectItem>
+                    <SelectItem value="trimestre">Este trimestre</SelectItem>
+                    <SelectItem value="semestre">Últimos 6 meses</SelectItem>
+                    <SelectItem value="ano">Este año</SelectItem>
+                    <SelectItem value="custom">Personalizado</SelectItem>
+                  </SelectContent>
+                </Select>
 
-            {preset === "custom" && (
-              <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-md border">
-                <Input type="date" value={desde} onChange={e => setDesde(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
-                <span className="text-muted-foreground text-sm">-</span>
-                <Input type="date" value={hasta} onChange={e => setHasta(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
-              </div>
+                {preset === "custom" && (
+                  <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-md border">
+                    <Input type="date" value={internalDesde} onChange={e => setInternalDesde(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
+                    <span className="text-muted-foreground text-sm">-</span>
+                    <Input type="date" value={internalHasta} onChange={e => setInternalHasta(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
+                  </div>
+                )}
+              </>
             )}
 
             <Select value={agrupacion} onValueChange={(v: GetAdminDiferenciasAgrupacion) => setAgrupacion(v)}>

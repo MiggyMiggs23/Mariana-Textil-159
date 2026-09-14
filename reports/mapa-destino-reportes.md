@@ -1,8 +1,8 @@
-# Mapa de destino de Reportes — para aprobación
+# Mapa de destino de Reportes — aprobado
 
 Fecha: 14 de septiembre de 2026.
 
-**Estado: propuesta del Bloque 1. No se ha movido contenido ni modificado código, cálculos, permisos o datos.**
+**Estado: mapa aprobado, incluida R01 y X04 íntegra en Ventas → Comparar. La primera implementación quedó bloqueada en verificación; consultar `reports/reorganizacion-reportes-verificacion.md`. La tasa de cancelación se pospuso expresamente.**
 
 Este mapa inventaría las once pestañas declaradas actualmente, sus tablas y gráficos, indicadores y detalles asociados. Los nombres entre comillas corresponden a encabezados actuales; cuando una tabla no tiene título se describe expresamente.
 
@@ -276,7 +276,7 @@ Además se mantienen filtros aplicables, ordenamiento, totales, unidades, varian
 - **Conservar:** tarjeta “Costo recibido”, en Qué comprar → Compras y proveedores.
 - **Evidencia:** ambas tarjetas reciben exactamente `totalCost`, con el mismo tipo monetario, filtro y restricción económica.
 - **Alcance:** una tarjeta; ninguna tabla, gráfico, operación ni fórmula.
-- **Estado:** propuesta pendiente de aprobación; aún no retirada.
+- **Estado:** retirada autorizada y aplicada al código; la entrega completa sigue bloqueada por fallos de verificación.
 
 ### No retirar estos pares
 
@@ -331,11 +331,11 @@ Orden propuesto: dinero faltante y movimientos que reducen existencias primero; 
 
 ## 7. Qué se está aprobando y qué queda pendiente
 
-La aprobación solicitada cubre los destinos de los elementos V01–D05, el detalle Q03–Q10, la conservación íntegra X01–X04 y la retirada propuesta R01.
+La aprobación recibida cubre los destinos de los elementos V01–D05, el detalle Q03–Q10, la conservación íntegra X01–X04 y la retirada R01.
 
-Antes de implementar la tasa de cancelación habrá que fijar explícitamente el denominador y la referencia de fechas; el mapa no autoriza inventar ese cálculo. Tampoco autoriza recuperar datos, cambiar reglas financieras o ampliar permisos.
+La tasa no se implementa todavía. Su definición futura aprobada es cancelados del periodo / (contabilizados + cancelados del periodo) × 100, con fecha de cancelación y criterio canónico de contabilización como Caja en Tiempo Real. Si el criterio del tablero difiere al implementarla, detenerse y reportarlo. Ventas y Control deben compartir la fuente de cancelaciones; no duplicar su consulta. El mapa no autoriza recuperar datos, cambiar reglas financieras o ampliar permisos.
 
-No se ejecutaron las verificaciones del resultado final: todavía no existe una reorganización implementada que comparar. Typecheck, codegen, suites, igualdad de cifras, enlaces, ceros, PROPIA y teléfono corresponden a la etapa posterior a la aprobación.
+Las verificaciones posteriores a la aprobación encontraron fallos; sus resultados y limitaciones están documentados en `reports/reorganizacion-reportes-verificacion.md`. No considerar este mapa como evidencia de que la implementación ya cumple.
 
 ## 8. Fuentes consultadas
 
@@ -349,4 +349,4 @@ No se ejecutaron las verificaciones del resultado final: todavía no existe una 
 - `artifacts/mariana-textil/src/pages/caja/diferencias.tsx`: Diferencias de Caja.
 - `artifacts/api-server/src/lib/admin-alertas.ts`: condición existente de salidas pendientes y umbral de 24 horas.
 
-**Detenido aquí, pendiente de aprobación.**
+**Mapa aprobado. Correcciones de la implementación pendientes de autorización tras la verificación fallida.**

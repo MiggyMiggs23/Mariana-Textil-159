@@ -1676,7 +1676,8 @@ export async function listDestinationAccountMovements(
              THEN ('Abono #' || d."movimientoCreditoId"::text)
            ELSE ('Ticket #' || d.folio::text)
          END documento,d."clienteId",c.nombre cliente,
-          d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,d.importe::text monto,
+          d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,
+          d."cuentaDestino" "cuentaDestino",d.importe::text monto,
            d."formaPago",d.facturado,d.fuente,
           (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
             (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))) incongruente,

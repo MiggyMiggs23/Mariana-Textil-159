@@ -7,6 +7,7 @@ import { formatReportValue } from "./report-format";
 import { cn } from "@/lib/utils";
 import { formatUnit } from "@workspace/number-format";
 import { getReportBlockExplanation } from "./report-explanations";
+import { Link } from "wouter";
 
 export function ReportTable({ block, hasEconomicAccess, section }: { block: ReporteTable, hasEconomicAccess: boolean; section?: string }) {
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -172,6 +173,16 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
                             />
                             <span>{content}</span>
                           </div>
+                        );
+                      }
+
+                      // 7. Links (Drilldowns coordinate from backend)
+                      const linkUrl = row[`${col.key}Url`] || row[`${col.key}Enlace`] || (col.key === 'folio' || col.key === 'ticket' || col.key === 'documento' || col.key === 'id' ? (row.url || row.enlace) : null);
+                      if (linkUrl && typeof linkUrl === 'string') {
+                        content = (
+                          <Link href={linkUrl} className="text-primary hover:underline font-medium">
+                            {content}
+                          </Link>
                         );
                       }
                     }

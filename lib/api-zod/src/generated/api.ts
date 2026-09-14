@@ -10397,7 +10397,7 @@ export const GetReporteQueComprarEvidenciaResponse = zod.record(zod.string(), zo
  * @summary Reporte analítico de sólo lectura
  */
 export const GetReporteSeccionParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar', 'control-operativo'])
 })
 
 export const getReporteSeccionQueryPeriodoDefault = `mensual`;
@@ -10491,7 +10491,7 @@ export const GetReporteSeccionResponse = zod.object({
  * @summary Exporta un reporte a XLSX
  */
 export const ExportReporteSeccionXlsxParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar', 'control-operativo'])
 })
 
 export const exportReporteSeccionXlsxQueryPeriodoDefault = `mensual`;
@@ -10533,7 +10533,7 @@ export const ExportReporteSeccionXlsxResponse = zod.unknown()
  * @summary Exporta un reporte a PDF
  */
 export const ExportReporteSeccionPdfParams = zod.object({
-  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar'])
+  "seccion": zod.enum(['ventas', 'utilidad', 'inventario', 'mapas-calor', 'color', 'compras', 'clientes', 'pagos-dirigidos', 'que-comprar', 'control-operativo'])
 })
 
 export const exportReporteSeccionPdfQueryPeriodoDefault = `mensual`;

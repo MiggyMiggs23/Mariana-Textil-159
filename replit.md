@@ -808,7 +808,7 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 - Reporte y evidencia usan el mismo historial hasta la fecha final. El conteo de caídas bajo mínimo incluye **aperturas en el periodo**, no episodios antiguos que siguen abiertos; estos se presentan aparte, sin sumarlos. La conciliación contrasta las cifras de la fila con los movimientos, no dos sumas idénticas de un mismo resultado.
 - La causa de un episodio distingue configuración, cruce demostrado por un movimiento y observación sin causa demostrable. Un cambio de mínimo solo se atribuye al producto editado; habilitar el sitio puede atribuirse a su configuración general. No inventar un movimiento desencadenante para episodios históricos sin evidencia.
 - Las sugerencias deben ser **hechos observados**, con acceso a sus movimientos y cálculo verificable. No se suponen plazos de reposición: no existen de forma general en el sistema; los contenedores tienen fecha de pedido, pero muchas compras entran sin ella. No convertir un faltante medido en una orden o proyección inventada.
-- **Retiro autorizado:** se trasladó únicamente el mapa **Mes × color** desde Mapas de Calor a Qué comprar. **Tablas retiradas: ninguna. Pestañas retiradas: ninguna.** Las tablas parcialmente coincidentes conservan información propia. No se alteran Ventas, Utilidad y Márgenes, Clientes y Crédito, Pagos Dirigidos, Diferencias de Caja ni Comparativo entre Sitios.
+- **Traslado anterior de Mes × color:** ese cambio retiró únicamente el mapa desde Mapas de Calor para mostrarlo en Qué comprar, sin retirar tablas ni pestañas. La reorganización posterior aprobada se documenta en «Reportes por decisión»; su implementación aún no supera la verificación.
 - **2026-09-11:** se implementaron configuración separada, migración aditiva, evaluación periódica y avisos en el sistema existente, pantalla de mínimos, reporte mensual y consulta de evidencia; se corrigieron los hallazgos con autorización. Las pruebas reales no ejecutadas se detallan en `docs/stock-minimos-verificacion.md`.
 
 ## Higiene de la documentación
@@ -863,3 +863,30 @@ No se ejecutaron migraciones ni escrituras directas de datos, no se crearon usua
 - Se aplicó la migración aditiva `lib/db/migrations/20260914_supplier_trace.sql`, sin rellenar históricos. La evidencia no se edita ni elimina; la cancelación añade reversas. Las ventas ligadas a tickets/notas solo pueden revertirse mediante la cancelación del documento.
 - Los históricos NORMAL con rollo, entrada y movimiento inequívocos se leen sin backfill; un movimiento revertido no es evidencia válida. Los rollos identificables sin costo se cuentan como excluidos. Las líneas sin evidencia física se informan como contexto global del sitio/periodo, no se asignan por conjetura a un proveedor.
 - Pruebas específicas y consulta SQL real de solo lectura aprobadas; se mantienen las limitaciones de navegador y los errores de tipos anteriores documentados en `reports/proveedores-utilidad-verificacion.md`. La herramienta de purga histórica no se amplió y continuará rechazando el nuevo esquema hasta una adaptación autorizada por separado.
+
+## Reportes por decisión — implementación bloqueada en verificación
+
+**2026-09-14:** se implementó una primera versión del mapa aprobado de once a cinco pestañas; la revisión encontró fallos nuevos y la entrega quedó bloqueada. No considerar esta reorganización terminada. Evidencia completa: `reports/reorganizacion-reportes-verificacion.md`. La API de vista previa se detuvo por una regresión de autorización, pendiente de corrección autorizada.
+
+La organización aprobada responde a decisiones, no a tipos de datos:
+
+| Pestaña aprobada | Pregunta |
+|---|---|
+| Ventas | Qué se vendió |
+| Qué comprar | Qué pedir y cuánto |
+| Utilidad y márgenes | Cuánto se gana |
+| Clientes y crédito | Cuánto deben y quién |
+| Control operativo | Qué anda mal |
+
+- Comparar sitios debe ser un modo dentro de las cinco, no otra pestaña. Debe usar únicamente el selector del encabezado, sin ampliar permisos o alcance PROPIA.
+- Inventario y Rotación, Mapas de Calor, Análisis de Color y Compras se reúnen en Qué comprar; se conservan recomendación y evidencia actuales.
+- Pagos Dirigidos resueltos se incorpora a Clientes y crédito sin retirar su tabla distinta de Pagos dirigidos.
+- Diferencias de Caja se incorpora completa a Control operativo.
+- Los tres gráficos del Comparativo y X04 completa, con doce columnas y Total General, se conservan juntos en Ventas → Comparar.
+- R01 autoriza retirar solo la tarjeta Compras que repite exactamente Costo recibido; ese importe se conserva. Ninguna de las 56 tablas principales ni de los 18 gráficos está autorizada para eliminarse.
+- Ventas, Utilidad y márgenes y Clientes y crédito conservan contenido y diseño. Mapa detallado: `reports/mapa-destino-reportes.md`.
+- Control operativo reúne diferencias de caja, tickets cancelados, salidas canceladas, salidas pendientes según la regla existente de 24 horas, abonos incongruentes, ajustes y rollos con tres o más reimpresiones. Se agrupan para no tener que abrir varias pestañas buscando problemas.
+- Todo bloque autorizado en cero debe mostrarse en cero; carga, error o permiso denegado no equivalen a ausencia de problemas. Las cifras deben permitir abrir el documento concreto de origen.
+- V19/V20/V21 permanecen en Ventas. Control debe consumir la misma fuente compartida de cancelaciones, no una versión duplicada de la consulta.
+- **Tasa pospuesta:** no implementarla en esta entrega. La definición futura aprobada es cancelados del periodo / (contabilizados + cancelados del periodo) × 100, con fecha de cancelación y predicado canónico de contabilización, exactamente como Caja en Tiempo Real. Si al implementarla difiere el criterio del tablero, detenerse y reportarlo. La comprobación actual confirmó que Caja sí coincide; Ventas tiene una diferencia previa de fechas que no se corrigió.
+- No corregir por cuenta propia los fallos encontrados durante la verificación. No ampliar el seed, copiar identidades ni crear usuarios/ADMIN temporales para completar pruebas.

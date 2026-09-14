@@ -31,6 +31,70 @@ export function isSalidaEnTransitoOverdue(enviadaAt: Date, now = new Date()): bo
     SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS * 60 * 60 * 1000;
 }
 
+type OverdueSalidaReadOptions = {
+  desde?: Date;
+  hasta?: Date;
+  ubicacionIds?: number[];
+};
+
+/**
+ * Canonical overdue-exit source.  Both inter-site transfers and customer
+ * deliveries intentionally remain in this one predicate.  In particular,
+ * customer deliveries use cobrado_at/autorizado_at and retain their
+ * cancellation and collection/authorization guards.
+ */
+export async function loadOverdueSalidaRows(options: OverdueSalidaReadOptions = {}) {
+  const values: unknown[] = [SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS];
+  const scope = options.ubicacionIds?.length
+    ? (() => {
+      values.push(options.ubicacionIds);
+      return `AND s.origen_id=ANY($${values.length}::int[])`;
+    })()
+    : "";
+  const sourceTimestamp = `(CASE WHEN s.modalidad = 'VENTA_CLIENTE'
+    THEN CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END
+    ELSE s.enviada_at END)`;
+  const dateParts: string[] = [];
+  if (options.desde) {
+    values.push(options.desde.toISOString());
+    dateParts.push(`${sourceTimestamp} >= $${values.length}`);
+  }
+  if (options.hasta) {
+    values.push(options.hasta.toISOString());
+    dateParts.push(`${sourceTimestamp} <= $${values.length}`);
+  }
+  const dateFilter = dateParts.length ? `AND ${dateParts.join(" AND ")}` : "";
+  const result = await pool.query(`
+    SELECT s.id, s.folio,
+      ${sourceTimestamp} AS "enviadaAt",
+      FLOOR(EXTRACT(EPOCH FROM (now() - ${sourceTimestamp})) / 3600)::int
+        AS "horasEnTransito",
+      origen.id AS "origenId", origen.nombre AS "nombreOrigen",
+      destino.id AS "destinoId", destino.nombre AS "nombreDestino",
+      s.ticket_id AS "ticketId", t.folio AS "ticketFolio", s.folio AS "salidaFolio",
+      ('/salidas/' || s.id) AS "salidaHref",
+      CASE WHEN s.ticket_id IS NULL THEN NULL ELSE ('/tickets/' || s.ticket_id) END AS "ticketHref"
+    FROM salidas s
+    JOIN ubicaciones origen ON origen.id = s.origen_id
+    LEFT JOIN ubicaciones destino ON destino.id = s.destino_id
+    LEFT JOIN tickets t ON t.id = s.ticket_id
+    WHERE (
+      (s.modalidad <> 'VENTA_CLIENTE' AND s.estado = 'EN_TRANSITO'
+       AND s.enviada_at < now() - ($1::int * interval '1 hour'))
+      OR
+      (s.modalidad = 'VENTA_CLIENTE' AND s.estado = 'RECIBIDA'
+       AND (CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END)
+           < now() - ($1::int * interval '1 hour')
+       AND t.estado <> 'CANCELADO'
+       AND (t.cobrado = true OR t.autorizacion_estado = 'AUTORIZADA'))
+    )
+    ${scope}
+    ${dateFilter}
+    ORDER BY s.enviada_at ASC, s.id ASC
+  `, values);
+  return result.rows;
+}
+
 function money(value: unknown): string {
   return Number(value ?? 0).toFixed(2);
 }
@@ -64,35 +128,7 @@ export async function getAdminAlertas() {
     pool.query(`SELECT c.id AS "clienteId",c.nombre AS "nombreCliente",m.id AS "movimientoId",
       m.notas AS nota,t.folio AS "ticketFolio" FROM clientes c JOIN movimientos_credito m ON m.cliente_id=c.id
       LEFT JOIN tickets t ON t.id=m.ticket_id WHERE m.tipo IN ('VENTA_CREDITO','AJUSTE')`),
-    pool.query(`
-       SELECT s.id, s.folio,
-         CASE WHEN s.modalidad = 'VENTA_CLIENTE'
-           THEN CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END
-           ELSE s.enviada_at END AS "enviadaAt",
-        FLOOR(EXTRACT(EPOCH FROM (now() - CASE WHEN s.modalidad = 'VENTA_CLIENTE'
-          THEN CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END
-          ELSE s.enviada_at END)) / 3600)::int
-          AS "horasEnTransito",
-        origen.id AS "origenId", origen.nombre AS "nombreOrigen",
-         destino.id AS "destinoId", destino.nombre AS "nombreDestino",
-         s.ticket_id AS "ticketId", t.folio AS "ticketFolio", s.folio AS "salidaFolio",
-         ('/salidas/' || s.id) AS "salidaHref",
-         CASE WHEN s.ticket_id IS NULL THEN NULL ELSE ('/tickets/' || s.ticket_id) END AS "ticketHref"
-       FROM salidas s
-      JOIN ubicaciones origen ON origen.id = s.origen_id
-       LEFT JOIN ubicaciones destino ON destino.id = s.destino_id
-       LEFT JOIN tickets t ON t.id = s.ticket_id
-       WHERE (
-          (s.modalidad <> 'VENTA_CLIENTE' AND s.estado = 'EN_TRANSITO' AND s.enviada_at < now() - ($1::int * interval '1 hour'))
-         OR
-         (s.modalidad = 'VENTA_CLIENTE' AND s.estado = 'RECIBIDA'
-          AND (CASE WHEN t.documento_tipo = 'TICKET' THEN t.cobrado_at ELSE t.autorizado_at END)
-              < now() - ($1::int * interval '1 hour')
-           AND t.estado <> 'CANCELADO'
-           AND (t.cobrado = true OR t.autorizacion_estado = 'AUTORIZADA'))
-       )
-      ORDER BY s.enviada_at ASC, s.id ASC
-    `, [SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS]),
+    loadOverdueSalidaRows(),
   ]);
 
   const documentosPendientes = pendingResult.rows.map((row) => ({
@@ -142,7 +178,7 @@ export async function getAdminAlertas() {
       a.fechaVencimiento.localeCompare(b.fechaVencimiento) ||
       a.movimientoId - b.movimientoId,
     );
-  const salidasEnTransito = transitResult.rows.filter((row) => row.ticketId == null).map((row) => ({
+  const salidasEnTransito = transitResult.filter((row) => row.ticketId == null).map((row) => ({
     ...row,
     id: Number(row.id),
     folio: Number(row.folio),
@@ -154,7 +190,7 @@ export async function getAdminAlertas() {
     salidaHref: row.salidaHref,
     ticketHref: row.ticketHref,
   }));
-  const ventasAutorizadasSinEntregar = transitResult.rows
+  const ventasAutorizadasSinEntregar = transitResult
     .filter((row) => row.ticketId != null && row.salidaHref != null)
     .map((row) => ({
       ticketId: Number(row.ticketId),

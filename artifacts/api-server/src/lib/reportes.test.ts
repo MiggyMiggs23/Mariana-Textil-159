@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
-import { omitEconomicReportFilters, parseReportBooleanQuery, redactEconomic, reportRange } from "./reportes";
+import { omitEconomicReportFilters, parseReportBooleanQuery, redactEconomic, reportRange, REPORT_SECTIONS } from "./reportes";
 import { buildHeatmapMatrix } from "./report-heatmap";
+import { summarizeCancellationRows } from "./reportes-sales";
 
 test("report ranges use Mexico City inclusive day bounds and equal prior period", () => {
   const range = reportRange({ periodo: "personalizado", desde: "2024-02-01", hasta: "2024-02-29" });
@@ -94,6 +96,59 @@ test("heatmap matrix pivots labels and preserves distinct, zero, and absent valu
     { label: "SKU-A", value_0: 5, value_1: 0, value_2: null },
     { label: "SKU-B", value_0: 9, value_1: null, value_2: null },
   ]);
+});
+
+test("cancellation aggregation deduplicates tickets while preserving modality totals", () => {
+  assert.deepEqual(
+    summarizeCancellationRows([
+      {
+        ticketId: 11, folio: "T-11", motivo: null, sitio: "Centro",
+        modalidad: "ROLLOS", lineas: 1, importe: 100, canceladoAt: null,
+        documentoHref: "/tickets/11",
+      },
+      {
+        ticketId: 11, folio: "T-11", motivo: null, sitio: "Centro",
+        modalidad: "ROLLOS", lineas: 1, importe: 50, canceladoAt: null,
+        documentoHref: "/tickets/11",
+      },
+      {
+        ticketId: 12, folio: "T-12", motivo: "Cliente", sitio: "Norte",
+        modalidad: "METRAJE", lineas: 1, importe: 20, canceladoAt: null,
+        documentoHref: "/tickets/12",
+      },
+    ]),
+    [
+      { modalidad: "ROLLOS", tickets: 1, importe: 150 },
+      { modalidad: "METRAJE", tickets: 1, importe: 20 },
+    ],
+  );
+});
+
+test("control operativo is a shared cancellation consumer and does not expose cancellation rate", () => {
+  const sales = readFileSync(new URL("./reportes-sales.ts", import.meta.url), "utf8");
+  const control = readFileSync(new URL("./reportes-control-operativo.ts", import.meta.url), "utf8");
+  assert.match(sales, /export async function loadCancellationRows/);
+  assert.match(sales, /const cancellationData = await loadCancellationRows\(ctx\)/);
+  assert.match(control, /loadCancellationRows\(ctx\)/);
+  assert.doesNotMatch(control, /tasaCancelacion|cancelationRate|cancellationRate/);
+  assert.ok(REPORT_SECTIONS.includes("control-operativo"));
+});
+
+test("control report keeps the existing authorization and read-scope boundary", () => {
+  const route = readFileSync(new URL("../routes/reportes.ts", import.meta.url), "utf8");
+  assert.match(route, /router\.use\("\/reportes", requireSession, requierePermiso\("reportes", "ver"\)\)/);
+  assert.match(route, /return buildReport\(params\.seccion, query, scopedLocations\(req\)/);
+  assert.match(route, /resolveReadScope\(req\.auth!\)/);
+});
+
+test("cancellation and control SQL retain grouped zero-safe aggregations", () => {
+  const sales = readFileSync(new URL("./reportes-sales.ts", import.meta.url), "utf8");
+  const control = readFileSync(new URL("./reportes-control-operativo.ts", import.meta.url), "utf8");
+  assert.match(sales, /COALESCE\(SUM\(l\.importe\),0\)::float/);
+  assert.match(sales, /COUNT\(l\.id\)::int/);
+  assert.match(control, /COUNT\(\*\)::int reimpresiones/);
+  assert.match(control, /HAVING COUNT\(\*\) >= 3/);
+  assert.match(control, /m\.tipo IN \('AJUSTE_POSITIVO','AJUSTE_NEGATIVO','CANCELACION'\)/);
 });
 
 for (const [periodo, desde, hasta] of [
