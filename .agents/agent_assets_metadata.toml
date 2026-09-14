@@ -742,3 +742,17 @@ mtime_ms = 1789417010793
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c9d19782-e29c-4945-b12f-7333500cad70/ff78f349-bd84-4cca-954f-3cb1b21ff72d"
 storage_version_token = "1789417030523052"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "itAe47jHExHlchiSoutXo"
+uri = "file://reports/mapa-destino-reportes.md"
+type = "text"
+title = "Mapa completo de destino — las once pestañas de Reportes"
+description = "56 tablas principales, 18 gráficos y sus indicadores y detalles. Incluye destinos, conservación del Comparativo y una única retirada propuesta por duplicidad."
+logical_id = "1c056002-3924-4598-9e64-1d264867a7a5"
+content_hash = "sha256:fea4bfaa948fab08bd47b01cf3238ba955418321c681c98ece3433b64f786bb5"
+size = 24475
+mtime_ms = 1789419620120
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/1c056002-3924-4598-9e64-1d264867a7a5/8bca5907-3603-4f41-8604-c34c71ed0ab7"
+storage_version_token = "1789419660818554"
+content_type = "text/markdown"

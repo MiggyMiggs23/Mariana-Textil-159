@@ -1,0 +1,95 @@
+# Prompt para Replit Agent — Reorganizar Reportes
+
+Hoy hay **once pestañas de reportes**, organizadas por tipo de dato en vez de por decisión. Para contestar una sola pregunta —qué pedir, qué anda mal— hay que abrir tres o cuatro y armar la respuesta a mano. Este trabajo las reduce a cinco, cada una contestando algo.
+
+No cambies ningún cálculo de dinero, de inventario ni ninguna regla de negocio: **esto es reorganización de lo que ya existe, más una pestaña nueva que consolida señales dispersas.** No toques la base por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+## Cómo queda
+
+| Pestaña | Qué contesta |
+|---|---|
+| **Ventas** | Qué se vendió |
+| **Qué comprar** | Qué pedir y cuánto |
+| **Utilidad y márgenes** | Cuánto se gana |
+| **Clientes y crédito** | Cuánto me deben y quién |
+| **Control operativo** | Qué anda mal |
+
+Pestañas actuales que desaparecen como tal: Inventario y Rotación, Mapas de Calor, Análisis de Color, Compras, Pagos Dirigidos, Comparativo entre Sitios y Diferencias de Caja. Su contenido se reubica, **no se borra**.
+
+---
+
+## Bloque 1 — Antes de mover nada: el inventario de destino
+
+Ya entregaste el informe comparativo de duplicados entre Análisis de Color, Inventario y Rotación, Mapas de Calor y Compras. Ahora necesito el mapa completo.
+
+**Dame, tabla por tabla y gráfico por gráfico de las once pestañas actuales, a cuál de las cinco nuevas va a parar**, o si se retira por estar duplicada. Con el nombre de cada elemento y su pestaña de origen.
+
+**Detente ahí y espera mi aprobación.** No muevas nada hasta que revise ese mapa. Es la única forma de garantizar que no se pierde algo que hoy se usa.
+
+## Bloque 2 — Control operativo: la pestaña nueva
+
+Consolida en un solo lugar todas las señales de que algo anda mal. Hoy están repartidas y por eso nadie las revisa: nadie abre cuatro pestañas a buscar problemas.
+
+Contenido:
+
+- **Diferencias de caja** — todo lo que hoy vive en esa pestaña
+- **Tickets cancelados**, con su tasa
+- **Salidas canceladas**
+- **Salidas autorizadas no entregadas** después del umbral de 24 horas que ya existe
+- **Abonos con cuenta destino incongruente** respecto al estatus fiscal de su venta
+- **Ajustes de inventario**
+- **Reimpresiones de etiqueta** de rollos que llevan tres o más
+
+Cada bloque muestra su conteo y su importe cuando el importe signifique algo, y **abre hasta el documento que lo originó**, conforme a la regla de que ninguna cifra del sistema es un callejón sin salida.
+
+Si un bloque está en cero, **no se oculta**: se muestra en cero. Que un control esté limpio es información, y esconderlo haría imposible distinguir "no hay problemas" de "esta pantalla no está midiendo".
+
+Ordena los bloques por gravedad, con lo que implica dinero o mercancía perdida arriba.
+
+## Bloque 3 — Comparativo entre Sitios deja de ser pestaña
+
+Comparar sitios no es un reporte: es **una forma de ver cualquier reporte**. Hoy vive como pestaña aparte y es el único lugar del sistema donde se puede comparar, lo cual obliga a salirse de donde uno está para responder una pregunta que aplica a todo.
+
+Conviértelo en un **modo de comparación disponible dentro de las cinco pestañas**, usando el selector de sitio del encabezado que ya existe. No agregues un control de sitio propio ni dupliques el que ya está.
+
+Si alguna tabla del Comparativo actual no tiene equivalente en las cinco, **repórtalo en el Bloque 1** en vez de perderla.
+
+## Bloque 4 — Dónde va lo demás
+
+- **Inventario y Rotación**, **Mapas de Calor** y **Análisis de Color** → a **Qué comprar**, que ya absorbió Mes × color. Lo que quede duplicado se retira; lo que aporte información propia se conserva.
+- **Compras** → a **Qué comprar**. Lo que se pidió y lo que llegó pertenece a la misma decisión.
+- **Pagos Dirigidos** → a **Clientes y crédito**.
+- **Diferencias de Caja** → a **Control operativo**.
+
+## Bloque 5 — Lo que no se toca
+
+**Ventas**, **Utilidad y márgenes** y **Clientes y crédito** conservan su contenido actual; solo reciben lo que llega de otras pestañas. No las rediseñes.
+
+Los permisos de reportes no cambian: quien ve reportes hoy sigue viendo lo mismo, reacomodado.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de reportes, analytics y permisos.
+3. **Compara el mapa del Bloque 1 contra el resultado final**: cada elemento debe estar donde el mapa dijo, o retirado por duplicado. Reporta cualquier diferencia.
+4. Confirma que **ninguna cifra cambió de valor** al reubicarse: los mismos números en el mismo periodo, solo en otra pestaña.
+5. En Control operativo, con datos que incluyan cada tipo de señal, confirma que cada bloque cuenta bien y **abre hasta su documento**.
+6. Confirma que un bloque en cero **se muestra en cero** y no desaparece.
+7. Confirma que el modo de comparación entre sitios funciona dentro de las cinco pestañas y que **no quedó un selector de sitio duplicado**.
+8. Verifica con un usuario de alcance PROPIA que no ve sitios ajenos en ninguna de las cinco, ni en el modo de comparación.
+9. Revisa las cinco pestañas en teléfono.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- Las cinco pestañas y **qué pregunta contesta cada una**. Que los reportes se organizan por decisión, no por tipo de dato.
+- Que **comparar sitios es un modo de ver, no un reporte**, y por eso vive dentro de las pestañas y no como una aparte.
+- El contenido de Control operativo y por qué está junto: nadie abre cuatro pestañas a buscar problemas.
+- Que **un bloque de control en cero se muestra en cero**, para poder distinguir que no hay problemas de que la pantalla no está midiendo.
+- El mapa de qué se movió de dónde a dónde, y qué se retiró por duplicado.
+- Un renglón con la fecha y qué se hizo.
