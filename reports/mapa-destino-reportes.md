@@ -2,7 +2,14 @@
 
 Fecha: 14 de septiembre de 2026.
 
-**Estado: mapa aprobado, incluida R01 y X04 íntegra en Ventas → Comparar. La primera implementación quedó bloqueada en verificación; consultar `reports/reorganizacion-reportes-verificacion.md`. La tasa de cancelación se pospuso expresamente.**
+**Estado: mapa aprobado, incluida R01 y X04 íntegra en Ventas → Comparar. El
+contrato fuente preserva 56 tablas y 18 gráficos; la verificación numérica real
+de las 53 tablas genéricas y la comparación aislada de X04 global 2026 pasan.
+Las comprobaciones parciales de contrato UI read-only pasaron con autenticación
+y respuestas interceptadas, sin login ni escrituras de DB; no son una E2E
+autenticada viva y no se declara publicación completa. Consultar
+`reports/reorganizacion-reportes-verificacion.md`. La tasa de cancelación se
+pospuso expresamente.**
 
 Este mapa inventaría las once pestañas declaradas actualmente, sus tablas y gráficos, indicadores y detalles asociados. Los nombres entre comillas corresponden a encabezados actuales; cuando una tabla no tiene título se describe expresamente.
 
@@ -10,7 +17,7 @@ Este mapa inventaría las once pestañas declaradas actualmente, sus tablas y gr
 
 | Pestaña | Pregunta | Contenido recibido |
 |---|---|---|
-| Ventas | Qué se vendió | Conserva lo actual. Recibe íntegro el Comparativo actual dentro del modo Comparar. |
+| Ventas | Qué se vendió | Conserva lo actual. Recibe íntegro el Comparativo actual dentro del modo Comparar. La fuente raw de X04 coincide legacy/current para el global 2026. |
 | Qué comprar | Qué pedir y cuánto | Conserva recomendación y evidencia. Recibe Inventario y Rotación, Mapas de Calor, Análisis de Color y Compras. |
 | Utilidad y márgenes | Cuánto se gana | Conserva todo lo actual, sin rediseño. |
 | Clientes y crédito | Cuánto me deben y quién | Conserva todo lo actual. Recibe Pagos Dirigidos resueltos. |
@@ -211,6 +218,23 @@ Conserva Fecha, Sitio, Tipo, Cliente/proveedor, Documento, Monto, Motivo, Solici
 
 La tabla no se desarma para repartir columnas y perder su contexto. Las otras cuatro pestañas tendrán su modo Comparar sobre sus propios datos; no recibirán artificialmente las métricas de caja de X04.
 
+**Evidencia numérica actual de X04:** el modo aislado del verificador comparó
+legacy/current `compareStores` sobre el mismo snapshot real
+`READ ONLY REPEATABLE READ`, global, año 2026. El source raw y sus totales
+coincidieron completos: ventas `103302.00`, costo `86822.00`, margen
+`16480.00`, tickets `4`, ticket promedio `25825.50`, metros `4986.000`,
+efectivo `103302.00`, transferencia/crédito `0.00`, cancelaciones `0` y
+diferencia de caja `0.00` (participación `100.00`). La exportación compuesta
+conservó las 12 columnas, 3 filas y Total General, tomando sus totales de la
+fuente sin recomputarlos. Esto es un pase numérico de fuentes; la prueba de
+navegador read-only con mock pasó las comprobaciones parciales de contrato UI
+con autenticación y respuestas interceptadas. No hubo login, escrituras de DB,
+click-through de filas (las capturas fueron cero), bytes reales de descarga ni
+E2E autenticada viva; mobile 402 no tuvo overflow de documento. El preview real
+del screenshot tool mostrando login es la sesión no autenticada, no evidencia
+de reportes. La forma inicial del mock de caja se corrigió durante la captura;
+no era un defecto de la aplicación.
+
 ### 2.11 Origen: Diferencias de Caja
 
 | ID | Tipo | Nombre actual | Destino |
@@ -276,7 +300,9 @@ Además se mantienen filtros aplicables, ordenamiento, totales, unidades, varian
 - **Conservar:** tarjeta “Costo recibido”, en Qué comprar → Compras y proveedores.
 - **Evidencia:** ambas tarjetas reciben exactamente `totalCost`, con el mismo tipo monetario, filtro y restricción económica.
 - **Alcance:** una tarjeta; ninguna tabla, gráfico, operación ni fórmula.
-- **Estado:** retirada autorizada y aplicada al código; la entrega completa sigue bloqueada por fallos de verificación.
+- **Estado:** retirada autorizada y aplicada al código; la evidencia numérica y
+  las comprobaciones parciales UI están documentadas, pero no hay publicación
+  completa ni E2E autenticada viva.
 
 ### No retirar estos pares
 
@@ -287,7 +313,7 @@ Además se mantienen filtros aplicables, ordenamiento, totales, unidades, varian
 | Mes × tela / Color × tela / Venta real al cliente por mes y color | Cambian dimensiones, periodización y/o fuente de cantidad. Una matriz no reemplaza a las otras. |
 | Compras por producto / tabla Qué comprar | Costos y recepción no equivalen a recomendación de compra. |
 | Pagos dirigidos / Pagos dirigidos resueltos | Conservan información y estados distintos. |
-| Ventas por sitio / Comparativo por tienda | Los nombres parecidos no garantizan la misma base financiera. X04 conserva su fuente. |
+| Ventas por sitio / Comparativo por tienda | Los nombres parecidos no garantizan la misma base financiera. X04 conserva su fuente; la comparación raw legacy/current del global 2026 pasa y su exportación conserva los totales de `compareStores`. |
 | Cancelaciones en Ventas / control de cancelaciones | Ventas está protegido; el control adicional facilita seguimiento sin quitar el detalle original. |
 
 ## 5. Control operativo: origen de cada bloque nuevo
@@ -335,7 +361,10 @@ La aprobación recibida cubre los destinos de los elementos V01–D05, el detall
 
 La tasa no se implementa todavía. Su definición futura aprobada es cancelados del periodo / (contabilizados + cancelados del periodo) × 100, con fecha de cancelación y criterio canónico de contabilización como Caja en Tiempo Real. Si el criterio del tablero difiere al implementarla, detenerse y reportarlo. Ventas y Control deben compartir la fuente de cancelaciones; no duplicar su consulta. El mapa no autoriza recuperar datos, cambiar reglas financieras o ampliar permisos.
 
-Las verificaciones posteriores a la aprobación encontraron fallos; sus resultados y limitaciones están documentados en `reports/reorganizacion-reportes-verificacion.md`. No considerar este mapa como evidencia de que la implementación ya cumple.
+Las verificaciones posteriores a la aprobación, incluida la evidencia numérica y
+las comprobaciones parciales UI con sus límites, están documentadas en
+`reports/reorganizacion-reportes-verificacion.md`. No considerar este mapa como
+publicación completa ni como evidencia de una E2E autenticada viva.
 
 ## 8. Fuentes consultadas
 
@@ -349,4 +378,6 @@ Las verificaciones posteriores a la aprobación encontraron fallos; sus resultad
 - `artifacts/mariana-textil/src/pages/caja/diferencias.tsx`: Diferencias de Caja.
 - `artifacts/api-server/src/lib/admin-alertas.ts`: condición existente de salidas pendientes y umbral de 24 horas.
 
-**Mapa aprobado. Correcciones de la implementación pendientes de autorización tras la verificación fallida.**
+**Mapa aprobado. El contrato fuente y las comprobaciones parciales UI están
+documentados; siguen pendientes la decisión explícita sobre la pantalla de historial
+individual de etiquetas y cualquier publicación o E2E autenticada viva.**

@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useSearch } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useListAdminCortes,
@@ -32,20 +33,48 @@ import { es } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import CorteDetail from "@/pages/corte-detail-shared";
+import { parseDateOnlyQuery, parsePositiveQueryId } from "@/lib/origin-drilldown";
 
 type SortKey = "fecha" | "tienda" | "cajero" | "vendido" | "cobrado" | "tickets" | "esperado" | "contado" | "diferencia";
+
+export function parseCorteSessionId(search: string | null | undefined): number | null {
+  return parsePositiveQueryId(search, "sesionId");
+}
 
 export default function CajaCortes() {
   const { selectedLocationId } = useLocationScope();
   const { toast } = useToast();
+  const search = useSearch();
+  const requestedSessionId = useMemo(() => parseCorteSessionId(search), [search]);
+  const defaultDesde = format(subDays(new Date(), 7), "yyyy-MM-dd");
+  const defaultHasta = format(new Date(), "yyyy-MM-dd");
+  const requestedDesde = useMemo(
+    () => parseDateOnlyQuery(search, "desde") ?? defaultDesde,
+    [search, defaultDesde],
+  );
+  const requestedHasta = useMemo(
+    () => parseDateOnlyQuery(search, "hasta") ?? defaultHasta,
+    [search, defaultHasta],
+  );
+  const requestedLocationId = useMemo(
+    () => parsePositiveQueryId(search, "ubicacionId"),
+    [search],
+  );
+  const requestedCajeroId = useMemo(
+    () => parsePositiveQueryId(search, "cajeroId"),
+    [search],
+  );
+  const effectiveLocationId = selectedLocationId ?? requestedLocationId;
 
-  const [desde, setDesde] = useState(format(subDays(new Date(), 7), "yyyy-MM-dd"));
-  const [hasta, setHasta] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [desde, setDesde] = useState(requestedDesde);
+  const [hasta, setHasta] = useState(requestedHasta);
   const [page, setPage] = useState(1);
   const pageSize = 50;
 
   // Filters
-  const [cajeroIdFilter, setCajeroIdFilter] = useState<string>("all");
+  const [cajeroIdFilter, setCajeroIdFilter] = useState<string>(
+    requestedCajeroId ? String(requestedCajeroId) : "all",
+  );
   const [numeroCorte, setNumeroCorte] = useState("");
   const [soloConDiferencia, setSoloConDiferencia] = useState(false);
 
@@ -53,7 +82,21 @@ export default function CajaCortes() {
   const [sortKey, setSortKey] = useState<SortKey>("fecha");
   const [sortAsc, setSortAsc] = useState(false);
 
-  const [selectedCorteId, setSelectedCorteId] = useState<number | null>(null);
+  // The list and detail endpoints both use the cash-session primary key.
+  // Keeping this state in sync with sesionId lets report links open the same
+  // detail dialog as a row click without inventing a second identifier.
+  const [selectedCorteId, setSelectedCorteId] = useState<number | null>(requestedSessionId);
+
+  useEffect(() => {
+    setSelectedCorteId(requestedSessionId);
+  }, [requestedSessionId]);
+
+  useEffect(() => {
+    setDesde(requestedDesde);
+    setHasta(requestedHasta);
+    setCajeroIdFilter(requestedCajeroId ? String(requestedCajeroId) : "all");
+    setPage(1);
+  }, [requestedDesde, requestedHasta, requestedCajeroId]);
 
   const { data: usersData } = useListUsers();
   const cashiers = (usersData || []).filter((u: User) => u.rol === Role.CAJA);
@@ -62,7 +105,7 @@ export default function CajaCortes() {
   const { data, isLoading, isError, error, refetch } = useListAdminCortes({
     desde,
     hasta,
-    ubicacionId: selectedLocationId ?? undefined,
+    ubicacionId: effectiveLocationId ?? undefined,
     numeroCorte: numeroCorte ? Number(numeroCorte) : undefined,
     soloConDiferencia: soloConDiferencia || undefined,
     cajeroId: cajeroIdFilter !== "all" ? Number(cajeroIdFilter) : undefined,
@@ -88,7 +131,7 @@ export default function CajaCortes() {
       const blob = await exportAdminCortesXlsx({
         desde,
         hasta,
-        ubicacionId: selectedLocationId ?? undefined,
+        ubicacionId: effectiveLocationId ?? undefined,
         cajeroId: cajeroIdFilter !== "all" ? Number(cajeroIdFilter) : undefined,
         numeroCorte: numeroCorte ? Number(numeroCorte) : undefined,
         soloConDiferencia: soloConDiferencia || undefined
@@ -109,7 +152,7 @@ export default function CajaCortes() {
       const blob = await exportAdminCortesPdf({
         desde,
         hasta,
-        ubicacionId: selectedLocationId ?? undefined,
+        ubicacionId: effectiveLocationId ?? undefined,
         cajeroId: cajeroIdFilter !== "all" ? Number(cajeroIdFilter) : undefined,
         numeroCorte: numeroCorte ? Number(numeroCorte) : undefined,
         soloConDiferencia: soloConDiferencia || undefined

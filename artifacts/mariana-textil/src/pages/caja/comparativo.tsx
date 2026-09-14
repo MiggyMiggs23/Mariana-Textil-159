@@ -28,6 +28,10 @@ import {
   getCategoricalChartColor,
   REPORT_CATEGORICAL_COLORS,
 } from "@/lib/report-chart-colors";
+import {
+  buildCajaComparativoRequest,
+  type CajaComparativoFilters,
+} from "./comparativo-query";
 
 type SortKey = "nombreUbicacion" | "participacion" | "ventas" | "margen" | "tickets" | "ticketPromedio" | "metros" | "efectivo" | "transferencia" | "credito" | "diferenciaCaja" | "porcentajeFacturado";
 
@@ -36,28 +40,29 @@ export default function CajaComparativo({
   filters
 }: { 
   embedded?: boolean;
-  filters?: { periodo: string, desde: string, hasta: string };
+  filters?: CajaComparativoFilters;
 }) {
   const [internalPeriodo, setInternalPeriodo] = useState<GetAdminComparacionTiendasPeriodo>("mensual");
   const [internalDesde, setInternalDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
   const [internalHasta, setInternalHasta] = useState(format(new Date(), "yyyy-MM-dd"));
 
-  const periodo = (filters?.periodo as GetAdminComparacionTiendasPeriodo) || internalPeriodo;
-  const desde = filters?.desde || internalDesde;
-  const hasta = filters?.hasta || internalHasta;
+  // Embedded reports already resolved the range in the report scope helper.
+  // Never let this component turn a preset back into a moving server-side
+  // period; standalone /caja/comparativo keeps its original preset behavior.
+  const periodo = filters
+    ? "personalizado" as GetAdminComparacionTiendasPeriodo
+    : internalPeriodo;
+  const desde = filters ? filters.desde : internalDesde;
+  const hasta = filters ? filters.hasta : internalHasta;
+  const isCustom = periodo === "personalizado";
 
 
   const [sortKey, setSortKey] = useState<SortKey>("ventas");
   const [sortAsc, setSortAsc] = useState(false);
 
-  // If not 'personalizado', we don't send dates to API
-  const isCustom = periodo as string === "personalizado";
+  const requestParams = buildCajaComparativoRequest(filters, periodo, desde, hasta);
 
-  const { data, isLoading, isError, error, refetch } = useGetAdminComparacionTiendas(
-    isCustom
-      ? { periodo: "personalizado", desde, hasta }
-      : { periodo }
-  );
+  const { data, isLoading, isError, error, refetch } = useGetAdminComparacionTiendas(requestParams);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc(!sortAsc);

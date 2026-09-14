@@ -40,7 +40,6 @@ import {
 type QueComprarReportProps = {
   params: QueComprarParams;
   dateRangeValid: boolean;
-  ubicacionId?: number | null;
 };
 
 type EvidenceTarget = {
@@ -341,19 +340,15 @@ function EpisodeEventsCard({
 export function QueComprarReport({
   params,
   dateRangeValid,
-  ubicacionId,
 }: QueComprarReportProps) {
   const [evidenceTarget, setEvidenceTarget] = useState<EvidenceTarget | null>(null);
-  // The operational site comes from the global header. Reuse the report
-  // query's existing ubicacionIds parameter rather than introducing a second
-  // site picker or an unsupported ubicacionId query parameter.
-  const reportParams = useMemo<QueComprarParams>(
-    () =>
-      ubicacionId == null
-        ? params
-        : { ...params, ubicacionIds: [ubicacionId] },
-    [params, ubicacionId],
-  );
+  // The operational site is already applied to params by reportes.tsx from
+  // the global header. Do not introduce a second site source here.
+  const reportParams = params;
+  const scopedLocationId =
+    Array.isArray(reportParams.ubicacionIds) && reportParams.ubicacionIds.length === 1
+      ? Number(reportParams.ubicacionIds[0])
+      : null;
   const reportQuery = useQuery({
     queryKey: ["reportes", "que-comprar", reportParams],
     queryFn: () => getQueComprarReport(reportParams),
@@ -452,7 +447,7 @@ export function QueComprarReport({
 
   const openEvidence = (row: Record<string, unknown>) => {
     const productoId = rowProductId(row);
-    const rowUbicacionId = rowLocationId(row, ubicacionId);
+    const rowUbicacionId = rowLocationId(row, scopedLocationId);
     if (productoId === null || rowUbicacionId === null) return;
     const evidenceUrl = row.evidenceUrl;
     setEvidenceTarget({
@@ -557,7 +552,7 @@ export function QueComprarReport({
                     {rows.map((row, index) => {
                       const suggestion = rowSuggestion(row);
                       const productId = rowProductId(row);
-                      const rowSiteId = rowLocationId(row, ubicacionId);
+                      const rowSiteId = rowLocationId(row, scopedLocationId);
                       const evidenceUrl = row.evidenceUrl;
                       const notMoved = row.noMovimiento === true;
                       const underMinimum = row.bajoMinimo === true;

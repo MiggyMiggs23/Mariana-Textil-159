@@ -8,6 +8,9 @@ import { cn } from "@/lib/utils";
 import { formatUnit } from "@workspace/number-format";
 import { getReportBlockExplanation } from "./report-explanations";
 import { Link } from "wouter";
+import { getReportTableHref, isSafeInternalReportHref } from "@/lib/report-href";
+
+export { getReportTableHref, isSafeInternalReportHref };
 
 export function ReportTable({ block, hasEconomicAccess, section }: { block: ReporteTable, hasEconomicAccess: boolean; section?: string }) {
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -94,11 +97,14 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
                     const isNumeric = col.kind === "money" || col.kind === "percentage" || col.kind === "count" || col.kind === "quantity" || col.kind === "days";
                     const alignRight = col.align === 'right' || (isNumeric && col.align !== 'left' && col.align !== 'center');
                     const alignCenter = col.align === 'center';
+                    const linkUrl = getReportTableHref(row, col);
 
                     // Semantic Colors Logic
                     const isPendingText = val === "Costo pendiente" || val === "Sin costo" || val === "Costo antiguo" || (val === undefined || val === null) && col.economic;
 
-                    let content = isPendingText ? (
+                    let content = col.kind === "link" ? (
+                      linkUrl ? "Ver documento" : "-"
+                    ) : isPendingText ? (
                       <span className="italic text-report-text-muted opacity-80" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 4px)' }}>
                         {val || "Pendiente"}
                       </span>
@@ -176,15 +182,16 @@ export function ReportTable({ block, hasEconomicAccess, section }: { block: Repo
                         );
                       }
 
-                      // 7. Links (Drilldowns coordinate from backend)
-                      const linkUrl = row[`${col.key}Url`] || row[`${col.key}Enlace`] || (col.key === 'folio' || col.key === 'ticket' || col.key === 'documento' || col.key === 'id' ? (row.url || row.enlace) : null);
-                      if (linkUrl && typeof linkUrl === 'string') {
-                        content = (
-                          <Link href={linkUrl} className="text-primary hover:underline font-medium">
-                            {content}
-                          </Link>
-                        );
-                      }
+                    }
+                    // 7. Links (Drilldowns coordinate from backend). This
+                    // intentionally sits outside the value guard: a valid
+                    // hrefKey can point at a row whose display value is null.
+                    if (linkUrl) {
+                      content = (
+                        <Link href={linkUrl} className="text-primary hover:underline font-medium">
+                          {content}
+                        </Link>
+                      );
                     }
 
                     return (

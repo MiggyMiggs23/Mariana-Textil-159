@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useSearch } from "wouter";
+import { useQuery } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
+  customFetch,
   useAjustarRollo,
   useListAjustesPendientes,
   useRevisarAjuste,
@@ -20,11 +22,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDebounce } from "@/hooks/use-debounce";
-import { Search, AlertTriangle, Check, X, FileEdit, Box, ChevronRight } from "lucide-react";
+import { Search, AlertTriangle, Check, X, FileEdit, Box, ChevronRight, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
@@ -36,11 +39,39 @@ import {
   advertenciaSkuEscaneado,
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
+import { parsePositiveQueryId } from "@/lib/origin-drilldown";
+
+export function parseAjusteMovementId(search: string | null | undefined): number | null {
+  return parsePositiveQueryId(search, "movementId");
+}
+
+function getInventoryMovement(movementId: number, signal?: AbortSignal) {
+  return customFetch<MovimientoRow>(`/api/inventario/movimientos/${movementId}`, {
+    method: "GET",
+    signal,
+  });
+}
 
 export default function Ajustes() {
   const queryClient = useQueryClient();
   const { data: user } = useGetCurrentUser();
   const isAdmin = user?.rol === Role.ADMIN;
+  const search = useSearch();
+  const [, setLocation] = useLocation();
+  const requestedMovementId = parseAjusteMovementId(search);
+  const movementDetail = useQuery({
+    queryKey: ["/api/inventario/movimientos", requestedMovementId],
+    queryFn: ({ signal }) => getInventoryMovement(requestedMovementId!, signal),
+    enabled: requestedMovementId != null,
+    retry: false,
+  });
+
+  const closeMovementDetail = () => {
+    const params = new URLSearchParams(search);
+    params.delete("movementId");
+    const nextSearch = params.toString();
+    setLocation(`/inventario/ajustes${nextSearch ? `?${nextSearch}` : ""}`);
+  };
 
   const [activeTab, setActiveTab] = useState("nuevo");
 
@@ -525,6 +556,85 @@ export default function Ajustes() {
           )}
         </Tabs>
       </div>
+      <Dialog
+        open={requestedMovementId != null}
+        onOpenChange={(open) => {
+          if (!open) closeMovementDetail();
+        }}
+      >
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              Detalle del movimiento #{requestedMovementId}
+            </DialogTitle>
+          </DialogHeader>
+          {movementDetail.isLoading ? (
+            <div className="flex items-center justify-center gap-2 py-12" data-testid="status-cargando-movimiento">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+              Cargando movimiento inmutable...
+            </div>
+          ) : movementDetail.isError ? (
+            <div className="space-y-3 py-8 text-center text-destructive" role="alert" data-testid="status-error-movimiento">
+              <p>{getApiErrorMessage(movementDetail.error, "No se pudo cargar el movimiento.")}</p>
+              <p className="text-sm text-muted-foreground">
+                El servidor rechazó o no encontró el movimiento solicitado.
+              </p>
+            </div>
+          ) : movementDetail.data ? (
+            <div className="grid gap-4 sm:grid-cols-2" data-testid={`detalle-movimiento-${movementDetail.data.id}`}>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Fecha</p>
+                <p>{format(new Date(movementDetail.data.createdAt), "dd/MM/yyyy HH:mm", { locale: es })}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Tipo</p>
+                <p>{movementDetail.data.tipo}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Rollo</p>
+                <p>{movementDetail.data.serie ?? `#${movementDetail.data.rolloId}`}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Producto</p>
+                <p>{movementDetail.data.skuProducto ?? `#${movementDetail.data.productoId}`}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Ubicación</p>
+                <p>{movementDetail.data.nombreUbicacion ?? `#${movementDetail.data.ubicacionId}`}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Cantidad / saldo posterior</p>
+                <p>{movementDetail.data.cantidad} · {movementDetail.data.saldoPosterior}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Documento</p>
+                <p>{movementDetail.data.documentoTipo && movementDetail.data.documentoId
+                  ? `${movementDetail.data.documentoTipo} #${movementDetail.data.documentoId}`
+                  : "Sin documento"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Movimiento origen</p>
+                <p>{movementDetail.data.movimientoOrigenId == null ? "—" : `#${movementDetail.data.movimientoOrigenId}`}</p>
+              </div>
+              <div className="sm:col-span-2">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Justificación</p>
+                <p className="whitespace-pre-wrap">{movementDetail.data.justificacion ?? "Sin justificación registrada."}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Revisión</p>
+                <p>{movementDetail.data.revisado ? "Revisado" : "Pendiente de revisión"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Usuario ID</p>
+                <p>{movementDetail.data.usuarioId}</p>
+              </div>
+            </div>
+          ) : null}
+          <DialogFooter>
+            <Button variant="outline" onClick={closeMovementDetail}>Cerrar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       <ConfirmacionTextoExacto
         open={confirmacionAjusteAbierta}
         onOpenChange={setConfirmacionAjusteAbierta}

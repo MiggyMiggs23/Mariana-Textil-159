@@ -9,6 +9,7 @@ export type ExportColumn = {
   key: string;
   label: string;
   kind: string;
+  hrefKey?: string;
   economic?: boolean;
 };
 export type ExportTable = {
@@ -17,6 +18,21 @@ export type ExportTable = {
   columns: ExportColumn[];
   rows: Record<string, unknown>[];
   totals: Record<string, unknown>;
+};
+
+export type ExportChart = {
+  id: string;
+  title: string;
+  categoryKey: string;
+  series: Array<{ key: string; label: string; kind?: string }>;
+  rows: Record<string, unknown>[];
+};
+export type ExportAlert = {
+  sesionId: number;
+  tipo: string;
+  mensaje: string;
+  importe: string;
+  href?: string;
 };
 
 export const INVENTORY_MODALITY = "NO APLICA — INVENTARIO FÍSICO";
@@ -110,6 +126,18 @@ const formatFor = (kind: string) => {
   return EXCEL_NUMBER_FORMAT.identifier;
 };
 
+function worksheetName(workbook: ExcelJS.Workbook, title: string): string {
+  const base = title.slice(0, 31) || "Hoja";
+  let candidate = base;
+  let suffix = 2;
+  while (workbook.getWorksheet(candidate)) {
+    const marker = ` ${suffix}`;
+    candidate = `${base.slice(0, 31 - marker.length)}${marker}`;
+    suffix += 1;
+  }
+  return candidate;
+}
+
 /** Creates the XLSX document from the already authorized server report. */
 export function createReportWorkbook(report: {
   section: unknown;
@@ -118,6 +146,9 @@ export function createReportWorkbook(report: {
   activeFilters: unknown;
   kpis?: Array<{ label: string; value: string | number | null; kind: string }>;
   tables: ExportTable[];
+  charts?: ExportChart[];
+  warnings?: string[];
+  alerts?: ExportAlert[];
 }): ExcelJS.Workbook {
   const workbook = new ExcelJS.Workbook();
   const modality = activeReportModality(report.activeFilters);
@@ -136,7 +167,7 @@ export function createReportWorkbook(report: {
     if (numeric(item.kind)) kpis.getCell(`B${kpis.rowCount}`).numFmt = formatFor(item.kind);
   }
   for (const item of report.tables) {
-    const sheet = workbook.addWorksheet(item.title.slice(0, 31));
+    const sheet = workbook.addWorksheet(worksheetName(workbook, item.title));
     sheet.columns = item.columns.map((column) => ({ header: column.label, key: column.key, width: Math.max(14, column.label.length + 3) }));
     for (const column of item.columns) if (numeric(column.kind)) sheet.getColumn(column.key).numFmt = formatFor(column.kind);
     sheet.addRows(item.rows.map((row) => Object.fromEntries(item.columns.map((column) => [
@@ -147,6 +178,43 @@ export function createReportWorkbook(report: {
     ]))));
     sheet.addRow(Object.fromEntries(item.columns.map((column) => [column.key, item.totals[column.key] ?? null])));
     sheet.autoFilter = { from: "A1", to: `${excelColumnName(item.columns.length)}1` };
+  }
+  for (const chart of report.charts ?? []) {
+    const sheet = workbook.addWorksheet(worksheetName(workbook, `Grafico ${chart.title}`));
+    const chartColumns = [
+      { key: chart.categoryKey, label: chart.categoryKey, kind: "text" },
+      ...chart.series.map((series) => ({ key: series.key, label: series.label, kind: series.kind ?? "text" })),
+    ];
+    sheet.columns = chartColumns.map((column) => ({
+      header: column.label,
+      key: column.key,
+      width: Math.max(14, column.label.length + 3),
+    }));
+    sheet.addRows(chart.rows.map((row) => Object.fromEntries(
+      chartColumns.map((column) => [
+        column.key,
+        numeric(column.kind) && row[column.key] != null
+          ? toExcelNumber(row[column.key] as string | number)
+          : row[column.key] ?? null,
+      ]),
+    )));
+    sheet.autoFilter = { from: "A1", to: `${excelColumnName(chartColumns.length)}1` };
+  }
+  if (report.warnings?.length) {
+    const warnings = workbook.addWorksheet(worksheetName(workbook, "Avisos"));
+    warnings.columns = [{ header: "Aviso", key: "warning", width: 100 }];
+    warnings.addRows(report.warnings.map((warning) => ({ warning })));
+  }
+  if (report.alerts?.length) {
+    const alerts = workbook.addWorksheet(worksheetName(workbook, "Alertas"));
+    alerts.columns = [
+      { header: "Sesión", key: "sesionId", width: 14 },
+      { header: "Tipo", key: "tipo", width: 14 },
+      { header: "Mensaje", key: "mensaje", width: 70 },
+      { header: "Importe", key: "importe", width: 18 },
+      { header: "Origen", key: "href", width: 70 },
+    ];
+    alerts.addRows(report.alerts);
   }
   return workbook;
 }

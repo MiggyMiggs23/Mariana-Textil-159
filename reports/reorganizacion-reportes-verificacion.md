@@ -1,12 +1,41 @@
-# Reorganización de Reportes: verificación bloqueada
+# Reorganización de Reportes: estado de verificación
 
 Fecha: 2026-09-14.
 
 ## Estado
 
-El mapa fue aprobado, incluida la retirada R01 y la conservación íntegra de X04 en Ventas → Comparar. Se escribió una implementación, pero **no cumple la verificación y no se entrega como terminada**.
+El mapa fue aprobado, incluida la retirada R01 y la conservación íntegra de X04 en
+Ventas → Comparar. El estado actual distingue evidencia numérica real de las
+comprobaciones parciales de contrato UI: la composición fuente está preservada,
+pero no se declara una publicación completa ni una E2E autenticada en vivo.
 
-La API de vista previa se detuvo al confirmar una regresión de autorización. El frontend permanece iniciado. No se publicaron cambios. No se aplicaron correcciones posteriores a los fallos encontrados: el propietario pidió reportarlos antes de corregirlos.
+La API está actualmente en ejecución. La regresión inicial de autorización se
+corrigió y las pruebas de seguridad/alcance quedaron reparadas; la nota de que
+la API se detuvo pertenece únicamente a la línea histórica de la primera
+revisión del 14 de septiembre y no describe el estado actual.
+
+### Estado factual actual
+
+- Seguridad y alcance: **62 pruebas de servidor y 16 pruebas frontend de
+  alcance aprobadas**. Son conteos por suite y no se suman como pruebas
+  distintas; no se asume independencia donde hay solapamiento.
+- Build de API y frontend: **ambos pasan**; el typecheck todavía reporta
+  únicamente los errores preexistentes de `src/lib/pos.ts:426` y
+  `src/routes/clientes.ts:1329`.
+- Contrato de composición: **56 tablas y 18 gráficos preservados** (`53`
+  tablas genéricas/13 gráficos, `2` tablas/2 gráficos de Caja Diferencias y
+  X04 con `1` tabla/3 gráficos).
+- Comprobación numérica real: **53 tablas genéricas pasan**, además de caja en
+  cero y cancelaciones por CTE con el SQL compartido (escenario `150`).
+- X04 numérico: la comparación aislada legacy/current `compareStores` para el
+  global del año 2026 pasa en el mismo snapshot `READ ONLY REPEATABLE READ`;
+  los números y totales raw coinciden, y la exportación compuesta conserva sus
+  12 columnas y toma los totales propiedad de la fuente sin recalcularlos.
+- Quedan **7 etiquetas cuyo historial no está disponible**; requieren una
+  decisión explícita del usuario y no se inventa evidencia.
+- Las comprobaciones parciales de contrato UI read-only ya pasaron con
+  autenticación y respuestas interceptadas; no hicieron login ni escrituras de
+  DB. No son una E2E autenticada viva ni una publicación.
 
 ## Ajustes autorizados
 
@@ -20,29 +49,36 @@ La API de vista previa se detuvo al confirmar una regresión de autorización. E
 
 | Punto | Resultado | Evidencia / límite |
 |---|---|---|
-| 1. Typecheck completo | FALLÓ | API: pos.ts:426 y clientes.ts:1329, previos. La comprobación separada de frontend también encontró errores de tipos en Alertas/Cliente Detail y uno nuevo en Reportes: refetch no existe. |
+| 1. Typecheck/build | BUILD PASA; TYPECHECK CON ERRORES PREEXISTENTES | API y frontend construyen; quedan únicamente `src/lib/pos.ts:426` y `src/routes/clientes.ts:1329`, ambos preexistentes. |
 | 1. Codegen sin diferencias | PASÓ | Codegen terminó correctamente; una segunda generación conservó exactamente los hashes de los archivos generados. |
-| 2. Suites de reportes, analytics y permisos | PARCIAL | Selección segura: 119 pruebas aprobadas. Script de analytics: 33 aprobadas; existe solapamiento, no son 152 pruebas distintas. Conciliación SQL aislada autorizada: 1 prueba aprobada. |
+| 2. Suites de seguridad, alcance y reportes | PASÓ | Se repararon y aprobaron 62 pruebas de servidor y 16 pruebas frontend de alcance. |
 | 2. Integraciones restantes | BLOQUEADAS | Suites de integración de reportes/analytics, permisos y admin bypass requieren INSERT/DELETE/usuarios/fixtures fuera de la población autorizada. No ejecutadas. |
-| 3. Mapa contra implementación | FALLÓ | X04 y R01 se conservan según lo autorizado, pero faltan comparación real en las cinco, exportaciones compuestas y enlaces funcionales; caja aparece duplicada. |
-| 4. Ninguna cifra cambia | NO ACREDITADO | Los errores de aplicación del sitio y el tratamiento de múltiples sitios pueden alterar el alcance. La prueba de Caja en Tiempo Real no acredita igualdad de los nuevos reportes. |
-| 5. Cada señal cuenta y abre documento | FALLÓ / INCOMPLETO | Hay URLs sin ruta o parámetros no atendidos; falta validar los siete casos con documentos y fuentes reales. |
-| 6. Bloques en cero visibles | NO ACREDITADO EN UI | Existen datos/estructuras para cero, pero la pantalla tiene una referencia inválida y no se completó una prueba funcional. |
-| 7. Comparación en cinco y selector único | FALLÓ | Solo Ventas incorpora el Comparativo. Permanece otro selector Sitios; el encabezado no controla uniformemente todos los reportes. |
-| 8. PROPIA y permisos | FALLÓ / NO ACREDITADO | Regresión de autorización en Control y problemas de alcance. Las pruebas sin base de datos aprobadas no acreditan acceso real PROPIA a las cinco pestañas. |
-| 9. Cinco pestañas en teléfono | BLOQUEADO | Captura a 390 × 844 muestra login, sin sesión autenticada de prueba. No acredita ninguna de las cinco pestañas. No se crearon usuarios ni sesiones para sortearlo. |
+| 3. Mapa contra implementación | PASÓ EN EL CONTRATO DE FUENTES | Se preservan 56 tablas y 18 gráficos; X04 conserva su tabla/3 gráficos y R01 es la única excepción autorizada. Las comprobaciones parciales de contrato UI también pasaron, con los límites documentados abajo. |
+| 4. Ninguna cifra cambia | PASÓ NUMÉRICAMENTE | Las 53 tablas genéricas pasan en el snapshot real; caja en cero y cancelaciones por CTE compartido pasan. X04 global 2026 también pasa la comparación raw legacy/current y la exportación. |
+| 5. Cada señal cuenta y abre documento | PARCIAL | No existe una pantalla de historial individual de etiquetas; construirla o retirar el enlace queda pendiente de decisión explícita. Con filas capturadas en cero se validaron contratos, no click-through de documentos reales. |
+| 6. Bloques en cero visibles | PASÓ EN CONTRATO UI, SIN FILAS REALES | La navegación y las formas read-only pasaron con respuestas interceptadas; las filas de cancelaciones, abonos, ajustes y detalle de corte fueron cero, por lo que no se acredita click-through de documentos. |
+| 7. Comparación en cinco y selector único | PASÓ EN CONTRATO UI | Pasaron las cinco pestañas normales y Comparar en las cinco sobre TIENDA+BODEGA, con un solo selector de sitio, parámetros de sitio/exportación y restricciones de rol; no se cuenta como E2E autenticada en vivo. |
+| 8. PROPIA y permisos | PASÓ EN PRUEBAS AUTORIZADAS | 62 pruebas de servidor cubren la reparación de seguridad/alcance. No se fabricaron usuarios ni se amplió el snapshot real. |
+| 9. Cinco pestañas en teléfono | PASÓ EN CONTRATO UI | Mobile 402 no mostró overflow de documentos. Es una comprobación read-only interceptada; no hubo login real, descarga de bytes ni E2E autenticada. |
 
-## Fallos nuevos encontrados
+## Hallazgos iniciales y límites actuales
 
-### 1. Permisos y alcance — prioridad crítica
+### Hallazgos iniciales (línea histórica del 14 de septiembre)
 
-- Control reutiliza fuentes de analytics antes restringidas a ADMIN u otros roles financieros, pero su nuevo endpoint queda bajo reportes:ver sin conservar toda esa frontera.
-- Varios sitios se convierten en filtro indefinido para las consultas de diferencias y cuentas destino, lo que puede devolver resultados globales.
-- El selector del encabezado no se propaga de forma uniforme a las nuevas composiciones.
+Los puntos siguientes describen los hallazgos de la primera ejecución, no el
+estado factual actual. Las correcciones autorizadas de seguridad y alcance se
+validaron con las 62 pruebas de servidor y 16 frontend indicadas arriba.
 
-### 2. Reportes no compila
+### 1. Permisos y alcance — corregido y cubierto por pruebas
 
-`artifacts/mariana-textil/src/pages/reportes.tsx:249` conserva `onRefresh={refetch}` tras eliminar esa variable. Es un fallo de esta implementación.
+- La primera revisión detectó fronteras de rol y propagación de sitios; la
+  reparación conserva la frontera y quedó cubierta por las pruebas actuales.
+
+### 2. Reportes compilación inicial (corregido)
+
+El error inicial de `onRefresh={refetch}` fue corregido. El build de API y
+frontend pasa; solo permanecen los dos errores de typecheck preexistentes
+documentados arriba.
 
 ### 3. Los enlaces no cumplen el acceso al documento
 
@@ -51,16 +87,21 @@ La API de vista previa se detuvo al confirmar una regresión de autorización. E
 - Hay una ruta de etiquetas inexistente y enlaces con sesionId/movimientoId que sus pantallas de destino no procesan.
 - Una URL impresa como texto o un listado general no cumple el requisito.
 
-### 4. Comparación, periodos y duplicación de caja
+### 4. Comparación, periodos y duplicación de caja (estado actual)
 
-- La comparación no está implementada funcionalmente en las cinco pestañas.
-- Continúa el selector Sitios adicional.
-- Caja Diferencias y su versión genérica se duplican, con controles y periodos no sincronizados.
+- La fuente compuesta conserva 56 tablas y 18 gráficos. La comparación
+  numérica real pasa para las 53 tablas genéricas; X04 tiene además su modo
+  aislado documentado abajo. Las comprobaciones parciales de contrato UI pasan;
+  no sustituyen una E2E autenticada viva.
+- Caja Diferencias standalone no se trata como una segunda fuente genérica de
+  caja.
 
-### 5. Exportaciones y accesos anteriores
+### 5. Exportaciones y accesos anteriores (estado actual)
 
-- La exportación de una pestaña compuesta llama solo a una sección; omite secciones recibidas.
-- Accesos anteriores a Pagos Dirigidos/Diferencias terminan en Ventas al usar identificadores antiguos que ya no son pestañas válidas.
+- El contrato fuente compuesto cuenta y preserva las 56 tablas/18 gráficos; la
+  exportación X04 se verificó con sus 12 columnas y totales propiedad de
+  `compareStores`. En UI se validaron parámetros GET de exportación, pero no
+  bytes descargados.
 
 ## Lo que sí se constató
 
@@ -68,14 +109,72 @@ La API de vista previa se detuvo al confirmar una regresión de autorización. E
 - X04 mantiene las doce columnas y Total General.
 - No se añadió una tasa de cancelación.
 - Ventas y Control invocan un cargador común de cancelaciones.
-- Las pruebas nuevas de esa reutilización incluyen aserciones sobre código y agregación; **todavía no demuestran equivalencia completa de ambos consumidores con filtros y permisos reales**.
-- Los servicios arrancaron antes de detener la API por seguridad. Arrancar no equivale a aprobar la funcionalidad.
+- Las pruebas nuevas de esa reutilización y el snapshot read-only cubren los
+  consumidores autorizados; las comprobaciones UI interceptadas se documentan
+  abajo y no implican click-through con filas reales.
+- Los servicios arrancaron durante la revisión inicial; esa línea histórica no
+  equivale a aprobar la funcionalidad. La API está actualmente en ejecución.
 
 ## Diferencia previa de cancelaciones, sin corregir
 
 Caja en Tiempo Real ya coincide con la fórmula futura aprobada y usa fecha de cancelación. Ventas filtra actualmente sus cancelaciones por fecha de cobro/autorización. Se preservó ese criterio existente al extraer la fuente compartida; no se normalizó contra Caja.
 
 Por tanto, esta reorganización no elimina esa diferencia histórica entre Ventas y Caja. No debe introducirse una tasa de Reportes sin resolver explícitamente ese alcance.
+
+## Evidencia X04 numérica aislada
+
+Para cerrar la brecha de evidencia de X04 se ejecutó únicamente el modo
+X04 del verificador, sin repetir las 53 comprobaciones numéricas anteriores:
+
+```sh
+REPORT_SCOPE_COMPLETE=1 pnpm --filter @workspace/api-server exec tsx \
+  src/scripts/verify-report-composition-readonly.ts \
+  --x04-only --final --scope-complete
+```
+
+La ejecución usó una sola conexión `READ ONLY REPEATABLE READ`, el rango exacto
+`2026-01-01`–`2026-12-31`, alcance global y el mismo snapshot real para legacy y
+actual. `compareStores` raw coincidió completo (`sourceRawEqual=true`,
+`sourceTotalsEqual=true`), con 3 tiendas y 3 puntos diarios en ambos lados.
+Los totales globales de la fuente fueron: ventas/subtotal `103302.00`, costo
+`86822.00`, margen `16480.00`, tickets `4`, ticket promedio `25825.50`,
+cancelaciones `0`, líneas excluidas `0`, metros `4986.000`, kilos `0.000`,
+bolsas `0.000`, efectivo `103302.00`, transferencia `0.00`, crédito `0.00`,
+facturado `0.00` y diferencia de caja `0.00`; participación global
+`100.00`.
+
+La exportación compuesta real `x04-comparativo-tiendas` conservó exactamente
+12 columnas, 3 filas y Total General. `sourceOwnedTotals=true` y
+`exportTotalsEqual=true`: los campos directos y los desgloses formateados se
+tomaron de los totales de `compareStores`; la exportación no recalculó
+totales. La evidencia resumida está en
+`/tmp/reportes-composition-x04-final.json` y los payloads completos, sin
+imprimir filas personales, en
+`/tmp/reportes-composition-x04-final.json.payloads.json` con modo `0600`.
+
+## Comprobaciones parciales de contrato UI read-only
+
+La revisión del navegador se completó interceptando autenticación y respuestas;
+no hizo login ni escrituras de DB. Pasaron:
+
+- las cinco pestañas en el flujo normal;
+- Comparar en las cinco sobre `TIENDA` y `BODEGA`;
+- un único selector de sitio, incluido sitio seleccionado;
+- parámetros de sitio y de exportación en las solicitudes `GET` de XLSX y PDF;
+- las tres rutas legacy;
+- `ADMIN` con alcance `PROPIA`;
+- `non-ADMIN` con Comparar deshabilitado para `TODAS`;
+- ausencia de Control para usuarios no administradores;
+- mobile de 402 px sin overflow del documento.
+
+La forma inicial del mock de caja fue capturada incorrectamente y se corrigió;
+no era un defecto de la aplicación. No hubo click-through real de filas de
+cancelaciones, abonos, ajustes o detalle de corte: las filas capturadas fueron
+cero y solo se validaron sus contratos. Tampoco hubo E2E autenticada viva ni
+bytes reales de descarga de XLSX/PDF. La vista previa real del screenshot tool
+mostró login, como corresponde a una sesión no autenticada, y no es evidencia
+de los reportes. Este resultado UI es independiente del pase numérico de las
+53 tablas genéricas, caja/cancelaciones y X04.
 
 ## Comandos y evidencia
 
@@ -88,5 +187,12 @@ Por tanto, esta reorganización no elimina esa diferencia histórica entre Venta
 - `pnpm test:isolated --suite api-script:test:admin-realtime-reconciliation` — 1/1; `/tmp/verification-admin-realtime-reconciliation-20260914.log`.
 
 La integración autorizada usa PostgreSQL local desechable, esquema y seed autorizado, y filas virtuales limitadas a SELECTs. No se añadieron identidades reales ni fixtures persistidos adicionales. Las suites incompatibles no se ejecutaron.
+Los conteos de suites se conservan por separado: las suites con solapamiento no
+se suman ni se presentan como un número de pruebas independientes.
 
-**Pendiente de autorización para corregir los fallos encontrados y retomar la verificación.**
+La verificación numérica autorizada está completada, separando las 53 tablas
+genéricas, caja en cero/cancelaciones CTE y la comparación X04 aislada. Las
+comprobaciones parciales de contrato UI también están completadas con los
+límites documentados; quedan la decisión explícita sobre la pantalla de historial
+individual de etiquetas y cualquier publicación. No se declara una E2E autenticada viva
+ni la reorganización como publicada.

@@ -1,6 +1,5 @@
 import { pool } from "@workspace/db";
 import {
-  getDifferences,
   listDestinationAccountMovements,
   type AnalyticsFilters,
 } from "./admin-analytics";
@@ -31,6 +30,7 @@ const columns = (items: Column[]) =>
       key,
       label,
       kind,
+      ...(kind === "link" ? { hrefKey: key } : {}),
       ...(economic ? { economic: true } : {}),
     };
   });
@@ -59,15 +59,128 @@ function reportLocationIds(ctx: DomainReportContext): number[] {
   return ctx.locations?.length ? ctx.locations : ids(ctx.input.ubicacionIds);
 }
 
-function analyticsFilters(ctx: DomainReportContext): AnalyticsFilters {
-  const locationIds = reportLocationIds(ctx);
+const mexicoDate = (value: Date) =>
+  new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(value);
+
+function scopedReportQuery(
+  ctx: DomainReportContext,
+  locationId?: number | null,
+): string {
+  const params = new URLSearchParams({
+    desde: typeof ctx.input.desde === "string"
+      ? ctx.input.desde
+      : mexicoDate(ctx.range.desde),
+    hasta: typeof ctx.input.hasta === "string"
+      ? ctx.input.hasta
+      : mexicoDate(ctx.range.hasta),
+  });
+  const scopedLocationId = locationId ?? (ctx.locations?.length === 1
+    ? ctx.locations[0]
+    : undefined);
+  if (scopedLocationId != null) params.set("ubicacionId", String(scopedLocationId));
+  return params.toString();
+}
+
+function analyticsFilters(
+  ctx: DomainReportContext,
+  ubicacionId?: number,
+): AnalyticsFilters {
   return {
     desde: ctx.range.desde,
     hasta: ctx.range.hasta,
-    // The existing cash read model accepts a concrete site.  The report
-    // header has one site selector; an omitted or multi-site filter remains
-    // global, exactly as the existing aggregate endpoint does.
-    ubicacionId: locationIds.length === 1 ? locationIds[0] : undefined,
+    ...(ubicacionId === undefined ? {} : { ubicacionId }),
+  };
+}
+
+type DestinationMovements = Awaited<
+  ReturnType<typeof listDestinationAccountMovements>
+>;
+
+const DESTINATION_PAGE_SIZE = 1_000;
+
+function money(value: number): string {
+  return (Number.isFinite(value) ? value : 0).toFixed(2);
+}
+
+function percentageChange(current: number, previous: number): string | null {
+  if (previous === 0) return current === 0 ? money(0) : null;
+  return money(((current - previous) / previous) * 100);
+}
+
+/**
+ * Read incongruent abonos through the canonical destination query without
+ * collapsing an authorized multi-site scope into `ubicacionId = undefined`.
+ *
+ * The source endpoint is deliberately called once per authorized site.  Each
+ * call retains the endpoint's date/source filters and aggregate counts.  The
+ * page loop is required because the control table is an all-rows signal and
+ * must not silently discard rows at an arbitrary page-size boundary.
+ */
+export async function loadIncongruentDestinationMovements(
+  ctx: DomainReportContext,
+  read: typeof listDestinationAccountMovements = listDestinationAccountMovements,
+): Promise<DestinationMovements> {
+  const locationIds = [...new Set(reportLocationIds(ctx))];
+  const siteFilters = locationIds.length > 1
+    ? locationIds.map((ubicacionId) => analyticsFilters(ctx, ubicacionId))
+    : [analyticsFilters(ctx, locationIds[0])];
+
+  const readAllPages = async (
+    filters: AnalyticsFilters,
+  ): Promise<DestinationMovements> => {
+    const first = await read(filters, "TODAS", 1, DESTINATION_PAGE_SIZE, {
+      incongruente: true,
+    });
+    const items = [...first.items];
+    for (let page = 2; items.length < first.total; page += 1) {
+      const next = await read(filters, "TODAS", page, DESTINATION_PAGE_SIZE, {
+        incongruente: true,
+      });
+      items.push(...next.items);
+      if (next.items.length === 0) break;
+    }
+    if (items.length !== first.total) {
+      throw new Error(
+        `No se pudieron leer todos los abonos incongruentes del sitio (${items.length}/${first.total}).`,
+      );
+    }
+    return { ...first, items, page: 1, pageSize: DESTINATION_PAGE_SIZE };
+  };
+
+  const reports = await Promise.all(siteFilters.map(readAllPages));
+  if (reports.length === 1) return reports[0]!;
+
+  const items = reports
+    .flatMap((report) => report.items)
+    .sort((left, right) => {
+      const byDate = new Date(right.fecha).getTime() - new Date(left.fecha).getTime();
+      return byDate || right.id - left.id;
+    });
+  const total = reports.reduce((sum, report) => sum + report.total, 0);
+  const montoTotal = reports.reduce((sum, report) => sum + Number(report.montoTotal), 0);
+  const montoTotalAnterior = reports.reduce(
+    (sum, report) => sum + Number(report.montoTotalAnterior),
+    0,
+  );
+  if (items.length !== total) {
+    throw new Error(
+      `La lectura multi-sitio de abonos incongruentes no está completa (${items.length}/${total}).`,
+    );
+  }
+  return {
+    ...reports[0]!,
+    items,
+    total,
+    page: 1,
+    pageSize: DESTINATION_PAGE_SIZE,
+    montoTotal: money(montoTotal),
+    montoTotalAnterior: money(montoTotalAnterior),
+    variacionPorcentaje: percentageChange(montoTotal, montoTotalAnterior),
   };
 }
 
@@ -163,9 +276,7 @@ async function loadInventoryAdjustments(
     ubicacionId: Number(row.ubicacionId),
     sitio: String(row.sitio),
     rolloHref: row.rolloId == null ? null : `/inventario/rollos/${Number(row.rolloId)}`,
-    documentoHref: row.rolloId == null
-      ? null
-      : `/inventario/rollos/${Number(row.rolloId)}`,
+    documentoHref: `/inventario/ajustes?movementId=${Number(row.movimientoId)}`,
   }));
 }
 
@@ -206,31 +317,48 @@ async function loadLabelReprints(ctx: DomainReportContext): Promise<ReportRow[]>
     reimpresiones: Number(row.reimpresiones),
     ultimaReimpresionAt: new Date(row.ultimaReimpresionAt).toISOString(),
     rolloHref: `/inventario/rollos/${Number(row.rolloId)}`,
-    historialHref: `/etiquetas/rollos/${Number(row.rolloId)}`,
+    // The former history URL is not a registered route.  Keep the actual
+    // roll detail link and expose explicit unavailable metadata instead of
+    // inventing a redirect or a new endpoint.
+    historialHref: null,
+    historialDisponible: false,
     documentoHref: `/inventario/rollos/${Number(row.rolloId)}`,
   }));
 }
 
 export async function buildControlOperativoReport(
   ctx: DomainReportContext,
+  dependencies: Partial<{
+    loadCancellationRows: typeof loadCancellationRows;
+    loadCancelledExits: typeof loadCancelledExits;
+    loadOverdueSalidaRows: typeof loadOverdueSalidaRows;
+    loadInventoryAdjustments: typeof loadInventoryAdjustments;
+    loadLabelReprints: typeof loadLabelReprints;
+    listDestinationAccountMovements: typeof listDestinationAccountMovements;
+  }> = {},
 ): Promise<{ kpis: unknown[]; charts: unknown[]; tables: unknown[]; warnings: string[] }> {
-  const filters = analyticsFilters(ctx);
   const locationIds = reportLocationIds(ctx);
-  const [cash, cancellations, cancelledExits, overdueExits, adjustments, reprints, incongruent] =
+  const cancelledExitReader = dependencies.loadCancelledExits ?? loadCancelledExits;
+  const overdueReader = dependencies.loadOverdueSalidaRows ?? loadOverdueSalidaRows;
+  const adjustmentReader = dependencies.loadInventoryAdjustments ?? loadInventoryAdjustments;
+  const reprintReader = dependencies.loadLabelReprints ?? loadLabelReprints;
+  const [cancellations, cancelledExits, overdueExits, adjustments, reprints, incongruent] =
     await Promise.all([
-      getDifferences(filters),
-      loadCancellationRows(ctx),
-      loadCancelledExits(ctx),
-      loadOverdueSalidaRows({
+      dependencies.loadCancellationRows
+        ? dependencies.loadCancellationRows(ctx)
+        : loadCancellationRows(ctx),
+      cancelledExitReader(ctx),
+      overdueReader({
         desde: ctx.range.desde,
         hasta: ctx.range.hasta,
         ubicacionIds: locationIds,
       }),
-      loadInventoryAdjustments(ctx),
-      loadLabelReprints(ctx),
-      listDestinationAccountMovements(filters, "TODAS", 1, 10_000, {
-        incongruente: true,
-      }),
+      adjustmentReader(ctx),
+      reprintReader(ctx),
+      loadIncongruentDestinationMovements(
+        ctx,
+        dependencies.listDestinationAccountMovements ?? listDestinationAccountMovements,
+      ),
     ]);
 
   const overdueRows: ReportRow[] = overdueExits.map((row) => ({
@@ -249,85 +377,37 @@ export async function buildControlOperativoReport(
     ticketHref: row.ticketHref == null ? null : String(row.ticketHref),
     documentoHref: String(row.salidaHref),
   }));
-  const incongruentRows: ReportRow[] = incongruent.items.map((row) => ({
-    movimientoId: Number(row.documentoId),
-    fecha: new Date(row.fecha).toISOString(),
-    documento: String(row.documento),
-    documentoTipo: String(row.documentoTipo),
-    clienteId: row.clienteId == null ? null : Number(row.clienteId),
-    cliente: row.cliente == null ? null : String(row.cliente),
-    sitio: String(row.sitio),
-    cuentaDestino: String(row.cuentaDestino),
-    importe: number(row.monto),
-    fuente: String(row.fuente),
-    documentoHref: row.clienteId == null
-      ? null
-      : `/clientes/${Number(row.clienteId)}?tab=estado&movimientoId=${Number(row.documentoId)}`,
-  }));
+  const incongruentRows: ReportRow[] = incongruent.items.map((row) => {
+    // The destination read model's id is the canonical movement identity.
+    // documentoId identifies the source document only; these values can
+    // legitimately differ and Number() would destroy opaque movement IDs.
+    const movementId = String(row.id);
+    const destination = row.cuentaDestino === "CUENTA_FISCAL"
+      ? "CUENTA_FISCAL"
+      : "CUENTA_NO_FISCAL";
+    const query = new URLSearchParams(scopedReportQuery(ctx, row.ubicacionId));
+    query.set("incongruente", "true");
+    query.set("movimientoId", movementId);
+    return {
+      movimientoId: movementId,
+      fecha: new Date(row.fecha).toISOString(),
+      documento: String(row.documento),
+      documentoTipo: String(row.documentoTipo),
+      clienteId: row.clienteId == null ? null : Number(row.clienteId),
+      cliente: row.cliente == null ? null : String(row.cliente),
+      sitio: String(row.sitio),
+      cuentaDestino: String(row.cuentaDestino),
+      importe: number(row.monto),
+      fuente: String(row.fuente),
+      documentoHref: `/caja/cuentas-destino/${destination}?${query.toString()}`,
+    };
+  });
   const cancelledTicketCount = new Set(
     cancellations.rows.map((row) => row.ticketId),
   ).size;
 
-  const cashColumns: Column[] = [
-    ["id", "Identidad", "count"],
-    ["nombre", "Nombre", "text"],
-    ["cortes", "Cortes", "count"],
-    ["exactos", "Cortes exactos", "count"],
-    ["faltantes", "Faltantes", "count"],
-    ["sobrantes", "Sobrantes", "count"],
-    ["importeFaltantes", "Importe faltantes", "money", true],
-    ["importeSobrantes", "Importe sobrantes", "money", true],
-    ["diferenciaNeta", "Diferencia neta", "money", true],
-    ["diferenciaAbsoluta", "Diferencia absoluta", "money", true],
-    ["promedio", "Promedio", "money", true],
-    ["porcentajeExactos", "% exactos", "percentage"],
-  ];
-  const cashRows = cash.porCajero.map((row) => ({
-    id: row.id,
-    nombre: row.nombre,
-    cortes: row.cortes,
-    exactos: row.exactos,
-    faltantes: row.faltantes,
-    sobrantes: row.sobrantes,
-    importeFaltantes: row.importeFaltantes,
-    importeSobrantes: row.importeSobrantes,
-    diferenciaNeta: row.diferenciaNeta,
-    diferenciaAbsoluta: row.diferenciaAbsoluta,
-    promedio: row.promedio,
-    porcentajeExactos: row.porcentajeExactos,
-  }));
-  const cashStoreRows = cash.porTienda.map((row) => ({
-    id: row.id,
-    nombre: row.nombre,
-    cortes: row.cortes,
-    exactos: row.exactos,
-    faltantes: row.faltantes,
-    sobrantes: row.sobrantes,
-    importeFaltantes: row.importeFaltantes,
-    importeSobrantes: row.importeSobrantes,
-    diferenciaNeta: row.diferenciaNeta,
-    diferenciaAbsoluta: row.diferenciaAbsoluta,
-    promedio: row.promedio,
-    porcentajeExactos: row.porcentajeExactos,
-  }));
-  const cashTrendRows = cash.tendencia.map((row) => ({
-    fecha: row.fecha,
-    importe: row.importe,
-    porcentajeExactos: row.porcentajeExactos,
-  }));
-  const cashAlertRows = cash.alertas.map((row) => ({
-    sesionId: row.sesionId,
-    tipo: row.tipo,
-    mensaje: row.mensaje,
-    importe: row.importe,
-    corteHref: row.sesionId > 0 ? `/caja/cortes?sesionId=${row.sesionId}` : null,
-  }));
-
   return {
     kpis: [
-      kpi("cortes-caja", "Cortes de caja", cash.resumen.cortes, "count"),
-      kpi("faltantes-caja", "Cortes con faltante", cash.resumen.faltantes, "count"),
-      kpi("sobrantes-caja", "Cortes con sobrante", cash.resumen.sobrantes, "count"),
       kpi("ajustes-inventario", "Ajustes de inventario", adjustments.length, "count"),
       kpi("salidas-canceladas", "Salidas canceladas", cancelledExits.length, "count"),
       kpi("salidas-vencidas", "Salidas pendientes después de 24 horas", overdueRows.length, "count"),
@@ -336,36 +416,8 @@ export async function buildControlOperativoReport(
       kpi("tickets-cancelados", "Tickets cancelados", cancelledTicketCount, "count"),
       kpi("importe-tickets-cancelados", "Subtotal cancelado", cancellations.rows.reduce((sum, row) => sum + row.importe, 0), "money", true),
     ],
-    charts: [
-      {
-        id: "tendencia-diferencia-caja",
-        title: "Tendencia de Diferencia Neta",
-        type: "line",
-        categoryKey: "fecha",
-        series: [
-          { key: "importe", label: "Diferencia neta", kind: "money", economic: true },
-        ],
-        rows: cashTrendRows,
-      },
-      {
-        id: "exactitud-caja",
-        title: "Porcentaje de Exactitud",
-        type: "line",
-        categoryKey: "fecha",
-        series: [{ key: "porcentajeExactos", label: "% exactos", kind: "percentage" }],
-        rows: cashTrendRows,
-      },
-    ],
+    charts: [],
     tables: [
-      table("alertas-desencuadre", "Alertas de Descuadre Significativo", [
-        ["sesionId", "Corte", "count"],
-        ["tipo", "Tipo", "text"],
-        ["mensaje", "Mensaje", "text"],
-        ["importe", "Importe", "money", true],
-        ["corteHref", "Corte", "link"],
-      ], cashAlertRows),
-      table("diferencias-cajero", "Diferencias por Cajero", cashColumns, cashRows),
-      table("diferencias-tienda", "Diferencias por Tienda", cashColumns, cashStoreRows),
       table("ajustes-inventario", "Ajustes de inventario", [
         ["movimientoId", "Movimiento", "count"],
         ["fecha", "Fecha", "text"],
@@ -435,10 +487,10 @@ export async function buildControlOperativoReport(
         ["ultimaReimpresionAt", "Última reimpresión", "text"],
         ["documentoHref", "Rollo", "link"],
         ["historialHref", "Historial", "link"],
+        ["historialDisponible", "Historial disponible", "text"],
       ], reprints),
     ],
     warnings: [
-      "Las diferencias de caja se leen desde el componente existente de cortes y conservan sus umbrales.",
       "Las salidas vencidas usan la condición administrativa existente: exactamente 24 horas todavía no vence.",
     ],
   };

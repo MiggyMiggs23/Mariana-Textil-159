@@ -1,7 +1,7 @@
 import { ReportesCatalogos } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Download, FileText } from "lucide-react";
+import { Download, FileText, RefreshCw } from "lucide-react";
 import { CombinedFilterBar, MultiSelectConfig } from "@/components/shared/combined-filter-bar";
 
 export type FilterState = {
@@ -9,7 +9,6 @@ export type FilterState = {
   modalidad: "TODO" | "ROLLOS" | "METRAJE";
   desde?: string;
   hasta?: string;
-  ubicacionIds: number[];
   productoIds: number[];
   telas: string[];
   colores: string[];
@@ -24,7 +23,6 @@ export type FilterState = {
 export const DEFAULT_FILTERS: FilterState = {
   periodo: "mensual",
   modalidad: "TODO",
-  ubicacionIds: [],
   productoIds: [],
   telas: [],
   colores: [],
@@ -58,7 +56,11 @@ export function ReportFilterBar({
   const isCustom = filters.periodo === "personalizado";
 
   const handlePeriodoChange = (val: string) => {
-    onChange({ ...filters, periodo: val });
+    onChange({
+      ...filters,
+      periodo: val,
+      ...(val === "personalizado" ? {} : { desde: undefined, hasta: undefined }),
+    });
   };
 
   const handleFacturadoChange = (val: string) => {
@@ -74,12 +76,6 @@ export function ReportFilterBar({
 
   const multiSelects: MultiSelectConfig[] = catalogos
     ? [
-        {
-          key: "ubicacionIds",
-          label: "Sitios",
-          options: (catalogos.sites || []).map((s) => ({ id: s.id, nombre: s.label })),
-          selected: filters.ubicacionIds.map(String),
-        },
         {
           key: "productoIds",
           label: "Productos",
@@ -209,6 +205,15 @@ export function ReportFilterBar({
 
   const actions = (
     <>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={onRefresh}
+        className="h-9 gap-1.5 flex"
+        data-testid="refresh-report"
+      >
+        <RefreshCw className="w-4 h-4" /> <span className="hidden xl:inline">Actualizar</span>
+      </Button>
       {onDownloadPdf && (
         <Button
           variant="outline"

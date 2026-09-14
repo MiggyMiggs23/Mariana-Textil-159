@@ -25,32 +25,69 @@ import { formatNumber } from "@workspace/number-format";
 import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear } from "date-fns";
 import { es } from "date-fns/locale";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { buildCorteListingHref as buildCorteHref } from "@/lib/origin-drilldown";
 import {
   REPORT_NEGATIVE_COLOR,
   REPORT_POSITIVE_COLOR,
 } from "@/lib/report-chart-colors";
+import {
+  DEFAULT_CASH_CONTROLS,
+} from "@/components/reportes/cash-controls";
+import type { CashControls } from "@/components/reportes/cash-controls";
 
 type SortKey = "nombre" | "cortes" | "exactos" | "porcentajeExactos" | "diferencia";
 
 export default function CajaDiferencias({ 
   embedded = false,
-  filters
+  filters,
+  controls,
+  onControlsChange,
 }: { 
   embedded?: boolean;
-  filters?: { desde: string, hasta: string };
+  filters?: { desde: string, hasta: string; ubicacionId?: number | null };
+  controls?: CashControls;
+  onControlsChange?: (controls: CashControls) => void;
 }) {
-  const { selectedLocationId } = useLocationScope();
+  const { selectedLocationId: headerLocationId } = useLocationScope();
 
   const [internalPreset, setInternalPreset] = useState("mes"); // hoy, semana, mes, trimestre, semestre, año, custom
   const [internalDesde, setInternalDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
   const [internalHasta, setInternalHasta] = useState(format(new Date(), "yyyy-MM-dd"));
-  const [agrupacion, setAgrupacion] = useState<GetAdminDiferenciasAgrupacion>(GetAdminDiferenciasAgrupacion.semana);
-  const [umbralCorte, setUmbralCorte] = useState("0");
-  const [umbralTienda, setUmbralTienda] = useState("0");
+  const [internalAgrupacion, setInternalAgrupacion] = useState<GetAdminDiferenciasAgrupacion>(DEFAULT_CASH_CONTROLS.agrupacion);
+  const [internalUmbralCorte, setInternalUmbralCorte] = useState(DEFAULT_CASH_CONTROLS.umbralCorte);
+  const [internalUmbralTienda, setInternalUmbralTienda] = useState(DEFAULT_CASH_CONTROLS.umbralTienda);
 
   const desde = filters?.desde || internalDesde;
   const hasta = filters?.hasta || internalHasta;
   const preset = filters ? "custom" : internalPreset;
+  const selectedLocationId =
+    filters?.ubicacionId === undefined ? headerLocationId : filters.ubicacionId;
+  const activeControls = controls ?? {
+    agrupacion: internalAgrupacion,
+    umbralCorte: internalUmbralCorte,
+    umbralTienda: internalUmbralTienda,
+  };
+
+  const updateControls = (next: Partial<CashControls>) => {
+    const updated = { ...activeControls, ...next };
+    if (controls) {
+      onControlsChange?.(updated);
+      return;
+    }
+    if (next.agrupacion !== undefined) setInternalAgrupacion(next.agrupacion);
+    if (next.umbralCorte !== undefined) setInternalUmbralCorte(next.umbralCorte);
+    if (next.umbralTienda !== undefined) setInternalUmbralTienda(next.umbralTienda);
+  };
+
+  const buildCorteListingHref = (siteId?: number, cajeroId?: number) => {
+    const effectiveSiteId = selectedLocationId ?? siteId;
+    return buildCorteHref({
+      desde,
+      hasta,
+      ubicacionId: effectiveSiteId,
+      cajeroId,
+    });
+  };
 
 
   const [sortKeyCajero, setSortKeyCajero] = useState<SortKey>("diferencia");
@@ -63,9 +100,9 @@ export default function CajaDiferencias({
     desde,
     hasta,
     ubicacionId: selectedLocationId ?? undefined,
-    umbralCorte: umbralCorte ? Number(umbralCorte) : undefined,
-    umbralTienda: umbralTienda ? Number(umbralTienda) : undefined,
-    agrupacion
+    umbralCorte: activeControls.umbralCorte ? Number(activeControls.umbralCorte) : undefined,
+    umbralTienda: activeControls.umbralTienda ? Number(activeControls.umbralTienda) : undefined,
+    agrupacion: activeControls.agrupacion
   });
 
   const applyPreset = (val: string) => {
@@ -156,7 +193,7 @@ export default function CajaDiferencias({
               </>
             )}
 
-            <Select value={agrupacion} onValueChange={(v: GetAdminDiferenciasAgrupacion) => setAgrupacion(v)}>
+            <Select value={activeControls.agrupacion} onValueChange={(v: GetAdminDiferenciasAgrupacion) => updateControls({ agrupacion: v })}>
               <SelectTrigger className="w-[120px] h-9 bg-background">
                 <SelectValue placeholder="Agrupar por" />
               </SelectTrigger>
@@ -168,12 +205,12 @@ export default function CajaDiferencias({
 
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground font-medium">Umbral Corte:</span>
-              <Input type="number" min="0" value={umbralCorte} onChange={e => setUmbralCorte(e.target.value)} className="h-9 w-20 text-right" />
+              <Input type="number" min="0" value={activeControls.umbralCorte} onChange={e => updateControls({ umbralCorte: e.target.value })} className="h-9 w-20 text-right" />
             </div>
 
             <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground font-medium">Umbral Tienda:</span>
-              <Input type="number" min="0" value={umbralTienda} onChange={e => setUmbralTienda(e.target.value)} className="h-9 w-20 text-right" />
+              <Input type="number" min="0" value={activeControls.umbralTienda} onChange={e => updateControls({ umbralTienda: e.target.value })} className="h-9 w-20 text-right" />
             </div>
 
             <Button variant="outline" size="icon" onClick={() => refetch()} title="Actualizar">
@@ -206,7 +243,21 @@ export default function CajaDiferencias({
                     <div key={i} className="bg-white dark:bg-black/20 p-3 rounded-md shadow-sm border border-destructive/10 text-sm">
                       <p className="font-semibold">{alerta.mensaje}</p>
                       <div className="flex justify-between items-center mt-2">
-                        <span className="text-muted-foreground text-xs font-mono">Corte #{alerta.sesionId}</span>
+                        {alerta.sesionId > 0 ? (
+                          <a
+                            href={`/caja/cortes?sesionId=${alerta.sesionId}`}
+                            className="text-muted-foreground text-xs font-mono underline-offset-2 hover:underline"
+                          >
+                            Corte #{alerta.sesionId}
+                          </a>
+                        ) : (
+                          <a
+                            href={buildCorteListingHref()}
+                            className="text-muted-foreground text-xs underline-offset-2 hover:underline"
+                          >
+                            Ver cortes del periodo
+                          </a>
+                        )}
                         <span className="font-bold font-mono text-destructive">{formatNumber(alerta.importe, { kind: "money" })}</span>
                       </div>
                     </div>
@@ -228,6 +279,12 @@ export default function CajaDiferencias({
                   <p className="text-xs text-muted-foreground mt-1">
                     {data.resumen.exactos} de {data.resumen.cortes} cortes sin diferencia
                   </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
                 </CardContent>
               </Card>
 
@@ -240,6 +297,12 @@ export default function CajaDiferencias({
                   <p className="text-xs text-muted-foreground mt-1 text-destructive/80 font-medium">
                     En {data.resumen.faltantes} cortes con faltante
                   </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
                 </CardContent>
               </Card>
 
@@ -252,6 +315,12 @@ export default function CajaDiferencias({
                   <p className="text-xs text-muted-foreground mt-1 text-amber-600/80 font-medium">
                     En {data.resumen.sobrantes} cortes con sobrante
                   </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
                 </CardContent>
               </Card>
 
@@ -266,6 +335,12 @@ export default function CajaDiferencias({
                   <p className="text-xs text-sidebar-foreground/70 mt-1">
                     Absoluta (descuadre total): {formatNumber(data.resumen.diferenciaAbsoluta, { kind: "money" })}
                   </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-sidebar-foreground underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
                 </CardContent>
               </Card>
             </div>
@@ -276,7 +351,7 @@ export default function CajaDiferencias({
                 <Card>
                   <CardHeader>
                     <CardTitle>Tendencia de Diferencia Neta</CardTitle>
-                    <CardDescription>Diferencias operativas por {agrupacion}</CardDescription>
+                    <CardDescription>Diferencias operativas por {activeControls.agrupacion}</CardDescription>
                   </CardHeader>
                   <CardContent>
                       <ChartContainer
@@ -312,7 +387,7 @@ export default function CajaDiferencias({
                 <Card>
                   <CardHeader>
                     <CardTitle>Porcentaje de Exactitud</CardTitle>
-                    <CardDescription>Cortes sin diferencias por {agrupacion}</CardDescription>
+                    <CardDescription>Cortes sin diferencias por {activeControls.agrupacion}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ChartContainer
@@ -376,6 +451,7 @@ export default function CajaDiferencias({
                           <SortableHead type="cajero" label="Exactos" sortName="exactos" align="right" />
                           <SortableHead type="cajero" label="% Exactitud" sortName="porcentajeExactos" align="right" />
                           <SortableHead type="cajero" label="Diferencia Neta" sortName="diferencia" align="right" />
+                          <TableHead className="text-right">Origen</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -398,10 +474,18 @@ export default function CajaDiferencias({
                                 {Number(row.diferencia) > 0 ? "+" : ""}{formatNumber(row.diferencia, { kind: "money" })}
                               </span>
                             </TableCell>
+                            <TableCell className="text-right">
+                              <a
+                                href={buildCorteListingHref(undefined, row.id)}
+                                className="text-primary underline-offset-2 hover:underline"
+                              >
+                                Ver cortes
+                              </a>
+                            </TableCell>
                           </TableRow>
                         ))}
                         {sortedCajeros.length === 0 && (
-                          <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-6">Sin datos</TableCell></TableRow>
+                          <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-6">Sin datos</TableCell></TableRow>
                         )}
                       </TableBody>
                     </Table>
@@ -423,6 +507,7 @@ export default function CajaDiferencias({
                           <SortableHead type="tienda" label="Exactos" sortName="exactos" align="right" />
                           <SortableHead type="tienda" label="% Exactitud" sortName="porcentajeExactos" align="right" />
                           <SortableHead type="tienda" label="Diferencia Neta" sortName="diferencia" align="right" />
+                          <TableHead className="text-right">Origen</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -445,10 +530,18 @@ export default function CajaDiferencias({
                                 {Number(row.diferencia) > 0 ? "+" : ""}{formatNumber(row.diferencia, { kind: "money" })}
                               </span>
                             </TableCell>
+                            <TableCell className="text-right">
+                              <a
+                                href={buildCorteListingHref(row.id)}
+                                className="text-primary underline-offset-2 hover:underline"
+                              >
+                                Ver cortes
+                              </a>
+                            </TableCell>
                           </TableRow>
                         ))}
                         {sortedTiendas.length === 0 && (
-                          <TableRow><TableCell colSpan={5} className="text-center text-muted-foreground py-6">Sin datos</TableCell></TableRow>
+                          <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-6">Sin datos</TableCell></TableRow>
                         )}
                       </TableBody>
                     </Table>

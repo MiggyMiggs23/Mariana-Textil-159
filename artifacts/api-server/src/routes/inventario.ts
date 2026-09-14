@@ -37,6 +37,8 @@ import {
   RevertirMovimientoResponse,
   GetRolloParams,
   GetRolloResponse,
+  GetInventarioMovimientoParams,
+  GetInventarioMovimientoResponse,
   ListRollosQueryParams,
   ListRollosResponse,
   GetExistenciasQueryParams,
@@ -244,6 +246,27 @@ type MovimientoRow = {
   createdAt: string;
 };
 
+type MovimientoDetalle = {
+  id: number;
+  rolloId: number;
+  serie: string | null;
+  productoId: number;
+  skuProducto: string | null;
+  ubicacionId: number;
+  nombreUbicacion: string | null;
+  tipo: string;
+  cantidad: string;
+  saldoPosterior: string;
+  documentoTipo: string | null;
+  documentoId: string | null;
+  movimientoOrigenId: number | null;
+  usuarioId: number;
+  motivoSalidaExtraordinaria: "MERMA" | "ROBO" | "MUESTRA" | null;
+  justificacion: string | null;
+  revisado: boolean;
+  createdAt: string;
+};
+
 async function enrichMovimiento(
   mov: typeof movimientosTable.$inferSelect,
 ): Promise<MovimientoRow> {
@@ -267,6 +290,83 @@ async function enrichMovimiento(
     uuidCliente: mov.uuidCliente ?? null,
     createdAt: mov.createdAt.toISOString(),
   };
+}
+
+/**
+ * Movement detail is a read-only origin record.  Keep this response separate
+ * from the roll history shape so the adjustment modal cannot receive client
+ * UUIDs, reviewer identities, costs, or any other unrelated sensitive field.
+ */
+async function getInventoryMovementDetail(
+  movimientoId: number,
+): Promise<MovimientoDetalle | null> {
+  const [row] = await db
+    .select({
+      id: movimientosTable.id,
+      rolloId: movimientosTable.rolloId,
+      serie: rollosTable.serie,
+      productoId: movimientosTable.productoId,
+      skuProducto: productosTable.sku,
+      ubicacionId: movimientosTable.ubicacionId,
+      nombreUbicacion: ubicacionesTable.nombre,
+      tipo: movimientosTable.tipo,
+      cantidad: movimientosTable.cantidad,
+      saldoPosterior: movimientosTable.saldoPosterior,
+      documentoTipo: movimientosTable.documentoTipo,
+      documentoId: movimientosTable.documentoId,
+      movimientoOrigenId: movimientosTable.movimientoOrigenId,
+      usuarioId: movimientosTable.usuarioId,
+      motivoSalidaExtraordinaria: movimientosTable.motivoSalidaExtraordinaria,
+      justificacion: movimientosTable.justificacion,
+      revisado: movimientosTable.revisado,
+      createdAt: movimientosTable.createdAt,
+    })
+    .from(movimientosTable)
+    .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))
+    .innerJoin(productosTable, eq(movimientosTable.productoId, productosTable.id))
+    .innerJoin(ubicacionesTable, eq(movimientosTable.ubicacionId, ubicacionesTable.id))
+    .where(eq(movimientosTable.id, movimientoId))
+    .limit(1);
+  if (!row) return null;
+  return {
+    id: Number(row.id),
+    rolloId: Number(row.rolloId),
+    serie: row.serie ?? null,
+    productoId: Number(row.productoId),
+    skuProducto: row.skuProducto ?? null,
+    ubicacionId: Number(row.ubicacionId),
+    nombreUbicacion: row.nombreUbicacion ?? null,
+    tipo: row.tipo,
+    cantidad: row.cantidad,
+    saldoPosterior: row.saldoPosterior,
+    documentoTipo: row.documentoTipo ?? null,
+    documentoId: row.documentoId ?? null,
+    movimientoOrigenId: row.movimientoOrigenId == null
+      ? null
+      : Number(row.movimientoOrigenId),
+    usuarioId: Number(row.usuarioId),
+    motivoSalidaExtraordinaria: row.motivoSalidaExtraordinaria ?? null,
+    justificacion: row.justificacion ?? null,
+    revisado: row.revisado,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+/**
+ * Canonical read-scope decision for an immutable movement.  A mismatched
+ * location intentionally becomes a 404 so PROPIA users cannot probe whether
+ * another site's movement exists.
+ */
+export function movementInReadScope(
+  auth: AuthContext,
+  movementLocationId: number,
+): "allow" | "forbidden" | "not-found" {
+  const scope = resolveReadScope(auth);
+  if (scope.scopeError) return "forbidden";
+  if (scope.ubicacionId != null && scope.ubicacionId !== movementLocationId) {
+    return "not-found";
+  }
+  return "allow";
 }
 
 async function getRolloDetail(rolloId: number) {
@@ -1471,6 +1571,38 @@ inventarioRouter.get(
           auth.user.rol !== "ADMIN" && auth.user.rol !== "CAJA",
         ),
       );
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// Immutable movement origin used by the Ajustes drill-down.  This endpoint
+// performs one scoped read only; it never invokes an inventory operation,
+// recalculates stock, or writes an audit/ledger row.
+inventarioRouter.get(
+  "/movimientos/:id",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = GetInventarioMovimientoParams.parse(req.params);
+      const auth = req.auth!;
+      const readScope = resolveReadScope(auth);
+      if (readScope.scopeError) {
+        res.status(403).json({ error: readScope.scopeError });
+        return;
+      }
+      const detail = await getInventoryMovementDetail(id);
+      if (!detail) {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      if (movementInReadScope(auth, detail.ubicacionId) === "not-found") {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      res.json(GetInventarioMovimientoResponse.parse(detail));
     } catch (e) {
       next(e);
     }

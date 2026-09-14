@@ -2267,6 +2267,29 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
+  /inventario/movimientos/{id}:
+    get:
+      operationId: getInventarioMovimiento
+      tags: [inventario]
+      summary: Obtiene un movimiento inmutable de inventario para su origen
+      description: >
+        Lectura de un movimiento de inventario con el alcance de consulta
+        canónico. Un movimiento fuera de PROPIA se responde como 404.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: number, minimum: 1 }
+      responses:
+        "200":
+          description: Detalle inmutable del movimiento
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MovimientoDetalle"
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
   /inventario/rollos:
     get:
       operationId: listRollos
@@ -5588,6 +5611,118 @@ paths:
           }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
+  /reportes/vistas/{vista}/export.xlsx:
+    get:
+      operationId: exportReporteVistaXlsx
+      tags: [reportes]
+      summary: Exporta una vista compuesta de reportes a XLSX
+      parameters:
+        - name: vista
+          in: path
+          required: true
+          schema:
+            { type: string, enum: [ventas, que-comprar, utilidad, clientes, control-operativo] }
+        - $ref: "#/components/parameters/ReportePeriodo"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/ReporteUbicacionIds"
+        - $ref: "#/components/parameters/ReporteProductoIds"
+        - $ref: "#/components/parameters/ReporteTelas"
+        - $ref: "#/components/parameters/ReporteColores"
+        - $ref: "#/components/parameters/ReporteUnidades"
+        - $ref: "#/components/parameters/ReporteUsuarioIds"
+        - $ref: "#/components/parameters/ReporteClienteIds"
+        - $ref: "#/components/parameters/ReporteProveedorIds"
+        - $ref: "#/components/parameters/ReporteFormasPago"
+        - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteModalidad"
+        - $ref: "#/components/parameters/ReporteMargenUmbral"
+        - $ref: "#/components/parameters/ReporteCoberturaCritico"
+        - $ref: "#/components/parameters/ReporteCoberturaBajo"
+        - $ref: "#/components/parameters/ReporteCoberturaNormal"
+        - $ref: "#/components/parameters/ReporteCoberturaExceso"
+        - name: modo
+          in: query
+          description: Modo de la vista; normal usa un único alcance y comparar crea marcos explícitos por sitio.
+          schema: { type: string, enum: [normal, comparar], default: normal }
+        - name: ubicacionId
+          in: query
+          description: Alcance singular común a todas las fuentes, incluida Caja; si se envía también ubicacionIds debe coincidir.
+          schema: { type: number, minimum: 1 }
+        - name: umbralCorte
+          in: query
+          schema: { type: number, minimum: 0, default: 500 }
+        - name: umbralTienda
+          in: query
+          schema: { type: number, minimum: 0, default: 500 }
+        - name: agrupacion
+          in: query
+          schema: { type: string, enum: [semana, mes], default: semana }
+      responses:
+        "200":
+          description: Archivo XLSX de una vista compuesta
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              { schema: { type: string, format: binary } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /reportes/vistas/{vista}/export.pdf:
+    get:
+      operationId: exportReporteVistaPdf
+      tags: [reportes]
+      summary: Exporta una vista compuesta de reportes a PDF
+      parameters:
+        - name: vista
+          in: path
+          required: true
+          schema:
+            { type: string, enum: [ventas, que-comprar, utilidad, clientes, control-operativo] }
+        - $ref: "#/components/parameters/ReportePeriodo"
+        - $ref: "#/components/parameters/AnalyticsDesde"
+        - $ref: "#/components/parameters/AnalyticsHasta"
+        - $ref: "#/components/parameters/ReporteUbicacionIds"
+        - $ref: "#/components/parameters/ReporteProductoIds"
+        - $ref: "#/components/parameters/ReporteTelas"
+        - $ref: "#/components/parameters/ReporteColores"
+        - $ref: "#/components/parameters/ReporteUnidades"
+        - $ref: "#/components/parameters/ReporteUsuarioIds"
+        - $ref: "#/components/parameters/ReporteClienteIds"
+        - $ref: "#/components/parameters/ReporteProveedorIds"
+        - $ref: "#/components/parameters/ReporteFormasPago"
+        - $ref: "#/components/parameters/ReporteFacturado"
+        - $ref: "#/components/parameters/ReporteModalidad"
+        - $ref: "#/components/parameters/ReporteMargenUmbral"
+        - $ref: "#/components/parameters/ReporteCoberturaCritico"
+        - $ref: "#/components/parameters/ReporteCoberturaBajo"
+        - $ref: "#/components/parameters/ReporteCoberturaNormal"
+        - $ref: "#/components/parameters/ReporteCoberturaExceso"
+        - name: modo
+          in: query
+          description: Modo de la vista; normal usa un único alcance y comparar crea marcos explícitos por sitio.
+          schema: { type: string, enum: [normal, comparar], default: normal }
+        - name: ubicacionId
+          in: query
+          description: Alcance singular común a todas las fuentes, incluida Caja; si se envía también ubicacionIds debe coincidir.
+          schema: { type: number, minimum: 1 }
+        - name: umbralCorte
+          in: query
+          schema: { type: number, minimum: 0, default: 500 }
+        - name: umbralTienda
+          in: query
+          schema: { type: number, minimum: 0, default: 500 }
+        - name: agrupacion
+          in: query
+          schema: { type: string, enum: [semana, mes], default: semana }
+      responses:
+        "200":
+          description: Archivo PDF de una vista compuesta
+          content:
+            application/pdf:
+              { schema: { type: string, format: binary } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
   /auditoria:
     get:
       operationId: listAuditoria
@@ -6815,6 +6950,11 @@ components:
                     key: { type: string },
                     label: { type: string },
                     kind: { type: string },
+                    hrefKey:
+                      {
+                        type: string,
+                        description: Row field containing the URL for this column,
+                      },
                     economic: { type: boolean },
                     estimated: { type: boolean },
                   },
@@ -6889,6 +7029,7 @@ components:
       required:
         [
           sites,
+          comparisonLocations,
           products,
           fabrics,
           colors,
@@ -6902,6 +7043,18 @@ components:
         sites:
           {
             type: array,
+            description: Catálogo legado; conserva los mismos sitios físicos activos que comparisonLocations,
+            items:
+              {
+                type: object,
+                required: [id, label],
+                properties: { id: { type: number }, label: { type: string } },
+              },
+          }
+        comparisonLocations:
+          {
+            type: array,
+            description: Sitios físicos activos compartidos por el selector del encabezado y Comparar,
             items:
               {
                 type: object,
@@ -10081,6 +10234,45 @@ components:
         revisadoPor: { type: ["number", "null"] }
         revisadoAt: { type: ["string", "null"], format: date-time }
         uuidCliente: { type: ["string", "null"] }
+        createdAt: { type: string, format: date-time }
+    MovimientoDetalle:
+      type: object
+      required:
+        [
+          id,
+          rolloId,
+          productoId,
+          ubicacionId,
+          tipo,
+          cantidad,
+          saldoPosterior,
+          usuarioId,
+          motivoSalidaExtraordinaria,
+          revisado,
+          createdAt,
+        ]
+      properties:
+        id: { type: number }
+        rolloId: { type: number }
+        serie: { type: ["string", "null"] }
+        productoId: { type: number }
+        skuProducto: { type: ["string", "null"] }
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: ["string", "null"] }
+        tipo:
+          $ref: "#/components/schemas/TipoMovimiento"
+        cantidad: { type: string }
+        saldoPosterior: { type: string }
+        documentoTipo: { type: ["string", "null"] }
+        documentoId: { type: ["string", "null"] }
+        movimientoOrigenId: { type: ["number", "null"] }
+        usuarioId: { type: number }
+        motivoSalidaExtraordinaria:
+          oneOf:
+            - $ref: "#/components/schemas/MotivoSalidaExtraordinaria"
+            - type: "null"
+        justificacion: { type: ["string", "null"] }
+        revisado: { type: boolean }
         createdAt: { type: string, format: date-time }
     RolloDetail:
       type: object

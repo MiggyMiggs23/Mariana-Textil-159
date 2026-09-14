@@ -10,6 +10,8 @@ export type ReporteTableColumnsItem = {
   key: string;
   label: string;
   kind: string;
+  /** Row field containing the URL for this column */
+  hrefKey?: string;
   economic?: boolean;
   estimated?: boolean;
 };

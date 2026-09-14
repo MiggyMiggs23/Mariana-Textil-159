@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation, useSearch } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CajaComparativo from "@/pages/caja/comparativo";
-import CajaDiferencias from "@/pages/caja/diferencias";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
-import { useGetReportesCatalogos, useGetReporteSeccion, getGetReporteSeccionQueryKey, useGetCurrentUser } from "@workspace/api-client-react";
+import { useGetReportesCatalogos, useGetCurrentUser } from "@workspace/api-client-react";
 
 import { ReportFilterBar, FilterState, DEFAULT_FILTERS } from "@/components/reportes/report-filter-bar";
-import { ReportKpis } from "@/components/reportes/report-kpis";
-import { ReportWarnings } from "@/components/reportes/report-warnings";
-import { ReportCharts } from "@/components/reportes/report-charts";
 import { VentasTab } from "@/components/reportes/tabs/ventas-tab";
 import { QueComprarTab } from "@/components/reportes/tabs/que-comprar-tab";
 import { UtilidadTab } from "@/components/reportes/tabs/utilidad-tab";
@@ -19,6 +16,20 @@ import { ControlOperativoTab } from "@/components/reportes/tabs/control-operativ
 import { readCombinedFilterCriteria, writeCombinedFilterCriteria, sanitizeCombinedFilterCriteria } from "@/components/shared/combined-filter-url";
 import { useLocationScope } from "@/lib/location-scope";
 import { toast } from "sonner";
+import {
+  applyReportScope,
+  buildReportExportParams,
+  buildComparisonScopeParams,
+  resolveReportRange,
+  resolveReportTab,
+  resolveReportViewMode,
+  type ReportViewMode,
+} from "@/components/reportes/report-scope";
+import {
+  DEFAULT_CASH_CONTROLS,
+  type CashControls,
+} from "@/components/reportes/cash-controls";
+import type { ReportComparisonFrame } from "@/components/reportes/report-source-frame";
 
 const TABS = [
   { id: "ventas", label: "Ventas" },
@@ -47,6 +58,8 @@ export default function Reportes() {
   const [location, setLocation] = useLocation();
   const searchString = useSearch();
   const { selectedLocationId } = useLocationScope();
+  const queryClient = useQueryClient();
+  const queryParams = new URLSearchParams(searchString);
 
   const allowedTabs = TABS.filter(tab => {
     if (!isAdmin) {
@@ -57,21 +70,35 @@ export default function Reportes() {
     return true;
   });
 
-  // Extract tab from URL or default to "ventas"
-  let activeTab = "ventas";
-  const requestedQueryTab = new URLSearchParams(searchString).get("tab");
+  // Extract tab from URL or default to "ventas". Legacy report routes are
+  // canonicalized below rather than rendered as dead report branches.
+  const requestedQueryTab = queryParams.get("tab");
   const pathParts = location.split('/');
   const lastPart = pathParts[pathParts.length - 1];
-  if (allowedTabs.some(t => t.id === requestedQueryTab)) {
-    activeTab = requestedQueryTab!;
-  } else if (allowedTabs.some(t => t.id === lastPart)) {
-    activeTab = lastPart;
-  } else if (!allowedTabs.some(t => t.id === activeTab)) {
-    activeTab = allowedTabs[0]?.id || "ventas";
-  }
+  const routeCandidate = requestedQueryTab ?? (lastPart === "reportes" ? null : lastPart);
+  const tabResolution = resolveReportTab(routeCandidate);
+  const activeTab = allowedTabs.some((tab) => tab.id === tabResolution.tab)
+    ? tabResolution.tab
+    : allowedTabs[0]?.id || "ventas";
 
-  // Check if we are in "global" compare mode (no specific location selected)
+  // Compare mode is only available to a user whose header scope can select
+  // among all authorized locations. PROPIA never widens through a URL mode.
   const isGlobalMode = selectedLocationId === null;
+  const canCompare = resolveReportViewMode(
+    "comparar",
+    selectedLocationId,
+    user?.alcanceConsulta,
+    user?.rol,
+  ) === "comparar";
+  const requestedMode: ReportViewMode = queryParams.get("modo") === "comparar"
+    ? "comparar"
+    : "normal";
+  const viewMode: ReportViewMode = resolveReportViewMode(
+    requestedMode,
+    selectedLocationId,
+    user?.alcanceConsulta,
+    user?.rol,
+  );
 
   // Parse initial state from URL search string
   const [filters, setFilters] = useState<FilterState>(() => {
@@ -83,16 +110,16 @@ export default function Reportes() {
     const combined = readCombinedFilterCriteria(params);
 
     const requestedPeriod = params.get("periodo");
+    const periodo = ["diario", "semanal", "mensual", "trimestral", "semestral", "anual", "personalizado"].includes(requestedPeriod ?? "")
+      ? requestedPeriod!
+      : DEFAULT_FILTERS.periodo;
     const parsed = {
-      periodo: ["diario", "semanal", "mensual", "trimestral", "semestral", "anual", "personalizado"].includes(requestedPeriod ?? "")
-        ? requestedPeriod!
-        : DEFAULT_FILTERS.periodo,
+      periodo,
       modalidad: (["ROLLOS", "METRAJE"].includes(params.get("modalidad") || "")
         ? params.get("modalidad")
         : "TODO") as FilterState["modalidad"],
-      desde: combined.desde,
-      hasta: combined.hasta,
-      ubicacionIds: combined.ubicacionIds,
+      desde: periodo === "personalizado" ? combined.desde : undefined,
+      hasta: periodo === "personalizado" ? combined.hasta : undefined,
       productoIds: parseNumArray("productoIds"),
       telas: combined.telas,
       colores: combined.colores,
@@ -107,21 +134,67 @@ export default function Reportes() {
   });
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
-  // Redirect to default tab if base route hit
+  // Redirect to default tab if base route hit.
   useEffect(() => {
     if ((location === "/reportes" || location === "/reportes/") && !requestedQueryTab) {
       setLocation(`/reportes/ventas${searchString ? '?' + searchString : ''}`);
     }
   }, [location, searchString, setLocation, requestedQueryTab]);
 
+  // Remove legacy route/site parameters while preserving report filters. The
+  // old Comparativo route enters compare mode; all other old sections map to
+  // their composed destination.
+  useEffect(() => {
+    const params = new URLSearchParams(searchString);
+    const waitingForScope = user === undefined && tabResolution.forcedMode === "comparar";
+    const shouldNormalizeMode =
+      requestedMode === "comparar" && user !== undefined && !canCompare;
+    const shouldCanonicalize =
+      !waitingForScope &&
+      (tabResolution.legacy ||
+        params.has("ubicacionIds") ||
+        params.has("ubicacionId") ||
+        shouldNormalizeMode);
+    if (!shouldCanonicalize) return;
+    params.delete("ubicacionIds");
+    params.delete("ubicacionId");
+    params.delete("tab");
+    const canonicalMode = canCompare &&
+      (tabResolution.forcedMode === "comparar" || requestedMode === "comparar")
+      ? "comparar"
+      : null;
+    if (canonicalMode) params.set("modo", canonicalMode);
+    else params.delete("modo");
+    const nextSearch = params.toString();
+    setLocation(`/reportes/${activeTab}${nextSearch ? `?${nextSearch}` : ""}`);
+  }, [
+    activeTab,
+    canCompare,
+    requestedMode,
+    requestedQueryTab,
+    searchString,
+    setLocation,
+    tabResolution.forcedMode,
+    tabResolution.legacy,
+    user,
+  ]);
+
   // Sync state to URL when filters change
   const handleFilterChange = (newFilters: FilterState) => {
     setFilters(newFilters);
     const params = new URLSearchParams();
+    if (viewMode === "comparar") params.set("modo", "comparar");
 
     if (newFilters.periodo !== "mensual") params.set("periodo", newFilters.periodo);
     if (newFilters.modalidad !== "TODO") params.set("modalidad", newFilters.modalidad);
-    writeCombinedFilterCriteria(params, newFilters);
+    writeCombinedFilterCriteria(params, {
+      proveedorIds: newFilters.proveedorIds,
+      ubicacionIds: [],
+      telas: newFilters.telas,
+      colores: newFilters.colores,
+      desde: newFilters.desde,
+      hasta: newFilters.hasta,
+    });
     if (newFilters.productoIds.length) params.set("productoIds", newFilters.productoIds.join(","));
     if (newFilters.unidades.length) params.set("unidades", newFilters.unidades.join(","));
     if (newFilters.usuarioIds.length) params.set("usuarioIds", newFilters.usuarioIds.join(","));
@@ -133,24 +206,32 @@ export default function Reportes() {
     setLocation(`/reportes/${activeTab}${newSearchString ? '?' + newSearchString : ''}`);
   };
 
-  const isCajaTab = activeTab === "comparativo" || activeTab === "diferencias";
-  const isQueComprar = activeTab === "que-comprar";
-  const isDateRangeValid = hasValidDateRange(filters);
+  const dateRange = resolveReportRange(filters);
+  const isDateRangeValid = hasValidDateRange(filters) && dateRange !== undefined;
 
   // Catalogos
   const { data: catalogos } = useGetReportesCatalogos();
 
   useEffect(() => {
     if (!catalogos) return;
-    const sanitized = sanitizeCombinedFilterCriteria(filters, {
+    const sanitized = sanitizeCombinedFilterCriteria({
+      proveedorIds: filters.proveedorIds,
+      ubicacionIds: [],
+      telas: filters.telas,
+      colores: filters.colores,
+      desde: filters.desde,
+      hasta: filters.hasta,
+    }, {
       proveedorIds: catalogos.suppliers.map((item) => item.id),
-      ubicacionIds: catalogos.sites.map((item) => item.id),
+      ubicacionIds: [],
       telas: catalogos.fabrics,
       colores: catalogos.colors,
     });
     const next = {
       ...filters,
-      ...sanitized,
+      proveedorIds: sanitized.proveedorIds,
+      telas: sanitized.telas,
+      colores: sanitized.colores,
       productoIds: filters.productoIds.filter((id) => catalogos.products.some((item) => item.id === id)),
       unidades: filters.unidades.filter((value) => catalogos.units.includes(value)),
       usuarioIds: filters.usuarioIds.filter((id) => catalogos.users.some((item) => item.id === id)),
@@ -165,26 +246,80 @@ export default function Reportes() {
     }
   }, [catalogos]);
 
-  // Clean params for the API call (removing empty arrays/undefined)
-  const apiParams = Object.fromEntries(
+  // Clean params for the API call (removing empty arrays/undefined), then
+  // apply the header scope as the sole source of site and date range.
+  const rawApiParams = Object.fromEntries(
     Object.entries(filters).filter(([_, v]) =>
       v !== undefined && (!Array.isArray(v) || v.length > 0)
     )
   );
+  const apiParams = applyReportScope(rawApiParams, {
+    selectedLocationId,
+    dateRange,
+  });
+
+  const [cashControls, setCashControls] = useState<CashControls>(DEFAULT_CASH_CONTROLS);
+  const comparisonLocations = catalogos?.comparisonLocations ?? [];
+  const comparisonSiteParams = viewMode === "comparar"
+    ? buildComparisonScopeParams(
+        rawApiParams,
+        comparisonLocations.map((site) => site.id),
+        dateRange,
+      )
+    : [];
+  const comparisonFrames: ReportComparisonFrame[] =
+    viewMode === "comparar"
+      ? comparisonLocations.map((site, index) => ({
+          siteId: site.id,
+          siteLabel: site.label,
+          apiParams: comparisonSiteParams[index],
+        }))
+      : [];
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({
+      predicate: ({ queryKey }) => {
+        const root = queryKey[0];
+        if (typeof root !== "string") return false;
+        return (
+          root === "reportes" ||
+          root.startsWith("/api/reportes/") ||
+          root.startsWith("/api/admin/comparacion-tiendas") ||
+          root.startsWith("/api/admin/diferencias")
+        );
+      },
+    });
+  };
+
+  const handleModeChange = (nextMode: string) => {
+    if (nextMode !== "normal" && nextMode !== "comparar") return;
+    if (nextMode === "comparar" && !canCompare) return;
+    const params = new URLSearchParams(searchString);
+    params.delete("ubicacionIds");
+    params.delete("ubicacionId");
+    params.delete("tab");
+    if (nextMode === "comparar") params.set("modo", "comparar");
+    else params.delete("modo");
+    const nextSearch = params.toString();
+    setLocation(`/reportes/${activeTab}${nextSearch ? `?${nextSearch}` : ""}`);
+  };
 
   const handleTabChange = (value: string) => {
-    setLocation(`/reportes/${value}${searchString ? '?' + searchString : ''}`);
+    const params = new URLSearchParams(searchString);
+    params.delete("ubicacionIds");
+    params.delete("ubicacionId");
+    const nextSearch = params.toString();
+    setLocation(`/reportes/${value}${nextSearch ? `?${nextSearch}` : ""}`);
   };
 
   const handleDownload = async (format: "xlsx" | "pdf") => {
     if (!isDateRangeValid) return;
-    const params = new URLSearchParams();
-    for (const [key, value] of Object.entries(apiParams)) {
-      params.set(key, Array.isArray(value) ? value.join(",") : String(value));
-    }
+    const params = new URLSearchParams(
+      buildReportExportParams(apiParams, viewMode, cashControls),
+    );
     setDownloadError(null);
     try {
-      const response = await fetch(`/api/reportes/${activeTab}/export.${format}?${params.toString()}`, {
+      const response = await fetch(`/api/reportes/vistas/${encodeURIComponent(activeTab)}/export.${format}?${params.toString()}`, {
         credentials: "include",
       });
       if (!response.ok) throw new Error(`La exportación respondió ${response.status}.`);
@@ -192,7 +327,7 @@ export default function Reportes() {
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement("a");
       anchor.href = url;
-      anchor.download = `${activeTab}.${format}`;
+      anchor.download = `${activeTab}-${viewMode}.${format}`;
       document.body.appendChild(anchor);
       anchor.click();
       anchor.remove();
@@ -206,10 +341,29 @@ export default function Reportes() {
     <AppLayout>
       <div className="mx-auto max-w-[1600px] space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-sidebar">Reportes y Decisiones</h1>
-          <p className="mt-1 text-muted-foreground">
-            Análisis consolidados para seguimiento operativo y financiero.
-          </p>
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight text-sidebar">Reportes y Decisiones</h1>
+              <p className="mt-1 text-muted-foreground">
+                Análisis consolidados para seguimiento operativo y financiero.
+              </p>
+            </div>
+            <ToggleGroup
+              type="single"
+              value={viewMode}
+              onValueChange={handleModeChange}
+              disabled={!canCompare}
+              aria-label="Modo de vista del reporte"
+              className="border rounded-lg p-1 bg-card self-start"
+            >
+              <ToggleGroupItem value="normal" aria-label="Vista normal" className="px-4">
+                Normal
+              </ToggleGroupItem>
+              <ToggleGroupItem value="comparar" aria-label="Comparar sitios" className="px-4">
+                Comparar
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
         </div>
 
         <Tabs
@@ -232,21 +386,12 @@ export default function Reportes() {
             </TabsList>
           </div>
 
-          {activeTab === "comparativo" ? (
-            <div className="animate-in fade-in">
-              <CajaComparativo embedded />
-            </div>
-          ) : activeTab === "diferencias" ? (
-            <div className="animate-in fade-in">
-              <CajaDiferencias embedded />
-            </div>
-          ) : (
-            <div className="space-y-6 animate-in fade-in">
+          <div className="space-y-6 animate-in fade-in">
               <ReportFilterBar
                 catalogos={catalogos}
                 filters={filters}
                 onChange={handleFilterChange}
-                onRefresh={refetch}
+                onRefresh={handleRefresh}
                 onDownloadExcel={() => handleDownload("xlsx")}
                 onDownloadPdf={() => handleDownload("pdf")}
                 actionsDisabled={!isDateRangeValid}
@@ -268,32 +413,43 @@ export default function Reportes() {
                   isDateRangeValid={isDateRangeValid} 
                   isGlobal={isGlobalMode} 
                   isAdmin={isAdmin}
+                  comparisonMode={viewMode === "comparar"}
+                  comparisonFrames={comparisonFrames}
                 />
               ) : activeTab === "que-comprar" ? (
                 <QueComprarTab 
                   apiParams={apiParams} 
                   isDateRangeValid={isDateRangeValid} 
-                  ubicacionId={selectedLocationId}
                   isAdmin={isAdmin}
+                  comparisonMode={viewMode === "comparar"}
+                  comparisonFrames={comparisonFrames}
                 />
               ) : activeTab === "utilidad" ? (
                 <UtilidadTab 
                   apiParams={apiParams} 
                   isDateRangeValid={isDateRangeValid}
+                  comparisonMode={viewMode === "comparar"}
+                  comparisonFrames={comparisonFrames}
                 />
               ) : activeTab === "clientes" ? (
                 <ClientesTab 
                   apiParams={apiParams} 
                   isDateRangeValid={isDateRangeValid}
+                  comparisonMode={viewMode === "comparar"}
+                  comparisonFrames={comparisonFrames}
                 />
               ) : activeTab === "control-operativo" ? (
                 <ControlOperativoTab 
                   apiParams={apiParams} 
                   isDateRangeValid={isDateRangeValid}
+                  selectedLocationId={selectedLocationId}
+                  comparisonMode={viewMode === "comparar"}
+                  comparisonFrames={comparisonFrames}
+                  cashControls={cashControls}
+                  onCashControlsChange={setCashControls}
                 />
               ) : null}
-            </div>
-          )}
+          </div>
         </Tabs>
       </div>
     </AppLayout>

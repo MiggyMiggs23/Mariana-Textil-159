@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useRoute, useSearch } from "wouter";
+import { Link, useLocation, useRoute, useSearch } from "wouter";
 import {
   exportAdminCuentaDestinoMovimientosXlsx,
   getListAdminCuentaDestinoMovimientosQueryKey,
@@ -10,6 +10,7 @@ import {
   useCreateAdminCuadreFiscalDiferencia,
   useResolveAdminCuadreFiscalDiferencia,
   getGetAdminCuadreFiscalQueryKey,
+  type AdminCuentaDestinoMovimiento,
   type ListAdminCuentaDestinoMovimientosFormaPago,
   type ListAdminCuentaDestinoMovimientosFuenteItem,
   type ListAdminCuentaDestinoMovimientosParams,
@@ -34,6 +35,12 @@ import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { AlertCircle, ArrowDownRight, ArrowLeft, ArrowUpRight, ChevronLeft, ChevronRight, Download, Loader2, X } from "lucide-react";
 import { format, parseISO } from "date-fns";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  encodeOpaqueQueryId,
+  parseOpaqueQueryId,
+  selectExactPageItem,
+} from "@/lib/origin-drilldown";
 
 import { es } from "date-fns/locale";
 
@@ -63,6 +70,10 @@ function isSourceCategory(value: string): value is ListAdminCuentaDestinoMovimie
   return SOURCE_CATEGORIES.some((source) => source === value);
 }
 
+export function parseCuentaDestinoMovementId(search: string | null | undefined): string | null {
+  return parseOpaqueQueryId(search, "movimientoId");
+}
+
 function comparisonLabel(
   preset: ListAdminCuentaDestinoMovimientosPreset,
   previousDesde: string,
@@ -82,7 +93,9 @@ function comparisonLabel(
 export default function CuentaDestinoDetalle() {
   const [, routeParams] = useRoute("/caja/cuentas-destino/:cuentaDestino");
   const search = useSearch();
+  const [, setLocation] = useLocation();
   const inherited = useMemo(() => new URLSearchParams(search), [search]);
+  const requestedMovementId = useMemo(() => parseCuentaDestinoMovementId(search), [search]);
   const destination = isDestination(routeParams?.cuentaDestino)
     ? routeParams.cuentaDestino
     : "CAJA_FISICA";
@@ -105,7 +118,9 @@ export default function CuentaDestinoDetalle() {
   const [incongruente, setIncongruente] = useState<boolean>(inherited.get("incongruente") === "true");
 
   const [page, setPage] = useState(1);
-  const pageSize = 50;
+  const pageSize = 100;
+  const [selectedMovement, setSelectedMovement] = useState<AdminCuentaDestinoMovimiento | null>(null);
+  const [movementLookupStatus, setMovementLookupStatus] = useState<"idle" | "searching" | "found" | "not-found">("idle");
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { data: currentUser } = useGetCurrentUser();
@@ -130,7 +145,9 @@ export default function CuentaDestinoDetalle() {
     facturado: facturado === "true" ? true : facturado === "false" ? false : undefined,
     formaPago: formaPago || undefined,
     fuente: fuentes.length ? fuentes : undefined,
-    incongruente: incongruente || undefined,
+    incongruente: requestedMovementId != null
+      ? (inherited.get("incongruente") === "true" ? true : false)
+      : (incongruente || undefined),
     page,
     pageSize,
     preset,
@@ -142,6 +159,42 @@ export default function CuentaDestinoDetalle() {
       queryKey: getListAdminCuentaDestinoMovimientosQueryKey(destination, params),
     },
   });
+
+  const totalPages = Math.max(1, Math.ceil((query.data?.total ?? 0) / pageSize));
+
+  // A report drill-down may target any page. Walk the existing paginated API
+  // until the immutable source row is found instead of silently matching page
+  // one only. The backend's incongruente/date/site filters remain in force.
+  useEffect(() => {
+    if (requestedMovementId == null) {
+      setSelectedMovement(null);
+      setMovementLookupStatus("idle");
+      return;
+    }
+    if (query.isError || query.isLoading || query.isFetching || !query.data) {
+      setMovementLookupStatus("searching");
+      return;
+    }
+    const selection = selectExactPageItem(
+      query.data.items,
+      requestedMovementId,
+      page,
+      totalPages,
+      (movement) => String(movement.id),
+    );
+    if (selection.kind === "found") {
+      setSelectedMovement(selection.item);
+      setMovementLookupStatus("found");
+      return;
+    }
+    if (selection.kind === "next-page") {
+      setMovementLookupStatus("searching");
+      setPage(selection.page);
+      return;
+    }
+    setSelectedMovement(null);
+    setMovementLookupStatus("not-found");
+  }, [page, query.data, query.isError, query.isFetching, query.isLoading, requestedMovementId, totalPages]);
 
 
   const renderVariation = (variation: string | null | undefined) => {
@@ -168,6 +221,22 @@ export default function CuentaDestinoDetalle() {
   if (ubicacionId != null) parentParams.set("ubicacionId", String(ubicacionId));
   if (inherited.has("preset")) parentParams.set("preset", inherited.get("preset")!);
   if (inherited.get("compare") === "true") parentParams.set("compare", "true");
+
+  const movementDetailHref = (movement: AdminCuentaDestinoMovimiento) => {
+    const detailParams = new URLSearchParams();
+    if (desde) detailParams.set("desde", desde);
+    if (hasta) detailParams.set("hasta", hasta);
+    if (ubicacionId != null) detailParams.set("ubicacionId", String(ubicacionId));
+    detailParams.set("incongruente", movement.incongruente ? "true" : "false");
+    return `/caja/cuentas-destino/${destination}?${detailParams.toString()}&movimientoId=${encodeOpaqueQueryId(movement.id)}`;
+  };
+  const clearMovementQuery = () => {
+    const next = new URLSearchParams(search);
+    next.delete("movimientoId");
+    const nextSearch = next.toString();
+    setLocation(`/caja/cuentas-destino/${destination}${nextSearch ? `?${nextSearch}` : ""}`);
+  };
+  const movementDialogOpen = requestedMovementId != null || selectedMovement != null;
 
   const handleExport = async () => {
     if (destination === "TODAS") return;
@@ -203,8 +272,6 @@ export default function CuentaDestinoDetalle() {
       </AppLayout>
     );
   }
-
-  const totalPages = Math.max(1, Math.ceil((query.data?.total ?? 0) / pageSize));
 
   const hasFilters = facturado !== "" || formaPago !== "" || incongruente || fuentes.length > 0;
   const destinationLabel = destination === "TODAS"
@@ -346,18 +413,23 @@ export default function CuentaDestinoDetalle() {
                   </TableHeader>
                   <TableBody>
                     {query.data?.items.map((movement) => (
-                      <TableRow key={movement.id} data-testid={`row-movimiento-${movement.id}`}>
+                      <TableRow
+                        key={movement.id}
+                        data-testid={`row-movimiento-${movement.id}`}
+                        className={String(movement.id) === requestedMovementId ? "bg-primary/10" : undefined}
+                        onClick={() => setSelectedMovement(movement)}
+                      >
                         <TableCell className="whitespace-nowrap">
                           {format(parseISO(movement.fecha), "dd MMM yyyy, HH:mm", { locale: es })}
                         </TableCell>
                         <TableCell>{movement.tipo}</TableCell>
-                        <TableCell>
-                          <Link
-                             href={movement.documentoTipo === "MOVIMIENTO_CREDITO" && movement.clienteId != null
-                               ? `/clientes/${movement.clienteId}?tab=estado&movimientoId=${movement.documentoId}`
-                               : movement.documentoTipo === "CLIENTE"
-                                 ? `/clientes/${movement.documentoId}?tab=estado`
-                                 : `/tickets/${movement.documentoId}`}
+                         <TableCell>
+                           <Link
+                              href={movement.documentoTipo === "MOVIMIENTO_CREDITO"
+                                ? movementDetailHref(movement)
+                                : movement.documentoTipo === "CLIENTE"
+                                  ? `/clientes/${movement.documentoId}?tab=estado`
+                                  : `/tickets/${movement.documentoId}`}
                             className="font-medium text-primary hover:underline"
                             data-testid={`link-documento-${movement.id}`}
                           >
@@ -444,6 +516,96 @@ export default function CuentaDestinoDetalle() {
           </div>
         )}
       </div>
+      <Dialog
+        open={movementDialogOpen}
+        onOpenChange={(open) => {
+          if (open) return;
+          setSelectedMovement(null);
+          if (requestedMovementId != null) {
+            clearMovementQuery();
+          }
+        }}
+      >
+        <DialogContent className="max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              {requestedMovementId != null
+                ? `Detalle del movimiento #${requestedMovementId}`
+                : "Detalle del movimiento"}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedMovement ? (
+            <div className="grid gap-4 sm:grid-cols-2" data-testid={`detalle-movimiento-cuenta-${String(selectedMovement.id)}`}>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Fecha</p>
+                <p>{format(parseISO(selectedMovement.fecha), "dd MMM yyyy, HH:mm", { locale: es })}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Fuente</p>
+                <p>{selectedMovement.fuente}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Documento</p>
+                <p>{selectedMovement.documento}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Documento origen</p>
+                <p>#{selectedMovement.documentoId}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">ID de la aplicación</p>
+                <p>{String(selectedMovement.id)}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Cuenta destino</p>
+                <p>{formatAccountDestination(destination)}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Monto</p>
+                <p className="font-mono">{formatNumber(selectedMovement.monto, { kind: "money" })}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Cliente</p>
+                <p>{selectedMovement.cliente ?? "Público general"}</p>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Sitio</p>
+                <p>{selectedMovement.sitio}</p>
+              </div>
+              <div className="sm:col-span-2">
+                <p className="text-xs font-semibold uppercase text-muted-foreground">Registró</p>
+                <p>{selectedMovement.registro} · ID {selectedMovement.registroId}</p>
+              </div>
+            </div>
+          ) : query.isError ? (
+            <div className="py-8 text-center text-destructive" role="alert" data-testid="status-error-movimiento-cuenta">
+              {getApiErrorMessage(query.error, "No se pudo cargar el movimiento.")}
+            </div>
+          ) : movementLookupStatus === "not-found" ? (
+            <div className="py-8 text-center text-destructive" role="alert" data-testid="status-movimiento-no-encontrado">
+              No se encontró el movimiento exacto en el detalle filtrado.
+            </div>
+          ) : (
+            <div className="flex items-center justify-center gap-2 py-10 text-muted-foreground" data-testid="status-buscando-movimiento">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              Buscando el movimiento exacto...
+            </div>
+          )}
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSelectedMovement(null);
+                if (requestedMovementId != null) {
+                  clearMovementQuery();
+                }
+              }}
+            >
+              Cerrar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   );
 }

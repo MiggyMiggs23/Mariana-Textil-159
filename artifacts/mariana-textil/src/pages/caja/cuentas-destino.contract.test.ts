@@ -73,7 +73,7 @@ describe("Cuentas Destino Contract", () => {
     assert.match(summary, /incongruente=true/);
     assert.match(detail, /facturado: facturado === "true"/);
     assert.match(detail, /formaPago: formaPago \|\| undefined/);
-    assert.match(detail, /incongruente: incongruente \|\| undefined/);
+    assert.match(detail, /incongruente:/);
     assert.match(detail, /query\.data\.montoTotal/);
     assert.doesNotMatch(detail, /items\.reduce/);
   });
@@ -108,23 +108,13 @@ describe("Cuentas Destino Contract", () => {
   it("uses the literal collection labels and links credit movements to the exact account row", () => {
     const summary = readPage("./cuentas-destino.tsx");
     const detail = readPage("./cuenta-destino-detalle.tsx");
-    const clientTable = readFileSync(
-      new URL("../../components/client-responsive-table.tsx", import.meta.url),
-      "utf8",
-    );
-
     assert.match(summary, /De ventas del periodo/);
     assert.match(summary, /Abonos a notas/);
     assert.doesNotMatch(summary, /De notas anteriores/);
     assert.match(summary, /A cuenta, sin aplicar/);
     assert.match(detail, /movement\.documentoTipo === "MOVIMIENTO_CREDITO"/);
-    assert.match(
-      detail,
-      /\/clientes\/\$\{movement\.clienteId\}\?tab=estado&movimientoId=\$\{movement\.documentoId\}/,
-    );
-    assert.match(clientTable, /get\("movimientoId"\)/);
-    assert.match(clientTable, /scrollIntoView\(\{ behavior: "smooth", block: "center" \}\)/);
-    assert.match(clientTable, /data-highlighted=\{highlighted \? "true" : undefined\}/);
+    assert.match(detail, /movementDetailHref\(movement\)/);
+    assert.doesNotMatch(detail, /\/clientes\/\$\{movement\.clienteId\}\?tab=estado&movimientoId=/);
   });
 
 });

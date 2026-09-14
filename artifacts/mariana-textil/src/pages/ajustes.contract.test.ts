@@ -41,3 +41,18 @@ test("Ajustes no envía la mutación antes de solicitar la confirmación", async
   );
   assert.doesNotMatch(submit, /ajustarRollo\.mutate/);
 });
+
+test("Ajustes opens the immutable movement query only through enabled lifecycle state", async () => {
+  const ajustes = await readFile(
+    new URL("artifacts/mariana-textil/src/pages/ajustes.tsx", root),
+    "utf8",
+  );
+
+  assert.match(ajustes, /useSearch/);
+  assert.match(ajustes, /parseAjusteMovementId\(search\)/);
+  assert.match(ajustes, /useQuery\(\{[\s\S]*?enabled:\s*requestedMovementId != null/);
+  assert.match(ajustes, /getInventoryMovement\(requestedMovementId!, signal\)/);
+  assert.match(ajustes, /movementDetail\.isError/);
+  assert.match(ajustes, /getApiErrorMessage\(movementDetail\.error/);
+  assert.doesNotMatch(ajustes, /if\s*\(requestedMovementId\)\s*\{\s*useQuery/);
+});

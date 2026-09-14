@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ReportesCatalogosClientsItem } from './reportesCatalogosClientsItem';
+import type { ReportesCatalogosComparisonLocationsItem } from './reportesCatalogosComparisonLocationsItem';
 import type { ReportesCatalogosProductsItem } from './reportesCatalogosProductsItem';
 import type { ReportesCatalogosSitesItem } from './reportesCatalogosSitesItem';
 import type { ReportesCatalogosSuppliersItem } from './reportesCatalogosSuppliersItem';
@@ -13,6 +14,7 @@ import type { ReportesCatalogosUsersItem } from './reportesCatalogosUsersItem';
 
 export interface ReportesCatalogos {
   sites: ReportesCatalogosSitesItem[];
+  comparisonLocations: ReportesCatalogosComparisonLocationsItem[];
   products: ReportesCatalogosProductsItem[];
   fabrics: string[];
   colors: string[];

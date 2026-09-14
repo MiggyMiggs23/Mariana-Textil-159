@@ -6,6 +6,7 @@ import { buildControlOperativoReport } from "./reportes-control-operativo";
 import { buildInventoryReport } from "./reportes-inventory";
 import { buildQueComprarReport } from "./reportes-que-comprar";
 import { buildSalesReport } from "./reportes-sales";
+import { listHeaderEligibleLocations } from "./header-locations";
 
 export const REPORT_SECTIONS = [
   "ventas",
@@ -241,11 +242,8 @@ async function buildDirectedPaymentsReport(context: { input: Record<string, unkn
 export async function getCatalogs(locations?: number[], economic = true) {
   const scope = locations?.length ? " WHERE ubicacion_id=ANY($1::int[])" : "";
   const values = locations?.length ? [locations] : [];
-  const [sites, products, users, clients, suppliers, fabrics, colors, units] = await Promise.all([
-    pool.query(
-      `SELECT id,nombre label FROM ubicaciones${locations?.length ? " WHERE id=ANY($1::int[])" : ""} ORDER BY nombre`,
-      values,
-    ),
+  const [comparisonLocations, products, users, clients, suppliers, fabrics, colors, units] = await Promise.all([
+    listHeaderEligibleLocations(locations),
     pool.query(
       `SELECT DISTINCT p.id,(p.sku||' — '||p.tela||' '||p.color) label
        FROM productos p LEFT JOIN rollos r ON r.producto_id=p.id${scope} ORDER BY label`,
@@ -277,8 +275,16 @@ export async function getCatalogs(locations?: number[], economic = true) {
     ),
   ]);
 
+  const sites = comparisonLocations.map((location) => ({
+    id: location.id,
+    label: location.nombre,
+  }));
   return {
-    sites: sites.rows.map((row) => ({ id: Number(row.id), label: row.label })),
+    // Keep the legacy sites key for clients that still consume it. Both
+    // catalogs are intentionally sourced from the header's physical active
+    // location selector.
+    sites,
+    comparisonLocations: sites,
     products: products.rows.map((row) => ({ id: Number(row.id), label: row.label })),
     fabrics: fabrics.rows.map((row) => row.tela),
     colors: colors.rows.map((row) => row.color),

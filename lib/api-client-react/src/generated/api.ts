@@ -136,6 +136,8 @@ import type {
   ExportKardexXlsxParams,
   ExportReporteSeccionPdfParams,
   ExportReporteSeccionXlsxParams,
+  ExportReporteVistaPdfParams,
+  ExportReporteVistaXlsxParams,
   ExportarHistorialEtiquetasXlsxParams,
   ExportarProveedorXlsxParams,
   ExportarSalidasParams,
@@ -213,6 +215,7 @@ import type {
   MotivoRechazoPagoDirigidoInput,
   MotivoReversoInput,
   MotivoSalidaInput,
+  MovimientoDetalle,
   MovimientoRow,
   NotFoundResponse,
   NotificacionMarcadaLeida,
@@ -7599,6 +7602,84 @@ export function useGetRollo<TData = Awaited<ReturnType<typeof getRollo>>, TError
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetRolloQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetInventarioMovimientoUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/movimientos/${id}`
+}
+
+/**
+ * Lectura de un movimiento de inventario con el alcance de consulta canónico. Un movimiento fuera de PROPIA se responde como 404.
+ * @summary Obtiene un movimiento inmutable de inventario para su origen
+ */
+export const getInventarioMovimiento = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<MovimientoDetalle> => {
+
+  return customFetch<MovimientoDetalle>(getGetInventarioMovimientoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetInventarioMovimientoQueryKey = (id: number,) => {
+    return [
+    `/api/inventario/movimientos/${id}`
+    ] as const;
+    }
+
+
+export const getGetInventarioMovimientoQueryOptions = <TData = Awaited<ReturnType<typeof getInventarioMovimiento>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getInventarioMovimiento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetInventarioMovimientoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getInventarioMovimiento>>> = ({ signal }) => getInventarioMovimiento(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getInventarioMovimiento>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetInventarioMovimientoQueryResult = NonNullable<Awaited<ReturnType<typeof getInventarioMovimiento>>>
+export type GetInventarioMovimientoQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Obtiene un movimiento inmutable de inventario para su origen
+ */
+
+export function useGetInventarioMovimiento<TData = Awaited<ReturnType<typeof getInventarioMovimiento>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getInventarioMovimiento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetInventarioMovimientoQueryOptions(id,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -18472,6 +18553,184 @@ export function useExportReporteSeccionPdf<TData = Awaited<ReturnType<typeof exp
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getExportReporteSeccionPdfQueryOptions(seccion,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportReporteVistaXlsxUrl = (vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/reportes/vistas/${vista}/export.xlsx?${stringifiedParams}` : `/api/reportes/vistas/${vista}/export.xlsx`
+}
+
+/**
+ * @summary Exporta una vista compuesta de reportes a XLSX
+ */
+export const exportReporteVistaXlsx = async (vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportReporteVistaXlsxUrl(vista,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportReporteVistaXlsxQueryKey = (vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaXlsxParams,) => {
+    return [
+    `/api/reportes/vistas/${vista}/export.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportReporteVistaXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteVistaXlsx>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteVistaXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportReporteVistaXlsxQueryKey(vista,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportReporteVistaXlsx>>> = ({ signal }) => exportReporteVistaXlsx(vista,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: vista !== null && vista !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportReporteVistaXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportReporteVistaXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportReporteVistaXlsx>>>
+export type ExportReporteVistaXlsxQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta una vista compuesta de reportes a XLSX
+ */
+
+export function useExportReporteVistaXlsx<TData = Awaited<ReturnType<typeof exportReporteVistaXlsx>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteVistaXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportReporteVistaXlsxQueryOptions(vista,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportReporteVistaPdfUrl = (vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaPdfParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/reportes/vistas/${vista}/export.pdf?${stringifiedParams}` : `/api/reportes/vistas/${vista}/export.pdf`
+}
+
+/**
+ * @summary Exporta una vista compuesta de reportes a PDF
+ */
+export const exportReporteVistaPdf = async (vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaPdfParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportReporteVistaPdfUrl(vista,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportReporteVistaPdfQueryKey = (vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaPdfParams,) => {
+    return [
+    `/api/reportes/vistas/${vista}/export.pdf`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportReporteVistaPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportReporteVistaPdf>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteVistaPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportReporteVistaPdfQueryKey(vista,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportReporteVistaPdf>>> = ({ signal }) => exportReporteVistaPdf(vista,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: vista !== null && vista !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportReporteVistaPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportReporteVistaPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportReporteVistaPdf>>>
+export type ExportReporteVistaPdfQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Exporta una vista compuesta de reportes a PDF
+ */
+
+export function useExportReporteVistaPdf<TData = Awaited<ReturnType<typeof exportReporteVistaPdf>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ vista: 'ventas' | 'que-comprar' | 'utilidad' | 'clientes' | 'control-operativo',
+    params?: ExportReporteVistaPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportReporteVistaPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportReporteVistaPdfQueryOptions(vista,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

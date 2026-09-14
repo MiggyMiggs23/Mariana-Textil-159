@@ -851,7 +851,12 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 - Se añadió y ejecutó `favor application preserves Cobrado classification and receipt-source conservation` en `clientes-aging.test.ts`. **Su cobertura es parcial:** verifica conservación del reparto en memoria, no el total de la consulta real de analytics por periodo/sitio. La revisión detectó que aplicar saldo sí cambia Cobrado filtrado por sitio; el requisito aún no se cumple.
 - También quedan pendientes la coherencia entre cancelación/reaplicación y el límite de aplicaciones de la base, y habilitar la autorización cuando el saldo a favor seleccionado resuelve el exceso de límite.
 
-No se ejecutaron migraciones ni escrituras directas de datos, no se crearon usuarios/ADMIN/sesiones de prueba y no se usó `executeSql` en development. Las suites de integración abortaron por falta de una conexión de pruebas aislada; no se quitaron sus protecciones. El navegador usó exclusivamente respuestas simuladas y quedó bloqueado; no acredita operaciones financieras reales.
+No se ejecutaron migraciones ni escrituras directas de datos, no se crearon
+usuarios/ADMIN/sesiones de prueba y no se usó `executeSql` en development. Las
+comprobaciones de navegador usaron autenticación y respuestas interceptadas, sin
+login ni escrituras de DB; no hubo E2E autenticada viva ni operaciones
+financieras reales. Las suites de integración incompatibles conservaron sus
+protecciones.
 
 ## Utilidad por proveedor y fichas de saldo — 2026-09-14
 
@@ -864,9 +869,42 @@ No se ejecutaron migraciones ni escrituras directas de datos, no se crearon usua
 - Los históricos NORMAL con rollo, entrada y movimiento inequívocos se leen sin backfill; un movimiento revertido no es evidencia válida. Los rollos identificables sin costo se cuentan como excluidos. Las líneas sin evidencia física se informan como contexto global del sitio/periodo, no se asignan por conjetura a un proveedor.
 - Pruebas específicas y consulta SQL real de solo lectura aprobadas; se mantienen las limitaciones de navegador y los errores de tipos anteriores documentados en `reports/proveedores-utilidad-verificacion.md`. La herramienta de purga histórica no se amplió y continuará rechazando el nuevo esquema hasta una adaptación autorizada por separado.
 
-## Reportes por decisión — implementación bloqueada en verificación
+## Reportes por decisión — estado factual de verificación
 
-**2026-09-14:** se implementó una primera versión del mapa aprobado de once a cinco pestañas; la revisión encontró fallos nuevos y la entrega quedó bloqueada. No considerar esta reorganización terminada. Evidencia completa: `reports/reorganizacion-reportes-verificacion.md`. La API de vista previa se detuvo por una regresión de autorización, pendiente de corrección autorizada.
+**2026-09-14, estado actual:** se implementó el mapa aprobado de once a cinco
+pestañas y se repararon seguridad y alcance. Pasaron **62 pruebas de servidor y
+16 pruebas frontend de alcance**. El build de API y frontend pasa; el
+typecheck conserva únicamente los errores preexistentes de
+`src/lib/pos.ts:426` y `src/routes/clientes.ts:1329`. La API está actualmente
+en ejecución. La nota histórica de que la API de vista previa se detuvo
+pertenece a la primera revisión y no es el estado actual.
+
+Los conteos 62/16 son resultados por suite y no se suman como pruebas distintas:
+no se asume independencia donde las suites se solapan.
+
+El contrato fuente preserva **56 tablas y 18 gráficos**: 53 tablas/13 gráficos
+genéricos, 2 tablas/2 gráficos de Caja Diferencias y X04 con 1 tabla/3
+gráficos. La comprobación numérica real pasa para las **53 tablas genéricas**,
+además de caja en cero y cancelaciones por CTE compartido con escenario `150`.
+El pase numérico no se presenta como una publicación completa ni como
+aprobación de navegador. Las comprobaciones parciales de contrato UI read-only
+sí se completaron con autenticación y respuestas interceptadas, sin login ni
+escrituras de DB:
+
+- pasaron las cinco pestañas normales y Comparar en las cinco sobre TIENDA y
+  BODEGA;
+- hubo un solo selector de sitio, con sitio seleccionado y parámetros GET de
+  exportación XLSX/PDF;
+- pasaron las tres rutas legacy, ADMIN/PROPIA, non-ADMIN con Comparar
+  deshabilitado para TODAS y non-ADMIN sin Control;
+- mobile de 402 px no mostró overflow de documento.
+
+La forma inicial del mock de caja se corrigió durante la captura; no era un
+defecto de la aplicación. Las capturas de filas de cancelaciones, abonos,
+ajustes y detalle de corte fueron cero: solo se validaron contratos, sin
+click-through real de documentos. No hubo E2E autenticada viva ni bytes reales
+de descarga XLSX/PDF. El preview real del screenshot tool mostró login,
+esperado para una sesión no autenticada, y no prueba los reportes.
 
 La organización aprobada responde a decisiones, no a tipos de datos:
 
@@ -883,10 +921,18 @@ La organización aprobada responde a decisiones, no a tipos de datos:
 - Pagos Dirigidos resueltos se incorpora a Clientes y crédito sin retirar su tabla distinta de Pagos dirigidos.
 - Diferencias de Caja se incorpora completa a Control operativo.
 - Los tres gráficos del Comparativo y X04 completa, con doce columnas y Total General, se conservan juntos en Ventas → Comparar.
+- X04 tiene evidencia numérica real separada: `compareStores` legacy/current
+  coincidió en el global del año 2026 usando el mismo snapshot
+  `READ ONLY REPEATABLE READ`; la exportación conserva sus 12 columnas y toma
+  los totales de la fuente sin recalcularlos. Resultado:
+  `/tmp/reportes-composition-x04-final.json`.
 - R01 autoriza retirar solo la tarjeta Compras que repite exactamente Costo recibido; ese importe se conserva. Ninguna de las 56 tablas principales ni de los 18 gráficos está autorizada para eliminarse.
 - Ventas, Utilidad y márgenes y Clientes y crédito conservan contenido y diseño. Mapa detallado: `reports/mapa-destino-reportes.md`.
 - Control operativo reúne diferencias de caja, tickets cancelados, salidas canceladas, salidas pendientes según la regla existente de 24 horas, abonos incongruentes, ajustes y rollos con tres o más reimpresiones. Se agrupan para no tener que abrir varias pestañas buscando problemas.
 - Todo bloque autorizado en cero debe mostrarse en cero; carga, error o permiso denegado no equivalen a ausencia de problemas. Las cifras deben permitir abrir el documento concreto de origen.
 - V19/V20/V21 permanecen en Ventas. Control debe consumir la misma fuente compartida de cancelaciones, no una versión duplicada de la consulta.
 - **Tasa pospuesta:** no implementarla en esta entrega. La definición futura aprobada es cancelados del periodo / (contabilizados + cancelados del periodo) × 100, con fecha de cancelación y predicado canónico de contabilización, exactamente como Caja en Tiempo Real. Si al implementarla difiere el criterio del tablero, detenerse y reportarlo. La comprobación actual confirmó que Caja sí coincide; Ventas tiene una diferencia previa de fechas que no se corrigió.
-- No corregir por cuenta propia los fallos encontrados durante la verificación. No ampliar el seed, copiar identidades ni crear usuarios/ADMIN temporales para completar pruebas.
+- Quedan **7 etiquetas cuyo historial no está disponible**; requieren decisión
+  explícita del usuario y no se inventa evidencia.
+- Las comprobaciones parciales UI están completas con esos límites; no se deben
+  declarar una E2E autenticada viva ni una publicación browser-approved.

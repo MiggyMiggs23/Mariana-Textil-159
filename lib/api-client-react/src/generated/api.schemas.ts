@@ -720,6 +720,8 @@ export type ReporteTableColumnsItem = {
   key: string;
   label: string;
   kind: string;
+  /** Row field containing the URL for this column */
+  hrefKey?: string;
   economic?: boolean;
   estimated?: boolean;
 };
@@ -762,6 +764,11 @@ export type ReportesCatalogosSitesItem = {
   label: string;
 };
 
+export type ReportesCatalogosComparisonLocationsItem = {
+  id: number;
+  label: string;
+};
+
 export type ReportesCatalogosProductsItem = {
   id: number;
   label: string;
@@ -784,6 +791,7 @@ export type ReportesCatalogosSuppliersItem = {
 
 export interface ReportesCatalogos {
   sites: ReportesCatalogosSitesItem[];
+  comparisonLocations: ReportesCatalogosComparisonLocationsItem[];
   products: ReportesCatalogosProductsItem[];
   fabrics: string[];
   colors: string[];
@@ -4360,6 +4368,34 @@ export interface MovimientoRow {
   revisadoAt?: string | null;
   /** @nullable */
   uuidCliente?: string | null;
+  createdAt: string;
+}
+
+export interface MovimientoDetalle {
+  id: number;
+  rolloId: number;
+  /** @nullable */
+  serie?: string | null;
+  productoId: number;
+  /** @nullable */
+  skuProducto?: string | null;
+  ubicacionId: number;
+  /** @nullable */
+  nombreUbicacion?: string | null;
+  tipo: TipoMovimiento;
+  cantidad: string;
+  saldoPosterior: string;
+  /** @nullable */
+  documentoTipo?: string | null;
+  /** @nullable */
+  documentoId?: string | null;
+  /** @nullable */
+  movimientoOrigenId?: number | null;
+  usuarioId: number;
+  motivoSalidaExtraordinaria: MotivoSalidaExtraordinaria | null;
+  /** @nullable */
+  justificacion?: string | null;
+  revisado: boolean;
   createdAt: string;
 }
 
@@ -8048,6 +8084,140 @@ coberturaBajo?: ReporteCoberturaBajoParameter;
 coberturaNormal?: ReporteCoberturaNormalParameter;
 coberturaExceso?: ReporteCoberturaExcesoParameter;
 };
+
+export type ExportReporteVistaXlsxParams = {
+periodo?: ReportePeriodoParameter;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionIds?: ReporteUbicacionIdsParameter;
+productoIds?: ReporteProductoIdsParameter;
+telas?: ReporteTelasParameter;
+colores?: ReporteColoresParameter;
+unidades?: ReporteUnidadesParameter;
+usuarioIds?: ReporteUsuarioIdsParameter;
+clienteIds?: ReporteClienteIdsParameter;
+proveedorIds?: ReporteProveedorIdsParameter;
+formasPago?: ReporteFormasPagoParameter;
+facturado?: ReporteFacturadoParameter;
+/**
+ * Modalidad de las líneas de venta; Todo no restringe resultados.
+ */
+modalidad?: ReporteModalidadParameter;
+margenUmbral?: ReporteMargenUmbralParameter;
+coberturaCritico?: ReporteCoberturaCriticoParameter;
+coberturaBajo?: ReporteCoberturaBajoParameter;
+coberturaNormal?: ReporteCoberturaNormalParameter;
+coberturaExceso?: ReporteCoberturaExcesoParameter;
+/**
+ * Modo de la vista; comparar conserva el comparativo autorizado de Ventas.
+ */
+modo?: ExportReporteVistaXlsxModo;
+/**
+ * Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.
+ * @minimum 1
+ */
+ubicacionId?: number;
+/**
+ * @minimum 0
+ */
+umbralCorte?: number;
+/**
+ * @minimum 0
+ */
+umbralTienda?: number;
+agrupacion?: ExportReporteVistaXlsxAgrupacion;
+};
+
+export type ExportReporteVistaXlsxModo = typeof ExportReporteVistaXlsxModo[keyof typeof ExportReporteVistaXlsxModo];
+
+
+export const ExportReporteVistaXlsxModo = {
+  normal: 'normal',
+  comparar: 'comparar',
+} as const;
+
+export type ExportReporteVistaXlsxAgrupacion = typeof ExportReporteVistaXlsxAgrupacion[keyof typeof ExportReporteVistaXlsxAgrupacion];
+
+
+export const ExportReporteVistaXlsxAgrupacion = {
+  semana: 'semana',
+  mes: 'mes',
+} as const;
+
+export type ExportReporteVistaPdfParams = {
+periodo?: ReportePeriodoParameter;
+/**
+ * Día inicial en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+desde?: AnalyticsDesdeParameter;
+/**
+ * Día final en America/Mexico_City
+ * @pattern ^\d{4}-\d{2}-\d{2}$
+ */
+hasta?: AnalyticsHastaParameter;
+ubicacionIds?: ReporteUbicacionIdsParameter;
+productoIds?: ReporteProductoIdsParameter;
+telas?: ReporteTelasParameter;
+colores?: ReporteColoresParameter;
+unidades?: ReporteUnidadesParameter;
+usuarioIds?: ReporteUsuarioIdsParameter;
+clienteIds?: ReporteClienteIdsParameter;
+proveedorIds?: ReporteProveedorIdsParameter;
+formasPago?: ReporteFormasPagoParameter;
+facturado?: ReporteFacturadoParameter;
+/**
+ * Modalidad de las líneas de venta; Todo no restringe resultados.
+ */
+modalidad?: ReporteModalidadParameter;
+margenUmbral?: ReporteMargenUmbralParameter;
+coberturaCritico?: ReporteCoberturaCriticoParameter;
+coberturaBajo?: ReporteCoberturaBajoParameter;
+coberturaNormal?: ReporteCoberturaNormalParameter;
+coberturaExceso?: ReporteCoberturaExcesoParameter;
+/**
+ * Modo de la vista; comparar conserva el comparativo autorizado de Ventas.
+ */
+modo?: ExportReporteVistaPdfModo;
+/**
+ * Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.
+ * @minimum 1
+ */
+ubicacionId?: number;
+/**
+ * @minimum 0
+ */
+umbralCorte?: number;
+/**
+ * @minimum 0
+ */
+umbralTienda?: number;
+agrupacion?: ExportReporteVistaPdfAgrupacion;
+};
+
+export type ExportReporteVistaPdfModo = typeof ExportReporteVistaPdfModo[keyof typeof ExportReporteVistaPdfModo];
+
+
+export const ExportReporteVistaPdfModo = {
+  normal: 'normal',
+  comparar: 'comparar',
+} as const;
+
+export type ExportReporteVistaPdfAgrupacion = typeof ExportReporteVistaPdfAgrupacion[keyof typeof ExportReporteVistaPdfAgrupacion];
+
+
+export const ExportReporteVistaPdfAgrupacion = {
+  semana: 'semana',
+  mes: 'mes',
+} as const;
 
 export type ListAuditoriaParams = {
 desde?: CalendarDate;

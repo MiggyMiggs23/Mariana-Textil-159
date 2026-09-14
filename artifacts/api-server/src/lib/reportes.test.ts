@@ -4,6 +4,8 @@ import test from "node:test";
 import { omitEconomicReportFilters, parseReportBooleanQuery, redactEconomic, reportRange, REPORT_SECTIONS } from "./reportes";
 import { buildHeatmapMatrix } from "./report-heatmap";
 import { summarizeCancellationRows } from "./reportes-sales";
+import reportesRouter, { controlOperativoRoleGate } from "../routes/reportes";
+import type { RolUsuario } from "@workspace/db";
 
 test("report ranges use Mexico City inclusive day bounds and equal prior period", () => {
   const range = reportRange({ periodo: "personalizado", desde: "2024-02-01", hasta: "2024-02-29" });
@@ -134,11 +136,50 @@ test("control operativo is a shared cancellation consumer and does not expose ca
   assert.ok(REPORT_SECTIONS.includes("control-operativo"));
 });
 
-test("control report keeps the existing authorization and read-scope boundary", () => {
+test("reportes keeps its module authorization and read-scope boundary", () => {
   const route = readFileSync(new URL("../routes/reportes.ts", import.meta.url), "utf8");
   assert.match(route, /router\.use\("\/reportes", requireSession, requierePermiso\("reportes", "ver"\)\)/);
   assert.match(route, /return buildReport\(params\.seccion, query, scopedLocations\(req\)/);
   assert.match(route, /resolveReadScope\(req\.auth!\)/);
+});
+
+test("control operativo route gate allows ADMIN and excludes every other role", () => {
+  type RouterLayer = { handle: unknown };
+  const layers = (reportesRouter as unknown as { stack: RouterLayer[] }).stack;
+  assert.equal(
+    layers.filter((layer) => layer.handle === controlOperativoRoleGate).length,
+    1,
+    "the ADMIN gate must be attached to the whole control-operativo branch",
+  );
+
+  type GateResult = { status: number | null; body: unknown; next: boolean };
+  function invoke(role: RolUsuario): GateResult {
+    const result: GateResult = { status: null, body: null, next: false };
+    const req = { auth: { user: { rol: role } } };
+    const res = {
+      status(code: number) {
+        result.status = code;
+        return res;
+      },
+      json(body: unknown) {
+        result.body = body;
+        return res;
+      },
+    };
+    controlOperativoRoleGate(req as never, res as never, () => {
+      result.next = true;
+    });
+    return result;
+  }
+
+  assert.deepEqual(invoke("ADMIN"), { status: null, body: null, next: true });
+  for (const role of ["TERMINAL", "CAJA", "SUPERVISOR", "BODEGA", "SISTEMAS", "CONTADOR"] as const) {
+    assert.deepEqual(invoke(role), {
+      status: 403,
+      body: { error: "No tienes permisos para esta operación." },
+      next: false,
+    }, `${role} must be denied before any control report or export handler runs`);
+  }
 });
 
 test("cancellation and control SQL retain grouped zero-safe aggregations", () => {

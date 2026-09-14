@@ -4157,6 +4157,39 @@ export const GetRolloResponse = zod.object({
 
 
 /**
+ * Lectura de un movimiento de inventario con el alcance de consulta canónico. Un movimiento fuera de PROPIA se responde como 404.
+ * @summary Obtiene un movimiento inmutable de inventario para su origen
+ */
+
+
+
+export const GetInventarioMovimientoParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const GetInventarioMovimientoResponse = zod.object({
+  "id": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string().nullish(),
+  "productoId": zod.number(),
+  "skuProducto": zod.string().nullish(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string().nullish(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "cantidad": zod.string(),
+  "saldoPosterior": zod.string(),
+  "documentoTipo": zod.string().nullish(),
+  "documentoId": zod.string().nullish(),
+  "movimientoOrigenId": zod.number().nullish(),
+  "usuarioId": zod.number(),
+  "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
+  "justificacion": zod.string().nullish(),
+  "revisado": zod.boolean(),
+  "createdAt": zod.coerce.date()
+})
+
+
+/**
  * @summary Lista rollos con filtros opcionales
  */
 export const ListRollosQueryParams = zod.object({
@@ -10349,6 +10382,10 @@ export const GetReportesCatalogosResponse = zod.object({
   "id": zod.number(),
   "label": zod.string()
 })),
+  "comparisonLocations": zod.array(zod.object({
+  "id": zod.number(),
+  "label": zod.string()
+})),
   "products": zod.array(zod.object({
   "id": zod.number(),
   "label": zod.string()
@@ -10478,6 +10515,7 @@ export const GetReporteSeccionResponse = zod.object({
   "key": zod.string(),
   "label": zod.string(),
   "kind": zod.string(),
+  "hrefKey": zod.string().optional().describe('Row field containing the URL for this column'),
   "economic": zod.boolean().optional(),
   "estimated": zod.boolean().optional()
 })),
@@ -10569,6 +10607,116 @@ export const ExportReporteSeccionPdfQueryParams = zod.object({
 })
 
 export const ExportReporteSeccionPdfResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta una vista compuesta de reportes a XLSX
+ */
+export const ExportReporteVistaXlsxParams = zod.object({
+  "vista": zod.enum(['ventas', 'que-comprar', 'utilidad', 'clientes', 'control-operativo'])
+})
+
+export const exportReporteVistaXlsxQueryPeriodoDefault = `mensual`;
+export const exportReporteVistaXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteVistaXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteVistaXlsxQueryModalidadDefault = `TODO`;
+export const exportReporteVistaXlsxQueryMargenUmbralDefault = 15;
+export const exportReporteVistaXlsxQueryCoberturaCriticoDefault = 7;
+export const exportReporteVistaXlsxQueryCoberturaBajoDefault = 15;
+export const exportReporteVistaXlsxQueryCoberturaNormalDefault = 60;
+export const exportReporteVistaXlsxQueryCoberturaExcesoDefault = 90;
+export const exportReporteVistaXlsxQueryModoDefault = `normal`;
+export const exportReporteVistaXlsxQueryUmbralCorteDefault = 500;
+export const exportReporteVistaXlsxQueryUmbralCorteMin = 0;
+
+export const exportReporteVistaXlsxQueryUmbralTiendaDefault = 500;
+export const exportReporteVistaXlsxQueryUmbralTiendaMin = 0;
+
+export const exportReporteVistaXlsxQueryAgrupacionDefault = `semana`;
+
+export const ExportReporteVistaXlsxQueryParams = zod.object({
+  "periodo": zod.enum(['diario', 'semanal', 'mensual', 'trimestral', 'semestral', 'anual', 'personalizado']).default(exportReporteVistaXlsxQueryPeriodoDefault),
+  "desde": zod.coerce.string().regex(exportReporteVistaXlsxQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportReporteVistaXlsxQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionIds": zod.coerce.string().optional(),
+  "productoIds": zod.coerce.string().optional(),
+  "telas": zod.coerce.string().optional(),
+  "colores": zod.coerce.string().optional(),
+  "unidades": zod.coerce.string().optional(),
+  "usuarioIds": zod.coerce.string().optional(),
+  "clienteIds": zod.coerce.string().optional(),
+  "proveedorIds": zod.coerce.string().optional(),
+  "formasPago": zod.coerce.string().optional(),
+  "facturado": zod.coerce.boolean().optional(),
+  "modalidad": zod.enum(['TODO', 'ROLLOS', 'METRAJE']).default(exportReporteVistaXlsxQueryModalidadDefault).describe('Modalidad de las líneas de venta; Todo no restringe resultados.'),
+  "margenUmbral": zod.coerce.number().default(exportReporteVistaXlsxQueryMargenUmbralDefault),
+  "coberturaCritico": zod.coerce.number().default(exportReporteVistaXlsxQueryCoberturaCriticoDefault),
+  "coberturaBajo": zod.coerce.number().default(exportReporteVistaXlsxQueryCoberturaBajoDefault),
+  "coberturaNormal": zod.coerce.number().default(exportReporteVistaXlsxQueryCoberturaNormalDefault),
+  "coberturaExceso": zod.coerce.number().default(exportReporteVistaXlsxQueryCoberturaExcesoDefault),
+  "modo": zod.enum(['normal', 'comparar']).default(exportReporteVistaXlsxQueryModoDefault).describe('Modo de la vista; comparar conserva el comparativo autorizado de Ventas.'),
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.'),
+  "umbralCorte": zod.coerce.number().min(exportReporteVistaXlsxQueryUmbralCorteMin).default(exportReporteVistaXlsxQueryUmbralCorteDefault),
+  "umbralTienda": zod.coerce.number().min(exportReporteVistaXlsxQueryUmbralTiendaMin).default(exportReporteVistaXlsxQueryUmbralTiendaDefault),
+  "agrupacion": zod.enum(['semana', 'mes']).default(exportReporteVistaXlsxQueryAgrupacionDefault)
+})
+
+export const ExportReporteVistaXlsxResponse = zod.unknown()
+
+
+/**
+ * @summary Exporta una vista compuesta de reportes a PDF
+ */
+export const ExportReporteVistaPdfParams = zod.object({
+  "vista": zod.enum(['ventas', 'que-comprar', 'utilidad', 'clientes', 'control-operativo'])
+})
+
+export const exportReporteVistaPdfQueryPeriodoDefault = `mensual`;
+export const exportReporteVistaPdfQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteVistaPdfQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportReporteVistaPdfQueryModalidadDefault = `TODO`;
+export const exportReporteVistaPdfQueryMargenUmbralDefault = 15;
+export const exportReporteVistaPdfQueryCoberturaCriticoDefault = 7;
+export const exportReporteVistaPdfQueryCoberturaBajoDefault = 15;
+export const exportReporteVistaPdfQueryCoberturaNormalDefault = 60;
+export const exportReporteVistaPdfQueryCoberturaExcesoDefault = 90;
+export const exportReporteVistaPdfQueryModoDefault = `normal`;
+export const exportReporteVistaPdfQueryUmbralCorteDefault = 500;
+export const exportReporteVistaPdfQueryUmbralCorteMin = 0;
+
+export const exportReporteVistaPdfQueryUmbralTiendaDefault = 500;
+export const exportReporteVistaPdfQueryUmbralTiendaMin = 0;
+
+export const exportReporteVistaPdfQueryAgrupacionDefault = `semana`;
+
+export const ExportReporteVistaPdfQueryParams = zod.object({
+  "periodo": zod.enum(['diario', 'semanal', 'mensual', 'trimestral', 'semestral', 'anual', 'personalizado']).default(exportReporteVistaPdfQueryPeriodoDefault),
+  "desde": zod.coerce.string().regex(exportReporteVistaPdfQueryDesdeRegExp).optional().describe('Día inicial en America\/Mexico_City'),
+  "hasta": zod.coerce.string().regex(exportReporteVistaPdfQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City'),
+  "ubicacionIds": zod.coerce.string().optional(),
+  "productoIds": zod.coerce.string().optional(),
+  "telas": zod.coerce.string().optional(),
+  "colores": zod.coerce.string().optional(),
+  "unidades": zod.coerce.string().optional(),
+  "usuarioIds": zod.coerce.string().optional(),
+  "clienteIds": zod.coerce.string().optional(),
+  "proveedorIds": zod.coerce.string().optional(),
+  "formasPago": zod.coerce.string().optional(),
+  "facturado": zod.coerce.boolean().optional(),
+  "modalidad": zod.enum(['TODO', 'ROLLOS', 'METRAJE']).default(exportReporteVistaPdfQueryModalidadDefault).describe('Modalidad de las líneas de venta; Todo no restringe resultados.'),
+  "margenUmbral": zod.coerce.number().default(exportReporteVistaPdfQueryMargenUmbralDefault),
+  "coberturaCritico": zod.coerce.number().default(exportReporteVistaPdfQueryCoberturaCriticoDefault),
+  "coberturaBajo": zod.coerce.number().default(exportReporteVistaPdfQueryCoberturaBajoDefault),
+  "coberturaNormal": zod.coerce.number().default(exportReporteVistaPdfQueryCoberturaNormalDefault),
+  "coberturaExceso": zod.coerce.number().default(exportReporteVistaPdfQueryCoberturaExcesoDefault),
+  "modo": zod.enum(['normal', 'comparar']).default(exportReporteVistaPdfQueryModoDefault).describe('Modo de la vista; comparar conserva el comparativo autorizado de Ventas.'),
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.'),
+  "umbralCorte": zod.coerce.number().min(exportReporteVistaPdfQueryUmbralCorteMin).default(exportReporteVistaPdfQueryUmbralCorteDefault),
+  "umbralTienda": zod.coerce.number().min(exportReporteVistaPdfQueryUmbralTiendaMin).default(exportReporteVistaPdfQueryUmbralTiendaDefault),
+  "agrupacion": zod.enum(['semana', 'mes']).default(exportReporteVistaPdfQueryAgrupacionDefault)
+})
+
+export const ExportReporteVistaPdfResponse = zod.unknown()
 
 
 /**
