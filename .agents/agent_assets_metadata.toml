@@ -728,3 +728,17 @@ mtime_ms = 1789416035589
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/54e7e7a6-f028-40da-87c2-606e1e6c383f/4e272ba6-9cde-4660-931e-3eaf68b28bb8"
 storage_version_token = "1789416087462230"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "p_jO7NcpLtXL_d-JKeYE4"
+uri = "file://reports/recibos-evidencia-historica.md"
+type = "text"
+title = "Revisión de evidencia histórica para recibos"
+description = "Conteos comprobados, información conservada y motivos concretos que impiden emitir los recibos históricos."
+logical_id = "c9d19782-e29c-4945-b12f-7333500cad70"
+content_hash = "sha256:bcfbd8b96516659d7c3827e8b1f92c39254d0f40a192700c904fcacc139aaeee"
+size = 3451
+mtime_ms = 1789417010793
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c9d19782-e29c-4945-b12f-7333500cad70/ff78f349-bd84-4cca-954f-3cb1b21ff72d"
+storage_version_token = "1789417030523052"
+content_type = "text/markdown"
