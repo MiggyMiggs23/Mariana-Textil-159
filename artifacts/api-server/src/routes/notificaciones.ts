@@ -22,6 +22,7 @@ import { getAdminAlertas } from "../lib/admin-alertas";
 import { pendingTicketPredicate } from "../lib/accounted-document";
 import { centsToMoney } from "../lib/credit-allocation";
 import { loadCustomerCreditProjections } from "../lib/credit-aging-read-model";
+import { deriveEstadoNota, type EstadoNota } from "../lib/clientes-aging";
 
 const router: IRouter = Router();
 router.use("/notificaciones", requireSession);
@@ -55,9 +56,13 @@ function activeStockMinimumNotification() {
   );
 }
 
-function present(row: typeof notificacionesCreditoTable.$inferSelect) {
+function present(
+  row: typeof notificacionesCreditoTable.$inferSelect,
+  estadoNota: EstadoNota,
+) {
   return {
     ...row,
+    estadoNota,
     fechaVencimiento: calendarDate(row.fechaVencimiento),
     leidaAt: row.leidaAt?.toISOString() ?? null,
     createdAt: row.createdAt.toISOString(),
@@ -87,6 +92,7 @@ type FeedEvent = {
   href: string;
   updatedAt: string;
   siteId: number | null;
+  estadoNota?: EstadoNota | null;
   action: {
     requestId: number; tipo: Kind; contraparte: string; documento: string;
     importe: string; motivo: string; solicitante: string;
@@ -319,12 +325,23 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           .orderBy(desc(notificacionesCreditoTable.createdAt))
           .limit(50),
       ]);
+      const notificationProjections = await loadCustomerCreditProjections(
+        [...new Set(creditNotifications.map((row) => Number(row.clienteId)))],
+      );
+      const notificationToday = new Date().toLocaleDateString("en-CA", {
+        timeZone: "America/Mexico_City",
+      });
 
       for (const row of pendingDirected) {
         const event = directedPaymentEvent(row as unknown as Record<string, unknown>, true);
         events.set(event.id, event);
       }
-      for (const row of creditNotifications) {
+       for (const row of creditNotifications) {
+         const charge = notificationProjections
+           .get(Number(row.clienteId))
+           ?.allCharges.find(
+             (candidate) => candidate.ticketId === Number(row.ticketId),
+           );
         events.set(`credit-notice:${row.id}`, {
           id: `credit-notice:${row.id}`,
           kind: "CREDIT_NOTICE",
@@ -334,6 +351,17 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           href: `/clientes/${row.clienteId}?tab=estado`,
           updatedAt: row.createdAt.toISOString(),
           siteId: row.tiendaId,
+           estadoNota: deriveEstadoNota({
+             importeOriginal: charge
+               ? centsToMoney(charge.originalCents)
+               : row.importe,
+             saldoPendiente: charge
+               ? centsToMoney(charge.pendienteCents)
+               : row.importe,
+             fechaVencimiento:
+               charge?.dueAt ?? calendarDate(row.fechaVencimiento),
+             hoy: notificationToday,
+           }),
           action: null,
         });
       }
@@ -360,6 +388,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           href: `/clientes/${row.clienteId}?tab=estado`,
           updatedAt: `${row.fechaVencimiento}T12:00:00.000Z`,
           siteId: null,
+          estadoNota: row.estadoNota,
           action: null,
         });
       }
@@ -479,7 +508,13 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
             pendiente: centsToMoney(charge.pendienteCents),
             fechaVencimiento: charge.dueAt,
             diasVencido,
-            estado: diasVencido > 0 ? "VENCIDA" as const : "POR_VENCER" as const,
+             estado: diasVencido > 0 ? "VENCIDA" as const : "POR_VENCER" as const,
+             estadoNota: deriveEstadoNota({
+               importeOriginal: centsToMoney(charge.originalCents),
+               saldoPendiente: centsToMoney(charge.pendienteCents),
+               fechaVencimiento: charge.dueAt,
+               hoy: today,
+             }),
           };
         }),
     ).sort((a, b) =>
@@ -506,8 +541,34 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
       a.primerVencimiento.localeCompare(b.primerVencimiento) ||
       a.clienteNombre.localeCompare(b.clienteNombre),
     );
+    const notificationStates = new Map(
+      notifications.map((notification) => {
+        const projection = projections.get(Number(notification.clienteId));
+        const charge = projection?.allCharges.find(
+          (candidate) => candidate.ticketId === Number(notification.ticketId),
+        );
+        return [
+          notification.id,
+          deriveEstadoNota({
+            importeOriginal: charge
+              ? centsToMoney(charge.originalCents)
+              : notification.importe,
+            saldoPendiente: charge
+              ? centsToMoney(charge.pendienteCents)
+              : notification.importe,
+            fechaVencimiento: charge?.dueAt ?? calendarDate(notification.fechaVencimiento),
+            hoy: today,
+          },
+        ] as const;
+      }),
+    );
     const parsed = ListNotificacionesResponse.parse({
-        notificaciones: notifications.map(present),
+        notificaciones: notifications.map((notification) =>
+          present(
+            notification,
+            notificationStates.get(notification.id) ?? "PENDIENTE",
+          ),
+        ),
         sistema: systemNotifications.map((row) => ({
           ...row,
           leidaAt: row.leidaAt?.toISOString() ?? null,

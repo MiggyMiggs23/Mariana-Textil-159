@@ -9,6 +9,38 @@ export type CreditStatus =
   | "PAGADA"
   | "SIN_PLAZO";
 
+/** Canonical customer-facing credit-note status. */
+export type EstadoNota =
+  | "PENDIENTE"
+  | "ABONO_PARCIAL"
+  | "PAGADA"
+  | "CON_RETRASO";
+
+/**
+ * Derives the note state from immutable balance evidence and the due date.
+ *
+ * Yellow means an open note (with or without a partial payment), green means
+ * paid, and red means an open overdue note.  The red overdue meaning wins
+ * over the yellow partial meaning so urgency is never hidden by a payment.
+ */
+export function deriveEstadoNota(input: {
+  importeOriginal: string | number;
+  saldoPendiente: string | number;
+  fechaVencimiento?: string | null;
+  hoy: string;
+}): EstadoNota {
+  const originalCents = moneyCents(input.importeOriginal);
+  const pendienteCents = Math.max(0, moneyCents(input.saldoPendiente));
+  if (pendienteCents <= 0) return "PAGADA";
+  if (
+    input.fechaVencimiento != null &&
+    input.fechaVencimiento.slice(0, 10) < input.hoy.slice(0, 10)
+  ) {
+    return "CON_RETRASO";
+  }
+  return pendienteCents < originalCents ? "ABONO_PARCIAL" : "PENDIENTE";
+}
+
 export function isCreditTerm(value: unknown): value is CreditTerm {
   return (
     typeof value === "number" &&

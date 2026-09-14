@@ -11,4 +11,5 @@ export interface ClienteEstadoCuenta {
   clienteId: number;
   movimientos: ClienteMovimiento[];
   saldoActual: string;
+  saldoAFavor: string;
 }

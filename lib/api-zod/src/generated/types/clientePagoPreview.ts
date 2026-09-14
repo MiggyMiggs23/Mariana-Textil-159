@@ -11,4 +11,6 @@ export interface ClientePagoPreview {
   monto: string;
   asignaciones: AplicacionCredito[];
   saldoAFavor: string;
+  /** Saldo a favor nuevo generado por este abono; saldoAFavor es el total resultante. */
+  saldoAFavorGenerado: string;
 }

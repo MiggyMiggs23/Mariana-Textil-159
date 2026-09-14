@@ -4,12 +4,275 @@ import {
   canLinkAdjustmentToTicket,
   creditDueDate,
   creditStatus,
+  deriveEstadoNota,
   deriveTicketCreditData,
   isCreditTerm,
   mexicoCityDate,
 } from "./clientes-aging";
-import { allocateCreditFifo } from "./credit-allocation";
+import { allocateCreditFifo, projectCreditLedger } from "./credit-allocation";
 import { createTextPdf } from "./pdf";
+import {
+  authorizedCreditPredicate,
+  collectedTicketPredicate,
+} from "./accounted-document";
+
+test("canonical note states distinguish unpaid, partial, paid, and overdue partial", () => {
+  const common = { importeOriginal: "100.00", fechaVencimiento: "2025-01-10", hoy: "2025-01-11" };
+  assert.equal(
+    deriveEstadoNota({ ...common, saldoPendiente: "100.00" }),
+    "CON_RETRASO",
+  );
+  assert.equal(
+    deriveEstadoNota({
+      ...common,
+      saldoPendiente: "50.00",
+      hoy: "2025-01-01",
+    }),
+    "ABONO_PARCIAL",
+  );
+  assert.equal(
+    deriveEstadoNota({
+      ...common,
+      saldoPendiente: "100.00",
+      fechaVencimiento: "2025-12-31",
+      hoy: "2025-01-01",
+    }),
+    "PENDIENTE",
+  );
+  assert.equal(
+    deriveEstadoNota({ ...common, saldoPendiente: "0.00" }),
+    "PAGADA",
+  );
+});
+
+test("explicit favor can target a protected new note without changing historical FIFO", () => {
+  const projection = projectCreditLedger([
+    {
+      id: 1,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-150.00",
+      createdAt: new Date(1),
+      explicitFavorApplications: [
+        { sourceId: 1, targetId: 20, amountCents: 5_000 },
+      ],
+    },
+    {
+      id: 10,
+      ticketId: 10,
+      tipo: "VENTA_CREDITO",
+      importe: "100.00",
+      createdAt: new Date(2),
+    },
+    {
+      id: 20,
+      ticketId: 20,
+      tipo: "VENTA_CREDITO",
+      importe: "50.00",
+      createdAt: new Date(3),
+      preventImplicitFavor: true,
+    },
+  ]);
+  assert.deepEqual(
+    projection.allCharges.map((charge) => [charge.movimientoId, charge.pendienteCents]),
+    [[10, 0], [20, 0]],
+  );
+  assert.equal(projection.overpaymentCents, 0);
+  assert.equal(
+    projection.allocations.some(
+      (allocation) =>
+        allocation.sourceId === 1 &&
+        allocation.targetId === 20 &&
+        allocation.appliedCents === 5_000,
+    ),
+    true,
+  );
+});
+
+test("later ordinary favor can settle a protected note", () => {
+  const projection = projectCreditLedger([
+    {
+      id: 20,
+      ticketId: 20,
+      tipo: "VENTA_CREDITO",
+      importe: "50.00",
+      createdAt: new Date(1),
+      preventImplicitFavor: true,
+    },
+    {
+      id: 30,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-50.00",
+      createdAt: new Date(2),
+    },
+  ]);
+  assert.equal(projection.balanceCents, 0);
+  assert.equal(projection.overpaymentCents, 0);
+});
+
+test("a new note with no explicit favor choice leaves prior favor available", () => {
+  const projection = projectCreditLedger([
+    {
+      id: 10,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-50.00",
+      createdAt: new Date(1),
+    },
+    {
+      id: 20,
+      ticketId: 20,
+      tipo: "VENTA_CREDITO",
+      importe: "50.00",
+      createdAt: new Date(2),
+      preventImplicitFavor: true,
+    },
+  ]);
+  assert.equal(projection.balanceCents, 5_000);
+  assert.equal(projection.overpaymentCents, 5_000);
+});
+
+test("directed payment excess remains available favor", () => {
+  const projection = projectCreditLedger([
+    {
+      id: 10,
+      ticketId: 10,
+      tipo: "VENTA_CREDITO",
+      importe: "100.00",
+      createdAt: new Date(1),
+    },
+    {
+      id: 11,
+      ticketId: 10,
+      directedMovimientoId: 10,
+      tipo: "ABONO",
+      importe: "-150.00",
+      createdAt: new Date(2),
+    },
+  ]);
+  assert.equal(projection.balanceCents, 0);
+  assert.equal(projection.overpaymentCents, 5_000);
+  assert.equal(projection.overpaymentSources[0]?.availableCents, 5_000);
+});
+
+test("favor application preserves Cobrado classification and receipt-source conservation", () => {
+  // Keep this assertion tied to the production predicate used by the period
+  // Cobrado query: credit-note authorization is accounted separately and an
+  // aplicaciones_credito row cannot alter a collected ticket.
+  assert.equal(
+    collectedTicketPredicate("f"),
+    "(f.estado='VENDIDO' AND f.documento_tipo='TICKET' AND f.cobrado=true)",
+  );
+  assert.match(
+    authorizedCreditPredicate("f"),
+    /f\.documento_tipo='NOTA' AND f\.autorizacion_estado='AUTORIZADA'/,
+  );
+
+  const movements = [
+    {
+      id: 1,
+      ticketId: null,
+      tipo: "ABONO" as const,
+      importe: "-150.00",
+      createdAt: new Date(1),
+      explicitFavorApplications: [
+        { sourceId: 1, targetId: 20, amountCents: 5_000 },
+      ],
+    },
+    {
+      id: 10,
+      ticketId: 10,
+      tipo: "VENTA_CREDITO" as const,
+      importe: "100.00",
+      createdAt: new Date(2),
+    },
+    {
+      id: 20,
+      ticketId: 20,
+      tipo: "VENTA_CREDITO" as const,
+      importe: "50.00",
+      createdAt: new Date(3),
+      preventImplicitFavor: true,
+    },
+  ];
+  const projection = projectCreditLedger(movements);
+  const receiptCents = movements
+    .filter((movement) => movement.tipo === "ABONO")
+    .reduce((sum, movement) => sum + Math.abs(Number(movement.importe) * 100), 0);
+  const sourceApplications = projection.allocations
+    .filter((allocation) => allocation.sourceId === 1)
+    .reduce((sum, allocation) => sum + allocation.appliedCents, 0);
+  const sourceFavor = projection.overpaymentSources.find(
+    (source) => source.movementId === 1,
+  )?.availableCents ?? 0;
+  assert.equal(sourceApplications + sourceFavor, receiptCents);
+  assert.equal(projection.balanceCents, 0);
+});
+
+test("resulting favor includes existing favor separately from the new receipt excess", () => {
+  const projection = projectCreditLedger([
+    {
+      id: 10,
+      ticketId: 10,
+      tipo: "VENTA_CREDITO",
+      importe: "100.00",
+      createdAt: new Date(1),
+    },
+    {
+      id: 11,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-150.00",
+      createdAt: new Date(2),
+    },
+    {
+      id: 12,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-100.00",
+      createdAt: new Date(3),
+    },
+  ]);
+  assert.deepEqual(
+    projection.overpaymentSources.map((source) => source.availableCents),
+    [5_000, 10_000],
+  );
+  assert.equal(projection.overpaymentCents, 15_000);
+});
+
+test("replayed explicit application evidence is idempotent", () => {
+  const projection = projectCreditLedger([
+    {
+      id: 1,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-50.00",
+      createdAt: new Date(1),
+      explicitFavorApplications: [
+        { sourceId: 1, targetId: 20, amountCents: 5_000 },
+        // A retry cannot consume the same source/target twice.
+        { sourceId: 1, targetId: 20, amountCents: 5_000 },
+      ],
+    },
+    {
+      id: 20,
+      ticketId: 20,
+      tipo: "VENTA_CREDITO",
+      importe: "50.00",
+      createdAt: new Date(2),
+      preventImplicitFavor: true,
+    },
+  ]);
+  assert.equal(
+    projection.allocations.filter(
+      (allocation) => allocation.sourceId === 1 && allocation.targetId === 20,
+    ).reduce((sum, allocation) => sum + allocation.appliedCents, 0),
+    5_000,
+  );
+  assert.equal(projection.balanceCents, 0);
+  assert.equal(projection.overpaymentCents, 0);
+});
 
 test("linked REVERSO cancels its own later ticket before ABONO FIFO", () => {
   const result = allocateCreditFifo(

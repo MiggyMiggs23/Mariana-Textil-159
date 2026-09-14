@@ -45,6 +45,7 @@ import type {
   AuditoriaInventarioSitio,
   AuditoriaListResult,
   AutorizacionNotaProyeccion,
+  AutorizarNotaInput,
   BajaCliente200,
   BajaClienteBody,
   BorradorSalidaResult,
@@ -13325,14 +13326,15 @@ export const getAutorizarNotaUrl = (id: number,) => {
 /**
  * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
  */
-export const autorizarNota = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+export const autorizarNota = async (id: number,
+    autorizarNotaInput?: AutorizarNotaInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
 
   return customFetch<TicketDetalle>(getAutorizarNotaUrl(id),
   {
     ...options,
-    method: 'POST'
-
-
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(autorizarNotaInput)
   }
 );}
 
@@ -13341,8 +13343,8 @@ export const autorizarNota = async (id: number, options?: Parameters<typeof cust
 
 
 export const getAutorizarNotaMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data?: BodyType<AutorizarNotaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data?: BodyType<AutorizarNotaInput>}, TContext> => {
 
 const mutationKey = ['autorizarNota'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -13354,10 +13356,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof autorizarNota>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof autorizarNota>>, {id: number;data?: BodyType<AutorizarNotaInput>}> = (props) => {
+          const {id,data} = props ?? {};
 
-          return  autorizarNota(id,requestOptions)
+          return  autorizarNota(id,data,requestOptions)
         }
 
 
@@ -13368,18 +13370,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type AutorizarNotaMutationResult = NonNullable<Awaited<ReturnType<typeof autorizarNota>>>
-
+    export type AutorizarNotaMutationBody = BodyType<AutorizarNotaInput> | undefined
     export type AutorizarNotaMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
 
     /**
  * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
  */
 export const useAutorizarNota = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data?: BodyType<AutorizarNotaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof autorizarNota>>,
         TError,
-        {id: number},
+        {id: number;data?: BodyType<AutorizarNotaInput>},
         TContext
       > => {
       return useMutation(getAutorizarNotaMutationOptions(options));

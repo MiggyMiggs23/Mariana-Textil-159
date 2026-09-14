@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { AdminAlertaCreditoEstadoNota } from './adminAlertaCreditoEstadoNota';
 
 export interface AdminAlertaCredito {
   movimientoId: number;
@@ -17,6 +18,7 @@ export interface AdminAlertaCredito {
   /** Saldo vigente de la fila después de aplicar pagos FIFO. */
   importe: string;
   fechaVencimiento: Date;
+  estadoNota: AdminAlertaCreditoEstadoNota;
   /** Días firmados contra hoy en Ciudad de México; negativo significa vencido. */
   diasRestantes: number;
 }

@@ -7,6 +7,7 @@
  */
 import type { ClienteNotaAbono } from './clienteNotaAbono';
 import type { ClienteNotaCreditoDetalleEstado } from './clienteNotaCreditoDetalleEstado';
+import type { ClienteNotaCreditoDetalleEstadoNota } from './clienteNotaCreditoDetalleEstadoNota';
 import type { TicketDetalle } from './ticketDetalle';
 
 export interface ClienteNotaCreditoDetalle {
@@ -16,6 +17,7 @@ export interface ClienteNotaCreditoDetalle {
   importeOriginal: string;
   saldoActual: string;
   estado: ClienteNotaCreditoDetalleEstado;
+  estadoNota: ClienteNotaCreditoDetalleEstadoNota;
   /** @nullable */
   fechaVencimiento: Date | null;
   /** @minimum 0 */

@@ -1,6 +1,7 @@
 import { pool } from "@workspace/db";
 import { pendingTicketPredicate } from "./accounted-document";
 import { loadCustomerCreditProjections } from "./credit-aging-read-model";
+import { deriveEstadoNota } from "./clientes-aging";
 
 const MEXICO_CITY_TIME_ZONE = "America/Mexico_City";
 /**
@@ -125,6 +126,12 @@ export async function getAdminAlertas() {
         ticketFolio: row.ticketFolio == null ? null : Number(row.ticketFolio),
         importe: money(charge.pendienteCents / 100),
         fechaVencimiento: charge.dueAt,
+         estadoNota: deriveEstadoNota({
+           importeOriginal: (charge.originalCents / 100).toFixed(2),
+           saldoPendiente: (charge.pendienteCents / 100).toFixed(2),
+           fechaVencimiento: charge.dueAt,
+           hoy: today,
+         }),
         diasRestantes: Math.floor(
           (Date.parse(`${charge.dueAt}T00:00:00Z`) -
             Date.parse(`${today}T00:00:00Z`)) / 86_400_000,

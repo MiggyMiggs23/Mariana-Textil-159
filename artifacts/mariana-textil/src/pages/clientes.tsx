@@ -140,7 +140,7 @@ export default function Clientes() {
               <Card className="overflow-hidden">
                 <div className="overflow-x-auto">
                   <Table>
-                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Contacto</TableHead><TableHead>RFC</TableHead><TableHead>Estado</TableHead>{canCredit && <><TableHead className="text-right">Saldo</TableHead><TableHead className="text-right">Disponible</TableHead></>}{user?.rol === "ADMIN" && <TableHead className="text-right">Acciones</TableHead>}</TableRow></TableHeader>
+                    <TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Contacto</TableHead><TableHead>RFC</TableHead><TableHead>Estado</TableHead>{canCredit && <><TableHead className="text-right">Saldo</TableHead><TableHead className="text-right">Disponible</TableHead></>}{canFinances && canCredit && <TableHead className="text-right">Saldo a favor</TableHead>}{user?.rol === "ADMIN" && <TableHead className="text-right">Acciones</TableHead>}</TableRow></TableHeader>
                     <TableBody>{visible.map((client) => (
                       <TableRow key={client.id} data-testid={`row-client-${client.id}`}>
                         <TableCell className="font-medium">
@@ -156,7 +156,7 @@ export default function Clientes() {
                         <TableCell><div>{client.telefono || "—"}</div><div className="text-xs text-muted-foreground">{client.correo}</div></TableCell>
                         <TableCell>{client.rfc || "—"}</TableCell>
                         <TableCell><Badge variant={client.activo ? "default" : "secondary"}>{client.activo ? "Activo" : "Inactivo"}</Badge></TableCell>
-                        {canCredit && <ClientFinancialCells id={client.id} />}
+                        {canCredit && <ClientFinancialCells id={client.id} showFavor={canFinances} />}
                         {user?.rol === "ADMIN" && (
                           <TableCell className="text-right">
                             {!client.activo && !client.esSistema && (
@@ -453,13 +453,14 @@ function AnalyticsTable({ title, rows }: { title: string; rows: string[][] }) {
   return <Card><CardHeader><CardTitle>{title}</CardTitle></CardHeader><CardContent>{rows.length ? <div className="space-y-2">{rows.map((row, index) => <div key={`${row[0]}-${index}`} className="grid grid-cols-3 gap-2 border-b py-2 text-sm"><span className="font-medium">{row[0]}</span><span className="text-right">{row[1]}</span><span className="text-right text-muted-foreground">{row[2]}</span></div>)}</div> : <p className="text-muted-foreground">Sin datos para el periodo.</p>}<p className="mt-3 text-sm text-muted-foreground">{explanations[title]}</p></CardContent></Card>;
 }
 
-function ClientFinancialCells({ id }: { id: number }) {
+function ClientFinancialCells({ id, showFavor }: { id: number; showFavor: boolean }) {
   const query = useGetClienteCredito(id, {
     query: { queryKey: getGetClienteCreditoQueryKey(id), staleTime: 30_000 },
   });
-  if (query.isLoading) return <><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell></>;
-  if (query.isError) return <><TableCell className="text-right text-muted-foreground">—</TableCell><TableCell className="text-right text-muted-foreground">—</TableCell></>;
-  return <><TableCell className="text-right font-mono" data-testid={`text-client-balance-${id}`}>{formatNumber(query.data?.saldoActual, { kind: "money" })}</TableCell><TableCell className="text-right font-mono">{formatNumber(query.data?.creditoDisponible, { kind: "money" })}</TableCell></>;
+  if (query.isLoading) return <><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell><TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell>{showFavor && <TableCell><Skeleton className="ml-auto h-4 w-16" /></TableCell>}</>;
+  if (query.isError) return <><TableCell className="text-right text-muted-foreground">—</TableCell><TableCell className="text-right text-muted-foreground">—</TableCell>{showFavor && <TableCell className="text-right text-muted-foreground">—</TableCell>}</>;
+  const saldoAFavor = (query.data as typeof query.data & { saldoAFavor?: string } | undefined)?.saldoAFavor ?? "0.00";
+  return <><TableCell className="text-right font-mono text-red-700" data-testid={`text-client-balance-${id}`}>{formatNumber(query.data?.saldoActual, { kind: "money" })}</TableCell><TableCell className="text-right font-mono">{formatNumber(query.data?.creditoDisponible, { kind: "money" })}</TableCell>{showFavor && <TableCell className="text-right font-mono text-emerald-700" data-testid={`text-client-favor-${id}`}>{formatNumber(saldoAFavor, { kind: "money" })}</TableCell>}</>;
 }
 
 function IncobrablesTab() {

@@ -13,6 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, Bell, Check, Clock, RefreshCw } from "lucide-react";
 import { formatNumber } from "@workspace/number-format";
 import { Link } from "wouter";
+import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
 
 function formatCalendarDate(value: string): string {
   const [year, month, day] = value.slice(0, 10).split("-").map(Number);
@@ -61,7 +62,7 @@ export default function Notificaciones() {
         {!data?.notificaciones.length ? <Card><CardContent className="p-6 text-muted-foreground">No hay notificaciones de crédito.</CardContent></Card> : data.notificaciones.map((item) =>
           <Card key={item.id} className={item.urgente ? "border-destructive bg-destructive/5" : item.leidaAt ? "opacity-70" : ""}>
             <CardContent className="flex flex-wrap items-center justify-between gap-4 p-4">
-              <div className="space-y-1"><p className="font-semibold">{item.urgente && <AlertTriangle className="mr-1 inline h-4 w-4 text-destructive" />}{item.clienteNombre} · Folio {item.folio}</p><p className="text-sm text-muted-foreground">{formatNumber(item.importe, { kind: "money" })} · {item.diasPlazo} días · vence {formatCalendarDate(item.fechaVencimiento)}</p><p className="text-xs text-muted-foreground">Cajero: {item.cajeroNombre} · Tienda: {item.tiendaNombre}</p></div>
+              <div className="space-y-1"><p className="font-semibold">{item.urgente && <AlertTriangle className="mr-1 inline h-4 w-4 text-destructive" />}{item.clienteNombre} · Folio {item.folio}</p><div className="flex flex-wrap items-center gap-2"><ClienteNotaEstadoBadge estadoNota={(item as typeof item & { estadoNota?: EstadoNota }).estadoNota} saldoPendiente={item.importe} id={item.id} /><span className="text-sm text-muted-foreground">{formatNumber(item.importe, { kind: "money" })} · {item.diasPlazo} días · vence {formatCalendarDate(item.fechaVencimiento)}</span></div><p className="text-xs text-muted-foreground">Cajero: {item.cajeroNombre} · Tienda: {item.tiendaNombre}</p></div>
               {!item.leidaAt ? <Button size="sm" variant={item.urgente ? "destructive" : "outline"} onClick={() => markOne.mutate({ tipo: "credito", id: item.id })}><Check className="mr-1 h-4 w-4" />Leída</Button> : <span className="text-sm text-muted-foreground">Leída</span>}
             </CardContent>
           </Card>,
@@ -75,6 +76,6 @@ export default function Notificaciones() {
   </AppLayout>;
 }
 
-function AlertList({ title, rows, accent }: { title: string; rows: Array<{ movimientoId: number; clienteNombre: string; folio: number | null; pendiente: string; fechaVencimiento: string; diasVencido: number }>; accent: string }) {
-  return <Card><CardHeader><CardTitle className={accent}><Clock className="mr-2 inline h-5 w-5" />{title}</CardTitle></CardHeader><CardContent className="space-y-2">{rows.length ? rows.map((item) => <div key={item.movimientoId} className="border-b pb-2 text-sm"><p className="font-medium">{item.clienteNombre}{item.folio ? ` · Folio ${item.folio}` : ""}</p><p className="text-muted-foreground">{formatNumber(item.pendiente, { kind: "money" })} · vence {formatCalendarDate(item.fechaVencimiento)}{item.diasVencido ? ` · ${item.diasVencido} días vencida` : ""}</p></div>) : <p className="text-sm text-muted-foreground">Sin alertas.</p>}</CardContent></Card>;
+function AlertList({ title, rows, accent }: { title: string; rows: Array<{ movimientoId: number; clienteNombre: string; folio: number | null; pendiente: string; fechaVencimiento: string; diasVencido: number; estadoNota?: EstadoNota | string | null }>; accent: string }) {
+  return <Card><CardHeader><CardTitle className={accent}><Clock className="mr-2 inline h-5 w-5" />{title}</CardTitle></CardHeader><CardContent className="space-y-2">{rows.length ? rows.map((item) => <div key={item.movimientoId} className="border-b pb-2 text-sm"><p className="font-medium">{item.clienteNombre}{item.folio ? ` · Folio ${item.folio}` : ""}</p><div className="flex flex-wrap items-center gap-2"><ClienteNotaEstadoBadge estadoNota={item.estadoNota} saldoPendiente={item.pendiente} id={item.movimientoId} /><span className="text-muted-foreground">{formatNumber(item.pendiente, { kind: "money" })} · vence {formatCalendarDate(item.fechaVencimiento)}{item.diasVencido ? ` · ${item.diasVencido} días vencida` : ""}</span></div></div>) : <p className="text-sm text-muted-foreground">Sin alertas.</p>}</CardContent></Card>;
 }

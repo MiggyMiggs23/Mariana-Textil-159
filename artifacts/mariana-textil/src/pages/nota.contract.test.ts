@@ -12,10 +12,10 @@ test("Block 4 functionality in ticket detail", async () => {
   assert.match(ticketDetail, /<ClienteNotaCredito/);
 
   // - Show derived state, balance, vencimiento, días vencidos
-  assert.match(notaCredito, /nota\.estado === "PAGADA"/);
-  assert.match(notaCredito, /nota\.estado === "PARCIAL"/);
-  assert.match(notaCredito, /nota\.estado === "PENDIENTE"/);
-  assert.match(notaCredito, /nota\.saldoActual/);
+  assert.match(notaCredito, /estadoNota === "PAGADA"/);
+  assert.match(notaCredito, /estadoNota === "CON_RETRASO"/);
+  assert.match(notaCredito, /estadoNota === "PENDIENTE"/);
+  assert.match(notaCredito, /saldoPendiente/);
   assert.match(notaCredito, /nota\.diasVencidos/);
   assert.match(notaCredito, /nota\.fechaVencimiento/);
 

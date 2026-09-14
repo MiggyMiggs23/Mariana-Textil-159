@@ -114,7 +114,8 @@ describe("Cuentas Destino Contract", () => {
     );
 
     assert.match(summary, /De ventas del periodo/);
-    assert.match(summary, /De notas anteriores/);
+    assert.match(summary, /Abonos a notas/);
+    assert.doesNotMatch(summary, /De notas anteriores/);
     assert.match(summary, /A cuenta, sin aplicar/);
     assert.match(detail, /movement\.documentoTipo === "MOVIMIENTO_CREDITO"/);
     assert.match(

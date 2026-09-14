@@ -700,3 +700,17 @@ mtime_ms = 1789335955374
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c0b772b7-f65e-4513-81c1-5c95af95700e/facc7c12-92b0-4907-9315-d8a7ac869907"
 storage_version_token = "1789336481483242"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "rjBgukEUFNfSLmkaQUFb0"
+uri = "file://reports/credito-saldo-favor/verificacion.md"
+type = "text"
+title = "Verificación — trabajo incompleto"
+description = "Resultado de los diez puntos, fallos de compilación y pruebas, diagnóstico pendiente y problemas financieros encontrados. No aprobado para entrega."
+logical_id = "946ca70e-0fb6-4ad2-a4fe-b758736624fb"
+content_hash = "sha256:8570f8ce58842377095c172a10af013913e5dc8c2a87a61bcb58a7f813911cc6"
+size = 7229
+mtime_ms = 1789408142463
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/946ca70e-0fb6-4ad2-a4fe-b758736624fb/0de47d47-e064-4003-8721-b4e97c2facce"
+storage_version_token = "1789408207178632"
+content_type = "text/markdown"

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { TicketCreditoDiasPlazo } from './ticketCreditoDiasPlazo';
+import type { TicketCreditoEstadoNota } from './ticketCreditoEstadoNota';
 
 /**
  * Datos persistidos y saldo de ledger de la porción a crédito del ticket.
@@ -19,6 +20,8 @@ export interface TicketCredito {
   fechaVencimiento: Date | null;
   /** Saldo FIFO actual de la porción a crédito de esta venta */
   saldoPendiente: string;
+  /** @nullable */
+  estadoNota: TicketCreditoEstadoNota;
   /** @nullable */
   telefonoCliente: string | null;
   /** @nullable */

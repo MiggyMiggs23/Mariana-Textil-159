@@ -34,6 +34,21 @@ export type CreditLedgerMovement = {
   folio?: number | null;
   diasPlazo?: number | null;
   notas?: string | null;
+  /**
+   * New credit-note charges opt out of implicit FIFO use by favor that
+   * predates the note. Later receipts still settle the note normally.
+   */
+  preventImplicitFavor?: boolean;
+  /**
+   * Append-only application evidence for a new note.  These rows are loaded
+   * from aplicaciones_credito and are applied before normal FIFO.
+   */
+  explicitFavorApplications?: CreditFavorApplication[];
+};
+export type CreditFavorApplication = {
+  sourceId: number;
+  targetId: number;
+  amountCents: number;
 };
 export type CreditLedgerCharge = {
   movimientoId: number;
@@ -118,6 +133,11 @@ export function projectCreditLedger(movements: CreditLedgerMovement[]): {
   allCharges: CreditLedgerCharge[];
   allocations: CreditAllocation[];
   overpaymentCents: number;
+  overpaymentSources: Array<{
+    movementId: number;
+    availableCents: number;
+    tipo: CreditLedgerMovement["tipo"];
+  }>;
   balanceCents: number;
 } {
   const ordered = [...movements].sort((a, b) =>
@@ -127,7 +147,7 @@ export function projectCreditLedger(movements: CreditLedgerMovement[]): {
     m.tipo === "REVERSO" && m.movimientoOrigenId != null && cents(m.importe) > 0,
   ).map((m) => m.movimientoOrigenId!));
   const ticketReductions = new Map<number, number>();
-  const chargeReductions = new Map<number, number>();
+  const directedPayments: CreditLedgerMovement[] = [];
   for (const movement of ordered) {
     const amount = cents(movement.importe);
     const isLinkedReversal =
@@ -145,34 +165,145 @@ export function projectCreditLedger(movements: CreditLedgerMovement[]): {
         (ticketReductions.get(movement.ticketId!) ?? 0) - amount,
       );
     }
-    if (isDirectedPayment) {
-      chargeReductions.set(
-        movement.directedMovimientoId!,
-        (chargeReductions.get(movement.directedMovimientoId!) ?? 0) - amount,
-      );
-    }
+    if (isDirectedPayment) directedPayments.push(movement);
   }
-  const sources = ordered.flatMap((movement) => {
+  const sourceMovements = ordered.filter((movement) => {
     const amount = cents(movement.importe);
     return (movement.tipo === "ABONO" &&
-      movement.directedMovimientoId == null &&
       !reversedAbonos.has(movement.id)) ||
-      (movement.tipo === "AJUSTE" && amount < 0)
-      ? [{ id: movement.id, availableCents: Math.max(0, -amount) }] : [];
+      (movement.tipo === "AJUSTE" && amount < 0);
   });
+  const baseTargetBalances = new Map<number, number>();
   const chargeMovements = ordered.filter((movement) =>
     movement.tipo === "VENTA_CREDITO" || (movement.tipo === "AJUSTE" && cents(movement.importe) > 0));
-  const allocation = allocateCreditFifo(sources, chargeMovements.map((movement) => ({
-    id: movement.id,
-    balanceCents: Math.max(0, cents(movement.importe)),
-    createdAt: movement.createdAt,
-    linkedReductionCents:
-      (movement.tipo === "VENTA_CREDITO" && movement.ticketId != null
-        ? ticketReductions.get(movement.ticketId) ?? 0
-        : 0) +
-      (chargeReductions.get(movement.id) ?? 0),
-  })));
-  const balances = new Map(allocation.balances.map((item) => [item.targetId, item.balanceAfterCents]));
+  for (const movement of chargeMovements) {
+    baseTargetBalances.set(
+      movement.id,
+      Math.max(
+        0,
+        Math.max(0, cents(movement.importe)) -
+          (movement.tipo === "VENTA_CREDITO" && movement.ticketId != null
+            ? ticketReductions.get(movement.ticketId) ?? 0
+            : 0),
+      ),
+    );
+  }
+  const directedReservedBySource = new Map<number, number>();
+  for (const payment of directedPayments) {
+    const targetId = payment.directedMovimientoId!;
+    const targetBalance = baseTargetBalances.get(targetId) ?? 0;
+    const appliedCents = Math.min(
+      targetBalance,
+      Math.max(0, -cents(payment.importe)),
+    );
+    if (appliedCents <= 0) continue;
+    baseTargetBalances.set(targetId, targetBalance - appliedCents);
+    directedReservedBySource.set(payment.id, appliedCents);
+  }
+
+  // Project each receipt in ledger order.  This preserves the historical
+  // FIFO interpretation while making explicit applications residual-aware:
+  // ordinary older debt consumes a receipt first, and only its residual can
+  // be explicitly directed to a later note.  A marked note is protected only
+  // from receipts that predate it; later receipts remain ordinary FIFO.
+  const balances = new Map(
+    chargeMovements.map((movement) => [
+      movement.id,
+      baseTargetBalances.get(movement.id) ?? 0,
+    ]),
+  );
+  const explicitAllocations: CreditAllocation[] = [];
+  const allocations: CreditAllocation[] = [];
+  const overpaymentSources = new Map<number, number>();
+  const sourceIds = new Set(sourceMovements.map((movement) => movement.id));
+  const targetById = new Map(chargeMovements.map((movement) => [movement.id, movement]));
+  const movementPrecedes = (
+    left: CreditLedgerMovement,
+    right: CreditLedgerMovement,
+  ) =>
+    left.createdAt.getTime() < right.createdAt.getTime() ||
+    (left.createdAt.getTime() === right.createdAt.getTime() && left.id < right.id);
+  const canImplicitlyApply = (
+    source: CreditLedgerMovement,
+    target: CreditLedgerMovement,
+  ) =>
+    // Unmarked historical charges preserve the old global FIFO projection.
+    !target.preventImplicitFavor || movementPrecedes(target, source);
+
+  for (const source of sourceMovements) {
+    let remainingCents = Math.max(
+      0,
+      Math.max(0, -cents(source.importe)) -
+        (directedReservedBySource.get(source.id) ?? 0),
+    );
+    const applyNormal = (
+      targetPredicate: (target: CreditLedgerMovement) => boolean,
+    ) => {
+      for (const target of chargeMovements) {
+        if (remainingCents <= 0) break;
+        if (!targetPredicate(target) || !canImplicitlyApply(source, target)) {
+          continue;
+        }
+        const balanceBeforeCents = balances.get(target.id) ?? 0;
+        if (balanceBeforeCents <= 0) continue;
+        const appliedCents = Math.min(remainingCents, balanceBeforeCents);
+        balances.set(target.id, balanceBeforeCents - appliedCents);
+        remainingCents -= appliedCents;
+        allocations.push({
+          sourceId: source.id,
+          targetId: target.id,
+          appliedCents,
+          balanceBeforeCents,
+          balanceAfterCents: balanceBeforeCents - appliedCents,
+        });
+      }
+    };
+
+    const applications =
+      source.tipo === "ABONO" ? source.explicitFavorApplications ?? [] : [];
+    for (const application of applications) {
+      if (
+        application.sourceId !== source.id ||
+        !sourceIds.has(source.id) ||
+        !Number.isFinite(application.amountCents) ||
+        application.amountCents <= 0
+      ) {
+        continue;
+      }
+      const target = targetById.get(application.targetId);
+      if (!target) continue;
+      // Before targeting this note, settle all older implicitly eligible
+      // charges. This prevents explicit evidence from reopening an older note.
+      applyNormal((candidate) =>
+        candidate.id !== target.id && movementPrecedes(candidate, target),
+      );
+      if (remainingCents <= 0) break;
+      const balanceBeforeCents = balances.get(target.id) ?? 0;
+      const appliedCents = Math.min(
+        remainingCents,
+        balanceBeforeCents,
+        application.amountCents,
+      );
+      if (appliedCents <= 0) continue;
+      balances.set(target.id, balanceBeforeCents - appliedCents);
+      remainingCents -= appliedCents;
+      explicitAllocations.push({
+        sourceId: source.id,
+        targetId: target.id,
+        appliedCents,
+        balanceBeforeCents,
+        balanceAfterCents: balanceBeforeCents - appliedCents,
+      });
+    }
+    // Any residual ordinary credit follows FIFO. Crucially, a marked note
+    // becomes eligible once the receipt itself is later than that note.
+    applyNormal(() => true);
+    overpaymentSources.set(source.id, remainingCents);
+  }
+  const overpaymentCents = [...overpaymentSources.values()].reduce(
+    (sum, amount) => sum + amount,
+    0,
+  );
   const allCharges = chargeMovements.map((movement) => ({
     movimientoId: movement.id,
     ticketId: movement.ticketId,
@@ -188,7 +319,18 @@ export function projectCreditLedger(movements: CreditLedgerMovement[]): {
   }));
   const charges = allCharges.filter((charge) => charge.pendienteCents > 0);
   const balanceCents = charges.reduce((sum, charge) => sum + charge.pendienteCents, 0);
-  return { charges, allCharges, allocations: allocation.allocations, overpaymentCents: allocation.remainingCents, balanceCents };
+  return {
+    charges,
+    allCharges,
+    allocations: [...allocations, ...explicitAllocations],
+    overpaymentCents,
+    overpaymentSources: sourceMovements.map((movement) => ({
+      movementId: movement.id,
+      availableCents: overpaymentSources.get(movement.id) ?? 0,
+      tipo: movement.tipo,
+    })),
+    balanceCents,
+  };
 }
 
 export type CuentaDestino = "CAJA_FISICA" | "CUENTA_FISCAL" | "CUENTA_NO_FISCAL";

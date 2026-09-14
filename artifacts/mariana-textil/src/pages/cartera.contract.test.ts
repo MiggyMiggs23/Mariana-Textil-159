@@ -35,7 +35,7 @@ test("Cartera functionality respects block 2 constraints", async () => {
   assert.doesNotMatch(pagoDialog, /ticketId:/);
 
   // 7. Filtering for VENTA_CREDITO with pending balance
-  assert.match(cobros, /m\.tipo === "VENTA_CREDITO" && m\.estado !== "PAGADA"/);
+  assert.match(cobros, /m\.tipo === "VENTA_CREDITO" && .*estadoNota.* !== "PAGADA"/);
 
   // 8. Checking for specific implementation details added
   // Parse date properly to avoid YYYY-MM-DD UTC shift
@@ -87,7 +87,7 @@ test("Block 3 functionality in payment dialog", async () => {
 
   // - Mostrar saldo a favor si sobra.
   assert.match(pagoDialog, /saldoAFavor/);
-  assert.match(pagoDialog, /Saldo a Favor Generado/);
+  assert.match(pagoDialog, /Saldo a favor resultante/);
 
   // - Al confirmar, usar reparto real devuelto por create; refrescar cuenta y conservar una confirmación visible del resultado real
   assert.match(pagoDialog, /setRealResult\(data\)/);

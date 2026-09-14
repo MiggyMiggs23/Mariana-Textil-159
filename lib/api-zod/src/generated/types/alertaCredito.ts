@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AlertaCreditoEstado } from './alertaCreditoEstado';
+import type { AlertaCreditoEstadoNota } from './alertaCreditoEstadoNota';
 
 export interface AlertaCredito {
   movimientoId: number;
@@ -19,4 +20,5 @@ export interface AlertaCredito {
   fechaVencimiento: Date;
   diasVencido: number;
   estado: AlertaCreditoEstado;
+  estadoNota: AlertaCreditoEstadoNota;
 }

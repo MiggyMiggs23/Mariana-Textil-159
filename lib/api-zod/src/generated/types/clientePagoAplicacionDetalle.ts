@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ClientePagoAplicacionDetalleEstadoNota } from './clientePagoAplicacionDetalleEstadoNota';
 import type { ClientePagoAplicacionDetalleResultado } from './clientePagoAplicacionDetalleResultado';
 
 export interface ClientePagoAplicacionDetalle {
@@ -15,4 +16,5 @@ export interface ClientePagoAplicacionDetalle {
   importeOriginal: string;
   saldoActual: string;
   resultado: ClientePagoAplicacionDetalleResultado;
+  estadoNota: ClientePagoAplicacionDetalleEstadoNota;
 }

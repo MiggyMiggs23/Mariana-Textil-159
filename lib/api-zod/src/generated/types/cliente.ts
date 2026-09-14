@@ -29,6 +29,12 @@ export interface Cliente {
   /** @nullable */
   contactoNombre?: string | null;
   recibeNotaSinPrecios: boolean;
+  /** @nullable */
+  limiteCredito?: string | null;
+  /** Se incluye únicamente con permiso financiero. */
+  saldoActual?: string;
+  /** Se incluye únicamente con permiso financiero. */
+  saldoAFavor?: string;
   /** 0 indica que el cliente no tiene un plazo habitual configurado. */
   diasCredito: ClienteDiasCredito;
   createdAt: Date;

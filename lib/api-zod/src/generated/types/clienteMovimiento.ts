@@ -9,6 +9,7 @@ import type { ClienteMovimientoCuentaDestino } from './clienteMovimientoCuentaDe
 import type { ClienteMovimientoDesgloseIva } from './clienteMovimientoDesgloseIva';
 import type { ClienteMovimientoDiasPlazo } from './clienteMovimientoDiasPlazo';
 import type { ClienteMovimientoEstado } from './clienteMovimientoEstado';
+import type { ClienteMovimientoEstadoNota } from './clienteMovimientoEstadoNota';
 
 export interface ClienteMovimiento {
   movimientoId?: number;
@@ -40,6 +41,11 @@ export interface ClienteMovimiento {
   fechaVencimiento?: Date | null;
   /** @nullable */
   estado?: ClienteMovimientoEstado;
+  /**
+     * Estado canónico de la nota; estado conserva la clasificación de aging histórica.
+     * @nullable
+     */
+  estadoNota?: ClienteMovimientoEstadoNota;
   sinPlazo?: boolean;
   /** @nullable */
   movimientoOrigenId?: number | null;

@@ -4592,6 +4592,9 @@ export const ListClientesResponseItem = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(listClientesResponseRecibeNotaSinPreciosDefault),
+  "limiteCredito": zod.string().nullish(),
+  "saldoActual": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
+  "saldoAFavor": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
   "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -4638,6 +4641,9 @@ export const CreateClienteResponse = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(createClienteResponseRecibeNotaSinPreciosDefault),
+  "limiteCredito": zod.string().nullish(),
+  "saldoActual": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
+  "saldoAFavor": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
   "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -4652,6 +4658,7 @@ export const GetClientesCarteraResponse = zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "saldoActual": zod.string(),
+  "saldoAFavor": zod.string(),
   "antiguedad": zod.enum(['SIN_PLAZO', 'POR_VENCER', '1_30', '31_60', '61_90', 'MAS_90']),
   "diasVencido": zod.number(),
   "sinPlazo": zod.string().optional()
@@ -4722,6 +4729,9 @@ export const GetClienteResponse = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(getClienteResponseRecibeNotaSinPreciosDefault),
+  "limiteCredito": zod.string().nullish(),
+  "saldoActual": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
+  "saldoAFavor": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
   "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -4769,6 +4779,9 @@ export const UpdateClienteResponse = zod.object({
   "esSistema": zod.boolean(),
   "contactoNombre": zod.string().nullish(),
   "recibeNotaSinPrecios": zod.boolean().default(updateClienteResponseRecibeNotaSinPreciosDefault),
+  "limiteCredito": zod.string().nullish(),
+  "saldoActual": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
+  "saldoAFavor": zod.string().optional().describe('Se incluye únicamente con permiso financiero.'),
   "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).describe('0 indica que el cliente no tiene un plazo habitual configurado.'),
   "createdAt": zod.coerce.date(),
   "updatedAt": zod.coerce.date()
@@ -4867,6 +4880,7 @@ export const GetClienteCreditoResponse = zod.object({
   "clienteId": zod.number(),
   "limiteCredito": zod.string(),
   "saldoActual": zod.string(),
+  "saldoAFavor": zod.string().describe('Saldo a favor disponible; incluye cero explícitamente.'),
   "creditoDisponible": zod.string(),
   "puedeComprarCredito": zod.boolean(),
   "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]),
@@ -4952,10 +4966,12 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
   "fechaVencimiento": zod.coerce.date().nullish(),
   "estado": zod.enum(['VIGENTE', 'POR_VENCER', 'VENCIDA', 'PAGADA', 'SIN_PLAZO']).nullish(),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullish().describe('Estado canónico de la nota; estado conserva la clasificación de aging histórica.'),
   "sinPlazo": zod.boolean().optional(),
   "movimientoOrigenId": zod.number().nullish()
 })),
-  "saldoActual": zod.string()
+  "saldoActual": zod.string(),
+  "saldoAFavor": zod.string()
 })
 
 
@@ -5102,7 +5118,8 @@ export const CreateClientePagoResponse = zod.object({
   "saldoDespues": zod.string(),
   "resultado": zod.enum(['SALDADA', 'PARCIAL'])
 })),
-  "saldoAFavor": zod.string()
+  "saldoAFavor": zod.string(),
+  "saldoAFavorGenerado": zod.string().describe('Saldo a favor nuevo generado por este abono; saldoAFavor es el total resultante.')
 })
 
 
@@ -5134,7 +5151,8 @@ export const PreviewClientePagoResponse = zod.object({
   "saldoDespues": zod.string(),
   "resultado": zod.enum(['SALDADA', 'PARCIAL'])
 })),
-  "saldoAFavor": zod.string()
+  "saldoAFavor": zod.string(),
+  "saldoAFavorGenerado": zod.string().describe('Saldo a favor nuevo generado por este abono; saldoAFavor es el total resultante.')
 })
 
 
@@ -5189,6 +5207,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
@@ -5245,6 +5264,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "importeOriginal": zod.string(),
   "saldoActual": zod.string(),
   "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'PAGADA']),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "diasVencidos": zod.number().min(getClienteNotaCreditoResponseDiasVencidosMin),
   "abonos": zod.array(zod.object({
@@ -5288,7 +5308,8 @@ export const GetClientePagoDetalleResponse = zod.object({
   "aplicado": zod.string(),
   "importeOriginal": zod.string(),
   "saldoActual": zod.string(),
-  "resultado": zod.enum(['PENDIENTE', 'PARCIAL', 'PAGADA'])
+  "resultado": zod.enum(['PENDIENTE', 'PARCIAL', 'PAGADA']),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO'])
 }))
 })
 
@@ -5330,6 +5351,7 @@ export const ReversarClientePagoResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
   "fechaVencimiento": zod.coerce.date().nullish(),
   "estado": zod.enum(['VIGENTE', 'POR_VENCER', 'VENCIDA', 'PAGADA', 'SIN_PLAZO']).nullish(),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullish().describe('Estado canónico de la nota; estado conserva la clasificación de aging histórica.'),
   "sinPlazo": zod.boolean().optional(),
   "movimientoOrigenId": zod.number().nullish()
 })
@@ -5587,6 +5609,7 @@ export const GetPosClienteCreditoDisponibleResponse = zod.object({
   "clienteId": zod.number(),
   "limiteCredito": zod.string(),
   "saldoComprometido": zod.string().describe('Saldo neto del libro mayor de crédito autorizado.'),
+  "saldoAFavor": zod.string(),
   "creditoDisponible": zod.string(),
   "puedeComprarCredito": zod.boolean()
 })
@@ -5631,6 +5654,7 @@ export const ListNotificacionesResponse = zod.object({
   "tiendaId": zod.number(),
   "tiendaNombre": zod.string(),
   "urgente": zod.boolean(),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']),
   "leidaAt": zod.coerce.date().nullable(),
   "createdAt": zod.coerce.date()
 })),
@@ -5653,7 +5677,8 @@ export const ListNotificacionesResponse = zod.object({
   "pendiente": zod.string(),
   "fechaVencimiento": zod.coerce.date(),
   "diasVencido": zod.number(),
-  "estado": zod.enum(['POR_VENCER', 'VENCIDA'])
+  "estado": zod.enum(['POR_VENCER', 'VENCIDA']),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO'])
 })),
   "vencidas": zod.array(zod.object({
   "movimientoId": zod.number(),
@@ -5664,7 +5689,8 @@ export const ListNotificacionesResponse = zod.object({
   "pendiente": zod.string(),
   "fechaVencimiento": zod.coerce.date(),
   "diasVencido": zod.number(),
-  "estado": zod.enum(['POR_VENCER', 'VENCIDA'])
+  "estado": zod.enum(['POR_VENCER', 'VENCIDA']),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO'])
 })),
   "clientesConMultiplesVencidas": zod.array(zod.object({
   "clienteId": zod.number(),
@@ -5688,6 +5714,7 @@ export const GetNotificationFeedResponse = zod.object({
   "href": zod.string(),
   "updatedAt": zod.coerce.date(),
   "siteId": zod.number().nullable(),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullish(),
   "action": zod.union([zod.object({
   "requestId": zod.number(),
   "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
@@ -5804,6 +5831,7 @@ export const CrearTicketResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
@@ -6064,6 +6092,7 @@ export const ObtenerTicketResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
@@ -6269,6 +6298,7 @@ export const CancelarTicketResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
@@ -6382,6 +6412,7 @@ export const CobrarTicketResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
@@ -6447,6 +6478,7 @@ export const ObtenerProyeccionAutorizacionNotaResponse = zod.object({
   "ticketId": zod.number(),
   "clienteNombre": zod.string(),
   "saldoActual": zod.string(),
+  "saldoAFavorDisponible": zod.string(),
   "importe": zod.string(),
   "suma": zod.string(),
   "limiteCredito": zod.string(),
@@ -6461,6 +6493,14 @@ export const ObtenerProyeccionAutorizacionNotaResponse = zod.object({
  */
 export const AutorizarNotaParams = zod.object({
   "id": zod.coerce.number()
+})
+
+export const autorizarNotaBodyAplicarSaldoAFavorDefault = `0.00`;
+export const autorizarNotaBodyAplicarSaldoAFavorRegExp = new RegExp('^\\d+(\\.\\d{1,2})?$');
+
+
+export const AutorizarNotaBody = zod.object({
+  "aplicarSaldoAFavor": zod.string().regex(autorizarNotaBodyAplicarSaldoAFavorRegExp).default(autorizarNotaBodyAplicarSaldoAFavorDefault).describe('Importe de saldo a favor que el cajero decide aplicar explícitamente.')
 })
 
 export const AutorizarNotaResponse = zod.object({
@@ -6500,6 +6540,7 @@ export const AutorizarNotaResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
@@ -7644,6 +7685,7 @@ export const GenerarVentaDesdeSalidasResponse = zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
   "fechaVencimiento": zod.coerce.date().nullable(),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
@@ -9135,6 +9177,7 @@ export const GetAdminAlertasResponse = zod.object({
   "ticketFolio": zod.number().nullable(),
   "importe": zod.string().describe('Saldo vigente de la fila después de aplicar pagos FIFO.'),
   "fechaVencimiento": zod.coerce.date(),
+  "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']),
   "diasRestantes": zod.number().describe('Días firmados contra hoy en Ciudad de México; negativo significa vencido.')
 })),
   "salidasEnTransito": zod.array(zod.object({

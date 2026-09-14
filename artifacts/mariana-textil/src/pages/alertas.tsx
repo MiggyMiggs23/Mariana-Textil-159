@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { formatNumber } from "@workspace/number-format";
 import { Link } from "wouter";
+import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
 
 function ticketTime(value: string): string {
   return new Intl.DateTimeFormat("es-MX", {
@@ -195,27 +196,23 @@ export default function Alertas() {
               ) : (
                 <div className="grid gap-3">
                   {visibleCredits.map((credito) => (
-                    <Card
-                      key={credito.movimientoId}
-                      className={`border-l-4 hover:bg-muted/30 transition-colors shadow-sm ${
-                        credito.diasRestantes < 0 ? "border-l-destructive" : "border-l-amber-500"
-                      }`}
-                    >
+                    <Card key={credito.movimientoId} className="border-l-4 border-l-amber-500 hover:bg-muted/30 transition-colors shadow-sm">
                       <CardContent className="p-4 flex items-center justify-between gap-4">
                         <div className="space-y-1.5 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="font-bold text-base truncate">{credito.nombreCliente}</span>
-                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 ${
-                              credito.diasRestantes < 0
-                                ? "text-destructive bg-destructive/10"
-                                : "text-amber-700 bg-amber-100 dark:text-amber-400 dark:bg-amber-900/30"
-                            }`}>
+                            <ClienteNotaEstadoBadge
+                              estadoNota={(credito as typeof credito & { estadoNota?: EstadoNota }).estadoNota}
+                              saldoPendiente={credito.pendiente}
+                              id={credito.movimientoId}
+                            />
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 text-muted-foreground bg-muted">
                               {dueLabel(credito.diasRestantes)}
                             </span>
                           </div>
                           <div className="flex items-center gap-4 text-xs text-muted-foreground">
                             <span className="flex items-center gap-1"><Ticket className="h-3.5 w-3.5" />
-                               {credito.ticketFolio ? `Folio ${credito.ticketFolio}` : credito.nota || "Movimiento sin folio"}
+                               {credito.ticketFolio ? `Folio ${credito.ticketFolio}` : "Movimiento sin folio"}
                             </span>
                           </div>
                           <div className="text-xs font-medium text-foreground">
@@ -223,8 +220,8 @@ export default function Alertas() {
                           </div>
                         </div>
                         <div className="flex flex-col items-end gap-2 shrink-0">
-                          <span className={`font-bold text-lg font-mono ${credito.diasRestantes < 0 ? "text-destructive" : "text-amber-700 dark:text-amber-400"}`}>
-                            {formatNumber(credito.importe, { kind: "money" })}
+                          <span className="font-bold text-lg font-mono text-red-700">
+                            {formatNumber(credito.pendiente, { kind: "money" })}
                           </span>
                           <Link href={`/clientes/${credito.clienteId}?tab=estado`} className="text-primary hover:underline text-sm font-medium flex items-center gap-1">
                             Estado de cuenta <ArrowRight className="h-3 w-3" />

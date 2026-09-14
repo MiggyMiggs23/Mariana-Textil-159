@@ -357,7 +357,7 @@ export default function CajaCuentasDestino() {
           fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"] as ListAdminCuentaDestinoMovimientosFuenteItem[],
           breakdown: [
              { label: "De ventas del periodo", amount: header.cobrado.contado, fuentes: ["POS"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
-             { label: "De notas anteriores", amount: header.cobrado.abonos, fuentes: ["ABONO"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
+             { label: "Abonos a notas", amount: header.cobrado.abonos, fuentes: ["ABONO"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
              { label: "A cuenta, sin aplicar", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
           ],
           className: "border-l-4 border-l-primary",

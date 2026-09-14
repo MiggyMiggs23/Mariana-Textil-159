@@ -494,13 +494,13 @@ Las unidades se muestran siempre como **Mts.**, **Kg.**, **Bolsas** y **Pzas.**,
 
 ## Fuente de verdad del crédito
 
-El libro de movimientos de crédito es la fuente de verdad. El estado de una nota —pendiente, parcial, pagada— se deriva de los movimientos y nunca se marca a mano. Ninguna pantalla, endpoint o tarea puede guardar ese estado como una marca independiente.
+El libro de movimientos de crédito es la fuente de verdad. El estado de una nota —Pendiente, Abono parcial, Pagada o Con retraso— se deriva del saldo y de la fecha de pago mediante la función canónica, y nunca se marca a mano. Ninguna pantalla, endpoint o tarea puede guardar ese estado como una marca independiente.
 
 ## Parte 7 — Tickets, notas y viajes
 
 El documento de venta se elige antes de vender: **TICKET** para contado y **NOTA** para crédito. Nota implica crédito siempre y el servidor lo hace cumplir en `artifacts/api-server/src/lib/pos.ts`; el crédito y su plazo se deciden en el POS y Caja únicamente autoriza. La Nota se imprime con precios o como Nota de Productos sin ningún importe, a elección del operador; el filtrado de importes se hace en el servidor. La copia interna siempre lleva precios y QR. En el ticket y en las dos variantes de nota, las líneas de rollo se agrupan por producto mostrando la cantidad de rollos, y los números de serie no se imprimen; el detalle por rollo se conserva solo en el documento dentro del sistema, en la hoja de salida y en la hoja del viaje. Los viajes registran camioneta, chofer, origen y los documentos que se llevaron; no se cierran, no confirman entrega y no rastrean ubicación. Cuando una salida pertenece a un viaje, el chofer viene del viaje y no del campo de transportista.
 
-El libro de movimientos de crédito es la fuente de verdad. El estado de una nota —pendiente, parcial, pagada— se deriva de los movimientos y nunca se marca a mano. Todo abono, de cliente o a proveedor, se aplica a la nota o compra más antigua por fecha; al saldarla, el sobrante pasa a la siguiente, y lo que sobre al final queda como saldo a favor. Clientes y proveedores usan el mismo algoritmo de reparto. Una venta a crédito imprime nota, no ticket: dos copias, la interna con QR y la del cliente sin él.
+El libro de movimientos de crédito es la fuente de verdad. Salvo la excepción autorizada de pago dirigido, un abono se reparte por antigüedad entre las deudas elegibles existentes y el sobrante queda como saldo a favor. **El saldo a favor anterior de un cliente no se aplica automáticamente al autorizar una nota nueva:** requiere elección explícita del cajero. Esta regla no cambia el reparto de pagos a proveedores ni autoriza reescribir aplicaciones históricas. La implementación de saldo a favor del 2026-09-14 está detenida en verificación por los hallazgos documentados al final de este archivo. Una venta a crédito imprime nota, no ticket: dos copias, la interna con QR y la del cliente sin él.
 
 Los reversos de abonos de cliente son siempre totales: el movimiento `REVERSO` debe referenciar el `ABONO` original y tener exactamente el mismo importe con signo contrario. La base lo hace cumplir mediante un trigger y rechaza reversos parciales. Para corregir un abono equivocado se registra su reverso completo y después se captura el abono correcto; nunca se edita el original ni se inventa un ajuste parcial, conforme a la regla de correcciones mediante movimientos inversos.
 
@@ -516,11 +516,11 @@ La caja física mezcla ventas facturadas y sin factura porque el cajón es uno s
 
 Venta y cobranza son dos preguntas distintas y no se suman en una sola identidad. **Vendido = Contado + Crédito** y solo usa las fuentes de venta `POS` y `CREDITO`. **Cobrado = Contado + Abonos + Saldos a favor** y usa `POS`, `ABONO` y `ABONO_SALDO_FAVOR`. El contado aparece en ambas porque una venta de contado es venta y entrada de dinero al mismo tiempo; en cambio, `Cobrado + Por cobrar` no equivale a Vendido.
 
-La columna `fuente` de `destinationReadModel()` separa las cuatro categorías operativas: `POS` es venta cobrada al momento, `CREDITO` es venta prometida, `ABONO` es cobro posterior aplicado y `ABONO_SALDO_FAVOR` es dinero recibido aún sin aplicar. Los reversos internos se netean dentro de la categoría de abono correspondiente. El cobro de una nota de un periodo anterior es dinero que entra, pero no una venta nueva: aparece en Cobrado como cobranza de notas anteriores; sumarlo de nuevo en Vendido lo duplicaría contra el periodo donde sí se vendió.
+La columna `fuente` de `destinationReadModel()` separa las cuatro categorías operativas: `POS` es venta cobrada al momento, `CREDITO` es venta prometida, `ABONO` es dinero aplicado a notas y `ABONO_SALDO_FAVOR` es dinero recibido aún sin aplicar. Los reversos internos se netean dentro de la categoría de abono correspondiente. **Un abono se registra en el periodo en que entra el dinero, sin importar cuándo se emitió la nota**, incluso si ambos ocurren el mismo día. La categoría se llama **Abonos a notas**. No es una venta nueva: sumarlo de nuevo en Vendido duplicaría la venta.
 
 El encabezado contiene **Vendido**, **Por cobrar (notas de crédito al día)** y **Cobrado**. Cuentas por cobrar nunca se suma con las tres cuentas reales bajo una etiqueta de ingreso. Los porcentajes de Caja física, Cuenta fiscal y Cuenta no fiscal se calculan sobre Cobrado.
 
-La matriz cruza facturación con forma de cobro, contiene solo ventas (`POS` y `CREDITO`) y cuadra con Vendido por renglón y por columna. Abonos y saldos a favor van en un renglón separado de cobranza anterior. El servidor verifica el cierre y la interfaz muestra cualquier descuadre en vez de ajustarlo u ocultarlo. Toda forma de pago sin columna propia cae en **Otras**, para que ninguna desaparezca en silencio. Ninguna cifra financiera de esta pantalla se calcula en el navegador.
+La matriz cruza facturación con forma de cobro, contiene solo ventas (`POS` y `CREDITO`) y cuadra con Vendido por renglón y por columna. Abonos y saldos a favor van en un renglón separado de cobranza, sin exigir que la nota sea de un periodo anterior. El servidor verifica el cierre y la interfaz muestra cualquier descuadre en vez de ajustarlo u ocultarlo. Toda forma de pago sin columna propia cae en **Otras**, para que ninguna desaparezca en silencio. Ninguna cifra financiera de esta pantalla se calcula en el navegador.
 
 Ninguna cifra de Cuentas Destino es un callejón sin salida: cada importe abre el mismo detalle canónico de movimientos, con sus filtros, y desde ahí el folio lleva al documento de origen. La suma del detalle debe cuadrar al centavo con la cifra que lo abrió.
 
@@ -815,3 +815,36 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 - Ninguna regla de validación se escribe contra un conteo fijo de productos: los conteos caducan en la siguiente importación y dejan la validación falsamente aprobada.
 - Toda lista de roles escrita aquí debe cotejarse contra `rolUsuarioEnum` antes de darse por completa.
 - **Limpieza del 2026-09-06:** se corrigieron rutas de Entradas y Productos, el formato A5 de Salida, la documentación de TERMINAL, los conteos caducos, CREDITO y DEVOLUCION, y las reglas vigentes de impresión, POS/Caja y Caja en Tiempo Real.
+
+## Abonos, estados y saldo a favor — implementación detenida en verificación
+
+**2026-09-14:** se implementaron el contador circular de rollos capturados en salida para venta a cliente, el rótulo **Abonos a notas**, los estados canónicos y las pantallas/API de saldo a favor. **No están aprobados para entrega:** typecheck y varias pruebas fallaron; por instrucción del propietario se reportaron sin corregirlos. El informe y las limitaciones están en `reports/credito-saldo-favor/verificacion.md`.
+
+### Diagnóstico pendiente de confirmar con el abono original
+
+- El Cobrado del tablero principal consulta tickets/pagos de caja, no los ABONO del ledger. En cambio, Cuentas Destino sí consulta ABONO con fecha de recepción, pero excluye los que tienen cuenta destino nula. Son problemas distintos y no se corrigieron en esta tanda.
+- La consulta de solo lectura de la base conectada devolvió cero ABONO; no se encontró una base de producción publicada. Por tanto, **no se identificó ni se dio por diagnosticado el abono de prueba**.
+- Estado de cuenta y cartera leen el ledger sin filtrar cuenta destino: ese filtro de Cuentas Destino no les oculta un movimiento.
+- El flujo actual de solicitud de pago dirigido ya exige destino válido para clientes. Sigue pendiente acordar el tratamiento de históricos sin cuenta. Propuesta no implementada: exigir cuenta en todos los ingresos nuevos y mostrar históricos como **Sin cuenta destino**, sin inventar una cuenta.
+
+### Estados canónicos de nota
+
+| Condición | Color | Texto |
+|---|---|---|
+| Sin abonos y dentro del plazo | Amarillo | Pendiente |
+| Con abonos parciales y dentro del plazo | Amarillo | Abono parcial |
+| Sin saldo pendiente | Verde | Pagada |
+| Con saldo pendiente y fecha de pago vencida | Rojo | Con retraso |
+
+**Con retraso gana sobre Abono parcial.** Los estados se derivan en `deriveEstadoNota`, sin columna persistida; las vistas deben presentar ese resultado, no calcularlo otra vez. En las tres condiciones impagas se muestra el **saldo pendiente actual junto al estado**, no el importe original. Amarillo significa cobro pendiente dentro del plazo, verde liquidación y rojo atraso. La vista de notificaciones aún requiere corregir el importe que acompaña al estado; no se acredita cobertura completa de todas las vistas.
+
+### Reglas de saldo a favor
+
+- Saldo deudor (rojo) y saldo a favor (verde) son cifras distintas; cero se muestra explícitamente en las superficies financieras autorizadas.
+- El exceso de un pago genera saldo a favor y debe anunciarse al usuario. Al autorizar una nota nueva se ofrece el monto disponible y su aplicación es una decisión explícita del cajero, nunca automática.
+- **El saldo a favor es dinero ya contado en Cobrado. Aplicarlo a una nota no vuelve a contarse**, ni globalmente ni al filtrar por periodo o sitio.
+- **No se edita el saldo a favor a mano:** sube al recibir dinero de más y baja al aplicarlo. Cualquier corrección exige un movimiento trazable, nunca editar el número.
+- Se añadió y ejecutó `favor application preserves Cobrado classification and receipt-source conservation` en `clientes-aging.test.ts`. **Su cobertura es parcial:** verifica conservación del reparto en memoria, no el total de la consulta real de analytics por periodo/sitio. La revisión detectó que aplicar saldo sí cambia Cobrado filtrado por sitio; el requisito aún no se cumple.
+- También quedan pendientes la coherencia entre cancelación/reaplicación y el límite de aplicaciones de la base, y habilitar la autorización cuando el saldo a favor seleccionado resuelve el exceso de límite.
+
+No se ejecutaron migraciones ni escrituras directas de datos, no se crearon usuarios/ADMIN/sesiones de prueba y no se usó `executeSql` en development. Las suites de integración abortaron por falta de una conexión de pruebas aislada; no se quitaron sus protecciones. El navegador usó exclusivamente respuestas simuladas y quedó bloqueado; no acredita operaciones financieras reales.

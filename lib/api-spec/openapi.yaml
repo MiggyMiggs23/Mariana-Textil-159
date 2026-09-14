@@ -3915,6 +3915,12 @@ paths:
       summary: Autoriza una nota y emite su cargo de crédito de forma transaccional
       parameters:
         - $ref: "#/components/parameters/TicketId"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AutorizarNotaInput"
       responses:
         "200":
           description: Nota autorizada
@@ -7347,6 +7353,7 @@ components:
           ticketFolio,
           importe,
           fechaVencimiento,
+          estadoNota,
           diasRestantes,
         ]
       properties:
@@ -7359,6 +7366,8 @@ components:
           type: string
           description: Saldo vigente de la fila después de aplicar pagos FIFO.
         fechaVencimiento: { type: string, format: date }
+        estadoNota:
+          { type: string, enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
         diasRestantes:
           type: number
           description: Días firmados contra hoy en Ciudad de México; negativo significa vencido.
@@ -8478,6 +8487,11 @@ components:
         esSistema: { type: boolean }
         contactoNombre: { type: ["string", "null"] }
         recibeNotaSinPrecios: { type: boolean, default: false }
+        limiteCredito: { type: ["string", "null"] }
+        saldoActual:
+          { type: string, description: Se incluye únicamente con permiso financiero. }
+        saldoAFavor:
+          { type: string, description: Se incluye únicamente con permiso financiero. }
         diasCredito:
           type: number
           enum: [0, 7, 15, 30, 60]
@@ -8564,11 +8578,14 @@ components:
           diasCredito,
           utilizacion,
           totalVencido,
+          saldoAFavor,
         ]
       properties:
         clienteId: { type: number }
         limiteCredito: { type: string }
         saldoActual: { type: string }
+        saldoAFavor:
+          { type: string, description: Saldo a favor disponible; incluye cero explícitamente. }
         creditoDisponible: { type: string }
         puedeComprarCredito: { type: boolean }
         diasCredito: { type: number, enum: [0, 7, 15, 30, 60] }
@@ -8583,13 +8600,14 @@ components:
     PosClienteCreditoDisponible:
       type: object
       required:
-        [clienteId, limiteCredito, saldoComprometido, creditoDisponible, puedeComprarCredito]
+        [clienteId, limiteCredito, saldoComprometido, saldoAFavor, creditoDisponible, puedeComprarCredito]
       properties:
         clienteId: { type: number }
         limiteCredito: { type: string }
         saldoComprometido:
           type: string
           description: Saldo neto del libro mayor de crédito autorizado.
+        saldoAFavor: { type: string }
         creditoDisponible: { type: string }
         puedeComprarCredito: { type: boolean }
     ClienteCreditoUpdate:
@@ -8655,11 +8673,17 @@ components:
             type: ["string", "null"],
             enum: [VIGENTE, POR_VENCER, VENCIDA, PAGADA, SIN_PLAZO],
           }
+        estadoNota:
+          {
+            type: ["string", "null"],
+            enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO],
+            description: Estado canónico de la nota; estado conserva la clasificación de aging histórica.
+          }
         sinPlazo: { type: boolean }
         movimientoOrigenId: { type: ["number", "null"] }
     ClienteEstadoCuenta:
       type: object
-      required: [clienteId, movimientos, saldoActual]
+      required: [clienteId, movimientos, saldoActual, saldoAFavor]
       properties:
         clienteId: { type: number }
         movimientos:
@@ -8667,6 +8691,7 @@ components:
           items:
             $ref: "#/components/schemas/ClienteMovimiento"
         saldoActual: { type: string }
+        saldoAFavor: { type: string }
     ClienteCompraItem:
       type: object
       properties:
@@ -8746,7 +8771,7 @@ components:
             $ref: "#/components/schemas/ClientePagoItem"
     ClientePago:
       type: object
-      required: [id, clienteId, monto, cuentaDestino, asignaciones, saldoAFavor]
+      required: [id, clienteId, monto, cuentaDestino, asignaciones, saldoAFavor, saldoAFavorGenerado]
       properties:
         id: { type: number }
         clienteId: { type: number }
@@ -8757,6 +8782,8 @@ components:
           type: array
           items: { $ref: "#/components/schemas/AplicacionCredito" }
         saldoAFavor: { type: string }
+        saldoAFavorGenerado:
+          { type: string, description: Saldo a favor nuevo generado por este abono; saldoAFavor es el total resultante. }
     AplicacionCredito:
       type: object
       required:
@@ -8781,19 +8808,29 @@ components:
         resultado: { type: string, enum: [SALDADA, PARCIAL] }
     ClientePagoPreview:
       type: object
-      required: [monto, asignaciones, saldoAFavor]
+      required: [monto, asignaciones, saldoAFavor, saldoAFavorGenerado]
       properties:
         monto: { type: string }
         asignaciones:
           type: array
           items: { $ref: "#/components/schemas/AplicacionCredito" }
         saldoAFavor: { type: string }
+        saldoAFavorGenerado:
+          { type: string, description: Saldo a favor nuevo generado por este abono; saldoAFavor es el total resultante. }
     ClientePagoPreviewInput:
       type: object
       required: [importe]
       properties:
         importe: { type: number, minimum: 0.01 }
         fechaEfectiva: { type: ["string", "null"], format: date-time }
+    AutorizarNotaInput:
+      type: object
+      properties:
+        aplicarSaldoAFavor:
+          type: string
+          pattern: '^\d+(\.\d{1,2})?$'
+          default: "0.00"
+          description: Importe de saldo a favor que el cajero decide aplicar explícitamente.
     ClienteNotaAbono:
       type: object
       required:
@@ -8832,6 +8869,7 @@ components:
           importeOriginal,
           saldoActual,
           estado,
+          estadoNota,
           fechaVencimiento,
           diasVencidos,
           abonos,
@@ -8843,6 +8881,8 @@ components:
         importeOriginal: { type: string }
         saldoActual: { type: string }
         estado: { type: string, enum: [PENDIENTE, PARCIAL, PAGADA] }
+        estadoNota:
+          { type: string, enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
         fechaVencimiento: { type: ["string", "null"], format: date }
         diasVencidos: { type: number, minimum: 0 }
         abonos:
@@ -8859,6 +8899,7 @@ components:
           importeOriginal,
           saldoActual,
           resultado,
+          estadoNota,
         ]
       properties:
         ticketId: { type: number }
@@ -8868,6 +8909,8 @@ components:
         importeOriginal: { type: string }
         saldoActual: { type: string }
         resultado: { type: string, enum: [PENDIENTE, PARCIAL, PAGADA] }
+        estadoNota:
+          { type: string, enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
     ClientePagoDetalle:
       type: object
       required:
@@ -8964,11 +9007,12 @@ components:
         totalVencido: { type: string }
     ClienteCarteraItem:
       type: object
-      required: [id, nombre, saldoActual, antiguedad, diasVencido]
+      required: [id, nombre, saldoActual, saldoAFavor, antiguedad, diasVencido]
       properties:
         id: { type: number }
         nombre: { type: string }
         saldoActual: { type: string }
+        saldoAFavor: { type: string }
         antiguedad:
           type: string
           enum: [SIN_PLAZO, POR_VENCER, "1_30", "31_60", "61_90", MAS_90]
@@ -9047,9 +9091,10 @@ components:
           cajeroId,
           cajeroNombre,
           tiendaId,
-          tiendaNombre,
-          urgente,
-          leidaAt,
+           tiendaNombre,
+           urgente,
+           estadoNota,
+           leidaAt,
           createdAt,
         ]
       properties:
@@ -9066,6 +9111,8 @@ components:
         tiendaId: { type: number }
         tiendaNombre: { type: string }
         urgente: { type: boolean }
+        estadoNota:
+          { type: string, enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
         leidaAt: { type: ["string", "null"], format: date-time }
         createdAt: { type: string, format: date-time }
     AlertaCredito:
@@ -9081,6 +9128,7 @@ components:
           fechaVencimiento,
           diasVencido,
           estado,
+          estadoNota,
         ]
       properties:
         movimientoId: { type: number }
@@ -9092,6 +9140,8 @@ components:
         fechaVencimiento: { type: string, format: date }
         diasVencido: { type: number }
         estado: { type: string, enum: [POR_VENCER, VENCIDA] }
+        estadoNota:
+          { type: string, enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
     ClienteConNotasVencidas:
       type: object
       required: [clienteId, clienteNombre, notasVencidas, saldoVencido]
@@ -9137,6 +9187,8 @@ components:
         href: { type: string }
         updatedAt: { type: string, format: date-time }
         siteId: { type: ["number", "null"] }
+        estadoNota:
+          { type: ["string", "null"], enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
         action:
           oneOf:
             - $ref: "#/components/schemas/DirectedPaymentNotificationAction"
@@ -12174,6 +12226,7 @@ components:
           diasPlazo,
           fechaVencimiento,
           saldoPendiente,
+          estadoNota,
           telefonoCliente,
           correoCliente,
           direccionCliente,
@@ -12188,6 +12241,11 @@ components:
             type: string,
             description: Saldo FIFO actual de la porción a crédito de esta venta,
             después de abonos y reversos,
+          }
+        estadoNota:
+          {
+            type: ["string", "null"],
+            enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO],
           }
         telefonoCliente: { type: ["string", "null"] }
         correoCliente: { type: ["string", "null"] }
@@ -12230,11 +12288,12 @@ components:
             $ref: "#/components/schemas/FormaPagoTicket"
     AutorizacionNotaProyeccion:
       type: object
-      required: [ticketId, clienteNombre, saldoActual, importe, suma, limiteCredito, creditoDisponibleResultante, exceso, autorizable]
+      required: [ticketId, clienteNombre, saldoActual, saldoAFavorDisponible, importe, suma, limiteCredito, creditoDisponibleResultante, exceso, autorizable]
       properties:
         ticketId: { type: number }
         clienteNombre: { type: string }
         saldoActual: { type: string }
+        saldoAFavorDisponible: { type: string }
         importe: { type: string }
         suma: { type: string }
         limiteCredito: { type: string }

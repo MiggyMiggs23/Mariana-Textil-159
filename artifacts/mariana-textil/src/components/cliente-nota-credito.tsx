@@ -10,9 +10,10 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Loader2, ArrowRightLeft, CalendarClock, Ban, CheckCircle2 } from "lucide-react";
+import { Loader2, Ban } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
 import { Input } from "@/components/ui/input";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client-react";
@@ -70,52 +71,54 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
   }
 
   if (!nota) return null;
+  const notaConEstado = nota as typeof nota & {
+    estadoNota?: EstadoNota;
+    saldoPendiente?: string;
+  };
+  const estadoNota = notaConEstado.estadoNota;
+  const saldoPendiente = notaConEstado.saldoPendiente ?? nota.saldoActual;
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className={`border-2 ${nota.estado === "PAGADA" ? "border-emerald-500/50 bg-emerald-50/30" : nota.estado === "PARCIAL" ? "border-amber-500/50 bg-amber-50/30" : "border-muted"}`}>
+        <Card className="border-2">
           <CardHeader className="py-4 pb-2">
             <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-2">
               Estado de Nota
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-black">
-              {nota.estado === "PAGADA" && <span className="text-emerald-600 flex items-center gap-2"><CheckCircle2 className="h-5 w-5" /> PAGADA</span>}
-              {nota.estado === "PARCIAL" && <span className="text-amber-600 flex items-center gap-2"><ArrowRightLeft className="h-5 w-5" /> PAGO PARCIAL</span>}
-              {nota.estado === "PENDIENTE" && <span className="text-muted-foreground flex items-center gap-2"><CalendarClock className="h-5 w-5" /> PENDIENTE</span>}
-            </div>
+            <ClienteNotaEstadoBadge estadoNota={estadoNota} saldoPendiente={saldoPendiente} id={ticketId} />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="py-4 pb-2">
             <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold flex justify-between">
-              <span>Saldo Actual</span>
-              {nota.estado !== "PENDIENTE" && <span className="text-xs text-muted-foreground/60 font-medium">De {formatNumber(nota.importeOriginal, { kind: "money" })}</span>}
+              <span>Saldo pendiente</span>
+              {estadoNota !== "PENDIENTE" && <span className="text-xs text-muted-foreground/60 font-medium">De {formatNumber(nota.importeOriginal, { kind: "money" })}</span>}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-black tabular-nums ${Number(nota.saldoActual) > 0 ? "text-sidebar" : "text-emerald-600"}`}>
-              {formatNumber(nota.saldoActual, { kind: "money" })}
+            <div className={`text-3xl font-black tabular-nums ${estadoNota === "PAGADA" ? "text-emerald-600" : "text-red-700"}`}>
+              {formatNumber(saldoPendiente, { kind: "money" })}
             </div>
           </CardContent>
         </Card>
 
-        <Card className={`${nota.diasVencidos > 0 && nota.estado !== "PAGADA" ? "border-destructive/50 bg-destructive/5" : ""}`}>
+        <Card className={`${estadoNota === "CON_RETRASO" ? "border-destructive/50 bg-destructive/5" : ""}`}>
           <CardHeader className="py-4 pb-2">
-            <CardTitle className={`text-sm uppercase tracking-wider font-bold ${nota.diasVencidos > 0 && nota.estado !== "PAGADA" ? "text-destructive" : "text-muted-foreground"}`}>
+            <CardTitle className={`text-sm uppercase tracking-wider font-bold ${estadoNota === "CON_RETRASO" ? "text-destructive" : "text-muted-foreground"}`}>
               Vencimiento
             </CardTitle>
           </CardHeader>
           <CardContent>
             {nota.fechaVencimiento ? (
               <div>
-                <div className={`text-xl font-black ${nota.diasVencidos > 0 && nota.estado !== "PAGADA" ? "text-destructive" : ""}`}>
+                <div className={`text-xl font-black ${estadoNota === "CON_RETRASO" ? "text-destructive" : ""}`}>
                   {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}
                 </div>
-                {nota.diasVencidos > 0 && nota.estado !== "PAGADA" && (
+                {estadoNota === "CON_RETRASO" && (
                   <div className="text-sm text-destructive font-bold mt-1">
                     {nota.diasVencidos} días de retraso
                   </div>
@@ -304,7 +307,12 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
                         setReversoConfirm("");
                         queryClient.invalidateQueries({ queryKey: getGetClienteNotaCreditoQueryKey(clienteId, ticketId) });
                         queryClient.invalidateQueries({ queryKey: ["cliente-account", clienteId] });
-                        // También invalidar queries de clientes si es necesario
+                         queryClient.invalidateQueries({
+                           predicate: (query) => {
+                             const key = query.queryKey[0];
+                             return typeof key === "string" && (key.startsWith("/api/clientes/") || key.startsWith("/api/tickets/"));
+                           },
+                         });
                       },
                       onError: (err) => {
                         toast({ title: "Error al reversar", description: "Ocurrió un problema.", variant: "destructive" });

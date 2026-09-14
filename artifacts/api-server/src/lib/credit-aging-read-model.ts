@@ -1,6 +1,10 @@
 import { pool } from "@workspace/db";
 import { sql } from "drizzle-orm";
-import { projectCreditLedger, type CreditLedgerMovement } from "./credit-allocation";
+import {
+  projectCreditLedger,
+  type CreditFavorApplication,
+  type CreditLedgerMovement,
+} from "./credit-allocation";
 
 export type CustomerCreditProjection = ReturnType<typeof projectCreditLedger>;
 type CreditLedgerQuery = Pick<typeof pool, "query">;
@@ -19,7 +23,32 @@ type CreditLedgerRow = {
   dias_plazo: number | null;
   notas: string | null;
   folio: number | null;
+  metadata: string | null;
+  prevent_implicit_favor: boolean;
+  explicit_favor_applications: Array<{
+    sourceId: number;
+    targetId: number;
+    amountCents: number;
+  }> | null;
 };
+
+function parseExplicitFavorApplications(
+  value: CreditLedgerRow["explicit_favor_applications"],
+): CreditFavorApplication[] {
+  if (!Array.isArray(value)) return [];
+  return value.flatMap((item) => {
+    if (item == null || typeof item !== "object") return [];
+    const sourceId = Number(item.sourceId);
+    const targetId = Number(item.targetId);
+    const amountCents = Number(item.amountCents);
+    return Number.isSafeInteger(sourceId) &&
+      Number.isSafeInteger(targetId) &&
+      Number.isSafeInteger(amountCents) &&
+      amountCents > 0
+      ? [{ sourceId, targetId, amountCents }]
+      : [];
+  });
+}
 
 function mapRows(rows: CreditLedgerRow[]): CreditLedgerMovement[] {
   return rows.map((row) => ({
@@ -37,6 +66,10 @@ function mapRows(rows: CreditLedgerRow[]): CreditLedgerMovement[] {
     diasPlazo: row.dias_plazo == null ? null : Number(row.dias_plazo),
     notas: row.notas,
     folio: row.folio == null ? null : Number(row.folio),
+    preventImplicitFavor: row.prevent_implicit_favor === true,
+    explicitFavorApplications: parseExplicitFavorApplications(
+      row.explicit_favor_applications,
+    ),
   }));
 }
 
@@ -53,7 +86,21 @@ export async function loadCustomerCreditLedger(
     `SELECT m.cliente_id,m.id,m.ticket_id,
        directed_sale.id AS directed_movimiento_id,
        m.movimiento_origen_id,m.tipo,m.importe::text,
-       m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio
+        m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,
+        COALESCE(m.metadata LIKE '%"preventImplicitFavor":true%', false)
+          AS prevent_implicit_favor,
+        COALESCE((
+          SELECT json_agg(json_build_object(
+            'sourceId', a.abono_movimiento_id,
+            'targetId', a.venta_movimiento_id,
+            'amountCents', round(a.importe * 100)
+          ))
+          FROM aplicaciones_credito a
+          JOIN movimientos_credito favor_sale
+            ON favor_sale.id = a.venta_movimiento_id
+          WHERE a.abono_movimiento_id = m.id
+            AND favor_sale.metadata LIKE '%"favorApplication":true%'
+        ), '[]'::json) AS explicit_favor_applications
      FROM movimientos_credito m
      LEFT JOIN solicitudes_pago_dirigido request
        ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id
@@ -82,10 +129,24 @@ export async function loadCustomerCreditLedgerInTransaction(
   tx: { execute(query: any): Promise<unknown> },
 ): Promise<CreditLedgerMovement[]> {
   const result = await tx.execute(sql`
-    SELECT m.cliente_id,m.id,m.ticket_id,
-      directed_sale.id AS directed_movimiento_id,
-      m.movimiento_origen_id,m.tipo,m.importe::text,
-      m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio
+     SELECT m.cliente_id,m.id,m.ticket_id,
+        directed_sale.id AS directed_movimiento_id,
+        m.movimiento_origen_id,m.tipo,m.importe::text,
+        m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,
+        COALESCE(m.metadata LIKE '%"preventImplicitFavor":true%', false)
+          AS prevent_implicit_favor,
+        COALESCE((
+          SELECT json_agg(json_build_object(
+            'sourceId', a.abono_movimiento_id,
+            'targetId', a.venta_movimiento_id,
+            'amountCents', round(a.importe * 100)
+          ))
+          FROM aplicaciones_credito a
+          JOIN movimientos_credito favor_sale
+            ON favor_sale.id = a.venta_movimiento_id
+          WHERE a.abono_movimiento_id = m.id
+            AND favor_sale.metadata LIKE '%"favorApplication":true%'
+        ), '[]'::json) AS explicit_favor_applications
     FROM movimientos_credito m
     LEFT JOIN solicitudes_pago_dirigido directed_request
       ON directed_request.tipo='CLIENTE'
@@ -122,7 +183,21 @@ export async function loadCustomerCreditProjections(
     `SELECT m.cliente_id,m.id,m.ticket_id,
        directed_sale.id AS directed_movimiento_id,
        m.movimiento_origen_id,m.tipo,m.importe::text,
-       m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio
+        m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,
+        COALESCE(m.metadata LIKE '%"preventImplicitFavor":true%', false)
+          AS prevent_implicit_favor,
+        COALESCE((
+          SELECT json_agg(json_build_object(
+            'sourceId', a.abono_movimiento_id,
+            'targetId', a.venta_movimiento_id,
+            'amountCents', round(a.importe * 100)
+          ))
+          FROM aplicaciones_credito a
+          JOIN movimientos_credito favor_sale
+            ON favor_sale.id = a.venta_movimiento_id
+          WHERE a.abono_movimiento_id = m.id
+            AND favor_sale.metadata LIKE '%"favorApplication":true%'
+        ), '[]'::json) AS explicit_favor_applications
      FROM movimientos_credito m
      LEFT JOIN solicitudes_pago_dirigido request
        ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id

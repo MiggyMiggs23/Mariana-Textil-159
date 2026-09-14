@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Link, useSearch } from "wouter";
 import {
   Table,
@@ -11,7 +11,7 @@ import {
 
 export interface ResponsiveTableRow {
   id: string | number;
-  cells: string[];
+  cells: ReactNode[];
   ticketId?: number | null;
 }
 

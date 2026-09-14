@@ -7,6 +7,7 @@
  */
 import type { DirectedPaymentNotificationAction } from './directedPaymentNotificationAction';
 import type { NotificationFamily } from './notificationFamily';
+import type { NotificationFeedEventEstadoNota } from './notificationFeedEventEstadoNota';
 import type { NotificationFeedEventKind } from './notificationFeedEventKind';
 
 export interface NotificationFeedEvent {
@@ -20,5 +21,7 @@ export interface NotificationFeedEvent {
   updatedAt: Date;
   /** @nullable */
   siteId: number | null;
+  /** @nullable */
+  estadoNota?: NotificationFeedEventEstadoNota;
   action: DirectedPaymentNotificationAction | null;
 }

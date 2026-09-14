@@ -51,6 +51,12 @@ export function ClientePagoDialog({
 
   const [previewData, setPreviewData] = useState<ClientePagoPreview | null>(null);
   const [realResult, setRealResult] = useState<ClientePago | null>(null);
+  const previewExceso = previewData?.saldoAFavor ?? "0.00";
+  const resultWithFavor = realResult as (ClientePago & {
+    saldoAFavorGenerado?: string;
+  }) | null;
+  const excedenteGenerado = resultWithFavor?.saldoAFavorGenerado ?? resultWithFavor?.saldoAFavor ?? "0.00";
+  const saldoAFavorResultante = resultWithFavor?.saldoAFavor ?? "0.00";
 
   const { toast } = useToast();
   const previewPayment = usePreviewClientePago();
@@ -355,14 +361,22 @@ export function ClientePagoDialog({
               </div>
             )}
 
-            {Number(previewData.saldoAFavor) > 0 && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 flex items-center justify-between">
-                <div>
-                  <h4 className="font-bold text-emerald-800">Saldo a Favor Generado</h4>
-                  <p className="text-xs text-emerald-600 font-medium">Este excedente quedará disponible en la cuenta del cliente.</p>
+            {Number(previewExceso) > 0 && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-3" data-testid="receipt-preview-excess">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <h4 className="font-bold text-emerald-800">Excedente recibido</h4>
+                    <p className="text-xs text-emerald-600 font-medium">La parte que no se aplicó a una nota no se pierde.</p>
+                  </div>
+                  <div className="font-black text-emerald-700 tabular-nums text-xl" data-testid="text-preview-excess">
+                    {formatNumber(previewExceso, { kind: "money" })}
+                  </div>
                 </div>
-                <div className="font-black text-emerald-700 tabular-nums text-xl">
-                  {formatNumber(previewData.saldoAFavor, { kind: "money" })}
+                <div className="flex items-center justify-between border-t border-emerald-200 pt-3 text-sm">
+                  <span className="font-semibold text-emerald-800">Saldo a favor resultante</span>
+                  <span className="font-black text-emerald-700 tabular-nums" data-testid="text-preview-resulting-favor">
+                    {formatNumber(previewExceso, { kind: "money" })}
+                  </span>
                 </div>
               </div>
             )}
@@ -374,7 +388,7 @@ export function ClientePagoDialog({
              <div className="bg-white border-2 border-emerald-500/20 rounded-xl shadow-sm p-6 text-center space-y-2">
                 <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
                   <h3 className="font-black text-xl text-sidebar">{mode === "DIRIGIDO" ? "Solicitud de pago dirigido registrada" : "Abono registrado exitosamente"}</h3>
-                <p className="text-muted-foreground text-sm font-medium">Se aplicó {formatNumber(amount, { kind: "money" })} a la cuenta del cliente.</p>
+                 <p className="text-muted-foreground text-sm font-medium">Se registró {formatNumber(amount, { kind: "money" })} en la cuenta del cliente.</p>
              </div>
 
              {realResult.asignaciones && realResult.asignaciones.length > 0 && (
@@ -394,10 +408,16 @@ export function ClientePagoDialog({
                </div>
              )}
 
-             {Number(realResult.saldoAFavor) > 0 && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 flex justify-between items-center text-sm">
-                <span className="font-bold text-emerald-800">Saldo a Favor Generado</span>
-                 <span className="font-black text-emerald-700">{formatNumber(realResult.saldoAFavor, { kind: "money" })}</span>
+              {Number(excedenteGenerado) > 0 && (
+               <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-2 text-sm" data-testid="receipt-payment-excess">
+                 <div className="flex justify-between items-center gap-3">
+                   <span className="font-bold text-emerald-800">Excedente recibido</span>
+                   <span className="font-black text-emerald-700 tabular-nums" data-testid="text-payment-excess">{formatNumber(excedenteGenerado, { kind: "money" })}</span>
+                 </div>
+                 <div className="flex justify-between items-center gap-3 border-t border-emerald-200 pt-2">
+                   <span className="font-bold text-emerald-800">Saldo a favor resultante</span>
+                   <span className="font-black text-emerald-700 tabular-nums" data-testid="text-payment-resulting-favor">{formatNumber(saldoAFavorResultante, { kind: "money" })}</span>
+                 </div>
               </div>
             )}
           </div>

@@ -84,6 +84,8 @@ import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
+import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
+import { Checkbox } from "@/components/ui/checkbox";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
@@ -178,8 +180,9 @@ function CarteraContent() {
   };
 
   const notas = cuenta?.movimientos
-    ?.filter((m) => m.tipo === "VENTA_CREDITO" && m.estado !== "PAGADA")
+    ?.filter((m) => m.tipo === "VENTA_CREDITO" && m.estadoNota !== "PAGADA")
     .sort((a, b) => new Date(a.fecha!).getTime() - new Date(b.fecha!).getTime()) || [];
+  const cuentaConSaldoAFavor = cuenta as typeof cuenta & { saldoAFavor?: string };
 
   const [paymentOpen, setPaymentOpen] = useState(!!initialImporte);
   const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; nota?: (typeof notas)[number] }>({ open: false });
@@ -246,12 +249,14 @@ function CarteraContent() {
                     {ticket.nombreCliente || `Cliente #${clienteId}`}
                   </h3>
                 </div>
-                <div className="text-left sm:text-right bg-black/10 px-5 py-3 rounded-lg border border-white/10">
-                  <div className="text-xs font-bold text-primary-foreground/70 uppercase tracking-wider mb-1">
-                    Saldo Global
-                  </div>
-                  <div className="text-3xl font-black tabular-nums">
-                    {formatNumber(cuenta.saldoActual, { kind: "money" })}
+                 <div className="grid grid-cols-2 gap-3 text-left sm:text-right">
+                   <div className="bg-red-950/20 px-4 py-3 rounded-lg border border-red-100/20">
+                     <div className="text-xs font-bold text-primary-foreground/70 uppercase tracking-wider mb-1">Saldo deudor</div>
+                     <div className="text-2xl font-black tabular-nums text-red-100">{formatNumber(cuenta.saldoActual, { kind: "money" })}</div>
+                   </div>
+                   <div className="bg-emerald-950/20 px-4 py-3 rounded-lg border border-emerald-100/20">
+                     <div className="text-xs font-bold text-primary-foreground/70 uppercase tracking-wider mb-1">Saldo a favor</div>
+                     <div className="text-2xl font-black tabular-nums text-emerald-100">{formatNumber(cuentaConSaldoAFavor?.saldoAFavor ?? "0.00", { kind: "money" })}</div>
                   </div>
                 </div>
               </div>
@@ -279,6 +284,7 @@ function CarteraContent() {
                         <tr className="border-b bg-muted/50 text-muted-foreground">
                           <th className="p-4 font-bold">Folio</th>
                           <th className="p-4 font-bold">Fecha Venta</th>
+                          <th className="p-4 font-bold">Estado</th>
                           <th className="p-4 font-bold">Vencimiento</th>
                           <th className="p-4 font-bold text-right">Importe Orig.</th>
                           <th className="p-4 font-bold text-right">Saldo Pendiente</th>
@@ -289,10 +295,9 @@ function CarteraContent() {
                         {notas.map((nota, index) => {
                           const isHighlighted = nota.ticketFolio === ticket.folio;
 
-                          const parseDate = (dString: string) =>
-                            new Date(dString.includes('T') ? dString : `${dString}T12:00:00`);
-
-                          const isVencida = nota.fechaVencimiento ? parseDate(nota.fechaVencimiento) < new Date() : false;
+                           const parseDate = (dString: string) =>
+                             new Date(dString.includes('T') ? dString : `${dString}T12:00:00`);
+                           const notaEstado = nota.estadoNota as EstadoNota | null | undefined;
 
                           return (
                             <tr
@@ -314,10 +319,12 @@ function CarteraContent() {
                                 {nota.fecha ? format(parseDate(nota.fecha), "dd/MM/yyyy") : "N/A"}
                               </td>
                               <td className="p-4">
+                                <ClienteNotaEstadoBadge estadoNota={notaEstado} saldoPendiente={nota.saldoPendiente} id={nota.movimientoId} />
+                              </td>
+                              <td className="p-4">
                                 {nota.fechaVencimiento ? (
-                                  <span className={`font-bold ${isVencida ? "text-destructive" : "text-muted-foreground"}`}>
+                                  <span className="font-bold text-muted-foreground">
                                     {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}
-                                    {isVencida && " (Vencida)"}
                                   </span>
                                 ) : "N/A"}
                               </td>
@@ -366,6 +373,12 @@ function CarteraContent() {
         onSuccess={() => {
           if (clienteId) {
             queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(clienteId) });
+            queryClient.invalidateQueries({
+              predicate: (query) => {
+                const key = query.queryKey[0];
+                return typeof key === "string" && (key.startsWith("/api/clientes/") || key.startsWith("/api/tickets/"));
+              },
+            });
           }
         }}
       />
@@ -1070,6 +1083,8 @@ function AutorizacionNotaDialog({
   onAutorizada: () => void;
 }) {
   const autorizar = useAutorizarNota();
+  const [aplicarSaldoAFavor, setAplicarSaldoAFavor] = useState(false);
+  const [montoAplicarSaldoAFavor, setMontoAplicarSaldoAFavor] = useState("0");
   const { data: projection, isLoading, error } = useObtenerProyeccionAutorizacionNota(
     ticketId || 0,
     { query: {
@@ -1077,7 +1092,21 @@ function AutorizacionNotaDialog({
       queryKey: getObtenerProyeccionAutorizacionNotaQueryKey(ticketId || 0),
     } },
   );
-  const canAuthorize = projection?.autorizable === true && !autorizar.isPending;
+  const projectionWithFavor = projection as typeof projection & { saldoAFavorDisponible?: string };
+  const saldoAFavorDisponible = projectionWithFavor?.saldoAFavorDisponible ?? "0.00";
+  const amountToApply = aplicarSaldoAFavor ? montoAplicarSaldoAFavor : "0";
+  const aplicarSaldoValido = !aplicarSaldoAFavor || (
+    Number(amountToApply) > 0 &&
+    Number(amountToApply) <= Number(saldoAFavorDisponible)
+  );
+  const canAuthorize = projection?.autorizable === true && aplicarSaldoValido && !autorizar.isPending;
+
+  useEffect(() => {
+    if (open) {
+      setAplicarSaldoAFavor(false);
+      setMontoAplicarSaldoAFavor("0");
+    }
+  }, [open, ticketId]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -1113,6 +1142,46 @@ function AutorizacionNotaDialog({
                 {formatNumber(projection.creditoDisponibleResultante, { kind: "money" })}
               </dd>
             </dl>
+            {projection && (
+              <div className="space-y-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4" data-testid="card-authorization-saldo-a-favor">
+                <div className="flex items-start gap-3">
+                  <Checkbox
+                    id="autorizar-aplicar-saldo-a-favor"
+                    checked={aplicarSaldoAFavor}
+                    onCheckedChange={(checked) => {
+                      setAplicarSaldoAFavor(checked === true);
+                      if (checked !== true) setMontoAplicarSaldoAFavor("0");
+                    }}
+                    disabled={Number(saldoAFavorDisponible) <= 0}
+                    data-testid="checkbox-apply-saldo-a-favor"
+                  />
+                  <div className="space-y-1">
+                    <Label htmlFor="autorizar-aplicar-saldo-a-favor" className="font-bold text-emerald-900">
+                      Aplicar saldo a favor a esta nota
+                    </Label>
+                    <p className="text-sm text-emerald-800">
+                      Disponible: <strong data-testid="text-authorization-saldo-a-favor">{formatNumber(saldoAFavorDisponible, { kind: "money" })}</strong>. La aplicación es opcional y no se selecciona automáticamente.
+                    </p>
+                  </div>
+                </div>
+                {aplicarSaldoAFavor && (
+                  <div className="space-y-2 pl-7">
+                    <Label htmlFor="autorizar-monto-saldo-a-favor">Monto a aplicar</Label>
+                    <Input
+                      id="autorizar-monto-saldo-a-favor"
+                      type="number"
+                      min="0.01"
+                      max={saldoAFavorDisponible}
+                      step="0.01"
+                      value={montoAplicarSaldoAFavor}
+                      onChange={(event) => setMontoAplicarSaldoAFavor(event.target.value)}
+                      data-testid="input-apply-saldo-a-favor"
+                    />
+                    {!aplicarSaldoValido && <p className="text-sm font-semibold text-destructive" role="alert">El monto debe ser mayor a cero y no superar el saldo disponible.</p>}
+                  </div>
+                )}
+              </div>
+            )}
             {!projection.autorizable && (
               <p className="rounded-md border border-destructive/30 bg-destructive/10 p-3 font-semibold text-destructive" role="alert">
                 El límite se rebasa por {formatNumber(projection.exceso, { kind: "money" })}. Un ADMIN debe subir el límite del cliente.
@@ -1125,7 +1194,7 @@ function AutorizacionNotaDialog({
           <Button
             disabled={!ticketId || !canAuthorize}
             onClick={() => ticketId && autorizar.mutate(
-              { id: ticketId },
+              { id: ticketId, data: { aplicarSaldoAFavor: amountToApply } },
               { onSuccess: onAutorizada },
             )}
           >
@@ -1545,6 +1614,16 @@ function CobrosContent() {
           queryClient.invalidateQueries({
             queryKey: getObtenerCorteCajaQueryKey(sesionId),
           });
+          queryClient.invalidateQueries({ queryKey: ["cliente-account"] });
+          queryClient.invalidateQueries({ queryKey: ["cliente-stats"] });
+          queryClient.invalidateQueries({ queryKey: ["cliente-credit"] });
+          queryClient.invalidateQueries({ queryKey: ["clientes-portfolio"] });
+          queryClient.invalidateQueries({
+            predicate: (query) => {
+              const key = query.queryKey[0];
+              return typeof key === "string" && (key.startsWith("/api/clientes/") || key.startsWith("/api/tickets/"));
+            },
+          });
         }}
       />
       <AutorizacionNotaDialog
@@ -1559,6 +1638,18 @@ function CobrosContent() {
           setSelectedTicketId(null);
           queryClient.invalidateQueries({
             queryKey: getListarTicketsCajaQueryKey({ ubicacionId: selectedLocationId }),
+          });
+          queryClient.invalidateQueries({ queryKey: getObtenerTicketQueryKey(selectedTicketId || 0) });
+          queryClient.invalidateQueries({ queryKey: ["cliente-account"] });
+          queryClient.invalidateQueries({ queryKey: ["cliente-stats"] });
+          queryClient.invalidateQueries({ queryKey: ["cliente-credit"] });
+          queryClient.invalidateQueries({ queryKey: ["clientes-portfolio"] });
+          queryClient.invalidateQueries({ queryKey: getListarTicketsQueryKey() });
+          queryClient.invalidateQueries({
+            predicate: (query) => {
+              const key = query.queryKey[0];
+              return typeof key === "string" && (key.startsWith("/api/clientes/") || key.startsWith("/api/tickets/"));
+            },
           });
         }}
       />

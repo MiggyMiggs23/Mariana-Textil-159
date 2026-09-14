@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { NotificacionCreditoDiasPlazo } from './notificacionCreditoDiasPlazo';
+import type { NotificacionCreditoEstadoNota } from './notificacionCreditoEstadoNota';
 
 export interface NotificacionCredito {
   id: number;
@@ -21,6 +22,7 @@ export interface NotificacionCredito {
   tiendaId: number;
   tiendaNombre: string;
   urgente: boolean;
+  estadoNota: NotificacionCreditoEstadoNota;
   /** @nullable */
   leidaAt: Date | null;
   createdAt: Date;

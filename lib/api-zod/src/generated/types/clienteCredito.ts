@@ -12,6 +12,8 @@ export interface ClienteCredito {
   clienteId: number;
   limiteCredito: string;
   saldoActual: string;
+  /** Saldo a favor disponible; incluye cero explícitamente. */
+  saldoAFavor: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
   diasCredito: ClienteCreditoDiasCredito;

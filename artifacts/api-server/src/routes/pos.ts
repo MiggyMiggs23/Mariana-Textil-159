@@ -3,6 +3,7 @@ import { Router, type IRouter } from "express";
 import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 import {
   AbrirSesionCajaBody,
+  AutorizarNotaBody,
   AutorizarNotaParams,
   AutorizarNotaResponse,
   AbrirSesionCajaResponse,
@@ -323,9 +324,7 @@ router.get(
       }
 
       const projection = await loadCustomerCreditProjection(clienteId);
-      const ledgerNetCents =
-        projection.balanceCents - projection.overpaymentCents;
-      const committedCents = ledgerNetCents;
+       const committedCents = projection.balanceCents;
       const limitCents = Math.round(Number(cliente.limiteCredito) * 100);
       const availableCents = Math.max(0, limitCents - committedCents);
       res.json(
@@ -333,6 +332,7 @@ router.get(
           clienteId,
           limiteCredito: (limitCents / 100).toFixed(2),
           saldoComprometido: (committedCents / 100).toFixed(2),
+           saldoAFavor: (projection.overpaymentCents / 100).toFixed(2),
           creditoDisponible: (availableCents / 100).toFixed(2),
           puedeComprarCredito: availableCents > 0,
         }),
@@ -788,16 +788,29 @@ router.post(
   async (req, res, next): Promise<void> => {
     try {
       const params = AutorizarNotaParams.parse(req.params);
-      const [ticket] = await db.select({ ubicacionId: ticketsTable.ubicacionId })
+      const body = AutorizarNotaBody.parse(req.body ?? {});
+       const [ticket] = await db.select({
+         ubicacionId: ticketsTable.ubicacionId,
+         autorizacionEstado: ticketsTable.autorizacionEstado,
+       })
         .from(ticketsTable).where(eq(ticketsTable.id, params.id)).limit(1);
       if (!ticket) { res.status(404).json({ error: "Nota no encontrada." }); return; }
       assertOperationalLocation(req, ticket.ubicacionId);
+       if (ticket.autorizacionEstado === "AUTORIZADA") {
+         res.json(
+           AutorizarNotaResponse.parse(
+             await buildTicketDetail(db, params.id, true),
+           ),
+         );
+         return;
+       }
       const [session] = await db.select({ id: sesionesCajaTable.id }).from(sesionesCajaTable)
         .where(and(eq(sesionesCajaTable.ubicacionId, ticket.ubicacionId), eq(sesionesCajaTable.estado, "ABIERTA"))).limit(1);
       if (!session) throw new PosError("Abre una sesión de caja antes de autorizar.", "OPEN_SESSION_REQUIRED", 409);
       const result = await db.transaction((tx) => autorizarNota(tx, {
         ticketId: params.id, sesionCajaId: session.id,
-        usuarioId: req.auth!.user.id, ip: getRequestIp(req),
+         usuarioId: req.auth!.user.id, ip: getRequestIp(req),
+         aplicarSaldoAFavor: body.aplicarSaldoAFavor,
       }, true));
       res.json(AutorizarNotaResponse.parse(result));
     } catch (error) {
@@ -826,7 +839,10 @@ router.get(
           .from(clientesTable).where(eq(clientesTable.id, ticket.clienteId)).limit(1),
         loadCustomerCreditProjection(ticket.clienteId),
       ]);
-      const current = projection.balanceCents - projection.overpaymentCents;
+      const current = projection.balanceCents;
+       const saldoAFavorDisponible = projection.overpaymentSources
+         .filter((source) => source.tipo === "ABONO")
+         .reduce((sum, source) => sum + source.availableCents, 0);
       const amount = Math.round(Number(ticket.total) * 100);
       const sum = current + amount;
       const limit = Math.round(Number(cliente[0]!.limiteCredito) * 100);
@@ -834,6 +850,7 @@ router.get(
       res.json(ObtenerProyeccionAutorizacionNotaResponse.parse({
         ticketId: id, clienteNombre: cliente[0]!.nombre,
         saldoActual: (current / 100).toFixed(2), importe: (amount / 100).toFixed(2),
+         saldoAFavorDisponible: (saldoAFavorDisponible / 100).toFixed(2),
         suma: (sum / 100).toFixed(2), limiteCredito: (limit / 100).toFixed(2),
         creditoDisponibleResultante: (resulting / 100).toFixed(2),
         exceso: (Math.max(0, -resulting) / 100).toFixed(2), autorizable: resulting >= 0,

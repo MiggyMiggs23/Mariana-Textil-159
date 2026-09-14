@@ -1195,6 +1195,16 @@ export interface AdminAlertaTicket {
   nombreCreador: string;
 }
 
+export type AdminAlertaCreditoEstadoNota = typeof AdminAlertaCreditoEstadoNota[keyof typeof AdminAlertaCreditoEstadoNota];
+
+
+export const AdminAlertaCreditoEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
+} as const;
+
 export interface AdminAlertaCredito {
   movimientoId: number;
   clienteId: number;
@@ -1206,6 +1216,7 @@ export interface AdminAlertaCredito {
   /** Saldo vigente de la fila después de aplicar pagos FIFO. */
   importe: string;
   fechaVencimiento: string;
+  estadoNota: AdminAlertaCreditoEstadoNota;
   /** Días firmados contra hoy en Ciudad de México; negativo significa vencido. */
   diasRestantes: number;
 }
@@ -2429,6 +2440,12 @@ export interface Cliente {
   /** @nullable */
   contactoNombre?: string | null;
   recibeNotaSinPrecios: boolean;
+  /** @nullable */
+  limiteCredito?: string | null;
+  /** Se incluye únicamente con permiso financiero. */
+  saldoActual?: string;
+  /** Se incluye únicamente con permiso financiero. */
+  saldoAFavor?: string;
   /** 0 indica que el cliente no tiene un plazo habitual configurado. */
   diasCredito: ClienteDiasCredito;
   createdAt: string;
@@ -2553,6 +2570,8 @@ export interface ClienteCredito {
   clienteId: number;
   limiteCredito: string;
   saldoActual: string;
+  /** Saldo a favor disponible; incluye cero explícitamente. */
+  saldoAFavor: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
   diasCredito: ClienteCreditoDiasCredito;
@@ -2572,6 +2591,7 @@ export interface PosClienteCreditoDisponible {
   limiteCredito: string;
   /** Saldo neto del libro mayor de crédito autorizado. */
   saldoComprometido: string;
+  saldoAFavor: string;
   creditoDisponible: string;
   puedeComprarCredito: boolean;
 }
@@ -2660,6 +2680,20 @@ export const ClienteMovimientoEstado = {
   SIN_PLAZO: 'SIN_PLAZO',
 } as const;
 
+/**
+ * Estado canónico de la nota; estado conserva la clasificación de aging histórica.
+ * @nullable
+ */
+export type ClienteMovimientoEstadoNota = typeof ClienteMovimientoEstadoNota[keyof typeof ClienteMovimientoEstadoNota] | null;
+
+
+export const ClienteMovimientoEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
+} as const;
+
 export interface ClienteMovimiento {
   movimientoId?: number;
   /** @nullable */
@@ -2690,6 +2724,11 @@ export interface ClienteMovimiento {
   fechaVencimiento?: string | null;
   /** @nullable */
   estado?: ClienteMovimientoEstado;
+  /**
+     * Estado canónico de la nota; estado conserva la clasificación de aging histórica.
+     * @nullable
+     */
+  estadoNota?: ClienteMovimientoEstadoNota;
   sinPlazo?: boolean;
   /** @nullable */
   movimientoOrigenId?: number | null;
@@ -2699,6 +2738,7 @@ export interface ClienteEstadoCuenta {
   clienteId: number;
   movimientos: ClienteMovimiento[];
   saldoActual: string;
+  saldoAFavor: string;
 }
 
 export interface ClienteCompraItem {
@@ -2831,12 +2871,16 @@ export interface ClientePago {
   cuentaDestino: ClientePagoCuentaDestino;
   asignaciones: AplicacionCredito[];
   saldoAFavor: string;
+  /** Saldo a favor nuevo generado por este abono; saldoAFavor es el total resultante. */
+  saldoAFavorGenerado: string;
 }
 
 export interface ClientePagoPreview {
   monto: string;
   asignaciones: AplicacionCredito[];
   saldoAFavor: string;
+  /** Saldo a favor nuevo generado por este abono; saldoAFavor es el total resultante. */
+  saldoAFavorGenerado: string;
 }
 
 export interface ClientePagoPreviewInput {
@@ -2844,6 +2888,14 @@ export interface ClientePagoPreviewInput {
   importe: number;
   /** @nullable */
   fechaEfectiva?: string | null;
+}
+
+export interface AutorizarNotaInput {
+  /**
+     * Importe de saldo a favor que el cajero decide aplicar explícitamente.
+     * @pattern ^\d+(\.\d{1,2})?$
+     */
+  aplicarSaldoAFavor?: string;
 }
 
 /**
@@ -2895,6 +2947,16 @@ export const ClienteNotaCreditoDetalleEstado = {
   PENDIENTE: 'PENDIENTE',
   PARCIAL: 'PARCIAL',
   PAGADA: 'PAGADA',
+} as const;
+
+export type ClienteNotaCreditoDetalleEstadoNota = typeof ClienteNotaCreditoDetalleEstadoNota[keyof typeof ClienteNotaCreditoDetalleEstadoNota];
+
+
+export const ClienteNotaCreditoDetalleEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
 } as const;
 
 export type EstadoTicket = typeof EstadoTicket[keyof typeof EstadoTicket];
@@ -2968,6 +3030,19 @@ export const TicketCreditoDiasPlazo = {
 } as const;
 
 /**
+ * @nullable
+ */
+export type TicketCreditoEstadoNota = typeof TicketCreditoEstadoNota[keyof typeof TicketCreditoEstadoNota] | null;
+
+
+export const TicketCreditoEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
+} as const;
+
+/**
  * Datos persistidos y saldo de ledger de la porción a crédito del ticket.
  */
 export interface TicketCredito {
@@ -2979,6 +3054,8 @@ export interface TicketCredito {
   fechaVencimiento: string | null;
   /** Saldo FIFO actual de la porción a crédito de esta venta */
   saldoPendiente: string;
+  /** @nullable */
+  estadoNota: TicketCreditoEstadoNota;
   /** @nullable */
   telefonoCliente: string | null;
   /** @nullable */
@@ -3134,6 +3211,7 @@ export interface ClienteNotaCreditoDetalle {
   importeOriginal: string;
   saldoActual: string;
   estado: ClienteNotaCreditoDetalleEstado;
+  estadoNota: ClienteNotaCreditoDetalleEstadoNota;
   /** @nullable */
   fechaVencimiento: string | null;
   /** @minimum 0 */
@@ -3150,6 +3228,16 @@ export const ClientePagoAplicacionDetalleResultado = {
   PAGADA: 'PAGADA',
 } as const;
 
+export type ClientePagoAplicacionDetalleEstadoNota = typeof ClientePagoAplicacionDetalleEstadoNota[keyof typeof ClientePagoAplicacionDetalleEstadoNota];
+
+
+export const ClientePagoAplicacionDetalleEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
+} as const;
+
 export interface ClientePagoAplicacionDetalle {
   ticketId: number;
   folio: number;
@@ -3158,6 +3246,7 @@ export interface ClientePagoAplicacionDetalle {
   importeOriginal: string;
   saldoActual: string;
   resultado: ClientePagoAplicacionDetalleResultado;
+  estadoNota: ClientePagoAplicacionDetalleEstadoNota;
 }
 
 /**
@@ -3303,6 +3392,7 @@ export interface ClienteCarteraItem {
   id: number;
   nombre: string;
   saldoActual: string;
+  saldoAFavor: string;
   antiguedad: ClienteCarteraItemAntiguedad;
   diasVencido: number;
   sinPlazo?: string;
@@ -3364,6 +3454,16 @@ export const NotificacionCreditoDiasPlazo = {
   NUMBER_60: 60,
 } as const;
 
+export type NotificacionCreditoEstadoNota = typeof NotificacionCreditoEstadoNota[keyof typeof NotificacionCreditoEstadoNota];
+
+
+export const NotificacionCreditoEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
+} as const;
+
 export interface NotificacionCredito {
   id: number;
   ticketId: number;
@@ -3378,6 +3478,7 @@ export interface NotificacionCredito {
   tiendaId: number;
   tiendaNombre: string;
   urgente: boolean;
+  estadoNota: NotificacionCreditoEstadoNota;
   /** @nullable */
   leidaAt: string | null;
   createdAt: string;
@@ -3389,6 +3490,16 @@ export type AlertaCreditoEstado = typeof AlertaCreditoEstado[keyof typeof Alerta
 export const AlertaCreditoEstado = {
   POR_VENCER: 'POR_VENCER',
   VENCIDA: 'VENCIDA',
+} as const;
+
+export type AlertaCreditoEstadoNota = typeof AlertaCreditoEstadoNota[keyof typeof AlertaCreditoEstadoNota];
+
+
+export const AlertaCreditoEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
 } as const;
 
 export interface AlertaCredito {
@@ -3403,6 +3514,7 @@ export interface AlertaCredito {
   fechaVencimiento: string;
   diasVencido: number;
   estado: AlertaCreditoEstado;
+  estadoNota: AlertaCreditoEstadoNota;
 }
 
 export interface ClienteConNotasVencidas {
@@ -3437,6 +3549,19 @@ export const NotificationFeedEventKind = {
   CREDIT_NOTICE: 'CREDIT_NOTICE',
 } as const;
 
+/**
+ * @nullable
+ */
+export type NotificationFeedEventEstadoNota = typeof NotificationFeedEventEstadoNota[keyof typeof NotificationFeedEventEstadoNota] | null;
+
+
+export const NotificationFeedEventEstadoNota = {
+  PENDIENTE: 'PENDIENTE',
+  ABONO_PARCIAL: 'ABONO_PARCIAL',
+  PAGADA: 'PAGADA',
+  CON_RETRASO: 'CON_RETRASO',
+} as const;
+
 export type DirectedPaymentNotificationActionTipo = typeof DirectedPaymentNotificationActionTipo[keyof typeof DirectedPaymentNotificationActionTipo];
 
 
@@ -3466,6 +3591,8 @@ export interface NotificationFeedEvent {
   updatedAt: string;
   /** @nullable */
   siteId: number | null;
+  /** @nullable */
+  estadoNota?: NotificationFeedEventEstadoNota;
   action: DirectedPaymentNotificationAction | null;
 }
 
@@ -5848,6 +5975,7 @@ export interface AutorizacionNotaProyeccion {
   ticketId: number;
   clienteNombre: string;
   saldoActual: string;
+  saldoAFavorDisponible: string;
   importe: string;
   suma: string;
   limiteCredito: string;

@@ -10,6 +10,7 @@ export interface AutorizacionNotaProyeccion {
   ticketId: number;
   clienteNombre: string;
   saldoActual: string;
+  saldoAFavorDisponible: string;
   importe: string;
   suma: string;
   limiteCredito: string;

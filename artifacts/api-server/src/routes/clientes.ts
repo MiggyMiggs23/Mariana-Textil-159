@@ -38,7 +38,11 @@ import { requireSession } from "../middlewares/auth";
 import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { createTextPdf } from "../lib/pdf";
-import { canLinkAdjustmentToTicket, creditStatus } from "../lib/clientes-aging";
+import {
+  canLinkAdjustmentToTicket,
+  creditStatus,
+  deriveEstadoNota,
+} from "../lib/clientes-aging";
 import {
   loadCustomerCreditLedger,
   loadCustomerCreditProjectionInTransaction,
@@ -94,13 +98,6 @@ function parseId(value: string | string[]): number | null {
   return Number.isInteger(id) && id > 0 ? id : null;
 }
 
-function moneyState(importeOriginal: string, saldoActual: string) {
-  const originalCents = moneyToCents(importeOriginal);
-  const balanceCents = Math.max(0, moneyToCents(saldoActual));
-  if (balanceCents === 0) return "PAGADA" as const;
-  return balanceCents < originalCents ? "PARCIAL" as const : "PENDIENTE" as const;
-}
-
 function creditDueDays(fechaVencimiento: unknown): number {
   if (fechaVencimiento == null) return 0;
   const due = dateOnly(fechaVencimiento);
@@ -129,6 +126,34 @@ function dateOnly(value: unknown): string | null {
   return typeof value === "string"
     ? value.slice(0, 10)
     : (value as Date).toISOString().slice(0, 10);
+}
+
+function todayMexicoCity(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+/** Historical alias retained for clients that still read estado/resultado. */
+function legacyNoteState(
+  importeOriginal: string,
+  saldoPendiente: string,
+  fechaVencimiento: string | null,
+): "PENDIENTE" | "PARCIAL" | "PAGADA" {
+  const canonical = deriveEstadoNota({
+    importeOriginal,
+    saldoPendiente,
+    fechaVencimiento,
+    hoy: todayMexicoCity(),
+  });
+  if (canonical === "PAGADA") return "PAGADA";
+  if (canonical === "ABONO_PARCIAL" || canonical === "CON_RETRASO") {
+    return "PARCIAL";
+  }
+  return "PENDIENTE";
 }
 
 function presentAllocations(
@@ -196,7 +221,8 @@ async function carteraReadModel() {
   const projections = await loadCustomerCreditProjections(clients.rows.map((client) => Number(client.id)));
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
   return clients.rows.map((client) => {
-    const charges = projections.get(Number(client.id))!.charges;
+    const projection = projections.get(Number(client.id))!;
+    const charges = projection.charges;
     const sum = (predicate: (due: string | null) => boolean) => charges.filter((charge) => predicate(charge.dueAt))
       .reduce((total, charge) => total + charge.pendienteCents, 0);
     const dueDays = (due: string | null) => due == null ? 0 : Math.max(0, Math.floor(
@@ -209,7 +235,8 @@ async function carteraReadModel() {
       : oldestDays <= 30 ? "1_30"
       : oldestDays <= 60 ? "31_60"
       : oldestDays <= 90 ? "61_90" : "MAS_90";
-    return { id: Number(client.id), nombre: client.nombre, saldo: centsToMoney(sum(() => true)), saldoActual: centsToMoney(sum(() => true)),
+    const saldoAFavor = centsToMoney(projection.overpaymentCents);
+    return { id: Number(client.id), nombre: client.nombre, saldo: centsToMoney(sum(() => true)), saldoActual: centsToMoney(sum(() => true)), saldoAFavor,
       porVencer: centsToMoney(sum((due) => due != null && due >= today)), sinPlazo: centsToMoney(sum((due) => due == null)),
       "1_30": centsToMoney(sum((due) => dueDays(due) >= 1 && dueDays(due) <= 30)),
       "31_60": centsToMoney(sum((due) => dueDays(due) >= 31 && dueDays(due) <= 60)),
@@ -275,12 +302,21 @@ router.get(
         return;
       }
       const projections = await loadCustomerCreditProjections(rows.map((row) => row.id));
-      const byId = new Map([...projections].map(([id, projection]) => [id, centsToMoney(projection.balanceCents)]));
+      const byId = new Map(
+        [...projections].map(([id, projection]) => [
+          id,
+          {
+            saldoActual: centsToMoney(projection.balanceCents),
+            saldoAFavor: centsToMoney(projection.overpaymentCents),
+          },
+        ]),
+      );
       res.json(
         rows.map((row) => ({
           ...presentClienteOperativo(row),
           limiteCredito: row.limiteCredito,
-          saldoActual: byId.get(row.id) ?? "0.00",
+          saldoActual: byId.get(row.id)?.saldoActual ?? "0.00",
+          saldoAFavor: byId.get(row.id)?.saldoAFavor ?? "0.00",
         })),
       );
     } catch (e) {
@@ -594,6 +630,7 @@ router.get(
       sheet.columns = [
         { header: "Cliente", key: "nombre", width: 30 },
         { header: "Saldo", key: "saldo", width: 15 },
+         { header: "Saldo a favor", key: "saldoAFavor", width: 15 },
         { header: "Vencido", key: "vencido", width: 15 },
         { header: "Primer vencimiento", key: "primerVencimiento", width: 22 },
         { header: "Sin plazo definido", key: "sinPlazo", width: 18 },
@@ -604,6 +641,7 @@ router.get(
       sheet.addRows(result.rows.map((row) => ({
         ...row,
         saldo: toExcelNumber(row.saldo),
+        saldoAFavor: toExcelNumber(row.saldoAFavor),
         vencido: toExcelNumber(row.vencido),
         sinPlazo: toExcelNumber(row.sinPlazo),
       })));
@@ -629,7 +667,7 @@ router.get(
         "Cartera de clientes",
         result.rows.map(
           (row) =>
-            `${row.nombre} | saldo ${formatNumber(row.saldo, { kind: "money" })} | vencido ${formatNumber(row.vencido, { kind: "money" })} | sin plazo definido ${formatNumber(row.sinPlazo, { kind: "money" })}`,
+            `${row.nombre} | saldo ${formatNumber(row.saldo, { kind: "money" })} | saldo a favor ${formatNumber(row.saldoAFavor, { kind: "money" })} | vencido ${formatNumber(row.vencido, { kind: "money" })} | sin plazo definido ${formatNumber(row.sinPlazo, { kind: "money" })}`,
         ),
       );
       res.type("application/pdf");
@@ -703,6 +741,7 @@ router.get(
         ...presentClienteOperativo(row),
         limiteCredito: row.limiteCredito,
         saldoActual: centsToMoney(balance.balanceCents),
+        saldoAFavor: centsToMoney(balance.overpaymentCents),
       });
     } catch (e) {
       next(e);
@@ -850,8 +889,7 @@ router.get(
       const balance = await loadCustomerCreditProjection(id);
       const limite = parseFloat(row.limiteCredito ?? "0");
       const saldo = balance.balanceCents / 100;
-      const saldoParaLimite =
-        (balance.balanceCents - balance.overpaymentCents) / 100;
+       const saldoParaLimite = balance.balanceCents / 100;
       const disponible = Math.max(0, limite - saldoParaLimite);
       const puedeComprarCredito = disponible > 0;
       const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
@@ -876,6 +914,7 @@ router.get(
         clienteId: row.id,
         limiteCredito: row.limiteCredito,
         saldoActual: saldo.toFixed(2),
+         saldoAFavor: centsToMoney(balance.overpaymentCents),
         creditoDisponible: disponible.toFixed(2),
         puedeComprarCredito,
         diasCredito: row.diasCredito,
@@ -1125,6 +1164,21 @@ router.get(
                 today,
               )
             : null,
+          estadoNota: movement.tipo === "VENTA_CREDITO"
+            ? deriveEstadoNota({
+                importeOriginal: centsToMoney(
+                  projectedCharges.get(Number(movement.movimientoId))?.originalCents ?? 0,
+                ),
+                saldoPendiente: projectedCharges.get(Number(movement.movimientoId))
+                  ?.pendienteCents == null
+                  ? "0.00"
+                  : centsToMoney(
+                      projectedCharges.get(Number(movement.movimientoId))!.pendienteCents,
+                    ),
+                fechaVencimiento: dateOnly(movement.fechaVencimiento),
+                hoy: today,
+              })
+            : null,
          fechaVencimiento:
            movement.fechaVencimiento == null
              ? null
@@ -1136,6 +1190,7 @@ router.get(
         clienteId: id,
         movimientos: [...withBalance].reverse(),
          saldoActual: centsToMoney(balance.balanceCents),
+          saldoAFavor: centsToMoney(balance.overpaymentCents),
       });
     } catch (e) {
       next(e);
@@ -1162,7 +1217,8 @@ router.get(
         return;
       }
       const [movements, projection] = await Promise.all([pool.query(
-        `SELECT created_at, tipo, importe::text, notas,
+         `SELECT id, created_at, tipo, importe::text, notas,
+            ticket_id, fecha_vencimiento,
            SUM(importe) OVER (ORDER BY created_at, id)::text AS "saldoCorridoHistorico"
          FROM movimientos_credito WHERE cliente_id=$1
          ORDER BY created_at, id`,
@@ -1175,11 +1231,26 @@ router.get(
           .replaceAll(">", "&gt;");
       const rows = movements.rows
         .map(
-          (item) =>
-            `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldoCorridoHistorico, { kind: "money" }))}</td><td>${escape(item.notas)}</td></tr>`,
+          (item) => {
+            const charge = projection.allCharges.find(
+              (candidate) => candidate.movimientoId === Number(item.id),
+            );
+            const saldoPendiente = charge && item.tipo === "VENTA_CREDITO"
+              ? centsToMoney(charge.pendienteCents)
+              : null;
+            const estadoNota = charge && item.tipo === "VENTA_CREDITO"
+              ? deriveEstadoNota({
+                  importeOriginal: centsToMoney(charge.originalCents),
+                  saldoPendiente: saldoPendiente!,
+                  fechaVencimiento: charge.dueAt,
+                  hoy: todayMexicoCity(),
+                })
+              : null;
+            return `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldoCorridoHistorico, { kind: "money" }))}</td><td>${escape(saldoPendiente)}</td><td>${escape(estadoNota)}</td><td>${escape(item.notas)}</td></tr>`;
+          },
         )
         .join("");
-      res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><p>Saldo actual proyectado: ${escape(formatNumber(centsToMoney(projection.balanceCents), { kind: "money" }))}</p><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo corrido histórico</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+      res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><p>Saldo actual proyectado: ${escape(formatNumber(centsToMoney(projection.balanceCents), { kind: "money" }))}</p><p>Saldo a favor: ${escape(formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" }))}</p><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo corrido histórico</th><th>Saldo pendiente</th><th>Estado de nota</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
     } catch (error) {
       next(error);
     }
@@ -1197,7 +1268,8 @@ router.get(
         return;
       }
       const [result, projection] = await Promise.all([pool.query(
-        `SELECT m.created_at AS fecha,m.tipo,m.importe::text AS importe,
+         `SELECT m.id,m.created_at AS fecha,m.tipo,m.importe::text AS importe,
+           m.fecha_vencimiento AS "fechaVencimiento",
           m.forma_pago AS "formaPago",m.referencia,t.folio AS folio,
           u.nombre AS usuario,SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS "saldoCorridoHistorico"
          FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
@@ -1210,6 +1282,9 @@ router.get(
         { header: "Fecha", key: "fecha", width: 22 }, { header: "Tipo", key: "tipo", width: 18 },
         { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },
         { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },
+         { header: "Saldo a favor", key: "saldoAFavor", width: 18 },
+         { header: "Saldo pendiente", key: "saldoPendiente", width: 18 },
+         { header: "Estado de nota", key: "estadoNota", width: 18 },
         { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },
         { header: "Subtotal facturado", key: "subtotalFacturado", width: 18 }, { header: "IVA facturado", key: "ivaFacturado", width: 16 },
         { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },
@@ -1218,8 +1293,25 @@ router.get(
       sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getColumn("subtotalFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getColumn("ivaFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.addRows(result.rows.map((row) => ({
+       sheet.addRows(result.rows.map((row) => {
+         const charge = projection.allCharges.find(
+           (candidate) => candidate.movimientoId === Number(row.id),
+         );
+         const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"
+           ? centsToMoney(charge.pendienteCents)
+           : null;
+         const estadoNota = charge && row.tipo === "VENTA_CREDITO"
+           ? deriveEstadoNota({
+               importeOriginal: centsToMoney(charge.originalCents),
+               saldoPendiente: saldoPendiente!,
+               fechaVencimiento: charge.dueAt,
+               hoy: todayMexicoCity(),
+             })
+           : null;
+         return {
         ...row,
+         saldoPendiente,
+         estadoNota,
         ...(row.formaPago === "FACTURADO"
           ? (() => {
               const breakdown = breakdownIvaIncluded(
@@ -1234,10 +1326,15 @@ router.get(
         folio: row.folio == null ? "" : String(row.folio),
         importe: toExcelNumber(row.importe),
         saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico),
-      })));
+         saldoPendiente: saldoPendiente == null ? null : toExcelNumber(saldoPendiente),
+       };
+       }));
       const summary = sheet.addRow({
         tipo: "SALDO ACTUAL PROYECTADO",
         saldoActualProyectado: toExcelNumber(centsToMoney(projection.balanceCents)),
+         saldoAFavor: toExcelNumber(centsToMoney(projection.overpaymentCents)),
+         saldoPendiente: toExcelNumber(centsToMoney(projection.balanceCents)),
+         estadoNota: "SALDO_DEUDOR",
       });
       summary.getCell("saldoActualProyectado").numFmt = EXCEL_NUMBER_FORMAT.money;
       res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -1261,16 +1358,32 @@ router.get(
         return;
       }
       const [result, projection] = await Promise.all([pool.query(
-        `SELECT m.created_at,m.tipo,m.importe::text,t.folio,
+         `SELECT m.id,m.created_at,m.tipo,m.importe::text,t.folio,
           SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS "saldoCorridoHistorico"
          FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
          WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
         [id],
       ), loadCustomerCreditProjection(id)]);
       const pdf = createTextPdf(
-        `Estado de cuenta - cliente ${id} - saldo actual proyectado ${formatNumber(centsToMoney(projection.balanceCents), { kind: "money" })}`,
+         `Estado de cuenta - cliente ${id} - saldo actual proyectado ${formatNumber(centsToMoney(projection.balanceCents), { kind: "money" })} - saldo a favor ${formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" })}`,
         result.rows.map((row) =>
-          `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico ${formatNumber(row.saldoCorridoHistorico, { kind: "money" })} | folio ${row.folio ?? "-"}`,
+           (() => {
+             const charge = projection.allCharges.find(
+               (candidate) => candidate.movimientoId === Number(row.id),
+             );
+             const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"
+               ? centsToMoney(charge.pendienteCents)
+               : null;
+             const estadoNota = charge && row.tipo === "VENTA_CREDITO"
+               ? deriveEstadoNota({
+                   importeOriginal: centsToMoney(charge.originalCents),
+                   saldoPendiente: saldoPendiente!,
+                   fechaVencimiento: charge.dueAt,
+                   hoy: todayMexicoCity(),
+                 })
+               : null;
+             return `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico ${formatNumber(row.saldoCorridoHistorico, { kind: "money" })} | saldo pendiente ${formatNumber(saldoPendiente, { kind: "money" })} | estado ${estadoNota ?? "-"} | folio ${row.folio ?? "-"}`;
+           })(),
         ),
       );
       res.type("application/pdf");
@@ -1579,14 +1692,26 @@ router.get(
         (charge) => charge.movimientoId === Number(movement.movimientoVentaId),
       );
       const saldoActual = centsToMoney(projectedCharge?.pendienteCents ?? 0);
+       const fechaVencimiento = dateOnly(movement.fechaVencimiento);
+       const estadoNota = deriveEstadoNota({
+         importeOriginal: movement.importeOriginal,
+         saldoPendiente: saldoActual,
+         fechaVencimiento,
+         hoy: todayMexicoCity(),
+       });
       res.json(GetClienteNotaCreditoResponse.parse({
         clienteId,
         ticket,
         movimientoVentaId: Number(movement.movimientoVentaId),
         importeOriginal: movement.importeOriginal,
         saldoActual,
-        estado: moneyState(movement.importeOriginal, saldoActual),
-        fechaVencimiento: dateOnly(movement.fechaVencimiento),
+         estado: legacyNoteState(
+           movement.importeOriginal,
+           saldoActual,
+           fechaVencimiento,
+         ),
+         estadoNota,
+         fechaVencimiento,
         diasVencidos: creditDueDays(movement.fechaVencimiento),
         abonos: abonos.rows.map((row) => ({
           ...row,
@@ -1630,7 +1755,8 @@ router.get(
       const [applications, projection] = await Promise.all([pool.query(
         `SELECT sale.ticket_id AS "ticketId",t.folio,
            sale.id AS "movimientoVentaId",a.importe::text AS aplicado,
-            sale.importe::text AS "importeOriginal"
+            sale.importe::text AS "importeOriginal",
+            sale.fecha_vencimiento AS "fechaVencimiento"
          FROM aplicaciones_credito a
          JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
          JOIN tickets t ON t.id=sale.ticket_id
@@ -1650,12 +1776,26 @@ router.get(
           const saldoActual = centsToMoney(
             projectedCharges.get(Number(row.movimientoVentaId))?.pendienteCents ?? 0,
           );
+           const charge = projectedCharges.get(Number(row.movimientoVentaId));
+           const fechaVencimiento =
+             charge?.dueAt ?? dateOnly(row.fechaVencimiento);
+           const estadoNota = deriveEstadoNota({
+             importeOriginal: row.importeOriginal,
+             saldoPendiente: saldoActual,
+             fechaVencimiento,
+             hoy: todayMexicoCity(),
+           });
           return {
           ...row, saldoActual,
           ticketId: Number(row.ticketId),
           folio: Number(row.folio),
           movimientoVentaId: Number(row.movimientoVentaId),
-          resultado: moneyState(row.importeOriginal, saldoActual),
+           resultado: legacyNoteState(
+             row.importeOriginal,
+             saldoActual,
+             fechaVencimiento,
+           ),
+           estadoNota,
         };
         }),
       }));
@@ -1758,7 +1898,8 @@ router.post(
       res.json({
         monto: centsToMoney(amountCents),
         asignaciones: presentAllocations(allocation.projection.allCharges, allocation.allocations),
-        saldoAFavor: centsToMoney(allocation.remainingCents),
+         saldoAFavor: centsToMoney(allocation.projection.overpaymentCents),
+         saldoAFavorGenerado: centsToMoney(allocation.remainingCents),
       });
     } catch (error) {
       next(error);
@@ -1872,11 +2013,17 @@ router.post(
             formaPago: body.formaPago,
             cuentaDestino: body.cuentaDestino,
             asignaciones,
-            saldoAFavor: centsToMoney(sourceRemainderCents),
+             saldoAFavor: centsToMoney(projection.overpaymentCents),
+             saldoAFavorGenerado: centsToMoney(sourceRemainderCents),
           },
           ip: getRequestIp(req),
         });
-        return { created: created!, asignaciones, saldoAFavor: centsToMoney(sourceRemainderCents) };
+         return {
+           created: created!,
+           asignaciones,
+           saldoAFavor: centsToMoney(projection.overpaymentCents),
+           saldoAFavorGenerado: centsToMoney(sourceRemainderCents),
+         };
       });
       if (!result) {
         res.status(404).json({ error: "Cliente no encontrado." });
@@ -1890,6 +2037,7 @@ router.post(
           cuentaDestino: result.created.cuentaDestino,
           asignaciones: result.asignaciones,
           saldoAFavor: result.saldoAFavor,
+           saldoAFavorGenerado: result.saldoAFavorGenerado,
         }),
       );
     } catch (e) {

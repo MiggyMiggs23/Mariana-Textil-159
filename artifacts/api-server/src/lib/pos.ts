@@ -50,6 +50,7 @@ import {
 } from "./unit-cost";
 import {
   deriveTicketCreditData,
+  deriveEstadoNota,
   creditDueDate,
   isCreditTerm,
   type CreditTerm,
@@ -406,6 +407,21 @@ export async function buildTicketDetail(
           fechaVencimiento: ticket.fechaVencimientoTicket,
         }
       : derivedCredit;
+  const estadoNota = derivedCredit.esCredito
+    ? deriveEstadoNota({
+        importeOriginal: credit.importeCredito,
+        saldoPendiente: credit.saldoPendiente,
+        fechaVencimiento:
+          credit.fechaVencimiento == null
+            ? null
+            : typeof credit.fechaVencimiento === "string"
+              ? credit.fechaVencimiento
+              : credit.fechaVencimiento.toISOString().slice(0, 10),
+        hoy: new Date().toLocaleDateString("en-CA", {
+          timeZone: "America/Mexico_City",
+        }),
+      })
+    : null;
   const [viaje] = await database.select({ id: viajesTable.id, folio: viajesTable.folio })
     .from(viajeTicketsTable).innerJoin(viajesTable, eq(viajeTicketsTable.viajeId, viajesTable.id))
     .where(eq(viajeTicketsTable.ticketId, ticketId)).limit(1);
@@ -415,6 +431,7 @@ export async function buildTicketDetail(
   return {
     ...ticket,
     ...credit,
+    estadoNota,
     viaje: viaje ?? null,
     salidas: salidas.map((s) => ({ id: s.id, folioFormateado: `${s.iniciales}-${String(s.folio).padStart(6, "0")}`, origenId: s.origenId, nombreOrigen: s.nombreOrigen, href: s.href })),
     convertidoANotaPorCobro,
@@ -1629,7 +1646,13 @@ export async function cobrarTicket(
 
 export async function autorizarNota(
   tx: Tx,
-  input: { ticketId: number; sesionCajaId: number; usuarioId: number; ip: string },
+  input: {
+    ticketId: number;
+    sesionCajaId: number;
+    usuarioId: number;
+    ip: string;
+    aplicarSaldoAFavor?: string;
+  },
   includeCosts: boolean,
 ) {
   const [ticket] = await tx.select().from(ticketsTable)
@@ -1639,7 +1662,11 @@ export async function autorizarNota(
     throw new PosError("El documento no es una nota de crédito válida.", "NOT_A_CREDIT_NOTE", 409);
   }
   if (ticket.estado !== "VENDIDO") throw new PosError("La nota está cancelada.", "NOTE_CANCELLED", 409);
-  if (ticket.autorizacionEstado === "AUTORIZADA") throw new PosError("La nota ya fue autorizada.", "ALREADY_AUTHORIZED", 409);
+  // Retrying the same request is safe: the ticket-level unique authorization
+  // evidence is the idempotency key and no second receipt is ever created.
+  if (ticket.autorizacionEstado === "AUTORIZADA") {
+    return buildTicketDetail(tx, ticket.id, includeCosts);
+  }
   const [sesion] = await tx.select().from(sesionesCajaTable)
     .where(eq(sesionesCajaTable.id, input.sesionCajaId)).for("update").limit(1);
   if (!sesion || sesion.estado !== "ABIERTA" || sesion.ubicacionId !== ticket.ubicacionId) {
@@ -1651,19 +1678,80 @@ export async function autorizarNota(
   if (!cliente?.activo || cliente.esSistema) throw new PosError("Cliente de crédito inválido.", "INVALID_CLIENT", 409);
   const ledger = await loadCustomerCreditLedgerInTransaction(ticket.clienteId, tx);
   const projection = projectCreditLedger(ledger);
-  const saldo = projection.balanceCents - projection.overpaymentCents;
+  const aplicarSaldoAFavorCents = money(input.aplicarSaldoAFavor ?? "0.00");
+  if (aplicarSaldoAFavorCents < 0) {
+    throw new PosError(
+      "El saldo a favor a aplicar no puede ser negativo.",
+      "INVALID_FAVOR_APPLICATION",
+    );
+  }
+  const favorSources = projection.overpaymentSources.filter(
+    (source) => source.tipo === "ABONO" && source.availableCents > 0,
+  );
+  const saldoAFavorDisponibleCents = favorSources.reduce(
+    (sum, source) => sum + source.availableCents,
+    0,
+  );
+  if (aplicarSaldoAFavorCents > saldoAFavorDisponibleCents) {
+    throw new PosError(
+      `El saldo a favor disponible es $${decimalMoney(saldoAFavorDisponibleCents)}.`,
+      "FAVOR_BALANCE_EXCEEDED",
+      409,
+    );
+  }
   const limite = money(cliente.limiteCredito);
   const importe = money(ticket.total);
-  if (saldo + importe > limite) {
-    const exceso = saldo + importe - limite;
+  if (aplicarSaldoAFavorCents > importe) {
+    throw new PosError(
+      "El saldo a favor no puede exceder el importe de la nota.",
+      "FAVOR_APPLICATION_EXCEEDS_NOTE",
+      409,
+    );
+  }
+  // Favor is an independent available balance. Only the explicit amount being
+  // applied to this note reduces the debtor balance for the credit-limit check.
+  const saldo = projection.balanceCents;
+  if (saldo + importe - aplicarSaldoAFavorCents > limite) {
+    const exceso = saldo + importe - aplicarSaldoAFavorCents - limite;
     throw new PosError(`El límite se rebasa por $${decimalMoney(exceso)}. Un ADMIN debe subir el límite del cliente.`, "CREDIT_LIMIT_EXCEEDED", 409);
   }
+  let favorToApply = aplicarSaldoAFavorCents;
+  const explicitFavorApplications: Array<{
+    sourceId: number;
+    targetId: number;
+    importe: string;
+  }> = [];
   const [movement] = await tx.insert(movimientosCreditoTable).values({
     clienteId: ticket.clienteId, ticketId: ticket.id, tipo: "VENTA_CREDITO",
     importe: decimalMoney(importe), usuarioId: input.usuarioId, formaPago: "CREDITO",
-    notas: `Nota ${ticket.folio}`, metadata: JSON.stringify({ origen: "AUTORIZACION_NOTA" }),
+    notas: `Nota ${ticket.folio}`,
+    metadata: JSON.stringify({
+      origen: "AUTORIZACION_NOTA",
+      preventImplicitFavor: true,
+      favorApplication: aplicarSaldoAFavorCents > 0,
+    }),
     diasPlazo: ticket.diasPlazo, fechaVencimiento: ticket.fechaVencimiento!,
   }).returning();
+  for (const source of favorSources) {
+    if (favorToApply <= 0) break;
+    const applied = Math.min(favorToApply, source.availableCents);
+    if (applied <= 0) continue;
+    explicitFavorApplications.push({
+      sourceId: source.movementId,
+      targetId: movement!.id,
+      importe: decimalMoney(applied),
+    });
+    favorToApply -= applied;
+  }
+  if (explicitFavorApplications.length > 0) {
+    await tx.insert(aplicacionesCreditoTable).values(
+      explicitFavorApplications.map((application) => ({
+        abonoMovimientoId: application.sourceId,
+        ventaMovimientoId: application.targetId,
+        importe: application.importe,
+      })),
+    );
+  }
   const now = new Date();
   await consumirRollosSalidaVenta(tx, ticket.id, input.usuarioId);
   await tx.insert(autorizacionesNotaTable).values({
@@ -1687,8 +1775,13 @@ export async function autorizarNota(
     cajeroNombre: cajero!.nombre, tiendaId: ticket.ubicacionId, tiendaNombre: tienda!.nombre,
   });
   await tx.insert(auditoriaTable).values({
-    usuarioId: input.usuarioId, accion: "AUTORIZAR_NOTA", entidad: "tickets",
-    entidadId: String(ticket.id), datosDespues: { sesionCajaId: sesion.id, movimientoCreditoId: movement!.id }, ip: input.ip,
+     usuarioId: input.usuarioId, accion: "AUTORIZAR_NOTA", entidad: "tickets",
+     entidadId: String(ticket.id), datosDespues: {
+       sesionCajaId: sesion.id,
+       movimientoCreditoId: movement!.id,
+       aplicarSaldoAFavor: decimalMoney(aplicarSaldoAFavorCents),
+       aplicacionesSaldoAFavor: explicitFavorApplications,
+     }, ip: input.ip,
   });
   return buildTicketDetail(tx, ticket.id, includeCosts);
 }
