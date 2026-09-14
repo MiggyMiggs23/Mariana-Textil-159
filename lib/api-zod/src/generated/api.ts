@@ -2398,6 +2398,74 @@ export const EstadisticasProveedorResponse = zod.object({
 
 
 /**
+ * @summary Utilidad atribuida al proveedor por consumo físico
+ */
+export const GetProveedorUtilidadParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+
+export const getProveedorUtilidadQueryPageDefault = 1;
+
+export const getProveedorUtilidadQueryPageSizeDefault = 20;
+export const getProveedorUtilidadQueryPageSizeMax = 200;
+
+
+
+export const GetProveedorUtilidadQueryParams = zod.object({
+  "desde": zod.date().describe('Fecha inicial del instante de contabilización, inclusive'),
+  "hasta": zod.date().describe('Fecha final del instante de contabilización, inclusive'),
+  "ubicacionId": zod.coerce.number().int().min(1).optional().describe('Ubicación opcional; el servidor aplica el alcance del usuario'),
+  "page": zod.coerce.number().int().min(1).default(getProveedorUtilidadQueryPageDefault),
+  "pageSize": zod.coerce.number().int().min(1).max(getProveedorUtilidadQueryPageSizeMax).default(getProveedorUtilidadQueryPageSizeDefault)
+})
+
+export const GetProveedorUtilidadResponse = zod.object({
+  "proveedorId": zod.number(),
+  "desde": zod.coerce.date(),
+  "hasta": zod.coerce.date(),
+  "ubicacionId": zod.number().nullable(),
+  "summary": zod.object({
+  "ventas": zod.string(),
+  "costo": zod.string(),
+  "utilidad": zod.string(),
+  "margenPct": zod.string().nullable(),
+  "lineasIncluidas": zod.number(),
+  "lineasExcluidasSinRollo": zod.number(),
+  "lineasExcluidasSinCosto": zod.number(),
+  "rollosExcluidosSinCosto": zod.number().describe('Conteo distinto de rollos físicos vendidos que no tienen costo válido')
+}),
+  "items": zod.array(zod.object({
+  "lineaId": zod.number(),
+  "ticketId": zod.number(),
+  "ticketFolio": zod.number(),
+  "fecha": zod.coerce.date(),
+  "proveedorId": zod.number(),
+  "proveedor": zod.string(),
+  "entradaId": zod.number(),
+  "entradaFolio": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "productoId": zod.number(),
+  "sku": zod.string(),
+  "tela": zod.string(),
+  "color": zod.string(),
+  "unidad": zod.enum(['METRO', 'KILO', 'BOLSA', 'PIEZA']),
+  "tipo": zod.enum(['NORMAL', 'METREADO']),
+  "cantidad": zod.string(),
+  "ventas": zod.string(),
+  "costo": zod.string().nullable(),
+  "utilidad": zod.string().nullable(),
+  "margenPct": zod.string().nullable(),
+  "costoStatus": zod.enum(['COMPLETO', 'SIN_COSTO'])
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number()
+})
+
+
+/**
  * @summary Exporta estado de cuenta del proveedor en XLSX
  */
 export const ExportarProveedorXlsxParams = zod.object({

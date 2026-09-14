@@ -1441,6 +1441,48 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/utilidad:
+    get:
+      operationId: getProveedorUtilidad
+      tags: [proveedores]
+      summary: Utilidad atribuida al proveedor por consumo físico
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+        - in: query
+          name: desde
+          required: true
+          schema: { type: string, format: date }
+          description: Fecha inicial del instante de contabilización, inclusive
+        - in: query
+          name: hasta
+          required: true
+          schema: { type: string, format: date }
+          description: Fecha final del instante de contabilización, inclusive
+        - in: query
+          name: ubicacionId
+          schema: { type: integer, minimum: 1 }
+          description: Ubicación opcional; el servidor aplica el alcance del usuario
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1, default: 1 }
+        - in: query
+          name: pageSize
+          schema: { type: integer, minimum: 1, maximum: 200, default: 20 }
+      responses:
+        "200":
+          description: Resumen y renglones paginados de utilidad atribuida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProveedorUtilidadResult"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /proveedores/{id}/exportar:
     get:
       operationId: exportarProveedorXlsx
@@ -11635,6 +11677,95 @@ components:
         color: { type: string }
         totalCosto: { type: string }
         rollosCount: { type: number }
+    ProveedorUtilidadRow:
+      type: object
+      required:
+        [
+          lineaId,
+          ticketId,
+          ticketFolio,
+          fecha,
+          proveedorId,
+          proveedor,
+          entradaId,
+          entradaFolio,
+          rolloId,
+          serie,
+          productoId,
+          sku,
+          tela,
+          color,
+          unidad,
+          tipo,
+          cantidad,
+          ventas,
+          costo,
+          utilidad,
+          margenPct,
+          costoStatus,
+        ]
+      properties:
+        lineaId: { type: number }
+        ticketId: { type: number }
+        ticketFolio: { type: number }
+        fecha: { type: string, format: date-time }
+        proveedorId: { type: number }
+        proveedor: { type: string }
+        entradaId: { type: number }
+        entradaFolio: { type: number }
+        rolloId: { type: number }
+        serie: { type: string }
+        productoId: { type: number }
+        sku: { type: string }
+        tela: { type: string }
+        color: { type: string }
+        unidad: { type: string, enum: [METRO, KILO, BOLSA, PIEZA] }
+        tipo: { type: string, enum: [NORMAL, METREADO] }
+        cantidad: { type: string }
+        ventas: { type: string }
+        costo: { type: ["string", "null"] }
+        utilidad: { type: ["string", "null"] }
+        margenPct: { type: ["string", "null"] }
+        costoStatus: { type: string, enum: [COMPLETO, SIN_COSTO] }
+    ProveedorUtilidadResumen:
+      type: object
+      required:
+        [
+          ventas,
+          costo,
+          utilidad,
+          margenPct,
+          lineasIncluidas,
+          lineasExcluidasSinRollo,
+          lineasExcluidasSinCosto,
+          rollosExcluidosSinCosto,
+        ]
+      properties:
+        ventas: { type: string }
+        costo: { type: string }
+        utilidad: { type: string }
+        margenPct: { type: ["string", "null"] }
+        lineasIncluidas: { type: number }
+        lineasExcluidasSinRollo: { type: number }
+        lineasExcluidasSinCosto: { type: number }
+        rollosExcluidosSinCosto:
+          type: number
+          description: Conteo distinto de rollos físicos vendidos que no tienen costo válido
+    ProveedorUtilidadResult:
+      type: object
+      required: [proveedorId, desde, hasta, ubicacionId, summary, items, total, page, pageSize]
+      properties:
+        proveedorId: { type: number }
+        desde: { type: string, format: date-time }
+        hasta: { type: string, format: date-time }
+        ubicacionId: { type: ["number", "null"] }
+        summary: { $ref: "#/components/schemas/ProveedorUtilidadResumen" }
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/ProveedorUtilidadRow" }
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
     ProveedorEstadisticas:
       type: object
       required:

@@ -159,6 +159,54 @@ export type EstadisticasPeriodo = {
   porColor: Array<{ color: string; totalCosto: string; rollosCount: number }>;
 };
 
+export type ProveedorUtilidadRow = {
+  lineaId: number;
+  ticketId: number;
+  ticketFolio: number;
+  fecha: string;
+  proveedorId: number;
+  proveedor: string;
+  entradaId: number;
+  entradaFolio: number;
+  rolloId: number;
+  serie: string;
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
+  tipo: "NORMAL" | "METREADO";
+  cantidad: string;
+  ventas: string;
+  costo: string | null;
+  utilidad: string | null;
+  margenPct: string | null;
+  costoStatus: "COMPLETO" | "SIN_COSTO";
+};
+
+export type ProveedorUtilidadSummary = {
+  ventas: string;
+  costo: string;
+  utilidad: string;
+  margenPct: string | null;
+  lineasIncluidas: number;
+  lineasExcluidasSinRollo: number;
+  lineasExcluidasSinCosto: number;
+  rollosExcluidosSinCosto: number;
+};
+
+export type ProveedorUtilidadResult = {
+  proveedorId: number;
+  desde: string;
+  hasta: string;
+  ubicacionId: number | null;
+  summary: ProveedorUtilidadSummary;
+  items: ProveedorUtilidadRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
+
 export type AnaliticaGlobalProveedores = {
   pareto: Array<{ proveedorId: number; proveedor: string; total: string; porcentajeAcumulado: string }>;
   deuda: Array<{ proveedorId: number; proveedor: string; saldo: string }>;
@@ -904,6 +952,389 @@ export async function resumenProveedores(): Promise<ResumenGeneral> {
   };
 }
 
+type SupplierUtilitySqlRow = {
+  linea_id: number;
+  ticket_id: number;
+  ticket_folio: number;
+  fecha: Date | string;
+  proveedor_id: number;
+  proveedor: string;
+  entrada_id: number;
+  entrada_folio: number;
+  rollo_id: number;
+  serie: string;
+  producto_id: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
+  tipo: "NORMAL" | "METREADO";
+  cantidad: string;
+  ventas: string;
+  costo: string | null;
+};
+
+/**
+ * Shared source-of-truth CTE for supplier utility. The supplier is obtained
+ * from entradas.proveedor_id, never from rollos.proveedor_id or producto_id.
+ *
+ * NORMAL lines have an explicit physical roll. METREADO lines are allocated
+ * over the negative VENTA movements written by the inventory engine. The
+ * running ranges make multiple metered lines in one ticket deterministic and
+ * preserve every consumed roll/provider rather than assigning the whole line
+ * to a guessed supplier. NORMAL cost uses the immutable ticket-line snapshot;
+ * METREADO cost uses the consumed physical roll's cost because the line-level
+ * metered snapshot is an average and must not be attributed to one supplier.
+ */
+function supplierUtilityCte(opts: {
+  proveedorId: number;
+  ubicacionId?: number | null;
+  desde: Date;
+  hasta: Date;
+}) {
+  const location = opts.ubicacionId == null
+    ? sql``
+    : sql`AND t.ubicacion_id = ${opts.ubicacionId}`;
+  const movementTypes = sql`'TICKET', 'NOTA', 'TICKET_BOLSA_NORMAL', 'TICKET_BOLSA_METREADO', 'TICKET_PIEZA_NORMAL'`;
+  return sql`
+    WITH accounted_lines AS (
+      SELECT
+        t.id AS ticket_id,
+        t.folio AS ticket_folio,
+        ${sql.raw(accountedDocumentAt("t"))} AS accounted_at,
+        l.id AS linea_id,
+        l.rollo_id,
+        l.producto_id,
+        l.tipo,
+        l.cantidad,
+        l.precio_unitario,
+        l.importe,
+        l.costo_unitario_congelado
+      FROM tickets t
+      JOIN ticket_lineas l ON l.ticket_id = t.id
+      WHERE ${sql.raw(accountedDocumentPredicate("t"))}
+        AND ${sql.raw(accountedDocumentAt("t"))} >= ${opts.desde}
+        AND ${sql.raw(accountedDocumentAt("t"))} <= ${opts.hasta}
+        ${location}
+    ),
+    normal_source AS (
+      SELECT
+        a.linea_id,
+        a.ticket_id,
+        a.ticket_folio,
+        a.accounted_at,
+        e.proveedor_id,
+        p.nombre AS proveedor,
+        e.id AS entrada_id,
+        e.folio AS entrada_folio,
+        r.id AS rollo_id,
+        r.serie,
+        pr.id AS producto_id,
+        pr.sku,
+        pr.tela,
+        pr.color,
+        pr.unidad,
+        a.tipo,
+        a.cantidad::numeric AS cantidad,
+        ROUND(a.importe, 2)::numeric AS ventas,
+        CASE WHEN a.costo_unitario_congelado IS NULL THEN NULL
+          ELSE ROUND(a.cantidad * a.costo_unitario_congelado, 2)::numeric
+        END AS costo
+      FROM accounted_lines a
+      JOIN rollos r ON r.id = a.rollo_id
+      JOIN entradas e ON e.id = r.recepcion_id
+      JOIN proveedores p ON p.id = e.proveedor_id
+      JOIN productos pr ON pr.id = a.producto_id
+      WHERE a.tipo = 'NORMAL'
+        AND a.rollo_id IS NOT NULL
+        AND e.proveedor_id = ${opts.proveedorId}
+    ),
+    metered_lines AS (
+      SELECT
+        a.*,
+        COALESCE(
+          SUM(a.cantidad) OVER (
+            PARTITION BY a.ticket_id, a.producto_id
+            ORDER BY a.linea_id
+            ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
+          ),
+          0
+        )::numeric AS line_start
+      FROM accounted_lines a
+      WHERE a.tipo = 'METREADO' AND a.rollo_id IS NULL
+    ),
+    metered_moves AS (
+      SELECT
+        m.id AS movimiento_id,
+        t.id AS ticket_id,
+        m.producto_id,
+        (-m.cantidad)::numeric AS cantidad,
+        r.id AS rollo_id,
+        r.serie,
+        r.costo_unitario AS rollo_costo_unitario,
+        e.id AS entrada_id,
+        e.folio AS entrada_folio,
+        e.proveedor_id,
+        p.nombre AS proveedor,
+        pr.sku,
+        pr.tela,
+        pr.color,
+        pr.unidad,
+        COALESCE(
+          SUM((-m.cantidad)::numeric) OVER (
+            PARTITION BY t.id, m.producto_id
+            ORDER BY m.id
+            ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
+          ),
+          0
+        )::numeric AS move_start
+      FROM movimientos m
+      JOIN tickets t ON t.id = CASE
+        WHEN m.documento_id ~ '^[0-9]+$' THEN m.documento_id::integer
+        ELSE NULL
+      END
+      JOIN rollos r ON r.id = m.rollo_id
+      JOIN entradas e ON e.id = r.recepcion_id
+      JOIN proveedores p ON p.id = e.proveedor_id
+      JOIN productos pr ON pr.id = m.producto_id
+      WHERE m.tipo = 'VENTA'
+        AND m.cantidad < 0
+        AND m.documento_tipo IN (${movementTypes})
+        AND ${sql.raw(accountedDocumentPredicate("t"))}
+        AND ${sql.raw(accountedDocumentAt("t"))} >= ${opts.desde}
+        AND ${sql.raw(accountedDocumentAt("t"))} <= ${opts.hasta}
+        ${location}
+        AND e.proveedor_id = ${opts.proveedorId}
+    ),
+    metered_source AS (
+      SELECT
+        l.linea_id,
+        l.ticket_id,
+        l.ticket_folio,
+        l.accounted_at,
+        m.proveedor_id,
+        m.proveedor,
+        m.entrada_id,
+        m.entrada_folio,
+        m.rollo_id,
+        m.serie,
+        l.producto_id,
+        m.sku,
+        m.tela,
+        m.color,
+        m.unidad,
+        l.tipo,
+        GREATEST(
+          0::numeric,
+          LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
+            - GREATEST(l.line_start, m.move_start)
+        )::numeric AS cantidad,
+        CASE WHEN m.rollo_costo_unitario IS NULL THEN
+          ROUND(
+            GREATEST(
+              0::numeric,
+              LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
+                - GREATEST(l.line_start, m.move_start)
+            ) * l.precio_unitario,
+            2
+          )::numeric
+        ELSE
+          ROUND(
+            GREATEST(
+              0::numeric,
+              LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
+                - GREATEST(l.line_start, m.move_start)
+            ) * l.precio_unitario,
+            2
+          )::numeric
+        END AS ventas,
+        CASE WHEN m.rollo_costo_unitario IS NULL THEN NULL
+          ELSE ROUND(
+            GREATEST(
+              0::numeric,
+              LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
+                - GREATEST(l.line_start, m.move_start)
+            ) * m.rollo_costo_unitario,
+            2
+          )::numeric
+        END AS costo
+      FROM metered_lines l
+      JOIN metered_moves m
+        ON m.ticket_id = l.ticket_id
+       AND m.producto_id = l.producto_id
+       AND m.move_start < l.line_start + l.cantidad
+       AND m.move_start + m.cantidad > l.line_start
+    ),
+    source AS (
+      SELECT * FROM normal_source
+      UNION ALL
+      SELECT * FROM metered_source
+    )
+  `;
+}
+
+/**
+ * Supplier-attributed utility detail. Only accounted sales are eligible, and
+ * all physical consumption is resolved through the roll's reception entry.
+ */
+export async function utilidadPorProveedor(opts: {
+  proveedorId: number;
+  ubicacionId?: number | null;
+  desde: Date;
+  hasta: Date;
+  page?: number;
+  pageSize?: number;
+}): Promise<ProveedorUtilidadResult> {
+  const page = opts.page ?? 1;
+  const pageSize = opts.pageSize ?? 20;
+  const offset = (page - 1) * pageSize;
+  const cte = supplierUtilityCte(opts);
+  const [rowsResult, summaryResult] = await Promise.all([
+    db.execute<SupplierUtilitySqlRow>(sql`
+      ${cte}
+      SELECT
+        linea_id,
+        ticket_id,
+        ticket_folio,
+        accounted_at AS fecha,
+        proveedor_id,
+        proveedor,
+        entrada_id,
+        entrada_folio,
+        rollo_id,
+        serie,
+        producto_id,
+        sku,
+        tela,
+        color,
+        unidad,
+        tipo,
+        cantidad::text,
+        ventas::text,
+        costo::text
+      FROM source
+      WHERE cantidad > 0
+      ORDER BY accounted_at DESC, ticket_id DESC, linea_id, rollo_id
+      LIMIT ${pageSize} OFFSET ${offset}
+    `),
+    db.execute<{
+      ventas: string;
+      costo: string;
+      lineas_incluidas: string;
+      lineas_excluidas_sin_costo: string;
+      rollos_excluidos_sin_costo: string;
+      total: string;
+      lineas_excluidas_sin_rollo: string;
+    }>(sql`
+      ${cte},
+      untraceable AS (
+        SELECT COUNT(*) FILTER (
+          WHERE a.tipo = 'METREADO'
+            AND NOT EXISTS (
+              SELECT 1
+              FROM movimientos m
+              WHERE m.tipo = 'VENTA'
+                AND m.cantidad < 0
+                AND m.producto_id = a.producto_id
+                AND m.documento_id = a.ticket_id::text
+                AND m.documento_tipo IN (${movementTypesForSummary()})
+            )
+        )::text AS lineas_excluidas_sin_rollo
+        FROM accounted_lines a
+      ),
+      summary AS (
+        SELECT
+          COALESCE(SUM(ventas) FILTER (WHERE costo IS NOT NULL), 0)::text AS ventas,
+          COALESCE(SUM(costo) FILTER (WHERE costo IS NOT NULL), 0)::text AS costo,
+          COUNT(DISTINCT linea_id) FILTER (WHERE costo IS NOT NULL)::text AS lineas_incluidas,
+          COUNT(DISTINCT linea_id) FILTER (WHERE costo IS NULL)::text AS lineas_excluidas_sin_costo,
+          COUNT(DISTINCT rollo_id) FILTER (WHERE costo IS NULL)::text AS rollos_excluidos_sin_costo,
+          COUNT(*)::text AS total
+        FROM source
+        WHERE cantidad > 0
+      )
+      SELECT
+        summary.ventas,
+        summary.costo,
+        summary.lineas_incluidas,
+        summary.lineas_excluidas_sin_costo,
+        summary.rollos_excluidos_sin_costo,
+        summary.total,
+        untraceable.lineas_excluidas_sin_rollo
+      FROM summary CROSS JOIN untraceable
+    `),
+  ]);
+
+  const summaryRow = summaryResult.rows[0] ?? {
+    ventas: "0",
+    costo: "0",
+    lineas_incluidas: "0",
+    lineas_excluidas_sin_costo: "0",
+    rollos_excluidos_sin_costo: "0",
+    total: "0",
+    lineas_excluidas_sin_rollo: "0",
+  };
+  const ventas = Number(summaryRow.ventas);
+  const costo = Number(summaryRow.costo);
+  const items = rowsResult.rows.map((row) => {
+    const rowVentas = Number(row.ventas);
+    const rowCosto = row.costo == null ? null : Number(row.costo);
+    const utilidad = rowCosto == null ? null : rowVentas - rowCosto;
+    return {
+      lineaId: Number(row.linea_id),
+      ticketId: Number(row.ticket_id),
+      ticketFolio: Number(row.ticket_folio),
+      fecha: toDate(row.fecha)!.toISOString(),
+      proveedorId: Number(row.proveedor_id),
+      proveedor: row.proveedor,
+      entradaId: Number(row.entrada_id),
+      entradaFolio: Number(row.entrada_folio),
+      rolloId: Number(row.rollo_id),
+      serie: row.serie,
+      productoId: Number(row.producto_id),
+      sku: row.sku,
+      tela: row.tela,
+      color: row.color,
+      unidad: row.unidad,
+      tipo: row.tipo,
+      cantidad: Number(row.cantidad).toFixed(3),
+      ventas: rowVentas.toFixed(2),
+      costo: rowCosto == null ? null : rowCosto.toFixed(2),
+      utilidad: utilidad == null ? null : utilidad.toFixed(2),
+      margenPct:
+        utilidad == null || rowVentas <= 0
+          ? null
+          : ((utilidad / rowVentas) * 100).toFixed(2),
+      costoStatus: rowCosto == null ? "SIN_COSTO" as const : "COMPLETO" as const,
+    } satisfies ProveedorUtilidadRow;
+  });
+
+  return {
+    proveedorId: opts.proveedorId,
+    desde: opts.desde.toISOString(),
+    hasta: opts.hasta.toISOString(),
+    ubicacionId: opts.ubicacionId ?? null,
+    summary: {
+      ventas: ventas.toFixed(2),
+      costo: costo.toFixed(2),
+      utilidad: (ventas - costo).toFixed(2),
+      margenPct: ventas > 0 ? (((ventas - costo) / ventas) * 100).toFixed(2) : null,
+      lineasIncluidas: Number(summaryRow.lineas_incluidas),
+      lineasExcluidasSinRollo: Number(summaryRow.lineas_excluidas_sin_rollo),
+      lineasExcluidasSinCosto: Number(summaryRow.lineas_excluidas_sin_costo),
+      rollosExcluidosSinCosto: Number(summaryRow.rollos_excluidos_sin_costo),
+    },
+    items,
+    total: Number(summaryRow.total),
+    page,
+    pageSize,
+  };
+}
+
+function movementTypesForSummary() {
+  return sql`'TICKET', 'NOTA', 'TICKET_BOLSA_NORMAL', 'TICKET_BOLSA_METREADO', 'TICKET_PIEZA_NORMAL'`;
+}
+
 /**
  * Detailed statistics for a supplier within a date range.
  * Includes per-month, per-product (with cost comparison), per-tela, per-color
@@ -1222,39 +1653,27 @@ export async function estadisticasPeriodo(opts: {
 
   const exclusiveRows = await db.execute(sql`
     SELECT pr.id, pr.sku, pr.tela, pr.color
-    FROM productos pr JOIN rollos ro ON ro.producto_id=pr.id
+    FROM productos pr
+    JOIN rollos ro ON ro.producto_id=pr.id
+    JOIN entradas e ON e.id=ro.recepcion_id
     GROUP BY pr.id,pr.sku,pr.tela,pr.color
-    HAVING COUNT(DISTINCT ro.proveedor_id) FILTER (WHERE ro.proveedor_id IS NOT NULL)=1
-      AND MAX(ro.proveedor_id) FILTER (WHERE ro.proveedor_id IS NOT NULL)=${proveedorId}
+    HAVING COUNT(DISTINCT e.proveedor_id) FILTER (WHERE e.proveedor_id IS NOT NULL)=1
+      AND MAX(e.proveedor_id) FILTER (WHERE e.proveedor_id IS NOT NULL)=${proveedorId}
     ORDER BY pr.sku
   `);
-  // A sale is attributed only to its physical roll. Never infer a supplier from
-  // producto_id: a product can have rolls from several suppliers.
-  const marginRows = await db.execute(sql`
-    WITH lineas_periodo AS (
-      SELECT tl.*, t.id AS ticket_id
-      FROM ticket_lineas tl JOIN tickets t ON t.id=tl.ticket_id
-      WHERE ${sql.raw(accountedDocumentPredicate("t"))}
-        AND ${sql.raw(accountedDocumentAt("t"))} BETWEEN ${desde} AND ${hasta}
-    ), lineas_proveedor AS (
-      SELECT lp.*
-      FROM lineas_periodo lp
-      JOIN rollos ro ON ro.id=lp.rollo_id
-      JOIN entradas e ON e.id=ro.recepcion_id
-      WHERE e.proveedor_id=${proveedorId}
-    )
-    SELECT
-      COALESCE(SUM(importe) FILTER (WHERE costo_total_congelado > 0),0)::text AS ventas,
-      COALESCE(SUM(costo_total_congelado) FILTER (WHERE costo_total_congelado > 0),0)::text AS costo,
-      COUNT(*) FILTER (WHERE costo_total_congelado > 0)::text AS incluidas,
-      (SELECT COUNT(*) FROM lineas_periodo WHERE rollo_id IS NULL)::text AS sin_rollo,
-      COUNT(*) FILTER (WHERE costo_total_congelado IS NULL OR costo_total_congelado <= 0)::text AS sin_costo
-    FROM lineas_proveedor
-  `);
-  const margin = marginRows.rows[0] as {
-    ventas: string; costo: string; incluidas: string; sin_rollo: string; sin_costo: string;
-  };
-  const ventas = parseFloat(margin.ventas), costoVenta = parseFloat(margin.costo), margen = ventas-costoVenta;
+  // Margin uses the same physical-consumption attribution as the utility
+  // endpoint. In particular, a partial BOLSA sale can contribute to several
+  // providers, and the approved source of supplier identity is entradas.
+  const utility = await utilidadPorProveedor({
+    proveedorId,
+    desde,
+    hasta,
+    page: 1,
+    pageSize: 1,
+  });
+  const ventas = parseFloat(utility.summary.ventas);
+  const costoVenta = parseFloat(utility.summary.costo);
+  const margen = ventas - costoVenta;
   const monthSorted = [...porMes].sort((a,b) => parseFloat(b.total)-parseFloat(a.total));
   const topTotal = porProducto[0] ? parseFloat(porProducto[0].totalCosto) : 0;
   const top3Total = porProducto.slice(0,3).reduce((s,p) => s+parseFloat(p.totalCosto),0);
@@ -1297,10 +1716,10 @@ export async function estadisticasPeriodo(opts: {
       costo: costoVenta.toFixed(2),
       margen: margen.toFixed(2),
       margenPct: ventas > 0 ? (margen/ventas*100).toFixed(2) : null,
-      lineasIncluidas: parseInt(margin.incluidas, 10),
-      lineasExcluidasSinRollo: parseInt(margin.sin_rollo, 10),
-      lineasExcluidasSinCosto: parseInt(margin.sin_costo, 10),
-      nota: "Solo se incluyen líneas VENDIDAS ligadas al rollo físico recibido de este proveedor; líneas sin rollo o sin costo se excluyen.",
+      lineasIncluidas: utility.summary.lineasIncluidas,
+      lineasExcluidasSinRollo: utility.summary.lineasExcluidasSinRollo,
+      lineasExcluidasSinCosto: utility.summary.lineasExcluidasSinCosto,
+      nota: "Solo se incluyen documentos contabilizados y consumo físico ligado al rollo recibido de este proveedor; líneas sin evidencia de consumo o sin costo se excluyen.",
     },
     porMes,
     porProducto,

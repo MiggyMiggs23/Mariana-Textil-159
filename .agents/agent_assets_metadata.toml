@@ -714,3 +714,17 @@ mtime_ms = 1789408142463
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/946ca70e-0fb6-4ad2-a4fe-b758736624fb/0de47d47-e064-4003-8721-b4e97c2facce"
 storage_version_token = "1789408207178632"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "DXea0Zli3X9Uh6uxPJe61"
+uri = "file://reports/proveedores-utilidad-verificacion.md"
+type = "text"
+title = "Verificación de Clientes y Proveedores"
+description = "Implementación parcial: resultados, cuatro bloqueos y decisiones pendientes. Utilidad por proveedor no aprobada."
+logical_id = "54e7e7a6-f028-40da-87c2-606e1e6c383f"
+content_hash = "sha256:92c229e8531b4ab107871946834f8d1e4cd765bb8f1eba73b37e219fd1f574ed"
+size = 4252
+mtime_ms = 1789413305963
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/54e7e7a6-f028-40da-87c2-606e1e6c383f/f26133ee-373d-4200-8491-3e2cd757582a"
+storage_version_token = "1789413328061299"
+content_type = "text/markdown"

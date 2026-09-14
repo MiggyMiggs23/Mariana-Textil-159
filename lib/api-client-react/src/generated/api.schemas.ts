@@ -5595,6 +5595,86 @@ export interface EstadisticasPorColor {
   rollosCount: number;
 }
 
+export type ProveedorUtilidadRowUnidad = typeof ProveedorUtilidadRowUnidad[keyof typeof ProveedorUtilidadRowUnidad];
+
+
+export const ProveedorUtilidadRowUnidad = {
+  METRO: 'METRO',
+  KILO: 'KILO',
+  BOLSA: 'BOLSA',
+  PIEZA: 'PIEZA',
+} as const;
+
+export type ProveedorUtilidadRowTipo = typeof ProveedorUtilidadRowTipo[keyof typeof ProveedorUtilidadRowTipo];
+
+
+export const ProveedorUtilidadRowTipo = {
+  NORMAL: 'NORMAL',
+  METREADO: 'METREADO',
+} as const;
+
+export type ProveedorUtilidadRowCostoStatus = typeof ProveedorUtilidadRowCostoStatus[keyof typeof ProveedorUtilidadRowCostoStatus];
+
+
+export const ProveedorUtilidadRowCostoStatus = {
+  COMPLETO: 'COMPLETO',
+  SIN_COSTO: 'SIN_COSTO',
+} as const;
+
+export interface ProveedorUtilidadRow {
+  lineaId: number;
+  ticketId: number;
+  ticketFolio: number;
+  fecha: string;
+  proveedorId: number;
+  proveedor: string;
+  entradaId: number;
+  entradaFolio: number;
+  rolloId: number;
+  serie: string;
+  productoId: number;
+  sku: string;
+  tela: string;
+  color: string;
+  unidad: ProveedorUtilidadRowUnidad;
+  tipo: ProveedorUtilidadRowTipo;
+  cantidad: string;
+  ventas: string;
+  /** @nullable */
+  costo: string | null;
+  /** @nullable */
+  utilidad: string | null;
+  /** @nullable */
+  margenPct: string | null;
+  costoStatus: ProveedorUtilidadRowCostoStatus;
+}
+
+export interface ProveedorUtilidadResumen {
+  ventas: string;
+  costo: string;
+  utilidad: string;
+  /** @nullable */
+  margenPct: string | null;
+  lineasIncluidas: number;
+  lineasExcluidasSinRollo: number;
+  lineasExcluidasSinCosto: number;
+  /** Conteo distinto de rollos físicos vendidos que no tienen costo válido */
+  rollosExcluidosSinCosto: number;
+}
+
+export interface ProveedorUtilidadResult {
+  proveedorId: number;
+  desde: string;
+  hasta: string;
+  /** @nullable */
+  ubicacionId: number | null;
+  summary: ProveedorUtilidadResumen;
+  items: ProveedorUtilidadRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
 export type ProveedorEstadisticasFrecuencia = {
   /** @nullable */
   promedioDiasEntreCompras: string | null;
@@ -6885,6 +6965,31 @@ desde: string;
  * Fecha fin del periodo, formato YYYY-MM-DD
  */
 hasta: string;
+};
+
+export type GetProveedorUtilidadParams = {
+/**
+ * Fecha inicial del instante de contabilización, inclusive
+ */
+desde: string;
+/**
+ * Fecha final del instante de contabilización, inclusive
+ */
+hasta: string;
+/**
+ * Ubicación opcional; el servidor aplica el alcance del usuario
+ * @minimum 1
+ */
+ubicacionId?: number;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 200
+ */
+pageSize?: number;
 };
 
 export type ExportarProveedorXlsxParams = {

@@ -842,7 +842,7 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 
 ### Reglas de saldo a favor
 
-- Saldo deudor (rojo) y saldo a favor (verde) son cifras distintas; cero se muestra explícitamente en las superficies financieras autorizadas.
+- Saldo deudor (rojo) y saldo a favor (verde) son cifras distintas. En las fichas de Clientes y Proveedores, la deuda nunca se muestra negativa; la sección independiente de saldo a favor aparece únicamente si su monto es positivo. Sin saldo a favor, esa sección no aparece.
 - El exceso de un pago genera saldo a favor y debe anunciarse al usuario. Al autorizar una nota nueva se ofrece el monto disponible y su aplicación es una decisión explícita del cajero, nunca automática.
 - **El saldo a favor es dinero ya contado en Cobrado. Aplicarlo a una nota no vuelve a contarse**, ni globalmente ni al filtrar por periodo o sitio.
 - **No se edita el saldo a favor a mano:** sube al recibir dinero de más y baja al aplicarlo. Cualquier corrección exige un movimiento trazable, nunca editar el número.
@@ -850,3 +850,11 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 - También quedan pendientes la coherencia entre cancelación/reaplicación y el límite de aplicaciones de la base, y habilitar la autorización cuando el saldo a favor seleccionado resuelve el exceso de límite.
 
 No se ejecutaron migraciones ni escrituras directas de datos, no se crearon usuarios/ADMIN/sesiones de prueba y no se usó `executeSql` en development. Las suites de integración abortaron por falta de una conexión de pruebas aislada; no se quitaron sus protecciones. El navegador usó exclusivamente respuestas simuladas y quedó bloqueado; no acredita operaciones financieras reales.
+
+## Utilidad por proveedor y fichas de saldo — 2026-09-14
+
+- La utilidad nueva se atribuye al proveedor de la **entrada**, por elección explícita del usuario, aunque el rollo tenga otro proveedor. No se modifican registros para hacer coincidir ambas referencias.
+- El remanente disponible de pagos a proveedores ya existe. Esta solicitud cambia su presentación, no define un anticipo nuevo ni cambia su aplicación financiera.
+- En las fichas, la deuda es roja y no negativa; saldo a favor es verde, independiente y solo visible si es positivo.
+- La utilidad debe usar documentos procesados por Caja, excluir y contar rollos distintos sin costo, conservar cantidades/costos históricos de ventas parciales y permitir llegar al detalle de los rollos. Debe respetar el ocultamiento económico en el servidor y en la interfaz.
+- **Implementación no aprobada:** la revisión encontró problemas de atribución de consumos, falta de trazabilidad de algunas ventas parciales, redondeo/costo histórico y bloqueo de SUPERVISOR. No se activó la API nueva ni se corrigieron los fallos sin autorización. El detalle está en `reports/proveedores-utilidad-verificacion.md`.

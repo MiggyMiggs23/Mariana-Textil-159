@@ -25,6 +25,8 @@ import {
   ReversarPagoProveedorResponse,
   ListHistorialComprasProveedoresQueryParams,
   ListHistorialComprasProveedoresResponse,
+  GetProveedorUtilidadParams,
+  GetProveedorUtilidadResponse,
 } from "@workspace/api-zod";
 import {
   auditoriaTable,
@@ -51,6 +53,7 @@ import {
   previewPagoProveedor,
   resumenProveedores,
   analiticaGlobalProveedores,
+  utilidadPorProveedor,
   type EstadoCompra,
 } from "../lib/compras-proveedor";
 import { listarHistorialComprasProveedores } from "../lib/historial-compras-proveedores";
@@ -953,6 +956,105 @@ router.get(
       });
 
       res.json(stats);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ── GET /proveedores/:id/utilidad ──────────────────────────────────────────
+// proveedores_finanzas module
+
+router.get(
+  "/proveedores/:id/utilidad",
+  requierePermiso("proveedores_finanzas", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = GetProveedorUtilidadParams.safeParse(req.params);
+      if (!params.success) {
+        res.status(400).json({
+          error: "El proveedor, periodo o paginación son inválidos.",
+        });
+        return;
+      }
+
+      const [prov] = await db
+        .select({ id: proveedoresTable.id })
+        .from(proveedoresTable)
+        .where(eq(proveedoresTable.id, params.data.id))
+        .limit(1);
+      if (!prov) {
+        res.status(404).json({ error: "Proveedor no encontrado." });
+        return;
+      }
+
+      const desdeText =
+        typeof req.query.desde === "string" ? req.query.desde : undefined;
+      const hastaText =
+        typeof req.query.hasta === "string" ? req.query.hasta : undefined;
+      const desde = parseMexicoDateQuery(desdeText, "start");
+      const hasta = parseMexicoDateQuery(hastaText, "end");
+      if (
+        desdeText === undefined ||
+        hastaText === undefined ||
+        desde == null ||
+        hasta == null
+      ) {
+        res.status(400).json({
+          error: "Las fechas desde y hasta son requeridas y deben usar el formato YYYY-MM-DD.",
+        });
+        return;
+      }
+      if (desde > hasta) {
+        res.status(400).json({
+          error: "La fecha desde no puede ser posterior a la fecha hasta.",
+        });
+        return;
+      }
+
+      const requestedUbicacionId =
+        typeof req.query.ubicacionId === "string"
+          ? Number(req.query.ubicacionId)
+          : undefined;
+      const page =
+        typeof req.query.page === "string" ? Number(req.query.page) : 1;
+      const pageSize =
+        typeof req.query.pageSize === "string"
+          ? Number(req.query.pageSize)
+          : 20;
+      if (
+        (requestedUbicacionId != null &&
+          (!Number.isInteger(requestedUbicacionId) ||
+            requestedUbicacionId < 1)) ||
+        !Number.isInteger(page) ||
+        page < 1 ||
+        !Number.isInteger(pageSize) ||
+        pageSize < 1 ||
+        pageSize > 200
+      ) {
+        res.status(400).json({
+          error: "La ubicación o paginación es inválida.",
+        });
+        return;
+      }
+      const { ubicacionId, scopeError } = resolveReadScope(
+        req.auth!,
+        requestedUbicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const result = await utilidadPorProveedor({
+        proveedorId: params.data.id,
+        ubicacionId,
+        desde,
+        hasta,
+        page,
+        pageSize,
+      });
+      res.json(GetProveedorUtilidadResponse.parse(result));
     } catch (e) {
       next(e);
     }

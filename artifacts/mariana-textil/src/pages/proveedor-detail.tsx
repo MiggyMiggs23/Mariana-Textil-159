@@ -8,6 +8,9 @@ import {
   getGetProveedorQueryKey,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
+  useGetProveedorUtilidad,
+  getGetProveedorUtilidadQueryKey,
+  type ProveedorUtilidadResult,
   Role,
   TipoProveedor,
   Moneda,
@@ -37,7 +40,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
-import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert, Search } from "lucide-react";
+import { ArrowLeft, Save, Building2, MapPin, Mail, Phone, ShoppingBag, Globe2, Wallet, Download, Printer, Plus, ExternalLink, ShieldAlert, Search, Eye, EyeOff } from "lucide-react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { formatNumber, formatUnit } from "@workspace/number-format";
@@ -197,6 +200,17 @@ export default function ProveedorDetail() {
   const { data: estadoCuenta, isLoading: isEstadoCuentaLoading } = useEstadoCuentaProveedor(provId, {}, {
     query: { enabled: !!provId && canViewFinanzas, queryKey: getEstadoCuentaProveedorQueryKey(provId, {}) }
   });
+  const estadoCuentaConSaldos = estadoCuenta as (typeof estadoCuenta & {
+    saldoDeudor?: string;
+    saldoAFavor?: string;
+  }) | undefined;
+  const saldoActualProveedor = Number(estadoCuentaConSaldos?.saldoActual ?? 0);
+  const saldoDeudorProveedor = Math.max(0, Number(estadoCuentaConSaldos?.saldoDeudor ?? saldoActualProveedor));
+  const saldoAFavorProveedor = Math.max(
+    0,
+    Number(estadoCuentaConSaldos?.saldoAFavor ?? Math.max(0, -saldoActualProveedor)),
+  );
+  const tieneSaldoAFavorProveedor = Number.isFinite(saldoAFavorProveedor) && saldoAFavorProveedor > 0;
 
   const [isPagoOpen, setIsPagoOpen] = useState(!!initialImporte);
   const [detalleCompraId, setDetalleCompraId] = useState<number | null>(null);
@@ -210,6 +224,27 @@ export default function ProveedorDetail() {
   initDesde.setFullYear(initDesde.getFullYear() - 1);
   const [estDesde, setEstDesde] = useState(initDesde.toISOString().split("T")[0]);
   const [estHasta, setEstHasta] = useState(new Date().toISOString().split("T")[0]);
+  const [utilityVisible, setUtilityVisible] = useState(false);
+  const [utilityPage, setUtilityPage] = useState(1);
+  const utilityPageSize = 20;
+
+  useEffect(() => {
+    setUtilityPage(1);
+  }, [estDesde, estHasta]);
+
+  const utilityParams = useMemo(() => ({
+    desde: estDesde,
+    hasta: estHasta,
+    page: utilityPage,
+    pageSize: utilityPageSize,
+  }), [estDesde, estHasta, utilityPage]);
+
+  const utilityQuery = useGetProveedorUtilidad(provId, utilityParams, {
+    query: {
+      enabled: !!provId && canViewFinanzas && utilityVisible,
+      queryKey: getGetProveedorUtilidadQueryKey(provId, utilityParams),
+    },
+  });
 
   const { data: estadisticas, isLoading: isEstadisticasLoading } = useEstadisticasProveedor(provId,
     { desde: estDesde, hasta: estHasta },
@@ -326,15 +361,27 @@ export default function ProveedorDetail() {
               </div>
 
               {canViewFinanzas && (
-                <div className="bg-muted/30 p-4 rounded-xl border border-border min-w-[200px] flex flex-col justify-center items-end">
-                  <span className="text-sm font-medium text-muted-foreground">Saldo Actual</span>
-                  <span className={`text-3xl font-bold tracking-tight ${(estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0) ? "text-destructive" : ""}`}>
-                    {formatNumber(estadoCuenta?.saldoActual || "0", { kind: "money" })}
-                  </span>
-                  {estadoCuenta && parseFloat(estadoCuenta.saldoActual) > 0 && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
-                    <Button size="sm" className="mt-3 w-full" onClick={() => { setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
-                      Abonar a cuenta
-                    </Button>
+                <div className={`grid gap-3 ${tieneSaldoAFavorProveedor ? "sm:grid-cols-2" : "sm:grid-cols-1"}`}>
+                  <div className="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/20">
+                    <span className="text-sm font-semibold text-red-700 dark:text-red-300">Saldo deudor</span>
+                    <span className="mt-1 block text-3xl font-bold tracking-tight tabular-nums text-red-700 dark:text-red-300" data-testid="metric-supplier-saldo-deudor">
+                      {formatNumber(saldoDeudorProveedor, { kind: "money" })}
+                    </span>
+                    <span className="mt-1 block text-xs text-red-800/70 dark:text-red-200/70">Rojo significa dinero pendiente de pago al proveedor.</span>
+                    {saldoDeudorProveedor > 0 && hasPermission(user, Modules.PROVEEDORES_FINANZAS, 'crear') && (
+                      <Button size="sm" className="mt-3 w-full" onClick={() => { setIsPagoOpen(true); }} data-testid="button-registrar-pago-header">
+                        Abonar a cuenta
+                      </Button>
+                    )}
+                  </div>
+                  {tieneSaldoAFavorProveedor && (
+                    <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/20">
+                      <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">Saldo a favor</span>
+                      <span className="mt-1 block text-3xl font-bold tracking-tight tabular-nums text-emerald-700 dark:text-emerald-300" data-testid="metric-supplier-saldo-a-favor">
+                        {formatNumber(saldoAFavorProveedor, { kind: "money" })}
+                      </span>
+                      <span className="mt-1 block text-xs text-emerald-800/70 dark:text-emerald-200/70">Verde significa un anticipo disponible para aplicar a compras del proveedor.</span>
+                    </div>
                   )}
                 </div>
               )}
@@ -740,7 +787,14 @@ export default function ProveedorDetail() {
                     <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Frecuencia promedio</div><div className="text-xl font-bold">{formatNumber(estadisticas.frecuencia.promedioDiasEntreCompras, { kind: "count" })} días</div><div className="text-xs">Última: {formatDate(estadisticas.frecuencia.ultimaCompra)}</div></CardContent></Card>
                     <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Días promedio para pagar</div><div className="text-xl font-bold">{formatNumber(estadisticas.diasPromedioPago, { kind: "count" })}</div></CardContent></Card>
                     <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Concentración producto principal</div><div className="text-xl font-bold">{formatNumber(estadisticas.concentracion.productoPrincipalPct, { kind: "percentage", percentageInput: "percent" })}</div><div className="text-xs">Top 3: {formatNumber(estadisticas.concentracion.tresPrincipalesPct, { kind: "percentage", percentageInput: "percent" })}</div></CardContent></Card>
-                    <Card><CardContent className="p-4"><div className="text-xs text-muted-foreground">Utilidad generada</div><div className="text-xl font-bold">{formatNumber(estadisticas.margenGenerado.margen, { kind: "money" })}</div><div className="text-xs">Margen {formatNumber(estadisticas.margenGenerado.margenPct, { kind: "percentage", percentageInput: "percent" })} sobre ventas · {formatNumber(estadisticas.margenGenerado.lineasIncluidas, { kind: "count" })} líneas</div><div className="text-[10px] text-muted-foreground">Excluidas: {formatNumber(estadisticas.margenGenerado.lineasExcluidasSinRollo, { kind: "count" })} sin rollo, {formatNumber(estadisticas.margenGenerado.lineasExcluidasSinCosto, { kind: "count" })} sin costo</div><div className="text-[10px] text-muted-foreground mt-1">{estadisticas.margenGenerado.nota}</div></CardContent></Card>
+                     <SupplierUtilityCard
+                       query={utilityQuery}
+                       visible={utilityVisible}
+                       onToggle={() => setUtilityVisible((current) => !current)}
+                       page={utilityPage}
+                       pageSize={utilityPageSize}
+                       onPageChange={setUtilityPage}
+                     />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -923,9 +977,14 @@ export default function ProveedorDetail() {
             </div>
             <div className="text-right">
               <p>Saldo actual</p>
-              <p className="text-xl font-bold">
-                {formatNumber(estadoCuenta?.saldoActual ?? "0", { kind: "money" })}
-              </p>
+               <p className="text-xl font-bold" data-testid="print-supplier-saldo-deudor">
+                 {formatNumber(saldoDeudorProveedor, { kind: "money" })}
+               </p>
+               {tieneSaldoAFavorProveedor && (
+                 <p data-testid="print-supplier-saldo-a-favor">
+                   Saldo a favor: {formatNumber(saldoAFavorProveedor, { kind: "money" })}
+                 </p>
+               )}
             </div>
           </div>
 
@@ -1075,6 +1134,232 @@ export default function ProveedorDetail() {
   );
 }
 
+function utilityMoney(value: string | null | undefined): string {
+  return value == null ? "—" : formatNumber(value, { kind: "money" });
+}
+
+type SupplierUtilityQuery = {
+  data?: ProveedorUtilidadResult;
+  isLoading: boolean;
+  isError: boolean;
+  error: unknown;
+};
+
+function SupplierUtilityCard({
+  query,
+  visible,
+  onToggle,
+  page,
+  pageSize,
+  onPageChange,
+}: {
+  query: SupplierUtilityQuery;
+  visible: boolean;
+  onToggle: () => void;
+  page: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+}) {
+  const total = query.data?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const summary = query.data?.summary;
+  const utilityIsZero = summary ? Number(summary.utilidad) === 0 : false;
+  const zeroUtilityExplanation = summary
+    ? summary.lineasIncluidas > 0
+      ? "La utilidad neta es $0.00: hay ventas contabilizadas con costo válido, pero sus ingresos y costos se compensan."
+      : summary.rollosExcluidosSinCosto > 0
+        ? `La utilidad es $0.00 porque se excluyeron ${formatNumber(summary.rollosExcluidosSinCosto, { kind: "count" })} rollo(s) vendido(s) sin costo válido.`
+        : Number(summary.ventas) === 0 && summary.lineasExcluidasSinRollo === 0
+          ? "No hubo ventas contabilizadas en el periodo; la utilidad es $0.00."
+          : "La utilidad es $0.00 porque no hubo líneas con costo válido para calcularla."
+    : "";
+
+  return (
+    <Card className="col-span-2 md:col-span-4" data-testid="card-supplier-utility">
+      <CardHeader className="flex flex-row items-start justify-between gap-4">
+        <div>
+          <CardTitle className="text-lg">Utilidad generada por ventas</CardTitle>
+          <CardDescription>
+            Solo ventas contabilizadas por Caja en el periodo seleccionado.
+          </CardDescription>
+        </div>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-11 w-11 shrink-0"
+          aria-label={visible ? "Ocultar utilidad del proveedor" : "Mostrar utilidad del proveedor"}
+          aria-pressed={visible}
+          onClick={onToggle}
+          data-testid="button-toggle-supplier-utility"
+        >
+          {visible ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {!visible ? (
+          <>
+            <p className="text-2xl font-bold" data-testid="metric-supplier-utility">
+              <span aria-label="Utilidad del proveedor oculta">••••••</span>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              La utilidad y el detalle por rollo están ocultos. Usa el ojito para revelarlos.
+            </p>
+          </>
+        ) : query.isLoading ? (
+          <p className="py-6 text-center text-muted-foreground" role="status" data-testid="status-supplier-utility-loading">
+            Calculando utilidad...
+          </p>
+        ) : query.isError ? (
+          <p className="py-6 text-destructive" role="alert" data-testid="error-supplier-utility">
+            {getErrorMessage(query.error)}
+          </p>
+        ) : !summary ? (
+          <p className="py-6 text-center text-muted-foreground" data-testid="empty-supplier-utility">
+            No hay utilidad contabilizada en el periodo.
+          </p>
+        ) : (
+          <>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-live="polite">
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Utilidad</p>
+                <p className="mt-1 text-2xl font-bold tabular-nums" data-testid="metric-supplier-utility">
+                  {utilityMoney(summary.utilidad)}
+                </p>
+              </div>
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Ventas contabilizadas</p>
+                <p className="mt-1 text-xl font-bold tabular-nums" data-testid="metric-supplier-utility-sales">
+                  {utilityMoney(summary.ventas)}
+                </p>
+              </div>
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Costo identificado</p>
+                <p className="mt-1 text-xl font-bold tabular-nums" data-testid="metric-supplier-utility-cost">
+                  {utilityMoney(summary.costo)}
+                </p>
+              </div>
+              <div className="rounded-lg border bg-muted/20 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Margen</p>
+                <p className="mt-1 text-xl font-bold tabular-nums" data-testid="metric-supplier-utility-margin">
+                  {summary.margenPct == null ? "—" : formatNumber(summary.margenPct, { kind: "percentage", percentageInput: "percent" })}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-2 text-sm">
+              <p data-testid="metric-supplier-utility-excluded-no-cost">
+                Rollos vendidos excluidos por falta de costo:{" "}
+                <strong>{formatNumber(summary.rollosExcluidosSinCosto, { kind: "count" })}</strong>
+              </p>
+              <p className="text-muted-foreground" data-testid="metric-supplier-utility-excluded-no-roll">
+                Líneas metreada(s) sin evidencia de consumo excluidas:{" "}
+                {formatNumber(summary.lineasExcluidasSinRollo, { kind: "count" })}
+              </p>
+              {utilityIsZero && (
+                <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-amber-900" data-testid="status-supplier-utility-zero">
+                  {zeroUtilityExplanation}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                La atribución usa el proveedor de la ENTRADA asociada al rollo, aunque el proveedor capturado en otra referencia no coincida.
+                Las ventas parciales por metraje aportan solo la cantidad consumida.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <h3 className="font-semibold">Detalle por rollo vendido</h3>
+                <p className="text-sm text-muted-foreground">
+                  Folio de nota, cantidades/unidades y valores monetarios de cada línea contabilizada.
+                </p>
+              </div>
+              <div className="overflow-x-auto rounded-md border">
+                <Table className="min-w-[1120px]">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Folio de nota</TableHead>
+                      <TableHead>Fecha</TableHead>
+                      <TableHead>Rollo / serie</TableHead>
+                      <TableHead>Entrada</TableHead>
+                      <TableHead>Producto</TableHead>
+                      <TableHead className="text-right">Cantidad</TableHead>
+                      <TableHead className="text-right">Ventas</TableHead>
+                      <TableHead className="text-right">Costo</TableHead>
+                      <TableHead className="text-right">Utilidad</TableHead>
+                      <TableHead>Costo</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {query.data?.items.length ? query.data.items.map((item) => (
+                      <TableRow key={`${item.lineaId}-${item.rolloId}`} data-testid={`row-supplier-utility-${item.lineaId}-${item.rolloId}`}>
+                        <TableCell className="font-mono">#{formatNumber(item.ticketFolio, { kind: "identifier" })}</TableCell>
+                        <TableCell>{formatDate(item.fecha)}</TableCell>
+                        <TableCell>
+                          <div className="font-mono">{item.serie}</div>
+                          <div className="text-xs text-muted-foreground">Rollo #{formatNumber(item.rolloId, { kind: "identifier" })}</div>
+                        </TableCell>
+                        <TableCell className="font-mono">#{formatNumber(item.entradaFolio, { kind: "identifier" })}</TableCell>
+                        <TableCell>
+                          <div className="font-medium">{item.sku}</div>
+                          <div className="text-xs text-muted-foreground">{item.tela} · {item.color} · {item.tipo}</div>
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums">
+                          {formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.unidad)}
+                        </TableCell>
+                        <TableCell className="text-right tabular-nums">{utilityMoney(item.ventas)}</TableCell>
+                        <TableCell className="text-right tabular-nums">{utilityMoney(item.costo)}</TableCell>
+                        <TableCell className="text-right font-semibold tabular-nums">{utilityMoney(item.utilidad)}</TableCell>
+                        <TableCell>
+                          <Badge variant={item.costoStatus === "COMPLETO" ? "secondary" : "outline"} className={item.costoStatus === "SIN_COSTO" ? "border-amber-300 text-amber-800" : ""}>
+                            {item.costoStatus === "COMPLETO" ? "Completo" : "Sin costo"}
+                          </Badge>
+                        </TableCell>
+                      </TableRow>
+                    )) : (
+                      <TableRow>
+                        <TableCell colSpan={10} className="h-20 text-center text-muted-foreground">
+                          No hay rollos vendidos en el periodo.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-muted-foreground" aria-live="polite" data-testid="text-supplier-utility-pagination">
+                  Página {formatNumber(page, { kind: "count" })} de {formatNumber(totalPages, { kind: "count" })} · {formatNumber(total, { kind: "count" })} línea(s)
+                </p>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="min-h-11"
+                    disabled={page <= 1 || query.isLoading}
+                    onClick={() => onPageChange(Math.max(1, page - 1))}
+                    data-testid="button-supplier-utility-previous"
+                  >
+                    Anterior
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="min-h-11"
+                    disabled={page >= totalPages || query.isLoading}
+                    onClick={() => onPageChange(Math.min(totalPages, page + 1))}
+                    data-testid="button-supplier-utility-next"
+                  >
+                    Siguiente
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 
 function AjusteDialog({ open, onClose, proveedorId }: { open: boolean, onClose: () => void, proveedorId: number }) {

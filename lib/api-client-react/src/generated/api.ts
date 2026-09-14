@@ -159,6 +159,7 @@ import type {
   GetExistenciasParams,
   GetKardexParams,
   GetPosClienteCreditoDisponibleParams,
+  GetProveedorUtilidadParams,
   GetReporteQueComprarEvidenciaParams,
   GetReporteSeccionParams,
   GetResumenContenedoresParams,
@@ -257,6 +258,7 @@ import type {
   ProveedorPagoDetalle,
   ProveedorPagosResult,
   ProveedorUpdate,
+  ProveedorUtilidadResult,
   ProveedoresListResult,
   ProveedoresResumen,
   PurgaConfirmacion,
@@ -4912,6 +4914,95 @@ export function useEstadisticasProveedor<TData = Awaited<ReturnType<typeof estad
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getEstadisticasProveedorQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetProveedorUtilidadUrl = (id: number,
+    params: GetProveedorUtilidadParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/proveedores/${id}/utilidad?${stringifiedParams}` : `/api/proveedores/${id}/utilidad`
+}
+
+/**
+ * @summary Utilidad atribuida al proveedor por consumo físico
+ */
+export const getProveedorUtilidad = async (id: number,
+    params: GetProveedorUtilidadParams, options?: Parameters<typeof customFetch>[1]): Promise<ProveedorUtilidadResult> => {
+
+  return customFetch<ProveedorUtilidadResult>(getGetProveedorUtilidadUrl(id,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetProveedorUtilidadQueryKey = (id: number,
+    params?: GetProveedorUtilidadParams,) => {
+    return [
+    `/api/proveedores/${id}/utilidad`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetProveedorUtilidadQueryOptions = <TData = Awaited<ReturnType<typeof getProveedorUtilidad>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: number,
+    params: GetProveedorUtilidadParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedorUtilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetProveedorUtilidadQueryKey(id,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getProveedorUtilidad>>> = ({ signal }) => getProveedorUtilidad(id,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getProveedorUtilidad>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetProveedorUtilidadQueryResult = NonNullable<Awaited<ReturnType<typeof getProveedorUtilidad>>>
+export type GetProveedorUtilidadQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+/**
+ * @summary Utilidad atribuida al proveedor por consumo físico
+ */
+
+export function useGetProveedorUtilidad<TData = Awaited<ReturnType<typeof getProveedorUtilidad>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: number,
+    params: GetProveedorUtilidadParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getProveedorUtilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetProveedorUtilidadQueryOptions(id,params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
