@@ -12,11 +12,14 @@ test("client utility starts visually hidden and exposes a touch-friendly toggle"
   assert.match(page, /className="h-11 w-11"/);
   assert.match(page, /aria-label=\{utilityVisible \? "Ocultar utilidad acumulada" : "Mostrar utilidad acumulada"\}/);
   assert.match(page, /<span aria-label="Utilidad oculta">••••••<\/span>/);
+  assert.match(page, /hasSaldoAFavor && \(/);
+  assert.match(page, /Math\.max\(0, saldoDeudorRaw\)/);
   assert.doesNotMatch(page, /localStorage.*utilityVisible|sessionStorage.*utilityVisible/);
 });
 
 test("client utility is server-gated and declares every excluded no-cost line", () => {
   assert.match(page, /enabled: canFinances/);
+  assert.match(page, /enabled: canFinances && utilityVisible && Number\.isFinite\(id\)/);
   assert.match(page, /canFinances && \(/);
   assert.match(page, /lineasExcluidasSinCosto \?\? 0/);
   assert.match(clientApi, /utilidadAcumulada\?: string/);

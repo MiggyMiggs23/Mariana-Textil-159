@@ -204,12 +204,14 @@ export default function ProveedorDetail() {
     saldoDeudor?: string;
     saldoAFavor?: string;
   }) | undefined;
-  const saldoActualProveedor = Number(estadoCuentaConSaldos?.saldoActual ?? 0);
-  const saldoDeudorProveedor = Math.max(0, Number(estadoCuentaConSaldos?.saldoDeudor ?? saldoActualProveedor));
-  const saldoAFavorProveedor = Math.max(
-    0,
-    Number(estadoCuentaConSaldos?.saldoAFavor ?? Math.max(0, -saldoActualProveedor)),
+  const saldoActualProveedorRaw = Number(estadoCuentaConSaldos?.saldoActual ?? 0);
+  const saldoActualProveedor = Number.isFinite(saldoActualProveedorRaw) ? saldoActualProveedorRaw : 0;
+  const saldoDeudorRaw = Number(estadoCuentaConSaldos?.saldoDeudor ?? saldoActualProveedor);
+  const saldoDeudorProveedor = Number.isFinite(saldoDeudorRaw) ? Math.max(0, saldoDeudorRaw) : 0;
+  const saldoAFavorRaw = Number(
+    estadoCuentaConSaldos?.saldoAFavor ?? Math.max(0, -saldoActualProveedor),
   );
+  const saldoAFavorProveedor = Number.isFinite(saldoAFavorRaw) ? Math.max(0, saldoAFavorRaw) : 0;
   const tieneSaldoAFavorProveedor = Number.isFinite(saldoAFavorProveedor) && saldoAFavorProveedor > 0;
 
   const [isPagoOpen, setIsPagoOpen] = useState(!!initialImporte);
@@ -275,15 +277,6 @@ export default function ProveedorDetail() {
 
   const handlePrint = () => {
     window.print();
-  };
-
-  const handleOpenEntradaDocument = (entradaId: number) => {
-    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
-    window.open(
-      `${baseUrl}/entradas/${entradaId}/documento`,
-      "_blank",
-      "noopener,noreferrer",
-    );
   };
 
   if (isProvLoading) {
@@ -1253,7 +1246,7 @@ function SupplierUtilityCard({
                 <strong>{formatNumber(summary.rollosExcluidosSinCosto, { kind: "count" })}</strong>
               </p>
               <p className="text-muted-foreground" data-testid="metric-supplier-utility-excluded-no-roll">
-                Líneas metreada(s) sin evidencia de consumo excluidas:{" "}
+                Líneas de venta sin evidencia física — globales del sitio y periodo seleccionado (no atribuibles a un proveedor):{" "}
                 {formatNumber(summary.lineasExcluidasSinRollo, { kind: "count" })}
               </p>
               {utilityIsZero && (
@@ -1274,7 +1267,72 @@ function SupplierUtilityCard({
                   Folio de nota, cantidades/unidades y valores monetarios de cada línea contabilizada.
                 </p>
               </div>
-              <div className="overflow-x-auto rounded-md border">
+              <div className="space-y-3 md:hidden">
+                {query.data?.items.length ? query.data.items.map((item) => (
+                  <article
+                    key={`mobile-${item.lineaId}-${item.rolloId}`}
+                    className="rounded-md border p-4"
+                    data-testid={`card-supplier-utility-${item.lineaId}-${item.rolloId}`}
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div>
+                        <p className="font-medium">{item.sku}</p>
+                        <p className="text-sm text-muted-foreground">{item.tela} · {item.color} · {item.tipo}</p>
+                      </div>
+                      <Badge variant={item.costoStatus === "COMPLETO" ? "secondary" : "outline"} className={item.costoStatus === "SIN_COSTO" ? "border-amber-300 text-amber-800" : ""}>
+                        {item.costoStatus === "COMPLETO" ? "Completo" : "Sin costo"}
+                      </Badge>
+                    </div>
+                    <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 text-sm">
+                      <div>
+                        <dt className="text-muted-foreground">Folio de nota</dt>
+                        <dd className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/tickets/${item.ticketId}`}>
+                            #{formatNumber(item.ticketFolio, { kind: "identifier" })}
+                          </Link>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Fecha</dt>
+                        <dd>{formatDate(item.fecha)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Entrada</dt>
+                        <dd className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/entradas/${item.entradaId}/documento`}>
+                            #{formatNumber(item.entradaFolio, { kind: "identifier" })}
+                          </Link>
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Rollo / serie</dt>
+                        <dd className="font-mono">{item.serie} <span className="text-xs text-muted-foreground">(#{formatNumber(item.rolloId, { kind: "identifier" })})</span></dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Cantidad</dt>
+                        <dd className="tabular-nums">{formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.unidad)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Ventas</dt>
+                        <dd className="tabular-nums">{utilityMoney(item.ventas)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Costo</dt>
+                        <dd className="tabular-nums">{utilityMoney(item.costo)}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-muted-foreground">Utilidad</dt>
+                        <dd className="font-semibold tabular-nums">{utilityMoney(item.utilidad)}</dd>
+                      </div>
+                    </dl>
+                  </article>
+                )) : (
+                  <p className="rounded-md border p-6 text-center text-muted-foreground">
+                    No hay rollos vendidos en el periodo.
+                  </p>
+                )}
+              </div>
+              <div className="hidden overflow-x-auto rounded-md border md:block">
                 <Table className="min-w-[1120px]">
                   <TableHeader>
                     <TableRow>
@@ -1293,13 +1351,21 @@ function SupplierUtilityCard({
                   <TableBody>
                     {query.data?.items.length ? query.data.items.map((item) => (
                       <TableRow key={`${item.lineaId}-${item.rolloId}`} data-testid={`row-supplier-utility-${item.lineaId}-${item.rolloId}`}>
-                        <TableCell className="font-mono">#{formatNumber(item.ticketFolio, { kind: "identifier" })}</TableCell>
+                        <TableCell className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/tickets/${item.ticketId}`}>
+                            #{formatNumber(item.ticketFolio, { kind: "identifier" })}
+                          </Link>
+                        </TableCell>
                         <TableCell>{formatDate(item.fecha)}</TableCell>
                         <TableCell>
                           <div className="font-mono">{item.serie}</div>
                           <div className="text-xs text-muted-foreground">Rollo #{formatNumber(item.rolloId, { kind: "identifier" })}</div>
                         </TableCell>
-                        <TableCell className="font-mono">#{formatNumber(item.entradaFolio, { kind: "identifier" })}</TableCell>
+                        <TableCell className="font-mono">
+                          <Link className="text-primary underline-offset-2 hover:underline" href={`/entradas/${item.entradaId}/documento`}>
+                            #{formatNumber(item.entradaFolio, { kind: "identifier" })}
+                          </Link>
+                        </TableCell>
                         <TableCell>
                           <div className="font-medium">{item.sku}</div>
                           <div className="text-xs text-muted-foreground">{item.tela} · {item.color} · {item.tipo}</div>

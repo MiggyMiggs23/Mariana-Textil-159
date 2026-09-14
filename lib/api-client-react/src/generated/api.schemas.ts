@@ -5909,6 +5909,13 @@ export interface PosPrecioValidationResult {
   code?: string;
 }
 
+export interface TicketLineaFuenteRolloInput {
+  /** @minimum 1 */
+  rolloId: number;
+  /** @exclusiveMinimum 0 */
+  cantidad: number;
+}
+
 export interface TicketLineaInput {
   /**
      * Obligatorio para línea NORMAL de rollo completo; debe ser null en línea METREADO.
@@ -5921,6 +5928,8 @@ export interface TicketLineaInput {
   cantidad: number;
   /** @minimum 0 */
   precioUnitario: number;
+  /** Fuentes físicas explícitas obligatorias para una línea nueva METREADO cuyo producto tenga unidad METRO. NORMAL y BOLSA no las usan; nunca se infiere un rollo por producto. Cada rollo debe pertenecer a una entrada con proveedor autoritativo. */
+  fuentesRollo?: TicketLineaFuenteRolloInput[];
 }
 
 /**

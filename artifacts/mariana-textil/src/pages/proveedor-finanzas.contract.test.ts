@@ -35,6 +35,8 @@ test("Block 5 functionality in proveedor UI", async () => {
   // - Lista de compras muestra estado derivado y saldo pendiente
   assert.match(provDetail, /compra\.saldoPendiente/);
   assert.match(provDetail, /compra\.estado === CompraConEstadoEstado\.PAGADA/);
+  assert.match(provDetail, /tieneSaldoAFavorProveedor && \(/);
+  assert.match(provDetail, /Math\.max\(0, saldoDeudorRaw\)/);
 
   // - Abrir compra muestra todos los pagos que la tocaron
   assert.match(compraDialog, /useGetProveedorCompraDetalle/);

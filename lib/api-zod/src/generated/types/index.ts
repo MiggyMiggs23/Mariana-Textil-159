@@ -686,6 +686,7 @@ export * from './ticketInput';
 export * from './ticketInputDiasPlazo';
 export * from './ticketLinea';
 export * from './ticketLineaCostoFuente';
+export * from './ticketLineaFuenteRolloInput';
 export * from './ticketLineaImpresionBase';
 export * from './ticketLineaImpresionConPrecios';
 export * from './ticketLineaImpresionSinPrecios';

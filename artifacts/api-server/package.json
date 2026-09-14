@@ -61,7 +61,9 @@
     "test:inventory-six-view-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/inventory-six-view.integration.test.ts",
     "test:pagos-dirigidos-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/pagos-dirigidos.integration.test.ts",
     "test:viajes-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/viajes.integration.test.ts",
-    "test:cuadre-fiscal-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/cuadre-fiscal.integration.test.ts"
+    "test:cuadre-fiscal-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/cuadre-fiscal.integration.test.ts",
+    "test:supplier-trace-contract": "tsx --test src/supplier-trace.contract.test.ts",
+    "verify:supplier-utility-readonly": "tsx src/scripts/verify-supplier-utility-readonly.ts"
   },
   "dependencies": {
     "@google-cloud/storage": "^8.0.1",

@@ -324,6 +324,9 @@ test("CONTADOR y SISTEMAS leen tickets globalmente pero no operan fuera de ubica
       ]);
     }
     if (created.tickets.length) {
+      await mutate("DELETE FROM ticket_linea_consumos WHERE ticket_id = ANY($1::int[])", [
+        created.tickets,
+      ]);
       await mutate("DELETE FROM ticket_lineas WHERE ticket_id = ANY($1::int[])", [
         created.tickets,
       ]);

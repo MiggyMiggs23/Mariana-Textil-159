@@ -1957,6 +1957,190 @@ export async function consumirBolsasFifo(
   return movimientos;
 }
 
+export type ConsumoRolloMetreadoInput = {
+  productoId: number;
+  ubicacionId: number;
+  fuentes: Array<{ rolloId: number; cantidad: string }>;
+  cantidadTotal: string;
+  usuarioId: number;
+  documentoId: string;
+  documentoTipo?: string;
+  justificacion?: string | null;
+};
+
+export function validarFuentesRollosMetreado(
+  fuentes: ReadonlyArray<{ rolloId: number; cantidad: string }>,
+  cantidadTotal: string,
+): Map<number, bigint> {
+  if (!fuentes.length) {
+    throw new InventarioError(
+      "La línea metreada debe indicar los rollos físicos consumidos.",
+      "SOURCE_ROLLO_REQUIRED",
+    );
+  }
+  const sourceIds = fuentes.map((source) => source.rolloId);
+  if (new Set(sourceIds).size !== sourceIds.length) {
+    throw new InventarioError(
+      "No se puede seleccionar el mismo rollo físico más de una vez.",
+      "DUPLICATE_SOURCE_ROLLO",
+    );
+  }
+  const requested = new Map<number, bigint>();
+  for (const source of fuentes) {
+    try {
+      const quantity = quantityToThousandthsBigInt(source.cantidad);
+      if (quantity <= 0n) throw new Error("non-positive");
+      requested.set(source.rolloId, quantity);
+    } catch {
+      throw new InventarioError(
+        "La cantidad de cada rollo fuente debe ser positiva y tener milésimas válidas.",
+        "INVALID_SOURCE_QUANTITY",
+      );
+    }
+  }
+  let expected: bigint;
+  try {
+    expected = quantityToThousandthsBigInt(cantidadTotal);
+  } catch {
+    throw new InventarioError(
+      "La cantidad metreada de la línea no tiene milésimas válidas.",
+      "SOURCE_ROLLO_QUANTITY_MISMATCH",
+    );
+  }
+  const actual = [...requested.values()].reduce((sum, value) => sum + value, 0n);
+  if (actual !== expected) {
+    throw new InventarioError(
+      "Las fuentes físicas deben cubrir exactamente la cantidad metreada en milésimas.",
+      "SOURCE_ROLLO_QUANTITY_MISMATCH",
+    );
+  }
+  return requested;
+}
+
+/**
+ * Consume explicitly selected quantities from physical fabric rolls.
+ *
+ * METRO METREADO has no safe product-level FIFO inference: callers must send
+ * the physical source rolls. Candidates are re-read after the deterministic
+ * inventory-pair advisory lock and then row-locked before validation/mutation.
+ */
+export async function consumirRollosMetreadoSeleccionados(
+  tx: Tx,
+  input: ConsumoRolloMetreadoInput,
+): Promise<Array<typeof movimientosTable.$inferSelect>> {
+  const requested = validarFuentesRollosMetreado(
+    input.fuentes,
+    input.cantidadTotal,
+  );
+  const sourceIds = [...requested.keys()];
+
+  await lockInventoryPairs(tx, [{ productoId: input.productoId, ubicacionId: input.ubicacionId }]);
+  const lockedRows = await tx
+    .select({
+      id: rollosTable.id,
+      serie: rollosTable.serie,
+      productoId: rollosTable.productoId,
+      ubicacionId: rollosTable.ubicacionId,
+      estado: rollosTable.estado,
+      cantidadActual: rollosTable.cantidadActual,
+      recepcionId: rollosTable.recepcionId,
+    })
+    .from(rollosTable)
+    .where(inArray(rollosTable.id, sourceIds))
+    .orderBy(rollosTable.id)
+    .for("update");
+  if (lockedRows.length !== sourceIds.length) {
+    throw new InventarioError(
+      "Uno de los rollos fuente ya no existe.",
+      "SOURCE_ROLLO_NOT_FOUND",
+    );
+  }
+  const entryIds = [
+    ...new Set(
+      lockedRows
+        .map((row) => row.recepcionId)
+        .filter((id): id is number => id != null),
+    ),
+  ];
+  const entryRows = entryIds.length
+    ? await tx
+        .select({
+          id: entradasTable.id,
+          proveedorId: entradasTable.proveedorId,
+        })
+        .from(entradasTable)
+        .where(inArray(entradasTable.id, entryIds))
+        .orderBy(entradasTable.id)
+        .for("update")
+    : [];
+  const providerByEntry = new Map(
+    entryRows.map((entry) => [entry.id, entry.proveedorId]),
+  );
+  const rows = lockedRows.map((row) => ({
+    ...row,
+    recepcionProveedorId:
+      row.recepcionId == null
+        ? null
+        : providerByEntry.get(row.recepcionId) ?? null,
+  }));
+  await assertNoActiveVentaClienteReservation(tx, sourceIds);
+
+  for (const row of rows) {
+    const requestedQuantity = requested.get(row.id)!;
+    if (
+      row.productoId !== input.productoId ||
+      row.ubicacionId !== input.ubicacionId ||
+      row.estado !== "DISPONIBLE"
+    ) {
+      throw new InventarioError(
+        `El rollo fuente ${row.serie} ya no está disponible en la ubicación solicitada.`,
+        "SOURCE_ROLLO_SCOPE",
+      );
+    }
+    if (row.recepcionId == null || row.recepcionProveedorId == null) {
+      throw new InventarioError(
+        `El rollo fuente ${row.serie} no tiene una entrada/proveedor autoritativo.`,
+        "SOURCE_ROLLO_ENTRY_REQUIRED",
+      );
+    }
+    if (quantityToThousandthsBigInt(row.cantidadActual) < requestedQuantity) {
+      throw new InventarioError(
+        `El rollo fuente ${row.serie} no tiene cantidad suficiente.`,
+        "SOURCE_ROLLO_INSUFFICIENT",
+      );
+    }
+  }
+
+  const movimientos: Array<typeof movimientosTable.$inferSelect> = [];
+  for (const row of rows) {
+    const requestedQuantity = requested.get(row.id)!;
+    const remaining =
+      quantityToThousandthsBigInt(row.cantidadActual) - requestedQuantity;
+    await tx
+      .update(rollosTable)
+      .set({
+        cantidadActual: formatQuantityThousandthsBigInt(remaining),
+        estado: remaining === 0n ? "VENDIDO" : "DISPONIBLE",
+      })
+      .where(eq(rollosTable.id, row.id));
+    movimientos.push(
+      await insertMovimiento(tx, {
+        rolloId: row.id,
+        productoId: row.productoId,
+        ubicacionId: row.ubicacionId,
+        tipo: "VENTA",
+        cantidad: formatQuantityThousandthsBigInt(-requestedQuantity),
+        usuarioId: input.usuarioId,
+        justificacion: input.justificacion ?? null,
+        documentoTipo: input.documentoTipo ?? "TICKET_METRO_METREADO",
+        documentoId: input.documentoId,
+      }),
+    );
+  }
+  await refreshCache(tx, input.productoId, input.ubicacionId);
+  return movimientos;
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type AjustarRolloInput = {
@@ -2275,7 +2459,22 @@ export type RevertirMovimientoInput = {
   usuarioId: number;
   justificacion?: string | null;
   uuidCliente?: string | null;
+  /**
+   * Only the atomic ticket-cancellation workflow may reverse a ticket-owned
+   * VENTA. Generic inventory adjustment routes must leave the ticket and its
+   * supplier-allocation ledger untouched.
+   */
+  permitirCancelacionDocumento?: boolean;
 };
+
+const TICKET_OWNED_SALE_DOCUMENT_TYPES = new Set([
+  "TICKET",
+  "NOTA",
+  DOCUMENTO_TICKET_BOLSA_NORMAL,
+  DOCUMENTO_TICKET_BOLSA_METREADO,
+  DOCUMENTO_TICKET_PIEZA_NORMAL,
+  "TICKET_METRO_METREADO",
+]);
 
 /**
  * Reverse a movement by recording a CANCELACION that references the original.
@@ -2299,6 +2498,16 @@ export async function revertirMovimiento(
 
   if (!orig) {
     throw new InventarioError("Movimiento no encontrado.", "MOVIMIENTO_NOT_FOUND");
+  }
+  if (
+    orig.tipo === "VENTA" &&
+    TICKET_OWNED_SALE_DOCUMENT_TYPES.has(orig.documentoTipo ?? "") &&
+    input.permitirCancelacionDocumento !== true
+  ) {
+    throw new InventarioError(
+      "Las ventas de tickets solo se cancelan desde el documento para revertir también sus asignaciones de proveedor.",
+      "TICKET_CANCELLATION_REQUIRED",
+    );
   }
   let justificacion =
     input.justificacion ?? `Cancelación del movimiento #${input.movimientoOrigenId}`;
@@ -2379,7 +2588,8 @@ export async function revertirMovimiento(
     orig.tipo === "VENTA" &&
     (orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_NORMAL ||
       orig.documentoTipo === DOCUMENTO_TICKET_BOLSA_METREADO ||
-      orig.documentoTipo === DOCUMENTO_TICKET_PIEZA_NORMAL);
+      orig.documentoTipo === DOCUMENTO_TICKET_PIEZA_NORMAL ||
+      orig.documentoTipo === "TICKET_METRO_METREADO");
   const cantidadRestore = movsThatChangeCantidad.includes(orig.tipo) || ventaBolsa
     ? formatQuantityThousandthsBigInt(
         quantityToThousandthsBigInt(rollo.cantidadActual) +

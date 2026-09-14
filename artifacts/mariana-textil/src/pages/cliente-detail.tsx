@@ -123,7 +123,7 @@ export default function ClienteDetail() {
   const account = useQuery({ queryKey: ["cliente-account", id], queryFn: () => getAccount(id), enabled: canFinances && Number.isFinite(id) });
   const purchases = useQuery({ queryKey: ["cliente-purchases", id, periodDates], queryFn: () => getPurchases(id, periodDates), enabled: canFinances && Number.isFinite(id) });
   const stats = useQuery({ queryKey: ["cliente-stats", id, periodDates], queryFn: () => getStats(id, periodDates), enabled: canFinances && Number.isFinite(id) });
-  const lifetimeStats = useQuery({ queryKey: ["cliente-lifetime-stats", id], queryFn: () => getStats(id, {}), enabled: canFinances && Number.isFinite(id) });
+  const lifetimeStats = useQuery({ queryKey: ["cliente-lifetime-stats", id], queryFn: () => getStats(id, {}), enabled: canFinances && utilityVisible && Number.isFinite(id) });
   const analytics = useQuery({ queryKey: ["cliente-analytics", id, periodDates], queryFn: () => getClientAnalytics(id, periodDates), enabled: canFinances && Number.isFinite(id) });
   const portfolio = useQuery({ queryKey: ["clientes-portfolio"], queryFn: getPortfolio, enabled: canCredit && Number.isFinite(id) });
   const payments = useGetClientePagos(id, { query: { enabled: canFinances && Number.isFinite(id), queryKey: getGetClientePagosQueryKey(id) } });
@@ -133,7 +133,8 @@ export default function ClienteDetail() {
   const saldoAFavorFromAccount = (account.data as (typeof account.data & { saldoAFavor?: string }) | undefined)?.saldoAFavor;
   const saldoAFavor = saldoAFavorFromCredit ?? saldoAFavorFromAccount ?? "0.00";
   const saldoActual = account.data?.saldoActual ?? credit.data?.saldoActual;
-  const saldoDeudor = Math.max(0, Number(saldoActual ?? 0));
+  const saldoDeudorRaw = Number(saldoActual ?? 0);
+  const saldoDeudor = Number.isFinite(saldoDeudorRaw) ? Math.max(0, saldoDeudorRaw) : 0;
   const saldoAFavorAmount = Number(saldoAFavor);
   const hasSaldoAFavor = Number.isFinite(saldoAFavorAmount) && saldoAFavorAmount > 0;
   const chartData = useMemo(() => {

@@ -55,3 +55,4 @@
 - [Hashes entre clientes PostgreSQL](database-snapshot-client-parsers.md) — comparar representaciones SQL uniformes, no fechas decodificadas de forma distinta por pg y Drizzle.
 - [Respaldo exacto sin reinicios intermedios](exact-backup-quiescence.md) — detener escritores hasta aplicar; separar conservación al commit de efectos posteriores del arranque y login.
 - [Atribución de utilidad al proveedor](supplier-profit-attribution.md) — la diferencia con los filtros históricos de ventas es deliberada; no homogeneizarla automáticamente.
+- [Pruebas financieras SQL sin escrituras](readonly-financial-sql-fixtures.md) — CTEs VALUES y READ ONLY prueban la consulta real sin usuarios ni movimientos temporales.

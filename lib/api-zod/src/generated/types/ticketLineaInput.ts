@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { TicketLineaFuenteRolloInput } from './ticketLineaFuenteRolloInput';
 import type { TipoTicket } from './tipoTicket';
 
 export interface TicketLineaInput {
@@ -19,4 +20,6 @@ export interface TicketLineaInput {
   cantidad: number;
   /** @minimum 0 */
   precioUnitario: number;
+  /** Fuentes físicas explícitas obligatorias para una línea nueva METREADO cuyo producto tenga unidad METRO. NORMAL y BOLSA no las usan; nunca se infiere un rollo por producto. Cada rollo debe pertenecer a una entrada con proveedor autoritativo. */
+  fuentesRollo?: TicketLineaFuenteRolloInput[];
 }

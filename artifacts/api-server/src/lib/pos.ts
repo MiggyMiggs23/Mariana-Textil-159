@@ -35,6 +35,7 @@ import {
 } from "./credit-aging-read-model";
 import {
   consumirBolsasFifo,
+  consumirRollosMetreadoSeleccionados,
   DOCUMENTO_TICKET_BOLSA_METREADO,
   DOCUMENTO_TICKET_BOLSA_NORMAL,
   DOCUMENTO_TICKET_PIEZA_NORMAL,
@@ -69,6 +70,10 @@ import { meteredReferenceCost } from "./metered-reference-cost";
 import { IVA_RATE_BASIS_POINTS } from "./iva";
 import { consumirRollosSalidaVenta } from "./salidas";
 import { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
+import {
+  recordTicketLineConsumption,
+  reverseTicketLineConsumptions,
+} from "./supplier-trace";
 
 const FOLIO_ROW_ID = 1;
 
@@ -93,6 +98,8 @@ export type CrearTicketLineaInput = {
   cantidad: string;
   precioUnitario: string;
   ubicacionId?: number;
+  /** Explicit physical sources required for new METREADO METRO lines. */
+  fuentesRollo?: Array<{ rolloId: number; cantidad: string }>;
 };
 
 export type CrearTicketInput = {
@@ -925,6 +932,55 @@ export async function crearTicket(
         409,
       );
     }
+    if (tipo === "NORMAL" && linea.fuentesRollo?.length) {
+      throw new PosError(
+        "Las líneas NORMAL no admiten fuentes parciales.",
+        "NORMAL_SOURCE_ROLLO_NOT_ALLOWED",
+      );
+    }
+    if (
+      tipo === "METREADO" &&
+      linea.fuentesRollo?.length &&
+      producto.unidad !== "METRO"
+    ) {
+      throw new PosError(
+        "Solo las líneas METREADO de tela METRO admiten fuentes físicas explícitas.",
+        "INVALID_SOURCE_ROLLO_UNIT",
+      );
+    }
+    if (tipo === "METREADO" && producto.unidad === "METRO") {
+      if (!linea.fuentesRollo?.length) {
+        throw new PosError(
+          "Las líneas METREADO de tela METRO deben indicar los rollos físicos consumidos.",
+          "SOURCE_ROLLO_REQUIRED",
+        );
+      }
+      const sourceQuantity = (linea.fuentesRollo ?? []).reduce(
+        (sum, source) => sum + Number(source.cantidad),
+        0,
+      );
+      if (
+        linea.fuentesRollo?.some(
+          (source) =>
+            !Number.isFinite(Number(source.cantidad)) ||
+            Number(source.cantidad) <= 0,
+        )
+      ) {
+        throw new PosError(
+          "Cada fuente física debe tener una cantidad positiva.",
+          "INVALID_SOURCE_QUANTITY",
+        );
+      }
+      if (
+        linea.fuentesRollo?.length &&
+        Math.abs(sourceQuantity - Number(cantidad)) > 0.0005
+      ) {
+        throw new PosError(
+          "Las fuentes físicas deben cubrir exactamente la cantidad metreada.",
+          "SOURCE_ROLLO_QUANTITY_MISMATCH",
+        );
+      }
+    }
     if (linea.rolloId != null && !rollo) {
       throw new PosError("Rollo no encontrado.", "ROLLO_NOT_FOUND", 404);
     }
@@ -993,6 +1049,7 @@ export async function crearTicket(
       costoTotalCongelado:
         costoCents == null ? null : decimalMoney(costoCents),
       costoReferenciaEstado,
+      fuentesRollo: linea.fuentesRollo ?? [],
       importeCents,
     };
   });
@@ -1044,12 +1101,38 @@ export async function crearTicket(
     })
     .returning();
 
+  // Insert lines before consuming inventory so every movement can be linked to
+  // its durable physical-allocation ledger row in the same transaction.
+  const insertedLineas = await tx
+    .insert(ticketLineasTable)
+    .values(
+      lineasPreparadas.map((linea) => ({
+        ticketId: ticket!.id,
+        rolloId: linea.rolloId,
+        productoId: linea.productoId,
+        tipo: linea.tipo as "NORMAL" | "METREADO",
+        cantidad: linea.cantidad,
+        precioUnitario: linea.precioUnitario,
+        precioSugerido: linea.precioSugerido,
+        importe: linea.importe,
+        costoUnitarioCongelado: linea.costoUnitarioCongelado,
+        costoTotalCongelado: linea.costoTotalCongelado,
+        costoReferenciaEstado: linea.costoReferenciaEstado,
+      })),
+    )
+    .returning();
+  const movimientosPorLinea = new Map<
+    number,
+    Array<typeof movimientosTable.$inferSelect>
+  >();
+
   // Sell every explicitly selected roll/box first. This prevents a FIFO BOLSA
   // line in the same ticket from consuming a box also selected as NORMAL.
-  for (const linea of input.deferInventory ? [] : lineasPreparadas) {
+  for (const [lineIndex, linea] of lineasPreparadas.entries()) {
+    if (input.deferInventory) continue;
     const producto = productoMap.get(linea.productoId)!;
     if (linea.tipo === "NORMAL" && linea.rolloId != null) {
-      await venderRollo(tx, {
+      const result = await venderRollo(tx, {
         rolloId: linea.rolloId,
         usuarioId: input.usuarioTerminalId,
         justificacion: `Venta ticket ${folio}`,
@@ -1063,13 +1146,15 @@ export async function crearTicket(
         vaciarCantidadActual:
           producto.unidad === "BOLSA" || producto.unidad === "PIEZA",
       });
+      movimientosPorLinea.set(lineIndex, [result.movimiento]);
     }
   }
-  for (const linea of input.deferInventory ? [] : lineasPreparadas) {
+  for (const [lineIndex, linea] of lineasPreparadas.entries()) {
+    if (input.deferInventory) continue;
     const producto = productoMap.get(linea.productoId)!;
     if (linea.tipo === "METREADO" && producto.unidad === "BOLSA") {
       try {
-        await consumirBolsasFifo(tx, {
+        const movimientos = await consumirBolsasFifo(tx, {
           productoId: linea.productoId,
           ubicacionId: input.ubicacionId,
           cantidad: linea.cantidad,
@@ -1077,6 +1162,31 @@ export async function crearTicket(
           documentoId: String(ticket!.id),
           justificacion: `Venta metreada de bolsas ticket ${folio}`,
         });
+        movimientosPorLinea.set(lineIndex, movimientos);
+      } catch (error) {
+        if (error instanceof InventarioError) {
+          throw new PosError(error.message, error.code, 409);
+        }
+        throw error;
+      }
+    }
+    if (
+      linea.tipo === "METREADO" &&
+      producto.unidad === "METRO" &&
+      linea.fuentesRollo?.length
+    ) {
+      try {
+        const movimientos = await consumirRollosMetreadoSeleccionados(tx, {
+          productoId: linea.productoId,
+          ubicacionId: lineLocation(input.lineas[lineIndex]!),
+          fuentes: linea.fuentesRollo,
+          cantidadTotal: linea.cantidad,
+          usuarioId: input.usuarioTerminalId,
+          documentoId: String(ticket!.id),
+          documentoTipo: "TICKET_METRO_METREADO",
+          justificacion: `Venta metreada de tela ticket ${folio}`,
+        });
+        movimientosPorLinea.set(lineIndex, movimientos);
       } catch (error) {
         if (error instanceof InventarioError) {
           throw new PosError(error.message, error.code, 409);
@@ -1085,19 +1195,28 @@ export async function crearTicket(
       }
     }
   }
-  for (const linea of lineasPreparadas) {
-    await tx.insert(ticketLineasTable).values({
+
+  for (const [lineIndex, movimientos] of movimientosPorLinea) {
+    const linea = lineasPreparadas[lineIndex]!;
+    const ticketLinea = insertedLineas[lineIndex];
+    if (!ticketLinea) throw new PosError("No se pudo registrar la línea de venta.", "LINE_INSERT_FAILED");
+    await recordTicketLineConsumption(tx, {
       ticketId: ticket!.id,
-      rolloId: linea.rolloId,
-      productoId: linea.productoId,
-      tipo: linea.tipo as "NORMAL" | "METREADO",
+      ticketLineaId: ticketLinea.id,
       cantidad: linea.cantidad,
-      precioUnitario: linea.precioUnitario,
-      precioSugerido: linea.precioSugerido,
-      importe: linea.importe,
-      costoUnitarioCongelado: linea.costoUnitarioCongelado,
-      costoTotalCongelado: linea.costoTotalCongelado,
-      costoReferenciaEstado: linea.costoReferenciaEstado,
+      ingresoCentavos: linea.importeCents,
+      costoMode: linea.tipo === "NORMAL" ? "LINE_FROZEN" : "ROLL_PHYSICAL",
+      costoCentavos:
+        linea.costoTotalCongelado == null
+          ? null
+          : money(linea.costoTotalCongelado),
+      movimientos: movimientos.map((movement) => ({
+        id: Number(movement.id),
+        rolloId: movement.rolloId,
+        cantidad: movement.cantidad,
+      })),
+      idempotencyPrefix: `ticket:${ticket!.id}:line:${ticketLinea.id}`,
+      requireCompleteTrace: true,
     });
   }
 
@@ -1204,6 +1323,7 @@ export async function cancelarTicket(
             movimientosTable.documentoTipo,
             DOCUMENTO_TICKET_PIEZA_NORMAL,
           ),
+          eq(movimientosTable.documentoTipo, "TICKET_METRO_METREADO"),
         ),
         eq(movimientosTable.documentoId, String(ticket.id)),
       ),
@@ -1216,13 +1336,21 @@ export async function cancelarTicket(
       ubicacionId: venta.ubicacionId,
     })),
   );
+  const cancellationByOriginal = new Map<number, number>();
   for (const venta of ventas) {
-    await revertirMovimiento(tx, {
+    const reversed = await revertirMovimiento(tx, {
       movimientoOrigenId: Number(venta.id),
       usuarioId: input.usuarioId,
       justificacion: motivo,
+      permitirCancelacionDocumento: true,
     });
+    cancellationByOriginal.set(Number(venta.id), Number(reversed.movimiento.id));
   }
+  await reverseTicketLineConsumptions(
+    tx,
+    ticket.id,
+    cancellationByOriginal,
+  );
 
   const creditCharges =
     ticket.documentoTipo === "NOTA" &&

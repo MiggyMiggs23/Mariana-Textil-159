@@ -978,15 +978,23 @@ type SupplierUtilitySqlRow = {
  * Shared source-of-truth CTE for supplier utility. The supplier is obtained
  * from entradas.proveedor_id, never from rollos.proveedor_id or producto_id.
  *
- * NORMAL lines have an explicit physical roll. METREADO lines are allocated
- * over the negative VENTA movements written by the inventory engine. The
- * running ranges make multiple metered lines in one ticket deterministic and
- * preserve every consumed roll/provider rather than assigning the whole line
- * to a guessed supplier. NORMAL cost uses the immutable ticket-line snapshot;
- * METREADO cost uses the consumed physical roll's cost because the line-level
- * metered snapshot is an average and must not be attributed to one supplier.
+ * New NORMAL and METREADO lines are resolved through the append-only physical
+ * allocation ledger written by the inventory engine. A read-only fallback
+ * admits only legacy NORMAL lines whose explicit roll, reception/provider,
+ * frozen line cost and matching accounted VENTA movement all agree; it never
+ * writes a backfill. Every consumed roll and provider is preserved rather than
+ * assigning a whole line to a guessed supplier. NORMAL cost uses its immutable
+ * ticket-line snapshot; METREADO cost uses each consumed physical roll's
+ * frozen cost because the line-level metered snapshot is an average.
  */
-function supplierUtilityCte(opts: {
+/**
+ * Renderable source-of-truth CTE for the supplier utility report.
+ *
+ * Kept exported for the read-only PostgreSQL regression harness. The harness
+ * prefixes this fragment with statement-scoped VALUES CTEs; it never touches
+ * application tables or writes fixture rows.
+ */
+export function supplierUtilityCte(opts: {
   proveedorId: number;
   ubicacionId?: number | null;
   desde: Date;
@@ -995,21 +1003,22 @@ function supplierUtilityCte(opts: {
   const location = opts.ubicacionId == null
     ? sql``
     : sql`AND t.ubicacion_id = ${opts.ubicacionId}`;
-  const movementTypes = sql`'TICKET', 'NOTA', 'TICKET_BOLSA_NORMAL', 'TICKET_BOLSA_METREADO', 'TICKET_PIEZA_NORMAL'`;
   return sql`
     WITH accounted_lines AS (
       SELECT
         t.id AS ticket_id,
         t.folio AS ticket_folio,
+        t.ubicacion_id,
         ${sql.raw(accountedDocumentAt("t"))} AS accounted_at,
         l.id AS linea_id,
-        l.rollo_id,
         l.producto_id,
         l.tipo,
         l.cantidad,
         l.precio_unitario,
         l.importe,
-        l.costo_unitario_congelado
+        l.rollo_id,
+        l.costo_unitario_congelado,
+        l.costo_total_congelado
       FROM tickets t
       JOIN ticket_lineas l ON l.ticket_id = t.id
       WHERE ${sql.raw(accountedDocumentPredicate("t"))}
@@ -1017,7 +1026,107 @@ function supplierUtilityCte(opts: {
         AND ${sql.raw(accountedDocumentAt("t"))} <= ${opts.hasta}
         ${location}
     ),
-    normal_source AS (
+    net_allocations_raw AS (
+      SELECT
+        c.id AS consumo_id,
+        c.ticket_id,
+        c.ticket_linea_id AS linea_id,
+        c.rollo_id,
+        c.entrada_id,
+        c.proveedor_id AS captured_proveedor_id,
+        c.cantidad_milesimas
+          - COALESCE(SUM(r.cantidad_milesimas), 0)::bigint AS cantidad_milesimas,
+        c.ingreso_centavos
+          - COALESCE(SUM(r.ingreso_centavos), 0)::bigint AS ingreso_centavos,
+        CASE
+          WHEN c.costo_centavos IS NULL THEN NULL
+          WHEN COUNT(r.id) FILTER (WHERE r.costo_centavos IS NULL) > 0 THEN NULL
+          ELSE c.costo_centavos - COALESCE(SUM(r.costo_centavos), 0)::bigint
+        END AS costo_centavos
+      FROM ticket_linea_consumos c
+      LEFT JOIN ticket_linea_consumos r
+        ON r.reversa_de_id = c.id
+       AND r.tipo = 'REVERSA'
+      WHERE c.tipo = 'CONSUMO'
+      GROUP BY
+        c.id,
+        c.ticket_id,
+        c.ticket_linea_id,
+        c.rollo_id,
+        c.entrada_id,
+        c.proveedor_id,
+        c.cantidad_milesimas,
+        c.ingreso_centavos,
+        c.costo_centavos
+    ),
+    net_allocations AS (
+      SELECT *
+      FROM net_allocations_raw
+      WHERE cantidad_milesimas > 0
+    ),
+    physical_source AS (
+      SELECT
+        a.linea_id,
+        a.ticket_id,
+        a.ticket_folio,
+        a.accounted_at,
+        e.proveedor_id,
+        p.nombre AS proveedor,
+        e.id AS entrada_id,
+        e.folio AS entrada_folio,
+        n.rollo_id,
+        r.serie,
+        pr.id AS producto_id,
+        pr.sku,
+        pr.tela,
+        pr.color,
+        pr.unidad,
+        a.tipo,
+        n.cantidad_milesimas::numeric / 1000 AS cantidad,
+        n.ingreso_centavos::numeric / 100 AS ventas,
+        n.costo_centavos::numeric / 100 AS costo
+      FROM net_allocations n
+      JOIN accounted_lines a ON a.linea_id = n.linea_id
+      JOIN rollos r
+        ON r.id = n.rollo_id
+       AND r.recepcion_id = n.entrada_id
+      JOIN entradas e ON e.id = n.entrada_id
+      JOIN proveedores p ON p.id = e.proveedor_id
+      JOIN productos pr ON pr.id = a.producto_id
+      WHERE e.proveedor_id = ${opts.proveedorId}
+        AND n.captured_proveedor_id = e.proveedor_id
+    ),
+    legacy_normal_matches AS (
+      SELECT
+        a.linea_id,
+        MIN(m.id) AS movimiento_id
+      FROM accounted_lines a
+      JOIN movimientos m
+        ON m.rollo_id = a.rollo_id
+       AND m.producto_id = a.producto_id
+       AND m.ubicacion_id = a.ubicacion_id
+       AND m.tipo = 'VENTA'
+       AND m.cantidad < 0
+       AND m.documento_id = a.ticket_id::text
+       AND m.documento_tipo IN (
+         'TICKET',
+         'NOTA',
+         'TICKET_BOLSA_NORMAL',
+         'TICKET_PIEZA_NORMAL'
+       )
+       AND (-m.cantidad)::numeric = a.cantidad
+       AND NOT EXISTS (
+         SELECT 1
+         FROM movimientos reversal
+         WHERE reversal.tipo = 'CANCELACION'
+           AND reversal.movimiento_origen_id = m.id
+       )
+      WHERE a.tipo = 'NORMAL'
+        AND a.rollo_id IS NOT NULL
+      GROUP BY a.linea_id
+      HAVING COUNT(*) = 1
+    ),
+    legacy_normal_evidence AS (
       SELECT
         a.linea_id,
         a.ticket_id,
@@ -1035,140 +1144,61 @@ function supplierUtilityCte(opts: {
         pr.color,
         pr.unidad,
         a.tipo,
-        a.cantidad::numeric AS cantidad,
-        ROUND(a.importe, 2)::numeric AS ventas,
-        CASE WHEN a.costo_unitario_congelado IS NULL THEN NULL
-          ELSE ROUND(a.cantidad * a.costo_unitario_congelado, 2)::numeric
-        END AS costo
+        a.cantidad,
+        a.importe,
+        a.costo_unitario_congelado,
+        a.costo_total_congelado
       FROM accounted_lines a
-      JOIN rollos r ON r.id = a.rollo_id
+      JOIN legacy_normal_matches lm ON lm.linea_id = a.linea_id
+      JOIN rollos r
+        ON r.id = a.rollo_id
       JOIN entradas e ON e.id = r.recepcion_id
       JOIN proveedores p ON p.id = e.proveedor_id
       JOIN productos pr ON pr.id = a.producto_id
+      JOIN movimientos m ON m.id = lm.movimiento_id
       WHERE a.tipo = 'NORMAL'
         AND a.rollo_id IS NOT NULL
-        AND e.proveedor_id = ${opts.proveedorId}
+        AND NOT EXISTS (
+          SELECT 1
+          FROM ticket_linea_consumos c
+          WHERE c.ticket_linea_id = a.linea_id
+            AND c.tipo = 'CONSUMO'
+        )
     ),
-    metered_lines AS (
+    legacy_normal_source AS (
       SELECT
-        a.*,
-        COALESCE(
-          SUM(a.cantidad) OVER (
-            PARTITION BY a.ticket_id, a.producto_id
-            ORDER BY a.linea_id
-            ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
-          ),
-          0
-        )::numeric AS line_start
-      FROM accounted_lines a
-      WHERE a.tipo = 'METREADO' AND a.rollo_id IS NULL
-    ),
-    metered_moves AS (
-      SELECT
-        m.id AS movimiento_id,
-        t.id AS ticket_id,
-        m.producto_id,
-        (-m.cantidad)::numeric AS cantidad,
-        r.id AS rollo_id,
-        r.serie,
-        r.costo_unitario AS rollo_costo_unitario,
-        e.id AS entrada_id,
-        e.folio AS entrada_folio,
-        e.proveedor_id,
-        p.nombre AS proveedor,
-        pr.sku,
-        pr.tela,
-        pr.color,
-        pr.unidad,
-        COALESCE(
-          SUM((-m.cantidad)::numeric) OVER (
-            PARTITION BY t.id, m.producto_id
-            ORDER BY m.id
-            ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING
-          ),
-          0
-        )::numeric AS move_start
-      FROM movimientos m
-      JOIN tickets t ON t.id = CASE
-        WHEN m.documento_id ~ '^[0-9]+$' THEN m.documento_id::integer
-        ELSE NULL
-      END
-      JOIN rollos r ON r.id = m.rollo_id
-      JOIN entradas e ON e.id = r.recepcion_id
-      JOIN proveedores p ON p.id = e.proveedor_id
-      JOIN productos pr ON pr.id = m.producto_id
-      WHERE m.tipo = 'VENTA'
-        AND m.cantidad < 0
-        AND m.documento_tipo IN (${movementTypes})
-        AND ${sql.raw(accountedDocumentPredicate("t"))}
-        AND ${sql.raw(accountedDocumentAt("t"))} >= ${opts.desde}
-        AND ${sql.raw(accountedDocumentAt("t"))} <= ${opts.hasta}
-        ${location}
-        AND e.proveedor_id = ${opts.proveedorId}
-    ),
-    metered_source AS (
-      SELECT
-        l.linea_id,
-        l.ticket_id,
-        l.ticket_folio,
-        l.accounted_at,
-        m.proveedor_id,
-        m.proveedor,
-        m.entrada_id,
-        m.entrada_folio,
-        m.rollo_id,
-        m.serie,
-        l.producto_id,
-        m.sku,
-        m.tela,
-        m.color,
-        m.unidad,
-        l.tipo,
-        GREATEST(
-          0::numeric,
-          LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
-            - GREATEST(l.line_start, m.move_start)
-        )::numeric AS cantidad,
-        CASE WHEN m.rollo_costo_unitario IS NULL THEN
-          ROUND(
-            GREATEST(
-              0::numeric,
-              LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
-                - GREATEST(l.line_start, m.move_start)
-            ) * l.precio_unitario,
-            2
-          )::numeric
-        ELSE
-          ROUND(
-            GREATEST(
-              0::numeric,
-              LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
-                - GREATEST(l.line_start, m.move_start)
-            ) * l.precio_unitario,
-            2
-          )::numeric
-        END AS ventas,
-        CASE WHEN m.rollo_costo_unitario IS NULL THEN NULL
-          ELSE ROUND(
-            GREATEST(
-              0::numeric,
-              LEAST(l.line_start + l.cantidad, m.move_start + m.cantidad)
-                - GREATEST(l.line_start, m.move_start)
-            ) * m.rollo_costo_unitario,
-            2
-          )::numeric
+        linea_id,
+        ticket_id,
+        ticket_folio,
+        accounted_at,
+        proveedor_id,
+        proveedor,
+        entrada_id,
+        entrada_folio,
+        rollo_id,
+        serie,
+        producto_id,
+        sku,
+        tela,
+        color,
+        unidad,
+        tipo,
+        cantidad,
+        importe AS ventas,
+        CASE
+          WHEN costo_unitario_congelado IS NULL
+            OR costo_unitario_congelado <= 0
+            OR costo_total_congelado IS NULL
+            OR costo_total_congelado <= 0 THEN NULL
+          ELSE costo_total_congelado
         END AS costo
-      FROM metered_lines l
-      JOIN metered_moves m
-        ON m.ticket_id = l.ticket_id
-       AND m.producto_id = l.producto_id
-       AND m.move_start < l.line_start + l.cantidad
-       AND m.move_start + m.cantidad > l.line_start
+      FROM legacy_normal_evidence
+      WHERE proveedor_id = ${opts.proveedorId}
     ),
     source AS (
-      SELECT * FROM normal_source
+      SELECT * FROM physical_source
       UNION ALL
-      SELECT * FROM metered_source
+      SELECT * FROM legacy_normal_source
     )
   `;
 }
@@ -1229,16 +1259,17 @@ export async function utilidadPorProveedor(opts: {
       ${cte},
       untraceable AS (
         SELECT COUNT(*) FILTER (
-          WHERE a.tipo = 'METREADO'
-            AND NOT EXISTS (
-              SELECT 1
-              FROM movimientos m
-              WHERE m.tipo = 'VENTA'
-                AND m.cantidad < 0
-                AND m.producto_id = a.producto_id
-                AND m.documento_id = a.ticket_id::text
-                AND m.documento_tipo IN (${movementTypesForSummary()})
-            )
+          WHERE NOT EXISTS (
+            SELECT 1
+            FROM ticket_linea_consumos c
+            WHERE c.ticket_linea_id = a.linea_id
+              AND c.tipo = 'CONSUMO'
+          )
+          AND NOT EXISTS (
+            SELECT 1
+            FROM legacy_normal_evidence legacy
+            WHERE legacy.linea_id = a.linea_id
+          )
         )::text AS lineas_excluidas_sin_rollo
         FROM accounted_lines a
       ),
@@ -1329,10 +1360,6 @@ export async function utilidadPorProveedor(opts: {
     page,
     pageSize,
   };
-}
-
-function movementTypesForSummary() {
-  return sql`'TICKET', 'NOTA', 'TICKET_BOLSA_NORMAL', 'TICKET_BOLSA_METREADO', 'TICKET_PIEZA_NORMAL'`;
 }
 
 /**

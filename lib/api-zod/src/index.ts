@@ -665,6 +665,7 @@ export * from "./generated/types/ticketInput";
 export * from "./generated/types/ticketInputDiasPlazo";
 export * from "./generated/types/ticketLinea";
 export * from "./generated/types/ticketLineaCostoFuente";
+export * from "./generated/types/ticketLineaFuenteRolloInput";
 export * from "./generated/types/ticketLineaImpresionBase";
 export * from "./generated/types/ticketLineaImpresionConPrecios";
 export * from "./generated/types/ticketLineaImpresionSinPrecios";

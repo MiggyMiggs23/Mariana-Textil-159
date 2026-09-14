@@ -5840,6 +5840,9 @@ export const crearTicketBodyLineasItemCantidadExclusiveMin = 0;
 export const crearTicketBodyLineasItemPrecioUnitarioMin = 0;
 
 
+export const crearTicketBodyLineasItemFuentesRolloItemCantidadExclusiveMin = 0;
+
+
 
 
 export const CrearTicketBody = zod.object({
@@ -5858,7 +5861,11 @@ export const CrearTicketBody = zod.object({
   "productoId": zod.number(),
   "tipo": zod.enum(['NORMAL', 'METREADO']),
   "cantidad": zod.number().gt(crearTicketBodyLineasItemCantidadExclusiveMin),
-  "precioUnitario": zod.number().min(crearTicketBodyLineasItemPrecioUnitarioMin)
+  "precioUnitario": zod.number().min(crearTicketBodyLineasItemPrecioUnitarioMin),
+  "fuentesRollo": zod.array(zod.object({
+  "rolloId": zod.number().min(1),
+  "cantidad": zod.number().gt(crearTicketBodyLineasItemFuentesRolloItemCantidadExclusiveMin)
+})).optional().describe('Fuentes físicas explícitas obligatorias para una línea nueva METREADO cuyo producto tenga unidad METRO. NORMAL y BOLSA no las usan; nunca se infiere un rollo por producto. Cada rollo debe pertenecer a una entrada con proveedor autoritativo.\n')
 })).min(1)
 })
 

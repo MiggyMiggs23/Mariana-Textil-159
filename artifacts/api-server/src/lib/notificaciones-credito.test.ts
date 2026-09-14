@@ -162,6 +162,9 @@ after(async () => {
     ]);
   }
   if (ticketId) {
+    await pool.query("DELETE FROM ticket_linea_consumos WHERE ticket_id=$1", [
+      ticketId,
+    ]);
     await pool.query("DELETE FROM tickets WHERE id=$1", [ticketId]);
   }
   if (customerId) {

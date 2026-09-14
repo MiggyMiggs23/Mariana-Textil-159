@@ -411,6 +411,10 @@ router.post(
               tipo: linea.tipo,
               cantidad: String(linea.cantidad),
               precioUnitario: String(linea.precioUnitario),
+              fuentesRollo: linea.fuentesRollo?.map((source) => ({
+                rolloId: source.rolloId,
+                cantidad: String(source.cantidad),
+              })),
             })),
             ip: getRequestIp(req),
           },

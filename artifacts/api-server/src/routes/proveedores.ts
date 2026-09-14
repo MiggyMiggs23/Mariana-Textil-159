@@ -970,6 +970,12 @@ router.get(
   requierePermiso("proveedores_finanzas", "ver"),
   async (req, res, next): Promise<void> => {
     try {
+      if (req.auth!.user.rol === "SUPERVISOR") {
+        res.status(403).json({
+          error: "SUPERVISOR no puede consultar utilidad de proveedores.",
+        });
+        return;
+      }
       const params = GetProveedorUtilidadParams.safeParse(req.params);
       if (!params.success) {
         res.status(400).json({

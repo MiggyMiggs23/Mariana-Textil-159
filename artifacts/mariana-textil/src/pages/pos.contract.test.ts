@@ -85,8 +85,10 @@ test("cart rows isolate long product details from price, quantity, amount, and r
   // cells, rather than letting a long name or SKU push controls into each other.
   assert.match(
     page,
-    /grid-cols-\[minmax\(0,1fr\)_6rem_5rem_6rem_2rem\].*data-testid="pos-cart-line"/s,
+    /grid-cols-\[minmax\(0,1fr\)_6rem\].*sm:grid-cols-\[minmax\(0,1fr\)_6rem_5rem_6rem_2rem\].*data-testid="pos-cart-line"/s,
   );
+  assert.match(page, /col-span-2.*sm:col-start-5.*sm:row-start-1/);
+  assert.match(page, /max-w-24.*sm:max-w-none/);
   assert.match(page, /className="min-w-0 break-words font-semibold text-sm"/);
   assert.match(page, /className="mt-0\.5 break-all text-xs text-muted-foreground"/);
   assert.match(page, /htmlFor=\{`precio-\$\{lineKey\}`\}/);
@@ -94,7 +96,7 @@ test("cart rows isolate long product details from price, quantity, amount, and r
   assert.match(page, /Cant\. \/ \{meteredUnit\}/);
   assert.match(page, /self-end text-right font-mono text-sm whitespace-nowrap/);
   assert.match(page, /self-end text-right font-bold whitespace-nowrap/);
-  assert.match(page, /h-8 w-8 shrink-0 text-destructive/);
+  assert.match(page, /h-8 w-8 shrink-0.*text-destructive/);
   assert.match(page, /grid-cols-\[minmax\(0,1fr\)_auto_auto\].*title=\{rollo\.serie\}/s);
 
   // Representative catalog extremes must remain text content in the dedicated
@@ -103,4 +105,29 @@ test("cart rows isolate long product details from price, quantity, amount, and r
   const longestCatalogSku = "MT-JACQUARD-INSTITUCIONAL-ALTA-RESISTENCIA-ANCHO-160-COLOR-ESPECIAL-0001";
   assert.ok(longestCatalogName.length > 60);
   assert.ok(longestCatalogSku.length > 70);
+});
+
+test("METRO metered lines require explicit same-site physical source allocations", async () => {
+  const page = await readFile(new URL("./pos.tsx", import.meta.url), "utf8");
+
+  assert.match(page, /isMetroMeteredLine/);
+  assert.match(page, /useBuscarPos\(sourceLookupParams/);
+  assert.match(page, /rollo\.productoId === item\.producto\.id/);
+  assert.match(page, /rollo\.ubicacionId === locationId/);
+  assert.match(page, /data-testid=\{`pos-metered-source-picker-\$\{item\.producto\.id\}`\}/);
+  assert.match(page, /<CampoEscaneo[\s\S]*input-metered-source-scan/);
+  assert.match(page, /fuentesRollo/);
+  assert.match(page, /sourceQuantityInThousandths/);
+  assert.match(page, /Completa la asignación para continuar/);
+  assert.match(page, /asigna exactamente/);
+});
+
+test("editing a METRO quantity and removing a cart line cannot retain stale source quantities", async () => {
+  const page = await readFile(new URL("./pos.tsx", import.meta.url), "utf8");
+
+  assert.match(page, /cantidad: qty,[\s\S]*fuentesRollo: isMetroMeteredLine\(item\) \? \[\]/);
+  assert.match(page, /const removeFromCart = \(index: number\) =>/);
+  assert.match(page, /current\.filter\(\(_, itemIndex\) => itemIndex !== index\)/);
+  assert.match(page, /fuentesRollo: \(item\.fuentesRollo \?\? \[\]\)\.map/);
+  assert.match(page, /if \(incompleteMeteredSources\)/);
 });

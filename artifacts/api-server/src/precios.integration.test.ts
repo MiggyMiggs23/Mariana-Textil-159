@@ -213,6 +213,7 @@ if (!testUrl) {
     } finally {
       if (server) await new Promise<void>((resolve) => server!.close(() => resolve()));
       // FK-safe, tag/id-scoped cleanup only.
+      if (ids.lines.length) await mutate("DELETE FROM ticket_linea_consumos WHERE ticket_linea_id = ANY($1::int[])", [ids.lines]);
       if (ids.lines.length) await mutate("DELETE FROM ticket_lineas WHERE id = ANY($1::int[])", [ids.lines]);
       if (ids.tickets.length) await mutate("DELETE FROM tickets WHERE id = ANY($1::int[])", [ids.tickets]);
       if (ids.products.length) {

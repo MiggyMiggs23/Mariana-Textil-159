@@ -11746,7 +11746,13 @@ components:
         utilidad: { type: string }
         margenPct: { type: ["string", "null"] }
         lineasIncluidas: { type: number }
-        lineasExcluidasSinRollo: { type: number }
+        lineasExcluidasSinRollo:
+          type: number
+          description: >
+            Conteo global, no atribuido al proveedor, de líneas contabilizadas
+            dentro de fecha y ubicación solicitadas sin evidencia física
+            verificable. Incluye NORMAL y METREADO; no significa únicamente
+            líneas metreada(s).
         lineasExcluidasSinCosto: { type: number }
         rollosExcluidosSinCosto:
           type: number
@@ -12118,6 +12124,21 @@ components:
           $ref: "#/components/schemas/TipoTicket"
         cantidad: { type: number, exclusiveMinimum: 0 }
         precioUnitario: { type: number, minimum: 0 }
+        fuentesRollo:
+          type: array
+          description: >
+            Fuentes físicas explícitas obligatorias para una línea nueva
+            METREADO cuyo producto tenga unidad METRO. NORMAL y BOLSA no las
+            usan; nunca se infiere un rollo por producto. Cada rollo debe
+            pertenecer a una entrada con proveedor autoritativo.
+          items:
+            $ref: "#/components/schemas/TicketLineaFuenteRolloInput"
+    TicketLineaFuenteRolloInput:
+      type: object
+      required: [rolloId, cantidad]
+      properties:
+        rolloId: { type: number, minimum: 1 }
+        cantidad: { type: number, exclusiveMinimum: 0 }
     TicketInput:
       type: object
       required: [uuidCliente, ubicacionId, clienteId, facturado, lineas]

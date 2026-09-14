@@ -54,6 +54,7 @@ import {
 } from "./inventario";
 export { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
 import { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";
+import { recordTicketLineConsumption } from "./supplier-trace";
 
 export const salidasConcurrencyTestSeam: {
   afterReceiveCandidateRead?: (
@@ -227,7 +228,50 @@ export async function consumirRollosSalidaVenta(tx: Tx, ticketId: number, usuari
     .where(and(eq(salidasTable.ticketId, ticketId), eq(salidasTable.modalidad, "VENTA_CLIENTE"), eq(salidasTable.estado, "RECIBIDA"))).orderBy(asc(salidasTable.origenId), asc(salidaRollosTable.rolloId));
   if (!rows.length) return;
   await lockInventoryPairs(tx, rows.map(r => ({ productoId: r.productoId, ubicacionId: r.origenId })));
-  for (const r of rows) await venderRollo(tx, { rolloId: r.rolloId, usuarioId, justificacion: `Venta salida para cliente ticket ${ticketId}`, documentoTipo: ticket.documentoTipo, documentoId: String(ticketId), salidaId: r.salidaId, vaciarCantidadActual: true, owningSalidaIds: [r.salidaId] });
+  const ticketLines = await tx
+    .select()
+    .from(ticketLineasTable)
+    .where(eq(ticketLineasTable.ticketId, ticketId));
+  const lineByRollo = new Map(
+    ticketLines
+      .filter((line) => line.rolloId != null)
+      .map((line) => [line.rolloId!, line]),
+  );
+  for (const r of rows) {
+    const result = await venderRollo(tx, {
+      rolloId: r.rolloId,
+      usuarioId,
+      justificacion: `Venta salida para cliente ticket ${ticketId}`,
+      documentoTipo: ticket.documentoTipo,
+      documentoId: String(ticketId),
+      salidaId: r.salidaId,
+      vaciarCantidadActual: true,
+      owningSalidaIds: [r.salidaId],
+    });
+    const line = lineByRollo.get(r.rolloId);
+    if (line) {
+      await recordTicketLineConsumption(tx, {
+        ticketId,
+        ticketLineaId: line.id,
+        cantidad: line.cantidad,
+        ingresoCentavos: Math.round(Number(line.importe) * 100),
+        costoMode: "LINE_FROZEN",
+        costoCentavos:
+          line.costoTotalCongelado == null
+            ? null
+            : Math.round(Number(line.costoTotalCongelado) * 100),
+        movimientos: [
+          {
+            id: Number(result.movimiento.id),
+            rolloId: result.movimiento.rolloId,
+            cantidad: result.movimiento.cantidad,
+          },
+        ],
+        idempotencyPrefix: `ticket:${ticketId}:line:${line.id}`,
+        requireCompleteTrace: true,
+      });
+    }
+  }
 }
 
 export async function entregarSalidaVenta(tx: Tx, salidaId: number, usuarioId: number, series: string[], nota?: string | null) {

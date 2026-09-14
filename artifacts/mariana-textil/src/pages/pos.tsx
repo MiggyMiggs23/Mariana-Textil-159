@@ -99,10 +99,33 @@ type PriceValidation = {
 
 type CartLineKey = string;
 
+type MeteredSourceAllocation = {
+  rolloId: number;
+  cantidad: number;
+};
+
 function getCartLineKey(item: any): CartLineKey {
   return item.rollos
     ? `producto-${item.producto.id}`
     : `producto-metreado-${item.producto.id}`;
+}
+
+function isMetroMeteredLine(item: any): boolean {
+  return item.isMetreado && item.producto?.unidad === "METRO";
+}
+
+function quantityToThousandths(value: number | string | null | undefined): number {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Math.round(parsed * 1000) : 0;
+}
+
+function sourceQuantityInThousandths(
+  sources: MeteredSourceAllocation[] | undefined,
+): number {
+  return (sources ?? []).reduce(
+    (total, source) => total + quantityToThousandths(source.cantidad),
+    0,
+  );
 }
 
 function meteredCostWarning(item: any): string | null {
@@ -148,6 +171,7 @@ function CartLineItem({
   lineKey,
   priceValidation,
   onPriceValidationChange,
+  onChangeSources,
 }: {
   item: any;
   onRemove: () => void;
@@ -161,10 +185,124 @@ function CartLineItem({
     lineKey: CartLineKey,
     validation: PriceValidation,
   ) => void;
+  onChangeSources?: (sources: MeteredSourceAllocation[]) => void;
 }) {
   const validarPrecio = useValidarPrecioPos();
+  const { toast } = useToast();
   const validationSequence = useRef(0);
   const [expanded, setExpanded] = useState(false);
+  const [sourceScanValue, setSourceScanValue] = useState("");
+  const needsPhysicalSources = isMetroMeteredLine(item);
+  const sourceLookupParams = useMemo(
+    () => ({ q: item.producto.sku, ubicacionId: locationId }),
+    [item.producto.sku, locationId],
+  );
+  const sourceLookup = useBuscarPos(sourceLookupParams, {
+    query: {
+      enabled: needsPhysicalSources && !!locationId,
+      queryKey: getBuscarPosQueryKey(sourceLookupParams),
+    },
+  });
+  const sourceRolls = (sourceLookup.data?.rollos ?? []).filter(
+    (rollo) =>
+      rollo.productoId === item.producto.id &&
+      rollo.unidad === "METRO" &&
+      rollo.ubicacionId === locationId,
+  );
+  const selectedSources: MeteredSourceAllocation[] = item.fuentesRollo ?? [];
+  const selectedSourceQuantity = sourceQuantityInThousandths(selectedSources);
+  const requiredSourceQuantity = quantityToThousandths(item.cantidad);
+  const sourceQuantityComplete =
+    !needsPhysicalSources || selectedSourceQuantity === requiredSourceQuantity;
+
+  const changeSourceQuantity = useCallback(
+    (rolloId: number, requestedValue: number) => {
+      if (!onChangeSources) return;
+      const rollo = sourceRolls.find((candidate) => candidate.id === rolloId);
+      const current = selectedSources.find((source) => source.rolloId === rolloId);
+      const otherSelected = selectedSourceQuantity - quantityToThousandths(current?.cantidad);
+      const available = quantityToThousandths(rollo?.cantidadActual);
+      const remainingForLine = Math.max(0, requiredSourceQuantity - otherSelected);
+      const requested = quantityToThousandths(requestedValue);
+      const nextQuantity = Math.min(Math.max(0, requested), available, remainingForLine);
+
+      if (requested > nextQuantity) {
+        toast({
+          title: "Cantidad de fuente no disponible",
+          description: `Este rollo permite hasta ${formatNumber(nextQuantity / 1000, { kind: "quantity" })} ${formatUnit(item.producto.unidad)} para esta línea.`,
+          variant: "destructive",
+        });
+      }
+
+      const nextSources = selectedSources.filter((source) => source.rolloId !== rolloId);
+      if (nextQuantity > 0) {
+        nextSources.push({ rolloId, cantidad: nextQuantity / 1000 });
+      }
+      onChangeSources(nextSources);
+    },
+    [
+      item.producto.unidad,
+      onChangeSources,
+      requiredSourceQuantity,
+      selectedSourceQuantity,
+      selectedSources,
+      sourceRolls,
+      toast,
+    ],
+  );
+
+  const addSourceRoll = useCallback(
+    (rollo: PosRolloDisponible) => {
+      const current = selectedSources.find((source) => source.rolloId === rollo.id);
+      const selectedForOtherRolls =
+        selectedSourceQuantity - quantityToThousandths(current?.cantidad);
+      const remaining = Math.max(0, requiredSourceQuantity - selectedForOtherRolls);
+      const available = quantityToThousandths(rollo.cantidadActual);
+      const nextQuantity = Math.min(remaining, available);
+      if (nextQuantity <= 0) {
+        toast({
+          title: "La línea ya tiene sus fuentes completas",
+          description: "Reduce otra fuente o aumenta la cantidad de la línea antes de agregar este rollo.",
+          variant: "destructive",
+        });
+        return;
+      }
+      changeSourceQuantity(rollo.id, (quantityToThousandths(current?.cantidad) + nextQuantity) / 1000);
+    },
+    [
+      changeSourceQuantity,
+      requiredSourceQuantity,
+      selectedSourceQuantity,
+      selectedSources,
+      toast,
+    ],
+  );
+
+  const handleSourceScan = useCallback(
+    (
+      value: string,
+      codigo: CodigoEscaneadoInterpretado,
+    ) => {
+      const serie = normalizarSerieEscaneada(codigo.serie ? codigo : value);
+      const matches = sourceRolls.filter(
+        (rollo) => rollo.serie.toUpperCase() === serie.toUpperCase(),
+      );
+      if (matches.length !== 1) {
+        toast({
+          title: matches.length > 1 ? "El escaneo es ambiguo" : "Rollo fuente no elegible",
+          description:
+            matches.length > 1
+              ? "Selecciona el rollo correcto de la lista."
+              : "El rollo no está disponible en este sitio o no pertenece al mismo producto.",
+          variant: "destructive",
+        });
+        return;
+      }
+      addSourceRoll(matches[0]);
+      setSourceScanValue("");
+    },
+    [addSourceRoll, sourceRolls, toast],
+  );
 
   useEffect(() => {
     const sequence = ++validationSequence.current;
@@ -248,7 +386,7 @@ function CartLineItem({
   return (
     <div className={`border-b py-3 last:border-0 ${isMetreado ? 'bg-amber-50/30' : ''}`}>
       <div
-        className="grid grid-cols-[minmax(0,1fr)_6rem_5rem_6rem_2rem] items-start gap-2"
+        className="grid grid-cols-[minmax(0,1fr)_6rem] items-start gap-2 sm:grid-cols-[minmax(0,1fr)_6rem_5rem_6rem_2rem]"
         data-testid="pos-cart-line"
       >
         <div className="min-w-0">
@@ -314,7 +452,7 @@ function CartLineItem({
             </div>
         </div>
           {isMetreado ? (
-            <div className="min-w-0 text-right">
+             <div className="min-w-0 max-w-24 justify-self-end text-right sm:max-w-none sm:justify-self-auto">
               <Label className="block text-[10px] text-muted-foreground" htmlFor={`cantidad-${lineKey}`}>
                 Cant. / {meteredUnit}
               </Label>
@@ -342,14 +480,14 @@ function CartLineItem({
             </div>
           )}
 
-          <div className="self-end text-right font-bold whitespace-nowrap">
+           <div className="self-end text-right font-bold whitespace-nowrap">
             {formatNumber(cartLineSubtotalCents(item) / 100, { kind: "money" })}
           </div>
 
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 shrink-0 text-destructive"
+             className="col-span-2 h-8 w-8 shrink-0 justify-self-end text-destructive sm:col-span-1 sm:col-start-5 sm:row-start-1"
             onClick={onRemove}
             aria-label={`Quitar ${item.producto.tela} - ${item.producto.color} del ticket`}
           >
@@ -396,6 +534,110 @@ function CartLineItem({
               ))}
             </div>
           )}
+        </div>
+      )}
+      {needsPhysicalSources && (
+        <div
+          className="mt-3 space-y-3 rounded-md border border-amber-300 bg-amber-50/60 p-3"
+          data-testid={`pos-metered-source-picker-${item.producto.id}`}
+        >
+          <div>
+            <p className="text-sm font-semibold text-amber-950">
+              Fuentes físicas obligatorias
+            </p>
+            <p className="text-xs text-amber-900/80">
+              Selecciona y asigna la cantidad consumida de uno o más rollos METRO del mismo producto en este sitio.
+              La suma debe ser exactamente {formatNumber(item.cantidad, { kind: "quantity" })} {formatUnit(item.producto.unidad)}.
+            </p>
+          </div>
+          <CampoEscaneo
+            value={sourceScanValue}
+            onChange={setSourceScanValue}
+            onScan={handleSourceScan}
+            placeholder="Escanea la serie del rollo fuente..."
+            clearOnScan
+            className="h-10 bg-background"
+            data-testid={`input-metered-source-scan-${item.producto.id}`}
+          />
+          {sourceLookup.isLoading && (
+            <p className="text-xs text-muted-foreground" role="status">
+              Consultando rollos elegibles...
+            </p>
+          )}
+          {sourceLookup.isError && (
+            <p className="text-xs text-destructive" role="alert">
+              No se pudieron consultar los rollos fuente. {getApiErrorMessage(sourceLookup.error, "Intenta de nuevo.")}
+            </p>
+          )}
+          {!sourceLookup.isLoading && !sourceLookup.isError && sourceRolls.length === 0 && (
+            <p className="text-xs text-destructive" role="alert">
+              No hay rollos METRO disponibles para este producto en el sitio seleccionado.
+            </p>
+          )}
+          {sourceRolls.length > 0 && (
+            <div className="space-y-2">
+              {sourceRolls.map((rollo) => {
+                const selected = selectedSources.find((source) => source.rolloId === rollo.id);
+                const selectedQuantity = selected?.cantidad ?? 0;
+                return (
+                  <div
+                    key={rollo.id}
+                    className="grid gap-2 rounded-md border bg-background p-2 sm:grid-cols-[auto_minmax(0,1fr)_7rem_auto] sm:items-center"
+                    data-testid={`pos-metered-source-${item.producto.id}-${rollo.id}`}
+                  >
+                    <Checkbox
+                      checked={selectedQuantity > 0}
+                      onCheckedChange={(checked) => {
+                        if (checked) addSourceRoll(rollo);
+                        else changeSourceQuantity(rollo.id, 0);
+                      }}
+                      aria-label={`Usar rollo fuente ${rollo.serie}`}
+                    />
+                    <div className="min-w-0">
+                      <p className="truncate font-mono text-sm font-semibold">{rollo.serie}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Disponible: {formatNumber(rollo.cantidadActual, { kind: "quantity" })} {formatUnit(rollo.unidad)}
+                      </p>
+                    </div>
+                    <div>
+                      <Label className="text-[10px] text-muted-foreground" htmlFor={`fuente-${lineKey}-${rollo.id}`}>
+                        Cantidad
+                      </Label>
+                      <Input
+                        id={`fuente-${lineKey}-${rollo.id}`}
+                        type="number"
+                        min="0"
+                        max={rollo.cantidadActual}
+                        step="0.001"
+                        value={selectedQuantity || ""}
+                        onChange={(event) => changeSourceQuantity(rollo.id, Number(event.target.value) || 0)}
+                        className="h-8 text-right font-mono"
+                        data-testid={`input-metered-source-quantity-${item.producto.id}-${rollo.id}`}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="min-h-9"
+                      onClick={() => addSourceRoll(rollo)}
+                      disabled={selectedSourceQuantity >= requiredSourceQuantity && selectedQuantity === 0}
+                    >
+                      {selectedQuantity > 0 ? "Ajustar" : "Usar"}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div
+            className={`text-xs font-semibold ${sourceQuantityComplete ? "text-emerald-700" : "text-destructive"}`}
+            role={sourceQuantityComplete ? "status" : "alert"}
+            data-testid={`pos-metered-source-total-${item.producto.id}`}
+          >
+            Asignado: {formatNumber(selectedSourceQuantity / 1000, { kind: "quantity" })} / {formatNumber(requiredSourceQuantity / 1000, { kind: "quantity" })} {formatUnit(item.producto.unidad)}
+            {!sourceQuantityComplete && " · Completa la asignación para continuar."}
+          </div>
         </div>
       )}
       {priceIsBlocked && priceValidation.message && (
@@ -602,6 +844,7 @@ export default function PosPage() {
           rollo: null,
           producto: item,
           cantidad: 1,
+           ...(item.unidad === "METRO" ? { fuentesRollo: [] } : {}),
           precioUnitario: Number(suggested.price),
           priceValidation: { status: "valid" },
           isMetreado: true,
@@ -724,6 +967,7 @@ export default function PosPage() {
                   : item.precioUnitario,
                 meteredPriceTier: suggested.tier,
                 meteredPriceTierChanged: crossedTier,
+                fuentesRollo: isMetroMeteredLine(item) ? [] : item.fuentesRollo,
                 priceValidation: { status: "valid" },
               };
             })()
@@ -745,6 +989,19 @@ export default function PosPage() {
                 ? { status: "valid" }
                 : { status: "idle" },
             }
+          : item,
+      ),
+    );
+  };
+
+  const updateCartSources = (
+    index: number,
+    fuentesRollo: MeteredSourceAllocation[],
+  ) => {
+    commitCart((current) =>
+      current.map((item, itemIndex) =>
+        itemIndex === index && isMetroMeteredLine(item)
+          ? { ...item, fuentesRollo }
           : item,
       ),
     );
@@ -817,6 +1074,12 @@ export default function PosPage() {
       item.priceValidation?.status === "invalid" ||
       item.priceValidation?.status === "error",
   );
+  const incompleteMeteredSources = cart.find(
+    (item) =>
+      isMetroMeteredLine(item) &&
+      sourceQuantityInThousandths(item.fuentesRollo) !==
+        quantityToThousandths(item.cantidad),
+  );
   const confirmDisabled =
     cart.length === 0 ||
     !clientId ||
@@ -826,7 +1089,8 @@ export default function PosPage() {
     crearTicket.isPending ||
     hasInvalidValues ||
     validatingPrices ||
-    Boolean(blockedPrice);
+    Boolean(blockedPrice) ||
+    Boolean(incompleteMeteredSources);
     // Credit validation is intentionally based on the ledger-backed server
     // projection and is repeated atomically by the server.
   const finalConfirmDisabled = confirmDisabled || notaInvalida;
@@ -856,6 +1120,18 @@ export default function PosPage() {
       });
       return;
     }
+
+    if (incompleteMeteredSources) {
+      const assigned = sourceQuantityInThousandths(incompleteMeteredSources.fuentesRollo) / 1000;
+      const required = quantityToThousandths(incompleteMeteredSources.cantidad) / 1000;
+      toast({
+        title: "Completa las fuentes físicas",
+        description: `${incompleteMeteredSources.producto.tela} - ${incompleteMeteredSources.producto.color}: asigna exactamente ${formatNumber(required, { kind: "quantity" })} ${formatUnit(incompleteMeteredSources.producto.unidad)}. Actualmente hay ${formatNumber(assigned, { kind: "quantity" })} asignados.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (notaInvalida) {
       toast({
         title: clientId === "1" ? "Elige un cliente de crédito" : "Elige el plazo de crédito",
@@ -912,6 +1188,16 @@ export default function PosPage() {
             tipo: TipoTicket.METREADO,
             cantidad: Number(item.cantidad),
             precioUnitario: Number(item.precioUnitario),
+            ...(isMetroMeteredLine(item)
+              ? {
+                  fuentesRollo: (item.fuentesRollo ?? []).map(
+                    (source: MeteredSourceAllocation) => ({
+                      rolloId: source.rolloId,
+                      cantidad: Number(source.cantidad),
+                    }),
+                  ),
+                }
+              : {}),
           }],
     );
 
@@ -1305,6 +1591,7 @@ export default function PosPage() {
                     isMetreado={item.isMetreado}
                     onChangeQuantity={(qty) => updateCartQuantity(idx, qty)}
                     onChangePrice={(price) => updateCartPrice(idx, price)}
+                    onChangeSources={(sources) => updateCartSources(idx, sources)}
                   />
                 ))}
               </div>
