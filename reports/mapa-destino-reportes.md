@@ -330,7 +330,7 @@ Orden propuesto: dinero faltante y movimientos que reducen existencias primero; 
 | 4 | Abonos con cuenta destino incongruente | Cuentas destino y su consulta de movimientos incongruentes | Conteo e importe de los abonos afectados; acceso al detalle del abono, no solo a la cuenta. |
 | 5 | Tickets cancelados y tasa | Resumen de cancelaciones, Cancelaciones y Productos cancelados de Ventas; conteos del Comparativo | Conservar los conteos/importes originales y acceder al ticket. La tasa necesita definición explícita antes de implementarse: no encontré una tasa existente en esas fuentes. |
 | 6 | Salidas canceladas | Historial y estado de Salidas | Conteo, detalle y acceso a cada salida; no tratar automáticamente toda cancelación como mercancía perdida. |
-| 7 | Rollos con tres o más reimpresiones de etiqueta | Registros de reimpresión/auditoría | Conteo de rollos afectados, número de reimpresiones por rollo y acceso a rollo/historial. Sin importe monetario inventado. |
+| 7 | Rollos con tres o más reimpresiones de etiqueta | Registros de reimpresión/auditoría | Conteo de rollos afectados, número de reimpresiones por rollo y acceso al detalle del rollo (`/inventario/rollos/:id`). El usuario pospuso la pantalla de historial individual y autorizó retirar solo ese enlace pendiente. Sin importe monetario inventado. |
 
 **Umbral de 24 horas localizado:** `admin-alertas.ts` conserva el valor 24 y una comparación estricta: exactamente 24 horas todavía no vence. La consulta contempla tránsito entre sitios desde envío y ventas a cliente pendientes según cobro/autorización y estado de salida. Se debe reutilizar esa condición completa, no reducirla a una resta arbitraria contra la fecha de creación.
 
@@ -379,5 +379,6 @@ publicación completa ni como evidencia de una E2E autenticada viva.
 - `artifacts/api-server/src/lib/admin-alertas.ts`: condición existente de salidas pendientes y umbral de 24 horas.
 
 **Mapa aprobado. El contrato fuente y las comprobaciones parciales UI están
-documentados; siguen pendientes la decisión explícita sobre la pantalla de historial
-individual de etiquetas y cualquier publicación o E2E autenticada viva.**
+documentados. La pantalla de historial individual de etiquetas queda pospuesta
+por decisión del usuario; se conserva el enlace al detalle del rollo. No se
+declara una publicación ni una E2E autenticada viva.**

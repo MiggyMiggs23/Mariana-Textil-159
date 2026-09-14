@@ -142,7 +142,19 @@ test("control operativo performs explicit per-site reads and preserves scalar me
     loadCancelledExits: async () => [],
     loadOverdueSalidaRows: async () => [],
     loadInventoryAdjustments: async () => [],
-    loadLabelReprints: async () => [],
+    loadLabelReprints: async () => [{
+      rolloId: 42,
+      serie: "R-42",
+      sku: "SKU-42",
+      producto: "Tela de prueba",
+      tela: "Tela",
+      color: "Azul",
+      sitio: "Sitio 11",
+      reimpresiones: 3,
+      ultimaReimpresionAt: "2026-01-20T00:00:00.000Z",
+      rolloHref: "/inventario/rollos/42",
+      documentoHref: "/inventario/rollos/42",
+    }],
   });
 
   assert.deepEqual(
@@ -172,6 +184,7 @@ test("control operativo performs explicit per-site reads and preserves scalar me
 
   const tables = report.tables as Array<{
     id: string;
+    columns: Array<{ key: string; hrefKey?: string }>;
     rows: unknown[];
     totals: Record<string, unknown>;
   }>;
@@ -188,6 +201,15 @@ test("control operativo performs explicit per-site reads and preserves scalar me
   assert.equal(kpis.find((kpi) => kpi.id === "tickets-cancelados")?.value, 1);
   assert.equal(kpis.find((kpi) => kpi.id === "importe-tickets-cancelados")?.value, 15.75);
   assert.equal(report.charts.length, 0);
+  const reprints = tables.find((item) => item.id === "reimpresiones-etiqueta")!;
+  assert.equal(reprints.rows.length, 1);
+  assert.equal(reprints.columns.find((column) => column.key === "documentoHref")?.hrefKey, "documentoHref");
+  assert.ok(reprints.columns.every((column) => !column.key.startsWith("historial")));
+  const reprint = reprints.rows[0] as Record<string, unknown>;
+  assert.equal(reprint.documentoHref, "/inventario/rollos/42");
+  assert.equal(reprint.rolloHref, "/inventario/rollos/42");
+  assert.equal(reprint.reimpresiones, 3);
+  assert.equal(reprint.ultimaReimpresionAt, "2026-01-20T00:00:00.000Z");
   assert.deepEqual(
     tables.map((table) => table.id),
     [

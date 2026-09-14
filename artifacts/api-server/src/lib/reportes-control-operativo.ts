@@ -317,11 +317,6 @@ async function loadLabelReprints(ctx: DomainReportContext): Promise<ReportRow[]>
     reimpresiones: Number(row.reimpresiones),
     ultimaReimpresionAt: new Date(row.ultimaReimpresionAt).toISOString(),
     rolloHref: `/inventario/rollos/${Number(row.rolloId)}`,
-    // The former history URL is not a registered route.  Keep the actual
-    // roll detail link and expose explicit unavailable metadata instead of
-    // inventing a redirect or a new endpoint.
-    historialHref: null,
-    historialDisponible: false,
     documentoHref: `/inventario/rollos/${Number(row.rolloId)}`,
   }));
 }
@@ -486,8 +481,6 @@ export async function buildControlOperativoReport(
         ["reimpresiones", "Reimpresiones", "count"],
         ["ultimaReimpresionAt", "Última reimpresión", "text"],
         ["documentoHref", "Rollo", "link"],
-        ["historialHref", "Historial", "link"],
-        ["historialDisponible", "Historial disponible", "text"],
       ], reprints),
     ],
     warnings: [

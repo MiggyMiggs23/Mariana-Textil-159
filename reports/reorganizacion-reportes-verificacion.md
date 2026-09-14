@@ -31,8 +31,9 @@ revisión del 14 de septiembre y no describe el estado actual.
   global del año 2026 pasa en el mismo snapshot `READ ONLY REPEATABLE READ`;
   los números y totales raw coinciden, y la exportación compuesta conserva sus
   12 columnas y toma los totales propiedad de la fuente sin recalcularlos.
-- Quedan **7 etiquetas cuyo historial no está disponible**; requieren una
-  decisión explícita del usuario y no se inventa evidencia.
+- El usuario autorizó retirar solo el enlace pendiente al historial individual
+  de etiquetas, sin construir esa pantalla ahora. Se conservan los registros
+  y el enlace al detalle del rollo (`/inventario/rollos/:id`).
 - Las comprobaciones parciales de contrato UI read-only ya pasaron con
   autenticación y respuestas interceptadas; no hicieron login ni escrituras de
   DB. No son una E2E autenticada viva ni una publicación.
@@ -55,7 +56,7 @@ revisión del 14 de septiembre y no describe el estado actual.
 | 2. Integraciones restantes | BLOQUEADAS | Suites de integración de reportes/analytics, permisos y admin bypass requieren INSERT/DELETE/usuarios/fixtures fuera de la población autorizada. No ejecutadas. |
 | 3. Mapa contra implementación | PASÓ EN EL CONTRATO DE FUENTES | Se preservan 56 tablas y 18 gráficos; X04 conserva su tabla/3 gráficos y R01 es la única excepción autorizada. Las comprobaciones parciales de contrato UI también pasaron, con los límites documentados abajo. |
 | 4. Ninguna cifra cambia | PASÓ NUMÉRICAMENTE | Las 53 tablas genéricas pasan en el snapshot real; caja en cero y cancelaciones por CTE compartido pasan. X04 global 2026 también pasa la comparación raw legacy/current y la exportación. |
-| 5. Cada señal cuenta y abre documento | PARCIAL | No existe una pantalla de historial individual de etiquetas; construirla o retirar el enlace queda pendiente de decisión explícita. Con filas capturadas en cero se validaron contratos, no click-through de documentos reales. |
+| 5. Cada señal cuenta y abre documento | PARCIAL | Por decisión del usuario se retiró solo el enlace pendiente al historial individual de etiquetas y se conservó el acceso al detalle del rollo. Con filas capturadas en cero se validaron contratos, no click-through de documentos reales. |
 | 6. Bloques en cero visibles | PASÓ EN CONTRATO UI, SIN FILAS REALES | La navegación y las formas read-only pasaron con respuestas interceptadas; las filas de cancelaciones, abonos, ajustes y detalle de corte fueron cero, por lo que no se acredita click-through de documentos. |
 | 7. Comparación en cinco y selector único | PASÓ EN CONTRATO UI | Pasaron las cinco pestañas normales y Comparar en las cinco sobre TIENDA+BODEGA, con un solo selector de sitio, parámetros de sitio/exportación y restricciones de rol; no se cuenta como E2E autenticada en vivo. |
 | 8. PROPIA y permisos | PASÓ EN PRUEBAS AUTORIZADAS | 62 pruebas de servidor cubren la reparación de seguridad/alcance. No se fabricaron usuarios ni se amplió el snapshot real. |
@@ -193,6 +194,7 @@ se suman ni se presentan como un número de pruebas independientes.
 La verificación numérica autorizada está completada, separando las 53 tablas
 genéricas, caja en cero/cancelaciones CTE y la comparación X04 aislada. Las
 comprobaciones parciales de contrato UI también están completadas con los
-límites documentados; quedan la decisión explícita sobre la pantalla de historial
-individual de etiquetas y cualquier publicación. No se declara una E2E autenticada viva
+límites documentados. La pantalla de historial individual de etiquetas queda
+pospuesta por decisión del usuario; se conserva el enlace al detalle del rollo.
+No se declara una E2E autenticada viva
 ni la reorganización como publicada.
