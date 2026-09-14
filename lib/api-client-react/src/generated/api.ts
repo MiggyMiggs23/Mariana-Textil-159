@@ -1434,7 +1434,7 @@ export const getListEquiposLocationsUrl = () => {
 }
 
 /**
- * @summary Lista sitios operativos activos dentro del alcance de Equipos
+ * @summary Lista tiendas y bodegas activas dentro del alcance de Equipos
  */
 export const listEquiposLocations = async ( options?: Parameters<typeof customFetch>[1]): Promise<UbicacionInventario[]> => {
 
@@ -1481,7 +1481,7 @@ export type ListEquiposLocationsQueryError = ErrorType<UnauthorizedResponse | Fo
 
 
 /**
- * @summary Lista sitios operativos activos dentro del alcance de Equipos
+ * @summary Lista tiendas y bodegas activas dentro del alcance de Equipos
  */
 
 export function useListEquiposLocations<TData = Awaited<ReturnType<typeof listEquiposLocations>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(

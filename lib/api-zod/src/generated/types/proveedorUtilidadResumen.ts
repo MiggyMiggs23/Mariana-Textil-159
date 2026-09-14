@@ -13,6 +13,7 @@ export interface ProveedorUtilidadResumen {
   /** @nullable */
   margenPct: string | null;
   lineasIncluidas: number;
+  /** Conteo global, no atribuido al proveedor, de líneas contabilizadas dentro de fecha y ubicación solicitadas sin evidencia física verificable. Incluye NORMAL y METREADO; no significa únicamente líneas metreada(s). */
   lineasExcluidasSinRollo: number;
   lineasExcluidasSinCosto: number;
   /** Conteo distinto de rollos físicos vendidos que no tienen costo válido */

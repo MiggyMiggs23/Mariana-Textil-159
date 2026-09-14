@@ -26,16 +26,60 @@ const spec = readFileSync(
   new URL("../../../lib/api-spec/openapi.yaml", import.meta.url),
   "utf8",
 );
+const catalogMigration = readFileSync(
+  new URL(
+    "../../../lib/db/migrations/20260915_equipos_catalog_constraints.sql",
+    import.meta.url,
+  ),
+  "utf8",
+);
 
 test("equipos has one canonical closed type/checklist catalog", () => {
   assert.deepEqual(TIPOS_EQUIPO, [
-    "IMPRESORA_TICKETS",
-    "IMPRESORA_ETIQUETAS",
     "COMPUTADORA_POS",
+    "IMPRESORA_ENTRADAS",
+    "IMPRESORA_SALIDAS_NOTAS",
+    "IMPRESORA_ETIQUETAS",
+    "IMPRESORA_TICKETS",
     "PISTOLA_ESCANER",
     "SMARTPHONE_ESCANER",
   ]);
+  assert.deepEqual(
+    TIPOS_EQUIPO.map((tipo) => DEFINICIONES_EQUIPO[tipo].label),
+    [
+      "Computadora POS",
+      "Impresora de entradas",
+      "Impresora de salidas/notas",
+      "Impresora de etiquetas",
+      "Impresora térmica de tickets",
+      "Pistola Escáner",
+      "Smartphone Escáner",
+    ],
+  );
   assert.equal(checklistEquipo("COMPUTADORA_POS").length, 4);
+  assert.deepEqual(checklistEquipo("IMPRESORA_ENTRADAS"), [
+    { key: "ENTRADA_REAL", label: "Instalada y probada con una entrada real" },
+    {
+      key: "PAPEL_NAVEGADOR_CARTA",
+      label: "Tamaño de papel del navegador en Carta",
+    },
+    { key: "MARGENES_NINGUNO", label: "Márgenes del navegador en Ninguno" },
+    { key: "ESCALA_REAL", label: "Escala en Tamaño real" },
+  ]);
+  assert.deepEqual(checklistEquipo("IMPRESORA_SALIDAS_NOTAS"), [
+    { key: "SALIDA_REAL", label: "Instalada y probada con una salida real" },
+    { key: "NOTA_REAL", label: "Instalada y probada con una nota real" },
+    {
+      key: "PAPEL_NAVEGADOR_A5",
+      label: "Tamaño de papel del navegador en A5",
+    },
+    { key: "MARGENES_NINGUNO", label: "Márgenes del navegador en Ninguno" },
+    { key: "ESCALA_REAL", label: "Escala en Tamaño real" },
+    {
+      key: "PAPEL_COLOR_SITIO_BANDEJA",
+      label: "Papel de color del sitio en la bandeja correcta para salidas",
+    },
+  ]);
   assert.equal(checklistEquipo("IMPRESORA_TICKETS").length, 2);
   assert.equal(checklistEquipo("IMPRESORA_ETIQUETAS").length, 2);
   assert.equal(checklistEquipo("PISTOLA_ESCANER").length, 2);
@@ -116,6 +160,27 @@ test("equipment reads and writes enforce site scope", () => {
   );
 });
 
+test("equipment locations and mutation targets require active physical sites", () => {
+  assert.match(
+    route,
+    /const EQUIPOS_SITE_TYPES = \["TIENDA", "BODEGA"\] as const/,
+  );
+  assert.ok(
+    route.match(/inArray\(ubicacionesTable\.tipo, EQUIPOS_SITE_TYPES\)/g)
+      ?.length! >= 3,
+  );
+  assert.match(
+    route,
+    /eq\(ubicacionesTable\.activa, true\)[\s\S]*?inArray\(ubicacionesTable\.tipo, EQUIPOS_SITE_TYPES\)/,
+  );
+  assert.match(
+    route,
+    /WHEN 'COMPUTADORA_POS' THEN 1[\s\S]*WHEN 'IMPRESORA_ENTRADAS' THEN 2[\s\S]*WHEN 'IMPRESORA_SALIDAS_NOTAS' THEN 3[\s\S]*WHEN 'IMPRESORA_ETIQUETAS' THEN 4[\s\S]*WHEN 'IMPRESORA_TICKETS' THEN 5[\s\S]*WHEN 'PISTOLA_ESCANER' THEN 6[\s\S]*WHEN 'SMARTPHONE_ESCANER' THEN 7/,
+  );
+  assert.match(route, /if \(!location\) throw new Error\("INVALID_LOCATION"\)/);
+  assert.match(route, /La ubicación debe ser una tienda o bodega activa/);
+});
+
 test("active state is derived and checklist changes are audited both ways", () => {
   assert.match(route, /activo: faltantes\.length === 0/);
   assert.match(route, /accion: body\.data\.checked \? "PALOMEAR" : "DESPALOMEAR"/);
@@ -160,6 +225,26 @@ test("initializer reconciles and validates structure from canonical values", () 
   assert.match(initializer, /sqlLiteralList\(CHECKLIST_KEYS_EQUIPO\)/);
   assert.doesNotMatch(initializer, /'IMPRESORA_TICKETS',/);
   assert.doesNotMatch(initializer, /'TICKET_REAL',/);
+});
+
+test("catalog constraint migration is explicit, additive and limited to catalog checks", () => {
+  assert.match(catalogMigration, /BEGIN;\s+/);
+  assert.match(catalogMigration, /DROP CONSTRAINT IF EXISTS equipos_tipo_check/);
+  assert.match(catalogMigration, /ADD CONSTRAINT equipos_tipo_check/);
+  assert.match(
+    catalogMigration,
+    /DROP CONSTRAINT IF EXISTS equipos_checklist_item_key_check/,
+  );
+  assert.match(
+    catalogMigration,
+    /ADD CONSTRAINT equipos_checklist_item_key_check/,
+  );
+  assert.match(catalogMigration, /'IMPRESORA_ENTRADAS'/);
+  assert.match(catalogMigration, /'IMPRESORA_SALIDAS_NOTAS'/);
+  assert.match(catalogMigration, /'ENTRADA_REAL'/);
+  assert.match(catalogMigration, /'PAPEL_COLOR_SITIO_BANDEJA'/);
+  assert.match(catalogMigration, /COMMIT;\s*$/);
+  assert.doesNotMatch(catalogMigration, /INSERT\s|UPDATE\s|DELETE\s/i);
 });
 
 test("OpenAPI exposes registration, editing and checklist without deletion", () => {

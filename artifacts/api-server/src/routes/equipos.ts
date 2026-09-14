@@ -31,6 +31,7 @@ import { getRequestIp } from "../lib/request";
 import { checkOperationalScope, resolveReadScope } from "./inventario";
 
 const router: IRouter = Router();
+const EQUIPOS_SITE_TYPES = ["TIENDA", "BODEGA"] as const;
 
 export const StrictToggleEquipoChecklistBody =
   ToggleEquipoChecklistBody.strict();
@@ -114,10 +115,12 @@ async function loadEquipos(ubicacionId?: number, equipoId?: number) {
       ubicacionesTable.nombre,
       sql`CASE ${equiposTable.tipo}
         WHEN 'COMPUTADORA_POS' THEN 1
-        WHEN 'IMPRESORA_ETIQUETAS' THEN 2
-        WHEN 'IMPRESORA_TICKETS' THEN 3
-        WHEN 'PISTOLA_ESCANER' THEN 4
-        WHEN 'SMARTPHONE_ESCANER' THEN 5
+        WHEN 'IMPRESORA_ENTRADAS' THEN 2
+        WHEN 'IMPRESORA_SALIDAS_NOTAS' THEN 3
+        WHEN 'IMPRESORA_ETIQUETAS' THEN 4
+        WHEN 'IMPRESORA_TICKETS' THEN 5
+        WHEN 'PISTOLA_ESCANER' THEN 6
+        WHEN 'SMARTPHONE_ESCANER' THEN 7
       END`,
       equiposTable.identificador,
     );
@@ -245,9 +248,13 @@ router.get(
     }
     const filter =
       scope.ubicacionId == null
-        ? eq(ubicacionesTable.activa, true)
+        ? and(
+            eq(ubicacionesTable.activa, true),
+            inArray(ubicacionesTable.tipo, EQUIPOS_SITE_TYPES),
+          )
         : and(
             eq(ubicacionesTable.activa, true),
+            inArray(ubicacionesTable.tipo, EQUIPOS_SITE_TYPES),
             eq(ubicacionesTable.id, scope.ubicacionId),
           );
     const locations = await db
@@ -282,6 +289,18 @@ router.post(
     }
     try {
       const id = await db.transaction(async (tx) => {
+        const [location] = await tx
+          .select({ id: ubicacionesTable.id })
+          .from(ubicacionesTable)
+          .where(
+            and(
+              eq(ubicacionesTable.id, body.data.ubicacionId),
+              eq(ubicacionesTable.activa, true),
+              inArray(ubicacionesTable.tipo, EQUIPOS_SITE_TYPES),
+            ),
+          )
+          .limit(1);
+        if (!location) throw new Error("INVALID_LOCATION");
         const [row] = await tx
           .insert(equiposTable)
           .values({
@@ -314,6 +333,12 @@ router.post(
       if ((error as { code?: string }).code === "23505") {
         res.status(409).json({
           error: "Ya existe un equipo con ese identificador en el sitio.",
+        });
+        return;
+      }
+      if (error instanceof Error && error.message === "INVALID_LOCATION") {
+        res.status(400).json({
+          error: "La ubicación debe ser una tienda o bodega activa.",
         });
         return;
       }
@@ -353,6 +378,18 @@ router.patch(
           targetSite,
         ]);
         if (scopeError) throw new Error(`SCOPE:${scopeError}`);
+        const [location] = await tx
+          .select({ id: ubicacionesTable.id })
+          .from(ubicacionesTable)
+          .where(
+            and(
+              eq(ubicacionesTable.id, targetSite),
+              eq(ubicacionesTable.activa, true),
+              inArray(ubicacionesTable.tipo, EQUIPOS_SITE_TYPES),
+            ),
+          )
+          .limit(1);
+        if (!location) throw new Error("INVALID_LOCATION");
         const nextType = body.data.tipo as TipoEquipo | undefined;
         const checkedBefore = await tx
           .select({
@@ -405,6 +442,12 @@ router.patch(
     } catch (error) {
       if (error instanceof Error && error.message === "NOT_FOUND") {
         res.status(404).json({ error: "Equipo no encontrado." });
+        return;
+      }
+      if (error instanceof Error && error.message === "INVALID_LOCATION") {
+        res.status(400).json({
+          error: "La ubicación debe ser una tienda o bodega activa.",
+        });
         return;
       }
       if (error instanceof Error && error.message.startsWith("SCOPE:")) {

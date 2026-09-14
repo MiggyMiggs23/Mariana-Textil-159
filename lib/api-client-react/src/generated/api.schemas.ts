@@ -2015,9 +2015,11 @@ export type TipoEquipo = typeof TipoEquipo[keyof typeof TipoEquipo];
 
 
 export const TipoEquipo = {
-  IMPRESORA_TICKETS: 'IMPRESORA_TICKETS',
-  IMPRESORA_ETIQUETAS: 'IMPRESORA_ETIQUETAS',
   COMPUTADORA_POS: 'COMPUTADORA_POS',
+  IMPRESORA_ENTRADAS: 'IMPRESORA_ENTRADAS',
+  IMPRESORA_SALIDAS_NOTAS: 'IMPRESORA_SALIDAS_NOTAS',
+  IMPRESORA_ETIQUETAS: 'IMPRESORA_ETIQUETAS',
+  IMPRESORA_TICKETS: 'IMPRESORA_TICKETS',
   PISTOLA_ESCANER: 'PISTOLA_ESCANER',
   SMARTPHONE_ESCANER: 'SMARTPHONE_ESCANER',
 } as const;
@@ -5656,6 +5658,7 @@ export interface ProveedorUtilidadResumen {
   /** @nullable */
   margenPct: string | null;
   lineasIncluidas: number;
+  /** Conteo global, no atribuido al proveedor, de líneas contabilizadas dentro de fecha y ubicación solicitadas sin evidencia física verificable. Incluye NORMAL y METREADO; no significa únicamente líneas metreada(s). */
   lineasExcluidasSinRollo: number;
   lineasExcluidasSinCosto: number;
   /** Conteo distinto de rollos físicos vendidos que no tienen costo válido */

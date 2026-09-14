@@ -132,11 +132,13 @@ Regla de trazabilidad de este flujo:
 
 ## Registro de Equipos por sitio
 
-**Equipos es un directorio operativo, no un inventario general de activos.** Admite exclusivamente impresora térmica de tickets, impresora de etiquetas, computadora POS, pistola escáner y smartphone escáner. Equipos, Camionetas y Choferes viven juntos bajo DIRECTORIO.
+**Equipos es un directorio operativo, no un inventario general de activos.** Admite exclusivamente siete tipos: Computadora POS, Impresora de entradas, Impresora de salidas/notas, Impresora de etiquetas, Impresora térmica de tickets, Pistola Escáner y Smartphone Escáner. Equipos, Camionetas y Choferes viven juntos bajo DIRECTORIO.
 
-La pantalla usa únicamente el selector global de sitio del encabezado. Vista Global representa todos los sitios operativos activos, incluso los que todavía no tienen equipos; elegir un sitio filtra la misma pantalla. No existe ni debe agregarse un segundo filtro local. En global, el conteo de activos de cada sitio abre un detalle que contiene exclusivamente equipos activos.
+La pantalla usa únicamente el selector global de sitio del encabezado. Vista Global representa los sitios físicos activos (tiendas y bodegas), incluso los que todavía no tienen equipos; elegir un sitio filtra la misma pantalla. No existe ni debe agregarse un segundo filtro local. El catálogo de origen es el compartido de ubicaciones, pero Equipos filtra su propia consulta: En tránsito y Externo siguen existiendo para Inventario y no son destinos de equipos. En global, el conteo de activos de cada sitio abre un detalle que contiene exclusivamente equipos activos.
 
 Cada registro guarda sitio, tipo cerrado, identificador, marca, modelo, serie opcional y notas. No existe endpoint de eliminación. `activo` nunca se captura ni se persiste: se deriva como verdadero solo cuando todas las casillas canónicas del tipo están marcadas. Cada palomeo y despalomeo toma actor y fecha efectiva del servidor, se audita en ambos sentidos y rechaza campos de atribución enviados por el cliente.
+
+Las casillas se definen únicamente en el catálogo canónico de Equipos; la interfaz consume esas definiciones, sin copiarlas. La impresora de entradas exige instalación/prueba con entrada real, papel Carta en el navegador, márgenes Ninguno y escala Tamaño real. La impresora de salidas/notas exige pruebas con salida y nota, papel A5, márgenes Ninguno, escala Tamaño real y, para salidas, papel de color del sitio en la bandeja correcta.
 
 El módulo `equipos` es el **32**. Leer exige `equipos/ver`, crear exige `equipos/crear` y editar datos o checklist exige `equipos/editar`. Su catálogo mínimo de sitios está protegido por `equipos/ver` y no depende de permisos de Inventario o Ubicaciones. Para cualquier usuario no ADMIN con alcance PROPIA —incluido SUPERVISOR— pedir explícitamente otro sitio devuelve 403; el recurso fuera de alcance no se revela.
 

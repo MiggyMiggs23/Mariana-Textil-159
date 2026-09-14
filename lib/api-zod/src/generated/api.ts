@@ -401,7 +401,7 @@ export const ListEquiposResponseItem = zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
   "ubicacionNombre": zod.string(),
-  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipo": zod.enum(['COMPUTADORA_POS', 'IMPRESORA_ENTRADAS', 'IMPRESORA_SALIDAS_NOTAS', 'IMPRESORA_ETIQUETAS', 'IMPRESORA_TICKETS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
   "tipoLabel": zod.string(),
   "identificador": zod.string(),
   "marca": zod.string(),
@@ -444,7 +444,7 @@ export const createEquipoBodyNotasMax = 2000;
 
 export const CreateEquipoBody = zod.object({
   "ubicacionId": zod.number().min(1),
-  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipo": zod.enum(['COMPUTADORA_POS', 'IMPRESORA_ENTRADAS', 'IMPRESORA_SALIDAS_NOTAS', 'IMPRESORA_ETIQUETAS', 'IMPRESORA_TICKETS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
   "identificador": zod.string().min(1).max(createEquipoBodyIdentificadorMax),
   "marca": zod.string().min(1).max(createEquipoBodyMarcaMax),
   "modelo": zod.string().min(1).max(createEquipoBodyModeloMax),
@@ -460,7 +460,7 @@ export const CreateEquipoResponse = zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
   "ubicacionNombre": zod.string(),
-  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipo": zod.enum(['COMPUTADORA_POS', 'IMPRESORA_ENTRADAS', 'IMPRESORA_SALIDAS_NOTAS', 'IMPRESORA_ETIQUETAS', 'IMPRESORA_TICKETS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
   "tipoLabel": zod.string(),
   "identificador": zod.string(),
   "marca": zod.string(),
@@ -485,7 +485,7 @@ export const CreateEquipoResponse = zod.object({
 
 
 /**
- * @summary Lista sitios operativos activos dentro del alcance de Equipos
+ * @summary Lista tiendas y bodegas activas dentro del alcance de Equipos
  */
 export const ListEquiposLocationsResponseItem = zod.object({
   "id": zod.number(),
@@ -521,7 +521,7 @@ export const updateEquipoBodyNotasMax = 2000;
 
 export const UpdateEquipoBody = zod.object({
   "ubicacionId": zod.number().min(1).optional(),
-  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']).optional(),
+  "tipo": zod.enum(['COMPUTADORA_POS', 'IMPRESORA_ENTRADAS', 'IMPRESORA_SALIDAS_NOTAS', 'IMPRESORA_ETIQUETAS', 'IMPRESORA_TICKETS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']).optional(),
   "identificador": zod.string().min(1).max(updateEquipoBodyIdentificadorMax).optional(),
   "marca": zod.string().min(1).max(updateEquipoBodyMarcaMax).optional(),
   "modelo": zod.string().min(1).max(updateEquipoBodyModeloMax).optional(),
@@ -537,7 +537,7 @@ export const UpdateEquipoResponse = zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
   "ubicacionNombre": zod.string(),
-  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipo": zod.enum(['COMPUTADORA_POS', 'IMPRESORA_ENTRADAS', 'IMPRESORA_SALIDAS_NOTAS', 'IMPRESORA_ETIQUETAS', 'IMPRESORA_TICKETS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
   "tipoLabel": zod.string(),
   "identificador": zod.string(),
   "marca": zod.string(),
@@ -586,7 +586,7 @@ export const ToggleEquipoChecklistResponse = zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
   "ubicacionNombre": zod.string(),
-  "tipo": zod.enum(['IMPRESORA_TICKETS', 'IMPRESORA_ETIQUETAS', 'COMPUTADORA_POS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
+  "tipo": zod.enum(['COMPUTADORA_POS', 'IMPRESORA_ENTRADAS', 'IMPRESORA_SALIDAS_NOTAS', 'IMPRESORA_ETIQUETAS', 'IMPRESORA_TICKETS', 'PISTOLA_ESCANER', 'SMARTPHONE_ESCANER']),
   "tipoLabel": zod.string(),
   "identificador": zod.string(),
   "marca": zod.string(),
@@ -2431,7 +2431,7 @@ export const GetProveedorUtilidadResponse = zod.object({
   "utilidad": zod.string(),
   "margenPct": zod.string().nullable(),
   "lineasIncluidas": zod.number(),
-  "lineasExcluidasSinRollo": zod.number(),
+  "lineasExcluidasSinRollo": zod.number().describe('Conteo global, no atribuido al proveedor, de líneas contabilizadas dentro de fecha y ubicación solicitadas sin evidencia física verificable. Incluye NORMAL y METREADO; no significa únicamente líneas metreada(s).\n'),
   "lineasExcluidasSinCosto": zod.number(),
   "rollosExcluidosSinCosto": zod.number().describe('Conteo distinto de rollos físicos vendidos que no tienen costo válido')
 }),

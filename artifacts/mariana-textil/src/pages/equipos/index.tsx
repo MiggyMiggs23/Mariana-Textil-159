@@ -22,6 +22,8 @@ import { EquipoChecklistDialog } from "./equipo-checklist-dialog";
 function getTipoIcon(tipo: string) {
   switch (tipo) {
     case "COMPUTADORA_POS": return <Monitor className="w-4 h-4" />;
+    case "IMPRESORA_ENTRADAS":
+    case "IMPRESORA_SALIDAS_NOTAS":
     case "IMPRESORA_TICKETS": return <Printer className="w-4 h-4" />;
     case "IMPRESORA_ETIQUETAS": return <Tag className="w-4 h-4" />;
     case "PISTOLA_ESCANER": return <ScanLine className="w-4 h-4" />;
@@ -37,10 +39,12 @@ const spanishCollator = new Intl.Collator("es", {
 
 const tipoOrder: Record<string, number> = {
   COMPUTADORA_POS: 1,
-  IMPRESORA_ETIQUETAS: 2,
-  IMPRESORA_TICKETS: 3,
-  PISTOLA_ESCANER: 4,
-  SMARTPHONE_ESCANER: 5,
+  IMPRESORA_ENTRADAS: 2,
+  IMPRESORA_SALIDAS_NOTAS: 3,
+  IMPRESORA_ETIQUETAS: 4,
+  IMPRESORA_TICKETS: 5,
+  PISTOLA_ESCANER: 6,
+  SMARTPHONE_ESCANER: 7,
 };
 
 type SiteGroup = {

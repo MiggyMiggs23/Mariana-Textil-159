@@ -414,10 +414,10 @@ paths:
     get:
       operationId: listEquiposLocations
       tags: [equipos]
-      summary: Lista sitios operativos activos dentro del alcance de Equipos
+      summary: Lista tiendas y bodegas activas dentro del alcance de Equipos
       responses:
         "200":
-          description: Sitios disponibles sin depender del permiso de Inventario
+          description: Solo incluye ubicaciones físicas activas de tipo TIENDA o BODEGA, sin depender del permiso de Inventario
           content:
             application/json:
               schema:
@@ -8214,9 +8214,11 @@ components:
     TipoEquipo:
       type: string
       enum:
-        - IMPRESORA_TICKETS
-        - IMPRESORA_ETIQUETAS
         - COMPUTADORA_POS
+        - IMPRESORA_ENTRADAS
+        - IMPRESORA_SALIDAS_NOTAS
+        - IMPRESORA_ETIQUETAS
+        - IMPRESORA_TICKETS
         - PISTOLA_ESCANER
         - SMARTPHONE_ESCANER
     EquipoChecklistItem:

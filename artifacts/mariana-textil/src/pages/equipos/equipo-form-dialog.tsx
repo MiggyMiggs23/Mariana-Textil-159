@@ -185,6 +185,8 @@ export function EquipoFormDialog({ open, onClose, equipo, locations, defaultLoca
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="COMPUTADORA_POS">Computadora POS</SelectItem>
+                        <SelectItem value="IMPRESORA_ENTRADAS">Impresora de entradas</SelectItem>
+                        <SelectItem value="IMPRESORA_SALIDAS_NOTAS">Impresora de salidas/notas</SelectItem>
                         <SelectItem value="IMPRESORA_ETIQUETAS">Impresora de etiquetas</SelectItem>
                         <SelectItem value="IMPRESORA_TICKETS">Impresora térmica de tickets</SelectItem>
                         <SelectItem value="PISTOLA_ESCANER">Pistola Escáner</SelectItem>
