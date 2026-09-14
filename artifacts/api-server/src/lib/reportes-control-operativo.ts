@@ -474,13 +474,12 @@ export async function buildControlOperativoReport(
       }),
       table("reimpresiones-etiqueta", "Rollos con tres o más reimpresiones", [
         ["rolloId", "Rollo", "count"],
-        ["serie", "Serie", "text"],
+        { key: "serie", label: "Serie", kind: "text", hrefKey: "rolloHref" },
         ["sku", "SKU", "text"],
         ["producto", "Producto", "text"],
         ["sitio", "Sitio", "text"],
         ["reimpresiones", "Reimpresiones", "count"],
         ["ultimaReimpresionAt", "Última reimpresión", "text"],
-        ["documentoHref", "Rollo", "link"],
       ], reprints),
     ],
     warnings: [
