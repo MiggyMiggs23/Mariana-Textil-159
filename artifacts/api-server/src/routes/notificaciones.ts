@@ -558,7 +558,7 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
               : notification.importe,
             fechaVencimiento: charge?.dueAt ?? calendarDate(notification.fechaVencimiento),
             hoy: today,
-          },
+          }),
         ] as const;
       }),
     );

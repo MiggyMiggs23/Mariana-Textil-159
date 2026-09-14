@@ -4,6 +4,8 @@ Fecha de ejecución: 14 de septiembre de 2026.
 
 ## Resultado: incompleto; detenido tras fallos
 
+**Actualización del 2026-09-14, recuperación de acceso:** ante el reporte de imposibilidad de entrar, se corrigió exclusivamente el cierre de la llamada que impedía compilar la ruta de notificaciones. La API compiló y arrancó; el endpoint de login respondió con su validación habitual a una solicitud vacía, sin intentar autenticar a ningún usuario. No se cambiaron credenciales. Los resultados siguientes conservan la evidencia de la tanda original; los demás problemas financieros y verificaciones siguen pendientes.
+
 No se presenta esta implementación como terminada. El propietario indicó que cualquier fallo de verificación debía reportarse sin corregirlo por iniciativa del agente. Se detuvieron las correcciones de código tras la tanda de verificaciones.
 
 ## Cambios realizados

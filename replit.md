@@ -820,6 +820,8 @@ Todo documento dibuja su capacidad completa con renglones cerrados y perímetro 
 
 **2026-09-14:** se implementaron el contador circular de rollos capturados en salida para venta a cliente, el rótulo **Abonos a notas**, los estados canónicos y las pantallas/API de saldo a favor. **No están aprobados para entrega:** typecheck y varias pruebas fallaron; por instrucción del propietario se reportaron sin corregirlos. El informe y las limitaciones están en `reports/credito-saldo-favor/verificacion.md`.
 
+**Recuperación del acceso, 2026-09-14:** tras reportarse que no se podía entrar, se corrigió únicamente el error de sintaxis que detenía la API. El servidor compiló, arrancó y el endpoint de login volvió a responder. No se cambiaron credenciales. Esto no aprueba las funcionalidades financieras ni las pruebas pendientes.
+
 ### Diagnóstico pendiente de confirmar con el abono original
 
 - El Cobrado del tablero principal consulta tickets/pagos de caja, no los ABONO del ledger. En cambio, Cuentas Destino sí consulta ABONO con fecha de recepción, pero excluye los que tienen cuenta destino nula. Son problemas distintos y no se corrigieron en esta tanda.
