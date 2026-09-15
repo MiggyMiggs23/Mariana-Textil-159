@@ -960,3 +960,17 @@ mtime_ms = 1789510576766
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/dda4cdca-7aee-4091-a5c9-05d006632510/c5af6049-b6fe-4157-959d-115cf5397b33"
 storage_version_token = "1789510600060936"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "xYNzeTqK3R7QgoR0yCyVU"
+uri = "file://reports/prompt-a-resultado.md"
+type = "text"
+title = "Prompt A — auditoría documental"
+description = "Correcciones aplicadas, contradicciones, evidencia no comprobada y conservación de los archivos protegidos."
+logical_id = "40dc6130-41ac-4cca-8de8-c6f4c0b312b5"
+content_hash = "sha256:98cd237576130eeeffb502a50efca7d405c996491a31cc278c0a6563d5c05d1f"
+size = 9951
+mtime_ms = 1789512148170
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/40dc6130-41ac-4cca-8de8-c6f4c0b312b5/b420184c-1667-4479-822d-ba74796afea5"
+storage_version_token = "1789512166782620"
+content_type = "text/markdown"

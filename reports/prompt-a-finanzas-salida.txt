@@ -1,0 +1,167 @@
+PROMPT A — SALIDA DE AUDITORÍA FINANCIERA
+Fecha: 2026-09-15
+Alcance: lectura de código y replit.md. No se modificó la aplicación, replit.md,
+la base de datos, sesiones, servicios ni pruebas. No se ejecutaron workflows,
+la aplicación, pruebas, conectores, SQL ni escrituras financieras.
+
+DICTAMEN
+========
+
+1. «Cobrado» conserva dos definiciones deliberadamente distintas:
+   a) Ventas = Contado cobrado + Ventas a crédito. getSalesSummary() en
+      artifacts/api-server/src/lib/admin-analytics.ts usa
+      collectedTicketPredicate() y no une ABONO.
+    b) Cobrado = Contado + Abonos + Saldos a favor. destinationReadModel() y
+      getDestinationAccounts() incorporan POS, ABONO, reversos y saldo a favor.
+   Prompt C ya documenta Contado cobrado, Cobranza del periodo y la fuente
+   compartida; replit.md:836-845 también contiene la sección explícita
+   «Cobrado: dos definiciones sin reconciliar». Es decisión abierta del
+   propietario: no se propone unificar.
+
+2. La banda «Cobranza del periodo» está en
+   artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx:325-368 y usa
+   useSharedCuentasDestino() / encabezado.cobrado. La página raíz
+   pages/dashboard.tsx es inventario; el documento debe nombrar la superficie
+   exacta si «tablero» se interpreta como esa página.
+
+3. La asimetría Cruces/global está confirmada por lectura del SQL:
+   ABONO aplicado filtra por sale_ticket.ubicacion_id; ABONO_SALDO_FAVOR y su
+   reverso emiten NULL::int ubicacionId y exigen consulta global.
+   Los $25,000 de Cruces y $0 global del 15 de septiembre son cifras de un
+   reporte histórico, no una consulta ejecutada en esta auditoría. Se conserva
+   como pendiente abierto de alta prioridad anterior al piloto.
+
+4. Las referencias replit.md:538-542 están desfasadas:
+   - pos.ts:2082-2088 hoy ordena/mapea pagos, no deriva cuentas del corte.
+     El cálculo está en buildCorteCaja(), pos.ts:2420-2456.
+   - admin-analytics.ts:324-335 hoy contiene mexicoCityHour()/where().
+   - admin-analytics.ts:376-378 hoy es el CTE lines.
+   - notificaciones.ts:194-200 hoy devuelve el conteo; el uso real de
+     pendingTicketPredicate() está en el feed, notificaciones.ts:219-226.
+
+5. Hay seis copias manuales del predicado contabilizado en
+   admin-analytics.ts, no dos:
+   - getSalesSummary(): 381-382, 386-387, 390-391, 392-393, 396-397.
+   - getSessionMargin(): 441-442.
+   La función canónica es accountedDocumentPredicate() en
+   artifacts/api-server/src/lib/accounted-document.ts:6-8. No se unificaron.
+
+6. La regla automática de saldo a favor sí está en código:
+   autorizarNota() ignora aplicarSaldoAFavor del cliente, calcula
+   automaticFavorCents desde el ledger FIFO y registra evidencia exacta.
+   cliente-pago-dialog.tsx separa el flujo FIFO normal del pago dirigido;
+   solicitud-pago-dirigido-dialog.tsx exige motivo y etiqueta la operación
+   como excepción FIFO. NotificationsBell ofrece Aprobar/Rechazar para ADMIN.
+   La propuesta del Bloque 5 permanece propuesta no implementada.
+
+7. Fechas:
+   - Conforme: cliente-pago-dialog.tsx usa
+     buildMexicoCityEffectiveDate(); routes/clientes.ts valida con
+     parseFechaEfectiva() antes de zod.coerce.date().
+   - Contradicción: solicitud-pago-dirigido-dialog.tsx fabrica YYYY-MM-DD
+     con new Date() local y lo envía directamente; routes/pagos-dirigidos.ts
+     usa zod.coerce.date() y después new Date(data.fechaEfectiva).
+    - Contradicción: proveedor-pago-dialog.tsx envía T12:00:00 sin offset para
+     pagos normales y dirigidos; routes/proveedores.ts usa new Date(fechaRaw).
+    - El texto amplio de replit.md:860 («toda fecha ... lleva hora y
+      desplazamiento») no cubre esos flujos dirigidos/proveedor.
+    - Excepción válida de dominio: vencimiento es fecha calendario YYYY-MM-DD,
+     no instante; los filtros analíticos reciben YYYY-MM-DD y los convierten
+     a límites de America/Mexico_City.
+
+8. ClienteNotaEstadoBadge tiene cinco superficies:
+   - cliente-nota-credito.tsx:91
+   - cliente-detail.tsx:101
+   - alertas.tsx:204
+   - notificaciones.tsx:80
+   - cobros.tsx:328
+   El badge presenta solo estado/icono/color; saldo pendiente actual aparece en
+   campo separado. No se realizó cobertura visual nueva de PAGADA o CON RETRASO.
+
+9. Corte de caja:
+   listarSesionesCajaHistorial() calcula fondo inicial + pagos EFECTIVO de
+   tickets - salidas; buildCorteCaja() usa la misma fórmula. Ninguno consulta
+   movimientos_credito/ABONO. El gap está correctamente documentado como
+   pendiente pre-piloto; no se ejecutó cierre ni cuadre.
+
+10. Autorización de escrituras:
+    reports/prompt-a-auditoria-autorizacion.md concluye
+    «Autorización textual del propietario: NO COMPROBADA». Los reportes de
+    Bloque 4 narran IDs 47-50 y resultados históricos, pero son prosa/evidencia
+    histórica del agente y no sustituyen una cita textual primaria.
+
+MATRIZ DE CORRECCIONES PROPUESTAS (NO APLICADAS)
+=================================================
+
+- Mantener «Cobrado: dos definiciones sin reconciliar» en replit.md:836-845,
+  actualizar sus referencias de código y enlazar POS/Caja con Cuentas Destino;
+  conservar la decisión abierta, sin unificar.
+- Sustituir referencias de línea de replit.md por archivo + función; conservar
+  líneas solo como evidencia de esta auditoría.
+- Documentar seis copias manuales del predicado; no refactorizar aquí.
+- Precisar que la banda vive en Caja en Tiempo Real y que conserva la fuente
+  compartida.
+- Documentar las excepciones de fecha dirigida/proveedor y reservar su
+  corrección para una entrega de código.
+- Mantener la asimetría Cruces/global y el corte sin ABONO como pendientes de
+  alta prioridad; no corregirlos aquí.
+- Mantener el estado de autorización textual como NO COMPROBADO.
+
+EXTRACTOS DE COMANDOS Y SALIDAS
+================================
+
+Comando de referencias desfasadas:
+
+  rg -n 'pos.ts:2082-2088|admin-analytics.ts:324-335|admin-analytics.ts:376-378|notificaciones.ts:194' replit.md
+
+Salida:
+
+  replit.md:538:- artifacts/api-server/src/lib/pos.ts:2082-2088 ...
+  replit.md:539:- artifacts/api-server/src/lib/admin-analytics.ts:324-335 ...
+  replit.md:540:- artifacts/api-server/src/lib/admin-analytics.ts:376-378 ...
+  replit.md:542:... artifacts/api-server/src/routes/notificaciones.ts:194 ...
+
+Conteo de llamadas actuales al badge (imports y tests excluidos):
+
+  components/cliente-nota-credito.tsx:91
+  pages/cliente-detail.tsx:101
+  pages/alertas.tsx:204
+  pages/notificaciones.tsx:80
+  pages/cobros.tsx:328
+
+Comando de fechas:
+
+  rg -n 'parseFechaEfectiva|new Date\(data.fechaEfectiva\)|new Date\(fechaRaw\)' ...
+
+Salida relevante:
+
+  routes/pagos-dirigidos.ts:220:
+  const effectiveDate = data.fechaEfectiva ? new Date(data.fechaEfectiva) : new Date();
+  routes/clientes.ts:1941:
+  fechaEfectiva = parseFechaEfectiva(req.body?.fechaEfectiva);
+  routes/clientes.ts:1997:
+  fechaEfectiva = parseFechaEfectiva(req.body?.fechaEfectiva);
+  routes/proveedores.ts:674:
+  const parsed = new Date(fechaRaw as string);
+
+Búsqueda exacta de la frase vieja «decisión explícita del cajero» /
+«nunca automática»: salida vacía. La coincidencia «sustituye expresamente la
+aplicación manual anterior» es la regla vigente, no la frase antigua.
+
+HISTÓRICO LEÍDO, NO REEJECUTADO
+================================
+
+reports/prompt-c-readonly-2026-09-15-after.md conserva:
+
+  Comando exacto:
+  pnpm --filter @workspace/api-server exec tsx ../../.local/operations/prompt-c-readonly.ts --after
+  Escrituras, migraciones, login, secretos, sesión de usuario y ejecutores operativos: 0.
+
+Sus salidas históricas relevantes:
+
+  Cruces — source5 net total: $25000.00
+  Global — source5 net total: $0.00
+
+Ese comando no fue ejecutado en esta auditoría. Los movimientos 43-50,
+reversos, recapturas, saldos y efecto diario se conservan únicamente como
+datos reportados en los archivos históricos.

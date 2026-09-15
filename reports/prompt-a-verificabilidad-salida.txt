@@ -1,0 +1,103 @@
+Auditoría Prompt A, Bloque 5 — salida textual reproducible
+Fecha de lectura: 2026-09-15
+Alcance: lecturas estáticas de replit.md, OpenAPI y fuentes existentes.
+No se ejecutaron workflows, build, typecheck, navegador, suites ni escrituras de
+código/DB; únicamente se generaron los dos reportes de esta auditoría.
+
+$ wc -l -c replit.md lib/api-spec/openapi.yaml
+(snapshot de replit.md tomado al inicio de la auditoría, antes de cambios concurrentes)
+   975 157159 replit.md
+ 13361 457213 lib/api-spec/openapi.yaml
+
+$ node (extrae tokens de ruta de replit.md y busca la clave literal "  <ruta>:" en OpenAPI)
+replit route occurrences
+27	/inventario/entradas/{id}	OPENAPI_LITERAL
+105	/tickets/{id}	OPENAPI_LITERAL
+191	/api	NO_OPENAPI_LITERAL
+243	/precios	OPENAPI_LITERAL
+255	/auth/login	OPENAPI_LITERAL
+279	/inventario/existencias/agrupadas	OPENAPI_LITERAL
+280	/dashboard	OPENAPI_LITERAL
+281	/inventario/rollos	OPENAPI_LITERAL
+281	/productos/{id}	OPENAPI_LITERAL
+287	/productos	OPENAPI_LITERAL
+369	/salidas/borrador/rollos	OPENAPI_LITERAL
+369	/pos/buscar	OPENAPI_LITERAL
+369	/etiquetas/rollos	OPENAPI_LITERAL
+369	/rollos	NO_OPENAPI_LITERAL
+550	/pos	NO_OPENAPI_LITERAL
+621	/productos/{id}	OPENAPI_LITERAL
+621	/precios	OPENAPI_LITERAL
+945	/tmp/reportes-composition-x04-final.json	NO_OPENAPI_LITERAL
+950	/admin/diferencias	OPENAPI_LITERAL
+954	/inventario/rollos/:id	NO_OPENAPI_LITERAL
+route-occurrences=20
+
+$ rg -n 'path="/(pos|tickets/:id|inventario/rollos/:id)"' artifacts/mariana-textil/src/App.tsx
+401:          path="/inventario/rollos/:id"
+460:          path="/pos"
+581:          path="/tickets/:id"
+
+$ rg -n 'inventarioRouter|router.use\("/inventario"' artifacts/api-server/src/routes/index.ts artifacts/api-server/src/routes/inventario.ts
+13:import { inventarioRouter } from "./inventario";
+48:router.use("/inventario", inventarioRouter);
+125:export const inventarioRouter = Router();
+1659:  "/rollos",
+
+$ node (extrae referencias docs/ y reports/ y prueba fs.existsSync exacto)
+222	EXACT	docs/endpoint-permissions.md
+321	EXACT	reports/inventory-truth-part1-validation-2026-08-26.md
+379	EXACT	docs/inventory-engine-lock-loops.md
+470	EXACT	reports/auditoria-suites-base-pruebas.html
+802	EXACT	reports/reconstruir-cache-existencias-disposable-evidence.md
+814	EXACT	docs/stock-minimos-verificacion.md
+825	EXACT	reports/abonos-fifo-2026-09-15-resultado.md
+825	EXACT	reports/abonos-bloque4-2026-09-15-resultado.md
+827	EXACT	reports/credito-saldo-favor/verificacion-items-1-2.md
+827	EXACT	reports/credito-saldo-favor/resultado-2026-09-15.md
+834	EXACT	reports/abonos-fifo-2026-09-15-diagnostico.md
+838	EXACT	reports/abonos-bloque4-2026-09-15-resultado.md
+839	EXACT	reports/abonos-fifo-2026-09-15-propuesta-bloque-5.md
+881	EXACT	reports/proveedores-utilidad-verificacion.md
+920	EXACT	reports/export-download-verification.md
+948	EXACT	reports/mapa-destino-reportes.md
+970	EXACT	reports/prompt-c-readonly-2026-09-15-after.md
+974	EXACT	reports/prompt-c-readonly-2026-09-15-after.md
+976	EXACT	reports/prompt-c-resultado.md
+citations=19, unique=17, missing=0
+
+$ node (conteos actuales recontados de las declaraciones)
+MODULOS (artifacts/api-server/src/lib/permisos.ts): 32
+ROLES de matriz (lib/db/src/lib/seed-permissions.mjs): 6
+rolUsuarioEnum (lib/db/src/schema/enums.ts): 7, incluyendo ADMIN + esos 6
+TIPOS_EQUIPO (lib/db/src/lib/equipos-catalog.ts): 7
+estadoSalidaEnum: 5
+LIST_A (scripts/src/purge-operational-phase2.mts): 33
+LIST_B (scripts/src/purge-operational-phase2.mts): 7, más una secuencia no tabla
+LIST_C (scripts/src/purge-operational-phase2.mts): 18
+
+$ rg -n '(METREADO_CASH_ONLY|MAYOREO_THRESHOLD_UNITS|SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS|HISTORY_MIN_MONTHS|CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT|INACTIVITY_MS|ABSOLUTE_SESSION_MS)' artifacts lib
+artifacts/api-server/src/lib/pos.ts:1713:      "METREADO_CASH_ONLY",
+lib/metered-pricing/src/index.ts:2:export const MAYOREO_THRESHOLD_UNITS = 10;
+artifacts/api-server/src/lib/admin-alertas.ts:11:export const SALIDA_EN_TRANSITO_ALERT_THRESHOLD_HOURS = 24;
+artifacts/api-server/src/lib/reportes-que-comprar.ts:13:export const HISTORY_MIN_MONTHS = 3;
+artifacts/api-server/src/lib/admin-analytics.ts:23:export const CANCELLATION_RATE_ALERT_THRESHOLD_PERCENT = 10;
+artifacts/api-server/src/middlewares/auth.ts:17:export const INACTIVITY_MS = 8 * 60 * 60 * 1000;
+artifacts/api-server/src/middlewares/auth.ts:18:export const ABSOLUTE_SESSION_MS = 16 * 60 * 60 * 1000;
+
+$ rg -n 'pendingTicketPredicate|accountedDocumentPredicate|function getSessionMargin|function getSalesSummary' artifacts/api-server/src/lib/{admin-analytics.ts,accounted-document.ts} artifacts/api-server/src/routes/notificaciones.ts
+artifacts/api-server/src/lib/admin-analytics.ts:350:export async function getSalesSummary(filters: AnalyticsFilters) {
+artifacts/api-server/src/lib/admin-analytics.ts:429:export async function getSessionMargin(sesionId: number) {
+artifacts/api-server/src/routes/notificaciones.ts:22:import { pendingTicketPredicate } from "../lib/accounted-document";
+artifacts/api-server/src/routes/notificaciones.ts:225:           WHERE ${pendingTicketPredicate("t")} AND t.ubicacion_id=$1
+
+$ rg -n 'path="/(pos|tickets/:id|inventario/rollos/:id)"' ... ; test -e /tmp/reportes-composition-x04-final.json
+401:          path="/inventario/rollos/:id"
+460:          path="/pos"
+581:          path="/tickets/:id"
+MISSING /tmp/reportes-composition-x04-final.json
+
+Interpretación: las líneas anteriores son la salida de comandos ejecutados en esta
+sesión. Las cifras de pruebas, datos, Neon, navegador, impresoras y purga que
+aparecen en replit.md se conservaron como históricas/no rerun; no se convierten
+en aprobaciones actuales.

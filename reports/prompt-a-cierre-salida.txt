@@ -1,0 +1,119 @@
+Prompt A — cierre documental; sin DB, pruebas, build, codegen ni reinicios.
+Algoritmo: SHA-256 de ruta + NUL + contenido + NUL, rutas ordenadas de git ls-files -z artifacts lib scripts
+Archivos protegidos: 1432
+SHA-256: 8ad59087781b492cda373c9a4fd91157ef10f3fd21260e87ce1ce4ae80067ce0
+Coincide inicial: True
+
+$ git diff --check
+(sin salida)
+exitCode: 0
+
+$ git diff --stat
+ replit.md | 135 +++++++++++++++++++++++++++++++++++++++-----------------------
+ 1 file changed, 86 insertions(+), 49 deletions(-)
+
+exitCode: 0
+
+$ git diff HEAD --name-only -- artifacts lib scripts
+(sin salida)
+exitCode: 0
+
+$ git status --short
+ M replit.md
+?? attached_assets/Pasted--Prompt-A-Higiene-de-replit-md-contra-el-c-digo-versi-n_1789511249213.txt
+?? reports/prompt-a-alcance-inicial.txt
+?? reports/prompt-a-auditoria.md
+?? reports/prompt-a-cierre-salida.txt
+?? reports/prompt-a-finanzas-auditoria.md
+?? reports/prompt-a-finanzas-salida.txt
+?? reports/prompt-a-resultado.md
+?? reports/prompt-a-verificabilidad-salida.txt
+?? reports/prompt-a-verificabilidad.md
+
+exitCode: 0
+
+Existencia de todas las rutas explícitas citadas en replit.md:
+EXISTE .local/phase2-live-postcommit.json
+EXISTE .local/phase2-live-postrestart.json
+EXISTE .local/phase2-live-ui-evidence.json
+EXISTE .local/phase2-purge-evidence-20260913163342450.json
+EXISTE .local/phase2-purge-evidence-20260913163631333.json
+EXISTE .local/phase2-ui-rehearsal/phase2-disposable-postpurge-proof.json
+EXISTE .local/phase2-ui-rehearsal/ui-clarification.json
+EXISTE artifacts/api-server/src/lib/accounted-document.ts
+EXISTE artifacts/api-server/src/lib/admin-alertas.ts
+EXISTE artifacts/api-server/src/lib/admin-analytics.ts
+EXISTE artifacts/api-server/src/lib/clientes-aging.ts
+EXISTE artifacts/api-server/src/lib/compras-proveedor.ts
+EXISTE artifacts/api-server/src/lib/contenedores-helpers.ts
+EXISTE artifacts/api-server/src/lib/contenedores.ts
+EXISTE artifacts/api-server/src/lib/credit-allocation.ts
+EXISTE artifacts/api-server/src/lib/fecha-efectiva.ts
+EXISTE artifacts/api-server/src/lib/inventario.ts
+EXISTE artifacts/api-server/src/lib/mexico-date.ts
+EXISTE artifacts/api-server/src/lib/payment-behavior.ts
+EXISTE artifacts/api-server/src/lib/permisos.ts
+EXISTE artifacts/api-server/src/lib/pos.ts
+EXISTE artifacts/api-server/src/lib/precios.ts
+EXISTE artifacts/api-server/src/lib/reportes-inventory.ts
+EXISTE artifacts/api-server/src/lib/sensitive-data.ts
+EXISTE artifacts/api-server/src/middlewares/auth.ts
+EXISTE artifacts/api-server/src/routes/
+EXISTE artifacts/api-server/src/routes/clientes.ts
+EXISTE artifacts/api-server/src/routes/dashboard.ts
+EXISTE artifacts/api-server/src/routes/etiquetas.ts
+EXISTE artifacts/api-server/src/routes/inventario.ts
+EXISTE artifacts/api-server/src/routes/notificaciones.ts
+EXISTE artifacts/api-server/src/routes/pagos-dirigidos.ts
+EXISTE artifacts/api-server/src/routes/permisos.ts
+EXISTE artifacts/api-server/src/routes/precios.ts
+EXISTE artifacts/api-server/src/routes/productos.ts
+EXISTE artifacts/mariana-textil/src/
+EXISTE artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx
+EXISTE artifacts/mariana-textil/src/components/proveedor-pago-dialog.tsx
+EXISTE artifacts/mariana-textil/src/components/solicitud-pago-dirigido-dialog.tsx
+EXISTE artifacts/mariana-textil/src/hooks/use-shared-cuentas-destino.ts
+EXISTE artifacts/mariana-textil/src/lib/fecha-efectiva.ts
+EXISTE artifacts/mariana-textil/src/lib/home-route.ts
+EXISTE artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx
+EXISTE artifacts/mariana-textil/src/pages/cobros.tsx
+EXISTE artifacts/mariana-textil/src/pages/entrada-documento.tsx
+EXISTE artifacts/mariana-textil/src/pages/movimientos.tsx
+EXISTE artifacts/mariana-textil/src/pages/salida-documento.tsx
+EXISTE artifacts/mariana-textil/src/pages/ticket-detail.tsx
+EXISTE docs/endpoint-permissions.md
+EXISTE docs/inventory-engine-lock-loops.md
+EXISTE docs/stock-minimos-verificacion.md
+EXISTE lib/api-spec/openapi.yaml
+EXISTE lib/db/migrations/20260914_supplier_trace.sql
+EXISTE lib/db/src/schema/
+EXISTE lib/db/src/schema/enums.ts
+EXISTE lib/db/src/seed.mjs
+EXISTE lib/metered-pricing/src/index.ts
+EXISTE reports/abonos-bloque4-2026-09-15-resultado.md
+EXISTE reports/abonos-fifo-2026-09-15-diagnostico.md
+EXISTE reports/abonos-fifo-2026-09-15-plan-bloque-4.md
+EXISTE reports/abonos-fifo-2026-09-15-propuesta-bloque-5.md
+EXISTE reports/abonos-fifo-2026-09-15-resultado.md
+EXISTE reports/auditoria-suites-base-pruebas.html
+EXISTE reports/credito-saldo-favor/resultado-2026-09-15.md
+EXISTE reports/credito-saldo-favor/verificacion-items-1-2.md
+EXISTE reports/export-download-verification.md
+EXISTE reports/inventory-truth-part1-validation-2026-08-26.md
+EXISTE reports/mapa-destino-reportes.md
+EXISTE reports/prompt-a-finanzas-auditoria.md
+EXISTE reports/prompt-a-resultado.md
+EXISTE reports/prompt-a-verificabilidad.md
+EXISTE reports/prompt-c-readonly-2026-09-15-after.json
+EXISTE reports/prompt-c-readonly-2026-09-15-after.md
+EXISTE reports/prompt-c-resultado.md
+EXISTE reports/proveedores-utilidad-verificacion.md
+EXISTE reports/reconstruir-cache-existencias-disposable-evidence.md
+EXISTE scripts/.local/backups/respaldo-antes-de-purga-2026-09-13-101833
+EXISTE scripts/src/purge-operational-phase2.mts
+Ausentes: 0
+
+Citas de línea / afirmaciones retiradas restantes: 0
+Archivos rastreados modificados: ['replit.md']
+
+RESULTADO: conservación y alcance documental comprobados. Resultados históricos no reejecutados.

@@ -1,0 +1,10 @@
+Comando: git ls-files -z artifacts lib scripts; SHA-256 de rutas y contenido rastreado, ordenado.
+Archivos protegidos: 1432
+SHA-256: 8ad59087781b492cda373c9a4fd91157ef10f3fd21260e87ce1ce4ae80067ce0
+git diff --stat inicial:
+(sin diferencias rastreadas)
+git status --short inicial (incluye adjunto del usuario y reportes creados en esta tanda):
+?? attached_assets/Pasted--Prompt-A-Higiene-de-replit-md-contra-el-c-digo-versi-n_1789511249213.txt
+?? reports/prompt-a-alcance-inicial.txt
+
+Esta auditoría no ejecuta DB, compilación, pruebas, codegen, login ni reinicios.
