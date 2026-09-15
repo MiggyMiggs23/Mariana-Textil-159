@@ -2,6 +2,10 @@
 
 Fecha de preparación: 2026-09-15. **No ejecutado.**
 
+**Decisión expresa del usuario: no ejecutar todavía.** Solo se verificaron
+instantes mediante una transacción `REPEATABLE READ READ ONLY` y se actualizó
+este documento. No hay autorización para registrar reversos ni recapturas.
+
 No se han corregido, eliminado ni recapturado los movimientos reales.
 
 ## Movimientos exactos
@@ -19,6 +23,26 @@ Las dos recapturas conservarían **EFECTIVO / CAJA_FISICA**. No representan
 otra entrada física de dinero: sustituyen contablemente los abonos anulados.
 
 ## Fechas propuestas para las recapturas
+
+### Cuatro instantes verificados antes de cualquier escritura financiera
+
+Conversión realizada por PostgreSQL con `AT TIME ZONE 'America/Mexico_City'`,
+no con la zona local del navegador. En estos instantes el desplazamiento es
+UTC−06:00:
+
+| Evento | Instante UTC verificado | Hora de Ciudad de México |
+|---|---|---|
+| Cargo 43, nota 1004 | 2026-09-15 19:29:34.336084Z | **2026-09-15 13:29:34.336084−06:00** |
+| Captura original del abono 46 | 2026-09-15 19:35:17.006Z | **2026-09-15 13:35:17.006−06:00** |
+| Cargo 44, nota 1005 | 2026-09-15 19:32:04.605206Z | **2026-09-15 13:32:04.605206−06:00** |
+| Captura original del abono 45 | 2026-09-15 19:34:10.192Z | **2026-09-15 13:34:10.192−06:00** |
+
+En ambos casos la captura ocurrió después del cargo correspondiente.
+Los instantes de captura provienen de `metadata.fechaCaptura`; **no son las
+fechas efectivas actualmente guardadas de esos abonos**. Estas últimas
+siguen siendo, para ambos, `2026-09-15T00:00:00Z`, equivalente a
+**2026-09-14 18:00:00−06:00**. La misma consulta confirmó que no hay
+movimientos con origen 45 o 46.
 
 Usar el instante real conservado en la metadata original, no mediodía:
 
@@ -68,9 +92,32 @@ histórico del día 14**: el ingreso erróneo permanece visible allí y su
 compensación aparece el día de ejecución del reverso. No debe afirmarse que
 todos los totales diarios o por sitio quedarían corregidos con esta operación.
 
+### Efecto diario explícito de estos $25,000
+
+**Si ambos reversos se ejecutaran el 15 de septiembre, el día 14 conservaría
+los $25,000 y el día 15 quedaría en $0 neto por estas operaciones.**
+
+| Día en Ciudad de México | Abonos originales | Reversos | Recapturas | Neto recibido de estas operaciones |
+|---|---:|---:|---:|---:|
+| 2026-09-14 | +$25,000.00 | $0.00 | $0.00 | **+$25,000.00** |
+| 2026-09-15 | $0.00 | −$25,000.00 | +$25,000.00 | **$0.00** |
+
+Esta tabla usa signos de **dinero recibido**, opuestos a los del libro de
+crédito: el reverso resta recibido y la recaptura suma recibido. Aísla estos
+dos abonos; no afirma que el total de toda la operación del sitio sea cero
+ni acredita el comportamiento de un reporte no verificado.
+
+**La condición de ejecutar los reversos el día 15 es indispensable.**
+Si se autorizan y ejecutan otro día, el día 14 sigue conservando +$25,000,
+el día 15 recibe +$25,000 por las recapturas retrofechadas y el día de los
+reversos registra −$25,000. En ese escenario, el 15 **no** queda en cero
+neto. Antes de cualquier escritura debe revalidarse la fecha local real de
+ejecución y actualizar este cuadro; no se puede prometer cero neto el 15
+independientemente de cuándo se autorice.
+
 Si se quiere además trasladar contablemente el ingreso entre días, hay que
 definir y autorizar por separado la fecha efectiva del reverso y su tratamiento
 en los cortes. No se ha implementado esa extensión ni se ha alterado Cobrado.
 
-**Pendiente:** autorización expresa para ejecutar el plan descrito. Preparar
+**Pendiente y no autorizado:** autorización expresa para ejecutar el plan descrito. Preparar
 este documento no constituye autorización para escribir movimientos reales.
