@@ -1,19 +1,21 @@
-# Bloque 4 — Plan financiero pendiente de autorización
+# Bloque 4 — Plan financiero ejecutado
 
-Fecha de preparación: 2026-09-15. **No ejecutado.**
+Fecha de preparación y ejecución: 2026-09-15. **Ejecutado y verificado.**
 
 **Decisión vigente:** el usuario autorizó las cuatro operaciones con instantes
 exactos y orden obligatorio: reverso 46, reverso 45, recaptura 46, recaptura 45.
-La prevalidación de fecha y diferencias positivas pasó, pero la autenticación
-operativa respondió **401**. Se detuvo antes del primer reverso: **cero
-operaciones financieras ejecutadas**. La autorización no sustituye una sesión
-válida ni permite omitir los permisos.
+Tras un primer intento detenido sin movimientos por HTTP 401, el usuario
+proporcionó credenciales vigentes por el mecanismo seguro. La prevalidación
+se repitió y se ejecutaron, en orden, los movimientos **47, 48, 49 y 50**.
+Resultado y verificaciones:
+`reports/abonos-bloque4-2026-09-15-resultado.md`.
 
 Evidencia del intento y preservación posterior:
 `reports/abonos-bloque4-2026-09-15-evidencia.jsonl`.
 Resumen: `reports/abonos-bloque4-2026-09-15-bloqueo.md`.
 
-No se han corregido, eliminado ni recapturado los movimientos reales.
+Los originales permanecen intactos; la corrección se hizo exclusivamente
+mediante los dos reversos y las dos recapturas del plan que se conserva abajo.
 
 ## Movimientos exactos
 
@@ -126,6 +128,6 @@ Si se quiere además trasladar contablemente el ingreso entre días, hay que
 definir y autorizar por separado la fecha efectiva del reverso y su tratamiento
 en los cortes. No se ha implementado esa extensión ni se ha alterado Cobrado.
 
-**Pendiente:** autenticación operativa válida y nueva prevalidación antes de
-continuar. No repetir automáticamente solicitudes financieras. Si cambia el
-día local de ejecución, detenerse: ya no se cumpliría el cero neto del día 15.
+**Completado:** saldos $5,750.00 / $7,022.00, favor cero en ambos clientes,
+historial y Ver Reparto comprobados en pantalla. Día 14: +$25,000; día 15:
+$0 neto por las cuatro operaciones. No volver a ejecutar este plan.

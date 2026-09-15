@@ -924,3 +924,25 @@ mtime_ms = 1789506737112
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a43c7f14-4a85-4511-af71-f661dccfd20e/eac31c35-d574-45c8-bdfc-7bcda41e95eb"
 storage_version_token = "1789506827703088"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "6VRpqkfTEc3SLoIBo33ch"
+uri = "file://reports/abonos-bloque4-2026-09-15-resultado.md"
+type = "text"
+title = "Bloque 4 — ejecutado y verificado"
+description = "Cuatro operaciones, instantes exactos, saldos finales, reparto en pantalla y efecto diario confirmado."
+logical_id = "ed3f3741-b2ce-4055-b97d-f43d945f59ca"
+
+[[outputs]]
+id = "OB_PUluwdO98v0cbL5MUF"
+uri = "file://reports/abonos-bloque4-2026-09-15-ejecucion.jsonl"
+type = "unspecified"
+title = "Evidencia completa de ejecución"
+description = "Consultas SQL, parámetros, salidas textuales, respuestas HTTP, preservación de originales y auditoría."
+logical_id = "647b6234-ab8e-421e-b6b0-e88f0a1d65e4"
+content_hash = "sha256:608072dc37b30528ba4759f1a45782ae0bb41e0c00cfacc442058b306c5cc3d7"
+size = 38547
+mtime_ms = 1789507194940
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/647b6234-ab8e-421e-b6b0-e88f0a1d65e4/82ebc766-29d1-43f8-b279-cfd2926d674e"
+storage_version_token = "1789507340171558"
+content_type = "application/octet-stream"

@@ -2,18 +2,23 @@
 
 Fecha: **2026-09-15**, Ciudad de México.
 
+**Actualización posterior:** el Bloque 4 ya fue autorizado, ejecutado y
+verificado con los movimientos 47–50. Su resultado está en
+`reports/abonos-bloque4-2026-09-15-resultado.md`. El resto de este documento
+conserva los resultados y límites de la entrega inicial de los bloques 1–3.
+
 ## Dictamen
 
 **Entrega parcial, sin aprobación integral financiera ni de navegador.**
 Se implementaron los cambios de los bloques 1–3 y pasaron 26 pruebas acotadas.
 Persisten cuatro errores de tipos preexistentes, limitaciones de almacenamiento
-de aplicaciones y comprobaciones reales pendientes. No se ejecutó el Bloque 4
-ni se implementó el Bloque 5.
+de aplicaciones y comprobaciones reales pendientes. En la entrega inicial
+todavía no se había ejecutado el Bloque 4. El Bloque 5 sigue sin implementar.
 
 ### Documentos de esta entrega
 
 - [Bloque 0: consultas y salidas textuales](abonos-fifo-2026-09-15-diagnostico.md).
-- [Bloque 4: IDs, importes, fechas y autorización pendiente](abonos-fifo-2026-09-15-plan-bloque-4.md).
+- [Bloque 4: plan, ahora ejecutado](abonos-fifo-2026-09-15-plan-bloque-4.md).
 - [Bloque 5: propuesta escrita, no implementada](abonos-fifo-2026-09-15-propuesta-bloque-5.md).
 
 ## 1. Diagnóstico y conservación histórica
@@ -244,12 +249,14 @@ No hubo solicitudes de mutación.
   anteriores fuera de este manifiesto.
 - No hubo publicación, migración nueva ni correcciones financieras reales.
 
-## 4. Decisión pendiente
+## 4. Ejecución posterior del Bloque 4
 
-El plan del Bloque 4 propone reversar totalmente el **46 por $10,000** y el
-**45 por $15,000**, y recapturar con sus instantes reales de captura.
-Requiere autorización expresa y revalidación antes de ejecutar.
+El usuario autorizó posteriormente el plan. Se ejecutaron los reversos
+**47 y 48**, seguidos de las recapturas **49 y 50** con sus instantes reales
+exactos. Se verificaron las deudas **$5,750.00 / $7,022.00**, favor cero,
+Historial de Abonos y Ver Reparto en ambas notas. Evidencia completa:
+`reports/abonos-bloque4-2026-09-15-resultado.md`. No volver a ejecutar el plan.
 
-Advertencia: los reversos del flujo actual llevan fecha de ejecución;
-este plan no reclasifica por sí solo el corte histórico del día 14.
-Los detalles y consecuencias están en su documento separado.
+Los reversos llevaron fecha de ejecución, el día 15. El día 14 conserva
+los $25,000 y el 15 quedó en cero neto por esas cuatro operaciones;
+no se reclasificó el corte histórico del día 14.
