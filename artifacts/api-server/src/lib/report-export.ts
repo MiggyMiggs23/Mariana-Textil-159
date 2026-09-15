@@ -1,5 +1,14 @@
 import ExcelJS from "exceljs";
 import { EXCEL_NUMBER_FORMAT, formatUnit, toExcelNumber } from "@workspace/number-format";
+import {
+  formatReportDate,
+  formatReportFilters,
+  formatReportRange,
+  hasMeaningfulTotals,
+  labelForReportKey,
+  reportTotalLabel,
+  type ReportPresentationCatalogs,
+} from "./report-presentation";
 
 /**
  * Export-only normalization. Report builders retain their UI-oriented shapes,
@@ -120,7 +129,10 @@ const numeric = (kind: string) =>
   kind === "money" || kind === "quantity" || kind === "count" || kind === "percentage" || kind === "days";
 const formatFor = (kind: string) => {
   if (kind === "money") return EXCEL_NUMBER_FORMAT.money;
-  if (kind === "percentage") return "0.00%";
+  // Report percentages are already percentage points (12.5 means 12.5%).
+  // Excel's percent operator multiplies a stored number by 100, so use a
+  // literal percent sign while preserving the native numeric cell.
+  if (kind === "percentage") return '0.00"%"';
   if (kind === "quantity" || kind === "days") return EXCEL_NUMBER_FORMAT.quantity;
   if (kind === "count") return EXCEL_NUMBER_FORMAT.count;
   return EXCEL_NUMBER_FORMAT.identifier;
@@ -149,40 +161,79 @@ export function createReportWorkbook(report: {
   charts?: ExportChart[];
   warnings?: string[];
   alerts?: ExportAlert[];
+  catalogs?: ReportPresentationCatalogs;
 }): ExcelJS.Workbook {
   const workbook = new ExcelJS.Workbook();
   const modality = activeReportModality(report.activeFilters);
   const meta = workbook.addWorksheet("Periodo");
+  const filters = formatReportFilters(report.activeFilters, report.catalogs);
   meta.addRows([
     ["Reporte", report.section],
-    ["Generado", report.generatedAt],
-    ["Periodo", JSON.stringify(report.range)],
-    ["Filtros", JSON.stringify(report.activeFilters)],
-    ["Modalidad", modality],
+    ["Generado", formatReportDate(report.generatedAt, true)],
+    ["Periodo", formatReportRange(report.range)],
+    ["Filtros", filters.length ? filters.join("\n") : "Sin filtros adicionales"],
+    ["Modalidad", modality === "TODO" ? "Todas las modalidades" : modality],
   ]);
+  meta.getColumn(1).width = 20;
+  meta.getColumn(2).width = 100;
+  meta.getColumn(2).alignment = { wrapText: true, vertical: "top" };
+  meta.getColumn(1).font = { bold: true };
+  meta.views = [{ state: "frozen", ySplit: 1 }];
   const kpis = workbook.addWorksheet("Indicadores");
   kpis.columns = [{ header: "Indicador", key: "label", width: 38 }, { header: "Valor", key: "value", width: 18 }];
+  kpis.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
+  kpis.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F4E78" } };
+  kpis.views = [{ state: "frozen", ySplit: 1 }];
   for (const item of report.kpis ?? []) {
     kpis.addRow({ label: item.label, value: numeric(item.kind) && item.value != null ? toExcelNumber(item.value) : item.value });
     if (numeric(item.kind)) kpis.getCell(`B${kpis.rowCount}`).numFmt = formatFor(item.kind);
   }
   for (const item of report.tables) {
     const sheet = workbook.addWorksheet(worksheetName(workbook, item.title));
-    sheet.columns = item.columns.map((column) => ({ header: column.label, key: column.key, width: Math.max(14, column.label.length + 3) }));
+    sheet.columns = item.columns.map((column) => ({
+      header: column.label,
+      key: column.key,
+      width: Math.min(42, Math.max(14, column.label.length + 3)),
+    }));
     for (const column of item.columns) if (numeric(column.kind)) sheet.getColumn(column.key).numFmt = formatFor(column.kind);
+    sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
+    sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F4E78" } };
+    sheet.getRow(1).alignment = { wrapText: true, vertical: "middle" };
+    sheet.getRow(1).height = 30;
     sheet.addRows(item.rows.map((row) => Object.fromEntries(item.columns.map((column) => [
       column.key,
       numeric(column.kind) && row[column.key] != null && row[column.key] !== "Pendiente"
         ? toExcelNumber(row[column.key] as string | number)
         : row[column.key] ?? null,
     ]))));
-    sheet.addRow(Object.fromEntries(item.columns.map((column) => [column.key, item.totals[column.key] ?? null])));
+    if (hasMeaningfulTotals(item.totals)) {
+      const totalRow = Object.fromEntries(item.columns.map((column) => [
+        column.key,
+        numeric(column.kind) && item.totals[column.key] != null && item.totals[column.key] !== "Pendiente"
+          ? toExcelNumber(item.totals[column.key] as string | number)
+          : item.totals[column.key] ?? null,
+      ]));
+      const label = reportTotalLabel(item.columns, item.totals);
+      if (label && totalRow[label.key] == null) totalRow[label.key] = label.value;
+      const row = sheet.addRow(totalRow);
+      row.font = { bold: true };
+      row.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE2F0D9" } };
+      item.columns.forEach((column, index) => {
+        const cell = row.getCell(index + 1);
+        if (numeric(column.kind) && cell.value !== "Pendiente") {
+          cell.numFmt = formatFor(column.kind);
+        }
+      });
+    }
     sheet.autoFilter = { from: "A1", to: `${excelColumnName(item.columns.length)}1` };
+    sheet.views = [{ state: "frozen", ySplit: 1 }];
+    sheet.pageSetup = { orientation: item.columns.length > 8 ? "landscape" : "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0 };
+    sheet.pageSetup.printTitlesRow = "1:1";
   }
   for (const chart of report.charts ?? []) {
     const sheet = workbook.addWorksheet(worksheetName(workbook, `Grafico ${chart.title}`));
     const chartColumns = [
-      { key: chart.categoryKey, label: chart.categoryKey, kind: "text" },
+      { key: chart.categoryKey, label: labelForReportKey(chart.categoryKey), kind: "text" },
       ...chart.series.map((series) => ({ key: series.key, label: series.label, kind: series.kind ?? "text" })),
     ];
     sheet.columns = chartColumns.map((column) => ({
@@ -198,12 +249,24 @@ export function createReportWorkbook(report: {
           : row[column.key] ?? null,
       ]),
     )));
+    for (const column of chartColumns) {
+      if (numeric(column.kind)) sheet.getColumn(column.key).numFmt = formatFor(column.kind);
+    }
     sheet.autoFilter = { from: "A1", to: `${excelColumnName(chartColumns.length)}1` };
+    sheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
+    sheet.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F4E78" } };
+    sheet.getRow(1).alignment = { wrapText: true };
+    sheet.views = [{ state: "frozen", ySplit: 1 }];
+    sheet.pageSetup = { orientation: chartColumns.length > 6 ? "landscape" : "portrait", fitToPage: true, fitToWidth: 1, fitToHeight: 0 };
+    sheet.pageSetup.printTitlesRow = "1:1";
   }
   if (report.warnings?.length) {
     const warnings = workbook.addWorksheet(worksheetName(workbook, "Avisos"));
     warnings.columns = [{ header: "Aviso", key: "warning", width: 100 }];
     warnings.addRows(report.warnings.map((warning) => ({ warning })));
+    warnings.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
+    warnings.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F4E78" } };
+    warnings.views = [{ state: "frozen", ySplit: 1 }];
   }
   if (report.alerts?.length) {
     const alerts = workbook.addWorksheet(worksheetName(workbook, "Alertas"));
@@ -215,6 +278,9 @@ export function createReportWorkbook(report: {
       { header: "Origen", key: "href", width: 70 },
     ];
     alerts.addRows(report.alerts);
+    alerts.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
+    alerts.getRow(1).fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF1F4E78" } };
+    alerts.views = [{ state: "frozen", ySplit: 1 }];
   }
   return workbook;
 }

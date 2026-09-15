@@ -50,6 +50,7 @@
     "test:task58-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/task58.integration.test.ts",
     "test:admin-invariants": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/admin-invariants.integration.test.ts",
     "test:reportes": "tsx --test src/lib/reportes.test.ts",
+    "test:report-export-readability": "tsx --test src/lib/pdf.test.ts src/lib/report-presentation.test.ts src/lib/report-export.test.ts",
     "test:reportes-integration": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/reportes.integration.test.ts",
     "test:proveedores-alcance-fechas": "REQUIRE_ISOLATED_TEST_DATABASE=1 NODE_ENV=test TEST_DATABASE_URL=${TEST_DATABASE_URL:?TEST_DATABASE_URL must be explicit} tsx --test src/proveedores-alcance-fechas.integration.test.ts",
     "test:contenedores": "NODE_ENV=test tsx --test src/lib/contenedores.test.ts",
@@ -78,6 +79,7 @@
     "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "google-auth-library": "^11.0.2",
+    "pdfkit": "^0.20.2",
     "pino": "^9.14.0",
     "pino-http": "^10.5.0",
     "zod": "catalog:"
@@ -87,6 +89,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "catalog:",
+    "@types/pdfkit": "^0.17.6",
     "esbuild": "0.27.3",
     "esbuild-plugin-pino": "^2.3.3",
     "pino-pretty": "^13.1.3",

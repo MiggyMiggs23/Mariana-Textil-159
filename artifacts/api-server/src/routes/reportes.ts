@@ -8,7 +8,7 @@ import {
 } from "@workspace/api-zod";
 import { requireRole, requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
-import { createTextPdf, wrapPdfLines } from "../lib/pdf";
+import { createReadableReportPdf } from "../lib/pdf";
 import { buildReport, getCatalogs, parseReportBooleanQuery, reportRange, REPORT_SECTIONS, ReportInputError, type Report } from "../lib/reportes";
 import { createReportWorkbook, normalizeExportTables } from "../lib/report-export";
 import { resolveReadScope } from "./inventario";
@@ -136,6 +136,10 @@ router.get("/reportes/:seccion/export.xlsx", async (req, res, next): Promise<voi
       data.activeFilters,
       reportRows(data),
     );
+    const catalogs = await getCatalogs(
+      scopedLocations(req),
+      req.auth!.user.rol === "ADMIN",
+    );
     const workbook = createReportWorkbook({
       section: data.section,
       generatedAt: data.generatedAt,
@@ -143,6 +147,10 @@ router.get("/reportes/:seccion/export.xlsx", async (req, res, next): Promise<voi
       activeFilters: data.activeFilters,
       kpis: reportKpis(data),
       tables,
+      charts: data.charts as any,
+      warnings: data.warnings as string[],
+      alerts: data.alerts as any,
+      catalogs,
     });
     res.setHeader("Server-Timing", `reportes;dur=${(performance.now() - started).toFixed(1)}`);
     res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); res.attachment(`${data.section}.xlsx`);
@@ -153,13 +161,25 @@ router.get("/reportes/:seccion/export.pdf", async (req, res, next): Promise<void
   const started = performance.now();
   try {
     const data = await report(req);
-    const lines = [`Periodo: ${JSON.stringify(data.range)}`, `Filtros: ${JSON.stringify(data.activeFilters)}`, "Indicadores:", ...reportKpis(data).map((item) => `${item.label}: ${item.value}`)];
     const tables = normalizeExportTables(String(data.section), data.activeFilters, reportRows(data));
-    for (const item of tables) {
-      lines.push(item.title, ...item.rows.map((row) => item.columns.map((c) => `${c.label}: ${row[c.key] ?? ""}`).join(" | ")), `Totales: ${JSON.stringify(item.totals)}`);
-    }
+    const catalogs = await getCatalogs(
+      scopedLocations(req),
+      req.auth!.user.rol === "ADMIN",
+    );
     res.setHeader("Server-Timing", `reportes;dur=${(performance.now() - started).toFixed(1)}`);
-    res.type("application/pdf"); res.attachment(`${data.section}.pdf`); res.send(createTextPdf(`Reporte ${data.section}`, lines));
+    res.type("application/pdf"); res.attachment(`${data.section}.pdf`);
+    res.send(await createReadableReportPdf({
+      section: data.section,
+      generatedAt: data.generatedAt,
+      range: data.range,
+      activeFilters: data.activeFilters,
+      kpis: reportKpis(data),
+      tables,
+      charts: data.charts as any,
+      warnings: data.warnings as string[],
+      alerts: data.alerts as any,
+      catalogs,
+    }));
   } catch (e) { if (!error(e, res)) next(e); }
 });
 
@@ -309,6 +329,10 @@ router.get("/reportes/vistas/:vista/export.xlsx", async (req, res, next): Promis
       },
     );
     const tables = normalizeExportTables(String(data.section), data.activeFilters, reportRows(data));
+    const catalogs = await getCatalogs(
+      locations,
+      req.auth!.user.rol === "ADMIN",
+    );
     const workbook = createReportWorkbook({
       section: data.section,
       generatedAt: data.generatedAt,
@@ -316,6 +340,7 @@ router.get("/reportes/vistas/:vista/export.xlsx", async (req, res, next): Promis
       activeFilters: data.activeFilters,
       kpis: reportKpis(data),
       tables,
+      catalogs,
       charts: data.charts as any,
       warnings: data.warnings as string[],
       alerts: data.alerts as any,
@@ -350,33 +375,26 @@ router.get("/reportes/vistas/:vista/export.pdf", async (req, res, next): Promise
         alcanceConsulta: req.auth!.user.alcanceConsulta,
       },
     );
-    const lines = [
-      `Periodo: ${JSON.stringify(data.range)}`,
-      `Filtros: ${JSON.stringify(data.activeFilters)}`,
-      "Indicadores:",
-      ...reportKpis(data).map((item) => `${item.label}: ${item.value}`),
-      ...(data.warnings as string[]).map((warning) => `Aviso: ${warning}`),
-      ...((data.alerts ?? []) as Array<{ sesionId: number; tipo: string; mensaje: string; importe: string }>)
-        .map((alert) => `Alerta [${alert.tipo}] sesión ${alert.sesionId}: ${alert.mensaje} · Importe ${alert.importe}${"href" in alert && alert.href ? ` · Origen ${alert.href}` : ""}`),
-      ...((data.charts as Array<{ title: string; rows: Record<string, unknown>[] }>).flatMap((chart) => [
-        `Matriz: ${chart.title}`,
-        ...chart.rows.map((row) => JSON.stringify(row)),
-      ])),
-    ];
     const tables = normalizeExportTables(String(data.section), data.activeFilters, reportRows(data));
-    for (const item of tables) {
-      lines.push(
-        item.title,
-        ...item.rows.map((row) =>
-          item.columns.map((column) => `${column.label}: ${row[column.key] ?? ""}`).join(" | "),
-        ),
-        `Totales: ${JSON.stringify(item.totals)}`,
-      );
-    }
+    const catalogs = await getCatalogs(
+      locations,
+      req.auth!.user.rol === "ADMIN",
+    );
     res.setHeader("Server-Timing", `reportes-compuestos;dur=${(performance.now() - started).toFixed(1)}`);
     res.type("application/pdf");
     res.attachment(`${data.section}.pdf`);
-    res.send(createTextPdf(`Reporte ${data.section}`, wrapPdfLines(lines)));
+    res.send(await createReadableReportPdf({
+      section: data.section,
+      generatedAt: data.generatedAt,
+      range: data.range,
+      activeFilters: data.activeFilters,
+      kpis: reportKpis(data),
+      tables,
+      charts: data.charts as any,
+      warnings: data.warnings as string[],
+      alerts: data.alerts as any,
+      catalogs,
+    }));
   } catch (e) { if (!error(e, res)) next(e); }
 });
 

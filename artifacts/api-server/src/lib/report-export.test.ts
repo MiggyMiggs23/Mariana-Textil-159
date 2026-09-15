@@ -104,3 +104,36 @@ test("Excel number formats preserve report precision by kind", () => {
   assert.equal(sheet.getCell("B2").numFmt, "#,##0");
   assert.equal(sheet.getCell("B3").numFmt, "#,##0.00");
 });
+
+test("percentage points remain native numerics with literal percent display", () => {
+  const workbook = createReportWorkbook({
+    section: "ventas",
+    generatedAt: "",
+    range: {},
+    activeFilters: [],
+    kpis: [{ label: "Participación", value: 12.5, kind: "percentage" }],
+    tables: [{
+      id: "percent",
+      title: "Participación",
+      columns: [{ key: "value", label: "Participación", kind: "percentage" }],
+      rows: [{ value: 12.5 }],
+      totals: { value: 25 },
+    }],
+    charts: [{
+      id: "percent-chart",
+      title: "Participación por día",
+      categoryKey: "dia",
+      series: [{ key: "value", label: "Participación", kind: "percentage" }],
+      rows: [{ dia: "Lunes", value: 12.5 }],
+    }],
+  });
+  assert.equal(workbook.getWorksheet("Indicadores")!.getCell("B2").value, 12.5);
+  assert.equal(workbook.getWorksheet("Indicadores")!.getCell("B2").numFmt, '0.00"%"');
+  const table = workbook.getWorksheet("Participación")!;
+  assert.equal(table.getCell("A2").value, 12.5);
+  assert.equal(table.getColumn(1).numFmt, '0.00"%"');
+  assert.equal(table.getCell("A3").numFmt, '0.00"%"');
+  const chart = workbook.getWorksheet("Grafico Participación por día")!;
+  assert.equal(chart.getCell("B2").value, 12.5);
+  assert.equal(chart.getColumn(2).numFmt, '0.00"%"');
+});

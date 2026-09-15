@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { build as esbuild } from "esbuild";
 import esbuildPluginPino from "esbuild-plugin-pino";
-import { rm } from "node:fs/promises";
+import { cp, mkdir, rm } from "node:fs/promises";
 
 // Plugins (e.g. 'esbuild-plugin-pino') may use `require` to resolve dependencies
 globalThis.require = createRequire(import.meta.url);
@@ -13,6 +13,17 @@ const artifactDir = path.dirname(fileURLToPath(import.meta.url));
 async function buildAll() {
   const distDir = path.resolve(artifactDir, "dist");
   await rm(distDir, { recursive: true, force: true });
+  // PDF report exports embed this licensed Unicode font. Copy it beside the
+  // production bundle so the runtime does not depend on host-installed fonts.
+  await mkdir(path.resolve(distDir, "assets/fonts"), { recursive: true });
+  await cp(
+    path.resolve(artifactDir, "assets/fonts/DejaVuSans.ttf"),
+    path.resolve(distDir, "assets/fonts/DejaVuSans.ttf"),
+  );
+  await cp(
+    path.resolve(artifactDir, "assets/fonts/DEJAVU-LICENSE.txt"),
+    path.resolve(distDir, "assets/fonts/DEJAVU-LICENSE.txt"),
+  );
 
   await esbuild({
     entryPoints: [path.resolve(artifactDir, "src/index.ts")],
@@ -59,7 +70,9 @@ async function buildAll() {
       "@prisma/client",
       "@mikro-orm/*",
       "@grpc/*",
-      "@swc/*",
+      // Native compiler stays external; @swc/helpers used by fontkit must
+      // remain bundled so pnpm's transitive dependency is available at runtime.
+      "@swc/core",
       "@aws-sdk/*",
       "@azure/*",
       "@opentelemetry/*",

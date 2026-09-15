@@ -16,6 +16,13 @@ revisión del 14 de septiembre y no describe el estado actual.
 
 ### Estado factual actual
 
+- **Legibilidad de exportaciones:** el pase posterior de Ventas global Normal
+  y Qué comprar Normal descargó archivos nuevos con tablas, fuente Unicode,
+  rango/filtros legibles y formato correcto de porcentajes. Ambos casos
+  pasaron la lectura independiente y revisión visual; los 10 casos del pase
+  anterior acreditaban contenido, no legibilidad. Evidencia actual:
+  `reports/export-download-verification.md`.
+
 - **Actualización de descargas:** se descargaron y abrieron los bytes XLSX y
   PDF de las cinco vistas en Normal y Comparar: 10 casos, cero errores, con
   fuentes completas. Se corrigió X04 omitido en Ventas global Normal y el
