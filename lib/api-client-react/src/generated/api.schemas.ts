@@ -2715,7 +2715,12 @@ export interface ClienteMovimiento {
   fecha?: string;
   /** @nullable */
   notas?: string | null;
+  /** Saldo corrido histórico del libro firmado (SUM de importes); se conserva por compatibilidad y no sustituye la proyección FIFO. */
   saldoCorrido?: string;
+  /** Saldo deudor canónico después de proyectar el prefijo completo hasta este movimiento. */
+  saldoDeudorProyectado?: string;
+  /** Saldo a favor canónico después de proyectar el prefijo completo hasta este movimiento. */
+  saldoAFavorProyectado?: string;
   /** @nullable */
   saldoPendiente?: string | null;
   /** @nullable */
@@ -2904,7 +2909,7 @@ export interface ClientePagoPreviewInput {
 
 export interface AutorizarNotaInput {
   /**
-     * Importe de saldo a favor que el cajero decide aplicar explícitamente.
+     * Campo legado aceptado por compatibilidad; el servidor lo ignora y aplica automáticamente por FIFO el menor entre el favor disponible y la nota.
      * @pattern ^\d+(\.\d{1,2})?$
      */
   aplicarSaldoAFavor?: string;
@@ -6108,12 +6113,24 @@ export interface AutorizacionNotaProyeccion {
   clienteNombre: string;
   saldoActual: string;
   saldoAFavorDisponible: string;
+  /** Favor aplicado por el servidor al autorizar; menor entre favor disponible y la nota después del FIFO canónico. */
+  saldoAFavorAplicadoAutomaticamente: string;
+  /** Favor que quedaría disponible después de autorizar la nota. */
+  saldoAFavorRemanente: string;
+  /** Saldo deudor canónico después de autorizar la nota y aplicar automáticamente el favor. */
+  saldoDeudorProyectado: string;
   importe: string;
+  /** Alias histórico de saldoDeudorProyectado; se conserva para clientes existentes. */
   suma: string;
   limiteCredito: string;
   creditoDisponibleResultante: string;
   exceso: string;
   autorizable: boolean;
+  /**
+     * Motivo de capacidad de almacenamiento que impide autorizar; no modifica el cálculo financiero canónico.
+     * @nullable
+     */
+  motivoBloqueo?: string | null;
 }
 
 export type TicketDocumentoImpresionBaseCopia = typeof TicketDocumentoImpresionBaseCopia[keyof typeof TicketDocumentoImpresionBaseCopia];

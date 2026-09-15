@@ -35,15 +35,23 @@ export type CreditLedgerMovement = {
   diasPlazo?: number | null;
   notas?: string | null;
   /**
-   * New credit-note charges opt out of implicit FIFO use by favor that
-   * predates the note. Later receipts still settle the note normally.
+   * Historical compatibility marker.  This field is intentionally retained
+   * for notes written by the old manual-favor flow: those notes continue to
+   * reject a favor that predates them.  New notes must not write this marker.
    */
   preventImplicitFavor?: boolean;
   /**
-   * Append-only application evidence for a new note.  These rows are loaded
-   * from aplicaciones_credito and are applied before normal FIFO.
+   * Historical append-only application evidence for a marked note.  These
+   * rows are loaded from aplicaciones_credito and are applied before normal
+   * FIFO; prospective auto-favor rows are intentionally not loaded here.
    */
   explicitFavorApplications?: CreditFavorApplication[];
+  /**
+   * Immutable application rows already consuming this ABONO's database
+   * budget.  This is storage evidence only; it is never subtracted from the
+   * canonical financial projection.
+   */
+  immutableAppliedCents?: number;
 };
 export type CreditFavorApplication = {
   sourceId: number;
@@ -62,6 +70,74 @@ export type CreditLedgerCharge = {
   notas: string | null;
   tipo: "VENTA_CREDITO" | "AJUSTE";
 };
+
+/**
+ * The balance shown beside a ledger movement is a projection of the complete
+ * prefix ending at that movement.  It is deliberately separate from
+ * `saldoCorridoHistorico` (the old raw signed SUM kept by the API for
+ * compatibility).
+ */
+export type CreditMovementProjection = {
+  movementId: number;
+  saldoDeudorProyectadoCents: number;
+  saldoAFavorProyectadoCents: number;
+};
+
+export type CreditLedgerProjectionOptions = {
+  /**
+   * Prefix balances are needed by the account statement UI/export.  Keep the
+   * default off for aging/limit reads that only need the final balance.
+   */
+  includeMovementProjections?: boolean;
+};
+
+export type AutomaticFavorCandidate = {
+  source: CreditLedgerMovement;
+  appliedCents: number;
+};
+
+export type AutomaticFavorEligibility = {
+  autorizable: boolean;
+  motivoBloqueo: string | null;
+};
+
+/**
+ * Checks whether the append-only evidence table can document the allocations
+ * proposed by the canonical projector.  This is a storage-capability guard,
+ * not a second balance calculation: negative AJUSTE movements are valid
+ * ledger sources but applications_credito only accepts ABONO sources.
+ */
+export function evaluateAutomaticFavorEligibility(
+  candidates: AutomaticFavorCandidate[],
+): AutomaticFavorEligibility {
+  for (const candidate of candidates) {
+    if (candidate.appliedCents <= 0) continue;
+    if (candidate.source.tipo !== "ABONO") {
+      return {
+        autorizable: false,
+        motivoBloqueo:
+          "No se puede documentar el saldo a favor automático porque proviene de un ajuste negativo; aplicaciones_credito solo acepta ABONO.",
+      };
+    }
+    const consumedCents = Math.max(
+      0,
+      candidate.source.immutableAppliedCents ?? 0,
+    );
+    const sourceCents = Math.max(0, -moneyToCents(candidate.source.importe));
+    const availableForEvidenceCents = Math.max(
+      0,
+      sourceCents - consumedCents,
+    );
+    if (candidate.appliedCents > availableForEvidenceCents) {
+      return {
+        autorizable: false,
+        motivoBloqueo:
+          "No se puede documentar el saldo a favor automático porque el ABONO ya tiene aplicaciones inmutables consumidas.",
+      };
+    }
+  }
+  return { autorizable: true, motivoBloqueo: null };
+}
 
 export function allocateCreditFifo(
   sources: CreditAllocationSource[],
@@ -128,7 +204,7 @@ export function centsToMoney(value: number): string {
 }
 
 /** The sole FIFO interpretation of an immutable customer credit ledger. */
-export function projectCreditLedger(movements: CreditLedgerMovement[]): {
+function projectCreditLedgerCore(movements: CreditLedgerMovement[]): {
   charges: CreditLedgerCharge[];
   allCharges: CreditLedgerCharge[];
   allocations: CreditAllocation[];
@@ -206,6 +282,10 @@ export function projectCreditLedger(movements: CreditLedgerMovement[]): {
   // ordinary older debt consumes a receipt first, and only its residual can
   // be explicitly directed to a later note.  A marked note is protected only
   // from receipts that predate it; later receipts remain ordinary FIFO.
+  //
+  // `preventImplicitFavor` is read-only historical compatibility.  New
+  // charges omit it, so an available favor can settle them automatically
+  // regardless of whether the source predates the charge.
   const balances = new Map(
     chargeMovements.map((movement) => [
       movement.id,
@@ -331,6 +411,134 @@ export function projectCreditLedger(movements: CreditLedgerMovement[]): {
     })),
     balanceCents,
   };
+}
+
+function projectSimpleLedgerPrefixes(
+  ordered: CreditLedgerMovement[],
+): CreditMovementProjection[] {
+  const targets: Array<{
+    movement: CreditLedgerMovement;
+    balanceCents: number;
+  }> = [];
+  const sources: Array<{
+    movement: CreditLedgerMovement;
+    remainingCents: number;
+  }> = [];
+  const result: CreditMovementProjection[] = [];
+  const movementPrecedes = (
+    left: CreditLedgerMovement,
+    right: CreditLedgerMovement,
+  ) =>
+    left.createdAt.getTime() < right.createdAt.getTime() ||
+    (left.createdAt.getTime() === right.createdAt.getTime() && left.id < right.id);
+  const canImplicitlyApply = (
+    source: CreditLedgerMovement,
+    target: CreditLedgerMovement,
+  ) =>
+    !target.preventImplicitFavor || movementPrecedes(target, source);
+
+  for (const movement of ordered) {
+    const amountCents = moneyToCents(movement.importe);
+    const isTarget =
+      movement.tipo === "VENTA_CREDITO" ||
+      (movement.tipo === "AJUSTE" && amountCents > 0);
+    const isSource =
+      (movement.tipo === "ABONO" && amountCents < 0) ||
+      (movement.tipo === "AJUSTE" && amountCents < 0);
+
+    if (isTarget) {
+      const target = { movement, balanceCents: amountCents };
+      // A favor that predates an unmarked new note is consumed when the note
+      // enters the ledger.  This is the prospective auto-application rule.
+      for (const source of sources) {
+        if (source.remainingCents <= 0 || !canImplicitlyApply(source.movement, movement)) {
+          continue;
+        }
+        const applied = Math.min(source.remainingCents, target.balanceCents);
+        source.remainingCents -= applied;
+        target.balanceCents -= applied;
+        if (target.balanceCents <= 0) break;
+      }
+      targets.push(target);
+    }
+
+    if (isSource) {
+      const source = {
+        movement,
+        remainingCents: Math.max(0, -amountCents),
+      };
+      for (const target of targets) {
+        if (source.remainingCents <= 0) break;
+        if (!canImplicitlyApply(source.movement, target.movement)) continue;
+        const applied = Math.min(source.remainingCents, target.balanceCents);
+        source.remainingCents -= applied;
+        target.balanceCents -= applied;
+      }
+      sources.push(source);
+    }
+
+    result.push({
+      movementId: movement.id,
+      saldoDeudorProyectadoCents: targets.reduce(
+        (sum, target) => sum + target.balanceCents,
+        0,
+      ),
+      saldoAFavorProyectadoCents: sources.reduce(
+        (sum, source) => sum + source.remainingCents,
+        0,
+      ),
+    });
+  }
+  return result;
+}
+
+/**
+ * Projects the immutable credit ledger and, when requested, exposes the
+ * canonical balance after every chronological prefix.  Consumers must use
+ * these values instead of rebuilding a running balance with SUM(importe):
+ * the latter cannot represent FIFO applications, reversals, or historical
+ * favor exceptions.
+ *
+ * Prefixes use the exact core projector when reversals, directed payments, or
+ * explicit applications are present.  A plain FIFO ledger uses an equivalent
+ * incremental projection to keep the statement path bounded at O(n²), while
+ * callers that only need the final balance leave this option off entirely.
+ */
+export function projectCreditLedger(
+  movements: CreditLedgerMovement[],
+  options: CreditLedgerProjectionOptions = {},
+): {
+  charges: CreditLedgerCharge[];
+  allCharges: CreditLedgerCharge[];
+  allocations: CreditAllocation[];
+  overpaymentCents: number;
+  overpaymentSources: Array<{
+    movementId: number;
+    availableCents: number;
+    tipo: CreditLedgerMovement["tipo"];
+  }>;
+  balanceCents: number;
+  movementProjections: CreditMovementProjection[];
+} {
+  const ordered = [...movements].sort((a, b) =>
+    a.createdAt.getTime() - b.createdAt.getTime() || a.id - b.id);
+  const projection = projectCreditLedgerCore(ordered);
+  const movementProjections = options.includeMovementProjections === true
+    ? ordered.some((movement) =>
+        movement.tipo === "REVERSO" ||
+        movement.directedMovimientoId != null ||
+        (movement.explicitFavorApplications?.length ?? 0) > 0)
+      ? ordered.map((_, index) => {
+          const prefix = projectCreditLedgerCore(ordered.slice(0, index + 1));
+          return {
+            movementId: ordered[index]!.id,
+            saldoDeudorProyectadoCents: prefix.balanceCents,
+            saldoAFavorProyectadoCents: prefix.overpaymentCents,
+          };
+        })
+      : projectSimpleLedgerPrefixes(ordered)
+    : [];
+  return { ...projection, movementProjections };
 }
 
 export type CuentaDestino = "CAJA_FISICA" | "CUENTA_FISCAL" | "CUENTA_NO_FISCAL";

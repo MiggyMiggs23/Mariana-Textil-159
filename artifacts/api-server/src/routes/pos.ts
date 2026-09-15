@@ -90,7 +90,12 @@ import {
 import { normalizeUsername } from "../lib/auth-identifiers";
 import {
   loadCustomerCreditProjection,
+  loadCustomerCreditLedgerInTransaction,
 } from "../lib/credit-aging-read-model";
+import {
+  evaluateAutomaticFavorEligibility,
+  projectCreditLedger,
+} from "../lib/credit-allocation";
 
 const router: IRouter = Router();
 router.use(["/pos", "/tickets", "/caja", "/sesiones-caja"], requireSession);
@@ -829,36 +834,87 @@ router.get(
   async (req, res, next): Promise<void> => {
     try {
       const { id } = ObtenerProyeccionAutorizacionNotaParams.parse(req.params);
-      const [ticket] = await db.select({
-        id: ticketsTable.id, ubicacionId: ticketsTable.ubicacionId,
-        clienteId: ticketsTable.clienteId, documentoTipo: ticketsTable.documentoTipo,
-        total: ticketsTable.total,
-      }).from(ticketsTable).where(eq(ticketsTable.id, id)).limit(1);
-      if (!ticket || ticket.documentoTipo !== "NOTA") {
-        res.status(404).json({ error: "Nota no encontrada." }); return;
-      }
-      assertOperationalLocation(req, ticket.ubicacionId);
-      const [cliente, projection] = await Promise.all([
-        db.select({ nombre: clientesTable.nombre, limiteCredito: clientesTable.limiteCredito })
-          .from(clientesTable).where(eq(clientesTable.id, ticket.clienteId)).limit(1),
-        loadCustomerCreditProjection(ticket.clienteId),
-      ]);
-      const current = projection.balanceCents;
-       const saldoAFavorDisponible = projection.overpaymentSources
-         .filter((source) => source.tipo === "ABONO")
-         .reduce((sum, source) => sum + source.availableCents, 0);
-      const amount = Math.round(Number(ticket.total) * 100);
-      const sum = current + amount;
-      const limit = Math.round(Number(cliente[0]!.limiteCredito) * 100);
-      const resulting = limit - sum;
-      res.json(ObtenerProyeccionAutorizacionNotaResponse.parse({
-        ticketId: id, clienteNombre: cliente[0]!.nombre,
-        saldoActual: (current / 100).toFixed(2), importe: (amount / 100).toFixed(2),
-         saldoAFavorDisponible: (saldoAFavorDisponible / 100).toFixed(2),
-        suma: (sum / 100).toFixed(2), limiteCredito: (limit / 100).toFixed(2),
-        creditoDisponibleResultante: (resulting / 100).toFixed(2),
-        exceso: (Math.max(0, -resulting) / 100).toFixed(2), autorizable: resulting >= 0,
-      }));
+       const result = await db.transaction(async (tx) => {
+         const [ticket] = await tx.select({
+           id: ticketsTable.id, ubicacionId: ticketsTable.ubicacionId,
+           clienteId: ticketsTable.clienteId, documentoTipo: ticketsTable.documentoTipo,
+           total: ticketsTable.total, diasPlazo: ticketsTable.diasPlazo,
+           fechaVencimiento: ticketsTable.fechaVencimiento,
+         }).from(ticketsTable).where(eq(ticketsTable.id, id)).limit(1);
+         if (!ticket || ticket.documentoTipo !== "NOTA") {
+           throw new PosError("Nota no encontrada.", "NOTE_NOT_FOUND", 404);
+         }
+         assertOperationalLocation(req, ticket.ubicacionId);
+         const [cliente] = await tx.select({
+           nombre: clientesTable.nombre,
+           limiteCredito: clientesTable.limiteCredito,
+         }).from(clientesTable)
+           .where(eq(clientesTable.id, ticket.clienteId))
+           .for("update")
+           .limit(1);
+         if (!cliente) {
+           throw new PosError("Cliente de crédito no encontrado.", "CLIENT_NOT_FOUND", 404);
+         }
+         const ledger = await loadCustomerCreditLedgerInTransaction(
+           ticket.clienteId,
+           tx,
+         );
+         const projection = projectCreditLedger(ledger);
+         const current = projection.balanceCents;
+         const amount = Math.round(Number(ticket.total) * 100);
+         const hypotheticalId = Number.MAX_SAFE_INTEGER;
+         const hypothetical = projectCreditLedger([
+           ...ledger,
+           {
+             id: hypotheticalId,
+             ticketId: id,
+             tipo: "VENTA_CREDITO" as const,
+             importe: ticket.total,
+             createdAt: new Date(),
+             fechaVencimiento: ticket.fechaVencimiento,
+             diasPlazo: ticket.diasPlazo,
+           },
+         ]);
+         const ledgerById = new Map(
+           ledger.map((movement) => [movement.id, movement]),
+         );
+         const favorCandidates = hypothetical.allocations
+           .filter((allocation) => allocation.targetId === hypotheticalId)
+           .flatMap((allocation) => {
+             const source = ledgerById.get(allocation.sourceId);
+             return source == null
+               ? []
+               : [{ source, appliedCents: allocation.appliedCents }];
+           });
+         const favorEligibility = evaluateAutomaticFavorEligibility(
+           favorCandidates,
+         );
+         const saldoAFavorAplicado = favorCandidates.reduce(
+           (sum, candidate) => sum + candidate.appliedCents,
+           0,
+         );
+         const saldoAFavorDisponible = projection.overpaymentCents;
+         const saldoDeudorProyectado = hypothetical.balanceCents;
+         const saldoAFavorRemanente = hypothetical.overpaymentCents;
+         const limit = Math.round(Number(cliente.limiteCredito) * 100);
+         const resulting = limit - saldoDeudorProyectado;
+         return ObtenerProyeccionAutorizacionNotaResponse.parse({
+           ticketId: id, clienteNombre: cliente.nombre,
+           saldoActual: (current / 100).toFixed(2),
+           importe: (amount / 100).toFixed(2),
+           saldoAFavorDisponible: (saldoAFavorDisponible / 100).toFixed(2),
+           saldoAFavorAplicadoAutomaticamente: (saldoAFavorAplicado / 100).toFixed(2),
+           saldoAFavorRemanente: (saldoAFavorRemanente / 100).toFixed(2),
+           saldoDeudorProyectado: (saldoDeudorProyectado / 100).toFixed(2),
+           suma: (saldoDeudorProyectado / 100).toFixed(2),
+           limiteCredito: (limit / 100).toFixed(2),
+           creditoDisponibleResultante: (resulting / 100).toFixed(2),
+           exceso: (Math.max(0, -resulting) / 100).toFixed(2),
+           autorizable: resulting >= 0 && favorEligibility.autorizable,
+           motivoBloqueo: favorEligibility.motivoBloqueo,
+         });
+       });
+       res.json(result);
     } catch (error) {
       handlePosError(error, res, next);
     }

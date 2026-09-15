@@ -840,3 +840,59 @@ mtime_ms = 1789498933600
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/381950ad-69ac-4029-8a58-346cbd1fa28d/3bd67959-9d12-4b74-ae30-3b254eaf0c6e"
 storage_version_token = "1789499469025881"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "YEGaXu3l5js7ttPEnWDoN"
+uri = "file://reports/abonos-fifo-2026-09-15-resultado.md"
+type = "text"
+title = "Resultado y verificaciones — 15 de septiembre"
+description = "Entrega parcial: cambios, 26 pruebas, cuatro errores preexistentes y verificaciones pendientes."
+logical_id = "23de27a8-abf5-44a1-9251-0cb7247d5ac7"
+content_hash = "sha256:8e9f6f3beaca5229dc82c5f609740e17f9ea22bf531e941bf526673b06dc2274"
+size = 11294
+mtime_ms = 1789505479693
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/23de27a8-abf5-44a1-9251-0cb7247d5ac7/e9a75074-76d9-4657-95be-c3a3afa41994"
+storage_version_token = "1789505572897093"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "qoqLQNlJzZLqVoqgl9b0G"
+uri = "file://reports/abonos-fifo-2026-09-15-diagnostico.md"
+type = "text"
+title = "Bloque 0 — diagnóstico y consultas"
+description = "D1 y D2 confirmados; D3 no confirmado. Consultas de solo lectura y salidas textuales."
+logical_id = "88b5b66e-1ae5-4dae-9906-f09589bdab63"
+content_hash = "sha256:b4f99f4675f9e7a5ea93261d59c201c07d381cd5e71efb2c977ee3954b35fe26"
+size = 6931
+mtime_ms = 1789503911250
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/88b5b66e-1ae5-4dae-9906-f09589bdab63/d9ed15fe-afd1-4144-8821-9bb2b3e74e18"
+storage_version_token = "1789505573579377"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "DgVqAu9Hhw8VGrPQ3tPnb"
+uri = "file://reports/abonos-fifo-2026-09-15-plan-bloque-4.md"
+type = "text"
+title = "Bloque 4 — plan pendiente de autorización"
+description = "Reversos totales y recapturas de los abonos 46 y 45; importes, fechas y consecuencias."
+logical_id = "c6c0dc60-84d3-4471-b7db-efd8364aaa32"
+content_hash = "sha256:6d77ac8bed44473d071bb714cd68373c17cba960c22433174705d0d908a307de"
+size = 3854
+mtime_ms = 1789504286693
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c6c0dc60-84d3-4471-b7db-efd8364aaa32/ab64bba0-6580-4913-a6fb-328f9d35aba1"
+storage_version_token = "1789505574193567"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "NYfVa1hk32FzAF88-EV3Y"
+uri = "file://reports/abonos-fifo-2026-09-15-propuesta-bloque-5.md"
+type = "text"
+title = "Bloque 5 — propuesta, no implementada"
+description = "Abono al autorizar, FIFO, excepciones, caja, contratos y pruebas propuestas."
+logical_id = "948ba99d-5217-4174-a8a5-d54e1b676c13"
+content_hash = "sha256:bb184eee25bd70da9acaf277442ff57460a22d805c63557974e8549abc1c3ea3"
+size = 7187
+mtime_ms = 1789505542449
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/948ba99d-5217-4174-a8a5-d54e1b676c13/e57adf57-3bfb-4d85-a807-8901aa8430f9"
+storage_version_token = "1789505574747252"
+content_type = "text/markdown"

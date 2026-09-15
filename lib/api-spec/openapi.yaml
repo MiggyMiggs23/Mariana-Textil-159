@@ -8849,7 +8849,21 @@ components:
         importe: { type: string }
         fecha: { type: string, format: date-time }
         notas: { type: ["string", "null"] }
-        saldoCorrido: { type: string }
+        saldoCorrido:
+          {
+            type: string,
+            description: Saldo corrido histórico del libro firmado (SUM de importes); se conserva por compatibilidad y no sustituye la proyección FIFO.
+          }
+        saldoDeudorProyectado:
+          {
+            type: string,
+            description: Saldo deudor canónico después de proyectar el prefijo completo hasta este movimiento.
+          }
+        saldoAFavorProyectado:
+          {
+            type: string,
+            description: Saldo a favor canónico después de proyectar el prefijo completo hasta este movimiento.
+          }
         saldoPendiente: { type: ["string", "null"] }
         ticketFolio: { type: ["number", "null"] }
         nombreUsuario: { type: string }
@@ -9030,7 +9044,7 @@ components:
           type: string
           pattern: '^\d+(\.\d{1,2})?$'
           default: "0.00"
-          description: Importe de saldo a favor que el cajero decide aplicar explícitamente.
+          description: Campo legado aceptado por compatibilidad; el servidor lo ignora y aplica automáticamente por FIFO el menor entre el favor disponible y la nota.
     ClienteNotaAbono:
       type: object
       required:
@@ -12639,18 +12653,42 @@ components:
             $ref: "#/components/schemas/FormaPagoTicket"
     AutorizacionNotaProyeccion:
       type: object
-      required: [ticketId, clienteNombre, saldoActual, saldoAFavorDisponible, importe, suma, limiteCredito, creditoDisponibleResultante, exceso, autorizable]
+      required: [ticketId, clienteNombre, saldoActual, saldoAFavorDisponible, saldoAFavorAplicadoAutomaticamente, saldoAFavorRemanente, saldoDeudorProyectado, importe, suma, limiteCredito, creditoDisponibleResultante, exceso, autorizable]
       properties:
         ticketId: { type: number }
         clienteNombre: { type: string }
         saldoActual: { type: string }
         saldoAFavorDisponible: { type: string }
+        saldoAFavorAplicadoAutomaticamente:
+          {
+            type: string,
+            description: Favor aplicado por el servidor al autorizar; menor entre favor disponible y la nota después del FIFO canónico.
+          }
+        saldoAFavorRemanente:
+          {
+            type: string,
+            description: Favor que quedaría disponible después de autorizar la nota.
+          }
+        saldoDeudorProyectado:
+          {
+            type: string,
+            description: Saldo deudor canónico después de autorizar la nota y aplicar automáticamente el favor.
+          }
         importe: { type: string }
-        suma: { type: string }
+        suma:
+          {
+            type: string,
+            description: Alias histórico de saldoDeudorProyectado; se conserva para clientes existentes.
+          }
         limiteCredito: { type: string }
         creditoDisponibleResultante: { type: string }
         exceso: { type: string }
         autorizable: { type: boolean }
+        motivoBloqueo:
+          {
+            type: ["string", "null"],
+            description: Motivo de capacidad de almacenamiento que impide autorizar; no modifica el cálculo financiero canónico.
+          }
     TicketDetalle:
       allOf:
         - $ref: "#/components/schemas/TicketResumen"

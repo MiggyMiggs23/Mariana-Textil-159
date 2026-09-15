@@ -57,3 +57,4 @@
 - [Respaldo exacto sin reinicios intermedios](exact-backup-quiescence.md) — detener escritores hasta aplicar; separar conservación al commit de efectos posteriores del arranque y login.
 - [Atribución de utilidad al proveedor](supplier-profit-attribution.md) — la diferencia con los filtros históricos de ventas es deliberada; no homogeneizarla automáticamente.
 - [Pruebas financieras SQL sin escrituras](readonly-financial-sql-fixtures.md) — CTEs VALUES y READ ONLY prueban la consulta real sin usuarios ni movimientos temporales.
+- [Typecheck recursivo completo](recursive-typecheck-completeness.md) — el primer fallo puede ocultar otros paquetes; completar pendientes y deduplicar diagnósticos.

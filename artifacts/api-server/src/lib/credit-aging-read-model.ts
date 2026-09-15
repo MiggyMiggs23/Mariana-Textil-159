@@ -3,12 +3,12 @@ import { sql } from "drizzle-orm";
 import {
   projectCreditLedger,
   type CreditFavorApplication,
+  type CreditLedgerProjectionOptions,
   type CreditLedgerMovement,
 } from "./credit-allocation";
 
 export type CustomerCreditProjection = ReturnType<typeof projectCreditLedger>;
 type CreditLedgerQuery = Pick<typeof pool, "query">;
-
 
 type CreditLedgerRow = {
   cliente_id: number;
@@ -24,7 +24,13 @@ type CreditLedgerRow = {
   notas: string | null;
   folio: number | null;
   metadata: string | null;
+  /**
+   * Read only from the historical note metadata.  New notes deliberately omit
+   * this marker so the canonical projector can use available favor
+   * automatically.
+   */
   prevent_implicit_favor: boolean;
+  immutable_applied_cents: string | number | null;
   explicit_favor_applications: Array<{
     sourceId: number;
     targetId: number;
@@ -67,14 +73,24 @@ function mapRows(rows: CreditLedgerRow[]): CreditLedgerMovement[] {
     notas: row.notas,
     folio: row.folio == null ? null : Number(row.folio),
     preventImplicitFavor: row.prevent_implicit_favor === true,
+    immutableAppliedCents:
+      row.immutable_applied_cents == null
+        ? 0
+        : Number(row.immutable_applied_cents),
     explicitFavorApplications: parseExplicitFavorApplications(
       row.explicit_favor_applications,
     ),
   }));
 }
 
-function projectRows(rows: CreditLedgerRow[]): CustomerCreditProjection {
-  return projectCreditLedger(mapRows(rows));
+function projectRows(
+  rows: CreditLedgerRow[],
+  options: CreditLedgerProjectionOptions = {},
+): CustomerCreditProjection {
+  // Always project the complete customer ledger.  Callers may filter the
+  // returned rows for presentation, but never filter this query first: doing
+  // so would reset FIFO's starting debt/favor balance.
+  return projectCreditLedger(mapRows(rows), options);
 }
 
 /** Loads the complete immutable customer ledger, including paid charges. */
@@ -89,7 +105,10 @@ export async function loadCustomerCreditLedger(
         m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,
         COALESCE(m.metadata LIKE '%"preventImplicitFavor":true%', false)
           AS prevent_implicit_favor,
-        COALESCE((
+         -- Only legacy marked notes may supply directed historical evidence.
+         -- New automatic notes remain ordinary FIFO even if an application
+         -- row exists for Ver Reparto.
+         COALESCE((
           SELECT json_agg(json_build_object(
             'sourceId', a.abono_movimiento_id,
             'targetId', a.venta_movimiento_id,
@@ -99,8 +118,13 @@ export async function loadCustomerCreditLedger(
           JOIN movimientos_credito favor_sale
             ON favor_sale.id = a.venta_movimiento_id
           WHERE a.abono_movimiento_id = m.id
-            AND favor_sale.metadata LIKE '%"favorApplication":true%'
+             AND favor_sale.metadata LIKE '%"preventImplicitFavor":true%'
         ), '[]'::json) AS explicit_favor_applications
+         ,COALESCE((
+           SELECT round(COALESCE(SUM(a.importe), 0) * 100)
+           FROM aplicaciones_credito a
+           WHERE a.abono_movimiento_id = m.id
+         ), 0) AS immutable_applied_cents
      FROM movimientos_credito m
      LEFT JOIN solicitudes_pago_dirigido request
        ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id
@@ -119,8 +143,12 @@ export async function loadCustomerCreditLedger(
 export async function loadCustomerCreditProjection(
   clienteId: number,
   database: CreditLedgerQuery = pool,
+  options: CreditLedgerProjectionOptions = {},
 ): Promise<CustomerCreditProjection> {
-  return projectCreditLedger(await loadCustomerCreditLedger(clienteId, database));
+  return projectCreditLedger(
+    await loadCustomerCreditLedger(clienteId, database),
+    options,
+  );
 }
 
 /** Transaction adapter used by posting paths that already hold the customer lock. */
@@ -145,8 +173,13 @@ export async function loadCustomerCreditLedgerInTransaction(
           JOIN movimientos_credito favor_sale
             ON favor_sale.id = a.venta_movimiento_id
           WHERE a.abono_movimiento_id = m.id
-            AND favor_sale.metadata LIKE '%"favorApplication":true%'
+         AND favor_sale.metadata LIKE '%"preventImplicitFavor":true%'
         ), '[]'::json) AS explicit_favor_applications
+         ,COALESCE((
+           SELECT round(COALESCE(SUM(a.importe), 0) * 100)
+           FROM aplicaciones_credito a
+           WHERE a.abono_movimiento_id = m.id
+         ), 0) AS immutable_applied_cents
     FROM movimientos_credito m
     LEFT JOIN solicitudes_pago_dirigido directed_request
       ON directed_request.tipo='CLIENTE'
@@ -196,8 +229,13 @@ export async function loadCustomerCreditProjections(
           JOIN movimientos_credito favor_sale
             ON favor_sale.id = a.venta_movimiento_id
           WHERE a.abono_movimiento_id = m.id
-            AND favor_sale.metadata LIKE '%"favorApplication":true%'
+           AND favor_sale.metadata LIKE '%"preventImplicitFavor":true%'
         ), '[]'::json) AS explicit_favor_applications
+         ,COALESCE((
+           SELECT round(COALESCE(SUM(a.importe), 0) * 100)
+           FROM aplicaciones_credito a
+           WHERE a.abono_movimiento_id = m.id
+         ), 0) AS immutable_applied_cents
      FROM movimientos_credito m
      LEFT JOIN solicitudes_pago_dirigido request
        ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id

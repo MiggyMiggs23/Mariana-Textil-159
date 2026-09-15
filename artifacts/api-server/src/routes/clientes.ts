@@ -64,6 +64,10 @@ import { buildTicketDetail } from "../lib/pos";
 import { breakdownIvaIncluded } from "../lib/iva";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
 import { loadPaymentBehaviorList } from "../lib/payment-behavior";
+import {
+  FechaEfectivaValidationError,
+  parseFechaEfectiva,
+} from "../lib/fecha-efectiva";
 
 const router: IRouter = Router();
 
@@ -1138,9 +1142,17 @@ router.get(
             ORDER BY ledger.created_at,ledger.id`,
           [id, desde, hasta, tipo],
         ),
-        loadCustomerCreditProjection(id),
+         loadCustomerCreditProjection(id, pool, {
+           includeMovementProjections: true,
+         }),
       ]);
        const projectedCharges = new Map(balance.allCharges.map((charge) => [charge.movimientoId, charge]));
+        const projectedMovements = new Map(
+          balance.movementProjections.map((movement) => [
+            movement.movementId,
+            movement,
+          ]),
+        );
        const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
        const withBalance = movements.rows.map((movement) => ({
          ...movement,
@@ -1179,6 +1191,17 @@ router.get(
                 hoy: today,
               })
             : null,
+          // These are the canonical FIFO projections for this chronological
+          // prefix.  `saldoCorrido` remains the raw signed historical SUM for
+          // clients that still consume that legacy field.
+          saldoDeudorProyectado: centsToMoney(
+            projectedMovements.get(Number(movement.movimientoId))
+              ?.saldoDeudorProyectadoCents ?? 0,
+          ),
+          saldoAFavorProyectado: centsToMoney(
+            projectedMovements.get(Number(movement.movimientoId))
+              ?.saldoAFavorProyectadoCents ?? 0,
+          ),
          fechaVencimiento:
            movement.fechaVencimiento == null
              ? null
@@ -1223,7 +1246,15 @@ router.get(
          FROM movimientos_credito WHERE cliente_id=$1
          ORDER BY created_at, id`,
         [id],
-      ), loadCustomerCreditProjection(id)]);
+       ), loadCustomerCreditProjection(id, pool, {
+         includeMovementProjections: true,
+       })]);
+       const projectedMovements = new Map(
+         projection.movementProjections.map((movement) => [
+           movement.movementId,
+           movement,
+         ]),
+       );
       const escape = (value: unknown) =>
         String(value ?? "")
           .replaceAll("&", "&amp;")
@@ -1246,11 +1277,12 @@ router.get(
                   hoy: todayMexicoCity(),
                 })
               : null;
-            return `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldoCorridoHistorico, { kind: "money" }))}</td><td>${escape(saldoPendiente)}</td><td>${escape(estadoNota)}</td><td>${escape(item.notas)}</td></tr>`;
+             const projected = projectedMovements.get(Number(item.id));
+             return `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldoCorridoHistorico, { kind: "money" }))}</td><td>${escape(formatNumber(centsToMoney(projected?.saldoDeudorProyectadoCents ?? 0), { kind: "money" }))}</td><td>${escape(formatNumber(centsToMoney(projected?.saldoAFavorProyectadoCents ?? 0), { kind: "money" }))}</td><td>${escape(formatNumber(saldoPendiente, { kind: "money" }))}</td><td>${escape(estadoNota)}</td><td>${escape(item.notas)}</td></tr>`;
           },
         )
         .join("");
-      res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><p>Saldo actual proyectado: ${escape(formatNumber(centsToMoney(projection.balanceCents), { kind: "money" }))}</p><p>Saldo a favor: ${escape(formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" }))}</p><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo corrido histórico</th><th>Saldo pendiente</th><th>Estado de nota</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+       res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><p>Saldo actual proyectado: ${escape(formatNumber(centsToMoney(projection.balanceCents), { kind: "money" }))}</p><p>Saldo a favor: ${escape(formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" }))}</p><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo corrido histórico</th><th>Saldo deudor proyectado</th><th>Saldo a favor proyectado</th><th>Saldo pendiente</th><th>Estado de nota</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
     } catch (error) {
       next(error);
     }
@@ -1275,14 +1307,24 @@ router.get(
          FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
          JOIN usuarios u ON u.id=m.usuario_id WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
         [id],
-      ), loadCustomerCreditProjection(id)]);
+       ), loadCustomerCreditProjection(id, pool, {
+         includeMovementProjections: true,
+       })]);
+       const projectedMovements = new Map(
+         projection.movementProjections.map((movement) => [
+           movement.movementId,
+           movement,
+         ]),
+       );
       const workbook = new ExcelJS.Workbook();
       const sheet = workbook.addWorksheet("Estado de cuenta");
       sheet.columns = [
         { header: "Fecha", key: "fecha", width: 22 }, { header: "Tipo", key: "tipo", width: 18 },
-        { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },
+         { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },
         { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },
          { header: "Saldo a favor", key: "saldoAFavor", width: 18 },
+          { header: "Saldo deudor proyectado", key: "saldoDeudorProyectado", width: 24 },
+          { header: "Saldo a favor proyectado", key: "saldoAFavorProyectado", width: 24 },
          { header: "Saldo pendiente", key: "saldoPendiente", width: 18 },
          { header: "Estado de nota", key: "estadoNota", width: 18 },
         { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },
@@ -1308,6 +1350,13 @@ router.get(
                hoy: todayMexicoCity(),
              })
            : null;
+          const projected = projectedMovements.get(Number(row.id));
+          const saldoDeudorProyectado = projected == null
+            ? null
+            : centsToMoney(projected.saldoDeudorProyectadoCents);
+          const saldoAFavorProyectado = projected == null
+            ? null
+            : centsToMoney(projected.saldoAFavorProyectadoCents);
          return {
         ...row,
          saldoPendiente,
@@ -1326,6 +1375,8 @@ router.get(
         folio: row.folio == null ? "" : String(row.folio),
         importe: toExcelNumber(row.importe),
         saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico),
+         saldoDeudorProyectado: saldoDeudorProyectado == null ? null : toExcelNumber(saldoDeudorProyectado),
+         saldoAFavorProyectado: saldoAFavorProyectado == null ? null : toExcelNumber(saldoAFavorProyectado),
          saldoPendiente: saldoPendiente == null ? null : toExcelNumber(saldoPendiente),
        };
        }));
@@ -1363,7 +1414,15 @@ router.get(
          FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
          WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
         [id],
-      ), loadCustomerCreditProjection(id)]);
+       ), loadCustomerCreditProjection(id, pool, {
+         includeMovementProjections: true,
+       })]);
+       const projectedMovements = new Map(
+         projection.movementProjections.map((movement) => [
+           movement.movementId,
+           movement,
+         ]),
+       );
       const pdf = createTextPdf(
          `Estado de cuenta - cliente ${id} - saldo actual proyectado ${formatNumber(centsToMoney(projection.balanceCents), { kind: "money" })} - saldo a favor ${formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" })}`,
         result.rows.map((row) =>
@@ -1382,7 +1441,8 @@ router.get(
                    hoy: todayMexicoCity(),
                  })
                : null;
-             return `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico ${formatNumber(row.saldoCorridoHistorico, { kind: "money" })} | saldo pendiente ${formatNumber(saldoPendiente, { kind: "money" })} | estado ${estadoNota ?? "-"} | folio ${row.folio ?? "-"}`;
+              const projected = projectedMovements.get(Number(row.id));
+              return `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico ${formatNumber(row.saldoCorridoHistorico, { kind: "money" })} | saldo deudor proyectado ${formatNumber(centsToMoney(projected?.saldoDeudorProyectadoCents ?? 0), { kind: "money" })} | saldo a favor proyectado ${formatNumber(centsToMoney(projected?.saldoAFavorProyectadoCents ?? 0), { kind: "money" })} | saldo pendiente ${formatNumber(saldoPendiente, { kind: "money" })} | estado ${estadoNota ?? "-"} | folio ${row.folio ?? "-"}`;
            })(),
         ),
       );
@@ -1874,11 +1934,20 @@ router.post(
         res.status(400).json({ error: "Un abono no puede dirigirse a un ticket; se aplica FIFO." });
         return;
       }
+      let fechaEfectiva: Date;
+      try {
+        // Validate the raw HTTP value before zod's coerce.date() can turn a
+        // date-only string into an ambiguous UTC midnight.
+        fechaEfectiva = parseFechaEfectiva(req.body?.fechaEfectiva);
+      } catch (error) {
+        if (error instanceof FechaEfectivaValidationError) {
+          res.status(error.statusCode).json({ error: error.message });
+          return;
+        }
+        throw error;
+      }
       const body = PreviewClientePagoBody.parse(req.body);
-      const fechaEfectiva = body.fechaEfectiva
-        ? new Date(body.fechaEfectiva)
-        : new Date();
-      if (Number.isNaN(fechaEfectiva.getTime()) || fechaEfectiva > new Date()) {
+      if (fechaEfectiva > new Date()) {
         res.status(400).json({ error: "Fecha efectiva inválida o futura." });
         return;
       }
@@ -1921,6 +1990,18 @@ router.post(
         return;
       }
 
+      let fechaEfectiva: Date;
+      try {
+        // Keep this validation before CreateClientePagoBody.parse for the same
+        // strict RFC 3339 contract as the preview endpoint.
+        fechaEfectiva = parseFechaEfectiva(req.body?.fechaEfectiva);
+      } catch (error) {
+        if (error instanceof FechaEfectivaValidationError) {
+          res.status(error.statusCode).json({ error: error.message });
+          return;
+        }
+        throw error;
+      }
       const body = CreateClientePagoBody.parse(req.body);
       if (!["EFECTIVO", "TRANSFERENCIA", "FACTURADO"].includes(body.formaPago)) {
         res.status(400).json({ error: "Forma de pago inválida." });
@@ -1930,10 +2011,7 @@ router.post(
         res.status(400).json({ error: "La cuenta destino no corresponde a la forma de pago." });
         return;
       }
-      const fechaEfectiva = body.fechaEfectiva
-        ? new Date(body.fechaEfectiva)
-        : new Date();
-      if (Number.isNaN(fechaEfectiva.getTime()) || fechaEfectiva > new Date()) {
+      if (fechaEfectiva > new Date()) {
         res.status(400).json({ error: "Fecha efectiva inválida o futura." });
         return;
       }

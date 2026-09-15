@@ -1,0 +1,268 @@
+# Prompt para Replit Agent — Abonos, saldo a favor y estado de nota
+
+## Contexto
+
+Al probar abonos en Cruces se registraron dos abonos en efectivo el 15 de septiembre
+de 2026 (clientes 6 y 7), el mismo día en que se autorizaron las notas 1004 y 1005.
+Ninguno de los dos abonos se aplicó a su nota. Los dos quedaron íntegros como saldo
+a favor, y cada cliente muestra simultáneamente saldo deudor y saldo a favor.
+
+La causa está identificada en el código y son dos defectos encadenados. **No los des
+por buenos: el Bloque 0 los confirma contra la base antes de tocar nada.**
+
+Reglas del proyecto que este trabajo NO debe romper:
+
+- Las tablas operativas no usan DELETE. Toda corrección es un movimiento inverso.
+- El libro `movimientos_credito` es la única fuente de verdad del crédito.
+- `aplicaciones_credito` es evidencia de reparto, nunca fuente de saldo.
+- Los reversos de abono son siempre totales; la base lo hace cumplir por trigger.
+- Un abono se reparte por antigüedad (FIFO). La única excepción autorizada es el
+  pago dirigido, que queda registrado como excepción.
+- Los estados de nota se derivan en `deriveEstadoNota`; ninguna vista los recalcula.
+- Prohibido crear ADMIN, usuarios o sesiones de prueba en development.
+- Nada de `executeSql` de escritura en development.
+
+---
+
+## Bloque 0 — Confirmar el diagnóstico antes de corregir (solo lectura)
+
+No modifiques código en este bloque. Ejecuta consultas de **solo lectura** contra la
+base conectada y pega los resultados textuales en el reporte.
+
+1. Para los movimientos `ABONO` de los clientes 6 y 7, devuelve:
+   `id`, `cliente_id`, `importe`, `created_at` en UTC, `created_at` convertido a
+   `America/Mexico_City`, `cuenta_destino`, `forma_pago`, y
+   `metadata->>'fechaCaptura'`.
+
+2. Para los movimientos `VENTA_CREDITO` de las notas 1004 y 1005, devuelve:
+   `id`, `ticket_id`, `importe`, `created_at` en UTC y en `America/Mexico_City`,
+   `fecha_vencimiento`, y `metadata->>'preventImplicitFavor'`.
+
+3. Devuelve todas las filas de `aplicaciones_credito` de esos movimientos.
+
+4. Compara para cada nota: `tickets.fecha_vencimiento` contra
+   `movimientos_credito.fecha_vencimiento`.
+
+Lo que debe quedar demostrado o desmentido, punto por punto:
+
+- **D1.** El `created_at` de cada abono cae a las 00:00 UTC, es decir el día anterior
+  en hora de Ciudad de México, mientras `metadata->>'fechaCaptura'` muestra el
+  instante real de captura, varias horas después. Si `fechaCaptura` y `created_at`
+  no difieren en el día, D1 no está confirmado: repórtalo y detente.
+- **D2.** El `created_at` de cada abono es **anterior** al `created_at` del
+  `VENTA_CREDITO` de su nota, y esa nota tiene `preventImplicitFavor` en verdadero.
+  Esa combinación es la que impide la aplicación en
+  `canImplicitlyApply` de `artifacts/api-server/src/lib/credit-allocation.ts`.
+- **D3.** Si `tickets.fecha_vencimiento` y `movimientos_credito.fecha_vencimiento`
+  difieren para la misma nota, repórtalo con los dos valores exactos. Es una
+  discrepancia independiente; **no la corrijas en esta entrega**, solo documéntala
+  con su causa si la encuentras leyendo el código.
+
+Si D1 o D2 no se confirman, **detente y reporta** antes de seguir. No continúes con
+una hipótesis no demostrada.
+
+---
+
+## Bloque 1 — Fecha efectiva del abono
+
+Defecto: `artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx` envía
+`fechaEfectiva: effectiveDate || null` (alrededor de la línea 164), donde
+`effectiveDate` es una cadena `YYYY-MM-DD`. El servidor la interpreta con
+`new Date(...)`, que la resuelve a medianoche **UTC**, no a medianoche local. La
+misma pantalla ya lo hace bien para el pago dirigido en la línea 145.
+
+El contrato en `lib/api-spec/openapi.yaml` declara `fechaEfectiva` como
+`format: date-time`; hoy se envía un `date`.
+
+Qué hacer:
+
+1. En el diálogo, construir la fecha efectiva de forma explícita y única para las
+   dos ramas —abono normal y pago dirigido— con una sola función compartida, no
+   duplicando la cadena `T12:00:00` en dos llamadas. La fecha debe enviarse como
+   instante con desplazamiento explícito de `America/Mexico_City`, no como cadena
+   ambigua que el servidor tenga que adivinar.
+2. En `artifacts/api-server/src/routes/clientes.ts`, en los dos handlers que
+   construyen `fechaEfectiva` (`POST /clientes/:id/pagos` y
+   `POST /clientes/:id/pagos/vista-previa`), rechazar con 400 una `fechaEfectiva`
+   que no traiga hora ni desplazamiento. Un `date` pelón deja de ser aceptable: el
+   servidor no debe inventar la zona. El mensaje debe nombrar el campo y la regla.
+3. Cuando el campo de fecha del diálogo se deja vacío, el abono debe seguir usando
+   el instante real del servidor. Ese camino ya funciona; no lo cambies.
+4. Actualiza el contrato y regenera cliente y Zod si el esquema cambia.
+
+No toques `created_at` de ningún movimiento existente. La corrección de los dos
+abonos ya capturados va en el Bloque 4.
+
+---
+
+## Bloque 2 — El saldo a favor no coexiste con saldo deudor
+
+**Esta es una regla de negocio nueva del propietario y sustituye expresamente la
+regla anterior de `replit.md`** que decía que la aplicación del saldo a favor al
+autorizar una nota es siempre una decisión explícita del cajero y nunca automática.
+Esa frase se borra; no se deja conviviendo con la nueva.
+
+Regla vigente a partir de este cambio:
+
+> Un cliente no puede tener saldo a favor mientras tenga saldo deudor. Todo dinero
+> recibido consume primero la deuda existente por antigüedad. Solo el remanente
+> después de liquidar toda la deuda elegible queda como saldo a favor. Al autorizar
+> una nota nueva, el saldo a favor disponible del cliente se consume contra esa nota
+> automáticamente, hasta el menor de los dos importes.
+
+Qué hacer:
+
+1. Retirar `preventImplicitFavor` como veto permanente. Hoy en
+   `artifacts/api-server/src/lib/pos.ts:1858` toda nota nueva se marca, y en
+   `credit-allocation.ts` la función `canImplicitlyApply` impide para siempre que un
+   abono anterior a la nota la liquide. Esa combinación es la que produjo el caso.
+2. El saldo a favor disponible debe aplicarse a la nota que se autoriza sin que el
+   cajero tenga que marcar una casilla. La casilla de aplicación manual deja de ser
+   el único camino.
+3. Conservar intactas la evidencia y la trazabilidad: cada aplicación sigue
+   escribiendo su fila en `aplicaciones_credito` con importe exacto, y el reparto
+   debe poder abrirse desde «Ver Reparto». Nada se borra ni se reescribe.
+4. La validación de límite de crédito al autorizar debe seguir contando el favor
+   que efectivamente se aplica, y el límite sigue siendo duro y sin override.
+5. Conservar los movimientos históricos: las notas ya marcadas no cambian de saldo
+   retroactivamente por este cambio de reglas. Si una nota histórica quedaría
+   liquidada por un favor anterior, **no la toques**: reporta cuántas son y espera
+   decisión. La corrección de los dos casos conocidos va en el Bloque 4.
+6. Si el cliente conserva saldo a favor después de aplicar, ese remanente sigue
+   existiendo y visible; lo que deja de ser posible es favor y deuda al mismo tiempo.
+
+Además, en la ficha del cliente (`cliente-detail.tsx`, pestaña Estado de cuenta), la
+tarjeta de saldo deudor, la tarjeta de saldo a favor y la columna «Saldo» corrida
+deben leer la misma proyección. Hoy la columna corrida ya muestra la cifra neteada
+mientras las dos tarjetas muestran las cifras sin netear, y la misma pantalla se
+contradice. Una sola función, un solo resultado.
+
+---
+
+## Bloque 3 — Estado de nota a su propia columna
+
+En `cliente-detail.tsx`, el componente `ClienteNotaEstadoBadge` se está pintando
+dentro de la celda **Tipo**, apilado debajo del nombre del movimiento, junto con el
+texto «· Saldo pendiente $X». Por eso se ve encimado y desordenado.
+
+Qué hacer:
+
+1. La celda **Tipo** vuelve a contener únicamente el tipo de movimiento.
+2. Se agrega una columna propia **Estado**, colocada a la derecha, después de
+   «Saldo». Esa columna contiene la insignia de color y el saldo pendiente actual.
+3. Los movimientos que no son nota —abonos, ajustes, reversos— dejan la celda de esa
+   columna vacía con un guion, no con una insignia en blanco.
+4. La insignia conserva exactamente su semántica y sus colores actuales, derivados
+   de `deriveEstadoNota` en el servidor: ámbar Pendiente, ámbar Abono parcial, verde
+   Pagada, rojo Con retraso, y Con retraso gana sobre Abono parcial. **No
+   recalcules el estado en el navegador.**
+5. En teléfono, la fila no debe desbordar horizontalmente. Comprueba el
+   comportamiento de `ResponsiveTable` con la columna nueva a 402 px de ancho y
+   con el nombre de cliente y las notas más largos que existan.
+6. Revisa que el mismo cambio no rompa las otras vistas que montan
+   `ClienteNotaEstadoBadge`: `cliente-nota-credito.tsx`, `cobros.tsx`,
+   `alertas.tsx` y `notificaciones.tsx`. Ahí la insignia ya vive en su propio
+   contenedor y no debe moverse.
+
+---
+
+## Bloque 4 — Corregir los dos abonos ya capturados
+
+Los abonos de los clientes 6 y 7 existen con fecha equivocada y sin aplicación. No se
+editan y no se borran.
+
+Procedimiento, por movimiento inverso y conforme a la regla de correcciones:
+
+1. Registrar el **reverso total** de cada abono, referenciando el `ABONO` original
+   con el mismo importe y signo contrario. El trigger de la base rechaza reversos
+   parciales; no intentes uno.
+2. Volver a capturar cada abono con su fecha efectiva correcta, ya con el Bloque 1
+   aplicado, para que caiga en el día 15 de septiembre de 2026 en hora de Ciudad de
+   México y después de la autorización de su nota.
+3. Comprobar que el reparto FIFO ahora sí liquida o abona la nota correspondiente y
+   que `Historial de Abonos` deja de mostrar cero.
+
+**Este bloque requiere autorización expresa del propietario antes de ejecutarse,
+porque escribe movimientos financieros reales.** Prepáralo, descríbelo con los IDs
+y los importes exactos que vas a escribir, y **detente esperando el visto bueno**.
+No lo ejecutes junto con los bloques anteriores.
+
+---
+
+## Bloque 5 — Abono al autorizar la nota (pendiente de decisión)
+
+El propietario quiere poder registrar un abono parcial desde la misma ventana
+«Autorizar nota de crédito», y que ese abono se aplique **exclusivamente** a la nota
+que se está autorizando.
+
+Esto es una excepción a FIFO. El sistema ya tiene una excepción autorizada con
+solicitud, aprobación y registro histórico en Reportes: el **pago dirigido**.
+
+**No implementes este bloque todavía.** En su lugar, entrega una propuesta escrita
+que conteste:
+
+1. Cómo reusar la maquinaria existente de pago dirigido para este caso, de modo que
+   la excepción quede registrada en el histórico de excepciones a FIFO, con motivo y
+   auditoría, sin obligar a un ciclo de solicitud y aprobación separado cuando quien
+   lo registra es la misma caja que autoriza esa nota.
+2. Qué pasa cuando el cliente tiene deuda más antigua abierta. Propuesta a evaluar:
+   permitirlo solo cuando no hay deuda más antigua —caso en el que no es excepción,
+   porque FIFO haría lo mismo— y exigir el flujo completo de pago dirigido cuando sí
+   la hay.
+3. Qué archivos, endpoints y contratos tocaría, y qué pruebas lo cubrirían.
+4. Qué conflictos ve con la caja: la sesión abierta, la cuenta destino, el corte del
+   día y la atribución del ingreso por sitio.
+
+---
+
+## Verificación
+
+No declares nada aprobado sin ejecutarlo. Distingue explícitamente lo verificado de
+lo no verificado.
+
+1. `pnpm run typecheck` completo. Reporta el conteo de errores. Los dos errores
+   preexistentes conocidos son `src/lib/pos.ts:426` y `src/routes/clientes.ts:1329`;
+   **no los corrijas aquí** y confirma que no aparecieron otros.
+2. Codegen sin diferencias, o con las diferencias que este cambio justifique.
+3. Pruebas de reparto FIFO sobre el proyector puro, con escenarios explícitos:
+   abono anterior a la nota, abono posterior a la nota, abono del mismo día con el
+   mismo instante, abono mayor a la deuda, abono menor a la deuda, y cliente sin
+   deuda. Cada escenario debe afirmar el saldo resultante de cada nota y el
+   remanente a favor, no solo que la función no truena.
+4. Una prueba que afirme que **no puede quedar saldo a favor mayor a cero mientras
+   exista saldo deudor mayor a cero** para el mismo cliente en la misma proyección.
+5. Prueba de la fecha efectiva: una fecha capturada como 15 de septiembre debe
+   persistirse con un instante que caiga el 15 de septiembre en
+   `America/Mexico_City`, y una `fechaEfectiva` sin hora debe ser rechazada con 400.
+6. Comprobación en navegador de la columna Estado nueva, en escritorio y a 402 px,
+   con los cuatro estados y con filas que no son nota. Sin desbordamiento
+   horizontal. Si no puedes autenticar una sesión real, dilo y no lo presentes como
+   aprobado.
+7. Las suites que crean usuarios siguen bloqueadas. No las amplíes ni las modifiques.
+
+Deja el reporte completo en `reports/` con su fecha, incluidas las consultas del
+Bloque 0 con su salida textual.
+
+---
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. En la sección «Reglas de saldo a favor», **borrar** la frase que dice que al
+   autorizar una nota nueva se ofrece el monto disponible y que su aplicación es una
+   decisión explícita del cajero y nunca automática. Sustituirla por la regla del
+   Bloque 2, redactada como regla vigente, con la nota de que sustituye expresamente
+   a la anterior.
+2. Documentar la causa del caso: un abono enviado con fecha sin hora se persistía a
+   medianoche UTC, quedaba fechado el día anterior en hora de Ciudad de México y, al
+   preceder a la nota, el veto `preventImplicitFavor` impedía para siempre que la
+   liquidara. Escribir la regla derivada: **toda fecha que viaje entre navegador y
+   servidor lleva hora y desplazamiento explícitos; el servidor nunca infiere la
+   zona de una fecha pelona.**
+3. Documentar que el estado de nota vive en su propia columna a la derecha en el
+   estado de cuenta, y que la celda de tipo contiene únicamente el tipo.
+4. Registrar la discrepancia del Bloque 0 punto D3 entre
+   `tickets.fecha_vencimiento` y `movimientos_credito.fecha_vencimiento` si se
+   confirmó, como pendiente abierto y sin corregir.
+5. Registrar el Bloque 5 como propuesta entregada y no implementada.
+6. No escribas en `replit.md` ninguna afirmación de verificación que no hayas
+   ejecutado en esta sesión.

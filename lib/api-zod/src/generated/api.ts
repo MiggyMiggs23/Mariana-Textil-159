@@ -5052,7 +5052,9 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
   "notas": zod.string().nullish(),
-  "saldoCorrido": zod.string().optional(),
+  "saldoCorrido": zod.string().optional().describe('Saldo corrido histórico del libro firmado (SUM de importes); se conserva por compatibilidad y no sustituye la proyección FIFO.'),
+  "saldoDeudorProyectado": zod.string().optional().describe('Saldo deudor canónico después de proyectar el prefijo completo hasta este movimiento.'),
+  "saldoAFavorProyectado": zod.string().optional().describe('Saldo a favor canónico después de proyectar el prefijo completo hasta este movimiento.'),
   "saldoPendiente": zod.string().nullish(),
   "ticketFolio": zod.number().nullish(),
   "nombreUsuario": zod.string().optional(),
@@ -5437,7 +5439,9 @@ export const ReversarClientePagoResponse = zod.object({
   "importe": zod.string().optional(),
   "fecha": zod.coerce.date().optional(),
   "notas": zod.string().nullish(),
-  "saldoCorrido": zod.string().optional(),
+  "saldoCorrido": zod.string().optional().describe('Saldo corrido histórico del libro firmado (SUM de importes); se conserva por compatibilidad y no sustituye la proyección FIFO.'),
+  "saldoDeudorProyectado": zod.string().optional().describe('Saldo deudor canónico después de proyectar el prefijo completo hasta este movimiento.'),
+  "saldoAFavorProyectado": zod.string().optional().describe('Saldo a favor canónico después de proyectar el prefijo completo hasta este movimiento.'),
   "saldoPendiente": zod.string().nullish(),
   "ticketFolio": zod.number().nullish(),
   "nombreUsuario": zod.string().optional(),
@@ -6588,12 +6592,16 @@ export const ObtenerProyeccionAutorizacionNotaResponse = zod.object({
   "clienteNombre": zod.string(),
   "saldoActual": zod.string(),
   "saldoAFavorDisponible": zod.string(),
+  "saldoAFavorAplicadoAutomaticamente": zod.string().describe('Favor aplicado por el servidor al autorizar; menor entre favor disponible y la nota después del FIFO canónico.'),
+  "saldoAFavorRemanente": zod.string().describe('Favor que quedaría disponible después de autorizar la nota.'),
+  "saldoDeudorProyectado": zod.string().describe('Saldo deudor canónico después de autorizar la nota y aplicar automáticamente el favor.'),
   "importe": zod.string(),
-  "suma": zod.string(),
+  "suma": zod.string().describe('Alias histórico de saldoDeudorProyectado; se conserva para clientes existentes.'),
   "limiteCredito": zod.string(),
   "creditoDisponibleResultante": zod.string(),
   "exceso": zod.string(),
-  "autorizable": zod.boolean()
+  "autorizable": zod.boolean(),
+  "motivoBloqueo": zod.string().nullish().describe('Motivo de capacidad de almacenamiento que impide autorizar; no modifica el cálculo financiero canónico.')
 })
 
 
@@ -6609,7 +6617,7 @@ export const autorizarNotaBodyAplicarSaldoAFavorRegExp = new RegExp('^\\d+(\\.\\
 
 
 export const AutorizarNotaBody = zod.object({
-  "aplicarSaldoAFavor": zod.string().regex(autorizarNotaBodyAplicarSaldoAFavorRegExp).default(autorizarNotaBodyAplicarSaldoAFavorDefault).describe('Importe de saldo a favor que el cajero decide aplicar explícitamente.')
+  "aplicarSaldoAFavor": zod.string().regex(autorizarNotaBodyAplicarSaldoAFavorRegExp).default(autorizarNotaBodyAplicarSaldoAFavorDefault).describe('Campo legado aceptado por compatibilidad; el servidor lo ignora y aplica automáticamente por FIFO el menor entre el favor disponible y la nota.')
 })
 
 export const AutorizarNotaResponse = zod.object({

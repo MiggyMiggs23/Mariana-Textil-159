@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { allocateCreditFifo, isValidPaymentDestination, projectCreditLedger } from "./credit-allocation";
+import {
+  allocateCreditFifo,
+  evaluateAutomaticFavorEligibility,
+  isValidPaymentDestination,
+  projectCreditLedger,
+} from "./credit-allocation";
 
 const at = (day: number) => new Date(`2026-01-0${day}T00:00:00.000Z`);
 
@@ -260,6 +265,184 @@ test("same-day and next-day ABONOs reduce the sale for partial, exact, and exces
       `${scenario.name}: the single ABONO is the only payment source`,
     );
   }
+});
+
+test("prospective FIFO applies favor to a new note for all six timing/amount cases", () => {
+  const note = (
+    id: number,
+    createdAt: Date,
+    importe = "100.00",
+  ) => ({
+    id,
+    ticketId: id,
+    tipo: "VENTA_CREDITO" as const,
+    importe,
+    createdAt,
+  });
+  const payment = (id: number, createdAt: Date, importe: string) => ({
+    id,
+    ticketId: null,
+    tipo: "ABONO" as const,
+    importe,
+    createdAt,
+  });
+  const cases = [
+    {
+      name: "favor anterior",
+      movements: [
+        note(100, at(2)),
+        payment(10, at(1), "-40.00"),
+      ],
+      noteBalances: [[100, 6_000]],
+      favor: 0,
+    },
+    {
+      name: "favor posterior",
+      movements: [
+        note(100, at(2)),
+        payment(110, at(3), "-40.00"),
+      ],
+      noteBalances: [[100, 6_000]],
+      favor: 0,
+    },
+    {
+      name: "mismo instante ordenado por id",
+      movements: [
+        note(100, at(2), "100.00"),
+        note(101, at(2), "100.00"),
+        payment(200, at(2), "-150.00"),
+      ],
+      noteBalances: [[100, 0], [101, 5_000]],
+      favor: 0,
+    },
+    {
+      name: "favor mayor que la nota",
+      movements: [
+        note(100, at(2)),
+        payment(10, at(1), "-150.00"),
+      ],
+      noteBalances: [[100, 0]],
+      favor: 5_000,
+    },
+    {
+      name: "favor menor que la nota",
+      movements: [
+        note(100, at(2)),
+        payment(10, at(1), "-40.00"),
+      ],
+      noteBalances: [[100, 6_000]],
+      favor: 0,
+    },
+    {
+      name: "cliente sin deuda",
+      movements: [payment(10, at(1), "-75.00")],
+      noteBalances: [],
+      favor: 7_500,
+    },
+  ];
+
+  for (const scenario of cases) {
+    const projection = projectCreditLedger(scenario.movements, {
+      includeMovementProjections: true,
+    });
+    assert.deepEqual(
+      projection.allCharges.map((charge) => [charge.movimientoId, charge.pendienteCents]),
+      scenario.noteBalances,
+      scenario.name,
+    );
+    assert.equal(projection.overpaymentCents, scenario.favor, scenario.name);
+    assert.ok(
+      projection.balanceCents === 0 || projection.overpaymentCents === 0,
+      `${scenario.name}: prospective policy cannot create coexisting balances`,
+    );
+    const finalPrefix = projection.movementProjections.at(-1);
+    assert.equal(
+      finalPrefix?.saldoDeudorProyectadoCents,
+      projection.balanceCents,
+      `${scenario.name}: final debt prefix`,
+    );
+    assert.equal(
+      finalPrefix?.saldoAFavorProyectadoCents,
+      projection.overpaymentCents,
+      `${scenario.name}: final favor prefix`,
+    );
+  }
+});
+
+test("automatic favor eligibility blocks AJUSTE and consumed ABONO evidence", () => {
+  const adjustment = evaluateAutomaticFavorEligibility([{
+    source: {
+      id: 1,
+      ticketId: null,
+      tipo: "AJUSTE",
+      importe: "-10.00",
+      createdAt: at(1),
+    },
+    appliedCents: 1_000,
+  }]);
+  assert.equal(adjustment.autorizable, false);
+  assert.match(adjustment.motivoBloqueo ?? "", /ajuste negativo/i);
+
+  const consumedAbono = evaluateAutomaticFavorEligibility([{
+    source: {
+      id: 2,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-10.00",
+      createdAt: at(1),
+      immutableAppliedCents: 1_000,
+    },
+    appliedCents: 1,
+  }]);
+  assert.equal(consumedAbono.autorizable, false);
+  assert.match(consumedAbono.motivoBloqueo ?? "", /aplicaciones inmutables/i);
+
+  const availableAbono = evaluateAutomaticFavorEligibility([{
+    source: {
+      id: 3,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-10.00",
+      createdAt: at(1),
+      immutableAppliedCents: 400,
+    },
+    appliedCents: 600,
+  }]);
+  assert.equal(availableAbono.autorizable, true);
+  assert.equal(availableAbono.motivoBloqueo, null);
+});
+
+test("historical preventImplicitFavor remains a frozen exception while new notes auto-apply", () => {
+  const projection = projectCreditLedger([
+    {
+      id: 100,
+      ticketId: 100,
+      tipo: "VENTA_CREDITO",
+      importe: "100.00",
+      createdAt: at(2),
+      preventImplicitFavor: true,
+    },
+    {
+      id: 10,
+      ticketId: null,
+      tipo: "ABONO",
+      importe: "-40.00",
+      createdAt: at(1),
+    },
+    {
+      id: 101,
+      ticketId: 101,
+      tipo: "VENTA_CREDITO",
+      importe: "20.00",
+      createdAt: at(3),
+    },
+  ]);
+
+  assert.deepEqual(
+    projection.allCharges.map((charge) => [charge.movimientoId, charge.pendienteCents]),
+    [[100, 10_000], [101, 0]],
+  );
+  assert.equal(projection.overpaymentCents, 2_000);
 });
 
 test("validates payment destination against its payment method", () => {

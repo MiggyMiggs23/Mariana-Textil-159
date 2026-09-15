@@ -85,10 +85,15 @@ import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigid
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
-import { Checkbox } from "@/components/ui/checkbox";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
+
+function projectedMoney(value: string | number | null | undefined) {
+  return value === undefined || value === null || value === ""
+    ? "—"
+    : formatNumber(value, { kind: "money" });
+}
 
 function mexicoCityDate(date: Date): string {
   return new Intl.DateTimeFormat("en-CA", {
@@ -182,7 +187,8 @@ function CarteraContent() {
   const notas = cuenta?.movimientos
     ?.filter((m) => m.tipo === "VENTA_CREDITO" && m.estadoNota !== "PAGADA")
     .sort((a, b) => new Date(a.fecha!).getTime() - new Date(b.fecha!).getTime()) || [];
-  const cuentaConSaldoAFavor = cuenta as typeof cuenta & { saldoAFavor?: string };
+  const saldoDeudorProyectado = cuenta?.saldoActual;
+  const saldoAFavorProyectado = cuenta?.saldoAFavor;
 
   const [paymentOpen, setPaymentOpen] = useState(!!initialImporte);
   const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; nota?: (typeof notas)[number] }>({ open: false });
@@ -252,11 +258,11 @@ function CarteraContent() {
                  <div className="grid grid-cols-2 gap-3 text-left sm:text-right">
                    <div className="bg-red-950/20 px-4 py-3 rounded-lg border border-red-100/20">
                      <div className="text-xs font-bold text-primary-foreground/70 uppercase tracking-wider mb-1">Saldo deudor</div>
-                     <div className="text-2xl font-black tabular-nums text-red-100">{formatNumber(cuenta.saldoActual, { kind: "money" })}</div>
+                     <div className="text-2xl font-black tabular-nums text-red-100">{projectedMoney(saldoDeudorProyectado)}</div>
                    </div>
                    <div className="bg-emerald-950/20 px-4 py-3 rounded-lg border border-emerald-100/20">
                      <div className="text-xs font-bold text-primary-foreground/70 uppercase tracking-wider mb-1">Saldo a favor</div>
-                     <div className="text-2xl font-black tabular-nums text-emerald-100">{formatNumber(cuentaConSaldoAFavor?.saldoAFavor ?? "0.00", { kind: "money" })}</div>
+                     <div className="text-2xl font-black tabular-nums text-emerald-100">{projectedMoney(saldoAFavorProyectado)}</div>
                   </div>
                 </div>
               </div>
@@ -1083,8 +1089,6 @@ function AutorizacionNotaDialog({
   onAutorizada: () => void;
 }) {
   const autorizar = useAutorizarNota();
-  const [aplicarSaldoAFavor, setAplicarSaldoAFavor] = useState(false);
-  const [montoAplicarSaldoAFavor, setMontoAplicarSaldoAFavor] = useState("0");
   const { data: projection, isLoading, error } = useObtenerProyeccionAutorizacionNota(
     ticketId || 0,
     { query: {
@@ -1092,36 +1096,9 @@ function AutorizacionNotaDialog({
       queryKey: getObtenerProyeccionAutorizacionNotaQueryKey(ticketId || 0),
     } },
   );
-  const projectionWithFavor = projection as typeof projection & { saldoAFavorDisponible?: string };
-  const saldoAFavorDisponible = projectionWithFavor?.saldoAFavorDisponible ?? "0.00";
-  const amountToApply = aplicarSaldoAFavor ? montoAplicarSaldoAFavor : "0";
-  const maxFavorAplicable = Math.min(
-    Number(saldoAFavorDisponible),
-    Number(projection?.importe ?? 0),
-  );
-  const aplicarSaldoValido = !aplicarSaldoAFavor || (
-    Number.isFinite(Number(amountToApply)) &&
-    Number(amountToApply) > 0 &&
-    Number(amountToApply) <= maxFavorAplicable
-  );
-  // The API's `autorizable` flag describes the note before an optional
-  // favor application. Recompute the displayed result locally so a valid
-  // selected favor can actually unlock an otherwise over-limit note.
-  const favorAplicado = aplicarSaldoValido ? Number(amountToApply) : 0;
-  const creditoDisponibleConFavor =
-    Number(projection?.creditoDisponibleResultante ?? Number.NaN) + favorAplicado;
-  const excesoConFavor = Math.max(0, -creditoDisponibleConFavor);
-  const autorizableConFavor =
-    projection?.autorizable === true ||
-    (aplicarSaldoValido && Number.isFinite(creditoDisponibleConFavor) && creditoDisponibleConFavor >= -0.005);
-  const canAuthorize = autorizableConFavor && aplicarSaldoValido && !autorizar.isPending;
-
-  useEffect(() => {
-    if (open) {
-      setAplicarSaldoAFavor(false);
-      setMontoAplicarSaldoAFavor("0");
-    }
-  }, [open, ticketId]);
+  // Authorization and every resulting balance come from the server
+  // projection. There is deliberately no client-side favor amount override.
+  const canAuthorize = projection?.autorizable === true && !autorizar.isPending;
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -1141,65 +1118,37 @@ function AutorizacionNotaDialog({
           <div className="space-y-4">
             <div className="rounded-lg bg-indigo-50 p-5 text-center">
               <p className="text-xs font-bold uppercase text-indigo-700">Importe de la nota</p>
-              <p className="text-4xl font-black text-indigo-950">{formatNumber(projection.importe, { kind: "money" })}</p>
+               <p className="text-4xl font-black text-indigo-950">{projectedMoney(projection.importe)}</p>
             </div>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-lg border p-4 text-sm">
               <dt className="text-muted-foreground">Nombre del cliente</dt>
-              <dd className="text-right font-bold">{projection.clienteNombre}</dd>
-              <dt className="text-muted-foreground">Saldo actual</dt>
-              <dd className="text-right font-bold">{formatNumber(projection.saldoActual, { kind: "money" })}</dd>
+               <dd className="break-words text-right font-bold">{projection.clienteNombre}</dd>
+               <dt className="text-muted-foreground">Saldo deudor proyectado</dt>
+               <dd className="text-right font-bold">{projectedMoney(projection.saldoDeudorProyectado)}</dd>
               <dt className="text-muted-foreground">Importe por aprobar</dt>
-              <dd className="text-right font-bold">{formatNumber(projection.importe, { kind: "money" })}</dd>
+               <dd className="text-right font-bold">{projectedMoney(projection.importe)}</dd>
               <dt className="text-muted-foreground">Suma de los dos</dt>
-              <dd className="text-right font-bold">{formatNumber(projection.suma, { kind: "money" })}</dd>
+                <dd className="text-right font-bold">{projectedMoney(projection.suma)}</dd>
+               <dt className="text-muted-foreground">Saldo a favor disponible</dt>
+                <dd className="text-right font-bold" data-testid="text-authorization-saldo-a-favor-disponible">{projectedMoney(projection.saldoAFavorDisponible)}</dd>
+               <dt className="text-muted-foreground">Saldo a favor aplicado automáticamente</dt>
+                <dd className="text-right font-bold" data-testid="text-authorization-saldo-a-favor-aplicado">{projectedMoney(projection.saldoAFavorAplicadoAutomaticamente)}</dd>
+               <dt className="text-muted-foreground">Remanente de saldo a favor</dt>
+                <dd className="text-right font-bold" data-testid="text-authorization-saldo-a-favor-remanente">{projectedMoney(projection.saldoAFavorRemanente)}</dd>
               <dt className="text-muted-foreground">Crédito disponible resultante</dt>
-              <dd className={`text-right text-lg font-black ${autorizableConFavor ? "text-emerald-700" : "text-destructive"}`}>
-                {formatNumber(creditoDisponibleConFavor, { kind: "money" })}
+                <dd className={`text-right text-lg font-black ${projection.autorizable ? "text-emerald-700" : "text-destructive"}`} data-testid="text-authorization-credito-disponible-resultante">
+                  {projectedMoney(projection.creditoDisponibleResultante)}
               </dd>
+               <dt className="text-muted-foreground">Límite de crédito (duro)</dt>
+                <dd className="text-right font-bold" data-testid="text-authorization-limite-credito">{projectedMoney(projection.limiteCredito)}</dd>
             </dl>
-            {projection && (
-              <div className="space-y-3 rounded-lg border border-emerald-200 bg-emerald-50 p-4" data-testid="card-authorization-saldo-a-favor">
-                <div className="flex items-start gap-3">
-                  <Checkbox
-                    id="autorizar-aplicar-saldo-a-favor"
-                    checked={aplicarSaldoAFavor}
-                    onCheckedChange={(checked) => {
-                      setAplicarSaldoAFavor(checked === true);
-                      if (checked !== true) setMontoAplicarSaldoAFavor("0");
-                    }}
-                    disabled={Number(saldoAFavorDisponible) <= 0}
-                    data-testid="checkbox-apply-saldo-a-favor"
-                  />
-                  <div className="space-y-1">
-                    <Label htmlFor="autorizar-aplicar-saldo-a-favor" className="font-bold text-emerald-900">
-                      Aplicar saldo a favor a esta nota
-                    </Label>
-                    <p className="text-sm text-emerald-800">
-                      Disponible: <strong data-testid="text-authorization-saldo-a-favor">{formatNumber(saldoAFavorDisponible, { kind: "money" })}</strong>. La aplicación es opcional y no se selecciona automáticamente.
-                    </p>
-                  </div>
-                </div>
-                {aplicarSaldoAFavor && (
-                  <div className="space-y-2 pl-7">
-                    <Label htmlFor="autorizar-monto-saldo-a-favor">Monto a aplicar</Label>
-                    <Input
-                      id="autorizar-monto-saldo-a-favor"
-                      type="number"
-                      min="0.01"
-                      max={maxFavorAplicable}
-                      step="0.01"
-                      value={montoAplicarSaldoAFavor}
-                      onChange={(event) => setMontoAplicarSaldoAFavor(event.target.value)}
-                      data-testid="input-apply-saldo-a-favor"
-                    />
-                    {!aplicarSaldoValido && <p className="text-sm font-semibold text-destructive" role="alert">El monto debe ser mayor a cero y no superar el saldo a favor o el importe de la nota.</p>}
-                  </div>
-                )}
-              </div>
-            )}
-            {!autorizableConFavor && aplicarSaldoValido && (
+            {!projection.autorizable && (
               <p className="rounded-md border border-destructive/30 bg-destructive/10 p-3 font-semibold text-destructive" role="alert">
-                El límite se rebasa por {formatNumber(excesoConFavor, { kind: "money" })}. Un ADMIN debe subir el límite del cliente o aplicar más saldo a favor.
+                {projection.motivoBloqueo || (
+                  Number(projection.exceso) > 0
+                    ? `El límite se rebasa por ${projectedMoney(projection.exceso)}. Un ADMIN debe subir el límite del cliente.`
+                    : "No se puede autorizar esta nota con la proyección actual."
+                )}
               </p>
             )}
           </div>
@@ -1209,7 +1158,7 @@ function AutorizacionNotaDialog({
           <Button
             disabled={!ticketId || !canAuthorize}
             onClick={() => ticketId && autorizar.mutate(
-              { id: ticketId, data: { aplicarSaldoAFavor: amountToApply } },
+              { id: ticketId },
               { onSuccess: onAutorizada },
             )}
           >

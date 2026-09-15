@@ -17,6 +17,10 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatAccountDestination, formatNumber } from "@workspace/number-format";
+import {
+  buildMexicoCityEffectiveDate,
+  todayInMexicoCity,
+} from "@/lib/fecha-efectiva";
 import { format } from "date-fns";
 
 type Step = "form" | "preview" | "success";
@@ -78,9 +82,7 @@ export function ClientePagoDialog({
       setPreviewData(null);
       setRealResult(null);
 
-      const today = new Date();
-      const formatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
-      setEffectiveDate(formatted);
+      setEffectiveDate(todayInMexicoCity());
     }
   }, [open, defaultAmount]);
 
@@ -115,8 +117,9 @@ export function ClientePagoDialog({
       return;
     }
 
+    const fechaEfectiva = buildMexicoCityEffectiveDate(effectiveDate);
     previewPayment.mutate(
-      { id: clienteId, data: { importe: Number(amount) } },
+      { id: clienteId, data: { importe: Number(amount), fechaEfectiva } },
       {
         onSuccess: (data) => {
           setPreviewData(data);
@@ -135,6 +138,7 @@ export function ClientePagoDialog({
 
   const submitPayment = () => {
     if (!destinationAccount) return;
+    const fechaEfectiva = buildMexicoCityEffectiveDate(effectiveDate);
     if (mode === "DIRIGIDO") {
       if (!selectedMovementId || motivo.trim().length < 10) return;
       createDirectedPayment.mutate({
@@ -142,7 +146,7 @@ export function ClientePagoDialog({
           tipo: "CLIENTE", entidadId: clienteId, documentoMovimientoId: selectedMovementId,
           importe: Number(amount), formaPago: paymentMethod, cuentaDestino: destinationAccount,
           referencia: reference || undefined, notas: paymentNotes || undefined,
-          fechaEfectiva: effectiveDate ? `${effectiveDate}T12:00:00` : undefined,
+          fechaEfectiva: fechaEfectiva ?? undefined,
           motivo: motivo.trim(),
         },
       }, {
@@ -161,7 +165,7 @@ export function ClientePagoDialog({
           cuentaDestino: destinationAccount as "CAJA_FISICA" | "CUENTA_FISCAL" | "CUENTA_NO_FISCAL",
           referencia: reference || null,
           notas: paymentNotes || null,
-          fechaEfectiva: effectiveDate || null,
+          fechaEfectiva,
         }
       },
       {

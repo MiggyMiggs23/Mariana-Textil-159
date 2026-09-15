@@ -20,7 +20,12 @@ export interface ClienteMovimiento {
   fecha?: Date;
   /** @nullable */
   notas?: string | null;
+  /** Saldo corrido histórico del libro firmado (SUM de importes); se conserva por compatibilidad y no sustituye la proyección FIFO. */
   saldoCorrido?: string;
+  /** Saldo deudor canónico después de proyectar el prefijo completo hasta este movimiento. */
+  saldoDeudorProyectado?: string;
+  /** Saldo a favor canónico después de proyectar el prefijo completo hasta este movimiento. */
+  saldoAFavorProyectado?: string;
   /** @nullable */
   saldoPendiente?: string | null;
   /** @nullable */

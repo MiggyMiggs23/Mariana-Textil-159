@@ -27,8 +27,11 @@ import {
 } from "@workspace/db";
 import {
   centsToMoney,
+  evaluateAutomaticFavorEligibility,
   moneyToCents,
   projectCreditLedger,
+  type AutomaticFavorCandidate,
+  type CreditLedgerMovement,
 } from "./credit-allocation";
 import {
   loadCustomerCreditLedgerInTransaction,
@@ -89,6 +92,22 @@ export class PosError extends Error {
     super(message);
     this.name = "PosError";
   }
+}
+
+function automaticFavorCandidates(
+  movementId: number,
+  projection: ReturnType<typeof projectCreditLedger>,
+  ledger: CreditLedgerMovement[],
+): AutomaticFavorCandidate[] {
+  const byId = new Map(ledger.map((movement) => [movement.id, movement]));
+  return projection.allocations
+    .filter((allocation) => allocation.targetId === movementId)
+    .flatMap((allocation) => {
+      const source = byId.get(allocation.sourceId);
+      return source == null
+        ? []
+        : [{ source, appliedCents: allocation.appliedCents }];
+    });
 }
 
 export type CrearTicketLineaInput = {
@@ -1779,6 +1798,11 @@ export async function autorizarNota(
     sesionCajaId: number;
     usuarioId: number;
     ip: string;
+    /**
+     * Deprecated client field.  It is accepted for backwards compatibility,
+     * but the server ignores it and computes the automatic FIFO favor
+     * application from the locked ledger.
+     */
     aplicarSaldoAFavor?: string;
   },
   includeCosts: boolean,
@@ -1805,73 +1829,91 @@ export async function autorizarNota(
     .where(eq(clientesTable.id, ticket.clienteId)).for("update").limit(1);
   if (!cliente?.activo || cliente.esSistema) throw new PosError("Cliente de crédito inválido.", "INVALID_CLIENT", 409);
   const ledger = await loadCustomerCreditLedgerInTransaction(ticket.clienteId, tx);
-  const projection = projectCreditLedger(ledger);
-  const aplicarSaldoAFavorCents = money(input.aplicarSaldoAFavor ?? "0.00");
-  if (aplicarSaldoAFavorCents < 0) {
-    throw new PosError(
-      "El saldo a favor a aplicar no puede ser negativo.",
-      "INVALID_FAVOR_APPLICATION",
-    );
-  }
-  const favorSources = projection.overpaymentSources.filter(
-    (source) => source.tipo === "ABONO" && source.availableCents > 0,
-  );
-  const saldoAFavorDisponibleCents = favorSources.reduce(
-    (sum, source) => sum + source.availableCents,
-    0,
-  );
-  if (aplicarSaldoAFavorCents > saldoAFavorDisponibleCents) {
-    throw new PosError(
-      `El saldo a favor disponible es $${decimalMoney(saldoAFavorDisponibleCents)}.`,
-      "FAVOR_BALANCE_EXCEEDED",
-      409,
-    );
-  }
   const limite = money(cliente.limiteCredito);
   const importe = money(ticket.total);
-  if (aplicarSaldoAFavorCents > importe) {
+  const authorizationInstant = new Date();
+  const proposedMovementId = Number.MAX_SAFE_INTEGER;
+  const proposedProjection = projectCreditLedger([
+    ...ledger,
+    {
+      id: proposedMovementId,
+      ticketId: ticket.id,
+      tipo: "VENTA_CREDITO" as const,
+      importe: decimalMoney(importe),
+      createdAt: authorizationInstant,
+      fechaVencimiento: ticket.fechaVencimiento,
+      diasPlazo: ticket.diasPlazo,
+    },
+  ]);
+  const proposedFavorCandidates = automaticFavorCandidates(
+    proposedMovementId,
+    proposedProjection,
+    ledger,
+  );
+  const proposedEligibility = evaluateAutomaticFavorEligibility(
+    proposedFavorCandidates,
+  );
+  if (!proposedEligibility.autorizable) {
     throw new PosError(
-      "El saldo a favor no puede exceder el importe de la nota.",
-      "FAVOR_APPLICATION_EXCEEDS_NOTE",
+      proposedEligibility.motivoBloqueo!,
+      "FAVOR_APPLICATION_STORAGE_UNAVAILABLE",
       409,
     );
   }
-  // Favor is an independent available balance. Only the explicit amount being
-  // applied to this note reduces the debtor balance for the credit-limit check.
-  const saldo = projection.balanceCents;
-  if (saldo + importe - aplicarSaldoAFavorCents > limite) {
-    const exceso = saldo + importe - aplicarSaldoAFavorCents - limite;
-    throw new PosError(`El límite se rebasa por $${decimalMoney(exceso)}. Un ADMIN debe subir el límite del cliente.`, "CREDIT_LIMIT_EXCEEDED", 409);
-  }
-  let favorToApply = aplicarSaldoAFavorCents;
-  const explicitFavorApplications: Array<{
-    sourceId: number;
-    targetId: number;
-    importe: string;
-  }> = [];
   const [movement] = await tx.insert(movimientosCreditoTable).values({
     clienteId: ticket.clienteId, ticketId: ticket.id, tipo: "VENTA_CREDITO",
     importe: decimalMoney(importe), usuarioId: input.usuarioId, formaPago: "CREDITO",
     notas: `Nota ${ticket.folio}`,
     metadata: JSON.stringify({
       origen: "AUTORIZACION_NOTA",
-      preventImplicitFavor: true,
-      favorApplication: aplicarSaldoAFavorCents > 0,
     }),
     diasPlazo: ticket.diasPlazo, fechaVencimiento: ticket.fechaVencimiento!,
   }).returning();
-  for (const source of favorSources) {
-    if (favorToApply <= 0) break;
-    const applied = Math.min(favorToApply, source.availableCents);
-    if (applied <= 0) continue;
-    explicitFavorApplications.push({
-      sourceId: source.movementId,
-      targetId: movement!.id,
-      importe: decimalMoney(applied),
-    });
-    favorToApply -= applied;
+  const afterNote = await loadCustomerCreditLedgerInTransaction(ticket.clienteId, tx);
+  const afterProjection = projectCreditLedger(afterNote);
+  const noteAllocations = afterProjection.allocations.filter(
+    (allocation) => allocation.targetId === movement!.id,
+  );
+  const afterNoteMovements = new Map(afterNote.map((candidate) => [candidate.id, candidate]));
+  const actualFavorCandidates = automaticFavorCandidates(
+    movement!.id,
+    afterProjection,
+    afterNote,
+  );
+  const actualEligibility = evaluateAutomaticFavorEligibility(actualFavorCandidates);
+  if (!actualEligibility.autorizable) {
+    throw new PosError(
+      actualEligibility.motivoBloqueo!,
+      "FAVOR_APPLICATION_STORAGE_UNAVAILABLE",
+      409,
+    );
   }
+  const automaticFavorCents = noteAllocations.reduce(
+    (sum, allocation) =>
+      sum + allocation.appliedCents,
+    0,
+  );
+  // The hard limit is evaluated against the actual allocation produced by the
+  // canonical projector, not a client-supplied amount.  This also handles
+  // historical flagged notes whose favor remains temporarily independent.
+  if (afterProjection.balanceCents > limite) {
+    const exceso = afterProjection.balanceCents - limite;
+    throw new PosError(`El límite se rebasa por $${decimalMoney(exceso)}. Un ADMIN debe subir el límite del cliente.`, "CREDIT_LIMIT_EXCEEDED", 409);
+  }
+  const explicitFavorApplications = noteAllocations
+    .filter((allocation) =>
+      afterNoteMovements.get(allocation.sourceId)?.tipo === "ABONO",
+    )
+    .map((allocation) => ({
+      sourceId: allocation.sourceId,
+      targetId: allocation.targetId,
+      importe: decimalMoney(allocation.appliedCents),
+    }));
   if (explicitFavorApplications.length > 0) {
+    // `aplicaciones_credito` is immutable evidence for Ver Reparto.  The
+    // projector has already bounded each row by both the source remainder and
+    // this note; write those exact cents and never the deprecated request
+    // field.
     await tx.insert(aplicacionesCreditoTable).values(
       explicitFavorApplications.map((application) => ({
         abonoMovimientoId: application.sourceId,
@@ -1907,7 +1949,11 @@ export async function autorizarNota(
      entidadId: String(ticket.id), datosDespues: {
        sesionCajaId: sesion.id,
        movimientoCreditoId: movement!.id,
-       aplicarSaldoAFavor: decimalMoney(aplicarSaldoAFavorCents),
+        // Retain the old audit key as the canonical server value so existing
+        // readers do not lose the amount, while explicitly recording that it
+        // was not selected by the client.
+        aplicarSaldoAFavor: decimalMoney(automaticFavorCents),
+        saldoAFavorAplicadoAutomaticamente: decimalMoney(automaticFavorCents),
        aplicacionesSaldoAFavor: explicitFavorApplications,
      }, ip: input.ip,
   });

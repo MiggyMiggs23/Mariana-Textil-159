@@ -8,7 +8,7 @@
 
 export interface AutorizarNotaInput {
   /**
-     * Importe de saldo a favor que el cajero decide aplicar explícitamente.
+     * Campo legado aceptado por compatibilidad; el servidor lo ignora y aplica automáticamente por FIFO el menor entre el favor disponible y la nota.
      * @pattern ^\d+(\.\d{1,2})?$
      */
   aplicarSaldoAFavor?: string;

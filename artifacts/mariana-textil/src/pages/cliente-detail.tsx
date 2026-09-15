@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute, useSearch } from "wouter";
 import { ArrowLeft, Download, Eye, EyeOff, Loader2, LockKeyhole, Printer, FileText } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -13,6 +13,7 @@ import {
   getGetCurrentUserQueryKey,
   useGetCliente,
   useGetClienteCredito,
+  useGetClienteEstadoCuenta,
   useGetClientePagos,
   useGetClientePrecios,
   useGetCurrentUser,
@@ -23,6 +24,7 @@ import {
   downloadClienteDocumento,
   customFetch,
   type ClienteDocumento,
+  type ClienteMovimiento,
   useBajaCliente,
   useReactivarCliente,
   useUpdateCliente,
@@ -41,7 +43,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { AppBackLink } from "@/lib/internal-navigation";
 import { getCategoricalChartColor } from "@/lib/report-chart-colors";
 import { hasPermission, Modules } from "@/lib/permisos";
-import { createAdjustment, downloadClientFile, getAccount, getClientAnalytics, getPortfolio, getPurchases, getStats, updateCreditTerms } from "@/lib/clientes-api";
+import { createAdjustment, downloadClientFile, getClientAnalytics, getPortfolio, getPurchases, getStats, updateCreditTerms } from "@/lib/clientes-api";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ClientePagoDialog } from "@/components/cliente-pago-dialog";
 import { Input } from "@/components/ui/input";
@@ -53,10 +55,148 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { DirectedPaymentHistory } from "@/components/directed-payment-history";
 import { ResponsiveTable } from "@/components/client-responsive-table";
-import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
+import { ClienteNotaEstadoBadge } from "@/components/cliente-nota-estado-badge";
 import { CREDIT_TERMS, type ClientCreditTerm } from "@/lib/credit-terms";
 
 const date = (value?: string) => value ? new Intl.DateTimeFormat("es-MX", { dateStyle: "medium" }).format(new Date(value)) : "—";
+
+type StatementRow = ClienteMovimiento & { movimientoId: number };
+
+function projectedMoney(value: string | number | null | undefined) {
+  return value === undefined || value === null || value === ""
+    ? "—"
+    : formatNumber(value, { kind: "money" });
+}
+
+function ProjectedStatementBalance({ movement }: { movement: StatementRow }) {
+  const hasDebt = movement.saldoDeudorProyectado !== undefined && movement.saldoDeudorProyectado !== null;
+  const hasFavor = movement.saldoAFavorProyectado !== undefined && movement.saldoAFavorProyectado !== null;
+
+  if (!hasDebt && !hasFavor) {
+    return <span data-testid={`text-statement-saldo-missing-${movement.movimientoId}`}>—</span>;
+  }
+
+  return (
+    <span className="flex min-w-0 flex-col gap-0.5 text-right text-xs leading-tight" data-testid={`text-statement-saldo-${movement.movimientoId}`}>
+      <span className="whitespace-nowrap">Deudor {projectedMoney(movement.saldoDeudorProyectado)}</span>
+      <span className="whitespace-nowrap text-emerald-700 dark:text-emerald-300">
+        A favor {projectedMoney(movement.saldoAFavorProyectado)}
+      </span>
+    </span>
+  );
+}
+
+function StatementNoteState({ movement }: { movement: StatementRow }) {
+  if (movement.tipo !== "VENTA_CREDITO" || !movement.estadoNota) {
+    return <span data-testid={`text-statement-estado-missing-${movement.movimientoId}`}>—</span>;
+  }
+
+  return (
+    <div className="min-w-0 text-left">
+      <ClienteNotaEstadoBadge
+        estadoNota={movement.estadoNota}
+        saldoPendiente={movement.saldoPendiente}
+        id={movement.movimientoId}
+      />
+    </div>
+  );
+}
+
+const statementHeaders = ["Fecha", "Tipo", "Folio", "Pago", "Referencia / notas", "Usuario", "Importe", "Saldo", "Estado"];
+
+function StatementField({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="min-w-0 space-y-1">
+      <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{label}</dt>
+      <dd className="min-w-0 break-words [overflow-wrap:anywhere]">{children}</dd>
+    </div>
+  );
+}
+
+/**
+ * ResponsiveTable intentionally remains the desktop renderer. A nine-column
+ * ledger is not readable at 402px even when its overflow is contained, so the
+ * account statement has a local stacked-card renderer for small screens.
+ */
+function StatementResponsiveTable({
+  rows,
+  empty,
+  movementType,
+  movementFrom,
+  movementTo,
+}: {
+  rows: ClienteMovimiento[];
+  empty: string;
+  movementType: string;
+  movementFrom: string;
+  movementTo: string;
+}) {
+  const filteredRows = rows.filter((item): item is StatementRow =>
+    typeof item.movimientoId === "number" &&
+    (movementType === "all" || item.tipo === movementType) &&
+    (!movementFrom || (item.fechaEfectiva ?? item.fecha ?? "") >= movementFrom) &&
+    (!movementTo || (item.fechaEfectiva ?? item.fecha ?? "").slice(0, 10) <= movementTo),
+  );
+
+  if (!filteredRows.length) {
+    return <p className="py-10 text-center text-muted-foreground">{empty}</p>;
+  }
+
+  return (
+    <>
+      <div className="hidden min-w-0 sm:block" data-testid="statement-desktop-table">
+        <ResponsiveTable
+          headers={statementHeaders}
+          rows={filteredRows.map((item) => ({
+            id: item.movimientoId,
+            ticketId: item.ticketId,
+            cells: [
+              <span key={`movement-date-${item.movimientoId}`} className="whitespace-nowrap">{date(item.fechaEfectiva ?? item.fecha)}</span>,
+              <span key={`movement-type-${item.movimientoId}`} className="block break-words [overflow-wrap:anywhere]">{item.tipo ?? "Movimiento"}</span>,
+              formatNumber(item.ticketFolio, { kind: "identifier" }),
+              item.desgloseIva
+                ? <span className="block whitespace-normal break-words [overflow-wrap:anywhere]">{item.formaPago} · Subtotal {formatNumber(item.desgloseIva.subtotal, { kind: "money" })} · IVA {formatNumber(item.desgloseIva.iva, { kind: "money" })}</span>
+                : <span className="block break-words [overflow-wrap:anywhere]">{item.formaPago ?? "—"}</span>,
+              <span className="block max-w-[16rem] whitespace-normal break-words [overflow-wrap:anywhere]">{[item.referencia, item.notas].filter(Boolean).join(" · ") || "—"}</span>,
+              <span className="block max-w-[14rem] whitespace-normal break-words [overflow-wrap:anywhere]">{item.nombreUsuario ?? "—"}</span>,
+              formatNumber(item.importe, { kind: "money" }),
+              <ProjectedStatementBalance movement={item} />,
+              <StatementNoteState movement={item} />,
+            ],
+          }))}
+          empty={empty}
+        />
+      </div>
+      <div className="space-y-3 sm:hidden" data-testid="statement-mobile-cards">
+        {filteredRows.map((item) => (
+          <article
+            key={`statement-mobile-${item.movimientoId}`}
+            className="min-w-0 rounded-lg border bg-card p-4 shadow-sm"
+            data-testid={`statement-mobile-row-${item.movimientoId}`}
+          >
+            <dl className="grid min-w-0 gap-3">
+              <StatementField label="Fecha">{date(item.fechaEfectiva ?? item.fecha)}</StatementField>
+              <StatementField label="Tipo">{item.tipo ?? "Movimiento"}</StatementField>
+              <StatementField label="Folio">{formatNumber(item.ticketFolio, { kind: "identifier" })}</StatementField>
+              <StatementField label="Pago">
+                {item.desgloseIva
+                  ? <span>{item.formaPago} · Subtotal {formatNumber(item.desgloseIva.subtotal, { kind: "money" })} · IVA {formatNumber(item.desgloseIva.iva, { kind: "money" })}</span>
+                  : item.formaPago ?? "—"}
+              </StatementField>
+              <StatementField label="Referencia / notas">
+                {[item.referencia, item.notas].filter(Boolean).join(" · ") || "—"}
+              </StatementField>
+              <StatementField label="Usuario">{item.nombreUsuario ?? "—"}</StatementField>
+              <StatementField label="Importe">{formatNumber(item.importe, { kind: "money" })}</StatementField>
+              <StatementField label="Saldo"><ProjectedStatementBalance movement={item} /></StatementField>
+              <StatementField label="Estado"><StatementNoteState movement={item} /></StatementField>
+            </dl>
+          </article>
+        ))}
+      </div>
+    </>
+  );
+}
 
 export default function ClienteDetail() {
   const [, params] = useRoute("/clientes/:id");
@@ -120,7 +260,12 @@ export default function ClienteDetail() {
     const until = new Date(); const since = new Date(); since.setMonth(since.getMonth() - Number(period));
     return { desde: since.toISOString().slice(0, 10), hasta: until.toISOString().slice(0, 10) };
   }, [period]);
-  const account = useQuery({ queryKey: ["cliente-account", id], queryFn: () => getAccount(id), enabled: canFinances && Number.isFinite(id) });
+  const account = useGetClienteEstadoCuenta(id, undefined, {
+    query: {
+      enabled: canFinances && Number.isFinite(id),
+      queryKey: getGetClienteEstadoCuentaQueryKey(id),
+    },
+  });
   const purchases = useQuery({ queryKey: ["cliente-purchases", id, periodDates], queryFn: () => getPurchases(id, periodDates), enabled: canFinances && Number.isFinite(id) });
   const stats = useQuery({ queryKey: ["cliente-stats", id, periodDates], queryFn: () => getStats(id, periodDates), enabled: canFinances && Number.isFinite(id) });
   const lifetimeStats = useQuery({ queryKey: ["cliente-lifetime-stats", id], queryFn: () => getStats(id, {}), enabled: canFinances && utilityVisible && Number.isFinite(id) });
@@ -129,17 +274,8 @@ export default function ClienteDetail() {
   const payments = useGetClientePagos(id, { query: { enabled: canFinances && Number.isFinite(id), queryKey: getGetClientePagosQueryKey(id) } });
   const prices = useGetClientePrecios(id, { query: { enabled: canPrices && Number.isFinite(id), queryKey: getGetClientePreciosQueryKey(id) } });
   const filteredPurchases = purchases.data?.compras ?? [];
-  const saldoAFavorFromCredit = (credit.data as (typeof credit.data & { saldoAFavor?: string }) | undefined)?.saldoAFavor;
-  const saldoAFavorFromAccount = (account.data as (typeof account.data & { saldoAFavor?: string }) | undefined)?.saldoAFavor;
-  const saldoAFavor = saldoAFavorFromCredit ?? saldoAFavorFromAccount ?? "0.00";
-  const saldoActual = account.data?.saldoActual ?? credit.data?.saldoActual;
-  const saldoDeudorRaw = Number(saldoActual ?? 0);
-  const saldoDeudor = Number.isFinite(saldoDeudorRaw) ? Math.max(0, saldoDeudorRaw) : 0;
-  const saldoAFavorAmount = Number(saldoAFavor);
-  // Favor is a separate balance, not a conditional decoration. Keep the
-  // metric visible at $0.00 so a customer with no current favor is not
-  // confused with a customer whose financial data was not loaded.
-  const hasSaldoAFavor = Number.isFinite(saldoAFavorAmount);
+  const saldoDeudorProyectado = account.data?.saldoActual;
+  const saldoAFavorProyectado = account.data?.saldoAFavor;
   const chartData = useMemo(() => {
     const months = new Map<string, number>();
     filteredPurchases.forEach((item) => {
@@ -150,7 +286,7 @@ export default function ClienteDetail() {
     return Array.from(months, ([month, total]) => ({ month, total })).reverse();
   }, [filteredPurchases]);
 
-  const adjustment = useMutation({ mutationFn: () => createAdjustment(id, { importe: Number(adjustmentAmount), motivo: reason }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["cliente-account", id] }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ predicate: (query) => { const key = query.queryKey[0]; return typeof key === "string" && key.startsWith("/api/clientes/"); } }); setAdjustmentOpen(false); setAdjustmentAmount(""); setReason(""); toast({ title: "Ajuste registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el ajuste", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
+  const adjustment = useMutation({ mutationFn: () => createAdjustment(id, { importe: Number(adjustmentAmount), motivo: reason }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ predicate: (query) => { const key = query.queryKey[0]; return typeof key === "string" && key.startsWith("/api/clientes/"); } }); setAdjustmentOpen(false); setAdjustmentAmount(""); setReason(""); toast({ title: "Ajuste registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el ajuste", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
   const creditUpdate = useMutation({ mutationFn: () => updateCreditTerms(id, { limiteCredito: Number(creditLimit), diasCredito: Number(creditDays) as ClientCreditTerm }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) }); setCreditOpen(false); toast({ title: "Crédito actualizado" }); }, onError: (error) => toast({ title: "No se pudo actualizar", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
 
   const updateClient = useUpdateCliente();
@@ -319,23 +455,21 @@ export default function ClienteDetail() {
         {canFinances && (
           <Card data-testid="card-client-balances">
             <CardHeader><CardTitle>Saldos del cliente</CardTitle></CardHeader>
-            <CardContent className={`grid gap-4 ${hasSaldoAFavor ? "sm:grid-cols-2" : "sm:grid-cols-1"}`}>
+             <CardContent className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-900/50 dark:bg-red-950/20">
                 <p className="text-xs font-semibold uppercase tracking-wide text-red-700 dark:text-red-300">Saldo deudor</p>
                 <p className="mt-1 text-2xl font-black tabular-nums text-red-700 dark:text-red-300" data-testid="metric-client-saldo-deudor">
-                  {formatNumber(saldoDeudor, { kind: "money" })}
+                   {projectedMoney(saldoDeudorProyectado)}
                 </p>
                 <p className="mt-1 text-xs text-red-800/70 dark:text-red-200/70">Rojo significa dinero pendiente de cobro.</p>
               </div>
-              {hasSaldoAFavor && (
-                <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/20">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Saldo a favor</p>
-                  <p className="mt-1 text-2xl font-black tabular-nums text-emerald-700 dark:text-emerald-300" data-testid="metric-client-saldo-a-favor">
-                    {formatNumber(saldoAFavorAmount, { kind: "money" })}
-                  </p>
-                  <p className="mt-1 text-xs text-emerald-800/70 dark:text-emerald-200/70">Verde significa dinero recibido disponible para aplicar.</p>
-                </div>
-              )}
+               <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/20">
+                 <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700 dark:text-emerald-300">Saldo a favor</p>
+                 <p className="mt-1 text-2xl font-black tabular-nums text-emerald-700 dark:text-emerald-300" data-testid="metric-client-saldo-a-favor">
+                   {projectedMoney(saldoAFavorProyectado)}
+                 </p>
+                 <p className="mt-1 text-xs text-emerald-800/70 dark:text-emerald-200/70">Verde significa dinero recibido disponible para aplicar.</p>
+               </div>
             </CardContent>
           </Card>
         )}
@@ -364,14 +498,15 @@ export default function ClienteDetail() {
           </TabsContent>
           {canCredit && <TabsContent value="credito"><QueryState query={credit}>{(() => {
             const limit = Number(credit.data?.limiteCredito);
-            const balance = Number(credit.data?.saldoActual);
+             const balanceValue = credit.data?.saldoActual;
+             const balance = Number(balanceValue);
             const utilization = credit.data?.utilizacion != null ? Number(credit.data.utilizacion) : limit > 0 ? (balance / limit) * 100 : null;
             const aging = portfolio.data?.clientes.find((item) => item.id === id);
             const apiAging = (credit.data?.antiguedad ?? []) as Array<Record<string, unknown>>;
             const habitualTerm = credit.data?.diasCredito ?? client.diasCredito;
-             return <><div className="mb-4 flex justify-end">{canEditCredit && !client.esSistema && <Button variant="outline" onClick={() => { setCreditLimit(credit.data?.limiteCredito ?? ""); setCreditDays(String(habitualTerm)); setCreditOpen(true); }}>Editar términos</Button>}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Kpi label="Límite" value={formatNumber(credit.data?.limiteCredito, { kind: "money" })} /><Kpi label="Saldo actual" value={formatNumber(Math.max(0, balance), { kind: "money" })} />{canFinances && hasSaldoAFavor && <Kpi label="Saldo a favor" value={formatNumber(saldoAFavorAmount, { kind: "money" })} />}<Kpi label="Disponible" value={formatNumber(credit.data?.creditoDisponible, { kind: "money" })} /><Kpi label="Plazo habitual" value={habitualTerm === 0 ? "Sin plazo" : `${habitualTerm} días`} /><Kpi label="Total vencido" value={formatNumber(credit.data?.totalVencido, { kind: "money" })} />{credit.data?.primeraCompra && <Kpi label="Primera compra" value={date(credit.data.primeraCompra)} />}{credit.data?.ultimaActividad && <Kpi label="Última actividad" value={date(credit.data.ultimaActividad)} />}</div>{utilization !== null && Number.isFinite(utilization) && <Card className="mt-4"><CardContent className="pt-6"><div className="flex justify-between text-sm"><span>Utilización</span><strong>{formatNumber(utilization, { kind: "percentage", percentageInput: "percent" })}</strong></div><div className="mt-2 h-3 overflow-hidden rounded-full bg-muted"><div className={`h-full ${utilization > 100 ? "bg-destructive" : utilization > 80 ? "bg-amber-500" : "bg-emerald-500"}`} style={{ width: `${Math.min(100, utilization)}%` }} /></div></CardContent></Card>}<Card className="mt-4"><CardHeader><CardTitle>Antigüedad real</CardTitle></CardHeader><CardContent className="grid gap-3 sm:grid-cols-5">{apiAging.length ? apiAging.map((bucket, index) => <Aging key={String(bucket.rango ?? index)} label={String(bucket.rango ?? bucket.bucket ?? "Periodo")} value={String(bucket.importe ?? bucket.saldo ?? "")} />) : aging ? <><Aging label="Por vencer" value={aging.porVencer} /><Aging label="1–30 días" value={aging["1_30"]} /><Aging label="31–60 días" value={aging["31_60"]} /><Aging label="61–90 días" value={aging["61_90"]} /><Aging label="+90 días" value={aging.mas90} /></> : <p className="col-span-full text-muted-foreground">Sin saldo pendiente.</p>}</CardContent></Card></>;
-          })()}</QueryState></TabsContent>}
-          {canFinances && <TabsContent value="estado"><QueryState query={account}><div className="mb-4 flex flex-wrap gap-2"><Select value={movementType} onValueChange={setMovementType}><SelectTrigger className="w-48"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Todos los movimientos</SelectItem><SelectItem value="VENTA_CREDITO">Ventas a crédito</SelectItem><SelectItem value="ABONO">Pagos</SelectItem><SelectItem value="AJUSTE">Ajustes</SelectItem></SelectContent></Select><Input type="date" aria-label="Movimientos desde" value={movementFrom} onChange={(e) => setMovementFrom(e.target.value)} className="w-40" /><Input type="date" aria-label="Movimientos hasta" value={movementTo} onChange={(e) => setMovementTo(e.target.value)} className="w-40" /><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.xlsx`, `estado-cuenta-${id}.xlsx`)}>Excel</Button>{canCreatePayment && <Button onClick={() => setPaymentOpen(true)} data-testid="button-register-payment">Registrar pago</Button>}{canAdjust && <Button variant="outline" onClick={() => setAdjustmentOpen(true)} data-testid="button-register-adjustment">Ajuste</Button>}</div><Card><CardHeader><CardTitle>Movimientos, pagos y ajustes</CardTitle></CardHeader><CardContent><ResponsiveTable headers={["Fecha", "Tipo", "Folio", "Pago", "Referencia / notas", "Usuario", "Importe", "Saldo"]} rows={(account.data?.movimientos ?? []).filter((item) => (movementType === "all" || item.tipo === movementType) && (!movementFrom || (item.fechaEfectiva ?? item.fecha ?? "") >= movementFrom) && (!movementTo || (item.fechaEfectiva ?? item.fecha ?? "").slice(0, 10) <= movementTo)).map((item) => ({ id: item.movimientoId, ticketId: item.ticketId, cells: [date(item.fechaEfectiva ?? item.fecha), <div key={`movement-state-${item.movimientoId}`} className="space-y-1"><span>{item.tipo ?? "Movimiento"}</span><ClienteNotaEstadoBadge estadoNota={item.estadoNota as EstadoNota | null | undefined} saldoPendiente={item.saldoPendiente} id={item.movimientoId} /></div>, formatNumber(item.ticketFolio, { kind: "identifier" }), item.desgloseIva ? `${item.formaPago} · Subtotal ${formatNumber(item.desgloseIva.subtotal, { kind: "money" })} · IVA ${formatNumber(item.desgloseIva.iva, { kind: "money" })}` : item.formaPago ?? "—", [item.referencia, item.notas].filter(Boolean).join(" · ") || "—", item.nombreUsuario ?? "—", formatNumber(item.importe, { kind: "money" }), formatNumber(item.saldoCorrido, { kind: "money" })] }))} empty="No hay movimientos en la cuenta." /></CardContent></Card><div className="mt-4"><div className={`mt-4 grid gap-4 ${hasSaldoAFavor ? "sm:grid-cols-2" : "sm:grid-cols-1"}`}><Kpi label="Saldo deudor" value={formatNumber(saldoDeudor, { kind: "money" })} />{hasSaldoAFavor && <Kpi label="Saldo a favor" value={formatNumber(saldoAFavorAmount, { kind: "money" })} />}</div></div></QueryState></TabsContent>}
+             return <><div className="mb-4 flex justify-end">{canEditCredit && !client.esSistema && <Button variant="outline" onClick={() => { setCreditLimit(credit.data?.limiteCredito ?? ""); setCreditDays(String(habitualTerm)); setCreditOpen(true); }}>Editar términos</Button>}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Kpi label="Límite" value={formatNumber(credit.data?.limiteCredito, { kind: "money" })} /><Kpi label="Saldo actual" value={projectedMoney(balanceValue)} />{canFinances && <Kpi label="Saldo a favor" value={projectedMoney(saldoAFavorProyectado)} />}<Kpi label="Disponible" value={formatNumber(credit.data?.creditoDisponible, { kind: "money" })} /><Kpi label="Plazo habitual" value={habitualTerm === 0 ? "Sin plazo" : `${habitualTerm} días`} /><Kpi label="Total vencido" value={formatNumber(credit.data?.totalVencido, { kind: "money" })} />{credit.data?.primeraCompra && <Kpi label="Primera compra" value={date(credit.data.primeraCompra)} />}{credit.data?.ultimaActividad && <Kpi label="Última actividad" value={date(credit.data.ultimaActividad)} />}</div>{utilization !== null && Number.isFinite(utilization) && <Card className="mt-4"><CardContent className="pt-6"><div className="flex justify-between text-sm"><span>Utilización</span><strong>{formatNumber(utilization, { kind: "percentage", percentageInput: "percent" })}</strong></div><div className="mt-2 h-3 overflow-hidden rounded-full bg-muted"><div className={`h-full ${utilization > 100 ? "bg-destructive" : utilization > 80 ? "bg-amber-500" : "bg-emerald-500"}`} style={{ width: `${Math.min(100, utilization)}%` }} /></div></CardContent></Card>}<Card className="mt-4"><CardHeader><CardTitle>Antigüedad real</CardTitle></CardHeader><CardContent className="grid gap-3 sm:grid-cols-5">{apiAging.length ? apiAging.map((bucket, index) => <Aging key={String(bucket.rango ?? index)} label={String(bucket.rango ?? bucket.bucket ?? "Periodo")} value={String(bucket.importe ?? bucket.saldo ?? "")} />) : aging ? <><Aging label="Por vencer" value={aging.porVencer} /><Aging label="1–30 días" value={aging["1_30"]} /><Aging label="31–60 días" value={aging["31_60"]} /><Aging label="61–90 días" value={aging["61_90"]} /><Aging label="+90 días" value={aging.mas90} /></> : <p className="col-span-full text-muted-foreground">Sin saldo pendiente.</p>}</CardContent></Card></>;
+           })()}</QueryState></TabsContent>}
+           {canFinances && <TabsContent value="estado"><QueryState query={account}><div className="mb-4 flex flex-wrap gap-2"><Select value={movementType} onValueChange={setMovementType}><SelectTrigger className="w-48"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Todos los movimientos</SelectItem><SelectItem value="VENTA_CREDITO">Ventas a crédito</SelectItem><SelectItem value="ABONO">Pagos</SelectItem><SelectItem value="AJUSTE">Ajustes</SelectItem></SelectContent></Select><Input type="date" aria-label="Movimientos desde" value={movementFrom} onChange={(e) => setMovementFrom(e.target.value)} className="w-40" /><Input type="date" aria-label="Movimientos hasta" value={movementTo} onChange={(e) => setMovementTo(e.target.value)} className="w-40" /><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.xlsx`, `estado-cuenta-${id}.xlsx`)}>Excel</Button>{canCreatePayment && <Button onClick={() => setPaymentOpen(true)} data-testid="button-register-payment">Registrar pago</Button>}{canAdjust && <Button variant="outline" onClick={() => setAdjustmentOpen(true)} data-testid="button-register-adjustment">Ajuste</Button>}</div><Card><CardHeader><CardTitle>Movimientos, pagos y ajustes</CardTitle></CardHeader><CardContent><StatementResponsiveTable rows={account.data?.movimientos ?? []} movementType={movementType} movementFrom={movementFrom} movementTo={movementTo} empty="No hay movimientos en la cuenta." /></CardContent></Card><div className="mt-4"><div className="mt-4 grid gap-4 sm:grid-cols-2"><Kpi label="Saldo deudor" value={projectedMoney(saldoDeudorProyectado)} /><Kpi label="Saldo a favor" value={projectedMoney(saldoAFavorProyectado)} /></div></div></QueryState></TabsContent>}
           {canFinances && <TabsContent value="compras" className="space-y-4"><Period value={period} onChange={setPeriod} /><QueryState query={purchases}><Card><CardContent className="pt-6"><ResponsiveTable headers={["Fecha", "Folio", "Subtotal", "IVA", "Total", `ROLLOS · ${formatUnit("METRO")}`, `ROLLOS · ${formatUnit("KILO")}`, `CAJAS · ${formatUnit("BOLSA")}`, `METRAJE · ${formatUnit("METRO")}`, `SUELTAS · ${formatUnit("BOLSA")}`, "Utilidad"]} rows={filteredPurchases.map((item) => ({ id: item.id, ticketId: item.id, cells: [date(item.fecha), formatNumber(item.folio ?? item.id, { kind: "identifier" }), formatNumber(item.subtotal, { kind: "money" }), formatNumber(item.iva, { kind: "money" }), formatNumber(item.total, { kind: "money" }), formatNumber(item.rollosMetros, { kind: "quantity" }), formatNumber(item.rollosKilos, { kind: "quantity" }), formatNumber(item.rollosBolsas, { kind: "quantity" }), formatNumber(item.metrajeMetros, { kind: "quantity" }), formatNumber(item.metrajeBolsas, { kind: "quantity" }), item.lineasSinCosto ? "Pendiente" : formatNumber(item.margen, { kind: "money" })] }))} empty="No hay compras en este periodo." /><p className="mt-3 text-sm text-muted-foreground">Lista ventas del cliente en el periodo elegido con cantidades por unidad, subtotal, IVA y total; la utilidad queda pendiente si falta costo congelado.</p></CardContent></Card><p className="text-right text-sm font-semibold">Total del periodo: {formatNumber(filteredPurchases.reduce((sum, item) => sum + Number(item.total ?? 0), 0), { kind: "money" })}</p></QueryState></TabsContent>}
           {(canFinances || canPrices) && <TabsContent value="analitica" className="space-y-4"><Period value={period} onChange={setPeriod} />{canFinances && <QueryState query={stats}><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Kpi label="Compra acumulada" value={formatNumber(stats.data?.totalCompras, { kind: "money" })} /><Kpi label="Tickets" value={formatNumber(stats.data?.comprasCount, { kind: "count" })} /><Kpi label="Ticket promedio" value={formatNumber(Number(stats.data?.totalCompras ?? 0) / Math.max(1, stats.data?.comprasCount ?? 0), { kind: "money" })} /><Kpi label={formatUnit("METRO")} value={formatNumber(stats.data?.metros, { kind: "quantity" })} /><Kpi label={formatUnit("KILO")} value={formatNumber(stats.data?.kilos, { kind: "quantity" })} /><Kpi label={formatUnit("BOLSA")} value={formatNumber(stats.data?.bolsas, { kind: "quantity" })} /><Kpi label="Costo identificable" value={formatNumber(stats.data?.costo, { kind: "money" })} /><Kpi label="Utilidad identificable" value={formatNumber(stats.data?.margen, { kind: "money" })} /></div>{(stats.data?.lineasSinCosto ?? 0) > 0 && <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">Utilidad pendiente: {formatNumber(stats.data?.lineasSinCosto, { kind: "count" })} línea(s) no tienen costo congelado.</p>}<Card className="mt-4"><CardHeader><CardTitle>Compras por mes</CardTitle></CardHeader><CardContent>{chartData.length ? <div className="h-72" data-testid="chart-client-purchases"><ResponsiveContainer width="100%" height="100%"><BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} /><XAxis dataKey="month" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} /><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} /><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} /><Bar dataKey="total" fill={getCategoricalChartColor(0)} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div> : <p className="py-12 text-center text-muted-foreground">Sin datos para graficar en este periodo.</p>}<p className="mt-3 text-sm text-muted-foreground">Suma el total con IVA de ventas del cliente por mes dentro del periodo elegido.</p></CardContent></Card></QueryState>}{canPrices && <QueryState query={prices}><Card className="mt-4"><CardHeader><CardTitle>Precios negociados recientes</CardTitle></CardHeader><CardContent><ResponsiveTable headers={["Fecha", "SKU", "Precio", "Promedio últimas 3"]} rows={(prices.data?.precios ?? []).map((item) => ({ id: item.productoId, cells: [date(item.fecha), item.sku, formatNumber(item.precioUnitario, { kind: "money" }), formatNumber(item.promedio3, { kind: "money" })] }))} empty="No hay precios registrados." /><p className="mt-3 text-sm text-muted-foreground">Lista precios unitarios monetarios negociados recientemente y su promedio de las tres últimas operaciones.</p></CardContent></Card></QueryState>}{canFinances && payments.data?.pagos?.length ? <p className="text-sm text-muted-foreground">{formatNumber(payments.data.pagos.length, { kind: "count" })} pago(s) registrados en el historial.</p> : null}</TabsContent>}
           {canFinances && <ClientAnalyticsBlocks query={analytics} />}
@@ -390,7 +525,7 @@ export default function ClienteDetail() {
           saldoActual={account.data?.saldoActual}
           defaultAmount={initialPaymentAmount}
           onSuccess={() => {
-            queryClient.invalidateQueries({ queryKey: ["cliente-account", id] });
+            queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(id) });
             queryClient.invalidateQueries({ queryKey: getGetClientePagosQueryKey(id) });
             queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) });
             queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) });
