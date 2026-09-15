@@ -2,9 +2,16 @@
 
 Fecha de preparación: 2026-09-15. **No ejecutado.**
 
-**Decisión expresa del usuario: no ejecutar todavía.** Solo se verificaron
-instantes mediante una transacción `REPEATABLE READ READ ONLY` y se actualizó
-este documento. No hay autorización para registrar reversos ni recapturas.
+**Decisión vigente:** el usuario autorizó las cuatro operaciones con instantes
+exactos y orden obligatorio: reverso 46, reverso 45, recaptura 46, recaptura 45.
+La prevalidación de fecha y diferencias positivas pasó, pero la autenticación
+operativa respondió **401**. Se detuvo antes del primer reverso: **cero
+operaciones financieras ejecutadas**. La autorización no sustituye una sesión
+válida ni permite omitir los permisos.
+
+Evidencia del intento y preservación posterior:
+`reports/abonos-bloque4-2026-09-15-evidencia.jsonl`.
+Resumen: `reports/abonos-bloque4-2026-09-15-bloqueo.md`.
 
 No se han corregido, eliminado ni recapturado los movimientos reales.
 
@@ -119,5 +126,6 @@ Si se quiere además trasladar contablemente el ingreso entre días, hay que
 definir y autorizar por separado la fecha efectiva del reverso y su tratamiento
 en los cortes. No se ha implementado esa extensión ni se ha alterado Cobrado.
 
-**Pendiente y no autorizado:** autorización expresa para ejecutar el plan descrito. Preparar
-este documento no constituye autorización para escribir movimientos reales.
+**Pendiente:** autenticación operativa válida y nueva prevalidación antes de
+continuar. No repetir automáticamente solicitudes financieras. Si cambia el
+día local de ejecución, detenerse: ya no se cumpliría el cero neto del día 15.

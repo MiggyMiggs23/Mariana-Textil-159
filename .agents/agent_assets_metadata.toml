@@ -896,3 +896,31 @@ mtime_ms = 1789505542449
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/948ba99d-5217-4174-a8a5-d54e1b676c13/e57adf57-3bfb-4d85-a807-8901aa8430f9"
 storage_version_token = "1789505574747252"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "-Yu7kJefhmFfGQfrTd3DL"
+uri = "file://reports/abonos-bloque4-2026-09-15-bloqueo.md"
+type = "text"
+title = "Bloque 4 — detenido sin movimientos financieros"
+description = "Instantes exactos, diferencias positivas, saldos sin corregir y bloqueo de autenticación HTTP 401."
+logical_id = "6ae88245-bab4-4d16-8240-d68715048e06"
+content_hash = "sha256:35125e3746ac53a7232fe5dba59acf9752558942f137fe679b85bff0560b76b4"
+size = 3653
+mtime_ms = 1789506790980
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6ae88245-bab4-4d16-8240-d68715048e06/5c0af77d-d486-4eb7-b961-8695fe915b80"
+storage_version_token = "1789506827128450"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "nopbiBBxSkpCEyr8BvooQ"
+uri = "file://reports/abonos-bloque4-2026-09-15-evidencia.jsonl"
+type = "unspecified"
+title = "Evidencia — consultas y salidas textuales"
+description = "Prevalidación y preservación posterior: cuatro movimientos intactos, cero aplicaciones nuevas y cero operaciones financieras ejecutadas."
+logical_id = "a43c7f14-4a85-4511-af71-f661dccfd20e"
+content_hash = "sha256:0f57511263017f5c1fe1cec66f0cbb2c8f479479423df49d0356ed074cb72914"
+size = 4552
+mtime_ms = 1789506737112
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a43c7f14-4a85-4511-af71-f661dccfd20e/eac31c35-d574-45c8-bdfc-7bcda41e95eb"
+storage_version_token = "1789506827703088"
+content_type = "application/octet-stream"
