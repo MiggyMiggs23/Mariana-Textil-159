@@ -876,6 +876,56 @@ function addTokenCounts(target: Map<string, number>, text: string): void {
   }
 }
 
+function addCellTokenCounts(
+  target: Map<string, number>,
+  actualText: string,
+  expectedText: string,
+): void {
+  // Independent bbox extraction separates a token when the renderer wraps it
+  // at a line boundary (for example `ubicacionId` or the ISO millisecond
+  // suffix). Recombine only contiguous fragments whose concatenation is
+  // exactly the expected token; an omitted tail cannot satisfy this match.
+  const actualTokens = phraseWords(actualText);
+  const expectedTokens = phraseWords(expectedText);
+  addTokenCounts(target, actualText);
+  let actualCursor = 0;
+  for (const expectedToken of expectedTokens) {
+    while (actualCursor < actualTokens.length) {
+      const current = actualTokens[actualCursor]!;
+      if (current === expectedToken) {
+        actualCursor += 1;
+        break;
+      }
+      if (expectedToken.startsWith(current)) {
+        let joined = current;
+        let end = actualCursor;
+        for (let candidate = actualCursor + 1; candidate < actualTokens.length; candidate += 1) {
+          const combined = joined + actualTokens[candidate]!;
+          if (!expectedToken.startsWith(combined)) break;
+          joined = combined;
+          end = candidate;
+          if (joined === expectedToken) break;
+        }
+        if (joined === expectedToken && end > actualCursor) {
+          for (let consumed = actualCursor; consumed <= end; consumed += 1) {
+            const fragment = actualTokens[consumed]!;
+            target.set(fragment, (target.get(fragment) ?? 0) - 1);
+          }
+          target.set(expectedToken, (target.get(expectedToken) ?? 0) + 1);
+          actualCursor = end + 1;
+          break;
+        }
+      }
+      // Extra or mismatched text remains in the counts and is skipped only
+      // for the positional search; it cannot satisfy a later expected token.
+      actualCursor += 1;
+    }
+  }
+  for (const [token, count] of [...target]) {
+    if (count <= 0) target.delete(token);
+  }
+}
+
 function pdfPanelGeometry(
   bytes: Buffer,
   data: ComposedReport,
@@ -1027,12 +1077,22 @@ function pdfPanelGeometry(
         if (bodyTokensExpected < before) bodyTokensExpected = before;
       }
     }
-    for (const row of actualRows) {
+    for (const [rowIndex, row] of actualRows.entries()) {
       const page = pages[row.pageIndex]!;
-      for (const cell of row.row.cells) {
+      for (const [cellIndex, cell] of row.row.cells.entries()) {
         const text = cellWords(page, row.row, cell).map((word) => word.text).join(" ");
-        addTokenCounts(actualTokens, text);
-        bodyTokensObserved += geometryKey(text).split(" ").filter(Boolean).length;
+        const expectedRow = expectedRows[rowIndex];
+        const cellTokens = new Map<string, number>();
+        const expectedColumn = matched.panel.columns[cellIndex];
+        if (expectedRow && expectedColumn) {
+          addCellTokenCounts(cellTokens, text, expectedPdfCellText(expectedColumn, expectedRow));
+        } else {
+          addTokenCounts(cellTokens, text);
+        }
+        for (const [token, count] of cellTokens) {
+          actualTokens.set(token, (actualTokens.get(token) ?? 0) + count);
+        }
+        bodyTokensObserved += [...cellTokens.values()].reduce((sum, count) => sum + count, 0);
       }
     }
     for (const [token, expectedCount] of expectedTokens) {

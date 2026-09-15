@@ -518,12 +518,25 @@ function renderPdfTable(document: PDFKit.PDFDocument, table: ReadablePdfTable, c
           fill,
           "#d8dee4",
         ).restore();
-          document.font(REPORT_FONT).fontSize(total ? 8 : 7.8).fillColor("#27313a").text(
-            cellLines.join("\n"),
-            x + 4,
-            context.getCursor() + 4,
-            { width: width - 8, height: rowHeight - 6, align: columns[index]!.kind === "text" ? "left" : "right" },
-          );
+          document.font(REPORT_FONT).fontSize(total ? 8 : 7.8).fillColor("#27313a");
+          cellLines.forEach((line, lineIndex) => {
+            // `wrapPdfCellLines` already split every line against the exact
+            // cell width. Passing the joined value back to PDFKit lets it
+            // wrap long URL/ISO tokens a second time and clips the tail when
+            // the bounded text box is shorter than that reflow. Draw each
+            // prepared line independently so the PDF contains every token.
+            document.text(
+              line,
+              x + 4,
+              context.getCursor() + 4 + lineIndex * layout.lineHeight,
+              {
+                width: width - 8,
+                height: layout.lineHeight,
+                align: columns[index]!.kind === "text" ? "left" : "right",
+                lineBreak: false,
+              },
+            );
+          });
           x += width;
         });
         context.setCursor(context.getCursor() + rowHeight);

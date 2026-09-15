@@ -52,3 +52,9 @@ En PDFs tabulares, no deducir bordes de celdas desde el inicio del texto de los 
 **Why:** Una verificación de reportes aprobaba pese a encabezados no localizados y cruces de límites inferidos; los límites eran puntos medios entre textos, no bordes reales. Además, localizar solo el primer título dejaba sin medir las páginas de continuación. Los indicadores diagnósticos no justifican un PASS si no se resuelven o delimitan explícitamente.
 
 **How to apply:** Extraer bordes y texto mediante un lector independiente; asociar cada tabla y continuación sin reutilizar coincidencias ambiguas. Comprobar que los bloques exigidos representan fuentes lógicas, no sitios, y que ningún intervalo vacío satisface por accidente una prueba de ausencia de JSON.
+
+Retirar explícitamente una aprobación previa si un criterio posterior más completo detecta faltantes; conservar la evidencia histórica sin usarla para sostener el cierre actual.
+
+**Why:** El propietario confirmó que detectar lo que la prueba anterior no veía y retirar el aprobado era el resultado correcto. También exigió distinguir ausencia real en la fuente de omisión en el PDF antes de corregir: un cero de una combinación sin ventas no es un dato perdido por el generador.
+
+**How to apply:** Contrastar fuente, datos de exportación y PDF con lectura independiente; comunicar la causa antes de modificar y repetir después la matriz completa solicitada, sin rebajar criterios para recuperar un aprobado.

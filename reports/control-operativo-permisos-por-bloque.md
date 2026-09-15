@@ -1,6 +1,6 @@
 # Control operativo: planteamiento de autorización por bloque
 
-Estado: propuesta solamente. No implementada. El bloqueo ADMIN actual sigue vigente y es provisional, según replit.md.
+Estado: propuesta diferida por decisión del propietario el 2026-09-15. Las 24–40 horas estimadas se consideran demasiado costo para el piloto. No implementada ni autorizada: se conserva ADMIN-only provisionalmente, no como regla permanente. Si la restricción estorba después del piloto, se retoma. La decisión vigente y sus consecuencias están documentadas en replit.md; el detalle siguiente se conserva solo como planteamiento de referencia.
 
 ## Objetivo
 
