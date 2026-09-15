@@ -790,7 +790,9 @@ export type ReportesCatalogosSuppliersItem = {
 };
 
 export interface ReportesCatalogos {
+  /** Catálogo legado; conserva los mismos sitios físicos activos que comparisonLocations */
   sites: ReportesCatalogosSitesItem[];
+  /** Sitios físicos activos compartidos por el selector del encabezado y Comparar */
   comparisonLocations: ReportesCatalogosComparisonLocationsItem[];
   products: ReportesCatalogosProductsItem[];
   fabrics: string[];
@@ -3488,6 +3490,8 @@ export interface NotificacionCredito {
   tiendaId: number;
   tiendaNombre: string;
   urgente: boolean;
+  /** Saldo pendiente actual proyectado de la nota */
+  saldoPendiente: string;
   estadoNota: NotificacionCreditoEstadoNota;
   /** @nullable */
   leidaAt: string | null;
@@ -8117,11 +8121,11 @@ coberturaBajo?: ReporteCoberturaBajoParameter;
 coberturaNormal?: ReporteCoberturaNormalParameter;
 coberturaExceso?: ReporteCoberturaExcesoParameter;
 /**
- * Modo de la vista; comparar conserva el comparativo autorizado de Ventas.
+ * Modo de la vista; normal usa un único alcance y comparar crea marcos explícitos por sitio.
  */
 modo?: ExportReporteVistaXlsxModo;
 /**
- * Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.
+ * Alcance singular común a todas las fuentes, incluida Caja; si se envía también ubicacionIds debe coincidir.
  * @minimum 1
  */
 ubicacionId?: number;
@@ -8184,11 +8188,11 @@ coberturaBajo?: ReporteCoberturaBajoParameter;
 coberturaNormal?: ReporteCoberturaNormalParameter;
 coberturaExceso?: ReporteCoberturaExcesoParameter;
 /**
- * Modo de la vista; comparar conserva el comparativo autorizado de Ventas.
+ * Modo de la vista; normal usa un único alcance y comparar crea marcos explícitos por sitio.
  */
 modo?: ExportReporteVistaPdfModo;
 /**
- * Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.
+ * Alcance singular común a todas las fuentes, incluida Caja; si se envía también ubicacionIds debe coincidir.
  * @minimum 1
  */
 ubicacionId?: number;

@@ -5755,6 +5755,7 @@ export const ListNotificacionesResponse = zod.object({
   "tiendaId": zod.number(),
   "tiendaNombre": zod.string(),
   "urgente": zod.boolean(),
+  "saldoPendiente": zod.string().describe('Saldo pendiente actual proyectado de la nota'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']),
   "leidaAt": zod.coerce.date().nullable(),
   "createdAt": zod.coerce.date()
@@ -10381,11 +10382,11 @@ export const GetReportesCatalogosResponse = zod.object({
   "sites": zod.array(zod.object({
   "id": zod.number(),
   "label": zod.string()
-})),
+})).describe('Catálogo legado; conserva los mismos sitios físicos activos que comparisonLocations'),
   "comparisonLocations": zod.array(zod.object({
   "id": zod.number(),
   "label": zod.string()
-})),
+})).describe('Sitios físicos activos compartidos por el selector del encabezado y Comparar'),
   "products": zod.array(zod.object({
   "id": zod.number(),
   "label": zod.string()
@@ -10654,8 +10655,8 @@ export const ExportReporteVistaXlsxQueryParams = zod.object({
   "coberturaBajo": zod.coerce.number().default(exportReporteVistaXlsxQueryCoberturaBajoDefault),
   "coberturaNormal": zod.coerce.number().default(exportReporteVistaXlsxQueryCoberturaNormalDefault),
   "coberturaExceso": zod.coerce.number().default(exportReporteVistaXlsxQueryCoberturaExcesoDefault),
-  "modo": zod.enum(['normal', 'comparar']).default(exportReporteVistaXlsxQueryModoDefault).describe('Modo de la vista; comparar conserva el comparativo autorizado de Ventas.'),
-  "ubicacionId": zod.coerce.number().min(1).optional().describe('Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.'),
+  "modo": zod.enum(['normal', 'comparar']).default(exportReporteVistaXlsxQueryModoDefault).describe('Modo de la vista; normal usa un único alcance y comparar crea marcos explícitos por sitio.'),
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Alcance singular común a todas las fuentes, incluida Caja; si se envía también ubicacionIds debe coincidir.'),
   "umbralCorte": zod.coerce.number().min(exportReporteVistaXlsxQueryUmbralCorteMin).default(exportReporteVistaXlsxQueryUmbralCorteDefault),
   "umbralTienda": zod.coerce.number().min(exportReporteVistaXlsxQueryUmbralTiendaMin).default(exportReporteVistaXlsxQueryUmbralTiendaDefault),
   "agrupacion": zod.enum(['semana', 'mes']).default(exportReporteVistaXlsxQueryAgrupacionDefault)
@@ -10709,8 +10710,8 @@ export const ExportReporteVistaPdfQueryParams = zod.object({
   "coberturaBajo": zod.coerce.number().default(exportReporteVistaPdfQueryCoberturaBajoDefault),
   "coberturaNormal": zod.coerce.number().default(exportReporteVistaPdfQueryCoberturaNormalDefault),
   "coberturaExceso": zod.coerce.number().default(exportReporteVistaPdfQueryCoberturaExcesoDefault),
-  "modo": zod.enum(['normal', 'comparar']).default(exportReporteVistaPdfQueryModoDefault).describe('Modo de la vista; comparar conserva el comparativo autorizado de Ventas.'),
-  "ubicacionId": zod.coerce.number().min(1).optional().describe('Filtro singular de sitio usado por Diferencias de Caja; no amplía el alcance autorizado.'),
+  "modo": zod.enum(['normal', 'comparar']).default(exportReporteVistaPdfQueryModoDefault).describe('Modo de la vista; normal usa un único alcance y comparar crea marcos explícitos por sitio.'),
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Alcance singular común a todas las fuentes, incluida Caja; si se envía también ubicacionIds debe coincidir.'),
   "umbralCorte": zod.coerce.number().min(exportReporteVistaPdfQueryUmbralCorteMin).default(exportReporteVistaPdfQueryUmbralCorteDefault),
   "umbralTienda": zod.coerce.number().min(exportReporteVistaPdfQueryUmbralTiendaMin).default(exportReporteVistaPdfQueryUmbralTiendaDefault),
   "agrupacion": zod.enum(['semana', 'mes']).default(exportReporteVistaPdfQueryAgrupacionDefault)

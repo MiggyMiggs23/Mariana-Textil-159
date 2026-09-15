@@ -136,7 +136,10 @@ export default function ClienteDetail() {
   const saldoDeudorRaw = Number(saldoActual ?? 0);
   const saldoDeudor = Number.isFinite(saldoDeudorRaw) ? Math.max(0, saldoDeudorRaw) : 0;
   const saldoAFavorAmount = Number(saldoAFavor);
-  const hasSaldoAFavor = Number.isFinite(saldoAFavorAmount) && saldoAFavorAmount > 0;
+  // Favor is a separate balance, not a conditional decoration. Keep the
+  // metric visible at $0.00 so a customer with no current favor is not
+  // confused with a customer whose financial data was not loaded.
+  const hasSaldoAFavor = Number.isFinite(saldoAFavorAmount);
   const chartData = useMemo(() => {
     const months = new Map<string, number>();
     filteredPurchases.forEach((item) => {

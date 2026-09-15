@@ -208,6 +208,29 @@ test("favor application preserves Cobrado classification and receipt-source cons
   )?.availableCents ?? 0;
   assert.equal(sourceApplications + sourceFavor, receiptCents);
   assert.equal(projection.balanceCents, 0);
+
+  // The destination read model emits an ABONO row for the applied portion
+  // and an ABONO_SALDO_FAVOR row for the remaining portion.  Both are
+  // collections, so receiving favor and applying it later must conserve
+  // Cobrado rather than create a second receipt.
+  const cobradoFromDestinationRows = (rows: Array<{ fuente: string; importe: string }>) =>
+    rows
+      .filter(({ fuente }) =>
+        ["POS", "ABONO", "REVERSO_ABONO", "ABONO_SALDO_FAVOR", "REVERSO_ABONO_SALDO_FAVOR"]
+          .includes(fuente),
+      )
+      .reduce((sum, row) => sum + Number(row.importe), 0);
+  const beforeApplication = [
+    { fuente: "ABONO_SALDO_FAVOR", importe: "150.00" },
+  ];
+  const afterApplication = [
+    { fuente: "ABONO", importe: "50.00" },
+    { fuente: "ABONO_SALDO_FAVOR", importe: "100.00" },
+  ];
+  assert.equal(
+    cobradoFromDestinationRows(afterApplication),
+    cobradoFromDestinationRows(beforeApplication),
+  );
 });
 
 test("resulting favor includes existing favor separately from the new receipt excess", () => {

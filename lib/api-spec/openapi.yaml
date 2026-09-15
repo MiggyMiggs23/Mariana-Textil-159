@@ -9293,6 +9293,7 @@ components:
           tiendaId,
            tiendaNombre,
            urgente,
+           saldoPendiente,
            estadoNota,
            leidaAt,
           createdAt,
@@ -9311,6 +9312,7 @@ components:
         tiendaId: { type: number }
         tiendaNombre: { type: string }
         urgente: { type: boolean }
+        saldoPendiente: { type: string, description: Saldo pendiente actual proyectado de la nota }
         estadoNota:
           { type: string, enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
         leidaAt: { type: ["string", "null"], format: date-time }

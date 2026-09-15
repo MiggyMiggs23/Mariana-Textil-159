@@ -931,7 +931,7 @@ export default function CajaCuentasDestino() {
                         <div className="px-4 py-3 bg-muted/40 font-semibold text-sm flex items-center justify-between">
                           Cobros de periodos anteriores
                           <span className="text-muted-foreground font-normal text-xs">
-                            Abonos recibidos hoy de ventas pasadas
+                            Abonos a notas recibidos hoy
                           </span>
                         </div>
                         <div className="overflow-x-auto">

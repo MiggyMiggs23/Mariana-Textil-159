@@ -812,3 +812,31 @@ mtime_ms = 1789484696557
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f698a9c1-d1f8-40f4-b556-8e2bf06c6c46/584d83e7-3400-4647-9dc2-52cfd61432ba"
 storage_version_token = "1789487413792426"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "uteWJSxg9JdTlKyNs6zu7"
+uri = "file://reports/credito-saldo-favor/resultado-2026-09-15.md"
+type = "text"
+title = "Resultado de los diez puntos de verificación"
+description = "Avances, fallos y límites de las pruebas. La entrega no está aprobada integralmente."
+logical_id = "cd69b743-9a69-418c-a5f6-a9177759a446"
+content_hash = "sha256:b62fa0c06c39d45f71746954e31ef01c528f0574f84c72fc1094111d12de6197"
+size = 8204
+mtime_ms = 1789499452144
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/cd69b743-9a69-418c-a5f6-a9177759a446/c3e98b8a-5330-4dc5-af0e-98aba1193d39"
+storage_version_token = "1789499468333141"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "ksjSCRPxfnBoazC8pnKmU"
+uri = "file://reports/credito-saldo-favor/verificacion-items-1-2.md"
+type = "text"
+title = "Detalle de tipos, generación y suites"
+description = "Comandos, 181 pruebas ejecutadas, cinco fallos e integraciones bloqueadas."
+logical_id = "381950ad-69ac-4029-8a58-346cbd1fa28d"
+content_hash = "sha256:216ea43034b78f186971e5a4fdbc8091eaaf1294a3159d4bb48d35aee6db07c8"
+size = 10407
+mtime_ms = 1789498933600
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/381950ad-69ac-4029-8a58-346cbd1fa28d/3bd67959-9d12-4b74-ae30-3b254eaf0c6e"
+storage_version_token = "1789499469025881"
+content_type = "text/markdown"

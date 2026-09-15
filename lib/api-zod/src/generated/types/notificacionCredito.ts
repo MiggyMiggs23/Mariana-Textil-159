@@ -22,6 +22,8 @@ export interface NotificacionCredito {
   tiendaId: number;
   tiendaNombre: string;
   urgente: boolean;
+  /** Saldo pendiente actual proyectado de la nota */
+  saldoPendiente: string;
   estadoNota: NotificacionCreditoEstadoNota;
   /** @nullable */
   leidaAt: Date | null;

@@ -59,10 +59,12 @@ function activeStockMinimumNotification() {
 function present(
   row: typeof notificacionesCreditoTable.$inferSelect,
   estadoNota: EstadoNota,
+  saldoPendiente = row.importe,
 ) {
   return {
     ...row,
     estadoNota,
+    saldoPendiente,
     fechaVencimiento: calendarDate(row.fechaVencimiento),
     leidaAt: row.leidaAt?.toISOString() ?? null,
     createdAt: row.createdAt.toISOString(),
@@ -336,32 +338,33 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
         const event = directedPaymentEvent(row as unknown as Record<string, unknown>, true);
         events.set(event.id, event);
       }
-       for (const row of creditNotifications) {
-         const charge = notificationProjections
+      for (const row of creditNotifications) {
+        const charge = notificationProjections
            .get(Number(row.clienteId))
            ?.allCharges.find(
              (candidate) => candidate.ticketId === Number(row.ticketId),
            );
+        const saldoPendiente = charge
+          ? centsToMoney(charge.pendienteCents)
+          : row.importe;
         events.set(`credit-notice:${row.id}`, {
           id: `credit-notice:${row.id}`,
           kind: "CREDIT_NOTICE",
           family: row.urgente ? "ALERTA" : "AVISO",
           title: `Venta a crédito · Folio ${row.folio}`,
-          message: `${row.clienteNombre} · $${Number(row.importe).toFixed(2)}`,
+          message: `${row.clienteNombre} · $${Number(saldoPendiente).toFixed(2)}`,
           href: `/clientes/${row.clienteId}?tab=estado`,
           updatedAt: row.createdAt.toISOString(),
           siteId: row.tiendaId,
-           estadoNota: deriveEstadoNota({
-             importeOriginal: charge
-               ? centsToMoney(charge.originalCents)
-               : row.importe,
-             saldoPendiente: charge
-               ? centsToMoney(charge.pendienteCents)
-               : row.importe,
-             fechaVencimiento:
-               charge?.dueAt ?? calendarDate(row.fechaVencimiento),
-             hoy: notificationToday,
-           }),
+          estadoNota: deriveEstadoNota({
+            importeOriginal: charge
+              ? centsToMoney(charge.originalCents)
+              : row.importe,
+            saldoPendiente,
+            fechaVencimiento:
+              charge?.dueAt ?? calendarDate(row.fechaVencimiento),
+            hoy: notificationToday,
+          }),
           action: null,
         });
       }
@@ -562,11 +565,24 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
         ] as const;
       }),
     );
+    const notificationBalances = new Map(
+      notifications.map((notification) => {
+        const projection = projections.get(Number(notification.clienteId));
+        const charge = projection?.allCharges.find(
+          (candidate) => candidate.ticketId === Number(notification.ticketId),
+        );
+        return [
+          notification.id,
+          charge ? centsToMoney(charge.pendienteCents) : notification.importe,
+        ] as const;
+      }),
+    );
     const parsed = ListNotificacionesResponse.parse({
         notificaciones: notifications.map((notification) =>
           present(
             notification,
             notificationStates.get(notification.id) ?? "PENDIENTE",
+            notificationBalances.get(notification.id) ?? notification.importe,
           ),
         ),
         sistema: systemNotifications.map((row) => ({

@@ -13,7 +13,9 @@ import type { ReportesCatalogosSuppliersItem } from './reportesCatalogosSupplier
 import type { ReportesCatalogosUsersItem } from './reportesCatalogosUsersItem';
 
 export interface ReportesCatalogos {
+  /** Catálogo legado; conserva los mismos sitios físicos activos que comparisonLocations */
   sites: ReportesCatalogosSitesItem[];
+  /** Sitios físicos activos compartidos por el selector del encabezado y Comparar */
   comparisonLocations: ReportesCatalogosComparisonLocationsItem[];
   products: ReportesCatalogosProductsItem[];
   fabrics: string[];

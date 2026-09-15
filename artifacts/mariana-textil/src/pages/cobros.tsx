@@ -1095,11 +1095,26 @@ function AutorizacionNotaDialog({
   const projectionWithFavor = projection as typeof projection & { saldoAFavorDisponible?: string };
   const saldoAFavorDisponible = projectionWithFavor?.saldoAFavorDisponible ?? "0.00";
   const amountToApply = aplicarSaldoAFavor ? montoAplicarSaldoAFavor : "0";
-  const aplicarSaldoValido = !aplicarSaldoAFavor || (
-    Number(amountToApply) > 0 &&
-    Number(amountToApply) <= Number(saldoAFavorDisponible)
+  const maxFavorAplicable = Math.min(
+    Number(saldoAFavorDisponible),
+    Number(projection?.importe ?? 0),
   );
-  const canAuthorize = projection?.autorizable === true && aplicarSaldoValido && !autorizar.isPending;
+  const aplicarSaldoValido = !aplicarSaldoAFavor || (
+    Number.isFinite(Number(amountToApply)) &&
+    Number(amountToApply) > 0 &&
+    Number(amountToApply) <= maxFavorAplicable
+  );
+  // The API's `autorizable` flag describes the note before an optional
+  // favor application. Recompute the displayed result locally so a valid
+  // selected favor can actually unlock an otherwise over-limit note.
+  const favorAplicado = aplicarSaldoValido ? Number(amountToApply) : 0;
+  const creditoDisponibleConFavor =
+    Number(projection?.creditoDisponibleResultante ?? Number.NaN) + favorAplicado;
+  const excesoConFavor = Math.max(0, -creditoDisponibleConFavor);
+  const autorizableConFavor =
+    projection?.autorizable === true ||
+    (aplicarSaldoValido && Number.isFinite(creditoDisponibleConFavor) && creditoDisponibleConFavor >= -0.005);
+  const canAuthorize = autorizableConFavor && aplicarSaldoValido && !autorizar.isPending;
 
   useEffect(() => {
     if (open) {
@@ -1138,8 +1153,8 @@ function AutorizacionNotaDialog({
               <dt className="text-muted-foreground">Suma de los dos</dt>
               <dd className="text-right font-bold">{formatNumber(projection.suma, { kind: "money" })}</dd>
               <dt className="text-muted-foreground">Crédito disponible resultante</dt>
-              <dd className={`text-right text-lg font-black ${projection.autorizable ? "text-emerald-700" : "text-destructive"}`}>
-                {formatNumber(projection.creditoDisponibleResultante, { kind: "money" })}
+              <dd className={`text-right text-lg font-black ${autorizableConFavor ? "text-emerald-700" : "text-destructive"}`}>
+                {formatNumber(creditoDisponibleConFavor, { kind: "money" })}
               </dd>
             </dl>
             {projection && (
@@ -1171,20 +1186,20 @@ function AutorizacionNotaDialog({
                       id="autorizar-monto-saldo-a-favor"
                       type="number"
                       min="0.01"
-                      max={saldoAFavorDisponible}
+                      max={maxFavorAplicable}
                       step="0.01"
                       value={montoAplicarSaldoAFavor}
                       onChange={(event) => setMontoAplicarSaldoAFavor(event.target.value)}
                       data-testid="input-apply-saldo-a-favor"
                     />
-                    {!aplicarSaldoValido && <p className="text-sm font-semibold text-destructive" role="alert">El monto debe ser mayor a cero y no superar el saldo disponible.</p>}
+                    {!aplicarSaldoValido && <p className="text-sm font-semibold text-destructive" role="alert">El monto debe ser mayor a cero y no superar el saldo a favor o el importe de la nota.</p>}
                   </div>
                 )}
               </div>
             )}
-            {!projection.autorizable && (
+            {!autorizableConFavor && aplicarSaldoValido && (
               <p className="rounded-md border border-destructive/30 bg-destructive/10 p-3 font-semibold text-destructive" role="alert">
-                El límite se rebasa por {formatNumber(projection.exceso, { kind: "money" })}. Un ADMIN debe subir el límite del cliente.
+                El límite se rebasa por {formatNumber(excesoConFavor, { kind: "money" })}. Un ADMIN debe subir el límite del cliente o aplicar más saldo a favor.
               </p>
             )}
           </div>
