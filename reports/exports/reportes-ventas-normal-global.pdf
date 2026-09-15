@@ -1,0 +1,844 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R] /Count 7 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 3052 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Reporte ventas) Tj
+T*
+(Pagina 1 de 7) Tj
+T*
+(Periodo: {"desde":"2026-01-01T06:00:00.000Z","hasta":"2027) Tj
+T*
+(  -01-01T05:59:59.999Z","previousDesde":"2025-01-01T06:00:) Tj
+T*
+(  00.000Z","previousHasta":"2026-01-01T05:59:59.999Z","yea) Tj
+T*
+(  rAgoDesde":"2025-01-01T06:00:00.000Z","yearAgoHasta":"20) Tj
+T*
+(  26-01-01T05:59:59.999Z"}) Tj
+T*
+(Filtros: ["periodo=personalizado","desde=2026-01-01","hast) Tj
+T*
+(  a=2026-12-31","modalidad=TODO","margenUmbral=15","cobert) Tj
+T*
+(  uraCritico=7","coberturaBajo=15","coberturaNormal=60","c) Tj
+T*
+(  oberturaExceso=90","modo=normal","umbralCorte=0","umbral) Tj
+T*
+(  Tienda=0","agrupacion=semana"]) Tj
+T*
+(Indicadores:) Tj
+T*
+(Ventas totales: 103302) Tj
+T*
+(Tickets totales: 4) Tj
+T*
+(Ventas ? ROLLOS: 103302) Tj
+T*
+(Tickets con ROLLOS: 4) Tj
+T*
+(Subtotal promedio ? ROLLOS: 25825.5) Tj
+T*
+(Ventas ? METRAJE: 0) Tj
+T*
+(Tickets con METRAJE: 0) Tj
+T*
+(Subtotal promedio ? METRAJE: 0) Tj
+T*
+(ROLLOS ? METRO: 4986) Tj
+T*
+(Matriz: Ventas diarias) Tj
+T*
+({"dimension":"2026-09-14","modalidad":"ROLLOS","costoFuent) Tj
+T*
+(  e":"Costo exacto del rollo vendido","lineasCostoVencido") Tj
+T*
+(  :0,"lineasProvenienciaDesconocida":0,"unidad":"METRO","c) Tj
+T*
+(  antidad":4693,"tickets":3,"ventas":93926,"costo":78911,") Tj
+T*
+(  utilidad":15015,"margenPct":15.985988970040243}) Tj
+T*
+({"dimension":"2026-09-13","modalidad":"ROLLOS","costoFuent) Tj
+T*
+(  e":"Costo exacto del rollo vendido","lineasCostoVencido") Tj
+T*
+(  :0,"lineasProvenienciaDesconocida":0,"unidad":"METRO","c) Tj
+T*
+(  antidad":293,"tickets":1,"ventas":9376,"costo":7911,"uti) Tj
+T*
+(  lidad":1465,"margenPct":15.625}) Tj
+T*
+(Matriz: Ventas por hora) Tj
+T*
+({"dimension":"12","modalidad":"ROLLOS","costoFuente":"Cost) Tj
+T*
+(  o exacto del rollo vendido","lineasCostoVencido":0,"line) Tj
+T*
+(  asProvenienciaDesconocida":0,"unidad":"METRO","cantidad") Tj
+T*
+(  :4986,"tickets":4,"ventas":103302,"costo":86822,"utilida) Tj
+T*
+(  d":16480,"margenPct":15.95322452614664}) Tj
+T*
+(Matriz: Ventas por dia) Tj
+T*
+({"dimension":"Monday","modalidad":"ROLLOS","costoFuente":") Tj
+T*
+(  Costo exacto del rollo vendido","lineasCostoVencido":0,") Tj
+T*
+(  lineasProvenienciaDesconocida":0,"unidad":"METRO","canti) Tj
+T*
+(  dad":4693,"tickets":3,"ventas":93926,"costo":78911,"util) Tj
+T*
+(  idad":15015,"margenPct":15.985988970040243}) Tj
+T*
+({"dimension":"Sunday","modalidad":"ROLLOS","costoFuente":") Tj
+T*
+(  Costo exacto del rollo vendido","lineasCostoVencido":0,") Tj
+T*
+(  lineasProvenienciaDesconocida":0,"unidad":"METRO","canti) Tj
+T*
+(  dad":293,"tickets":1,"ventas":9376,"costo":7911,"utilida) Tj
+T*
+(  d":1465,"margenPct":15.625}) Tj
+T*
+(Matriz: X04 ? Ventas por Tienda \(TIENDA activa\)) Tj
+T*
+({"fecha":"2026-09-14","Mariana":17792,"Cruces":76134}) Tj
+T*
+({"fecha":"2026-09-13","Cruces":9376}) Tj
+T*
+(Matriz: X04 ? Participacion Global \(TIENDA activa\)) Tj
+T*
+({"nombreUbicacion":"Mariana","ventas":17792}) Tj
+T*
+({"nombreUbicacion":"Coco","ventas":0}) Tj
+T*
+({"nombreUbicacion":"Cruces","ventas":85510}) Tj
+T*
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 7 0 R >>
+endobj
+7 0 obj
+<< /Length 3062 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Reporte ventas) Tj
+T*
+(Pagina 2 de 7) Tj
+T*
+(Matriz: X04 ? Mezcla de Pago \(TIENDA activa\)) Tj
+T*
+({"nombreUbicacion":"Mariana","efectivo":17792,"transferenc) Tj
+T*
+(  ia":0,"credito":0}) Tj
+T*
+({"nombreUbicacion":"Coco","efectivo":0,"transferencia":0,") Tj
+T*
+(  credito":0}) Tj
+T*
+({"nombreUbicacion":"Cruces","efectivo":85510,"transferenci) Tj
+T*
+(  a":0,"credito":0}) Tj
+T*
+(Dia) Tj
+T*
+(Dia: 2026-09-14 | Modalidad: ROLLOS | Fuente del costo:) Tj
+T*
+(  Costo exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 4693 | Tickets: 3 | Subtotal) Tj
+T*
+(  sin IVA: 93926 | Costo congelado: 78911 | Utilidad:) Tj
+T*
+(  15015 | Margen exacto: 15.985988970040243) Tj
+T*
+(Dia: 2026-09-13 | Modalidad: ROLLOS | Fuente del costo:) Tj
+T*
+(  Costo exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 293 | Tickets: 1 | Subtotal) Tj
+T*
+(  sin IVA: 9376 | Costo congelado: 7911 | Utilidad: 1465 |) Tj
+T*
+(  Margen exacto: 15.625) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Dia de semana) Tj
+T*
+(Dia de semana: Monday | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 4693 |) Tj
+T*
+(  Tickets: 3 | Subtotal sin IVA: 93926 | Costo congelado:) Tj
+T*
+(  78911 | Utilidad: 15015 | Margen exacto:) Tj
+T*
+(  15.985988970040243) Tj
+T*
+(Dia de semana: Sunday | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 293 | Tickets:) Tj
+T*
+(  1 | Subtotal sin IVA: 9376 | Costo congelado: 7911 |) Tj
+T*
+(  Utilidad: 1465 | Margen exacto: 15.625) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Hora) Tj
+T*
+(Hora: 12 | Modalidad: ROLLOS | Fuente del costo: Costo) Tj
+T*
+(  exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 4986 | Tickets: 4 | Subtotal) Tj
+T*
+(  sin IVA: 103302 | Costo congelado: 86822 | Utilidad:) Tj
+T*
+(  16480 | Margen exacto: 15.95322452614664) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Sitio) Tj
+T*
+(Sitio: Cruces | Modalidad: ROLLOS | Fuente del costo:) Tj
+T*
+(  Costo exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 4430 | Tickets: 3 | Subtotal) Tj
+T*
+(  sin IVA: 85510 | Costo congelado: 71810 | Utilidad:) Tj
+T*
+(  13700 | Margen exacto: 16.021517951116827) Tj
+T*
+(Sitio: Mariana | Modalidad: ROLLOS | Fuente del costo:) Tj
+T*
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 9 0 R >>
+endobj
+9 0 obj
+<< /Length 3153 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Reporte ventas) Tj
+T*
+(Pagina 3 de 7) Tj
+T*
+(  Costo exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 556 | Tickets: 1 | Subtotal) Tj
+T*
+(  sin IVA: 17792 | Costo congelado: 15012 | Utilidad: 2780) Tj
+T*
+(  | Margen exacto: 15.625) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Producto) Tj
+T*
+(Producto: LICMET-ROJ | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 1887 |) Tj
+T*
+(  Tickets: 1 | Subtotal sin IVA: 60384 | Costo congelado:) Tj
+T*
+(  50949 | Utilidad: 9435 | Margen exacto: 15.625) Tj
+T*
+(Producto: LICMET-AZU | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 849 | Tickets:) Tj
+T*
+(  2 | Subtotal sin IVA: 27168 | Costo congelado: 22923 |) Tj
+T*
+(  Utilidad: 4245 | Margen exacto: 15.625) Tj
+T*
+(Producto: FORCAR70-BLA | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 1750 |) Tj
+T*
+(  Tickets: 1 | Subtotal sin IVA: 12250 | Costo congelado:) Tj
+T*
+(  10150 | Utilidad: 2100 | Margen exacto:) Tj
+T*
+(  17.142857142857142) Tj
+T*
+(Producto: FORCAR70-ROJ | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 500 | Tickets:) Tj
+T*
+(  1 | Subtotal sin IVA: 3500 | Costo congelado: 2800 |) Tj
+T*
+(  Utilidad: 700 | Margen exacto: 20) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Tela) Tj
+T*
+(Tela: Licra Metalica | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 2736 |) Tj
+T*
+(  Tickets: 3 | Subtotal sin IVA: 87552 | Costo congelado:) Tj
+T*
+(  73872 | Utilidad: 13680 | Margen exacto: 15.625) Tj
+T*
+(Tela: Forro Cartera 70 | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 2250 |) Tj
+T*
+(  Tickets: 2 | Subtotal sin IVA: 15750 | Costo congelado:) Tj
+T*
+(  12950 | Utilidad: 2800 | Margen exacto:) Tj
+T*
+(  17.77777777777778) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Color) Tj
+T*
+(Color: Roja | Modalidad: ROLLOS | Fuente del costo: Costo) Tj
+T*
+(  exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 11 0 R >>
+endobj
+11 0 obj
+<< /Length 3071 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Reporte ventas) Tj
+T*
+(Pagina 4 de 7) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 1887 | Tickets: 1 | Subtotal) Tj
+T*
+(  sin IVA: 60384 | Costo congelado: 50949 | Utilidad: 9435) Tj
+T*
+(  | Margen exacto: 15.625) Tj
+T*
+(Color: Azul Rey | Modalidad: ROLLOS | Fuente del costo:) Tj
+T*
+(  Costo exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 849 | Tickets: 2 | Subtotal) Tj
+T*
+(  sin IVA: 27168 | Costo congelado: 22923 | Utilidad: 4245) Tj
+T*
+(  | Margen exacto: 15.625) Tj
+T*
+(Color: Blanco | Modalidad: ROLLOS | Fuente del costo:) Tj
+T*
+(  Costo exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 1750 | Tickets: 1 | Subtotal) Tj
+T*
+(  sin IVA: 12250 | Costo congelado: 10150 | Utilidad: 2100) Tj
+T*
+(  | Margen exacto: 17.142857142857142) Tj
+T*
+(Color: Rojo | Modalidad: ROLLOS | Fuente del costo: Costo) Tj
+T*
+(  exacto del rollo vendido | Lineas con ultimo costo) Tj
+T*
+(  conocido: 0 | Lineas con fuente historica desconocida: 0) Tj
+T*
+(  | Unidad: Mts. | Cantidad: 500 | Tickets: 1 | Subtotal) Tj
+T*
+(  sin IVA: 3500 | Costo congelado: 2800 | Utilidad: 700 |) Tj
+T*
+(  Margen exacto: 20) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Vendedor) Tj
+T*
+(Vendedor: Administrador | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 4430 |) Tj
+T*
+(  Tickets: 3 | Subtotal sin IVA: 85510 | Costo congelado:) Tj
+T*
+(  71810 | Utilidad: 13700 | Margen exacto:) Tj
+T*
+(  16.021517951116827) Tj
+T*
+(Vendedor: Prueba Terminal | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 556 | Tickets:) Tj
+T*
+(  1 | Subtotal sin IVA: 17792 | Costo congelado: 15012 |) Tj
+T*
+(  Utilidad: 2780 | Margen exacto: 15.625) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Cliente) Tj
+T*
+(Cliente: Venta a Publico | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 4986 |) Tj
+T*
+(  Tickets: 4 | Subtotal sin IVA: 103302 | Costo congelado:) Tj
+T*
+(  86822 | Utilidad: 16480 | Margen exacto:) Tj
+T*
+(  15.95322452614664) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Forma de pago) Tj
+T*
+(Forma de pago: EFECTIVO | Modalidad: ROLLOS | Tickets: 4 |) Tj
+T*
+(  Cobro asignado por subtotal: 103302) Tj
+T*
+(Totales: {"ventas":103302}) Tj
+T*
+(Estado de factura) Tj
+T*
+(Estado de factura: No facturado | Modalidad: ROLLOS |) Tj
+T*
+ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 13 0 R >>
+endobj
+13 0 obj
+<< /Length 3205 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Reporte ventas) Tj
+T*
+(Pagina 5 de 7) Tj
+T*
+(  Fuente del costo: Costo exacto del rollo vendido |) Tj
+T*
+(  Lineas con ultimo costo conocido: 0 | Lineas con fuente) Tj
+T*
+(  historica desconocida: 0 | Unidad: Mts. | Cantidad: 4986) Tj
+T*
+(  | Tickets: 4 | Subtotal sin IVA: 103302 | Costo) Tj
+T*
+(  congelado: 86822 | Utilidad: 16480 | Margen exacto:) Tj
+T*
+(  15.95322452614664) Tj
+T*
+(Totales: {"cantidad":4986,"ventas":103302,"costo":86822,"u) Tj
+T*
+(  tilidad":16480}) Tj
+T*
+(Mejores productos) Tj
+T*
+(Producto: LICMET-ROJ | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 1887 |) Tj
+T*
+(  Tickets: 1 | Subtotal sin IVA: 60384 | Costo congelado:) Tj
+T*
+(  50949 | Utilidad: 9435 | Margen exacto: 15.625) Tj
+T*
+(Producto: LICMET-AZU | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 849 | Tickets:) Tj
+T*
+(  2 | Subtotal sin IVA: 27168 | Costo congelado: 22923 |) Tj
+T*
+(  Utilidad: 4245 | Margen exacto: 15.625) Tj
+T*
+(Producto: FORCAR70-BLA | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 1750 |) Tj
+T*
+(  Tickets: 1 | Subtotal sin IVA: 12250 | Costo congelado:) Tj
+T*
+(  10150 | Utilidad: 2100 | Margen exacto:) Tj
+T*
+(  17.142857142857142) Tj
+T*
+(Producto: FORCAR70-ROJ | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 500 | Tickets:) Tj
+T*
+(  1 | Subtotal sin IVA: 3500 | Costo congelado: 2800 |) Tj
+T*
+(  Utilidad: 700 | Margen exacto: 20) Tj
+T*
+(Totales: {}) Tj
+T*
+(Peores productos) Tj
+T*
+(Producto: FORCAR70-ROJ | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 500 | Tickets:) Tj
+T*
+(  1 | Subtotal sin IVA: 3500 | Costo congelado: 2800 |) Tj
+T*
+(  Utilidad: 700 | Margen exacto: 20) Tj
+T*
+(Producto: FORCAR70-BLA | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 1750 |) Tj
+T*
+(  Tickets: 1 | Subtotal sin IVA: 12250 | Costo congelado:) Tj
+T*
+(  10150 | Utilidad: 2100 | Margen exacto:) Tj
+T*
+(  17.142857142857142) Tj
+T*
+(Producto: LICMET-AZU | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 849 | Tickets:) Tj
+T*
+(  2 | Subtotal sin IVA: 27168 | Costo congelado: 22923 |) Tj
+T*
+(  Utilidad: 4245 | Margen exacto: 15.625) Tj
+T*
+ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 15 0 R >>
+endobj
+15 0 obj
+<< /Length 2911 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Reporte ventas) Tj
+T*
+(Pagina 6 de 7) Tj
+T*
+(Producto: LICMET-ROJ | Modalidad: ROLLOS | Fuente del) Tj
+T*
+(  costo: Costo exacto del rollo vendido | Lineas con) Tj
+T*
+(  ultimo costo conocido: 0 | Lineas con fuente historica) Tj
+T*
+(  desconocida: 0 | Unidad: Mts. | Cantidad: 1887 |) Tj
+T*
+(  Tickets: 1 | Subtotal sin IVA: 60384 | Costo congelado:) Tj
+T*
+(  50949 | Utilidad: 9435 | Margen exacto: 15.625) Tj
+T*
+(Totales: {}) Tj
+T*
+(Clasificacion ABC) Tj
+T*
+(Producto: LICMET-ROJ | Modalidad: ROLLOS | Unidad: Mts. |) Tj
+T*
+(  Ventas: 60384 | % acumulado: 58.453853749201365 | Clase:) Tj
+T*
+(  A) Tj
+T*
+(Producto: LICMET-AZU | Modalidad: ROLLOS | Unidad: Mts. |) Tj
+T*
+(  Ventas: 27168 | % acumulado: 84.75344136609165 | Clase:) Tj
+T*
+(  B) Tj
+T*
+(Producto: FORCAR70-BLA | Modalidad: ROLLOS | Unidad: Mts.) Tj
+T*
+(  | Ventas: 12250 | % acumulado: 96.61187585913147 |) Tj
+T*
+(  Clase: C) Tj
+T*
+(Producto: FORCAR70-ROJ | Modalidad: ROLLOS | Unidad: Mts.) Tj
+T*
+(  | Ventas: 3500 | % acumulado: 100 | Clase: C) Tj
+T*
+(Totales: {}) Tj
+T*
+(Pares de productos en canasta) Tj
+T*
+(Producto A: FORCAR70-BLA | Modalidad A: ROLLOS | Producto) Tj
+T*
+(  B: LICMET-ROJ | Modalidad B: ROLLOS | Tickets: 1 |) Tj
+T*
+(  Modalidad: NO APLICA ? SIN DESGLOSE POR MODALIDAD) Tj
+T*
+(Totales: {}) Tj
+T*
+(Resumen de cancelaciones) Tj
+T*
+(Totales: {}) Tj
+T*
+(Cancelaciones) Tj
+T*
+(Totales: {}) Tj
+T*
+(Productos cancelados) Tj
+T*
+(Totales: {}) Tj
+T*
+(X04 ? Tabla comparativa por tienda \(TIENDA activa\)) Tj
+T*
+(Tienda: Mariana | Part. %: 17.22 | Ventas: 17792.00 |) Tj
+T*
+(  Tendencia: 100.00 | Utilidad: 2780.00 | Tickets: 1 |) Tj
+T*
+(  Promedio: 17792.00 | Rollos / Metraje: Rollos ? metros:) Tj
+T*
+(  556.000 ? Rollos ? kilos: 0.000 ? Rollos ? bolsas: 0.000) Tj
+T*
+(  ? Metraje ? metros: 0.000 ? Metraje ? bolsas: 0.000 |) Tj
+T*
+(  Medios de Pago: Efectivo: 17792.00 ? Transferencia: 0.00) Tj
+T*
+(  ? Credito: 0.00 | Mejor / Peor Dia: Mejor: 2026-09-14) Tj
+T*
+(  \(17792.00\) ? Peor: 2026-09-14 \(17792.00\) | Facturado %:) Tj
+T*
+(  0.00 | Dif. Caja: 0.00 | Modalidad: NO APLICA ? SIN) Tj
+T*
+(  DESGLOSE POR MODALIDAD) Tj
+T*
+(Tienda: Coco | Part. %: 0.00 | Ventas: 0.00 | Tendencia:) Tj
+T*
+(  0.00 | Utilidad: 0.00 | Tickets: 0 | Promedio: 0.00 |) Tj
+T*
+(  Rollos / Metraje: Rollos ? metros: 0.000 ? Rollos ?) Tj
+T*
+(  kilos: 0.000 ? Rollos ? bolsas: 0.000 ? Metraje ?) Tj
+T*
+(  metros: 0.000 ? Metraje ? bolsas: 0.000 | Medios de) Tj
+T*
+(  Pago: Efectivo: 0.00 ? Transferencia: 0.00 ? Credito:) Tj
+T*
+(  0.00 | Mejor / Peor Dia:  | Facturado %: 0.00 | Dif.) Tj
+T*
+(  Caja: 0.00 | Modalidad: NO APLICA ? SIN DESGLOSE POR) Tj
+T*
+(  MODALIDAD) Tj
+T*
+(Tienda: Cruces | Part. %: 82.78 | Ventas: 85510.00 |) Tj
+T*
+(  Tendencia: 100.00 | Utilidad: 13700.00 | Tickets: 3 |) Tj
+T*
+(  Promedio: 28503.33 | Rollos / Metraje: Rollos ? metros:) Tj
+T*
+(  4430.000 ? Rollos ? kilos: 0.000 ? Rollos ? bolsas:) Tj
+T*
+ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 17 0 R >>
+endobj
+17 0 obj
+<< /Length 1000 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Reporte ventas) Tj
+T*
+(Pagina 7 de 7) Tj
+T*
+(  0.000 ? Metraje ? metros: 0.000 ? Metraje ? bolsas:) Tj
+T*
+(  0.000 | Medios de Pago: Efectivo: 85510.00 ?) Tj
+T*
+(  Transferencia: 0.00 ? Credito: 0.00 | Mejor / Peor Dia:) Tj
+T*
+(  Mejor: 2026-09-14 \(76134.00\) ? Peor: 2026-09-13) Tj
+T*
+(  \(9376.00\) | Facturado %: 0.00 | Dif. Caja: 0.00 |) Tj
+T*
+(  Modalidad: NO APLICA ? SIN DESGLOSE POR MODALIDAD) Tj
+T*
+(Totales: {"nombreUbicacion":"Total) Tj
+T*
+(  General","participacion":"100.00","ventas":"103302.00",") Tj
+T*
+(  tendenciaPorcentaje":null,"margen":"16480.00","tickets":) Tj
+T*
+(  4,"ticketPromedio":"25825.50","rollosMetraje":"Rollos ?) Tj
+T*
+(  metros: 4986.000 ? Rollos ? kilos: 0.000 ? Rollos ?) Tj
+T*
+(  bolsas: 0.000 ? Metraje ? metros: 0.000 ? Metraje ?) Tj
+T*
+(  bolsas: 0.000","mediosPago":"Efectivo: 103302.00 ?) Tj
+T*
+(  Transferencia: 0.00 ? Credito: 0.00","mejorPeorDia":null) Tj
+T*
+(  ,"porcentajeFacturado":"0.00","diferenciaCaja":"0.00"}) Tj
+T*
+ET
+endstream
+endobj
+xref
+0 18
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000155 00000 n 
+0000000225 00000 n 
+0000000351 00000 n 
+0000003455 00000 n 
+0000003581 00000 n 
+0000006695 00000 n 
+0000006821 00000 n 
+0000010026 00000 n 
+0000010154 00000 n 
+0000013278 00000 n 
+0000013406 00000 n 
+0000016664 00000 n 
+0000016792 00000 n 
+0000019756 00000 n 
+0000019884 00000 n 
+trailer
+<< /Size 18 /Root 1 0 R >>
+startxref
+20937
+%%EOF

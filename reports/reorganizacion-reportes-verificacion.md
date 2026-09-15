@@ -16,6 +16,17 @@ revisión del 14 de septiembre y no describe el estado actual.
 
 ### Estado factual actual
 
+- **Actualización de descargas:** se descargaron y abrieron los bytes XLSX y
+  PDF de las cinco vistas en Normal y Comparar: 10 casos, cero errores, con
+  fuentes completas. Se corrigió X04 omitido en Ventas global Normal y el
+  recorte de filas anchas del PDF. Evidencia y límites:
+  `reports/export-download-verification.md`. Las menciones posteriores a
+  «sin bytes descargados» describen el pase anterior de navegador, no este
+  nuevo pase HTTP local con handlers reales y datos de solo lectura.
+- La matriz HTTP de Control genérico y compuesto confirmó 403 no-ADMIN y
+  200 ADMIN en ambos formatos, conservando el middleware real de rol. Las
+  pruebas con sesiones reales y los clics en documentos quedan a cargo del usuario.
+
 - Seguridad y alcance: **62 pruebas de servidor y 16 pruebas frontend de
   alcance aprobadas**. Son conteos por suite y no se suman como pruebas
   distintas; no se asume independencia donde hay solapamiento.

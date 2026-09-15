@@ -272,7 +272,7 @@ export function comparisonTable(comparison: Awaited<ReturnType<typeof compareSto
   };
 }
 
-function comparisonCharts(comparison: Awaited<ReturnType<typeof compareStores>>) {
+export function comparisonCharts(comparison: Awaited<ReturnType<typeof compareStores>>) {
   const trendRows = comparison.ventasPorFecha.reduce<Array<Record<string, string | number>>>(
     (rows, point) => {
       const row = rows.find((item) => item.fecha === point.fecha);
@@ -596,10 +596,19 @@ export async function buildComposedReport(
 
   let content: ReportContent & { alerts?: NonNullable<ComposedReport["alerts"]> } =
     composeReportContent(view, sources);
-  if (view === "ventas" && modo === "comparar" && economic) {
-    // X04 is deliberately one complete global source. Its scope was checked
-    // above; retain the canonical context and never clear locations as a
-    // fallback, which could turn an assigned source into a global query.
+  if (
+    view === "ventas"
+    && economic
+    && authorization.rol === "ADMIN"
+    && authorization.alcanceConsulta === "TODAS"
+    && locations === undefined
+    && requestedIds.length === 0
+    && requestedSingular === undefined
+  ) {
+    // X04 is deliberately one complete global source. The Ventas screen
+    // embeds it in both Normal and Comparar global views; keep it in both
+    // exports as well. Its scope was checked above; never clear locations as
+    // a fallback, which could turn an assigned source into a global query.
     const comparison = await compareStores(rangeToAnalyticsFilters(ctx, input));
     content = {
       ...content,

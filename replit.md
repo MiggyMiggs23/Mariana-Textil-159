@@ -903,7 +903,13 @@ La forma inicial del mock de caja se corrigió durante la captura; no era un
 defecto de la aplicación. Las capturas de filas de cancelaciones, abonos,
 ajustes y detalle de corte fueron cero: solo se validaron contratos, sin
 click-through real de documentos. No hubo E2E autenticada viva ni bytes reales
-de descarga XLSX/PDF. El preview real del screenshot tool mostró login,
+de descarga XLSX/PDF en ese pase de navegador. En el pase posterior de handlers
+HTTP reales se descargaron y verificaron XLSX/PDF de las cinco vistas en Normal
+y Comparar (10 casos, cero errores); se corrigieron X04 omitido en Ventas global
+Normal y las filas anchas del PDF. Evidencia: `reports/export-download-verification.md`.
+Esta prueba usa contexto autorizado en memoria y una transacción de solo lectura,
+no sesiones reales. El usuario asume la comprobación de sesiones por rol y los
+clics de documentos reales. El preview real del screenshot tool mostró login,
 esperado para una sesión no autenticada, y no prueba los reportes.
 
 La organización aprobada responde a decisiones, no a tipos de datos:

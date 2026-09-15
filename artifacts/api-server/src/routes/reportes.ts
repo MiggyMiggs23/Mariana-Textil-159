@@ -8,7 +8,7 @@ import {
 } from "@workspace/api-zod";
 import { requireRole, requireSession, type AuthContext } from "../middlewares/auth";
 import { requierePermiso } from "../lib/permisos";
-import { createTextPdf } from "../lib/pdf";
+import { createTextPdf, wrapPdfLines } from "../lib/pdf";
 import { buildReport, getCatalogs, parseReportBooleanQuery, reportRange, REPORT_SECTIONS, ReportInputError, type Report } from "../lib/reportes";
 import { createReportWorkbook, normalizeExportTables } from "../lib/report-export";
 import { resolveReadScope } from "./inventario";
@@ -376,7 +376,7 @@ router.get("/reportes/vistas/:vista/export.pdf", async (req, res, next): Promise
     res.setHeader("Server-Timing", `reportes-compuestos;dur=${(performance.now() - started).toFixed(1)}`);
     res.type("application/pdf");
     res.attachment(`${data.section}.pdf`);
-    res.send(createTextPdf(`Reporte ${data.section}`, lines));
+    res.send(createTextPdf(`Reporte ${data.section}`, wrapPdfLines(lines)));
   } catch (e) { if (!error(e, res)) next(e); }
 });
 

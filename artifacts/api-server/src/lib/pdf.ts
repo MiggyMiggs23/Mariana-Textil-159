@@ -8,6 +8,26 @@ function pdfText(value: unknown): string {
     .replaceAll(")", "\\)");
 }
 
+/** Wrap composed-report lines so every visible value stays inside the page. */
+export function wrapPdfLines(lines: string[], maxChars = 58): string[] {
+  const wrapped: string[] = [];
+  for (const source of lines) {
+    let line = String(source);
+    if (line.length === 0) {
+      wrapped.push(line);
+      continue;
+    }
+    while (line.length > maxChars) {
+      let cut = line.lastIndexOf(" ", maxChars);
+      if (cut < Math.floor(maxChars * 0.6)) cut = maxChars;
+      wrapped.push(line.slice(0, cut));
+      line = `  ${line.slice(cut).trimStart()}`;
+    }
+    wrapped.push(line);
+  }
+  return wrapped;
+}
+
 /** Small dependency-free, valid multi-page PDF for tabular financial exports. */
 export function createTextPdf(title: string, lines: string[]): Buffer {
   const pageSize = 55;

@@ -3,6 +3,12 @@ name: Verificación de impresión
 description: Evita falsos positivos al comprobar vistas PDF basadas en CSS de impresión.
 ---
 
+Para exportaciones descargadas, comparar el archivo con otro generado por el mismo exportador no basta: contrastar sus fuentes con las de pantalla y verificar texto visible y geometría del PDF.
+
+**Why:** Dos archivos idénticos pueden compartir una fuente omitida o columnas fuera de la página. Los bytes correctos no demuestran que los datos sean visibles.
+
+**How to apply:** Descargar los bytes del handler real, abrir el XLSX/PDF con un lector independiente y comprobar últimas columnas, totales y límites físicos. Distinguir un arnés HTTP con contexto en memoria de una descarga con sesión real.
+
 Las vistas imprimibles deben verificarse con el mismo estado corporal que activa el flujo real, emulando `media: print` y comprobando estilo computado, geometría y participación en el layout. En formatos físicos, medir todos los elementos críticos y validar el PDF natural completo, sin ocultar páginas mediante rangos.
 
 **Why:** Comprobar solo el DOM o exportar sin el estado real de impresión produjo falsos positivos: contenido supuestamente visible con geometría 0×0, una hoja adicional, tamaños físicos incorrectos y un PDF vacío cuyo QR parecía fallar.
