@@ -1,0 +1,750 @@
+{
+  "verification": "prompt-c-readonly",
+  "status": "PASS",
+  "command": "pnpm --filter @workspace/api-server exec tsx ../../.local/operations/prompt-c-readonly.ts",
+  "baseline": "BEFORE frontend edits",
+  "databaseIdentity": {
+    "database": "heliumdb",
+    "databaseUser": "postgres",
+    "transactionTimestamp": "2026-09-15 22:00:14.223809+00",
+    "observedTimestamp": "2026-09-15 22:00:14.22528+00",
+    "transactionReadOnly": "on",
+    "transactionIsolation": "repeatable read"
+  },
+  "site": {
+    "id": 2,
+    "name": "Cruces"
+  },
+  "date": {
+    "input": {
+      "desde": "2026-09-15",
+      "hasta": "2026-09-15"
+    },
+    "timeZone": "America/Mexico_City"
+  },
+  "scopes": [
+    {
+      "label": "Cruces",
+      "ubicacionId": 2,
+      "filters": {
+        "input": {
+          "desde": "2026-09-15",
+          "hasta": "2026-09-15"
+        },
+        "ubicacionId": 2,
+        "desde": "2026-09-15T06:00:00.000Z",
+        "hasta": "2026-09-16T05:59:59.999Z"
+      },
+      "destination": {
+        "resumen": [
+          {
+            "cuentaDestino": "CAJA_FISICA",
+            "formaPago": "EFECTIVO",
+            "importe": "25000.00",
+            "operaciones": 2,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "100.00",
+            "cajaFisicaFacturado": "0.00"
+          },
+          {
+            "cuentaDestino": "CUENTA_NO_FISCAL",
+            "formaPago": "TRANSFERENCIA",
+            "importe": "0.00",
+            "operaciones": 0,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "0.00",
+            "cajaFisicaFacturado": "0.00"
+          },
+          {
+            "cuentaDestino": "CUENTA_FISCAL",
+            "formaPago": "TRANSFERENCIA",
+            "importe": "0.00",
+            "operaciones": 0,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "0.00",
+            "cajaFisicaFacturado": "0.00"
+          },
+          {
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "formaPago": "CREDITO",
+            "importe": "0.00",
+            "operaciones": 0,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "0.00",
+            "cajaFisicaFacturado": "0.00"
+          }
+        ],
+        "tendencia": [
+          {
+            "fecha": "2026-09-15",
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "importe": "37772.00"
+          }
+        ],
+        "ivaCobrado": "0.00",
+        "totalCobrado": "25000.00",
+        "encabezado": {
+          "vendido": {
+            "contado": "0.00",
+            "credito": "37772.00",
+            "total": "37772.00",
+            "totalAnterior": null,
+            "variacionPorcentaje": null
+          },
+          "porCobrar": {
+            "periodo": "37772.00",
+            "periodoAnterior": null,
+            "variacionPorcentaje": null
+          },
+          "cobrado": {
+            "contado": "0.00",
+            "abonos": "25000.00",
+            "saldosFavor": "0.00",
+            "total": "25000.00",
+            "totalAnterior": null,
+            "variacionPorcentaje": null
+          },
+          "previousDesde": null,
+          "previousHasta": null
+        },
+        "cobrosAnteriores": [
+          {
+            "cuentaDestino": "CAJA_FISICA",
+            "fuente": "ABONO",
+            "importe": "25000.00",
+            "importeAnterior": null,
+            "variacionPorcentaje": null
+          }
+        ],
+        "matriz": {
+          "filas": [
+            {
+              "facturado": true,
+              "efectivo": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "transferencia": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "porCobrar": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "otras": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "total": "0.00"
+            },
+            {
+              "facturado": false,
+              "efectivo": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "transferencia": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "porCobrar": {
+                "importe": "37772.00",
+                "cuentaDestino": "CUENTAS_POR_COBRAR",
+                "formasPago": [
+                  "CREDITO"
+                ]
+              },
+              "otras": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "total": "37772.00"
+            },
+            {
+              "facturado": null,
+              "efectivo": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "transferencia": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "porCobrar": {
+                "importe": "37772.00",
+                "cuentaDestino": "CUENTAS_POR_COBRAR",
+                "formasPago": [
+                  "CREDITO"
+                ]
+              },
+              "otras": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "total": "37772.00"
+            }
+          ],
+          "cierra": true
+        },
+        "ivaFacturado": {
+          "base": "0.00",
+          "iva": "0.00"
+        },
+        "incongruencias": {
+          "conteo": 0,
+          "importe": "0.00"
+        },
+        "porTienda": [
+          {
+            "ubicacionId": 2,
+            "nombreUbicacion": "Cruces",
+            "cajaFisica": "25000.00",
+            "cuentaFiscal": "0.00",
+            "cuentaNoFiscal": "0.00",
+            "cuentasPorCobrar": "37772.00",
+            "cobrado": "25000.00",
+            "porCobrar": "37772.00",
+            "vendido": "37772.00",
+            "total": "25000.00"
+          }
+        ],
+        "facturacion": {
+          "facturadoTotal": "0.00",
+          "noFacturadoTotal": "37772.00",
+          "facturadoEfectivo": "0.00",
+          "facturadoTransferencia": "0.00",
+          "noFacturadoEfectivo": "0.00",
+          "noFacturadoTransferencia": "0.00"
+        }
+      },
+      "dashboardCards": {
+        "ventasTotal": "37772.00",
+        "ventasTotalTickets": 2,
+        "contadoCobrado": "0.00",
+        "contadoCobradoTickets": 0,
+        "ventasCredito": "37772.00",
+        "ventasCreditoOperaciones": 2,
+        "utilidad": "6880.00",
+        "utilidadPorcentaje": "18.21"
+      },
+      "movementReconciliation": {
+        "destinationCollection": {
+          "operaciones": 2,
+          "importe": "25000.00"
+        },
+        "detail": {
+          "pageSize": 2,
+          "pages": [
+            {
+              "page": 1,
+              "returned": 2
+            }
+          ],
+          "total": 2,
+          "montoTotal": "25000.00",
+          "source5": {
+            "POS": {
+              "operaciones": 0,
+              "importe": "0.00"
+            },
+            "ABONO": {
+              "operaciones": 2,
+              "importe": "25000.00"
+            },
+            "REVERSO_ABONO": {
+              "operaciones": 0,
+              "importe": "0.00"
+            },
+            "ABONO_SALDO_FAVOR": {
+              "operaciones": 0,
+              "importe": "0.00"
+            },
+            "REVERSO_ABONO_SALDO_FAVOR": {
+              "operaciones": 0,
+              "importe": "0.00"
+            }
+          }
+        },
+        "source5NetTotal": "25000.00",
+        "canonicalSourcesExcludingCredito": [
+          "POS",
+          "ABONO",
+          "REVERSO_ABONO",
+          "ABONO_SALDO_FAVOR",
+          "REVERSO_ABONO_SALDO_FAVOR"
+        ],
+        "assertionsRecorded": []
+      }
+    },
+    {
+      "label": "Global",
+      "ubicacionId": null,
+      "filters": {
+        "input": {
+          "desde": "2026-09-15",
+          "hasta": "2026-09-15"
+        },
+        "ubicacionId": null,
+        "desde": "2026-09-15T06:00:00.000Z",
+        "hasta": "2026-09-16T05:59:59.999Z"
+      },
+      "destination": {
+        "resumen": [
+          {
+            "cuentaDestino": "CAJA_FISICA",
+            "formaPago": "EFECTIVO",
+            "importe": "0.00",
+            "operaciones": 4,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "0.00",
+            "cajaFisicaFacturado": "0.00"
+          },
+          {
+            "cuentaDestino": "CUENTA_NO_FISCAL",
+            "formaPago": "TRANSFERENCIA",
+            "importe": "0.00",
+            "operaciones": 0,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "0.00",
+            "cajaFisicaFacturado": "0.00"
+          },
+          {
+            "cuentaDestino": "CUENTA_FISCAL",
+            "formaPago": "TRANSFERENCIA",
+            "importe": "0.00",
+            "operaciones": 0,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "0.00",
+            "cajaFisicaFacturado": "0.00"
+          },
+          {
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "formaPago": "CREDITO",
+            "importe": "0.00",
+            "operaciones": 0,
+            "importeAnterior": null,
+            "variacionPorcentaje": null,
+            "porcentaje": "0.00",
+            "cajaFisicaFacturado": "0.00"
+          }
+        ],
+        "tendencia": [
+          {
+            "fecha": "2026-09-15",
+            "cuentaDestino": "CUENTAS_POR_COBRAR",
+            "importe": "37772.00"
+          }
+        ],
+        "ivaCobrado": "0.00",
+        "totalCobrado": "0.00",
+        "encabezado": {
+          "vendido": {
+            "contado": "0.00",
+            "credito": "37772.00",
+            "total": "37772.00",
+            "totalAnterior": null,
+            "variacionPorcentaje": null
+          },
+          "porCobrar": {
+            "periodo": "37772.00",
+            "periodoAnterior": null,
+            "variacionPorcentaje": null
+          },
+          "cobrado": {
+            "contado": "0.00",
+            "abonos": "25000.00",
+            "saldosFavor": "-25000.00",
+            "total": "0.00",
+            "totalAnterior": null,
+            "variacionPorcentaje": null
+          },
+          "previousDesde": null,
+          "previousHasta": null
+        },
+        "cobrosAnteriores": [
+          {
+            "cuentaDestino": "CAJA_FISICA",
+            "fuente": "ABONO",
+            "importe": "25000.00",
+            "importeAnterior": null,
+            "variacionPorcentaje": null
+          },
+          {
+            "cuentaDestino": "CAJA_FISICA",
+            "fuente": "ABONO_SALDO_FAVOR",
+            "importe": "-25000.00",
+            "importeAnterior": null,
+            "variacionPorcentaje": null
+          }
+        ],
+        "matriz": {
+          "filas": [
+            {
+              "facturado": true,
+              "efectivo": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "transferencia": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "porCobrar": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "otras": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "total": "0.00"
+            },
+            {
+              "facturado": false,
+              "efectivo": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "transferencia": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "porCobrar": {
+                "importe": "37772.00",
+                "cuentaDestino": "CUENTAS_POR_COBRAR",
+                "formasPago": [
+                  "CREDITO"
+                ]
+              },
+              "otras": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "total": "37772.00"
+            },
+            {
+              "facturado": null,
+              "efectivo": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "transferencia": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "porCobrar": {
+                "importe": "37772.00",
+                "cuentaDestino": "CUENTAS_POR_COBRAR",
+                "formasPago": [
+                  "CREDITO"
+                ]
+              },
+              "otras": {
+                "importe": "0.00",
+                "cuentaDestino": null,
+                "formasPago": []
+              },
+              "total": "37772.00"
+            }
+          ],
+          "cierra": true
+        },
+        "ivaFacturado": {
+          "base": "0.00",
+          "iva": "0.00"
+        },
+        "incongruencias": {
+          "conteo": 0,
+          "importe": "0.00"
+        },
+        "porTienda": [
+          {
+            "ubicacionId": 2,
+            "nombreUbicacion": "Cruces",
+            "cajaFisica": "25000.00",
+            "cuentaFiscal": "0.00",
+            "cuentaNoFiscal": "0.00",
+            "cuentasPorCobrar": "37772.00",
+            "cobrado": "25000.00",
+            "porCobrar": "37772.00",
+            "vendido": "37772.00",
+            "total": "25000.00"
+          }
+        ],
+        "facturacion": {
+          "facturadoTotal": "0.00",
+          "noFacturadoTotal": "37772.00",
+          "facturadoEfectivo": "0.00",
+          "facturadoTransferencia": "0.00",
+          "noFacturadoEfectivo": "0.00",
+          "noFacturadoTransferencia": "0.00"
+        }
+      },
+      "dashboardCards": {
+        "ventasTotal": "37772.00",
+        "ventasTotalTickets": 2,
+        "contadoCobrado": "0.00",
+        "contadoCobradoTickets": 0,
+        "ventasCredito": "37772.00",
+        "ventasCreditoOperaciones": 2,
+        "utilidad": "6880.00",
+        "utilidadPorcentaje": "18.21"
+      },
+      "movementReconciliation": {
+        "destinationCollection": {
+          "operaciones": 4,
+          "importe": "0.00"
+        },
+        "detail": {
+          "pageSize": 2,
+          "pages": [
+            {
+              "page": 1,
+              "returned": 2
+            },
+            {
+              "page": 2,
+              "returned": 2
+            }
+          ],
+          "total": 4,
+          "montoTotal": "0.00",
+          "source5": {
+            "POS": {
+              "operaciones": 0,
+              "importe": "0.00"
+            },
+            "ABONO": {
+              "operaciones": 2,
+              "importe": "25000.00"
+            },
+            "REVERSO_ABONO": {
+              "operaciones": 0,
+              "importe": "0.00"
+            },
+            "ABONO_SALDO_FAVOR": {
+              "operaciones": 0,
+              "importe": "0.00"
+            },
+            "REVERSO_ABONO_SALDO_FAVOR": {
+              "operaciones": 2,
+              "importe": "-25000.00"
+            }
+          }
+        },
+        "source5NetTotal": "0.00",
+        "canonicalSourcesExcludingCredito": [
+          "POS",
+          "ABONO",
+          "REVERSO_ABONO",
+          "ABONO_SALDO_FAVOR",
+          "REVERSO_ABONO_SALDO_FAVOR"
+        ],
+        "assertionsRecorded": []
+      }
+    }
+  ],
+  "assertionFailures": [],
+  "preservation": {
+    "movementIds": [
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50
+    ],
+    "before": {
+      "rows": [
+        {
+          "id": 43,
+          "tipo": "VENTA_CREDITO",
+          "importe": "15750.00",
+          "movimientoOrigenId": null,
+          "filaHash": "09e77d4626a029d0410bba1f03ed4d1b",
+          "fechaMexico": "2026-09-15 13:29:34.336084",
+          "veto": true
+        },
+        {
+          "id": 44,
+          "tipo": "VENTA_CREDITO",
+          "importe": "22022.00",
+          "movimientoOrigenId": null,
+          "filaHash": "2a3bf8d23e04ba661aede2d784945029",
+          "fechaMexico": "2026-09-15 13:32:04.605206",
+          "veto": true
+        },
+        {
+          "id": 45,
+          "tipo": "ABONO",
+          "importe": "-15000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "c7c2503c0b7824268a1a8361bce97088",
+          "fechaMexico": "2026-09-14 18:00:00.000000",
+          "veto": false
+        },
+        {
+          "id": 46,
+          "tipo": "ABONO",
+          "importe": "-10000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "8fc6f6833a4072709a16cd32fa175fdd",
+          "fechaMexico": "2026-09-14 18:00:00.000000",
+          "veto": false
+        },
+        {
+          "id": 47,
+          "tipo": "REVERSO",
+          "importe": "10000.00",
+          "movimientoOrigenId": 46,
+          "filaHash": "0d6555ee54a78c2f6b78c4de74956c8a",
+          "fechaMexico": "2026-09-15 15:16:51.254000",
+          "veto": false
+        },
+        {
+          "id": 48,
+          "tipo": "REVERSO",
+          "importe": "15000.00",
+          "movimientoOrigenId": 45,
+          "filaHash": "f3aececb8780969794aa3a1ffc89f169",
+          "fechaMexico": "2026-09-15 15:16:51.304000",
+          "veto": false
+        },
+        {
+          "id": 49,
+          "tipo": "ABONO",
+          "importe": "-10000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "22b2a5685bad227978fa3e616964e305",
+          "fechaMexico": "2026-09-15 13:35:17.006000",
+          "veto": false
+        },
+        {
+          "id": 50,
+          "tipo": "ABONO",
+          "importe": "-15000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "87dcbd8c128834acffd793b6d62c0dcd",
+          "fechaMexico": "2026-09-15 13:34:10.192000",
+          "veto": false
+        }
+      ],
+      "vetoCount": 2,
+      "vetoHash": "3abefa7a166da384b8c27c39fe74e5f7"
+    },
+    "after": {
+      "rows": [
+        {
+          "id": 43,
+          "tipo": "VENTA_CREDITO",
+          "importe": "15750.00",
+          "movimientoOrigenId": null,
+          "filaHash": "09e77d4626a029d0410bba1f03ed4d1b",
+          "fechaMexico": "2026-09-15 13:29:34.336084",
+          "veto": true
+        },
+        {
+          "id": 44,
+          "tipo": "VENTA_CREDITO",
+          "importe": "22022.00",
+          "movimientoOrigenId": null,
+          "filaHash": "2a3bf8d23e04ba661aede2d784945029",
+          "fechaMexico": "2026-09-15 13:32:04.605206",
+          "veto": true
+        },
+        {
+          "id": 45,
+          "tipo": "ABONO",
+          "importe": "-15000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "c7c2503c0b7824268a1a8361bce97088",
+          "fechaMexico": "2026-09-14 18:00:00.000000",
+          "veto": false
+        },
+        {
+          "id": 46,
+          "tipo": "ABONO",
+          "importe": "-10000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "8fc6f6833a4072709a16cd32fa175fdd",
+          "fechaMexico": "2026-09-14 18:00:00.000000",
+          "veto": false
+        },
+        {
+          "id": 47,
+          "tipo": "REVERSO",
+          "importe": "10000.00",
+          "movimientoOrigenId": 46,
+          "filaHash": "0d6555ee54a78c2f6b78c4de74956c8a",
+          "fechaMexico": "2026-09-15 15:16:51.254000",
+          "veto": false
+        },
+        {
+          "id": 48,
+          "tipo": "REVERSO",
+          "importe": "15000.00",
+          "movimientoOrigenId": 45,
+          "filaHash": "f3aececb8780969794aa3a1ffc89f169",
+          "fechaMexico": "2026-09-15 15:16:51.304000",
+          "veto": false
+        },
+        {
+          "id": 49,
+          "tipo": "ABONO",
+          "importe": "-10000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "22b2a5685bad227978fa3e616964e305",
+          "fechaMexico": "2026-09-15 13:35:17.006000",
+          "veto": false
+        },
+        {
+          "id": 50,
+          "tipo": "ABONO",
+          "importe": "-15000.00",
+          "movimientoOrigenId": null,
+          "filaHash": "87dcbd8c128834acffd793b6d62c0dcd",
+          "fechaMexico": "2026-09-15 13:34:10.192000",
+          "veto": false
+        }
+      ],
+      "vetoCount": 2,
+      "vetoHash": "3abefa7a166da384b8c27c39fe74e5f7"
+    },
+    "unchanged": true
+  },
+  "applicationQueryCount": 19,
+  "writes": 0,
+  "migrations": 0,
+  "logins": 0,
+  "operationExecutorsCalled": 0,
+  "piiStored": false
+}

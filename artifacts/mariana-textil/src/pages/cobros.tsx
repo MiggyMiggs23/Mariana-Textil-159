@@ -325,7 +325,7 @@ function CarteraContent() {
                                 {nota.fecha ? format(parseDate(nota.fecha), "dd/MM/yyyy") : "N/A"}
                               </td>
                               <td className="p-4">
-                                <ClienteNotaEstadoBadge estadoNota={notaEstado} saldoPendiente={nota.saldoPendiente} id={nota.movimientoId} />
+                                <ClienteNotaEstadoBadge estadoNota={notaEstado} id={nota.movimientoId} />
                               </td>
                               <td className="p-4">
                                 {nota.fechaVencimiento ? (

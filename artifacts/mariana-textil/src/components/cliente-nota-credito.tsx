@@ -81,45 +81,49 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-2">
-          <CardHeader className="py-4 pb-2">
-            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold flex items-center gap-2">
-              Estado de Nota
+        <Card className="border-2 flex flex-col">
+          <CardHeader className="py-4 pb-2 flex-none">
+            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold text-center h-8 flex flex-col justify-end">
+              <span>Estado de Nota</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <ClienteNotaEstadoBadge estadoNota={estadoNota} saldoPendiente={saldoPendiente} id={ticketId} />
+          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6">
+            <ClienteNotaEstadoBadge estadoNota={estadoNota} id={ticketId} className="scale-125" />
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="py-4 pb-2">
-            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold flex justify-between">
+        <Card className="flex flex-col">
+          <CardHeader className="py-4 pb-2 flex-none">
+            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold text-center h-8 flex flex-col justify-end">
               <span>Saldo pendiente</span>
-              {estadoNota !== "PENDIENTE" && <span className="text-xs text-muted-foreground/60 font-medium">De {formatNumber(nota.importeOriginal, { kind: "money" })}</span>}
+              {estadoNota !== "PENDIENTE" && (
+                <span className="text-[10px] text-muted-foreground/60 font-medium tracking-normal normal-case mt-0.5">
+                  De {formatNumber(nota.importeOriginal, { kind: "money" })}
+                </span>
+              )}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className={`text-3xl font-black tabular-nums ${estadoNota === "PAGADA" ? "text-emerald-600" : "text-red-700"}`}>
+          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6">
+            <div className={`text-3xl font-black tabular-nums leading-none ${estadoNota === "PAGADA" ? "text-emerald-600" : "text-red-700"}`}>
               {formatNumber(saldoPendiente, { kind: "money" })}
             </div>
           </CardContent>
         </Card>
 
-        <Card className={`${estadoNota === "CON_RETRASO" ? "border-destructive/50 bg-destructive/5" : ""}`}>
-          <CardHeader className="py-4 pb-2">
-            <CardTitle className={`text-sm uppercase tracking-wider font-bold ${estadoNota === "CON_RETRASO" ? "text-destructive" : "text-muted-foreground"}`}>
-              Vencimiento
+        <Card className={`flex flex-col ${estadoNota === "CON_RETRASO" ? "border-destructive/50 bg-destructive/5" : ""}`}>
+          <CardHeader className="py-4 pb-2 flex-none">
+            <CardTitle className={`text-sm uppercase tracking-wider font-bold text-center h-8 flex flex-col justify-end ${estadoNota === "CON_RETRASO" ? "text-destructive" : "text-muted-foreground"}`}>
+              <span>Vencimiento</span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6 text-center">
             {nota.fechaVencimiento ? (
-              <div>
-                <div className={`text-xl font-black ${estadoNota === "CON_RETRASO" ? "text-destructive" : ""}`}>
+              <div className="flex flex-col items-center justify-center">
+                <div className={`text-2xl font-black leading-none ${estadoNota === "CON_RETRASO" ? "text-destructive" : ""}`}>
                   {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}
                 </div>
                 {estadoNota === "CON_RETRASO" && (
-                  <div className="text-sm text-destructive font-bold mt-1">
+                  <div className="text-xs text-destructive font-bold mt-1.5 bg-destructive/10 px-2 py-0.5 rounded-full">
                     {nota.diasVencidos} días de retraso
                   </div>
                 )}

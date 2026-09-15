@@ -10,3 +10,11 @@ En PostgreSQL local desechable, esta imagen no garantiza `/run/postgresql`: inic
 **Why:** Integraciones financieras fallaron por triggers ausentes y por una copia compilada obsoleta. La preparación local también falló repetidamente por el socket inexistente, el rol implícito incorrecto y una URL de aplicación inalcanzable antes de llegar a la suite.
 
 **How to apply:** Usar una rama Neon o clúster local desechable, siempre con identidad distinta de development. Ejecutar push, seed e inicializadores actuales antes de confiar en ella. En modo test, `DATABASE_URL` debe apuntar a otra base alcanzable y `TEST_DATABASE_URL` a la aislada para que la guardia compruebe identidades distintas. Si el arranque limpio falla, no ejecutar la suite ni tocar development.
+
+### Encargos con prohibición de toda escritura
+
+No reiniciar una API con inicializadores mutadores para verificar un cambio de interfaz sujeto a cero escrituras. Reiniciar solo el frontend y ejecutar los lectores necesarios en una transacción explícita READ ONLY, sin arrancar la aplicación completa.
+
+**Why:** El reinicio recomendado para validar código puede violar el alcance de solo lectura antes de que llegue la primera petición HTTP; consultar únicamente endpoints GET no protege frente al arranque.
+
+**How to apply:** Comprobar el punto de entrada antes de reiniciar servicios en un encargo de solo lectura. Si no existe sesión autorizada, declarar pendiente la verificación autenticada, sin crear actores ni sesiones para desbloquearla.

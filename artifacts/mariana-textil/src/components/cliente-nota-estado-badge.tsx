@@ -14,7 +14,6 @@ type ClienteNotaEstadoBadgeProps = {
   saldoPendiente?: string | number | null;
   id?: string | number;
   className?: string;
-  showBalance?: boolean;
 };
 
 const estadoPresentation: Record<EstadoNota, {
@@ -33,10 +32,8 @@ const estadoPresentation: Record<EstadoNota, {
 
 export function ClienteNotaEstadoBadge({
   estadoNota,
-  saldoPendiente,
   id,
   className,
-  showBalance = true,
 }: ClienteNotaEstadoBadgeProps) {
   if (!estadoNota || !(estadoNota in estadoPresentation)) {
     return null;
@@ -44,19 +41,13 @@ export function ClienteNotaEstadoBadge({
 
   const presentation = estadoPresentation[estadoNota as EstadoNota];
   const Icon = presentation.icon;
-  const unpaid = estadoNota !== "PAGADA";
 
   return (
-    <span className={`inline-flex flex-wrap items-center gap-1.5 ${className ?? ""}`} data-testid={`status-nota-${id ?? "current"}`}>
+    <span className={`inline-flex items-center ${className ?? ""}`} data-testid={`status-nota-${id ?? "current"}`}>
       <Badge className={`gap-1 border font-semibold ${presentation.className}`}>
         <Icon className="h-3.5 w-3.5" aria-hidden="true" />
         {presentation.label}
       </Badge>
-      {showBalance && unpaid && (
-        <span className="text-sm font-bold tabular-nums text-red-700" data-testid={`text-saldo-pendiente-${id ?? "current"}`}>
-          · Saldo pendiente {formatNumber(saldoPendiente ?? "0", { kind: "money" })}
-        </span>
-      )}
     </span>
   );
 }

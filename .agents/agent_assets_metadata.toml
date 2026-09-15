@@ -946,3 +946,17 @@ mtime_ms = 1789507194940
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/647b6234-ab8e-421e-b6b0-e88f0a1d65e4/82ebc766-29d1-43f8-b279-cfd2926d674e"
 storage_version_token = "1789507340171558"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "PXuhhIR1k2nHYK7AvxKLX"
+uri = "file://reports/prompt-c-resultado.md"
+type = "text"
+title = "Prompt C: resultado y verificaciones"
+description = "Cambios implementados, cifras antes/después, pruebas ejecutadas y límites de la revisión visual."
+logical_id = "dda4cdca-7aee-4091-a5c9-05d006632510"
+content_hash = "sha256:cb64fe7ec8c980c531a9d3758f2a975460c58c39aef0b80bbc668f4ba649fa8d"
+size = 8525
+mtime_ms = 1789510576766
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/dda4cdca-7aee-4091-a5c9-05d006632510/c5af6049-b6fe-4157-959d-115cf5397b33"
+storage_version_token = "1789510600060936"
+content_type = "text/markdown"

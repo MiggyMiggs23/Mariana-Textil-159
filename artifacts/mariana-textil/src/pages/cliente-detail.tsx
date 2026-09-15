@@ -77,9 +77,9 @@ function ProjectedStatementBalance({ movement }: { movement: StatementRow }) {
   }
 
   return (
-    <span className="flex min-w-0 flex-col gap-0.5 text-right text-xs leading-tight" data-testid={`text-statement-saldo-${movement.movimientoId}`}>
-      <span className="whitespace-nowrap">Deudor {projectedMoney(movement.saldoDeudorProyectado)}</span>
-      <span className="whitespace-nowrap text-emerald-700 dark:text-emerald-300">
+    <span className="flex min-w-0 flex-col text-right text-[10px] leading-[1.1] opacity-75" data-testid={`text-statement-saldo-${movement.movimientoId}`}>
+      <span className="whitespace-nowrap font-medium text-muted-foreground">Deudor {projectedMoney(movement.saldoDeudorProyectado)}</span>
+      <span className="whitespace-nowrap font-medium text-emerald-700/80 dark:text-emerald-300/80">
         A favor {projectedMoney(movement.saldoAFavorProyectado)}
       </span>
     </span>
@@ -88,16 +88,24 @@ function ProjectedStatementBalance({ movement }: { movement: StatementRow }) {
 
 function StatementNoteState({ movement }: { movement: StatementRow }) {
   if (movement.tipo !== "VENTA_CREDITO" || !movement.estadoNota) {
-    return <span data-testid={`text-statement-estado-missing-${movement.movimientoId}`}>—</span>;
+    return (
+      <div className="flex min-h-[22px] min-w-0 items-center text-muted-foreground" data-testid={`text-statement-estado-missing-${movement.movimientoId}`}>
+        —
+      </div>
+    );
   }
 
   return (
-    <div className="min-w-0 text-left">
-      <ClienteNotaEstadoBadge
-        estadoNota={movement.estadoNota}
-        saldoPendiente={movement.saldoPendiente}
-        id={movement.movimientoId}
-      />
+    <div className="flex min-w-0 flex-col items-start gap-0.5">
+      <div className="flex min-h-[22px] items-center">
+        <ClienteNotaEstadoBadge
+          estadoNota={movement.estadoNota}
+          id={movement.movimientoId}
+        />
+      </div>
+      <span className="text-[11px] font-medium text-muted-foreground" data-testid={`text-saldo-pendiente-${movement.movimientoId}`}>
+        Saldo pendiente: {movement.saldoPendiente == null ? "No disponible" : formatNumber(movement.saldoPendiente, { kind: "money" })}
+      </span>
     </div>
   );
 }

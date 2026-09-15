@@ -9,6 +9,8 @@ import {
   AdminRealtimeStore,
   AdminPendingSummaryTiendasItem
 } from "@workspace/api-client-react";
+import { useSharedCuentasDestino } from "@/hooks/use-shared-cuentas-destino";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLocationScope } from "@/lib/location-scope";
 import { attentionCardTone } from "./attention-card-tone";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -98,6 +100,19 @@ export default function CajaTiempoReal() {
     enabled: breakdownConcept !== null,
   });
 
+  const todayStr = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Mexico_City",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  const { data: cuentasData, isLoading: cuentasLoading, isError: cuentasError, refetch: refetchCuentas } = useSharedCuentasDestino(
+    selectedLocationId ?? undefined,
+    todayStr,
+    todayStr,
+    "hoy"
+  );
+
   const {
     data: dashboard,
     isLoading: dashLoading,
@@ -136,6 +151,7 @@ export default function CajaTiempoReal() {
   const handleRefresh = () => {
     refetchDash();
     refetchPending();
+    refetchCuentas();
   };
 
   const lastUpdated = Math.max(dashUpdatedAt, pendingUpdatedAt);
@@ -169,6 +185,26 @@ export default function CajaTiempoReal() {
       alertas: pStore?.alertas ?? store.alertas
     };
   });
+
+  const detailHref = (fuentes: string[]) => {
+    const params = new URLSearchParams({ desde: todayStr, hasta: todayStr, preset: "hoy" });
+    if (selectedLocationId != null) params.set("ubicacionId", String(selectedLocationId));
+    fuentes.forEach((fuente) => params.append("fuente", fuente));
+    return `/caja/cuentas-destino/TODAS?${params.toString()}`;
+  };
+
+  const header = cuentasData?.encabezado;
+  const cobranzaStat = header ? {
+    title: "Cobranza del periodo",
+    amount: header.cobrado.total,
+    fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
+    breakdown: [
+       { label: "De ventas del periodo", amount: header.cobrado.contado, fuentes: ["POS"] },
+       { label: "Abonos a notas", amount: header.cobrado.abonos, fuentes: ["ABONO"] },
+       { label: "A cuenta, sin aplicar", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] },
+    ],
+    className: "border-l-4 border-l-primary",
+  } : null;
 
   return (
     <AppLayout>
@@ -235,7 +271,7 @@ export default function CajaTiempoReal() {
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("COBRADO")}
               >
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-green-700 dark:text-green-400 uppercase">Cobrado (Caja)</CardTitle>
+                  <CardTitle className="text-sm font-semibold text-green-700 dark:text-green-400 uppercase">Contado cobrado</CardTitle>
                   <Banknote className="h-4 w-4 text-green-600" />
                 </CardHeader>
                 <CardContent>
@@ -285,6 +321,58 @@ export default function CajaTiempoReal() {
                 </CardContent>
               </Card>
               </div>
+
+              {/* Band: Cobranza del periodo */}
+              {(cuentasLoading || cuentasError) && (
+                <section aria-label="Cobranza del periodo" aria-live="polite">
+                  <h3 className="text-lg font-bold tracking-tight text-sidebar mb-3">Qué dinero entró</h3>
+                  {cuentasError ? (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle>No se pudo consultar la cobranza del periodo</AlertTitle>
+                      <AlertDescription>
+                        Las cifras de ventas conservan su consulta independiente.
+                        <Button variant="outline" size="sm" className="ml-3" onClick={() => refetchCuentas()}>Reintentar cobranza</Button>
+                      </AlertDescription>
+                    </Alert>
+                  ) : <Card><CardContent className="pt-6 text-muted-foreground">Consultando cobranza del periodo…</CardContent></Card>}
+                </section>
+              )}
+              {!cuentasLoading && !cuentasError && cobranzaStat && (
+                <div>
+                  <h3 className="text-lg font-bold tracking-tight text-sidebar mb-3">Qué dinero entró</h3>
+                  <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                    <Card className={`relative overflow-hidden ${cobranzaStat.className}`}>
+                      <CardContent className="pt-6">
+                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                          {cobranzaStat.title}
+                        </p>
+                        <Link
+                          href={detailHref(cobranzaStat.fuentes)}
+                          className="mt-2 inline-block text-3xl font-black text-sidebar hover:text-primary hover:underline"
+                          data-testid="text-monto-cobranza-del-periodo"
+                        >
+                          {formatNumber(cobranzaStat.amount, { kind: "money" })}
+                        </Link>
+                        <div className="mt-4 grid gap-2 border-t pt-3">
+                          {cobranzaStat.breakdown.map((part) => (
+                            <Link
+                              key={part.label}
+                              href={detailHref(part.fuentes)}
+                              className="flex items-center justify-between gap-3 text-sm hover:text-primary hover:underline"
+                            >
+                              <span className="text-muted-foreground">{part.label}</span>
+                              <span className="font-mono font-semibold">
+                                {formatNumber(part.amount, { kind: "money" })}
+                              </span>
+                            </Link>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              )}
 
               <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card
@@ -616,7 +704,7 @@ export default function CajaTiempoReal() {
           <DialogHeader>
             <DialogTitle>
               {breakdownConcept === "COBRADO"
-                ? "Cobrado (Caja)"
+                ? "Contado cobrado"
                 : breakdownConcept === "CREDITO"
                   ? "Ventas a crédito"
                   : breakdownConcept === "CANCELADAS"
