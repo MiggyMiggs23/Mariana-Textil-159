@@ -48,6 +48,9 @@ Thumbs.db
 .cache/
 .local/
 
+# Read-only export verifier raw XLSX/PDF/PNG output is local-only evidence.
+reports/exports/
+
 # User-provided implementation prompts are inputs, not source code.
 attached_assets/Pasted--PROMPT-Precios-Supervisor-Auditor-a-Protecciones-y-Exi_1787713622072.txt
 attached_assets/Pasted--CORRECCI-N-Gr-ficas-limpieza-de-datos-y-nombres-de-cue_1787856761271.txt

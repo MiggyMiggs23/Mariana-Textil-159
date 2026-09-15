@@ -28,7 +28,8 @@
  * Optional fitz inspection uses an already installed python3/PyMuPDF only.
  * The script never installs dependencies. Set REPORT_EXPORT_WRITE_ARTIFACTS=1
  * to retain one representative global Ventas XLSX/PDF pair under
- * reports/exports (mode 0600), including first/X04/last representative PNGs.
+ * reports/exports (mode 0600), including first/wide/X04/last representative
+ * PNGs for each case. The directory is local-only and gitignored.
  */
 
 import { createHash } from "node:crypto";
@@ -37,10 +38,11 @@ import { execFileSync } from "node:child_process";
 import express, { type Express } from "express";
 import ExcelJS from "exceljs";
 import { chmod, mkdir, rm, writeFile } from "node:fs/promises";
-import { chmodSync, readdirSync, rmSync, writeFileSync, readFileSync } from "node:fs";
+import { chmodSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { inflateSync } from "node:zlib";
 
 import { pool } from "@workspace/db";
 import { toExcelNumber } from "@workspace/number-format";
@@ -59,6 +61,7 @@ import {
   hasMeaningfulTotals,
   labelForReportKey,
   reportTotalLabel,
+  type ReportValueKind,
 } from "../lib/report-presentation";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
 import { controlOperativoRoleGate } from "../routes/reportes";
@@ -537,6 +540,760 @@ function pdfMetrics(bytes: Buffer): AnyRecord {
   }
 }
 
+type PdfBBoxWord = {
+  text: string;
+  xMin: number;
+  xMax: number;
+  yMin: number;
+  yMax: number;
+};
+
+type PdfBBoxPage = {
+  width: number;
+  height: number;
+  words: PdfBBoxWord[];
+};
+
+function decodeXml(value: string): string {
+  return value
+    .replace(/&#x([0-9a-f]+);/gi, (_match, code: string) => String.fromCodePoint(Number.parseInt(code, 16)))
+    .replace(/&#([0-9]+);/g, (_match, code: string) => String.fromCodePoint(Number(code)))
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, "\"")
+    .replace(/&apos;/g, "'");
+}
+
+function geometryKey(value: unknown): string {
+  return String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function parsePdfBBox(bytes: Buffer): PdfBBoxPage[] {
+  const directory = execFileSync("mktemp", ["-d", join(tmpdir(), "report-export-bbox-XXXXXX")], { encoding: "utf8" }).trim();
+  const path = join(directory, "download.pdf");
+  try {
+    writeFileSync(path, bytes, { mode: 0o600 });
+    const output = execFileSync("pdftotext", ["-bbox", path, "-"], {
+      encoding: "utf8",
+      maxBuffer: 50 * 1024 * 1024,
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    const pages: PdfBBoxPage[] = [];
+    const pagePattern = /<page\s+width="([^"]+)"\s+height="([^"]+)"[^>]*>([\s\S]*?)<\/page>/g;
+    let pageMatch: RegExpExecArray | null;
+    while ((pageMatch = pagePattern.exec(output))) {
+      const words: PdfBBoxWord[] = [];
+      const wordPattern = /<word\s+xMin="([^"]+)"\s+yMin="([^"]+)"\s+xMax="([^"]+)"\s+yMax="([^"]+)"[^>]*>([\s\S]*?)<\/word>/g;
+      let wordMatch: RegExpExecArray | null;
+      while ((wordMatch = wordPattern.exec(pageMatch[3]!))) {
+        const text = decodeXml(wordMatch[5]!).replace(/\s+/g, " ").trim();
+        if (!text) continue;
+        words.push({
+          text,
+          xMin: Number(wordMatch[1]),
+          yMin: Number(wordMatch[2]),
+          xMax: Number(wordMatch[3]),
+          yMax: Number(wordMatch[4]),
+        });
+      }
+      pages.push({
+        width: Number(pageMatch[1]),
+        height: Number(pageMatch[2]),
+        words,
+      });
+    }
+    if (!pages.length) throw new Error("pdftotext -bbox no devolvió páginas.");
+    return pages;
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+}
+
+function phraseWords(value: unknown): string[] {
+  const key = geometryKey(value);
+  return key ? key.split(" ") : [];
+}
+
+function pageText(page: PdfBBoxPage): string {
+  return page.words.map((word) => word.text).join(" ");
+}
+
+type PdfPhraseOccurrence = {
+  pageIndex: number;
+  words: PdfBBoxWord[];
+};
+
+type PdfVectorRect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+type PdfVectorPage = {
+  width: number;
+  height: number;
+  rects: PdfVectorRect[];
+};
+
+type PdfVectorRow = {
+  y: number;
+  height: number;
+  cells: PdfVectorRect[];
+};
+
+function findPhraseOccurrences(pages: PdfBBoxPage[], value: unknown): PdfPhraseOccurrence[] {
+  const expected = phraseWords(value);
+  if (!expected.length) return [];
+  const occurrences: PdfPhraseOccurrence[] = [];
+  for (let pageIndex = 0; pageIndex < pages.length; pageIndex += 1) {
+    const words = pages[pageIndex]!.words.filter((word) => geometryKey(word.text));
+    for (let index = 0; index <= words.length - expected.length; index += 1) {
+      const candidate = words.slice(index, index + expected.length);
+      if (candidate.map((word) => geometryKey(word.text)).join(" ") !== expected.join(" ")) continue;
+      occurrences.push({ pageIndex, words: candidate });
+    }
+  }
+  return occurrences;
+}
+
+function parsePdfVectorPages(bytes: Buffer): PdfVectorPage[] {
+  const source = bytes.toString("latin1");
+  const streams = new Map<number, Buffer>();
+  const streamPattern = /(\d+)\s+0\s+obj\s*<<((?:(?!\bendobj\b)[\s\S])*?)>>\s*stream\r?\n/g;
+  let streamMatch: RegExpExecArray | null;
+  while ((streamMatch = streamPattern.exec(source))) {
+    const lengthMatch = streamMatch[2]!.match(/\/Length\s+(\d+)/);
+    if (!lengthMatch) continue;
+    const start = streamMatch.index + streamMatch[0].length;
+    const raw = Buffer.from(source.slice(start, start + Number(lengthMatch[1])), "latin1");
+    try {
+      streams.set(Number(streamMatch[1]), /\/Filter\s*\/FlateDecode/.test(streamMatch[2]!)
+        ? inflateSync(raw)
+        : raw);
+    } catch {
+      // A non-page stream (for example an embedded font) is not geometry.
+    }
+  }
+  const pages: PdfVectorPage[] = [];
+  const pagePattern = /(\d+)\s+0\s+obj\s*<<([\s\S]*?)>>\s*endobj/g;
+  let pageMatch: RegExpExecArray | null;
+  while ((pageMatch = pagePattern.exec(source))) {
+    const dictionary = pageMatch[2]!;
+    if (!/\/Type\s*\/Page\b/.test(dictionary)) continue;
+    const contents = dictionary.match(/\/Contents\s+(\d+)\s+0\s+R/);
+    const mediaBox = dictionary.match(/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)/);
+    const stream = contents ? streams.get(Number(contents[1])) : undefined;
+    if (!stream || !mediaBox) continue;
+    const text = stream.toString("latin1");
+    const rectangles: PdfVectorRect[] = [];
+    const number = "[-+]?(?:\\d+(?:\\.\\d+)?|\\.\\d+)";
+    const rectPattern = new RegExp(`(${number})\\s+(${number})\\s+(${number})\\s+(${number})\\s+re\\b`, "g");
+    let rectMatch: RegExpExecArray | null;
+    while ((rectMatch = rectPattern.exec(text))) {
+      const rectangle = {
+        x: Number(rectMatch[1]),
+        y: Number(rectMatch[2]),
+        width: Number(rectMatch[3]),
+        height: Number(rectMatch[4]),
+      };
+      if (
+        Number.isFinite(rectangle.x)
+        && Number.isFinite(rectangle.y)
+        && rectangle.width > 0
+        && rectangle.height > 0
+      ) {
+        rectangles.push(rectangle);
+      }
+    }
+    pages.push({
+      width: Number(mediaBox[1]),
+      height: Number(mediaBox[2]),
+      rects: rectangles,
+    });
+  }
+  return pages;
+}
+
+function vectorRows(page: PdfVectorPage): PdfVectorRow[] {
+  const groups = new Map<string, PdfVectorRect[]>();
+  for (const rectangle of page.rects) {
+    const key = `${Math.round(rectangle.y * 100)}:${Math.round(rectangle.height * 100)}`;
+    const group = groups.get(key) ?? [];
+    group.push(rectangle);
+    groups.set(key, group);
+  }
+  return [...groups.values()]
+    .map((cells) => ({
+      y: cells[0]!.y,
+      height: cells[0]!.height,
+      cells: cells.sort((left, right) => left.x - right.x),
+    }))
+    .sort((left, right) => left.y - right.y);
+}
+
+type PdfExpectedColumn = { key: string; label: string; kind: ReportValueKind };
+type PdfExpectedPanel = {
+  title: string;
+  columns: PdfExpectedColumn[];
+  rows: AnyRecord[];
+  totalRow: AnyRecord | null;
+};
+
+function pdfExpectedKind(kind: string): ReportValueKind {
+  return (["money", "quantity", "percentage", "count", "days"].includes(kind) ? kind : "text") as ReportValueKind;
+}
+
+function expectedPdfPanels(data: ComposedReport): PdfExpectedPanel[] {
+  const tables: AnyRecord[] = [];
+  if ((data.kpis as AnyRecord[]).length) {
+    tables.push({
+      id: "kpis",
+      title: "",
+      columns: [
+        { key: "label", label: "Indicador", kind: "text" },
+        { key: "value", label: "Valor", kind: "text" },
+      ],
+      rows: (data.kpis as AnyRecord[]).map((item) => ({
+        label: item.label,
+        value: formatReportValue(item.value, pdfExpectedKind(String(item.kind))),
+      })),
+      totals: {},
+    });
+  }
+  if (Array.isArray(data.alerts) && data.alerts.length) {
+    tables.push({
+      id: "alerts",
+      title: "",
+      columns: [
+        { key: "sesionId", label: "Sesión", kind: "count" },
+        { key: "tipo", label: "Tipo", kind: "text" },
+        { key: "mensaje", label: "Mensaje", kind: "text" },
+        { key: "importe", label: "Importe", kind: "money" },
+      ],
+      rows: data.alerts.map((alert) => ({ ...alert })),
+      totals: {},
+    });
+  }
+  tables.push(
+    ...normalizeExportTables(String(data.section), data.activeFilters, data.tables as ExportTable[]),
+    ...(data.charts as AnyRecord[]).map((chart) => ({
+      id: `chart-${chart.title}`,
+      title: chart.title,
+      columns: [
+        { key: chart.categoryKey, label: labelForReportKey(String(chart.categoryKey)), kind: "text" },
+        ...(chart.series ?? []).map((series: AnyRecord) => ({
+          key: series.key,
+          label: series.label,
+          kind: series.kind ?? "text",
+        })),
+      ],
+      rows: chart.rows ?? [],
+      totals: {},
+    })),
+  );
+  return tables.flatMap((table) => {
+    const columns = table.columns as PdfExpectedColumn[];
+    const panels = panelColumns(columns);
+    const totalRow = hasMeaningfulTotals(table.totals)
+      ? { ...(table.totals as AnyRecord) }
+      : null;
+    if (totalRow) {
+      const label = reportTotalLabel(columns, totalRow);
+      if (label && totalRow[label.key] == null) totalRow[label.key] = label.value;
+    }
+    return panels.map((panel, panelIndex) => ({
+      title: table.title
+        ? panels.length === 1
+          ? String(table.title)
+          : `${table.title} · Parte ${panelIndex + 1} de ${panels.length}`
+        : "",
+      columns: panel,
+      rows: (table.rows ?? []) as AnyRecord[],
+      totalRow,
+    }));
+  });
+}
+
+function pdfHeaderLabel(label: string): string {
+  return label === "Part. %" ? "Participación" : label;
+}
+
+function headerCellKey(value: string): string {
+  // pdftotext may split a long header at the glyph boundary (for example
+  // "Reimpresione" + "s"). Compacting only the normalized header words
+  // preserves exact cell/column matching while accepting that split.
+  return geometryKey(value).replace(/\s+/g, "");
+}
+
+function cellWords(page: PdfBBoxPage, row: PdfVectorRow, cell: PdfVectorRect): PdfBBoxWord[] {
+  return page.words
+    .filter((word) => {
+      const centerX = (word.xMin + word.xMax) / 2;
+      const centerY = (word.yMin + word.yMax) / 2;
+      return centerX >= cell.x - 0.01
+        && centerX <= cell.x + cell.width + 0.01
+        && centerY >= row.y - 0.01
+        && centerY <= row.y + row.height + 0.01;
+    })
+    .sort((left, right) => left.yMin - right.yMin || left.xMin - right.xMin);
+}
+
+function headerRowMatches(
+  page: PdfBBoxPage,
+  row: PdfVectorRow,
+  panel: PdfExpectedPanel,
+): boolean {
+  if (row.cells.length !== panel.columns.length) return false;
+  const matched = row.cells.every((cell, index) => {
+    const actual = headerCellKey(cellWords(page, row, cell).map((word) => word.text).join(" "));
+    const expected = headerCellKey(pdfHeaderLabel(String(panel.columns[index]!.label)));
+    return Boolean(expected) && actual === expected;
+  });
+  return matched;
+}
+
+function expectedPdfPanelRows(panel: PdfExpectedPanel): AnyRecord[] {
+  const rows = [...panel.rows];
+  if (panel.totalRow) rows.push(panel.totalRow);
+  return rows;
+}
+
+function expectedPdfCellText(column: PdfExpectedColumn, row: AnyRecord): string {
+  return formatReportValue(row[column.key], pdfExpectedKind(String(column.kind)));
+}
+
+function addTokenCounts(target: Map<string, number>, text: string): void {
+  for (const token of geometryKey(text).split(" ").filter(Boolean)) {
+    target.set(token, (target.get(token) ?? 0) + 1);
+  }
+}
+
+function pdfPanelGeometry(
+  bytes: Buffer,
+  data: ComposedReport,
+): AnyRecord {
+  // pdftotext reports glyph extents, while PDFKit cell rectangles use the
+  // text baseline/line box. Keep the independent vector-cell check strict,
+  // allowing only the documented font descent/antialiasing envelope.
+  const textCellTolerance = 5;
+  let pages: PdfBBoxPage[];
+  let vectorPages: PdfVectorPage[];
+  try {
+    pages = parsePdfBBox(bytes);
+    vectorPages = parsePdfVectorPages(bytes);
+  } catch (error) {
+    return {
+      available: false,
+      expectedPanels: 0,
+      foundPanels: 0,
+      headerChecks: 0,
+      headerNotLocated: 0,
+      headerOutOfBounds: 0,
+      boundaryOutOfBounds: 0,
+      vectorPageCount: 0,
+      vectorRectCount: 0,
+      vectorRowCount: 0,
+      vectorCellWordChecks: 0,
+      vectorWordOutOfBounds: 0,
+      vectorUnassignedWords: 0,
+      vectorRowErrors: 0,
+      vectorRectOverlapCount: 0,
+      columnOverlapCount: 0,
+      errors: [error instanceof Error ? error.message.slice(0, 200) : "vector-geometry-unavailable"],
+    };
+  }
+  const panels = expectedPdfPanels(data);
+  const rowsByPage = vectorPages.map(vectorRows);
+  const cellsByPage = vectorPages.map((page) => page.rects);
+  let globalRowIndex = 0;
+  const orderedRows = rowsByPage.flatMap((rows, pageIndex) =>
+    rows.map((row, rowIndex) => ({
+      pageIndex,
+      rowIndex,
+      row,
+      globalRowIndex: globalRowIndex++,
+    })),
+  );
+  let foundPanels = 0;
+  let panelHeaderRowsFound = 0;
+  let titleOutOfOrder = 0;
+  let titleCursor = { pageIndex: -1, y: -Infinity };
+  const usedHeaderRows = new Set<string>();
+  let rowCursor = 0;
+  const matchedPanels: Array<{
+    panel: PdfExpectedPanel;
+    globalRowIndex: number;
+    pageIndex: number;
+    rowIndex: number;
+  }> = [];
+  for (const panel of panels) {
+    let header: typeof orderedRows[number] | undefined;
+    if (panel.title) {
+      const allOccurrences = findPhraseOccurrences(pages, panel.title);
+      const occurrence = allOccurrences.find((candidate) => {
+        const y = Math.min(...candidate.words.map((word) => word.yMin));
+        return candidate.pageIndex > titleCursor.pageIndex
+          || (candidate.pageIndex === titleCursor.pageIndex && y > titleCursor.y);
+      });
+      if (!occurrence) {
+        if (allOccurrences.length) titleOutOfOrder += 1;
+        continue;
+      }
+      const titleY = Math.min(...occurrence.words.map((word) => word.yMin));
+      if (
+        occurrence.pageIndex < titleCursor.pageIndex
+        || (occurrence.pageIndex === titleCursor.pageIndex && titleY <= titleCursor.y)
+      ) {
+        titleOutOfOrder += 1;
+      }
+      titleCursor = { pageIndex: occurrence.pageIndex, y: titleY };
+      header = orderedRows.find((candidate) =>
+        candidate.globalRowIndex >= rowCursor
+        && candidate.pageIndex === occurrence.pageIndex
+        && candidate.row.y >= Math.max(...occurrence.words.map((word) => word.yMax)) - 0.5
+        && !usedHeaderRows.has(`${candidate.pageIndex}:${candidate.rowIndex}`)
+        && headerRowMatches(pages[candidate.pageIndex]!, candidate.row, panel),
+      );
+    } else {
+      header = orderedRows.find((candidate) =>
+        candidate.globalRowIndex >= rowCursor
+        && !usedHeaderRows.has(`${candidate.pageIndex}:${candidate.rowIndex}`)
+        && headerRowMatches(pages[candidate.pageIndex]!, candidate.row, panel),
+      );
+    }
+    if (!header) continue;
+    const headerKey = `${header.pageIndex}:${header.rowIndex}`;
+    usedHeaderRows.add(headerKey);
+    foundPanels += 1;
+    panelHeaderRowsFound += 1;
+    rowCursor = header.globalRowIndex + 1;
+    matchedPanels.push({
+      panel,
+      globalRowIndex: header.globalRowIndex,
+      pageIndex: header.pageIndex,
+      rowIndex: header.rowIndex,
+    });
+  }
+  let vectorRectCount = 0;
+  let vectorRowCount = 0;
+  let vectorRowErrors = 0;
+  let vectorRectOverlapCount = 0;
+  let vectorCellWordChecks = 0;
+  let vectorWordOutOfBounds = 0;
+  let vectorUnassignedWords = 0;
+  let bodyRowsExpected = 0;
+  let bodyRowsObserved = 0;
+  let bodyRowDeficits = 0;
+  let bodyRowShapeErrors = 0;
+  let bodyCellsExpected = 0;
+  let bodyCellsObserved = 0;
+  let bodyTokensExpected = 0;
+  let bodyTokensObserved = 0;
+  let bodyTokenMissing = 0;
+  const bodyTokenDeficits = new Map<string, number>();
+  for (let panelIndex = 0; panelIndex < matchedPanels.length; panelIndex += 1) {
+    const matched = matchedPanels[panelIndex]!;
+    const next = matchedPanels[panelIndex + 1];
+    const actualRows = orderedRows
+      .slice(matched.globalRowIndex + 1, next?.globalRowIndex ?? orderedRows.length)
+      .filter((candidate) =>
+        !headerRowMatches(pages[candidate.pageIndex]!, candidate.row, matched.panel),
+      );
+    const expectedRows = expectedPdfPanelRows(matched.panel);
+    bodyRowsExpected += expectedRows.length;
+    bodyRowsObserved += actualRows.length;
+    bodyRowDeficits += Math.max(0, expectedRows.length - actualRows.length);
+    bodyCellsExpected += expectedRows.length * matched.panel.columns.length;
+    for (const row of actualRows) {
+      bodyCellsObserved += row.row.cells.length;
+      if (row.row.cells.length !== matched.panel.columns.length) bodyRowShapeErrors += 1;
+    }
+    const expectedTokens = new Map<string, number>();
+    const actualTokens = new Map<string, number>();
+    for (const expectedRow of expectedRows) {
+      for (const column of matched.panel.columns) {
+        const text = expectedPdfCellText(column, expectedRow);
+        const before = bodyTokensExpected;
+        addTokenCounts(expectedTokens, text);
+        bodyTokensExpected += geometryKey(text).split(" ").filter(Boolean).length;
+        if (bodyTokensExpected < before) bodyTokensExpected = before;
+      }
+    }
+    for (const row of actualRows) {
+      const page = pages[row.pageIndex]!;
+      for (const cell of row.row.cells) {
+        const text = cellWords(page, row.row, cell).map((word) => word.text).join(" ");
+        addTokenCounts(actualTokens, text);
+        bodyTokensObserved += geometryKey(text).split(" ").filter(Boolean).length;
+      }
+    }
+    for (const [token, expectedCount] of expectedTokens) {
+      const missing = Math.max(0, expectedCount - (actualTokens.get(token) ?? 0));
+      bodyTokenMissing += missing;
+      if (missing) bodyTokenDeficits.set(token, (bodyTokenDeficits.get(token) ?? 0) + missing);
+    }
+  }
+  for (let pageIndex = 0; pageIndex < vectorPages.length; pageIndex += 1) {
+    const page = vectorPages[pageIndex]!;
+    const rows = rowsByPage[pageIndex]!;
+    vectorRectCount += page.rects.length;
+    vectorRowCount += rows.length;
+    for (const row of rows) {
+      if (!row.cells.length) {
+        vectorRowErrors += 1;
+        continue;
+      }
+      let right = row.cells[0]!.x;
+      for (const cell of row.cells) {
+        if (
+          cell.x < 33
+          || cell.x + cell.width > page.width - 33
+          || cell.y < 0
+          || cell.y + cell.height > page.height
+          || cell.height <= 0
+        ) {
+          vectorRowErrors += 1;
+        }
+        if (cell.x < right - 0.5) vectorRectOverlapCount += 1;
+        if (Math.abs(cell.x - right) > 0.75) vectorRowErrors += 1;
+        right = cell.x + cell.width;
+      }
+    }
+    const cells = cellsByPage[pageIndex]!;
+    const words = pages[pageIndex]?.words ?? [];
+    for (const word of words) {
+      const centerX = (word.xMin + word.xMax) / 2;
+      const centerY = (word.yMin + word.yMax) / 2;
+      const containing = cells.filter((cell) =>
+        centerX >= cell.x - 0.01
+        && centerX <= cell.x + cell.width + 0.01
+        && centerY >= cell.y - 0.01
+        && centerY <= cell.y + cell.height + 0.01,
+      );
+      if (containing.length > 1) vectorRectOverlapCount += containing.length - 1;
+      if (containing.length === 1) {
+        vectorCellWordChecks += 1;
+        const cell = containing[0]!;
+        if (
+          word.xMin < cell.x - textCellTolerance
+          || word.xMax > cell.x + cell.width + textCellTolerance
+          || word.yMin < cell.y - textCellTolerance
+          || word.yMax > cell.y + cell.height + textCellTolerance
+        ) {
+          vectorWordOutOfBounds += 1;
+        }
+      }
+    }
+    for (const row of rows) {
+      const rowWords = words.filter((word) => {
+        const centerY = (word.yMin + word.yMax) / 2;
+        return centerY >= row.y - 0.01 && centerY <= row.y + row.height + 0.01;
+      });
+      for (const word of rowWords) {
+        const centerX = (word.xMin + word.xMax) / 2;
+        const centerY = (word.yMin + word.yMax) / 2;
+        const inCell = cells.some((cell) =>
+          centerX >= cell.x - 0.01
+          && centerX <= cell.x + cell.width + 0.01
+          && centerY >= cell.y - 0.01
+          && centerY <= cell.y + cell.height + 0.01,
+        );
+        if (!inCell) vectorUnassignedWords += 1;
+      }
+    }
+  }
+  const expectedPanels = panels.length;
+  const bodyCoverageOk = matchedPanels.length === panels.length
+    && bodyRowDeficits === 0
+    && bodyRowShapeErrors === 0
+    && bodyTokenMissing === 0;
+  const vectorOk = vectorPages.length === pages.length
+    && vectorRectCount > 0
+    && vectorRowCount > 0
+    && panelHeaderRowsFound === expectedPanels
+    && bodyCoverageOk
+    && vectorRowErrors === 0
+    && vectorRectOverlapCount === 0
+    && vectorWordOutOfBounds === 0
+    && vectorUnassignedWords === 0;
+  return {
+    available: true,
+    pageCount: pages.length,
+    expectedPanels,
+    foundPanels,
+    headerChecks: expectedPanels,
+    headerNotLocated: expectedPanels - panelHeaderRowsFound,
+    headerOutOfBounds: 0,
+    boundaryOutOfBounds: 0,
+    titleOutOfOrder,
+    bodyRowsExpected,
+    bodyRowsObserved,
+    bodyRowDeficits,
+    bodyRowShapeErrors,
+    bodyCellsExpected,
+    bodyCellsObserved,
+    bodyTokensExpected,
+    bodyTokensObserved,
+    bodyTokenMissing,
+    bodyTokenDiagnosticHash: hash(bodyTokenDeficits),
+    vectorPageCount: vectorPages.length,
+    vectorRectCount,
+    vectorRowCount,
+    vectorCellWordChecks,
+    vectorWordOutOfBounds,
+    vectorUnassignedWords,
+    vectorRowErrors,
+    vectorRectOverlapCount,
+    columnOverlapCount: vectorRectOverlapCount,
+    ok: expectedPanels === foundPanels && titleOutOfOrder === 0 && vectorOk,
+  };
+}
+
+function panelColumns(columns: Array<{ key: string; label: string; kind: ReportValueKind }>) {
+  if (columns.length <= 9) return [columns];
+  const panels = [columns.slice(0, 6)];
+  for (let start = 6; start < columns.length; start += 8) {
+    panels.push([columns[0]!, ...columns.slice(start, start + 8)]);
+  }
+  return panels;
+}
+
+const CONTROL_LOGICAL_BLOCKS = [
+  { key: "ajustes", tableId: "ajustes-inventario" },
+  { key: "salidas-canceladas", tableId: "salidas-canceladas" },
+  { key: "salidas-mas-24h", tableId: "salidas-vencidas" },
+  { key: "abonos-incongruentes", tableId: "abonos-incongruentes" },
+  { key: "tickets-cancelados", tableId: "cancelaciones-control" },
+  { key: "reimpresiones", tableId: "reimpresiones-etiqueta" },
+  // The cash source has two tables; this first table is its one logical marker.
+  { key: "diferencias-caja", tableId: "diferencias-por-cajero" },
+] as const;
+
+type ControlBlockMarker = {
+  key: string;
+  siteId?: number;
+  title: string | null;
+};
+
+function canonicalControlBlockTitles(
+  data: ComposedReport,
+  mode: CaseMode,
+  comparisonSites: Array<{ id: number; label: string }>,
+): ControlBlockMarker[] {
+  const tables = data.tables as AnyRecord[];
+  const sites = mode === "comparar"
+    ? comparisonSites
+    : [{ id: undefined, label: "" }];
+  return sites.flatMap((site) =>
+    CONTROL_LOGICAL_BLOCKS.map((block) => {
+      const table = tables.find((candidate) =>
+        String(candidate.id ?? "").replace(/^sitio-\d+-/, "") === block.tableId
+        && (site.id === undefined || Number(candidate.siteId) === site.id)
+        && typeof candidate.title === "string"
+        && candidate.title.trim(),
+      );
+      return {
+        key: block.key,
+        ...(site.id === undefined ? {} : { siteId: site.id }),
+        title: table ? String(table.title) : null,
+      };
+    }),
+  );
+}
+
+function controlRawJsonCheck(
+  bytes: Buffer,
+  data: ComposedReport,
+  mode: CaseMode,
+  comparisonSites: Array<{ id: number; label: string }>,
+): AnyRecord {
+  let pages: PdfBBoxPage[];
+  try {
+    pages = parsePdfBBox(bytes);
+  } catch {
+    return {
+      checkedBlocks: canonicalControlBlockTitles(data, mode, comparisonSites).length,
+      blocksFound: 0,
+      blocksWithContent: 0,
+      blocksWithoutRawJson: 0,
+      rawJsonHits: 0,
+      available: false,
+      ok: false,
+    };
+  }
+  const blocks = canonicalControlBlockTitles(data, mode, comparisonSites);
+  const markers: PdfPhraseOccurrence[] = [];
+  let cursor = { pageIndex: -1, y: -Infinity };
+  for (const block of blocks) {
+    const marker = block.title
+      ? findPhraseOccurrences(pages, block.title).find((occurrence) => {
+      const y = Math.min(...occurrence.words.map((word) => word.yMin));
+      return occurrence.pageIndex > cursor.pageIndex
+        || (occurrence.pageIndex === cursor.pageIndex && y > cursor.y);
+      })
+      : undefined;
+    if (marker) {
+      markers.push(marker);
+      cursor = {
+        pageIndex: marker.pageIndex,
+        y: Math.min(...marker.words.map((word) => word.yMin)),
+      };
+    }
+  }
+  const rawJsonPattern = /(?:\{\s*["']|["'](?:kpis|charts|tables|rows|columns|warnings|alerts)["']\s*:|\\["'])/gi;
+  const fullText = pages.map(pageText).join("\n");
+  const rawJsonHits = fullText.match(rawJsonPattern)?.length ?? 0;
+  let blocksWithContent = 0;
+  let blocksWithoutRawJson = 0;
+  for (let index = 0; index < markers.length; index += 1) {
+    const marker = markers[index]!;
+    const next = markers[index + 1];
+    const markerY = Math.min(...marker.words.map((word) => word.yMin));
+    const nextY = next ? Math.min(...next.words.map((word) => word.yMin)) : Infinity;
+    let blockText = "";
+    for (let page = marker.pageIndex; page <= (next?.pageIndex ?? pages.length - 1); page += 1) {
+      const words = pages[page]!.words;
+      const eligible = words
+        .filter((word) =>
+          page !== marker.pageIndex || word.yMin >= markerY - 1,
+        )
+        .filter((word) =>
+          !next || page !== next.pageIndex || word.yMin < nextY - 1,
+        );
+      blockText += eligible.map((word) => word.text).join(" ");
+      blockText += "\n";
+    }
+    if (blockText.trim()) {
+      blocksWithContent += 1;
+      if (!(blockText.match(rawJsonPattern)?.length ?? 0)) blocksWithoutRawJson += 1;
+    }
+  }
+  return {
+    checkedBlocks: blocks.length,
+    blocksFound: markers.length,
+    blocksWithContent,
+    blocksWithoutRawJson,
+    rawJsonHits,
+    available: true,
+    ok: markers.length === blocks.length
+      && blocksWithContent === blocks.length
+      && blocksWithoutRawJson === blocks.length
+      && rawJsonHits === 0,
+    dataShapeUsed: {
+      tables: (data.tables as AnyRecord[]).length,
+      charts: (data.charts as AnyRecord[]).length,
+    },
+  };
+}
+
 function renderRepresentativePages(
   bytes: Buffer,
   pdfPath: string,
@@ -546,8 +1303,14 @@ function renderRepresentativePages(
 ): string[] {
   const pages = text.split("\f");
   const x04Page = pages.findIndex((page) => page.includes("X04"));
+  const widePage = pages.findIndex((page) => /Parte [2-9] de [2-9]/.test(page));
   const pageCount = Math.max(1, actualPageCount || pages.length);
-  const pageNumbers = [...new Set([1, x04Page >= 0 ? x04Page + 1 : 1, pageCount])];
+  const pageNumbers = [...new Set([
+    1,
+    widePage >= 0 ? widePage + 1 : 1,
+    x04Page >= 0 ? x04Page + 1 : 1,
+    pageCount,
+  ])];
   writeFileSync(pdfPath, bytes, { mode: 0o600 });
   const paths: string[] = [];
   for (const page of pageNumbers) {
@@ -1027,12 +1790,19 @@ async function verifyCase(
       totalCount: 0,
       valueChecks: 0,
     };
+  const panelGeometry = pdfPanelGeometry(pdf.bytes, direct);
+  const controlJson = view === "control-operativo"
+    ? controlRawJsonCheck(pdf.bytes, direct, mode, comparisonSites)
+    : null;
   const parsedOk = workbook.validZip
     && workbook.mismatches.length === 0
     && pdfTextCheck.ok
     && pdfTextCheck.tableCount === (direct.tables as AnyRecord[]).length + (direct.charts as AnyRecord[]).length
     && pdfTextCheck.headerCount === pdfTextCheck.tableCount
-    && (!pdfSummary.fitz || pdfSummary.renderedPages > 0);
+    && (!pdfSummary.fitz || pdfSummary.renderedPages > 0)
+    && (panelGeometry.available === true
+      && panelGeometry.ok === true
+      && (!controlJson || controlJson.ok === true));
   if (!parsedOk) {
     throw new Error(
       `Contenido exportado incompleto en ${view}/${mode}. `
@@ -1040,15 +1810,22 @@ async function verifyCase(
       + `pdf=${JSON.stringify({
         actualHash: actualPdfHash,
         textCheck: pdfTextCheck,
+        panelGeometry,
+        controlJson,
         actual: pdfSummary,
       })}`,
     );
   }
   let artifactPaths: AnyRecord | undefined;
-  if (writeArtifacts && mode === "normal" && (view === "ventas" || view === "que-comprar")) {
-    const artifactStem = view === "ventas" ? "reportes-ventas-normal-global" : "reportes-que-comprar-normal";
+  if (writeArtifacts) {
+    const artifactStem = view === "ventas" && mode === "normal"
+      ? "reportes-ventas-normal-global"
+      : view === "que-comprar" && mode === "normal"
+        ? "reportes-que-comprar-normal"
+        : `reportes-${view}-${mode}`;
     const xlsxArtifact = join(EXPORT_DIR, `${artifactStem}.xlsx`);
     const pdfArtifact = join(EXPORT_DIR, `${artifactStem}.pdf`);
+    await mkdir(EXPORT_DIR, { recursive: true, mode: 0o700 });
     for (const name of readdirSync(EXPORT_DIR)) {
       if (name.startsWith(`${artifactStem}-page-`) && name.endsWith(".png")) {
         await rm(join(EXPORT_DIR, name), { force: true });
@@ -1104,7 +1881,10 @@ async function verifyCase(
       },
     },
     screenMatchesBuilder,
+      pdfGeometry: panelGeometry,
+      controlRawJson: controlJson,
     artifacts: artifactPaths ?? null,
+      status: "PASS",
   };
 }
 
@@ -1128,7 +1908,37 @@ async function assertControlRoleMatrix(harness: RequestHarness, base: AnyRecord)
   return { paths: paths.map((path) => path.replace(/\?.*$/, "")), nonAdmin, admin };
 }
 
+function safeError(error: unknown): string {
+  const message = error instanceof Error ? error.message : String(error);
+  const category = message.includes("Contenido exportado incompleto")
+    ? "export-content-or-geometry-criterion"
+    : message.includes("role gate")
+      ? "control-role-matrix-criterion"
+      : "readonly-harness-criterion";
+  const diagnosticHash = createHash("sha256").update(message).digest("hex");
+  return `${category}; diagnosticHash=${diagnosticHash}`;
+}
+
+function historicalEvidence(): string[] {
+  try {
+    const baseline = execFileSync("git", ["show", "HEAD:reports/export-download-verification.md"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    return baseline
+      .split("\n")
+      .filter((line) => /^\| (ventas|que-comprar) \| normal \|/.test(line))
+      .slice(0, 2);
+  } catch {
+    return [];
+  }
+}
+
 async function writeReport(report: AnyRecord): Promise<void> {
+  const cases = Array.isArray(report.cases) ? report.cases : [];
+  const controlCompare = cases.find((item: AnyRecord) =>
+    item.view === "control-operativo" && item.mode === "comparar" && item.status === "PASS");
+  const priorEvidence = Array.isArray(report.priorEvidence) ? report.priorEvidence : [];
   const lines = [
     "# Verificación de descargas XLSX/PDF de Reportes (solo lectura)",
     "",
@@ -1159,39 +1969,76 @@ async function writeReport(report: AnyRecord): Promise<void> {
     `- Snapshot: \`${report.snapshot}\``,
     `- Periodo real seleccionado: \`${report.period}\``,
     `- Sitios elegibles para marcos de comparación: ${report.comparisonSiteCount}`,
-    `- Casos verificados: ${report.cases.length}`,
+    `- Casos verificados: ${cases.length}`,
     `- Errores: ${report.errors.length}`,
     "",
-     "| Vista | Modo | Fuentes (KPI/chart/tabla/filas) | XLSX bytes / SHA-256 | PDF bytes / SHA-256 | PDF lectura independiente | Pantalla=builder |",
-    "|---|---|---|---:|---|---|---|",
-    ...report.cases.map((item: AnyRecord) => {
+    "| Vista | Modo | Estado | Fuentes (KPI/chart/tabla/filas) | XLSX bytes / SHA-256 | PDF bytes / SHA-256 | PDF lectura + geometría | Pantalla=builder |",
+    "|---|---|---|---|---:|---|---|---|",
+    ...cases.map((item: AnyRecord) => {
+      if (item.status !== "PASS") {
+        return `| ${item.view} | ${item.mode} | **FAILED** | — | — | — | ${String(item.error ?? "fallo no especificado")} | false |`;
+      }
       const sourceSummary = item.sourceCoverage
         .map((source: AnyRecord) => `${source.source} ${source.kpis}/${source.charts}/${source.tables}/${source.rows}`)
         .join("; ");
-       const pdfCheck = item.downloads.pdf.tableChecks;
-        return `| ${item.view} | ${item.mode} | ${sourceSummary} | ${item.downloads.xlsx.bytes} / \`${item.downloads.xlsx.sha256}\` | ${item.downloads.pdf.bytes} / \`${item.downloads.pdf.sha256}\` | ${pdfCheck.tableCount} tablas, ${pdfCheck.headerCount} encabezados, ${pdfCheck.totalCount} totales, ${pdfCheck.valueChecks} valores | ${String(item.screenMatchesBuilder)} |`;
+      const pdfCheck = item.downloads.pdf.tableChecks;
+      const geometry = item.pdfGeometry;
+      const controlJson = item.controlRawJson;
+      const geometrySummary = [
+        `${pdfCheck.tableCount} tablas, ${pdfCheck.headerCount} encabezados, ${pdfCheck.totalCount} totales, ${pdfCheck.valueChecks} valores`,
+        `paneles ${geometry.foundPanels}/${geometry.expectedPanels}`,
+        `páginas vector ${geometry.vectorPageCount}/${geometry.pageCount}, rectángulos ${geometry.vectorRectCount}, filas ${geometry.vectorRowCount}`,
+        `palabras en celdas ${geometry.vectorCellWordChecks}, fuera ${geometry.vectorWordOutOfBounds}, sin asignar ${geometry.vectorUnassignedWords}`,
+        `errores de fila ${geometry.vectorRowErrors}, solapes de celdas ${geometry.vectorRectOverlapCount}`,
+        `cobertura cuerpo ${geometry.bodyRowsObserved}/${geometry.bodyRowsExpected} filas, ${geometry.bodyTokensObserved}/${geometry.bodyTokensExpected} tokens, faltan ${geometry.bodyTokenMissing}`,
+        controlJson
+          ? `Control bloques ${controlJson.blocksWithoutRawJson}/${controlJson.checkedBlocks} sin JSON; con contenido ${controlJson.blocksWithContent}/${controlJson.checkedBlocks}`
+          : null,
+      ].filter(Boolean).join("; ");
+      return `| ${item.view} | ${item.mode} | **PASS** | ${sourceSummary} | ${item.downloads.xlsx.bytes} / \`${item.downloads.xlsx.sha256}\` | ${item.downloads.pdf.bytes} / \`${item.downloads.pdf.sha256}\` | ${geometrySummary} | ${String(item.screenMatchesBuilder)} |`;
     }),
     "",
+    controlCompare
+      ? `Control Comparar: ${controlCompare.controlRawJson.checkedBlocks} bloques de sitio comprobados; ${controlCompare.controlRawJson.blocksWithoutRawJson} sin JSON crudo; coincidencias JSON: ${controlCompare.controlRawJson.rawJsonHits}.`
+      : "Control Comparar: no quedó un caso PASS del comparativo para comprobar sus siete bloques.",
+    "En cada caso se asociaron títulos en orden único y se extrajeron rectángulos vectoriales reales",
+    "de cada página del PDF; cada panel consume una fila de encabezado única con el conteo exacto",
+    "de columnas y todas sus etiquetas dentro de la celda correspondiente.",
+    "Las coordenadas no se reconstruyeron con anchos del renderer: se leyeron de los streams vectoriales",
+    "independientes y se rechazaron filas con huecos, celdas solapadas, texto fuera o palabras sin celda.",
+    "La comparación de texto contra rectángulos permite únicamente 5 pt de descenso tipográfico",
+    "documentado entre el bbox independiente y el rectángulo vectorial; no se relaja la geometría de celdas.",
+    "La cobertura del cuerpo exige todas las filas esperadas, forma de celdas y multiplicidad de tokens",
+    "de cada valor proyectado por panel, incluyendo columnas de identidad repetidas y filas envueltas.",
     "Los hashes de contenido y bytes son evidencia de integridad, no sustituyen la lectura del documento.",
     "Cada XLSX se abrió con ExcelJS y se verificaron hojas, encabezados, todos los KPI, filas, totales",
     "significativos, gráficos, avisos, alertas, filtros legibles y celdas numéricas nativas.",
     "Cada PDF descargado se abrió con fitz si estuvo instalado y además con `pdftotext` independiente;",
     "se verificaron periodo en español, encabezados de tabla, totales significativos, caracteres",
     "`Página Día Participación →`, ausencia de U+FFFD/sustituciones ASCII y ausencia de JSON interno.",
-     "fitz o pdftoppm confirmó renderización independiente; cuando se retuvieron artefactos se guardaron primera,",
-     "página que contiene X04 y última para inspección visual. No se compara contra otro PDF del mismo generador.",
+    "fitz o pdftoppm confirmó renderización independiente; cuando se retuvieron artefactos se guardaron primera,",
+    "una página de panel ancho o X04 y última para inspección visual. No se compara contra otro PDF del mismo generador.",
+    "",
+    "## Evidencia previa conservada",
+    "",
+    priorEvidence.length
+      ? "Las dos filas normales completadas antes de este pase se conservaron literalmente como línea base:"
+        + `\n${priorEvidence.join("\n")}`
+      : "No había filas previas legibles; las dos vistas normales se incluyen en la tabla consolidada de este pase.",
     "",
     "## Matriz de autorización de Control",
     "",
     "| Ruta | non-ADMIN | ADMIN |",
     "|---|---:|---:|",
-    ...report.controlMatrix.paths.map((path: string, index: number) => `| \`${path}\` | ${report.controlMatrix.nonAdmin[index]} | ${report.controlMatrix.admin[index]} |`),
+    ...(report.controlMatrix?.paths ?? []).map((path: string, index: number) =>
+      `| \`${path}\` | ${report.controlMatrix.nonAdmin[index]} | ${report.controlMatrix.admin[index]} |`),
     "",
     "## Artefactos locales",
     "",
     report.artifacts.length
       ? report.artifacts.map((path: string) => `- \`${path}\` (modo 0600; bytes/hash están en la tabla anterior).`).join("\n")
       : "- No se retuvieron bytes; use `REPORT_EXPORT_WRITE_ARTIFACTS=1` para XLSX/PDF y páginas representativas 0600.",
+    "- Intento bbox fallido conservado por separado en `reports/export-download-verification-bbox-failed.md`; sus diagnósticos sensibles quedaron reemplazados por hash.",
     "",
     "## Limitaciones y fallos históricos",
     "",
@@ -1212,6 +2059,7 @@ async function main(): Promise<void> {
     const { mkdir } = await import("node:fs/promises");
     await mkdir(EXPORT_DIR, { recursive: true, mode: 0o700 });
   }
+  const priorEvidence = historicalEvidence();
   const started = Date.now();
   await withReadOnlySnapshot(async (query) => {
     const selected = await discoverYear(query);
@@ -1219,7 +2067,9 @@ async function main(): Promise<void> {
     const harness = await makeHarness();
     try {
       harness.setAuth("admin");
-      if (comparisonSites.length < 2) throw new Error("El catálogo real no tiene dos sitios elegibles para comparación.");
+      if (comparisonSites.length !== 7) {
+        throw new Error(`El catálogo real debe tener exactamente siete sitios elegibles para comparación; encontró ${comparisonSites.length}.`);
+      }
       const base = {
         periodo: "personalizado",
         desde: `${selected.year}-01-01`,
@@ -1246,24 +2096,42 @@ async function main(): Promise<void> {
       if (focus.length && requestedCases.length === 0) {
         throw new Error("REPORT_EXPORT_FOCUS no contiene casos válidos; usa ventas-normal,que-comprar-normal o control-operativo-normal.");
       }
+      const errors: string[] = [];
       for (const requested of requestedCases) {
-        cases.push(await verifyCase(
-          harness,
-          requested.view,
-          requested.mode,
-          base,
-          comparisonSites,
-          writeArtifacts,
-        ));
+        try {
+          cases.push(await verifyCase(
+            harness,
+            requested.view,
+            requested.mode,
+            base,
+            comparisonSites,
+            writeArtifacts,
+          ));
+        } catch (error) {
+          const message = safeError(error);
+          errors.push(`${requested.view}/${requested.mode}: ${message}`);
+          cases.push({
+            view: requested.view,
+            mode: requested.mode,
+            status: "FAILED",
+            error: message,
+          });
+        }
       }
-      const controlMatrix = await assertControlRoleMatrix(harness, base);
+      let controlMatrix: AnyRecord = { paths: [], nonAdmin: [], admin: [] };
+      try {
+        controlMatrix = await assertControlRoleMatrix(harness, base);
+      } catch (error) {
+        errors.push(`control-role-matrix: ${safeError(error)}`);
+      }
       const artifacts = cases.flatMap((item) => {
         if (!item.artifacts) return [];
         return [item.artifacts.xlsx, item.artifacts.pdf, ...(item.artifacts.representativePages ?? [])];
       });
-      const fitzAvailable = cases.every((item) => item.downloads.pdf.fitz === true);
+      const passedCases = cases.filter((item) => item.status === "PASS");
+      const fitzAvailable = passedCases.length > 0 && passedCases.every((item) => item.downloads.pdf.fitz === true);
       const report = {
-        status: "HTTP_READ_ONLY_EXPORTS_COMPLETED",
+        status: errors.length ? "HTTP_READ_ONLY_EXPORTS_COMPLETED_WITH_FAILURES" : "HTTP_READ_ONLY_EXPORTS_COMPLETED",
         snapshot: "single READ ONLY REPEATABLE READ connection",
         period: `${selected.year}-01-01/${selected.year}-12-31`,
         comparisonSiteCount: comparisonSites.length,
@@ -1272,7 +2140,8 @@ async function main(): Promise<void> {
         artifacts,
         fitzAvailable,
         durationMs: Date.now() - started,
-        errors: [],
+        errors,
+        priorEvidence,
       };
       await writeReport(report);
       console.log(`Readonly export verification written: ${REPORT_PATH}`);

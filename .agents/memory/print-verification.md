@@ -46,3 +46,9 @@ Para verificar márgenes físicos, medir toda la tinta del PDF rasterizado y com
 **Why:** Algunas fuentes incluyen ascendentes invisibles que hacen que la caja de una palabra invada el margen aunque sus glifos estén dentro del área segura. Además, `ImageMagick -trim` seguido de `%@` informa límites relativos a la imagen ya recortada, no a la hoja original.
 
 **How to apply:** Medir `%@` sobre la página original sin recortarla; convertir píxeles a milímetros con el DPI de rasterización. Guardar las cajas de texto para diagnóstico y exigir texto completo, número de páginas correcto y bandas periféricas sin tinta. Medir geometría DOM con media `print`, no con estilos de pantalla.
+
+En PDFs tabulares, no deducir bordes de celdas desde el inicio del texto de los encabezados. Usar geometría real del documento, incluir páginas de continuación y distinguir la cobertura visual de una muestra de una comprobación de todo el archivo.
+
+**Why:** Una verificación de reportes aprobaba pese a encabezados no localizados y cruces de límites inferidos; los límites eran puntos medios entre textos, no bordes reales. Además, localizar solo el primer título dejaba sin medir las páginas de continuación. Los indicadores diagnósticos no justifican un PASS si no se resuelven o delimitan explícitamente.
+
+**How to apply:** Extraer bordes y texto mediante un lector independiente; asociar cada tabla y continuación sin reutilizar coincidencias ambiguas. Comprobar que los bloques exigidos representan fuentes lógicas, no sitios, y que ningún intervalo vacío satisface por accidente una prueba de ausencia de JSON.

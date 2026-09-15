@@ -784,3 +784,31 @@ mtime_ms = 1789437775259
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/49e07fbf-fae7-41b8-aa85-306dab0e052b/67adb165-c9a7-4828-8d8e-fbdecfc88538"
 storage_version_token = "1789437997365330"
 content_type = "application/pdf"
+
+[[outputs]]
+id = "aWh0TNLdLYl6r8QWzQy-O"
+uri = "file://reports/export-download-verification.md"
+type = "text"
+title = "Legibilidad de Reportes — resultado de los diez casos"
+description = "Informe final de verificación: seis casos aprobados y cuatro con fallos de cobertura PDF. Incluye Control con siete fuentes y Comparar con siete sitios."
+logical_id = "e3890479-a843-44a0-b4c7-86749ca00f79"
+content_hash = "sha256:50abacbf9b9540148d42be0e7acc61394e9178d6e47ca6840ac392737e1b20a1"
+size = 11329
+mtime_ms = 1789487378877
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e3890479-a843-44a0-b4c7-86749ca00f79/1acd29ca-a994-4293-8471-6175c604f2af"
+storage_version_token = "1789487413182629"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "oi4AhZA_E393CaT4tTqNr"
+uri = "file://reports/control-operativo-permisos-por-bloque.md"
+type = "text"
+title = "Control operativo — propuesta de permisos por bloque"
+description = "Políticas de las siete fuentes, acceso limitado a Control y estimación de 24–40 horas. Propuesta únicamente; no implementada."
+logical_id = "f698a9c1-d1f8-40f4-b556-8e2bf06c6c46"
+content_hash = "sha256:fe1732a9e66c2c68db40b88d140797f7abff74ad76589bd639d2e337606ade18"
+size = 7297
+mtime_ms = 1789484696557
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f698a9c1-d1f8-40f4-b556-8e2bf06c6c46/584d83e7-3400-4647-9dc2-52cfd61432ba"
+storage_version_token = "1789487413792426"
+content_type = "text/markdown"
