@@ -1,0 +1,35 @@
+{
+  "readOnly": true,
+  "cases": [
+    {
+      "filters": {
+        "incluirUbicacionesInactivas": false
+      },
+      "total": 0,
+      "pageGroups": 0
+    },
+    {
+      "filters": {
+        "incluirUbicacionesInactivas": false,
+        "buscar": "K_READ_ONLY_PROBE_NO_MATCH"
+      },
+      "total": 0,
+      "pageGroups": 0
+    },
+    {
+      "filters": {
+        "incluirUbicacionesInactivas": false,
+        "ubicacionId": 1,
+        "desde": "2026-09-01T00:00:00.000Z"
+      },
+      "total": 0,
+      "pageGroups": 0
+    }
+  ],
+  "identity": {
+    "database": "heliumdb",
+    "schema": "public",
+    "read_only": "on"
+  },
+  "success": true
+}

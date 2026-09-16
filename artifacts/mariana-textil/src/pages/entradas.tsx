@@ -4,7 +4,6 @@ import { ProductCombobox } from "@/components/product-combobox";
 import {
   useGetCatalogosEntrada,
   getGetCatalogosEntradaQueryKey,
-  useListEntradas,
   useListLocations,
   useCrearEntrada,
   useGetCurrentUser,
@@ -34,12 +33,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Plus, Trash2, Save, ArrowDownToLine, CheckCircle2, Box, X, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw, ExternalLink } from "lucide-react";
+import { Plus, Trash2, CheckCircle2, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getApiErrorMessage } from "@/lib/api-error";
 import {
@@ -56,6 +55,10 @@ import {
 import { Link } from "wouter";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
+import { useHistoryEntryState } from "@/lib/internal-navigation";
+import { hasPermission, Modules } from "@/lib/permisos";
+import { EntradaHistory } from "@/components/entrada-history";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type DraftLinea = {
   id: string;
@@ -102,7 +105,7 @@ export default function Entradas() {
   const {
     data: ubicaciones,
     isError: ubicacionesFailed,
-  } = useListLocations({
+  } = useListLocations(undefined, {
     query: {
       enabled: user?.rol === Role.ADMIN,
       queryKey: getListLocationsQueryKey()
@@ -117,15 +120,6 @@ export default function Entradas() {
       refetchInterval: 60_000,
     },
   });
-  const { data: entradasRecientes, isError: entradasRecientesFailed } =
-    useListEntradas(
-      { page: 1, pageSize: 10 },
-      {
-        query: {
-          queryKey: getListEntradasQueryKey({ page: 1, pageSize: 10 }),
-        },
-      },
-    );
 
   const [ubicacionId, setUbicacionId] = useState<string>("");
   const { data: pisos } = useListPisosLocation(Number(ubicacionId), {
@@ -190,8 +184,14 @@ export default function Entradas() {
   const qtyInputRef = useRef<HTMLInputElement>(null);
 
   const [resultado, setResult] = useState<EntradaDetail | null>(null);
+  const [activeTab, setActiveTab] = useHistoryEntryState<"historial" | "captura">(
+    "entradas.tab",
+    "historial",
+  );
 
   const selectedProduct = productos?.find(p => p.id.toString() === productoId);
+  const canCreate = hasPermission(user, Modules.ENTRADAS, "crear");
+  const showCapture = canCreate && activeTab === "captura";
   const serverDateLabel = serverTime
     ? new Intl.DateTimeFormat("es-MX", {
         dateStyle: "long",
@@ -784,93 +784,66 @@ export default function Entradas() {
   return (
     <AppLayout>
       <div className="max-w-6xl mx-auto space-y-6 pb-32">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-sidebar">ENTRADA</h1>
-            <p className="text-muted-foreground mt-1">Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie.</p>
-          </div>
-          {user?.rol === Role.ADMIN && (
-            <Button asChild variant="outline" className="border-amber-500 text-amber-700 bg-amber-50 hover:bg-amber-100">
-              <Link href="/entradas/pendientes-costo">
-                <AlertTriangle className="w-4 h-4 mr-2" />
-                Costos Pendientes
-              </Link>
-            </Button>
-          )}
-        </div>
-
-        {(catalogosFailed ||
-          serverTimeFailed ||
-          entradasRecientesFailed ||
-          (user?.rol === Role.ADMIN && ubicacionesFailed)) && (
-          <div
-            className="rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
-            role="alert"
-          >
-            <p className="font-semibold">No se pudieron cargar todos los datos de la entrada.</p>
-            <p className="mt-1">
-              Recarga la página antes de continuar; los catálogos incompletos no se mostrarán como listas vacías.
+            <h1 className="text-3xl font-bold tracking-tight text-sidebar">ENTRADAS</h1>
+            <p className="text-muted-foreground mt-1">
+              {showCapture
+                ? "Registra la mercancía que llega a un sitio. Cada rollo se da de alta con su cantidad propia y su número de serie."
+                : "Historial completo de entradas y documentos registrados."}
             </p>
           </div>
-        )}
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            {user?.rol === Role.ADMIN && (
+              <Button asChild variant="outline" className="border-amber-500 bg-amber-50 text-amber-700 hover:bg-amber-100">
+                <Link href="/entradas/pendientes-costo">
+                  <AlertTriangle className="mr-2 h-4 w-4" />
+                  Costos Pendientes
+                </Link>
+              </Button>
+            )}
+            {canCreate && (
+              <Button
+                type="button"
+                onClick={() => setActiveTab("captura")}
+                className="h-11 w-full bg-[#1e3a8a] px-5 text-white shadow-md hover:bg-[#1e3a8a]/90 sm:w-auto"
+                data-testid="btn-create-entrada"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Nueva entrada
+              </Button>
+            )}
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="border-b">
-            <CardTitle className="text-lg">Entradas recientes</CardTitle>
-            <CardDescription>
-              Abre cualquier folio para consultar, imprimir o guardar nuevamente su documento.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Folio</TableHead>
-                    <TableHead>Fecha</TableHead>
-                    <TableHead>Sitio</TableHead>
-                    <TableHead>Proveedor</TableHead>
-                    <TableHead className="text-right">Rollos</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(entradasRecientes?.items ?? []).map((entrada) => (
-                    <TableRow key={entrada.id}>
-                      <TableCell>
-                        <Link
-                          href={`/entradas/${entrada.id}/documento`}
-                          className="inline-flex items-center gap-1 font-semibold text-blue-700 underline underline-offset-2 hover:text-blue-900"
-                          data-testid={`entrada-document-link-${entrada.id}`}
-                        >
-                          {entrada.folioFormateado}
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        {new Date(entrada.createdAt).toLocaleString("es-MX", {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })}
-                      </TableCell>
-                      <TableCell>{entrada.nombreUbicacion}</TableCell>
-                      <TableCell>{entrada.nombreProveedor ?? "Sin proveedor"}</TableCell>
-                      <TableCell className="text-right">
-                        {formatNumber(entrada.totalRollos, { kind: "count" })}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  {entradasRecientes && entradasRecientes.items.length === 0 && (
-                    <TableRow>
-                      <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
-                        Aún no hay entradas registradas.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+        <Tabs
+          value={showCapture ? "captura" : "historial"}
+          onValueChange={(value) => {
+            if (value === "historial" || (value === "captura" && canCreate)) {
+              setActiveTab(value);
+            }
+          }}
+        >
+          <TabsList>
+            <TabsTrigger value="historial">Historial</TabsTrigger>
+            {canCreate && <TabsTrigger value="captura">Captura</TabsTrigger>}
+          </TabsList>
+        </Tabs>
+
+        <div className={showCapture ? "block" : "hidden"} data-testid="entrada-capture-surface">
+          {(catalogosFailed ||
+            serverTimeFailed ||
+            (user?.rol === Role.ADMIN && ubicacionesFailed)) && (
+            <div
+              className="mb-6 rounded-md border border-destructive/30 bg-destructive/10 p-4 text-sm text-destructive"
+              role="alert"
+            >
+              <p className="font-semibold">No se pudieron cargar todos los datos de la entrada.</p>
+              <p className="mt-1">
+                Recarga la página antes de continuar; los catálogos incompletos no se mostrarán como listas vacías.
+              </p>
             </div>
-          </CardContent>
-        </Card>
+          )}
 
         <Card className="border-t-4 border-t-primary shadow-sm">
           <CardHeader className="bg-muted/10 border-b">
@@ -1180,6 +1153,10 @@ export default function Entradas() {
               {crearEntrada.isPending ? "Guardando..." : "Guardar entrada"}
             </Button>
           </div>
+        </div>
+      </div>
+        <div className={showCapture ? "hidden" : "block"} data-testid="entrada-history-surface">
+          <EntradaHistory catalogos={catalogos} ubicaciones={ubicaciones} />
         </div>
       </div>
 

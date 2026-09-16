@@ -721,6 +721,12 @@ export const GetDashboardResponse = zod.object({
 /**
  * @summary Lista ubicaciones reales para administración
  */
+export const listLocationsQueryIncludeInactiveDefault = false;
+
+export const ListLocationsQueryParams = zod.object({
+  "includeInactive": zod.coerce.boolean().default(listLocationsQueryIncludeInactiveDefault).describe('Incluye ubicaciones inactivas; requiere ADMIN y ubicaciones.ver.')
+})
+
 export const listLocationsResponseInicialesRegExp = new RegExp('^[A-Z]{2,3}$');
 
 
@@ -4482,6 +4488,93 @@ export const GetKardexResponse = zod.object({
   "revisado": zod.boolean(),
   "revisadoPor": zod.number().nullable(),
   "revisadoAt": zod.coerce.date().nullable()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "pageSize": zod.number(),
+  "totalPages": zod.number(),
+  "resumen": zod.object({
+  "totalMetros": zod.string().describe('Suma absoluta de cantidades METRO del resultado filtrado completo.'),
+  "totalKilos": zod.string().describe('Suma absoluta de cantidades KILO del resultado filtrado completo.'),
+  "totalBolsas": zod.string().describe('Suma absoluta de cantidades BOLSA del resultado filtrado completo.'),
+  "totalPiezas": zod.string().describe('Suma absoluta de cantidades PIEZA del resultado filtrado completo.')
+})
+})
+
+
+/**
+ * Presentación agrupada del kardex. Agrupa únicamente movimientos con documento verificado usando tipo interno, ID interno, tipo de movimiento y sitio. Los movimientos sin documento verificado permanecen individuales por ID para conservar su justificación. Las cantidades se mantienen separadas por unidad.
+ * @summary Historial de movimientos agrupado por documento, tipo y sitio
+ */
+export const getKardexGroupedQueryIncluirUbicacionesInactivasDefault = false;
+export const getKardexGroupedQueryPageDefault = 1;
+
+export const getKardexGroupedQueryPageSizeDefault = 100;
+export const getKardexGroupedQueryPageSizeMax = 100;
+
+
+
+export const GetKardexGroupedQueryParams = zod.object({
+  "modo": zod.enum(['TODO_LO_QUE_SALIO']).optional(),
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
+  "productoId": zod.coerce.number().optional(),
+  "ubicacionId": zod.coerce.number().optional(),
+  "usuarioId": zod.coerce.number().optional(),
+  "desde": zod.date().optional(),
+  "hasta": zod.date().optional(),
+  "buscar": zod.coerce.string().optional(),
+  "incluirUbicacionesInactivas": zod.coerce.boolean().default(getKardexGroupedQueryIncluirUbicacionesInactivasDefault),
+  "page": zod.coerce.number().min(1).default(getKardexGroupedQueryPageDefault),
+  "pageSize": zod.coerce.number().min(1).max(getKardexGroupedQueryPageSizeMax).default(getKardexGroupedQueryPageSizeDefault)
+})
+
+export const GetKardexGroupedResponse = zod.object({
+  "grupos": zod.array(zod.object({
+  "groupId": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "fechaMin": zod.coerce.date(),
+  "fechaMax": zod.coerce.date(),
+  "latestDate": zod.coerce.date(),
+  "latestMovementId": zod.number(),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "ubicacionActiva": zod.boolean(),
+  "distinctRolloCount": zod.number(),
+  "partialitiesMerged": zod.number(),
+  "totalesPorUnidad": zod.array(zod.object({
+  "unidad": zod.string(),
+  "cantidad": zod.string().describe('Cantidad decimal exacta, nunca convertida a número JS.')
+})),
+  "productos": zod.array(zod.object({
+  "productoId": zod.number(),
+  "skuProducto": zod.string(),
+  "telaProducto": zod.string(),
+  "colorProducto": zod.string(),
+  "unidadProducto": zod.string()
+})),
+  "usuarios": zod.array(zod.object({
+  "usuarioId": zod.number(),
+  "nombreUsuario": zod.string(),
+  "username": zod.string()
+})),
+  "documentoTipo": zod.string().nullable(),
+  "documentoId": zod.string().nullable(),
+  "documentoEtiqueta": zod.string().nullable(),
+  "documentoRuta": zod.string().nullable(),
+  "ticketId": zod.number().nullable(),
+  "destinoEtiqueta": zod.string().nullable(),
+  "justificacion": zod.string().nullable(),
+  "rollos": zod.array(zod.object({
+  "movementId": zod.number(),
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "cantidad": zod.string(),
+  "unidad": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "saldoPosterior": zod.string(),
+  "referenciaRolloRuta": zod.string()
+}))
 })),
   "total": zod.number(),
   "page": zod.number(),

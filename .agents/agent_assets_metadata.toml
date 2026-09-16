@@ -1408,3 +1408,31 @@ mtime_ms = 1789545014883
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/02545f66-456e-4251-adb1-4c48853183c2/0d4f0d7a-0023-4f19-b078-51ebd143d75a"
 storage_version_token = "1789545083678613"
 content_type = "image/png"
+
+[[outputs]]
+id = "bHfYOxiYg7nVGFbpkMi4j"
+uri = "file://reports/prompt-k/visual/propuesta-clientes.html"
+type = "text"
+title = "Clientes — propuesta visual aislada"
+description = "Estilo de las tarjetas de Proveedores, adaptable a escritorio y móvil. Sin conexión a cifras; pendiente de corregir el alcance por sitio."
+logical_id = "49570a06-324e-4708-b07a-7d1061dac189"
+content_hash = "sha256:ebb15fb6ab78f80addfe2ebe62e3182f031126c842dc363d4594f8cd0c826fe6"
+size = 2954
+mtime_ms = 1789571896474
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/49570a06-324e-4708-b07a-7d1061dac189/fa51a0e1-704f-4fa7-b98b-b2ad232f70f1"
+storage_version_token = "1789572580996375"
+content_type = "text/html"
+
+[[outputs]]
+id = "86EcXw6v3v-P0Kml1gRB9"
+uri = "file://reports/prompt-k/antes-y-despues.html"
+type = "text"
+title = "Entradas, Movimientos y Sitios — antes y después"
+description = "12 capturas de escritorio y móvil con componentes reales y datos sintéticos. No es una verificación autenticada."
+logical_id = "539bc125-5776-4242-9518-74595196c804"
+content_hash = "sha256:007fe58b760aca188d56f90859882a6aa733edc4fb80564f25001a7f2f5dd691"
+size = 1572163
+mtime_ms = 1789573702050
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/539bc125-5776-4242-9518-74595196c804/775df1f6-62ef-41d8-91c1-eae445b8e56e"
+storage_version_token = "1789573710559111"
+content_type = "text/html"

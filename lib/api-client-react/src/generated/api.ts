@@ -159,6 +159,7 @@ import type {
   GetDashboardParams,
   GetExistenciasAgrupadasParams,
   GetExistenciasParams,
+  GetKardexGroupedParams,
   GetKardexParams,
   GetPosClienteCreditoDisponibleParams,
   GetProveedorUtilidadParams,
@@ -174,6 +175,7 @@ import type {
   ImportPreviewRow,
   ImportResult,
   KardexFilters,
+  KardexGroupedResult,
   KardexResult,
   ListAdminCortesParams,
   ListAdminCuentaDestinoMovimientosParams,
@@ -193,6 +195,7 @@ import type {
   ListEquiposParams,
   ListHistorialComprasProveedoresParams,
   ListKardexFiltersParams,
+  ListLocationsParams,
   ListPreciosParams,
   ListProductosParams,
   ListProveedorPagosParams,
@@ -2031,20 +2034,27 @@ export function useGetDashboard<TData = Awaited<ReturnType<typeof getDashboard>>
 
 
 
-export const getListLocationsUrl = () => {
+export const getListLocationsUrl = (params?: ListLocationsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
 
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
 
+  const stringifiedParams = normalizedParams.toString();
 
-  return `/api/locations`
+  return stringifiedParams.length > 0 ? `/api/locations?${stringifiedParams}` : `/api/locations`
 }
 
 /**
  * @summary Lista ubicaciones reales para administración
  */
-export const listLocations = async ( options?: Parameters<typeof customFetch>[1]): Promise<Location[]> => {
+export const listLocations = async (params?: ListLocationsParams, options?: Parameters<typeof customFetch>[1]): Promise<Location[]> => {
 
-  return customFetch<Location[]>(getListLocationsUrl(),
+  return customFetch<Location[]>(getListLocationsUrl(params),
   {
     ...options,
     method: 'GET'
@@ -2057,23 +2067,23 @@ export const listLocations = async ( options?: Parameters<typeof customFetch>[1]
 
 
 
-export const getListLocationsQueryKey = () => {
+export const getListLocationsQueryKey = (params?: ListLocationsParams,) => {
     return [
-    `/api/locations`
+    `/api/locations`, ...(params ? [params] : [])
     ] as const;
     }
 
 
-export const getListLocationsQueryOptions = <TData = Awaited<ReturnType<typeof listLocations>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+export const getListLocationsQueryOptions = <TData = Awaited<ReturnType<typeof listLocations>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: ListLocationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
 const {query: queryOptions, request: requestOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getListLocationsQueryKey();
+  const queryKey =  queryOptions?.queryKey ?? getListLocationsQueryKey(params);
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLocations>>> = ({ signal }) => listLocations({ signal, ...requestOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLocations>>> = ({ signal }) => listLocations(params, { signal, ...requestOptions });
 
 
 
@@ -2091,11 +2101,11 @@ export type ListLocationsQueryError = ErrorType<UnauthorizedResponse | Forbidden
  */
 
 export function useListLocations<TData = Awaited<ReturnType<typeof listLocations>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+ params?: ListLocationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLocations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
-  const queryOptions = getListLocationsQueryOptions(options)
+  const queryOptions = getListLocationsQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 
@@ -8430,6 +8440,99 @@ export function useGetKardex<TData = Awaited<ReturnType<typeof getKardex>>, TErr
  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
 
   const queryOptions = getGetKardexQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetKardexGroupedUrl = (params?: GetKardexGroupedParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["tipos"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : String(v));
+      });
+      return;
+    }
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/inventario/kardex/agrupado?${stringifiedParams}` : `/api/inventario/kardex/agrupado`
+}
+
+/**
+ * Presentación agrupada del kardex. Agrupa únicamente movimientos con documento verificado usando tipo interno, ID interno, tipo de movimiento y sitio. Los movimientos sin documento verificado permanecen individuales por ID para conservar su justificación. Las cantidades se mantienen separadas por unidad.
+ * @summary Historial de movimientos agrupado por documento, tipo y sitio
+ */
+export const getKardexGrouped = async (params?: GetKardexGroupedParams, options?: Parameters<typeof customFetch>[1]): Promise<KardexGroupedResult> => {
+
+  return customFetch<KardexGroupedResult>(getGetKardexGroupedUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetKardexGroupedQueryKey = (params?: GetKardexGroupedParams,) => {
+    return [
+    `/api/inventario/kardex/agrupado`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetKardexGroupedQueryOptions = <TData = Awaited<ReturnType<typeof getKardexGrouped>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(params?: GetKardexGroupedParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardexGrouped>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetKardexGroupedQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getKardexGrouped>>> = ({ signal }) => getKardexGrouped(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getKardexGrouped>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetKardexGroupedQueryResult = NonNullable<Awaited<ReturnType<typeof getKardexGrouped>>>
+export type GetKardexGroupedQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse>
+
+
+/**
+ * @summary Historial de movimientos agrupado por documento, tipo y sitio
+ */
+
+export function useGetKardexGrouped<TData = Awaited<ReturnType<typeof getKardexGrouped>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse>>(
+ params?: GetKardexGroupedParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getKardexGrouped>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetKardexGroupedQueryOptions(params,options)
 
   const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
 

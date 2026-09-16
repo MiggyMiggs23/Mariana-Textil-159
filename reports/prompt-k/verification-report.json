@@ -1,0 +1,4135 @@
+{
+  "verification": "Prompt K offline production-page evidence (synthetic/no-auth; not authentication verification)",
+  "generatedAt": "2026-09-16T15:47:41.037Z",
+  "limitations": [
+    "Synthetic fixtures only; no login, session, test user, database, or authentication approval.",
+    "This report does not verify authentication, authorization middleware, or live API behavior.",
+    "Only Entradas, Movimientos, and Sitios (production /ubicaciones route) are mounted."
+  ],
+  "scope": {
+    "productionPages": [
+      {
+        "key": "entradas",
+        "route": "/entradas"
+      },
+      {
+        "key": "movimientos",
+        "route": "/movimientos"
+      },
+      {
+        "key": "sitios",
+        "route": "/ubicaciones"
+      }
+    ],
+    "sourcePhases": [
+      "before",
+      "after"
+    ],
+    "viewports": [
+      {
+        "width": 1280,
+        "height": 1100
+      },
+      {
+        "width": 402,
+        "height": 874
+      }
+    ],
+    "screenshotCount": 12,
+    "databaseWrites": 0,
+    "liveBackend": false,
+    "liveApi": false,
+    "httpPolicy": "deny all except explicit local fixture interception allowlist",
+    "apiAllowlist": [
+      "GET /api/auth/me",
+      "GET /api/locations",
+      "GET /api/inventario/entradas",
+      "GET /api/inventario/entradas/catalogos",
+      "GET /api/inventario/fecha-servidor",
+      "GET /api/contenedores/disponibles-entrada",
+      "GET /api/locations/:id/pisos",
+      "GET /api/inventario/kardex",
+      "GET /api/inventario/kardex/agrupado",
+      "GET /api/inventario/kardex/filtros",
+      "PATCH /api/locations/:id (reactivation interception only)"
+    ]
+  },
+  "sourceContract": {
+    "sources": {
+      "before": {
+        "entradas": {
+          "path": ".local/prompt-k-before/pages-entradas.tsx",
+          "sha256": "322ee2c479d9795b5da7bf8db70f4537b3b3d51e3444558b5cbc8c51cc27d7c4",
+          "bytes": 72936
+        },
+        "movimientos": {
+          "path": ".local/prompt-k-before/movimientos.tsx",
+          "sha256": "2c26d13b0e2b34e8c1f77369c05560953cf4135e9d007c5c9f78554b8d91c9e6",
+          "bytes": 39339
+        },
+        "sitios": {
+          "path": ".local/prompt-k-before/ubicaciones.tsx",
+          "sha256": "b72d55bfdc8201448ca22ed06d11af821097049ad489327d41bae5700807eddd",
+          "bytes": 15925
+        },
+        "css": {
+          "path": ".local/prompt-k-before/index.css",
+          "sha256": "6c372e94228e7d03a78c938f83045d729aa56579d81fda7f395f58e4e82ed9a1",
+          "bytes": 23056
+        }
+      },
+      "after": {
+        "entradas": {
+          "path": "artifacts/mariana-textil/src/pages/entradas.tsx",
+          "sha256": "81389117e6f86adab921f52d65b1e7b9c7de57252d296fbfb6e575f3a4beedb9",
+          "bytes": 71954
+        },
+        "movimientos": {
+          "path": "artifacts/mariana-textil/src/pages/movimientos.tsx",
+          "sha256": "333bf3699f04fdec595325838dd7e056117e78d20d13931f15a5ee35f1cc479d",
+          "bytes": 43431
+        },
+        "sitios": {
+          "path": "artifacts/mariana-textil/src/pages/ubicaciones.tsx",
+          "sha256": "078f4365b98dd9bcc010fda0de5f68f2ea45d77c71ac52756d4fa80fb2d1492b",
+          "bytes": 17610
+        },
+        "css": {
+          "path": "artifacts/mariana-textil/src/index.css",
+          "sha256": "6c372e94228e7d03a78c938f83045d729aa56579d81fda7f395f58e4e82ed9a1",
+          "bytes": 23056
+        }
+      }
+    },
+    "cssHooks": [
+      "@import",
+      "--primary",
+      "--background",
+      "@custom-variant"
+    ],
+    "mountedRoutes": [
+      "/entradas",
+      "/movimientos",
+      "/ubicaciones"
+    ],
+    "excludedRoutes": [
+      "/clientes",
+      "/usuarios"
+    ],
+    "sourceBaselineReadOnly": true,
+    "actualEntradaHistorySource": "artifacts/mariana-textil/src/components/entrada-history.tsx",
+    "cssSourceScan": {
+      "current": ".local/prompt-k-check/src/current-harness.css",
+      "before": ".local/prompt-k-check/src/before-harness.css",
+      "includesProductionComponentTree": true,
+      "includesBeforeSnapshotTree": true
+    },
+    "beforeBytes": {
+      "entradas": 72875,
+      "movimientos": 39325,
+      "sitios": 15916
+    }
+  },
+  "fixtureProvenance": {
+    "path": "reports/prompt-k/generated-fixtures.json",
+    "sha256BeforeCapture": "78843d701a065f03978b430bffb3813e3f9d7eb9246ffd59fe82e40c268f775c",
+    "sha256AfterCapture": "78843d701a065f03978b430bffb3813e3f9d7eb9246ffd59fe82e40c268f775c",
+    "builder": {
+      "entrypoint": "groupKardexRows",
+      "source": "artifacts/api-server/src/lib/kardex-grouped.ts",
+      "executor": "pure presentation builder; no database connection",
+      "arithmetic": "addExactDecimal"
+    },
+    "policy": {
+      "label": "SYNTHETIC_OFFLINE_NO_AUTH_VERIFICATION",
+      "syntheticOnly": true,
+      "authenticationVerified": false,
+      "databaseWrites": 0,
+      "migrations": 0,
+      "sessions": 0,
+      "testUsers": 0,
+      "liveHttp": false,
+      "liveApi": false,
+      "liveCdn": false,
+      "canonicalFixturesMutable": false,
+      "noNetworkReactivation": true
+    }
+  },
+  "screenshots": [
+    {
+      "phase": "before",
+      "page": "entradas",
+      "viewport": "desktop",
+      "width": 1280,
+      "screenshot": "reports/prompt-k/screenshots/before-entradas-desktop.jpg",
+      "dimensions": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "bodyWidth": 1280
+      },
+      "requestCount": 76,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "before",
+      "page": "entradas",
+      "viewport": "mobile",
+      "width": 402,
+      "screenshot": "reports/prompt-k/screenshots/before-entradas-mobile.jpg",
+      "dimensions": {
+        "viewport": 402,
+        "documentWidth": 402,
+        "bodyWidth": 402
+      },
+      "requestCount": 76,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "before",
+      "page": "movimientos",
+      "viewport": "desktop",
+      "width": 1280,
+      "screenshot": "reports/prompt-k/screenshots/before-movimientos-desktop.jpg",
+      "dimensions": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "bodyWidth": 1280
+      },
+      "requestCount": 73,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "before",
+      "page": "movimientos",
+      "viewport": "mobile",
+      "width": 402,
+      "screenshot": "reports/prompt-k/screenshots/before-movimientos-mobile.jpg",
+      "dimensions": {
+        "viewport": 402,
+        "documentWidth": 402,
+        "bodyWidth": 402
+      },
+      "requestCount": 73,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "before",
+      "page": "sitios",
+      "viewport": "desktop",
+      "width": 1280,
+      "screenshot": "reports/prompt-k/screenshots/before-sitios-desktop.jpg",
+      "dimensions": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "bodyWidth": 1280
+      },
+      "requestCount": 72,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "before",
+      "page": "sitios",
+      "viewport": "mobile",
+      "width": 402,
+      "screenshot": "reports/prompt-k/screenshots/before-sitios-mobile.jpg",
+      "dimensions": {
+        "viewport": 402,
+        "documentWidth": 402,
+        "bodyWidth": 402
+      },
+      "requestCount": 72,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "after",
+      "page": "entradas",
+      "viewport": "mobile",
+      "width": 402,
+      "screenshot": "reports/prompt-k/screenshots/after-entradas-mobile.jpg",
+      "dimensions": {
+        "viewport": 402,
+        "documentWidth": 402,
+        "bodyWidth": 402
+      },
+      "requestCount": 79,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "after",
+      "page": "movimientos",
+      "viewport": "mobile",
+      "width": 402,
+      "screenshot": "reports/prompt-k/screenshots/after-movimientos-mobile.jpg",
+      "dimensions": {
+        "viewport": 402,
+        "documentWidth": 402,
+        "bodyWidth": 402
+      },
+      "requestCount": 77,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "after",
+      "page": "sitios",
+      "viewport": "desktop",
+      "width": 1280,
+      "screenshot": "reports/prompt-k/screenshots/after-sitios-desktop.jpg",
+      "dimensions": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "bodyWidth": 1280
+      },
+      "requestCount": 78,
+      "interceptedMutations": 1
+    },
+    {
+      "phase": "after",
+      "page": "sitios",
+      "viewport": "mobile",
+      "width": 402,
+      "screenshot": "reports/prompt-k/screenshots/after-sitios-mobile.jpg",
+      "dimensions": {
+        "viewport": 402,
+        "documentWidth": 402,
+        "bodyWidth": 402
+      },
+      "requestCount": 76,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "after",
+      "page": "entradas",
+      "viewport": "desktop",
+      "width": 1280,
+      "screenshot": "reports/prompt-k/screenshots/after-entradas-desktop.jpg",
+      "dimensions": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "bodyWidth": 1280
+      },
+      "requestCount": 88,
+      "interceptedMutations": 0
+    },
+    {
+      "phase": "after",
+      "page": "movimientos",
+      "viewport": "desktop",
+      "width": 1280,
+      "screenshot": "reports/prompt-k/screenshots/after-movimientos-desktop.jpg",
+      "dimensions": {
+        "viewport": 1280,
+        "documentWidth": 1280,
+        "bodyWidth": 1280
+      },
+      "requestCount": 80,
+      "interceptedMutations": 0
+    }
+  ],
+  "requestAudit": {
+    "blockedRequests": [],
+    "consoleErrors": [
+      "Cannot update a component (`%s`) while rendering a different component (`%s`). To locate the bad setState() call inside `%s`, follow the stack trace as described in https://react.dev/link/setstate-in-render ForwardRef Movimientos Movimientos"
+    ],
+    "journeyFailures": [],
+    "journeyFailureHistory": [
+      {
+        "phase": "after",
+        "page": "entradas",
+        "viewport": "desktop",
+        "journey": "pending-capture-retention",
+        "error": "AssertionError [ERR_ASSERTION]: committed pending line is missing\n    at exerciseEntradasPendingState (file:///home/runner/workspace/.local/prompt-k-check/verify.mjs:577:10)\n    at async runBrowserCases (file:///home/runner/workspace/.local/prompt-k-check/verify.mjs:710:17)\n    at async main (file:///home/runner/workspace/.local/prompt-k-check/verify.mjs:827:21)"
+      },
+      {
+        "phase": "after",
+        "page": "movimientos",
+        "viewport": "desktop",
+        "journey": "grouped-kardex-filters-pagination-expansion",
+        "error": "AssertionError [ERR_ASSERTION]: expanded group must preserve document navigation\n    at exerciseMovimientosState (file:///home/runner/workspace/.local/prompt-k-check/verify.mjs:659:10)\n    at async runBrowserCases (file:///home/runner/workspace/.local/prompt-k-check/verify.mjs:726:17)\n    at async main (file:///home/runner/workspace/.local/prompt-k-check/verify.mjs:827:21)"
+      }
+    ],
+    "phases": [
+      {
+        "phase": "before",
+        "page": "entradas",
+        "viewport": "desktop",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/entradas?phase=before&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/pages-entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas/catalogos"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations?query=%5Bobject+Object%5D"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/fecha-servidor"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations?query=%5Bobject+Object%5D"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "before",
+        "page": "entradas",
+        "viewport": "mobile",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/entradas?phase=before&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/pages-entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas/catalogos"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations?query=%5Bobject+Object%5D"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/fecha-servidor"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations?query=%5Bobject+Object%5D"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "before",
+        "page": "movimientos",
+        "viewport": "desktop",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/movimientos?phase=before&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/pages-entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/filtros"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex?page=1&pageSize=100"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "before",
+        "page": "movimientos",
+        "viewport": "mobile",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/movimientos?phase=before&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/pages-entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/filtros"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex?page=1&pageSize=100"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "before",
+        "page": "sitios",
+        "viewport": "desktop",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/ubicaciones?phase=before&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/pages-entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "before",
+        "page": "sitios",
+        "viewport": "mobile",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/ubicaciones?phase=before&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/pages-entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/.local/prompt-k-before/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/before-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "after",
+        "page": "entradas",
+        "viewport": "mobile",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/entradas?phase=after&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/after-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/current-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/entrada-history.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/tabs.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas/catalogos"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/fecha-servidor"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "after",
+        "page": "movimientos",
+        "viewport": "mobile",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/movimientos?phase=after&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/after-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/current-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/entrada-history.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/tabs.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/filtros"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/agrupado?page=1&pageSize=100"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "after",
+        "page": "sitios",
+        "viewport": "desktop",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/ubicaciones?phase=after&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/after-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/current-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/entrada-history.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/tabs.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations?includeInactive=true"
+          },
+          {
+            "method": "PATCH",
+            "url": "http://127.0.0.1:4187/api/locations/3"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations?includeInactive=true"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "after",
+        "page": "sitios",
+        "viewport": "mobile",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/ubicaciones?phase=after&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/after-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/current-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/entrada-history.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/tabs.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations?includeInactive=true"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "after",
+        "page": "entradas",
+        "viewport": "desktop",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/entradas?phase=after&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/after-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/current-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/entrada-history.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/tabs.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas/catalogos"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/fecha-servidor"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=2&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?folio=504&page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?fechaDesde=2025-01-05&page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?fechaDesde=2025-01-05&fechaHasta=2025-01-31&page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/entradas?page=1&pageSize=10"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/locations/1/pisos"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/contenedores/disponibles-entrada?ubicacionId=1"
+          }
+        ],
+        "blocked": []
+      },
+      {
+        "phase": "after",
+        "page": "movimientos",
+        "viewport": "desktop",
+        "requests": [
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/movimientos?phase=after&context=admin"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@vite/client"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/main.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@react-refresh"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/react-dom_client.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@tanstack_react-query.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/wouter.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/internal-navigation.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite/dist/client/env.mjs"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-O4BUER6X.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-ILHRZGIS.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AOSWHDFT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-JJ3WJUXN.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/after-pages.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/entradas.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/movimientos.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/pages/ubicaciones.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/current-harness.css"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/src/stubs/app-layout.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/card.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/table.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/badge.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/button.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/dialog.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/input.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/label.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/sonner.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/lucide-react.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/permisos.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/confirmacion-texto-exacto.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/date-fns.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/number-format/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/hooks/use-toast.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/select.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/checkbox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/switch.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/popover.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/product-combobox.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/api-error.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/roll-capture-state.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/campo-escaneo.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/entrada-history.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/components/ui/tabs.tsx"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/generated/api.schemas.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/api-client-react/src/custom-fetch.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/utils.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/class-variance-authority.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-slot.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-dialog.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-label.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/artifacts/mariana-textil/src/lib/confirmacion-texto-exacto.ts"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-switch.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-select.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-checkbox.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-popover.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/@fs/home/runner/workspace/lib/scanned-code/src/index.ts?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/@radix-ui_react-tabs.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/clsx.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/tailwind-merge.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-FNHC6X6J.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-EYRZ3RSY.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-E3W2AJ3Y.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-B7DAGEU5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-XNVHPWRL.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-VFEBP7SE.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-KXA3KPRI.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-AFX4PAY5.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-DJYI2AHT.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/node_modules/.vite/deps/chunk-IWT5EVO3.js?v=2362c53a"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/auth/me"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/filtros"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/agrupado?page=1&pageSize=100"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/agrupado?buscar=Documento+legado&page=1&pageSize=100"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/agrupado?page=1&pageSize=100"
+          },
+          {
+            "method": "GET",
+            "url": "http://127.0.0.1:4187/api/inventario/kardex/agrupado?page=2&pageSize=100"
+          }
+        ],
+        "blocked": []
+      }
+    ],
+    "readOnlyEntradas": null
+  },
+  "commands": {
+    "offlineBrowserPass": "node .local/prompt-k-check/verify.mjs",
+    "unitContract": "artifacts/api-server/node_modules/.bin/tsx --test .local/prompt-k-check/unit-contract.test.ts",
+    "noBrowserSyntaxCheck": "node --check .local/prompt-k-check/verify.mjs"
+  }
+}

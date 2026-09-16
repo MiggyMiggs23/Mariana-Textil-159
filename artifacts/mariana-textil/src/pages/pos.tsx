@@ -683,7 +683,7 @@ export default function PosPage() {
     data: availableLocations,
     isLoading: loadingLocations,
     isError: locationsFailed,
-  } = useListLocations({
+  } = useListLocations(undefined, {
     query: {
       enabled: canChooseLocation && !selectedLocationId,
       queryKey: getListLocationsQueryKey(),

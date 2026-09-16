@@ -45,6 +45,8 @@ import {
   GetExistenciasResponse,
   GetKardexQueryParams,
   GetKardexResponse,
+  GetKardexGroupedQueryParams,
+  GetKardexGroupedResponse,
   ListKardexFiltersQueryParams,
   ListKardexFiltersResponse,
   ExportKardexXlsxQueryParams,
@@ -117,6 +119,7 @@ import {
   listKardexFilters as queryKardexFilters,
   type KardexFiltersInput,
 } from "../lib/kardex";
+import { getKardexGrouped as queryKardexGrouped } from "../lib/kardex-grouped";
 import { isValidUnitCost } from "../lib/unit-cost";
 import {
   EXCEL_NUMBER_FORMAT,
@@ -977,7 +980,15 @@ inventarioRouter.get(
   requierePermiso("entradas", "ver"),
   async (req, res, next) => {
     try {
-      const q = ListEntradasQueryParams.parse(req.query);
+      // The generated contract uses Date values at runtime, while this
+      // read-only endpoint intentionally accepts strict HTML date inputs.
+      // Normalize before parsing so YYYY-MM-DD filters are interpreted as
+      // Mexico business-day boundaries and malformed dates remain 400s.
+      const q = ListEntradasQueryParams.parse({
+        ...req.query,
+        fechaDesde: parseMexicoDateQuery(req.query.fechaDesde, "start"),
+        fechaHasta: parseMexicoDateQuery(req.query.fechaHasta, "end"),
+      });
       const page = q.page ?? 1;
       const pageSize = q.pageSize ?? 20;
       const offset = (page - 1) * pageSize;
@@ -1018,16 +1029,8 @@ inventarioRouter.get(
         conditions.push(eq(entradasTable.ubicacionId, scopedUbicacionId));
       }
 
-      const desde =
-        typeof req.query.fechaDesde === "string" ? req.query.fechaDesde : null;
-      const hasta =
-        typeof req.query.fechaHasta === "string" ? req.query.fechaHasta : null;
-      if (desde) conditions.push(gte(entradasTable.fecha, new Date(desde)));
-      if (hasta) {
-        const hastaDate = new Date(hasta);
-        hastaDate.setDate(hastaDate.getDate() + 1);
-        conditions.push(lte(entradasTable.fecha, hastaDate));
-      }
+      if (q.fechaDesde) conditions.push(gte(entradasTable.fecha, q.fechaDesde));
+      if (q.fechaHasta) conditions.push(lte(entradasTable.fecha, q.fechaHasta));
 
       const where = conditions.length ? and(...conditions) : undefined;
 
@@ -2124,6 +2127,41 @@ inventarioRouter.get(
         totalPages: Math.ceil(result.total / q.pageSize),
       });
       res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/kardex/agrupado",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetKardexGroupedQueryParams.parse(
+        normalizeKardexQuery(req.query),
+      );
+      const auth = req.auth!;
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
+      }
+      const result = await queryKardexGrouped(
+        kardexFilters(q, scopedUbicacionId),
+        { page: q.page, pageSize: q.pageSize },
+      );
+      res.json(GetKardexGroupedResponse.parse(result));
     } catch (e) {
       next(e);
     }

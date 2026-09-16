@@ -1154,3 +1154,19 @@ El modo optativo de inspección sigue disponible en el código, pero **no está 
 ### Pendiente abierto — verificación autenticada del detalle de crédito
 
 **ABIERTO:** el detalle de movimiento de crédito todavía no tiene verificación autenticada con operaciones reales actuales. Los movimientos **43 a 50 desaparecieron con la purga**. Las pruebas con respaldos históricos y casos sintéticos no cierran este pendiente. Se cerrará cuando existan movimientos nuevos y se complete la comprobación autenticada con esos registros; no crear movimientos artificiales ni restaurar los eliminados para aparentar esa verificación.
+
+## Listados y navegación — Prompt K
+
+Alcance aprobado: **Entradas, Movimientos y Sitios**. Usuarios conserva su listado/filtro existente. No se agregó borrado; Clientes y Proveedores productivos no se modificaron.
+
+- **Entradas:** historial inicial, filtros y paginación conservados al navegar; botón azul de crear condicionado por permiso. La captura permanece montada y oculta al consultar el historial: su borrador es exclusivamente de memoria, no sobrevive a una recarga. No se modificaron handlers de captura, UUID, series, costos, folios ni POST. El GET normaliza fechas estrictas usando los límites del día de México.
+- **Movimientos:** vista documental agrupada por tipo/ID interno del documento resuelto, tipo de movimiento y sitio. Parcialidades comparten grupo; se presentan rango de fechas, rollos distintos y cantidades separadas por unidad. Sin documento verificable, cada movimiento permanece individual, con motivo y sin enlace inventado. SQL filtra y agrupa antes de paginar y recupera únicamente los hijos de los grupos seleccionados. El escritor, exportación y cálculos anteriores se conservan; se reutiliza su fuente filtrada y resolvedor documental.
+- **Sitios:** `GET /api/locations?includeInactive=true` requiere ADMIN y permiso de ver ubicaciones. El catálogo por defecto permanece activo-only. La administración permite reactivar con el PATCH existente y auditoría antes/después; no se creó DELETE.
+- **Borrabilidad:** auditoría agregada de solo lectura en `reports/prompt-k/resultado.md`. Todos los sitios/usuarios existentes tienen referencias. Ninguno de los 3 sitios inactivos ni de los 23 usuarios inactivos cumple el criterio de estar libre de referencias. La búsqueda amplia encontró la ruta genérica **preexistente** `DELETE /api/purga/usuarios/:id`; no fue añadida ni modificada. Las referencias lógicas no resolubles se documentan por separado.
+- **Verificación:** typecheck completo sin errores, generación estable, contratos/puras y consulta real protegida de solo lectura. La base consultada no tiene movimientos: el éxito SQL con cero filas no acredita agrupación con datos reales. Las comprobaciones visuales aisladas usan componentes reales y datos sintéticos, no sesiones autenticadas. Evidencia y límites: `reports/prompt-k/entrega.md`. Reinicio normal con inicializadores autorizados, sin activar inspección ni crear registros de negocio o usuarios/sesiones de prueba.
+
+### Pendiente financiero abierto — alcance de Clientes
+
+**ABIERTO:** `GET /api/clientes/resumen` devuelve `totalClientes`, `clientesConSaldo`, `totalCartera` y `totalVencido` globales sin `resolveReadScope`. Su consumidor directo es la pestaña Cartera de Clientes; el inventario de hooks e invalidaciones está en `reports/prompt-k/resultado.md`. No se conectó este resumen a un nuevo tablero. La corrección requiere una entrega financiera independiente y una regla aprobada de atribución por sitio; filtrar únicamente IDs de clientes y seguir proyectando su ledger global no evita mezclar actividad de distintos sitios.
+
+La propuesta visual `reports/prompt-k/visual/propuesta-clientes.html` reutiliza el estilo de Proveedores, muestra valores sin conectar y no está integrada en la aplicación.

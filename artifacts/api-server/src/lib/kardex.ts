@@ -40,6 +40,7 @@ import {
 } from "./kardex-document";
 
 const destinoUbicacion = alias(ubicacionesTable, "destino");
+const origenMovimiento = alias(movimientosTable, "origen_movimiento");
 
 export type KardexFiltersInput = {
   tipos?: TipoMovimiento[];
@@ -59,7 +60,7 @@ export const TODO_LO_QUE_SALIO_TIPOS = [
   "SALIDA_MOSTRADOR",
 ] as const satisfies readonly TipoMovimiento[];
 
-type JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];
+export type JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];
 
 type DocumentLookupContext = {
   references: DocumentReference[];
@@ -190,10 +191,10 @@ function joinedBase() {
       serie: rollosTable.serie,
        recepcionId: rollosTable.recepcionId,
       ubicacionId: movimientosTable.ubicacionId,
-      nombreUbicacion: ubicacionesTable.nombre,
+      nombreUbicacion: sql<string>`${ubicacionesTable.nombre}`.as("nombre_ubicacion"),
       ubicacionActiva: ubicacionesTable.activa,
       usuarioId: movimientosTable.usuarioId,
-      nombreUsuario: usuariosTable.nombre,
+      nombreUsuario: sql<string>`${usuariosTable.nombre}`.as("nombre_usuario"),
       username: usuariosTable.usuario,
       documentoTipo: movimientosTable.documentoTipo,
       documentoId: movimientosTable.documentoId,
@@ -202,6 +203,15 @@ function joinedBase() {
       revisado: movimientosTable.revisado,
       revisadoPor: movimientosTable.revisadoPor,
       revisadoAt: movimientosTable.revisadoAt,
+      originRolloId: sql<number | null>`${origenMovimiento.rolloId}`.as(
+        "origin_rollo_id",
+      ),
+      originDocumentoTipo: sql<string | null>`${origenMovimiento.documentoTipo}`.as(
+        "origin_documento_tipo",
+      ),
+      originDocumentoId: sql<string | null>`${origenMovimiento.documentoId}`.as(
+        "origin_documento_id",
+      ),
     })
     .from(movimientosTable)
     .innerJoin(productosTable, eq(movimientosTable.productoId, productosTable.id))
@@ -210,7 +220,22 @@ function joinedBase() {
       ubicacionesTable,
       eq(movimientosTable.ubicacionId, ubicacionesTable.id),
     )
-    .innerJoin(usuariosTable, eq(movimientosTable.usuarioId, usuariosTable.id));
+    .innerJoin(usuariosTable, eq(movimientosTable.usuarioId, usuariosTable.id))
+    .leftJoin(
+      origenMovimiento,
+      eq(movimientosTable.movimientoOrigenId, origenMovimiento.id),
+    );
+}
+
+/**
+ * Shared filtered source for read-only Kardex projections. Grouped history
+ * uses this same predicate before grouping so search/date/site filters cannot
+ * be applied after pagination.
+ */
+export function filteredMovementQuery(filters: KardexFiltersInput) {
+  const conditions = whereConditions(filters);
+  return joinedBase()
+    .where(conditions.length ? and(...conditions) : undefined);
 }
 
 async function selectMovements(
@@ -460,6 +485,10 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       referenciaRolloRuta: `/inventario/rollos/${row.rolloId}`,
     };
   });
+}
+
+export async function enrichKardexMovements(rows: JoinedMovement[]) {
+  return enrichDocuments(rows);
 }
 
 export async function getKardex(

@@ -98,7 +98,9 @@ export default function Etiquetas() {
     return () => window.removeEventListener("focus", restore);
   }, []);
 
-  const { data: locations } = useListLocations({ query: { queryKey: getListLocationsQueryKey() } });
+  const { data: locations } = useListLocations(undefined, {
+    query: { queryKey: getListLocationsQueryKey() },
+  });
   const { data: products } = useListProductos(undefined, { query: { queryKey: getListProductosQueryKey() } });
   const { data: users } = useListUsers({ query: { enabled: isAdmin, queryKey: getListUsersQueryKey() } });
 

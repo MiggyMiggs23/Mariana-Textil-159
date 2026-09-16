@@ -6,6 +6,7 @@ import {
   useUpdateLocation,
   Location,
   LocationInputTipo,
+  Role,
   useGetCurrentUser,
   getListLocationsQueryKey,
   useListPisosLocation,
@@ -131,10 +132,19 @@ function PisosSitio({ locationId, active }: { locationId: number, active: boolea
 }
 
 export default function Ubicaciones() {
-  const { data: locations, isLoading } = useListLocations();
+  const { data: user } = useGetCurrentUser();
+  const includeInactive = user?.rol === Role.ADMIN;
+  const { data: locations, isLoading } = useListLocations(
+    { includeInactive },
+    {
+      query: {
+        enabled: user !== undefined,
+        queryKey: getListLocationsQueryKey({ includeInactive }),
+      },
+    },
+  );
   const updateLocation = useUpdateLocation();
   const createLocation = useCreateLocation();
-  const { data: user } = useGetCurrentUser();
   const queryClient = useQueryClient();
 
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
@@ -191,6 +201,23 @@ export default function Ubicaciones() {
     );
   };
 
+  const handleReactivate = (location: Location) => {
+    updateLocation.mutate(
+      { id: location.id, data: { activa: true } },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: getListLocationsQueryKey() });
+          toast.success("Sitio reactivado correctamente");
+        },
+        onError: (err: any) => {
+          toast.error("Error al reactivar", {
+            description: err?.data?.error || err?.message || "Ocurrió un error inesperado",
+          });
+        },
+      },
+    );
+  };
+
   const handleCreate = () => {
     if (!createName.trim() || !/^[A-Z]{2,3}$/.test(createInitials)) return;
     createLocation.mutate({ data: { nombre: createName.trim(), iniciales: createInitials, tipo: createType } }, {
@@ -228,6 +255,9 @@ export default function Ubicaciones() {
             <p className="text-muted-foreground mt-2">
               Administración de tiendas y bodegas. Los sitios de sistema no pueden ser editados.
             </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              Los sitios se desactivan, no se borran: conservar sus referencias mantiene la trazabilidad.
+            </p>
           </div>
           {canCreate && <Button onClick={() => setCreating(true)} data-testid="button-create-location"><Plus className="mr-2 h-4 w-4" />Nuevo sitio</Button>}
         </div>
@@ -246,7 +276,7 @@ export default function Ubicaciones() {
               </TableHeader>
               <TableBody>
                 {locations?.map((loc) => (
-                  <TableRow key={loc.id}>
+                  <TableRow key={loc.id} className={!loc.activa ? "bg-muted/30" : undefined}>
                     <TableCell className="font-medium">
                       {loc.nombre}
                       {loc.esSistema && <Badge variant="secondary" className="ml-2 text-[10px]">SISTEMA</Badge>}
@@ -259,13 +289,28 @@ export default function Ubicaciones() {
                       <Badge variant={loc.activa ? "default" : "secondary"}>
                         {loc.activa ? "Activa" : "Inactiva"}
                       </Badge>
+                      {!loc.activa && (
+                        <span className="ml-2 text-xs text-muted-foreground">No disponible para operaciones</span>
+                      )}
                     </TableCell>
                     <TableCell className="text-right">
                       {canEdit && !loc.esSistema && (
-                        <Button variant="ghost" size="sm" onClick={() => openEdit(loc)}>
-                          <Pencil className="w-4 h-4 mr-2" />
-                          Editar
-                        </Button>
+                        <>
+                          {!loc.activa && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleReactivate(loc)}
+                              disabled={updateLocation.isPending}
+                            >
+                              Reactivar
+                            </Button>
+                          )}
+                          <Button variant="ghost" size="sm" onClick={() => openEdit(loc)}>
+                            <Pencil className="w-4 h-4 mr-2" />
+                            Editar
+                          </Button>
+                        </>
                       )}
                     </TableCell>
                   </TableRow>

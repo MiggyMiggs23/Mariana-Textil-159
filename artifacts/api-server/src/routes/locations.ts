@@ -3,6 +3,7 @@ import { and, asc, eq, inArray } from "drizzle-orm";
 import {
   CreateLocationBody,
   CreateLocationResponse,
+  ListLocationsQueryParams,
   ListLocationsResponse,
   UpdateLocationBody,
   UpdateLocationParams,
@@ -27,6 +28,7 @@ import { requierePermiso } from "../lib/permisos";
 import { presentLocation } from "../lib/presenters";
 import { isPostgresUniqueViolation } from "../lib/postgres-errors";
 import { getRequestIp } from "../lib/request";
+import { resolveLocationsListDecision } from "../lib/locations-query";
 
 const router: IRouter = Router();
 
@@ -35,18 +37,34 @@ router.use("/locations", requireSession);
 router.get(
   "/locations",
   requierePermiso("ubicaciones", "ver"),
-  async (_req, res): Promise<void> => {
-  const locations = await db
-    .select()
-    .from(ubicacionesTable)
-    .where(
-      and(
-        inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
-        eq(ubicacionesTable.activa, true),
-      ),
-    )
-    .orderBy(ubicacionesTable.id);
-  res.json(ListLocationsResponse.parse(locations.map(presentLocation)));
+  async (req, res): Promise<void> => {
+    const decision = resolveLocationsListDecision(
+      req.query.includeInactive,
+      req.auth!.user.rol,
+    );
+    const query = ListLocationsQueryParams.safeParse(req.query);
+    if (!query.success) {
+      res.status(400).json({ error: "Parámetros de ubicaciones inválidos." });
+      return;
+    }
+    if (!decision.ok) {
+      res.status(decision.status).json({ error: decision.error });
+      return;
+    }
+
+    const locations = await db
+      .select()
+      .from(ubicacionesTable)
+      .where(
+        and(
+          inArray(ubicacionesTable.tipo, ["TIENDA", "BODEGA"]),
+          decision.includeInactive
+            ? undefined
+            : eq(ubicacionesTable.activa, true),
+        ),
+      )
+      .orderBy(ubicacionesTable.id);
+    res.json(ListLocationsResponse.parse(locations.map(presentLocation)));
   },
 );
 
@@ -127,6 +145,9 @@ router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (
           ),
         )
         .returning();
+      if (!after) {
+        return null;
+      }
       await tx.insert(auditoriaTable).values({
         usuarioId: req.auth!.user.id,
         accion: "ACTUALIZAR",
@@ -138,6 +159,10 @@ router.patch("/locations/:id", requierePermiso("ubicaciones", "editar"), async (
       });
       return after;
     });
+    if (!updated) {
+      res.status(404).json({ error: "Ubicación no encontrada." });
+      return;
+    }
     res.json(UpdateLocationResponse.parse(presentLocation(updated)));
   } catch (error) {
       if (isPostgresUniqueViolation(error)) {

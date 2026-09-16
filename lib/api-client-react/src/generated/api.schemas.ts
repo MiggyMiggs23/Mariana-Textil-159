@@ -4612,6 +4612,79 @@ export interface KardexResult {
   resumen: KardexResumen;
 }
 
+export interface KardexGroupedUnitTotal {
+  unidad: string;
+  /** Cantidad decimal exacta, nunca convertida a número JS. */
+  cantidad: string;
+}
+
+export interface KardexGroupedProduct {
+  productoId: number;
+  skuProducto: string;
+  telaProducto: string;
+  colorProducto: string;
+  unidadProducto: string;
+}
+
+export interface KardexGroupedUser {
+  usuarioId: number;
+  nombreUsuario: string;
+  username: string;
+}
+
+export interface KardexGroupedRoll {
+  movementId: number;
+  rolloId: number;
+  serie: string;
+  cantidad: string;
+  unidad: string;
+  createdAt: string;
+  saldoPosterior: string;
+  referenciaRolloRuta: string;
+}
+
+export interface KardexGroupedRow {
+  groupId: string;
+  createdAt: string;
+  fechaMin: string;
+  fechaMax: string;
+  latestDate: string;
+  latestMovementId: number;
+  tipo: TipoMovimiento;
+  ubicacionId: number;
+  nombreUbicacion: string;
+  ubicacionActiva: boolean;
+  distinctRolloCount: number;
+  partialitiesMerged: number;
+  totalesPorUnidad: KardexGroupedUnitTotal[];
+  productos: KardexGroupedProduct[];
+  usuarios: KardexGroupedUser[];
+  /** @nullable */
+  documentoTipo: string | null;
+  /** @nullable */
+  documentoId: string | null;
+  /** @nullable */
+  documentoEtiqueta: string | null;
+  /** @nullable */
+  documentoRuta: string | null;
+  /** @nullable */
+  ticketId: number | null;
+  /** @nullable */
+  destinoEtiqueta: string | null;
+  /** @nullable */
+  justificacion: string | null;
+  rollos: KardexGroupedRoll[];
+}
+
+export interface KardexGroupedResult {
+  grupos: KardexGroupedRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  resumen: KardexResumen;
+}
+
 export interface KardexFilterProduct {
   id: number;
   sku: string;
@@ -6991,6 +7064,13 @@ export type GetDashboardParams = {
 ubicacionId?: number;
 };
 
+export type ListLocationsParams = {
+/**
+ * Incluye ubicaciones inactivas; requiere ADMIN y ubicaciones.ver.
+ */
+includeInactive?: boolean;
+};
+
 export type ListProductosParams = {
 /**
  * Limita existencias a una ubicación permitida por el alcance de consulta.
@@ -7385,6 +7465,34 @@ export type GetKardexModo = typeof GetKardexModo[keyof typeof GetKardexModo];
 
 
 export const GetKardexModo = {
+  TODO_LO_QUE_SALIO: 'TODO_LO_QUE_SALIO',
+} as const;
+
+export type GetKardexGroupedParams = {
+modo?: GetKardexGroupedModo;
+tipos?: TipoMovimiento[];
+productoId?: number;
+ubicacionId?: number;
+usuarioId?: number;
+desde?: string;
+hasta?: string;
+buscar?: string;
+incluirUbicacionesInactivas?: boolean;
+/**
+ * @minimum 1
+ */
+page?: number;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+pageSize?: number;
+};
+
+export type GetKardexGroupedModo = typeof GetKardexGroupedModo[keyof typeof GetKardexGroupedModo];
+
+
+export const GetKardexGroupedModo = {
   TODO_LO_QUE_SALIO: 'TODO_LO_QUE_SALIO',
 } as const;
 

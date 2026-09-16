@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mariana Textil — Propuesta Clientes</title>
+  <style>
+    :root { --background: hsl(210 20% 98%); --sidebar: hsl(228 51% 15%); --primary: hsl(226 72% 47%); --muted: hsl(215.4 16.3% 46.9%); --card: hsl(0 0% 100%); --border: hsl(214.3 31.8% 91.4%); }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--background); color: var(--sidebar); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+    main { min-height: 100dvh; padding: 24px; }
+    .wrap { max-width: 1152px; margin: 0 auto; }
+    header { display: grid; gap: 8px; }
+    .eyebrow { margin: 0; color: var(--primary); font-size: 12px; font-weight: 600; letter-spacing: .14em; line-height: 16px; text-transform: uppercase; }
+    h1 { margin: 0; font-size: 30px; line-height: 36px; letter-spacing: -.025em; font-weight: 700; }
+    .lede { margin: 0; color: var(--muted); font-size: 16px; line-height: 24px; }
+    .cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
+    .card { min-width: 0; min-height: 92px; padding: 16px; border: 1px solid var(--border); border-radius: 8px; background: var(--card); box-shadow: 0 1px 2px rgb(15 23 42 / .05); display: flex; flex-direction: column; gap: 4px; }
+    .label { color: var(--muted); font-size: 14px; line-height: 20px; font-weight: 500; }
+    .value { color: var(--sidebar); font-size: 24px; line-height: 32px; font-weight: 700; overflow-wrap: anywhere; }
+    .notice { margin: 24px 0 0; color: var(--muted); font-size: 12px; line-height: 16px; }
+    @media (min-width: 640px) { main { padding: 32px; } .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (min-width: 1024px) { .cards { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="wrap">
+      <header>
+        <p class="eyebrow">Propuesta visual — pendiente de corregir alcance por sitio</p>
+        <h1>Clientes</h1>
+        <p class="lede">Gestión de cuentas y saldos de clientes.</p>
+      </header>
+      <section class="cards" aria-label="Resumen de clientes">
+        <article class="card"><span class="label">Total Cartera</span><span class="value">Sin conectar</span></article>
+        <article class="card"><span class="label">Total Vencido</span><span class="value">Sin conectar</span></article>
+        <article class="card"><span class="label">Clientes con Saldo</span><span class="value">Sin conectar</span></article>
+        <article class="card"><span class="label">Total Clientes</span><span class="value">Sin conectar</span></article>
+      </section>
+      <p class="notice">Propuesta visual sin conexión a datos financieros ni conteos globales.</p>
+    </div>
+  </main>
+</body>
+</html>

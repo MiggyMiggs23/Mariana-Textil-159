@@ -562,6 +562,14 @@ paths:
       operationId: listLocations
       tags: [locations]
       summary: Lista ubicaciones reales para administración
+      parameters:
+        - in: query
+          name: includeInactive
+          required: false
+          description: Incluye ubicaciones inactivas; requiere ADMIN y ubicaciones.ver.
+          schema:
+            type: boolean
+            default: false
       responses:
         "200":
           description: Lista de ubicaciones
@@ -2555,6 +2563,69 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/KardexResult"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+  /inventario/kardex/agrupado:
+    get:
+      operationId: getKardexGrouped
+      tags: [inventario]
+      summary: Historial de movimientos agrupado por documento, tipo y sitio
+      description: >
+        Presentación agrupada del kardex. Agrupa únicamente movimientos con
+        documento verificado usando tipo interno, ID interno, tipo de movimiento
+        y sitio. Los movimientos sin documento verificado permanecen
+        individuales por ID para conservar su justificación. Las cantidades se
+        mantienen separadas por unidad.
+      parameters:
+        - in: query
+          name: modo
+          schema:
+            type: string
+            enum: [TODO_LO_QUE_SALIO]
+        - in: query
+          name: tipos
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/TipoMovimiento"
+        - in: query
+          name: productoId
+          schema: { type: number }
+        - in: query
+          name: ubicacionId
+          schema: { type: number }
+        - in: query
+          name: usuarioId
+          schema: { type: number }
+        - in: query
+          name: desde
+          schema: { type: string, format: date }
+        - in: query
+          name: hasta
+          schema: { type: string, format: date }
+        - in: query
+          name: buscar
+          schema: { type: string }
+        - in: query
+          name: incluirUbicacionesInactivas
+          schema: { type: boolean, default: false }
+        - in: query
+          name: page
+          schema: { type: number, minimum: 1, default: 1 }
+        - in: query
+          name: pageSize
+          schema: { type: number, minimum: 1, maximum: 100, default: 100 }
+      responses:
+        "200":
+          description: Movimientos del kardex agrupados para presentación
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/KardexGroupedResult"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -10446,6 +10517,132 @@ components:
         totalPages: { type: number }
         resumen:
           $ref: "#/components/schemas/KardexResumen"
+    KardexGroupedResult:
+      type: object
+      required: [grupos, total, page, pageSize, totalPages, resumen]
+      properties:
+        grupos:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexGroupedRow"
+        total: { type: number }
+        page: { type: number }
+        pageSize: { type: number }
+        totalPages: { type: number }
+        resumen:
+          $ref: "#/components/schemas/KardexResumen"
+    KardexGroupedUnitTotal:
+      type: object
+      required: [unidad, cantidad]
+      properties:
+        unidad: { type: string }
+        cantidad:
+          type: string
+          description: Cantidad decimal exacta, nunca convertida a número JS.
+    KardexGroupedProduct:
+      type: object
+      required:
+        [productoId, skuProducto, telaProducto, colorProducto, unidadProducto]
+      properties:
+        productoId: { type: number }
+        skuProducto: { type: string }
+        telaProducto: { type: string }
+        colorProducto: { type: string }
+        unidadProducto: { type: string }
+    KardexGroupedUser:
+      type: object
+      required: [usuarioId, nombreUsuario, username]
+      properties:
+        usuarioId: { type: number }
+        nombreUsuario: { type: string }
+        username: { type: string }
+    KardexGroupedRoll:
+      type: object
+      required:
+        [
+          movementId,
+          rolloId,
+          serie,
+          cantidad,
+          unidad,
+          createdAt,
+          saldoPosterior,
+          referenciaRolloRuta,
+        ]
+      properties:
+        movementId: { type: number }
+        rolloId: { type: number }
+        serie: { type: string }
+        cantidad: { type: string }
+        unidad: { type: string }
+        createdAt: { type: string, format: date-time }
+        saldoPosterior: { type: string }
+        referenciaRolloRuta: { type: string }
+    KardexGroupedRow:
+      type: object
+      required:
+        [
+          groupId,
+          createdAt,
+          fechaMin,
+          fechaMax,
+          latestDate,
+          latestMovementId,
+          tipo,
+          ubicacionId,
+          nombreUbicacion,
+          ubicacionActiva,
+          distinctRolloCount,
+          partialitiesMerged,
+          totalesPorUnidad,
+          productos,
+          usuarios,
+          documentoTipo,
+          documentoId,
+          documentoEtiqueta,
+          documentoRuta,
+          ticketId,
+          destinoEtiqueta,
+          justificacion,
+          rollos,
+        ]
+      properties:
+        groupId: { type: string }
+        createdAt: { type: string, format: date-time }
+        fechaMin: { type: string, format: date-time }
+        fechaMax: { type: string, format: date-time }
+        latestDate: { type: string, format: date-time }
+        latestMovementId: { type: number }
+        tipo:
+          $ref: "#/components/schemas/TipoMovimiento"
+        ubicacionId: { type: number }
+        nombreUbicacion: { type: string }
+        ubicacionActiva: { type: boolean }
+        distinctRolloCount: { type: number }
+        partialitiesMerged: { type: number }
+        totalesPorUnidad:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexGroupedUnitTotal"
+        productos:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexGroupedProduct"
+        usuarios:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexGroupedUser"
+        documentoTipo: { type: ["string", "null"] }
+        documentoId: { type: ["string", "null"] }
+        documentoEtiqueta: { type: ["string", "null"] }
+        documentoRuta: { type: ["string", "null"] }
+        ticketId: { type: ["number", "null"] }
+        destinoEtiqueta: { type: ["string", "null"] }
+        justificacion: { type: ["string", "null"] }
+        rollos:
+          type: array
+          items:
+            $ref: "#/components/schemas/KardexGroupedRoll"
     KardexResumen:
       type: object
       required: [totalMetros, totalKilos, totalBolsas, totalPiezas]

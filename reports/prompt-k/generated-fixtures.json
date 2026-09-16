@@ -1,0 +1,2103 @@
+{
+  "fixturePolicy": {
+    "label": "SYNTHETIC_OFFLINE_NO_AUTH_VERIFICATION",
+    "syntheticOnly": true,
+    "authenticationVerified": false,
+    "databaseWrites": 0,
+    "migrations": 0,
+    "sessions": 0,
+    "testUsers": 0,
+    "liveHttp": false,
+    "liveApi": false,
+    "liveCdn": false,
+    "canonicalFixturesMutable": false,
+    "noNetworkReactivation": true
+  },
+  "builder": {
+    "entrypoint": "groupKardexRows",
+    "source": "artifacts/api-server/src/lib/kardex-grouped.ts",
+    "executor": "pure presentation builder; no database connection",
+    "arithmetic": "addExactDecimal"
+  },
+  "contexts": {
+    "admin": {
+      "id": 0,
+      "nombre": "Contexto offline de permisos",
+      "usuario": "offline-context",
+      "rol": "ADMIN",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Matriz Textil",
+        "iniciales": "MT",
+        "tipo": "BODEGA",
+        "activa": true,
+        "esSistema": true
+      },
+      "alcanceConsulta": "TODAS",
+      "permisos": []
+    },
+    "readOnly": {
+      "id": 0,
+      "nombre": "Contexto offline de permisos",
+      "usuario": "offline-context",
+      "rol": "BODEGA",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Matriz Textil",
+        "iniciales": "MT",
+        "tipo": "BODEGA",
+        "activa": true,
+        "esSistema": true
+      },
+      "alcanceConsulta": "TODAS",
+      "permisos": [
+        {
+          "modulo": "entradas",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "movimientos",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        },
+        {
+          "modulo": "ubicaciones",
+          "puedeVer": true,
+          "puedeCrear": false,
+          "puedeEditar": false,
+          "puedeAutorizar": false
+        }
+      ]
+    }
+  },
+  "locations": {
+    "all": [
+      {
+        "id": 1,
+        "nombre": "Matriz Textil",
+        "iniciales": "MT",
+        "tipo": "BODEGA",
+        "activa": true,
+        "esSistema": true
+      },
+      {
+        "id": 2,
+        "nombre": "Tienda Centro",
+        "iniciales": "TC",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      {
+        "id": 3,
+        "nombre": "Bodega Norte",
+        "iniciales": "BN",
+        "tipo": "BODEGA",
+        "activa": false,
+        "esSistema": false
+      }
+    ],
+    "activeOnly": [
+      {
+        "id": 1,
+        "nombre": "Matriz Textil",
+        "iniciales": "MT",
+        "tipo": "BODEGA",
+        "activa": true,
+        "esSistema": true
+      },
+      {
+        "id": 2,
+        "nombre": "Tienda Centro",
+        "iniciales": "TC",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      }
+    ]
+  },
+  "entradas": {
+    "catalogos": {
+      "productos": [
+        {
+          "id": 10,
+          "sku": "TEL-10",
+          "tela": "Algodón base",
+          "color": "Rojo",
+          "unidad": "METRO",
+          "activo": true
+        },
+        {
+          "id": 11,
+          "sku": "TEL-11",
+          "tela": "Lino ligero",
+          "color": "Azul",
+          "unidad": "KILO",
+          "activo": true
+        }
+      ],
+      "proveedores": [
+        {
+          "id": 20,
+          "nombre": "Proveedor sintético A",
+          "activo": true
+        }
+      ]
+    },
+    "items": [
+      {
+        "id": 501,
+        "folio": 503,
+        "inicialesSitio": "MT",
+        "folioFormateado": "DN-000503",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "proveedorId": 20,
+        "nombreProveedor": "Proveedor sintético A",
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "fecha": "2025-01-15",
+        "totalRollos": 3,
+        "totalCosto": null,
+        "createdAt": "2025-01-15T14:00:00.000Z"
+      },
+      {
+        "id": 502,
+        "folio": 504,
+        "inicialesSitio": "TC",
+        "folioFormateado": "DN-000504",
+        "ubicacionId": 2,
+        "nombreUbicacion": "Tienda Centro",
+        "proveedorId": null,
+        "nombreProveedor": null,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "fecha": "2025-01-16",
+        "totalRollos": 1,
+        "totalCosto": null,
+        "createdAt": "2025-01-16T14:00:00.000Z"
+      }
+    ],
+    "total": 21,
+    "pageSize": 10
+  },
+  "movimientos": {
+    "rawRows": [
+      {
+        "id": 100,
+        "createdAt": "2025-01-15T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "0.1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 500,
+        "serie": "SERIE-500",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "900",
+        "documentoEtiqueta": "Ticket 900",
+        "documentoRuta": "/tickets/900",
+        "ticketId": 900,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 101,
+        "createdAt": "2025-01-15T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "0.2",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 501,
+        "serie": "SERIE-501",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "900",
+        "documentoEtiqueta": "Ticket 900",
+        "documentoRuta": "/tickets/900",
+        "ticketId": 900,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 102,
+        "createdAt": "2025-01-15T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "2",
+        "saldoPosterior": "10",
+        "productoId": 11,
+        "skuProducto": "TEL-11",
+        "telaProducto": "Lino ligero",
+        "colorProducto": "Azul",
+        "unidadProducto": "KILO",
+        "rolloId": 502,
+        "serie": "SERIE-502",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "900",
+        "documentoEtiqueta": "Ticket 900",
+        "documentoRuta": "/tickets/900",
+        "ticketId": 900,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 103,
+        "createdAt": "2025-01-14T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "0.4",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 503,
+        "serie": "SERIE-503",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "901",
+        "documentoEtiqueta": "Ticket 901",
+        "documentoRuta": "/tickets/901",
+        "ticketId": 901,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 104,
+        "createdAt": "2025-01-13T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "0.5",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 504,
+        "serie": "SERIE-504",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "902",
+        "documentoEtiqueta": "Ticket 902",
+        "documentoRuta": "/tickets/902",
+        "ticketId": 902,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 200,
+        "createdAt": "2025-01-12T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 600,
+        "serie": "SERIE-600",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "910",
+        "documentoEtiqueta": "Ticket 910",
+        "documentoRuta": "/tickets/910",
+        "ticketId": 910,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 201,
+        "createdAt": "2025-01-11T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 601,
+        "serie": "SERIE-601",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "911",
+        "documentoEtiqueta": "Ticket 911",
+        "documentoRuta": "/tickets/911",
+        "ticketId": 911,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 202,
+        "createdAt": "2025-01-10T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 602,
+        "serie": "SERIE-602",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "912",
+        "documentoEtiqueta": "Ticket 912",
+        "documentoRuta": "/tickets/912",
+        "ticketId": 912,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 203,
+        "createdAt": "2025-01-09T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 603,
+        "serie": "SERIE-603",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "913",
+        "documentoEtiqueta": "Ticket 913",
+        "documentoRuta": "/tickets/913",
+        "ticketId": 913,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 204,
+        "createdAt": "2025-01-08T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 604,
+        "serie": "SERIE-604",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "914",
+        "documentoEtiqueta": "Ticket 914",
+        "documentoRuta": "/tickets/914",
+        "ticketId": 914,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 205,
+        "createdAt": "2025-01-07T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 605,
+        "serie": "SERIE-605",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "915",
+        "documentoEtiqueta": "Ticket 915",
+        "documentoRuta": "/tickets/915",
+        "ticketId": 915,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 206,
+        "createdAt": "2025-01-06T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "1",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 606,
+        "serie": "SERIE-606",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "916",
+        "documentoEtiqueta": "Ticket 916",
+        "documentoRuta": "/tickets/916",
+        "ticketId": 916,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": null,
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 300,
+        "createdAt": "2025-01-20T12:00:00.000Z",
+        "tipo": "VENTA",
+        "cantidad": "0.7",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 700,
+        "serie": "SERIE-700",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": "TICKET",
+        "documentoId": "404",
+        "documentoEtiqueta": null,
+        "documentoRuta": null,
+        "ticketId": null,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": "Documento legado no localizado",
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      },
+      {
+        "id": 301,
+        "createdAt": "2025-01-19T12:00:00.000Z",
+        "tipo": "AJUSTE_POSITIVO",
+        "cantidad": "0.8",
+        "saldoPosterior": "10",
+        "productoId": 10,
+        "skuProducto": "TEL-10",
+        "telaProducto": "Algodón base",
+        "colorProducto": "Rojo",
+        "unidadProducto": "METRO",
+        "rolloId": 701,
+        "serie": "SERIE-701",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "usuarioId": 0,
+        "nombreUsuario": "Contexto offline",
+        "username": "offline-context",
+        "documentoTipo": null,
+        "documentoId": null,
+        "documentoEtiqueta": null,
+        "documentoRuta": null,
+        "ticketId": null,
+        "destinoEtiqueta": "Cliente sintético",
+        "movimientoOrigenId": null,
+        "justificacion": "Ajuste manual trazable sin documento verificado",
+        "revisado": true,
+        "revisadoPor": null,
+        "revisadoAt": null,
+        "referenciaRolloRuta": "/inventario/rollos/500"
+      }
+    ],
+    "groupedRows": [
+      {
+        "groupId": "movement:300",
+        "createdAt": "2025-01-20T12:00:00.000Z",
+        "fechaMin": "2025-01-20T12:00:00.000Z",
+        "fechaMax": "2025-01-20T12:00:00.000Z",
+        "latestDate": "2025-01-20T12:00:00.000Z",
+        "latestMovementId": 300,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "0.7"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": null,
+        "documentoId": null,
+        "documentoEtiqueta": null,
+        "documentoRuta": null,
+        "ticketId": null,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": "Documento legado no localizado",
+        "rollos": [
+          {
+            "movementId": 300,
+            "rolloId": 700,
+            "serie": "SERIE-700",
+            "cantidad": "0.7",
+            "unidad": "METRO",
+            "createdAt": "2025-01-20T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "movement:301",
+        "createdAt": "2025-01-19T12:00:00.000Z",
+        "fechaMin": "2025-01-19T12:00:00.000Z",
+        "fechaMax": "2025-01-19T12:00:00.000Z",
+        "latestDate": "2025-01-19T12:00:00.000Z",
+        "latestMovementId": 301,
+        "tipo": "AJUSTE_POSITIVO",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "0.8"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": null,
+        "documentoId": null,
+        "documentoEtiqueta": null,
+        "documentoRuta": null,
+        "ticketId": null,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": "Ajuste manual trazable sin documento verificado",
+        "rollos": [
+          {
+            "movementId": 301,
+            "rolloId": 701,
+            "serie": "SERIE-701",
+            "cantidad": "0.8",
+            "unidad": "METRO",
+            "createdAt": "2025-01-19T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"900\",\"VENTA\",1]",
+        "createdAt": "2025-01-15T12:00:00.000Z",
+        "fechaMin": "2025-01-15T12:00:00.000Z",
+        "fechaMax": "2025-01-15T12:00:00.000Z",
+        "latestDate": "2025-01-15T12:00:00.000Z",
+        "latestMovementId": 102,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 3,
+        "partialitiesMerged": 3,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "0.3"
+          },
+          {
+            "unidad": "KILO",
+            "cantidad": "2"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 11,
+            "skuProducto": "TEL-11",
+            "telaProducto": "Lino ligero",
+            "colorProducto": "Azul",
+            "unidadProducto": "KILO"
+          },
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "900",
+        "documentoEtiqueta": "Ticket 900",
+        "documentoRuta": "/tickets/900",
+        "ticketId": 900,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 102,
+            "rolloId": 502,
+            "serie": "SERIE-502",
+            "cantidad": "2",
+            "unidad": "KILO",
+            "createdAt": "2025-01-15T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          },
+          {
+            "movementId": 101,
+            "rolloId": 501,
+            "serie": "SERIE-501",
+            "cantidad": "0.2",
+            "unidad": "METRO",
+            "createdAt": "2025-01-15T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          },
+          {
+            "movementId": 100,
+            "rolloId": 500,
+            "serie": "SERIE-500",
+            "cantidad": "0.1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-15T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"901\",\"VENTA\",1]",
+        "createdAt": "2025-01-14T12:00:00.000Z",
+        "fechaMin": "2025-01-14T12:00:00.000Z",
+        "fechaMax": "2025-01-14T12:00:00.000Z",
+        "latestDate": "2025-01-14T12:00:00.000Z",
+        "latestMovementId": 103,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "0.4"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "901",
+        "documentoEtiqueta": "Ticket 901",
+        "documentoRuta": "/tickets/901",
+        "ticketId": 901,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 103,
+            "rolloId": 503,
+            "serie": "SERIE-503",
+            "cantidad": "0.4",
+            "unidad": "METRO",
+            "createdAt": "2025-01-14T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"902\",\"VENTA\",1]",
+        "createdAt": "2025-01-13T12:00:00.000Z",
+        "fechaMin": "2025-01-13T12:00:00.000Z",
+        "fechaMax": "2025-01-13T12:00:00.000Z",
+        "latestDate": "2025-01-13T12:00:00.000Z",
+        "latestMovementId": 104,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "0.5"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "902",
+        "documentoEtiqueta": "Ticket 902",
+        "documentoRuta": "/tickets/902",
+        "ticketId": 902,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 104,
+            "rolloId": 504,
+            "serie": "SERIE-504",
+            "cantidad": "0.5",
+            "unidad": "METRO",
+            "createdAt": "2025-01-13T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"910\",\"VENTA\",1]",
+        "createdAt": "2025-01-12T12:00:00.000Z",
+        "fechaMin": "2025-01-12T12:00:00.000Z",
+        "fechaMax": "2025-01-12T12:00:00.000Z",
+        "latestDate": "2025-01-12T12:00:00.000Z",
+        "latestMovementId": 200,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "1"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "910",
+        "documentoEtiqueta": "Ticket 910",
+        "documentoRuta": "/tickets/910",
+        "ticketId": 910,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 200,
+            "rolloId": 600,
+            "serie": "SERIE-600",
+            "cantidad": "1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-12T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"911\",\"VENTA\",1]",
+        "createdAt": "2025-01-11T12:00:00.000Z",
+        "fechaMin": "2025-01-11T12:00:00.000Z",
+        "fechaMax": "2025-01-11T12:00:00.000Z",
+        "latestDate": "2025-01-11T12:00:00.000Z",
+        "latestMovementId": 201,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "1"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "911",
+        "documentoEtiqueta": "Ticket 911",
+        "documentoRuta": "/tickets/911",
+        "ticketId": 911,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 201,
+            "rolloId": 601,
+            "serie": "SERIE-601",
+            "cantidad": "1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-11T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"912\",\"VENTA\",1]",
+        "createdAt": "2025-01-10T12:00:00.000Z",
+        "fechaMin": "2025-01-10T12:00:00.000Z",
+        "fechaMax": "2025-01-10T12:00:00.000Z",
+        "latestDate": "2025-01-10T12:00:00.000Z",
+        "latestMovementId": 202,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "1"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "912",
+        "documentoEtiqueta": "Ticket 912",
+        "documentoRuta": "/tickets/912",
+        "ticketId": 912,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 202,
+            "rolloId": 602,
+            "serie": "SERIE-602",
+            "cantidad": "1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-10T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"913\",\"VENTA\",1]",
+        "createdAt": "2025-01-09T12:00:00.000Z",
+        "fechaMin": "2025-01-09T12:00:00.000Z",
+        "fechaMax": "2025-01-09T12:00:00.000Z",
+        "latestDate": "2025-01-09T12:00:00.000Z",
+        "latestMovementId": 203,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "1"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "913",
+        "documentoEtiqueta": "Ticket 913",
+        "documentoRuta": "/tickets/913",
+        "ticketId": 913,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 203,
+            "rolloId": 603,
+            "serie": "SERIE-603",
+            "cantidad": "1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-09T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"914\",\"VENTA\",1]",
+        "createdAt": "2025-01-08T12:00:00.000Z",
+        "fechaMin": "2025-01-08T12:00:00.000Z",
+        "fechaMax": "2025-01-08T12:00:00.000Z",
+        "latestDate": "2025-01-08T12:00:00.000Z",
+        "latestMovementId": 204,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "1"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "914",
+        "documentoEtiqueta": "Ticket 914",
+        "documentoRuta": "/tickets/914",
+        "ticketId": 914,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 204,
+            "rolloId": 604,
+            "serie": "SERIE-604",
+            "cantidad": "1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-08T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"915\",\"VENTA\",1]",
+        "createdAt": "2025-01-07T12:00:00.000Z",
+        "fechaMin": "2025-01-07T12:00:00.000Z",
+        "fechaMax": "2025-01-07T12:00:00.000Z",
+        "latestDate": "2025-01-07T12:00:00.000Z",
+        "latestMovementId": 205,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "1"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "915",
+        "documentoEtiqueta": "Ticket 915",
+        "documentoRuta": "/tickets/915",
+        "ticketId": 915,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 205,
+            "rolloId": 605,
+            "serie": "SERIE-605",
+            "cantidad": "1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-07T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      },
+      {
+        "groupId": "[\"TICKET\",\"916\",\"VENTA\",1]",
+        "createdAt": "2025-01-06T12:00:00.000Z",
+        "fechaMin": "2025-01-06T12:00:00.000Z",
+        "fechaMax": "2025-01-06T12:00:00.000Z",
+        "latestDate": "2025-01-06T12:00:00.000Z",
+        "latestMovementId": 206,
+        "tipo": "VENTA",
+        "ubicacionId": 1,
+        "nombreUbicacion": "Matriz Textil",
+        "ubicacionActiva": true,
+        "distinctRolloCount": 1,
+        "partialitiesMerged": 1,
+        "totalesPorUnidad": [
+          {
+            "unidad": "METRO",
+            "cantidad": "1"
+          }
+        ],
+        "productos": [
+          {
+            "productoId": 10,
+            "skuProducto": "TEL-10",
+            "telaProducto": "Algodón base",
+            "colorProducto": "Rojo",
+            "unidadProducto": "METRO"
+          }
+        ],
+        "usuarios": [
+          {
+            "usuarioId": 0,
+            "nombreUsuario": "Contexto offline",
+            "username": "offline-context"
+          }
+        ],
+        "documentoTipo": "TICKET",
+        "documentoId": "916",
+        "documentoEtiqueta": "Ticket 916",
+        "documentoRuta": "/tickets/916",
+        "ticketId": 916,
+        "destinoEtiqueta": "Cliente sintético",
+        "justificacion": null,
+        "rollos": [
+          {
+            "movementId": 206,
+            "rolloId": 606,
+            "serie": "SERIE-606",
+            "cantidad": "1",
+            "unidad": "METRO",
+            "createdAt": "2025-01-06T12:00:00.000Z",
+            "saldoPosterior": "10",
+            "referenciaRolloRuta": "/inventario/rollos/500"
+          }
+        ]
+      }
+    ],
+    "groupedResult": {
+      "grupos": [
+        {
+          "groupId": "movement:300",
+          "createdAt": "2025-01-20T12:00:00.000Z",
+          "fechaMin": "2025-01-20T12:00:00.000Z",
+          "fechaMax": "2025-01-20T12:00:00.000Z",
+          "latestDate": "2025-01-20T12:00:00.000Z",
+          "latestMovementId": 300,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "0.7"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "ticketId": null,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": "Documento legado no localizado",
+          "rollos": [
+            {
+              "movementId": 300,
+              "rolloId": 700,
+              "serie": "SERIE-700",
+              "cantidad": "0.7",
+              "unidad": "METRO",
+              "createdAt": "2025-01-20T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "movement:301",
+          "createdAt": "2025-01-19T12:00:00.000Z",
+          "fechaMin": "2025-01-19T12:00:00.000Z",
+          "fechaMax": "2025-01-19T12:00:00.000Z",
+          "latestDate": "2025-01-19T12:00:00.000Z",
+          "latestMovementId": 301,
+          "tipo": "AJUSTE_POSITIVO",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "0.8"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": null,
+          "documentoId": null,
+          "documentoEtiqueta": null,
+          "documentoRuta": null,
+          "ticketId": null,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": "Ajuste manual trazable sin documento verificado",
+          "rollos": [
+            {
+              "movementId": 301,
+              "rolloId": 701,
+              "serie": "SERIE-701",
+              "cantidad": "0.8",
+              "unidad": "METRO",
+              "createdAt": "2025-01-19T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"900\",\"VENTA\",1]",
+          "createdAt": "2025-01-15T12:00:00.000Z",
+          "fechaMin": "2025-01-15T12:00:00.000Z",
+          "fechaMax": "2025-01-15T12:00:00.000Z",
+          "latestDate": "2025-01-15T12:00:00.000Z",
+          "latestMovementId": 102,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 3,
+          "partialitiesMerged": 3,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "0.3"
+            },
+            {
+              "unidad": "KILO",
+              "cantidad": "2"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 11,
+              "skuProducto": "TEL-11",
+              "telaProducto": "Lino ligero",
+              "colorProducto": "Azul",
+              "unidadProducto": "KILO"
+            },
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "900",
+          "documentoEtiqueta": "Ticket 900",
+          "documentoRuta": "/tickets/900",
+          "ticketId": 900,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 102,
+              "rolloId": 502,
+              "serie": "SERIE-502",
+              "cantidad": "2",
+              "unidad": "KILO",
+              "createdAt": "2025-01-15T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            },
+            {
+              "movementId": 101,
+              "rolloId": 501,
+              "serie": "SERIE-501",
+              "cantidad": "0.2",
+              "unidad": "METRO",
+              "createdAt": "2025-01-15T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            },
+            {
+              "movementId": 100,
+              "rolloId": 500,
+              "serie": "SERIE-500",
+              "cantidad": "0.1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-15T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"901\",\"VENTA\",1]",
+          "createdAt": "2025-01-14T12:00:00.000Z",
+          "fechaMin": "2025-01-14T12:00:00.000Z",
+          "fechaMax": "2025-01-14T12:00:00.000Z",
+          "latestDate": "2025-01-14T12:00:00.000Z",
+          "latestMovementId": 103,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "0.4"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "901",
+          "documentoEtiqueta": "Ticket 901",
+          "documentoRuta": "/tickets/901",
+          "ticketId": 901,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 103,
+              "rolloId": 503,
+              "serie": "SERIE-503",
+              "cantidad": "0.4",
+              "unidad": "METRO",
+              "createdAt": "2025-01-14T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"902\",\"VENTA\",1]",
+          "createdAt": "2025-01-13T12:00:00.000Z",
+          "fechaMin": "2025-01-13T12:00:00.000Z",
+          "fechaMax": "2025-01-13T12:00:00.000Z",
+          "latestDate": "2025-01-13T12:00:00.000Z",
+          "latestMovementId": 104,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "0.5"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "902",
+          "documentoEtiqueta": "Ticket 902",
+          "documentoRuta": "/tickets/902",
+          "ticketId": 902,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 104,
+              "rolloId": 504,
+              "serie": "SERIE-504",
+              "cantidad": "0.5",
+              "unidad": "METRO",
+              "createdAt": "2025-01-13T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"910\",\"VENTA\",1]",
+          "createdAt": "2025-01-12T12:00:00.000Z",
+          "fechaMin": "2025-01-12T12:00:00.000Z",
+          "fechaMax": "2025-01-12T12:00:00.000Z",
+          "latestDate": "2025-01-12T12:00:00.000Z",
+          "latestMovementId": 200,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "1"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "910",
+          "documentoEtiqueta": "Ticket 910",
+          "documentoRuta": "/tickets/910",
+          "ticketId": 910,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 200,
+              "rolloId": 600,
+              "serie": "SERIE-600",
+              "cantidad": "1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-12T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"911\",\"VENTA\",1]",
+          "createdAt": "2025-01-11T12:00:00.000Z",
+          "fechaMin": "2025-01-11T12:00:00.000Z",
+          "fechaMax": "2025-01-11T12:00:00.000Z",
+          "latestDate": "2025-01-11T12:00:00.000Z",
+          "latestMovementId": 201,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "1"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "911",
+          "documentoEtiqueta": "Ticket 911",
+          "documentoRuta": "/tickets/911",
+          "ticketId": 911,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 201,
+              "rolloId": 601,
+              "serie": "SERIE-601",
+              "cantidad": "1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-11T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"912\",\"VENTA\",1]",
+          "createdAt": "2025-01-10T12:00:00.000Z",
+          "fechaMin": "2025-01-10T12:00:00.000Z",
+          "fechaMax": "2025-01-10T12:00:00.000Z",
+          "latestDate": "2025-01-10T12:00:00.000Z",
+          "latestMovementId": 202,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "1"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "912",
+          "documentoEtiqueta": "Ticket 912",
+          "documentoRuta": "/tickets/912",
+          "ticketId": 912,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 202,
+              "rolloId": 602,
+              "serie": "SERIE-602",
+              "cantidad": "1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-10T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"913\",\"VENTA\",1]",
+          "createdAt": "2025-01-09T12:00:00.000Z",
+          "fechaMin": "2025-01-09T12:00:00.000Z",
+          "fechaMax": "2025-01-09T12:00:00.000Z",
+          "latestDate": "2025-01-09T12:00:00.000Z",
+          "latestMovementId": 203,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "1"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "913",
+          "documentoEtiqueta": "Ticket 913",
+          "documentoRuta": "/tickets/913",
+          "ticketId": 913,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 203,
+              "rolloId": 603,
+              "serie": "SERIE-603",
+              "cantidad": "1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-09T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"914\",\"VENTA\",1]",
+          "createdAt": "2025-01-08T12:00:00.000Z",
+          "fechaMin": "2025-01-08T12:00:00.000Z",
+          "fechaMax": "2025-01-08T12:00:00.000Z",
+          "latestDate": "2025-01-08T12:00:00.000Z",
+          "latestMovementId": 204,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "1"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "914",
+          "documentoEtiqueta": "Ticket 914",
+          "documentoRuta": "/tickets/914",
+          "ticketId": 914,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 204,
+              "rolloId": 604,
+              "serie": "SERIE-604",
+              "cantidad": "1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-08T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        }
+      ],
+      "total": 12,
+      "page": 1,
+      "pageSize": 10,
+      "totalPages": 2,
+      "resumen": {
+        "totalMetros": "9.7",
+        "totalKilos": "2",
+        "totalBolsas": "0",
+        "totalPiezas": "0"
+      }
+    },
+    "groupedPageTwo": {
+      "grupos": [
+        {
+          "groupId": "[\"TICKET\",\"915\",\"VENTA\",1]",
+          "createdAt": "2025-01-07T12:00:00.000Z",
+          "fechaMin": "2025-01-07T12:00:00.000Z",
+          "fechaMax": "2025-01-07T12:00:00.000Z",
+          "latestDate": "2025-01-07T12:00:00.000Z",
+          "latestMovementId": 205,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "1"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "915",
+          "documentoEtiqueta": "Ticket 915",
+          "documentoRuta": "/tickets/915",
+          "ticketId": 915,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 205,
+              "rolloId": 605,
+              "serie": "SERIE-605",
+              "cantidad": "1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-07T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        },
+        {
+          "groupId": "[\"TICKET\",\"916\",\"VENTA\",1]",
+          "createdAt": "2025-01-06T12:00:00.000Z",
+          "fechaMin": "2025-01-06T12:00:00.000Z",
+          "fechaMax": "2025-01-06T12:00:00.000Z",
+          "latestDate": "2025-01-06T12:00:00.000Z",
+          "latestMovementId": 206,
+          "tipo": "VENTA",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Matriz Textil",
+          "ubicacionActiva": true,
+          "distinctRolloCount": 1,
+          "partialitiesMerged": 1,
+          "totalesPorUnidad": [
+            {
+              "unidad": "METRO",
+              "cantidad": "1"
+            }
+          ],
+          "productos": [
+            {
+              "productoId": 10,
+              "skuProducto": "TEL-10",
+              "telaProducto": "Algodón base",
+              "colorProducto": "Rojo",
+              "unidadProducto": "METRO"
+            }
+          ],
+          "usuarios": [
+            {
+              "usuarioId": 0,
+              "nombreUsuario": "Contexto offline",
+              "username": "offline-context"
+            }
+          ],
+          "documentoTipo": "TICKET",
+          "documentoId": "916",
+          "documentoEtiqueta": "Ticket 916",
+          "documentoRuta": "/tickets/916",
+          "ticketId": 916,
+          "destinoEtiqueta": "Cliente sintético",
+          "justificacion": null,
+          "rollos": [
+            {
+              "movementId": 206,
+              "rolloId": 606,
+              "serie": "SERIE-606",
+              "cantidad": "1",
+              "unidad": "METRO",
+              "createdAt": "2025-01-06T12:00:00.000Z",
+              "saldoPosterior": "10",
+              "referenciaRolloRuta": "/inventario/rollos/500"
+            }
+          ]
+        }
+      ],
+      "total": 12,
+      "page": 2,
+      "pageSize": 10,
+      "totalPages": 2,
+      "resumen": {
+        "totalMetros": "9.7",
+        "totalKilos": "2",
+        "totalBolsas": "0",
+        "totalPiezas": "0"
+      }
+    },
+    "filters": {
+      "productos": [
+        {
+          "id": 10,
+          "sku": "TEL-10",
+          "tela": "Algodón base",
+          "color": "Rojo",
+          "unidad": "METRO"
+        },
+        {
+          "id": 11,
+          "sku": "TEL-11",
+          "tela": "Lino ligero",
+          "color": "Azul",
+          "unidad": "KILO"
+        }
+      ],
+      "usuarios": [
+        {
+          "id": 0,
+          "nombre": "Contexto offline",
+          "username": "offline-context"
+        }
+      ],
+      "ubicaciones": [
+        {
+          "id": 1,
+          "nombre": "Matriz Textil",
+          "activa": true
+        },
+        {
+          "id": 2,
+          "nombre": "Tienda Centro",
+          "activa": true
+        },
+        {
+          "id": 3,
+          "nombre": "Bodega Norte",
+          "activa": false
+        }
+      ],
+      "tipos": [
+        "VENTA",
+        "AJUSTE_POSITIVO"
+      ]
+    }
+  },
+  "serverTime": {
+    "fecha": "2025-01-15T12:00:00.000Z",
+    "zonaHoraria": "America/Mexico_City"
+  }
+}
