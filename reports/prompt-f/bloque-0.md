@@ -35,6 +35,8 @@ La API inicialmente servía un bundle anterior y su arranque normal ejecutaba in
 
 Se activó `API_INSPECTION_BOOT=1` únicamente en desarrollo. El arranque omite inicializadores, backfill de compras y monitor de mínimos; solo comprueba `SELECT 1` antes de servir. Ambos workflows arrancaron correctamente y `/api/healthz` devolvió `{"status":"ok"}`. El código nuevo de la API sí quedó cargado. El arranque normal de producción no cambió y rechaza esta opción.
 
-**No es un servidor globalmente de solo lectura:** conserva las operaciones autorizadas del sistema. Iniciar sesión y usar una sesión autenticada pueden escribir o renovar su caducidad; no se hicieron esas acciones. El mantenimiento automático indicado queda pausado mientras esté habilitada la opción de desarrollo.
+**No es un servidor globalmente de solo lectura:** conserva las operaciones autorizadas del sistema. Iniciar sesión y usar una sesión autenticada pueden escribir o renovar su caducidad; no se hicieron esas acciones. El mantenimiento automático indicado estuvo pausado mientras se habilitó la opción de desarrollo.
+
+**Estado posterior, 2026-09-16:** el propietario autorizó el arranque normal y aclaró que sus escrituras de inicialización no estaban incluidas en la restricción de Prompt F. Se retiró la opción de inspección y se recuperaron ambos servicios y su mantenimiento normal. Véase la regla vigente en `replit.md`.
 
 La presentación aislada no debe describirse como una E2E autenticada.

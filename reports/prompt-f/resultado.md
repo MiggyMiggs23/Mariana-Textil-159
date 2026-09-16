@@ -43,6 +43,10 @@ La base actual tiene cero movimientos de crédito. El cliente 7 existe, pero no 
 
 El entorno se reinició automáticamente durante el trabajo. Se recuperaron API y frontend mediante un arranque optativo de inspección de desarrollo, revisado para evitar escrituras durante la carga de módulos y el arranque.
 
-Con `API_INSPECTION_BOOT=1` quedan pausados los inicializadores, el backfill de compras y el monitor automático de mínimos. Las operaciones normales y permisos de los usuarios no cambian; el modo no convierte todos los endpoints en consultas libres de escrituras. No se hicieron logins ni GET con sesión, que podrían renovarla. La reactivación del mantenimiento debe ser explícita, no automática dentro de una entrega sin escrituras.
+Durante Prompt F, `API_INSPECTION_BOOT=1` pausó los inicializadores, el backfill de compras y el monitor automático de mínimos. No se hicieron logins ni GET con sesión, que podrían renovarla.
+
+**Actualización autorizada del 2026-09-16:** se retiró la opción de desarrollo y se reiniciaron ambos servicios en modo normal. Los inicializadores completaron y el backfill terminó con cero inserciones; el monitor de mínimos volvió a iniciarse. El propietario aclaró que la prohibición de escrituras de Prompt F no incluía los inicializadores normales y reproducibles del arranque. La regla vigente y el inventario de escrituras quedan en `replit.md`.
+
+**Pendiente abierto:** verificación autenticada del detalle con operaciones reales nuevas. Los movimientos 43 a 50 desaparecieron con la purga; ni las pruebas archivadas ni las sintéticas cierran ese pendiente.
 
 No se modificaron movimientos históricos, el veto de notas, la regla de saldo a favor, FIFO, impresión, asimetría de sitios, corte de caja ni vencimientos.
