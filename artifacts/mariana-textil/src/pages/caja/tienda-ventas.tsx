@@ -436,7 +436,7 @@ export default function TiendaVentas() {
             <AlertCircle className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p>La tienda solicitada no es válida.</p>
             <Button variant="outline" className="mt-4" asChild>
-              <Link href="/caja/tiempo-real">Volver a Caja en Tiempo Real</Link>
+              <Link href="/caja/tiempo-real">Volver a Tiempo real</Link>
             </Button>
           </CardContent>
         </Card>

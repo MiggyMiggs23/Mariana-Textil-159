@@ -59,6 +59,7 @@ import {
   Banknote,
   CreditCard,
   Clock,
+  Building2,
 } from "lucide-react";
 import {
   ACCOUNT_DESTINATION_ORDER,
@@ -510,148 +511,357 @@ export default function CajaCuentasDestino() {
           </div>
         ) : (
             <div className="space-y-12">
-              {/* SECTION: VENTA */}
+
+              {/* SECTION: COBRANZA (FIRST) */}
               <section className="space-y-6">
-                <h2 className="recon-heading border-b pb-2 mb-4">Ventas</h2>
-                <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                  {header && (
-                    <>
-                      <Card className="border-sidebar/10 shadow-sm recon-top-card">
-                        <div className="recon-icon-box blue">
-                          <ShoppingBag className="h-6 w-6" />
-                        </div>
-                        <div className="recon-top-card-content">
-                          <span className="recon-top-card-label">Ventas totales</span>
+                <h2 className="text-2xl font-bold tracking-tight text-sidebar border-b pb-2 mb-4">Cobranza</h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
+                  {topStats.filter((stat) => stat.title === "Cobrado").map((stat) => {
+                    const currentHref = detailHref("TODAS", stat.fuentes);
+                    const previousHref = data.encabezado.previousDesde && data.encabezado.previousHasta
+                      ? detailHref("TODAS", stat.fuentes, {
+                          desde: format(parseISO(data.encabezado.previousDesde), "yyyy-MM-dd"),
+                          hasta: format(parseISO(data.encabezado.previousHasta), "yyyy-MM-dd"),
+                          compare: null,
+                          preset: "custom",
+                        })
+                      : currentHref;
+                    return (
+                      <Card key={stat.title} className={`relative overflow-hidden ${stat.className} h-full flex flex-col`}>
+                        <CardContent className="p-6 flex-1 flex flex-col">
+                          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                            {stat.title}
+                          </p>
                           <Link
-                            href={detailHref("TODAS", ["POS", "CREDITO"])}
-                            className="recon-top-card-value hover:text-primary hover:underline"
-                            data-testid="text-monto-ventas-totales"
+                            href={currentHref}
+                            className="mt-2 inline-block text-3xl font-black text-sidebar hover:text-primary hover:underline"
+                            data-testid={`text-monto-${stat.title.toLowerCase().replace(" ", "-")}`}
                           >
-                            {formatNumber(header.vendido.total, { kind: "money" })}
+                            {formatNumber(stat.amount, { kind: "money" })}
                           </Link>
-                          {compare && (
-                            <div className="mt-3 pt-3 border-t flex flex-col gap-1">
-                              <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">
-                                  {header.previousDesde && header.previousHasta
-                                    ? comparisonLabel(preset, header.previousDesde, header.previousHasta)
-                                    : "Periodo anterior"}
-                                </span>
+                          {stat.breakdown.length > 0 && (
+                            <div className="mt-4 grid gap-2 border-t pt-3">
+                              {stat.breakdown.map((part) => (
                                 <Link
-                                  href={detailHref("TODAS", ["POS", "CREDITO"], {
-                                    desde: header.previousDesde
-                                      ? format(parseISO(header.previousDesde), "yyyy-MM-dd")
-                                      : null,
-                                    hasta: header.previousHasta
-                                      ? format(parseISO(header.previousHasta), "yyyy-MM-dd")
-                                      : null,
-                                    compare: null,
-                                    preset: "custom",
-                                  })}
-                                  className="font-medium hover:text-primary hover:underline"
+                                  key={part.label}
+                                  href={detailHref("TODAS", part.fuentes)}
+                                  className="flex items-center justify-between gap-3 text-sm hover:text-primary hover:underline"
                                 >
-                                  {formatNumber(header.vendido.totalAnterior, { kind: "money" })}
+                                  <span className="text-muted-foreground">{part.label}</span>
+                                  <span className="font-mono font-semibold">
+                                    {formatNumber(part.amount, { kind: "money" })}
+                                  </span>
                                 </Link>
-                              </div>
-                              <Link
-                                href={detailHref("TODAS", ["POS", "CREDITO"])}
-                                className="flex justify-end hover:opacity-80"
-                              >
-                                {renderVariation(header.vendido.variacionPorcentaje)}
-                              </Link>
+                              ))}
                             </div>
                           )}
-                        </div>
-                      </Card>
-
-                      <Card className="border-sidebar/10 shadow-sm recon-top-card">
-                        <div className="recon-icon-box green">
-                          <Banknote className="h-6 w-6" />
-                        </div>
-                        <div className="recon-top-card-content">
-                          <span className="recon-top-card-label">Contado</span>
-                          <Link
-                            href={detailHref("TODAS", ["POS"])}
-                            className="recon-top-card-value text-green-700 dark:text-green-400 hover:text-primary hover:underline"
-                            data-testid="text-monto-ventas-contado"
-                          >
-                            {formatNumber(header.vendido.contado, { kind: "money" })}
-                          </Link>
-                        </div>
-                      </Card>
-
-                      <Card className="border-sidebar/10 shadow-sm recon-top-card">
-                        <div className="recon-icon-box blue">
-                          <CreditCard className="h-6 w-6" />
-                        </div>
-                        <div className="recon-top-card-content">
-                          <span className="recon-top-card-label">Ventas a crédito</span>
-                          <Link
-                            href={detailHref("TODAS", ["CREDITO"])}
-                            className="recon-top-card-value hover:text-primary hover:underline"
-                            data-testid="text-monto-ventas-credito"
-                          >
-                            {formatNumber(header.vendido.credito, { kind: "money" })}
-                          </Link>
-                        </div>
-                      </Card>
-
-                      <Card className="border-sidebar/10 shadow-sm recon-top-card border-dashed">
-                        <div className="recon-icon-box amber">
-                          <Clock className="h-6 w-6" />
-                        </div>
-                        <div className="recon-top-card-content">
-                          <span className="recon-top-card-label">Por cobrar</span>
-                          <Link
-                            href={detailHref("TODAS", ["CREDITO"])}
-                            className="recon-top-card-value text-amber-700 dark:text-amber-500 hover:text-primary hover:underline"
-                            data-testid="text-monto-por-cobrar"
-                          >
-                            {formatNumber(header.porCobrar.periodo, { kind: "money" })}
-                          </Link>
-                          <span className="recon-top-card-sub">
-                            Notas de crédito al día
-                          </span>
-                          {compare && (
-                            <div className="mt-3 pt-3 border-t flex flex-col gap-1">
-                              <div className="flex items-center justify-between text-sm">
-                                <span className="text-muted-foreground">
-                                  {header.previousDesde && header.previousHasta
-                                    ? comparisonLabel(preset, header.previousDesde, header.previousHasta)
-                                    : "Periodo anterior"}
-                                </span>
-                                <Link
-                                  href={detailHref("TODAS", ["CREDITO"], {
-                                    desde: header.previousDesde
-                                      ? format(parseISO(header.previousDesde), "yyyy-MM-dd")
-                                      : null,
-                                    hasta: header.previousHasta
-                                      ? format(parseISO(header.previousHasta), "yyyy-MM-dd")
-                                      : null,
-                                    compare: null,
-                                    preset: "custom",
-                                  })}
-                                  className="font-medium hover:text-primary hover:underline"
-                                >
-                                  {formatNumber(header.porCobrar.periodoAnterior, { kind: "money" })}
+                          <div className="mt-auto">
+                            {compare && (
+                              <div className="flex flex-col gap-1 pt-3 border-t">
+                                <div className="flex items-center justify-between text-sm">
+                                  <span className="text-muted-foreground">
+                                    {header?.previousDesde && header?.previousHasta
+                                      ? comparisonLabel(preset, header.previousDesde, header.previousHasta)
+                                      : "Periodo anterior"}
+                                  </span>
+                                  <Link href={previousHref} className="font-medium hover:text-primary hover:underline">
+                                    {formatNumber(stat.prev, { kind: "money" })}
+                                  </Link>
+                                </div>
+                                <Link href={currentHref} className="flex justify-end hover:opacity-80">
+                                  {renderVariation(stat.variation)}
                                 </Link>
                               </div>
-                              <Link
-                                href={detailHref("TODAS", ["CREDITO"])}
-                                className="flex justify-end hover:opacity-80"
-                              >
-                                {renderVariation(header.porCobrar.variacionPorcentaje)}
-                              </Link>
-                            </div>
-                          )}
-                        </div>
+                            )}
+                          </div>
+                        </CardContent>
                       </Card>
-                    </>
-                  )}
+                    );
+                  })}
                 </div>
+
+
                 <div>
-                    <Card className="h-full">
-                      <CardHeader>
+                  {(() => {
+                    const row = cuentasSegundaFila.find(
+                      (item) => item.cuentaDestino === "CAJA_FISICA",
+                    );
+                    const rowNF = cuentasSegundaFila.find(
+                      (item) => item.cuentaDestino === "CUENTA_NO_FISCAL",
+                    );
+                    const rowF = cuentasSegundaFila.find(
+                      (item) => item.cuentaDestino === "CUENTA_FISCAL",
+                    );
+
+                    const sinFactura = row
+                      ? formatCentsAsMoney(
+                          calculateCashSinFacturaCents(
+                            row.importe,
+                            row.cajaFisicaFacturado,
+                          ),
+                        )
+                      : null;
+
+                    if (row && sinFactura !== null) {
+                      assertCashDifferenceInCents({
+                        cobrado: row.importe,
+                        facturado: row.cajaFisicaFacturado,
+                        sinFactura,
+                      });
+                    }
+
+                    const cobradoTotalStr = header?.cobrado.total || "0";
+                    const cobradoTotalNum = Number(cobradoTotalStr);
+                    const pctFacturado = cobradoTotalNum > 0 && row ? (Number(row.cajaFisicaFacturado) / cobradoTotalNum) * 100 : 0;
+                    const sinFacturaCents = row ? calculateCashSinFacturaCents(row.importe, row.cajaFisicaFacturado) : 0;
+                    const pctSinFactura = cobradoTotalNum > 0 ? ((Number(sinFacturaCents) / 100) / cobradoTotalNum) * 100 : 0;
+
+                    const currentHrefEF = detailHref("CAJA_FISICA", []);
+                    const currentHrefEF_Fact = detailHref(
+                      "CAJA_FISICA",
+                      ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
+                      { facturado: true },
+                    );
+                    const currentHrefEF_Sin = detailHref(
+                      "CAJA_FISICA",
+                      ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
+                      { facturado: false },
+                    );
+                    const currentHrefNF = rowNF
+                      ? detailHref(rowNF.cuentaDestino, [])
+                      : "#";
+                    const currentHrefF = rowF
+                      ? detailHref(rowF.cuentaDestino, [])
+                      : "#";
+
+                    const previousHrefEF =
+                      data.encabezado.previousDesde &&
+                      data.encabezado.previousHasta
+                        ? detailHref("CAJA_FISICA", [], {
+                            desde: format(
+                              parseISO(data.encabezado.previousDesde),
+                              "yyyy-MM-dd",
+                            ),
+                            hasta: format(
+                              parseISO(data.encabezado.previousHasta),
+                              "yyyy-MM-dd",
+                            ),
+                            compare: null,
+                            preset: "custom",
+                          })
+                        : currentHrefEF;
+                    const previousHrefNF = rowNF
+                      ? data.encabezado.previousDesde &&
+                        data.encabezado.previousHasta
+                        ? detailHref(rowNF.cuentaDestino, [], {
+                            desde: format(
+                              parseISO(data.encabezado.previousDesde),
+                              "yyyy-MM-dd",
+                            ),
+                            hasta: format(
+                              parseISO(data.encabezado.previousHasta),
+                              "yyyy-MM-dd",
+                            ),
+                            compare: null,
+                            preset: "custom",
+                          })
+                        : currentHrefNF
+                      : null;
+                    const previousHrefF = rowF
+                      ? data.encabezado.previousDesde &&
+                        data.encabezado.previousHasta
+                        ? detailHref(rowF.cuentaDestino, [], {
+                            desde: format(
+                              parseISO(data.encabezado.previousDesde),
+                              "yyyy-MM-dd",
+                            ),
+                            hasta: format(
+                              parseISO(data.encabezado.previousHasta),
+                              "yyyy-MM-dd",
+                            ),
+                            compare: null,
+                            preset: "custom",
+                          })
+                        : currentHrefF
+                      : null;
+
+                    const renderDestinationCard = (
+                      title: string,
+                      icon: React.ReactNode,
+                      colorClass: string,
+                      importe: string,
+                      importeAnterior: string | null,
+                      porcentaje: string | null,
+                      variation: string | null,
+                      currentHref: string,
+                      previousHref: string | null,
+                      showVariation: boolean,
+                      subtitle?: string,
+                      dashed?: boolean
+                    ) => (
+                      <Card
+                        data-destination={title}
+                        className={`border-sidebar/10 shadow-sm recon-top-card relative overflow-hidden transition-colors hover:border-primary/60 hover:bg-sidebar/5 h-full ${dashed ? 'border-dashed' : ''}`}
+                      >
+                        <div className={`recon-icon-box ${colorClass}`}>
+                          {icon}
+                        </div>
+                        <div className="recon-top-card-content flex-1 w-full min-w-0">
+                          <span className="recon-top-card-label">{title}</span>
+                          <Link
+                            href={currentHref}
+                            className={`recon-top-card-value hover:text-primary hover:underline block mb-1 ${dashed ? "text-amber-700 dark:text-amber-500" : ""}`}
+                            data-testid={`text-monto-${title.toLowerCase().replace(/\s+/g, "-")}`}
+                          >
+                            {formatNumber(importe, { kind: "money" })}
+                          </Link>
+                          {subtitle && (
+                            <span className="recon-top-card-sub mb-2">{subtitle}</span>
+                          )}
+
+                          <div className="mt-auto flex flex-col gap-1.5 pt-2 border-t w-full border-sidebar/10">
+                            <div className="h-5 flex items-center">
+                              {porcentaje !== null ? (
+                                <Link href={currentHref} className="text-xs font-bold text-muted-foreground bg-sidebar/5 px-1.5 py-0.5 rounded hover:text-primary hover:underline">
+                                  {formatNumber(porcentaje, { kind: "percentage", percentageInput: "percent" })} DEL TOTAL
+                                </Link>
+                              ) : (
+                                <span className="h-5 block" />
+                              )}
+                            </div>
+                            {compare && (
+                              <div className="flex items-center justify-between text-sm">
+                                {dashed && (
+                                  <span className="text-muted-foreground mr-2">
+                                    {header?.previousDesde && header?.previousHasta
+                                      ? comparisonLabel(preset, header.previousDesde, header.previousHasta)
+                                      : "Periodo anterior"}
+                                  </span>
+                                )}
+                                {previousHref && importeAnterior !== null ? (
+                                  <Link
+                                    href={previousHref}
+                                    className="font-medium hover:text-primary hover:underline whitespace-nowrap"
+                                  >
+                                    {formatNumber(importeAnterior, { kind: "money" })}
+                                  </Link>
+                                ) : (
+                                  <span className="block" />
+                                )}
+                              </div>
+                            )}
+                            {compare && (
+                              <div className="h-5 flex items-center justify-end">
+                                {showVariation ? (
+                                  <Link href={currentHref} className="flex justify-end hover:opacity-80">
+                                    {renderVariation(variation)}
+                                  </Link>
+                                ) : (
+                                  <span className="h-5 block" />
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </Card>
+                    );
+
+                    return (
+                      <div className="grid grid-cols-1 md:grid-cols-3 auto-rows-fr gap-4 md:gap-6">
+                        {row && sinFactura !== null ? renderDestinationCard(
+                          "Total en efectivo",
+                          <Banknote className="h-6 w-6" />,
+                          "blue",
+                          row.importe,
+                          row.importeAnterior,
+                          row.porcentaje,
+                          row.variacionPorcentaje,
+                          currentHrefEF,
+                          previousHrefEF,
+                          true
+                        ) : <div />}
+                        {row && sinFactura !== null ? renderDestinationCard(
+                          "Efectivo facturado",
+                          <FileText className="h-6 w-6" />,
+                          "blue",
+                          row.cajaFisicaFacturado,
+                          null,
+                          pctFacturado.toString(),
+                          null,
+                          currentHrefEF_Fact,
+                          null,
+                          false
+                        ) : <div />}
+                        {row && sinFactura !== null ? renderDestinationCard(
+                          "Efectivo sin factura",
+                          <Wallet className="h-6 w-6" />,
+                          "blue",
+                          sinFactura,
+                          null,
+                          pctSinFactura.toString(),
+                          null,
+                          currentHrefEF_Sin,
+                          null,
+                          false
+                        ) : <div />}
+                        {rowNF ? renderDestinationCard(
+                          formatAccountDestination(rowNF.cuentaDestino),
+                          <Building2 className="h-6 w-6" />,
+                          "blue",
+                          rowNF.importe,
+                          rowNF.importeAnterior,
+                          rowNF.porcentaje,
+                          rowNF.variacionPorcentaje,
+                          currentHrefNF,
+                          previousHrefNF,
+                          true
+                        ) : <div />}
+                        {rowF ? renderDestinationCard(
+                          formatAccountDestination(rowF.cuentaDestino),
+                          <CreditCard className="h-6 w-6" />,
+                          "blue",
+                          rowF.importe,
+                          rowF.importeAnterior,
+                          rowF.porcentaje,
+                          rowF.variacionPorcentaje,
+                          currentHrefF,
+                          previousHrefF,
+                          true
+                        ) : <div />}
+                        {header ? renderDestinationCard(
+                          "Por cobrar",
+                          <Clock className="h-6 w-6" />,
+                          "amber",
+                          header.porCobrar.periodo,
+                          header.porCobrar.periodoAnterior,
+                          null,
+                          header.porCobrar.variacionPorcentaje,
+                          detailHref("TODAS", ["CREDITO"]),
+                          detailHref("TODAS", ["CREDITO"], {
+                            desde: header.previousDesde
+                              ? format(parseISO(header.previousDesde), "yyyy-MM-dd")
+                              : null,
+                            hasta: header.previousHasta
+                              ? format(parseISO(header.previousHasta), "yyyy-MM-dd")
+                              : null,
+                            compare: null,
+                            preset: "custom",
+                          }),
+                          true,
+                          "Notas de crédito al día",
+                          true
+                        ) : <div />}
+                      </div>
+                    );
+                  })()}
+                </div>
+
+              </section>
+
+              <section className="space-y-6">
+                <div>
+                    <Card className="h-full"><CardHeader>
                         <CardTitle className="text-lg flex items-center gap-2">
                           Matriz de Operaciones (Ventas)
                           {!data.matriz.cierra && (
@@ -756,337 +966,99 @@ export default function CajaCuentasDestino() {
                     </Card>
                 </div>
               </section>
-
-              {/* SECTION: COBRANZA */}
-              <section className="space-y-4">
-                <h2 className="text-xl font-bold tracking-tight text-sidebar border-b pb-2">Cobranza</h2>
-                <div className="flex flex-col gap-4 md:gap-6 mb-6">
-                  {(() => {
-                    const row = cuentasSegundaFila.find(
-                      (item) => item.cuentaDestino === "CAJA_FISICA",
-                    );
-                    const rowNF = cuentasSegundaFila.find(
-                      (item) => item.cuentaDestino === "CUENTA_NO_FISCAL",
-                    );
-                    const rowF = cuentasSegundaFila.find(
-                      (item) => item.cuentaDestino === "CUENTA_FISCAL",
-                    );
-
-                    const sinFactura = row
-                      ? formatCentsAsMoney(
-                          calculateCashSinFacturaCents(
-                            row.importe,
-                            row.cajaFisicaFacturado,
-                          ),
-                        )
-                      : null;
-                    if (row && sinFactura !== null) {
-                      assertCashDifferenceInCents({
-                        cobrado: row.importe,
-                        facturado: row.cajaFisicaFacturado,
-                        sinFactura,
-                      });
-                    }
-
-                    const currentHrefEF = detailHref("CAJA_FISICA", []);
-                    const currentHrefEF_Fact = detailHref(
-                      "CAJA_FISICA",
-                      ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
-                      { facturado: true },
-                    );
-                    const currentHrefEF_Sin = detailHref(
-                      "CAJA_FISICA",
-                      ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
-                      { facturado: false },
-                    );
-                    const currentHrefNF = rowNF
-                      ? detailHref(rowNF.cuentaDestino, [])
-                      : "#";
-                    const currentHrefF = rowF
-                      ? detailHref(rowF.cuentaDestino, [])
-                      : "#";
-                    const previousHrefEF =
-                      data.encabezado.previousDesde &&
-                      data.encabezado.previousHasta
-                        ? detailHref("CAJA_FISICA", [], {
-                            desde: format(
-                              parseISO(data.encabezado.previousDesde),
-                              "yyyy-MM-dd",
-                            ),
-                            hasta: format(
-                              parseISO(data.encabezado.previousHasta),
-                              "yyyy-MM-dd",
-                            ),
-                            compare: null,
-                            preset: "custom",
-                          })
-                        : currentHrefEF;
-                    const previousHrefNF = rowNF
-                      ? data.encabezado.previousDesde &&
-                        data.encabezado.previousHasta
-                        ? detailHref(rowNF.cuentaDestino, [], {
-                            desde: format(
-                              parseISO(data.encabezado.previousDesde),
-                              "yyyy-MM-dd",
-                            ),
-                            hasta: format(
-                              parseISO(data.encabezado.previousHasta),
-                              "yyyy-MM-dd",
-                            ),
-                            compare: null,
-                            preset: "custom",
-                          })
-                        : currentHrefNF
-                      : null;
-                    const previousHrefF = rowF
-                      ? data.encabezado.previousDesde &&
-                        data.encabezado.previousHasta
-                        ? detailHref(rowF.cuentaDestino, [], {
-                            desde: format(
-                              parseISO(data.encabezado.previousDesde),
-                              "yyyy-MM-dd",
-                            ),
-                            hasta: format(
-                              parseISO(data.encabezado.previousHasta),
-                              "yyyy-MM-dd",
-                            ),
-                            compare: null,
-                            preset: "custom",
-                          })
-                        : currentHrefF
-                      : null;
-
-                    const renderDestinationCard = (
-                      title: string,
-                      importe: string,
-                      importeAnterior: string | null,
-                      porcentaje: string | null,
-                      variation: string | null,
-                      currentHref: string,
-                      previousHref: string | null,
-                      showVariation: boolean,
-                    ) => (
-                      <Card
-                        data-destination={title}
-                        className={`j-destination-card ${title.startsWith("Cuentas") ? "j-bank-card" : "j-cash-card"} ${compare ? "j-comparing" : ""} relative overflow-hidden transition-colors hover:border-primary/60 hover:bg-sidebar/5 flex flex-col h-full border-sidebar/20 shadow-sm`}
-                      >
-                        <CardContent className="j-destination-content p-4 sm:p-5 flex-1 flex flex-col">
-                          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider line-clamp-1 mb-1">
-                            {title}
-                          </p>
+<section className="space-y-6">
+                <h2 className="recon-heading border-b pb-2 mb-4">Ventas</h2>
+                <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-3 gap-4">
+                  {header && (
+                    <>
+                      <Card className="border-sidebar/10 shadow-sm recon-top-card">
+                        <div className="recon-icon-box blue">
+                          <ShoppingBag className="h-6 w-6" />
+                        </div>
+                        <div className="recon-top-card-content">
+                          <span className="recon-top-card-label">Ventas totales</span>
                           <Link
-                            href={currentHref}
-                            className="inline-block text-2xl sm:text-3xl font-black text-sidebar hover:text-primary hover:underline leading-none"
+                            href={detailHref("TODAS", ["POS", "CREDITO"])}
+                            className="recon-top-card-value hover:text-primary hover:underline"
+                            data-testid="text-monto-ventas-totales"
                           >
-                            {formatNumber(importe, { kind: "money" })}
+                            {formatNumber(header.vendido.total, { kind: "money" })}
                           </Link>
-                          <div
-                            className={`j-destination-meta ${!porcentaje && !compare ? "j-empty-meta" : ""} mt-auto pt-3 flex flex-col gap-1`}
-                          >
-                            <div className="h-5 flex items-center">
-                              {porcentaje ? (
+                          {compare && (
+                            <div className="mt-3 pt-3 border-t flex flex-col gap-1">
+                              <div className="flex items-center justify-between text-sm">
+                                <span className="text-muted-foreground">
+                                  {header.previousDesde && header.previousHasta
+                                    ? comparisonLabel(preset, header.previousDesde, header.previousHasta)
+                                    : "Periodo anterior"}
+                                </span>
                                 <Link
-                                  href={currentHref}
-                                  className="text-xs font-bold text-muted-foreground bg-sidebar/5 px-2 py-0.5 rounded hover:text-primary hover:underline"
+                                  href={detailHref("TODAS", ["POS", "CREDITO"], {
+                                    desde: header.previousDesde
+                                      ? format(parseISO(header.previousDesde), "yyyy-MM-dd")
+                                      : null,
+                                    hasta: header.previousHasta
+                                      ? format(parseISO(header.previousHasta), "yyyy-MM-dd")
+                                      : null,
+                                    compare: null,
+                                    preset: "custom",
+                                  })}
+                                  className="font-medium hover:text-primary hover:underline"
                                 >
-                                  {formatNumber(porcentaje, {
-                                    kind: "percentage",
-                                    percentageInput: "percent",
-                                  })}{" "}
-                                  del total
+                                  {formatNumber(header.vendido.totalAnterior, { kind: "money" })}
                                 </Link>
-                              ) : (
-                                <span className="h-5 block" />
-                              )}
+                              </div>
+                              <Link
+                                href={detailHref("TODAS", ["POS", "CREDITO"])}
+                                className="flex justify-end hover:opacity-80"
+                              >
+                                {renderVariation(header.vendido.variacionPorcentaje)}
+                              </Link>
                             </div>
-                            {compare && (
-                              <div className="h-5 flex items-center">
-                                {previousHref && importeAnterior !== null ? (
-                                  <Link
-                                    href={previousHref}
-                                    className="text-xs font-medium text-muted-foreground hover:text-primary hover:underline"
-                                  >
-                                    {formatNumber(importeAnterior, {
-                                      kind: "money",
-                                    })}
-                                  </Link>
-                                ) : (
-                                  <span className="h-5 block" />
-                                )}
-                              </div>
-                            )}
-                            {compare && (
-                              <div className="h-5 flex items-center justify-end">
-                                {showVariation ? (
-                                  <Link
-                                    href={currentHref}
-                                    className="flex justify-end hover:opacity-80"
-                                  >
-                                    {renderVariation(variation)}
-                                  </Link>
-                                ) : (
-                                  <span className="h-5 block" />
-                                )}
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
+                          )}
+                        </div>
                       </Card>
-                    );
 
-                    return (
-                      <>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-                          {row && sinFactura !== null ? (
-                            renderDestinationCard(
-                              "Total en efectivo",
-                              row.importe,
-                              row.importeAnterior,
-                              row.porcentaje,
-                              row.variacionPorcentaje,
-                              currentHrefEF,
-                              previousHrefEF,
-                              true,
-                            )
-                          ) : (
-                            <div />
-                          )}
-                          {row && sinFactura !== null ? (
-                            renderDestinationCard(
-                              "Efectivo facturado",
-                              row.cajaFisicaFacturado,
-                              null,
-                              null,
-                              null,
-                              currentHrefEF_Fact,
-                              null,
-                              false,
-                            )
-                          ) : (
-                            <div />
-                          )}
-                          {row && sinFactura !== null ? (
-                            renderDestinationCard(
-                              "Efectivo sin factura",
-                              sinFactura,
-                              null,
-                              null,
-                              null,
-                              currentHrefEF_Sin,
-                              null,
-                              false,
-                            )
-                          ) : (
-                            <div />
-                          )}
+                      <Card className="border-sidebar/10 shadow-sm recon-top-card">
+                        <div className="recon-icon-box green">
+                          <Banknote className="h-6 w-6" />
                         </div>
-                        <div className="j-destination-banks grid grid-cols-1 md:grid-cols-6 gap-4 md:gap-6">
-                          <div className="md:col-span-2 md:col-start-2">
-                            {rowNF ? (
-                              renderDestinationCard(
-                                formatAccountDestination(rowNF.cuentaDestino),
-                                rowNF.importe,
-                                rowNF.importeAnterior,
-                                rowNF.porcentaje,
-                                rowNF.variacionPorcentaje,
-                                currentHrefNF,
-                                previousHrefNF,
-                                true,
-                              )
-                            ) : (
-                              <div />
-                            )}
-                          </div>
-                          <div className="md:col-span-2">
-                            {rowF ? (
-                              renderDestinationCard(
-                                formatAccountDestination(rowF.cuentaDestino),
-                                rowF.importe,
-                                rowF.importeAnterior,
-                                rowF.porcentaje,
-                                rowF.variacionPorcentaje,
-                                currentHrefF,
-                                previousHrefF,
-                                true,
-                              )
-                            ) : (
-                              <div />
-                            )}
-                          </div>
+                        <div className="recon-top-card-content">
+                          <span className="recon-top-card-label">Contado</span>
+                          <Link
+                            href={detailHref("TODAS", ["POS"])}
+                            className="recon-top-card-value text-green-700 dark:text-green-400 hover:text-primary hover:underline"
+                            data-testid="text-monto-ventas-contado"
+                          >
+                            {formatNumber(header.vendido.contado, { kind: "money" })}
+                          </Link>
                         </div>
-                      </>
-                    );
-                  })()}
+                      </Card>
+
+                      <Card className="border-sidebar/10 shadow-sm recon-top-card">
+                        <div className="recon-icon-box blue">
+                          <CreditCard className="h-6 w-6" />
+                        </div>
+                        <div className="recon-top-card-content">
+                          <span className="recon-top-card-label">Ventas a crédito</span>
+                          <Link
+                            href={detailHref("TODAS", ["CREDITO"])}
+                            className="recon-top-card-value hover:text-primary hover:underline"
+                            data-testid="text-monto-ventas-credito"
+                          >
+                            {formatNumber(header.vendido.credito, { kind: "money" })}
+                          </Link>
+                        </div>
+                      </Card>
+
+
+                    </>
+                  )}
                 </div>
               </section>
 
-              <div data-preview="collection-detail-row" className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <div className="h-full">
-                  {topStats.filter((stat) => stat.title === "Cobrado").map((stat) => {
-                    const currentHref = detailHref("TODAS", stat.fuentes);
-                    const previousHref = data.encabezado.previousDesde && data.encabezado.previousHasta
-                      ? detailHref("TODAS", stat.fuentes, {
-                          desde: format(parseISO(data.encabezado.previousDesde), "yyyy-MM-dd"),
-                          hasta: format(parseISO(data.encabezado.previousHasta), "yyyy-MM-dd"),
-                          compare: null,
-                          preset: "custom",
-                        })
-                      : currentHref;
-                    return (
-                      <Card key={stat.title} className={`relative overflow-hidden ${stat.className} h-full flex flex-col`}>
-                        <CardContent className="p-6 flex-1 flex flex-col">
-                          <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                            {stat.title}
-                          </p>
-                          <Link
-                            href={currentHref}
-                            className="mt-2 inline-block text-3xl font-black text-sidebar hover:text-primary hover:underline"
-                            data-testid={`text-monto-${stat.title.toLowerCase().replace(" ", "-")}`}
-                          >
-                            {formatNumber(stat.amount, { kind: "money" })}
-                          </Link>
-                          {stat.breakdown.length > 0 && (
-                            <div className="mt-4 grid gap-2 border-t pt-3">
-                              {stat.breakdown.map((part) => (
-                                <Link
-                                  key={part.label}
-                                  href={detailHref("TODAS", part.fuentes)}
-                                  className="flex items-center justify-between gap-3 text-sm hover:text-primary hover:underline"
-                                >
-                                  <span className="text-muted-foreground">{part.label}</span>
-                                  <span className="font-mono font-semibold">
-                                    {formatNumber(part.amount, { kind: "money" })}
-                                  </span>
-                                </Link>
-                              ))}
-                            </div>
-                          )}
-                          <div className="mt-auto">
-                            {compare && (
-                              <div className="flex flex-col gap-1 pt-3 border-t">
-                                <div className="flex items-center justify-between text-sm">
-                                  <span className="text-muted-foreground">
-                                    {header?.previousDesde && header?.previousHasta
-                                      ? comparisonLabel(preset, header.previousDesde, header.previousHasta)
-                                      : "Periodo anterior"}
-                                  </span>
-                                  <Link href={previousHref} className="font-medium hover:text-primary hover:underline">
-                                    {formatNumber(stat.prev, { kind: "money" })}
-                                  </Link>
-                                </div>
-                                <Link href={currentHref} className="flex justify-end hover:opacity-80">
-                                  {renderVariation(stat.variation)}
-                                </Link>
-                              </div>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-                <div className="xl:col-span-2 flex flex-col gap-6 h-full">
-                  <Card className="flex-1 flex flex-col">
+              <div data-preview="collection-detail-row" className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <Card className="flex-1 flex flex-col">
                     <CardContent className="p-0 flex-1 flex flex-col">
                             <div className="px-4 py-3 bg-muted/40 font-semibold text-sm flex items-center justify-between">
                               Cobros por abonos y saldos a favor
@@ -1206,8 +1178,7 @@ export default function CajaCuentasDestino() {
                         </div>
                       </CardContent>
                     </Card>
-                  </div>
-                </div>
+              </div>
 
               {/* Incongruencias Alert */}
               {data.incongruencias.conteo > 0 && (

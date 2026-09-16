@@ -1436,3 +1436,17 @@ mtime_ms = 1789573702050
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/539bc125-5776-4242-9518-74595196c804/775df1f6-62ef-41d8-91c1-eae445b8e56e"
 storage_version_token = "1789573710559111"
 content_type = "text/html"
+
+[[outputs]]
+id = "76l-hXOwXAm0FtgS7S0WR"
+uri = "file://reports/cobranza-layout/before-after.html"
+type = "text"
+title = "Cuentas Destino: antes y después"
+description = "Ocho capturas de escritorio y móvil, tabla comparativa de cifras e inventario de enlaces. Verificación aislada con datos sintéticos, sin usuarios ni sesiones de prueba."
+logical_id = "b2382122-95bb-4bde-9668-c671c69e9753"
+content_hash = "sha256:2fe5667ca589fe3bd3d83539cfc3d81bc65cc8fc2b1ada6ab27db94650d051f5"
+size = 3004661
+mtime_ms = 1789589814964
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/b2382122-95bb-4bde-9668-c671c69e9753/0ccfab26-0ba6-4021-a0c2-6a138b0d5e29"
+storage_version_token = "1789589902161259"
+content_type = "text/html"

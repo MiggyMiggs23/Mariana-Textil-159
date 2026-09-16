@@ -214,7 +214,7 @@ export default function CajaTiempoReal() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-sidebar flex items-center gap-2">
               <Activity className="h-8 w-8 text-primary" />
-              Caja en Tiempo Real
+              Tiempo real
             </h1>
             <p className="text-muted-foreground mt-1">
               Monitoreo operativo de cobros.
