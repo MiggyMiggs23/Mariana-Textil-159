@@ -15,6 +15,13 @@ const PAGE_STATE_KEY = "__marianaPageState";
 const TRACKER_KEY = "__marianaInternalNavigationTracker";
 const globalStateCache = new Map<string, unknown>();
 let activeScrollRestoration: (() => void) | null = null;
+const SCROLL_PERSISTENCE_INTERVAL_MS = 220;
+let pendingScrollPersistence: {
+  window: TrackedWindow;
+  timer: number;
+  sessionId: string;
+  entryId: string;
+} | null = null;
 
 interface NavigationEntryState {
   sessionId: string;
@@ -139,6 +146,52 @@ function cancelActiveScrollRestoration() {
   activeScrollRestoration = null;
 }
 
+function cancelScheduledScrollPersistence() {
+  if (!pendingScrollPersistence) return;
+  pendingScrollPersistence.window.clearTimeout(pendingScrollPersistence.timer);
+  pendingScrollPersistence = null;
+}
+
+function scheduleScrollPersistence() {
+  if (typeof window === "undefined" || activeScrollRestoration) return;
+
+  const trackedWindow = window as TrackedWindow;
+  const tracker = trackedWindow[TRACKER_KEY];
+  const current = navigationEntry(trackedWindow.history.state);
+  if (!tracker || current?.sessionId !== tracker.sessionId) return;
+  if (pendingScrollPersistence) return;
+
+  const { sessionId, entryId } = current;
+  const timer = trackedWindow.setTimeout(() => {
+    if (
+      pendingScrollPersistence == null ||
+      pendingScrollPersistence.timer !== timer
+    ) {
+      return;
+    }
+    pendingScrollPersistence = null;
+    if (
+      activeScrollRestoration ||
+      typeof window === "undefined" ||
+      window !== trackedWindow
+    ) {
+      return;
+    }
+
+    const latestTracker = trackedWindow[TRACKER_KEY];
+    const latest = navigationEntry(trackedWindow.history.state);
+    if (
+      latestTracker?.sessionId !== sessionId ||
+      latest?.sessionId !== sessionId ||
+      latest.entryId !== entryId
+    ) {
+      return;
+    }
+    saveCurrentScrollPosition();
+  }, SCROLL_PERSISTENCE_INTERVAL_MS);
+  pendingScrollPersistence = { window: trackedWindow, timer, sessionId, entryId };
+}
+
 export function initializeInternalNavigation() {
   if (typeof window === "undefined") return;
 
@@ -202,18 +255,15 @@ export function initializeInternalNavigation() {
     );
   }) as History["replaceState"];
 
-  let scrollFrame = 0;
   window.addEventListener(
     "scroll",
-    () => {
-      window.cancelAnimationFrame(scrollFrame);
-      scrollFrame = window.requestAnimationFrame(saveCurrentScrollPosition);
-    },
+    scheduleScrollPersistence,
     { passive: true },
   );
 
   window.history.scrollRestoration = "manual";
   window.addEventListener("popstate", (event) => {
+    cancelScheduledScrollPersistence();
     cancelActiveScrollRestoration();
     const destination = navigationEntry(event.state);
     if (destination?.sessionId !== sessionId) return;
@@ -238,6 +288,7 @@ function readScrollContainers() {
 
 export function saveCurrentScrollPosition() {
   if (typeof window === "undefined") return;
+  cancelScheduledScrollPersistence();
   const trackedWindow = window as TrackedWindow;
   const tracker = trackedWindow[TRACKER_KEY];
   const current = navigationEntry(window.history.state);
@@ -285,7 +336,7 @@ function restoreScrollPosition(
     if (cancelled) return;
     cancelled = true;
     observer?.disconnect();
-    timers.forEach(window.clearTimeout);
+    timers.forEach((timer) => window.clearTimeout(timer));
     window.removeEventListener("wheel", stop);
     window.removeEventListener("touchstart", stop);
     window.removeEventListener("pointerdown", stop);
