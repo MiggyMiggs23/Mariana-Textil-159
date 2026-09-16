@@ -1,0 +1,313 @@
+{
+  "capturedAt": "2026-09-16T07:32:25.022Z",
+  "sourceIdentity": {
+    "database": "heliumdb",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersion": "16.10",
+    "readMode": "REPEATABLE READ READ ONLY transaction",
+    "writeGuard": "Every query was checked to allow only read/transaction statements; no initializer or workflow was invoked."
+  },
+  "connectionProof": {
+    "status": "VERIFIED_AGAINST_CURRENT_RUNNING_API",
+    "capturedAt": "2026-09-16T07:35:39.137Z",
+    "queryConnection": {
+      "mechanism": "tsx process importing /home/runner/workspace/lib/db/src/index.ts, the same @workspace/db package initialization used by the API build",
+      "database": "heliumdb",
+      "schema": "public",
+      "serverVersion": "16.10",
+      "transactionIsolation": "repeatable read",
+      "transactionReadOnly": "on",
+      "backendPid": 1249
+    },
+    "actualRunningApi": {
+      "pid": 29928,
+      "command": "node --enable-source-maps ./dist/index.mjs",
+      "cwd": "/home/runner/workspace/artifacts/api-server",
+      "apiSourceSha256": "857c9c39d19bc2d6b818a91aa53fb38076f0473fc7bb41a330111f55fe9ab9ac",
+      "dbInitializerSource": "lib/db/src/index.ts",
+      "dbInitializerSourceSha256": "87821afe653cd2eb30806bc7b7a4b2d6968a73a4305c3421deac3286ac39ae37",
+      "apiBundleSha256": "2109d662274ce15fda1c54afac08dba22e311d08804212f83ca8df5bd9088022",
+      "poolConstructor": "BoundPool",
+      "poolQueryMethodConfirmed": true,
+      "inProcessIdentity": {
+        "database": "heliumdb",
+        "schema": "public",
+        "serverVersion": "16.10",
+        "transactionIsolation": "read committed",
+        "transactionReadOnly": "off",
+        "backendPid": 1247,
+        "observedAtMexico": "2026-09-16T01:35:18.391"
+      },
+      "readOnlyProbe": "A temporary debugger breakpoint on the running pool query method captured the existing BoundPool; a SELECT identity query was submitted through that same pool. The /api/auth/me probe returned 401 without changing authentication or data."
+    },
+    "safeDatabaseUrlFingerprint": {
+      "apiProcess": {
+        "host": "helium",
+        "database": "heliumdb",
+        "username": "postgres",
+        "queryKeys": [
+          "sslmode"
+        ],
+        "length": 62,
+        "sha256": "4703c7788edd0861a3c011171866a4f84b2902712b12da0e62858852767f21dd"
+      },
+      "queryProcess": {
+        "host": "helium",
+        "database": "heliumdb",
+        "username": "postgres",
+        "queryKeys": [
+          "sslmode"
+        ],
+        "length": 62,
+        "sha256": "4703c7788edd0861a3c011171866a4f84b2902712b12da0e62858852767f21dd"
+      },
+      "equal": true,
+      "applicationDatabaseUrlPresentInApi": false,
+      "testDatabaseUrlPresentInApi": false,
+      "externalNeon": "No external-Neon URL was used by the current running API process. Its effective DATABASE_URL target is the internal helium host; no claim is made that this is an external Neon connection."
+    },
+    "identityEquality": {
+      "database": true,
+      "schema": true,
+      "serverVersion": true,
+      "safeConfigFingerprint": true
+    }
+  },
+  "scope": {
+    "timezone": "America/Mexico_City",
+    "desde": "2026-09-16",
+    "hasta": "2026-09-16",
+    "samePeriodForBothScreens": true,
+    "canonicalFunctions": [
+      "getSalesSummary",
+      "getQuantities",
+      "getPending",
+      "getRealtimeStores",
+      "getRealtimeTickets",
+      "getRealtimeSalidaSummaries",
+      "getDestinationAccounts",
+      "listCuts",
+      "compareStores"
+    ]
+  },
+  "databaseCensus": {
+    "tickets": 0,
+    "ticketLineas": 0,
+    "sesionesCaja": 0,
+    "productos": 1234,
+    "clientes": 7,
+    "ticketDateBounds": {
+      "min": null,
+      "max": null
+    },
+    "blockedVerification": [
+      "No 7-digit ticket/folio or ticket-line example is available: tickets and ticket_lineas are empty in the verified API database.",
+      "No attached sale/client drilldown can be shown: catalog clients/products exist, but there are no documents linking them."
+    ],
+    "warning": "The verified workspace/API database has catalog data but no transaction, ticket-line, or cash-session rows. Deployed-production equivalence is not established. No non-zero sales, payment, customer-document, product-line, or cut example can be truthfully shown from this source."
+  },
+  "roleAndScopeContext": {
+    "activeUsersByRole": {
+      "ADMIN": 3,
+      "TERMINAL": 1,
+      "CAJA": 1,
+      "SUPERVISOR": 1,
+      "BODEGA": 2
+    },
+    "assignedLocations": [
+      {
+        "role": "TERMINAL",
+        "locationId": 1,
+        "location": "Mariana",
+        "users": 1
+      },
+      {
+        "role": "CAJA",
+        "locationId": 1,
+        "location": "Mariana",
+        "users": 1
+      },
+      {
+        "role": "SUPERVISOR",
+        "locationId": 5,
+        "location": "Don Nacho",
+        "users": 1
+      },
+      {
+        "role": "BODEGA",
+        "locationId": 5,
+        "location": "Don Nacho",
+        "users": 2
+      }
+    ]
+  },
+  "realtimeScreen": {
+    "global": {
+      "ventas": "0.00",
+      "cobrado": "0.00",
+      "pendiente": "0.00",
+      "tickets": 0,
+      "ticketsCobrados": 0,
+      "documentosPendientes": 0,
+      "cancelaciones": 0,
+      "salidasEnTransito": 0,
+      "salidasCanceladas": 0,
+      "quantities": []
+    },
+    "stores": [
+      {
+        "locationId": 1,
+        "location": "Mariana",
+        "cashSessionId": null,
+        "sold": "0.00",
+        "collected": "0.00",
+        "pending": "0.00",
+        "tickets": 0,
+        "alerts": []
+      },
+      {
+        "locationId": 3,
+        "location": "Coco",
+        "cashSessionId": null,
+        "sold": "0.00",
+        "collected": "0.00",
+        "pending": "0.00",
+        "tickets": 0,
+        "alerts": []
+      },
+      {
+        "locationId": 2,
+        "location": "Cruces",
+        "cashSessionId": null,
+        "sold": "0.00",
+        "collected": "0.00",
+        "pending": "0.00",
+        "tickets": 0,
+        "alerts": []
+      }
+    ],
+    "latestTickets": [],
+    "note": "The three stores above are the actual locations returned by the canonical real-time analytics query for this scope; all have no open cash session."
+  },
+  "destinationAccountsScreen": {
+    "header": {
+      "vendido": {
+        "contado": "0.00",
+        "credito": "0.00",
+        "total": "0.00"
+      },
+      "porCobrar": "0.00",
+      "cobrado": {
+        "contado": "0.00",
+        "abonos": "0.00",
+        "saldosFavor": "0.00",
+        "total": "0.00"
+      }
+    },
+    "destinations": [
+      {
+        "code": "CAJA_FISICA",
+        "label": "Caja física",
+        "importe": "0.00",
+        "operaciones": 0
+      },
+      {
+        "code": "CUENTA_NO_FISCAL",
+        "label": "Cuenta no fiscal",
+        "importe": "0.00",
+        "operaciones": 0
+      },
+      {
+        "code": "CUENTA_FISCAL",
+        "label": "Cuenta fiscal",
+        "importe": "0.00",
+        "operaciones": 0
+      },
+      {
+        "code": "CUENTAS_POR_COBRAR",
+        "label": "Cuentas por cobrar",
+        "importe": "0.00",
+        "operaciones": 0
+      }
+    ],
+    "trendRows": 0,
+    "cobrosAnteriores": 0,
+    "incongruencias": 0,
+    "matrixCloses": true
+  },
+  "cutsAndComparison": {
+    "cuts": {
+      "total": 0,
+      "items": 0,
+      "pageTotals": {
+        "vendido": "0.00",
+        "cobrado": "0.00",
+        "tickets": 0,
+        "diferencia": "0.00"
+      }
+    },
+    "comparison": {
+      "sites": [
+        "Mariana",
+        "Coco",
+        "Cruces"
+      ],
+      "totalSales": "0.00",
+      "totalTickets": 0,
+      "salesTrendRows": 0
+    }
+  },
+  "catalogOnlyExamplesNotUsedAsTransactions": {
+    "note": "These are real active catalog rows, provided only to preserve truthful long-name examples for a future detail preview. They are not tickets or drill-down results.",
+    "products": [
+      {
+        "id": 1720,
+        "sku": "MEZDIA10-IND2",
+        "name": "Mezclilla Diamantina 10 Oz — Indigo Rayada",
+        "unit": "METRO"
+      },
+      {
+        "id": 1948,
+        "sku": "CAMFLOMAR-AMA",
+        "name": "Campesina Flor Margarita — Amarillo Mango",
+        "unit": "METRO"
+      },
+      {
+        "id": 1262,
+        "sku": "GABGAP170-BLA2",
+        "name": "Gabardina Gap 1.70 — Blanco Sandorizado",
+        "unit": "METRO"
+      },
+      {
+        "id": 117,
+        "sku": "TAFESTMUE-DIS",
+        "name": "Tafetan Estampado Muertos — Diseños",
+        "unit": "METRO"
+      }
+    ],
+    "clients": [
+      {
+        "id": 4,
+        "name": "Hilario Bonifacio",
+        "creditDays": 0
+      },
+      {
+        "id": 7,
+        "name": "Jacinta Mendoza",
+        "creditDays": 30
+      },
+      {
+        "id": 6,
+        "name": "Miguel Esteban",
+        "creditDays": 30
+      },
+      {
+        "id": 1,
+        "name": "Venta a Público",
+        "creditDays": 0
+      }
+    ]
+  },
+  "conclusion": "Canonical verified workspace/API reads confirm that both target screens must render an honest zero-state for 2026-09-16. Deployed-production equivalence is not established. Catalog labels can be used only in a clearly marked catalog context; fabricating ticket lines, clients attached to sales, amounts, or cash cuts would violate the data requirement."
+}

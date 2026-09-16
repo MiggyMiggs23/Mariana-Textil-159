@@ -1,0 +1,38 @@
+{
+  "report": "prompt-l/read-only-live-catalog-export",
+  "generatedBy": "scripts/src/prompt-l-label-fit-verifier.mjs",
+  "source": {
+    "connectionVariable": "DATABASE_URL",
+    "credentialsOmitted": true,
+    "apiServerStarted": false,
+    "apiServerImported": false,
+    "authUsersSessionsRead": false,
+    "transaction": "REPEATABLE READ READ ONLY"
+  },
+  "identity": {
+    "database_name": "heliumdb",
+    "schema_name": "public",
+    "server_version": "16.10",
+    "transaction_isolation": "repeatable read",
+    "transaction_read_only": "on"
+  },
+  "sourceCounts": {
+    "rollos": "0",
+    "assignedSeries": "0",
+    "products": "1234",
+    "priceHistory": "1016"
+  },
+  "sourceHashes": {
+    "products": "9b5a7bfb4133c1c700f9d242628c0c46",
+    "priceHistory": "64f5ec3242e70cdfe37e1a242c26b506"
+  },
+  "gate": {
+    "readOnlyTransaction": true,
+    "zeroRollos": true,
+    "zeroAssignedSeries": true,
+    "noDuplicateAssignedSeries": true,
+    "productsMatchApprovedSnapshot": true,
+    "pricesMatchApprovedSnapshot": true,
+    "pass": true
+  }
+}

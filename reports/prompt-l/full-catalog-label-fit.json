@@ -1,0 +1,1413 @@
+{
+  "report": "prompt-l/full-catalog-label-fit",
+  "status": "PASS_RENDERED_CATALOG_GATE",
+  "stopGate": {
+    "sourceGateStatus": "PASS_READONLY_SOURCE_GATE",
+    "productionCodeChanged": false,
+    "databaseMutationAttempted": false,
+    "apiServerRestarted": false,
+    "authUsersSessionsAccessed": false
+  },
+  "source": {
+    "connectionVariable": "DATABASE_URL",
+    "credentialsOmitted": true,
+    "liveProductsCount": 1234,
+    "liveProductsHash": "9b5a7bfb4133c1c700f9d242628c0c46",
+    "approvedProductsHash": "9b5a7bfb4133c1c700f9d242628c0c46",
+    "livePricesCount": "1016",
+    "livePricesHash": "64f5ec3242e70cdfe37e1a242c26b506",
+    "approvedPricesHash": "64f5ec3242e70cdfe37e1a242c26b506",
+    "liveRollosCount": "0",
+    "liveAssignedSeriesCount": "0"
+  },
+  "render": {
+    "component": "artifacts/mariana-textil/src/components/label-print.tsx",
+    "logo": "artifacts/mariana-textil/src/assets/mariana-textil-logo-monochrome.png",
+    "stylesheet": "artifacts/mariana-textil/dist/public/assets/index-CTwFjwBL.css",
+    "stylesheetSha256": "0d37f041f2af0b17e581fa25f6fdf50ab6f13b0f6fb705a80312737b10ce2700",
+    "browser": {
+      "engine": "Chromium",
+      "playwrightCoreVersion": "1.55.0"
+    },
+    "media": "print",
+    "bodyClass": "printing-labels",
+    "labelSizeMm": {
+      "width": 100,
+      "height": 70
+    },
+    "qrSizeMm": 29,
+    "qrErrorToleranceMm": 0.35,
+    "quantity": "35.000",
+    "minimumFontSteps": {
+      "productNamePx": 14,
+      "skuPx": 6,
+      "quantityPx": 13,
+      "qrPayloadPx": 4
+    }
+  },
+  "catalogCount": 1234,
+  "baseline7": {
+    "targetSeries": "9999999",
+    "catalogCount": 1234,
+    "overflowCount": 1,
+    "overflowsByKind": {
+      "product-name": 1
+    },
+    "overflowList": [
+      {
+        "productId": 1948,
+        "sku": "CAMFLOMAR-AMA",
+        "kind": "product-name",
+        "reason": "autofit-overflow",
+        "expected": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+        "actual": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+        "geometry": {
+          "text": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "fitState": "overflow",
+          "fontStep": 14,
+          "textWidth": 353,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 353,
+          "rect": {
+            "x": 12.328,
+            "y": 292089.313,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        }
+      }
+    ],
+    "fontFamilies": [
+      "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+    ],
+    "printMedia": true,
+    "bodyClass": "printing-labels",
+    "fontsStatus": "loaded",
+    "conformanceCounts": {
+      "productNameFullColorExact": 1234,
+      "autoFit": {
+        "productNameMeasured": 1234,
+        "productNameFits": 1233,
+        "skuMeasured": 1234,
+        "skuFits": 1234,
+        "quantityMeasured": 1234,
+        "quantityFits": 1234,
+        "qrPayloadMeasured": 1234,
+        "qrPayloadFits": 1234
+      },
+      "series": {
+        "textExact": 1234,
+        "scrollWidthAtMostClientWidth": 1234,
+        "textBoundingAtMostClientWidth": 1234,
+        "minClientWidth": 106,
+        "maxTextBoundingWidth": 82.46875
+      },
+      "qrPhysicalSize29mm": 1234,
+      "labelPhysicalSize100x70mm": 1234
+    },
+    "representativeGeometry": [
+      {
+        "productId": 1,
+        "sku": "TAF-ROJ",
+        "productName": "TAFETA - ROJO",
+        "expectedProductName": "TAFETA - ROJO",
+        "series": {
+          "text": "9999999",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 82.46875,
+          "rect": {
+            "x": 12.328,
+            "y": 149.078,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - ROJO",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 203.5,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 203.5,
+          "rect": {
+            "x": 12.328,
+            "y": 12.328,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-ROJ",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 58.95,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 58.953125,
+          "rect": {
+            "x": 12.328,
+            "y": 94.797,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": 209.391,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-ROJ-9999999",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 75.16,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 75.15625,
+          "rect": {
+            "x": 250.391,
+            "y": 217.672,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": 97.656,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": 0,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      },
+      {
+        "productId": 2,
+        "sku": "TAF-AZU",
+        "productName": "TAFETA - AZUL REY",
+        "expectedProductName": "TAFETA - AZUL REY",
+        "series": {
+          "text": "9999999",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 82.46875,
+          "rect": {
+            "x": 12.328,
+            "y": 413.641,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - AZUL REY",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 267.19,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 267.1875,
+          "rect": {
+            "x": 12.328,
+            "y": 276.891,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-AZU",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 62.98,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 62.984375,
+          "rect": {
+            "x": 12.328,
+            "y": 359.359,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": 473.953,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-AZU-9999999",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 77.56,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 77.5625,
+          "rect": {
+            "x": 250.391,
+            "y": 482.234,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": 362.219,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": 264.563,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      },
+      {
+        "productId": 3,
+        "sku": "TAF-NEG",
+        "productName": "TAFETA - NEGRO",
+        "expectedProductName": "TAFETA - NEGRO",
+        "series": {
+          "text": "9999999",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 82.46875,
+          "rect": {
+            "x": 12.328,
+            "y": 678.203,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - NEGRO",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 232.13,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 232.125,
+          "rect": {
+            "x": 12.328,
+            "y": 541.453,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-NEG",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 63.41,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 63.40625,
+          "rect": {
+            "x": 12.328,
+            "y": 623.922,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": 738.516,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-NEG-9999999",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 77.83,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 77.828125,
+          "rect": {
+            "x": 250.391,
+            "y": 746.797,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": 626.781,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": 529.125,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      }
+    ]
+  },
+  "candidate8Min": {
+    "targetSeries": "10000001",
+    "catalogCount": 1234,
+    "overflowCount": 1,
+    "overflowsByKind": {
+      "product-name": 1
+    },
+    "overflowList": [
+      {
+        "productId": 1948,
+        "sku": "CAMFLOMAR-AMA",
+        "kind": "product-name",
+        "reason": "autofit-overflow",
+        "expected": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+        "actual": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+        "geometry": {
+          "text": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "fitState": "overflow",
+          "fontStep": 14,
+          "textWidth": 353,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 353,
+          "rect": {
+            "x": 12.328,
+            "y": 480.328,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        }
+      }
+    ],
+    "fontFamilies": [
+      "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+    ],
+    "printMedia": true,
+    "bodyClass": "printing-labels",
+    "fontsStatus": "loaded",
+    "conformanceCounts": {
+      "productNameFullColorExact": 1234,
+      "autoFit": {
+        "productNameMeasured": 1234,
+        "productNameFits": 1233,
+        "skuMeasured": 1234,
+        "skuFits": 1234,
+        "quantityMeasured": 1234,
+        "quantityFits": 1234,
+        "qrPayloadMeasured": 1234,
+        "qrPayloadFits": 1234
+      },
+      "series": {
+        "textExact": 1234,
+        "scrollWidthAtMostClientWidth": 1234,
+        "textBoundingAtMostClientWidth": 1234,
+        "minClientWidth": 106,
+        "maxTextBoundingWidth": 94.25
+      },
+      "qrPhysicalSize29mm": 1234,
+      "labelPhysicalSize100x70mm": 1234
+    },
+    "representativeGeometry": [
+      {
+        "productId": 1,
+        "sku": "TAF-ROJ",
+        "productName": "TAFETA - ROJO",
+        "expectedProductName": "TAFETA - ROJO",
+        "series": {
+          "text": "10000001",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 94.25,
+          "rect": {
+            "x": 12.328,
+            "y": -291459.938,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - ROJO",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 203.5,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 203.5,
+          "rect": {
+            "x": 12.328,
+            "y": -291596.688,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-ROJ",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 58.95,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 58.953125,
+          "rect": {
+            "x": 12.328,
+            "y": -291514.188,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": -291399.625,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-ROJ-10000001",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 80.44,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 80.4375,
+          "rect": {
+            "x": 250.391,
+            "y": -291391.313,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": -291511.344,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": -291609,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      },
+      {
+        "productId": 2,
+        "sku": "TAF-AZU",
+        "productName": "TAFETA - AZUL REY",
+        "expectedProductName": "TAFETA - AZUL REY",
+        "series": {
+          "text": "10000001",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 94.25,
+          "rect": {
+            "x": 12.328,
+            "y": -291195.375,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - AZUL REY",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 267.19,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 267.1875,
+          "rect": {
+            "x": 12.328,
+            "y": -291332.125,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-AZU",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 62.98,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 62.984375,
+          "rect": {
+            "x": 12.328,
+            "y": -291249.625,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": -291135.063,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-AZU-10000001",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 82.84,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 82.84375,
+          "rect": {
+            "x": 250.391,
+            "y": -291126.75,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": -291246.781,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": -291344.438,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      },
+      {
+        "productId": 3,
+        "sku": "TAF-NEG",
+        "productName": "TAFETA - NEGRO",
+        "expectedProductName": "TAFETA - NEGRO",
+        "series": {
+          "text": "10000001",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 94.25,
+          "rect": {
+            "x": 12.328,
+            "y": -290930.813,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - NEGRO",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 232.13,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 232.125,
+          "rect": {
+            "x": 12.328,
+            "y": -291067.563,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-NEG",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 63.41,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 63.40625,
+          "rect": {
+            "x": 12.328,
+            "y": -290985.063,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": -290870.5,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-NEG-10000001",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 83.11,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 83.109375,
+          "rect": {
+            "x": 250.391,
+            "y": -290862.188,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": -290982.219,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": -291079.875,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      }
+    ]
+  },
+  "candidate8Max": {
+    "targetSeries": "99999999",
+    "catalogCount": 1234,
+    "overflowCount": 1,
+    "overflowsByKind": {
+      "product-name": 1
+    },
+    "overflowList": [
+      {
+        "productId": 1948,
+        "sku": "CAMFLOMAR-AMA",
+        "kind": "product-name",
+        "reason": "autofit-overflow",
+        "expected": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+        "actual": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+        "geometry": {
+          "text": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "fitState": "overflow",
+          "fontStep": 14,
+          "textWidth": 353,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 353,
+          "rect": {
+            "x": 12.328,
+            "y": 480.328,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        }
+      }
+    ],
+    "fontFamilies": [
+      "Inter, ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+    ],
+    "printMedia": true,
+    "bodyClass": "printing-labels",
+    "fontsStatus": "loaded",
+    "conformanceCounts": {
+      "productNameFullColorExact": 1234,
+      "autoFit": {
+        "productNameMeasured": 1234,
+        "productNameFits": 1233,
+        "skuMeasured": 1234,
+        "skuFits": 1234,
+        "quantityMeasured": 1234,
+        "quantityFits": 1234,
+        "qrPayloadMeasured": 1234,
+        "qrPayloadFits": 1234
+      },
+      "series": {
+        "textExact": 1234,
+        "scrollWidthAtMostClientWidth": 1234,
+        "textBoundingAtMostClientWidth": 1234,
+        "minClientWidth": 106,
+        "maxTextBoundingWidth": 94.25
+      },
+      "qrPhysicalSize29mm": 1234,
+      "labelPhysicalSize100x70mm": 1234
+    },
+    "representativeGeometry": [
+      {
+        "productId": 1,
+        "sku": "TAF-ROJ",
+        "productName": "TAFETA - ROJO",
+        "expectedProductName": "TAFETA - ROJO",
+        "series": {
+          "text": "99999999",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 94.25,
+          "rect": {
+            "x": 12.328,
+            "y": -291459.938,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - ROJO",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 203.5,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 203.5,
+          "rect": {
+            "x": 12.328,
+            "y": -291596.688,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-ROJ",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 58.95,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 58.953125,
+          "rect": {
+            "x": 12.328,
+            "y": -291514.188,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": -291399.625,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-ROJ-99999999",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 80.44,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 80.4375,
+          "rect": {
+            "x": 250.391,
+            "y": -291391.313,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": -291511.344,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": -291609,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      },
+      {
+        "productId": 2,
+        "sku": "TAF-AZU",
+        "productName": "TAFETA - AZUL REY",
+        "expectedProductName": "TAFETA - AZUL REY",
+        "series": {
+          "text": "99999999",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 94.25,
+          "rect": {
+            "x": 12.328,
+            "y": -291195.375,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - AZUL REY",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 267.19,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 267.1875,
+          "rect": {
+            "x": 12.328,
+            "y": -291332.125,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-AZU",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 62.98,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 62.984375,
+          "rect": {
+            "x": 12.328,
+            "y": -291249.625,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": -291135.063,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-AZU-99999999",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 82.84,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 82.84375,
+          "rect": {
+            "x": 250.391,
+            "y": -291126.75,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": -291246.781,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": -291344.438,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      },
+      {
+        "productId": 3,
+        "sku": "TAF-NEG",
+        "productName": "TAFETA - NEGRO",
+        "expectedProductName": "TAFETA - NEGRO",
+        "series": {
+          "text": "99999999",
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 94.25,
+          "rect": {
+            "x": 12.328,
+            "y": -290930.813,
+            "width": 105.828,
+            "height": 21,
+            "widthMm": 28,
+            "heightMm": 5.556
+          },
+          "overflow": false
+        },
+        "productNameFit": {
+          "text": "TAFETA - NEGRO",
+          "fitState": "fits",
+          "fontStep": 30,
+          "textWidth": 232.13,
+          "availableWidth": 345.72,
+          "clientWidth": 353,
+          "scrollWidth": 353,
+          "textBoundingWidth": 232.125,
+          "rect": {
+            "x": 12.328,
+            "y": -291067.563,
+            "width": 353.281,
+            "height": 41.563,
+            "widthMm": 93.472,
+            "heightMm": 10.997
+          }
+        },
+        "skuFit": {
+          "text": "TAF-NEG",
+          "fitState": "fits",
+          "fontStep": 15,
+          "textWidth": 63.41,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 63.40625,
+          "rect": {
+            "x": 12.328,
+            "y": -290985.063,
+            "width": 105.828,
+            "height": 15,
+            "widthMm": 28,
+            "heightMm": 3.969
+          }
+        },
+        "quantityFit": {
+          "text": "35.000",
+          "fitState": "fits",
+          "fontStep": 29,
+          "textWidth": 84.66,
+          "availableWidth": 105.83,
+          "clientWidth": 106,
+          "scrollWidth": 106,
+          "textBoundingWidth": 84.65625,
+          "rect": {
+            "x": 12.328,
+            "y": -290870.5,
+            "width": 105.828,
+            "height": 29,
+            "widthMm": 28,
+            "heightMm": 7.673
+          }
+        },
+        "qrPayloadFit": {
+          "text": "TAF-NEG-99999999",
+          "fitState": "fits",
+          "fontStep": 9,
+          "textWidth": 83.11,
+          "availableWidth": 115.22,
+          "clientWidth": 115,
+          "scrollWidth": 115,
+          "textBoundingWidth": 83.109375,
+          "rect": {
+            "x": 250.391,
+            "y": -290862.188,
+            "width": 115.219,
+            "height": 9,
+            "widthMm": 30.485,
+            "heightMm": 2.381
+          }
+        },
+        "qr": {
+          "rect": {
+            "x": 253.203,
+            "y": -290982.219,
+            "width": 109.594,
+            "height": 109.594,
+            "widthMm": 28.997,
+            "heightMm": 28.997
+          },
+          "widthAttribute": "29mm",
+          "heightAttribute": "29mm",
+          "viewBox": "0 0 29 29"
+        },
+        "label": {
+          "x": 0,
+          "y": -291079.875,
+          "width": 377.938,
+          "height": 264.563,
+          "widthMm": 99.996,
+          "heightMm": 69.999
+        }
+      }
+    ]
+  },
+  "comparison": {
+    "minSeries": {
+      "preexisting7OverflowCount": 1,
+      "preexisting7OverflowList": [
+        {
+          "productId": 1948,
+          "sku": "CAMFLOMAR-AMA",
+          "kind": "product-name",
+          "reason": "autofit-overflow",
+          "expected": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "actual": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "geometry": {
+            "text": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+            "fitState": "overflow",
+            "fontStep": 14,
+            "textWidth": 353,
+            "availableWidth": 345.72,
+            "clientWidth": 353,
+            "scrollWidth": 353,
+            "textBoundingWidth": 353,
+            "rect": {
+              "x": 12.328,
+              "y": 292089.313,
+              "width": 353.281,
+              "height": 41.563,
+              "widthMm": 93.472,
+              "heightMm": 10.997
+            }
+          }
+        }
+      ],
+      "eightDigitOverflowCount": 1,
+      "eightDigitOverflowList": [
+        {
+          "productId": 1948,
+          "sku": "CAMFLOMAR-AMA",
+          "kind": "product-name",
+          "reason": "autofit-overflow",
+          "expected": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "actual": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "geometry": {
+            "text": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+            "fitState": "overflow",
+            "fontStep": 14,
+            "textWidth": 353,
+            "availableWidth": 345.72,
+            "clientWidth": 353,
+            "scrollWidth": 353,
+            "textBoundingWidth": 353,
+            "rect": {
+              "x": 12.328,
+              "y": 480.328,
+              "width": 353.281,
+              "height": 41.563,
+              "widthMm": 93.472,
+              "heightMm": 10.997
+            }
+          }
+        }
+      ],
+      "introducedByEightDigitCount": 0,
+      "introducedByEightDigitList": []
+    },
+    "maxSeries": {
+      "preexisting7OverflowCount": 1,
+      "preexisting7OverflowList": [
+        {
+          "productId": 1948,
+          "sku": "CAMFLOMAR-AMA",
+          "kind": "product-name",
+          "reason": "autofit-overflow",
+          "expected": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "actual": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "geometry": {
+            "text": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+            "fitState": "overflow",
+            "fontStep": 14,
+            "textWidth": 353,
+            "availableWidth": 345.72,
+            "clientWidth": 353,
+            "scrollWidth": 353,
+            "textBoundingWidth": 353,
+            "rect": {
+              "x": 12.328,
+              "y": 292089.313,
+              "width": 353.281,
+              "height": 41.563,
+              "widthMm": 93.472,
+              "heightMm": 10.997
+            }
+          }
+        }
+      ],
+      "eightDigitOverflowCount": 1,
+      "eightDigitOverflowList": [
+        {
+          "productId": 1948,
+          "sku": "CAMFLOMAR-AMA",
+          "kind": "product-name",
+          "reason": "autofit-overflow",
+          "expected": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "actual": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+          "geometry": {
+            "text": "CAMPESINA FLOR MARGARITA - AMARILLO MANGO",
+            "fitState": "overflow",
+            "fontStep": 14,
+            "textWidth": 353,
+            "availableWidth": 345.72,
+            "clientWidth": 353,
+            "scrollWidth": 353,
+            "textBoundingWidth": 353,
+            "rect": {
+              "x": 12.328,
+              "y": 480.328,
+              "width": 353.281,
+              "height": 41.563,
+              "widthMm": 93.472,
+              "heightMm": 10.997
+            }
+          }
+        }
+      ],
+      "introducedByEightDigitCount": 0,
+      "introducedByEightDigitList": []
+    }
+  },
+  "qrDecode": {
+    "attempted": 1234,
+    "decodedExact": 1234,
+    "mismatches": [],
+    "expectedCount": 1234,
+    "series": "99999999",
+    "decoder": "@zxing/browser BrowserQRCodeReader"
+  },
+  "screenshots": [
+    "reports/prompt-l/baseline-7-product-1948-product-name.jpg",
+    "reports/prompt-l/candidate-8-min-product-1948-product-name.jpg",
+    "reports/prompt-l/candidate-8-max-product-1948-product-name.jpg"
+  ],
+  "physicalScan": "PENDING: screen/DOM/ZXing verification does not accredit a physical printer, pistol, or phone-camera scan."
+}

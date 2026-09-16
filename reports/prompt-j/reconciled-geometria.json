@@ -1,0 +1,306 @@
+[
+  {
+    "route": "cuentas",
+    "screen": "escritorio",
+    "geometry": {
+      "destinations": [
+        {
+          "title": "Total en efectivo",
+          "x": 243.546875,
+          "y": 808.796875,
+          "width": 324.140625,
+          "height": 144,
+          "bottom": 952.796875,
+          "right": 567.6875,
+          "amount": {
+            "x": 264.546875,
+            "y": 853.796875,
+            "width": 282.140625,
+            "height": 24,
+            "bottom": 877.796875,
+            "right": 546.6875
+          },
+          "meta": [
+            {
+              "x": 264.546875,
+              "y": 911.796875,
+              "width": 105.75,
+              "height": 20,
+              "bottom": 931.796875,
+              "right": 370.296875
+            }
+          ]
+        },
+        {
+          "title": "Efectivo facturado",
+          "x": 583.6875,
+          "y": 808.796875,
+          "width": 324.15625,
+          "height": 144,
+          "bottom": 952.796875,
+          "right": 907.84375,
+          "amount": {
+            "x": 604.6875,
+            "y": 853.796875,
+            "width": 282.15625,
+            "height": 24,
+            "bottom": 877.796875,
+            "right": 886.84375
+          },
+          "meta": []
+        },
+        {
+          "title": "Efectivo sin factura",
+          "x": 923.84375,
+          "y": 808.796875,
+          "width": 324.140625,
+          "height": 144,
+          "bottom": 952.796875,
+          "right": 1247.984375,
+          "amount": {
+            "x": 944.84375,
+            "y": 853.796875,
+            "width": 282.140625,
+            "height": 24,
+            "bottom": 877.796875,
+            "right": 1226.984375
+          },
+          "meta": []
+        },
+        {
+          "title": "Cuentas No Fiscales",
+          "x": 413.609375,
+          "y": 968.796875,
+          "width": 324.15625,
+          "height": 144,
+          "bottom": 1112.796875,
+          "right": 737.765625,
+          "amount": {
+            "x": 434.609375,
+            "y": 1013.796875,
+            "width": 282.15625,
+            "height": 24,
+            "bottom": 1037.796875,
+            "right": 716.765625
+          },
+          "meta": [
+            {
+              "x": 434.609375,
+              "y": 1071.796875,
+              "width": 105.75,
+              "height": 20,
+              "bottom": 1091.796875,
+              "right": 540.359375
+            }
+          ]
+        },
+        {
+          "title": "Cuentas Fiscales",
+          "x": 753.765625,
+          "y": 968.796875,
+          "width": 324.15625,
+          "height": 144,
+          "bottom": 1112.796875,
+          "right": 1077.921875,
+          "amount": {
+            "x": 774.765625,
+            "y": 1013.796875,
+            "width": 282.15625,
+            "height": 24,
+            "bottom": 1037.796875,
+            "right": 1056.921875
+          },
+          "meta": [
+            {
+              "x": 774.765625,
+              "y": 1071.796875,
+              "width": 105.75,
+              "height": 20,
+              "bottom": 1091.796875,
+              "right": 880.515625
+            }
+          ]
+        }
+      ],
+      "collection": {
+        "x": 243.546875,
+        "y": 1160.796875,
+        "width": 318.8125,
+        "height": 259,
+        "bottom": 1419.796875,
+        "right": 562.359375
+      },
+      "detail": {
+        "x": 586.359375,
+        "y": 1160.796875,
+        "width": 661.640625,
+        "height": 259,
+        "bottom": 1419.796875,
+        "right": 1248
+      },
+      "overflow": false,
+      "strip": null
+    }
+  },
+  {
+    "route": "caja",
+    "screen": "escritorio",
+    "geometry": {
+      "destinations": [],
+      "overflow": false,
+      "strip": null
+    }
+  },
+  {
+    "route": "cuentas",
+    "screen": "movil",
+    "geometry": {
+      "destinations": [
+        {
+          "title": "Total en efectivo",
+          "x": 16,
+          "y": 1291.6875,
+          "width": 370,
+          "height": 114,
+          "bottom": 1405.6875,
+          "right": 386,
+          "amount": {
+            "x": 33,
+            "y": 1332.6875,
+            "width": 336,
+            "height": 32,
+            "bottom": 1364.6875,
+            "right": 369
+          },
+          "meta": [
+            {
+              "x": 33,
+              "y": 1368.6875,
+              "width": 105.75,
+              "height": 20,
+              "bottom": 1388.6875,
+              "right": 138.75
+            }
+          ]
+        },
+        {
+          "title": "Efectivo facturado",
+          "x": 16,
+          "y": 1421.6875,
+          "width": 370,
+          "height": 90,
+          "bottom": 1511.6875,
+          "right": 386,
+          "amount": {
+            "x": 33,
+            "y": 1462.6875,
+            "width": 336,
+            "height": 32,
+            "bottom": 1494.6875,
+            "right": 369
+          },
+          "meta": []
+        },
+        {
+          "title": "Efectivo sin factura",
+          "x": 16,
+          "y": 1527.6875,
+          "width": 370,
+          "height": 90,
+          "bottom": 1617.6875,
+          "right": 386,
+          "amount": {
+            "x": 33,
+            "y": 1568.6875,
+            "width": 336,
+            "height": 32,
+            "bottom": 1600.6875,
+            "right": 369
+          },
+          "meta": []
+        },
+        {
+          "title": "Cuentas No Fiscales",
+          "x": 16,
+          "y": 1633.6875,
+          "width": 370,
+          "height": 78,
+          "bottom": 1711.6875,
+          "right": 386,
+          "amount": {
+            "x": 33,
+            "y": 1666.6875,
+            "width": 218.25,
+            "height": 28,
+            "bottom": 1694.6875,
+            "right": 251.25
+          },
+          "meta": [
+            {
+              "x": 263.25,
+              "y": 1662.6875,
+              "width": 105.75,
+              "height": 20,
+              "bottom": 1682.6875,
+              "right": 369
+            }
+          ]
+        },
+        {
+          "title": "Cuentas Fiscales",
+          "x": 16,
+          "y": 1727.6875,
+          "width": 370,
+          "height": 78,
+          "bottom": 1805.6875,
+          "right": 386,
+          "amount": {
+            "x": 33,
+            "y": 1760.6875,
+            "width": 218.25,
+            "height": 28,
+            "bottom": 1788.6875,
+            "right": 251.25
+          },
+          "meta": [
+            {
+              "x": 263.25,
+              "y": 1756.6875,
+              "width": 105.75,
+              "height": 20,
+              "bottom": 1776.6875,
+              "right": 369
+            }
+          ]
+        }
+      ],
+      "collection": {
+        "x": 16,
+        "y": 1853.6875,
+        "width": 370,
+        "height": 219,
+        "bottom": 2072.6875,
+        "right": 386
+      },
+      "detail": {
+        "x": 16,
+        "y": 2096.6875,
+        "width": 370,
+        "height": 215,
+        "bottom": 2311.6875,
+        "right": 386
+      },
+      "overflow": false,
+      "strip": null
+    }
+  },
+  {
+    "route": "caja",
+    "screen": "movil",
+    "geometry": {
+      "destinations": [],
+      "overflow": false,
+      "strip": null
+    }
+  }
+]

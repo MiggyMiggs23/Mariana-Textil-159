@@ -1,0 +1,1779 @@
+{
+  "status": "COMMITTED",
+  "mode": "apply",
+  "source": {
+    "database": "heliumdb",
+    "schema": "public",
+    "identity": {
+      "database_name": "heliumdb",
+      "current_user_name": "postgres",
+      "session_user_name": "postgres",
+      "server_version": "16.10",
+      "timezone_setting": "America/Mexico_City",
+      "transaction_read_only": "off",
+      "transaction_isolation": "repeatable read",
+      "clock_timestamp_utc": "2026-09-16 05:30:42.331 UTC",
+      "clock_timestamp_mexico": "2026-09-15 23:30:42.331 America/Mexico_City"
+    }
+  },
+  "authorization": {
+    "authorizationSha256": "4c25e87fee2eed7ebb175ae8c22169a9a2886bd372163f3fa9f5b6b640f01423",
+    "backupSha256": "da7d3f7f342756511c6a04d000f0f4f4fa3feea6b9caad21e6abec5213dffb22",
+    "ownerClosureStatus": "APPROVED_BY_OWNER"
+  },
+  "mutation": {
+    "writesExecuted": true
+  },
+  "operatorSource": {
+    "executedSha256": "143babe56b95f0564c7a202edfba993bddbbc2d38c82652a415d2f19d70a7387",
+    "finalSha256": "9a57885a77c860fe195d128ed6e081210b0f94fa8cb978b334ce7cdbdda39e6a",
+    "executionProofPreserved": true,
+    "databaseExecutionWasNotReplayed": true
+  },
+  "retryPolicy": {
+    "automaticRetry": false,
+    "commitUnknownNoRetry": true
+  },
+  "disposableBehavior": {
+    "status": "PASS",
+    "evidence": "reports/prompt-m/operator-evidence.json",
+    "textOutput": "reports/prompt-m/test-output.txt",
+    "productionDataRead": false,
+    "usersOrSessionsCreated": false,
+    "entradaFirstFolio": "1",
+    "salidaFirstFolio": "1",
+    "seriesFirstNumber": "10000001"
+  },
+  "typecheck": {
+    "status": "PASS",
+    "command": "pnpm run typecheck",
+    "output": "reports/prompt-m/typecheck-final.txt",
+    "diagnostics": 0,
+    "previousFailurePreservedAt": "reports/prompt-m/typecheck-before-fix-failure.txt"
+  },
+  "serviceGate": {
+    "status": "PASS",
+    "managedChecks": {
+      "apiPort8080": "PASS",
+      "frontendPort20329": "PASS"
+    },
+    "priorManagedChecks": {
+      "apiPort8080": "FAILED_PORT_OCCUPIED",
+      "frontendPort20329": "FAILED_PORT_OCCUPIED"
+    },
+    "currentObserved": {
+      "apiHealthHttp200": true,
+      "rootWebHttp200": true
+    },
+    "cleanStartProven": true,
+    "separateAuthorityRequired": true,
+    "mainStartupVerified": true,
+    "mainCurrentRunning": true,
+    "healthAndLogConfirmation": "PASS",
+    "startupEvidence": {
+      "apiLog": "/tmp/logs/artifactsapi-server_API_Server_20260916_054036_802_977fa598.log",
+      "webLog": "/tmp/logs/artifactsmariana-textil_web_20260916_054036_802_c5d8b9a8.log",
+      "healthReport": "reports/prompt-m/restart-health.txt",
+      "apiSchemaStartupComplete": true,
+      "apiServerListeningPort": 8080,
+      "apiBackfillInserted": 0,
+      "viteReadyMilliseconds": 313,
+      "startupErrors": false,
+      "apiHealthHttpStatus": 200,
+      "apiHealthStatus": "ok",
+      "rootWebHttpStatus": 200,
+      "healthCapturedAtUtc": "2026-09-16 05:40:37 UTC"
+    },
+    "reason": "Owner-authorized normal restart completed; startup logs and HTTP health evidence passed. Startup writes remain separately authorized."
+  },
+  "postRestartReadOnly": {
+    "status": "PASS",
+    "evidence": "reports/prompt-m/post-reinicio.json",
+    "markdown": "reports/prompt-m/post-reinicio.md",
+    "capturedAtUtc": "2026-09-16 05:41:29.117 UTC",
+    "capturedAtMexico": "2026-09-15 23:41:29.117 America/Mexico_City",
+    "identity": {
+      "database_name": "heliumdb",
+      "current_user_name": "postgres",
+      "session_user_name": "postgres",
+      "server_version": "16.10",
+      "timezone_setting": "America/Mexico_City",
+      "transaction_read_only": "on",
+      "transaction_isolation": "repeatable read"
+    },
+    "allSixCurrentDefaultsMatchGuard": true,
+    "all46CurrentRowsMatchCommitted": true,
+    "protectedCatalogHashesMatchCommitted": true,
+    "sourceWriteExecuted": false,
+    "rollbackCompleted": true,
+    "scopeLimitRecorded": true,
+    "mainStartupVerified": true,
+    "mainCurrentRunning": true,
+    "healthAndLogConfirmation": "PASS",
+    "startupEvidence": {
+      "apiLog": "/tmp/logs/artifactsapi-server_API_Server_20260916_054036_802_977fa598.log",
+      "webLog": "/tmp/logs/artifactsmariana-textil_web_20260916_054036_802_c5d8b9a8.log",
+      "healthReport": "reports/prompt-m/restart-health.txt",
+      "apiSchemaStartupComplete": true,
+      "apiServerListeningPort": 8080,
+      "apiBackfillInserted": 0,
+      "viteReadyMilliseconds": 313,
+      "startupErrors": false,
+      "apiHealthHttpStatus": 200,
+      "apiHealthStatus": "ok",
+      "rootWebHttpStatus": 200,
+      "healthCapturedAtUtc": "2026-09-16 05:40:37 UTC"
+    }
+  },
+  "closure": {
+    "status": "CLOSED_DB_AND_POST_RESTART_READONLY",
+    "postRestartReadOnlyPass": true,
+    "wholeDatabaseUnchangedClaim": false,
+    "serviceHealthLogConfirmation": "PASS",
+    "noFurtherRestartRequested": true
+  },
+  "transaction": {
+    "lockOrder": [
+      "public.auditoria_inventario_folio SHARE",
+      "public.entrada_folio ACCESS EXCLUSIVE",
+      "public.salida_folio ACCESS EXCLUSIVE",
+      "public.series_consecutivo ACCESS EXCLUSIVE",
+      "public.ticket_folio SHARE",
+      "public.viaje_folio SHARE"
+    ],
+    "before": {
+      "identity": {
+        "database_name": "heliumdb",
+        "current_user_name": "postgres",
+        "session_user_name": "postgres",
+        "server_version": "16.10",
+        "timezone_setting": "America/Mexico_City",
+        "transaction_read_only": "off",
+        "transaction_isolation": "repeatable read",
+        "clock_timestamp_utc": "2026-09-16 05:30:42.331 UTC",
+        "clock_timestamp_mexico": "2026-09-15 23:30:42.331 America/Mexico_City"
+      },
+      "catalogue": [
+        {
+          "schema_name": "public",
+          "table_name": "entrada_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "99"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "salida_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "499"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "viaje_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "0"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "auditoria_inventario_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "0"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "ticket_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "999"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "series_consecutivo",
+          "column_name": "ultimo_numero",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "1000000"
+        }
+      ],
+      "controlRows": [
+        {
+          "table_name": "entrada_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "ticket_folio",
+          "control_key": "1",
+          "control_value": "999"
+        },
+        {
+          "table_name": "series_consecutivo",
+          "control_key": "1",
+          "control_value": "10000000"
+        }
+      ],
+      "protectedCatalog": [
+        {
+          "table_name": "productos",
+          "row_count": "1234",
+          "ordered_canonical_row_hash": "ec387f3b7a73aadcdf971c03b221a001"
+        },
+        {
+          "table_name": "precio_historial",
+          "row_count": "1016",
+          "ordered_canonical_row_hash": "995ad0f005ac98c01a8951f6acc37af1"
+        }
+      ],
+      "sequences": [
+        {
+          "schema_name": "public",
+          "sequence_name": "aplicaciones_credito_id_seq",
+          "last_value": "6"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+          "last_value": "18"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "auditoria_id_seq",
+          "last_value": "3966"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "auditorias_inventario_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "autorizaciones_nota_id_seq",
+          "last_value": "6"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "camionetas_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "choferes_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "cliente_documentos_id_seq",
+          "last_value": "4"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "clientes_id_seq",
+          "last_value": "7"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "contenedor_lineas_id_seq",
+          "last_value": "2"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "contenedores_folio_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "contenedores_id_seq",
+          "last_value": "2"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "cuadre_fiscal_registros_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "entradas_id_seq",
+          "last_value": "432"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "equipos_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "movimientos_credito_id_seq",
+          "last_value": "50"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "movimientos_id_seq",
+          "last_value": "6522"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "notificaciones_credito_id_seq",
+          "last_value": "8"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "notificaciones_sistema_id_seq",
+          "last_value": "40"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "pagos_proveedor_id_seq",
+          "last_value": "450"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "permisos_rol_id_seq",
+          "last_value": "29563"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "permisos_ubicacion_id_seq",
+          "last_value": "7074"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "permisos_usuario_id_seq",
+          "last_value": "125"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "pisos_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "precio_historial_id_seq",
+          "last_value": "1016"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "productos_id_seq",
+          "last_value": "2077"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "proveedores_id_seq",
+          "last_value": "225"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "reimpresiones_etiqueta_id_seq",
+          "last_value": "170"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "revisiones_etiqueta_id_seq",
+          "last_value": "31"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "rollos_id_seq",
+          "last_value": "5463"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salida_lineas_id_seq",
+          "last_value": "26"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salida_rollos_id_seq",
+          "last_value": "113"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salidas_dinero_caja_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salidas_id_seq",
+          "last_value": "24"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "sesiones_caja_id_seq",
+          "last_value": "42"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "solicitudes_pago_dirigido_id_seq",
+          "last_value": "1"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "stock_minimo_episodios_id_seq",
+          "last_value": "10"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "stock_minimos_id_seq",
+          "last_value": "3"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ticket_linea_consumos_id_seq",
+          "last_value": "20"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ticket_lineas_id_seq",
+          "last_value": "353"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ticket_pagos_id_seq",
+          "last_value": "89"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "tickets_id_seq",
+          "last_value": "105"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ubicaciones_id_seq",
+          "last_value": "834"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "usuarios_id_seq",
+          "last_value": "233"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "viajes_id_seq",
+          "last_value": null
+        }
+      ]
+    },
+    "after": {
+      "identity": {
+        "database_name": "heliumdb",
+        "current_user_name": "postgres",
+        "session_user_name": "postgres",
+        "server_version": "16.10",
+        "timezone_setting": "America/Mexico_City",
+        "transaction_read_only": "off",
+        "transaction_isolation": "repeatable read",
+        "clock_timestamp_utc": "2026-09-16 05:30:42.491 UTC",
+        "clock_timestamp_mexico": "2026-09-15 23:30:42.491 America/Mexico_City"
+      },
+      "catalogue": [
+        {
+          "schema_name": "public",
+          "table_name": "entrada_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "0"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "salida_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "0"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "viaje_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "0"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "auditoria_inventario_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "0"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "ticket_folio",
+          "column_name": "ultimo_folio",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "999"
+        },
+        {
+          "schema_name": "public",
+          "table_name": "series_consecutivo",
+          "column_name": "ultimo_numero",
+          "data_type": "integer",
+          "not_null": true,
+          "live_default_expression": "10000000"
+        }
+      ],
+      "controlRows": [
+        {
+          "table_name": "entrada_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "entrada_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "salida_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "viaje_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "1",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "2",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "3",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "4",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "5",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "6",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "7",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "8",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "9",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "458",
+          "control_value": "0"
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "control_key": "531",
+          "control_value": "0"
+        },
+        {
+          "table_name": "ticket_folio",
+          "control_key": "1",
+          "control_value": "999"
+        },
+        {
+          "table_name": "series_consecutivo",
+          "control_key": "1",
+          "control_value": "10000000"
+        }
+      ],
+      "protectedCatalog": [
+        {
+          "table_name": "productos",
+          "row_count": "1234",
+          "ordered_canonical_row_hash": "ec387f3b7a73aadcdf971c03b221a001"
+        },
+        {
+          "table_name": "precio_historial",
+          "row_count": "1016",
+          "ordered_canonical_row_hash": "995ad0f005ac98c01a8951f6acc37af1"
+        }
+      ],
+      "sequences": [
+        {
+          "schema_name": "public",
+          "sequence_name": "aplicaciones_credito_id_seq",
+          "last_value": "6"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+          "last_value": "18"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "auditoria_id_seq",
+          "last_value": "3966"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "auditorias_inventario_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "autorizaciones_nota_id_seq",
+          "last_value": "6"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "camionetas_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "choferes_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "cliente_documentos_id_seq",
+          "last_value": "4"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "clientes_id_seq",
+          "last_value": "7"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "contenedor_lineas_id_seq",
+          "last_value": "2"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "contenedores_folio_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "contenedores_id_seq",
+          "last_value": "2"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "cuadre_fiscal_registros_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "entradas_id_seq",
+          "last_value": "432"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "equipos_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "movimientos_credito_id_seq",
+          "last_value": "50"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "movimientos_id_seq",
+          "last_value": "6522"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "notificaciones_credito_id_seq",
+          "last_value": "8"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "notificaciones_sistema_id_seq",
+          "last_value": "40"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "pagos_proveedor_id_seq",
+          "last_value": "450"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "permisos_rol_id_seq",
+          "last_value": "29563"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "permisos_ubicacion_id_seq",
+          "last_value": "7074"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "permisos_usuario_id_seq",
+          "last_value": "125"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "pisos_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "precio_historial_id_seq",
+          "last_value": "1016"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "productos_id_seq",
+          "last_value": "2077"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "proveedores_id_seq",
+          "last_value": "225"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "reimpresiones_etiqueta_id_seq",
+          "last_value": "170"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "revisiones_etiqueta_id_seq",
+          "last_value": "31"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "rollos_id_seq",
+          "last_value": "5463"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salida_lineas_id_seq",
+          "last_value": "26"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salida_rollos_id_seq",
+          "last_value": "113"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salidas_dinero_caja_id_seq",
+          "last_value": null
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "salidas_id_seq",
+          "last_value": "24"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "sesiones_caja_id_seq",
+          "last_value": "42"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "solicitudes_pago_dirigido_id_seq",
+          "last_value": "1"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "stock_minimo_episodios_id_seq",
+          "last_value": "10"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "stock_minimos_id_seq",
+          "last_value": "3"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ticket_linea_consumos_id_seq",
+          "last_value": "20"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ticket_lineas_id_seq",
+          "last_value": "353"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ticket_pagos_id_seq",
+          "last_value": "89"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "tickets_id_seq",
+          "last_value": "105"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "ubicaciones_id_seq",
+          "last_value": "834"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "usuarios_id_seq",
+          "last_value": "233"
+        },
+        {
+          "schema_name": "public",
+          "sequence_name": "viajes_id_seq",
+          "last_value": null
+        }
+      ]
+    },
+    "ddl": [
+      "ALTER TABLE public.entrada_folio ALTER COLUMN ultimo_folio SET DEFAULT 0;",
+      "ALTER TABLE public.salida_folio ALTER COLUMN ultimo_folio SET DEFAULT 0;",
+      "ALTER TABLE public.series_consecutivo ALTER COLUMN ultimo_numero SET DEFAULT 10000000;"
+    ],
+    "ddlExecuted": true,
+    "proof": {
+      "allSixDefaultsMatchCode": true,
+      "counterRowsUnchanged": true,
+      "protectedCatalogUnchanged": true,
+      "protectedCatalogMatchesDryRun": true,
+      "all45SequencesUnchanged": true,
+      "all45SequencesMatchDryRun": true,
+      "nextvalCalled": false
+    },
+    "commitAcknowledged": true
+  },
+  "postCommitRead": {
+    "pass": true,
+    "identity": {
+      "database_name": "heliumdb",
+      "current_user_name": "postgres",
+      "session_user_name": "postgres",
+      "server_version": "16.10",
+      "timezone_setting": "America/Mexico_City",
+      "transaction_read_only": "on",
+      "transaction_isolation": "repeatable read",
+      "clock_timestamp_utc": "2026-09-16 05:30:42.538 UTC",
+      "clock_timestamp_mexico": "2026-09-15 23:30:42.538 America/Mexico_City"
+    },
+    "catalogue": [
+      {
+        "schema_name": "public",
+        "table_name": "entrada_folio",
+        "column_name": "ultimo_folio",
+        "data_type": "integer",
+        "not_null": true,
+        "live_default_expression": "0"
+      },
+      {
+        "schema_name": "public",
+        "table_name": "salida_folio",
+        "column_name": "ultimo_folio",
+        "data_type": "integer",
+        "not_null": true,
+        "live_default_expression": "0"
+      },
+      {
+        "schema_name": "public",
+        "table_name": "viaje_folio",
+        "column_name": "ultimo_folio",
+        "data_type": "integer",
+        "not_null": true,
+        "live_default_expression": "0"
+      },
+      {
+        "schema_name": "public",
+        "table_name": "auditoria_inventario_folio",
+        "column_name": "ultimo_folio",
+        "data_type": "integer",
+        "not_null": true,
+        "live_default_expression": "0"
+      },
+      {
+        "schema_name": "public",
+        "table_name": "ticket_folio",
+        "column_name": "ultimo_folio",
+        "data_type": "integer",
+        "not_null": true,
+        "live_default_expression": "999"
+      },
+      {
+        "schema_name": "public",
+        "table_name": "series_consecutivo",
+        "column_name": "ultimo_numero",
+        "data_type": "integer",
+        "not_null": true,
+        "live_default_expression": "10000000"
+      }
+    ],
+    "controlRows": [
+      {
+        "table_name": "entrada_folio",
+        "control_key": "1",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "2",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "3",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "4",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "5",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "6",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "7",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "8",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "9",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "458",
+        "control_value": "0"
+      },
+      {
+        "table_name": "entrada_folio",
+        "control_key": "531",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "1",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "2",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "3",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "4",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "5",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "6",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "7",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "8",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "9",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "458",
+        "control_value": "0"
+      },
+      {
+        "table_name": "salida_folio",
+        "control_key": "531",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "1",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "2",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "3",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "4",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "5",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "6",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "7",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "8",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "9",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "458",
+        "control_value": "0"
+      },
+      {
+        "table_name": "viaje_folio",
+        "control_key": "531",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "1",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "2",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "3",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "4",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "5",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "6",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "7",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "8",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "9",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "458",
+        "control_value": "0"
+      },
+      {
+        "table_name": "auditoria_inventario_folio",
+        "control_key": "531",
+        "control_value": "0"
+      },
+      {
+        "table_name": "ticket_folio",
+        "control_key": "1",
+        "control_value": "999"
+      },
+      {
+        "table_name": "series_consecutivo",
+        "control_key": "1",
+        "control_value": "10000000"
+      }
+    ],
+    "protectedCatalog": [
+      {
+        "table_name": "productos",
+        "row_count": "1234",
+        "ordered_canonical_row_hash": "ec387f3b7a73aadcdf971c03b221a001"
+      },
+      {
+        "table_name": "precio_historial",
+        "row_count": "1016",
+        "ordered_canonical_row_hash": "995ad0f005ac98c01a8951f6acc37af1"
+      }
+    ],
+    "all45Sequences": [
+      {
+        "schema_name": "public",
+        "sequence_name": "aplicaciones_credito_id_seq",
+        "last_value": "6"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+        "last_value": "18"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "auditoria_id_seq",
+        "last_value": "3966"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "auditorias_inventario_id_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "autorizaciones_nota_id_seq",
+        "last_value": "6"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "camionetas_id_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "choferes_id_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "cliente_documentos_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "clientes_id_seq",
+        "last_value": "7"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "contenedor_lineas_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "contenedores_folio_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "contenedores_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "cuadre_fiscal_registros_id_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "entradas_id_seq",
+        "last_value": "432"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "equipos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "movimientos_credito_id_seq",
+        "last_value": "50"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "movimientos_id_seq",
+        "last_value": "6522"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "notificaciones_credito_id_seq",
+        "last_value": "8"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "notificaciones_sistema_id_seq",
+        "last_value": "40"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "pagos_proveedor_id_seq",
+        "last_value": "450"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "permisos_rol_id_seq",
+        "last_value": "29563"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "permisos_ubicacion_id_seq",
+        "last_value": "7074"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "permisos_usuario_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "pisos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "precio_historial_id_seq",
+        "last_value": "1016"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "productos_id_seq",
+        "last_value": "2077"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "proveedores_id_seq",
+        "last_value": "225"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "reimpresiones_etiqueta_id_seq",
+        "last_value": "170"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "revisiones_etiqueta_id_seq",
+        "last_value": "31"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "rollos_id_seq",
+        "last_value": "5463"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "salida_lineas_id_seq",
+        "last_value": "26"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "salida_rollos_id_seq",
+        "last_value": "113"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "salidas_dinero_caja_id_seq",
+        "last_value": null
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "salidas_id_seq",
+        "last_value": "24"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "sesiones_caja_id_seq",
+        "last_value": "42"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "solicitudes_pago_dirigido_id_seq",
+        "last_value": "1"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "stock_minimo_episodios_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "stock_minimos_id_seq",
+        "last_value": "3"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "ticket_linea_consumos_id_seq",
+        "last_value": "20"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "ticket_lineas_id_seq",
+        "last_value": "353"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "ticket_pagos_id_seq",
+        "last_value": "89"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "tickets_id_seq",
+        "last_value": "105"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "ubicaciones_id_seq",
+        "last_value": "834"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "usuarios_id_seq",
+        "last_value": "233"
+      },
+      {
+        "schema_name": "public",
+        "sequence_name": "viajes_id_seq",
+        "last_value": null
+      }
+    ]
+  },
+  "proof": {
+    "allSixDefaultsMatchCode": true,
+    "counterRowsUnchanged": true,
+    "protectedCatalogUnchanged": true,
+    "protectedCatalogMatchesDryRun": true,
+    "all45SequencesUnchanged": true,
+    "all45SequencesMatchDryRun": true,
+    "nextvalCalled": false
+  },
+  "gates": {
+    "block0RowCount": 46,
+    "liveRowCount": 46,
+    "dryRunReadOnlyPass": true,
+    "oldDefaultsMatch": true
+  }
+}

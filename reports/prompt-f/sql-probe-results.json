@@ -1,0 +1,38 @@
+{
+  "method": "EXPLAIN sin ANALYZE, consultas SELECT parametrizadas, sin escrituras",
+  "database": "heliumdb/public",
+  "initialResults": [
+    {
+      "name": "movement",
+      "success": true,
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "name": "ledger",
+      "success": true,
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "name": "applications",
+      "success": true,
+      "exitCode": 0,
+      "error": null
+    },
+    {
+      "name": "auditoria",
+      "success": true,
+      "exitCode": 0,
+      "error": null
+    }
+  ],
+  "changedQueryResults": [
+    {
+      "name": "movement",
+      "success": true,
+      "exitCode": 0,
+      "error": null
+    }
+  ]
+}

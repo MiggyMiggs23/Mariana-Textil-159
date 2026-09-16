@@ -496,10 +496,10 @@ await test("T-07: Series concurrentes → números globales distintos y consecut
     );
   }
 
-  // First allocated series must be >= 1000001 (counter starts at 1000001)
+  // First allocated series must be >= 10000001 (counter starts at 10000001)
   assert.ok(
-    sorted[0]! >= 1000001,
-    `Series must start at or after 1000001, got ${sorted[0]}`,
+    sorted[0]! >= 10000001,
+    `Series must start at or after 10000001, got ${sorted[0]}`,
   );
 });
 

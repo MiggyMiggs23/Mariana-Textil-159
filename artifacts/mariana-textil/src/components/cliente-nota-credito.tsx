@@ -243,6 +243,13 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
                           >
                             Ver Reparto
                           </Button>
+                          <Link
+                            href={`/clientes/${clienteId}/movimientos/${abono.movimientoPagoId}`}
+                            className="inline-flex h-8 items-center rounded-md px-2 text-xs font-bold text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            data-testid={`link-abono-movimiento-${abono.movimientoPagoId}`}
+                          >
+                            ABONO · Movimiento #{abono.movimientoPagoId}
+                          </Link>
                           {abono.revertido ? (
                             <Badge variant="outline" className="h-8 border-destructive/40 text-destructive">
                               REVERTIDO

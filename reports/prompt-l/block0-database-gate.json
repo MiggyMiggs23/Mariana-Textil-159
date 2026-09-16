@@ -1,0 +1,119 @@
+{
+  "report": "prompt-l/block0-database-gate",
+  "generatedBy": "read-only direct verifier",
+  "appConfigTarget": {
+    "connectionVariable": "DATABASE_URL",
+    "protocol": "postgresql",
+    "host": "helium",
+    "port": "5432",
+    "database": "heliumdb",
+    "credentialsOmitted": true
+  },
+  "sourceIdentityReference": "reports/prompt-h/api-pool-identity-2026-09-15.md",
+  "snapshot": {
+    "path": ".local/backups/prompt-h-block2-20260915214248-7517/source-snapshot.json",
+    "capturedAtMexico": "2026-09-15 21:42:48",
+    "commit": "70ebe2a193c7ca6ca60257d2ff80260f45718554"
+  },
+  "status": "PASS_READONLY_GATE",
+  "observedAtMexico": "2026-09-15T22:40:38.967",
+  "identity": {
+    "databaseName": "heliumdb",
+    "schemaName": "public",
+    "serverVersion": "16.10",
+    "transactionIsolation": "repeatable read",
+    "transactionReadOnly": "on",
+    "observedAtMexico": "2026-09-15T22:40:38.967"
+  },
+  "rollos": {
+    "totalCount": "0",
+    "assignedSerieNonNullNonEmptyCount": "0",
+    "nullOrEmptySerieCount": "0",
+    "distinctAssignedSerieCount": "0"
+  },
+  "seriesConsecutivo": {
+    "rowCount": "1",
+    "minUltimoNumero": "1000000",
+    "maxUltimoNumero": "1000000",
+    "rows": [
+      {
+        "id": "1",
+        "ultimoNumero": "1000000"
+      }
+    ],
+    "columns": [
+      {
+        "columnName": "id",
+        "dataType": "integer",
+        "udtName": "int4",
+        "isNullable": "NO",
+        "numericPrecision": "32",
+        "numericScale": "0",
+        "columnDefault": "1",
+        "declaredTypeRange": "-2147483648..2147483647"
+      },
+      {
+        "columnName": "ultimo_numero",
+        "dataType": "integer",
+        "udtName": "int4",
+        "isNullable": "NO",
+        "numericPrecision": "32",
+        "numericScale": "0",
+        "columnDefault": "1000000",
+        "declaredTypeRange": "-2147483648..2147483647"
+      }
+    ]
+  },
+  "duplicates": {
+    "rollosSerie": [],
+    "seriesUltimoNumero": []
+  },
+  "catalogComparison": [
+    {
+      "table": "productos",
+      "expected": {
+        "schema": "public",
+        "table": "productos",
+        "count": "1234",
+        "orderedCanonicalRowHash": "9b5a7bfb4133c1c700f9d242628c0c46"
+      },
+      "actual": {
+        "schema": "public",
+        "table": "productos",
+        "count": "1234",
+        "orderedCanonicalRowHash": "9b5a7bfb4133c1c700f9d242628c0c46"
+      },
+      "matches": true,
+      "sqlMethod": "to_jsonb(t)::text; md5(COALESCE(string_agg(md5(canonical), '' ORDER BY canonical, md5(canonical)), ''))"
+    },
+    {
+      "table": "precio_historial",
+      "expected": {
+        "schema": "public",
+        "table": "precio_historial",
+        "count": "1016",
+        "orderedCanonicalRowHash": "64f5ec3242e70cdfe37e1a242c26b506"
+      },
+      "actual": {
+        "schema": "public",
+        "table": "precio_historial",
+        "count": "1016",
+        "orderedCanonicalRowHash": "64f5ec3242e70cdfe37e1a242c26b506"
+      },
+      "matches": true,
+      "sqlMethod": "to_jsonb(t)::text; md5(COALESCE(string_agg(md5(canonical), '' ORDER BY canonical, md5(canonical)), ''))"
+    }
+  ],
+  "productColors": {
+    "totalCount": "1234",
+    "nonNullNonEmptyColorCount": "1234",
+    "distinctNonEmptyColorCount": "175",
+    "nonNullNonEmptyColorHexCount": "17",
+    "canonicalHashIncludesAllColumns": true
+  },
+  "gate": {
+    "zeroRollos": true,
+    "zeroAssignedSeries": true,
+    "protectedCatalogUnchanged": true
+  }
+}

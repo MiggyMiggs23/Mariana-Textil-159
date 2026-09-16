@@ -36,6 +36,7 @@ import {
   ensureEquiposSchema,
 } from "@workspace/db";
 import { logger } from "./lib/logger";
+import { startupMode } from "./lib/startup-mode";
 import { backfillCompras } from "./lib/compras-proveedor";
 import {
   runStockMinimumPoller,
@@ -138,7 +139,17 @@ export async function ensureStartupSchemas(): Promise<void> {
 }
 
 export async function startServer() {
-  await ensureStartupSchemas();
+  // Development-only inspection boot: never run startup DDL, backfills or the
+  // writing stock monitor when a read-only delivery explicitly forbids them.
+  // This does not change request authorization or the normal production boot.
+  const inspectionBoot = startupMode(process.env) === "inspection";
+  if (inspectionBoot) {
+    // Fail explicitly if the already-provisioned database cannot be read.
+    await pool.query("SELECT 1");
+    logger.warn("Inspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.");
+  } else {
+    await ensureStartupSchemas();
+  }
   const port = requireServerPort();
   const server = app.listen(port);
   server.on("error", async (err) => {
@@ -149,6 +160,17 @@ export async function startServer() {
   server.on("listening", () => {
     logger.info({ port }, "Server listening");
   });
+  if (inspectionBoot) {
+    installGracefulShutdown({
+      app,
+      server,
+      pool,
+      drain: requestDrain,
+      backfill: { promise: Promise.resolve(), abort() {} },
+      logger,
+    });
+    return;
+  }
   const backfillController = new AbortController();
   const backfillPromise = observeBackgroundTask(
     backfillCompras({ signal: backfillController.signal }),

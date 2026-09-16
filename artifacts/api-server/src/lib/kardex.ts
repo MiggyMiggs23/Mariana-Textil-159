@@ -18,6 +18,7 @@ import {
   clientesTable,
   entradasTable,
   movimientosTable,
+  movimientosCreditoTable,
   productosTable,
   rollosTable,
   salidasTable,
@@ -33,6 +34,7 @@ import {
   resolveMovementReference,
   resolveDocument,
   TICKET_DOCUMENT_TYPES,
+  type CreditMovementOwner,
   type DocumentReference,
   type MovementDocumentSource,
 } from "./kardex-document";
@@ -67,6 +69,7 @@ type DocumentLookupContext = {
   ticketClientMap: Map<number, string>;
   salidaMap: Map<number, string>;
   salidaDestinationMap: Map<number, string | null>;
+  creditMovementMap: Map<number, CreditMovementOwner>;
 };
 
 export function resolveKardexTipos(filters: KardexFiltersInput) {
@@ -271,6 +274,12 @@ async function loadDocumentContext(
     )
     .map((reference) => Number(reference.id))
     .filter((id) => Number.isSafeInteger(id) && id > 0);
+  const creditMovementIds = references
+    .filter(
+      (reference) => reference.tipo === "MOVIMIENTO_CREDITO" && reference.id,
+    )
+    .map((reference) => Number(reference.id))
+    .filter((id) => Number.isSafeInteger(id) && id > 0);
   const [tickets, salidas] = await Promise.all([
     ticketIds.length
       ? db
@@ -300,6 +309,15 @@ async function loadDocumentContext(
           .where(inArray(salidasTable.id, salidaIds))
       : [],
   ]);
+  const creditMovements = creditMovementIds.length
+    ? await db
+        .select({
+          id: movimientosCreditoTable.id,
+          clienteId: movimientosCreditoTable.clienteId,
+        })
+        .from(movimientosCreditoTable)
+        .where(inArray(movimientosCreditoTable.id, creditMovementIds))
+    : [];
   const ticketMap = new Map(tickets.map((ticket) => [ticket.id, ticket.folio]));
   const ticketClientMap = new Map(
     tickets.map((ticket) => [ticket.id, ticket.clienteNombre]),
@@ -313,12 +331,27 @@ async function loadDocumentContext(
   const salidaDestinationMap = new Map(
     salidas.map((salida) => [salida.id, salida.destinoNombre]),
   );
+  const creditMovementMap = new Map(
+    creditMovements
+      .filter(
+        (movement) =>
+          Number.isSafeInteger(movement.id) &&
+          movement.id > 0 &&
+          Number.isSafeInteger(movement.clienteId) &&
+          movement.clienteId > 0,
+      )
+      .map((movement) => [
+        movement.id,
+        { clienteId: movement.clienteId },
+      ] as const),
+  );
   return {
     entradaMap,
     ticketMap,
     ticketClientMap,
     salidaMap,
     salidaDestinationMap,
+    creditMovementMap,
   };
 }
 
@@ -370,6 +403,7 @@ export async function loadMovementDocumentContext(
         context.entradaMap,
         context.ticketMap,
         context.salidaMap,
+        context.creditMovementMap,
       ),
     ),
     ...context,
@@ -406,6 +440,10 @@ async function enrichDocuments(rows: JoinedMovement[]) {
         ? (row.tipo === "TRANSFERENCIA_SALIDA" ? "Salida a sitio" : "Entrada por salida")
         : document.label,
       documentoRuta: salidaInmediata && reference.id ? `/salidas/${reference.id}` : document.route,
+      documentoClienteId:
+        reference.tipo === "MOVIMIENTO_CREDITO" && reference.id
+          ? (context.creditMovementMap.get(Number(reference.id))?.clienteId ?? null)
+          : null,
       destinoEtiqueta:
         row.tipo === "VENTA" &&
         isTicketDocumentType(reference.tipo) &&

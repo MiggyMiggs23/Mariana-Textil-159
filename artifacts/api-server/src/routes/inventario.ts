@@ -239,6 +239,8 @@ type MovimientoRow = {
   documentoId: string | null;
   documentoRuta: string | null;
   documentoEtiqueta: string | null;
+  /** Owning client ID for a live MOVIMIENTO_CREDITO document reference. */
+  documentoClienteId: number | null;
   movimientoOrigenId: number | null;
   usuarioId: number;
   justificacion: string | null;
@@ -273,6 +275,7 @@ type MovimientoDetalle = {
 function serializeMovimiento(
   mov: typeof movimientosTable.$inferSelect,
   document: { label: string | null; route: string | null },
+  documentoClienteId: number | null = null,
 ): MovimientoRow {
   return {
     id: Number(mov.id),
@@ -287,6 +290,7 @@ function serializeMovimiento(
     documentoId: mov.documentoId ?? null,
     documentoRuta: document.route,
     documentoEtiqueta: document.label,
+    documentoClienteId,
     movimientoOrigenId: mov.movimientoOrigenId ?? null,
     usuarioId: mov.usuarioId,
     justificacion: mov.justificacion ?? null,
@@ -305,6 +309,11 @@ async function enrichMovimiento(
   return serializeMovimiento(
     mov,
     context.documents[0] ?? { label: null, route: null },
+    context.references[0]?.tipo === "MOVIMIENTO_CREDITO" &&
+      context.references[0]?.id
+      ? (context.creditMovementMap.get(Number(context.references[0].id))?.clienteId ??
+        null)
+      : null,
   );
 }
 
@@ -316,6 +325,11 @@ async function enrichMovimientos(
     return serializeMovimiento(
       mov,
       context.documents[index] ?? { label: null, route: null },
+      context.references[index]?.tipo === "MOVIMIENTO_CREDITO" &&
+        context.references[index]?.id
+        ? (context.creditMovementMap.get(Number(context.references[index].id))?.clienteId ??
+          null)
+        : null,
     );
   });
 }

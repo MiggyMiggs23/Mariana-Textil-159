@@ -1,0 +1,577 @@
+{
+  "report": "Prompt M Block 0 — live folio defaults and control rows",
+  "status": "STOP_BEFORE_BLOCK_1_AND_BLOCK_2",
+  "sourcePrompt": "attached_assets/Pasted--Prompt-M-Los-defaults-99-y-499-de-los-contadores-de-fo_1789535965263.txt",
+  "scope": {
+    "databaseTarget": "heliumdb",
+    "schema": "public",
+    "access": "direct PostgreSQL via DATABASE_URL",
+    "readOnly": true,
+    "writesToDatabase": false,
+    "writesPerformed": [
+      "reports/prompt-m/block0-defaults.json",
+      "reports/prompt-m/block0-defaults.md"
+    ],
+    "blocksExecuted": [
+      "Block 0 live catalogue and row reads"
+    ],
+    "blocksNotExecuted": [
+      "Block 1 default ALTERs",
+      "Block 2 disposable insertion/behavior test",
+      "user/session creation"
+    ]
+  },
+  "transactionEvidence": {
+    "begin": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "setLocalTimezone": "SET LOCAL TIME ZONE 'America/Mexico_City'",
+    "transactionReadOnly": "on",
+    "transactionIsolation": "repeatable read",
+    "end": "ROLLBACK",
+    "writeAttempted": false
+  },
+  "identity": {
+    "database": "heliumdb",
+    "currentUser": "postgres",
+    "sessionUser": "postgres",
+    "serverVersion": "16.10",
+    "timezoneSetting": "America/Mexico_City",
+    "transactionTimestampMexico": "2026-09-15 23:21:00.625 -06:00",
+    "statementTimestampMexico": "2026-09-15 23:21:00.627 -06:00",
+    "clockTimestampMexico": "2026-09-15 23:21:00.627 -06:00",
+    "environmentValuesRecorded": false
+  },
+  "ownerAndBackupGate": {
+    "ownerClosureReport": "reports/prompt-h/cierre-propietario.md",
+    "ownerClosureStatus": "APPROVED_BY_OWNER",
+    "ownerClosureObserved": true,
+    "approvedDump": ".local/backups/prompt-h-block2-20260915214248-7517/prompt-h-block2-20260915214248-7517.dump",
+    "approvedDumpExists": true,
+    "approvedDumpSizeBytes": 440802,
+    "approvedDumpSha256Recorded": "da7d3f7f342756511c6a04d000f0f4f4fa3feea6b9caad21e6abec5213dffb22",
+    "approvedDumpSha256ComputedReadonly": "da7d3f7f342756511c6a04d000f0f4f4fa3feea6b9caad21e6abec5213dffb22",
+    "approvedDumpSha256Matches": true,
+    "backupWasNotRestoredOrReadForCredentials": true,
+    "backupRemainsPresent": true
+  },
+  "codeDeclarations": [
+    {
+      "table": "entrada_folio",
+      "column": "ultimo_folio",
+      "declaredDefault": "0",
+      "declaration": ".notNull().default(0)",
+      "sourceFile": "lib/db/src/schema/entradas.ts",
+      "sourceLine": 71
+    },
+    {
+      "table": "salida_folio",
+      "column": "ultimo_folio",
+      "declaredDefault": "0",
+      "declaration": ".notNull().default(0)",
+      "sourceFile": "lib/db/src/schema/salidas.ts",
+      "sourceLine": 182
+    },
+    {
+      "table": "viaje_folio",
+      "column": "ultimo_folio",
+      "declaredDefault": "0",
+      "declaration": ".notNull().default(0)",
+      "sourceFile": "lib/db/src/schema/viajes.ts",
+      "sourceLine": 47
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "column": "ultimo_folio",
+      "declaredDefault": "0",
+      "declaration": ".notNull().default(0)",
+      "sourceFile": "lib/db/src/schema/auditorias-inventario.ts",
+      "sourceLine": 25
+    },
+    {
+      "table": "ticket_folio",
+      "column": "ultimo_folio",
+      "declaredDefault": "999",
+      "declaration": ".notNull().default(999)",
+      "sourceFile": "lib/db/src/schema/pos.ts",
+      "sourceLine": 403
+    },
+    {
+      "table": "series_consecutivo",
+      "column": "ultimo_numero",
+      "declaredDefault": "10000000",
+      "declaration": ".notNull().default(10000000)",
+      "sourceFile": "lib/db/src/schema/series.ts",
+      "sourceLine": 20
+    }
+  ],
+  "catalogueDefaults": [
+    {
+      "table": "entrada_folio",
+      "column": "ultimo_folio",
+      "dataType": "integer",
+      "notNull": true,
+      "liveDefaultExpression": "99"
+    },
+    {
+      "table": "salida_folio",
+      "column": "ultimo_folio",
+      "dataType": "integer",
+      "notNull": true,
+      "liveDefaultExpression": "499"
+    },
+    {
+      "table": "viaje_folio",
+      "column": "ultimo_folio",
+      "dataType": "integer",
+      "notNull": true,
+      "liveDefaultExpression": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "column": "ultimo_folio",
+      "dataType": "integer",
+      "notNull": true,
+      "liveDefaultExpression": "0"
+    },
+    {
+      "table": "ticket_folio",
+      "column": "ultimo_folio",
+      "dataType": "integer",
+      "notNull": true,
+      "liveDefaultExpression": "999"
+    },
+    {
+      "table": "series_consecutivo",
+      "column": "ultimo_numero",
+      "dataType": "integer",
+      "notNull": true,
+      "liveDefaultExpression": "1000000"
+    }
+  ],
+  "rowCounts": [
+    {
+      "table": "entrada_folio",
+      "rowCount": 11
+    },
+    {
+      "table": "salida_folio",
+      "rowCount": 11
+    },
+    {
+      "table": "viaje_folio",
+      "rowCount": 11
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "rowCount": 11
+    },
+    {
+      "table": "ticket_folio",
+      "rowCount": 1
+    },
+    {
+      "table": "series_consecutivo",
+      "rowCount": 1
+    }
+  ],
+  "controlRows": [
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "1",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "2",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "3",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "4",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "5",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "6",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "7",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "8",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "9",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "458",
+      "value": "0"
+    },
+    {
+      "table": "entrada_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "531",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "1",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "2",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "3",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "4",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "5",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "6",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "7",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "8",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "9",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "458",
+      "value": "0"
+    },
+    {
+      "table": "salida_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "531",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "1",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "2",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "3",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "4",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "5",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "6",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "7",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "8",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "9",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "458",
+      "value": "0"
+    },
+    {
+      "table": "viaje_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "531",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "1",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "2",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "3",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "4",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "5",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "6",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "7",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "8",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "9",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "458",
+      "value": "0"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "keyColumn": "ubicacion_id",
+      "valueColumn": "ultimo_folio",
+      "key": "531",
+      "value": "0"
+    },
+    {
+      "table": "ticket_folio",
+      "keyColumn": "id",
+      "valueColumn": "ultimo_folio",
+      "key": "1",
+      "value": "999"
+    },
+    {
+      "table": "series_consecutivo",
+      "keyColumn": "id",
+      "valueColumn": "ultimo_numero",
+      "key": "1",
+      "value": "10000000"
+    }
+  ],
+  "comparison": [
+    {
+      "table": "entrada_folio",
+      "column": "ultimo_folio",
+      "codeDefault": "0",
+      "liveDefault": "99",
+      "difference": true,
+      "rowCount": 11,
+      "rows": "ubicacion_id 1,2,3,4,5,6,7,8,9,458,531; ultimo_folio=0 for all"
+    },
+    {
+      "table": "salida_folio",
+      "column": "ultimo_folio",
+      "codeDefault": "0",
+      "liveDefault": "499",
+      "difference": true,
+      "rowCount": 11,
+      "rows": "ubicacion_id 1,2,3,4,5,6,7,8,9,458,531; ultimo_folio=0 for all"
+    },
+    {
+      "table": "viaje_folio",
+      "column": "ultimo_folio",
+      "codeDefault": "0",
+      "liveDefault": "0",
+      "difference": false,
+      "rowCount": 11,
+      "rows": "ubicacion_id 1,2,3,4,5,6,7,8,9,458,531; ultimo_folio=0 for all"
+    },
+    {
+      "table": "auditoria_inventario_folio",
+      "column": "ultimo_folio",
+      "codeDefault": "0",
+      "liveDefault": "0",
+      "difference": false,
+      "rowCount": 11,
+      "rows": "ubicacion_id 1,2,3,4,5,6,7,8,9,458,531; ultimo_folio=0 for all"
+    },
+    {
+      "table": "ticket_folio",
+      "column": "ultimo_folio",
+      "codeDefault": "999",
+      "liveDefault": "999",
+      "difference": false,
+      "rowCount": 1,
+      "rows": "id 1; ultimo_folio=999"
+    },
+    {
+      "table": "series_consecutivo",
+      "column": "ultimo_numero",
+      "codeDefault": "10000000",
+      "liveDefault": "1000000",
+      "difference": true,
+      "rowCount": 1,
+      "rows": "id 1; ultimo_numero=10000000"
+    }
+  ],
+  "unexpectedSeriesDrift": {
+    "isUnexpectedRelativeToPrompt": true,
+    "table": "series_consecutivo",
+    "column": "ultimo_numero",
+    "codeDefault": "10000000",
+    "liveDefault": "1000000",
+    "currentRowValue": "10000000",
+    "meaning": "The live default differs from the current Drizzle declaration, while the existing control row already has the code value.",
+    "requiredAction": "STOP and obtain an owner decision before any ALTER; do not auto-align this default and do not alter the row.",
+    "alterApplied": false
+  },
+  "queryText": {
+    "begin": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "setLocalTimezone": "SET LOCAL TIME ZONE 'America/Mexico_City'",
+    "identity": "SELECT current_database() AS database_name, current_user AS current_user_name, session_user AS session_user_name, current_setting('server_version') AS server_version, current_setting('TimeZone') AS timezone_setting, current_setting('transaction_read_only') AS transaction_read_only, current_setting('transaction_isolation') AS transaction_isolation, to_char(transaction_timestamp(), 'YYYY-MM-DD HH24:MI:SS.MS TZH:TZM') AS transaction_timestamp_mexico, to_char(statement_timestamp(), 'YYYY-MM-DD HH24:MI:SS.MS TZH:TZM') AS statement_timestamp_mexico, to_char(clock_timestamp(), 'YYYY-MM-DD HH24:MI:SS.MS TZH:TZM') AS clock_timestamp_mexico",
+    "catalogue": "SELECT n.nspname AS schema_name, c.relname AS table_name, a.attname AS column_name, format_type(a.atttypid, a.atttypmod) AS data_type, a.attnotnull AS not_null, pg_get_expr(d.adbin, d.adrelid) AS default_expression, NULLIF(a.attidentity, '') AS identity_kind, NULLIF(a.attgenerated, '') AS generated_kind\nFROM pg_attribute a\nJOIN pg_class c ON c.oid = a.attrelid\nJOIN pg_namespace n ON n.oid = c.relnamespace\nLEFT JOIN pg_attrdef d ON d.adrelid = a.attrelid AND d.adnum = a.attnum\nWHERE n.nspname = 'public' AND c.relname IN ('entrada_folio','salida_folio','viaje_folio','auditoria_inventario_folio','ticket_folio','series_consecutivo') AND a.attname IN ('ultimo_folio','ultimo_numero') AND a.attnum > 0 AND NOT a.attisdropped\nORDER BY array_position(ARRAY['entrada_folio','salida_folio','viaje_folio','auditoria_inventario_folio','ticket_folio','series_consecutivo'], c.relname)",
+    "rowCounts": "SELECT * FROM (\n  SELECT 'entrada_folio' AS table_name, count(*)::int AS row_count FROM public.entrada_folio\n  UNION ALL SELECT 'salida_folio', count(*)::int FROM public.salida_folio\n  UNION ALL SELECT 'viaje_folio', count(*)::int FROM public.viaje_folio\n  UNION ALL SELECT 'auditoria_inventario_folio', count(*)::int FROM public.auditoria_inventario_folio\n  UNION ALL SELECT 'ticket_folio', count(*)::int FROM public.ticket_folio\n  UNION ALL SELECT 'series_consecutivo', count(*)::int FROM public.series_consecutivo\n) AS counts ORDER BY array_position(ARRAY['entrada_folio','salida_folio','viaje_folio','auditoria_inventario_folio','ticket_folio','series_consecutivo'], table_name)",
+    "controlRows": "SELECT * FROM (\n  SELECT 'entrada_folio' AS table_name, ubicacion_id::text AS control_key, ultimo_folio::text AS control_value FROM public.entrada_folio\n  UNION ALL SELECT 'salida_folio', ubicacion_id::text, ultimo_folio::text FROM public.salida_folio\n  UNION ALL SELECT 'viaje_folio', ubicacion_id::text, ultimo_folio::text FROM public.viaje_folio\n  UNION ALL SELECT 'auditoria_inventario_folio', ubicacion_id::text, ultimo_folio::text FROM public.auditoria_inventario_folio\n  UNION ALL SELECT 'ticket_folio', id::text, ultimo_folio::text FROM public.ticket_folio\n  UNION ALL SELECT 'series_consecutivo', id::text, ultimo_numero::text FROM public.series_consecutivo\n) AS rows ORDER BY array_position(ARRAY['entrada_folio','salida_folio','viaje_folio','auditoria_inventario_folio','ticket_folio','series_consecutivo'], table_name), control_key::bigint",
+    "transactionState": "SELECT current_setting('transaction_read_only') AS transaction_read_only, current_setting('transaction_isolation') AS transaction_isolation",
+    "rollback": "ROLLBACK"
+  }
+}

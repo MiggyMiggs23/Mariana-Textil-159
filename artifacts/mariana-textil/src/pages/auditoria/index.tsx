@@ -46,6 +46,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Link } from 'wouter';
 import {
   Sheet,
   SheetContent,
@@ -72,6 +73,25 @@ const AUDIT_ROLES: Role[] = [
   'SISTEMAS',
   'CONTADOR',
 ];
+
+type AuditedCreditMovementReference = {
+  entidad?: string | null;
+  entidadId?: string | null;
+  /** Supplied by the API when the audited movement belongs to a client. */
+  clienteId?: number | string | null;
+  /** Backward-compatible alias used by some audit projections. */
+  entidadClienteId?: number | string | null;
+  /** Shared server-resolved route; absent/null means unresolved. */
+  documentoRuta?: string | null;
+};
+
+const auditEntityLinkClass =
+  "text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+
+function getAuditedCreditMovementRoute(reference: AuditedCreditMovementReference) {
+  if (reference.entidad?.toLowerCase() !== "movimientos_credito") return null;
+  return reference.documentoRuta ?? null;
+}
 
 export default function Auditoria() {
   const { toast } = useToast();
@@ -329,7 +349,10 @@ export default function Auditoria() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  data.items.map((item) => (
+                  data.items.map((item) => {
+                    const reference = item as typeof item & AuditedCreditMovementReference;
+                    const href = getAuditedCreditMovementRoute(reference);
+                    return (
                     <TableRow key={item.id} className="group cursor-pointer hover:bg-muted/50 transition-colors" onClick={() => setSelectedId(item.id)}>
                       <TableCell className="font-mono text-xs whitespace-nowrap">
                         <div className="flex items-center gap-1.5 text-muted-foreground">
@@ -355,9 +378,34 @@ export default function Auditoria() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium text-sm">{item.entidad}</div>
+                        <div className="font-medium text-sm">
+                          {href ? (
+                            <Link
+                              href={href}
+                              className={auditEntityLinkClass}
+                              onClick={(event) => event.stopPropagation()}
+                              aria-label={`Abrir movimiento de crédito ${reference.entidadId}`}
+                            >
+                              {item.entidad}
+                            </Link>
+                          ) : (
+                            item.entidad
+                          )}
+                        </div>
                         {item.entidadId && (
-                          <div className="text-xs text-muted-foreground font-mono">ID: {item.entidadId}</div>
+                          <div className="text-xs text-muted-foreground font-mono">
+                            {href ? (
+                              <Link
+                                href={href}
+                                className={auditEntityLinkClass}
+                                onClick={(event) => event.stopPropagation()}
+                              >
+                                ID: {item.entidadId}
+                              </Link>
+                            ) : (
+                              `ID: ${item.entidadId}`
+                            )}
+                          </div>
                         )}
                       </TableCell>
                       <TableCell className="text-sm">
@@ -369,7 +417,8 @@ export default function Auditoria() {
                         </Button>
                       </TableCell>
                     </TableRow>
-                  ))
+                    );
+                  })
                 )}
               </TableBody>
             </Table>
@@ -474,11 +523,35 @@ function AuditoriaDetailSheet({ id, onClose }: { id: string | null, onClose: () 
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-wider">Entidad</div>
-                  <div className="font-medium text-sm">{data.entidad}</div>
+                  {(() => {
+                    const reference = data as typeof data & AuditedCreditMovementReference;
+                    const href = getAuditedCreditMovementRoute(reference);
+                    return href ? (
+                      <Link
+                        href={href}
+                        className={auditEntityLinkClass}
+                        aria-label={`Abrir movimiento de crédito ${reference.entidadId}`}
+                      >
+                        {data.entidad}
+                      </Link>
+                    ) : (
+                      <div className="font-medium text-sm">{data.entidad}</div>
+                    );
+                  })()}
                 </div>
                 <div>
                   <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-wider">ID Entidad</div>
-                  <div className="font-mono text-sm">{data.entidadId || '-'}</div>
+                  {(() => {
+                    const reference = data as typeof data & AuditedCreditMovementReference;
+                    const href = getAuditedCreditMovementRoute(reference);
+                    return href ? (
+                      <Link href={href} className={`${auditEntityLinkClass} font-mono text-sm`}>
+                        {data.entidadId}
+                      </Link>
+                    ) : (
+                      <div className="font-mono text-sm">{data.entidadId || '-'}</div>
+                    );
+                  })()}
                 </div>
                 <div className="col-span-2">
                   <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1 tracking-wider">Sitio</div>

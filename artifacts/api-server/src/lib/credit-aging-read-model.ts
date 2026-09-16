@@ -8,7 +8,64 @@ import {
 } from "./credit-allocation";
 
 export type CustomerCreditProjection = ReturnType<typeof projectCreditLedger>;
-type CreditLedgerQuery = Pick<typeof pool, "query">;
+export type CreditLedgerQuery = {
+  query<T = CreditLedgerRow>(
+    text: string,
+    values?: readonly unknown[],
+  ): Promise<{ rows: T[] }>;
+};
+
+export type CreditLedgerReadQueryProbe = {
+  text: string;
+  values: readonly unknown[];
+};
+
+/**
+ * Exact SQL probe used by the canonical detail read.  Offline verification
+ * can EXPLAIN this statement with the same client id and parameters.
+ */
+export function buildCustomerCreditLedgerReadQuery(
+  clienteId: number,
+): CreditLedgerReadQueryProbe {
+  return {
+    text: `SELECT m.cliente_id,m.id,m.ticket_id,
+       directed_sale.id AS directed_movimiento_id,
+       m.movimiento_origen_id,m.tipo,m.importe::text,
+        m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,
+        COALESCE(m.metadata LIKE '%"preventImplicitFavor":true%', false)
+          AS prevent_implicit_favor,
+         -- Only legacy marked notes may supply directed historical evidence.
+         -- New automatic notes remain ordinary FIFO even if an application
+         -- row exists for Ver Reparto.
+         COALESCE((
+          SELECT json_agg(json_build_object(
+            'sourceId', a.abono_movimiento_id,
+            'targetId', a.venta_movimiento_id,
+            'amountCents', round(a.importe * 100)
+          ))
+          FROM aplicaciones_credito a
+          JOIN movimientos_credito favor_sale
+            ON favor_sale.id = a.venta_movimiento_id
+          WHERE a.abono_movimiento_id = m.id
+             AND favor_sale.metadata LIKE '%"preventImplicitFavor":true%'
+        ), '[]'::json) AS explicit_favor_applications
+         ,COALESCE((
+           SELECT round(COALESCE(SUM(a.importe), 0) * 100)
+           FROM aplicaciones_credito a
+           WHERE a.abono_movimiento_id = m.id
+         ), 0) AS immutable_applied_cents
+     FROM movimientos_credito m
+     LEFT JOIN solicitudes_pago_dirigido request
+       ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id
+     LEFT JOIN movimientos_credito directed_sale
+       ON directed_sale.id=request.documento_movimiento_id
+      AND directed_sale.tipo='VENTA_CREDITO'
+      AND directed_sale.cliente_id=m.cliente_id
+     LEFT JOIN tickets t ON t.id=m.ticket_id
+     WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
+    values: [clienteId],
+  };
+}
 
 type CreditLedgerRow = {
   cliente_id: number;
@@ -98,43 +155,10 @@ export async function loadCustomerCreditLedger(
   clienteId: number,
   database: CreditLedgerQuery = pool,
 ): Promise<CreditLedgerMovement[]> {
+  const readQuery = buildCustomerCreditLedgerReadQuery(clienteId);
   const result = await database.query<CreditLedgerRow>(
-    `SELECT m.cliente_id,m.id,m.ticket_id,
-       directed_sale.id AS directed_movimiento_id,
-       m.movimiento_origen_id,m.tipo,m.importe::text,
-        m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,
-        COALESCE(m.metadata LIKE '%"preventImplicitFavor":true%', false)
-          AS prevent_implicit_favor,
-         -- Only legacy marked notes may supply directed historical evidence.
-         -- New automatic notes remain ordinary FIFO even if an application
-         -- row exists for Ver Reparto.
-         COALESCE((
-          SELECT json_agg(json_build_object(
-            'sourceId', a.abono_movimiento_id,
-            'targetId', a.venta_movimiento_id,
-            'amountCents', round(a.importe * 100)
-          ))
-          FROM aplicaciones_credito a
-          JOIN movimientos_credito favor_sale
-            ON favor_sale.id = a.venta_movimiento_id
-          WHERE a.abono_movimiento_id = m.id
-             AND favor_sale.metadata LIKE '%"preventImplicitFavor":true%'
-        ), '[]'::json) AS explicit_favor_applications
-         ,COALESCE((
-           SELECT round(COALESCE(SUM(a.importe), 0) * 100)
-           FROM aplicaciones_credito a
-           WHERE a.abono_movimiento_id = m.id
-         ), 0) AS immutable_applied_cents
-     FROM movimientos_credito m
-     LEFT JOIN solicitudes_pago_dirigido request
-       ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id
-     LEFT JOIN movimientos_credito directed_sale
-       ON directed_sale.id=request.documento_movimiento_id
-      AND directed_sale.tipo='VENTA_CREDITO'
-       AND directed_sale.cliente_id=m.cliente_id
-     LEFT JOIN tickets t ON t.id=m.ticket_id
-     WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
-    [clienteId],
+    readQuery.text,
+    readQuery.values,
   );
   return mapRows(result.rows);
 }

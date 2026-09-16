@@ -1,6 +1,6 @@
 # Prompt H — Bloque 1: listas vivas y propuesta ABC
 
-- **Estado:** COMPLETE_READ_ONLY_REFINED_NO_DB_CAPTURE.
+- **Estado:** COMPLETE_READ_ONLY_REFINED_NO_DB_CAPTURE (captura de configuración histórica; no es un bloqueo vigente de identidad).
 - **Identidad directa de inventario:** heliumdb/public; transacción repeatable read READ ONLY.
 - **Escrituras:** ninguna; no se hizo respaldo todavía, no se ejecutó purga, no se cambió trigger/secuencia/default, y no se hizo prueba de escritura.
 - **Regla de aprobación:** la aprobación del propietario de estas listas es necesaria antes del preflight y de la purga; no equivale por sí sola a autorización textual de purga. El respaldo completo verificado fue solicitado como trabajo separado y aún no se hizo.
@@ -11,14 +11,16 @@
 - Comparación no secreta de destino DATABASE_URL contra la fuente del inventario: true.
 - Presencia de overrides de prueba coincide con la fuente del inventario: true; overrides presentes: ninguno.
 - No se expusieron valores de entorno, credenciales ni URLs; solo presencia, coincidencia booleana y destino no secreto.
-- El destino queda **no confirmado a nivel de conexión efectiva de la API**: el proceso y la fuente coinciden en configuración, pero no se obtuvo `current_database()` desde ese proceso.
+- La identidad efectiva queda **CONFIRMADA** desde el pool en proceso de la API: `heliumdb/public`; evidencia de solo lectura: `reports/prompt-h/api-pool-identity-2026-09-15.md`.
+- La confirmación no abrió endpoint público, no reinició la API, no cambió autenticación ni entorno y dejó cerrado el inspector de loopback.
 - Inspección de arranque: source importa @workspace/db=true; dotenv/loadEnv en source=false; asignación DATABASE_URL en source=false; dotenv/loadEnv en dist=false.
 
 ## Totales y diferencias
 
-- Tablas vivas ordinarias/particionadas: **60**; Drizzle runtime: **59**. Diferencia: `cuadre_fiscal_registros` (cuadre_fiscal_registros).
+- Tablas vivas ordinarias/particionadas: **60**; Drizzle runtime: **59**. Diferencia viva/no declarada: `cuadre_fiscal_registros`.
 - ABC: A=35, B=7, C=18; suma=60 y coincide=true.
-- Las secuencias se listan aparte y no suman al total de tablas; hay 45. Triggers no internos vivos: 14 (no 11).
+- Deriva de esquema: `cuadre_fiscal_registros` está viva y ausente de Drizzle; se reporta solamente, sin crearla ni borrarla del esquema.
+- Las secuencias se listan aparte y no suman al total de tablas; hay 45. Triggers no internos vivos: **14** (el conteo 11 es histórico).
 - Mismatches: columnas/tablas=1; conteos FK=4.
 
 ## Lista A (35)
@@ -102,17 +104,19 @@
 - `productos` queda en C y conserva el catálogo, incluidos sus colores; `precio_historial` queda en C.
 - Defaults B (solo reporte, sin corrección): [{"table":"auditoria_inventario_folio","column":"ultimo_folio","liveDefaultExpression":"0","notNull":true,"reportOnlyNoCorrection":true},{"table":"entrada_folio","column":"ultimo_folio","liveDefaultExpression":"99","notNull":true,"reportOnlyNoCorrection":true},{"table":"salida_folio","column":"ultimo_folio","liveDefaultExpression":"499","notNull":true,"reportOnlyNoCorrection":true},{"table":"series_consecutivo","column":"ultimo_numero","liveDefaultExpression":"1000000","notNull":true,"reportOnlyNoCorrection":true},{"table":"ticket_folio","column":"ultimo_folio","liveDefaultExpression":"999","notNull":true,"reportOnlyNoCorrection":true},{"table":"viaje_folio","column":"ultimo_folio","liveDefaultExpression":"0","notNull":true,"reportOnlyNoCorrection":true}].
 - DELETE bloqueado por triggers append-only/inmutables activos: 8; triggers activos de TRUNCATE sobre A: 0.
+- Hallazgo de seguridad (remediación separada; triggers intactos): los guards append-only bloquean DELETE por filas, pero no impiden TRUNCATE a roles privilegiados. Es un hallazgo de seguridad de privilegios de base de datos, no una afirmación de explotación HTTP.
 - FK entrantes desde B/C hacia A: 0; FK entrantes específicamente desde C: 0.
 - Cierre de FK entrante para A: solo A (sin tablas fuera de A).
 
 ## Estrategia propuesta, sin ejecutar
 
-- Permitida por metadata para revisión: true. Solo **TRUNCATE A RESTRICT**; B nunca es objetivo de TRUNCATE.
-- B contadores: `UPDATE ... SET ultimo_folio/ultimo_numero = 0`; `existencias` no se trunca.
+- Permitida por metadata para revisión: true. Solo **TRUNCATE A CONTINUE IDENTITY RESTRICT**; B nunca es objetivo de TRUNCATE.
+- B contadores (propuesta report-only): `entrada_folio`, `salida_folio`, `viaje_folio` y `auditoria_inventario_folio` → 0; `ticket_folio` → 999; `series_consecutivo` → 1000000. `existencias` no se trunca.
 - Luego, dentro de la misma transacción propietaria: `await reconstruirCacheExistencias(tx)`. La función acepta la transacción, bloquea pares, lee `existencias`/`movimientos`/`rollos`, actualiza por `ON CONFLICT`, y no escribe configuración C.
 - Inspección estática de caché: artifacts/api-server/src/lib/inventario.ts:2832-2871; acepta tx=true, usa tx recibida=true, contiene DELETE/TRUNCATE=false.
-- Secuencias operativas candidatas: contenedores_folio_seq; se propone únicamente ALTER SEQUENCE ... RESTART, nunca setval.
+- Secuencias de folio detectadas: `contenedores_folio_seq`; no se reinicia ninguna secuencia. Pregunta pendiente: **¿debe `public.contenedores_folio_seq` reiniciarse como folio de negocio de `contenedores`, o conservarse sin reset para evitar reutilizar folios históricos?**
 - Hash exacto de C/auditoria: pendiente del preflight aprobado; este bloque solo tiene metadata/conteos y no expone filas.
+- Toda mutación futura queda **PENDIENTE de nueva autorización textual del propietario después de respaldo verificado y preflight**; esta aprobación de listas no autoriza ejecutar.
 
 ## Evidencia y puerta de aprobación
 

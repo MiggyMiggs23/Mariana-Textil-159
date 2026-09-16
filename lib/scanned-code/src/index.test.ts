@@ -29,8 +29,42 @@ for (const [input, serie, sku] of cases) {
   });
 }
 
-test("no acepta una serie embebida en una secuencia de ocho dígitos", () => {
-  assert.equal(interpretarCodigoEscaneado("10002874").serie, null);
+test("prefiere los ocho dígitos sobre la cola ambigua de siete", () => {
+  const codigo = interpretarCodigoEscaneado("SKU-12345678");
+  assert.equal(codigo.serie, "12345678");
+  assert.equal(codigo.sku, "SKU");
+  assert.notEqual(codigo.serie, "2345678");
+});
+
+test("acepta siete y ocho dígitos solos y en payload SKU-SERIE", () => {
+  for (const [texto, serie, sku] of [
+    ["1234567", "1234567", null],
+    ["12345678", "12345678", null],
+    ["SKU-1234567", "1234567", "SKU"],
+    ["SKU-12345678", "12345678", "SKU"],
+  ] as const) {
+    assert.deepEqual(interpretarCodigoEscaneado(texto), {
+      serie,
+      sku,
+      textoOriginal: texto,
+    });
+  }
+});
+
+test("rechaza nueve dígitos y conserva el texto libre sin alterarlo", () => {
+  const nueve = "SKU-123456789";
+  assert.deepEqual(interpretarCodigoEscaneado(nueve), {
+    serie: null,
+    sku: null,
+    textoOriginal: nueve,
+  });
+
+  const textoLibre = "buscar tela azul";
+  assert.deepEqual(interpretarCodigoEscaneado(textoLibre), {
+    serie: null,
+    sku: null,
+    textoOriginal: textoLibre,
+  });
 });
 
 test("la advertencia de SKU informa sin alterar la serie", () => {

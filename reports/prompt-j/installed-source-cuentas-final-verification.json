@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-09-16T08:10:07.666Z",
+  "harness": {
+    "pageFilter": "cuentas",
+    "source": "actual production source files mounted through Vite aliases",
+    "sourceRoot": "artifacts/mariana-textil",
+    "stalePreviewMounted": false,
+    "stalePreviewPaths": [],
+    "authenticatedE2E": false,
+    "databaseQueries": false,
+    "apiRequestsSent": false,
+    "apiResponsesIntercepted": true,
+    "workflowRestarted": false,
+    "userOrSessionCreated": false,
+    "visualCaseWithSevenDigitTransaction": false,
+    "note": "Offline browser snapshots only; canonical zero-state responses were fulfilled in-browser. Seven-digit transaction evidence is unavailable in the verified zero-transaction database."
+  },
+  "sourceFiles": {
+    "realtime": {
+      "path": "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx",
+      "sha256": "47b0fcda271e032c5a85858c14a507f9e607f04c22730397efac8e13424f38e5"
+    },
+    "accounts": {
+      "path": "artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx",
+      "sha256": "d36f0d9dd4920ae89d88689a4f020ddb0e684838dbe89c3d1dff5abbc956fcb8"
+    },
+    "realtimeCss": {
+      "path": "artifacts/mariana-textil/src/pages/caja/tiempo-real-layout.css",
+      "sha256": "130e7c4a57fba399dda7e1d71d3313f89672e54e030c996a45e414444a22c31f"
+    },
+    "accountsCss": {
+      "path": "artifacts/mariana-textil/src/pages/caja/cuentas-destino-layout.css",
+      "sha256": "aba9a7583300218d758b84d7a5493d8142d596506c9bf7d48941536b71c002ca"
+    }
+  },
+  "canonical": {
+    "path": "reports/prompt-j/real-data-canonical-http-responses.json",
+    "capturedAt": "2026-09-16T07:35:39.137Z",
+    "period": {
+      "desde": "2026-09-16",
+      "hasta": "2026-09-16",
+      "timezone": "America/Mexico_City"
+    },
+    "locations": [
+      "Mariana",
+      "Coco",
+      "Cruces"
+    ],
+    "allTransactionCountsZero": true
+  },
+  "network": {
+    "requestCount": 128,
+    "interceptedRoutes": [
+      {
+        "method": "GET",
+        "pathname": "/api/admin/cuentas-destino",
+        "query": "?desde=2026-09-16&hasta=2026-09-16&compare=false&preset=hoy",
+        "page": "cuentas-destino-desktop",
+        "intercepted": true
+      },
+      {
+        "method": "GET",
+        "pathname": "/api/admin/cuentas-destino",
+        "query": "?desde=2026-09-16&hasta=2026-09-16&compare=false&preset=hoy",
+        "page": "cuentas-destino-desktop",
+        "intercepted": true
+      },
+      {
+        "method": "GET",
+        "pathname": "/api/admin/cuentas-destino",
+        "query": "?desde=2026-09-16&hasta=2026-09-16&compare=false&preset=hoy",
+        "page": "cuentas-destino-mobile",
+        "intercepted": true
+      },
+      {
+        "method": "GET",
+        "pathname": "/api/admin/cuentas-destino",
+        "query": "?desde=2026-09-16&hasta=2026-09-16&compare=false&preset=hoy",
+        "page": "cuentas-destino-mobile",
+        "intercepted": true
+      }
+    ],
+    "unexpectedOrBlockedRequests": []
+  },
+  "screenshots": [
+    {
+      "path": "reports/prompt-j/installed-source-cuentas-final-cuentas-destino-desktop-1280.png",
+      "page": "cuentas-destino-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 1100
+      }
+    },
+    {
+      "path": "reports/prompt-j/installed-source-cuentas-final-cuentas-destino-mobile-402.png",
+      "page": "cuentas-destino-mobile",
+      "viewport": {
+        "width": 402,
+        "height": 874
+      }
+    }
+  ],
+  "result": "PASS"
+}

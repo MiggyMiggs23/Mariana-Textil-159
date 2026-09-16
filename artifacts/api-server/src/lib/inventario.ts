@@ -166,18 +166,22 @@ export class InventarioError extends Error {
 
 /** Single-row control table id for the global series counter. */
 const SERIES_ROW_ID = 1;
+/** Highest eight-digit series number; checked after the row lock is acquired. */
+const MAX_SERIES_NUMBER = 99999999;
 
 /**
  * Atomically reserve the next N global series numbers.
  * Locks the single control row FOR UPDATE so concurrent transactions serialize,
  * guaranteeing globally consecutive numbers that are never reused. The counter
- * is seeded with 1000000 so the first series is 1000001. Must be called inside
- * a tx. Returns the numeric strings in allocation order.
+ * is seeded with 10000000 so the first series is 10000001. The range from
+ * 10000001 through 99999999 contains exactly 89,999,999 roll numbers
+ * (approximately 90 million, or about 300 years at the current rate).
+ * Must be called inside a tx. Returns the numeric strings in allocation order.
  */
-async function reserveSeries(tx: Tx, quantity: number): Promise<string[]> {
+export async function reserveSeries(tx: Tx, quantity: number): Promise<string[]> {
   await tx
     .insert(seriesConsecutivoTable)
-    .values({ id: SERIES_ROW_ID, ultimoNumero: 1000000 })
+    .values({ id: SERIES_ROW_ID, ultimoNumero: 10000000 })
     .onConflictDoNothing();
 
   const [row] = await tx
@@ -188,6 +192,13 @@ async function reserveSeries(tx: Tx, quantity: number): Promise<string[]> {
 
   const start = row!.ultimoNumero;
   const next = start + quantity;
+  if (next > MAX_SERIES_NUMBER) {
+    throw new InventarioError(
+      "Se agotó la serie global de rollos.",
+      "SERIES_EXHAUSTED",
+      { ultimoNumero: start, cantidad: quantity, maximo: MAX_SERIES_NUMBER },
+    );
+  }
 
   await tx
     .update(seriesConsecutivoTable)

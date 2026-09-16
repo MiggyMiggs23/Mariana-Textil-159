@@ -21,6 +21,7 @@ import Proveedores from "@/pages/proveedores";
 import ProveedorDetail from "@/pages/proveedor-detail";
 import Clientes from "@/pages/clientes";
 import ClienteDetail from "@/pages/cliente-detail";
+import ClienteMovimientoDetail from "@/pages/cliente-movimiento-detail";
 import Entradas from "@/pages/entradas";
 import EntradasPendientesCosto from "@/pages/entradas-pendientes-costo";
 import EntradaDocumento from "@/pages/entrada-documento";
@@ -612,6 +613,16 @@ function Router() {
             <ProtectedRoute
               component={Clientes}
               allowedModule={Modules.CLIENTES}
+            />
+          )}
+        />
+        <Route
+          path="/clientes/:id/movimientos/:movimientoId"
+          component={() => (
+            <ProtectedRoute
+              component={ClienteMovimientoDetail}
+              allowedModule={Modules.CLIENTES_FINANZAS}
+              allowedAction="ver"
             />
           )}
         />

@@ -1,0 +1,184 @@
+{
+  "verification": "Prompt F real production detail page",
+  "generatedAt": "2026-09-16T08:44:04.835Z",
+  "scope": {
+    "productionPage": "artifacts/mariana-textil/src/pages/cliente-movimiento-detail.tsx",
+    "fixturePath": "reports/prompt-f/generated-detail-fixtures.json",
+    "realMovements": [
+      45,
+      48,
+      50
+    ],
+    "viewports": [
+      402,
+      1280
+    ],
+    "liveDatabase": false,
+    "liveBackend": false,
+    "browserApiAllowlist": "GET /api/clientes/7/pagos/{45,48,50}"
+  },
+  "staticContract": {
+    "sourcePath": "artifacts/mariana-textil/src/pages/cliente-movimiento-detail.tsx",
+    "financialArithmetic": "guarded",
+    "financialArithmeticMutant": "rejected",
+    "mountedPage": "production source imported directly by harness entry"
+  },
+  "fixtureProvenance": {
+    "realSnapshot": "latest43To50Snapshot",
+    "currentDataStatus": "historical_readonly_not_live",
+    "builder": {
+      "module": "artifacts/api-server/src/lib/credit-movement-detail.ts",
+      "entrypoint": "buildCreditMovementDetail",
+      "projection": "loadCustomerCreditProjection -> loadCustomerCreditLedger -> projectCreditLedger",
+      "executor": "ArchivedReadExecutor (query adapter; no database connection)",
+      "realReadQueryCount": 12,
+      "syntheticReadQueryCount": 10
+    },
+    "syntheticPolicy": "Synthetic-only unit/browser stress. It is never mounted in app DB and is not real-data approval."
+  },
+  "startup": {
+    "entry": "node .local/prompt-f-check/verify.mjs",
+    "viteConfig": ".local/prompt-f-check/vite.config.mjs",
+    "vitePort": 4182,
+    "fixtureBuilder": "artifacts/api-server/node_modules/.bin/tsx .local/prompt-f-check/build-fixtures.ts",
+    "fixtureEnvironment": "NODE_ENV=test DATABASE_URL=postgresql://prompt-f-disabled.invalid/prompt_f TEST_DATABASE_URL='' REQUIRE_ISOLATED_TEST_DATABASE=''",
+    "database": "no connection; offline ArchivedReadExecutor only"
+  },
+  "browser": {
+    "results": [
+      {
+        "kind": "realArchived",
+        "movementId": 45,
+        "screenshot": "reports/prompt-f/prompt-f-movement-45-402px.jpg",
+        "blockedRequestCount": 0,
+        "requestCount": 33,
+        "viewport": 402,
+        "hrefs": [
+          "/clientes/7?tab=estado&movimientoId=45",
+          "/clientes/7/movimientos/48"
+        ],
+        "displayedMoney": [
+          "-$15,000.00",
+          "$15,000.00"
+        ],
+        "dimensions": {
+          "viewport": 402,
+          "documentWidth": 402,
+          "bodyWidth": 402
+        }
+      },
+      {
+        "kind": "realArchived",
+        "movementId": 45,
+        "screenshot": "reports/prompt-f/prompt-f-movement-45-1280px.jpg",
+        "blockedRequestCount": 0,
+        "requestCount": 33,
+        "viewport": 1280,
+        "hrefs": [
+          "/clientes/7?tab=estado&movimientoId=45",
+          "/clientes/7/movimientos/48"
+        ],
+        "displayedMoney": [
+          "-$15,000.00",
+          "$15,000.00"
+        ],
+        "dimensions": {
+          "viewport": 1280,
+          "documentWidth": 1280,
+          "bodyWidth": 1280
+        }
+      },
+      {
+        "kind": "realArchived",
+        "movementId": 48,
+        "screenshot": "reports/prompt-f/prompt-f-movement-48-402px.jpg",
+        "blockedRequestCount": 0,
+        "requestCount": 33,
+        "viewport": 402,
+        "hrefs": [
+          "/clientes/7?tab=estado&movimientoId=48",
+          "/clientes/7/movimientos/45"
+        ],
+        "displayedMoney": [
+          "$15,000.00"
+        ],
+        "dimensions": {
+          "viewport": 402,
+          "documentWidth": 402,
+          "bodyWidth": 402
+        }
+      },
+      {
+        "kind": "realArchived",
+        "movementId": 48,
+        "screenshot": "reports/prompt-f/prompt-f-movement-48-1280px.jpg",
+        "blockedRequestCount": 0,
+        "requestCount": 33,
+        "viewport": 1280,
+        "hrefs": [
+          "/clientes/7?tab=estado&movimientoId=48",
+          "/clientes/7/movimientos/45"
+        ],
+        "displayedMoney": [
+          "$15,000.00"
+        ],
+        "dimensions": {
+          "viewport": 1280,
+          "documentWidth": 1280,
+          "bodyWidth": 1280
+        }
+      },
+      {
+        "kind": "realArchived",
+        "movementId": 50,
+        "screenshot": "reports/prompt-f/prompt-f-movement-50-402px.jpg",
+        "blockedRequestCount": 0,
+        "requestCount": 33,
+        "viewport": 402,
+        "hrefs": [
+          "/clientes/7?tab=estado&movimientoId=50",
+          "/tickets/105"
+        ],
+        "displayedMoney": [
+          "-$15,000.00",
+          "$15,000.00",
+          "$22,022.00",
+          "$7,022.00"
+        ],
+        "dimensions": {
+          "viewport": 402,
+          "documentWidth": 402,
+          "bodyWidth": 402
+        }
+      },
+      {
+        "kind": "realArchived",
+        "movementId": 50,
+        "screenshot": "reports/prompt-f/prompt-f-movement-50-1280px.jpg",
+        "blockedRequestCount": 0,
+        "requestCount": 33,
+        "viewport": 1280,
+        "hrefs": [
+          "/clientes/7?tab=estado&movimientoId=50",
+          "/tickets/105"
+        ],
+        "displayedMoney": [
+          "-$15,000.00",
+          "$15,000.00",
+          "$22,022.00",
+          "$7,022.00"
+        ],
+        "dimensions": {
+          "viewport": 1280,
+          "documentWidth": 1280,
+          "bodyWidth": 1280
+        }
+      }
+    ],
+    "blocked": []
+  },
+  "commands": {
+    "fixtureAndBrowser": "node .local/prompt-f-check/verify.mjs",
+    "unitContract": "artifacts/api-server/node_modules/.bin/tsx --test .local/prompt-f-check/unit-contract.test.ts"
+  }
+}

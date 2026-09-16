@@ -1058,3 +1058,353 @@ mtime_ms = 1789527460278
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5b5536cc-73ab-454c-9146-5490c5a15db9/e2fcb371-83c0-4dd2-a995-1cd851591aed"
 storage_version_token = "1789527527529020"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "y0RHvNKLbgN3HXVPJN2zc"
+uri = "file://reports/prompt-h/resultado-bloques-2-3.md"
+type = "text"
+title = "Respaldo renovado y verificado"
+description = "Restauración de 60 tablas, 14 triggers, SHA-256 comprobado en Drive y API conservado en pausa."
+logical_id = "52dadf1b-7a83-4fee-88bb-fe42db664a72"
+content_hash = "sha256:251e510aade022471b4cd1a8b191a5498715d991291a19cec86df3b7fcaf1930"
+size = 5263
+mtime_ms = 1789529779990
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/52dadf1b-7a83-4fee-88bb-fe42db664a72/9a6491cd-aba9-4248-a63a-1daeb7eae75c"
+storage_version_token = "1789529844325580"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "GqBscUIVemeWW-k-qhYc_"
+uri = "file://reports/prompt-h/block3-preflight.md"
+type = "text"
+title = "Preflight completo con API pausado — comparación idéntica"
+description = "Conteos de las 35 tablas A, folios y series, seis contadores objetivo y huellas de las 18 tablas C. Purga no autorizada."
+logical_id = "e9806bfe-408b-44f3-92e2-182ac1d6d9d7"
+content_hash = "sha256:afe4207f6e5f0787e5230e897d7740d35540c55b72b93bbe38f3894c4257f2ca"
+size = 48834
+mtime_ms = 1789529685922
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e9806bfe-408b-44f3-92e2-182ac1d6d9d7/cb3b98f8-b64b-4c05-86fd-daeeb269f348"
+storage_version_token = "1789529843802373"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "8-OcMWpcjEbx19oI2S_t0"
+uri = "file://reports/prompt-h/block2-restore.md"
+type = "text"
+title = "Verificación del respaldo — 60 tablas"
+description = "Comparación tabla por tabla, esquema, índices, restricciones y 14 triggers; restauración desechable conservada."
+logical_id = "1880bab1-6d95-4e49-9f41-4e4b05e056ba"
+content_hash = "sha256:472c6e805917416afc27d4a131ee5472e11c07f83564cbfb053b013c529b54e3"
+size = 20646
+mtime_ms = 1789528496982
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/1880bab1-6d95-4e49-9f41-4e4b05e056ba/bb0e8799-8178-4cc5-840f-16f0dac9b546"
+storage_version_token = "1789529149986237"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "IY2BpfX3BV97QFwESf3kZ"
+uri = "file://reports/prompt-h/comparacion-lista-a-anterior.md"
+type = "text"
+title = "Comparación anterior de la Lista A"
+description = "35 conteos iguales; 34 huellas iguales. Solo sesiones cambió de huella, manteniendo 11 filas."
+logical_id = "0435be79-c931-4270-9165-f83c2bd6d3f6"
+content_hash = "sha256:a774f17349741be2b22e9489b49b24ea7347c811d100494b3a9c0f137d3dee58"
+size = 5949
+mtime_ms = 1789529458790
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0435be79-c931-4270-9165-f83c2bd6d3f6/bf791035-bf7b-4231-9d15-714f031d9e9d"
+storage_version_token = "1789529844939143"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "t4iVQQvNzdhX3dwezGqCE"
+uri = "file://reports/prompt-h/block4-purga-verificacion.md"
+type = "text"
+title = "Purga autorizada — commit y verificación"
+description = "A vacía y B en sus objetivos al commit; C, triggers y secuencias conservados. Evidencia completa de ejecución."
+logical_id = "152aa58d-28de-49fa-83ae-1ef27a9436a0"
+content_hash = "sha256:cc0ba2ec4d52cba9345feea928eb7af687649cf5c3993a77e463c4d6e191955e"
+size = 20290
+mtime_ms = 1789532616925
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/152aa58d-28de-49fa-83ae-1ef27a9436a0/9a743be4-690d-4815-98fb-9eb1c18bb2cb"
+storage_version_token = "1789532701326897"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "Mc6VIhlFheiB7jvWl7jW-"
+uri = "file://reports/prompt-h/post-arranque-comparacion.md"
+type = "text"
+title = "Comparación posterior al arranque"
+description = "Cambios de fechas en permisos, alertas nuevas y avances de secuencias, separados de la purga. No se alteraron valores de permisos."
+logical_id = "bc564bdd-3802-4088-98ad-73d928ec1f30"
+content_hash = "sha256:1205863d9cef5e757f5076eda812fc8f64f95167dd779e47f96ffb56ec5a41e7"
+size = 17313
+mtime_ms = 1789532465973
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bc564bdd-3802-4088-98ad-73d928ec1f30/957a0856-3491-412c-9227-a050a2a23636"
+storage_version_token = "1789532701884987"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "NwZpl5hqrz3UgFH-tEYG9"
+uri = "file://reports/prompt-l/block0-code-map.md"
+type = "text"
+title = "Prompt L — Bloque 0 y límites antes de activar"
+description = "Cero rollos y series asignadas; catálogo intacto; reglas localizadas y restricción del reinicio del API."
+logical_id = "a30d95f3-12d9-41f5-a29d-350864600d1d"
+content_hash = "sha256:c0c667ff28b146bc47ea62316d2d088aa439d2628e6389cc065d8d32daa293c9"
+size = 4953
+mtime_ms = 1789534782697
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a30d95f3-12d9-41f5-a29d-350864600d1d/d9c00562-9656-4dc3-ad1a-6af36bfaa993"
+storage_version_token = "1789534789490827"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "tliKUd-6cURh3os7QzLQO"
+uri = "file://reports/prompt-l/full-catalog-label-fit.md"
+type = "text"
+title = "Etiquetas: revisión de los 1,234 productos"
+description = "Ocho dígitos completos y 1,234 QR decodificados; una advertencia de ancho útil previa, sin desbordamientos nuevos."
+logical_id = "c267ec82-fea5-4649-9f03-8d10f4996492"
+content_hash = "sha256:3b01a3881052096f21bd57812346b5ec188f75cbc31b7131ac9ece94d878e8f0"
+size = 2557
+mtime_ms = 1789534581117
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c267ec82-fea5-4649-9f03-8d10f4996492/3f4470c7-6612-4bd6-bdab-8db977b8e708"
+storage_version_token = "1789534790030057"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "OD7Y_wWviVxVgdehOc9j8"
+uri = "file://reports/prompt-l/candidate-8-min-product-1948-product-name.jpg"
+type = "image"
+title = "Etiqueta con advertencia previa de ancho útil"
+description = "Campesina Flor Margarita — Amarillo Mango. Texto completo presente; supera el ancho útil del autoajuste tanto con siete como con ocho dígitos."
+logical_id = "5093dea4-9121-4d39-b788-dfcbf5030e45"
+content_hash = "sha256:7892f1994556fa0718671894d2ad360ece82d00efc8ee258c74b1acc055483e4"
+size = 21344
+mtime_ms = 1789534560541
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5093dea4-9121-4d39-b788-dfcbf5030e45/dcc84bd3-5af3-45eb-9795-c7594d21128c"
+storage_version_token = "1789534790716849"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "MlsxEigIG6UAh9kHOYOcc"
+uri = "file://reports/prompt-l/resultado.md"
+type = "text"
+title = "Prompt L — resultado y verificaciones"
+description = "Cambio a ocho dígitos activado, contador confirmado en 10000000 y catálogo conservado. Incluye límites y pruebas físicas pendientes."
+logical_id = "aae81882-c149-4696-bf69-9f0fe8aab938"
+content_hash = "sha256:dd125fd3327f4056773a0f29d7aa01135194a74b2224e75f39d6b376fe2880e3"
+size = 2752
+mtime_ms = 1789535819677
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/aae81882-c149-4696-bf69-9f0fe8aab938/8d00e808-def2-4986-8118-ee7503b459e6"
+storage_version_token = "1789535838732362"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "MKQUqLi9Gzyuy2M6NZSqu"
+uri = "file://reports/prompt-m/block0-defaults.md"
+type = "text"
+title = "Prompt M — defaults vivos y valores actuales"
+description = "Comparación de los seis contadores, detalle de las 46 filas y confirmación del respaldo. Solo lectura; tres diferencias detectadas."
+logical_id = "f5ac2af3-2c23-4c6f-9ea1-b282d4adcdf8"
+content_hash = "sha256:704e31ecddc66c1e3b4a73b191a275ef797dd01b79a46355dbebb829275c778a"
+size = 7785
+mtime_ms = 1789536112668
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f5ac2af3-2c23-4c6f-9ea1-b282d4adcdf8/bf647ac5-9291-4241-a21c-ff252d4a3b24"
+storage_version_token = "1789536159217044"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "eKTzl5-dVf7KTOu4ada3h"
+uri = "file://reports/prompt-m/resultado.md"
+type = "text"
+title = "Prompt M — cierre verificado"
+description = "Defaults alineados, 46 filas conservadas, pruebas desechables aprobadas, typecheck sin errores y ambos servicios con arranque limpio."
+logical_id = "63f15754-0ee8-4238-a11c-f92c64476e36"
+content_hash = "sha256:9e31a51fcf505437cf1e46bbf7857fe94654cee2aff65818c68defdc1a612281"
+size = 6354
+mtime_ms = 1789537359080
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/63f15754-0ee8-4238-a11c-f92c64476e36/a194f81e-3543-4730-860f-8b8c0ff2084c"
+storage_version_token = "1789537374999357"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "z-FprtvpSJLtw1JCnSjCU"
+uri = "file://reports/prompt-j/propuesta-caja-escritorio.png"
+type = "image"
+title = "Caja en Tiempo Real — escritorio"
+description = "Operación y señales primero; Estado por Tienda después; aclaración de cobranza al final de la columna derecha. Propuesta con datos ficticios."
+logical_id = "57e3b95c-edf1-48b9-a04a-4a0c9700b2dd"
+content_hash = "sha256:2ff0052fb6f27fbef6a74cb23cb1df3b06eaefc929a927fc6901db98352528b7"
+size = 280134
+mtime_ms = 1789540892800
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/57e3b95c-edf1-48b9-a04a-4a0c9700b2dd/94d0b89b-64b9-44e4-98a7-1c041ddee207"
+storage_version_token = "1789540924968315"
+content_type = "image/png"
+
+[[outputs]]
+id = "e-byFzLqwp9Tnor2Q-VsI"
+uri = "file://reports/prompt-j/propuesta-cuentas-escritorio.png"
+type = "image"
+title = "Cuentas Destino — escritorio"
+description = "Cartera junto a Vendido y tres cifras de efectivo con igual peso visual. Propuesta con datos ficticios."
+logical_id = "05730337-33ae-465c-82ca-2961bb445315"
+content_hash = "sha256:cd01f83a1333478b7ad5fcc1d26bf52314c0baaa29f33c93d87920aa9e06b90d"
+size = 248995
+mtime_ms = 1789540895340
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/05730337-33ae-465c-82ca-2961bb445315/c2fe8dab-90ca-4397-a9da-5d721dc8963d"
+storage_version_token = "1789540925604533"
+content_type = "image/png"
+
+[[outputs]]
+id = "KF5ZFbjh2e_jEm6agLw-1"
+uri = "file://reports/prompt-j/propuesta-caja-movil.png"
+type = "image"
+title = "Caja en Tiempo Real — móvil de 402 px"
+description = "Vista completa de la composición en pantalla estrecha. Datos de ejemplo, sin cambios en la aplicación."
+logical_id = "bf51d573-0ec0-4618-9ef7-01c11bd1dc7b"
+content_hash = "sha256:3506b670df9345eeef710f9f57975e4095eaf972b97d109154756d97ef936bf2"
+size = 268351
+mtime_ms = 1789540893968
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bf51d573-0ec0-4618-9ef7-01c11bd1dc7b/104be8e4-6a9e-4924-8351-7bcb00c5d239"
+storage_version_token = "1789540926189723"
+content_type = "image/png"
+
+[[outputs]]
+id = "7tanm6JWzWxk2G_bMKqGx"
+uri = "file://reports/prompt-j/propuesta-cuentas-movil.png"
+type = "image"
+title = "Cuentas Destino — móvil de 402 px"
+description = "Los tres importes de efectivo se apilan conservando el mismo peso visual. Datos de ejemplo."
+logical_id = "e1a79101-99fd-4020-a775-eb0a3c86e90a"
+content_hash = "sha256:69ca0b54791ec960150ece17647b89513add9c849bebd7fcbd10b7a60d50b0e4"
+size = 208403
+mtime_ms = 1789540896568
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e1a79101-99fd-4020-a775-eb0a3c86e90a/fad2c255-6caa-4829-afa1-135c6c1de067"
+storage_version_token = "1789540926907627"
+content_type = "image/png"
+
+[[outputs]]
+id = "OkXRtujTARYxPnaw1zqr2"
+uri = "file://reports/prompt-j/composicion-ajustada-caja-escritorio.png"
+type = "image"
+title = "Caja — composición ajustada en escritorio"
+description = "Rollos y Metros en una franja delgada de ancho completo; cobranza más arriba, antes de Tabla Comparativa y Últimos documentos. Datos de ejemplo."
+logical_id = "cd9a5314-2b32-4d33-b27a-45e6668614d7"
+content_hash = "sha256:2c64df14ea4ea0152c26b20b1e631837e497be4116441f73ea1bb939cbc4c8e4"
+size = 273219
+mtime_ms = 1789542708635
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/cd9a5314-2b32-4d33-b27a-45e6668614d7/5cbc3093-ee35-4841-84cd-3dd888a7e994"
+storage_version_token = "1789542754308815"
+content_type = "image/png"
+
+[[outputs]]
+id = "pdqpx4EyHQm_owBP0O4PN"
+uri = "file://reports/prompt-j/composicion-ajustada-cuentas-escritorio.png"
+type = "image"
+title = "Cuentas Destino — composición ajustada en escritorio"
+description = "Cinco destinos iguales, agrupados en tres de efectivo y dos de banco. Debajo, Cobrado y la tabla de abonos alineados y del mismo alto."
+logical_id = "4b4eb046-9f4d-43fd-98bd-df72a847ae91"
+content_hash = "sha256:9137c65560a39a1433267ada7f8b62a1406c5e9f0c192a6500abb8d9e5115356"
+size = 249710
+mtime_ms = 1789542707427
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4b4eb046-9f4d-43fd-98bd-df72a847ae91/d4a6c3df-b4af-41ad-a7b0-e77f8197d326"
+storage_version_token = "1789542754984458"
+content_type = "image/png"
+
+[[outputs]]
+id = "6coEYAInI3nYJro9Z2r3r"
+uri = "file://reports/prompt-j/composicion-ajustada-caja-movil.png"
+type = "image"
+title = "Caja — composición ajustada a 402 px"
+description = "Vista móvil completa de la maqueta. Sin cambios en las cifras ni en la aplicación."
+logical_id = "8f12d426-ec17-48df-8a2f-20c49a9c455d"
+content_hash = "sha256:aa7641441e7c08e39cd47923d3dbb12ad17c877af14f0cf7e74e020dd7431252"
+size = 266999
+mtime_ms = 1789542711007
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8f12d426-ec17-48df-8a2f-20c49a9c455d/6fd52c88-4c60-4f83-b1f3-cf3fd4b58a00"
+storage_version_token = "1789542755628382"
+content_type = "image/png"
+
+[[outputs]]
+id = "vz5dYCuOdVnhGq3eDF-yU"
+uri = "file://reports/prompt-j/composicion-ajustada-cuentas-movil.png"
+type = "image"
+title = "Cuentas Destino — composición ajustada a 402 px"
+description = "Tamaños móviles conservados; efectivo agrupado primero y bancos después. Porcentajes separados de los importes."
+logical_id = "9ed88c69-3140-42e8-81af-b000cb38310a"
+content_hash = "sha256:5bdfab3b7526ea8b911c68e674e799a41d9e9a17a286fe0030aef17bd0c54557"
+size = 210942
+mtime_ms = 1789542709879
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9ed88c69-3140-42e8-81af-b000cb38310a/e0801b9a-1288-4ca6-97cd-287836ff8829"
+storage_version_token = "1789542756184540"
+content_type = "image/png"
+
+[[outputs]]
+id = "oSQfJUV6ryNT5mVXbjHYa"
+uri = "file://reports/prompt-j/composicion-reconciliada-omisiones.html"
+type = "text"
+title = "Inventario de omisiones y composición reconciliada"
+description = "Lista completa de elementos que se conservan, diferencias frente a las referencias y límites de la comprobación con datos reales."
+logical_id = "5595fdfd-b852-4e59-878c-ad51851ad6ee"
+content_hash = "sha256:4bc40320a56276aaaa522866dd37384f3e56a6e183efc28af31002b7be80a0a4"
+size = 9212
+mtime_ms = 1789545049115
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5595fdfd-b852-4e59-878c-ad51851ad6ee/d658008c-f6cd-4019-b9a8-3a7693cf7da8"
+storage_version_token = "1789545081379556"
+content_type = "text/html"
+
+[[outputs]]
+id = "mbCV1Vdzhe4Etid2vZuSc"
+uri = "file://reports/prompt-j/reconciliada-real-caja-escritorio.png"
+type = "image"
+title = "Caja — referencia reconciliada, escritorio"
+description = "Datos de la API verificada, corte fijo del 16/09/2026. Orden Mariana, Coco, Cruces; señales originales y cobranza sin sección propia. Propuesta no aplicada."
+logical_id = "168db242-8f18-4206-9e26-2c9c9afd8ed1"
+content_hash = "sha256:13a803f1e867eef12ba02e07b45eff122b4041eb0d2ba4e650a1b279b629b2bf"
+size = 198964
+mtime_ms = 1789545013543
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/168db242-8f18-4206-9e26-2c9c9afd8ed1/38a810be-a092-41ec-9f23-391da5af05f1"
+storage_version_token = "1789545082080896"
+content_type = "image/png"
+
+[[outputs]]
+id = "sKvc0eEWQvz_Ov_JMHH-R"
+uri = "file://reports/prompt-j/reconciliada-real-cuentas-escritorio.png"
+type = "image"
+title = "Cuentas Destino — referencia reconciliada, escritorio"
+description = "Composición con respuestas reales en cero: destinos agrupados, porcentajes separados, comparación visible y estados vacíos sin inventar movimientos."
+logical_id = "31c630f9-9d81-4251-972a-43b01fafe332"
+content_hash = "sha256:4e9c56d1ea38c1f7773cf0d371e7f984795e8e1ab0d61694c5052f6ed626a20e"
+size = 181611
+mtime_ms = 1789545012191
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/31c630f9-9d81-4251-972a-43b01fafe332/0616a2b5-5c14-4eb3-abbd-8eff47121a47"
+storage_version_token = "1789545082605450"
+content_type = "image/png"
+
+[[outputs]]
+id = "0eURQ6eAftBNwa0c8uVbp"
+uri = "file://reports/prompt-j/reconciliada-real-caja-movil.png"
+type = "image"
+title = "Caja — referencia reconciliada a 402 px"
+description = "Estado real de cajas cerradas y ceros; sin desbordamiento horizontal de la página. Vista aislada, no implementación."
+logical_id = "19d70e04-700d-48ff-b4e4-434527c9962d"
+content_hash = "sha256:d103c3d3bc116d9ec91ec1c76e0e6315261422146afcee4258d00b7f32f0e25c"
+size = 187877
+mtime_ms = 1789545016015
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/19d70e04-700d-48ff-b4e4-434527c9962d/d5965c5e-8d45-4aba-abfe-47734cf2c8eb"
+storage_version_token = "1789545083139235"
+content_type = "image/png"
+
+[[outputs]]
+id = "tC3M_sewNwbCuoudQtfPA"
+uri = "file://reports/prompt-j/reconciliada-real-cuentas-movil.png"
+type = "image"
+title = "Cuentas Destino — referencia reconciliada a 402 px"
+description = "Tamaños móviles conservados; tres destinos de efectivo seguidos por dos bancarios. Datos del corte verificado."
+logical_id = "02545f66-456e-4251-adb1-4c48853183c2"
+content_hash = "sha256:727b698673a4e37b0dec2caabe7f8f3a13864f55cf37abf7ec61ef7d76b00166"
+size = 163797
+mtime_ms = 1789545014883
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/02545f66-456e-4251-adb1-4c48853183c2/0d4f0d7a-0023-4f19-b078-51ebd143d75a"
+storage_version_token = "1789545083678613"
+content_type = "image/png"

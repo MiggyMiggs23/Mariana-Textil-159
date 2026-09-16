@@ -10983,7 +10983,7 @@ export const getGetClientePagoDetalleUrl = (id: number,
 }
 
 /**
- * @summary Detalle de las notas liquidadas por un abono
+ * @summary Detalle de un movimiento de crédito (lectura)
  */
 export const getClientePagoDetalle = async (id: number,
     pagoId: number, options?: Parameters<typeof customFetch>[1]): Promise<ClientePagoDetalle> => {
@@ -11033,7 +11033,7 @@ export type GetClientePagoDetalleQueryError = ErrorType<ValidationErrorResponse 
 
 
 /**
- * @summary Detalle de las notas liquidadas por un abono
+ * @summary Detalle de un movimiento de crédito (lectura)
  */
 
 export function useGetClientePagoDetalle<TData = Awaited<ReturnType<typeof getClientePagoDetalle>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(

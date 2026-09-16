@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Exact read-only SQL probes for Prompt F credit movement detail. EXPLAIN each statement only inside the main agent's REPEATABLE READ READ ONLY transaction.",
+  "status": "readonly_explain_probes_only",
+  "liveDatabaseFinding": {
+    "source": "reports/prompt-f/historical-credit-cases.json",
+    "currentMovimientosCreditoCount": 0,
+    "currentMovementIds43To50Count": 0,
+    "interpretation": "These archive-shaped parameters are not live foreign keys and must not be restored or inserted. A current zero-row movement lookup is expected; the remaining statements are included so their joins and columns can be parsed/planned against the actual schema."
+  },
+  "builders": {
+    "movementApplicationsAuditoria": "artifacts/api-server/src/lib/credit-movement-detail.ts#buildCreditMovementDetailReadQueries",
+    "ledger": "artifacts/api-server/src/lib/credit-aging-read-model.ts#buildCustomerCreditLedgerReadQuery"
+  },
+  "transactionInstructions": [
+    "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "EXPLAIN (VERBOSE, COSTS OFF) each sql statement with its listed parameters",
+    "ROLLBACK"
+  ],
+  "cases": [
+    {
+      "caseId": "client7-latest-archive-movement50-active-recapture",
+      "clientId": 7,
+      "movementId": 50,
+      "sourceIdsAfterMovementRead": [50],
+      "historicalOnly": true,
+      "queries": [
+        {
+          "name": "movement",
+          "parameters": [50, 7],
+          "sql": "SELECT m.id,m.cliente_id AS \"clienteId\",c.nombre AS \"clienteNombre\",\n       m.tipo,m.importe::text,m.created_at AS \"fechaEfectiva\",\n       m.forma_pago AS \"formaPago\",m.cuenta_destino AS \"cuentaDestino\",\n       m.referencia,m.notas,u.nombre AS \"usuarioRegistrador\",\n       m.ticket_id AS \"ticketId\",t.folio AS \"ticketFolio\",\n       CASE WHEN original.id IS NOT NULL THEN m.movimiento_origen_id ELSE NULL END\n         AS \"movimientoOriginalId\",\n       original.tipo AS \"movimientoOriginalTipo\",\n        original.importe::text AS \"movimientoOriginalImporte\",\n        original.created_at AS \"movimientoOriginalFechaEfectiva\",\n       reverse.id AS \"reversoMovimientoId\",\n       reverse.notas AS \"motivoReverso\"\n     FROM movimientos_credito m\n     JOIN clientes c ON c.id=m.cliente_id\n     JOIN usuarios u ON u.id=m.usuario_id\n     LEFT JOIN tickets t ON t.id=m.ticket_id AND t.cliente_id=m.cliente_id\n     LEFT JOIN movimientos_credito original\n       ON original.id=m.movimiento_origen_id\n      AND original.cliente_id=m.cliente_id\n     LEFT JOIN movimientos_credito reverse\n       ON reverse.movimiento_origen_id=m.id\n      AND reverse.cliente_id=m.cliente_id\n      AND reverse.tipo='REVERSO'\n     WHERE m.id=$1 AND m.cliente_id=$2\n       AND m.tipo IN ('ABONO','REVERSO','AJUSTE')\n     LIMIT 1"
+        },
+        {
+          "name": "ledger",
+          "parameters": [7],
+          "sql": "SELECT m.cliente_id,m.id,m.ticket_id,\n       directed_sale.id AS directed_movimiento_id,\n       m.movimiento_origen_id,m.tipo,m.importe::text,\n        m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,\n        COALESCE(m.metadata LIKE '%\"preventImplicitFavor\":true%', false)\n          AS prevent_implicit_favor,\n         -- Only legacy marked notes may supply directed historical evidence.\n         -- New automatic notes remain ordinary FIFO even if an application\n         -- row exists for Ver Reparto.\n         COALESCE((\n          SELECT json_agg(json_build_object(\n            'sourceId', a.abono_movimiento_id,\n            'targetId', a.venta_movimiento_id,\n            'amountCents', round(a.importe * 100)\n          ))\n          FROM aplicaciones_credito a\n          JOIN movimientos_credito favor_sale\n            ON favor_sale.id = a.venta_movimiento_id\n          WHERE a.abono_movimiento_id = m.id\n             AND favor_sale.metadata LIKE '%\"preventImplicitFavor\":true%'\n        ), '[]'::json) AS explicit_favor_applications\n         ,COALESCE((\n           SELECT round(COALESCE(SUM(a.importe), 0) * 100)\n           FROM aplicaciones_credito a\n           WHERE a.abono_movimiento_id = m.id\n         ), 0) AS immutable_applied_cents\n     FROM movimientos_credito m\n     LEFT JOIN solicitudes_pago_dirigido request\n       ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id\n     LEFT JOIN movimientos_credito directed_sale\n       ON directed_sale.id=request.documento_movimiento_id\n      AND directed_sale.tipo='VENTA_CREDITO'\n      AND directed_sale.cliente_id=m.cliente_id\n     LEFT JOIN tickets t ON t.id=m.ticket_id\n     WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id"
+        },
+        {
+          "name": "applications",
+          "parameters": [[50], 7],
+          "sql": "SELECT a.abono_movimiento_id AS \"abonoMovimientoId\",\n         sale.ticket_id AS \"ticketId\",t.folio,\n         sale.id AS \"movimientoVentaId\",a.importe::text AS aplicado,\n         sale.importe::text AS \"importeOriginal\",\n         sale.fecha_vencimiento AS \"fechaVencimiento\"\n       FROM aplicaciones_credito a\n       JOIN movimientos_credito sale\n         ON sale.id=a.venta_movimiento_id AND sale.cliente_id=$2\n       LEFT JOIN tickets t\n         ON t.id=sale.ticket_id AND t.cliente_id=$2\n       WHERE a.abono_movimiento_id=ANY($1::int[])\n       ORDER BY a.abono_movimiento_id,a.id"
+        },
+        {
+          "name": "auditoria",
+          "parameters": [["50", "50"], "7"],
+          "sql": "SELECT a.id::text,a.accion,a.created_at AS fecha,a.entidad,a.entidad_id AS \"entidadId\",\n     COALESCE(a.usuario_snapshot,u.nombre) AS usuario,\n     a.datos_antes AS \"datosAntes\",a.datos_despues AS \"datosDespues\"\n   FROM auditoria a\n   LEFT JOIN usuarios u ON u.id=a.usuario_id\n   WHERE (\n     (a.entidad='movimientos_credito' AND a.entidad_id=ANY($1::text[]))\n     OR (a.entidad='clientes' AND a.entidad_id=$2)\n   )\n   ORDER BY a.created_at,a.id\n   LIMIT 100"
+        }
+      ]
+    },
+    {
+      "caseId": "client7-latest-archive-movement48-reversal-of45",
+      "clientId": 7,
+      "movementId": 48,
+      "sourceIdsAfterMovementRead": [45],
+      "historicalOnly": true,
+      "queries": [
+        {
+          "name": "movement",
+          "parameters": [48, 7],
+          "sql": "SELECT m.id,m.cliente_id AS \"clienteId\",c.nombre AS \"clienteNombre\",\n       m.tipo,m.importe::text,m.created_at AS \"fechaEfectiva\",\n       m.forma_pago AS \"formaPago\",m.cuenta_destino AS \"cuentaDestino\",\n       m.referencia,m.notas,u.nombre AS \"usuarioRegistrador\",\n       m.ticket_id AS \"ticketId\",t.folio AS \"ticketFolio\",\n       CASE WHEN original.id IS NOT NULL THEN m.movimiento_origen_id ELSE NULL END\n         AS \"movimientoOriginalId\",\n       original.tipo AS \"movimientoOriginalTipo\",\n        original.importe::text AS \"movimientoOriginalImporte\",\n        original.created_at AS \"movimientoOriginalFechaEfectiva\",\n       reverse.id AS \"reversoMovimientoId\",\n       reverse.notas AS \"motivoReverso\"\n     FROM movimientos_credito m\n     JOIN clientes c ON c.id=m.cliente_id\n     JOIN usuarios u ON u.id=m.usuario_id\n     LEFT JOIN tickets t ON t.id=m.ticket_id AND t.cliente_id=m.cliente_id\n     LEFT JOIN movimientos_credito original\n       ON original.id=m.movimiento_origen_id\n      AND original.cliente_id=m.cliente_id\n     LEFT JOIN movimientos_credito reverse\n       ON reverse.movimiento_origen_id=m.id\n      AND reverse.cliente_id=m.cliente_id\n      AND reverse.tipo='REVERSO'\n     WHERE m.id=$1 AND m.cliente_id=$2\n       AND m.tipo IN ('ABONO','REVERSO','AJUSTE')\n     LIMIT 1"
+        },
+        {
+          "name": "ledger",
+          "parameters": [7],
+          "sql": "SELECT m.cliente_id,m.id,m.ticket_id,\n       directed_sale.id AS directed_movimiento_id,\n       m.movimiento_origen_id,m.tipo,m.importe::text,\n        m.created_at,m.fecha_vencimiento,m.dias_plazo,m.notas,t.folio,m.metadata,\n        COALESCE(m.metadata LIKE '%\"preventImplicitFavor\":true%', false)\n          AS prevent_implicit_favor,\n         -- Only legacy marked notes may supply directed historical evidence.\n         -- New automatic notes remain ordinary FIFO even if an application\n         -- row exists for Ver Reparto.\n         COALESCE((\n          SELECT json_agg(json_build_object(\n            'sourceId', a.abono_movimiento_id,\n            'targetId', a.venta_movimiento_id,\n            'amountCents', round(a.importe * 100)\n          ))\n          FROM aplicaciones_credito a\n          JOIN movimientos_credito favor_sale\n            ON favor_sale.id = a.venta_movimiento_id\n          WHERE a.abono_movimiento_id = m.id\n             AND favor_sale.metadata LIKE '%\"preventImplicitFavor\":true%'\n        ), '[]'::json) AS explicit_favor_applications\n         ,COALESCE((\n           SELECT round(COALESCE(SUM(a.importe), 0) * 100)\n           FROM aplicaciones_credito a\n           WHERE a.abono_movimiento_id = m.id\n         ), 0) AS immutable_applied_cents\n     FROM movimientos_credito m\n     LEFT JOIN solicitudes_pago_dirigido request\n       ON request.tipo='CLIENTE' AND request.estado='APROBADA' AND request.movimiento_id=m.id\n     LEFT JOIN movimientos_credito directed_sale\n       ON directed_sale.id=request.documento_movimiento_id\n      AND directed_sale.tipo='VENTA_CREDITO'\n      AND directed_sale.cliente_id=m.cliente_id\n     LEFT JOIN tickets t ON t.id=m.ticket_id\n     WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id"
+        },
+        {
+          "name": "applications",
+          "parameters": [[45], 7],
+          "sql": "SELECT a.abono_movimiento_id AS \"abonoMovimientoId\",\n         sale.ticket_id AS \"ticketId\",t.folio,\n         sale.id AS \"movimientoVentaId\",a.importe::text AS aplicado,\n         sale.importe::text AS \"importeOriginal\",\n         sale.fecha_vencimiento AS \"fechaVencimiento\"\n       FROM aplicaciones_credito a\n       JOIN movimientos_credito sale\n         ON sale.id=a.venta_movimiento_id AND sale.cliente_id=$2\n       LEFT JOIN tickets t\n         ON t.id=sale.ticket_id AND t.cliente_id=$2\n       WHERE a.abono_movimiento_id=ANY($1::int[])\n       ORDER BY a.abono_movimiento_id,a.id"
+        },
+        {
+          "name": "auditoria",
+          "parameters": [["48", "45"], "7"],
+          "sql": "SELECT a.id::text,a.accion,a.created_at AS fecha,a.entidad,a.entidad_id AS \"entidadId\",\n     COALESCE(a.usuario_snapshot,u.nombre) AS usuario,\n     a.datos_antes AS \"datosAntes\",a.datos_despues AS \"datosDespues\"\n   FROM auditoria a\n   LEFT JOIN usuarios u ON u.id=a.usuario_id\n   WHERE (\n     (a.entidad='movimientos_credito' AND a.entidad_id=ANY($1::text[]))\n     OR (a.entidad='clientes' AND a.entidad_id=$2)\n   )\n   ORDER BY a.created_at,a.id\n   LIMIT 100"
+        }
+      ]
+    }
+  ]
+}

@@ -180,6 +180,11 @@ export interface AuditoriaEntry {
   entidad: string;
   /** @nullable */
   entidadId: string | null;
+  /**
+     * Owner client ID only when entidad is movimientos_credito and the live movement matches the complete stored audit identity; null means unresolved.
+     * @nullable
+     */
+  clienteId?: number | null;
   /** @nullable */
   sitioId: number | null;
   /** @nullable */
@@ -3238,6 +3243,37 @@ export interface ClienteNotaCreditoDetalle {
   abonos: ClienteNotaAbono[];
 }
 
+export interface ClientePagoDetalleReparto {
+  /** @nullable */
+  ticketId: number | null;
+  /** @nullable */
+  folio: number | null;
+  movimientoVentaId: number;
+  importeAplicado: string;
+  /**
+     * Saldo proyectado antes de una aplicación vigente; for inactive historical evidence it is null when that before-state was not retained and must not be replaced with the current balance.
+     * @nullable
+     */
+  saldoAntes: string | null;
+  /**
+     * Saldo proyectado después de una aplicación vigente; for inactive historical evidence it is null when that after-state was not retained and must not be replaced with the current balance.
+     * @nullable
+     */
+  saldoDespues: string | null;
+  /** Indica si la aplicación sigue activa en la proyección actual. */
+  vigente: boolean;
+}
+
+export interface ClientePagoAuditoria {
+  id: number;
+  accion: string;
+  fecha: string;
+  /** @nullable */
+  usuario: string | null;
+  /** @nullable */
+  motivo: string | null;
+}
+
 export type ClientePagoAplicacionDetalleResultado = typeof ClientePagoAplicacionDetalleResultado[keyof typeof ClientePagoAplicacionDetalleResultado];
 
 
@@ -3295,6 +3331,15 @@ export const ClientePagoDetalleCuentaDestino = {
   CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
 } as const;
 
+export type ClientePagoDetalleTipo = typeof ClientePagoDetalleTipo[keyof typeof ClientePagoDetalleTipo];
+
+
+export const ClientePagoDetalleTipo = {
+  ABONO: 'ABONO',
+  REVERSO: 'REVERSO',
+  AJUSTE: 'AJUSTE',
+} as const;
+
 export interface ClientePagoDetalle {
   id: number;
   clienteId: number;
@@ -3312,7 +3357,40 @@ export interface ClientePagoDetalle {
   reversoMovimientoId?: number | null;
   /** @nullable */
   motivoReverso?: string | null;
+  /** Evidencia histórica de aplicaciones; no sustituye la proyección del servidor. */
   aplicaciones: ClientePagoAplicacionDetalle[];
+  /** Nombre del cliente al que pertenece el movimiento. */
+  clienteNombre?: string;
+  tipo?: ClientePagoDetalleTipo;
+  /** Importe firmado del movimiento. */
+  importe?: string;
+  fechaEfectiva?: string;
+  /**
+     * Instante de captura comprobado en auditoría; null si no existe evidencia suficiente.
+     * @nullable
+     */
+  fechaCaptura?: string | null;
+  /** @nullable */
+  usuarioCaptura?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  /** @nullable */
+  ticketId?: number | null;
+  /** @nullable */
+  ticketFolio?: number | null;
+  /** @nullable */
+  movimientoOriginalId?: number | null;
+  /** Aplicaciones proyectadas del ABONO. Se omite para REVERSO y AJUSTE. */
+  reparto?: ClientePagoDetalleReparto[];
+  /**
+     * Saldo a favor proyectado del ABONO; se omite para REVERSO y AJUSTE.
+     * @nullable
+     */
+  saldoAFavor?: string | null;
+  /** Aplicaciones históricas que cesaron por este REVERSO; no es el reparto propio del reverso. An empty array means no immutable application row was retained for the original payment. When before/after evidence was not retained, those fields are null rather than current projected balances. */
+  aplicacionesRevertidas?: ClientePagoDetalleReparto[];
+  /** Metadatos de auditoría comprobados, sin datos sensibles. */
+  auditoria?: ClientePagoAuditoria[];
 }
 
 export interface ReimpresionClienteNota {
@@ -4370,6 +4448,11 @@ export interface MovimientoRow {
   documentoEtiqueta?: string | null;
   /** @nullable */
   documentoRuta?: string | null;
+  /**
+     * Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.
+     * @nullable
+     */
+  documentoClienteId?: number | null;
   /** @nullable */
   movimientoOrigenId?: number | null;
   usuarioId: number;

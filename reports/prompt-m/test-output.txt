@@ -1,0 +1,8 @@
+status: PASS
+source-shaped-minimal-schema: {"pass":true,"publicTables":["auditoria_inventario_folio","entrada_folio","salida_folio","series_consecutivo","ticket_folio","ubicaciones","viaje_folio"]}
+six-defaults-omitted-values: {"pass":true,"values":{"entrada_folio":"0","salida_folio":"0","viaje_folio":"0","auditoria_inventario_folio":"0","ticket_folio":"999","series_consecutivo":"10000000"}}
+entrada-allocator-first-folio: {"pass":true,"firstFolio":"1","sql":["INSERT INTO entrada_folio (ubicacion_id) VALUES ($1) ON CONFLICT DO NOTHING","SELECT ultimo_folio FROM entrada_folio WHERE ubicacion_id = $1 FOR UPDATE","UPDATE entrada_folio SET ultimo_folio = ultimo_folio + 1 WHERE ubicacion_id = $1 RETURNING ultimo_folio"]}
+salida-allocator-first-folio: {"pass":true,"firstFolio":"1","sql":["INSERT INTO salida_folio (ubicacion_id) VALUES ($1) ON CONFLICT DO NOTHING","SELECT ultimo_folio FROM salida_folio WHERE ubicacion_id = $1 FOR UPDATE","UPDATE salida_folio SET ultimo_folio = ultimo_folio + 1 WHERE ubicacion_id = $1 RETURNING ultimo_folio"]}
+series-allocator-first-series: {"pass":true,"start":"10000000","firstSeries":"10000001","sql":["INSERT INTO series_consecutivo (id, ultimo_numero) VALUES (1, 10000000) ON CONFLICT (id) DO NOTHING","SELECT ultimo_numero FROM series_consecutivo WHERE id = 1 FOR UPDATE","UPDATE series_consecutivo SET ultimo_numero = ultimo_numero + 1 WHERE id = 1 RETURNING ultimo_numero"]}
+no-users-or-sessions: {"pass":true,"note":"Fixture contains only ubicaciones and six counters; no user/session tables or rows."}
+transaction: ROLLBACK (fixture mutations discarded)

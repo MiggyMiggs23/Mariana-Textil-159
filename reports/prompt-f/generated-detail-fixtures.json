@@ -1,0 +1,261 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-16T08:49:20.149Z",
+  "fixturePolicy": {
+    "realCase": "Historical latest43To50Snapshot only; client 7 rows 44,45,48,50 are not live foreign keys.",
+    "syntheticCase": "Synthetic-only unit/browser stress. It is never mounted in app DB and is not real-data approval.",
+    "users": "User rows are excluded by historical-credit-cases field policy.",
+    "databaseWrites": 0,
+    "migrations": 0,
+    "liveHttp": false
+  },
+  "source": {
+    "archivePath": "reports/prompt-f/historical-credit-cases.json",
+    "archiveCaseId": "client7-latest-snapshot-movements43-50",
+    "archiveSnapshot": "latest43To50Snapshot",
+    "archiveClientId": 7,
+    "archiveClientName": "Jacinta Mendoza",
+    "latestClientMovementIds": [
+      44,
+      45,
+      48,
+      50
+    ]
+  },
+  "builder": {
+    "module": "artifacts/api-server/src/lib/credit-movement-detail.ts",
+    "entrypoint": "buildCreditMovementDetail",
+    "projection": "loadCustomerCreditProjection -> loadCustomerCreditLedger -> projectCreditLedger",
+    "executor": "ArchivedReadExecutor (query adapter; no database connection)",
+    "realReadQueryCount": 12,
+    "syntheticReadQueryCount": 10
+  },
+  "realArchived": {
+    "clientId": 7,
+    "selectedMovementIds": [
+      45,
+      48,
+      50
+    ],
+    "details": {
+      "45": {
+        "id": 45,
+        "clienteId": 7,
+        "fecha": "2026-09-15T00:00:00.000Z",
+        "montoTotalAbono": "15000.00",
+        "formaPago": null,
+        "cuentaDestino": null,
+        "referencia": null,
+        "usuarioRegistrador": "Identidad histórica omitida (usuarios excluidos)",
+        "revertido": true,
+        "reversoMovimientoId": 48,
+        "motivoReverso": "Corrección autorizada de fecha efectiva del abono 45: reverso total previo a recaptura exacta del 15/09/2026 13:34:10.192 America/Mexico_City. Sin ingreso físico adicional.",
+        "aplicaciones": [],
+        "clienteNombre": "Jacinta Mendoza",
+        "tipo": "ABONO",
+        "importe": "-15000.00",
+        "fechaEfectiva": "2026-09-15T00:00:00.000Z",
+        "fechaCaptura": null,
+        "usuarioCaptura": "Identidad histórica omitida (usuarios excluidos)",
+        "notas": null,
+        "ticketId": null,
+        "ticketFolio": null,
+        "movimientoOriginalId": null,
+        "reparto": [],
+        "saldoAFavor": null
+      },
+      "48": {
+        "id": 48,
+        "clienteId": 7,
+        "fecha": "2026-09-15T21:16:51.304Z",
+        "montoTotalAbono": "15000.00",
+        "formaPago": null,
+        "cuentaDestino": null,
+        "referencia": null,
+        "usuarioRegistrador": "Identidad histórica omitida (usuarios excluidos)",
+        "revertido": false,
+        "reversoMovimientoId": null,
+        "motivoReverso": "Corrección autorizada de fecha efectiva del abono 45: reverso total previo a recaptura exacta del 15/09/2026 13:34:10.192 America/Mexico_City. Sin ingreso físico adicional.",
+        "aplicaciones": [],
+        "clienteNombre": "Jacinta Mendoza",
+        "tipo": "REVERSO",
+        "importe": "15000.00",
+        "fechaEfectiva": "2026-09-15T21:16:51.304Z",
+        "fechaCaptura": null,
+        "usuarioCaptura": "Identidad histórica omitida (usuarios excluidos)",
+        "notas": "Corrección autorizada de fecha efectiva del abono 45: reverso total previo a recaptura exacta del 15/09/2026 13:34:10.192 America/Mexico_City. Sin ingreso físico adicional.",
+        "ticketId": null,
+        "ticketFolio": null,
+        "movimientoOriginalId": 45,
+        "aplicacionesRevertidas": []
+      },
+      "50": {
+        "id": 50,
+        "clienteId": 7,
+        "fecha": "2026-09-15T19:34:10.192Z",
+        "montoTotalAbono": "15000.00",
+        "formaPago": "EFECTIVO",
+        "cuentaDestino": "CAJA_FISICA",
+        "referencia": "CORRECCION-FECHA-ABONO-45",
+        "usuarioRegistrador": "Identidad histórica omitida (usuarios excluidos)",
+        "revertido": false,
+        "reversoMovimientoId": null,
+        "motivoReverso": null,
+        "aplicaciones": [
+          {
+            "ticketId": 105,
+            "folio": 1005,
+            "movimientoVentaId": 44,
+            "aplicado": "15000.00",
+            "importeOriginal": "22022.00",
+            "saldoActual": "7022.00",
+            "resultado": "PARCIAL",
+            "estadoNota": "ABONO_PARCIAL"
+          }
+        ],
+        "clienteNombre": "Jacinta Mendoza",
+        "tipo": "ABONO",
+        "importe": "-15000.00",
+        "fechaEfectiva": "2026-09-15T19:34:10.192Z",
+        "fechaCaptura": null,
+        "usuarioCaptura": "Identidad histórica omitida (usuarios excluidos)",
+        "notas": "Recaptura autorizada del abono 45 tras reverso total. Sin ingreso físico adicional; instante exacto de captura original.",
+        "ticketId": null,
+        "ticketFolio": null,
+        "movimientoOriginalId": null,
+        "reparto": [
+          {
+            "ticketId": 105,
+            "folio": 1005,
+            "movimientoVentaId": 44,
+            "importeAplicado": "15000.00",
+            "saldoAntes": "22022.00",
+            "saldoDespues": "7022.00",
+            "vigente": true
+          }
+        ],
+        "saldoAFavor": "0.00"
+      }
+    },
+    "applicationEvidence": [
+      {
+        "id": 6,
+        "abonoMovementId": 50,
+        "ventaMovementId": 44,
+        "amount": "15000.00",
+        "createdAt": "2026-09-15 21:16:51.39202+00"
+      }
+    ]
+  },
+  "syntheticOnly": {
+    "label": "SYNTHETIC_ONLY_NOT_REAL_APPROVAL",
+    "clientId": 99,
+    "longNameLength": 150,
+    "selectedMovementIds": [
+      703,
+      704,
+      705
+    ],
+    "details": {
+      "703": {
+        "id": 703,
+        "clienteId": 99,
+        "fecha": "2026-01-03T12:00:00.000Z",
+        "montoTotalAbono": "10000000.00",
+        "formaPago": null,
+        "cuentaDestino": null,
+        "referencia": "SYNTHETIC_ONLY_SPLIT",
+        "usuarioRegistrador": "Identidad histórica omitida (usuarios excluidos)",
+        "revertido": false,
+        "reversoMovimientoId": null,
+        "motivoReverso": null,
+        "aplicaciones": [],
+        "clienteNombre": "SYNTHETIC ONLY LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG ",
+        "tipo": "ABONO",
+        "importe": "-10000000.00",
+        "fechaEfectiva": "2026-01-03T12:00:00.000Z",
+        "fechaCaptura": null,
+        "usuarioCaptura": "Identidad histórica omitida (usuarios excluidos)",
+        "notas": null,
+        "ticketId": null,
+        "ticketFolio": null,
+        "movimientoOriginalId": null,
+        "reparto": [
+          {
+            "ticketId": 1701,
+            "folio": 2701,
+            "movimientoVentaId": 701,
+            "importeAplicado": "9876543.21",
+            "saldoAntes": "9876543.21",
+            "saldoDespues": "0.00",
+            "vigente": true
+          },
+          {
+            "ticketId": 1702,
+            "folio": 2702,
+            "movimientoVentaId": 702,
+            "importeAplicado": "123456.79",
+            "saldoAntes": "1234567.89",
+            "saldoDespues": "1111111.10",
+            "vigente": true
+          }
+        ],
+        "saldoAFavor": "0.00"
+      },
+      "704": {
+        "id": 704,
+        "clienteId": 99,
+        "fecha": "2026-01-04T12:00:00.000Z",
+        "montoTotalAbono": "1234567.89",
+        "formaPago": null,
+        "cuentaDestino": null,
+        "referencia": "SYNTHETIC_ONLY_AJUSTE_POSITIVE",
+        "usuarioRegistrador": "Identidad histórica omitida (usuarios excluidos)",
+        "revertido": false,
+        "reversoMovimientoId": null,
+        "motivoReverso": null,
+        "aplicaciones": [],
+        "clienteNombre": "SYNTHETIC ONLY LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG ",
+        "tipo": "AJUSTE",
+        "importe": "1234567.89",
+        "fechaEfectiva": "2026-01-04T12:00:00.000Z",
+        "fechaCaptura": null,
+        "usuarioCaptura": "Identidad histórica omitida (usuarios excluidos)",
+        "notas": null,
+        "ticketId": 1703,
+        "ticketFolio": 2703,
+        "movimientoOriginalId": null
+      },
+      "705": {
+        "id": 705,
+        "clienteId": 99,
+        "fecha": "2026-01-05T12:00:00.000Z",
+        "montoTotalAbono": "7654321.10",
+        "formaPago": null,
+        "cuentaDestino": null,
+        "referencia": "SYNTHETIC_ONLY_AJUSTE_NEGATIVE",
+        "usuarioRegistrador": "Identidad histórica omitida (usuarios excluidos)",
+        "revertido": false,
+        "reversoMovimientoId": null,
+        "motivoReverso": null,
+        "aplicaciones": [],
+        "clienteNombre": "SYNTHETIC ONLY LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG LONG ",
+        "tipo": "AJUSTE",
+        "importe": "-7654321.10",
+        "fechaEfectiva": "2026-01-05T12:00:00.000Z",
+        "fechaCaptura": null,
+        "usuarioCaptura": "Identidad histórica omitida (usuarios excluidos)",
+        "notas": null,
+        "ticketId": null,
+        "ticketFolio": null,
+        "movimientoOriginalId": null
+      }
+    },
+    "sevenDigitAmountStrings": [
+      "9876543.21",
+      "1234567.89",
+      "10000000.00",
+      "7654321.10"
+    ]
+  }
+}

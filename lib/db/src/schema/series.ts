@@ -7,7 +7,9 @@ import { z } from "zod/v4";
  *
  * A single-row control table (id = 1). `ultimoNumero` holds the last series
  * number handed out. The next series is `ultimoNumero + 1`. The sequence starts
- * so that the first allocated series is 1000001 (row seeded with 1000000).
+ * so that the first allocated series is 10000001 (row seeded with 10000000).
+ * From 10000001 through 99999999 this provides exactly 89,999,999 roll
+ * numbers (approximately 90 million, or about 300 years at the current rate).
  *
  * Series are allocated atomically under a row lock so they are globally
  * consecutive under concurrency and never reused. `rollos.serie` stores only
@@ -15,7 +17,7 @@ import { z } from "zod/v4";
  */
 export const seriesConsecutivoTable = pgTable("series_consecutivo", {
   id: integer("id").primaryKey().default(1),
-  ultimoNumero: integer("ultimo_numero").notNull().default(1000000),
+  ultimoNumero: integer("ultimo_numero").notNull().default(10000000),
 });
 
 export const insertSeriesConsecutivoSchema = createInsertSchema(

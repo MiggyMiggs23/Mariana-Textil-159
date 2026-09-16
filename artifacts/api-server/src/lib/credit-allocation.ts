@@ -81,6 +81,12 @@ export type CreditMovementProjection = {
   movementId: number;
   saldoDeudorProyectadoCents: number;
   saldoAFavorProyectadoCents: number;
+  /**
+   * Canonical allocation trace for the prefix ending at this movement.  This
+   * is deliberately optional because statement callers only need the two
+   * prefix balances; detail readers opt in with includeAllocationTraces.
+   */
+  allocations?: CreditAllocation[];
 };
 
 export type CreditLedgerProjectionOptions = {
@@ -89,6 +95,12 @@ export type CreditLedgerProjectionOptions = {
    * default off for aging/limit reads that only need the final balance.
    */
   includeMovementProjections?: boolean;
+  /**
+   * Include the projector's allocation trace alongside each requested prefix.
+   * Stored aplicaciones_credito rows remain evidence only; this trace is
+   * always produced by projectCreditLedger.
+   */
+  includeAllocationTraces?: boolean;
 };
 
 export type AutomaticFavorCandidate = {
@@ -523,6 +535,8 @@ export function projectCreditLedger(
   const ordered = [...movements].sort((a, b) =>
     a.createdAt.getTime() - b.createdAt.getTime() || a.id - b.id);
   const projection = projectCreditLedgerCore(ordered);
+  const includeAllocationTraces =
+    options.includeAllocationTraces === true;
   const movementProjections = options.includeMovementProjections === true
     ? ordered.some((movement) =>
         movement.tipo === "REVERSO" ||
@@ -534,9 +548,22 @@ export function projectCreditLedger(
             movementId: ordered[index]!.id,
             saldoDeudorProyectadoCents: prefix.balanceCents,
             saldoAFavorProyectadoCents: prefix.overpaymentCents,
+            ...(includeAllocationTraces
+              ? { allocations: prefix.allocations }
+              : {}),
           };
         })
-      : projectSimpleLedgerPrefixes(ordered)
+      : includeAllocationTraces
+        ? ordered.map((_, index) => {
+            const prefix = projectCreditLedgerCore(ordered.slice(0, index + 1));
+            return {
+              movementId: ordered[index]!.id,
+              saldoDeudorProyectadoCents: prefix.balanceCents,
+              saldoAFavorProyectadoCents: prefix.overpaymentCents,
+              allocations: prefix.allocations,
+            };
+          })
+        : projectSimpleLedgerPrefixes(ordered)
     : [];
   return { ...projection, movementProjections };
 }

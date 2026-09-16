@@ -27,6 +27,11 @@ export interface MovimientoRow {
   documentoEtiqueta?: string | null;
   /** @nullable */
   documentoRuta?: string | null;
+  /**
+     * Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.
+     * @nullable
+     */
+  documentoClienteId?: number | null;
   /** @nullable */
   movimientoOrigenId?: number | null;
   usuarioId: number;

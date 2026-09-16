@@ -1,5 +1,7 @@
 import { sql } from "drizzle-orm";
 import { db } from "@workspace/db";
+import { resolveAuditedCreditMovementOwner } from "./auditoria-owner";
+import { resolveKardexDocument } from "./kardex-document";
 
 export const AUDIT_EXPORT_LIMIT = 10_000;
 
@@ -38,6 +40,10 @@ type AuditoriaEntry = {
   sitioId: number | null;
   sitio: string | null;
   ip: string;
+  /** Present only for a verified MOVIMIENTO_CREDITO audit reference. */
+  clienteId?: number | null;
+  /** Shared document route; null means the verified reference is unresolved. */
+  documentoRuta?: string | null;
 };
 type AuditoriaDetail = AuditoriaEntry & {
   datosAntes: Record<string, unknown> | null;
@@ -70,14 +76,20 @@ function whereSql(filters: AuditoriaFilters) {
     : sql``;
 }
 
-export function presentAuditoria(row: Row): AuditoriaEntry;
+export function presentAuditoria(
+  row: Row,
+  detail?: false,
+  ownerClienteId?: number | null,
+): AuditoriaEntry;
 export function presentAuditoria(
   row: Row,
   detail: true,
+  ownerClienteId?: number | null,
 ): AuditoriaDetail;
 export function presentAuditoria(
   row: Row,
   detail = false,
+  ownerClienteId?: number | null,
 ): AuditoriaEntry | AuditoriaDetail {
   const base: AuditoriaEntry = {
     id: String(row.id),
@@ -93,6 +105,19 @@ export function presentAuditoria(
     sitio: row.sitio_snapshot == null ? null : String(row.sitio_snapshot),
     ip: String(row.ip),
   };
+  if (base.entidad === "movimientos_credito") {
+    base.clienteId = ownerClienteId ?? null;
+    base.documentoRuta =
+      ownerClienteId == null
+        ? null
+        : resolveKardexDocument(
+            { tipo: "MOVIMIENTO_CREDITO", id: base.entidadId },
+            new Map(),
+            new Map(),
+            new Map(),
+            new Map([[Number(base.entidadId), { clienteId: ownerClienteId }]]),
+          ).route;
+  }
   if (!detail) return base;
   return {
     ...base,
@@ -107,6 +132,64 @@ const selection = sql`
   a.sitio_snapshot, a.ip, a.datos_antes, a.datos_despues
 `;
 
+type MovementOwnerRow = {
+  id: number | string;
+  clienteId: number | string;
+  tipo: string;
+  importe: number | string;
+  createdAt: Date | string;
+};
+
+async function auditedMovementOwners(rows: readonly Row[]) {
+  const movementIds = rows
+    .filter((row) => String(row.entidad) === "movimientos_credito")
+    .map((row) => {
+      const parsed = Number(row.entidad_id);
+      return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
+    })
+    .filter((id): id is number => id != null);
+  const uniqueIds = [...new Set(movementIds)];
+  const owners = new Map<string, number | null>();
+  if (uniqueIds.length === 0) return owners;
+
+  const movementsResult = await db.execute(sql`
+    SELECT m.id, m.cliente_id AS "clienteId", m.tipo,
+           m.importe::text AS importe, m.created_at AS "createdAt"
+    FROM movimientos_credito m
+    WHERE m.id IN (${sql.join(uniqueIds.map((id) => sql`${id}`), sql`, `)})
+  `);
+  const movements = new Map(
+    (movementsResult.rows as MovementOwnerRow[]).map((movement) => [
+      String(movement.id),
+      movement,
+    ]),
+  );
+  for (const row of rows) {
+    if (String(row.entidad) !== "movimientos_credito") continue;
+    const auditId = String(row.id);
+    const parsedMovementId = Number(row.entidad_id);
+    const movementId =
+      Number.isSafeInteger(parsedMovementId) && parsedMovementId > 0
+        ? parsedMovementId
+        : null;
+    const movement = movementId == null ? null : movements.get(String(movementId));
+    owners.set(
+      auditId,
+      resolveAuditedCreditMovementOwner(
+        {
+          entidad: String(row.entidad),
+          entidadId: row.entidad_id == null ? null : String(row.entidad_id),
+          fecha: String(row.created_at),
+          datosAntes: row.datos_antes,
+          datosDespues: row.datos_despues,
+        },
+        movement ?? null,
+      ),
+    );
+  }
+  return owners;
+}
+
 export async function listAuditoria(
   filters: AuditoriaFilters,
   page: number,
@@ -120,8 +203,9 @@ export async function listAuditoria(
     LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
   `);
   const rows = result.rows as Row[];
+  const owners = await auditedMovementOwners(rows);
   return {
-    items: rows.map((row) => presentAuditoria(row)),
+    items: rows.map((row) => presentAuditoria(row, false, owners.get(String(row.id)))),
     total: Number(rows[0]?.total ?? 0),
     page,
     pageSize,
@@ -135,7 +219,9 @@ export async function getAuditoria(id: string) {
     WHERE a.id = ${id}::bigint LIMIT 1
   `);
   const row = result.rows[0] as Row | undefined;
-  return row ? presentAuditoria(row, true) : null;
+  if (!row) return null;
+  const owners = await auditedMovementOwners([row]);
+  return presentAuditoria(row, true, owners.get(String(row.id)));
 }
 
 export async function exportAuditoriaRows(filters: AuditoriaFilters) {
@@ -150,5 +236,6 @@ export async function exportAuditoriaRows(filters: AuditoriaFilters) {
   if (rows.length > AUDIT_EXPORT_LIMIT) {
     throw new Error("AUDIT_EXPORT_LIMIT");
   }
-  return rows.map((row) => presentAuditoria(row, true));
+  const owners = await auditedMovementOwners(rows);
+  return rows.map((row) => presentAuditoria(row, true, owners.get(String(row.id))));
 }

@@ -66,6 +66,42 @@ const CLASS_B = new Set([
   "existencias",
 ]);
 
+/**
+ * Owner-approved business counter targets. These are table values, not
+ * PostgreSQL sequence values: internal IDs and their sequences are preserved.
+ */
+const APPROVED_COUNTER_TARGETS: Record<string, number> = Object.freeze({
+  entrada_folio: 0,
+  salida_folio: 0,
+  viaje_folio: 0,
+  auditoria_inventario_folio: 0,
+  ticket_folio: 999,
+  series_consecutivo: 1_000_000,
+});
+
+const CUADRE_FISCAL_SCHEMA_DRIFT = {
+  table: "cuadre_fiscal_registros",
+  finding: "LIVE_ABSENT_FROM_DRIZZLE",
+  action: "DO_NOT_CHANGE_SCHEMA",
+  note:
+    "La tabla vive en la base pero no está declarada en Drizzle; se reporta como deriva y no se crea ni se borra del esquema en este bloque.",
+} as const;
+
+const APPEND_ONLY_TRUNCATE_SECURITY_FINDING =
+  "Los guards append-only bloquean DELETE por filas, pero no impiden TRUNCATE a roles privilegiados. Es un hallazgo de seguridad de privilegios de base de datos, no una afirmación de explotación HTTP; la remediación es separada y los triggers quedan intactos.";
+
+const API_POOL_IDENTITY_EVIDENCE = {
+  status: "CONFIRMED_FROM_RUNNING_API_POOL_READ_ONLY",
+  evidencePath: "reports/prompt-h/api-pool-identity-2026-09-15.md",
+  database: "heliumdb",
+  schema: "public",
+  source: "current_database() executed through the API's existing in-process pg pool",
+  publicEndpointExposed: false,
+  apiRestarted: false,
+  authenticationChanged: false,
+  loopbackInspectorClosed: true,
+} as const;
+
 const REASONS: Record<string, string> = {
   productos:
     "C — Catálogo operativo de productos que conserva explícitamente sus colores y atributos.",
@@ -220,6 +256,45 @@ function tableRef(schema: string, table: string): string {
   return `${quoteIdentifier(schema)}.${quoteIdentifier(table)}`;
 }
 
+function counterUpdatesFor(
+  counterDefaults: Array<Record<string, unknown>>,
+): JsonObject[] {
+  return counterDefaults.map((counter) => {
+    const table = String(counter.table);
+    const targetValue = APPROVED_COUNTER_TARGETS[table];
+    return {
+      table,
+      column: String(counter.column),
+      targetValue: targetValue ?? null,
+      reportOnlyProposal: true,
+      ...(targetValue === undefined
+        ? {
+            pendingOwnerDecision:
+              "No hay valor aprobado para este contador; no se generará SQL de mutación.",
+          }
+        : {}),
+    };
+  });
+}
+
+function pendingOperationalFolioSequenceDecisions(
+  sequenceRows: Array<Record<string, unknown>>,
+): JsonObject[] {
+  return sequenceRows
+    .filter((sequence) => String(sequence.ownerColumn ?? "").toLowerCase() === "folio")
+    .map((sequence) => ({
+      sequenceSchema: sequence.sequenceSchema,
+      sequence: sequence.sequence,
+      ownerTable: sequence.ownerTable,
+      ownerColumn: sequence.ownerColumn,
+      decision:
+        String(sequence.sequence) === "contenedores_folio_seq"
+          ? "PENDING exact owner decision: should public.contenedores_folio_seq reset as contenedores business folio, or remain unrestarted to avoid historical folio reuse? Do not reset this sequence in this turn."
+          : "PENDING owner decision: operational folio sequence reset is not authorized in this turn.",
+      resetProposed: false,
+    }));
+}
+
 function mexicoCityTimestamp(date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "America/Mexico_City",
@@ -326,7 +401,8 @@ async function inspectRunningApiProcess(
         presentOverrideKeys.length === inventoryOverrideKeys.length &&
         presentOverrideKeys.every((key) => inventoryOverrideKeys.includes(key)),
       presentTestOverrideKeys: presentOverrideKeys,
-      actualDatabaseIdentityProvenFromApiProcess: false,
+      actualDatabaseIdentityProvenFromApiProcess: true,
+      actualDatabaseIdentityEvidence: API_POOL_IDENTITY_EVIDENCE,
     });
   }
   const staticSourcePath = resolve(repositoryRoot, "artifacts/api-server/src/index.ts");
@@ -346,7 +422,8 @@ async function inspectRunningApiProcess(
         /process\.env(?:\[['"]DATABASE_URL['"]\]|\.DATABASE_URL)\s*=/.test(staticSource),
       distHasDotenvOrLoadEnv: /\bdotenv\b|loadEnv|envFile|dotenv\/config/i.test(distSource),
       note:
-        "The running API process configuration is inspected without printing environment values. Matching DATABASE_URL target metadata does not prove that the API completed a connection to that database.",
+        "The running API process configuration is inspected without printing environment values. Effective API-pool identity is confirmed separately by the read-only in-process evidence cited in apiPoolIdentityEvidence.",
+      apiPoolIdentityEvidence: API_POOL_IDENTITY_EVIDENCE,
     },
   };
 }
@@ -563,9 +640,10 @@ async function main(): Promise<void> {
         file: "lib/db/src/index.ts",
         selection:
           "The API selects DATABASE_URL unless TEST_DATABASE_URL/REQUIRE_ISOLATED_TEST_DATABASE changes selection; this diagnostic refuses those overrides.",
-        actualApiRuntimeIdentityProven: false,
+        actualApiRuntimeIdentityProven: true,
+        identityEvidence: API_POOL_IDENTITY_EVIDENCE,
         distinction:
-          "The direct pg connection is proven below; no API-process current_database() proof was obtained, so API identity is not claimed.",
+          "The direct pg connection is proven below, and the API's effective in-process pool identity is confirmed by the separate read-only evidence cited above.",
       },
     },
   };
@@ -1067,12 +1145,7 @@ async function main(): Promise<void> {
         notNull: row.not_null,
         reportOnlyNoCorrection: true,
       }));
-    const counterUpdates = counterDefaults.map((counter) => ({
-      table: String(counter.table),
-      column: String(counter.column),
-      targetValue: 0,
-      reportOnlyProposal: true,
-    }));
+    const counterUpdates = counterUpdatesFor(counterDefaults);
 
     const initializerSources = sourceMetadata.initializerAndMigrationSources as any;
     const initializerAndMigrationTableNames = [
@@ -1100,36 +1173,38 @@ async function main(): Promise<void> {
     const counterSequenceRows = sequenceRows.filter(
       (sequence) => String(sequence.ownerColumn ?? "").toLowerCase() === "folio",
     );
+    const pendingOperationalFolioSequences =
+      pendingOperationalFolioSequenceDecisions(sequenceRows);
 
     const proposedApproach = truncateAllowedByMetadata
       ? {
           status: "CONDITIONAL_METADATA_ALLOWED_NOT_EXECUTED",
           reason:
-            "No preserved-table or B incoming FK edge to A, and no active TRUNCATE trigger on A, was found in the inspected metadata; this is only a proposed approach and remains pending owner approval.",
+            "No preserved-table or B incoming FK edge to A, and no active TRUNCATE trigger on A, was found in the inspected metadata; this is only a proposed approach and remains pending new textual owner authorization after verified backup and preflight.",
           sql: [
             "BEGIN;",
             "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ WRITE;",
             `TRUNCATE TABLE ${[...candidateATables]
               .sort()
               .map((table) => tableRef("public", table))
-              .join(", ")} RESTRICT;`,
-            ...counterUpdates.map(
-              (counter) =>
-                `UPDATE ${tableRef("public", counter.table)} SET ${quoteIdentifier(counter.column)} = 0;`,
-            ),
-            "await reconstruirCacheExistencias(tx);",
-            ...counterSequenceRows
+              .join(", ")} CONTINUE IDENTITY RESTRICT;`,
+            ...counterUpdates
+              .filter((counter) => typeof counter.targetValue === "number")
               .map(
-                (sequence) =>
-                  `ALTER SEQUENCE ${tableRef(String(sequence.sequenceSchema), String(sequence.sequence))} RESTART WITH 1;`,
+                (counter) =>
+                  `UPDATE ${tableRef("public", String(counter.table))} SET ${quoteIdentifier(String(counter.column))} = ${counter.targetValue};`,
               ),
+            "await reconstruirCacheExistencias(tx);",
             "COMMIT;",
           ].join("\n"),
           warnings: [
             "This SQL is not executed by Block 1.",
-            "A is the only TRUNCATE target; existencias is never truncated.",
-            "The B counter rows are UPDATE ... SET ... = 0; reconstruirCacheExistencias(tx) must receive this same caller-owned transaction.",
-            "ALTER SEQUENCE RESTART is transactional; setval is intentionally not proposed.",
+            "A is the only TRUNCATE target; existencias is never truncated. CONTINUE IDENTITY is explicit; RESTART IDENTITY is prohibited.",
+            "The B counter rows use only the owner-approved targets: four per-site folio tables = 0, ticket_folio = 999, series_consecutivo = 1000000.",
+            "reconstruirCacheExistencias(tx) must receive this same caller-owned transaction.",
+            "No ALTER SEQUENCE, setval, or other sequence reset is proposed; internal IDs and their sequences remain preserved.",
+            "No internal-ID or operational-folio sequence reset is proposed. contenedores_folio_seq remains PENDING because its business-folio semantics require a separate owner decision.",
+            "Any future mutation requires new textual owner authorization after a verified backup and preflight.",
             "Counter defaults are report-only; this proposal does not change defaults.",
           ],
         }
@@ -1199,6 +1274,11 @@ async function main(): Promise<void> {
         liveWithoutStaticInitializerOrMigration,
         liveWithoutStaticSourceButDeclaredInDrizzle,
         liveWithoutAnySchemaOrStaticSource,
+        cuadreFiscalRegistrosDrift:
+          liveTableNameSet.has(CUADRE_FISCAL_SCHEMA_DRIFT.table) &&
+          !schemaTableNameSet.has(CUADRE_FISCAL_SCHEMA_DRIFT.table)
+            ? CUADRE_FISCAL_SCHEMA_DRIFT
+            : null,
         note:
           "Runtime Drizzle metadata was imported from lib/db/src/schema/index.ts without importing lib/db/src/index.ts or initializing a database connection. Initializer/migration CREATE TABLE discovery is static text discovery and does not execute those files.",
       },
@@ -1206,6 +1286,7 @@ async function main(): Promise<void> {
         candidateATruncateTables: [...candidateATables].sort(),
         counterUpdates,
         counterSequenceRows,
+        pendingOperationalFolioSequences,
         appendOnlyDeleteBlockers,
         activeTruncateTriggers,
         cReferencingCandidateTables,
@@ -1218,14 +1299,25 @@ async function main(): Promise<void> {
         cacheRebuildInspection: reportContext.cacheRebuildInspection,
         auditHashRequirement:
           "An exact row-content hash for preserved C, especially auditoria, is not established by this metadata/count-only block; a later approved preflight must define a deterministic hash without exposing raw identities/tokens. The preserved audit table must not be mutated, and any append-only trigger makes DELETE-based cleanup impossible.",
+        securityFinding: APPEND_ONLY_TRUNCATE_SECURITY_FINDING,
       },
+      securityFindings: [
+        {
+          id: "APPEND_ONLY_DELETE_DOES_NOT_GUARD_TRUNCATE",
+          scope: "database privileges",
+          finding: APPEND_ONLY_TRUNCATE_SECURITY_FINDING,
+          remediation: "SEPARATE_REVIEW",
+          triggersUntouched: true,
+          httpExploitAssertion: false,
+        },
+      ],
       approvalGate: {
         pendingOwnerApproval: true,
         block1Only: true,
         block2PlusNotStarted: true,
         authorizationTextRequiredBeforeAnyWrite: true,
         note:
-          "This report proposes classifications only. No backup, restore, purge, sequence reset, trigger change, seed, authentication, branch, restart, or other write was performed.",
+          "This report proposes classifications only. No backup, restore, purge, sequence reset, trigger change, seed, authentication, branch, restart, or other write was performed. Any future mutation is pending new textual owner authorization after a verified backup and preflight.",
       },
       userFacingSummaryPath: relative(repositoryRoot, compactReportPath),
       exactSqlAndOutputs: queryRecords,
@@ -1337,16 +1429,13 @@ function refineFeasibilityFromExistingReport(report: any): void {
     })),
   ];
   const counterDefaults = report.inventory?.counterDefaults ?? [];
-  const counterUpdates = counterDefaults.map((counter: any) => ({
-    table: String(counter.table),
-    column: String(counter.column),
-    targetValue: 0,
-    reportOnlyProposal: true,
-  }));
+  const counterUpdates = counterUpdatesFor(counterDefaults);
   const sequenceRows = report.inventory?.sequencesSeparately ?? [];
   const counterSequenceRows = sequenceRows.filter(
     (sequence: any) => String(sequence.ownerColumn ?? "").toLowerCase() === "folio",
   );
+  const pendingOperationalFolioSequences =
+    pendingOperationalFolioSequenceDecisions(sequenceRows);
   const truncateAllowedByMetadata =
     activeTruncateTriggers.length === 0 &&
     (incomingFkClosureForA.outsideRootTables as string[]).length === 0;
@@ -1354,31 +1443,31 @@ function refineFeasibilityFromExistingReport(report: any): void {
     ? {
         status: "CONDITIONAL_METADATA_ALLOWED_NOT_EXECUTED",
         reason:
-          "No hay FK entrante desde B/C hacia A ni trigger activo de TRUNCATE sobre A; la estrategia propuesta trunca solo A, actualiza contadores B a 0 y reconstruye existencias con la transacción recibida.",
+          "No hay FK entrante desde B/C hacia A ni trigger activo de TRUNCATE sobre A; la estrategia propuesta trunca solo A, aplica los objetivos B aprobados y reconstruye existencias con la transacción recibida. Sigue pendiente de nueva autorización textual después de respaldo verificado y preflight.",
         sql: [
           "BEGIN;",
           "SET TRANSACTION ISOLATION LEVEL REPEATABLE READ, READ WRITE;",
           `TRUNCATE TABLE ${[...aTables]
             .sort()
             .map((table) => tableRef("public", table))
-            .join(", ")} RESTRICT;`,
-          ...counterUpdates.map(
-            (counter: any) =>
-              `UPDATE ${tableRef("public", counter.table)} SET ${quoteIdentifier(counter.column)} = 0;`,
-          ),
+            .join(", ")} CONTINUE IDENTITY RESTRICT;`,
+          ...counterUpdates
+            .filter((counter: any) => typeof counter.targetValue === "number")
+            .map(
+              (counter: any) =>
+                `UPDATE ${tableRef("public", String(counter.table))} SET ${quoteIdentifier(String(counter.column))} = ${counter.targetValue};`,
+            ),
           "await reconstruirCacheExistencias(tx);",
-          ...counterSequenceRows.map(
-            (sequence: any) =>
-              `ALTER SEQUENCE ${tableRef(String(sequence.sequenceSchema), String(sequence.sequence))} RESTART WITH 1;`,
-          ),
           "COMMIT;",
         ].join("\n"),
         warnings: [
           "No se ejecuta en Bloque 1.",
-          "A es el único objetivo de TRUNCATE; existencias nunca se trunca.",
+          "A es el único objetivo de TRUNCATE; existencias nunca se trunca. CONTINUE IDENTITY es explícito; RESTART IDENTITY está prohibido.",
           "reconstruirCacheExistencias(tx) debe recibir exactamente esta transacción; no abre otra.",
-          "Los contadores B usan UPDATE ... = 0; los defaults se reportan y no se corrigen.",
-          "ALTER SEQUENCE RESTART es transaccional; no se propone setval.",
+          "Los contadores B usan únicamente los objetivos aprobados: cuatro folios por sitio = 0, ticket_folio = 999 y series_consecutivo = 1000000; los defaults se reportan y no se corrigen.",
+          "No se propone ALTER SEQUENCE, setval ni ningún reset de secuencia; los IDs internos y sus secuencias se conservan.",
+          "contenedores_folio_seq queda PENDING por su semántica de folio de negocio ambigua; no se reinicia en este turno.",
+          "Cualquier mutación futura queda pendiente de nueva autorización textual del propietario después de respaldo verificado y preflight.",
         ],
       }
     : {
@@ -1391,11 +1480,24 @@ function refineFeasibilityFromExistingReport(report: any): void {
     const obsoleteCandidateField = ["candidate", "PurgeTables"].join("");
     delete report.feasibility[obsoleteCandidateField];
   }
+  const liveOnlyTables = (report.schemaComparison?.liveOnlyTables ?? []).map(String);
+  const drizzleRuntimeTables = (
+    report.schemaComparison?.drizzleRuntimeTables ?? []
+  ).map((table: any) => String(table.tableName));
+  report.schemaComparison = {
+    ...report.schemaComparison,
+    cuadreFiscalRegistrosDrift:
+      liveOnlyTables.includes(CUADRE_FISCAL_SCHEMA_DRIFT.table) &&
+      !drizzleRuntimeTables.includes(CUADRE_FISCAL_SCHEMA_DRIFT.table)
+        ? CUADRE_FISCAL_SCHEMA_DRIFT
+        : null,
+  };
   report.feasibility = {
     ...report.feasibility,
     candidateATruncateTables: [...aTables].sort(),
     counterUpdates,
     counterSequenceRows,
+    pendingOperationalFolioSequences,
     appendOnlyDeleteBlockers,
     activeTruncateTriggers,
     cReferencingCandidateTables,
@@ -1409,7 +1511,18 @@ function refineFeasibilityFromExistingReport(report: any): void {
       report.cacheRebuildInspection ?? (awaitableCacheInspectionPlaceholder() as any),
     auditHashRequirement:
       "El hash exacto de filas C, incluida auditoria, no se establece en este bloque de metadata/conteos; un preflight aprobado debe definirlo sin exponer identidades/tokens. auditoria no se muta.",
+    securityFinding: APPEND_ONLY_TRUNCATE_SECURITY_FINDING,
   };
+  report.securityFindings = [
+    {
+      id: "APPEND_ONLY_DELETE_DOES_NOT_GUARD_TRUNCATE",
+      scope: "database privileges",
+      finding: APPEND_ONLY_TRUNCATE_SECURITY_FINDING,
+      remediation: "SEPARATE_REVIEW",
+      triggersUntouched: true,
+      httpExploitAssertion: false,
+    },
+  ];
 }
 
 function awaitableCacheInspectionPlaceholder(): JsonObject {
@@ -1454,11 +1567,16 @@ function renderCompactSpanishReport(report: any): string {
       "- No se expusieron valores de entorno, credenciales ni URLs; solo presencia, coincidencia booleana y destino no secreto.",
     );
     lines.push(
-      "- El destino queda **no confirmado a nivel de conexión efectiva de la API**: el proceso y la fuente coinciden en configuración, pero no se obtuvo `current_database()` desde ese proceso.",
+      `- Identidad efectiva **CONFIRMADA** desde el pool en proceso de la API: \`${API_POOL_IDENTITY_EVIDENCE.database}/${API_POOL_IDENTITY_EVIDENCE.schema}\`; evidencia de solo lectura: \`${API_POOL_IDENTITY_EVIDENCE.evidencePath}\`.`,
     );
   } else {
-    lines.push("- No se identificó un proceso API `dist/index.mjs`; el destino queda no confirmado.");
+    lines.push(
+      `- Identidad efectiva **CONFIRMADA** por evidencia previa del pool en proceso: \`${API_POOL_IDENTITY_EVIDENCE.database}/${API_POOL_IDENTITY_EVIDENCE.schema}\`; \`${API_POOL_IDENTITY_EVIDENCE.evidencePath}\`.`,
+    );
   }
+  lines.push(
+    "- La confirmación no abrió endpoint público, no reinició la API, no cambió autenticación/entorno y dejó cerrado el inspector de loopback.",
+  );
   lines.push(
     `- Inspección de arranque: source importa @workspace/db=${api?.startupInspection?.sourceImportsWorkspaceDb}; dotenv/loadEnv en source=${api?.startupInspection?.sourceHasDotenvOrLoadEnv}; asignación DATABASE_URL en source=${api?.startupInspection?.sourceAssignsDatabaseUrl}; dotenv/loadEnv en dist=${api?.startupInspection?.distHasDotenvOrLoadEnv}.`,
   );
@@ -1466,14 +1584,17 @@ function renderCompactSpanishReport(report: any): string {
   lines.push("## Totales y diferencias");
   lines.push("");
   lines.push(
-    `- Tablas vivas ordinarias/particionadas: **${inventory.liveOrdinaryAndPartitionTableCount}**; Drizzle runtime: **${report.schemaComparison.drizzleRuntimeTableCount}**. Diferencia: \`${report.schemaComparison.liveOnlyTables.join(", ") || "ninguna"}\` (cuadre_fiscal_registros).`,
+    `- Tablas vivas ordinarias/particionadas: **${inventory.liveOrdinaryAndPartitionTableCount}**; Drizzle runtime: **${report.schemaComparison.drizzleRuntimeTableCount}**. Diferencia viva/no declarada: \`${report.schemaComparison.liveOnlyTables.join(", ") || "ninguna"}\`.`,
   );
   lines.push(
     `- ABC: A=${classification.counts.A}, B=${classification.counts.B}, C=${classification.counts.C}; suma=${classification.sum} y coincide=${classification.equalsLiveTableCount}.`,
   );
   lines.push(
+    `- Deriva de esquema: \`cuadre_fiscal_registros\` está viva y ausente de Drizzle=${Boolean(report.schemaComparison.cuadreFiscalRegistrosDrift)}; se reporta solamente, sin crearla ni borrarla del esquema.`,
+  );
+  lines.push(
     "- Las secuencias se listan aparte y no suman al total de tablas; hay " +
-      `${inventory.sequencesSeparately.length}. Triggers no internos vivos: ${inventory.nonInternalTriggersAndFunctionSource.length} (no 11).`,
+      `${inventory.sequencesSeparately.length}. Triggers no internos vivos: ${inventory.nonInternalTriggersAndFunctionSource.length} (conteo actual; el 11 es histórico).`,
   );
   lines.push(
     `- Mismatches: columnas/tablas=${report.schemaComparison.schemaColumnMismatches.length}; conteos FK=${report.schemaComparison.liveForeignKeyCountMismatches.length}.`,
@@ -1504,6 +1625,9 @@ function renderCompactSpanishReport(report: any): string {
     `- DELETE bloqueado por triggers append-only/inmutables activos: ${report.feasibility.appendOnlyDeleteBlockers.length}; triggers activos de TRUNCATE sobre A: ${report.feasibility.activeTruncateTriggers.length}.`,
   );
   lines.push(
+    `- Hallazgo de seguridad (remediación separada; triggers intactos): ${APPEND_ONLY_TRUNCATE_SECURITY_FINDING}`,
+  );
+  lines.push(
     `- FK entrantes desde B/C hacia A: ${report.feasibility.outsideCandidateReferencingCandidate.length}; FK entrantes específicamente desde C: ${report.feasibility.cReferencingCandidateTables.length}.`,
   );
   lines.push(
@@ -1513,10 +1637,10 @@ function renderCompactSpanishReport(report: any): string {
   lines.push("## Estrategia propuesta, sin ejecutar");
   lines.push("");
   lines.push(
-    `- Permitida por metadata para revisión: ${report.feasibility.truncateAllowedByMetadata}. Solo **TRUNCATE A RESTRICT**; B nunca es objetivo de TRUNCATE.`,
+    `- Permitida por metadata para revisión: ${report.feasibility.truncateAllowedByMetadata}. Solo **TRUNCATE A CONTINUE IDENTITY RESTRICT**; B nunca es objetivo de TRUNCATE.`,
   );
   lines.push(
-    "- B contadores: `UPDATE ... SET ultimo_folio/ultimo_numero = 0`; `existencias` no se trunca.",
+    "- B contadores (propuesta report-only): `entrada_folio`, `salida_folio`, `viaje_folio` y `auditoria_inventario_folio` → 0; `ticket_folio` → 999; `series_consecutivo` → 1000000. `existencias` no se trunca.",
   );
   lines.push(
     "- Luego, dentro de la misma transacción propietaria: `await reconstruirCacheExistencias(tx)`. La función acepta la transacción, bloquea pares, lee `existencias`/`movimientos`/`rollos`, actualiza por `ON CONFLICT`, y no escribe configuración C.",
@@ -1525,10 +1649,13 @@ function renderCompactSpanishReport(report: any): string {
     `- Inspección estática de caché: ${report.cacheRebuildInspection.sourceFile}:${report.cacheRebuildInspection.sourceLineStart}-${report.cacheRebuildInspection.sourceLineEnd}; acepta tx=${report.cacheRebuildInspection.acceptsCallerTransaction}, usa tx recibida=${report.cacheRebuildInspection.usesCallerTransactionWhenSupplied}, contiene DELETE/TRUNCATE=${report.cacheRebuildInspection.containsDeleteOrTruncate}.`,
   );
   lines.push(
-    `- Secuencias operativas candidatas: ${report.feasibility.counterSequenceRows.map((row: any) => row.sequence).join(", ") || "ninguna"}; se propone únicamente ALTER SEQUENCE ... RESTART, nunca setval.`,
+    `- Secuencias de folio detectadas: ${report.feasibility.counterSequenceRows.map((row: any) => row.sequence).join(", ") || "ninguna"}; no se reinicia ninguna secuencia. Pendiente explícito: ${report.feasibility.pendingOperationalFolioSequences?.map((row: any) => row.sequence).join(", ") || "ninguna"}.`,
   );
   lines.push(
     `- Hash exacto de C/auditoria: pendiente del preflight aprobado; este bloque solo tiene metadata/conteos y no expone filas.`,
+  );
+  lines.push(
+    "- Toda mutación futura queda PENDIENTE de nueva autorización textual del propietario después de respaldo verificado y preflight; esta aprobación de listas no autoriza ejecutar.",
   );
   lines.push("");
   lines.push("## Evidencia y puerta de aprobación");
@@ -1554,16 +1681,19 @@ async function refineExistingReport(): Promise<void> {
   report.apiProcessInspection = apiProcessInspection;
   report.cacheRebuildInspection = cacheRebuildInspection;
   refineFeasibilityFromExistingReport(report);
-  report.status = "COMPLETE_READ_ONLY_REFINED_NO_DB_CAPTURE";
+  report.status = "COMPLETE_READ_ONLY_REFINED_HISTORICAL_CONFIG_ONLY";
   report.refinement = {
     mode: "offline refinement from existing captured evidence",
     databaseCaptureRerun: false,
     changedInputs: [
       "revisión de proceso API dist/index.mjs y su entorno por presencia/coincidencia booleana",
+      "evidencia separada de identidad efectiva del pool API: reports/prompt-h/api-pool-identity-2026-09-15.md",
       "inspección estática de reconstruirCacheExistencias(tx)",
       "cierre FK recalculado para TRUNCATE A solamente",
     ],
     secretsPrintedOrStored: false,
+    identityStatus:
+      "La captura config-only del Bloque 1 es histórica; la identidad efectiva actual quedó confirmada por el pool en proceso y ya no es un bloqueo.",
   };
   report.userFacingSummaryPath = relative(repositoryRoot, compactReportPath);
   await mkdir(reportDirectory, { recursive: true });
@@ -1592,7 +1722,10 @@ function renderMarkdown(report: any): string {
     "- Source selection: `lib/db/src/index.ts` selects `DATABASE_URL` for a normal process; test override keys were checked and none were present.",
   );
   lines.push(
-    `- API process inspection: ${JSON.stringify(report.apiProcessInspection ?? { inspected: false })}; only non-secret presence/match booleans are recorded, and API \`current_database()\` is not proven.`,
+    `- API process inspection: ${JSON.stringify(report.apiProcessInspection ?? { inspected: false })}; effective pool identity is confirmed by read-only evidence \`${API_POOL_IDENTITY_EVIDENCE.evidencePath}\` as ${API_POOL_IDENTITY_EVIDENCE.database}/${API_POOL_IDENTITY_EVIDENCE.schema}.`,
+  );
+  lines.push(
+    "- Identity confirmation used the existing in-process pool without a public endpoint or restart; authentication/environment were unchanged and the loopback inspector was closed.",
   );
   lines.push("");
   lines.push("## Live table inventory and classification");
@@ -1628,6 +1761,9 @@ function renderMarkdown(report: any): string {
   lines.push("");
   lines.push(`- Drizzle runtime table count: **${report.schemaComparison.drizzleRuntimeTableCount}**.`);
   lines.push(`- Live-only tables: ${report.schemaComparison.liveOnlyTables.join(", ") || "none"}.`);
+  lines.push(
+    `- Schema drift finding: ${report.schemaComparison.cuadreFiscalRegistrosDrift ? "`cuadre_fiscal_registros` is live but absent from Drizzle; report only, do not change schema." : "none"}.`,
+  );
   lines.push(`- Schema-only tables: ${report.schemaComparison.schemaOnlyTables.join(", ") || "none"}.`);
   lines.push(
     `- Column mismatches: ${report.schemaComparison.schemaColumnMismatches.length}; foreign-key count mismatches: ${report.schemaComparison.liveForeignKeyCountMismatches.length}.`,
@@ -1670,7 +1806,13 @@ function renderMarkdown(report: any): string {
     `- Proposed approach status: **${report.feasibility.proposedApproach.status}** — ${report.feasibility.proposedApproach.reason}`,
   );
   lines.push(
-    "- No DELETE, TRUNCATE, ALTER SEQUENCE, trigger change, UPDATE, INSERT, trial write, or rollback-only write was executed. The proposal truncates only A, updates B counters to 0, and calls `reconstruirCacheExistencias(tx)` for existencias.",
+    "- No DELETE, TRUNCATE, ALTER SEQUENCE, trigger change, UPDATE, INSERT, trial write, or rollback-only write was executed. The report-only proposal truncates only A, applies the owner-approved B counter targets, and calls `reconstruirCacheExistencias(tx)` for existencias.",
+  );
+  lines.push(
+    `- Security finding (separate remediation; triggers untouched): ${APPEND_ONLY_TRUNCATE_SECURITY_FINDING}`,
+  );
+  lines.push(
+    `- Operational folio sequence decision: ${report.feasibility.pendingOperationalFolioSequences?.map((row: any) => `${row.sequence}: ${row.decision}`).join(" | ") || "none detected"}. No sequence reset is proposed.`,
   );
   lines.push(
     `- Audit exact-hash caveat: ${report.feasibility.auditHashRequirement}`,
@@ -1679,7 +1821,7 @@ function renderMarkdown(report: any): string {
   lines.push("## Approval gate");
   lines.push("");
   lines.push(
-    "**PENDING EXPLICIT OWNER APPROVAL.** This is Block 1 only; Block 2 and later are not started. The three lists must be reviewed and approved before preflight/purge. The requested backup is separate and has not been made; authorization text must be saved in `reports/` before the first purge write.",
+    "**PENDING EXPLICIT OWNER APPROVAL FOR ANY MUTATION.** This is Block 1 only; Block 2 and later are not started. The three live lists may be approved independently, but any future mutation requires new textual owner authorization after a verified backup and preflight. No backup is represented as verified by this report.",
   );
   lines.push("");
   lines.push("## Exact SQL and outputs");

@@ -117,4 +117,24 @@ describe("Cuentas Destino Contract", () => {
     assert.doesNotMatch(detail, /\/clientes\/\$\{movement\.clienteId\}\?tab=estado&movimientoId=/);
   });
 
+  it("keeps destination comparison links scoped to the previous period", () => {
+    const summary = readPage("./cuentas-destino.tsx");
+    for (const destination of ["CAJA_FISICA", "CUENTA_NO_FISCAL", "CUENTA_FISCAL"]) {
+      assert.match(
+        summary,
+        new RegExp(
+          `previousHref(?:EF|NF|F)[\\s\\S]*detailHref\\((?:"${destination}"|row(?:NF|F)\\.cuentaDestino), \\[\\], \\{[\\s\\S]*compare: null,[\\s\\S]*preset: "custom"`,
+        ),
+      );
+    }
+    assert.match(
+      summary,
+      /href=\{previousHref\}[\s\S]*formatNumber\(importeAnterior,[\s\S]*kind: "money"/,
+    );
+    assert.match(
+      summary,
+      /href=\{currentHref\}[\s\S]*\{renderVariation\(variation\)\}/,
+    );
+  });
+
 });

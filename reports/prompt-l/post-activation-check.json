@@ -1,0 +1,158 @@
+{
+  "report": "prompt-l/post-activation-check",
+  "status": "PASS_READONLY_POST_ACTIVATION",
+  "observedAtUtc": "2026-09-16T05:15:29.746Z",
+  "source": {
+    "database": "heliumdb",
+    "schema": "public",
+    "connectionVariable": "DATABASE_URL",
+    "credentialsOmitted": true,
+    "transaction": "REPEATABLE READ READ ONLY",
+    "writesExecuted": false,
+    "initializationExecuted": false,
+    "authenticationExecuted": false
+  },
+  "identity": {
+    "database_name": "heliumdb",
+    "schema_name": "public",
+    "server_version": "16.10",
+    "transaction_isolation": "repeatable read",
+    "transaction_read_only": "on"
+  },
+  "activation": {
+    "committedReport": "reports/prompt-l/counter-update.json",
+    "committedStatus": "COMMITTED",
+    "changedTable": "series_consecutivo",
+    "changedRows": 1,
+    "operatorReportedSourceBefore": "rollos=0; assignedSeries=0; series_consecutivo id=1 ultimo_numero=1000000",
+    "operatorReportedApiLifecycle": "old/orphan PIDs stopped gracefully; both managed workflows restarted once successfully",
+    "apiRestartedByThisCheck": false
+  },
+  "seriesControl": {
+    "rows": [
+      {
+        "id": "1",
+        "ultimo_numero": "10000000"
+      }
+    ],
+    "expected": {
+      "id": "1",
+      "ultimo_numero": "10000000"
+    },
+    "pass": true
+  },
+  "rollos": {
+    "counts": {
+      "total_count": "0",
+      "assigned_series": "0",
+      "null_or_empty_series": "0",
+      "distinct_assigned_series": "0"
+    },
+    "newActivityDetected": false,
+    "dataPreservedWithoutReset": true,
+    "pass": true,
+    "note": "No current rollos; no reset was attempted."
+  },
+  "otherFolios": {
+    "tables": {
+      "entrada_folio": {
+        "row_count": "11",
+        "min_ultimo_folio": "0",
+        "max_ultimo_folio": "0",
+        "zero_rows": "11"
+      },
+      "salida_folio": {
+        "row_count": "11",
+        "min_ultimo_folio": "0",
+        "max_ultimo_folio": "0",
+        "zero_rows": "11"
+      },
+      "viaje_folio": {
+        "row_count": "11",
+        "min_ultimo_folio": "0",
+        "max_ultimo_folio": "0",
+        "zero_rows": "11"
+      },
+      "auditoria_inventario_folio": {
+        "row_count": "11",
+        "min_ultimo_folio": "0",
+        "max_ultimo_folio": "0",
+        "zero_rows": "11"
+      }
+    },
+    "expectedValue": "0",
+    "pass": true
+  },
+  "ticketFolio": {
+    "row": {
+      "row_count": "1",
+      "min_ultimo_folio": "999",
+      "max_ultimo_folio": "999",
+      "n999_rows": "1"
+    },
+    "expectedValue": "999",
+    "pass": true
+  },
+  "protectedCatalogs": {
+    "productos": {
+      "count": "1234",
+      "ordered_canonical_row_hash": "9b5a7bfb4133c1c700f9d242628c0c46",
+      "expectedCount": "1234",
+      "expectedHash": "9b5a7bfb4133c1c700f9d242628c0c46"
+    },
+    "precio_historial": {
+      "count": "1016",
+      "ordered_canonical_row_hash": "64f5ec3242e70cdfe37e1a242c26b506",
+      "expectedCount": "1016",
+      "expectedHash": "64f5ec3242e70cdfe37e1a242c26b506"
+    },
+    "pass": true
+  },
+  "physicalDefault": {
+    "observed": "1000000",
+    "expected": "1000000",
+    "unchanged": true
+  },
+  "builtApiBundle": {
+    "path": "artifacts/api-server/dist/index.mjs",
+    "sha256": "2109d662274ce15fda1c54afac08dba22e311d08804212f83ca8df5bd9088022",
+    "staticInspectionOnly": true,
+    "appImportedOrStarted": false,
+    "checks": {
+      "eightDigitParser": true,
+      "explicitEightDigitSeed": true,
+      "maxEightDigitGuard": true,
+      "exhaustionDomainError": true
+    }
+  },
+  "retainedEvidence": {
+    "parserTests": "16/16 PASS",
+    "reserveSeriesMockTests": "3/3 PASS",
+    "apiScanContracts": "3/3 PASS",
+    "frontendContracts": "8/8 PASS",
+    "codegenTrackedPaths": 734,
+    "codegenDiffs": 0,
+    "typecheckFinal": "reports/prompt-l/typecheck-final.txt; PASS; 0 diagnostics",
+    "noRealRollosCreatedByTests": true,
+    "physicalLabelGate": "catalog 1234/1234, QR 1234/1234, zero introduced eight-digit overflow; one pre-existing AutoFit warning CAMFLOMAR-AMA (text 353px vs usable 345.72px at minimum 14px), full text present",
+    "physicalLabelReadPending": true,
+    "labelCatalogNotRerunThisSubturn": true
+  },
+  "historicalBoundaries": {
+    "physicalDefaultRemains": "1000000",
+    "drizzleAndExplicitReserveSeed": "10000000",
+    "firstGeneratedSeries": "10000001",
+    "maximumSeries": "99999999",
+    "capacity": "89999999",
+    "approximateDuration": "90 million / about 300 years at current rate",
+    "promptHSevenDigitCounter": "1000000 retained as historical evidence only; not a current generation rule",
+    "promptHBackupsUntouched": true,
+    "normalStartupWritesAuthorizedDocument": "reports/prompt-l/autorizacion-arranque.md"
+  },
+  "boundaries": {
+    "noTestsRepeated": true,
+    "noPublishAttempted": true,
+    "noSuggestions": true,
+    "noApiPauseOrRestartAttempted": true
+  }
+}

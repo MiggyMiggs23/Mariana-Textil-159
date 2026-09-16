@@ -279,7 +279,7 @@ await test("E-03: Rollback → no quema series ni deja filas", async () => {
     .from(seriesConsecutivoTable)
     .where(eq(seriesConsecutivoTable.id, 1))
     .limit(1);
-  const serieAntes = before?.ultimoNumero ?? 1000000;
+  const serieAntes = before?.ultimoNumero ?? 10000000;
 
   const [folioBeforeRow] = await db.execute(
     sql`SELECT ultimo_folio FROM entrada_folio WHERE ubicacion_id = ${ubicacionId}`,
@@ -309,7 +309,7 @@ await test("E-03: Rollback → no quema series ni deja filas", async () => {
     .from(seriesConsecutivoTable)
     .where(eq(seriesConsecutivoTable.id, 1))
     .limit(1);
-  const serieDespues = after?.ultimoNumero ?? 1000000;
+  const serieDespues = after?.ultimoNumero ?? 10000000;
   assert.equal(
     serieDespues,
     serieAntes,

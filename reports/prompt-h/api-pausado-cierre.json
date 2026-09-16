@@ -1,0 +1,9 @@
+{
+  "observedAt": "2026-09-16T03:49:25.427Z",
+  "command": "pnpm --filter @workspace/api-server run dev",
+  "name": "artifacts/api-server: API Server",
+  "openPorts": null,
+  "output": "",
+  "state": "finished",
+  "waitForPort": 8080
+}

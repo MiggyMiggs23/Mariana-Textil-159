@@ -1,0 +1,44 @@
+{
+  "apiPaused": true,
+  "downloadedBytes": 440802,
+  "downloadedPath": ".local/backups/prompt-h-block2-20260915213056-6573/prompt-h-block2-20260915213056-6573.dump.drive-verified",
+  "downloadedSha256": "4a5deaa825127629e26c3989ea76dab8800748dc177cb4fc7e6eebedf74489a6",
+  "file": {
+    "id": "1ABt2lfoEXzulR7_4MJqudfgJNtFjthpK",
+    "name": "Mariana-Textil-API-pausado-2026-09-15-213056.dump",
+    "parents": [
+      "1tnAVn0P5aW-jfMJEa0Z9P8clH4pz5dSj"
+    ],
+    "permissions": [
+      {
+        "id": "02938770931288994627",
+        "role": "owner",
+        "type": "user"
+      }
+    ],
+    "shared": false,
+    "size": "440802",
+    "trashed": false,
+    "webViewLink": "https://drive.google.com/file/d/1ABt2lfoEXzulR7_4MJqudfgJNtFjthpK/view?usp=drivesdk"
+  },
+  "folder": {
+    "id": "1tnAVn0P5aW-jfMJEa0Z9P8clH4pz5dSj",
+    "name": "2026-09-08_respaldo_previo_inicializadores_salida_id_codigo_y_development",
+    "permissions": [
+      {
+        "id": "02938770931288994627",
+        "role": "owner",
+        "type": "user"
+      }
+    ],
+    "shared": false,
+    "trashed": false
+  },
+  "hashesMatch": true,
+  "localPath": ".local/backups/prompt-h-block2-20260915213056-6573/prompt-h-block2-20260915213056-6573.dump",
+  "privatePermissionsVerified": true,
+  "sourceBytes": 440802,
+  "sourceSha256": "4a5deaa825127629e26c3989ea76dab8800748dc177cb4fc7e6eebedf74489a6",
+  "status": "PASS",
+  "verifiedAtMexico": "martes, 15 de septiembre de 2026, 9:32:49 p.m. GMT-6"
+}

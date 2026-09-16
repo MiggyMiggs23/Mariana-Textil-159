@@ -3754,6 +3754,7 @@ export const ActivarRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -3908,6 +3909,7 @@ export const RevertSalidaExtraordinariaResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -3969,6 +3971,7 @@ export const VenderRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -4035,6 +4038,7 @@ export const AjustarRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -4097,6 +4101,7 @@ export const RevertirMovimientoResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -4153,6 +4158,7 @@ export const GetRolloResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -4559,6 +4565,7 @@ export const ListAjustesPendientesResponseItem = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -4594,6 +4601,7 @@ export const RevisarAjusteResponse = zod.object({
   "documentoId": zod.string().nullish(),
   "documentoEtiqueta": zod.string().nullish(),
   "documentoRuta": zod.string().nullish(),
+  "documentoClienteId": zod.number().nullish().describe('Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.'),
   "movimientoOrigenId": zod.number().nullish(),
   "usuarioId": zod.number(),
   "motivoSalidaExtraordinaria": zod.union([zod.enum(['MERMA', 'ROBO', 'MUESTRA']),zod.null()]),
@@ -5401,7 +5409,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
 
 
 /**
- * @summary Detalle de las notas liquidadas por un abono
+ * @summary Detalle de un movimiento de crédito (lectura)
  */
 export const GetClientePagoDetalleParams = zod.object({
   "id": zod.coerce.number(),
@@ -5429,7 +5437,43 @@ export const GetClientePagoDetalleResponse = zod.object({
   "saldoActual": zod.string(),
   "resultado": zod.enum(['PENDIENTE', 'PARCIAL', 'PAGADA']),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO'])
-}))
+})).describe('Evidencia histórica de aplicaciones; no sustituye la proyección del servidor.'),
+  "clienteNombre": zod.string().optional().describe('Nombre del cliente al que pertenece el movimiento.'),
+  "tipo": zod.enum(['ABONO', 'REVERSO', 'AJUSTE']).optional(),
+  "importe": zod.string().optional().describe('Importe firmado del movimiento.'),
+  "fechaEfectiva": zod.coerce.date().optional(),
+  "fechaCaptura": zod.coerce.date().nullish().describe('Instante de captura comprobado en auditoría; null si no existe evidencia suficiente.'),
+  "usuarioCaptura": zod.string().nullish(),
+  "notas": zod.string().nullish(),
+  "ticketId": zod.number().nullish(),
+  "ticketFolio": zod.number().nullish(),
+  "movimientoOriginalId": zod.number().nullish(),
+  "reparto": zod.array(zod.object({
+  "ticketId": zod.number().nullable(),
+  "folio": zod.number().nullable(),
+  "movimientoVentaId": zod.number(),
+  "importeAplicado": zod.string(),
+  "saldoAntes": zod.string().nullable().describe('Saldo proyectado antes de una aplicación vigente; for inactive historical evidence it is null when that before-state was not retained and must not be replaced with the current balance.'),
+  "saldoDespues": zod.string().nullable().describe('Saldo proyectado después de una aplicación vigente; for inactive historical evidence it is null when that after-state was not retained and must not be replaced with the current balance.'),
+  "vigente": zod.boolean().describe('Indica si la aplicación sigue activa en la proyección actual.')
+})).optional().describe('Aplicaciones proyectadas del ABONO. Se omite para REVERSO y AJUSTE.'),
+  "saldoAFavor": zod.string().nullish().describe('Saldo a favor proyectado del ABONO; se omite para REVERSO y AJUSTE.'),
+  "aplicacionesRevertidas": zod.array(zod.object({
+  "ticketId": zod.number().nullable(),
+  "folio": zod.number().nullable(),
+  "movimientoVentaId": zod.number(),
+  "importeAplicado": zod.string(),
+  "saldoAntes": zod.string().nullable().describe('Saldo proyectado antes de una aplicación vigente; for inactive historical evidence it is null when that before-state was not retained and must not be replaced with the current balance.'),
+  "saldoDespues": zod.string().nullable().describe('Saldo proyectado después de una aplicación vigente; for inactive historical evidence it is null when that after-state was not retained and must not be replaced with the current balance.'),
+  "vigente": zod.boolean().describe('Indica si la aplicación sigue activa en la proyección actual.')
+})).optional().describe('Aplicaciones históricas que cesaron por este REVERSO; no es el reparto propio del reverso. An empty array means no immutable application row was retained for the original payment. When before\/after evidence was not retained, those fields are null rather than current projected balances.'),
+  "auditoria": zod.array(zod.object({
+  "id": zod.number(),
+  "accion": zod.string(),
+  "fecha": zod.coerce.date(),
+  "usuario": zod.string().nullable(),
+  "motivo": zod.string().nullable()
+})).optional().describe('Metadatos de auditoría comprobados, sin datos sensibles.')
 })
 
 
@@ -10789,6 +10833,7 @@ export const ListAuditoriaResponse = zod.object({
   "modulo": zod.string().nullable(),
   "entidad": zod.string(),
   "entidadId": zod.string().nullable(),
+  "clienteId": zod.number().nullish().describe('Owner client ID only when entidad is movimientos_credito and the live movement matches the complete stored audit identity; null means unresolved.'),
   "sitioId": zod.number().nullable(),
   "sitio": zod.string().nullable(),
   "ip": zod.string()
@@ -10848,6 +10893,7 @@ export const GetAuditoriaResponse = zod.object({
   "modulo": zod.string().nullable(),
   "entidad": zod.string(),
   "entidadId": zod.string().nullable(),
+  "clienteId": zod.number().nullish().describe('Owner client ID only when entidad is movimientos_credito and the live movement matches the complete stored audit identity; null means unresolved.'),
   "sitioId": zod.number().nullable(),
   "sitio": zod.string().nullable(),
   "ip": zod.string()

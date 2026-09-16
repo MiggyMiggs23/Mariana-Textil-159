@@ -110,6 +110,39 @@ function StatementNoteState({ movement }: { movement: StatementRow }) {
   );
 }
 
+const movementDetailTypes = new Set(["ABONO", "REVERSO", "AJUSTE"]);
+
+function getMovementDetailHref(clienteId: number, movement: StatementRow) {
+  return movementDetailTypes.has(movement.tipo ?? "") && movement.movimientoId != null
+    ? `/clientes/${clienteId}/movimientos/${movement.movimientoId}`
+    : null;
+}
+
+function getMovementDetailLabel(movement: StatementRow) {
+  return `${movement.tipo ?? "Movimiento"} · Movimiento #${movement.movimientoId}`;
+}
+
+function StatementMovementLink({
+  clienteId,
+  movement,
+}: {
+  clienteId: number;
+  movement: StatementRow;
+}) {
+  const href = getMovementDetailHref(clienteId, movement);
+  if (!href) return formatNumber(movement.ticketFolio, { kind: "identifier" });
+
+  return (
+    <Link
+      href={href}
+      className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      aria-label={`Abrir ${getMovementDetailLabel(movement)}`}
+    >
+      {getMovementDetailLabel(movement)}
+    </Link>
+  );
+}
+
 const statementHeaders = ["Fecha", "Tipo", "Folio", "Pago", "Referencia / notas", "Usuario", "Importe", "Saldo", "Estado"];
 
 function StatementField({ label, children }: { label: string; children: ReactNode }) {
@@ -132,19 +165,36 @@ function StatementResponsiveTable({
   movementType,
   movementFrom,
   movementTo,
+  clienteId,
 }: {
   rows: ClienteMovimiento[];
   empty: string;
   movementType: string;
   movementFrom: string;
   movementTo: string;
+  clienteId: number;
 }) {
+  const search = useSearch();
   const filteredRows = rows.filter((item): item is StatementRow =>
     typeof item.movimientoId === "number" &&
     (movementType === "all" || item.tipo === movementType) &&
     (!movementFrom || (item.fechaEfectiva ?? item.fecha ?? "") >= movementFrom) &&
     (!movementTo || (item.fechaEfectiva ?? item.fecha ?? "").slice(0, 10) <= movementTo),
   );
+  const requestedMovementId = Number(new URLSearchParams(search).get("movimientoId"));
+  const highlightedMovementId = Number.isSafeInteger(requestedMovementId) && requestedMovementId > 0
+    ? String(requestedMovementId)
+    : null;
+
+  useEffect(() => {
+    if (!highlightedMovementId) return;
+    const frame = window.requestAnimationFrame(() => {
+      document
+        .querySelector(`[data-testid="statement-mobile-row-${highlightedMovementId}"]`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [highlightedMovementId, filteredRows.length]);
 
   if (!filteredRows.length) {
     return <p className="py-10 text-center text-muted-foreground">{empty}</p>;
@@ -158,10 +208,16 @@ function StatementResponsiveTable({
           rows={filteredRows.map((item) => ({
             id: item.movimientoId,
             ticketId: item.ticketId,
+            href: getMovementDetailHref(clienteId, item),
+            linkLabel: getMovementDetailHref(clienteId, item)
+              ? getMovementDetailLabel(item)
+              : undefined,
             cells: [
               <span key={`movement-date-${item.movimientoId}`} className="whitespace-nowrap">{date(item.fechaEfectiva ?? item.fecha)}</span>,
               <span key={`movement-type-${item.movimientoId}`} className="block break-words [overflow-wrap:anywhere]">{item.tipo ?? "Movimiento"}</span>,
-              formatNumber(item.ticketFolio, { kind: "identifier" }),
+                getMovementDetailHref(clienteId, item)
+                  ? getMovementDetailLabel(item)
+                  : formatNumber(item.ticketFolio, { kind: "identifier" }),
               item.desgloseIva
                 ? <span className="block whitespace-normal break-words [overflow-wrap:anywhere]">{item.formaPago} · Subtotal {formatNumber(item.desgloseIva.subtotal, { kind: "money" })} · IVA {formatNumber(item.desgloseIva.iva, { kind: "money" })}</span>
                 : <span className="block break-words [overflow-wrap:anywhere]">{item.formaPago ?? "—"}</span>,
@@ -176,16 +232,22 @@ function StatementResponsiveTable({
         />
       </div>
       <div className="space-y-3 sm:hidden" data-testid="statement-mobile-cards">
-        {filteredRows.map((item) => (
+        {filteredRows.map((item) => {
+          const highlighted =
+            highlightedMovementId != null &&
+            String(item.movimientoId) === String(highlightedMovementId);
+          return (
           <article
             key={`statement-mobile-${item.movimientoId}`}
-            className="min-w-0 rounded-lg border bg-card p-4 shadow-sm"
+            className={`min-w-0 rounded-lg border bg-card p-4 shadow-sm ${highlighted ? "bg-primary/10 ring-2 ring-inset ring-primary" : ""}`}
+            aria-current={highlighted ? "true" : undefined}
+            data-highlighted={highlighted ? "true" : undefined}
             data-testid={`statement-mobile-row-${item.movimientoId}`}
           >
             <dl className="grid min-w-0 gap-3">
               <StatementField label="Fecha">{date(item.fechaEfectiva ?? item.fecha)}</StatementField>
               <StatementField label="Tipo">{item.tipo ?? "Movimiento"}</StatementField>
-              <StatementField label="Folio">{formatNumber(item.ticketFolio, { kind: "identifier" })}</StatementField>
+              <StatementField label="Folio"><StatementMovementLink clienteId={clienteId} movement={item} /></StatementField>
               <StatementField label="Pago">
                 {item.desgloseIva
                   ? <span>{item.formaPago} · Subtotal {formatNumber(item.desgloseIva.subtotal, { kind: "money" })} · IVA {formatNumber(item.desgloseIva.iva, { kind: "money" })}</span>
@@ -200,7 +262,8 @@ function StatementResponsiveTable({
               <StatementField label="Estado"><StatementNoteState movement={item} /></StatementField>
             </dl>
           </article>
-        ))}
+          );
+        })}
       </div>
     </>
   );
@@ -514,7 +577,7 @@ export default function ClienteDetail() {
             const habitualTerm = credit.data?.diasCredito ?? client.diasCredito;
              return <><div className="mb-4 flex justify-end">{canEditCredit && !client.esSistema && <Button variant="outline" onClick={() => { setCreditLimit(credit.data?.limiteCredito ?? ""); setCreditDays(String(habitualTerm)); setCreditOpen(true); }}>Editar términos</Button>}</div><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Kpi label="Límite" value={formatNumber(credit.data?.limiteCredito, { kind: "money" })} /><Kpi label="Saldo actual" value={projectedMoney(balanceValue)} />{canFinances && <Kpi label="Saldo a favor" value={projectedMoney(saldoAFavorProyectado)} />}<Kpi label="Disponible" value={formatNumber(credit.data?.creditoDisponible, { kind: "money" })} /><Kpi label="Plazo habitual" value={habitualTerm === 0 ? "Sin plazo" : `${habitualTerm} días`} /><Kpi label="Total vencido" value={formatNumber(credit.data?.totalVencido, { kind: "money" })} />{credit.data?.primeraCompra && <Kpi label="Primera compra" value={date(credit.data.primeraCompra)} />}{credit.data?.ultimaActividad && <Kpi label="Última actividad" value={date(credit.data.ultimaActividad)} />}</div>{utilization !== null && Number.isFinite(utilization) && <Card className="mt-4"><CardContent className="pt-6"><div className="flex justify-between text-sm"><span>Utilización</span><strong>{formatNumber(utilization, { kind: "percentage", percentageInput: "percent" })}</strong></div><div className="mt-2 h-3 overflow-hidden rounded-full bg-muted"><div className={`h-full ${utilization > 100 ? "bg-destructive" : utilization > 80 ? "bg-amber-500" : "bg-emerald-500"}`} style={{ width: `${Math.min(100, utilization)}%` }} /></div></CardContent></Card>}<Card className="mt-4"><CardHeader><CardTitle>Antigüedad real</CardTitle></CardHeader><CardContent className="grid gap-3 sm:grid-cols-5">{apiAging.length ? apiAging.map((bucket, index) => <Aging key={String(bucket.rango ?? index)} label={String(bucket.rango ?? bucket.bucket ?? "Periodo")} value={String(bucket.importe ?? bucket.saldo ?? "")} />) : aging ? <><Aging label="Por vencer" value={aging.porVencer} /><Aging label="1–30 días" value={aging["1_30"]} /><Aging label="31–60 días" value={aging["31_60"]} /><Aging label="61–90 días" value={aging["61_90"]} /><Aging label="+90 días" value={aging.mas90} /></> : <p className="col-span-full text-muted-foreground">Sin saldo pendiente.</p>}</CardContent></Card></>;
            })()}</QueryState></TabsContent>}
-           {canFinances && <TabsContent value="estado"><QueryState query={account}><div className="mb-4 flex flex-wrap gap-2"><Select value={movementType} onValueChange={setMovementType}><SelectTrigger className="w-48"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Todos los movimientos</SelectItem><SelectItem value="VENTA_CREDITO">Ventas a crédito</SelectItem><SelectItem value="ABONO">Pagos</SelectItem><SelectItem value="AJUSTE">Ajustes</SelectItem></SelectContent></Select><Input type="date" aria-label="Movimientos desde" value={movementFrom} onChange={(e) => setMovementFrom(e.target.value)} className="w-40" /><Input type="date" aria-label="Movimientos hasta" value={movementTo} onChange={(e) => setMovementTo(e.target.value)} className="w-40" /><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.xlsx`, `estado-cuenta-${id}.xlsx`)}>Excel</Button>{canCreatePayment && <Button onClick={() => setPaymentOpen(true)} data-testid="button-register-payment">Registrar pago</Button>}{canAdjust && <Button variant="outline" onClick={() => setAdjustmentOpen(true)} data-testid="button-register-adjustment">Ajuste</Button>}</div><Card><CardHeader><CardTitle>Movimientos, pagos y ajustes</CardTitle></CardHeader><CardContent><StatementResponsiveTable rows={account.data?.movimientos ?? []} movementType={movementType} movementFrom={movementFrom} movementTo={movementTo} empty="No hay movimientos en la cuenta." /></CardContent></Card><div className="mt-4"><div className="mt-4 grid gap-4 sm:grid-cols-2"><Kpi label="Saldo deudor" value={projectedMoney(saldoDeudorProyectado)} /><Kpi label="Saldo a favor" value={projectedMoney(saldoAFavorProyectado)} /></div></div></QueryState></TabsContent>}
+           {canFinances && <TabsContent value="estado"><QueryState query={account}><div className="mb-4 flex flex-wrap gap-2"><Select value={movementType} onValueChange={setMovementType}><SelectTrigger className="w-48"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="all">Todos los movimientos</SelectItem><SelectItem value="VENTA_CREDITO">Ventas a crédito</SelectItem><SelectItem value="ABONO">Pagos</SelectItem><SelectItem value="REVERSO">Reversos</SelectItem><SelectItem value="AJUSTE">Ajustes</SelectItem></SelectContent></Select><Input type="date" aria-label="Movimientos desde" value={movementFrom} onChange={(e) => setMovementFrom(e.target.value)} className="w-40" /><Input type="date" aria-label="Movimientos hasta" value={movementTo} onChange={(e) => setMovementTo(e.target.value)} className="w-40" /><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.xlsx`, `estado-cuenta-${id}.xlsx`)}>Excel</Button>{canCreatePayment && <Button onClick={() => setPaymentOpen(true)} data-testid="button-register-payment">Registrar pago</Button>}{canAdjust && <Button variant="outline" onClick={() => setAdjustmentOpen(true)} data-testid="button-register-adjustment">Ajuste</Button>}</div><Card><CardHeader><CardTitle>Movimientos, pagos y ajustes</CardTitle></CardHeader><CardContent><StatementResponsiveTable rows={account.data?.movimientos ?? []} movementType={movementType} movementFrom={movementFrom} movementTo={movementTo} clienteId={id} empty="No hay movimientos en la cuenta." /></CardContent></Card><div className="mt-4"><div className="mt-4 grid gap-4 sm:grid-cols-2"><Kpi label="Saldo deudor" value={projectedMoney(saldoDeudorProyectado)} /><Kpi label="Saldo a favor" value={projectedMoney(saldoAFavorProyectado)} /></div></div></QueryState></TabsContent>}
           {canFinances && <TabsContent value="compras" className="space-y-4"><Period value={period} onChange={setPeriod} /><QueryState query={purchases}><Card><CardContent className="pt-6"><ResponsiveTable headers={["Fecha", "Folio", "Subtotal", "IVA", "Total", `ROLLOS · ${formatUnit("METRO")}`, `ROLLOS · ${formatUnit("KILO")}`, `CAJAS · ${formatUnit("BOLSA")}`, `METRAJE · ${formatUnit("METRO")}`, `SUELTAS · ${formatUnit("BOLSA")}`, "Utilidad"]} rows={filteredPurchases.map((item) => ({ id: item.id, ticketId: item.id, cells: [date(item.fecha), formatNumber(item.folio ?? item.id, { kind: "identifier" }), formatNumber(item.subtotal, { kind: "money" }), formatNumber(item.iva, { kind: "money" }), formatNumber(item.total, { kind: "money" }), formatNumber(item.rollosMetros, { kind: "quantity" }), formatNumber(item.rollosKilos, { kind: "quantity" }), formatNumber(item.rollosBolsas, { kind: "quantity" }), formatNumber(item.metrajeMetros, { kind: "quantity" }), formatNumber(item.metrajeBolsas, { kind: "quantity" }), item.lineasSinCosto ? "Pendiente" : formatNumber(item.margen, { kind: "money" })] }))} empty="No hay compras en este periodo." /><p className="mt-3 text-sm text-muted-foreground">Lista ventas del cliente en el periodo elegido con cantidades por unidad, subtotal, IVA y total; la utilidad queda pendiente si falta costo congelado.</p></CardContent></Card><p className="text-right text-sm font-semibold">Total del periodo: {formatNumber(filteredPurchases.reduce((sum, item) => sum + Number(item.total ?? 0), 0), { kind: "money" })}</p></QueryState></TabsContent>}
           {(canFinances || canPrices) && <TabsContent value="analitica" className="space-y-4"><Period value={period} onChange={setPeriod} />{canFinances && <QueryState query={stats}><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Kpi label="Compra acumulada" value={formatNumber(stats.data?.totalCompras, { kind: "money" })} /><Kpi label="Tickets" value={formatNumber(stats.data?.comprasCount, { kind: "count" })} /><Kpi label="Ticket promedio" value={formatNumber(Number(stats.data?.totalCompras ?? 0) / Math.max(1, stats.data?.comprasCount ?? 0), { kind: "money" })} /><Kpi label={formatUnit("METRO")} value={formatNumber(stats.data?.metros, { kind: "quantity" })} /><Kpi label={formatUnit("KILO")} value={formatNumber(stats.data?.kilos, { kind: "quantity" })} /><Kpi label={formatUnit("BOLSA")} value={formatNumber(stats.data?.bolsas, { kind: "quantity" })} /><Kpi label="Costo identificable" value={formatNumber(stats.data?.costo, { kind: "money" })} /><Kpi label="Utilidad identificable" value={formatNumber(stats.data?.margen, { kind: "money" })} /></div>{(stats.data?.lineasSinCosto ?? 0) > 0 && <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">Utilidad pendiente: {formatNumber(stats.data?.lineasSinCosto, { kind: "count" })} línea(s) no tienen costo congelado.</p>}<Card className="mt-4"><CardHeader><CardTitle>Compras por mes</CardTitle></CardHeader><CardContent>{chartData.length ? <div className="h-72" data-testid="chart-client-purchases"><ResponsiveContainer width="100%" height="100%"><BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} /><XAxis dataKey="month" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} /><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} /><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} /><Bar dataKey="total" fill={getCategoricalChartColor(0)} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div> : <p className="py-12 text-center text-muted-foreground">Sin datos para graficar en este periodo.</p>}<p className="mt-3 text-sm text-muted-foreground">Suma el total con IVA de ventas del cliente por mes dentro del periodo elegido.</p></CardContent></Card></QueryState>}{canPrices && <QueryState query={prices}><Card className="mt-4"><CardHeader><CardTitle>Precios negociados recientes</CardTitle></CardHeader><CardContent><ResponsiveTable headers={["Fecha", "SKU", "Precio", "Promedio últimas 3"]} rows={(prices.data?.precios ?? []).map((item) => ({ id: item.productoId, cells: [date(item.fecha), item.sku, formatNumber(item.precioUnitario, { kind: "money" }), formatNumber(item.promedio3, { kind: "money" })] }))} empty="No hay precios registrados." /><p className="mt-3 text-sm text-muted-foreground">Lista precios unitarios monetarios negociados recientemente y su promedio de las tres últimas operaciones.</p></CardContent></Card></QueryState>}{canFinances && payments.data?.pagos?.length ? <p className="text-sm text-muted-foreground">{formatNumber(payments.data.pagos.length, { kind: "count" })} pago(s) registrados en el historial.</p> : null}</TabsContent>}
           {canFinances && <ClientAnalyticsBlocks query={analytics} />}

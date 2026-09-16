@@ -20,7 +20,7 @@ test("15 etiquetas de varios productos sobreviven cambios de resultados", () => 
     Array.from({ length: 5 }, (_, index) => ({
       id: page * 5 + index + 1,
       producto: `Producto ${page + 1}`,
-      serie: String(page * 5 + index + 1).padStart(7, "0"),
+      serie: String(page * 5 + index + 1).padStart(8, "0"),
     })),
   );
 

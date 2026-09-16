@@ -64,6 +64,7 @@ import { buildTicketDetail } from "../lib/pos";
 import { breakdownIvaIncluded } from "../lib/iva";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
 import { loadPaymentBehaviorList } from "../lib/payment-behavior";
+import { buildCreditMovementDetail } from "../lib/credit-movement-detail";
 import {
   FechaEfectivaValidationError,
   parseFechaEfectiva,
@@ -178,6 +179,21 @@ function presentAllocations(
       resultado: allocation.balanceAfterCents === 0 ? "SALDADA" : "PARCIAL",
     };
   });
+}
+
+function creditMovementAuditSnapshot(
+  movement: Pick<
+    typeof movimientosCreditoTable.$inferSelect,
+    "id" | "clienteId" | "tipo" | "createdAt" | "importe"
+  >,
+) {
+  return {
+    id: movement.id,
+    clienteId: movement.clienteId,
+    tipo: movement.tipo,
+    createdAt: movement.createdAt,
+    importe: movement.importe,
+  };
 }
 
 function previewPaymentProjection(
@@ -1795,69 +1811,28 @@ router.get(
         res.status(400).json({ error: "ID inválido." });
         return;
       }
-      const payment = await pool.query(
-         `SELECT m.id,m.cliente_id AS "clienteId",m.created_at AS fecha,
-           ABS(m.importe)::text AS "montoTotalAbono",m.forma_pago AS "formaPago",
-            m.cuenta_destino AS "cuentaDestino",m.referencia,u.nombre AS "usuarioRegistrador",
-            EXISTS(SELECT 1 FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=m.id) AS revertido,
-            (SELECT r.id FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=m.id LIMIT 1) AS "reversoMovimientoId",
-            (SELECT r.notas FROM movimientos_credito r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=m.id LIMIT 1) AS "motivoReverso"
-         FROM movimientos_credito m JOIN usuarios u ON u.id=m.usuario_id
-         WHERE m.id=$1 AND m.cliente_id=$2 AND m.tipo='ABONO'`,
-        [pagoId, clienteId],
-      );
-      const abono = payment.rows[0];
-      if (!abono) {
-        res.status(404).json({ error: "El abono no corresponde al cliente." });
-        return;
+      const snapshot = await pool.connect();
+      try {
+        await snapshot.query(
+          "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY",
+        );
+        const detail = await buildCreditMovementDetail(
+          snapshot,
+          clienteId,
+          pagoId,
+        );
+        await snapshot.query("COMMIT");
+        if (!detail) {
+          res.status(404).json({ error: "El movimiento no corresponde al cliente." });
+          return;
+        }
+        res.json(GetClientePagoDetalleResponse.parse(detail));
+      } catch (error) {
+        await snapshot.query("ROLLBACK").catch(() => undefined);
+        throw error;
+      } finally {
+        snapshot.release();
       }
-      const [applications, projection] = await Promise.all([pool.query(
-        `SELECT sale.ticket_id AS "ticketId",t.folio,
-           sale.id AS "movimientoVentaId",a.importe::text AS aplicado,
-            sale.importe::text AS "importeOriginal",
-            sale.fecha_vencimiento AS "fechaVencimiento"
-         FROM aplicaciones_credito a
-         JOIN movimientos_credito sale ON sale.id=a.venta_movimiento_id
-         JOIN tickets t ON t.id=sale.ticket_id
-         WHERE a.abono_movimiento_id=$1 AND sale.cliente_id=$2
-         ORDER BY t.folio,a.id`,
-        [pagoId, clienteId],
-      ), loadCustomerCreditProjection(clienteId)]);
-      const projectedCharges = new Map(
-        projection.allCharges.map((charge) => [charge.movimientoId, charge]),
-      );
-      res.json(GetClientePagoDetalleResponse.parse({
-        ...abono,
-        id: Number(abono.id),
-        clienteId: Number(abono.clienteId),
-        fecha: new Date(abono.fecha).toISOString(),
-        aplicaciones: applications.rows.map((row) => {
-          const saldoActual = centsToMoney(
-            projectedCharges.get(Number(row.movimientoVentaId))?.pendienteCents ?? 0,
-          );
-           const charge = projectedCharges.get(Number(row.movimientoVentaId));
-           const fechaVencimiento =
-             charge?.dueAt ?? dateOnly(row.fechaVencimiento);
-           const estadoNota = deriveEstadoNota({
-             importeOriginal: row.importeOriginal,
-             saldoPendiente: saldoActual,
-             fechaVencimiento,
-             hoy: todayMexicoCity(),
-           });
-          return {
-          ...row, saldoActual,
-          ticketId: Number(row.ticketId),
-          folio: Number(row.folio),
-          movimientoVentaId: Number(row.movimientoVentaId),
-           resultado: legacyNoteState(
-             row.importeOriginal,
-             saldoActual,
-             fechaVencimiento,
-           ),
-           estadoNota,
-        };
-        }),
-      }));
     } catch (error) {
       next(error);
     }
@@ -2086,6 +2061,7 @@ router.post(
           entidadId: String(id),
           datosDespues: {
             movimientoCreditoId: created!.id,
+            movimiento: creditMovementAuditSnapshot(created!),
             importe,
             formaPago: body.formaPago,
             cuentaDestino: body.cuentaDestino,
@@ -2176,7 +2152,13 @@ router.post(
           usuarioId: req.auth!.user.id, accion: "REVERSAR_PAGO_CLIENTE",
           entidad: "movimientos_credito", entidadId: String(created!.id),
           datosAntes: { pagoId, importe: abono.importe, asignaciones: apps.rows },
-          datosDespues: { reversoId: created!.id, importe: created!.importe, motivo, asignaciones: apps.rows },
+          datosDespues: {
+            reversoId: created!.id,
+            movimiento: creditMovementAuditSnapshot(created!),
+            importe: created!.importe,
+            motivo,
+            asignaciones: apps.rows,
+          },
           ip: getRequestIp(req),
         });
         return created!;
@@ -2280,7 +2262,12 @@ router.post(
           accion: "AJUSTE_CREDITO",
           entidad: "clientes",
           entidadId: String(id),
-          datosDespues: { movimientoCreditoId: created!.id, importe, motivo },
+          datosDespues: {
+            movimientoCreditoId: created!.id,
+            movimiento: creditMovementAuditSnapshot(created!),
+            importe,
+            motivo,
+          },
           ip: getRequestIp(req),
         });
         return created;

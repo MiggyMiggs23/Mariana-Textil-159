@@ -1,0 +1,148 @@
+# Prompt L — Serie de rollo de siete a ocho dígitos
+
+## Por qué ahora y no después
+
+La serie de rollo es hoy de siete dígitos. Con un volumen de 250 a 300 mil rollos al
+año, la capacidad de 1000001 a 9999999 dura unos treinta años. Está dentro de la vida
+del negocio y el modo de falla es malo.
+
+**Se hace ahora porque es el momento más barato que va a existir.** Después de la purga
+del Prompt H la base queda con cero rollos y cero etiquetas físicas pegadas a
+mercancía. Cambiar la longitud de la serie con dos años de etiquetas ya impresas sobre
+rollos reales cuesta un orden de magnitud más.
+
+**Este prompt se ejecuta después de que la purga del Prompt H haya cerrado y esté
+verificada.** Si la purga no ha terminado, detente.
+
+---
+
+## Bloque 0 — Los cuatro puntos donde vive la regla
+
+Confírmalos en el código y repórtalos textualmente antes de tocar nada. Si encuentras
+alguno más, es un hallazgo y lo reportas.
+
+1. **El generador.** `lib/db/src/schema/series.ts` declara
+   `series_consecutivo.ultimo_numero` como entero con default `1000000`, y
+   `reserveSeries` en `artifacts/api-server/src/lib/inventario.ts` reserva bajo candado
+   de fila devolviendo `ultimoNumero + n`. `rollos.serie` guarda solo la cadena
+   numérica.
+
+2. **El intérprete.** `lib/scanned-code/src/index.ts` tiene
+   `const SERIE_AL_FINAL = /(?:^|\D)(\d{7})$/`, con el comentario «La serie válida son
+   exactamente siete dígitos consecutivos al final». Es la única normalización
+   compartida por teclado, pistola y cámara, y la consumen las tres rutas que consumen
+   rollos: POS, Salida Nueva y Etiquetas.
+
+3. **La vista previa de etiquetas.** `artifacts/mariana-textil/src/pages/etiquetas.tsx`
+   alrededor de la línea 592 construye
+   `serie: String(product.id).padStart(7, "0").slice(-7)`.
+
+4. **El QR.** Su carga es `SKU-SERIE` y se arma en el frontend. Localiza dónde y
+   repórtalo.
+
+**Comprueba además que la base quedó con cero rollos y cero series asignadas después de
+la purga.** Si hay alguna serie viva, detente: el plan de este prompt supone población
+vacía y hay que replantearlo.
+
+---
+
+## Bloque 1 — Generar ocho dígitos
+
+1. El contador arranca en **10000000**, de modo que la primera serie asignada sea
+   **10000001**, de ocho dígitos.
+2. Cambia el default del esquema **y** el valor vivo en la base. El Prompt H dejó el
+   contador en 1000000 porque se ejecutó antes de esta decisión; este prompt lo mueve a
+   10000000. Es un `UPDATE` sobre la tabla de control, no una migración de datos.
+3. **La reserva sigue siendo atómica, bajo candado de fila, globalmente consecutiva y
+   sin reutilización.** No toques esa mecánica.
+4. Comprueba que el tipo de la columna soporta el rango. Ocho dígitos llegan a
+   99999999, dentro del rango de un entero de cuatro bytes.
+5. Registra la capacidad resultante en un comentario junto a la constante: de 10000001
+   a 99999999 son noventa millones de rollos, unos trescientos años al ritmo actual.
+
+---
+
+## Bloque 2 — Leer siete y ocho, generar solo ocho
+
+El intérprete debe **aceptar las dos longitudes** aunque el sistema solo genere ocho.
+
+Razón: tolerante al leer, estricto al escribir. Si aparece una etiqueta impresa antes
+del cambio, debe poder leerse en vez de fallar en silencio.
+
+1. Ajusta `SERIE_AL_FINAL` para aceptar siete **u** ocho dígitos, prefiriendo la
+   coincidencia más larga cuando ambas sean posibles. Actualiza el comentario que hoy
+   dice «exactamente siete».
+2. **Prueba explícitamente el caso de ambigüedad:** un código cuyos últimos ocho
+   dígitos sean válidos y cuyos últimos siete también. Debe resolver a ocho, siempre, y
+   la prueba debe fallar si alguien invierte la preferencia.
+3. Prueba también: siete dígitos solos, ocho solos, `SKU-` más cada longitud, un código
+   de nueve dígitos que **no** debe interpretarse como serie, y texto libre que debe
+   seguir pasando como búsqueda sin alterarse.
+4. **No dupliques esta normalización en ninguna pantalla.** Duplicarla ya fue la causa
+   de un fallo documentado: Salida para venta enviaba el payload compuesto sin extraer
+   la serie. Las tres rutas siguen pasando por la función compartida.
+5. La advertencia de SKU discrepante sigue avisando sin bloquear. La serie manda.
+
+---
+
+## Bloque 3 — La etiqueta física
+
+Un dígito más ocupa espacio en una superficie donde **ya no cabe el nombre del producto
+con su color**. Ese es un pendiente abierto y este cambio lo empeora.
+
+1. Corrige la vista previa de `etiquetas.tsx` para que use ocho dígitos.
+2. **Genera etiquetas de todo el catálogo vigente y comprueba que la serie de ocho
+   dígitos cabe completa en todas.** No dos ejemplos: el catálogo completo. Es regla
+   escrita en `replit.md` y es la que se incumplió la vez pasada, cuando el ajuste se
+   calibró contra un catálogo que todavía no tenía los colores dados de alta.
+3. Si al agregar el dígito algo deja de caber, **repórtalo con la evidencia y
+   detente**. No reduzcas el tamaño de fuente por debajo del mínimo legible ni recortes
+   el nombre del producto para hacer espacio: la etiqueta se lee de lejos entre los
+   rollos y perder el color es inaceptable.
+4. El QR conserva su forma `SKU-SERIE` y su tamaño. Comprueba que sigue siendo legible
+   con la carga más larga.
+5. Las etiquetas conservan sus tres decimales de metraje y su ajuste de fuente por
+   escalones.
+
+---
+
+## Verificación
+
+1. Una serie recién generada tiene ocho dígitos y empieza en 10000001.
+2. El intérprete resuelve siete y ocho dígitos, con la prueba de ambigüedad del Bloque
+   2.2 pasando.
+3. Las tres rutas que consumen rollos —POS, Salida Nueva, Etiquetas— resuelven una
+   serie de ocho dígitos desde teclado y desde el payload completo `SKU-SERIE`.
+4. Etiquetas generadas para **todo el catálogo**, con el reporte de cuántas se
+   revisaron y si alguna quedó fuera de caja.
+5. `pnpm run typecheck` completo en cero, con el verificador corregido.
+6. Codegen sin diferencias, o con las que este cambio justifique.
+7. **Comprobación física pendiente:** esto se cierra cuando se imprima una etiqueta real
+   y se escanee con la pistola y con la cámara del teléfono. Deja esa limitación
+   escrita; que pase en pantalla no acredita una lectura física.
+
+## Restricciones
+
+- **No ejecutes este prompt si la purga del Prompt H no cerró y quedó verificada.**
+- No cambies los folios de entradas, salidas, viajes, tickets ni auditorías. Son
+  contadores distintos y no se tocan aquí.
+- No toques la mecánica de reserva atómica de series.
+- No dupliques la normalización de escaneo en ninguna pantalla.
+- No reduzcas el tamaño de fuente de la etiqueta por debajo del mínimo legible ni
+  recortes nombres de producto.
+- No crees usuarios ni sesiones de prueba.
+- La única escritura autorizada en la base es el `UPDATE` del contador de series a
+  10000000. Ninguna otra.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que la serie de rollo es de **ocho dígitos**, arranca en 10000001, y su capacidad es
+   de noventa millones, sustituyendo expresamente toda mención a siete dígitos. La
+   redacción vieja se borra, no conviven las dos.
+2. Que el intérprete **acepta siete y ocho** por tolerancia con etiquetas anteriores,
+   prefiere la coincidencia más larga, y que el sistema **solo genera ocho**.
+3. Que el cambio se hizo con la base en cero rollos y por qué ese era el momento más
+   barato.
+4. Si la serie de ocho dígitos afectó el espacio de la etiqueta, con la evidencia del
+   catálogo completo.
+5. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

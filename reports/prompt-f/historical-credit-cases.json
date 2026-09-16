@@ -1,0 +1,392 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Offline historical evidence only. This file is not a live-app seed, migration, restore input, or E2E claim.",
+  "status": "historical_readonly_not_live",
+  "fieldPolicy": {
+    "included": [
+      "credit movement identity, client identity/name, type, literal amount, date, reference, linked origin movement",
+      "credit application identity and literal amount",
+      "linked ticket id, folio, literal total, due date, and client name",
+      "audit identity metadata when it matched a client/type/date in an already-written read-only report"
+    ],
+    "excluded": [
+      "users, auth, sessions, secrets, payment credentials, ticket lines, products, addresses, phone/email, and unrelated tables",
+      "derived or rounded financial values",
+      "live identifiers treated as current foreign keys"
+    ]
+  },
+  "currentAvailability": {
+    "sourceFile": "reports/prompt-j/real-data-canonical-snapshot.json",
+    "sourceSha256": "5d84f021e234fb25259c119b84ad2ebdd011eec5d72631f5f295909e4c8ec9ef",
+    "capturedAt": "2026-09-16T07:32:25.022Z",
+    "identity": {
+      "database": "heliumdb",
+      "schema": "public",
+      "serverVersion": "16.10",
+      "readMode": "REPEATABLE READ READ ONLY transaction"
+    },
+    "mainReadOnlyQueryResult": {
+      "movimientosCreditoGroupedByTipo": [],
+      "client7Exists": true,
+      "movementIds43To50Count": 0
+    },
+    "interpretation": "The current verified database has no credit-movement rows, including no current rows for ids 43 through 50. The historical rows below must not be merged into the live application."
+  },
+  "provenance": {
+    "archiveSearch": {
+      "scope": "Local workspace only: 15 dump files (8 prompt-h, 6 pre-purge backups under .local/backups and scripts/.local/backups, and the root dated dump).",
+      "tablesExtracted": [
+        "public.movimientos_credito",
+        "public.aplicaciones_credito",
+        "public.clientes",
+        "public.tickets"
+      ],
+      "extraction": "pg_restore --file=/tmp/... --data-only --table=movimientos_credito --table=aplicaciones_credito --table=clientes --table=tickets ARCHIVE; no --dbname target was used.",
+      "safety": "Text extraction only. No database restore, write, migration, authentication, session, user, or remote integration was performed."
+    },
+    "latest43To50Snapshot": {
+      "archiveFile": ".local/backups/prompt-h-block2-20260915214248-7517/prompt-h-block2-20260915214248-7517.dump",
+      "archiveSha256": "da7d3f7f342756511c6a04d000f0f4f4fa3feea6b9caad21e6abec5213dffb22",
+      "archivedAtUtc": "2026-09-16T03:42:49.250266666Z",
+      "archiveNameTimestamp": "20260915214248",
+      "corroboratingReport": {
+        "file": "reports/prompt-h/history-paused-213056/block3-preflight-metadata.json",
+        "sha256": "3c4c4578afd9248fc9cb8c2644e88f7f7f12d872aa63046fc8a67f3b38bae991",
+        "archivedAtUtc": "2026-09-16T03:34:45.922070879Z",
+        "evidenceSection": "businessEvidence.creditMovements and businessEvidence.tickets"
+      },
+      "rowScope": "The selected dump contains literal rows 43 through 50 and the two corresponding credit applications."
+    },
+    "earlierClient7Snapshot": {
+      "archiveFile": ".local/backups/respaldo-antes-de-purga-2026-09-13-092331/respaldo-antes-de-purga-2026-09-13-092331.dump",
+      "archiveSha256": "f39951acc3bbeeff60a3007806b9f05b6a36b21299c586f9f0829bc54d4b0f67",
+      "archivedAtUtc": "2026-09-13T15:23:32.490299892Z",
+      "archiveNameTimestamp": "20260913092331",
+      "rowScope": "Earlier snapshot containing client 7 movements 40 and 41, one application, and ticket 96. It is kept as a separate historical case and is not merged with the later snapshot."
+    },
+    "historicalReadonlyReports": [
+      {
+        "file": "reports/abonos-bloque4-2026-09-15-ejecucion.jsonl",
+        "sha256": "608072dc37b30528ba4759f1a45782ae0bb41e0c00cfacc442058b306c5cc3d7",
+        "archivedAtUtc": "2026-09-15T21:19:54.940350597Z",
+        "scope": "Read-only preservation, applications, and matching audit evidence for the 43-50 sequence."
+      },
+      {
+        "file": "reports/prompt-c-readonly-2026-09-15-after.json",
+        "sha256": "213d32245b6513afac1734d5f9115f899dd998e0c3218f0bea91c8e56ef96ee5",
+        "archivedAtUtc": "2026-09-15T22:05:27.799377747Z",
+        "scope": "Read-only before/after preservation of movement ids 43-50; historical and not current."
+      }
+    ]
+  },
+  "canonicalInputLedger": {
+    "clientId": 7,
+    "clientName": "Jacinta Mendoza",
+    "ledgerSnapshot": "latest43To50Snapshot",
+    "notLiveForeignKeys": true,
+    "movements": [
+      {
+        "id": 44,
+        "clientId": 7,
+        "clientName": "Jacinta Mendoza",
+        "type": "VENTA_CREDITO",
+        "amount": "22022.00",
+        "createdAt": "2026-09-15 19:32:04.605206+00",
+        "reference": null,
+        "ticketId": 105,
+        "dueDate": "2026-10-15",
+        "originMovementId": null
+      },
+      {
+        "id": 45,
+        "clientId": 7,
+        "clientName": "Jacinta Mendoza",
+        "type": "ABONO",
+        "amount": "-15000.00",
+        "createdAt": "2026-09-15 00:00:00+00",
+        "reference": null,
+        "ticketId": null,
+        "dueDate": null,
+        "originMovementId": null
+      },
+      {
+        "id": 48,
+        "clientId": 7,
+        "clientName": "Jacinta Mendoza",
+        "type": "REVERSO",
+        "amount": "15000.00",
+        "createdAt": "2026-09-15 21:16:51.304+00",
+        "reference": null,
+        "ticketId": null,
+        "dueDate": null,
+        "originMovementId": 45
+      },
+      {
+        "id": 50,
+        "clientId": 7,
+        "clientName": "Jacinta Mendoza",
+        "type": "ABONO",
+        "amount": "-15000.00",
+        "createdAt": "2026-09-15 19:34:10.192+00",
+        "reference": "CORRECCION-FECHA-ABONO-45",
+        "ticketId": null,
+        "dueDate": null,
+        "originMovementId": null
+      }
+    ],
+    "applications": [
+      {
+        "id": 6,
+        "abonoMovementId": 50,
+        "ventaMovementId": 44,
+        "amount": "15000.00",
+        "createdAt": "2026-09-15 21:16:51.39202+00"
+      }
+    ],
+    "linkedTickets": [
+      {
+        "id": 105,
+        "folio": 1005,
+        "total": "22022.00",
+        "dueDate": "2026-10-15",
+        "clientName": "Jacinta Mendoza"
+      }
+    ],
+    "auditIdentityMetadata": [
+      {
+        "clientId": 7,
+        "movementType": "REVERSO",
+        "movementDate": "2026-09-15 21:16:51.304+00",
+        "action": "REVERSAR_PAGO_CLIENTE",
+        "entity": "movimientos_credito",
+        "entityId": "48",
+        "actorUserId": 1
+      },
+      {
+        "clientId": 7,
+        "movementType": "ABONO",
+        "movementDate": "2026-09-15 19:34:10.192+00",
+        "action": "PAGO_CLIENTE",
+        "entity": "clientes",
+        "entityId": "7",
+        "actorUserId": 1
+      }
+    ]
+  },
+  "historicalCases": [
+    {
+      "caseId": "client7-latest-snapshot-movements43-50",
+      "provenanceRef": "latest43To50Snapshot",
+      "clientId": 7,
+      "clientName": "Jacinta Mendoza",
+      "movements43To50": [
+        {
+          "id": 43,
+          "clientId": 6,
+          "clientName": "Miguel Esteban",
+          "type": "VENTA_CREDITO",
+          "amount": "15750.00",
+          "createdAt": "2026-09-15 19:29:34.336084+00",
+          "reference": null,
+          "ticketId": 104,
+          "dueDate": "2026-10-15",
+          "originMovementId": null
+        },
+        {
+          "id": 44,
+          "clientId": 7,
+          "clientName": "Jacinta Mendoza",
+          "type": "VENTA_CREDITO",
+          "amount": "22022.00",
+          "createdAt": "2026-09-15 19:32:04.605206+00",
+          "reference": null,
+          "ticketId": 105,
+          "dueDate": "2026-10-15",
+          "originMovementId": null
+        },
+        {
+          "id": 45,
+          "clientId": 7,
+          "clientName": "Jacinta Mendoza",
+          "type": "ABONO",
+          "amount": "-15000.00",
+          "createdAt": "2026-09-15 00:00:00+00",
+          "reference": null,
+          "ticketId": null,
+          "dueDate": null,
+          "originMovementId": null
+        },
+        {
+          "id": 46,
+          "clientId": 6,
+          "clientName": "Miguel Esteban",
+          "type": "ABONO",
+          "amount": "-10000.00",
+          "createdAt": "2026-09-15 00:00:00+00",
+          "reference": null,
+          "ticketId": null,
+          "dueDate": null,
+          "originMovementId": null
+        },
+        {
+          "id": 47,
+          "clientId": 6,
+          "clientName": "Miguel Esteban",
+          "type": "REVERSO",
+          "amount": "10000.00",
+          "createdAt": "2026-09-15 21:16:51.254+00",
+          "reference": null,
+          "ticketId": null,
+          "dueDate": null,
+          "originMovementId": 46
+        },
+        {
+          "id": 48,
+          "clientId": 7,
+          "clientName": "Jacinta Mendoza",
+          "type": "REVERSO",
+          "amount": "15000.00",
+          "createdAt": "2026-09-15 21:16:51.304+00",
+          "reference": null,
+          "ticketId": null,
+          "dueDate": null,
+          "originMovementId": 45
+        },
+        {
+          "id": 49,
+          "clientId": 6,
+          "clientName": "Miguel Esteban",
+          "type": "ABONO",
+          "amount": "-10000.00",
+          "createdAt": "2026-09-15 19:35:17.006+00",
+          "reference": "CORRECCION-FECHA-ABONO-46",
+          "ticketId": null,
+          "dueDate": null,
+          "originMovementId": null
+        },
+        {
+          "id": 50,
+          "clientId": 7,
+          "clientName": "Jacinta Mendoza",
+          "type": "ABONO",
+          "amount": "-15000.00",
+          "createdAt": "2026-09-15 19:34:10.192+00",
+          "reference": "CORRECCION-FECHA-ABONO-45",
+          "ticketId": null,
+          "dueDate": null,
+          "originMovementId": null
+        }
+      ],
+      "applications": [
+        {
+          "id": 5,
+          "abonoMovementId": 49,
+          "ventaMovementId": 43,
+          "amount": "10000.00",
+          "createdAt": "2026-09-15 21:16:51.346716+00"
+        },
+        {
+          "id": 6,
+          "abonoMovementId": 50,
+          "ventaMovementId": 44,
+          "amount": "15000.00",
+          "createdAt": "2026-09-15 21:16:51.39202+00"
+        }
+      ],
+      "linkedTickets": [
+        {
+          "id": 104,
+          "folio": 1004,
+          "total": "15750.00",
+          "dueDate": "2026-10-15",
+          "clientName": "Miguel Esteban"
+        },
+        {
+          "id": 105,
+          "folio": 1005,
+          "total": "22022.00",
+          "dueDate": "2026-10-15",
+          "clientName": "Jacinta Mendoza"
+        }
+      ]
+    },
+    {
+      "caseId": "client7-earlier-prepurge-snapshot-movements40-41",
+      "provenance": {
+        "archiveFile": ".local/backups/respaldo-antes-de-purga-2026-09-13-092331/respaldo-antes-de-purga-2026-09-13-092331.dump",
+        "archiveSha256": "f39951acc3bbeeff60a3007806b9f05b6a36b21299c586f9f0829bc54d4b0f67",
+        "archivedAtUtc": "2026-09-13T15:23:32.490299892Z"
+      },
+      "clientId": 7,
+      "clientName": "Jacinta Mendoza",
+      "movements": [
+        {
+          "id": 40,
+          "clientId": 7,
+          "clientName": "Jacinta Mendoza",
+          "type": "VENTA_CREDITO",
+          "amount": "5000.00",
+          "createdAt": "2026-09-11 21:36:32.73976+00",
+          "reference": null,
+          "ticketId": 96,
+          "dueDate": "2026-10-11",
+          "originMovementId": null
+        },
+        {
+          "id": 41,
+          "clientId": 7,
+          "clientName": "Jacinta Mendoza",
+          "type": "ABONO",
+          "amount": "-5000.00",
+          "createdAt": "2026-09-11 00:00:00+00",
+          "reference": null,
+          "ticketId": null,
+          "dueDate": null,
+          "originMovementId": null
+        }
+      ],
+      "applications": [
+        {
+          "id": 4,
+          "abonoMovementId": 41,
+          "ventaMovementId": 40,
+          "amount": "5000.00",
+          "createdAt": "2026-09-11 21:44:59.275927+00"
+        }
+      ],
+      "linkedTickets": [
+        {
+          "id": 96,
+          "folio": 1003,
+          "total": "5000.00",
+          "dueDate": "2026-10-11",
+          "clientName": "Jacinta Mendoza"
+        }
+      ],
+      "separateSnapshot": true,
+      "notMergedWithLatestCase": true
+    }
+  ],
+  "coverageAndNegativeFindings": {
+    "movement43To50": "Available in the latest local prompt-h archive; all eight literal rows are exported above.",
+    "client7Ledger": "Available as four movements and one application in the latest snapshot, plus an earlier separate two-movement snapshot.",
+    "splitAbonos": {
+      "available": false,
+      "finding": "No extracted aplicaciones_credito row shows one ABONO applied to more than one credit note. Latest rows are one application for movement 49 to sale 43 and one for movement 50 to sale 44; earlier movement 41 has one application to sale 40.",
+      "scope": "15 local archives and the four whitelisted tables only; not an assertion about an uninspected source."
+    },
+    "ajuste": {
+      "available": false,
+      "finding": "No literal AJUSTE movement row was present in the scoped archive extractions. AJUSTE mentions in SQL definitions/tests were not treated as data."
+    },
+    "sevenDigitRealAmount": {
+      "available": false,
+      "finding": "No literal credit movement, credit application, or ticket total with seven or more integer digits was found in the scoped archive rows. Counter values such as series_consecutivo=1000000 are not transaction amounts and were excluded."
+    },
+    "longNames": {
+      "available": false,
+      "finding": "No qualifying long client name or linked ticket recipient was present in the allowed rows. The canonical snapshot has catalog-only long product-name examples, but they have no transaction link and are intentionally not exported under the field policy."
+    }
+  },
+  "useRestriction": "Use only as offline historical input evidence. Do not restore, seed, merge, migrate, expose through the live API, or claim live E2E equivalence from these rows."
+}

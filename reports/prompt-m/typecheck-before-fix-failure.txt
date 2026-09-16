@@ -1,0 +1,42 @@
+
+> workspace@0.0.0 typecheck /home/runner/workspace
+> node ./scripts/src/typecheck-runner.mjs
+
+
+> @workspace/api-server@0.0.0 typecheck /home/runner/workspace/artifacts/api-server
+> tsc -p tsconfig.json --noEmit
+
+
+> @workspace/mariana-textil@0.0.0 typecheck /home/runner/workspace/artifacts/mariana-textil
+> tsc -p tsconfig.json --noEmit
+
+
+> @workspace/scripts@0.0.0 typecheck /home/runner/workspace/scripts
+> tsc -p tsconfig.json --noEmit
+
+src/prompt-m-defaults-operator.mts(16,23): error TS7016: Could not find a declaration file for module '../../lib/db/node_modules/pg/lib/index.js'. '/home/runner/workspace/lib/db/node_modules/pg/lib/index.js' implicitly has an 'any' type.
+src/prompt-m-defaults-operator.mts(839,79): error TS2345: Argument of type 'Row | null' is not assignable to parameter of type 'Row'.
+  Type 'null' is not assignable to type 'Row'.
+ ELIFECYCLE  Command failed with exit code 2.
+
+=== Typecheck summary ===
+Packages selected: 3 artifacts/scripts; library results: 7
+PASS @workspace/scanned-code [library] (0 TypeScript errors)
+PASS @workspace/number-format [library] (0 TypeScript errors)
+PASS @workspace/metered-pricing [library] (0 TypeScript errors)
+PASS @workspace/db [library] (0 TypeScript errors)
+PASS @workspace/api-client-react [library] (0 TypeScript errors)
+PASS @workspace/api-zod [library] (0 TypeScript errors)
+PASS @workspace/libraries [library-stage] (0 TypeScript errors)
+PASS @workspace/api-server [package] (0 TypeScript errors)
+PASS @workspace/mariana-textil [package] (0 TypeScript errors)
+FAIL @workspace/scripts [package] (2 TypeScript errors)
+  scripts/src/prompt-m-defaults-operator.mts:16:23 TS7016: Could not find a declaration file for module '../../lib/db/node_modules/pg/lib/index.js'. '/home/runner/workspace/lib/db/node_modules/pg/lib/index.js' implicitly has an 'any' type.
+  scripts/src/prompt-m-defaults-operator.mts:839:79 TS2345: Argument of type 'Row | null' is not assignable to parameter of type 'Row'.
+Unique TypeScript diagnostics: 2
+Repeated diagnostic emissions: 0
+Process/parser failures: 0
+RESULT: FAIL (all selected checks were attempted)
+ ELIFECYCLE  Command failed with exit code 1.
+
+EXIT_CODE=1

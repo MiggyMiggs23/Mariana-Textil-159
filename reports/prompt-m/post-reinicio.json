@@ -1,0 +1,802 @@
+{
+  "status": "PASS",
+  "check": "PROMPT_M_POST_RESTART_READONLY",
+  "source": {
+    "database": "heliumdb",
+    "schema": "public",
+    "identity": {
+      "database_name": "heliumdb",
+      "current_user_name": "postgres",
+      "session_user_name": "postgres",
+      "server_version": "16.10",
+      "timezone_setting": "America/Mexico_City",
+      "transaction_read_only": "on",
+      "transaction_isolation": "repeatable read",
+      "clock_timestamp_utc": "2026-09-16 05:41:29.117 UTC",
+      "clock_timestamp_mexico": "2026-09-15 23:41:29.117 America/Mexico_City"
+    },
+    "transaction": "REPEATABLE READ READ ONLY",
+    "rollbackCompleted": true,
+    "sourceWriteExecuted": false,
+    "usersOrSessionsCreated": false,
+    "apiImported": false
+  },
+  "restartAuthorization": {
+    "path": "reports/prompt-m/autorizacion-reinicio.md",
+    "sha256": "5c1ccf201c9c988bb4569c2ed959904748c538cdcf9a418e1dba743c47444fc1",
+    "recordedBeforeRestart": true,
+    "scope": "normal service restart only; no ALTER repetition or initializer modification"
+  },
+  "comparisons": {
+    "defaults": {
+      "expectedGuard": {
+        "entrada_folio": "0",
+        "salida_folio": "0",
+        "viaje_folio": "0",
+        "auditoria_inventario_folio": "0",
+        "ticket_folio": "999",
+        "series_consecutivo": "10000000"
+      },
+      "rows": [
+        {
+          "table_name": "entrada_folio",
+          "column_name": "ultimo_folio",
+          "expected_new_default": "0",
+          "committed_default": "0",
+          "current_default": "0",
+          "current_matches_guard": true,
+          "committed_matches_guard": true
+        },
+        {
+          "table_name": "salida_folio",
+          "column_name": "ultimo_folio",
+          "expected_new_default": "0",
+          "committed_default": "0",
+          "current_default": "0",
+          "current_matches_guard": true,
+          "committed_matches_guard": true
+        },
+        {
+          "table_name": "viaje_folio",
+          "column_name": "ultimo_folio",
+          "expected_new_default": "0",
+          "committed_default": "0",
+          "current_default": "0",
+          "current_matches_guard": true,
+          "committed_matches_guard": true
+        },
+        {
+          "table_name": "auditoria_inventario_folio",
+          "column_name": "ultimo_folio",
+          "expected_new_default": "0",
+          "committed_default": "0",
+          "current_default": "0",
+          "current_matches_guard": true,
+          "committed_matches_guard": true
+        },
+        {
+          "table_name": "ticket_folio",
+          "column_name": "ultimo_folio",
+          "expected_new_default": "999",
+          "committed_default": "999",
+          "current_default": "999",
+          "current_matches_guard": true,
+          "committed_matches_guard": true
+        },
+        {
+          "table_name": "series_consecutivo",
+          "column_name": "ultimo_numero",
+          "expected_new_default": "10000000",
+          "committed_default": "10000000",
+          "current_default": "10000000",
+          "current_matches_guard": true,
+          "committed_matches_guard": true
+        }
+      ],
+      "allSixCurrentMatchGuard": true,
+      "allSixCommittedMatchGuard": true
+    },
+    "counterRows": {
+      "committedEvidencePath": "reports/prompt-m/resultado.json",
+      "committedRowCount": 46,
+      "currentRowCount": 46,
+      "rows": [
+        {
+          "key": "auditoria_inventario_folio:1",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:2",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:3",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:4",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:5",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:6",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:7",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:8",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:9",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:458",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "auditoria_inventario_folio:531",
+          "committed": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "auditoria_inventario_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:1",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:2",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:3",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:4",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:5",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:6",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:7",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:8",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:9",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:458",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "entrada_folio:531",
+          "committed": {
+            "table_name": "entrada_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "entrada_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:1",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:2",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:3",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:4",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:5",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:6",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:7",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:8",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:9",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:458",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "salida_folio:531",
+          "committed": {
+            "table_name": "salida_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "salida_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "series_consecutivo:1",
+          "committed": {
+            "table_name": "series_consecutivo",
+            "control_key": "1",
+            "control_value": "10000000"
+          },
+          "current": {
+            "table_name": "series_consecutivo",
+            "control_key": "1",
+            "control_value": "10000000"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "ticket_folio:1",
+          "committed": {
+            "table_name": "ticket_folio",
+            "control_key": "1",
+            "control_value": "999"
+          },
+          "current": {
+            "table_name": "ticket_folio",
+            "control_key": "1",
+            "control_value": "999"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:1",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "1",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:2",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "2",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:3",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "3",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:4",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "4",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:5",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "5",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:6",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "6",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:7",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "7",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:8",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "8",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:9",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "9",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:458",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "458",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        },
+        {
+          "key": "viaje_folio:531",
+          "committed": {
+            "table_name": "viaje_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "current": {
+            "table_name": "viaje_folio",
+            "control_key": "531",
+            "control_value": "0"
+          },
+          "matches_committed": true
+        }
+      ],
+      "all46CurrentRowsMatchCommitted": true,
+      "tableCounts": {
+        "auditoria_inventario_folio": 11,
+        "entrada_folio": 11,
+        "salida_folio": 11,
+        "series_consecutivo": 1,
+        "ticket_folio": 1,
+        "viaje_folio": 11
+      }
+    },
+    "protectedCatalog": {
+      "rows": [
+        {
+          "table_name": "productos",
+          "committed_row_count": "1234",
+          "current_row_count": "1234",
+          "committed_ordered_canonical_row_hash": "ec387f3b7a73aadcdf971c03b221a001",
+          "current_ordered_canonical_row_hash": "ec387f3b7a73aadcdf971c03b221a001",
+          "matches_committed": true
+        },
+        {
+          "table_name": "precio_historial",
+          "committed_row_count": "1016",
+          "current_row_count": "1016",
+          "committed_ordered_canonical_row_hash": "995ad0f005ac98c01a8951f6acc37af1",
+          "current_ordered_canonical_row_hash": "995ad0f005ac98c01a8951f6acc37af1",
+          "matches_committed": true
+        }
+      ],
+      "allHashesMatchCommitted": true
+    }
+  },
+  "scopeLimit": "This read-only post-start check covers only the six defaults, all 46 counter rows, and protected catalog hashes. Normal startup writes elsewhere were separately authorized; this does not claim the whole database is unchanged since the DDL commit.",
+  "mainServiceObservation": {
+    "startupVerifiedByMain": true,
+    "currentRunningByMain": true,
+    "healthAndLogConfirmation": "PASS",
+    "startupEvidence": {
+      "apiLog": "/tmp/logs/artifactsapi-server_API_Server_20260916_054036_802_977fa598.log",
+      "webLog": "/tmp/logs/artifactsmariana-textil_web_20260916_054036_802_c5d8b9a8.log",
+      "healthReport": "reports/prompt-m/restart-health.txt",
+      "apiSchemaStartupComplete": true,
+      "apiServerListeningPort": 8080,
+      "apiBackfillInserted": 0,
+      "viteReadyMilliseconds": 313,
+      "startupErrors": false,
+      "apiHealthHttpStatus": 200,
+      "apiHealthStatus": "ok",
+      "rootWebHttpStatus": 200,
+      "healthCapturedAtUtc": "2026-09-16 05:40:37 UTC"
+    },
+    "noFurtherRestartRequested": true
+  }
+}

@@ -3277,13 +3277,13 @@ paths:
     get:
       operationId: getClientePagoDetalle
       tags: [clientes]
-      summary: Detalle de las notas liquidadas por un abono
+      summary: Detalle de un movimiento de crédito (lectura)
       parameters:
         - $ref: "#/components/parameters/ClienteId"
         - $ref: "#/components/parameters/ClientePagoId"
       responses:
         "200":
-          description: Abono y sus aplicaciones inmutables
+          description: Movimiento de crédito y su proyección canónica
           content:
             application/json:
               schema:
@@ -6326,6 +6326,11 @@ components:
         modulo: { type: ["string", "null"] }
         entidad: { type: string }
         entidadId: { type: ["string", "null"] }
+        clienteId:
+          {
+            type: ["number", "null"],
+            description: Owner client ID only when entidad is movimientos_credito and the live movement matches the complete stored audit identity; null means unresolved.
+          }
         sitioId: { type: ["number", "null"] }
         sitio: { type: ["string", "null"] }
         ip: { type: string }
@@ -9104,6 +9109,38 @@ components:
         abonos:
           type: array
           items: { $ref: "#/components/schemas/ClienteNotaAbono" }
+    ClientePagoDetalleReparto:
+      type: object
+      required:
+        [
+          ticketId,
+          folio,
+          movimientoVentaId,
+          importeAplicado,
+          saldoAntes,
+          saldoDespues,
+          vigente,
+        ]
+      properties:
+        ticketId: { type: ["number", "null"] }
+        folio: { type: ["number", "null"] }
+        movimientoVentaId: { type: number }
+        importeAplicado: { type: string }
+        saldoAntes:
+          { type: ["string", "null"], description: Saldo proyectado antes de una aplicación vigente; for inactive historical evidence it is null when that before-state was not retained and must not be replaced with the current balance. }
+        saldoDespues:
+          { type: ["string", "null"], description: Saldo proyectado después de una aplicación vigente; for inactive historical evidence it is null when that after-state was not retained and must not be replaced with the current balance. }
+        vigente:
+          { type: boolean, description: Indica si la aplicación sigue activa en la proyección actual. }
+    ClientePagoAuditoria:
+      type: object
+      required: [id, accion, fecha, usuario, motivo]
+      properties:
+        id: { type: number }
+        accion: { type: string }
+        fecha: { type: string, format: date-time }
+        usuario: { type: ["string", "null"] }
+        motivo: { type: ["string", "null"] }
     ClientePagoAplicacionDetalle:
       type: object
       required:
@@ -9159,7 +9196,38 @@ components:
         motivoReverso: { type: ["string", "null"] }
         aplicaciones:
           type: array
+          description: Evidencia histórica de aplicaciones; no sustituye la proyección del servidor.
           items: { $ref: "#/components/schemas/ClientePagoAplicacionDetalle" }
+        clienteNombre:
+          { type: string, description: Nombre del cliente al que pertenece el movimiento. }
+        tipo:
+          { type: string, enum: [ABONO, REVERSO, AJUSTE] }
+        importe:
+          { type: string, description: Importe firmado del movimiento. }
+        fechaEfectiva:
+          { type: string, format: date-time }
+        fechaCaptura:
+          { type: ["string", "null"], format: date-time, description: Instante de captura comprobado en auditoría; null si no existe evidencia suficiente. }
+        usuarioCaptura:
+          { type: ["string", "null"] }
+        notas: { type: ["string", "null"] }
+        ticketId: { type: ["number", "null"] }
+        ticketFolio: { type: ["number", "null"] }
+        movimientoOriginalId: { type: ["number", "null"] }
+        reparto:
+          type: array
+          description: Aplicaciones proyectadas del ABONO. Se omite para REVERSO y AJUSTE.
+          items: { $ref: "#/components/schemas/ClientePagoDetalleReparto" }
+        saldoAFavor:
+          { type: ["string", "null"], description: Saldo a favor proyectado del ABONO; se omite para REVERSO y AJUSTE. }
+        aplicacionesRevertidas:
+          type: array
+          description: Aplicaciones históricas que cesaron por este REVERSO; no es el reparto propio del reverso. An empty array means no immutable application row was retained for the original payment. When before/after evidence was not retained, those fields are null rather than current projected balances.
+          items: { $ref: "#/components/schemas/ClientePagoDetalleReparto" }
+        auditoria:
+          type: array
+          description: Metadatos de auditoría comprobados, sin datos sensibles.
+          items: { $ref: "#/components/schemas/ClientePagoAuditoria" }
     ReimpresionClienteNota:
       type: object
       required: [clienteId, ticketId, folio, reimpresoAt]
@@ -10243,6 +10311,11 @@ components:
         documentoId: { type: ["string", "null"] }
         documentoEtiqueta: { type: ["string", "null"] }
         documentoRuta: { type: ["string", "null"] }
+        documentoClienteId:
+          {
+            type: ["number", "null"],
+            description: Owner client ID for a live MOVIMIENTO_CREDITO document reference; null for other document types or when the referenced movement cannot be resolved.
+          }
         movimientoOrigenId: { type: ["number", "null"] }
         usuarioId: { type: number }
         motivoSalidaExtraordinaria:

@@ -60,3 +60,6 @@
 - [Typecheck recursivo completo](recursive-typecheck-completeness.md) — el primer fallo puede ocultar otros paquetes; completar pendientes y deduplicar diagnósticos.
 - [Instantes de recaptura histórica](historical-payment-recapture-instants.md) — conservar el instante original exacto; normalizar a mediodía puede volver a bloquear el reparto.
 - [Referencias convertidas en enlaces](reference-navigation-review.md) — auditar todas las ramas del resolver; una ruta latente puede fallar al hacerse navegable.
+- [Compuertas de operaciones destructivas](destructive-operator-evidence.md) — ejecutar las mismas validaciones previas en modo de solo lectura contra evidencia real; pruebas puras no bastan.
+- [Tamaños móviles aprobados en Caja](approved-financial-mobile-sizing.md) — igualar destinos en escritorio no autoriza agrandar las tarjetas móviles ya aprobadas.
+- [CSS precompilado en maquetas](precompiled-preview-css.md) — esbuild no genera utilidades nuevas de Tailwind; comprobar el grid renderizado, no solo las clases.

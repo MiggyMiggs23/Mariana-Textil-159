@@ -1,0 +1,92 @@
+{
+  "operation": "PROMPT_M_DISPOSABLE_DEFAULT_BEHAVIOR",
+  "status": "PASS",
+  "database": "disposable_only",
+  "productionDataRead": false,
+  "productionDatabaseTouched": false,
+  "usersCreated": false,
+  "sessionsCreated": false,
+  "sourceShape": [
+    "CREATE TABLE ubicaciones (id integer PRIMARY KEY);",
+    "CREATE TABLE entrada_folio (ubicacion_id integer PRIMARY KEY REFERENCES ubicaciones(id), ultimo_folio integer NOT NULL DEFAULT 0);",
+    "CREATE TABLE salida_folio (ubicacion_id integer PRIMARY KEY REFERENCES ubicaciones(id), ultimo_folio integer NOT NULL DEFAULT 0);",
+    "CREATE TABLE viaje_folio (ubicacion_id integer PRIMARY KEY REFERENCES ubicaciones(id), ultimo_folio integer NOT NULL DEFAULT 0);",
+    "CREATE TABLE auditoria_inventario_folio (ubicacion_id integer PRIMARY KEY REFERENCES ubicaciones(id), ultimo_folio integer NOT NULL DEFAULT 0);",
+    "CREATE TABLE ticket_folio (id integer PRIMARY KEY DEFAULT 1, ultimo_folio integer NOT NULL DEFAULT 999);",
+    "CREATE TABLE series_consecutivo (id integer PRIMARY KEY DEFAULT 1, ultimo_numero integer NOT NULL DEFAULT 10000000);"
+  ],
+  "allocatorSourceFiles": [
+    "artifacts/api-server/src/lib/inventario.ts",
+    "artifacts/api-server/src/lib/salidas.ts"
+  ],
+  "allocatorSourceSha256": {
+    "artifacts/api-server/src/lib/inventario.ts": "90b1615ff3b32a7047622b6c0b9006ebfe1b1b7070a17b753e5f527b0d02e02e",
+    "artifacts/api-server/src/lib/salidas.ts": "21278d6a66d8d659eab3c378f7156b5f3ff2bad78d6fdab85fe317dd3f673ba9"
+  },
+  "allocatorMethod": "source-extracted SQL equivalent; API module not imported",
+  "tests": [
+    {
+      "name": "source-shaped-minimal-schema",
+      "pass": true,
+      "publicTables": [
+        "auditoria_inventario_folio",
+        "entrada_folio",
+        "salida_folio",
+        "series_consecutivo",
+        "ticket_folio",
+        "ubicaciones",
+        "viaje_folio"
+      ]
+    },
+    {
+      "name": "six-defaults-omitted-values",
+      "pass": true,
+      "values": {
+        "entrada_folio": "0",
+        "salida_folio": "0",
+        "viaje_folio": "0",
+        "auditoria_inventario_folio": "0",
+        "ticket_folio": "999",
+        "series_consecutivo": "10000000"
+      }
+    },
+    {
+      "name": "entrada-allocator-first-folio",
+      "pass": true,
+      "firstFolio": "1",
+      "sql": [
+        "INSERT INTO entrada_folio (ubicacion_id) VALUES ($1) ON CONFLICT DO NOTHING",
+        "SELECT ultimo_folio FROM entrada_folio WHERE ubicacion_id = $1 FOR UPDATE",
+        "UPDATE entrada_folio SET ultimo_folio = ultimo_folio + 1 WHERE ubicacion_id = $1 RETURNING ultimo_folio"
+      ]
+    },
+    {
+      "name": "salida-allocator-first-folio",
+      "pass": true,
+      "firstFolio": "1",
+      "sql": [
+        "INSERT INTO salida_folio (ubicacion_id) VALUES ($1) ON CONFLICT DO NOTHING",
+        "SELECT ultimo_folio FROM salida_folio WHERE ubicacion_id = $1 FOR UPDATE",
+        "UPDATE salida_folio SET ultimo_folio = ultimo_folio + 1 WHERE ubicacion_id = $1 RETURNING ultimo_folio"
+      ]
+    },
+    {
+      "name": "series-allocator-first-series",
+      "pass": true,
+      "start": "10000000",
+      "firstSeries": "10000001",
+      "sql": [
+        "INSERT INTO series_consecutivo (id, ultimo_numero) VALUES (1, 10000000) ON CONFLICT (id) DO NOTHING",
+        "SELECT ultimo_numero FROM series_consecutivo WHERE id = 1 FOR UPDATE",
+        "UPDATE series_consecutivo SET ultimo_numero = ultimo_numero + 1 WHERE id = 1 RETURNING ultimo_numero"
+      ]
+    },
+    {
+      "name": "no-users-or-sessions",
+      "pass": true,
+      "note": "Fixture contains only ubicaciones and six counters; no user/session tables or rows."
+    }
+  ],
+  "evidenceSha256": "0404255903ecf1263658ebcefbdbb769e762417d23e62ffc45d78a2f447d6c6e",
+  "cleanup": "Only the newly-created disposable cluster was stopped and removed; reports retained."
+}

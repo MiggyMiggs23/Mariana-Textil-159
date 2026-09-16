@@ -1,0 +1,2048 @@
+{
+  "operation": "PROMPT_H_POST_ARRANQUE_READ_ONLY_COMPARISON",
+  "status": "PASS_READ_ONLY_POST_START_CAPTURE",
+  "overallComparison": "POST_START_VALUE_DRIFT_REPORTED_NO_REPAIR",
+  "driftAssessment": {
+    "schema": "NO_SCHEMA_DRIFT",
+    "c": "REAL_FULL_ROW_HASH_DRIFT_NOT_CLASSIFIED_AS_TIMESTAMP_ONLY",
+    "a": "POST_START_A_VALUE_DRIFT",
+    "sequences": "POST_START_SEQUENCE_VALUE_DRIFT"
+  },
+  "sourceDatabase": "heliumdb",
+  "sourceSchema": "public",
+  "apiWasRestartedByMainBeforeCapture": true,
+  "frontendAlsoRestartedByMain": true,
+  "apiRestartedByThisCapture": false,
+  "transaction": {
+    "isolation": "REPEATABLE READ",
+    "readOnly": true,
+    "sourceWrites": false,
+    "SQLWritesExecuted": false
+  },
+  "capturedIdentity": {
+    "database_name": "heliumdb",
+    "schema_name": "public",
+    "server_version": "16.10",
+    "server_version_num": "160010",
+    "server_port": null,
+    "server_address": null
+  },
+  "baselineStatusPath": ".local/prompt-h-authorized-purge-status.json",
+  "baselineStatusSha256": "8615138f458daba22096a47bc21f47fbb4ffc3382c146a3bd90c10e6bd20a641",
+  "baselineStatus": "COMMITTED_POSTCOMMIT_READ_PASS",
+  "baselineConsistency": {
+    "tableEvidence": true,
+    "triggers": true,
+    "sequences": true
+  },
+  "schema": {
+    "comparisons": {
+      "tables": {
+        "status": "MATCH",
+        "expectedCount": 60,
+        "actualCount": 60,
+        "missing": [],
+        "added": [],
+        "changed": []
+      },
+      "columns": {
+        "status": "MATCH",
+        "expectedCount": 604,
+        "actualCount": 604,
+        "missing": [],
+        "added": [],
+        "changed": []
+      },
+      "constraints": {
+        "status": "MATCH",
+        "expectedCount": 286,
+        "actualCount": 286,
+        "missing": [],
+        "added": [],
+        "changed": []
+      },
+      "indexes": {
+        "status": "MATCH",
+        "expectedCount": 218,
+        "actualCount": 218,
+        "missing": [],
+        "added": [],
+        "changed": []
+      },
+      "functions": {
+        "status": "MATCH",
+        "expectedCount": 49,
+        "actualCount": 49,
+        "missing": [],
+        "added": [],
+        "changed": []
+      },
+      "triggers": {
+        "status": "MATCH",
+        "expectedCount": 14,
+        "actualCount": 14,
+        "missing": [],
+        "added": [],
+        "changed": []
+      },
+      "sequences": {
+        "status": "MATCH",
+        "expectedCount": 45,
+        "actualCount": 45,
+        "missing": [],
+        "added": [],
+        "changed": []
+      },
+      "database": {
+        "status": "MATCH"
+      }
+    },
+    "baselineLockedCatalogueCounts": {
+      "tables": 60,
+      "columns": 604,
+      "constraints": 286,
+      "indexes": 218,
+      "functions": 49,
+      "triggers": 14,
+      "sequences": 45
+    },
+    "triggerComparison": {
+      "count": 14,
+      "baselineCount": 14,
+      "exactStateAndDefinition": true,
+      "allEnabledOriginOrAlways": true,
+      "changed": {
+        "status": "MATCH",
+        "expectedCount": 14,
+        "actualCount": 14,
+        "missing": [],
+        "added": [],
+        "changed": []
+      }
+    }
+  },
+  "all60": {
+    "baselineCount": 60,
+    "currentCount": 60,
+    "tableChanges": [
+      {
+        "table": "aplicaciones_credito",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria",
+        "beforeCount": "3286",
+        "afterCount": "3286",
+        "beforeHash": "ebfb27fc49b43dbf3eb4082729d84b0d",
+        "afterHash": "ebfb27fc49b43dbf3eb4082729d84b0d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_escaneos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_participantes",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_snapshot",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditorias_inventario",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "autorizaciones_nota",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "camionetas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "choferes",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "cliente_documentos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "clientes",
+        "beforeCount": "7",
+        "afterCount": "7",
+        "beforeHash": "57547451eec364bf428e41924ded0b49",
+        "afterHash": "57547451eec364bf428e41924ded0b49",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "contenedor_lineas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "contenedores",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "cuadre_fiscal_registros",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "entrada_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "entradas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "equipos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "equipos_checklist",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "existencias",
+        "beforeCount": "37",
+        "afterCount": "37",
+        "beforeHash": "cf4fec9ce687afbde4c378d846505625",
+        "afterHash": "cf4fec9ce687afbde4c378d846505625",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "movimientos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "movimientos_credito",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "notificaciones_credito",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "notificaciones_sistema",
+        "beforeCount": "0",
+        "afterCount": "12",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "24c477404df84bb09ec8c376c2c7e38f",
+        "countChanged": true,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "pagos_proveedor",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "permisos_rol",
+        "beforeCount": "192",
+        "afterCount": "192",
+        "beforeHash": "4d18bc7f2e1076313bc0ed9cddfffe88",
+        "afterHash": "bd230a3eae3bea46826293b828240ca2",
+        "countChanged": false,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "permisos_ubicacion",
+        "beforeCount": "54",
+        "afterCount": "54",
+        "beforeHash": "bc5e55897a9b7e834766d59550c35db1",
+        "afterHash": "5ce4162b4e1c7c6b9d0e8e1dd5b5473b",
+        "countChanged": false,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "permisos_usuario",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "pisos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "precio_historial",
+        "beforeCount": "1016",
+        "afterCount": "1016",
+        "beforeHash": "64f5ec3242e70cdfe37e1a242c26b506",
+        "afterHash": "64f5ec3242e70cdfe37e1a242c26b506",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "productos",
+        "beforeCount": "1234",
+        "afterCount": "1234",
+        "beforeHash": "9b5a7bfb4133c1c700f9d242628c0c46",
+        "afterHash": "9b5a7bfb4133c1c700f9d242628c0c46",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "proveedores",
+        "beforeCount": "27",
+        "afterCount": "27",
+        "beforeHash": "4a0020d06fb591411ff067f4140e5994",
+        "afterHash": "4a0020d06fb591411ff067f4140e5994",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "reimpresiones_etiqueta",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "revisiones_etiqueta",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "rollos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_lineas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_rollos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salidas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salidas_dinero_caja",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "series_consecutivo",
+        "beforeCount": "1",
+        "afterCount": "1",
+        "beforeHash": "425e214a431270c700029d189b1c414d",
+        "afterHash": "425e214a431270c700029d189b1c414d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones_caja",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones_caja_dias",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "solicitudes_pago_dirigido",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimo_episodios",
+        "beforeCount": "0",
+        "afterCount": "3",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "ee466b3b81125f83760eacd3addc2dd4",
+        "countChanged": true,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "stock_minimo_sitios",
+        "beforeCount": "1",
+        "afterCount": "1",
+        "beforeHash": "17a13e555dc56c6b9871558bd51ba05c",
+        "afterHash": "17a13e555dc56c6b9871558bd51ba05c",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimos",
+        "beforeCount": "3",
+        "afterCount": "3",
+        "beforeHash": "60b15edc65d0fa3cbaf651c9427fc0ae",
+        "afterHash": "60b15edc65d0fa3cbaf651c9427fc0ae",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_folio",
+        "beforeCount": "1",
+        "afterCount": "1",
+        "beforeHash": "1b34fd1b69e6a439935eaf4c7efe7d72",
+        "afterHash": "1b34fd1b69e6a439935eaf4c7efe7d72",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_linea_consumos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_lineas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_pagos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "tickets",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ubicaciones",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "024961124e5a29d6f6e1c4053687a948",
+        "afterHash": "024961124e5a29d6f6e1c4053687a948",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "usuarios",
+        "beforeCount": "31",
+        "afterCount": "31",
+        "beforeHash": "658b6ca14c31aa1a9eaf3fdeede703f1",
+        "afterHash": "658b6ca14c31aa1a9eaf3fdeede703f1",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_salidas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_tickets",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viajes",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      }
+    ],
+    "status": "DIFFERENT"
+  },
+  "A": {
+    "tableCount": 35,
+    "countChanges": [
+      {
+        "table": "aplicaciones_credito",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_escaneos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_participantes",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_snapshot",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "auditorias_inventario",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "autorizaciones_nota",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "contenedor_lineas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "contenedores",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "cuadre_fiscal_registros",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "entradas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "movimientos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "movimientos_credito",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "notificaciones_credito",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "notificaciones_sistema",
+        "beforeCount": "0",
+        "afterCount": "12",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "24c477404df84bb09ec8c376c2c7e38f",
+        "countChanged": true,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "pagos_proveedor",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "reimpresiones_etiqueta",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "revisiones_etiqueta",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "rollos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_lineas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_rollos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salidas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salidas_dinero_caja",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones_caja",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones_caja_dias",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "solicitudes_pago_dirigido",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimo_episodios",
+        "beforeCount": "0",
+        "afterCount": "3",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "ee466b3b81125f83760eacd3addc2dd4",
+        "countChanged": true,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "ticket_linea_consumos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_lineas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_pagos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "tickets",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_salidas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_tickets",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viajes",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      }
+    ],
+    "status": "DIFFERENT"
+  },
+  "B": {
+    "tableCount": 7,
+    "hashChanges": [
+      {
+        "table": "auditoria_inventario_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "entrada_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "existencias",
+        "beforeCount": "37",
+        "afterCount": "37",
+        "beforeHash": "cf4fec9ce687afbde4c378d846505625",
+        "afterHash": "cf4fec9ce687afbde4c378d846505625",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "series_consecutivo",
+        "beforeCount": "1",
+        "afterCount": "1",
+        "beforeHash": "425e214a431270c700029d189b1c414d",
+        "afterHash": "425e214a431270c700029d189b1c414d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_folio",
+        "beforeCount": "1",
+        "afterCount": "1",
+        "beforeHash": "1b34fd1b69e6a439935eaf4c7efe7d72",
+        "afterHash": "1b34fd1b69e6a439935eaf4c7efe7d72",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_folio",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "afterHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      }
+    ],
+    "counterRows": [
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "1",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "2",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "3",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "4",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "5",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "6",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "7",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "8",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "9",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "458",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "row_key": "531",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "1",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "2",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "3",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "4",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "5",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "6",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "7",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "8",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "9",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "458",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "entrada_folio",
+        "row_key": "531",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "1",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "2",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "3",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "4",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "5",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "6",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "7",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "8",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "9",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "458",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "salida_folio",
+        "row_key": "531",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "1",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "2",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "3",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "4",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "5",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "6",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "7",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "8",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "9",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "458",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "viaje_folio",
+        "row_key": "531",
+        "actual_value": "0",
+        "target": "0",
+        "matchesTarget": true
+      },
+      {
+        "table": "ticket_folio",
+        "row_key": "1",
+        "actual_value": "999",
+        "target": "999",
+        "matchesTarget": true
+      },
+      {
+        "table": "series_consecutivo",
+        "row_key": "1",
+        "actual_value": "1000000",
+        "target": "1000000",
+        "matchesTarget": true
+      }
+    ],
+    "allSixObjectivesMatch": true,
+    "status": "MATCH_OBJECTIVES"
+  },
+  "C": {
+    "tableCount": 18,
+    "beforeAfter": [
+      {
+        "table": "auditoria",
+        "beforeCount": "3286",
+        "afterCount": "3286",
+        "beforeHash": "ebfb27fc49b43dbf3eb4082729d84b0d",
+        "afterHash": "ebfb27fc49b43dbf3eb4082729d84b0d",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "camionetas",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "choferes",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "cliente_documentos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "clientes",
+        "beforeCount": "7",
+        "afterCount": "7",
+        "beforeHash": "57547451eec364bf428e41924ded0b49",
+        "afterHash": "57547451eec364bf428e41924ded0b49",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "equipos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "equipos_checklist",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "permisos_rol",
+        "beforeCount": "192",
+        "afterCount": "192",
+        "beforeHash": "4d18bc7f2e1076313bc0ed9cddfffe88",
+        "afterHash": "bd230a3eae3bea46826293b828240ca2",
+        "countChanged": false,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "permisos_ubicacion",
+        "beforeCount": "54",
+        "afterCount": "54",
+        "beforeHash": "bc5e55897a9b7e834766d59550c35db1",
+        "afterHash": "5ce4162b4e1c7c6b9d0e8e1dd5b5473b",
+        "countChanged": false,
+        "hashChanged": true,
+        "status": "DIFFERENT"
+      },
+      {
+        "table": "permisos_usuario",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "pisos",
+        "beforeCount": "0",
+        "afterCount": "0",
+        "beforeHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "afterHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "precio_historial",
+        "beforeCount": "1016",
+        "afterCount": "1016",
+        "beforeHash": "64f5ec3242e70cdfe37e1a242c26b506",
+        "afterHash": "64f5ec3242e70cdfe37e1a242c26b506",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "productos",
+        "beforeCount": "1234",
+        "afterCount": "1234",
+        "beforeHash": "9b5a7bfb4133c1c700f9d242628c0c46",
+        "afterHash": "9b5a7bfb4133c1c700f9d242628c0c46",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "proveedores",
+        "beforeCount": "27",
+        "afterCount": "27",
+        "beforeHash": "4a0020d06fb591411ff067f4140e5994",
+        "afterHash": "4a0020d06fb591411ff067f4140e5994",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimo_sitios",
+        "beforeCount": "1",
+        "afterCount": "1",
+        "beforeHash": "17a13e555dc56c6b9871558bd51ba05c",
+        "afterHash": "17a13e555dc56c6b9871558bd51ba05c",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimos",
+        "beforeCount": "3",
+        "afterCount": "3",
+        "beforeHash": "60b15edc65d0fa3cbaf651c9427fc0ae",
+        "afterHash": "60b15edc65d0fa3cbaf651c9427fc0ae",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "ubicaciones",
+        "beforeCount": "11",
+        "afterCount": "11",
+        "beforeHash": "024961124e5a29d6f6e1c4053687a948",
+        "afterHash": "024961124e5a29d6f6e1c4053687a948",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      },
+      {
+        "table": "usuarios",
+        "beforeCount": "31",
+        "afterCount": "31",
+        "beforeHash": "658b6ca14c31aa1a9eaf3fdeede703f1",
+        "afterHash": "658b6ca14c31aa1a9eaf3fdeede703f1",
+        "countChanged": false,
+        "hashChanged": false,
+        "status": "MATCH"
+      }
+    ],
+    "changedTables": [
+      "permisos_rol",
+      "permisos_ubicacion"
+    ],
+    "status": "DIFFERENT_EXACT_TABLES_LISTED",
+    "timestampAttribution": "NOT_ATTRIBUTED_WITHOUT_COLUMN_PROOF"
+  },
+  "sequences": {
+    "count": 45,
+    "changes": [
+      {
+        "sequence": "public.aplicaciones_credito_id_seq",
+        "before": "6",
+        "after": "6",
+        "changed": false
+      },
+      {
+        "sequence": "public.aplicaciones_pago_proveedor_id_seq",
+        "before": "18",
+        "after": "18",
+        "changed": false
+      },
+      {
+        "sequence": "public.auditoria_id_seq",
+        "before": "3965",
+        "after": "3965",
+        "changed": false
+      },
+      {
+        "sequence": "public.auditorias_inventario_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.autorizaciones_nota_id_seq",
+        "before": "6",
+        "after": "6",
+        "changed": false
+      },
+      {
+        "sequence": "public.camionetas_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.choferes_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.cliente_documentos_id_seq",
+        "before": "4",
+        "after": "4",
+        "changed": false
+      },
+      {
+        "sequence": "public.clientes_id_seq",
+        "before": "7",
+        "after": "7",
+        "changed": false
+      },
+      {
+        "sequence": "public.contenedor_lineas_id_seq",
+        "before": "2",
+        "after": "2",
+        "changed": false
+      },
+      {
+        "sequence": "public.contenedores_folio_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.contenedores_id_seq",
+        "before": "2",
+        "after": "2",
+        "changed": false
+      },
+      {
+        "sequence": "public.cuadre_fiscal_registros_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.entradas_id_seq",
+        "before": "432",
+        "after": "432",
+        "changed": false
+      },
+      {
+        "sequence": "public.equipos_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.movimientos_credito_id_seq",
+        "before": "50",
+        "after": "50",
+        "changed": false
+      },
+      {
+        "sequence": "public.movimientos_id_seq",
+        "before": "6522",
+        "after": "6522",
+        "changed": false
+      },
+      {
+        "sequence": "public.notificaciones_credito_id_seq",
+        "before": "8",
+        "after": "8",
+        "changed": false
+      },
+      {
+        "sequence": "public.notificaciones_sistema_id_seq",
+        "before": "28",
+        "after": "40",
+        "changed": true
+      },
+      {
+        "sequence": "public.pagos_proveedor_id_seq",
+        "before": "450",
+        "after": "450",
+        "changed": false
+      },
+      {
+        "sequence": "public.permisos_rol_id_seq",
+        "before": "29041",
+        "after": "29128",
+        "changed": true
+      },
+      {
+        "sequence": "public.permisos_ubicacion_id_seq",
+        "before": "6750",
+        "after": "6804",
+        "changed": true
+      },
+      {
+        "sequence": "public.permisos_usuario_id_seq",
+        "before": "125",
+        "after": "125",
+        "changed": false
+      },
+      {
+        "sequence": "public.pisos_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.precio_historial_id_seq",
+        "before": "1016",
+        "after": "1016",
+        "changed": false
+      },
+      {
+        "sequence": "public.productos_id_seq",
+        "before": "2077",
+        "after": "2077",
+        "changed": false
+      },
+      {
+        "sequence": "public.proveedores_id_seq",
+        "before": "225",
+        "after": "225",
+        "changed": false
+      },
+      {
+        "sequence": "public.reimpresiones_etiqueta_id_seq",
+        "before": "170",
+        "after": "170",
+        "changed": false
+      },
+      {
+        "sequence": "public.revisiones_etiqueta_id_seq",
+        "before": "31",
+        "after": "31",
+        "changed": false
+      },
+      {
+        "sequence": "public.rollos_id_seq",
+        "before": "5463",
+        "after": "5463",
+        "changed": false
+      },
+      {
+        "sequence": "public.salida_lineas_id_seq",
+        "before": "26",
+        "after": "26",
+        "changed": false
+      },
+      {
+        "sequence": "public.salida_rollos_id_seq",
+        "before": "113",
+        "after": "113",
+        "changed": false
+      },
+      {
+        "sequence": "public.salidas_dinero_caja_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      },
+      {
+        "sequence": "public.salidas_id_seq",
+        "before": "24",
+        "after": "24",
+        "changed": false
+      },
+      {
+        "sequence": "public.sesiones_caja_id_seq",
+        "before": "42",
+        "after": "42",
+        "changed": false
+      },
+      {
+        "sequence": "public.solicitudes_pago_dirigido_id_seq",
+        "before": "1",
+        "after": "1",
+        "changed": false
+      },
+      {
+        "sequence": "public.stock_minimo_episodios_id_seq",
+        "before": "7",
+        "after": "10",
+        "changed": true
+      },
+      {
+        "sequence": "public.stock_minimos_id_seq",
+        "before": "3",
+        "after": "3",
+        "changed": false
+      },
+      {
+        "sequence": "public.ticket_linea_consumos_id_seq",
+        "before": "20",
+        "after": "20",
+        "changed": false
+      },
+      {
+        "sequence": "public.ticket_lineas_id_seq",
+        "before": "353",
+        "after": "353",
+        "changed": false
+      },
+      {
+        "sequence": "public.ticket_pagos_id_seq",
+        "before": "89",
+        "after": "89",
+        "changed": false
+      },
+      {
+        "sequence": "public.tickets_id_seq",
+        "before": "105",
+        "after": "105",
+        "changed": false
+      },
+      {
+        "sequence": "public.ubicaciones_id_seq",
+        "before": "834",
+        "after": "834",
+        "changed": false
+      },
+      {
+        "sequence": "public.usuarios_id_seq",
+        "before": "233",
+        "after": "233",
+        "changed": false
+      },
+      {
+        "sequence": "public.viajes_id_seq",
+        "before": "null",
+        "after": "null",
+        "changed": false
+      }
+    ],
+    "changedCount": 4,
+    "status": "DIFFERENT"
+  },
+  "cacheInvariant": {
+    "baseline": {
+      "badPairs": 0,
+      "existencias_rows": 37,
+      "movimientos_rows": 0,
+      "rollos_rows": 0
+    },
+    "current": {
+      "badPairs": 0,
+      "existencias_rows": 37,
+      "movimientos_rows": 0,
+      "rollos_rows": 0
+    },
+    "exact": true
+  },
+  "columnDeltaComparison": {
+    "operation": "PROMPT_H_POST_ARRANQUE_C_COLUMN_DELTA_READ_ONLY",
+    "status": "PASS_COLUMN_DELTA_VERIFIED",
+    "transaction": {
+      "isolation": "REPEATABLE READ",
+      "readOnly": true,
+      "sourceWrites": false,
+      "restoredWrites": false,
+      "SQLWritesExecuted": false
+    },
+    "restoredDatabase": "restore_disposable_20260915214248-7517",
+    "restoredSocketDirectory": "/tmp/prompt-h-block2-20260915214248-7517-7517",
+    "approvedPreflightReport": "reports/prompt-h/block3-preflight-metadata.json",
+    "baselineSnapshot": ".local/backups/prompt-h-block2-20260915214248-7517/source-snapshot.json",
+    "rawPermissionValuesPersisted": false,
+    "tables": [
+      {
+        "table": "permisos_rol",
+        "primaryKey": "id",
+        "sourceRowCount": 192,
+        "restoredRowCount": 192,
+        "rowAlignment": {
+          "sourceMissingKeys": 0,
+          "sourceExtraKeys": 0,
+          "equalRows": 120,
+          "changedRows": 72
+        },
+        "changedColumns": [
+          {
+            "column": "updated_at",
+            "changedRowCount": 72
+          }
+        ],
+        "timestampLikeChangedColumns": [
+          "updated_at"
+        ],
+        "businessChangedColumns": [],
+        "classification": "TIMESTAMP_ONLY_PROVEN",
+        "sourceMatchesPriorPostStartCapture": true,
+        "restoredMatchesApprovedPreflightBaseline": true,
+        "restoredMatchesSnapshot": true,
+        "additionalSourceDriftSincePostStartCapture": false
+      },
+      {
+        "table": "permisos_ubicacion",
+        "primaryKey": "id",
+        "sourceRowCount": 54,
+        "restoredRowCount": 54,
+        "rowAlignment": {
+          "sourceMissingKeys": 0,
+          "sourceExtraKeys": 0,
+          "equalRows": 0,
+          "changedRows": 54
+        },
+        "changedColumns": [
+          {
+            "column": "updated_at",
+            "changedRowCount": 54
+          }
+        ],
+        "timestampLikeChangedColumns": [
+          "updated_at"
+        ],
+        "businessChangedColumns": [],
+        "classification": "TIMESTAMP_ONLY_PROVEN",
+        "sourceMatchesPriorPostStartCapture": true,
+        "restoredMatchesApprovedPreflightBaseline": true,
+        "restoredMatchesSnapshot": true,
+        "additionalSourceDriftSincePostStartCapture": false
+      }
+    ]
+  },
+  "nonSecretEvidence": {
+    "rawRowsPersisted": false,
+    "credentialsPersisted": false,
+    "noRepairOrResetAttempted": true
+  }
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "route": "caja",
+    "screen": "escritorio",
+    "width": 1280,
+    "errors": [],
+    "hasMariana": true,
+    "hasCoco": true,
+    "hasCruces": true,
+    "hasFictional": false,
+    "zeroMoney": true,
+    "scrollWidth": 1280,
+    "innerWidth": 1280
+  },
+  {
+    "route": "caja",
+    "screen": "movil",
+    "width": 402,
+    "errors": [],
+    "hasMariana": true,
+    "hasCoco": true,
+    "hasCruces": true,
+    "hasFictional": false,
+    "zeroMoney": true,
+    "scrollWidth": 402,
+    "innerWidth": 402
+  },
+  {
+    "route": "cuentas",
+    "screen": "escritorio",
+    "width": 1280,
+    "errors": [],
+    "hasMariana": true,
+    "hasCoco": false,
+    "hasCruces": false,
+    "hasFictional": false,
+    "zeroMoney": true,
+    "scrollWidth": 1280,
+    "innerWidth": 1280
+  },
+  {
+    "route": "cuentas",
+    "screen": "movil",
+    "width": 402,
+    "errors": [],
+    "hasMariana": false,
+    "hasCoco": false,
+    "hasCruces": false,
+    "hasFictional": false,
+    "zeroMoney": true,
+    "scrollWidth": 402,
+    "innerWidth": 402
+  }
+]

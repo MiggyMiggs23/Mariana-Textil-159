@@ -21,6 +21,11 @@ export interface AuditoriaEntry {
   entidad: string;
   /** @nullable */
   entidadId: string | null;
+  /**
+     * Owner client ID only when entidad is movimientos_credito and the live movement matches the complete stored audit identity; null means unresolved.
+     * @nullable
+     */
+  clienteId?: number | null;
   /** @nullable */
   sitioId: number | null;
   /** @nullable */

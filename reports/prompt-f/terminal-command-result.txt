@@ -1,0 +1,15 @@
+Command: node .local/prompt-f-check/verify.mjs
+Exit code: 0
+
+Wrote reports/prompt-f/verification-report.json
+
+Supplementary command: artifacts/api-server/node_modules/.bin/tsx --test .local/prompt-f-check/unit-contract.test.ts
+Exit code: 0
+
+3 passing, 0 failing.
+
+Synthetic command: PROMPT_F_CASE_SET=synthetic node .local/prompt-f-check/verify.mjs
+Exit code: 0
+
+Wrote reports/prompt-f/verification-report-synthetic.json
+6/6 synthetic browser cases passed.

@@ -79,6 +79,32 @@ test("document resolver only follows primary IDs, never a different document fol
   );
 });
 
+test("credit movement references use the live owner client route", () => {
+  assert.deepEqual(
+    resolveDocument(
+      { tipo: "MOVIMIENTO_CREDITO", id: "77" },
+      new Map(),
+      new Map(),
+      new Map(),
+      new Map([[77, { clienteId: 42 }]]),
+    ),
+    {
+      label: "Movimiento de crédito 77",
+      route: "/clientes/42/movimientos/77",
+    },
+  );
+  assert.deepEqual(
+    resolveDocument(
+      { tipo: "MOVIMIENTO_CREDITO", id: "77" },
+      new Map(),
+      new Map(),
+      new Map(),
+      new Map(),
+    ),
+    { label: null, route: null },
+  );
+});
+
 test("entry history uses the rollo FK when a folio collides with another entry ID", () => {
   const entradas = new Map([
     [7, { id: 7, label: "MAT-000042" }],
@@ -189,6 +215,9 @@ test("note IDs are loaded and searchable, and the sale writer supplies traceabil
   );
   assert.match(source, /const referencedTicketId =\s*isTicketDocumentType\(reference\.tipo\)/);
   assert.match(salidas, /if \(!ticket\)[\s\S]*TICKET_NOT_FOUND/);
-  assert.match(salidas, /documentoTipo: ticket\.documentoTipo, documentoId: String\(ticketId\), salidaId: r\.salidaId/);
+  assert.match(
+    salidas,
+    /documentoTipo:\s*ticket\.documentoTipo,\s*documentoId:\s*String\(ticketId\),\s*salidaId:\s*r\.salidaId/,
+  );
   assert.equal((page.match(/row\.documentoRuta \?/g) ?? []).length, 2, "desktop and mobile use the enriched document route");
 });

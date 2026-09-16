@@ -6,8 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { ClientePagoAplicacionDetalle } from './clientePagoAplicacionDetalle';
+import type { ClientePagoAuditoria } from './clientePagoAuditoria';
 import type { ClientePagoDetalleCuentaDestino } from './clientePagoDetalleCuentaDestino';
 import type { ClientePagoDetalleFormaPago } from './clientePagoDetalleFormaPago';
+import type { ClientePagoDetalleReparto } from './clientePagoDetalleReparto';
+import type { ClientePagoDetalleTipo } from './clientePagoDetalleTipo';
 
 export interface ClientePagoDetalle {
   id: number;
@@ -26,5 +29,38 @@ export interface ClientePagoDetalle {
   reversoMovimientoId?: number | null;
   /** @nullable */
   motivoReverso?: string | null;
+  /** Evidencia histórica de aplicaciones; no sustituye la proyección del servidor. */
   aplicaciones: ClientePagoAplicacionDetalle[];
+  /** Nombre del cliente al que pertenece el movimiento. */
+  clienteNombre?: string;
+  tipo?: ClientePagoDetalleTipo;
+  /** Importe firmado del movimiento. */
+  importe?: string;
+  fechaEfectiva?: Date;
+  /**
+     * Instante de captura comprobado en auditoría; null si no existe evidencia suficiente.
+     * @nullable
+     */
+  fechaCaptura?: Date | null;
+  /** @nullable */
+  usuarioCaptura?: string | null;
+  /** @nullable */
+  notas?: string | null;
+  /** @nullable */
+  ticketId?: number | null;
+  /** @nullable */
+  ticketFolio?: number | null;
+  /** @nullable */
+  movimientoOriginalId?: number | null;
+  /** Aplicaciones proyectadas del ABONO. Se omite para REVERSO y AJUSTE. */
+  reparto?: ClientePagoDetalleReparto[];
+  /**
+     * Saldo a favor proyectado del ABONO; se omite para REVERSO y AJUSTE.
+     * @nullable
+     */
+  saldoAFavor?: string | null;
+  /** Aplicaciones históricas que cesaron por este REVERSO; no es el reparto propio del reverso. An empty array means no immutable application row was retained for the original payment. When before/after evidence was not retained, those fields are null rather than current projected balances. */
+  aplicacionesRevertidas?: ClientePagoDetalleReparto[];
+  /** Metadatos de auditoría comprobados, sin datos sensibles. */
+  auditoria?: ClientePagoAuditoria[];
 }

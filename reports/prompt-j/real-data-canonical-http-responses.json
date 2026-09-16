@@ -1,0 +1,457 @@
+{
+  "verification": {
+    "capturedAt": "2026-09-16T07:35:39.137Z",
+    "source": "same running API pool and same @workspace/db initialization",
+    "scope": {
+      "desde": "2026-09-16",
+      "hasta": "2026-09-16",
+      "timezone": "America/Mexico_City"
+    },
+    "queryConnection": {
+      "database_name": "heliumdb",
+      "schema_name": "public",
+      "server_version": "16.10",
+      "application_name": "",
+      "transaction_isolation": "repeatable read",
+      "transaction_read_only": "on",
+      "backend_pid": 1249,
+      "observed_at_mexico": "2026-09-16T01:35:39.137"
+    },
+    "queryUrlFingerprint": {
+      "host": "helium",
+      "database": "heliumdb",
+      "username": "postgres",
+      "queryKeys": [
+        "sslmode"
+      ],
+      "length": 62,
+      "sha256": "4703c7788edd0861a3c011171866a4f84b2902712b12da0e62858852767f21dd"
+    },
+    "apiPoolFingerprintSha256": "4703c7788edd0861a3c011171866a4f84b2902712b12da0e62858852767f21dd",
+    "identityEquality": {
+      "database": true,
+      "schema": true,
+      "serverVersion": true,
+      "configFingerprint": true
+    }
+  },
+  "realtimeDashboard": {
+    "generatedAt": "2026-09-16T07:35:39.176Z",
+    "fullRefreshSeconds": 300,
+    "pendingRefreshSeconds": 30,
+    "totales": {
+      "ventas": "0.00",
+      "cobrado": "0.00",
+      "pendiente": "0.00",
+      "subtotal": "0.00",
+      "iva": "0.00",
+      "costo": "0.00",
+      "margen": "0.00",
+      "margenPorcentaje": "0.00",
+      "tickets": 0,
+      "ticketsCobrados": 0,
+      "documentosPendientes": 0,
+      "cancelaciones": 0,
+      "importeCancelaciones": "0.00",
+      "lineasExcluidasMargen": 0
+    },
+    "cantidades": [],
+    "ventasCredito": {
+      "importe": "0.00",
+      "operaciones": 0
+    },
+    "cancelaciones": {
+      "tickets": 0,
+      "importe": "0.00",
+      "tasaCancelacion": "0.00",
+      "excedeUmbral": false
+    },
+    "salidasEnTransito": {
+      "conteo": 0,
+      "importe": "0.00"
+    },
+    "salidasCanceladas": {
+      "conteo": 0,
+      "importe": "0.00"
+    },
+    "pendientes": {
+      "tickets": 0,
+      "ticketsSinCobrar": 0,
+      "notasSinAutorizar": 0,
+      "importe": "0.00",
+      "tiendas": [
+        {
+          "ubicacionId": 1,
+          "pendiente": "0.00",
+          "pendientes30Min": 0,
+          "alertas": []
+        },
+        {
+          "ubicacionId": 3,
+          "pendiente": "0.00",
+          "pendientes30Min": 0,
+          "alertas": []
+        },
+        {
+          "ubicacionId": 2,
+          "pendiente": "0.00",
+          "pendientes30Min": 0,
+          "alertas": []
+        }
+      ]
+    },
+    "tiendas": [
+      {
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "sesionCajaId": null,
+        "abiertaAt": null,
+        "cajero": null,
+        "usuarioTerminal": null,
+        "vendido": "0.00",
+        "cobrado": "0.00",
+        "pendiente": "0.00",
+        "tickets": 0,
+        "documentosPendientes": 0,
+        "ticketsCobrados": 0,
+        "margen": "0.00",
+        "subtotal": "0",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00",
+        "creditoOperaciones": 0,
+        "pendientes30Min": 0,
+        "cancelaciones": 0,
+        "ticketPromedio": "0.00",
+        "margenPorcentaje": "0.00",
+        "tasaCancelacion": "0.00",
+        "alertas": []
+      },
+      {
+        "ubicacionId": 3,
+        "nombreUbicacion": "Coco",
+        "sesionCajaId": null,
+        "abiertaAt": null,
+        "cajero": null,
+        "usuarioTerminal": null,
+        "vendido": "0.00",
+        "cobrado": "0.00",
+        "pendiente": "0.00",
+        "tickets": 0,
+        "documentosPendientes": 0,
+        "ticketsCobrados": 0,
+        "margen": "0.00",
+        "subtotal": "0",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00",
+        "creditoOperaciones": 0,
+        "pendientes30Min": 0,
+        "cancelaciones": 0,
+        "ticketPromedio": "0.00",
+        "margenPorcentaje": "0.00",
+        "tasaCancelacion": "0.00",
+        "alertas": []
+      },
+      {
+        "ubicacionId": 2,
+        "nombreUbicacion": "Cruces",
+        "sesionCajaId": null,
+        "abiertaAt": null,
+        "cajero": null,
+        "usuarioTerminal": null,
+        "vendido": "0.00",
+        "cobrado": "0.00",
+        "pendiente": "0.00",
+        "tickets": 0,
+        "documentosPendientes": 0,
+        "ticketsCobrados": 0,
+        "margen": "0.00",
+        "subtotal": "0",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00",
+        "creditoOperaciones": 0,
+        "pendientes30Min": 0,
+        "cancelaciones": 0,
+        "ticketPromedio": "0.00",
+        "margenPorcentaje": "0.00",
+        "tasaCancelacion": "0.00",
+        "alertas": []
+      }
+    ],
+    "comparativo": [
+      {
+        "ubicacionId": 1,
+        "nombreUbicacion": "Mariana",
+        "sesionCajaId": null,
+        "abiertaAt": null,
+        "cajero": null,
+        "usuarioTerminal": null,
+        "vendido": "0.00",
+        "cobrado": "0.00",
+        "pendiente": "0.00",
+        "tickets": 0,
+        "documentosPendientes": 0,
+        "ticketsCobrados": 0,
+        "margen": "0.00",
+        "subtotal": "0",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00",
+        "creditoOperaciones": 0,
+        "pendientes30Min": 0,
+        "cancelaciones": 0,
+        "ticketPromedio": "0.00",
+        "margenPorcentaje": "0.00",
+        "tasaCancelacion": "0.00",
+        "alertas": []
+      },
+      {
+        "ubicacionId": 3,
+        "nombreUbicacion": "Coco",
+        "sesionCajaId": null,
+        "abiertaAt": null,
+        "cajero": null,
+        "usuarioTerminal": null,
+        "vendido": "0.00",
+        "cobrado": "0.00",
+        "pendiente": "0.00",
+        "tickets": 0,
+        "documentosPendientes": 0,
+        "ticketsCobrados": 0,
+        "margen": "0.00",
+        "subtotal": "0",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00",
+        "creditoOperaciones": 0,
+        "pendientes30Min": 0,
+        "cancelaciones": 0,
+        "ticketPromedio": "0.00",
+        "margenPorcentaje": "0.00",
+        "tasaCancelacion": "0.00",
+        "alertas": []
+      },
+      {
+        "ubicacionId": 2,
+        "nombreUbicacion": "Cruces",
+        "sesionCajaId": null,
+        "abiertaAt": null,
+        "cajero": null,
+        "usuarioTerminal": null,
+        "vendido": "0.00",
+        "cobrado": "0.00",
+        "pendiente": "0.00",
+        "tickets": 0,
+        "documentosPendientes": 0,
+        "ticketsCobrados": 0,
+        "margen": "0.00",
+        "subtotal": "0",
+        "efectivo": "0.00",
+        "transferencia": "0.00",
+        "credito": "0.00",
+        "creditoOperaciones": 0,
+        "pendientes30Min": 0,
+        "cancelaciones": 0,
+        "ticketPromedio": "0.00",
+        "margenPorcentaje": "0.00",
+        "tasaCancelacion": "0.00",
+        "alertas": []
+      }
+    ],
+    "ultimosTickets": []
+  },
+  "realtimePending": {
+    "tickets": 0,
+    "ticketsSinCobrar": 0,
+    "notasSinAutorizar": 0,
+    "importe": "0.00",
+    "tiendas": [
+      {
+        "ubicacionId": 1,
+        "pendiente": "0.00",
+        "pendientes30Min": 0,
+        "alertas": []
+      },
+      {
+        "ubicacionId": 3,
+        "pendiente": "0.00",
+        "pendientes30Min": 0,
+        "alertas": []
+      },
+      {
+        "ubicacionId": 2,
+        "pendiente": "0.00",
+        "pendientes30Min": 0,
+        "alertas": []
+      }
+    ]
+  },
+  "cuentasDestino": {
+    "resumen": [
+      {
+        "cuentaDestino": "CAJA_FISICA",
+        "formaPago": "EFECTIVO",
+        "importe": "0.00",
+        "operaciones": 0,
+        "importeAnterior": null,
+        "variacionPorcentaje": null,
+        "porcentaje": "0.00",
+        "cajaFisicaFacturado": "0.00"
+      },
+      {
+        "cuentaDestino": "CUENTA_NO_FISCAL",
+        "formaPago": "TRANSFERENCIA",
+        "importe": "0.00",
+        "operaciones": 0,
+        "importeAnterior": null,
+        "variacionPorcentaje": null,
+        "porcentaje": "0.00",
+        "cajaFisicaFacturado": "0.00"
+      },
+      {
+        "cuentaDestino": "CUENTA_FISCAL",
+        "formaPago": "TRANSFERENCIA",
+        "importe": "0.00",
+        "operaciones": 0,
+        "importeAnterior": null,
+        "variacionPorcentaje": null,
+        "porcentaje": "0.00",
+        "cajaFisicaFacturado": "0.00"
+      },
+      {
+        "cuentaDestino": "CUENTAS_POR_COBRAR",
+        "formaPago": "CREDITO",
+        "importe": "0.00",
+        "operaciones": 0,
+        "importeAnterior": null,
+        "variacionPorcentaje": null,
+        "porcentaje": "0.00",
+        "cajaFisicaFacturado": "0.00"
+      }
+    ],
+    "tendencia": [],
+    "ivaCobrado": "0.00",
+    "totalCobrado": "0.00",
+    "encabezado": {
+      "vendido": {
+        "contado": "0.00",
+        "credito": "0.00",
+        "total": "0.00",
+        "totalAnterior": null,
+        "variacionPorcentaje": null
+      },
+      "porCobrar": {
+        "periodo": "0.00",
+        "periodoAnterior": null,
+        "variacionPorcentaje": null
+      },
+      "cobrado": {
+        "contado": "0.00",
+        "abonos": "0.00",
+        "saldosFavor": "0.00",
+        "total": "0.00",
+        "totalAnterior": null,
+        "variacionPorcentaje": null
+      },
+      "previousDesde": null,
+      "previousHasta": null
+    },
+    "cobrosAnteriores": [],
+    "matriz": {
+      "filas": [
+        {
+          "facturado": true,
+          "efectivo": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "transferencia": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "porCobrar": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "otras": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "total": "0.00"
+        },
+        {
+          "facturado": false,
+          "efectivo": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "transferencia": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "porCobrar": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "otras": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "total": "0.00"
+        },
+        {
+          "facturado": null,
+          "efectivo": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "transferencia": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "porCobrar": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "otras": {
+            "importe": "0.00",
+            "cuentaDestino": null,
+            "formasPago": []
+          },
+          "total": "0.00"
+        }
+      ],
+      "cierra": true
+    },
+    "ivaFacturado": {
+      "base": "0.00",
+      "iva": "0.00"
+    },
+    "incongruencias": {
+      "conteo": 0,
+      "importe": "0.00"
+    },
+    "porTienda": [],
+    "facturacion": {
+      "facturadoTotal": "0.00",
+      "noFacturadoTotal": "0.00",
+      "facturadoEfectivo": "0.00",
+      "facturadoTransferencia": "0.00",
+      "noFacturadoEfectivo": "0.00",
+      "noFacturadoTransferencia": "0.00"
+    }
+  }
+}

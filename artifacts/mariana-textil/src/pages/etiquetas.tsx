@@ -589,7 +589,7 @@ function CatalogLabelFitReport({ products }: { products: FitReportProduct[] }) {
               key={product.id}
               data={{
                 sku: product.sku,
-                serie: String(product.id).padStart(7, "0").slice(-7),
+                serie: String(product.id).padStart(8, "0").slice(-8),
                 tela: product.tela,
                 color: product.color,
                 cantidad: "9999999.999",

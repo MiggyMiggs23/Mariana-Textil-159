@@ -6,11 +6,13 @@ export type CodigoEscaneadoInterpretado = {
 
 export type ModoEscaneo = "serie" | "raw";
 
-const SERIE_AL_FINAL = /(?:^|\D)(\d{7})$/;
+const SERIE_AL_FINAL = /(?:^|\D)(\d{8}|\d{7})$/;
 
 /**
  * Interpreta etiquetas SKU-SERIE sin alterar búsquedas de texto libre.
- * La serie válida son exactamente siete dígitos consecutivos al final.
+ * La serie válida son siete u ocho dígitos consecutivos al final; la
+ * coincidencia de ocho dígitos se prefiere cuando ambas longitudes son
+ * posibles. Un noveno dígito no es una serie.
  */
 export function interpretarCodigoEscaneado(
   textoOriginal: string,

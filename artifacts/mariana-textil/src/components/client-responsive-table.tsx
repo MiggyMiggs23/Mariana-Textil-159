@@ -13,6 +13,10 @@ export interface ResponsiveTableRow {
   id: string | number;
   cells: ReactNode[];
   ticketId?: number | null;
+  /** Optional destination for the row's explicit primary identifier. */
+  href?: string | null;
+  /** Optional accessible/readable label for the explicit destination. */
+  linkLabel?: ReactNode;
 }
 
 interface ResponsiveTableProps {
@@ -83,12 +87,13 @@ export function ResponsiveTable({
                     key={headers[index]}
                     className={index === headers.length - 1 ? "text-right font-mono" : ""}
                   >
-                    {headers[index] === "Folio" && row.ticketId != null ? (
+                    {headers[index] === "Folio" &&
+                    (row.href != null || row.ticketId != null) ? (
                       <Link
-                        href={`/tickets/${row.ticketId}`}
-                        className="font-medium text-primary hover:underline"
+                        href={row.href ?? `/tickets/${row.ticketId}`}
+                        className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       >
-                        {cell}
+                        {row.linkLabel ?? cell}
                       </Link>
                     ) : (
                       cell

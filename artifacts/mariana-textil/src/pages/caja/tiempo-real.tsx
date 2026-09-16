@@ -13,7 +13,7 @@ import { useSharedCuentasDestino } from "@/hooks/use-shared-cuentas-destino";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLocationScope } from "@/lib/location-scope";
 import { attentionCardTone } from "./attention-card-tone";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
 import { RefreshCw, Activity, AlertCircle, Ban, Clock, Banknote, ShoppingBag, Loader2, CreditCard, LineChart, Users, Store } from "lucide-react";
@@ -28,6 +28,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import "./tiempo-real-layout.css";
 
 type BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE" | "CANCELADAS" | "SALIDAS_EN_TRANSITO" | "SALIDAS_CANCELADAS";
 type BreakdownItem = {
@@ -195,20 +196,20 @@ export default function CajaTiempoReal() {
 
   const header = cuentasData?.encabezado;
   const cobranzaStat = header ? {
-    title: "Cobranza del periodo",
+    title: "Cobrado en el periodo",
     amount: header.cobrado.total,
     fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
     breakdown: [
-       { label: "De ventas del periodo", amount: header.cobrado.contado, fuentes: ["POS"] },
-       { label: "Abonos a notas", amount: header.cobrado.abonos, fuentes: ["ABONO"] },
-       { label: "A cuenta, sin aplicar", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] },
+       { label: "Cobros directos", amount: header.cobrado.contado, fuentes: ["POS"] },
+       { label: "Abonos a notas (neto de reversos)", amount: header.cobrado.abonos, fuentes: ["ABONO"] },
+       { label: "Saldo a favor (neto de reversos)", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] },
     ],
     className: "border-l-4 border-l-primary",
   } : null;
 
   return (
     <AppLayout>
-      <div className="max-w-[1600px] mx-auto space-y-6">
+      <div className="tiempo-real-layout max-w-[1600px] mx-auto space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-6">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-sidebar flex items-center gap-2">
@@ -248,131 +249,79 @@ export default function CajaTiempoReal() {
           <div className="space-y-6 animate-in fade-in duration-500">
             <div className="flex flex-col gap-4">
               <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-              <Card className="border-sidebar/10 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Ventas (Total)</CardTitle>
-                  <ShoppingBag className="h-4 w-4 text-primary" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-black text-sidebar">
+              <Card className="border-sidebar/10 shadow-sm recon-top-card">
+                <div className="recon-icon-box blue">
+                  <ShoppingBag className="h-6 w-6" />
+                </div>
+                <div className="recon-top-card-content">
+                  <span className="recon-top-card-label">Ventas totales</span>
+                  <span className="recon-top-card-value">
                     {formatNumber(totals.ventas, { kind: "money" })}
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1">
-                     {formatCountLabel(totals.tickets, "ticket total", "tickets totales")}
-                  </p>
-                </CardContent>
+                  </span>
+                  <span className="recon-top-card-sub">
+                    {formatCountLabel(totals.tickets, "ticket total", "tickets totales")}
+                  </span>
+                </div>
               </Card>
 
               <Card
-                className="border-green-500/20 bg-green-50/30 dark:bg-green-950/10 shadow-sm cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="border-sidebar/10 shadow-sm cursor-pointer transition-shadow hover:shadow-md recon-top-card"
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("COBRADO")}
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("COBRADO")}
               >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-green-700 dark:text-green-400 uppercase">Contado cobrado</CardTitle>
-                  <Banknote className="h-4 w-4 text-green-600" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-black text-green-700 dark:text-green-400">
+                <div className="recon-icon-box green">
+                  <Banknote className="h-6 w-6" />
+                </div>
+                <div className="recon-top-card-content">
+                  <span className="recon-top-card-label">Contado cobrado</span>
+                  <span className="recon-top-card-value text-green-700 dark:text-green-400">
                     {formatNumber(totals.cobrado, { kind: "money" })}
-                  </div>
-                  <p className="text-xs text-green-700/70 dark:text-green-400/70 mt-1 font-medium">
+                  </span>
+                  <span className="recon-top-card-sub">
                      {formatCountLabel(totals.ticketsCobrados, "ticket cobrado", "tickets cobrados")}
-                  </p>
-                </CardContent>
+                  </span>
+                </div>
               </Card>
 
               <Card
-                className="border-sidebar/10 shadow-sm cursor-pointer transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="border-sidebar/10 shadow-sm cursor-pointer transition-shadow hover:shadow-md recon-top-card"
                 data-testid="realtime-credit-card"
                 role="button"
                 tabIndex={0}
                 onClick={() => openBreakdown("CREDITO")}
                 onKeyDown={(event) => event.key === "Enter" && openBreakdown("CREDITO")}
               >
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Ventas a crédito</CardTitle>
-                  <CreditCard className="h-4 w-4 text-primary" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-black text-sidebar">
+                <div className="recon-icon-box blue">
+                  <CreditCard className="h-6 w-6" />
+                </div>
+                <div className="recon-top-card-content">
+                  <span className="recon-top-card-label">Ventas a crédito</span>
+                  <span className="recon-top-card-value">
                     {formatNumber(dashboard.ventasCredito.importe, { kind: "money" })}
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1 font-medium">
+                  </span>
+                  <span className="recon-top-card-sub">
                      {formatCountLabel(dashboard.ventasCredito.operaciones, "operación a crédito", "operaciones a crédito")}
-                  </p>
-                </CardContent>
+                  </span>
+                </div>
               </Card>
 
-              <Card className="border-sidebar/10 shadow-sm">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-semibold text-muted-foreground uppercase">Utilidad</CardTitle>
-                  <LineChart className="h-4 w-4 text-primary" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-black text-sidebar">
+              <Card className="border-sidebar/10 shadow-sm recon-top-card">
+                <div className="recon-icon-box blue">
+                  <LineChart className="h-6 w-6" />
+                </div>
+                <div className="recon-top-card-content">
+                  <span className="recon-top-card-label">Utilidad</span>
+                  <span className="recon-top-card-value">
                     {totals.margen == null ? "Pendiente" : formatNumber(totals.margen, { kind: "money" })}
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1 font-medium">
+                  </span>
+                  <span className="recon-top-card-sub">
                     {totals.margenPorcentaje == null ? "Costo pendiente" : <>Margen {formatNumber(totals.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}</>}
-                  </p>
-                </CardContent>
+                  </span>
+                </div>
               </Card>
               </div>
-
-              {/* Band: Cobranza del periodo */}
-              {(cuentasLoading || cuentasError) && (
-                <section aria-label="Cobranza del periodo" aria-live="polite">
-                  <h3 className="text-lg font-bold tracking-tight text-sidebar mb-3">Qué dinero entró</h3>
-                  {cuentasError ? (
-                    <Alert variant="destructive">
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertTitle>No se pudo consultar la cobranza del periodo</AlertTitle>
-                      <AlertDescription>
-                        Las cifras de ventas conservan su consulta independiente.
-                        <Button variant="outline" size="sm" className="ml-3" onClick={() => refetchCuentas()}>Reintentar cobranza</Button>
-                      </AlertDescription>
-                    </Alert>
-                  ) : <Card><CardContent className="pt-6 text-muted-foreground">Consultando cobranza del periodo…</CardContent></Card>}
-                </section>
-              )}
-              {!cuentasLoading && !cuentasError && cobranzaStat && (
-                <div>
-                  <h3 className="text-lg font-bold tracking-tight text-sidebar mb-3">Qué dinero entró</h3>
-                  <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                    <Card className={`relative overflow-hidden ${cobranzaStat.className}`}>
-                      <CardContent className="pt-6">
-                        <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-                          {cobranzaStat.title}
-                        </p>
-                        <Link
-                          href={detailHref(cobranzaStat.fuentes)}
-                          className="mt-2 inline-block text-3xl font-black text-sidebar hover:text-primary hover:underline"
-                          data-testid="text-monto-cobranza-del-periodo"
-                        >
-                          {formatNumber(cobranzaStat.amount, { kind: "money" })}
-                        </Link>
-                        <div className="mt-4 grid gap-2 border-t pt-3">
-                          {cobranzaStat.breakdown.map((part) => (
-                            <Link
-                              key={part.label}
-                              href={detailHref(part.fuentes)}
-                              className="flex items-center justify-between gap-3 text-sm hover:text-primary hover:underline"
-                            >
-                              <span className="text-muted-foreground">{part.label}</span>
-                              <span className="font-mono font-semibold">
-                                {formatNumber(part.amount, { kind: "money" })}
-                              </span>
-                            </Link>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </div>
-              )}
 
               <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
               <Card
@@ -477,131 +426,200 @@ export default function CajaTiempoReal() {
               </Card>
               </div>
             </div>
-            {dashboard && (
-              <div className="flex flex-wrap gap-3" data-testid="analytics-quantities">
-                {dashboard.cantidades.map((row) => (
-                  <div
-                    key={`${row.tipo}-${row.unidad}`}
-                    className="rounded-md border bg-card px-4 py-2 text-sm"
-                    data-testid={`quantity-${row.tipo.toLowerCase()}-${row.unidad.toLowerCase()}`}
-                  >
-                    <span className="font-semibold">{row.modalidad}</span>
-                    <span className="ml-2 font-mono">{formatNumber(row.cantidad, { kind: "quantity" })} {formatUnit(row.unidad)}</span>
-                  </div>
-                ))}
-              </div>
-            )}
 
-            <h3 className="text-xl font-bold tracking-tight text-sidebar mt-10 mb-4">Estado por Tienda</h3>
+             {(cuentasLoading || cuentasError) && (
+               <div aria-label="Cobrado en el periodo" aria-live="polite">
+                 {cuentasError ? (
+                   <Alert variant="destructive">
+                     <AlertCircle className="h-4 w-4" />
+                     <AlertTitle>No se pudo consultar la cobranza del periodo</AlertTitle>
+                     <AlertDescription>
+                       Las cifras de ventas conservan su consulta independiente.
+                       <Button variant="outline" size="sm" className="ml-3" onClick={() => refetchCuentas()}>Reintentar cobranza</Button>
+                     </AlertDescription>
+                   </Alert>
+                 ) : (
+                   <div className="py-3 text-sm text-muted-foreground">Consultando cobranza del periodo…</div>
+                 )}
+               </div>
+             )}
+             {!cuentasLoading && !cuentasError && cobranzaStat && (
+               <div className="py-6 border-y border-sidebar/10">
+                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                   <div>
+                     <p className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                       {cobranzaStat.title}
+                     </p>
+                     <Link
+                       href={detailHref(cobranzaStat.fuentes)}
+                       className="mt-1 inline-block text-3xl font-black text-sidebar hover:text-primary hover:underline"
+                       data-testid="text-monto-cobranza-del-periodo"
+                     >
+                       {formatNumber(cobranzaStat.amount, { kind: "money" })}
+                     </Link>
+                   </div>
+                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-8 flex-1 md:max-w-2xl md:border-l border-sidebar/10 md:pl-8 border-t md:border-t-0 pt-4 md:pt-0">
+                     {cobranzaStat.breakdown.map((part) => (
+                       <Link
+                         key={part.label}
+                         href={detailHref(part.fuentes)}
+                         className="flex sm:flex-col items-center sm:items-start justify-between sm:justify-start gap-1 text-sm hover:text-primary hover:underline group"
+                       >
+                         <span className="text-muted-foreground text-xs">{part.label}</span>
+                         <span className="font-mono font-semibold group-hover:underline">
+                           {formatNumber(part.amount, { kind: "money" })}
+                         </span>
+                       </Link>
+                     ))}
+                   </div>
+                 </div>
+               </div>
+             )}
+
+             {dashboard && dashboard.cantidades.length > 0 && (
+               <div className="flex w-full flex-col sm:flex-row sm:items-center justify-around gap-2 rounded-md border bg-card px-6 py-2.5 text-sm shadow-sm" data-testid="analytics-quantities">
+                 {dashboard.cantidades.map((row) => (
+                   <div
+                     key={`${row.tipo}-${row.unidad}`}
+                     data-testid={`quantity-${row.tipo.toLowerCase()}-${row.unidad.toLowerCase()}`}
+                     className="flex items-center justify-between sm:justify-start gap-2"
+                   >
+                     <span className="font-semibold text-muted-foreground">{row.modalidad}</span>
+                     <span className="font-mono font-bold text-sidebar text-base">{formatNumber(row.cantidad, { kind: "quantity" })} {formatUnit(row.unidad)}</span>
+                   </div>
+                 ))}
+               </div>
+             )}
+
+             <h3 className="recon-heading mt-10">Estado por tienda</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {mergedStores.map(store => {
                 const hasPendingAlert = store.pendientes30Min > 0;
                 return (
-                  <Card key={store.ubicacionId} className="flex flex-col relative overflow-hidden">
-                    {hasPendingAlert && (
-                       <div className="absolute top-0 right-0 w-1.5 h-full bg-amber-500" />
-                    )}
-                    <CardHeader className="pb-3 border-b bg-muted/20">
-                      <CardTitle className="text-lg flex items-center justify-between">
-                        <span className="flex items-center gap-2">
-                          <Store className="w-5 h-5 text-sidebar-primary" />
-                          {store.nombreUbicacion}
-                        </span>
-                      </CardTitle>
-                      <CardDescription className="flex items-center gap-4 text-xs mt-2">
-                        <span className="flex items-center gap-1.5">
-                          <Users className="w-3.5 h-3.5" />
-                          {store.cajero || "Caja Cerrada"}
-                        </span>
-                        {store.abiertaAt && (
-                          <span className="flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5" />
-                            {format(parseISO(store.abiertaAt), "HH:mm")}
-                          </span>
-                        )}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-4 flex-1">
-                      <div className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm mb-4">
-                        <div>
-                          <p className="text-xs text-muted-foreground font-semibold">Vendido</p>
-                          <p className="font-bold text-base text-sidebar">{formatNumber(store.vendido, { kind: "money" })}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground font-semibold">Cobrado</p>
-                          <p className="font-bold text-base text-green-700">{formatNumber(store.cobrado, { kind: "money" })}</p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground font-semibold">Pendiente</p>
-                          <p className={`font-bold text-base ${Number(store.pendiente) > 0 ? "text-amber-700" : ""}`}>
-                            {formatNumber(store.pendiente, { kind: "money" })}
-                          </p>
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground font-semibold">Tickets cobrados (Promedio)</p>
-                          <p className="font-medium text-sidebar">
-                            {store.ticketsCobrados} <span className="text-muted-foreground font-normal">({formatNumber(store.ticketPromedio, { kind: "money" })})</span>
-                          </p>
-                        </div>
-                      </div>
+                   <Card key={store.ubicacionId} className="flex flex-col relative overflow-hidden shadow-sm">
+                     <CardContent className="p-5 flex-1">
+                       <div className="flex items-start justify-between mb-4">
+                         <div className="flex gap-3">
+                           <div className="mt-0.5 text-primary">
+                             <Store className="w-5 h-5" />
+                           </div>
+                           <div>
+                             <div className="font-bold text-base text-sidebar">{store.nombreUbicacion}</div>
+                             <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-0.5 font-medium">
+                               {store.sesionCajaId ? (
+                                 <>
+                                   <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                                   Caja abierta {store.abiertaAt && `• ${format(parseISO(store.abiertaAt), "HH:mm")}`}
+                                 </>
+                               ) : (
+                                 <>
+                                   <div className="w-1.5 h-1.5 rounded-full bg-gray-400"></div>
+                                   Caja cerrada
+                                 </>
+                               )}
+                               <span className="flex items-center gap-1">
+                                 <Users className="w-3 h-3" />
+                                 {store.cajero || "Sin cajero"}
+                               </span>
+                             </div>
+                           </div>
+                         </div>
+                         {hasPendingAlert && (
+                            <div className="bg-amber-50 text-amber-600 dark:bg-amber-950 dark:text-amber-400 text-[10px] px-2 py-0.5 rounded font-bold">
+                              {store.pendientes30Min} pendientes {'>'} 30 min
+                            </div>
+                         )}
+                       </div>
 
-                      <div className="bg-muted/50 rounded-md p-3 text-xs mb-3">
-                        <div className="flex justify-between items-center mb-1 pb-1 border-b">
-                          <span className="font-medium text-muted-foreground">Utilidad</span>
-                          <span className="font-bold text-sidebar flex items-center gap-2">
-                            {store.margen == null ? "Pendiente" : formatNumber(store.margen, { kind: "money" })}
-                            <span className="text-muted-foreground text-[10px] bg-white dark:bg-black/20 px-1.5 py-0.5 rounded border">
-                              {store.margenPorcentaje == null ? "Costo pendiente" : formatNumber(store.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}
-                            </span>
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="font-medium text-muted-foreground">Efectivo / Transf</span>
-                          <span>{formatNumber(store.efectivo, { kind: "money" })} / {formatNumber(store.transferencia, { kind: "money" })}</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium text-muted-foreground">Crédito</span>
-                          <span>{formatNumber(store.credito, { kind: "money" })}</span>
-                        </div>
-                      </div>
+                       <div className="grid grid-cols-3 gap-y-4 gap-x-2 mb-4">
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Vendido</span>
+                           <span className="recon-store-item-val">{formatNumber(store.vendido, { kind: "money" })}</span>
+                         </div>
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Cobrado</span>
+                           <span className="recon-store-item-val green">{formatNumber(store.cobrado, { kind: "money" })}</span>
+                         </div>
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Margen</span>
+                           <span className="recon-store-item-val">
+                             {store.margenPorcentaje == null ? "Costo pendiente" : formatNumber(store.margenPorcentaje, { kind: "percentage", percentageInput: "percent" })}
+                           </span>
+                         </div>
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Pendiente</span>
+                           <span className={`recon-store-item-val ${Number(store.pendiente) > 0 ? "amber" : ""}`}>
+                             {formatNumber(store.pendiente, { kind: "money" })}
+                           </span>
+                         </div>
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Utilidad</span>
+                           <span className="recon-store-item-val">
+                             {store.margen == null ? "Pendiente" : formatNumber(store.margen, { kind: "money" })}
+                           </span>
+                         </div>
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Tickets cobrados</span>
+                           <span className="recon-store-item-val">{store.ticketsCobrados}</span>
+                           <span className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
+                             Ticket promedio<br/>{formatNumber(store.ticketPromedio, { kind: "money" })}
+                           </span>
+                         </div>
+                       </div>
 
-                      {store.sesionCajaId ? (
-                        <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                          Sesión #{store.sesionCajaId} abierta
-                          {store.usuarioTerminal && ` • Term: ${store.usuarioTerminal}`}
-                        </div>
-                      ) : (
-                        <div className="text-xs text-muted-foreground mb-3 flex items-center gap-2">
-                          <span className="w-2 h-2 rounded-full bg-muted-foreground"></span>
-                          Caja Cerrada
-                        </div>
-                      )}
+                       <div className="border-t border-sidebar/10 pt-4 grid grid-cols-3 gap-2 mb-4">
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Efectivo</span>
+                           <span className="recon-store-item-val">{formatNumber(store.efectivo, { kind: "money" })}</span>
+                         </div>
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Transferencia</span>
+                           <span className="recon-store-item-val">{formatNumber(store.transferencia, { kind: "money" })}</span>
+                         </div>
+                         <div className="recon-store-item">
+                           <span className="recon-store-item-label">Crédito</span>
+                           <span className="recon-store-item-val">{formatNumber(store.credito, { kind: "money" })}</span>
+                         </div>
+                       </div>
 
-                      {store.alertas.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-1">
-                          {store.alertas.map((alerta, i) => (
-                            <span key={i} className="bg-destructive/10 text-destructive text-[10px] px-2 py-0.5 rounded font-bold border border-destructive/20">
-                              {alerta}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                    <CardFooter className="pt-0 pb-4">
-                      <Button asChild variant="outline" className="w-full text-sm h-8" size="sm">
-                        <Link href={`/caja/tiendas/${store.ubicacionId}/ventas`}>
-                          Ver ventas
-                        </Link>
-                      </Button>
-                    </CardFooter>
+                       <div className="border-t border-sidebar/10 pt-3 flex items-center justify-between">
+                         <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 font-medium">
+                           {store.sesionCajaId ? (
+                             <>
+                               <Activity className="w-3.5 h-3.5" />
+                               Sesión #{store.sesionCajaId} · Term: {store.usuarioTerminal || "—"}
+                             </>
+                           ) : (
+                             <>
+                               <Ban className="w-3.5 h-3.5" />
+                               Caja cerrada
+                             </>
+                           )}
+                         </div>
+                       </div>
+
+                       {store.alertas.length > 0 && (
+                         <div className="mt-3 flex flex-wrap gap-1">
+                           {store.alertas.map((alerta, i) => (
+                             <span key={i} className="bg-destructive/10 text-destructive text-[10px] px-2 py-0.5 rounded font-bold border border-destructive/20">
+                               {alerta}
+                             </span>
+                           ))}
+                         </div>
+                       )}
+                     </CardContent>
+                     <div className="bg-muted/10 border-t px-5 py-2">
+                       <Link href={`/caja/tiendas/${store.ubicacionId}/ventas`} className="text-primary text-xs font-semibold flex items-center justify-center gap-1 hover:underline">
+                         Ver ventas →
+                       </Link>
+                     </div>
                   </Card>
                 )
               })}
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 pt-6">
-              <Card className="xl:col-span-2">
+              <Card className="xl:col-span-3 shadow-sm">
                 <CardHeader>
                   <CardTitle>Tabla Comparativa</CardTitle>
                 </CardHeader>
@@ -639,7 +657,7 @@ export default function CajaTiempoReal() {
                         ))}
                       </TableBody>
                       <TableFooter>
-                        <TableRow>
+                       <TableRow className="bg-muted/20">
                           <TableCell className="font-bold">Total General</TableCell>
                           <TableCell className="text-right font-bold">{formatNumber(totals.tickets, { kind: "count" })}</TableCell>
                           <TableCell className="text-right font-mono font-bold">{formatNumber(totals.ventas, { kind: "money" })}</TableCell>
@@ -655,7 +673,7 @@ export default function CajaTiempoReal() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="xl:col-span-3 shadow-sm">
                 <CardHeader>
                   <CardTitle>Últimos documentos</CardTitle>
                 </CardHeader>
@@ -675,11 +693,11 @@ export default function CajaTiempoReal() {
                           </div>
                         </div>
                         <div className="flex justify-between items-end text-xs">
-                          <div>
+                           <div className="min-w-0">
                             <p className="text-muted-foreground">{t.nombreUbicacion}</p>
-                            <p className="font-medium truncate max-w-[150px]">{t.nombreCliente || "Sin Cliente"}</p>
+                             <p className="font-medium break-words">{t.nombreCliente || "Sin Cliente"}</p>
                           </div>
-                          <div className="text-right">
+                           <div className="text-right shrink-0">
                             <p className="font-mono font-bold text-sm">{formatNumber(t.importe, { kind: "money" })}</p>
                             <p className="font-mono text-green-600 dark:text-green-500 text-[10px] mt-0.5">{t.margen == null ? "Margen pendiente" : `${formatNumber(t.margen, { kind: "money" })} marg.`}</p>
                           </div>

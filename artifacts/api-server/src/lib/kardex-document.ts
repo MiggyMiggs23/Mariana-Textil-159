@@ -28,6 +28,15 @@ export type DocumentReference = {
   id: string | null;
 };
 
+/**
+ * The credit movement route is nested under its owning client.  The owner is
+ * deliberately kept as an ID-only lookup result: document resolution must not
+ * turn an inventory history read into a client catalog read.
+ */
+export type CreditMovementOwner = {
+  clienteId: number;
+};
+
 export type MovementDocumentSource = {
   tipo: string;
   documentoTipo: string | null;
@@ -78,6 +87,7 @@ export function resolveDocument(
   entradaMap: Map<number, { id: number; label: string }>,
   ticketMap: Map<number, number>,
   salidaMap: Map<number, string>,
+  creditMovementMap: Map<number, CreditMovementOwner> = new Map(),
 ): { label: string | null; route: string | null } {
   if (!reference.tipo || !reference.id) return { label: null, route: null };
   if (reference.tipo === "ENTRADA") {
@@ -116,5 +126,27 @@ export function resolveDocument(
       route: `/salidas/${salidaId}`,
     };
   }
+  if (reference.tipo === "MOVIMIENTO_CREDITO") {
+    const movementId = Number(reference.id);
+    const owner = creditMovementMap.get(movementId);
+    if (
+      owner == null ||
+      !Number.isSafeInteger(owner.clienteId) ||
+      owner.clienteId <= 0
+    ) {
+      return { label: null, route: null };
+    }
+    return {
+      label: `Movimiento de crédito ${movementId}`,
+      route: `/clientes/${owner.clienteId}/movimientos/${movementId}`,
+    };
+  }
   return { label: null, route: null };
 }
+
+/**
+ * Named export for consumers that need the shared Kardex document resolver.
+ * Keep resolveDocument as the compatibility name used by existing Kardex
+ * callers and tests.
+ */
+export const resolveKardexDocument = resolveDocument;
