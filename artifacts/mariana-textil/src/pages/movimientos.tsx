@@ -562,16 +562,21 @@ export default function Movimientos() {
                             </TableCell>
                             <TableCell className="align-top py-3">
                               {row.documentoRuta ? (
-                                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground bg-primary/5 px-2 py-1 rounded-md">
-                                  <span>{row.documentoEtiqueta || `${row.documentoTipo} ${row.documentoId}`}</span>
-                                </span>
+                                <Link
+                                  href={row.documentoRuta}
+                                  className="inline-flex items-center gap-1.5 text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-sm font-medium bg-primary/5 px-2 py-1 rounded-md"
+                                  aria-label={`Abrir ${row.documentoEtiqueta || "documento"}`}
+                                  data-testid={`link-documento-${row.id}`}
+                                >
+                                  <span>{row.documentoEtiqueta || "Abrir documento"}</span>
+                                  <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                                </Link>
                               ) : (
-                                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground/70 bg-muted/30 px-2 py-1 rounded-md">
-                                  <span className="w-3.5 h-3.5 flex items-center justify-center border border-dashed rounded-sm border-current opacity-70">
-                                    <span className="w-1.5 h-[1px] bg-current"></span>
-                                  </span>
-                                  Sin documento
-                                </span>
+                                row.documentoEtiqueta || row.documentoTipo || row.documentoId ? (
+                                  <span className="text-muted-foreground italic">Referencia no resuelta</span>
+                                ) : (
+                                  <span className="text-muted-foreground">Sin documento</span>
+                                )
                               )}
                             </TableCell>
                             <TableCell className="align-top py-3 text-right">
@@ -663,16 +668,21 @@ export default function Movimientos() {
                         <div>
                           <span className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground block mb-1">Documento</span>
                           {row.documentoRuta ? (
-                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground truncate">
-                              <span className="truncate">{row.documentoEtiqueta || `${row.documentoTipo} ${row.documentoId}`}</span>
-                            </span>
+                            <Link
+                              href={row.documentoRuta}
+                              className="inline-flex items-center gap-1.5 text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-sm font-medium truncate"
+                              aria-label={`Abrir ${row.documentoEtiqueta || "documento"}`}
+                              data-testid={`mobile-link-documento-${row.id}`}
+                            >
+                              <span className="truncate">{row.documentoEtiqueta || "Abrir documento"}</span>
+                              <ExternalLink className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                            </Link>
                           ) : (
-                            <span className="text-[11px] font-medium text-muted-foreground italic flex items-center gap-1">
-                              <span className="w-3 h-3 flex items-center justify-center border border-dashed rounded-[2px] border-current opacity-70">
-                                <span className="w-1 h-[1px] bg-current"></span>
-                              </span>
-                              Sin doc
-                            </span>
+                            row.documentoEtiqueta || row.documentoTipo || row.documentoId ? (
+                              <span className="text-[11px] font-medium text-muted-foreground italic">Referencia no resuelta</span>
+                            ) : (
+                              <span className="text-[11px] font-medium text-muted-foreground italic">Sin doc</span>
+                            )
                           )}
                         </div>
                       </div>

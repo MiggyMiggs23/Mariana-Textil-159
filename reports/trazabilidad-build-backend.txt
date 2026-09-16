@@ -1,0 +1,30 @@
+
+> @workspace/api-server@0.0.0 build /home/runner/workspace/artifacts/api-server
+> node ./build.mjs
+
+▲ [WARNING] Duplicate key "saldoPendiente" in object literal [duplicate-object-key]
+
+    src/routes/clientes.ts:1380:9:
+      1380 │          saldoPendiente: saldoPendiente == null ? null : toExcel...
+           ╵          ~~~~~~~~~~~~~~
+
+  The original key "saldoPendiente" is here:
+
+    src/routes/clientes.ts:1362:9:
+      1362 │          saldoPendiente,
+           ╵          ~~~~~~~~~~~~~~
+
+1 warning
+
+  dist/index.mjs                       8.0mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.4kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                  14.0mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.6kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 2540ms

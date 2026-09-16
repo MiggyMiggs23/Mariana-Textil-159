@@ -7545,6 +7545,7 @@ components:
       required:
         [
           movimientoId,
+          ticketId,
           clienteId,
           nombreCliente,
           nota,
@@ -7556,6 +7557,7 @@ components:
         ]
       properties:
         movimientoId: { type: number }
+        ticketId: { type: ["number", "null"] }
         clienteId: { type: number }
         nombreCliente: { type: string }
         nota: { type: ["string", "null"] }
@@ -10239,6 +10241,8 @@ components:
         saldoPosterior: { type: string }
         documentoTipo: { type: ["string", "null"] }
         documentoId: { type: ["string", "null"] }
+        documentoEtiqueta: { type: ["string", "null"] }
+        documentoRuta: { type: ["string", "null"] }
         movimientoOrigenId: { type: ["number", "null"] }
         usuarioId: { type: number }
         motivoSalidaExtraordinaria:

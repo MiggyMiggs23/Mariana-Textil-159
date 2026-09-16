@@ -974,3 +974,17 @@ mtime_ms = 1789512148170
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/40dc6130-41ac-4cca-8de8-c6f4c0b312b5/b420184c-1667-4479-822d-ba74796afea5"
 storage_version_token = "1789512166782620"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "wtYVvXrSjG8jLAVrEFo-Z"
+uri = "file://reports/trazabilidad-resultado.md"
+type = "text"
+title = "Trazabilidad A + B — resultado"
+description = "Casos implementados, identidad de navegación, categoría C detenida y resultados de verificación con sus límites."
+logical_id = "200f8034-d6ba-4709-a300-7d8ce908a63f"
+content_hash = "sha256:ee9349d29ffddd4b6e347c9e5747c0bc02b2e798d6ff5acbf64c78bb5c02954c"
+size = 6454
+mtime_ms = 1789518908965
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/200f8034-d6ba-4709-a300-7d8ce908a63f/0e0603f2-88fd-4ab7-9993-125f5ffe5e78"
+storage_version_token = "1789518935019388"
+content_type = "text/markdown"

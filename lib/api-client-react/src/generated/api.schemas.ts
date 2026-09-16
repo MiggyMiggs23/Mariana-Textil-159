@@ -1217,6 +1217,8 @@ export const AdminAlertaCreditoEstadoNota = {
 
 export interface AdminAlertaCredito {
   movimientoId: number;
+  /** @nullable */
+  ticketId: number | null;
   clienteId: number;
   nombreCliente: string;
   /** @nullable */
@@ -4364,6 +4366,10 @@ export interface MovimientoRow {
   documentoTipo?: string | null;
   /** @nullable */
   documentoId?: string | null;
+  /** @nullable */
+  documentoEtiqueta?: string | null;
+  /** @nullable */
+  documentoRuta?: string | null;
   /** @nullable */
   movimientoOrigenId?: number | null;
   usuarioId: number;

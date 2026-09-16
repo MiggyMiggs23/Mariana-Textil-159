@@ -59,3 +59,4 @@
 - [Pruebas financieras SQL sin escrituras](readonly-financial-sql-fixtures.md) — CTEs VALUES y READ ONLY prueban la consulta real sin usuarios ni movimientos temporales.
 - [Typecheck recursivo completo](recursive-typecheck-completeness.md) — el primer fallo puede ocultar otros paquetes; completar pendientes y deduplicar diagnósticos.
 - [Instantes de recaptura histórica](historical-payment-recapture-instants.md) — conservar el instante original exacto; normalizar a mediodía puede volver a bloquear el reparto.
+- [Referencias convertidas en enlaces](reference-navigation-review.md) — auditar todas las ramas del resolver; una ruta latente puede fallar al hacerse navegable.

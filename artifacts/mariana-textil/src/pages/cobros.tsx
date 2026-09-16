@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
 import {
   useObtenerSesionCajaActual,
@@ -93,6 +93,40 @@ function projectedMoney(value: string | number | null | undefined) {
   return value === undefined || value === null || value === ""
     ? "—"
     : formatNumber(value, { kind: "money" });
+}
+
+export function CarteraTicketFolioLink({
+  ticketId,
+  ticketFolio,
+}: {
+  ticketId: number;
+  ticketFolio: number | null | undefined;
+}) {
+  return (
+    <Link
+      href={`/tickets/${ticketId}`}
+      className="hover:text-primary hover:underline"
+    >
+      {ticketFolio != null ? `#${ticketFolio}` : "—"}
+    </Link>
+  );
+}
+
+export function CarteraMovementLink({
+  clienteId,
+  movimientoId,
+}: {
+  clienteId: number;
+  movimientoId: number;
+}) {
+  return (
+    <Link
+      href={`/clientes/${clienteId}?tab=estado&movimientoId=${movimientoId}`}
+      className="ml-3 inline-flex items-center text-xs font-semibold text-primary hover:underline"
+    >
+      Estado de cuenta
+    </Link>
+  );
 }
 
 function mexicoCityDate(date: Date): string {
@@ -300,6 +334,16 @@ function CarteraContent() {
                       <tbody className="divide-y border-b">
                         {notas.map((nota, index) => {
                           const isHighlighted = nota.ticketFolio === ticket.folio;
+                           const ticketHref =
+                             typeof nota.ticketId === "number"
+                               ? `/tickets/${nota.ticketId}`
+                               : null;
+                           const clientMovementHref =
+                             clienteId && typeof nota.movimientoId === "number"
+                               ? `/clientes/${clienteId}?tab=estado&movimientoId=${nota.movimientoId}`
+                               : null;
+                           const folioLabel =
+                             nota.ticketFolio != null ? `#${nota.ticketFolio}` : "—";
 
                            const parseDate = (dString: string) =>
                              new Date(dString.includes('T') ? dString : `${dString}T12:00:00`);
@@ -307,14 +351,31 @@ function CarteraContent() {
 
                           return (
                             <tr
-                              key={nota.ticketFolio ? `nota-folio-${nota.ticketFolio}` : `nota-idx-${index}`}
+                              key={nota.movimientoId != null ? `nota-movimiento-${nota.movimientoId}` : `nota-idx-${index}`}
                               className={`transition-colors ${isHighlighted ? "bg-primary/10 border-primary/20 relative" : "hover:bg-muted/30"}`}
                             >
                               <td className="p-4 font-black text-sidebar relative">
                                 {isHighlighted && (
                                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
                                 )}
-                                #{nota.ticketFolio}
+                                 {ticketHref ? (
+                                   <span data-testid={`link-cartera-ticket-${nota.ticketId}`}>
+                                     <CarteraTicketFolioLink
+                                       ticketId={nota.ticketId as number}
+                                       ticketFolio={nota.ticketFolio}
+                                     />
+                                   </span>
+                                 ) : (
+                                   folioLabel
+                                 )}
+                                 {clientMovementHref && (
+                                   <span data-testid={`link-cartera-movement-${nota.movimientoId}`}>
+                                     <CarteraMovementLink
+                                       clienteId={clienteId as number}
+                                       movimientoId={nota.movimientoId as number}
+                                     />
+                                   </span>
+                                 )}
                                 {isHighlighted && (
                                   <span className="ml-3 inline-flex items-center rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-bold text-primary uppercase tracking-wider">
                                     ESCANEADA
@@ -396,7 +457,7 @@ function CarteraContent() {
           tipo="CLIENTE"
           entidadId={clienteId || 0}
           documentoMovimientoId={dirigidoDialog.nota.movimientoId!}
-          folio={dirigidoDialog.nota.ticketFolio || "—"}
+          folio={dirigidoDialog.nota.ticketFolio ?? "—"}
           saldoPendiente={dirigidoDialog.nota.saldoPendiente ?? "0"}
           onSuccess={() => {
              if (clienteId) {

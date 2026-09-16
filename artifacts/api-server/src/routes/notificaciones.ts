@@ -504,7 +504,7 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
           ));
           return {
             movimientoId: charge.movimientoId,
-            ticketId: charge.ticketId,
+            ticketId: metadata.ticketId == null ? null : Number(metadata.ticketId),
             clienteId,
             clienteNombre: metadata.clienteNombre,
             folio: metadata.folio == null ? null : Number(metadata.folio),

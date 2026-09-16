@@ -9,6 +9,8 @@ import type { AdminAlertaCreditoEstadoNota } from './adminAlertaCreditoEstadoNot
 
 export interface AdminAlertaCredito {
   movimientoId: number;
+  /** @nullable */
+  ticketId: number | null;
   clienteId: number;
   nombreCliente: string;
   /** @nullable */

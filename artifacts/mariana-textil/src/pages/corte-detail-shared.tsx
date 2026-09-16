@@ -7,6 +7,21 @@ import { Download, FileText, Printer } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Link } from "wouter";
+
+export function CorteTicketFolioLink({
+  ticketId,
+  folio,
+}: {
+  ticketId: number;
+  folio: number;
+}) {
+  return (
+    <Link href={`/tickets/${ticketId}`} className="text-primary hover:underline">
+      F-{folio}
+    </Link>
+  );
+}
 
 export default function CorteDetail({ corte }: { corte: CorteCaja }) {
   const { toast } = useToast();
@@ -252,7 +267,9 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
             <TableBody>
               {corte.ticketsCobradosDetalle.map(t => (
                 <TableRow key={t.ticketId}>
-                  <TableCell className="font-mono font-medium">F-{t.folio}</TableCell>
+                  <TableCell className="font-mono font-medium">
+                    <CorteTicketFolioLink ticketId={t.ticketId} folio={t.folio} />
+                  </TableCell>
                   <TableCell className="text-muted-foreground">{format(new Date(t.cobradoAt), "HH:mm:ss")}</TableCell>
                   <TableCell className="text-right font-mono text-sidebar font-semibold">{formatNumber(t.importe, { kind: "money" })}</TableCell>
                 </TableRow>

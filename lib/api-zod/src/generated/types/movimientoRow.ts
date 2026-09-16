@@ -24,6 +24,10 @@ export interface MovimientoRow {
   /** @nullable */
   documentoId?: string | null;
   /** @nullable */
+  documentoEtiqueta?: string | null;
+  /** @nullable */
+  documentoRuta?: string | null;
+  /** @nullable */
   movimientoOrigenId?: number | null;
   usuarioId: number;
   motivoSalidaExtraordinaria: MotivoSalidaExtraordinaria | null;

@@ -1,0 +1,19 @@
+✔ document links use the resolved primary-key route, not the displayed folio (8.355109ms)
+✔ a null route is explicit and never rebuilt from a document id (0.539275ms)
+✔ a movement without any document reference remains an unlinked label (0.527521ms)
+✔ detail links use real IDs when displayed folios differ (6.477514ms)
+✔ nullable identity fields remain visible but unlinked (0.806787ms)
+✔ the note link closes only for an unmodified primary click (0.190505ms)
+✔ adjustment series links use the roll primary id (7.281514ms)
+✔ conciliation product links use the product primary id (1.0518ms)
+✔ kardex document cells keep desktop and mobile resolved-route branches (1.620614ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 884.675544
+
+exit_code=0

@@ -113,6 +113,7 @@ import {
 } from "../lib/inventario";
 import {
   getKardex as queryKardex,
+  loadMovementDocumentContext,
   listKardexFilters as queryKardexFilters,
   type KardexFiltersInput,
 } from "../lib/kardex";
@@ -236,6 +237,8 @@ type MovimientoRow = {
   saldoPosterior: string;
   documentoTipo: string | null;
   documentoId: string | null;
+  documentoRuta: string | null;
+  documentoEtiqueta: string | null;
   movimientoOrigenId: number | null;
   usuarioId: number;
   justificacion: string | null;
@@ -267,9 +270,10 @@ type MovimientoDetalle = {
   createdAt: string;
 };
 
-async function enrichMovimiento(
+function serializeMovimiento(
   mov: typeof movimientosTable.$inferSelect,
-): Promise<MovimientoRow> {
+  document: { label: string | null; route: string | null },
+): MovimientoRow {
   return {
     id: Number(mov.id),
     rolloId: mov.rolloId,
@@ -281,6 +285,8 @@ async function enrichMovimiento(
     saldoPosterior: mov.saldoPosterior,
     documentoTipo: mov.documentoTipo ?? null,
     documentoId: mov.documentoId ?? null,
+    documentoRuta: document.route,
+    documentoEtiqueta: document.label,
     movimientoOrigenId: mov.movimientoOrigenId ?? null,
     usuarioId: mov.usuarioId,
     justificacion: mov.justificacion ?? null,
@@ -290,6 +296,28 @@ async function enrichMovimiento(
     uuidCliente: mov.uuidCliente ?? null,
     createdAt: mov.createdAt.toISOString(),
   };
+}
+
+async function enrichMovimiento(
+  mov: typeof movimientosTable.$inferSelect,
+): Promise<MovimientoRow> {
+  const context = await loadMovementDocumentContext([mov]);
+  return serializeMovimiento(
+    mov,
+    context.documents[0] ?? { label: null, route: null },
+  );
+}
+
+async function enrichMovimientos(
+  movimientos: readonly (typeof movimientosTable.$inferSelect)[],
+): Promise<MovimientoRow[]> {
+  const context = await loadMovementDocumentContext(movimientos);
+  return movimientos.map((mov, index) => {
+    return serializeMovimiento(
+      mov,
+      context.documents[index] ?? { label: null, route: null },
+    );
+  });
 }
 
 /**
@@ -384,6 +412,7 @@ async function getRolloDetail(rolloId: number) {
        pisoId: rollosTable.pisoId,
        nombrePiso: pisosTable.nombre,
       proveedorId: rollosTable.proveedorId,
+      recepcionId: rollosTable.recepcionId,
       estado: rollosTable.estado,
       cantidadInicial: rollosTable.cantidadInicial,
       cantidadActual: rollosTable.cantidadActual,
@@ -427,7 +456,12 @@ async function getRolloDetail(rolloId: number) {
     costoUnitario: rollo.costoUnitario,
     costoTotal: rollo.costoTotal,
     notas: rollo.notas ?? null,
-    historial: await Promise.all(movimientos.map(enrichMovimiento)),
+    historial: await enrichMovimientos(
+      movimientos.map((mov) => ({
+        ...mov,
+        recepcionId: rollo.recepcionId ?? null,
+      })),
+    ),
     createdAt: rollo.createdAt.toISOString(),
     updatedAt: rollo.updatedAt.toISOString(),
   };
@@ -2237,7 +2271,7 @@ inventarioRouter.get(
         )
         .orderBy(desc(movimientosTable.createdAt));
 
-      const items = await Promise.all(rows.map(enrichMovimiento));
+      const items = await enrichMovimientos(rows);
       const response = ListAjustesPendientesResponse.parse(items);
       res.json(response);
     } catch (e) {

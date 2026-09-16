@@ -57,6 +57,27 @@ import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
 import { useReimprimirClienteNota } from "@workspace/api-client-react";
 import { formatDateOnlyMx } from "@/lib/date-only";
 
+export function RolloSerieLink({
+  rolloId,
+  serie,
+}: {
+  rolloId: number | null;
+  serie: string;
+}) {
+  return rolloId != null ? (
+    <Link
+      href={`/inventario/rollos/${rolloId}`}
+      className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono hover:underline"
+    >
+      {serie}
+    </Link>
+  ) : (
+    <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
+      {serie}
+    </span>
+  );
+}
+
 export default function TicketDetailPage() {
   const [, params] = useRoute("/tickets/:id");
   const ticketId = Number(params?.id);
@@ -447,9 +468,16 @@ export default function TicketDetailPage() {
                           {linea.skuProducto}
                         </span>
                         {linea.serieRollo && (
-                          <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
-                            {linea.serieRollo}
-                          </span>
+                          showRolls && linea.lineas.length === 1 ? (
+                            <RolloSerieLink
+                              rolloId={linea.lineas[0].rolloId}
+                              serie={linea.serieRollo}
+                            />
+                          ) : (
+                            <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
+                              {linea.serieRollo}
+                            </span>
+                          )
                         )}
                       </div>
                     </td>
@@ -515,9 +543,16 @@ export default function TicketDetailPage() {
                           {linea.skuProducto}
                         </span>
                         {linea.serieRollo && (
-                          <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
-                            {linea.serieRollo}
-                          </span>
+                          showRolls && linea.lineas.length === 1 ? (
+                            <RolloSerieLink
+                              rolloId={linea.lineas[0].rolloId}
+                              serie={linea.serieRollo}
+                            />
+                          ) : (
+                            <span className="text-[10px] bg-primary/10 text-primary px-1.5 rounded uppercase font-mono">
+                              {linea.serieRollo}
+                            </span>
+                          )
                         )}
                       </div>
                     </td>

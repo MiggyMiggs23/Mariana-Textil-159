@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { formatNumber } from "@workspace/number-format";
 import { format } from "date-fns";
 import {
@@ -19,10 +19,75 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "wouter";
 
 interface ClienteNotaCreditoProps {
   clienteId: number;
   ticketId: number;
+}
+
+export function isNormalNotaAplicacionClick(
+  event: Pick<
+    MouseEvent<HTMLAnchorElement>,
+    | "button"
+    | "defaultPrevented"
+    | "metaKey"
+    | "ctrlKey"
+    | "shiftKey"
+    | "altKey"
+    | "currentTarget"
+  >,
+) {
+  const target = event.currentTarget?.target;
+  return (
+    event.button === 0 &&
+    !event.defaultPrevented &&
+    !event.metaKey &&
+    !event.ctrlKey &&
+    !event.shiftKey &&
+    !event.altKey &&
+    (!target || target === "_self")
+  );
+}
+
+export function handleNotaAplicacionClick(
+  event: Pick<
+    MouseEvent<HTMLAnchorElement>,
+    | "button"
+    | "defaultPrevented"
+    | "metaKey"
+    | "ctrlKey"
+    | "shiftKey"
+    | "altKey"
+    | "currentTarget"
+  >,
+  onNavigate?: () => void,
+) {
+  if (onNavigate && isNormalNotaAplicacionClick(event)) {
+    onNavigate();
+  }
+}
+
+export function NotaAplicacionFolioLink({
+  ticketId,
+  folio,
+  onNavigate,
+}: {
+  ticketId: number | null;
+  folio: number;
+  onNavigate?: () => void;
+}) {
+  return ticketId != null ? (
+    <Link
+      href={`/tickets/${ticketId}`}
+      className="font-black text-sm text-sidebar hover:text-primary hover:underline"
+      onClick={(event) => handleNotaAplicacionClick(event, onNavigate)}
+    >
+      #{folio}
+    </Link>
+  ) : (
+    <span className="font-black text-sm text-sidebar">#{folio}</span>
+  );
 }
 
 function parseDate(dString: string) {
@@ -233,7 +298,11 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
                       <div key={idx} className={`p-3 rounded-lg border shadow-sm flex items-center justify-between ${asig.ticketId === ticketId ? "bg-primary/5 border-primary/30" : "bg-white"}`}>
                         <div>
                           <div className="flex items-center gap-2 mb-1">
-                            <span className="font-black text-sm text-sidebar">#{asig.folio}</span>
+                            <NotaAplicacionFolioLink
+                              ticketId={asig.ticketId}
+                              folio={asig.folio}
+                              onNavigate={() => setSelectedPagoId(null)}
+                            />
                             <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${asig.resultado === "PAGADA" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
                               {asig.resultado}
                             </span>

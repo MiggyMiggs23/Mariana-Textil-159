@@ -1,0 +1,11 @@
+✔ document links use the resolved primary-key route, not the displayed folio (6.260574ms)
+✔ a null route is explicit and never rebuilt from a document id (0.591683ms)
+✔ a movement without any document reference remains an unlinked label (0.394012ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 344.79632

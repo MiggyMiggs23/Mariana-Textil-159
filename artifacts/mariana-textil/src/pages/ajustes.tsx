@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useSearch } from "wouter";
+import { Link, useLocation, useSearch } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
@@ -505,7 +505,13 @@ export default function Ajustes() {
                               {format(new Date(mov.createdAt), "dd/MM/yy HH:mm")}
                             </TableCell>
                             <TableCell>
-                              <div className="font-mono font-medium">{mov.serie}</div>
+                              <Link
+                                href={`/inventario/rollos/${mov.rolloId}`}
+                                className="font-mono font-medium text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                data-testid={`link-ajuste-rollo-${mov.rolloId}`}
+                              >
+                                {mov.serie}
+                              </Link>
                               <div className="text-xs text-muted-foreground truncate w-32" title={mov.skuProducto}>{mov.skuProducto}</div>
                             </TableCell>
                             <TableCell>
@@ -592,7 +598,12 @@ export default function Ajustes() {
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase text-muted-foreground">Rollo</p>
-                <p>{movementDetail.data.serie ?? `#${movementDetail.data.rolloId}`}</p>
+                <Link
+                  href={`/inventario/rollos/${movementDetail.data.rolloId}`}
+                  className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  {movementDetail.data.serie ?? `#${movementDetail.data.rolloId}`}
+                </Link>
               </div>
               <div>
                 <p className="text-xs font-semibold uppercase text-muted-foreground">Producto</p>

@@ -1,0 +1,28 @@
+Trazabilidad de pruebas backend — cierre A6
+Fecha: 2026-09-16
+
+Alcance focal
+- RECEPCION_SALIDA navega únicamente a la ruta existente /salidas/:id.
+- La resolución verifica existencia por salidaMap (PK real); salida ausente
+  devuelve label/ruta nulos.
+- Una cancelación hereda documento solo si origen y cancelación tienen
+  identidad de rollo presente y el mismo rollo, para TICKET, NOTA, SALIDA y
+  ENTRADA.
+- Se conserva resolución FK de entrada, colisión folio/ID y solo-folio sin
+  href.
+- El contrato de rutas de App.tsx confirma /salidas/:id y no se añade ninguna
+  ruta nueva.
+
+Comando ejecutado (sin DB/build/typecheck/codegen/workflow)
+pnpm --filter @workspace/api-server exec tsx --test --test-name-pattern="document resolver only follows primary IDs|entry history uses the rollo FK|cancellation only inherits" src/kardex-sale-documents.contract.test.ts
+
+Resultado
+✔ document resolver only follows primary IDs, never a different document folio
+✔ entry history uses the rollo FK when a folio collides with another entry ID
+✔ cancellation only inherits a known original reference
+ℹ tests 3
+ℹ pass 3
+ℹ fail 0
+
+No se ejecutó la aserción estática preexistente que inspecciona salidas.ts,
+por indicación de alcance; no se modificó salidas.ts.

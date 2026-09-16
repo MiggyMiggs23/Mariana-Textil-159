@@ -33,7 +33,11 @@ Decisión conservadora: el contrato vigente de `GET /inventario/entradas/{id}` y
 
 El contador confirma **contra lo facturado**, no contra lo cobrado. La diferencia entre facturado y cobrado es cartera de ventas fiscales a crédito, no un descuadre, y la pantalla debe decirlo. Al confirmar se congela la cifra contra la que se confirmó.
 
-En toda tabla del sistema, el identificador principal del renglón es un enlace al detalle: un solo enlace por renglón, y ninguna columna de "Ver detalle".
+En toda tabla documental, el identificador principal del renglón enlaza a su origen cuando existe un destino identificable. **Un renglón puede tener varios identificadores navegables de entidades distintas**: por ejemplo, serie → rollo y folio → documento. La regla prohíbe columnas decorativas de «Ver detalle» y enlaces redundantes al mismo destino, no los caminos necesarios a cada origen.
+
+**Identidad de navegación:** las rutas se construyen exclusivamente con IDs internos o relaciones estables verificadas; el folio y la serie sirven como texto visible, nunca como sustitutos del ID. Si solo existe un folio o una referencia ambigua, el caso requiere contrato/resolución y queda sin enlace hasta identificarlo; no se prueba una ruta por coincidencia numérica. La falta de pantalla o ruta destino es categoría C: se reporta y no se construye sin una decisión separada del propietario.
+
+Las capturas en borrador, los catálogos editados en diálogo y los documentos imprimibles no requieren convertir cada celda en un enlace. Los agregados conservan su regla propia de desglose hacia los documentos que los componen; no se les inventa un ID documental.
 
 Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una venta con líneas metreadas.
 

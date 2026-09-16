@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { ProductCombobox } from "@/components/product-combobox";
 import {
@@ -165,7 +166,15 @@ export default function Conciliacion() {
 
                     return (
                       <TableRow key={`${row.productoId}:${row.ubicacionId}`} className="bg-destructive/5">
-                        <TableCell className="font-mono font-medium">{row.productoId}</TableCell>
+                        <TableCell className="font-mono font-medium">
+                          <Link
+                            href={`/productos/${row.productoId}`}
+                            className="text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            data-testid={`link-conciliacion-producto-${row.productoId}`}
+                          >
+                            {row.productoId}
+                          </Link>
+                        </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <span className="font-medium">{row.ubicacionNombre}</span>

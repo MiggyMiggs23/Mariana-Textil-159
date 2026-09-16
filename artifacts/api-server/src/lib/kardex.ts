@@ -29,9 +29,12 @@ import {
 } from "@workspace/db";
 import {
   isTicketDocumentType,
+  isTicketNavigationDocumentType,
+  resolveMovementReference,
   resolveDocument,
   TICKET_DOCUMENT_TYPES,
   type DocumentReference,
+  type MovementDocumentSource,
 } from "./kardex-document";
 
 const destinoUbicacion = alias(ubicacionesTable, "destino");
@@ -55,6 +58,16 @@ export const TODO_LO_QUE_SALIO_TIPOS = [
 ] as const satisfies readonly TipoMovimiento[];
 
 type JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];
+
+type DocumentLookupContext = {
+  references: DocumentReference[];
+  documents: Array<ReturnType<typeof resolveDocument>>;
+  entradaMap: Map<number, { id: number; label: string }>;
+  ticketMap: Map<number, number>;
+  ticketClientMap: Map<number, string>;
+  salidaMap: Map<number, string>;
+  salidaDestinationMap: Map<number, string | null>;
+};
 
 export function resolveKardexTipos(filters: KardexFiltersInput) {
   return filters.modo === "TODO_LO_QUE_SALIO"
@@ -172,6 +185,7 @@ function joinedBase() {
       unidadProducto: productosTable.unidad,
       rolloId: movimientosTable.rolloId,
       serie: rollosTable.serie,
+       recepcionId: rollosTable.recepcionId,
       ubicacionId: movimientosTable.ubicacionId,
       nombreUbicacion: ubicacionesTable.nombre,
       ubicacionActiva: ubicacionesTable.activa,
@@ -209,38 +223,13 @@ async function selectMovements(
     : query;
 }
 
-async function enrichDocuments(rows: JoinedMovement[]) {
-  const originIds = rows
-    .map((row) => row.movimientoOrigenId)
-    .filter((id): id is number => id != null);
-  const origins = originIds.length
-    ? await db
-        .select({
-          id: movimientosTable.id,
-          documentoTipo: movimientosTable.documentoTipo,
-          documentoId: movimientosTable.documentoId,
-        })
-        .from(movimientosTable)
-        .where(inArray(movimientosTable.id, originIds))
-    : [];
-  const originMap = new Map(
-    origins.map((origin) => [
-      origin.id,
-      { tipo: origin.documentoTipo, id: origin.documentoId },
-    ]),
-  );
-
-  const references = rows.map((row): DocumentReference => {
-    if (row.tipo === "CANCELACION" && row.movimientoOrigenId != null) {
-      const inherited = originMap.get(row.movimientoOrigenId);
-      if (inherited?.tipo && inherited.id) return inherited;
-    }
-    return { tipo: row.documentoTipo, id: row.documentoId };
-  });
+async function loadDocumentContext(
+  references: DocumentReference[],
+): Promise<Omit<DocumentLookupContext, "references" | "documents">> {
   const entradaIds = references
     .filter((reference) => reference.tipo === "ENTRADA" && reference.id)
     .map((reference) => Number(reference.id))
-    .filter(Number.isSafeInteger);
+    .filter((id) => Number.isSafeInteger(id) && id > 0);
   const entradas = entradaIds.length
     ? await db
         .select({
@@ -254,10 +243,7 @@ async function enrichDocuments(rows: JoinedMovement[]) {
           eq(entradasTable.ubicacionId, ubicacionesTable.id),
         )
         .where(
-          or(
-            inArray(entradasTable.id, entradaIds),
-            inArray(entradasTable.folio, entradaIds),
-          ),
+          inArray(entradasTable.id, entradaIds),
         )
     : [];
   const entradaMap = new Map(
@@ -266,15 +252,16 @@ async function enrichDocuments(rows: JoinedMovement[]) {
         id: entrada.id,
         label: `${entrada.iniciales}-${String(entrada.folio).padStart(6, "0")}`,
       };
-      // Historical RECEPCION movements may reference the entry folio rather
-      // than its primary key; both must retain the same navigable document.
-      return [[entrada.id, document], [entrada.folio, document]] as const;
+      return [[entrada.id, document]] as const;
     }),
   );
   const ticketIds = references
-    .filter((reference) => isTicketDocumentType(reference.tipo) && reference.id)
+    .filter(
+      (reference) =>
+        isTicketNavigationDocumentType(reference.tipo) && reference.id,
+    )
     .map((reference) => Number(reference.id))
-    .filter(Number.isSafeInteger);
+    .filter((id) => Number.isSafeInteger(id) && id > 0);
   const salidaIds = references
     .filter(
       (reference) =>
@@ -283,7 +270,7 @@ async function enrichDocuments(rows: JoinedMovement[]) {
         reference.id,
     )
     .map((reference) => Number(reference.id))
-    .filter(Number.isSafeInteger);
+    .filter((id) => Number.isSafeInteger(id) && id > 0);
   const [tickets, salidas] = await Promise.all([
     ticketIds.length
       ? db
@@ -326,22 +313,83 @@ async function enrichDocuments(rows: JoinedMovement[]) {
   const salidaDestinationMap = new Map(
     salidas.map((salida) => [salida.id, salida.destinoNombre]),
   );
+  return {
+    entradaMap,
+    ticketMap,
+    ticketClientMap,
+    salidaMap,
+    salidaDestinationMap,
+  };
+}
+
+/** Resolves movement references in one ID-only batch. */
+export async function loadMovementDocumentContext(
+  rows: readonly MovementDocumentSource[],
+): Promise<DocumentLookupContext> {
+  const originIds = rows
+    .map((row) => row.movimientoOrigenId)
+    .filter((id): id is number => id != null);
+  const origins = originIds.length
+    ? await db
+        .select({
+          id: movimientosTable.id,
+          rolloId: movimientosTable.rolloId,
+          documentoTipo: movimientosTable.documentoTipo,
+          documentoId: movimientosTable.documentoId,
+        })
+        .from(movimientosTable)
+        .where(inArray(movimientosTable.id, originIds))
+    : [];
+  const originMap = new Map(
+    origins.map((origin) => [
+      origin.id,
+      {
+        rolloId: origin.rolloId,
+        reference: { tipo: origin.documentoTipo, id: origin.documentoId },
+      },
+    ]),
+  );
+  const references = rows.map((row): DocumentReference => {
+    const origin = row.movimientoOrigenId == null
+      ? null
+      : originMap.get(row.movimientoOrigenId) ?? null;
+    const originalReference = origin == null
+      ? null
+      : { ...origin.reference, rolloId: origin.rolloId };
+    return resolveMovementReference(
+      row,
+      originalReference,
+    );
+  });
+  const context = await loadDocumentContext(references);
+  return {
+    references,
+    documents: references.map((reference) =>
+      resolveDocument(
+        reference,
+        context.entradaMap,
+        context.ticketMap,
+        context.salidaMap,
+      ),
+    ),
+    ...context,
+  };
+}
+
+async function enrichDocuments(rows: JoinedMovement[]) {
+  const context = await loadMovementDocumentContext(rows);
+  const { references } = context;
 
   return rows.map((row, index) => {
     const reference = references[index]!;
-    const document = resolveDocument(
-      reference,
-      entradaMap,
-      ticketMap,
-      salidaMap,
-    );
+    const document = context.documents[index]!;
     const salidaInmediata =
       (reference.tipo === "SALIDA" || reference.tipo === "RECEPCION_SALIDA") &&
       (row.tipo === "TRANSFERENCIA_SALIDA" || row.tipo === "TRANSFERENCIA_ENTRADA");
     const referencedTicketId =
       isTicketDocumentType(reference.tipo) &&
       reference.id &&
-      ticketMap.has(Number(reference.id))
+      context.ticketMap.has(Number(reference.id))
         ? Number(reference.id)
         : null;
     return {
@@ -363,11 +411,11 @@ async function enrichDocuments(rows: JoinedMovement[]) {
         isTicketDocumentType(reference.tipo) &&
         reference.tipo !== "NOTA" &&
         reference.id
-          ? (ticketClientMap.get(Number(reference.id)) ?? null)
+          ? (context.ticketClientMap.get(Number(reference.id)) ?? null)
           : row.tipo === "TRANSFERENCIA_SALIDA" &&
               reference.tipo === "SALIDA" &&
               reference.id
-            ? (salidaDestinationMap.get(Number(reference.id)) ?? null)
+            ? (context.salidaDestinationMap.get(Number(reference.id)) ?? null)
             : row.tipo === "SALIDA_MOSTRADOR"
               ? "Mostrador"
               : null,

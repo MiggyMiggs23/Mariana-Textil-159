@@ -126,7 +126,7 @@ export async function getAdminAlertas() {
       ORDER BY t.created_at ASC, t.id ASC
     `),
     pool.query(`SELECT c.id AS "clienteId",c.nombre AS "nombreCliente",m.id AS "movimientoId",
-      m.notas AS nota,t.folio AS "ticketFolio" FROM clientes c JOIN movimientos_credito m ON m.cliente_id=c.id
+      m.ticket_id AS "ticketId",m.notas AS nota,t.folio AS "ticketFolio" FROM clientes c JOIN movimientos_credito m ON m.cliente_id=c.id
       LEFT JOIN tickets t ON t.id=m.ticket_id WHERE m.tipo IN ('VENTA_CREDITO','AJUSTE')`),
     loadOverdueSalidaRows(),
   ]);
@@ -158,6 +158,7 @@ export async function getAdminAlertas() {
       return {
         ...row,
         movimientoId: charge.movimientoId,
+         ticketId: row.ticketId == null ? null : Number(row.ticketId),
         clienteId,
         ticketFolio: row.ticketFolio == null ? null : Number(row.ticketFolio),
         importe: money(charge.pendienteCents / 100),

@@ -1,0 +1,85 @@
+✖ document links use the resolved primary-key route, not the displayed folio (4.074431ms)
+✖ a null route is explicit and never rebuilt from a document id (0.509169ms)
+✖ a movement without any document reference remains an unlinked label (0.634662ms)
+node:internal/modules/esm/get_format:185
+  throw new ERR_UNKNOWN_FILE_EXTENSION(ext, filepath);
+        ^
+
+TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".png" for /home/runner/workspace/artifacts/mariana-textil/src/assets/mariana-textil-logo-monochrome.png
+    at Object.getFileProtocolModuleFormat [as file:] (node:internal/modules/esm/get_format:185:9)
+    at defaultGetFormat (node:internal/modules/esm/get_format:211:36)
+    at defaultLoadSync (node:internal/modules/esm/load:158:16)
+    at #loadAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:795:12)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at load (file:///home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/register-zZ7SWseA.mjs:2:5386)
+    at nextStep (node:internal/modules/customization_hooks:189:26)
+    at loadWithHooks (node:internal/modules/customization_hooks:374:18)
+    at #loadSync (node:internal/modules/esm/loader:812:14)
+    at ModuleLoader.load (node:internal/modules/esm/loader:780:26) {
+  code: 'ERR_UNKNOWN_FILE_EXTENSION'
+}
+
+Node.js v24.13.0
+✖ src/pages/detail-identity-links.render.test.ts (2949.976239ms)
+✔ adjustment series links use the roll primary id (6.856639ms)
+✔ conciliation product links use the product primary id (1.170543ms)
+✔ kardex document cells keep desktop and mobile resolved-route branches (1.202082ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 3
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2964.305538
+
+✖ failing tests:
+
+test at src/components/movimiento-documento-link.render.test.ts:1:550
+✖ document links use the resolved primary-key route, not the displayed folio (4.074431ms)
+  ReferenceError: React is not defined
+      at MovimientoDocumentoLink (/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx:42:3)
+      at react-stack-bottom-frame (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:8970:18)
+      at renderWithHooks (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4699:19)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5134:23)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5586:15)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at finishFunctionComponent (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4743:13)
+
+test at src/components/movimiento-documento-link.render.test.ts:1:952
+✖ a null route is explicit and never rebuilt from a document id (0.509169ms)
+  ReferenceError: React is not defined
+      at MovimientoDocumento (/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx:86:5)
+      at react-stack-bottom-frame (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:8970:18)
+      at renderWithHooks (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4699:19)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5134:23)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5586:15)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at finishFunctionComponent (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4743:13)
+
+test at src/components/movimiento-documento-link.render.test.ts:1:1300
+✖ a movement without any document reference remains an unlinked label (0.634662ms)
+  ReferenceError: React is not defined
+      at MovimientoDocumentoFallback (/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.tsx:70:3)
+      at react-stack-bottom-frame (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:8970:18)
+      at renderWithHooks (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4699:19)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5134:23)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5586:15)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at finishFunctionComponent (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4743:13)
+
+test at src/pages/detail-identity-links.render.test.ts:1:1
+✖ src/pages/detail-identity-links.render.test.ts (2949.976239ms)
+  'test failed'
+undefined
+/home/runner/workspace/artifacts/mariana-textil:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx --test src/components/movimiento-documento-link.render.test.ts src/pages/detail-identity-links.render.test.ts src/pages/inventory-reference-links.contract.test.ts

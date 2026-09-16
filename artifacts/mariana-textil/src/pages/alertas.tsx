@@ -32,6 +32,22 @@ function transitAgeLabel(hours: number): string {
   return days > 0 ? `${days} ${days === 1 ? "día" : "días"} y ${remainingHours} h` : `${hours} h`;
 }
 
+export function AlertaCreditoTicketLink({
+  ticketId,
+  label,
+}: {
+  ticketId: number | null | undefined;
+  label: string;
+}) {
+  return ticketId != null ? (
+    <Link href={`/tickets/${ticketId}`} className="hover:text-primary hover:underline">
+      {label}
+    </Link>
+  ) : (
+    label
+  );
+}
+
 export default function Alertas() {
   const [typeFilter, setTypeFilter] = useState("todas");
   const [dueFilter, setDueFilter] = useState("todos");
@@ -195,41 +211,62 @@ export default function Alertas() {
                 </Card>
               ) : (
                 <div className="grid gap-3">
-                  {visibleCredits.map((credito) => (
-                    <Card key={credito.movimientoId} className="border-l-4 border-l-amber-500 hover:bg-muted/30 transition-colors shadow-sm">
-                      <CardContent className="p-4 flex items-center justify-between gap-4">
-                        <div className="space-y-1.5 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-base truncate">{credito.nombreCliente}</span>
-                            <ClienteNotaEstadoBadge
-                              estadoNota={(credito as typeof credito & { estadoNota?: EstadoNota }).estadoNota}
-                              saldoPendiente={credito.pendiente}
-                              id={credito.movimientoId}
-                            />
-                            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 text-muted-foreground bg-muted">
-                              {dueLabel(credito.diasRestantes)}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1"><Ticket className="h-3.5 w-3.5" />
-                               {credito.ticketFolio ? `Folio ${credito.ticketFolio}` : "Movimiento sin folio"}
-                            </span>
-                          </div>
-                          <div className="text-xs font-medium text-foreground">
-                             Vencimiento: {credito.fechaVencimiento.slice(0, 10)}
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-end gap-2 shrink-0">
-                          <span className="font-bold text-lg font-mono text-red-700">
-                            {formatNumber(credito.pendiente, { kind: "money" })}
-                          </span>
-                          <Link href={`/clientes/${credito.clienteId}?tab=estado`} className="text-primary hover:underline text-sm font-medium flex items-center gap-1">
-                            Estado de cuenta <ArrowRight className="h-3 w-3" />
-                          </Link>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                   {visibleCredits.map((credito) => {
+                     // The API contract carries the real ticket identifier separately
+                     // from its display folio. Keep the optional read compatible with
+                     // clients generated before that field was added.
+                     const ticketId = (
+                       credito as typeof credito & { ticketId?: number | null }
+                     ).ticketId;
+                     const ticketLabel =
+                       credito.ticketFolio != null
+                         ? `Folio ${credito.ticketFolio}`
+                         : "Movimiento sin folio";
+                     const clientMovementHref =
+                       `/clientes/${credito.clienteId}?tab=estado&movimientoId=${credito.movimientoId}`;
+
+                     return (
+                       <Card key={credito.movimientoId} className="border-l-4 border-l-amber-500 hover:bg-muted/30 transition-colors shadow-sm">
+                         <CardContent className="p-4 flex items-center justify-between gap-4">
+                           <div className="space-y-1.5 min-w-0">
+                             <div className="flex items-center gap-2">
+                               <Link
+                                 href={clientMovementHref}
+                                 className="font-bold text-base truncate hover:text-primary hover:underline"
+                               >
+                                 {credito.nombreCliente}
+                               </Link>
+                               <ClienteNotaEstadoBadge
+                                 estadoNota={(credito as typeof credito & { estadoNota?: EstadoNota }).estadoNota}
+                                 saldoPendiente={credito.pendiente}
+                                 id={credito.movimientoId}
+                               />
+                               <span className="px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 text-muted-foreground bg-muted">
+                                 {dueLabel(credito.diasRestantes)}
+                               </span>
+                             </div>
+                             <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                               <span className="flex items-center gap-1">
+                                 <Ticket className="h-3.5 w-3.5" />
+                                 <AlertaCreditoTicketLink ticketId={ticketId} label={ticketLabel} />
+                               </span>
+                             </div>
+                             <div className="text-xs font-medium text-foreground">
+                                Vencimiento: {credito.fechaVencimiento.slice(0, 10)}
+                             </div>
+                           </div>
+                           <div className="flex flex-col items-end gap-2 shrink-0">
+                             <span className="font-bold text-lg font-mono text-red-700">
+                               {formatNumber(credito.pendiente, { kind: "money" })}
+                             </span>
+                             <Link href={clientMovementHref} className="text-primary hover:underline text-sm font-medium flex items-center gap-1">
+                               Estado de cuenta <ArrowRight className="h-3 w-3" />
+                             </Link>
+                           </div>
+                         </CardContent>
+                       </Card>
+                     );
+                   })}
                 </div>
               )}
             </div>}

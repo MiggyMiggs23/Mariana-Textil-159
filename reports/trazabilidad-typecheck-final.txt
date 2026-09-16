@@ -1,0 +1,29 @@
+Scope: 10 of 11 workspace projects
+scripts typecheck$ tsc -p tsconfig.json --noEmit
+scripts typecheck: ../artifacts/api-server/src/lib/pos.ts(445,41): error TS2339: Property 'toISOString' does not exist on type 'never'.
+scripts typecheck: ../artifacts/api-server/src/routes/clientes.ts(1380,10): error TS1117: An object literal cannot have multiple properties with the same name.
+scripts typecheck: Failed
+artifacts/api-server typecheck$ tsc -p tsconfig.json --noEmit
+artifacts/mariana-textil typecheck$ tsc -p tsconfig.json --noEmit
+artifacts/mariana-textil typecheck: src/pages/alertas.tsx(241,58): error TS2339: Property 'pendiente' does not exist on type 'AdminAlertaCredito'.
+artifacts/mariana-textil typecheck: src/pages/alertas.tsx(260,54): error TS2339: Property 'pendiente' does not exist on type 'AdminAlertaCredito'.
+artifacts/mariana-textil typecheck: Failed
+artifacts/api-server typecheck: src/lib/pos.ts(445,41): error TS2339: Property 'toISOString' does not exist on type 'never'.
+artifacts/api-server typecheck: src/routes/clientes.ts(1380,10): error TS1117: An object literal cannot have multiple properties with the same name.
+artifacts/api-server typecheck: Failed
+ ERR_PNPM_RECURSIVE_FAIL  
+
+
+Summary: 3 fails, 0 passes
+
+/home/runner/workspace/scripts:
+ ERROR  @workspace/scripts@0.0.0 typecheck: `tsc -p tsconfig.json --noEmit`
+Exit status 2
+
+/home/runner/workspace/artifacts/api-server:
+ ERROR  @workspace/api-server@0.0.0 typecheck: `tsc -p tsconfig.json --noEmit`
+Exit status 2
+
+/home/runner/workspace/artifacts/mariana-textil:
+ ERROR  @workspace/mariana-textil@0.0.0 typecheck: `tsc -p tsconfig.json --noEmit`
+Exit status 2

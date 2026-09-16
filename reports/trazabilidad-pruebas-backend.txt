@@ -1,0 +1,34 @@
+Trazabilidad de pruebas backend — navegación Kardex A6
+Fecha: 2026-09-16
+
+Objetivo
+- Reconocer TICKET_METRO_METREADO únicamente para resolver navegación hacia
+  /tickets/:id.
+- Mantener TICKET_DOCUMENT_TYPES y sus predicados/filtros existentes sin
+  cambios financieros.
+- Verificar referencias ENTRADA con FK rollo.recepcionId, colisiones
+  folio/ID y cancelaciones inseguras.
+
+Comando ejecutado (sin DB, sin workflow, sin build/typecheck)
+pnpm --filter @workspace/api-server exec tsx --test --test-name-pattern="document resolver only follows primary IDs|entry history uses the rollo FK|cancellation only inherits" src/kardex-sale-documents.contract.test.ts
+
+Resultado
+✔ document resolver only follows primary IDs, never a different document folio
+✔ entry history uses the rollo FK when a folio collides with another entry ID
+✔ cancellation only inherits a known original reference
+ℹ tests 3
+ℹ pass 3
+ℹ fail 0
+
+Cobertura relevante
+- TICKET_METRO_METREADO resuelve etiqueta/ruta con ID primario del ticket.
+- TICKET_DESCONOCIDO permanece sin etiqueta/ruta.
+- Un folio de ENTRADA que coincide con el ID de otra entrada no se usa:
+  prevalece el FK del rollo.
+- Solo folio, sin recepcionId estable, no genera href.
+- Cancelación con origen ENTRADA solo hereda si comparte relación estable;
+  origen ausente o relación insegura queda nulo.
+
+Notas
+- No se ejecutó codegen: este ajuste no cambia el contrato API.
+- No se ejecutaron pruebas de DB, build, typecheck ni workflow.

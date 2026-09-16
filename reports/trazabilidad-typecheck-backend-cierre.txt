@@ -1,0 +1,9 @@
+
+> @workspace/api-server@0.0.0 typecheck /home/runner/workspace/artifacts/api-server
+> tsc -p tsconfig.json --noEmit
+
+src/lib/pos.ts(445,41): error TS2339: Property 'toISOString' does not exist on type 'never'.
+src/routes/clientes.ts(1380,10): error TS1117: An object literal cannot have multiple properties with the same name.
+/home/runner/workspace/artifacts/api-server:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/api-server@0.0.0 typecheck: `tsc -p tsconfig.json --noEmit`
+Exit status 2

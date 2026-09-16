@@ -1,0 +1,37 @@
+✔ document links use the resolved primary-key route, not the displayed folio (7.363328ms)
+✖ a null route is explicit and never rebuilt from a document id (1.923911ms)
+✔ a movement without any document reference remains an unlinked label (0.452764ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 647.476763
+
+✖ failing tests:
+
+test at src/components/movimiento-documento-link.render.test.ts:7:558
+✖ a null route is explicit and never rebuilt from a document id (1.923911ms)
+  AssertionError [ERR_ASSERTION]: The input was expected to not match the regular expression /99/. Input:
+  
+  '<span class="text-muted-foreground italic">NOTA 99 — Referencia no resuelta</span>'
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/components/movimiento-documento-link.render.test.ts:59:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '<span class="text-muted-foreground italic">NOTA 99 — Referencia no resuelta</span>',
+    expected: /99/,
+    operator: 'doesNotMatch',
+    diff: 'simple'
+  }
+undefined
+/home/runner/workspace/artifacts/mariana-textil:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx --test src/components/movimiento-documento-link.render.test.ts

@@ -6,7 +6,7 @@ import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloP
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity, Printer, Layers, RotateCcw } from "lucide-react";
+import { ArrowLeft, Box, Calendar, DollarSign, MapPin, Hash, User, Activity, Printer, Layers, RotateCcw, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { QRCodeSVG } from "qrcode.react";
@@ -19,6 +19,7 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import { etiquetasApi } from "@/lib/etiquetas-api";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { ReprintLabelsDialog } from "@/components/reprint-labels-dialog";
+import type { MovimientoDocumentoReference } from "@/components/movimiento-documento-link";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -308,6 +309,7 @@ export default function RolloDetail() {
                 </TableHeader>
                 <TableBody>
                   {rollo.historial.map((mov) => {
+                    const movementDocument = mov as typeof mov & MovimientoDocumentoReference;
                     const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO'].includes(mov.tipo);
                     const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'CANCELACION'].includes(mov.tipo);
 
@@ -332,9 +334,25 @@ export default function RolloDetail() {
                         <TableCell className="text-right font-bold tabular-nums">
                           {formatNumber(mov.saldoPosterior, { kind: "quantity" })}
                         </TableCell>
-                        <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate" title={mov.justificacion || mov.documentoId || ''}>
-                          {mov.documentoTipo && `${mov.documentoTipo} ${mov.documentoId || ''} `}
-                          {mov.justificacion}
+                        <TableCell className="text-xs text-muted-foreground max-w-[200px]">
+                          <div className="flex flex-col gap-1">
+                            {movementDocument.documentoRuta ? (
+                              <Link
+                                href={movementDocument.documentoRuta}
+                                className="inline-flex items-center gap-1.5 text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                                aria-label={`Abrir ${movementDocument.documentoEtiqueta || "documento"}`}
+                                data-testid={`link-rollo-documento-${mov.id}`}
+                              >
+                                <span>{movementDocument.documentoEtiqueta || "Abrir documento"}</span>
+                                <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                              </Link>
+                            ) : movementDocument.documentoEtiqueta || movementDocument.documentoTipo || movementDocument.documentoId ? (
+                              <span className="text-muted-foreground italic">Referencia no resuelta</span>
+                            ) : (
+                              <span className="text-muted-foreground">Sin documento</span>
+                            )}
+                            {mov.justificacion && <span className="truncate" title={mov.justificacion}>{mov.justificacion}</span>}
+                          </div>
                         </TableCell>
                         {isAdmin && (
                           <TableCell className="text-right">

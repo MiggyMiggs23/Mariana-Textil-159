@@ -6,14 +6,72 @@ export const TICKET_DOCUMENT_TYPES = [
   "TICKET_BOLSA_METREADO",
 ] as const;
 
+/** Ticket-backed movement types whose document ID is safe for navigation. */
+export const TICKET_NAVIGATION_DOCUMENT_TYPES = [
+  ...TICKET_DOCUMENT_TYPES,
+  "TICKET_METRO_METREADO",
+] as const;
+
 export function isTicketDocumentType(tipo: string | null): boolean {
   return tipo != null && (TICKET_DOCUMENT_TYPES as readonly string[]).includes(tipo);
+}
+
+export function isTicketNavigationDocumentType(tipo: string | null): boolean {
+  return (
+    tipo != null &&
+    (TICKET_NAVIGATION_DOCUMENT_TYPES as readonly string[]).includes(tipo)
+  );
 }
 
 export type DocumentReference = {
   tipo: string | null;
   id: string | null;
 };
+
+export type MovementDocumentSource = {
+  tipo: string;
+  documentoTipo: string | null;
+  documentoId: string | null;
+  movimientoOrigenId: number | null;
+  rolloId?: number | null;
+  /** Stable rollo → entrada FK used for historical RECEPCION rows. */
+  recepcionId?: number | null;
+};
+
+export type OriginalMovementReference = DocumentReference & {
+  rolloId?: number | null;
+};
+
+/**
+ * Selects the document reference without interpreting human folios as IDs.
+ * RECEPCION references use rollos.recepcionId because old rows may contain an
+ * entry folio in documentoId; a missing relationship is intentionally unsafe.
+ * Cancellation rows inherit only their original movement reference when both
+ * movements identify the same rollo.
+ */
+export function resolveMovementReference(
+  source: MovementDocumentSource,
+  originalReference?: OriginalMovementReference | null,
+): DocumentReference {
+  const safeOriginal =
+    originalReference?.tipo &&
+    originalReference.id &&
+    source.rolloId != null &&
+    originalReference.rolloId != null &&
+    source.rolloId === originalReference.rolloId
+      ? originalReference
+      : null;
+  const reference = source.tipo === "CANCELACION"
+    ? safeOriginal?.tipo && safeOriginal.id
+      ? { tipo: safeOriginal.tipo, id: safeOriginal.id }
+      : { tipo: null, id: null }
+    : { tipo: source.documentoTipo, id: source.documentoId };
+
+  if (reference.tipo !== "ENTRADA") return reference;
+  return source.recepcionId == null
+    ? { tipo: "ENTRADA", id: null }
+    : { tipo: "ENTRADA", id: String(source.recepcionId) };
+}
 
 export function resolveDocument(
   reference: DocumentReference,
@@ -31,7 +89,7 @@ export function resolveDocument(
           route: `/entradas/${entry.id}/documento`,
         };
   }
-  if (isTicketDocumentType(reference.tipo)) {
+  if (isTicketNavigationDocumentType(reference.tipo)) {
     const ticketId = Number(reference.id);
     const folio = ticketMap.get(ticketId);
     if (folio == null) return { label: null, route: null };
@@ -55,7 +113,7 @@ export function resolveDocument(
     if (folio == null) return { label: null, route: null };
     return {
       label: `Recepción de salida ${folio}`,
-      route: `/salidas/${salidaId}/documento/recepcion`,
+      route: `/salidas/${salidaId}`,
     };
   }
   return { label: null, route: null };
