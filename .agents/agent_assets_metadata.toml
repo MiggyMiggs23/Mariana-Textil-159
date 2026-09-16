@@ -1030,3 +1030,31 @@ mtime_ms = 1789522528448
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/47b908c0-7b26-4e01-af79-357ff95f72d8/43427586-cd07-4b30-bc5a-1628157376e5"
 storage_version_token = "1789522534335780"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "DFJ9eXdFCzT2YJIBHh6uY"
+uri = "file://reports/prompt-h/block1-listas-es.md"
+type = "text"
+title = "Prompt H — listas A, B y C para aprobación"
+description = "Clasificación de las 60 tablas vivas, conteos, justificaciones, diferencias y estrategia propuesta sin ejecutar."
+logical_id = "ea16812c-9c0c-43e9-aec0-1a3684627119"
+content_hash = "sha256:f3c92bcf5429af7b0a23505d67717ea09da8786d651738d93c0c9d282a86a14c"
+size = 10971
+mtime_ms = 1789527460278
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ea16812c-9c0c-43e9-aec0-1a3684627119/79e32cae-b9f0-4187-a7c3-961674c67804"
+storage_version_token = "1789527526849847"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "5_UKY6D1L7pN0YilmE0MP"
+uri = "file://reports/prompt-h/block1-live-inventory.md"
+type = "text"
+title = "Prompt H — evidencia de solo lectura"
+description = "Consultas y salidas completas del inventario: tablas, columnas, restricciones, secuencias y triggers."
+logical_id = "5b5536cc-73ab-454c-9146-5490c5a15db9"
+content_hash = "sha256:ffeac80cda6d1dbd76bbe68509bf1f012e10684d94934ca75688090a50d51f98"
+size = 412083
+mtime_ms = 1789527460278
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/5b5536cc-73ab-454c-9146-5490c5a15db9/e2fcb371-83c0-4dd2-a995-1cd851591aed"
+storage_version_token = "1789527527529020"
+content_type = "text/markdown"
