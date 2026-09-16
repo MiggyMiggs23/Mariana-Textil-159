@@ -58,3 +58,9 @@ Retirar explícitamente una aprobación previa si un criterio posterior más com
 **Why:** El propietario confirmó que detectar lo que la prueba anterior no veía y retirar el aprobado era el resultado correcto. También exigió distinguir ausencia real en la fuente de omisión en el PDF antes de corregir: un cero de una combinación sin ventas no es un dato perdido por el generador.
 
 **How to apply:** Contrastar fuente, datos de exportación y PDF con lectura independiente; comunicar la causa antes de modificar y repetir después la matriz completa solicitada, sin rebajar criterios para recuperar un aprobado.
+
+Para medir desplazamiento inicial, separar la caja de toda la tinta de la posición del contenido interior y comparar anclas equivalentes entre páginas del mismo diseño.
+
+**Why:** Un borde o fondo fijo puede comenzar en la misma coordenada aunque el contenido interior se desplace. A la inversa, el primer texto puede empezar antes en una continuación de series que en una hoja de productos sin que exista espacio inicial sobrante.
+
+**How to apply:** Conservar ambos indicadores y explicar las diferencias de plantilla; no declarar ausencia de desplazamiento únicamente porque coincida el borde, ni declarar un defecto comparando primeros textos de estructuras distintas.

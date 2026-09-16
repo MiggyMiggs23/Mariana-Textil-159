@@ -1,0 +1,42 @@
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+{
+  "status": "passed",
+  "reportPath": "/tmp/prompt-e-salida/report.json",
+  "pdfs": [
+    {
+      "name": "salida-count-1",
+      "status": "passed",
+      "pageCount": 1,
+      "pdfPath": "/tmp/prompt-e-salida/salida-count-1.pdf"
+    },
+    {
+      "name": "salida-count-10",
+      "status": "passed",
+      "pageCount": 1,
+      "pdfPath": "/tmp/prompt-e-salida/salida-count-10.pdf"
+    },
+    {
+      "name": "salida-count-11-boundary",
+      "status": "passed",
+      "pageCount": 2,
+      "pdfPath": "/tmp/prompt-e-salida/salida-count-11-boundary.pdf"
+    }
+  ]
+}
+
+EXIT=0

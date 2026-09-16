@@ -1,0 +1,1360 @@
+{
+  "status": "failed",
+  "fixturePolicy": "Read-only browser Fetch fixtures only; no DB writes, users, sessions, or live API calls.",
+  "scenarios": [
+    {
+      "name": "entrada-count-1",
+      "kind": "entrada",
+      "fixtureName": "count1",
+      "configuredRowCount": 1,
+      "route": "/entradas/71001/documento",
+      "expectedPageCount": 1,
+      "expectedDomPageCount": 1,
+      "dimensionsMm": {
+        "width": 216,
+        "height": 279,
+        "safe": 5
+      },
+      "requestedRequests": [
+        "GET /api/auth/me",
+        "GET /api/inventario/entradas/71001"
+      ],
+      "status": "passed",
+      "mounted": {
+        "pageCount": 1,
+        "rowCount": 1,
+        "buttonText": "Imprimir / Guardar PDF"
+      },
+      "print": {
+        "printCalls": 1,
+        "bodyClass": "print-entrada"
+      },
+      "layout": {
+        "pages": [
+          {
+            "x": 0,
+            "y": 0,
+            "right": 814.484375,
+            "bottom": 1052.59375,
+            "width": 814.484375,
+            "height": 1052.59375
+          }
+        ],
+        "frames": [
+          {
+            "x": 19.828125,
+            "y": 19.828125,
+            "right": 794.65625,
+            "bottom": 1032.765625,
+            "width": 774.828125,
+            "height": 1012.9375
+          }
+        ],
+        "rows": [
+          {
+            "x": 53.328125,
+            "y": 379.328125,
+            "right": 761.15625,
+            "bottom": 433.328125,
+            "width": 707.828125,
+            "height": 54
+          }
+        ],
+        "pageCount": 1,
+        "rowCount": 1,
+        "noteSections": [],
+        "entrySections": [
+          {
+            "table": {
+              "x": 52.828125,
+              "y": 329.828125,
+              "right": 761.65625,
+              "bottom": 433.828125,
+              "width": 708.828125,
+              "height": 104
+            },
+            "footer": {
+              "x": 20.828125,
+              "y": 729.546875,
+              "right": 793.65625,
+              "bottom": 825.546875,
+              "width": 772.828125,
+              "height": 96
+            },
+            "frame": {
+              "x": 19.828125,
+              "y": 19.828125,
+              "right": 794.65625,
+              "bottom": 1032.765625,
+              "width": 774.828125,
+              "height": 1012.9375
+            }
+          }
+        ]
+      },
+      "pdfPath": "/tmp/prompt-e-entrada/entrada-count-1.pdf",
+      "pdf": {
+        "pageCount": 1,
+        "pageSize": "612 x 791.04 pts (letter)",
+        "pageSizePoints": {
+          "width": 612,
+          "height": 791.04
+        },
+        "pages": [
+          "ENTRADA Página 1 de 1 USUARIO Usuario PDF fixture HORA 12:00 hrs FECHA 01/01/2026 NO. FOLIO QA-ENT-71001 PROVEEDOR N/A SITIO Sitio PDF fixture CANTIDAD DE CANTIDAD / # PRODUCTO SKU SITIO ROLLOS UNIDAD SKU- Sitio PDF 1 SKU-ENTRADA-0001 - Tela fixture 0… 1 1.00 Mts. ENTRADA- 0001 fixture LISTADO DE SERIES PRODUCTO SKU SERIE 1 SERIE 2 SERIE 3 SERIE 4 SERIE- Tela fixture 0001 Azul fixture SKU-ENTRAD… ENTRADA- 0001 OBSERVACIONES Fixture de safe area laser RECIBIDO POR REVISADO POR AUTORIZADO POR"
+        ],
+        "bboxPages": [
+          [
+            {
+              "text": "ENTRADA",
+              "xMin": 57.621091,
+              "xMax": 222.036327,
+              "yMin": 19.612499,
+              "yMax": 81.037497
+            },
+            {
+              "text": "Página",
+              "xMin": 57.621091,
+              "xMax": 92.101704,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "1",
+              "xMin": 94.757809,
+              "xMax": 99.19775,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "de",
+              "xMin": 101.844722,
+              "xMax": 114.605708,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "1",
+              "xMin": 117.257808,
+              "xMax": 121.697749,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "USUARIO",
+              "xMin": 57.621091,
+              "xMax": 101.304447,
+              "yMin": 148.528119,
+              "yMax": 163.884368
+            },
+            {
+              "text": "Usuario",
+              "xMin": 153.621091,
+              "xMax": 192.459808,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "PDF",
+              "xMin": 195.259124,
+              "xMax": 215.761809,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "fixture",
+              "xMin": 218.561125,
+              "xMax": 251.172437,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "HORA",
+              "xMin": 341.425771,
+              "xMax": 369.063835,
+              "yMin": 148.528119,
+              "yMax": 163.884368
+            },
+            {
+              "text": "12:00",
+              "xMin": 437.425767,
+              "xMax": 464.993393,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "hrs",
+              "xMin": 467.799297,
+              "xMax": 483.831279,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "FECHA",
+              "xMin": 57.621091,
+              "xMax": 90.270672,
+              "yMin": 179.278118,
+              "yMax": 194.634367
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 153.621091,
+              "xMax": 209.986811,
+              "yMin": 178.157805,
+              "yMax": 196.073429
+            },
+            {
+              "text": "NO.",
+              "xMin": 341.425771,
+              "xMax": 358.730541,
+              "yMin": 179.278118,
+              "yMax": 194.634367
+            },
+            {
+              "text": "FOLIO",
+              "xMin": 361.486588,
+              "xMax": 390.053649,
+              "yMin": 179.278118,
+              "yMax": 194.634367
+            },
+            {
+              "text": "QA-ENT-71001",
+              "xMin": 437.425767,
+              "xMax": 512.313428,
+              "yMin": 178.157805,
+              "yMax": 196.073429
+            },
+            {
+              "text": "PROVEEDOR",
+              "xMin": 57.621091,
+              "xMax": 116.53517,
+              "yMin": 210.028116,
+              "yMax": 225.384366
+            },
+            {
+              "text": "N/A",
+              "xMin": 153.621091,
+              "xMax": 172.631832,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "SITIO",
+              "xMin": 341.425771,
+              "xMax": 367.114414,
+              "yMin": 210.028116,
+              "yMax": 225.384366
+            },
+            {
+              "text": "Sitio",
+              "xMin": 437.425767,
+              "xMax": 459.415268,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "PDF",
+              "xMin": 462.214584,
+              "xMax": 482.717269,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "fixture",
+              "xMin": 485.516585,
+              "xMax": 518.127897,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "CANTIDAD",
+              "xMin": 270.386711,
+              "xMax": 321.400133,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "DE",
+              "xMin": 324.431467,
+              "xMax": 336.847768,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 284.695301,
+              "xMax": 322.540968,
+              "yMin": 264.028114,
+              "yMax": 279.384363
+            },
+            {
+              "text": "#",
+              "xMin": 51.843748,
+              "xMax": 57.68408,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 79.37109,
+              "xMax": 133.597269,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "1",
+              "xMin": 53.156248,
+              "xMax": 56.816892,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "SKU-ENTRADA-0001",
+              "xMin": 79.37109,
+              "xMax": 172.33212,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "-",
+              "xMin": 174.467278,
+              "xMax": 178.677239,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "Tela",
+              "xMin": 180.80859,
+              "xMax": 199.138179,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "fixture",
+              "xMin": 201.269527,
+              "xMax": 230.419687,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "0…",
+              "xMin": 232.551035,
+              "xMax": 247.646478,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "1",
+              "xMin": 301.898425,
+              "xMax": 305.778796,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "CANTIDAD",
+              "xMin": 371.847645,
+              "xMax": 422.861066,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "/",
+              "xMin": 425.8924,
+              "xMax": 429.386052,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 391.828109,
+              "xMax": 429.391645,
+              "yMin": 264.028114,
+              "yMax": 279.384363
+            },
+            {
+              "text": "1.00",
+              "xMin": 390.679671,
+              "xMax": 408.523573,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "Mts.",
+              "xMin": 410.92967,
+              "xMax": 429.833272,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "SKU",
+              "xMin": 448.593731,
+              "xMax": 468.44733,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "SITIO",
+              "xMin": 517.710916,
+              "xMax": 543.399559,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "SKU-",
+              "xMin": 448.593731,
+              "xMax": 466.59666,
+              "yMin": 289.256091,
+              "yMax": 297.752185
+            },
+            {
+              "text": "ENTRADA-",
+              "xMin": 448.593731,
+              "xMax": 484.599589,
+              "yMin": 300.506091,
+              "yMax": 309.002184
+            },
+            {
+              "text": "0001",
+              "xMin": 448.593731,
+              "xMax": 466.59666,
+              "yMin": 311.756091,
+              "yMax": 320.252184
+            },
+            {
+              "text": "Sitio",
+              "xMin": 517.710916,
+              "xMax": 536.185525,
+              "yMin": 290.278113,
+              "yMax": 305.634362
+            },
+            {
+              "text": "PDF",
+              "xMin": 538.716775,
+              "xMax": 556.272926,
+              "yMin": 290.278113,
+              "yMax": 305.634362
+            },
+            {
+              "text": "fixture",
+              "xMin": 517.710916,
+              "xMax": 545.062477,
+              "yMin": 302.278112,
+              "yMax": 317.634362
+            },
+            {
+              "text": "LISTADO",
+              "xMin": 39.621092,
+              "xMax": 81.122551,
+              "yMin": 333.028111,
+              "yMax": 348.38436
+            },
+            {
+              "text": "DE",
+              "xMin": 84.153885,
+              "xMax": 96.570186,
+              "yMin": 333.028111,
+              "yMax": 348.38436
+            },
+            {
+              "text": "SERIES",
+              "xMin": 99.60152,
+              "xMax": 133.008711,
+              "yMin": 333.028111,
+              "yMax": 348.38436
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 46.371092,
+              "xMax": 96.078399,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SKU",
+              "xMin": 225.996088,
+              "xMax": 244.195215,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SERIE",
+              "xMin": 294.996085,
+              "xMax": 319.804861,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "1",
+              "xMin": 322.593737,
+              "xMax": 326.150743,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "Tela",
+              "xMin": 46.371092,
+              "xMax": 63.173215,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "fixture",
+              "xMin": 65.12695,
+              "xMax": 91.847919,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "0001",
+              "xMin": 93.801655,
+              "xMax": 114.047992,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "Azul",
+              "xMin": 116.001727,
+              "xMax": 134.258074,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "fixture",
+              "xMin": 136.211809,
+              "xMax": 162.932778,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "SKU-ENTRAD…",
+              "xMin": 225.996088,
+              "xMax": 280.458607,
+              "yMin": 384.631698,
+              "yMax": 393.977401
+            },
+            {
+              "text": "SERIE-",
+              "xMin": 294.996085,
+              "xMax": 324.700918,
+              "yMin": 376.381698,
+              "yMax": 385.727401
+            },
+            {
+              "text": "ENTRADA-",
+              "xMin": 294.996085,
+              "xMax": 334.602529,
+              "yMin": 384.631698,
+              "yMax": 393.977401
+            },
+            {
+              "text": "0001",
+              "xMin": 294.996085,
+              "xMax": 314.799307,
+              "yMin": 392.881698,
+              "yMax": 402.2274
+            },
+            {
+              "text": "SERIE",
+              "xMin": 365.460922,
+              "xMax": 390.269698,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "2",
+              "xMin": 393.058581,
+              "xMax": 398.255114,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SERIE",
+              "xMin": 435.925767,
+              "xMax": 460.734543,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "3",
+              "xMin": 463.523418,
+              "xMax": 468.848857,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SERIE",
+              "xMin": 506.390604,
+              "xMax": 531.19938,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "4",
+              "xMin": 533.988263,
+              "xMax": 539.567486,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 49.371092,
+              "xMax": 113.262881,
+              "yMin": 556.148414,
+              "yMax": 568.945289
+            },
+            {
+              "text": "Fixture",
+              "xMin": 49.371092,
+              "xMax": 73.815671,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "de",
+              "xMin": 75.925046,
+              "xMax": 84.889889,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "safe",
+              "xMin": 86.999264,
+              "xMax": 102.09814,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "area",
+              "xMin": 104.207515,
+              "xMax": 119.775141,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "laser",
+              "xMin": 121.884516,
+              "xMax": 139.067133,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "RECIBIDO",
+              "xMin": 246.492177,
+              "xMax": 284.515125,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "POR",
+              "xMin": 287.041248,
+              "xMax": 303.355212,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "REVISADO",
+              "xMin": 366.855457,
+              "xMax": 408.257353,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "POR",
+              "xMin": 410.783476,
+              "xMax": 427.09744,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "AUTORIZADO",
+              "xMin": 482.765605,
+              "xMax": 536.434845,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "POR",
+              "xMin": 538.960968,
+              "xMax": 555.274933,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            }
+          ]
+        ],
+        "fontBboxPages": [
+          [
+            {
+              "text": "ENTRADA",
+              "xMin": 57.621091,
+              "xMax": 222.036327,
+              "yMin": 19.612499,
+              "yMax": 81.037497
+            },
+            {
+              "text": "Página",
+              "xMin": 57.621091,
+              "xMax": 92.101704,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "1",
+              "xMin": 94.757809,
+              "xMax": 99.19775,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "de",
+              "xMin": 101.844722,
+              "xMax": 114.605708,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "1",
+              "xMin": 117.257808,
+              "xMax": 121.697749,
+              "yMin": 70.90781,
+              "yMax": 88.823434
+            },
+            {
+              "text": "USUARIO",
+              "xMin": 57.621091,
+              "xMax": 101.304447,
+              "yMin": 148.528119,
+              "yMax": 163.884368
+            },
+            {
+              "text": "Usuario",
+              "xMin": 153.621091,
+              "xMax": 192.459808,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "PDF",
+              "xMin": 195.259124,
+              "xMax": 215.761809,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "fixture",
+              "xMin": 218.561125,
+              "xMax": 251.172437,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "HORA",
+              "xMin": 341.425771,
+              "xMax": 369.063835,
+              "yMin": 148.528119,
+              "yMax": 163.884368
+            },
+            {
+              "text": "12:00",
+              "xMin": 437.425767,
+              "xMax": 464.993393,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "hrs",
+              "xMin": 467.799297,
+              "xMax": 483.831279,
+              "yMin": 147.407806,
+              "yMax": 165.323431
+            },
+            {
+              "text": "FECHA",
+              "xMin": 57.621091,
+              "xMax": 90.270672,
+              "yMin": 179.278118,
+              "yMax": 194.634367
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 153.621091,
+              "xMax": 209.986811,
+              "yMin": 178.157805,
+              "yMax": 196.073429
+            },
+            {
+              "text": "NO.",
+              "xMin": 341.425771,
+              "xMax": 358.730541,
+              "yMin": 179.278118,
+              "yMax": 194.634367
+            },
+            {
+              "text": "FOLIO",
+              "xMin": 361.486588,
+              "xMax": 390.053649,
+              "yMin": 179.278118,
+              "yMax": 194.634367
+            },
+            {
+              "text": "QA-ENT-71001",
+              "xMin": 437.425767,
+              "xMax": 512.313428,
+              "yMin": 178.157805,
+              "yMax": 196.073429
+            },
+            {
+              "text": "PROVEEDOR",
+              "xMin": 57.621091,
+              "xMax": 116.53517,
+              "yMin": 210.028116,
+              "yMax": 225.384366
+            },
+            {
+              "text": "N/A",
+              "xMin": 153.621091,
+              "xMax": 172.631832,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "SITIO",
+              "xMin": 341.425771,
+              "xMax": 367.114414,
+              "yMin": 210.028116,
+              "yMax": 225.384366
+            },
+            {
+              "text": "Sitio",
+              "xMin": 437.425767,
+              "xMax": 459.415268,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "PDF",
+              "xMin": 462.214584,
+              "xMax": 482.717269,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "fixture",
+              "xMin": 485.516585,
+              "xMax": 518.127897,
+              "yMin": 208.907804,
+              "yMax": 226.823428
+            },
+            {
+              "text": "CANTIDAD",
+              "xMin": 270.386711,
+              "xMax": 321.400133,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "DE",
+              "xMin": 324.431467,
+              "xMax": 336.847768,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 284.695301,
+              "xMax": 322.540968,
+              "yMin": 264.028114,
+              "yMax": 279.384363
+            },
+            {
+              "text": "#",
+              "xMin": 51.843748,
+              "xMax": 57.68408,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 79.37109,
+              "xMax": 133.597269,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "1",
+              "xMin": 53.156248,
+              "xMax": 56.816892,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "SKU-ENTRADA-0001",
+              "xMin": 79.37109,
+              "xMax": 172.33212,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "-",
+              "xMin": 174.467278,
+              "xMax": 178.677239,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "Tela",
+              "xMin": 180.80859,
+              "xMax": 199.138179,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "fixture",
+              "xMin": 201.269527,
+              "xMax": 230.419687,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "0…",
+              "xMin": 232.551035,
+              "xMax": 247.646478,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "1",
+              "xMin": 301.898425,
+              "xMax": 305.778796,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "CANTIDAD",
+              "xMin": 371.847645,
+              "xMax": 422.861066,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "/",
+              "xMin": 425.8924,
+              "xMax": 429.386052,
+              "yMin": 252.028114,
+              "yMax": 267.384364
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 391.828109,
+              "xMax": 429.391645,
+              "yMin": 264.028114,
+              "yMax": 279.384363
+            },
+            {
+              "text": "1.00",
+              "xMin": 390.679671,
+              "xMax": 408.523573,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "Mts.",
+              "xMin": 410.92967,
+              "xMax": 429.833272,
+              "yMin": 296.278113,
+              "yMax": 311.634362
+            },
+            {
+              "text": "SKU",
+              "xMin": 448.593731,
+              "xMax": 468.44733,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "SITIO",
+              "xMin": 517.710916,
+              "xMax": 543.399559,
+              "yMin": 258.028114,
+              "yMax": 273.384364
+            },
+            {
+              "text": "SKU-",
+              "xMin": 448.593731,
+              "xMax": 466.59666,
+              "yMin": 289.256091,
+              "yMax": 297.752185
+            },
+            {
+              "text": "ENTRADA-",
+              "xMin": 448.593731,
+              "xMax": 484.599589,
+              "yMin": 300.506091,
+              "yMax": 309.002184
+            },
+            {
+              "text": "0001",
+              "xMin": 448.593731,
+              "xMax": 466.59666,
+              "yMin": 311.756091,
+              "yMax": 320.252184
+            },
+            {
+              "text": "Sitio",
+              "xMin": 517.710916,
+              "xMax": 536.185525,
+              "yMin": 290.278113,
+              "yMax": 305.634362
+            },
+            {
+              "text": "PDF",
+              "xMin": 538.716775,
+              "xMax": 556.272926,
+              "yMin": 290.278113,
+              "yMax": 305.634362
+            },
+            {
+              "text": "fixture",
+              "xMin": 517.710916,
+              "xMax": 545.062477,
+              "yMin": 302.278112,
+              "yMax": 317.634362
+            },
+            {
+              "text": "LISTADO",
+              "xMin": 39.621092,
+              "xMax": 81.122551,
+              "yMin": 333.028111,
+              "yMax": 348.38436
+            },
+            {
+              "text": "DE",
+              "xMin": 84.153885,
+              "xMax": 96.570186,
+              "yMin": 333.028111,
+              "yMax": 348.38436
+            },
+            {
+              "text": "SERIES",
+              "xMin": 99.60152,
+              "xMax": 133.008711,
+              "yMin": 333.028111,
+              "yMax": 348.38436
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 46.371092,
+              "xMax": 96.078399,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SKU",
+              "xMin": 225.996088,
+              "xMax": 244.195215,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SERIE",
+              "xMin": 294.996085,
+              "xMax": 319.804861,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "1",
+              "xMin": 322.593737,
+              "xMax": 326.150743,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "Tela",
+              "xMin": 46.371092,
+              "xMax": 63.173215,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "fixture",
+              "xMin": 65.12695,
+              "xMax": 91.847919,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "0001",
+              "xMin": 93.801655,
+              "xMax": 114.047992,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "Azul",
+              "xMin": 116.001727,
+              "xMax": 134.258074,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "fixture",
+              "xMin": 136.211809,
+              "xMax": 162.932778,
+              "yMin": 381.963265,
+              "yMax": 396.039827
+            },
+            {
+              "text": "SKU-ENTRAD…",
+              "xMin": 225.996088,
+              "xMax": 280.458607,
+              "yMin": 384.631698,
+              "yMax": 393.977401
+            },
+            {
+              "text": "SERIE-",
+              "xMin": 294.996085,
+              "xMax": 324.700918,
+              "yMin": 376.381698,
+              "yMax": 385.727401
+            },
+            {
+              "text": "ENTRADA-",
+              "xMin": 294.996085,
+              "xMax": 334.602529,
+              "yMin": 384.631698,
+              "yMax": 393.977401
+            },
+            {
+              "text": "0001",
+              "xMin": 294.996085,
+              "xMax": 314.799307,
+              "yMin": 392.881698,
+              "yMax": 402.2274
+            },
+            {
+              "text": "SERIE",
+              "xMin": 365.460922,
+              "xMax": 390.269698,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "2",
+              "xMin": 393.058581,
+              "xMax": 398.255114,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SERIE",
+              "xMin": 435.925767,
+              "xMax": 460.734543,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "3",
+              "xMin": 463.523418,
+              "xMax": 468.848857,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "SERIE",
+              "xMin": 506.390604,
+              "xMax": 531.19938,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "4",
+              "xMin": 533.988263,
+              "xMax": 539.567486,
+              "yMin": 356.463266,
+              "yMax": 370.539828
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 49.371092,
+              "xMax": 113.262881,
+              "yMin": 556.148414,
+              "yMax": 568.945289
+            },
+            {
+              "text": "Fixture",
+              "xMin": 49.371092,
+              "xMax": 73.815671,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "de",
+              "xMin": 75.925046,
+              "xMax": 84.889889,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "safe",
+              "xMin": 86.999264,
+              "xMax": 102.09814,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "area",
+              "xMin": 104.207515,
+              "xMax": 119.775141,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "laser",
+              "xMin": 121.884516,
+              "xMax": 139.067133,
+              "yMin": 569.360606,
+              "yMax": 582.551323
+            },
+            {
+              "text": "RECIBIDO",
+              "xMin": 246.492177,
+              "xMax": 284.515125,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "POR",
+              "xMin": 287.041248,
+              "xMax": 303.355212,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "REVISADO",
+              "xMin": 366.855457,
+              "xMax": 408.257353,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "POR",
+              "xMin": 410.783476,
+              "xMax": 427.09744,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "AUTORIZADO",
+              "xMin": 482.765605,
+              "xMax": 536.434845,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            },
+            {
+              "text": "POR",
+              "xMin": 538.960968,
+              "xMax": 555.274933,
+              "yMin": 595.148413,
+              "yMax": 607.945287
+            }
+          ]
+        ]
+      },
+      "pdfTextSafeArea": {
+        "authority": "diagnostic-only-font-boxes",
+        "widthMm": 216,
+        "heightMm": 279,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "fontBoxOverlaps": [
+          {
+            "pageNumber": 1,
+            "count": 0,
+            "words": []
+          }
+        ]
+      },
+      "raster": {
+        "dpi": 96,
+        "widthMm": 216,
+        "heightMm": 279,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "pageSizePoints": {
+          "width": 612,
+          "height": 791.04
+        },
+        "pages": [
+          {
+            "pageNumber": 1,
+            "imagePath": "/tmp/prompt-e-entrada/entrada-count-1-1.png",
+            "width": 816,
+            "height": 1055,
+            "inkBoundsPx": {
+              "x": 20,
+              "y": 20,
+              "width": 775,
+              "height": 1013
+            },
+            "inkBoundsMm": {
+              "x": 5.291666666666667,
+              "y": 5.291666666666667,
+              "width": 205.05208333333331,
+              "height": 268.0229166666667
+            },
+            "borderBandMm": 5,
+            "edgeClearanceMm": {
+              "left": 5.291666666666667,
+              "top": 5.291666666666667,
+              "right": 5.556249999999977,
+              "bottom": 5.74675000000002
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "entrada-configured-overflow-probe",
+      "kind": "entrada",
+      "fixtureName": "overflowPages",
+      "configuredRowCount": 24,
+      "route": "/entradas/71024/documento",
+      "expectedPageCount": 4,
+      "expectedDomPageCount": 4,
+      "dimensionsMm": {
+        "width": 216,
+        "height": 279,
+        "safe": 5
+      },
+      "requestedRequests": [
+        "GET /api/auth/me",
+        "GET /api/inventario/entradas/71024"
+      ],
+      "status": "failed",
+      "failure": "AssertionError: Expected values to be strictly equal:\n\n5 !== 4\n"
+    }
+  ],
+  "browser": {
+    "executable": "/repl/tools/bin/chromium",
+    "version": {
+      "Browser": "Chrome/152.0.7977.64",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.18",
+      "WebKit-Version": "537.36 (@506c834ecceaa943c5f41e6cfe7f68acb5c45346)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:34409/devtools/browser/e9622c51-77bb-4769-ba1d-0396ec7c8de3"
+    },
+    "launchArgs": [
+      "--headless=new",
+      "--disable-gpu",
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
+      "--hide-scrollbars",
+      "--remote-debugging-address=127.0.0.1",
+      "--remote-debugging-port=34409",
+      "--user-data-dir=/tmp/laser-salida-chromium-x1appx",
+      "about:blank"
+    ],
+    "stderrTail": "(examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7600:7600:0916/013052.589625:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7600:7600:0916/013052.595243:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7600:7600:0916/013052.610152:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7600:7620:0916/013052.610155:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[7600:7620:0916/013052.610184:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[7600:7600:0916/013052.610283:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7600:7620:0916/013052.610338:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7600:7600:0916/013052.620132:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type: \n[7600:7600:0916/013052.620389:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7600:7620:0916/013052.620659:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7600:7600:0916/013052.629023:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7600:7620:0916/013052.630344:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7600:7600:0916/013052.639684:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7637:7649:0916/013052.673004:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013052.678006:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013053.030609:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013053.056522:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013053.056874:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013053.057861:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013053.088175:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013053.088607:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7637:7649:0916/013053.092943:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7600:7623:0916/013054.774098:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT\n[7637:7649:0916/013056.688752:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n"
+  }
+}

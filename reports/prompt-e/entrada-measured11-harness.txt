@@ -1,0 +1,27 @@
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+{
+  "status": "passed",
+  "reportPath": "/tmp/prompt-e-entrada-measured11/report.json",
+  "scenarios": [
+    {
+      "name": "entrada-measured-11-rows",
+      "status": "passed",
+      "expectedPageCount": 3,
+      "actualPageCount": 3,
+      "failure": null
+    }
+  ]
+}
+
+EXIT=0

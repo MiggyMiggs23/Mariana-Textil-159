@@ -1,0 +1,26 @@
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+WARNING: The convert command is deprecated in IMv7, use "magick" instead of "convert" or "magick convert"
+
+{
+  "status": "failed",
+  "reportPath": "/tmp/prompt-e-entrada/report.json",
+  "scenarios": [
+    {
+      "name": "entrada-count-1",
+      "status": "passed",
+      "expectedPageCount": 1,
+      "actualPageCount": 1,
+      "failure": null
+    },
+    {
+      "name": "entrada-configured-overflow-probe",
+      "status": "failed",
+      "expectedPageCount": 4,
+      "actualPageCount": null,
+      "failure": "AssertionError: Expected values to be strictly equal:\n\n5 !== 4\n"
+    }
+  ]
+}
+
+EXIT=1

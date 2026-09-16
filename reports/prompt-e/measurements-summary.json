@@ -1,0 +1,188 @@
+warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.
+{
+  "pdfs": [
+    {
+      "name": "entrada-count-1.pdf",
+      "pageCount": 1,
+      "inkTopMm": [
+        5.292
+      ],
+      "textTopMm": [
+        11.245
+      ]
+    },
+    {
+      "name": "entrada-measured-11-rows.pdf",
+      "pageCount": 3,
+      "inkTopMm": [
+        5.292,
+        5.292,
+        5.292
+      ],
+      "textTopMm": [
+        11.245,
+        11.245,
+        8.764
+      ]
+    },
+    {
+      "name": "baseline-1-label.pdf",
+      "pageCount": 1,
+      "inkTopMm": [
+        0.0
+      ],
+      "textTopMm": [
+        6.54
+      ]
+    },
+    {
+      "name": "regression-25-labels-simulated-mounted-portal.pdf",
+      "pageCount": 25,
+      "inkTopMm": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "textTopMm": [
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54
+      ]
+    },
+    {
+      "name": "regression-25-labels.pdf",
+      "pageCount": 25,
+      "inkTopMm": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "textTopMm": [
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54,
+        6.54
+      ]
+    },
+    {
+      "name": "salida-count-1.pdf",
+      "pageCount": 1,
+      "inkTopMm": [
+        5.292
+      ],
+      "textTopMm": [
+        5.953
+      ]
+    },
+    {
+      "name": "salida-count-10.pdf",
+      "pageCount": 1,
+      "inkTopMm": [
+        5.292
+      ],
+      "textTopMm": [
+        5.953
+      ]
+    },
+    {
+      "name": "salida-count-11-boundary.pdf",
+      "pageCount": 2,
+      "inkTopMm": [
+        5.292,
+        5.292
+      ],
+      "textTopMm": [
+        5.953,
+        5.953
+      ]
+    }
+  ],
+  "measurements": "reports/prompt-e/measurements.json"
+}

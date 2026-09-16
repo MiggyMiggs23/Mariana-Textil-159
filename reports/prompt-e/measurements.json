@@ -1,0 +1,2356 @@
+{
+  "method": "PyMuPDF page.get_pixmap + non-white raster bounds; pdftotext-equivalent text words via fitz",
+  "dpi": 96,
+  "inkThreshold": 250,
+  "pdfs": [
+    {
+      "pdf": "reports/prompt-e/entrada-count-1.pdf",
+      "pageCount": 1,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 612.0,
+            "height": 791.0399780273438
+          },
+          "pageSizeMm": {
+            "width": 215.89999999999998,
+            "height": 279.06132558186846
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 816,
+            "heightPx": 1055,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 775,
+            "height": 1013,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.5562499999999995,
+            "bottomMm": 5.820833333333333,
+            "widthMm": 205.05208333333331,
+            "heightMm": 268.0229166666667
+          },
+          "textBounds": {
+            "minYPt": 31.875,
+            "maxYPt": 606.0234375,
+            "minYMm": 11.244791666666666,
+            "maxYMm": 213.79160156249998,
+            "wordCount": 82
+          },
+          "imageCount": 1,
+          "text": "ENTRADA Página 1 de 1 USUARIO Usuario PDF fixture HORA 12:00 hrs FECHA 01/01/2026 NO. FOLIO QA-ENT-71001 PROVEEDOR N/A SITIO Sitio PDF fixture # PRODUCTO CANTIDAD DE ROLLOS CANTIDAD / UNIDAD SKU SITIO 1 SKU-ENTRADA-0001 - Tela fixture 0… 1 1.00 Mts. SKU- ENTRADA- 0001 Sitio PDF fixture LISTADO DE SERIES PRODUCTO SKU SERIE 1 SERIE 2 SERIE 3 SERIE 4 Tela fixture 0001 Azul fixture SKU-ENTRAD… SERIE- ENTRADA- 0001 OBSERVACIONES Fixture de safe area laser RECIBIDO POR REVISADO POR AUTORIZADO POR",
+          "imagePath": "reports/prompt-e/rendered/entrada-count-1-page-1.png"
+        }
+      ]
+    },
+    {
+      "pdf": "reports/prompt-e/entrada-measured-11-rows.pdf",
+      "pageCount": 3,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 612.0,
+            "height": 791.0399780273438
+          },
+          "pageSizeMm": {
+            "width": 215.89999999999998,
+            "height": 279.06132558186846
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 816,
+            "heightPx": 1055,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 775,
+            "height": 1013,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.5562499999999995,
+            "bottomMm": 5.820833333333333,
+            "widthMm": 205.05208333333331,
+            "heightMm": 268.0229166666667
+          },
+          "textBounds": {
+            "minYPt": 31.875,
+            "maxYPt": 684.752197265625,
+            "minYMm": 11.244791666666666,
+            "maxYMm": 241.5653584798177,
+            "wordCount": 183
+          },
+          "imageCount": 1,
+          "text": "ENTRADA Página 1 de 3 USUARIO Usuario PDF fixture HORA 12:00 hrs FECHA 01/01/2026 NO. FOLIO QA-ENT-71011 PROVEEDOR N/A SITIO Sitio PDF fixture # PRODUCTO CANTIDAD DE ROLLOS CANTIDAD / UNIDAD SKU SITIO 1 SKU-ENTRADA-0001 - Tela fixture 0… 1 1.00 Mts. SKU- ENTRADA- 0001 Sitio PDF fixture 2 SKU-ENTRADA-0002 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0002 Sitio PDF fixture 3 SKU-ENTRADA-0003 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0003 Sitio PDF fixture 4 SKU-ENTRADA-0004 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0004 Sitio PDF fixture 5 SKU-ENTRADA-0005 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0005 Sitio PDF fixture 6 SKU-ENTRADA-0006 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0006 Sitio PDF fixture 7 SKU-ENTRADA-0007 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0007 Sitio PDF fixture 8 SKU-ENTRADA-0008 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0008 Sitio PDF fixture 9 SKU-ENTRADA-0009 - Tela fixture … 1 1.00 Mts. SKU- ENTRADA- 0009 Sitio PDF fixture 10 SKU-ENTRADA-0010 - Tela fixture 0… 1 1.00 Mts. SKU- ENTRADA- 0010 Sitio PDF fixture",
+          "imagePath": "reports/prompt-e/rendered/entrada-measured-11-rows-page-1.png"
+        },
+        {
+          "pageNumber": 2,
+          "pageSizePt": {
+            "width": 612.0,
+            "height": 791.0399780273438
+          },
+          "pageSizeMm": {
+            "width": 215.89999999999998,
+            "height": 279.06132558186846
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 816,
+            "heightPx": 1055,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 775,
+            "height": 1013,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.5562499999999995,
+            "bottomMm": 5.820833333333333,
+            "widthMm": 205.05208333333331,
+            "heightMm": 268.0229166666667
+          },
+          "textBounds": {
+            "minYPt": 31.875,
+            "maxYPt": 748.5234375,
+            "minYMm": 11.244791666666666,
+            "maxYMm": 264.0624348958333,
+            "wordCount": 60
+          },
+          "imageCount": 1,
+          "text": "ENTRADA Página 2 de 3 USUARIO Usuario PDF fixture HORA 12:00 hrs FECHA 01/01/2026 NO. FOLIO QA-ENT-71011 PROVEEDOR N/A SITIO Sitio PDF fixture # PRODUCTO CANTIDAD DE ROLLOS CANTIDAD / UNIDAD SKU SITIO 11 SKU-ENTRADA-0011 - Tela fixture 0… 1 1.00 Mts. SKU- ENTRADA- 0011 Sitio PDF fixture OBSERVACIONES Fixture de safe area laser RECIBIDO POR REVISADO POR AUTORIZADO POR",
+          "imagePath": "reports/prompt-e/rendered/entrada-measured-11-rows-page-2.png"
+        },
+        {
+          "pageNumber": 3,
+          "pageSizePt": {
+            "width": 612.0,
+            "height": 791.0399780273438
+          },
+          "pageSizeMm": {
+            "width": 215.89999999999998,
+            "height": 279.06132558186846
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 816,
+            "heightPx": 1055,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 775,
+            "height": 1013,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.5562499999999995,
+            "bottomMm": 5.820833333333333,
+            "widthMm": 205.05208333333331,
+            "heightMm": 268.0229166666667
+          },
+          "textBounds": {
+            "minYPt": 24.84375,
+            "maxYPt": 393.9774169921875,
+            "minYMm": 8.764322916666666,
+            "maxYMm": 138.9864776611328,
+            "wordCount": 118
+          },
+          "imageCount": 0,
+          "text": "FOLIO QA-ENT-71011 LISTADO DE SERIES Página 3 de 3 PRODUCTO SKU SERIE 1 SERIE 2 SERIE 3 SERIE 4 Tela fixture 0001 Azul fixture SKU-ENTRAD… SERIE- ENTRADA- 0001 Tela fixture 0002 Rojo fixture SKU-ENTRAD… SERIE- ENTRADA- 0002 Tela fixture 0003 Azul fixture SKU-ENTRAD… SERIE- ENTRADA- 0003 Tela fixture 0004 Rojo fixture SKU-ENTRAD… SERIE- ENTRADA- 0004 Tela fixture 0005 Azul fixture SKU-ENTRAD… SERIE- ENTRADA- 0005 Tela fixture 0006 Rojo fixture SKU-ENTRAD… SERIE- ENTRADA- 0006 Tela fixture 0007 Azul fixture SKU-ENTRAD… SERIE- ENTRADA- 0007 Tela fixture 0008 Rojo fixture SKU-ENTRAD… SERIE- ENTRADA- 0008 Tela fixture 0009 Azul fixture SKU-ENTRAD… SERIE- ENTRADA- 0009 Tela fixture 0010 Rojo fixture SKU-ENTRAD… SERIE- ENTRADA- 0010 Tela fixture 0011 Azul fixture SKU-ENTRAD… SERIE- ENTRADA- 0011",
+          "imagePath": "reports/prompt-e/rendered/entrada-measured-11-rows-page-3.png"
+        }
+      ]
+    },
+    {
+      "pdf": "reports/prompt-e/labels/baseline-1-label.pdf",
+      "pageCount": 1,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN BASELINE - AZUL PRUEBA SKU SKU-BASELINE NO. DE SERIE 1000000 METROS DEL ROLLO 1.234 MARIANA TEXTIL SKU-BASELINE-1000000",
+          "imagePath": "reports/prompt-e/rendered/baseline-1-label-page-1.png"
+        }
+      ]
+    },
+    {
+      "pdf": "reports/prompt-e/labels/regression-25-labels-simulated-mounted-portal.pdf",
+      "pageCount": 25,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000001 METROS DEL ROLLO 100.000 MARIANA TEXTIL SKU-REGRESION-1000001",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-1.png"
+        },
+        {
+          "pageNumber": 2,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000002 METROS DEL ROLLO 100.125 MARIANA TEXTIL SKU-REGRESION-1000002",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-2.png"
+        },
+        {
+          "pageNumber": 3,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000003 METROS DEL ROLLO 100.250 MARIANA TEXTIL SKU-REGRESION-1000003",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-3.png"
+        },
+        {
+          "pageNumber": 4,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000004 METROS DEL ROLLO 100.375 MARIANA TEXTIL SKU-REGRESION-1000004",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-4.png"
+        },
+        {
+          "pageNumber": 5,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000005 METROS DEL ROLLO 100.500 MARIANA TEXTIL SKU-REGRESION-1000005",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-5.png"
+        },
+        {
+          "pageNumber": 6,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000006 METROS DEL ROLLO 100.625 MARIANA TEXTIL SKU-REGRESION-1000006",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-6.png"
+        },
+        {
+          "pageNumber": 7,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000007 METROS DEL ROLLO 100.750 MARIANA TEXTIL SKU-REGRESION-1000007",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-7.png"
+        },
+        {
+          "pageNumber": 8,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000008 METROS DEL ROLLO 100.875 MARIANA TEXTIL SKU-REGRESION-1000008",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-8.png"
+        },
+        {
+          "pageNumber": 9,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000009 METROS DEL ROLLO 101.000 MARIANA TEXTIL SKU-REGRESION-1000009",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-9.png"
+        },
+        {
+          "pageNumber": 10,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000010 METROS DEL ROLLO 101.125 MARIANA TEXTIL SKU-REGRESION-1000010",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-10.png"
+        },
+        {
+          "pageNumber": 11,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000011 METROS DEL ROLLO 101.250 MARIANA TEXTIL SKU-REGRESION-1000011",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-11.png"
+        },
+        {
+          "pageNumber": 12,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000012 METROS DEL ROLLO 101.375 MARIANA TEXTIL SKU-REGRESION-1000012",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-12.png"
+        },
+        {
+          "pageNumber": 13,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000013 METROS DEL ROLLO 101.500 MARIANA TEXTIL SKU-REGRESION-1000013",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-13.png"
+        },
+        {
+          "pageNumber": 14,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000014 METROS DEL ROLLO 101.625 MARIANA TEXTIL SKU-REGRESION-1000014",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-14.png"
+        },
+        {
+          "pageNumber": 15,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000015 METROS DEL ROLLO 101.750 MARIANA TEXTIL SKU-REGRESION-1000015",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-15.png"
+        },
+        {
+          "pageNumber": 16,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000016 METROS DEL ROLLO 101.875 MARIANA TEXTIL SKU-REGRESION-1000016",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-16.png"
+        },
+        {
+          "pageNumber": 17,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000017 METROS DEL ROLLO 102.000 MARIANA TEXTIL SKU-REGRESION-1000017",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-17.png"
+        },
+        {
+          "pageNumber": 18,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000018 METROS DEL ROLLO 102.125 MARIANA TEXTIL SKU-REGRESION-1000018",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-18.png"
+        },
+        {
+          "pageNumber": 19,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000019 METROS DEL ROLLO 102.250 MARIANA TEXTIL SKU-REGRESION-1000019",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-19.png"
+        },
+        {
+          "pageNumber": 20,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000020 METROS DEL ROLLO 102.375 MARIANA TEXTIL SKU-REGRESION-1000020",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-20.png"
+        },
+        {
+          "pageNumber": 21,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000021 METROS DEL ROLLO 102.500 MARIANA TEXTIL SKU-REGRESION-1000021",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-21.png"
+        },
+        {
+          "pageNumber": 22,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000022 METROS DEL ROLLO 102.625 MARIANA TEXTIL SKU-REGRESION-1000022",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-22.png"
+        },
+        {
+          "pageNumber": 23,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000023 METROS DEL ROLLO 102.750 MARIANA TEXTIL SKU-REGRESION-1000023",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-23.png"
+        },
+        {
+          "pageNumber": 24,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000024 METROS DEL ROLLO 102.875 MARIANA TEXTIL SKU-REGRESION-1000024",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-24.png"
+        },
+        {
+          "pageNumber": 25,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000025 METROS DEL ROLLO 103.000 MARIANA TEXTIL SKU-REGRESION-1000025",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-simulated-mounted-portal-page-25.png"
+        }
+      ]
+    },
+    {
+      "pdf": "reports/prompt-e/labels/regression-25-labels.pdf",
+      "pageCount": 25,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000001 METROS DEL ROLLO 100.000 MARIANA TEXTIL SKU-REGRESION-1000001",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-1.png"
+        },
+        {
+          "pageNumber": 2,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000002 METROS DEL ROLLO 100.125 MARIANA TEXTIL SKU-REGRESION-1000002",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-2.png"
+        },
+        {
+          "pageNumber": 3,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000003 METROS DEL ROLLO 100.250 MARIANA TEXTIL SKU-REGRESION-1000003",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-3.png"
+        },
+        {
+          "pageNumber": 4,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000004 METROS DEL ROLLO 100.375 MARIANA TEXTIL SKU-REGRESION-1000004",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-4.png"
+        },
+        {
+          "pageNumber": 5,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000005 METROS DEL ROLLO 100.500 MARIANA TEXTIL SKU-REGRESION-1000005",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-5.png"
+        },
+        {
+          "pageNumber": 6,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000006 METROS DEL ROLLO 100.625 MARIANA TEXTIL SKU-REGRESION-1000006",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-6.png"
+        },
+        {
+          "pageNumber": 7,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000007 METROS DEL ROLLO 100.750 MARIANA TEXTIL SKU-REGRESION-1000007",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-7.png"
+        },
+        {
+          "pageNumber": 8,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000008 METROS DEL ROLLO 100.875 MARIANA TEXTIL SKU-REGRESION-1000008",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-8.png"
+        },
+        {
+          "pageNumber": 9,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000009 METROS DEL ROLLO 101.000 MARIANA TEXTIL SKU-REGRESION-1000009",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-9.png"
+        },
+        {
+          "pageNumber": 10,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000010 METROS DEL ROLLO 101.125 MARIANA TEXTIL SKU-REGRESION-1000010",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-10.png"
+        },
+        {
+          "pageNumber": 11,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000011 METROS DEL ROLLO 101.250 MARIANA TEXTIL SKU-REGRESION-1000011",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-11.png"
+        },
+        {
+          "pageNumber": 12,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000012 METROS DEL ROLLO 101.375 MARIANA TEXTIL SKU-REGRESION-1000012",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-12.png"
+        },
+        {
+          "pageNumber": 13,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000013 METROS DEL ROLLO 101.500 MARIANA TEXTIL SKU-REGRESION-1000013",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-13.png"
+        },
+        {
+          "pageNumber": 14,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000014 METROS DEL ROLLO 101.625 MARIANA TEXTIL SKU-REGRESION-1000014",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-14.png"
+        },
+        {
+          "pageNumber": 15,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000015 METROS DEL ROLLO 101.750 MARIANA TEXTIL SKU-REGRESION-1000015",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-15.png"
+        },
+        {
+          "pageNumber": 16,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000016 METROS DEL ROLLO 101.875 MARIANA TEXTIL SKU-REGRESION-1000016",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-16.png"
+        },
+        {
+          "pageNumber": 17,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000017 METROS DEL ROLLO 102.000 MARIANA TEXTIL SKU-REGRESION-1000017",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-17.png"
+        },
+        {
+          "pageNumber": 18,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000018 METROS DEL ROLLO 102.125 MARIANA TEXTIL SKU-REGRESION-1000018",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-18.png"
+        },
+        {
+          "pageNumber": 19,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000019 METROS DEL ROLLO 102.250 MARIANA TEXTIL SKU-REGRESION-1000019",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-19.png"
+        },
+        {
+          "pageNumber": 20,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000020 METROS DEL ROLLO 102.375 MARIANA TEXTIL SKU-REGRESION-1000020",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-20.png"
+        },
+        {
+          "pageNumber": 21,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000021 METROS DEL ROLLO 102.500 MARIANA TEXTIL SKU-REGRESION-1000021",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-21.png"
+        },
+        {
+          "pageNumber": 22,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000022 METROS DEL ROLLO 102.625 MARIANA TEXTIL SKU-REGRESION-1000022",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-22.png"
+        },
+        {
+          "pageNumber": 23,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000023 METROS DEL ROLLO 102.750 MARIANA TEXTIL SKU-REGRESION-1000023",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-23.png"
+        },
+        {
+          "pageNumber": 24,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000024 METROS DEL ROLLO 102.875 MARIANA TEXTIL SKU-REGRESION-1000024",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-24.png"
+        },
+        {
+          "pageNumber": 25,
+          "pageSizePt": {
+            "width": 282.9599914550781,
+            "height": 198.0
+          },
+          "pageSizeMm": {
+            "width": 99.82199698554145,
+            "height": 69.85
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 378,
+            "heightPx": 264,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 0,
+            "y": 0,
+            "width": 378,
+            "height": 264,
+            "leftMm": 0.0,
+            "topMm": 0.0,
+            "rightMm": 0.0,
+            "bottomMm": 0.0,
+            "widthMm": 100.01249999999999,
+            "heightMm": 69.85
+          },
+          "textBounds": {
+            "minYPt": 18.538330078125,
+            "maxYPt": 179.91796875,
+            "minYMm": 6.539910888671875,
+            "maxYMm": 63.47106119791667,
+            "wordCount": 18
+          },
+          "imageCount": 1,
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000025 METROS DEL ROLLO 103.000 MARIANA TEXTIL SKU-REGRESION-1000025",
+          "imagePath": "reports/prompt-e/rendered/regression-25-labels-page-25.png"
+        }
+      ]
+    },
+    {
+      "pdf": "reports/prompt-e/salida-count-1.pdf",
+      "pageCount": 1,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 594.9599609375,
+            "height": 420.0
+          },
+          "pageSizeMm": {
+            "width": 209.8886528862847,
+            "height": 148.16666666666666
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 794,
+            "heightPx": 560,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 754,
+            "height": 520,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.291666666666667,
+            "bottomMm": 5.291666666666667,
+            "widthMm": 199.49583333333334,
+            "heightMm": 137.58333333333334
+          },
+          "textBounds": {
+            "minYPt": 16.875,
+            "maxYPt": 400.61865234375,
+            "minYMm": 5.953125,
+            "maxYMm": 141.32935791015623,
+            "wordCount": 60
+          },
+          "imageCount": 1,
+          "text": "Salida MARIANA TEXTIL QA-SAL-84001 Pág 1/1 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE ROLLOS CANT. DE UNIDAD SKU 1 Tela salida 01 Azul salida 1 1.00 Mts. SKU-SALIDA-01 OBSERVACIONES Observaciones de safe area PDF Revisó Entregó Recibió Total Rollos 1 Total Mts. 1.00",
+          "imagePath": "reports/prompt-e/rendered/salida-count-1-page-1.png"
+        }
+      ]
+    },
+    {
+      "pdf": "reports/prompt-e/salida-count-10.pdf",
+      "pageCount": 1,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 594.9599609375,
+            "height": 420.0
+          },
+          "pageSizeMm": {
+            "width": 209.8886528862847,
+            "height": 148.16666666666666
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 794,
+            "heightPx": 560,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 754,
+            "height": 520,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.291666666666667,
+            "bottomMm": 5.291666666666667,
+            "widthMm": 199.49583333333334,
+            "heightMm": 137.58333333333334
+          },
+          "textBounds": {
+            "minYPt": 16.875,
+            "maxYPt": 400.61865234375,
+            "minYMm": 5.953125,
+            "maxYMm": 141.32935791015623,
+            "wordCount": 150
+          },
+          "imageCount": 1,
+          "text": "Salida MARIANA TEXTIL QA-SAL-84010 Pág 1/1 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE ROLLOS CANT. DE UNIDAD SKU 1 Tela salida 01 Azul salida 1 1.00 Mts. SKU-SALIDA-01 2 Tela salida 02 Rojo salida 1 1.00 Mts. SKU-SALIDA-02 3 Tela salida 03 Azul salida 1 1.00 Mts. SKU-SALIDA-03 4 Tela salida 04 Rojo salida 1 1.00 Mts. SKU-SALIDA-04 5 Tela salida 05 Azul salida 1 1.00 Mts. SKU-SALIDA-05 6 Tela salida 06 Rojo salida 1 1.00 Mts. SKU-SALIDA-06 7 Tela salida 07 Azul salida 1 1.00 Mts. SKU-SALIDA-07 8 Tela salida 08 Rojo salida 1 1.00 Mts. SKU-SALIDA-08 9 Tela salida 09 Azul salida 1 1.00 Mts. SKU-SALIDA-09 10 Tela salida 10 Rojo salida 1 1.00 Mts. SKU-SALIDA-10 OBSERVACIONES Observaciones de safe area PDF Revisó Entregó Recibió Total Rollos 10 Total Mts. 10.00",
+          "imagePath": "reports/prompt-e/rendered/salida-count-10-page-1.png"
+        }
+      ]
+    },
+    {
+      "pdf": "reports/prompt-e/salida-count-11-boundary.pdf",
+      "pageCount": 2,
+      "pages": [
+        {
+          "pageNumber": 1,
+          "pageSizePt": {
+            "width": 594.9599609375,
+            "height": 420.0
+          },
+          "pageSizeMm": {
+            "width": 209.8886528862847,
+            "height": 148.16666666666666
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 794,
+            "heightPx": 560,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 754,
+            "height": 520,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.291666666666667,
+            "bottomMm": 5.291666666666667,
+            "widthMm": 199.49583333333334,
+            "heightMm": 137.58333333333334
+          },
+          "textBounds": {
+            "minYPt": 16.875,
+            "maxYPt": 400.61865234375,
+            "minYMm": 5.953125,
+            "maxYMm": 141.32935791015623,
+            "wordCount": 150
+          },
+          "imageCount": 1,
+          "text": "Salida MARIANA TEXTIL QA-SAL-84011 Pág 1/2 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE ROLLOS CANT. DE UNIDAD SKU 1 Tela salida 01 Azul salida 1 1.00 Mts. SKU-SALIDA-01 2 Tela salida 02 Rojo salida 1 1.00 Mts. SKU-SALIDA-02 3 Tela salida 03 Azul salida 1 1.00 Mts. SKU-SALIDA-03 4 Tela salida 04 Rojo salida 1 1.00 Mts. SKU-SALIDA-04 5 Tela salida 05 Azul salida 1 1.00 Mts. SKU-SALIDA-05 6 Tela salida 06 Rojo salida 1 1.00 Mts. SKU-SALIDA-06 7 Tela salida 07 Azul salida 1 1.00 Mts. SKU-SALIDA-07 8 Tela salida 08 Rojo salida 1 1.00 Mts. SKU-SALIDA-08 9 Tela salida 09 Azul salida 1 1.00 Mts. SKU-SALIDA-09 10 Tela salida 10 Rojo salida 1 1.00 Mts. SKU-SALIDA-10 OBSERVACIONES Observaciones de safe area PDF Revisó Entregó Recibió Total Rollos 11 Total Mts. 11.00",
+          "imagePath": "reports/prompt-e/rendered/salida-count-11-boundary-page-1.png"
+        },
+        {
+          "pageNumber": 2,
+          "pageSizePt": {
+            "width": 594.9599609375,
+            "height": 420.0
+          },
+          "pageSizeMm": {
+            "width": 209.8886528862847,
+            "height": 148.16666666666666
+          },
+          "render": {
+            "dpi": 96,
+            "widthPx": 794,
+            "heightPx": 560,
+            "inkThreshold": 250
+          },
+          "inkBounds": {
+            "x": 20,
+            "y": 20,
+            "width": 754,
+            "height": 520,
+            "leftMm": 5.291666666666667,
+            "topMm": 5.291666666666667,
+            "rightMm": 5.291666666666667,
+            "bottomMm": 5.291666666666667,
+            "widthMm": 199.49583333333334,
+            "heightMm": 137.58333333333334
+          },
+          "textBounds": {
+            "minYPt": 16.875,
+            "maxYPt": 400.61865234375,
+            "minYMm": 5.953125,
+            "maxYMm": 141.32935791015623,
+            "wordCount": 60
+          },
+          "imageCount": 1,
+          "text": "Salida MARIANA TEXTIL QA-SAL-84011 Pág 2/2 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE ROLLOS CANT. DE UNIDAD SKU 11 Tela salida 11 Azul salida 1 1.00 Mts. SKU-SALIDA-11 OBSERVACIONES Observaciones de safe area PDF Revisó Entregó Recibió Total Rollos 11 Total Mts. 11.00",
+          "imagePath": "reports/prompt-e/rendered/salida-count-11-boundary-page-2.png"
+        }
+      ]
+    }
+  ]
+}

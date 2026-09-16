@@ -1002,3 +1002,31 @@ mtime_ms = 1789521363249
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9ee9a4cd-b212-49e9-9d51-2b2d6ed836d7/b036b130-2e37-4210-bed1-3b4a312daf6f"
 storage_version_token = "1789521394114805"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "9l2s5a_vKrGcVeKpeIFlB"
+uri = "file://reports/prompt-e/block-0-report.md"
+type = "text"
+title = "Prompt E — mediciones y resultado"
+description = "Reproducción detenida sin cambios de código: coordenadas por página, conteos, límites y hallazgos independientes."
+logical_id = "83f95bea-8d91-4b8a-8a83-e6abb585089e"
+content_hash = "sha256:15d08c1928038e3939841c22d949e7ed30bfe07607d8892961f1927af49495db"
+size = 10158
+mtime_ms = 1789522470764
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/83f95bea-8d91-4b8a-8a83-e6abb585089e/fb6a0b47-df71-4ac8-a0bd-2081fb1c6b80"
+storage_version_token = "1789522533646320"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "2SXOQLmlbdzAmkmQr4vHT"
+uri = "file://reports/prompt-e-evidencia.zip"
+type = "unspecified"
+title = "PDFs y evidencia de Prompt E"
+description = "PDFs mínimos y paginados de Entrada, Salida y Etiquetas, mediciones completas y salidas de las pruebas."
+logical_id = "47b908c0-7b26-4e01-af79-357ff95f72d8"
+content_hash = "sha256:ac9c3e74eb7acce548f22f0d543712289d714f284dc3f3938fe05f63fcabd611"
+size = 6371791
+mtime_ms = 1789522528448
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/47b908c0-7b26-4e01-af79-357ff95f72d8/43427586-cd07-4b30-bc5a-1628157376e5"
+storage_version_token = "1789522534335780"
+content_type = "application/octet-stream"

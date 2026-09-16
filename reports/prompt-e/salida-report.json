@@ -1,0 +1,6564 @@
+{
+  "status": "passed",
+  "fixturePolicy": "Read-only browser Fetch fixtures; no DB writes, seeds, users, or live API calls.",
+  "scenarios": [
+    {
+      "name": "salida-count-1",
+      "route": "/salidas/84001/documento/salida",
+      "expectedPageCount": 1,
+      "requestedPaths": [
+        "GET /api/auth/me",
+        "GET /api/salidas/84001/documento"
+      ],
+      "pdfSettings": {
+        "paperWidthMm": 210,
+        "paperHeightMm": 148,
+        "marginMm": 0,
+        "scale": 1,
+        "preferCSSPageSize": true,
+        "printBackground": true,
+        "displayHeaderFooter": false
+      },
+      "status": "passed",
+      "layoutMeasurement": {
+        "page": {
+          "x": 0,
+          "y": 0,
+          "width": 793.6875,
+          "height": 559.359375,
+          "right": 793.6875,
+          "bottom": 559.359375
+        },
+        "frame": {
+          "x": 19.828125,
+          "y": 19.828125,
+          "width": 754.03125,
+          "height": 519.703125,
+          "right": 773.859375,
+          "bottom": 539.53125
+        },
+        "header": {
+          "x": 20.828125,
+          "y": 20.828125,
+          "width": 752.03125,
+          "height": 137.09375,
+          "right": 772.859375,
+          "bottom": 157.921875
+        },
+        "metadata": {
+          "x": 20.828125,
+          "y": 157.921875,
+          "width": 752.03125,
+          "height": 37,
+          "right": 772.859375,
+          "bottom": 194.921875
+        },
+        "table": {
+          "x": 20.828125,
+          "y": 194.921875,
+          "width": 752.03125,
+          "height": 257.109375,
+          "right": 772.859375,
+          "bottom": 452.03125
+        },
+        "footer": {
+          "x": 20.828125,
+          "y": 452.03125,
+          "width": 752.03125,
+          "height": 86.5,
+          "right": 772.859375,
+          "bottom": 538.53125
+        },
+        "rows": [
+          {
+            "y": 225.921875,
+            "height": 24.140625,
+            "bottom": 250.0625
+          },
+          {
+            "y": 250.0625,
+            "height": 22.375,
+            "bottom": 272.4375
+          },
+          {
+            "y": 272.4375,
+            "height": 22.375,
+            "bottom": 294.8125
+          },
+          {
+            "y": 294.8125,
+            "height": 22.375,
+            "bottom": 317.1875
+          },
+          {
+            "y": 317.1875,
+            "height": 22.375,
+            "bottom": 339.5625
+          },
+          {
+            "y": 339.5625,
+            "height": 22.375,
+            "bottom": 361.9375
+          },
+          {
+            "y": 361.9375,
+            "height": 22.375,
+            "bottom": 384.3125
+          },
+          {
+            "y": 384.3125,
+            "height": 22.375,
+            "bottom": 406.6875
+          },
+          {
+            "y": 406.6875,
+            "height": 22.375,
+            "bottom": 429.0625
+          },
+          {
+            "y": 429.0625,
+            "height": 22.46875,
+            "bottom": 451.53125
+          }
+        ],
+        "frameContentHeight": 519.703125,
+        "tableAvailableHeight": 257.109375,
+        "frameInkWithinPage": true
+      },
+      "pdfPath": "/tmp/prompt-e-salida/salida-count-1.pdf",
+      "pdf": {
+        "pageCount": 1,
+        "pageSize": "594.96 x 420 pts (A5)",
+        "pageSizePoints": {
+          "width": 594.96,
+          "height": 420
+        },
+        "pages": [
+          "Salida MARIANA TEXTIL QA-SAL-84001 Pág 1/1 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE CANT. DE SKU ROLLOS UNIDAD 1 Tela salida 01 Azul salida 1 1.00 Mts. SKU-SALIDA-01 OBSERVACIONES Observaciones de safe area PDF Total Rollos 1 Revisó Entregó Recibió Total Mts. 1.00"
+        ],
+        "bboxPages": [
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84001",
+              "xMin": 42.621092,
+              "xMax": 120.060031,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "1/1",
+              "xMin": 58.253904,
+              "xMax": 67.63989,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1",
+              "xMin": 23.437499,
+              "xMax": 26.550292,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "01",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "SKU-SALIDA-01",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "1",
+              "xMin": 566.660136,
+              "xMax": 569.893779,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "1.00",
+              "xMin": 554.249977,
+              "xMax": 569.885135,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ]
+        ],
+        "fontBboxPages": [
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84001",
+              "xMin": 42.621092,
+              "xMax": 120.060031,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "1/1",
+              "xMin": 58.253904,
+              "xMax": 67.63989,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1",
+              "xMin": 23.437499,
+              "xMax": 26.550292,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "01",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "SKU-SALIDA-01",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "1",
+              "xMin": 566.660136,
+              "xMax": 569.893779,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "1.00",
+              "xMin": 554.249977,
+              "xMax": 569.885135,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ]
+        ]
+      },
+      "fontBoxDiagnostics": {
+        "authority": "diagnostic-only-font-boxes",
+        "widthMm": 210,
+        "heightMm": 148,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "fontBoxOverlaps": [
+          {
+            "pageNumber": 1,
+            "count": 1,
+            "words": [
+              {
+                "text": "Salida",
+                "xMin": 42.621092,
+                "xMax": 141.199237,
+                "yMin": 4.6125,
+                "yMax": 66.037497
+              }
+            ]
+          }
+        ]
+      },
+      "raster": {
+        "dpi": 96,
+        "widthMm": 210,
+        "heightMm": 148,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "pageSizePoints": {
+          "width": 594.96,
+          "height": 420
+        },
+        "pages": [
+          {
+            "pageNumber": 1,
+            "imagePath": "/tmp/prompt-e-salida/salida-count-1-1.png",
+            "width": 794,
+            "height": 560,
+            "inkBoundsPx": {
+              "x": 20,
+              "y": 20,
+              "width": 754,
+              "height": 520
+            },
+            "inkBoundsMm": {
+              "x": 5.291666666666667,
+              "y": 5.291666666666667,
+              "width": 199.49583333333334,
+              "height": 137.58333333333334
+            },
+            "borderBandMm": 5,
+            "edgeClearanceMm": {
+              "left": 5.291666666666667,
+              "top": 5.291666666666667,
+              "right": 5.101166666666671,
+              "bottom": 5.291666666666657
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "salida-count-10",
+      "route": "/salidas/84010/documento/salida",
+      "expectedPageCount": 1,
+      "requestedPaths": [
+        "GET /api/auth/me",
+        "GET /api/salidas/84010/documento"
+      ],
+      "pdfSettings": {
+        "paperWidthMm": 210,
+        "paperHeightMm": 148,
+        "marginMm": 0,
+        "scale": 1,
+        "preferCSSPageSize": true,
+        "printBackground": true,
+        "displayHeaderFooter": false
+      },
+      "status": "passed",
+      "layoutMeasurement": {
+        "page": {
+          "x": 0,
+          "y": 0,
+          "width": 793.6875,
+          "height": 559.359375,
+          "right": 793.6875,
+          "bottom": 559.359375
+        },
+        "frame": {
+          "x": 19.828125,
+          "y": 19.828125,
+          "width": 754.03125,
+          "height": 519.703125,
+          "right": 773.859375,
+          "bottom": 539.53125
+        },
+        "header": {
+          "x": 20.828125,
+          "y": 20.828125,
+          "width": 752.03125,
+          "height": 137.09375,
+          "right": 772.859375,
+          "bottom": 157.921875
+        },
+        "metadata": {
+          "x": 20.828125,
+          "y": 157.921875,
+          "width": 752.03125,
+          "height": 37,
+          "right": 772.859375,
+          "bottom": 194.921875
+        },
+        "table": {
+          "x": 20.828125,
+          "y": 194.921875,
+          "width": 752.03125,
+          "height": 257.109375,
+          "right": 772.859375,
+          "bottom": 452.03125
+        },
+        "footer": {
+          "x": 20.828125,
+          "y": 452.03125,
+          "width": 752.03125,
+          "height": 86.5,
+          "right": 772.859375,
+          "bottom": 538.53125
+        },
+        "rows": [
+          {
+            "y": 225.921875,
+            "height": 23.0625,
+            "bottom": 248.984375
+          },
+          {
+            "y": 248.984375,
+            "height": 22.5,
+            "bottom": 271.484375
+          },
+          {
+            "y": 271.484375,
+            "height": 22.5,
+            "bottom": 293.984375
+          },
+          {
+            "y": 293.984375,
+            "height": 22.5,
+            "bottom": 316.484375
+          },
+          {
+            "y": 316.484375,
+            "height": 22.5,
+            "bottom": 338.984375
+          },
+          {
+            "y": 338.984375,
+            "height": 22.5,
+            "bottom": 361.484375
+          },
+          {
+            "y": 361.484375,
+            "height": 22.5,
+            "bottom": 383.984375
+          },
+          {
+            "y": 383.984375,
+            "height": 22.5,
+            "bottom": 406.484375
+          },
+          {
+            "y": 406.484375,
+            "height": 22.5,
+            "bottom": 428.984375
+          },
+          {
+            "y": 428.984375,
+            "height": 22.546875,
+            "bottom": 451.53125
+          }
+        ],
+        "frameContentHeight": 519.703125,
+        "tableAvailableHeight": 257.109375,
+        "frameInkWithinPage": true
+      },
+      "pdfPath": "/tmp/prompt-e-salida/salida-count-10.pdf",
+      "pdf": {
+        "pageCount": 1,
+        "pageSize": "594.96 x 420 pts (A5)",
+        "pageSizePoints": {
+          "width": 594.96,
+          "height": 420
+        },
+        "pages": [
+          "Salida MARIANA TEXTIL QA-SAL-84010 Pág 1/1 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE CANT. DE SKU ROLLOS UNIDAD 1 Tela salida 01 Azul salida 1 1.00 Mts. SKU-SALIDA-01 2 Tela salida 02 Rojo salida 1 1.00 Mts. SKU-SALIDA-02 3 Tela salida 03 Azul salida 1 1.00 Mts. SKU-SALIDA-03 4 Tela salida 04 Rojo salida 1 1.00 Mts. SKU-SALIDA-04 5 Tela salida 05 Azul salida 1 1.00 Mts. SKU-SALIDA-05 6 Tela salida 06 Rojo salida 1 1.00 Mts. SKU-SALIDA-06 7 Tela salida 07 Azul salida 1 1.00 Mts. SKU-SALIDA-07 8 Tela salida 08 Rojo salida 1 1.00 Mts. SKU-SALIDA-08 9 Tela salida 09 Azul salida 1 1.00 Mts. SKU-SALIDA-09 10 Tela salida 10 Rojo salida 1 1.00 Mts. SKU-SALIDA-10 OBSERVACIONES Observaciones de safe area PDF Total Rollos 10 Revisó Entregó Recibió Total Mts. 10.00"
+        ],
+        "bboxPages": [
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84010",
+              "xMin": 42.621092,
+              "xMax": 120.060031,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "1/1",
+              "xMin": 58.253904,
+              "xMax": 67.63989,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1",
+              "xMin": 23.437499,
+              "xMax": 26.550292,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "01",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "SKU-SALIDA-01",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "2",
+              "xMin": 22.67578,
+              "xMax": 27.297362,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "02",
+              "xMin": 76.852292,
+              "xMax": 86.157711,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "SKU-SALIDA-02",
+              "xMin": 364.371082,
+              "xMax": 422.327623,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "3",
+              "xMin": 22.640624,
+              "xMax": 27.342772,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "03",
+              "xMin": 76.852292,
+              "xMax": 86.216305,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "SKU-SALIDA-03",
+              "xMin": 364.371082,
+              "xMax": 422.386217,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "4",
+              "xMin": 22.535155,
+              "xMax": 27.45703,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "04",
+              "xMin": 76.852292,
+              "xMax": 86.428707,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "SKU-SALIDA-04",
+              "xMin": 364.371082,
+              "xMax": 422.598619,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "5",
+              "xMin": 22.734374,
+              "xMax": 27.257079,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "05",
+              "xMin": 76.852292,
+              "xMax": 86.0332,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "SKU-SALIDA-05",
+              "xMin": 364.371082,
+              "xMax": 422.203111,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "6",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "06",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "SKU-SALIDA-06",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "7",
+              "xMin": 22.851562,
+              "xMax": 27.136229,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "07",
+              "xMin": 76.852292,
+              "xMax": 85.681637,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "SKU-SALIDA-07",
+              "xMin": 364.371082,
+              "xMax": 421.851549,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "8",
+              "xMin": 22.628905,
+              "xMax": 27.349364,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "08",
+              "xMin": 76.852292,
+              "xMax": 86.223629,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "SKU-SALIDA-08",
+              "xMin": 364.371082,
+              "xMax": 422.393541,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "9",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "09",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "SKU-SALIDA-09",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "10",
+              "xMin": 21.011718,
+              "xMax": 28.965819,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "10",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "SKU-SALIDA-10",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "10",
+              "xMin": 561.597637,
+              "xMax": 569.888652,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "10.00",
+              "xMin": 549.410137,
+              "xMax": 569.884555,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ]
+        ],
+        "fontBboxPages": [
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84010",
+              "xMin": 42.621092,
+              "xMax": 120.060031,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "1/1",
+              "xMin": 58.253904,
+              "xMax": 67.63989,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1",
+              "xMin": 23.437499,
+              "xMax": 26.550292,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "01",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "SKU-SALIDA-01",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "2",
+              "xMin": 22.67578,
+              "xMax": 27.297362,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "02",
+              "xMin": 76.852292,
+              "xMax": 86.157711,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "SKU-SALIDA-02",
+              "xMin": 364.371082,
+              "xMax": 422.327623,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "3",
+              "xMin": 22.640624,
+              "xMax": 27.342772,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "03",
+              "xMin": 76.852292,
+              "xMax": 86.216305,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "SKU-SALIDA-03",
+              "xMin": 364.371082,
+              "xMax": 422.386217,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "4",
+              "xMin": 22.535155,
+              "xMax": 27.45703,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "04",
+              "xMin": 76.852292,
+              "xMax": 86.428707,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "SKU-SALIDA-04",
+              "xMin": 364.371082,
+              "xMax": 422.598619,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "5",
+              "xMin": 22.734374,
+              "xMax": 27.257079,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "05",
+              "xMin": 76.852292,
+              "xMax": 86.0332,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "SKU-SALIDA-05",
+              "xMin": 364.371082,
+              "xMax": 422.203111,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "6",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "06",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "SKU-SALIDA-06",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "7",
+              "xMin": 22.851562,
+              "xMax": 27.136229,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "07",
+              "xMin": 76.852292,
+              "xMax": 85.681637,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "SKU-SALIDA-07",
+              "xMin": 364.371082,
+              "xMax": 421.851549,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "8",
+              "xMin": 22.628905,
+              "xMax": 27.349364,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "08",
+              "xMin": 76.852292,
+              "xMax": 86.223629,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "SKU-SALIDA-08",
+              "xMin": 364.371082,
+              "xMax": 422.393541,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "9",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "09",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "SKU-SALIDA-09",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "10",
+              "xMin": 21.011718,
+              "xMax": 28.965819,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "10",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "SKU-SALIDA-10",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "10",
+              "xMin": 561.597637,
+              "xMax": 569.888652,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "10.00",
+              "xMin": 549.410137,
+              "xMax": 569.884555,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ]
+        ]
+      },
+      "fontBoxDiagnostics": {
+        "authority": "diagnostic-only-font-boxes",
+        "widthMm": 210,
+        "heightMm": 148,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "fontBoxOverlaps": [
+          {
+            "pageNumber": 1,
+            "count": 1,
+            "words": [
+              {
+                "text": "Salida",
+                "xMin": 42.621092,
+                "xMax": 141.199237,
+                "yMin": 4.6125,
+                "yMax": 66.037497
+              }
+            ]
+          }
+        ]
+      },
+      "raster": {
+        "dpi": 96,
+        "widthMm": 210,
+        "heightMm": 148,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "pageSizePoints": {
+          "width": 594.96,
+          "height": 420
+        },
+        "pages": [
+          {
+            "pageNumber": 1,
+            "imagePath": "/tmp/prompt-e-salida/salida-count-10-1.png",
+            "width": 794,
+            "height": 560,
+            "inkBoundsPx": {
+              "x": 20,
+              "y": 20,
+              "width": 754,
+              "height": 520
+            },
+            "inkBoundsMm": {
+              "x": 5.291666666666667,
+              "y": 5.291666666666667,
+              "width": 199.49583333333334,
+              "height": 137.58333333333334
+            },
+            "borderBandMm": 5,
+            "edgeClearanceMm": {
+              "left": 5.291666666666667,
+              "top": 5.291666666666667,
+              "right": 5.101166666666671,
+              "bottom": 5.291666666666657
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "salida-count-11-boundary",
+      "route": "/salidas/84011/documento/salida",
+      "expectedPageCount": 2,
+      "requestedPaths": [
+        "GET /api/auth/me",
+        "GET /api/salidas/84011/documento"
+      ],
+      "pdfSettings": {
+        "paperWidthMm": 210,
+        "paperHeightMm": 148,
+        "marginMm": 0,
+        "scale": 1,
+        "preferCSSPageSize": true,
+        "printBackground": true,
+        "displayHeaderFooter": false
+      },
+      "status": "passed",
+      "layoutMeasurement": {
+        "page": {
+          "x": 0,
+          "y": 0,
+          "width": 793.6875,
+          "height": 559.359375,
+          "right": 793.6875,
+          "bottom": 559.359375
+        },
+        "frame": {
+          "x": 19.828125,
+          "y": 19.828125,
+          "width": 754.03125,
+          "height": 519.703125,
+          "right": 773.859375,
+          "bottom": 539.53125
+        },
+        "header": {
+          "x": 20.828125,
+          "y": 20.828125,
+          "width": 752.03125,
+          "height": 137.09375,
+          "right": 772.859375,
+          "bottom": 157.921875
+        },
+        "metadata": {
+          "x": 20.828125,
+          "y": 157.921875,
+          "width": 752.03125,
+          "height": 37,
+          "right": 772.859375,
+          "bottom": 194.921875
+        },
+        "table": {
+          "x": 20.828125,
+          "y": 194.921875,
+          "width": 752.03125,
+          "height": 257.109375,
+          "right": 772.859375,
+          "bottom": 452.03125
+        },
+        "footer": {
+          "x": 20.828125,
+          "y": 452.03125,
+          "width": 752.03125,
+          "height": 86.5,
+          "right": 772.859375,
+          "bottom": 538.53125
+        },
+        "rows": [
+          {
+            "y": 225.921875,
+            "height": 23.0625,
+            "bottom": 248.984375
+          },
+          {
+            "y": 248.984375,
+            "height": 22.5,
+            "bottom": 271.484375
+          },
+          {
+            "y": 271.484375,
+            "height": 22.5,
+            "bottom": 293.984375
+          },
+          {
+            "y": 293.984375,
+            "height": 22.5,
+            "bottom": 316.484375
+          },
+          {
+            "y": 316.484375,
+            "height": 22.5,
+            "bottom": 338.984375
+          },
+          {
+            "y": 338.984375,
+            "height": 22.5,
+            "bottom": 361.484375
+          },
+          {
+            "y": 361.484375,
+            "height": 22.5,
+            "bottom": 383.984375
+          },
+          {
+            "y": 383.984375,
+            "height": 22.5,
+            "bottom": 406.484375
+          },
+          {
+            "y": 406.484375,
+            "height": 22.5,
+            "bottom": 428.984375
+          },
+          {
+            "y": 428.984375,
+            "height": 22.546875,
+            "bottom": 451.53125
+          }
+        ],
+        "frameContentHeight": 519.703125,
+        "tableAvailableHeight": 257.109375,
+        "frameInkWithinPage": true
+      },
+      "pdfPath": "/tmp/prompt-e-salida/salida-count-11-boundary.pdf",
+      "pdf": {
+        "pageCount": 2,
+        "pageSize": "594.96 x 420 pts (A5)",
+        "pageSizePoints": {
+          "width": 594.96,
+          "height": 420
+        },
+        "pages": [
+          "Salida MARIANA TEXTIL QA-SAL-84011 Pág 1/2 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE CANT. DE SKU ROLLOS UNIDAD 1 Tela salida 01 Azul salida 1 1.00 Mts. SKU-SALIDA-01 2 Tela salida 02 Rojo salida 1 1.00 Mts. SKU-SALIDA-02 3 Tela salida 03 Azul salida 1 1.00 Mts. SKU-SALIDA-03 4 Tela salida 04 Rojo salida 1 1.00 Mts. SKU-SALIDA-04 5 Tela salida 05 Azul salida 1 1.00 Mts. SKU-SALIDA-05 6 Tela salida 06 Rojo salida 1 1.00 Mts. SKU-SALIDA-06 7 Tela salida 07 Azul salida 1 1.00 Mts. SKU-SALIDA-07 8 Tela salida 08 Rojo salida 1 1.00 Mts. SKU-SALIDA-08 9 Tela salida 09 Azul salida 1 1.00 Mts. SKU-SALIDA-09 10 Tela salida 10 Rojo salida 1 1.00 Mts. SKU-SALIDA-10 OBSERVACIONES Observaciones de safe area PDF Total Rollos 11 Revisó Entregó Recibió Total Mts. 11.00",
+          "Salida MARIANA TEXTIL QA-SAL-84011 Pág 2/2 GENERÓ: Usuario PDF fixture ENTREGÓ: Transportista PDF fixture ORIGEN: Sitio origen PDF DESTINO: Sitio destino PDF FECHA: 01/01/2026 12:00 # PRODUCTO COLOR NO. DE CANT. DE SKU ROLLOS UNIDAD 11 Tela salida 11 Azul salida 1 1.00 Mts. SKU-SALIDA-11 OBSERVACIONES Observaciones de safe area PDF Total Rollos 11 Revisó Entregó Recibió Total Mts. 11.00"
+        ],
+        "bboxPages": [
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84011",
+              "xMin": 42.621092,
+              "xMax": 117.506808,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "1/2",
+              "xMin": 58.253904,
+              "xMax": 69.130368,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1",
+              "xMin": 23.437499,
+              "xMax": 26.550292,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "01",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "SKU-SALIDA-01",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "2",
+              "xMin": 22.67578,
+              "xMax": 27.297362,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "02",
+              "xMin": 76.852292,
+              "xMax": 86.157711,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "SKU-SALIDA-02",
+              "xMin": 364.371082,
+              "xMax": 422.327623,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "3",
+              "xMin": 22.640624,
+              "xMax": 27.342772,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "03",
+              "xMin": 76.852292,
+              "xMax": 86.216305,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "SKU-SALIDA-03",
+              "xMin": 364.371082,
+              "xMax": 422.386217,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "4",
+              "xMin": 22.535155,
+              "xMax": 27.45703,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "04",
+              "xMin": 76.852292,
+              "xMax": 86.428707,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "SKU-SALIDA-04",
+              "xMin": 364.371082,
+              "xMax": 422.598619,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "5",
+              "xMin": 22.734374,
+              "xMax": 27.257079,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "05",
+              "xMin": 76.852292,
+              "xMax": 86.0332,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "SKU-SALIDA-05",
+              "xMin": 364.371082,
+              "xMax": 422.203111,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "6",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "06",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "SKU-SALIDA-06",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "7",
+              "xMin": 22.851562,
+              "xMax": 27.136229,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "07",
+              "xMin": 76.852292,
+              "xMax": 85.681637,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "SKU-SALIDA-07",
+              "xMin": 364.371082,
+              "xMax": 421.851549,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "8",
+              "xMin": 22.628905,
+              "xMax": 27.349364,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "08",
+              "xMin": 76.852292,
+              "xMax": 86.223629,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "SKU-SALIDA-08",
+              "xMin": 364.371082,
+              "xMax": 422.393541,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "9",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "09",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "SKU-SALIDA-09",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "10",
+              "xMin": 21.011718,
+              "xMax": 28.965819,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "10",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "SKU-SALIDA-10",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "11",
+              "xMin": 563.425762,
+              "xMax": 569.893046,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "11.00",
+              "xMin": 551.015602,
+              "xMax": 569.884402,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ],
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84011",
+              "xMin": 42.621092,
+              "xMax": 117.506808,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "2/2",
+              "xMin": 58.253904,
+              "xMax": 70.630368,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "11",
+              "xMin": 21.878905,
+              "xMax": 28.104491,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "11",
+              "xMin": 76.852292,
+              "xMax": 82.953366,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "SKU-SALIDA-11",
+              "xMin": 364.371082,
+              "xMax": 419.123277,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "11",
+              "xMin": 563.425762,
+              "xMax": 569.893046,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "11.00",
+              "xMin": 551.015602,
+              "xMax": 569.884402,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ]
+        ],
+        "fontBboxPages": [
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84011",
+              "xMin": 42.621092,
+              "xMax": 117.506808,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "1/2",
+              "xMin": 58.253904,
+              "xMax": 69.130368,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1",
+              "xMin": 23.437499,
+              "xMax": 26.550292,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "01",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "SKU-SALIDA-01",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 171.39843,
+              "yMax": 184.195305
+            },
+            {
+              "text": "2",
+              "xMin": 22.67578,
+              "xMax": 27.297362,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "02",
+              "xMin": 76.852292,
+              "xMax": 86.157711,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "SKU-SALIDA-02",
+              "xMin": 364.371082,
+              "xMax": 422.327623,
+              "yMin": 188.64843,
+              "yMax": 201.445304
+            },
+            {
+              "text": "3",
+              "xMin": 22.640624,
+              "xMax": 27.342772,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "03",
+              "xMin": 76.852292,
+              "xMax": 86.216305,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "SKU-SALIDA-03",
+              "xMin": 364.371082,
+              "xMax": 422.386217,
+              "yMin": 205.148429,
+              "yMax": 217.945303
+            },
+            {
+              "text": "4",
+              "xMin": 22.535155,
+              "xMax": 27.45703,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "04",
+              "xMin": 76.852292,
+              "xMax": 86.428707,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "SKU-SALIDA-04",
+              "xMin": 364.371082,
+              "xMax": 422.598619,
+              "yMin": 222.398428,
+              "yMax": 235.195303
+            },
+            {
+              "text": "5",
+              "xMin": 22.734374,
+              "xMax": 27.257079,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "05",
+              "xMin": 76.852292,
+              "xMax": 86.0332,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "SKU-SALIDA-05",
+              "xMin": 364.371082,
+              "xMax": 422.203111,
+              "yMin": 238.898428,
+              "yMax": 251.695302
+            },
+            {
+              "text": "6",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "06",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "SKU-SALIDA-06",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 256.148427,
+              "yMax": 268.945301
+            },
+            {
+              "text": "7",
+              "xMin": 22.851562,
+              "xMax": 27.136229,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "07",
+              "xMin": 76.852292,
+              "xMax": 85.681637,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "SKU-SALIDA-07",
+              "xMin": 364.371082,
+              "xMax": 421.851549,
+              "yMin": 272.648426,
+              "yMax": 285.445301
+            },
+            {
+              "text": "8",
+              "xMin": 22.628905,
+              "xMax": 27.349364,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "08",
+              "xMin": 76.852292,
+              "xMax": 86.223629,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "SKU-SALIDA-08",
+              "xMin": 364.371082,
+              "xMax": 422.393541,
+              "yMin": 289.898425,
+              "yMax": 302.6953
+            },
+            {
+              "text": "9",
+              "xMin": 22.628905,
+              "xMax": 27.353026,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "09",
+              "xMin": 76.852292,
+              "xMax": 86.234616,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "SKU-SALIDA-09",
+              "xMin": 364.371082,
+              "xMax": 422.404527,
+              "yMin": 306.398425,
+              "yMax": 319.195299
+            },
+            {
+              "text": "10",
+              "xMin": 21.011718,
+              "xMax": 28.965819,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "10",
+              "xMin": 76.852292,
+              "xMax": 84.634274,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Rojo",
+              "xMin": 166.371091,
+              "xMax": 181.898434,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "salida",
+              "xMin": 184.007809,
+              "xMax": 204.614497,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "SKU-SALIDA-10",
+              "xMin": 364.371082,
+              "xMax": 420.804186,
+              "yMin": 323.648424,
+              "yMax": 336.445298
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "11",
+              "xMin": 563.425762,
+              "xMax": 569.893046,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "11.00",
+              "xMin": 551.015602,
+              "xMax": 569.884402,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ],
+          [
+            {
+              "text": "Salida",
+              "xMin": 42.621092,
+              "xMax": 141.199237,
+              "yMin": 4.6125,
+              "yMax": 66.037497
+            },
+            {
+              "text": "MARIANA",
+              "xMin": 42.621092,
+              "xMax": 93.767574,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "TEXTIL",
+              "xMin": 96.254146,
+              "xMax": 132.870844,
+              "yMin": 55.90781,
+              "yMax": 73.823434
+            },
+            {
+              "text": "QA-SAL-84011",
+              "xMin": 42.621092,
+              "xMax": 117.506808,
+              "yMin": 71.65781,
+              "yMax": 89.573434
+            },
+            {
+              "text": "Pág",
+              "xMin": 42.621092,
+              "xMax": 56.47682,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "2/2",
+              "xMin": 58.253904,
+              "xMax": 70.630368,
+              "yMin": 85.898434,
+              "yMax": 98.695308
+            },
+            {
+              "text": "GENERÓ:",
+              "xMin": 21.621093,
+              "xMax": 55.286863,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Usuario",
+              "xMin": 58.28906,
+              "xMax": 86.031002,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 88.030514,
+              "xMax": 102.675289,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 104.6748,
+              "xMax": 127.968596,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "ORIGEN:",
+              "xMin": 21.621093,
+              "xMax": 52.836912,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 55.839841,
+              "xMax": 71.546628,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "origen",
+              "xMin": 73.54614,
+              "xMax": 96.490719,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 98.49023,
+              "xMax": 113.135005,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "ENTREGÓ:",
+              "xMin": 300.6328,
+              "xMax": 339.304673,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "Transportista",
+              "xMin": 342.304673,
+              "xMax": 389.974933,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "PDF",
+              "xMin": 391.974444,
+              "xMax": 406.619219,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "fixture",
+              "xMin": 408.618731,
+              "xMax": 431.912526,
+              "yMin": 118.898433,
+              "yMax": 131.695307
+            },
+            {
+              "text": "DESTINO:",
+              "xMin": 207.621089,
+              "xMax": 243.559564,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "Sitio",
+              "xMin": 246.56249,
+              "xMax": 262.269276,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "destino",
+              "xMin": 264.268788,
+              "xMax": 290.833728,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PDF",
+              "xMin": 292.83324,
+              "xMax": 307.478015,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "FECHA:",
+              "xMin": 393.632796,
+              "xMax": 421.845686,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "01/01/2026",
+              "xMin": 424.851545,
+              "xMax": 465.112774,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "12:00",
+              "xMin": 467.112285,
+              "xMax": 486.803446,
+              "yMin": 131.648432,
+              "yMax": 144.445306
+            },
+            {
+              "text": "PRODUCTO",
+              "xMin": 37.371092,
+              "xMax": 79.93462,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "COLOR",
+              "xMin": 166.371091,
+              "xMax": 192.43066,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "NO.",
+              "xMin": 249.398427,
+              "xMax": 263.069081,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 264.615796,
+              "xMax": 274.587719,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "ROLLOS",
+              "xMin": 247.16015,
+              "xMax": 276.823234,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "11",
+              "xMin": 21.878905,
+              "xMax": 28.104491,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Tela",
+              "xMin": 37.371092,
+              "xMax": 52.026853,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 54.136228,
+              "xMax": 74.742917,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "11",
+              "xMin": 76.852292,
+              "xMax": 82.953366,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Azul",
+              "xMin": 166.371091,
+              "xMax": 181.938717,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "salida",
+              "xMin": 184.048092,
+              "xMax": 204.65478,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "1",
+              "xMin": 260.460927,
+              "xMax": 263.511464,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "#",
+              "xMin": 22.558593,
+              "xMax": 27.425536,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "CANT.",
+              "xMin": 322.183584,
+              "xMax": 346.100087,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "DE",
+              "xMin": 347.646802,
+              "xMax": 357.618725,
+              "yMin": 146.648431,
+              "yMax": 159.445306
+            },
+            {
+              "text": "SKU",
+              "xMin": 364.371082,
+              "xMax": 380.165759,
+              "yMin": 151.148431,
+              "yMax": 163.945306
+            },
+            {
+              "text": "UNIDAD",
+              "xMin": 328.183584,
+              "xMax": 357.611561,
+              "yMin": 155.648431,
+              "yMax": 168.445305
+            },
+            {
+              "text": "1.00",
+              "xMin": 324.984361,
+              "xMax": 339.854287,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "Mts.",
+              "xMin": 341.859361,
+              "xMax": 357.612358,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "SKU-SALIDA-11",
+              "xMin": 364.371082,
+              "xMax": 419.123277,
+              "yMin": 172.14843,
+              "yMax": 184.945305
+            },
+            {
+              "text": "OBSERVACIONES",
+              "xMin": 25.371093,
+              "xMax": 89.262882,
+              "yMin": 340.148423,
+              "yMax": 352.945298
+            },
+            {
+              "text": "Observaciones",
+              "xMin": 25.371093,
+              "xMax": 79.444264,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "de",
+              "xMin": 81.443776,
+              "xMax": 90.485523,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "safe",
+              "xMin": 92.485035,
+              "xMax": 107.834399,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "area",
+              "xMin": 109.833911,
+              "xMax": 125.58684,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "PDF",
+              "xMin": 127.586352,
+              "xMax": 142.231126,
+              "yMin": 349.898423,
+              "yMax": 362.695297
+            },
+            {
+              "text": "Revisó",
+              "xMin": 57.960935,
+              "xMax": 82.45913,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Entregó",
+              "xMin": 159.093743,
+              "xMax": 187.741691,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Recibió",
+              "xMin": 263.062489,
+              "xMax": 290.170886,
+              "yMin": 389.648421,
+              "yMax": 402.445296
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Rollos",
+              "xMin": 381.887679,
+              "xMax": 404.187727,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "11",
+              "xMin": 563.425762,
+              "xMax": 569.893046,
+              "yMin": 370.148422,
+              "yMax": 382.945297
+            },
+            {
+              "text": "Total",
+              "xMin": 361.92186,
+              "xMax": 380.111556,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "Mts.",
+              "xMin": 381.890609,
+              "xMax": 398.384234,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            },
+            {
+              "text": "11.00",
+              "xMin": 551.015602,
+              "xMax": 569.884402,
+              "yMin": 385.148421,
+              "yMax": 397.945296
+            }
+          ]
+        ]
+      },
+      "fontBoxDiagnostics": {
+        "authority": "diagnostic-only-font-boxes",
+        "widthMm": 210,
+        "heightMm": 148,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "fontBoxOverlaps": [
+          {
+            "pageNumber": 1,
+            "count": 1,
+            "words": [
+              {
+                "text": "Salida",
+                "xMin": 42.621092,
+                "xMax": 141.199237,
+                "yMin": 4.6125,
+                "yMax": 66.037497
+              }
+            ]
+          },
+          {
+            "pageNumber": 2,
+            "count": 1,
+            "words": [
+              {
+                "text": "Salida",
+                "xMin": 42.621092,
+                "xMax": 141.199237,
+                "yMin": 4.6125,
+                "yMax": 66.037497
+              }
+            ]
+          }
+        ]
+      },
+      "raster": {
+        "dpi": 96,
+        "widthMm": 210,
+        "heightMm": 148,
+        "safeMm": 5,
+        "toleranceMm": 0,
+        "pageSizePoints": {
+          "width": 594.96,
+          "height": 420
+        },
+        "pages": [
+          {
+            "pageNumber": 1,
+            "imagePath": "/tmp/prompt-e-salida/salida-count-11-boundary-1.png",
+            "width": 794,
+            "height": 560,
+            "inkBoundsPx": {
+              "x": 20,
+              "y": 20,
+              "width": 754,
+              "height": 520
+            },
+            "inkBoundsMm": {
+              "x": 5.291666666666667,
+              "y": 5.291666666666667,
+              "width": 199.49583333333334,
+              "height": 137.58333333333334
+            },
+            "borderBandMm": 5,
+            "edgeClearanceMm": {
+              "left": 5.291666666666667,
+              "top": 5.291666666666667,
+              "right": 5.101166666666671,
+              "bottom": 5.291666666666657
+            }
+          },
+          {
+            "pageNumber": 2,
+            "imagePath": "/tmp/prompt-e-salida/salida-count-11-boundary-2.png",
+            "width": 794,
+            "height": 560,
+            "inkBoundsPx": {
+              "x": 20,
+              "y": 20,
+              "width": 754,
+              "height": 520
+            },
+            "inkBoundsMm": {
+              "x": 5.291666666666667,
+              "y": 5.291666666666667,
+              "width": 199.49583333333334,
+              "height": 137.58333333333334
+            },
+            "borderBandMm": 5,
+            "edgeClearanceMm": {
+              "left": 5.291666666666667,
+              "top": 5.291666666666667,
+              "right": 5.101166666666671,
+              "bottom": 5.291666666666657
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "browser": {
+    "executable": "/repl/tools/bin/chromium",
+    "version": {
+      "Browser": "Chrome/152.0.7977.64",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.18",
+      "WebKit-Version": "537.36 (@506c834ecceaa943c5f41e6cfe7f68acb5c45346)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:37335/devtools/browser/404a87df-9d8d-40b5-9329-ce5f55f65f1e"
+    },
+    "launchArgs": [
+      "--headless=new",
+      "--disable-gpu",
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
+      "--hide-scrollbars",
+      "--remote-debugging-address=127.0.0.1",
+      "--remote-debugging-port=37335",
+      "--user-data-dir=/tmp/laser-salida-chromium-4FwcoN",
+      "about:blank"
+    ],
+    "stderrTail": "r type: \n[7343:7363:0916/013041.982752:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7343:7343:0916/013041.982933:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7343:7343:0916/013041.986320:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7343:7343:0916/013042.002164:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7343:7363:0916/013042.002177:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[7343:7363:0916/013042.002201:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[7343:7343:0916/013042.002310:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7343:7363:0916/013042.002347:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7343:7343:0916/013042.017809:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type: \n[7343:7343:0916/013042.018088:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7343:7363:0916/013042.018268:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7343:7343:0916/013042.023534:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7343:7363:0916/013042.023610:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7343:7343:0916/013042.034751:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7380:7397:0916/013042.101709:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7380:7397:0916/013042.108067:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7380:7397:0916/013042.468695:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7380:7397:0916/013042.469121:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7380:7397:0916/013042.504325:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7380:7397:0916/013042.504775:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7380:7397:0916/013042.505486:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7343:7366:0916/013045.408743:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT\n[7380:7397:0916/013045.957340:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7380:7397:0916/013048.727398:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n"
+  }
+}

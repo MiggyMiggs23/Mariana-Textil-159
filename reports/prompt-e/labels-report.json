@@ -1,0 +1,1188 @@
+{
+  "startedAt": "2026-09-16T01:30:27.335Z",
+  "appUrl": "http://localhost:80",
+  "os": {
+    "platform": "linux",
+    "arch": "x64",
+    "release": "6.18.52",
+    "version": "#Replit-Linux SMP Mon Sep 14 11:36:19 UTC 2026"
+  },
+  "node": "v24.13.0",
+  "chromium": {
+    "executable": "/repl/tools/bin/chromium",
+    "headless": true,
+    "launchArgs": [
+      "--headless=new",
+      "--disable-gpu",
+      "--no-sandbox",
+      "--disable-dev-shm-usage",
+      "--hide-scrollbars",
+      "--remote-debugging-address=127.0.0.1",
+      "--remote-debugging-port=35681",
+      "--user-data-dir=/tmp/entrada-etiquetas-chromium-9gWmar",
+      "about:blank"
+    ],
+    "cdpVersion": {
+      "Browser": "Chrome/152.0.7977.64",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.18",
+      "WebKit-Version": "537.36 (@506c834ecceaa943c5f41e6cfe7f68acb5c45346)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:35681/devtools/browser/5240b3bc-ec21-4e8f-bbb0-a20d1d28d146"
+    },
+    "processPid": 7064,
+    "stderrTail": "r type: \n[7064:7084:0916/013028.460802:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7064:7064:0916/013028.461666:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7064:7064:0916/013028.478236:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7064:7064:0916/013028.556070:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7064:7084:0916/013028.557183:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[7064:7084:0916/013028.557265:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory\n[7064:7064:0916/013028.561269:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7064:7084:0916/013028.563551:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7064:7064:0916/013028.602598:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type: \n[7064:7064:0916/013028.626826:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7064:7084:0916/013028.626957:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7064:7064:0916/013028.667912:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7064:7084:0916/013028.668038:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Could not parse server address: Unknown address type (examples of valid types are \"tcp\" and on UNIX \"unix\")\n[7064:7064:0916/013028.688408:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.NameHasOwner: object_path= /org/freedesktop/DBus: unknown error type: \n[7101:7131:0916/013028.751211:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7101:7131:0916/013028.759309:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7101:7131:0916/013028.941206:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7101:7131:0916/013028.947185:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7101:7131:0916/013029.013332:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7101:7131:0916/013029.013742:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7101:7131:0916/013029.043411:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7064:7087:0916/013031.618796:ERROR:google_apis/gcm/engine/registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT\n[7101:7131:0916/013033.494941:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n[7101:7131:0916/013035.877679:ERROR:net/socket/socket_posix.cc:121] CreatePlatformSocket() failed: Address family not supported by protocol (97)\n"
+  },
+  "pdfCapture": {
+    "driver": "Chromium DevTools Protocol Page.printToPDF",
+    "media": "print",
+    "nativeWindowPrintCalled": false,
+    "waspDriverTested": false,
+    "waspDriverDescription": "Not available in this headless run; Wasp WPL308 native dialog/page-count behavior remains unverified.",
+    "distinction": "This PDF proves Chromium CSS pagination only. It does not prove the Wasp WPL308 native dialog will report the same page count."
+  },
+  "fixturePolicy": "Browser Fetch fixtures only; no DB writes, test users, session creation, or live API calls.",
+  "scenarios": [
+    {
+      "name": "baseline-1-label",
+      "route": "/entradas/9100/etiquetas",
+      "scenarioType": "actual-route-baseline",
+      "actualUserReproduction": false,
+      "distinction": "The browser follows the real EntradaEtiquetas route and real print button. The additional portal scenario is simulated by duplicating the fully-rendered mounted portal without injecting an offset; it is not evidence that this exact DOM is the user's Wasp or Microsoft Print to PDF reproduction.",
+      "expectedLabelCount": 1,
+      "expectedSeries": [
+        "1000000"
+      ],
+      "requestedApiPaths": [
+        "GET /api/auth/me",
+        "GET /api/inventario/entradas/9100"
+      ],
+      "status": "passed",
+      "dom": [
+        {
+          "expected": {
+            "sku": "SKU-BASELINE",
+            "serie": "1000000",
+            "tela": "Algodón baseline",
+            "color": "Azul prueba",
+            "cantidad": "1.234",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN BASELINE - AZUL PRUEBASKUSKU-BASELINENO. DE SERIE1000000METROS DEL ROLLO1.234MARIANA TEXTILSKU-BASELINE-1000000"
+        }
+      ],
+      "mountedScenario": {
+        "actualRouteContainerCount": 1,
+        "simulatedAdditionalContainerCount": 0,
+        "mountedContainerCount": 1,
+        "artificialOffsetInjected": false
+      },
+      "actualMountedContainerCount": 1,
+      "printState": {
+        "nativePrintOverridden": true,
+        "cleanupDelayMs": 1000,
+        "bodyClass": "printing-labels print-target-scoped",
+        "printRootParent": "body",
+        "labelCount": 1,
+        "printCalls": 1,
+        "signalAt": 4375.199999999953,
+        "mountedContainerCount": 1,
+        "activePrintContainerCount": 1
+      },
+      "browserContext": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+        "platform": "Linux x86_64",
+        "language": "en-US"
+      },
+      "pdfSettings": {
+        "paperWidthMm": 100,
+        "paperHeightMm": 70,
+        "paperWidthInches": 3.937007874015748,
+        "paperHeightInches": 2.7559055118110236,
+        "scale": 1,
+        "marginTopInches": 0,
+        "marginBottomInches": 0,
+        "marginLeftInches": 0,
+        "marginRightInches": 0,
+        "preferCSSPageSize": true,
+        "printBackground": true,
+        "displayHeaderFooter": false,
+        "driver": "Chromium CDP Page.printToPDF"
+      },
+      "pdfPath": "/tmp/entrada-etiquetas-pdf-regression/baseline-1-label.pdf",
+      "pdf": {
+        "pageCount": 1,
+        "pdfMetadata": {
+          "creator": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+          "producer": "Skia/PDF m152",
+          "pageSize": "282.96 x 198 pts",
+          "pdfVersion": "1.4"
+        },
+        "pages": [
+          "ALGODÓN BASELINE - AZUL PRUEBA SKU SKU-BASELINE NO. DE SERIE 1000000 METROS DEL ROLLO 1.234 MARIANA TEXTIL SKU-BASELINE-1000000"
+        ],
+        "bboxPages": [
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          }
+        ],
+        "firstContentY": 15.407812,
+        "contentStartY": [
+          15.407812
+        ],
+        "contentStartYSpread": 0
+      },
+      "phase": "pdf-assertion"
+    },
+    {
+      "name": "regression-25-labels",
+      "route": "/entradas/9200/etiquetas",
+      "scenarioType": "actual-route-baseline",
+      "actualUserReproduction": false,
+      "distinction": "The browser follows the real EntradaEtiquetas route and real print button. The additional portal scenario is simulated by duplicating the fully-rendered mounted portal without injecting an offset; it is not evidence that this exact DOM is the user's Wasp or Microsoft Print to PDF reproduction.",
+      "expectedLabelCount": 25,
+      "expectedSeries": [
+        "1000001",
+        "1000002",
+        "1000003",
+        "1000004",
+        "1000005",
+        "1000006",
+        "1000007",
+        "1000008",
+        "1000009",
+        "1000010",
+        "1000011",
+        "1000012",
+        "1000013",
+        "1000014",
+        "1000015",
+        "1000016",
+        "1000017",
+        "1000018",
+        "1000019",
+        "1000020",
+        "1000021",
+        "1000022",
+        "1000023",
+        "1000024",
+        "1000025"
+      ],
+      "requestedApiPaths": [
+        "GET /api/auth/me",
+        "GET /api/inventario/entradas/9200"
+      ],
+      "status": "passed",
+      "dom": [
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000001",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000001METROS DEL ROLLO100.000MARIANA TEXTILSKU-REGRESION-1000001"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000002",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.125",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000002METROS DEL ROLLO100.125MARIANA TEXTILSKU-REGRESION-1000002"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000003",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.250",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000003METROS DEL ROLLO100.250MARIANA TEXTILSKU-REGRESION-1000003"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000004",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.375",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000004METROS DEL ROLLO100.375MARIANA TEXTILSKU-REGRESION-1000004"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000005",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.500",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000005METROS DEL ROLLO100.500MARIANA TEXTILSKU-REGRESION-1000005"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000006",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.625",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000006METROS DEL ROLLO100.625MARIANA TEXTILSKU-REGRESION-1000006"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000007",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.750",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000007METROS DEL ROLLO100.750MARIANA TEXTILSKU-REGRESION-1000007"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000008",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.875",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000008METROS DEL ROLLO100.875MARIANA TEXTILSKU-REGRESION-1000008"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000009",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000009METROS DEL ROLLO101.000MARIANA TEXTILSKU-REGRESION-1000009"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000010",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.125",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000010METROS DEL ROLLO101.125MARIANA TEXTILSKU-REGRESION-1000010"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000011",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.250",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000011METROS DEL ROLLO101.250MARIANA TEXTILSKU-REGRESION-1000011"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000012",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.375",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000012METROS DEL ROLLO101.375MARIANA TEXTILSKU-REGRESION-1000012"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000013",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.500",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000013METROS DEL ROLLO101.500MARIANA TEXTILSKU-REGRESION-1000013"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000014",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.625",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000014METROS DEL ROLLO101.625MARIANA TEXTILSKU-REGRESION-1000014"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000015",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.750",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000015METROS DEL ROLLO101.750MARIANA TEXTILSKU-REGRESION-1000015"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000016",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.875",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000016METROS DEL ROLLO101.875MARIANA TEXTILSKU-REGRESION-1000016"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000017",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000017METROS DEL ROLLO102.000MARIANA TEXTILSKU-REGRESION-1000017"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000018",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.125",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000018METROS DEL ROLLO102.125MARIANA TEXTILSKU-REGRESION-1000018"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000019",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.250",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000019METROS DEL ROLLO102.250MARIANA TEXTILSKU-REGRESION-1000019"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000020",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.375",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000020METROS DEL ROLLO102.375MARIANA TEXTILSKU-REGRESION-1000020"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000021",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.500",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000021METROS DEL ROLLO102.500MARIANA TEXTILSKU-REGRESION-1000021"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000022",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.625",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000022METROS DEL ROLLO102.625MARIANA TEXTILSKU-REGRESION-1000022"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000023",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.750",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000023METROS DEL ROLLO102.750MARIANA TEXTILSKU-REGRESION-1000023"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000024",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.875",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000024METROS DEL ROLLO102.875MARIANA TEXTILSKU-REGRESION-1000024"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000025",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "103.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000025METROS DEL ROLLO103.000MARIANA TEXTILSKU-REGRESION-1000025"
+        }
+      ],
+      "mountedScenario": {
+        "actualRouteContainerCount": 1,
+        "simulatedAdditionalContainerCount": 0,
+        "mountedContainerCount": 1,
+        "artificialOffsetInjected": false
+      },
+      "actualMountedContainerCount": 1,
+      "printState": {
+        "nativePrintOverridden": true,
+        "cleanupDelayMs": 1000,
+        "bodyClass": "printing-labels print-target-scoped",
+        "printRootParent": "body",
+        "labelCount": 25,
+        "printCalls": 1,
+        "signalAt": 1918.5,
+        "mountedContainerCount": 1,
+        "activePrintContainerCount": 1
+      },
+      "browserContext": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+        "platform": "Linux x86_64",
+        "language": "en-US"
+      },
+      "pdfSettings": {
+        "paperWidthMm": 100,
+        "paperHeightMm": 70,
+        "paperWidthInches": 3.937007874015748,
+        "paperHeightInches": 2.7559055118110236,
+        "scale": 1,
+        "marginTopInches": 0,
+        "marginBottomInches": 0,
+        "marginLeftInches": 0,
+        "marginRightInches": 0,
+        "preferCSSPageSize": true,
+        "printBackground": true,
+        "displayHeaderFooter": false,
+        "driver": "Chromium CDP Page.printToPDF"
+      },
+      "pdfPath": "/tmp/entrada-etiquetas-pdf-regression/regression-25-labels.pdf",
+      "pdf": {
+        "pageCount": 25,
+        "pdfMetadata": {
+          "creator": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+          "producer": "Skia/PDF m152",
+          "pageSize": "282.96 x 198 pts",
+          "pdfVersion": "1.4"
+        },
+        "pages": [
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000001 METROS DEL ROLLO 100.000 MARIANA TEXTIL SKU-REGRESION-1000001",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000002 METROS DEL ROLLO 100.125 MARIANA TEXTIL SKU-REGRESION-1000002",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000003 METROS DEL ROLLO 100.250 MARIANA TEXTIL SKU-REGRESION-1000003",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000004 METROS DEL ROLLO 100.375 MARIANA TEXTIL SKU-REGRESION-1000004",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000005 METROS DEL ROLLO 100.500 MARIANA TEXTIL SKU-REGRESION-1000005",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000006 METROS DEL ROLLO 100.625 MARIANA TEXTIL SKU-REGRESION-1000006",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000007 METROS DEL ROLLO 100.750 MARIANA TEXTIL SKU-REGRESION-1000007",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000008 METROS DEL ROLLO 100.875 MARIANA TEXTIL SKU-REGRESION-1000008",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000009 METROS DEL ROLLO 101.000 MARIANA TEXTIL SKU-REGRESION-1000009",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000010 METROS DEL ROLLO 101.125 MARIANA TEXTIL SKU-REGRESION-1000010",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000011 METROS DEL ROLLO 101.250 MARIANA TEXTIL SKU-REGRESION-1000011",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000012 METROS DEL ROLLO 101.375 MARIANA TEXTIL SKU-REGRESION-1000012",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000013 METROS DEL ROLLO 101.500 MARIANA TEXTIL SKU-REGRESION-1000013",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000014 METROS DEL ROLLO 101.625 MARIANA TEXTIL SKU-REGRESION-1000014",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000015 METROS DEL ROLLO 101.750 MARIANA TEXTIL SKU-REGRESION-1000015",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000016 METROS DEL ROLLO 101.875 MARIANA TEXTIL SKU-REGRESION-1000016",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000017 METROS DEL ROLLO 102.000 MARIANA TEXTIL SKU-REGRESION-1000017",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000018 METROS DEL ROLLO 102.125 MARIANA TEXTIL SKU-REGRESION-1000018",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000019 METROS DEL ROLLO 102.250 MARIANA TEXTIL SKU-REGRESION-1000019",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000020 METROS DEL ROLLO 102.375 MARIANA TEXTIL SKU-REGRESION-1000020",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000021 METROS DEL ROLLO 102.500 MARIANA TEXTIL SKU-REGRESION-1000021",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000022 METROS DEL ROLLO 102.625 MARIANA TEXTIL SKU-REGRESION-1000022",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000023 METROS DEL ROLLO 102.750 MARIANA TEXTIL SKU-REGRESION-1000023",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000024 METROS DEL ROLLO 102.875 MARIANA TEXTIL SKU-REGRESION-1000024",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000025 METROS DEL ROLLO 103.000 MARIANA TEXTIL SKU-REGRESION-1000025"
+        ],
+        "bboxPages": [
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          }
+        ],
+        "firstContentY": 15.407812,
+        "contentStartY": [
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812
+        ],
+        "contentStartYSpread": 0
+      },
+      "phase": "pdf-assertion"
+    },
+    {
+      "name": "regression-25-labels-simulated-mounted-portal",
+      "route": "/entradas/9200/etiquetas",
+      "scenarioType": "simulated-mounted-container-regression",
+      "actualUserReproduction": false,
+      "distinction": "The browser follows the real EntradaEtiquetas route and real print button. The additional portal scenario is simulated by duplicating the fully-rendered mounted portal without injecting an offset; it is not evidence that this exact DOM is the user's Wasp or Microsoft Print to PDF reproduction.",
+      "expectedLabelCount": 25,
+      "expectedSeries": [
+        "1000001",
+        "1000002",
+        "1000003",
+        "1000004",
+        "1000005",
+        "1000006",
+        "1000007",
+        "1000008",
+        "1000009",
+        "1000010",
+        "1000011",
+        "1000012",
+        "1000013",
+        "1000014",
+        "1000015",
+        "1000016",
+        "1000017",
+        "1000018",
+        "1000019",
+        "1000020",
+        "1000021",
+        "1000022",
+        "1000023",
+        "1000024",
+        "1000025"
+      ],
+      "requestedApiPaths": [
+        "GET /api/auth/me",
+        "GET /api/inventario/entradas/9200"
+      ],
+      "status": "passed",
+      "dom": [
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000001",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000001METROS DEL ROLLO100.000MARIANA TEXTILSKU-REGRESION-1000001"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000002",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.125",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000002METROS DEL ROLLO100.125MARIANA TEXTILSKU-REGRESION-1000002"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000003",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.250",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000003METROS DEL ROLLO100.250MARIANA TEXTILSKU-REGRESION-1000003"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000004",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.375",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000004METROS DEL ROLLO100.375MARIANA TEXTILSKU-REGRESION-1000004"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000005",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.500",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000005METROS DEL ROLLO100.500MARIANA TEXTILSKU-REGRESION-1000005"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000006",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.625",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000006METROS DEL ROLLO100.625MARIANA TEXTILSKU-REGRESION-1000006"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000007",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.750",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000007METROS DEL ROLLO100.750MARIANA TEXTILSKU-REGRESION-1000007"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000008",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "100.875",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000008METROS DEL ROLLO100.875MARIANA TEXTILSKU-REGRESION-1000008"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000009",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000009METROS DEL ROLLO101.000MARIANA TEXTILSKU-REGRESION-1000009"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000010",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.125",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000010METROS DEL ROLLO101.125MARIANA TEXTILSKU-REGRESION-1000010"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000011",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.250",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000011METROS DEL ROLLO101.250MARIANA TEXTILSKU-REGRESION-1000011"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000012",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.375",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000012METROS DEL ROLLO101.375MARIANA TEXTILSKU-REGRESION-1000012"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000013",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.500",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000013METROS DEL ROLLO101.500MARIANA TEXTILSKU-REGRESION-1000013"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000014",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.625",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000014METROS DEL ROLLO101.625MARIANA TEXTILSKU-REGRESION-1000014"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000015",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.750",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000015METROS DEL ROLLO101.750MARIANA TEXTILSKU-REGRESION-1000015"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000016",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "101.875",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000016METROS DEL ROLLO101.875MARIANA TEXTILSKU-REGRESION-1000016"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000017",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000017METROS DEL ROLLO102.000MARIANA TEXTILSKU-REGRESION-1000017"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000018",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.125",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000018METROS DEL ROLLO102.125MARIANA TEXTILSKU-REGRESION-1000018"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000019",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.250",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000019METROS DEL ROLLO102.250MARIANA TEXTILSKU-REGRESION-1000019"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000020",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.375",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000020METROS DEL ROLLO102.375MARIANA TEXTILSKU-REGRESION-1000020"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000021",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.500",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000021METROS DEL ROLLO102.500MARIANA TEXTILSKU-REGRESION-1000021"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000022",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.625",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000022METROS DEL ROLLO102.625MARIANA TEXTILSKU-REGRESION-1000022"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000023",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.750",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000023METROS DEL ROLLO102.750MARIANA TEXTILSKU-REGRESION-1000023"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000024",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "102.875",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000024METROS DEL ROLLO102.875MARIANA TEXTILSKU-REGRESION-1000024"
+        },
+        {
+          "expected": {
+            "sku": "SKU-REGRESION",
+            "serie": "1000025",
+            "tela": "Algodón regresión",
+            "color": "Azul prueba",
+            "cantidad": "103.000",
+            "unidad": "METRO"
+          },
+          "text": "ALGODÓN REGRESIÓN - AZUL PRUEBASKUSKU-REGRESIONNO. DE SERIE1000025METROS DEL ROLLO103.000MARIANA TEXTILSKU-REGRESION-1000025"
+        }
+      ],
+      "mountedScenario": {
+        "actualRouteContainerCount": 1,
+        "simulatedAdditionalContainerCount": 1,
+        "mountedContainerCount": 2,
+        "artificialOffsetInjected": false
+      },
+      "actualMountedContainerCount": 2,
+      "printState": {
+        "nativePrintOverridden": true,
+        "cleanupDelayMs": 1000,
+        "bodyClass": "printing-labels print-target-scoped",
+        "printRootParent": "body",
+        "labelCount": 25,
+        "printCalls": 1,
+        "signalAt": 2057.1999999999534,
+        "mountedContainerCount": 2,
+        "activePrintContainerCount": 1
+      },
+      "browserContext": {
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+        "platform": "Linux x86_64",
+        "language": "en-US"
+      },
+      "pdfSettings": {
+        "paperWidthMm": 100,
+        "paperHeightMm": 70,
+        "paperWidthInches": 3.937007874015748,
+        "paperHeightInches": 2.7559055118110236,
+        "scale": 1,
+        "marginTopInches": 0,
+        "marginBottomInches": 0,
+        "marginLeftInches": 0,
+        "marginRightInches": 0,
+        "preferCSSPageSize": true,
+        "printBackground": true,
+        "displayHeaderFooter": false,
+        "driver": "Chromium CDP Page.printToPDF"
+      },
+      "pdfPath": "/tmp/entrada-etiquetas-pdf-regression/regression-25-labels-simulated-mounted-portal.pdf",
+      "pdf": {
+        "pageCount": 25,
+        "pdfMetadata": {
+          "creator": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+          "producer": "Skia/PDF m152",
+          "pageSize": "282.96 x 198 pts",
+          "pdfVersion": "1.4"
+        },
+        "pages": [
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000001 METROS DEL ROLLO 100.000 MARIANA TEXTIL SKU-REGRESION-1000001",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000002 METROS DEL ROLLO 100.125 MARIANA TEXTIL SKU-REGRESION-1000002",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000003 METROS DEL ROLLO 100.250 MARIANA TEXTIL SKU-REGRESION-1000003",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000004 METROS DEL ROLLO 100.375 MARIANA TEXTIL SKU-REGRESION-1000004",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000005 METROS DEL ROLLO 100.500 MARIANA TEXTIL SKU-REGRESION-1000005",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000006 METROS DEL ROLLO 100.625 MARIANA TEXTIL SKU-REGRESION-1000006",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000007 METROS DEL ROLLO 100.750 MARIANA TEXTIL SKU-REGRESION-1000007",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000008 METROS DEL ROLLO 100.875 MARIANA TEXTIL SKU-REGRESION-1000008",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000009 METROS DEL ROLLO 101.000 MARIANA TEXTIL SKU-REGRESION-1000009",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000010 METROS DEL ROLLO 101.125 MARIANA TEXTIL SKU-REGRESION-1000010",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000011 METROS DEL ROLLO 101.250 MARIANA TEXTIL SKU-REGRESION-1000011",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000012 METROS DEL ROLLO 101.375 MARIANA TEXTIL SKU-REGRESION-1000012",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000013 METROS DEL ROLLO 101.500 MARIANA TEXTIL SKU-REGRESION-1000013",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000014 METROS DEL ROLLO 101.625 MARIANA TEXTIL SKU-REGRESION-1000014",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000015 METROS DEL ROLLO 101.750 MARIANA TEXTIL SKU-REGRESION-1000015",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000016 METROS DEL ROLLO 101.875 MARIANA TEXTIL SKU-REGRESION-1000016",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000017 METROS DEL ROLLO 102.000 MARIANA TEXTIL SKU-REGRESION-1000017",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000018 METROS DEL ROLLO 102.125 MARIANA TEXTIL SKU-REGRESION-1000018",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000019 METROS DEL ROLLO 102.250 MARIANA TEXTIL SKU-REGRESION-1000019",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000020 METROS DEL ROLLO 102.375 MARIANA TEXTIL SKU-REGRESION-1000020",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000021 METROS DEL ROLLO 102.500 MARIANA TEXTIL SKU-REGRESION-1000021",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000022 METROS DEL ROLLO 102.625 MARIANA TEXTIL SKU-REGRESION-1000022",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000023 METROS DEL ROLLO 102.750 MARIANA TEXTIL SKU-REGRESION-1000023",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000024 METROS DEL ROLLO 102.875 MARIANA TEXTIL SKU-REGRESION-1000024",
+          "ALGODÓN REGRESIÓN - AZUL PRUEBA SKU SKU-REGRESION NO. DE SERIE 1000025 METROS DEL ROLLO 103.000 MARIANA TEXTIL SKU-REGRESION-1000025"
+        ],
+        "bboxPages": [
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          },
+          {
+            "contentStartY": 15.407812,
+            "wordCount": 18
+          }
+        ],
+        "firstContentY": 15.407812,
+        "contentStartY": [
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812,
+          15.407812
+        ],
+        "contentStartYSpread": 0
+      },
+      "phase": "pdf-assertion"
+    }
+  ],
+  "status": "passed"
+}

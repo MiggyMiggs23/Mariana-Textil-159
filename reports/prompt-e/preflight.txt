@@ -1,0 +1,1 @@
+Harness source inspection complete: labels allows only GET auth/feed/entrada; laser fixtures map only GET auth/notifications/document reads; no unmocked mutation/auth requests are permitted.

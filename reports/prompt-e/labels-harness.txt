@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "reportPath": "/tmp/entrada-etiquetas-pdf-regression/report.json",
+  "pdfs": [
+    {
+      "name": "baseline-1-label",
+      "status": "passed",
+      "pageCount": 1,
+      "expectedLabelCount": 1,
+      "pdfPath": "/tmp/entrada-etiquetas-pdf-regression/baseline-1-label.pdf"
+    },
+    {
+      "name": "regression-25-labels",
+      "status": "passed",
+      "pageCount": 25,
+      "expectedLabelCount": 25,
+      "pdfPath": "/tmp/entrada-etiquetas-pdf-regression/regression-25-labels.pdf"
+    },
+    {
+      "name": "regression-25-labels-simulated-mounted-portal",
+      "status": "passed",
+      "pageCount": 25,
+      "expectedLabelCount": 25,
+      "pdfPath": "/tmp/entrada-etiquetas-pdf-regression/regression-25-labels-simulated-mounted-portal.pdf"
+    }
+  ],
+  "environment": {
+    "browser": "Chrome/152.0.7977.64",
+    "os": "linux/x64 6.18.52",
+    "headless": true,
+    "pdfDriver": "Chromium DevTools Protocol Page.printToPDF",
+    "waspDriverTested": false
+  }
+}
+
+EXIT=0
