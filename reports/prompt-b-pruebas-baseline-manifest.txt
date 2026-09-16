@@ -1,0 +1,67 @@
+# Prompt B — manifest explícito de baseline
+# Fecha de selección: 2026-09-16
+#
+# Solo pruebas existentes, sin modificación de producción ni de tests.
+# El baseline dejó cinco fallos conocidos preservados; no se repararon tests ni
+# se modificaron los 69 vetos de rol. No se comprobó una identidad exhaustiva
+# de "las cinco frágiles", por lo que este manifest no afirma excluirlas ni
+# inventa una lista de 74 pruebas.
+# No se incluyen suites DB/auth ni tests con imports transitivos que alcanzan
+# @workspace/db en runtime. Las lecturas estáticas de OpenAPI/schema son sólo
+# lectura: no ejecutan migraciones; aun así se excluyeron por alcance
+# conservador cuando el contract inspecciona esas fuentes.
+#
+# Kardex focal: se ejecuta en comando separado con --test-name-pattern para
+# conservar exactamente los tres casos focales ya conocidos.
+
+## backend focal kardex (pattern separado; 3 casos)
+artifacts/api-server/src/kardex-sale-documents.contract.test.ts
+pattern: document resolver only follows primary IDs|entry history uses the rollo FK|cancellation only inherits
+
+## backend contracts/unitarios sin DB, auth ni migraciones
+artifacts/api-server/src/kardex-block2.contract.test.ts
+artifacts/api-server/src/clientes-bolsa.contract.test.ts
+artifacts/api-server/src/clientes-estado-cuenta.contract.test.ts
+artifacts/api-server/src/clientes-notas-credito.contract.test.ts
+artifacts/api-server/src/clientes-pagos.contract.test.ts
+artifacts/api-server/src/lib/clientes-aging.test.ts
+artifacts/api-server/src/lib/clientes-create.test.ts
+artifacts/api-server/src/lib/fecha-efectiva.test.ts
+
+## frontend contratos/unitarios/render sin red ni DB
+artifacts/mariana-textil/src/components/cliente-nota-estado-badge.contract.test.ts
+artifacts/mariana-textil/src/components/cliente-nota-estado-badge.render.test.ts
+artifacts/mariana-textil/src/components/movimiento-documento-link.render.test.ts
+artifacts/mariana-textil/src/lib/date-only.contract.test.ts
+artifacts/mariana-textil/src/lib/fecha-efectiva.test.ts
+artifacts/mariana-textil/src/lib/pos-product-price.contract.test.ts
+artifacts/mariana-textil/src/pages/cartera.contract.test.ts
+artifacts/mariana-textil/src/pages/cliente-ticket-links.contract.test.ts
+artifacts/mariana-textil/src/pages/cobros-payment-methods.contract.test.ts
+artifacts/mariana-textil/src/pages/cobros-salidas-block4.contract.test.ts
+artifacts/mariana-textil/src/pages/detail-identity-links.render.test.ts
+artifacts/mariana-textil/src/pages/inventory-reference-links.contract.test.ts
+artifacts/mariana-textil/src/pages/nota.contract.test.ts
+artifacts/mariana-textil/src/pages/pos.contract.test.ts
+
+## exclusiones conservadoras por imports/transitivos o alcance
+# artifacts/api-server/src/lib/admin-alertas-credit-risk.test.ts
+#   Importa ./admin-alertas; ese módulo importa @workspace/db transitivamente.
+# artifacts/api-server/src/lib/fecha-efectiva-routes.test.ts
+#   Importa @workspace/db, el router de clientes y usa HTTP/fetch.
+# artifacts/api-server/src/notification-feed.contract.test.ts
+#   Sólo lee lib/db/src/lib/notificaciones-schema.ts; no ejecuta una
+#   migración. Se excluye conservadoramente por alcance schema/DB.
+# artifacts/api-server/src/pos-caja-final.contract.test.ts
+#   Sólo lee lib/db/src/lib/ticket-authorization-schema.ts; no ejecuta una
+#   migración. Se excluye conservadoramente por alcance schema/DB.
+# artifacts/api-server/src/lib/venta-trace-access.test.ts
+#   Se excluye por ser autorización/rol, fuera del alcance sin auth.
+# reports/trazabilidad-pruebas-ui-corregidas.txt ya conserva los 9 verdes
+# focales; aquí se vuelven a ejecutar sus tres archivos sin discovery.
+
+## aclaración de alcance
+# Los cinco fallos del baseline se preservaron en AFTER con las mismas firmas;
+# no se arreglaron pruebas. Tampoco se modificaron ni repararon los 69 vetos
+# de rol. No se afirma aquí cuáles son las cinco pruebas frágiles: sus
+# identidades no fueron verificadas y no se presenta una lista de 74.

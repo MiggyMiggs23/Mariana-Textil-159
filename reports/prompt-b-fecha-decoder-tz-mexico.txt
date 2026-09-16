@@ -1,0 +1,26 @@
+$ TZ=America/Mexico_City artifacts/api-server/node_modules/.bin/tsx reports/prompt-b-fecha-runtime.ts decoder
+
+## decoder real de PostgreSQL/Drizzle
+{
+  "tz": "America/Mexico_City",
+  "wire": "2026-10-02",
+  "dateOid": 1082,
+  "defaultPgParser": {
+    "type": "object",
+    "isDate": true,
+    "iso": "2026-10-02T06:00:00.000Z",
+    "local": "Fri Oct 02 2026 00:00:00 GMT-0600 (Central Standard Time)"
+  },
+  "drizzleNodePgParser": {
+    "type": "string",
+    "value": "2026-10-02"
+  },
+  "defaultDrizzleColumn": {
+    "columnType": "PgDateString",
+    "mapped": "2026-10-02"
+  },
+  "explicitDateModeColumn": {
+    "columnType": "PgDate",
+    "mappedIso": "2026-10-02T00:00:00.000Z"
+  }
+}

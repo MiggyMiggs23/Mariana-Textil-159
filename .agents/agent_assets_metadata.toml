@@ -988,3 +988,17 @@ mtime_ms = 1789518908965
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/200f8034-d6ba-4709-a300-7d8ce908a63f/0e0603f2-88fd-4ab7-9993-125f5ffe5e78"
 storage_version_token = "1789518935019388"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "CU2RBZrG3sPLWtCWxIGCR"
+uri = "file://reports/prompt-b-resultado.md"
+type = "text"
+title = "Prompt B — resultado y evidencia completa"
+description = "Typecheck en cero, salidas antes/después, build, codegen, comparación de pruebas y pendientes de vencimiento y CI."
+logical_id = "9ee9a4cd-b212-49e9-9d51-2b2d6ed836d7"
+content_hash = "sha256:9b3328cb1c50d85410de3f4940e78e370987212c0b8c3faf41e2818a045f3773"
+size = 32809
+mtime_ms = 1789521363249
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9ee9a4cd-b212-49e9-9d51-2b2d6ed836d7/b036b130-2e37-4210-bed1-3b4a312daf6f"
+storage_version_token = "1789521394114805"
+content_type = "text/markdown"

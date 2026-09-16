@@ -1,0 +1,11 @@
+✔ document resolver only follows primary IDs, never a different document folio (1.607585ms)
+✔ entry history uses the rollo FK when a folio collides with another entry ID (0.201928ms)
+✔ cancellation only inherits a known original reference (0.25781ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 236.977555

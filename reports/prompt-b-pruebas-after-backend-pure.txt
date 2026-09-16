@@ -1,0 +1,669 @@
+✔ las tres consultas de ventas de clientes separan BOLSA completa y suelta (1.008389ms)
+✔ OpenAPI y cliente muestran los totales BOLSA sin mezclarlos (2.448481ms)
+✔ estado de cuenta projects current balances while retaining raw running history (11.600457ms)
+✔ overpayment export distinguishes historical running balance from current outstanding (2.826796ms)
+✔ POS sale capability receives only minimal credit availability (6.392533ms)
+✖ contrato de notas de crédito deriva los tres estados sin persistirlos (21.579733ms)
+✔ consultas de detalle usan aplicaciones_credito en ambas direcciones (9.705269ms)
+✔ antigüedad toma fecha_vencimiento en calendario America/Mexico_City (4.382994ms)
+✔ reimpresión audita antes de responder y no actualiza el ledger (3.715326ms)
+✔ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (2.033883ms)
+✔ estado de cuenta proyecta cuentaDestino desde el CTE del ledger (7.106808ms)
+✔ TODO_LO_QUE_SALIO is a read-only GET contract with its exact forced types (1.160573ms)
+✖ outgoing preset retains read scope and supplies destination, documents, units and absolute totals (4.896847ms)
+✔ outgoing view sends its combined preset through list and export endpoints (0.346451ms)
+✔ canonical note states distinguish unpaid, partial, paid, and overdue partial (1.008497ms)
+✔ explicit favor can target a protected new note without changing historical FIFO (1.766546ms)
+✔ later ordinary favor can settle a protected note (0.212806ms)
+✔ a new note with no explicit favor choice leaves prior favor available (0.198797ms)
+✔ directed payment excess remains available favor (0.200217ms)
+✔ favor application preserves Cobrado classification and receipt-source conservation (0.475796ms)
+✔ resulting favor includes existing favor separately from the new receipt excess (0.226911ms)
+✔ replayed explicit application evidence is idempotent (0.224299ms)
+✔ linked REVERSO cancels its own later ticket before ABONO FIFO (0.348985ms)
+✔ unlinked negative amount applies oldest sale first (0.51466ms)
+✔ positive adjustment remains as an aged receivable (0.202252ms)
+✔ aging and payment application report the same balances with a linked reversal (0.581366ms)
+✔ reversing an ABONO restores the ticket balance (0.19118ms)
+✔ negative adjustment cannot be linked to a ticket and bypass FIFO (0.075988ms)
+✔ financial export is a valid PDF byte stream (0.594297ms)
+✔ financial PDF paginates without dropping rows (0.81083ms)
+✔ credit due dates support every mandatory term from Mexico City sale date (4.472389ms)
+✔ credit status boundaries are calculated at query time (0.211681ms)
+✔ only the four explicit credit terms are accepted (0.158538ms)
+✔ cash ticket does not infer credit from unrelated customer ledger (0.120221ms)
+✔ ticket credit derives from its sale movement without a ticket payment (0.144084ms)
+✔ mixed ticket reports only its credit portion and persisted terms (0.084685ms)
+✔ ticket credit balance uses FIFO abonos and linked reversals (0.114753ms)
+✔ aging examples remain current until due date and age only afterward (0.075327ms)
+✔ a client without supplied terms is created without authorized credit (1.234501ms)
+✔ a credit limit may be saved without a habitual term (1.168185ms)
+✔ valid supplied credit terms are normalized (0.193942ms)
+✔ only the optional zero value and supported habitual terms are accepted (0.308749ms)
+✔ active non-system names use a trimmed, case-insensitive key (0.570614ms)
+✔ a unique-index result from concurrent creates is recognized as a name conflict (0.171202ms)
+✔ an explicit Mexico City offset keeps September 15 on September 15 locally (0.902477ms)
+✔ an offset-bearing date-time is accepted (0.384593ms)
+✔ a bare date is rejected before zod coercion (0.439335ms)
+✔ a date-time without an offset is rejected (0.109206ms)
+✔ invalid calendar dates are rejected (0.149663ms)
+✔ null and undefined preserve server-now semantics (0.091762ms)
+ℹ tests 50
+ℹ suites 0
+ℹ pass 48
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 649.520372
+
+✖ failing tests:
+
+test at src/clientes-notas-credito.contract.test.ts:1:598
+✖ contrato de notas de crédito deriva los tres estados sin persistirlos (21.579733ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /function moneyState[\s\S]*?balanceCents === 0\) return "PAGADA"[\s\S]*?balanceCents < originalCents \? "PARCIAL"[\s\S]*?: "PENDIENTE"/. Input:
+  
+  'import { Router, type IRouter } from "express";\n' +
+    'import ExcelJS from "exceljs";\n' +
+    'import { and, asc, desc, eq, sql } from "drizzle-orm";\n' +
+    'import {\n' +
+    '  CreateClientePagoBody,\n' +
+    '  CreateClientePagoResponse,\n' +
+    '  GetClienteNotaCreditoResponse,\n' +
+    '  GetClientePagoDetalleResponse,\n' +
+    '  PreviewClientePagoBody,\n' +
+    '  ReimprimirClienteNotaResponse,\n' +
+    '  ListarComportamientoPagoClientesResponse,\n' +
+    '  ObtenerComportamientoPagoClienteParams,\n' +
+    '  ObtenerComportamientoPagoClienteResponse,\n' +
+    '} from "@workspace/api-zod";\n' +
+    'import {\n' +
+    '  auditoriaTable,\n' +
+    '  aplicacionesCreditoTable,\n' +
+    '  clientesTable,\n' +
+    '  db,\n' +
+    '  movimientosCreditoTable,\n' +
+    '  pool,\n' +
+    '  productosTable,\n' +
+    '  ticketLineasTable,\n' +
+    '  ticketsTable,\n' +
+    '} from "@workspace/db";\n' +
+    'import {\n' +
+    '  ADVISORY_LOCK_NAMESPACES,\n' +
+    '  transactionAdvisoryLock,\n' +
+    '} from "@workspace/db/advisory-locks";\n' +
+    'import {\n' +
+    '  centsToMoney,\n' +
+    '  isValidPaymentDestination,\n' +
+    '  moneyToCents,\n' +
+    '  projectCreditLedger,\n' +
+    '  type CreditLedgerCharge,\n' +
+    '} from "../lib/credit-allocation";\n' +
+    'import { requireSession } from "../middlewares/auth";\n' +
+    'import { requierePermiso, resolvePermiso } from "../lib/permisos";\n' +
+    'import { getRequestIp } from "../lib/request";\n' +
+    'import { createTextPdf } from "../lib/pdf";\n' +
+    'import {\n' +
+    '  canLinkAdjustmentToTicket,\n' +
+    '  creditStatus,\n' +
+    '  deriveEstadoNota,\n' +
+    '} from "../lib/clientes-aging";\n' +
+    'import {\n' +
+    '  loadCustomerCreditLedger,\n' +
+    '  loadCustomerCreditProjectionInTransaction,\n' +
+    '  loadCustomerCreditProjection,\n' +
+    '  loadCustomerCreditProjections,\n' +
+    '} from "../lib/credit-aging-read-model";\n' +
+    'import {\n' +
+    '  isActiveNonSystemNameConflict,\n' +
+    '  isClientCreditTerm,\n' +
+    '  parseClientCreditTerms,\n' +
+    '} from "../lib/clientes-create";\n' +
+    'import {\n' +
+    '  EXCEL_NUMBER_FORMAT,\n' +
+    '  formatNumber,\n' +
+    '  toExcelNumber,\n' +
+    '} from "@workspace/number-format";\n' +
+    'import { ordenarEspanol } from "../lib/spanish-order";\n' +
+    'import { buildTicketDetail } from "../lib/pos";\n' +
+    'import { breakdownIvaIncluded } from "../lib/iva";\n' +
+    'import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";\n' +
+    'import { loadPaymentBehaviorList } from "../lib/payment-behavior";\n' +
+    'import {\n' +
+    '  FechaEfectivaValidationError,\n' +
+    '  parseFechaEfectiva,\n' +
+    '} from "../lib/fecha-efectiva";\n' +
+    '\n' +
+    'const router: IRouter = Router();\n' +
+    '\n' +
+    'router.use("/clientes", requireSession);\n' +
+    '\n' +
+    '// ── helpers ───────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '/** Operational fields only — no financial data */\n' +
+    'function presentClienteOperativo(row: typeof clientesTable.$inferSelect) {\n' +
+    '  return {\n' +
+    '    id: row.id,\n' +
+    '    nombre: row.nombre,\n' +
+    '    telefono: row.telefono,\n' +
+    '    correo: row.correo,\n' +
+    '    direccionParticular: row.direccionParticular,\n' +
+    '    direccionEntrega: row.direccionEntrega,\n' +
+    '    direccion: row.direccionParticular,\n' +
+    '    rfc: row.rfc,\n' +
+    '    notas: row.notas,\n' +
+    '    activo: row.activo,\n' +
+    '    esSistema: row.esSistema,\n' +
+    '    contactoNombre: row.contactoNombre,\n' +
+    '    recibeNotaSinPrecios: row.recibeNotaSinPrecios,\n' +
+    '    diasCredito: row.diasCredito,\n' +
+    '    createdAt: row.createdAt,\n' +
+    '    updatedAt: row.updatedAt,\n' +
+    '  };\n' +
+    '}\n' +
+    '\n' +
+    'function parseId(value: string | string[]): number | null {\n' +
+    '  const id = Number(Array.isArray(value) ? value[0] : value);\n' +
+    '  return Number.isInteger(id) && id > 0 ? id : null;\n' +
+    '}\n' +
+    '\n' +
+    'function creditDueDays(fechaVencimiento: unknown): number {\n' +
+    '  if (fechaVencimiento == null) return 0;\n' +
+    '  const due = dateOnly(fechaVencimiento);\n' +
+    '  if (!due) return 0;\n' +
+    '  // A paid note also reports the calendar age at query time; it is evidence,\n' +
+    '  // not a persisted delinquency status.\n' +
+    '  const todayParts = new Intl.DateTimeFormat("en-US", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).formatToParts(new Date());\n' +
+    '  const today = Object.fromEntries(\n' +
+    '    todayParts\n' +
+    '      .filter((part) => part.type !== "literal")\n' +
+    '      .map((part) => [part.type, part.value]),\n' +
+    '  );\n' +
+    '  const todayCalendar = `${today.year}-${today.month}-${today.day}`;\n' +
+    '  const difference =\n' +
+    '    Date.parse(`${todayCalendar}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`);\n' +
+    '  return Math.max(0, Math.floor(difference / 86_400_000));\n' +
+    '}\n' +
+    '\n' +
+    'function dateOnly(value: unknown): string | null {\n' +
+    '  if (value == null) return null;\n' +
+    '  return typeof value === "string"\n' +
+    '    ? value.slice(0, 10)\n' +
+    '    : (value as Date).toISOString().slice(0, 10);\n' +
+    '}\n' +
+    '\n' +
+    'function todayMexicoCity(): string {\n' +
+    '  return new Intl.DateTimeFormat("en-CA", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).format(new Date());\n' +
+    '}\n' +
+    '\n' +
+    '/** Historical alias retained for clients that still read estado/resultado. */\n' +
+    'function legacyNoteState(\n' +
+    '  importeOriginal: string,\n' +
+    '  saldoPendiente: string,\n' +
+    '  fechaVencimiento: string | null,\n' +
+    '): "PENDIENTE" | "PARCIAL" | "PAGADA" {\n' +
+    '  const canonical = deriveEstadoNota({\n' +
+    '    importeOriginal,\n' +
+    '    saldoPendiente,\n' +
+    '    fechaVencimiento,\n' +
+    '    hoy: todayMexicoCity(),\n' +
+    '  });\n' +
+    '  if (canonical === "PAGADA") return "PAGADA";\n' +
+    '  if (canonical === "ABONO_PARCIAL" || canonical === "CON_RETRASO") {\n' +
+    '    return "PARCIAL";\n' +
+    '  }\n' +
+    '  return "PENDIENTE";\n' +
+    '}\n' +
+    '\n' +
+    'function presentAllocations(\n' +
+    '  charges: CreditLedgerCharge[],\n' +
+    '  allocations: ReturnType<typeof projectCreditLedger>["allocations"],\n' +
+    ') {\n' +
+    '  const salesById = new Map(charges.map((charge) => [charge.movimientoId, charge]));\n' +
+    '  return allocations.map((allocation) => {\n' +
+    '    const sale = salesById.get(allocation.targetId)!;\n' +
+    '    return {\n' +
+    '      folio: sale.folio,\n' +
+    '      ticketId: sale.ticketId,\n' +
+    '      movimientoVentaId: sale.movimientoId,\n' +
+    '      vencimiento: sale.dueAt,\n' +
+    '      saldoAntes: centsToMoney(allocation.balanceBeforeCents),\n' +
+    '      aplicado: centsToMoney(allocation.appliedCents),\n' +
+    '      saldoDespues: centsToMoney(allocation.balanceAfterCents),\n' +
+    '      resultado: allocation.balanceAfterCents === 0 ? "SALDADA" : "PARCIAL",\n' +
+    '    };\n' +
+    '  });\n' +
+    '}\n' +
+    '\n' +
+    'function previewPaymentProjection(\n' +
+    '  movements: Parameters<typeof projectCreditLedger>[0],\n' +
+    '  amountCents: number,\n' +
+    '  effectiveAt: Date,\n' +
+    ') {\n' +
+    '  // Database IDs are increasing, so a hypothetical row with the same effective\n' +
+    '  // timestamp as an existing movement must sort after that existing evidence,\n' +
+    '  // exactly as the subsequently inserted row will.\n' +
+    '  const sourceId = Number.MAX_SAFE_INTEGER;\n' +
+    '  const projection = projectCreditLedger([\n' +
+    '    ...movements,\n' +
+    '    {\n' +
+    '      id: sourceId,\n' +
+    '      ticketId: null,\n' +
+    '      tipo: "ABONO" as const,\n' +
+    '      importe: centsToMoney(-amountCents),\n' +
+    '      createdAt: effectiveAt,\n' +
+    '    },\n' +
+    '  ]);\n' +
+    '  const allocations = projection.allocations.filter(\n' +
+    '    (allocation) => allocation.sourceId === sourceId,\n' +
+    '  );\n' +
+    '  const appliedCents = allocations.reduce(\n' +
+    '    (sum, allocation) => sum + allocation.appliedCents,\n' +
+    '    0,\n' +
+    '  );\n' +
+    '  return { projection, allocations, remainingCents: amountCents - appliedCents };\n' +
+    '}\n' +
+    '\n' +
+    'function period(req: { query: Record<string, unknown> }) {\n' +
+    '  const desde = typeof req.query.desde === "string" ? req.query.desde : null;\n' +
+    '  const hasta = typeof req.query.hasta === "string" ? req.query.hasta : null;\n' +
+    '  const valid = /^\\d{4}-\\d{2}-\\d{2}$/;\n' +
+    '  if ((desde && !valid.test(desde)) || (hasta && !valid.test(hasta))) {\n' +
+    '    throw new Error("INVALID_PERIOD");\n' +
+    '  }\n' +
+    '  return { desde, hasta };\n' +
+    '}\n' +
+    'async function carteraReadModel() {\n' +
+    '  const clients = await pool.query<{ id: number; nombre: string }>(\n' +
+    '    "SELECT id,nombre FROM clientes WHERE activo AND NOT es_sistema",\n' +
+    '  );\n' +
+    '  const projections = await loadCustomerCreditProjections(clients.rows.map((client) => Number(client.id)));\n' +
+    '  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });\n' +
+    '  return clients.rows.map((client) => {\n' +
+    '    const projection = projections.get(Number(client.id))!;\n' +
+    '    const charges = projection.charges;\n' +
+    '    const sum = (predicate: (due: string | null) => boolean) => charges.filter((charge) => predicate(charge.dueAt))\n' +
+    '      .reduce((total, charge) => total + charge.pendienteCents, 0);\n' +
+    '    const dueDays = (due: string | null) => due == null ? 0 : Math.max(0, Math.floor(\n' +
+    '      (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`)) / 86400000,\n' +
+    '    ));\n' +
+    '    const overdue = charges.filter((charge) => charge.dueAt != null && dueDays(charge.dueAt) > 0)\n' +
+    '      .map((charge) => charge.dueAt!).sort();\n' +
+    '    const oldestDays = overdue[0] == null ? 0 : dueDays(overdue[0]);\n' +
+    '    const age = oldestDays === 0 ? "POR_VENCER"\n' +
+    '      : oldestDays <= 30 ? "1_30"\n' +
+    '      : oldestDays <= 60 ? "31_60"\n' +
+    '      : oldestDays <= 90 ? "61_90" : "MAS_90";\n' +
+    '    const saldoAFavor = centsToMoney(projection.overpaymentCents);\n' +
+    '    return { id: Number(client.id), nombre: client.nombre, saldo: centsToMoney(sum(() => true)), saldoActual: centsToMoney(sum(() => true)), saldoAFavor,\n' +
+    '      porVencer: centsToMoney(sum((due) => due != null && due >= today)), sinPlazo: centsToMoney(sum((due) => due == null)),\n' +
+    '      "1_30": centsToMoney(sum((due) => dueDays(due) >= 1 && dueDays(due) <= 30)),\n' +
+    '      "31_60": centsToMoney(sum((due) => dueDays(due) >= 31 && dueDays(due) <= 60)),\n' +
+    '      "61_90": centsToMoney(sum((due) => dueDays(due) >= 61 && dueDays(due) <= 90)),\n' +
+    '      mas90: centsToMoney(sum((due) => dueDays(due) > 90)),\n' +
+    '      antiguedad: charges.length && charges.every((charge) => charge.dueAt == null) ? "SIN_PLAZO" : age,\n' +
+    '      diasVencido: overdue[0] ? Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${overdue[0]}T00:00:00Z`)) / 86400000) : 0,\n' +
+    '      vencido: centsToMoney(sum((due) => due != null && due < today)),\n' +
+    '      primerVencimiento: charges.map((charge) => charge.dueAt).filter(Boolean).sort()[0] ?? null,\n' +
+    '    };\n' +
+    '  }).filter((row) => row.saldoActual !== "0.00").sort((a, b) => Number(b.saldoActual) - Number(a.saldoActual));\n' +
+    '}\n' +
+    '\n' +
+    '// ── GET /clientes/resumen ─────────────────────────────────────────────────────\n' +
+    '// Must come BEFORE /:id to avoid Express matching "resumen" as an id.\n' +
+    '// clientes_finanzas module (cartera, vencidos)\n' +
+    '\n' +
+    'router.get(\n' +
+    '  "/clientes/resumen",\n' +
+    '  requierePermiso("clientes_finanzas", "ver"),\n' +
+    '  async (_req, res, next): Promise<void> => {\n' +
+    '    try {\n' +
+    '       const result = await pool.query<{ id: number }>("SELECT id FROM clientes WHERE activo");\n' +
+    '       const projections = await loadCustomerCreditProjections(result.rows.map((row) => Number(row.id)));\n' +
+    '       const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexic'... 86460 more characters
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/clientes-notas-credito.contract.test.ts:23:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { Router, type IRouter } from "express";\nimport ExcelJS from "exceljs";\nimport { and, asc, desc, eq, sql } from "drizzle-orm";\nimport {\n  CreateClientePagoBody,\n  CreateClientePagoResponse,\n  GetClienteNotaCreditoResponse,\n  GetClientePagoDetalleResponse,\n  PreviewClientePagoBody,\n  ReimprimirClienteNotaResponse,\n  ListarComportamientoPagoClientesResponse,\n  ObtenerComportamientoPagoClienteParams,\n  ObtenerComportamientoPagoClienteResponse,\n} from "@workspace/api-zod";\nimport {\n  auditoriaTable,\n  aplicacionesCreditoTable,\n  clientesTable,\n  db,\n  movimientosCreditoTable,\n  pool,\n  productosTable,\n  ticketLineasTable,\n  ticketsTable,\n} from "@workspace/db";\nimport {\n  ADVISORY_LOCK_NAMESPACES,\n  transactionAdvisoryLock,\n} from "@workspace/db/advisory-locks";\nimport {\n  centsToMoney,\n  isValidPaymentDestination,\n  moneyToCents,\n  projectCreditLedger,\n  type CreditLedgerCharge,\n} from "../lib/credit-allocation";\nimport { requireSession } from "../middlewares/auth";\nimport { requierePermiso, resolvePermiso } from "../lib/permisos";\nimport { getRequestIp } from "../lib/request";\nimport { createTextPdf } from "../lib/pdf";\nimport {\n  canLinkAdjustmentToTicket,\n  creditStatus,\n  deriveEstadoNota,\n} from "../lib/clientes-aging";\nimport {\n  loadCustomerCreditLedger,\n  loadCustomerCreditProjectionInTransaction,\n  loadCustomerCreditProjection,\n  loadCustomerCreditProjections,\n} from "../lib/credit-aging-read-model";\nimport {\n  isActiveNonSystemNameConflict,\n  isClientCreditTerm,\n  parseClientCreditTerms,\n} from "../lib/clientes-create";\nimport {\n  EXCEL_NUMBER_FORMAT,\n  formatNumber,\n  toExcelNumber,\n} from "@workspace/number-format";\nimport { ordenarEspanol } from "../lib/spanish-order";\nimport { buildTicketDetail } from "../lib/pos";\nimport { breakdownIvaIncluded } from "../lib/iva";\nimport { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";\nimport { loadPaymentBehaviorList } from "../lib/payment-behavior";\nimport {\n  FechaEfectivaValidationError,\n  parseFechaEfectiva,\n} from "../lib/fecha-efectiva";\n\nconst router: IRouter = Router();\n\nrouter.use("/clientes", requireSession);\n\n// ── helpers ───────────────────────────────────────────────────────────────────\n\n/** Operational fields only — no financial data */\nfunction presentClienteOperativo(row: typeof clientesTable.$inferSelect) {\n  return {\n    id: row.id,\n    nombre: row.nombre,\n    telefono: row.telefono,\n    correo: row.correo,\n    direccionParticular: row.direccionParticular,\n    direccionEntrega: row.direccionEntrega,\n    direccion: row.direccionParticular,\n    rfc: row.rfc,\n    notas: row.notas,\n    activo: row.activo,\n    esSistema: row.esSistema,\n    contactoNombre: row.contactoNombre,\n    recibeNotaSinPrecios: row.recibeNotaSinPrecios,\n    diasCredito: row.diasCredito,\n    createdAt: row.createdAt,\n    updatedAt: row.updatedAt,\n  };\n}\n\nfunction parseId(value: string | string[]): number | null {\n  const id = Number(Array.isArray(value) ? value[0] : value);\n  return Number.isInteger(id) && id > 0 ? id : null;\n}\n\nfunction creditDueDays(fechaVencimiento: unknown): number {\n  if (fechaVencimiento == null) return 0;\n  const due = dateOnly(fechaVencimiento);\n  if (!due) return 0;\n  // A paid note also reports the calendar age at query time; it is evidence,\n  // not a persisted delinquency status.\n  const todayParts = new Intl.DateTimeFormat("en-US", {\n    timeZone: "America/Mexico_City",\n    year: "numeric",\n    month: "2-digit",\n    day: "2-digit",\n  }).formatToParts(new Date());\n  const today = Object.fromEntries(\n    todayParts\n      .filter((part) => part.type !== "literal")\n      .map((part) => [part.type, part.value]),\n  );\n  const todayCalendar = `${today.year}-${today.month}-${today.day}`;\n  const difference =\n    Date.parse(`${todayCalendar}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`);\n  return Math.max(0, Math.floor(difference / 86_400_000));\n}\n\nfunction dateOnly(value: unknown): string | null {\n  if (value == null) return null;\n  return typeof value === "string"\n    ? value.slice(0, 10)\n    : (value as Date).toISOString().slice(0, 10);\n}\n\nfunction todayMexicoCity(): string {\n  return new Intl.DateTimeFormat("en-CA", {\n    timeZone: "America/Mexico_City",\n    year: "numeric",\n    month: "2-digit",\n    day: "2-digit",\n  }).format(new Date());\n}\n\n/** Historical alias retained for clients that still read estado/resultado. */\nfunction legacyNoteState(\n  importeOriginal: string,\n  saldoPendiente: string,\n  fechaVencimiento: string | null,\n): "PENDIENTE" | "PARCIAL" | "PAGADA" {\n  const canonical = deriveEstadoNota({\n    importeOriginal,\n    saldoPendiente,\n    fechaVencimiento,\n    hoy: todayMexicoCity(),\n  });\n  if (canonical === "PAGADA") return "PAGADA";\n  if (canonical === "ABONO_PARCIAL" || canonical === "CON_RETRASO") {\n    return "PARCIAL";\n  }\n  return "PENDIENTE";\n}\n\nfunction presentAllocations(\n  charges: CreditLedgerCharge[],\n  allocations: ReturnType<typeof projectCreditLedger>["allocations"],\n) {\n  const salesById = new Map(charges.map((charge) => [charge.movimientoId, charge]));\n  return allocations.map((allocation) => {\n    const sale = salesById.get(allocation.targetId)!;\n    return {\n      folio: sale.folio,\n      ticketId: sale.ticketId,\n      movimientoVentaId: sale.movimientoId,\n      vencimiento: sale.dueAt,\n      saldoAntes: centsToMoney(allocation.balanceBeforeCents),\n      aplicado: centsToMoney(allocation.appliedCents),\n      saldoDespues: centsToMoney(allocation.balanceAfterCents),\n      resultado: allocation.balanceAfterCents === 0 ? "SALDADA" : "PARCIAL",\n    };\n  });\n}\n\nfunction previewPaymentProjection(\n  movements: Parameters<typeof projectCreditLedger>[0],\n  amountCents: number,\n  effectiveAt: Date,\n) {\n  // Database IDs are increasing, so a hypothetical row with the same effective\n  // timestamp as an existing movement must sort after that existing evidence,\n  // exactly as the subsequently inserted row will.\n  const sourceId = Number.MAX_SAFE_INTEGER;\n  const projection = projectCreditLedger([\n    ...movements,\n    {\n      id: sourceId,\n      ticketId: null,\n      tipo: "ABONO" as const,\n      importe: centsToMoney(-amountCents),\n      createdAt: effectiveAt,\n    },\n  ]);\n  const allocations = projection.allocations.filter(\n    (allocation) => allocation.sourceId === sourceId,\n  );\n  const appliedCents = allocations.reduce(\n    (sum, allocation) => sum + allocation.appliedCents,\n    0,\n  );\n  return { projection, allocations, remainingCents: amountCents - appliedCents };\n}\n\nfunction period(req: { query: Record<string, unknown> }) {\n  const desde = typeof req.query.desde === "string" ? req.query.desde : null;\n  const hasta = typeof req.query.hasta === "string" ? req.query.hasta : null;\n  const valid = /^\\d{4}-\\d{2}-\\d{2}$/;\n  if ((desde && !valid.test(desde)) || (hasta && !valid.test(hasta))) {\n    throw new Error("INVALID_PERIOD");\n  }\n  return { desde, hasta };\n}\nasync function carteraReadModel() {\n  const clients = await pool.query<{ id: number; nombre: string }>(\n    "SELECT id,nombre FROM clientes WHERE activo AND NOT es_sistema",\n  );\n  const projections = await loadCustomerCreditProjections(clients.rows.map((client) => Number(client.id)));\n  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });\n  return clients.rows.map((client) => {\n    const projection = projections.get(Number(client.id))!;\n    const charges = projection.charges;\n    const sum = (predicate: (due: string | null) => boolean) => charges.filter((charge) => predicate(charge.dueAt))\n      .reduce((total, charge) => total + charge.pendienteCents, 0);\n    const dueDays = (due: string | null) => due == null ? 0 : Math.max(0, Math.floor(\n      (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`)) / 86400000,\n    ));\n    const overdue = charges.filter((charge) => charge.dueAt != null && dueDays(charge.dueAt) > 0)\n      .map((charge) => charge.dueAt!).sort();\n    const oldestDays = overdue[0] == null ? 0 : dueDays(overdue[0]);\n    const age = oldestDays === 0 ? "POR_VENCER"\n      : oldestDays <= 30 ? "1_30"\n      : oldestDays <= 60 ? "31_60"\n      : oldestDays <= 90 ? "61_90" : "MAS_90";\n    const saldoAFavor = centsToMoney(projection.overpaymentCents);\n    return { id: Number(client.id), nombre: client.nombre, saldo: centsToMoney(sum(() => true)), saldoActual: centsToMoney(sum(() => true)), saldoAFavor,\n      porVencer: centsToMoney(sum((due) => due != null && due >= today)), sinPlazo: centsToMoney(sum((due) => due == null)),\n      "1_30": centsToMoney(sum((due) => dueDays(due) >= 1 && dueDays(due) <= 30)),\n      "31_60": centsToMoney(sum((due) => dueDays(due) >= 31 && dueDays(due) <= 60)),\n      "61_90": centsToMoney(sum((due) => dueDays(due) >= 61 && dueDays(due) <= 90)),\n      mas90: centsToMoney(sum((due) => dueDays(due) > 90)),\n      antiguedad: charges.length && charges.every((charge) => charge.dueAt == null) ? "SIN_PLAZO" : age,\n      diasVencido: overdue[0] ? Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${overdue[0]}T00:00:00Z`)) / 86400000) : 0,\n      vencido: centsToMoney(sum((due) => due != null && due < today)),\n      primerVencimiento: charges.map((charge) => charge.dueAt).filter(Boolean).sort()[0] ?? null,\n    };\n  }).filter((row) => row.saldoActual !== "0.00").sort((a, b) => Number(b.saldoActual) - Number(a.saldoActual));\n}\n\n// ── GET /clientes/resumen ─────────────────────────────────────────────────────\n// Must come BEFORE /:id to avoid Express matching "resumen" as an id.\n// clientes_finanzas module (cartera, vencidos)\n\nrouter.get(\n  "/clientes/resumen",\n  requierePermiso("clientes_finanzas", "ver"),\n  async (_req, res, next): Promise<void> => {\n    try {\n       const result = await pool.query<{ id: number }>("SELECT id FROM clientes WHERE activo");\n       const projections = await loadCustomerCreditProjections(result.rows.map((row) => Number(row.id)));\n       const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexic'... 86460 more characters,
+    expected: /function moneyState[\s\S]*?balanceCents === 0\) return "PAGADA"[\s\S]*?balanceCents < originalCents \? "PARCIAL"[\s\S]*?: "PENDIENTE"/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at src/kardex-block2.contract.test.ts:1:1126
+✖ outgoing preset retains read scope and supplies destination, documents, units and absolute totals (4.896847ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /route: `\/tickets\/\$\{ticketId\}`/. Input:
+  
+  'import {\n' +
+    '  and,\n' +
+    '  asc,\n' +
+    '  count,\n' +
+    '  desc,\n' +
+    '  eq,\n' +
+    '  gte,\n' +
+    '  ilike,\n' +
+    '  inArray,\n' +
+    '  lte,\n' +
+    '  or,\n' +
+    '  sql,\n' +
+    '  type SQL,\n' +
+    '} from "drizzle-orm";\n' +
+    'import { alias } from "drizzle-orm/pg-core";\n' +
+    'import {\n' +
+    '  db,\n' +
+    '  clientesTable,\n' +
+    '  entradasTable,\n' +
+    '  movimientosTable,\n' +
+    '  productosTable,\n' +
+    '  rollosTable,\n' +
+    '  salidasTable,\n' +
+    '  ticketsTable,\n' +
+    '  tipoMovimientoEnum,\n' +
+    '  ubicacionesTable,\n' +
+    '  usuariosTable,\n' +
+    '  type TipoMovimiento,\n' +
+    '} from "@workspace/db";\n' +
+    'import {\n' +
+    '  isTicketDocumentType,\n' +
+    '  isTicketNavigationDocumentType,\n' +
+    '  resolveMovementReference,\n' +
+    '  resolveDocument,\n' +
+    '  TICKET_DOCUMENT_TYPES,\n' +
+    '  type DocumentReference,\n' +
+    '  type MovementDocumentSource,\n' +
+    '} from "./kardex-document";\n' +
+    '\n' +
+    'const destinoUbicacion = alias(ubicacionesTable, "destino");\n' +
+    '\n' +
+    'export type KardexFiltersInput = {\n' +
+    '  tipos?: TipoMovimiento[];\n' +
+    '  modo?: "TODO_LO_QUE_SALIO";\n' +
+    '  desde?: Date;\n' +
+    '  hasta?: Date;\n' +
+    '  ubicacionId?: number;\n' +
+    '  productoId?: number;\n' +
+    '  usuarioId?: number;\n' +
+    '  buscar?: string;\n' +
+    '  incluirUbicacionesInactivas: boolean;\n' +
+    '};\n' +
+    '\n' +
+    'export const TODO_LO_QUE_SALIO_TIPOS = [\n' +
+    '  "VENTA",\n' +
+    '  "TRANSFERENCIA_SALIDA",\n' +
+    '  "SALIDA_MOSTRADOR",\n' +
+    '] as const satisfies readonly TipoMovimiento[];\n' +
+    '\n' +
+    'type JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];\n' +
+    '\n' +
+    'type DocumentLookupContext = {\n' +
+    '  references: DocumentReference[];\n' +
+    '  documents: Array<ReturnType<typeof resolveDocument>>;\n' +
+    '  entradaMap: Map<number, { id: number; label: string }>;\n' +
+    '  ticketMap: Map<number, number>;\n' +
+    '  ticketClientMap: Map<number, string>;\n' +
+    '  salidaMap: Map<number, string>;\n' +
+    '  salidaDestinationMap: Map<number, string | null>;\n' +
+    '};\n' +
+    '\n' +
+    'export function resolveKardexTipos(filters: KardexFiltersInput) {\n' +
+    '  return filters.modo === "TODO_LO_QUE_SALIO"\n' +
+    '    ? [...TODO_LO_QUE_SALIO_TIPOS]\n' +
+    '    : filters.tipos;\n' +
+    '}\n' +
+    '\n' +
+    'function whereConditions(filters: KardexFiltersInput): SQL[] {\n' +
+    '  const conditions: SQL[] = [];\n' +
+    '  if (!filters.incluirUbicacionesInactivas) {\n' +
+    '    conditions.push(eq(ubicacionesTable.activa, true));\n' +
+    '  }\n' +
+    '  if (filters.ubicacionId != null) {\n' +
+    '    conditions.push(eq(movimientosTable.ubicacionId, filters.ubicacionId));\n' +
+    '  }\n' +
+    '  if (filters.productoId != null) {\n' +
+    '    conditions.push(eq(movimientosTable.productoId, filters.productoId));\n' +
+    '  }\n' +
+    '  if (filters.usuarioId != null) {\n' +
+    '    conditions.push(eq(movimientosTable.usuarioId, filters.usuarioId));\n' +
+    '  }\n' +
+    '  const tipos = resolveKardexTipos(filters);\n' +
+    '  if (tipos?.length) {\n' +
+    '    conditions.push(inArray(movimientosTable.tipo, tipos));\n' +
+    '  }\n' +
+    '  if (filters.desde) {\n' +
+    '    conditions.push(gte(movimientosTable.createdAt, filters.desde));\n' +
+    '  }\n' +
+    '  if (filters.hasta) {\n' +
+    '    conditions.push(lte(movimientosTable.createdAt, filters.hasta));\n' +
+    '  }\n' +
+    '  const term = filters.buscar?.trim();\n' +
+    '  if (term) {\n' +
+    '    const pattern = `%${term}%`;\n' +
+    '    const ticketDocumentTypesSql = sql.join(\n' +
+    '      TICKET_DOCUMENT_TYPES.map((tipo) => sql`${tipo}`),\n' +
+    '      sql`, `,\n' +
+    '    );\n' +
+    '    conditions.push(\n' +
+    '      or(\n' +
+    '        ilike(rollosTable.serie, pattern),\n' +
+    '        ilike(productosTable.sku, pattern),\n' +
+    '        ilike(productosTable.tela, pattern),\n' +
+    '        ilike(productosTable.color, pattern),\n' +
+    '        ilike(ubicacionesTable.nombre, pattern),\n' +
+    '        ilike(usuariosTable.nombre, pattern),\n' +
+    '        ilike(usuariosTable.usuario, pattern),\n' +
+    '        ilike(movimientosTable.documentoTipo, pattern),\n' +
+    '        ilike(movimientosTable.documentoId, pattern),\n' +
+    '        ilike(movimientosTable.justificacion, pattern),\n' +
+    '        sql`exists (\n' +
+    '          select 1\n' +
+    '          from tickets kardex_ticket\n' +
+    '          where ${movimientosTable.documentoTipo} in (${ticketDocumentTypesSql})\n' +
+    '            and kardex_ticket.id = case\n' +
+    "              when ${movimientosTable.documentoId} ~ '^[0-9]+$'\n" +
+    '              then ${movimientosTable.documentoId}::integer\n' +
+    '            end\n' +
+    '            and kardex_ticket.folio::text ilike ${pattern}\n' +
+    '        )`,\n' +
+    '        sql`exists (\n' +
+    '          select 1\n' +
+    '          from salidas kardex_salida\n' +
+    "          where ${movimientosTable.documentoTipo} in ('SALIDA', 'RECEPCION_SALIDA')\n" +
+    '            and kardex_salida.id = case\n' +
+    "              when ${movimientosTable.documentoId} ~ '^[0-9]+$'\n" +
+    '              then ${movimientosTable.documentoId}::integer\n' +
+    '            end\n' +
+    '            and kardex_salida.folio::text ilike ${pattern}\n' +
+    '        )`,\n' +
+    '        sql`exists (\n' +
+    '          select 1\n' +
+    '          from movimientos kardex_origen\n' +
+    '          join tickets kardex_ticket\n' +
+    '            on kardex_ticket.id = case\n' +
+    "              when kardex_origen.documento_id ~ '^[0-9]+$'\n" +
+    '              then kardex_origen.documento_id::integer\n' +
+    '            end\n' +
+    "          where ${movimientosTable.tipo} = 'CANCELACION'\n" +
+    '            and kardex_origen.id = ${movimientosTable.movimientoOrigenId}\n' +
+    '            and kardex_origen.documento_tipo in (${ticketDocumentTypesSql})\n' +
+    '            and kardex_ticket.folio::text ilike ${pattern}\n' +
+    '        )`,\n' +
+    '        sql`exists (\n' +
+    '          select 1\n' +
+    '          from movimientos kardex_origen\n' +
+    '          join salidas kardex_salida\n' +
+    '            on kardex_salida.id = case\n' +
+    "              when kardex_origen.documento_id ~ '^[0-9]+$'\n" +
+    '              then kardex_origen.documento_id::integer\n' +
+    '            end\n' +
+    "          where ${movimientosTable.tipo} = 'CANCELACION'\n" +
+    '            and kardex_origen.id = ${movimientosTable.movimientoOrigenId}\n' +
+    "            and kardex_origen.documento_tipo in ('SALIDA', 'RECEPCION_SALIDA')\n" +
+    '            and kardex_salida.folio::text ilike ${pattern}\n' +
+    '        )`,\n' +
+    '      )!,\n' +
+    '    );\n' +
+    '  }\n' +
+    '  return conditions;\n' +
+    '}\n' +
+    '\n' +
+    'function joinedBase() {\n' +
+    '  return db\n' +
+    '    .select({\n' +
+    '      id: movimientosTable.id,\n' +
+    '      createdAt: movimientosTable.createdAt,\n' +
+    '      tipo: movimientosTable.tipo,\n' +
+    '      cantidad: movimientosTable.cantidad,\n' +
+    '      saldoPosterior: movimientosTable.saldoPosterior,\n' +
+    '      productoId: movimientosTable.productoId,\n' +
+    '      skuProducto: productosTable.sku,\n' +
+    '      telaProducto: productosTable.tela,\n' +
+    '      colorProducto: productosTable.color,\n' +
+    '      unidadProducto: productosTable.unidad,\n' +
+    '      rolloId: movimientosTable.rolloId,\n' +
+    '      serie: rollosTable.serie,\n' +
+    '       recepcionId: rollosTable.recepcionId,\n' +
+    '      ubicacionId: movimientosTable.ubicacionId,\n' +
+    '      nombreUbicacion: ubicacionesTable.nombre,\n' +
+    '      ubicacionActiva: ubicacionesTable.activa,\n' +
+    '      usuarioId: movimientosTable.usuarioId,\n' +
+    '      nombreUsuario: usuariosTable.nombre,\n' +
+    '      username: usuariosTable.usuario,\n' +
+    '      documentoTipo: movimientosTable.documentoTipo,\n' +
+    '      documentoId: movimientosTable.documentoId,\n' +
+    '      movimientoOrigenId: movimientosTable.movimientoOrigenId,\n' +
+    '      justificacion: movimientosTable.justificacion,\n' +
+    '      revisado: movimientosTable.revisado,\n' +
+    '      revisadoPor: movimientosTable.revisadoPor,\n' +
+    '      revisadoAt: movimientosTable.revisadoAt,\n' +
+    '    })\n' +
+    '    .from(movimientosTable)\n' +
+    '    .innerJoin(productosTable, eq(movimientosTable.productoId, productosTable.id))\n' +
+    '    .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))\n' +
+    '    .innerJoin(\n' +
+    '      ubicacionesTable,\n' +
+    '      eq(movimientosTable.ubicacionId, ubicacionesTable.id),\n' +
+    '    )\n' +
+    '    .innerJoin(usuariosTable, eq(movimientosTable.usuarioId, usuariosTable.id));\n' +
+    '}\n' +
+    '\n' +
+    'async function selectMovements(\n' +
+    '  filters: KardexFiltersInput,\n' +
+    '  pagination?: { limit: number; offset: number },\n' +
+    ') {\n' +
+    '  const conditions = whereConditions(filters);\n' +
+    '  const query = joinedBase()\n' +
+    '    .where(conditions.length ? and(...conditions) : undefined)\n' +
+    '    .orderBy(desc(movimientosTable.createdAt), desc(movimientosTable.id));\n' +
+    '  return pagination\n' +
+    '    ? query.limit(pagination.limit).offset(pagination.offset)\n' +
+    '    : query;\n' +
+    '}\n' +
+    '\n' +
+    'async function loadDocumentContext(\n' +
+    '  references: DocumentReference[],\n' +
+    '): Promise<Omit<DocumentLookupContext, "references" | "documents">> {\n' +
+    '  const entradaIds = references\n' +
+    '    .filter((reference) => reference.tipo === "ENTRADA" && reference.id)\n' +
+    '    .map((reference) => Number(reference.id))\n' +
+    '    .filter((id) => Number.isSafeInteger(id) && id > 0);\n' +
+    '  const entradas = entradaIds.length\n' +
+    '    ? await db\n' +
+    '        .select({\n' +
+    '          id: entradasTable.id,\n' +
+    '          folio: entradasTable.folio,\n' +
+    '          iniciales: ubicacionesTable.iniciales,\n' +
+    '        })\n' +
+    '        .from(entradasTable)\n' +
+    '        .innerJoin(\n' +
+    '          ubicacionesTable,\n' +
+    '          eq(entradasTable.ubicacionId, ubicacionesTable.id),\n' +
+    '        )\n' +
+    '        .where(\n' +
+    '          inArray(entradasTable.id, entradaIds),\n' +
+    '        )\n' +
+    '    : [];\n' +
+    '  const entradaMap = new Map(\n' +
+    '    entradas.flatMap((entrada) => {\n' +
+    '      const document = {\n' +
+    '        id: entrada.id,\n' +
+    '        label: `${entrada.iniciales}-${String(entrada.folio).padStart(6, "0")}`,\n' +
+    '      };\n' +
+    '      return [[entrada.id, document]] as const;\n' +
+    '    }),\n' +
+    '  );\n' +
+    '  const ticketIds = references\n' +
+    '    .filter(\n' +
+    '      (reference) =>\n' +
+    '        isTicketNavigationDocumentType(reference.tipo) && reference.id,\n' +
+    '    )\n' +
+    '    .map((reference) => Number(reference.id))\n' +
+    '    .filter((id) => Number.isSafeInteger(id) && id > 0);\n' +
+    '  const salidaIds = references\n' +
+    '    .filter(\n' +
+    '      (reference) =>\n' +
+    '        (reference.tipo === "SALIDA" ||\n' +
+    '          reference.tipo === "RECEPCION_SALIDA") &&\n' +
+    '        reference.id,\n' +
+    '    )\n' +
+    '    .map((reference) => Number(reference.id))\n' +
+    '    .filter((id) => Number.isSafeInteger(id) && id > 0);\n' +
+    '  const [tickets, salidas] = await Promise.all([\n' +
+    '    ticketIds.length\n' +
+    '      ? db\n' +
+    '          .select({\n' +
+    '            id: ticketsTable.id,\n' +
+    '            folio: ticketsTable.folio,\n' +
+    '            clienteNombre: clientesTable.nombre,\n' +
+    '          })\n' +
+    '          .from(ticketsTable)\n' +
+    '          .innerJoin(clientesTable, eq(ticketsTable.clienteId, clientesTable.id))\n' +
+    '          .where(inArray(ticketsTable.id, ticketIds))\n' +
+    '      : [],\n' +
+    '    salidaIds.length\n' +
+    '      ? db\n' +
+    '          .select({\n' +
+    '            id: salidasTable.id,\n' +
+    '            folio: salidasTable.folio,\n' +
+    '            iniciales: ubicacionesTable.iniciales,\n' +
+    '            destinoNombre: destinoUbicacion.nombre,\n' +
+    '          })\n' +
+    '          .from(salidasTable)\n' +
+    '          .innerJoin(\n' +
+    '            ubicacionesTable,\n' +
+    '            eq(salidasTable.origenId, ubicacionesTable.id),\n' +
+    '          )\n' +
+    '          .leftJoin(destinoUbicacion, eq(salidasTable.destinoId, destinoUbicacion.id))\n' +
+    '          .where(inArray(salidasTable.id, salidaIds))\n' +
+    '      : [],\n' +
+    '  ]);\n' +
+    '  const ticketMap = new Map(tickets.map((ticket) => [ticket.id, ticket.folio]));\n' +
+    '  const ticketClientMap = new Map(\n' +
+    '    tickets.m'... 7471 more characters
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/kardex-block2.contract.test.ts:34:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import {\n  and,\n  asc,\n  count,\n  desc,\n  eq,\n  gte,\n  ilike,\n  inArray,\n  lte,\n  or,\n  sql,\n  type SQL,\n} from "drizzle-orm";\nimport { alias } from "drizzle-orm/pg-core";\nimport {\n  db,\n  clientesTable,\n  entradasTable,\n  movimientosTable,\n  productosTable,\n  rollosTable,\n  salidasTable,\n  ticketsTable,\n  tipoMovimientoEnum,\n  ubicacionesTable,\n  usuariosTable,\n  type TipoMovimiento,\n} from "@workspace/db";\nimport {\n  isTicketDocumentType,\n  isTicketNavigationDocumentType,\n  resolveMovementReference,\n  resolveDocument,\n  TICKET_DOCUMENT_TYPES,\n  type DocumentReference,\n  type MovementDocumentSource,\n} from "./kardex-document";\n\nconst destinoUbicacion = alias(ubicacionesTable, "destino");\n\nexport type KardexFiltersInput = {\n  tipos?: TipoMovimiento[];\n  modo?: "TODO_LO_QUE_SALIO";\n  desde?: Date;\n  hasta?: Date;\n  ubicacionId?: number;\n  productoId?: number;\n  usuarioId?: number;\n  buscar?: string;\n  incluirUbicacionesInactivas: boolean;\n};\n\nexport const TODO_LO_QUE_SALIO_TIPOS = [\n  "VENTA",\n  "TRANSFERENCIA_SALIDA",\n  "SALIDA_MOSTRADOR",\n] as const satisfies readonly TipoMovimiento[];\n\ntype JoinedMovement = Awaited<ReturnType<typeof selectMovements>>[number];\n\ntype DocumentLookupContext = {\n  references: DocumentReference[];\n  documents: Array<ReturnType<typeof resolveDocument>>;\n  entradaMap: Map<number, { id: number; label: string }>;\n  ticketMap: Map<number, number>;\n  ticketClientMap: Map<number, string>;\n  salidaMap: Map<number, string>;\n  salidaDestinationMap: Map<number, string | null>;\n};\n\nexport function resolveKardexTipos(filters: KardexFiltersInput) {\n  return filters.modo === "TODO_LO_QUE_SALIO"\n    ? [...TODO_LO_QUE_SALIO_TIPOS]\n    : filters.tipos;\n}\n\nfunction whereConditions(filters: KardexFiltersInput): SQL[] {\n  const conditions: SQL[] = [];\n  if (!filters.incluirUbicacionesInactivas) {\n    conditions.push(eq(ubicacionesTable.activa, true));\n  }\n  if (filters.ubicacionId != null) {\n    conditions.push(eq(movimientosTable.ubicacionId, filters.ubicacionId));\n  }\n  if (filters.productoId != null) {\n    conditions.push(eq(movimientosTable.productoId, filters.productoId));\n  }\n  if (filters.usuarioId != null) {\n    conditions.push(eq(movimientosTable.usuarioId, filters.usuarioId));\n  }\n  const tipos = resolveKardexTipos(filters);\n  if (tipos?.length) {\n    conditions.push(inArray(movimientosTable.tipo, tipos));\n  }\n  if (filters.desde) {\n    conditions.push(gte(movimientosTable.createdAt, filters.desde));\n  }\n  if (filters.hasta) {\n    conditions.push(lte(movimientosTable.createdAt, filters.hasta));\n  }\n  const term = filters.buscar?.trim();\n  if (term) {\n    const pattern = `%${term}%`;\n    const ticketDocumentTypesSql = sql.join(\n      TICKET_DOCUMENT_TYPES.map((tipo) => sql`${tipo}`),\n      sql`, `,\n    );\n    conditions.push(\n      or(\n        ilike(rollosTable.serie, pattern),\n        ilike(productosTable.sku, pattern),\n        ilike(productosTable.tela, pattern),\n        ilike(productosTable.color, pattern),\n        ilike(ubicacionesTable.nombre, pattern),\n        ilike(usuariosTable.nombre, pattern),\n        ilike(usuariosTable.usuario, pattern),\n        ilike(movimientosTable.documentoTipo, pattern),\n        ilike(movimientosTable.documentoId, pattern),\n        ilike(movimientosTable.justificacion, pattern),\n        sql`exists (\n          select 1\n          from tickets kardex_ticket\n          where ${movimientosTable.documentoTipo} in (${ticketDocumentTypesSql})\n            and kardex_ticket.id = case\n              when ${movimientosTable.documentoId} ~ \'^[0-9]+$\'\n              then ${movimientosTable.documentoId}::integer\n            end\n            and kardex_ticket.folio::text ilike ${pattern}\n        )`,\n        sql`exists (\n          select 1\n          from salidas kardex_salida\n          where ${movimientosTable.documentoTipo} in (\'SALIDA\', \'RECEPCION_SALIDA\')\n            and kardex_salida.id = case\n              when ${movimientosTable.documentoId} ~ \'^[0-9]+$\'\n              then ${movimientosTable.documentoId}::integer\n            end\n            and kardex_salida.folio::text ilike ${pattern}\n        )`,\n        sql`exists (\n          select 1\n          from movimientos kardex_origen\n          join tickets kardex_ticket\n            on kardex_ticket.id = case\n              when kardex_origen.documento_id ~ \'^[0-9]+$\'\n              then kardex_origen.documento_id::integer\n            end\n          where ${movimientosTable.tipo} = \'CANCELACION\'\n            and kardex_origen.id = ${movimientosTable.movimientoOrigenId}\n            and kardex_origen.documento_tipo in (${ticketDocumentTypesSql})\n            and kardex_ticket.folio::text ilike ${pattern}\n        )`,\n        sql`exists (\n          select 1\n          from movimientos kardex_origen\n          join salidas kardex_salida\n            on kardex_salida.id = case\n              when kardex_origen.documento_id ~ \'^[0-9]+$\'\n              then kardex_origen.documento_id::integer\n            end\n          where ${movimientosTable.tipo} = \'CANCELACION\'\n            and kardex_origen.id = ${movimientosTable.movimientoOrigenId}\n            and kardex_origen.documento_tipo in (\'SALIDA\', \'RECEPCION_SALIDA\')\n            and kardex_salida.folio::text ilike ${pattern}\n        )`,\n      )!,\n    );\n  }\n  return conditions;\n}\n\nfunction joinedBase() {\n  return db\n    .select({\n      id: movimientosTable.id,\n      createdAt: movimientosTable.createdAt,\n      tipo: movimientosTable.tipo,\n      cantidad: movimientosTable.cantidad,\n      saldoPosterior: movimientosTable.saldoPosterior,\n      productoId: movimientosTable.productoId,\n      skuProducto: productosTable.sku,\n      telaProducto: productosTable.tela,\n      colorProducto: productosTable.color,\n      unidadProducto: productosTable.unidad,\n      rolloId: movimientosTable.rolloId,\n      serie: rollosTable.serie,\n       recepcionId: rollosTable.recepcionId,\n      ubicacionId: movimientosTable.ubicacionId,\n      nombreUbicacion: ubicacionesTable.nombre,\n      ubicacionActiva: ubicacionesTable.activa,\n      usuarioId: movimientosTable.usuarioId,\n      nombreUsuario: usuariosTable.nombre,\n      username: usuariosTable.usuario,\n      documentoTipo: movimientosTable.documentoTipo,\n      documentoId: movimientosTable.documentoId,\n      movimientoOrigenId: movimientosTable.movimientoOrigenId,\n      justificacion: movimientosTable.justificacion,\n      revisado: movimientosTable.revisado,\n      revisadoPor: movimientosTable.revisadoPor,\n      revisadoAt: movimientosTable.revisadoAt,\n    })\n    .from(movimientosTable)\n    .innerJoin(productosTable, eq(movimientosTable.productoId, productosTable.id))\n    .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))\n    .innerJoin(\n      ubicacionesTable,\n      eq(movimientosTable.ubicacionId, ubicacionesTable.id),\n    )\n    .innerJoin(usuariosTable, eq(movimientosTable.usuarioId, usuariosTable.id));\n}\n\nasync function selectMovements(\n  filters: KardexFiltersInput,\n  pagination?: { limit: number; offset: number },\n) {\n  const conditions = whereConditions(filters);\n  const query = joinedBase()\n    .where(conditions.length ? and(...conditions) : undefined)\n    .orderBy(desc(movimientosTable.createdAt), desc(movimientosTable.id));\n  return pagination\n    ? query.limit(pagination.limit).offset(pagination.offset)\n    : query;\n}\n\nasync function loadDocumentContext(\n  references: DocumentReference[],\n): Promise<Omit<DocumentLookupContext, "references" | "documents">> {\n  const entradaIds = references\n    .filter((reference) => reference.tipo === "ENTRADA" && reference.id)\n    .map((reference) => Number(reference.id))\n    .filter((id) => Number.isSafeInteger(id) && id > 0);\n  const entradas = entradaIds.length\n    ? await db\n        .select({\n          id: entradasTable.id,\n          folio: entradasTable.folio,\n          iniciales: ubicacionesTable.iniciales,\n        })\n        .from(entradasTable)\n        .innerJoin(\n          ubicacionesTable,\n          eq(entradasTable.ubicacionId, ubicacionesTable.id),\n        )\n        .where(\n          inArray(entradasTable.id, entradaIds),\n        )\n    : [];\n  const entradaMap = new Map(\n    entradas.flatMap((entrada) => {\n      const document = {\n        id: entrada.id,\n        label: `${entrada.iniciales}-${String(entrada.folio).padStart(6, "0")}`,\n      };\n      return [[entrada.id, document]] as const;\n    }),\n  );\n  const ticketIds = references\n    .filter(\n      (reference) =>\n        isTicketNavigationDocumentType(reference.tipo) && reference.id,\n    )\n    .map((reference) => Number(reference.id))\n    .filter((id) => Number.isSafeInteger(id) && id > 0);\n  const salidaIds = references\n    .filter(\n      (reference) =>\n        (reference.tipo === "SALIDA" ||\n          reference.tipo === "RECEPCION_SALIDA") &&\n        reference.id,\n    )\n    .map((reference) => Number(reference.id))\n    .filter((id) => Number.isSafeInteger(id) && id > 0);\n  const [tickets, salidas] = await Promise.all([\n    ticketIds.length\n      ? db\n          .select({\n            id: ticketsTable.id,\n            folio: ticketsTable.folio,\n            clienteNombre: clientesTable.nombre,\n          })\n          .from(ticketsTable)\n          .innerJoin(clientesTable, eq(ticketsTable.clienteId, clientesTable.id))\n          .where(inArray(ticketsTable.id, ticketIds))\n      : [],\n    salidaIds.length\n      ? db\n          .select({\n            id: salidasTable.id,\n            folio: salidasTable.folio,\n            iniciales: ubicacionesTable.iniciales,\n            destinoNombre: destinoUbicacion.nombre,\n          })\n          .from(salidasTable)\n          .innerJoin(\n            ubicacionesTable,\n            eq(salidasTable.origenId, ubicacionesTable.id),\n          )\n          .leftJoin(destinoUbicacion, eq(salidasTable.destinoId, destinoUbicacion.id))\n          .where(inArray(salidasTable.id, salidaIds))\n      : [],\n  ]);\n  const ticketMap = new Map(tickets.map((ticket) => [ticket.id, ticket.folio]));\n  const ticketClientMap = new Map(\n    tickets.m'... 7471 more characters,
+    expected: /route: `\/tickets\/\$\{ticketId\}`/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -238,7 +238,7 @@ export default function Alertas() {
                                </Link>
                                <ClienteNotaEstadoBadge
                                  estadoNota={(credito as typeof credito & { estadoNota?: EstadoNota }).estadoNota}
-                                 saldoPendiente={credito.pendiente}
+                                saldoPendiente={credito.importe}
                                  id={credito.movimientoId}
                                />
                                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 text-muted-foreground bg-muted">
@@ -257,7 +257,7 @@ export default function Alertas() {
                            </div>
                            <div className="flex flex-col items-end gap-2 shrink-0">
                              <span className="font-bold text-lg font-mono text-red-700">
-                               {formatNumber(credito.pendiente, { kind: "money" })}
+                               {formatNumber(credito.importe, { kind: "money" })}
                              </span>
                              <Link href={clientMovementHref} className="text-primary hover:underline text-sm font-medium flex items-center gap-1">
                                Estado de cuenta <ArrowRight className="h-3 w-3" />

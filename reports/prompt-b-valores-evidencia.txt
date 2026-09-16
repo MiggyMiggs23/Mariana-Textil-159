@@ -1,0 +1,38 @@
+Prompt B — evidencia de valores (AST + Node vm, sin DB)
+Comando ejecutado: node reports/prompt-b-valores.mjs
+Fuentes comparadas: git show HEAD:artifacts/api-server/src/routes/clientes.ts vs archivo actual; git show HEAD:artifacts/mariana-textil/src/pages/alertas.tsx vs archivo actual.
+Datos: exclusivamente sintéticos; no se importó ningún route ni se hicieron conexiones de red/DB.
+
+1) Excel: retorno REAL de sheet.addRows(result.rows.map(...))
+   AST objeto retorno antes: { ...row, saldoPendiente, estadoNota, ...(row.formaPago === "FACTURADO" ? (() => { const breakdown = breakdownIvaIncluded( Math.abs(moneyToCents(row.importe)), ); return { subtotalFacturado: breakdown.subtotalCents / 100, ivaFacturado: breakdown.ivaCents / 100, }; })() : {}), folio: row.folio == null ? "" : String(row.folio), importe: toExcelNumber(row.importe), saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico), saldoDeudorProyectado: saldoDeudorProyectado == null ? null : toExcelNumber(saldoDeudorProyectado), saldoAFavorProyectado: saldoAFavorProyectado == null ? null : toExcelNumber(saldoAFavorProyectado), saldoPendiente: saldoPendiente == null ? null : toExcelNumber(saldoPendiente), }
+   AST objeto retorno actual: { ...row, estadoNota, ...(row.formaPago === "FACTURADO" ? (() => { const breakdown = breakdownIvaIncluded( Math.abs(moneyToCents(row.importe)), ); return { subtotalFacturado: breakdown.subtotalCents / 100, ivaFacturado: breakdown.ivaCents / 100, }; })() : {}), folio: row.folio == null ? "" : String(row.folio), importe: toExcelNumber(row.importe), saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico), saldoDeudorProyectado: saldoDeudorProyectado == null ? null : toExcelNumber(saldoDeudorProyectado), saldoAFavorProyectado: saldoAFavorProyectado == null ? null : toExcelNumber(saldoAFavorProyectado), saldoPendiente: saldoPendiente == null ? null : toExcelNumber(saldoPendiente), }
+   Keys AST saldoPendiente antes: 2; actual: 1.
+   Duplicados AST antes: ["saldoPendiente"]; actual: [].
+   Objeto efectivo ANTES: {"id":"7","fecha":"2026-01-01","tipo":"VENTA_CREDITO","importe":123.45,"fechaVencimiento":"2026-01-01","formaPago":"CREDITO","referencia":null,"folio":"","usuario":"synthetic","saldoCorridoHistorico":0,"estadoNota":"PENDIENTE","saldoDeudorProyectado":null,"saldoAFavorProyectado":null,"saldoPendiente":123.45}
+   Objeto efectivo DESPUÉS: {"id":"7","fecha":"2026-01-01","tipo":"VENTA_CREDITO","importe":123.45,"fechaVencimiento":"2026-01-01","formaPago":"CREDITO","referencia":null,"folio":"","usuario":"synthetic","saldoCorridoHistorico":0,"estadoNota":"PENDIENTE","saldoDeudorProyectado":null,"saldoAFavorProyectado":null,"saldoPendiente":123.45}
+   Keys efectivos ANTES (14): ["id","fecha","tipo","importe","fechaVencimiento","formaPago","referencia","folio","usuario","saldoCorridoHistorico","estadoNota","saldoDeudorProyectado","saldoAFavorProyectado","saldoPendiente"]
+   Keys efectivos DESPUÉS (14): ["id","fecha","tipo","importe","fechaVencimiento","formaPago","referencia","folio","usuario","saldoCorridoHistorico","estadoNota","saldoDeudorProyectado","saldoAFavorProyectado","saldoPendiente"]
+   Igualdad profunda efectiva: true
+   tipos/celdas: importe=number(123.45), saldoCorridoHistorico=number(0), saldoPendiente=number(123.45), saldoDeudorProyectado=null, saldoAFavorProyectado=null.
+   Conservación de valores sintéticos: true
+   Caso null efectivo ANTES: {"id":"8","fecha":"2026-01-01","tipo":"AJUSTE","importe":0,"fechaVencimiento":"2026-01-01","formaPago":"CONTADO","referencia":null,"folio":"","usuario":"synthetic","saldoCorridoHistorico":0,"estadoNota":null,"saldoDeudorProyectado":null,"saldoAFavorProyectado":null,"saldoPendiente":null}
+   Caso null efectivo DESPUÉS: {"id":"8","fecha":"2026-01-01","tipo":"AJUSTE","importe":0,"fechaVencimiento":"2026-01-01","formaPago":"CONTADO","referencia":null,"folio":"","usuario":"synthetic","saldoCorridoHistorico":0,"estadoNota":null,"saldoDeudorProyectado":null,"saldoAFavorProyectado":null,"saldoPendiente":null}
+   Conservación null + igualdad: true
+
+2) Alertas: expresiones JSX REALES ubicadas por AST
+   Prop saldoPendiente antes: credito.pendiente
+   Prop saldoPendiente actual: credito.importe
+   Prop evaluada antes con credito={importe:"123.45", pendiente:undefined}: undefined
+   Prop evaluada actual con credito={importe:"123.45", pendiente:undefined}: "123.45"
+   formatNumber real antes: formatNumber(credito.pendiente, { kind: "money" })
+   formatNumber real actual: formatNumber(credito.importe, { kind: "money" })
+   Visible formatNumber antes (undefined): "—"
+   Visible formatNumber actual (importe 123.45): "$123.45"
+   Cambio visible demostrado: true
+
+3) Badge
+   Destructuring real de ClienteNotaEstadoBadge: ["estadoNota","id","className"]
+   Ignora saldoPendiente (no se destructura ni se lee en el cuerpo): true
+   Conclusión: cambiar solo ese prop no cambia el badge; el badge presenta estadoNota/id/className.
+
+RESULTADO: PASS (8/8 comprobaciones)

@@ -1,0 +1,56 @@
+
+> workspace@0.0.0 build /home/runner/workspace
+> pnpm run typecheck && pnpm -r --if-present run build
+
+
+> workspace@0.0.0 typecheck /home/runner/workspace
+> node ./scripts/src/typecheck-runner.mjs
+
+
+> @workspace/api-server@0.0.0 typecheck /home/runner/workspace/artifacts/api-server
+> tsc -p tsconfig.json --noEmit
+
+src/lib/pos.ts(445,41): error TS2339: Property 'toISOString' does not exist on type 'never'.
+src/routes/clientes.ts(1380,10): error TS1117: An object literal cannot have multiple properties with the same name.
+ ELIFECYCLE  Command failed with exit code 1.
+
+> @workspace/mariana-textil@0.0.0 typecheck /home/runner/workspace/artifacts/mariana-textil
+> tsc -p tsconfig.json --noEmit
+
+src/pages/alertas.tsx(241,58): error TS2339: Property 'pendiente' does not exist on type 'AdminAlertaCredito'.
+src/pages/alertas.tsx(260,54): error TS2339: Property 'pendiente' does not exist on type 'AdminAlertaCredito'.
+ ELIFECYCLE  Command failed with exit code 1.
+
+> @workspace/scripts@0.0.0 typecheck /home/runner/workspace/scripts
+> tsc -p tsconfig.json --noEmit
+
+../artifacts/api-server/src/lib/pos.ts(445,41): error TS2339: Property 'toISOString' does not exist on type 'never'.
+../artifacts/api-server/src/routes/clientes.ts(1380,10): error TS1117: An object literal cannot have multiple properties with the same name.
+ ELIFECYCLE  Command failed with exit code 1.
+
+=== Typecheck summary ===
+Packages selected: 3
+PASS @workspace/scanned-code [library] (0 TypeScript errors)
+PASS @workspace/number-format [library] (0 TypeScript errors)
+PASS @workspace/metered-pricing [library] (0 TypeScript errors)
+PASS @workspace/db [library] (0 TypeScript errors)
+PASS @workspace/api-client-react [library] (0 TypeScript errors)
+PASS @workspace/api-zod [library] (0 TypeScript errors)
+PASS @workspace/libraries [library-stage] (0 TypeScript errors)
+FAIL @workspace/api-server [package] (2 TypeScript errors)
+  artifacts/api-server/src/lib/pos.ts:445:41 TS2339: Property 'toISOString' does not exist on type 'never'.
+  artifacts/api-server/src/routes/clientes.ts:1380:10 TS1117: An object literal cannot have multiple properties with the same name.
+FAIL @workspace/mariana-textil [package] (2 TypeScript errors)
+  artifacts/mariana-textil/src/pages/alertas.tsx:241:58 TS2339: Property 'pendiente' does not exist on type 'AdminAlertaCredito'.
+  artifacts/mariana-textil/src/pages/alertas.tsx:260:54 TS2339: Property 'pendiente' does not exist on type 'AdminAlertaCredito'.
+FAIL @workspace/scripts [package] (2 TypeScript errors)
+  artifacts/api-server/src/lib/pos.ts:445:41 TS2339: Property 'toISOString' does not exist on type 'never'.
+  artifacts/api-server/src/routes/clientes.ts:1380:10 TS1117: An object literal cannot have multiple properties with the same name.
+Unique TypeScript diagnostics: 4
+Repeated diagnostic emissions: 2
+Process/parser failures: 0
+RESULT: FAIL (all selected checks were attempted)
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.
+
+EXIT_CODE=1

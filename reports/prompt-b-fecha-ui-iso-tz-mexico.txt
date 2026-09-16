@@ -1,0 +1,17 @@
+$ TZ=America/Mexico_City artifacts/api-server/node_modules/.bin/tsx reports/prompt-b-fecha-runtime.ts ui
+
+## Zod endpoint y calendario LCD/impresión
+{
+  "tz": "America/Mexico_City",
+  "endpoint": "GetClienteNotaCreditoResponse",
+  "endpointDateInput": "2026-10-02",
+  "endpointDateRuntime": {
+    "type": "object",
+    "isDate": true,
+    "iso": "2026-10-02T00:00:00.000Z"
+  },
+  "endpointJsonWire": "2026-10-02T00:00:00.000Z",
+  "lcdDateFnsFromIso": "01/10/2026",
+  "printDateOnlyMx": "02/10/2026",
+  "expectedDifferenceUnderMexico": "LCD -1 día; impresión conserva día"
+}

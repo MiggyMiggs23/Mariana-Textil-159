@@ -1,0 +1,341 @@
+✔ nota state presentation is shared and keeps canonical backend states (15.935577ms)
+✔ affected credit views use the shared state badge (2.915137ms)
+✖ Los cuatro estados reales renderizan icono y estado, nunca un importe en la insignia (3.466131ms)
+✔ document links use the resolved primary-key route, not the displayed folio (8.238005ms)
+✔ a null route is explicit and never rebuilt from a document id (0.767079ms)
+✔ a movement without any document reference remains an unlinked label (0.546469ms)
+✔ date-only payment dates keep their persisted calendar day in Mexico (18.924965ms)
+✔ September 15 is sent as September 15 in Mexico City (1.142935ms)
+✔ the date-only helper returns an explicit offset-bearing instant (0.349984ms)
+✔ blank dates keep the server-now path (0.104348ms)
+✔ invalid calendar dates are rejected (0.426569ms)
+✔ today is derived in Mexico City rather than browser local time (1.474604ms)
+✔ POS distingue precio ausente de un precio capturado en cero (1.229493ms)
+✔ POS bloquea antes de mutar el carrito y presenta el precio ausente (10.702911ms)
+✔ Cartera functionality respects block 2 constraints (17.20644ms)
+✔ Block 3 functionality in payment dialog (2.040403ms)
+✔ credit term UX lives in note creation and ticket Cobros has no credit option (3.128042ms)
+✖ the second client ticket row links by its real ticket id, not by list position (3.696817ms)
+✔ primary collection offers only equal-width cash and transfer controls (0.950281ms)
+✔ split payments offer only cash and transfer while metreado remains cash-only (0.460862ms)
+✔ invoice status comes only from the ticket and never changes the payment amount (0.191839ms)
+✔ invoiced sales are emphasized without changing the normal document label (0.201136ms)
+✔ Bloque 4 only renders cash outs in Mariana and warns old sessions (10.536597ms)
+✔ detail links use real IDs when displayed folios differ (9.041212ms)
+✔ nullable identity fields remain visible but unlinked (0.907433ms)
+✔ the note link closes only for an unmodified primary click (0.293028ms)
+✔ adjustment series links use the roll primary id (10.499195ms)
+✔ conciliation product links use the product primary id (1.782694ms)
+✔ kardex document cells keep desktop and mobile resolved-route branches (2.064369ms)
+✖ Block 4 functionality in ticket detail (18.340051ms)
+✔ Block 4 functionality in cobros (7.149241ms)
+✔ Nota keeps the 5.25mm root safe area and uses an inner ink frame (1.797885ms)
+✔ POS uses the BOLSA threshold and whole-bag quantity UX (13.359214ms)
+✔ tabular printing is unchecked client-only state and does not change TicketInput (1.878851ms)
+✔ POS sends generated notes directly to the printable ticket detail (5.801672ms)
+✔ scanner auto-add is limited to exact available roll scans (1.525682ms)
+✔ normal cart groups by product but expands checkout back to individual rolls (2.664399ms)
+✔ cart rows isolate long product details from price, quantity, amount, and removal controls (2.829551ms)
+✔ METRO metered lines require explicit same-site physical source allocations (2.740783ms)
+✔ editing a METRO quantity and removing a cart line cannot retain stale source quantities (1.530706ms)
+ℹ tests 40
+ℹ suites 0
+ℹ pass 37
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1256.581059
+
+✖ failing tests:
+
+test at src/components/cliente-nota-estado-badge.render.test.ts:1:216
+✖ Los cuatro estados reales renderizan icono y estado, nunca un importe en la insignia (3.466131ms)
+  ReferenceError: React is not defined
+      at ClienteNotaEstadoBadge (/home/runner/workspace/artifacts/mariana-textil/src/components/cliente-nota-estado-badge.tsx:45:3)
+      at react-stack-bottom-frame (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:8970:18)
+      at renderWithHooks (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4699:19)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5134:23)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at performWork (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:6743:17)
+      at startWork (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:7467:7)
+      at renderToStringImpl (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:7555:7)
+      at process.env.NODE_ENV.exports.renderToStaticMarkup (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:9019:14)
+      at <anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/components/cliente-nota-estado-badge.render.test.ts:10:18)
+
+test at src/pages/cliente-ticket-links.contract.test.ts:1:238
+✖ the second client ticket row links by its real ticket id, not by list position (3.696817ms)
+  ReferenceError: React is not defined
+      at ResponsiveTable (/home/runner/workspace/artifacts/mariana-textil/src/components/client-responsive-table.tsx:53:3)
+      at react-stack-bottom-frame (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:8970:18)
+      at renderWithHooks (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4699:19)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5134:23)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at renderElement (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5586:15)
+      at retryNode (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5899:31)
+      at renderNodeDestructive (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:5849:11)
+      at finishFunctionComponent (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-server-legacy.node.development.js:4743:13)
+
+test at src/pages/nota.contract.test.ts:1:158
+✖ Block 4 functionality in ticket detail (18.340051ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /estadoNota === "PENDIENTE"/. Input:
+  
+  'import { useState, type MouseEvent } from "react";\n' +
+    'import { formatNumber } from "@workspace/number-format";\n' +
+    'import { format } from "date-fns";\n' +
+    'import {\n' +
+    '  useGetClienteNotaCredito,\n' +
+    '  getGetClienteNotaCreditoQueryKey,\n' +
+    '  useGetClientePagoDetalle,\n' +
+    '  getGetClientePagoDetalleQueryKey\n' +
+    '} from "@workspace/api-client-react";\n' +
+    'import { useQuery } from "@tanstack/react-query";\n' +
+    'import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";\n' +
+    'import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";\n' +
+    'import { Loader2, Ban } from "lucide-react";\n' +
+    'import { Button } from "@/components/ui/button";\n' +
+    'import { Badge } from "@/components/ui/badge";\n' +
+    'import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";\n' +
+    'import { Input } from "@/components/ui/input";\n' +
+    'import { hasPermission, Modules } from "@/lib/permisos";\n' +
+    'import { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client-react";\n' +
+    'import { useToast } from "@/hooks/use-toast";\n' +
+    'import { useQueryClient } from "@tanstack/react-query";\n' +
+    'import { Link } from "wouter";\n' +
+    '\n' +
+    'interface ClienteNotaCreditoProps {\n' +
+    '  clienteId: number;\n' +
+    '  ticketId: number;\n' +
+    '}\n' +
+    '\n' +
+    'export function isNormalNotaAplicacionClick(\n' +
+    '  event: Pick<\n' +
+    '    MouseEvent<HTMLAnchorElement>,\n' +
+    '    | "button"\n' +
+    '    | "defaultPrevented"\n' +
+    '    | "metaKey"\n' +
+    '    | "ctrlKey"\n' +
+    '    | "shiftKey"\n' +
+    '    | "altKey"\n' +
+    '    | "currentTarget"\n' +
+    '  >,\n' +
+    ') {\n' +
+    '  const target = event.currentTarget?.target;\n' +
+    '  return (\n' +
+    '    event.button === 0 &&\n' +
+    '    !event.defaultPrevented &&\n' +
+    '    !event.metaKey &&\n' +
+    '    !event.ctrlKey &&\n' +
+    '    !event.shiftKey &&\n' +
+    '    !event.altKey &&\n' +
+    '    (!target || target === "_self")\n' +
+    '  );\n' +
+    '}\n' +
+    '\n' +
+    'export function handleNotaAplicacionClick(\n' +
+    '  event: Pick<\n' +
+    '    MouseEvent<HTMLAnchorElement>,\n' +
+    '    | "button"\n' +
+    '    | "defaultPrevented"\n' +
+    '    | "metaKey"\n' +
+    '    | "ctrlKey"\n' +
+    '    | "shiftKey"\n' +
+    '    | "altKey"\n' +
+    '    | "currentTarget"\n' +
+    '  >,\n' +
+    '  onNavigate?: () => void,\n' +
+    ') {\n' +
+    '  if (onNavigate && isNormalNotaAplicacionClick(event)) {\n' +
+    '    onNavigate();\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    'export function NotaAplicacionFolioLink({\n' +
+    '  ticketId,\n' +
+    '  folio,\n' +
+    '  onNavigate,\n' +
+    '}: {\n' +
+    '  ticketId: number | null;\n' +
+    '  folio: number;\n' +
+    '  onNavigate?: () => void;\n' +
+    '}) {\n' +
+    '  return ticketId != null ? (\n' +
+    '    <Link\n' +
+    '      href={`/tickets/${ticketId}`}\n' +
+    '      className="font-black text-sm text-sidebar hover:text-primary hover:underline"\n' +
+    '      onClick={(event) => handleNotaAplicacionClick(event, onNavigate)}\n' +
+    '    >\n' +
+    '      #{folio}\n' +
+    '    </Link>\n' +
+    '  ) : (\n' +
+    '    <span className="font-black text-sm text-sidebar">#{folio}</span>\n' +
+    '  );\n' +
+    '}\n' +
+    '\n' +
+    'function parseDate(dString: string) {\n' +
+    "  return new Date(dString.includes('T') ? dString : `${dString}T12:00:00`);\n" +
+    '}\n' +
+    '\n' +
+    'export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoProps) {\n' +
+    '  const { data: nota, isLoading } = useGetClienteNotaCredito(\n' +
+    '    clienteId,\n' +
+    '    ticketId,\n' +
+    '    {\n' +
+    '      query: {\n' +
+    '        enabled: !!clienteId && !!ticketId,\n' +
+    '        queryKey: getGetClienteNotaCreditoQueryKey(clienteId, ticketId),\n' +
+    '      }\n' +
+    '    }\n' +
+    '  );\n' +
+    '\n' +
+    '  const [selectedPagoId, setSelectedPagoId] = useState<number | null>(null);\n' +
+    '  const [reversoPagoId, setReversoPagoId] = useState<number | null>(null);\n' +
+    '  const [reversoMotivo, setReversoMotivo] = useState("");\n' +
+    '  const [reversoConfirm, setReversoConfirm] = useState("");\n' +
+    '  const { data: user } = useGetCurrentUser();\n' +
+    '  const reversarPago = useReversarClientePago();\n' +
+    '  const { toast } = useToast();\n' +
+    '  const queryClient = useQueryClient();\n' +
+    '\n' +
+    '  const { data: pagoDetalle, isLoading: isLoadingPago } = useGetClientePagoDetalle(\n' +
+    '    clienteId,\n' +
+    '    selectedPagoId || 0,\n' +
+    '    {\n' +
+    '      query: {\n' +
+    '        enabled: !!clienteId && !!selectedPagoId,\n' +
+    '        queryKey: getGetClientePagoDetalleQueryKey(clienteId, selectedPagoId || 0),\n' +
+    '      }\n' +
+    '    }\n' +
+    '  );\n' +
+    '\n' +
+    '  if (isLoading) {\n' +
+    '    return (\n' +
+    '      <div className="flex h-32 flex-col items-center justify-center gap-3">\n' +
+    '        <Loader2 className="h-8 w-8 animate-spin text-primary" />\n' +
+    '        <p className="text-sm font-medium text-primary/60">Cargando detalles de crédito...</p>\n' +
+    '      </div>\n' +
+    '    );\n' +
+    '  }\n' +
+    '\n' +
+    '  if (!nota) return null;\n' +
+    '  const notaConEstado = nota as typeof nota & {\n' +
+    '    estadoNota?: EstadoNota;\n' +
+    '    saldoPendiente?: string;\n' +
+    '  };\n' +
+    '  const estadoNota = notaConEstado.estadoNota;\n' +
+    '  const saldoPendiente = notaConEstado.saldoPendiente ?? nota.saldoActual;\n' +
+    '\n' +
+    '  return (\n' +
+    '    <div className="space-y-6">\n' +
+    '      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">\n' +
+    '        <Card className="border-2 flex flex-col">\n' +
+    '          <CardHeader className="py-4 pb-2 flex-none">\n' +
+    '            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold text-center h-8 flex flex-col justify-end">\n' +
+    '              <span>Estado de Nota</span>\n' +
+    '            </CardTitle>\n' +
+    '          </CardHeader>\n' +
+    '          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6">\n' +
+    '            <ClienteNotaEstadoBadge estadoNota={estadoNota} id={ticketId} className="scale-125" />\n' +
+    '          </CardContent>\n' +
+    '        </Card>\n' +
+    '\n' +
+    '        <Card className="flex flex-col">\n' +
+    '          <CardHeader className="py-4 pb-2 flex-none">\n' +
+    '            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold text-center h-8 flex flex-col justify-end">\n' +
+    '              <span>Saldo pendiente</span>\n' +
+    '              {estadoNota !== "PENDIENTE" && (\n' +
+    '                <span className="text-[10px] text-muted-foreground/60 font-medium tracking-normal normal-case mt-0.5">\n' +
+    '                  De {formatNumber(nota.importeOriginal, { kind: "money" })}\n' +
+    '                </span>\n' +
+    '              )}\n' +
+    '            </CardTitle>\n' +
+    '          </CardHeader>\n' +
+    '          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6">\n' +
+    '            <div className={`text-3xl font-black tabular-nums leading-none ${estadoNota === "PAGADA" ? "text-emerald-600" : "text-red-700"}`}>\n' +
+    '              {formatNumber(saldoPendiente, { kind: "money" })}\n' +
+    '            </div>\n' +
+    '          </CardContent>\n' +
+    '        </Card>\n' +
+    '\n' +
+    '        <Card className={`flex flex-col ${estadoNota === "CON_RETRASO" ? "border-destructive/50 bg-destructive/5" : ""}`}>\n' +
+    '          <CardHeader className="py-4 pb-2 flex-none">\n' +
+    '            <CardTitle className={`text-sm uppercase tracking-wider font-bold text-center h-8 flex flex-col justify-end ${estadoNota === "CON_RETRASO" ? "text-destructive" : "text-muted-foreground"}`}>\n' +
+    '              <span>Vencimiento</span>\n' +
+    '            </CardTitle>\n' +
+    '          </CardHeader>\n' +
+    '          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6 text-center">\n' +
+    '            {nota.fechaVencimiento ? (\n' +
+    '              <div className="flex flex-col items-center justify-center">\n' +
+    '                <div className={`text-2xl font-black leading-none ${estadoNota === "CON_RETRASO" ? "text-destructive" : ""}`}>\n' +
+    '                  {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}\n' +
+    '                </div>\n' +
+    '                {estadoNota === "CON_RETRASO" && (\n' +
+    '                  <div className="text-xs text-destructive font-bold mt-1.5 bg-destructive/10 px-2 py-0.5 rounded-full">\n' +
+    '                    {nota.diasVencidos} días de retraso\n' +
+    '                  </div>\n' +
+    '                )}\n' +
+    '              </div>\n' +
+    '            ) : (\n' +
+    '              <div className="text-muted-foreground font-medium">No establecido</div>\n' +
+    '            )}\n' +
+    '          </CardContent>\n' +
+    '        </Card>\n' +
+    '      </div>\n' +
+    '\n' +
+    '      <Card>\n' +
+    '        <CardHeader className="bg-muted/30 pb-4 border-b">\n' +
+    '          <CardTitle className="text-lg">Historial de Abonos ({nota.abonos.length})</CardTitle>\n' +
+    '        </CardHeader>\n' +
+    '        <CardContent className="p-0">\n' +
+    '          {nota.abonos.length === 0 ? (\n' +
+    '            <div className="p-8 text-center text-muted-foreground font-medium">\n' +
+    '              No se han registrado abonos a esta nota.\n' +
+    '            </div>\n' +
+    '          ) : (\n' +
+    '            <div className="overflow-x-auto">\n' +
+    '              <table className="w-full text-sm text-left">\n' +
+    '                <thead className="bg-muted/30 border-b">\n' +
+    '                  <tr>\n' +
+    '                    <th className="p-4 font-bold text-muted-foreground">Fecha</th>\n' +
+    '                    <th className="p-4 font-bold text-muted-foreground">Aplicado a Nota</th>\n' +
+    '                    <th className="p-4 font-bold text-muted-foreground">Forma / Ref</th>\n' +
+    '                    <th className="p-4 font-bold text-muted-foreground">Usuario</th>\n' +
+    '                    <th className="p-4 font-bold text-muted-foreground text-right">Total del Pago</th>\n' +
+    '                    <th className="p-4 font-bold text-muted-foreground text-center">Detalle</th>\n' +
+    '                  </tr>\n' +
+    '                </thead>\n' +
+    '                <tbody className="divide-y">\n' +
+    '                  {nota.abonos.map((abono, i) => (\n' +
+    '                    <tr key={i} className="hover:bg-muted/20 transition-colors">\n' +
+    '                      <td className="p-4 font-medium">{format(parseDate(abono.fecha), "dd/MM/yyyy")}</td>\n' +
+    '                      <td className="p-4 font-black text-emerald-600 tabular-nums">{formatNumber(abono.montoAplicado, { kind: "money" })}</td>\n' +
+    '                      <td className="p-4">\n' +
+    '                        <div className="font-bold">{abono.formaPago || "—"}</div>\n' +
+    '                        {abono.referencia && <div className="text-xs text-muted-foreground mt-0.5">{abono.referencia}</div>}\n' +
+    '                      </td>\n' +
+    '                      <td className="p-4">{abono.usuarioRegistrador || "—"}</td>\n' +
+    '                      <td className="p-4 text-right font-medium tabular-nums">{formatNumber(abono.montoTotalAbono, { kind: "money" })}</td>\n' +
+    '                      <td className="p-4 text-center">\n' +
+    '                        <div className="flex justify-center gap-2">\n' +
+    '                          <Button\n' +
+    '                            variant="ghost"\n' +
+    '                            size="sm"\n' +
+    '                            className="h-8 text-xs font-bold"\n' +
+    '                            onClick={() => setSelectedPagoId(abono.movimientoPagoId)}\n' +
+    '                          >\n' +
+    '                            Ver Reparto\n' +
+    '                          </Button>\n' +
+    '                          {abono.revertido ? (\n' +
+    '                            <Badge var'... 8159 more characters
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/nota.contract.test.ts:17:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { useState, type MouseEvent } from "react";\nimport { formatNumber } from "@workspace/number-format";\nimport { format } from "date-fns";\nimport {\n  useGetClienteNotaCredito,\n  getGetClienteNotaCreditoQueryKey,\n  useGetClientePagoDetalle,\n  getGetClientePagoDetalleQueryKey\n} from "@workspace/api-client-react";\nimport { useQuery } from "@tanstack/react-query";\nimport { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";\nimport { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";\nimport { Loader2, Ban } from "lucide-react";\nimport { Button } from "@/components/ui/button";\nimport { Badge } from "@/components/ui/badge";\nimport { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";\nimport { Input } from "@/components/ui/input";\nimport { hasPermission, Modules } from "@/lib/permisos";\nimport { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client-react";\nimport { useToast } from "@/hooks/use-toast";\nimport { useQueryClient } from "@tanstack/react-query";\nimport { Link } from "wouter";\n\ninterface ClienteNotaCreditoProps {\n  clienteId: number;\n  ticketId: number;\n}\n\nexport function isNormalNotaAplicacionClick(\n  event: Pick<\n    MouseEvent<HTMLAnchorElement>,\n    | "button"\n    | "defaultPrevented"\n    | "metaKey"\n    | "ctrlKey"\n    | "shiftKey"\n    | "altKey"\n    | "currentTarget"\n  >,\n) {\n  const target = event.currentTarget?.target;\n  return (\n    event.button === 0 &&\n    !event.defaultPrevented &&\n    !event.metaKey &&\n    !event.ctrlKey &&\n    !event.shiftKey &&\n    !event.altKey &&\n    (!target || target === "_self")\n  );\n}\n\nexport function handleNotaAplicacionClick(\n  event: Pick<\n    MouseEvent<HTMLAnchorElement>,\n    | "button"\n    | "defaultPrevented"\n    | "metaKey"\n    | "ctrlKey"\n    | "shiftKey"\n    | "altKey"\n    | "currentTarget"\n  >,\n  onNavigate?: () => void,\n) {\n  if (onNavigate && isNormalNotaAplicacionClick(event)) {\n    onNavigate();\n  }\n}\n\nexport function NotaAplicacionFolioLink({\n  ticketId,\n  folio,\n  onNavigate,\n}: {\n  ticketId: number | null;\n  folio: number;\n  onNavigate?: () => void;\n}) {\n  return ticketId != null ? (\n    <Link\n      href={`/tickets/${ticketId}`}\n      className="font-black text-sm text-sidebar hover:text-primary hover:underline"\n      onClick={(event) => handleNotaAplicacionClick(event, onNavigate)}\n    >\n      #{folio}\n    </Link>\n  ) : (\n    <span className="font-black text-sm text-sidebar">#{folio}</span>\n  );\n}\n\nfunction parseDate(dString: string) {\n  return new Date(dString.includes(\'T\') ? dString : `${dString}T12:00:00`);\n}\n\nexport function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoProps) {\n  const { data: nota, isLoading } = useGetClienteNotaCredito(\n    clienteId,\n    ticketId,\n    {\n      query: {\n        enabled: !!clienteId && !!ticketId,\n        queryKey: getGetClienteNotaCreditoQueryKey(clienteId, ticketId),\n      }\n    }\n  );\n\n  const [selectedPagoId, setSelectedPagoId] = useState<number | null>(null);\n  const [reversoPagoId, setReversoPagoId] = useState<number | null>(null);\n  const [reversoMotivo, setReversoMotivo] = useState("");\n  const [reversoConfirm, setReversoConfirm] = useState("");\n  const { data: user } = useGetCurrentUser();\n  const reversarPago = useReversarClientePago();\n  const { toast } = useToast();\n  const queryClient = useQueryClient();\n\n  const { data: pagoDetalle, isLoading: isLoadingPago } = useGetClientePagoDetalle(\n    clienteId,\n    selectedPagoId || 0,\n    {\n      query: {\n        enabled: !!clienteId && !!selectedPagoId,\n        queryKey: getGetClientePagoDetalleQueryKey(clienteId, selectedPagoId || 0),\n      }\n    }\n  );\n\n  if (isLoading) {\n    return (\n      <div className="flex h-32 flex-col items-center justify-center gap-3">\n        <Loader2 className="h-8 w-8 animate-spin text-primary" />\n        <p className="text-sm font-medium text-primary/60">Cargando detalles de crédito...</p>\n      </div>\n    );\n  }\n\n  if (!nota) return null;\n  const notaConEstado = nota as typeof nota & {\n    estadoNota?: EstadoNota;\n    saldoPendiente?: string;\n  };\n  const estadoNota = notaConEstado.estadoNota;\n  const saldoPendiente = notaConEstado.saldoPendiente ?? nota.saldoActual;\n\n  return (\n    <div className="space-y-6">\n      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">\n        <Card className="border-2 flex flex-col">\n          <CardHeader className="py-4 pb-2 flex-none">\n            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold text-center h-8 flex flex-col justify-end">\n              <span>Estado de Nota</span>\n            </CardTitle>\n          </CardHeader>\n          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6">\n            <ClienteNotaEstadoBadge estadoNota={estadoNota} id={ticketId} className="scale-125" />\n          </CardContent>\n        </Card>\n\n        <Card className="flex flex-col">\n          <CardHeader className="py-4 pb-2 flex-none">\n            <CardTitle className="text-sm uppercase tracking-wider text-muted-foreground font-bold text-center h-8 flex flex-col justify-end">\n              <span>Saldo pendiente</span>\n              {estadoNota !== "PENDIENTE" && (\n                <span className="text-[10px] text-muted-foreground/60 font-medium tracking-normal normal-case mt-0.5">\n                  De {formatNumber(nota.importeOriginal, { kind: "money" })}\n                </span>\n              )}\n            </CardTitle>\n          </CardHeader>\n          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6">\n            <div className={`text-3xl font-black tabular-nums leading-none ${estadoNota === "PAGADA" ? "text-emerald-600" : "text-red-700"}`}>\n              {formatNumber(saldoPendiente, { kind: "money" })}\n            </div>\n          </CardContent>\n        </Card>\n\n        <Card className={`flex flex-col ${estadoNota === "CON_RETRASO" ? "border-destructive/50 bg-destructive/5" : ""}`}>\n          <CardHeader className="py-4 pb-2 flex-none">\n            <CardTitle className={`text-sm uppercase tracking-wider font-bold text-center h-8 flex flex-col justify-end ${estadoNota === "CON_RETRASO" ? "text-destructive" : "text-muted-foreground"}`}>\n              <span>Vencimiento</span>\n            </CardTitle>\n          </CardHeader>\n          <CardContent className="flex-1 flex flex-col items-center justify-center pb-6 text-center">\n            {nota.fechaVencimiento ? (\n              <div className="flex flex-col items-center justify-center">\n                <div className={`text-2xl font-black leading-none ${estadoNota === "CON_RETRASO" ? "text-destructive" : ""}`}>\n                  {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}\n                </div>\n                {estadoNota === "CON_RETRASO" && (\n                  <div className="text-xs text-destructive font-bold mt-1.5 bg-destructive/10 px-2 py-0.5 rounded-full">\n                    {nota.diasVencidos} días de retraso\n                  </div>\n                )}\n              </div>\n            ) : (\n              <div className="text-muted-foreground font-medium">No establecido</div>\n            )}\n          </CardContent>\n        </Card>\n      </div>\n\n      <Card>\n        <CardHeader className="bg-muted/30 pb-4 border-b">\n          <CardTitle className="text-lg">Historial de Abonos ({nota.abonos.length})</CardTitle>\n        </CardHeader>\n        <CardContent className="p-0">\n          {nota.abonos.length === 0 ? (\n            <div className="p-8 text-center text-muted-foreground font-medium">\n              No se han registrado abonos a esta nota.\n            </div>\n          ) : (\n            <div className="overflow-x-auto">\n              <table className="w-full text-sm text-left">\n                <thead className="bg-muted/30 border-b">\n                  <tr>\n                    <th className="p-4 font-bold text-muted-foreground">Fecha</th>\n                    <th className="p-4 font-bold text-muted-foreground">Aplicado a Nota</th>\n                    <th className="p-4 font-bold text-muted-foreground">Forma / Ref</th>\n                    <th className="p-4 font-bold text-muted-foreground">Usuario</th>\n                    <th className="p-4 font-bold text-muted-foreground text-right">Total del Pago</th>\n                    <th className="p-4 font-bold text-muted-foreground text-center">Detalle</th>\n                  </tr>\n                </thead>\n                <tbody className="divide-y">\n                  {nota.abonos.map((abono, i) => (\n                    <tr key={i} className="hover:bg-muted/20 transition-colors">\n                      <td className="p-4 font-medium">{format(parseDate(abono.fecha), "dd/MM/yyyy")}</td>\n                      <td className="p-4 font-black text-emerald-600 tabular-nums">{formatNumber(abono.montoAplicado, { kind: "money" })}</td>\n                      <td className="p-4">\n                        <div className="font-bold">{abono.formaPago || "—"}</div>\n                        {abono.referencia && <div className="text-xs text-muted-foreground mt-0.5">{abono.referencia}</div>}\n                      </td>\n                      <td className="p-4">{abono.usuarioRegistrador || "—"}</td>\n                      <td className="p-4 text-right font-medium tabular-nums">{formatNumber(abono.montoTotalAbono, { kind: "money" })}</td>\n                      <td className="p-4 text-center">\n                        <div className="flex justify-center gap-2">\n                          <Button\n                            variant="ghost"\n                            size="sm"\n                            className="h-8 text-xs font-bold"\n                            onClick={() => setSelectedPagoId(abono.movimientoPagoId)}\n                          >\n                            Ver Reparto\n                          </Button>\n                          {abono.revertido ? (\n                            <Badge var'... 8159 more characters,
+    expected: /estadoNota === "PENDIENTE"/,
+    operator: 'match',
+    diff: 'simple'
+  }

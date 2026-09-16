@@ -437,12 +437,7 @@ export async function buildTicketDetail(
     ? deriveEstadoNota({
         importeOriginal: credit.importeCredito,
         saldoPendiente: credit.saldoPendiente,
-        fechaVencimiento:
-          credit.fechaVencimiento == null
-            ? null
-            : typeof credit.fechaVencimiento === "string"
-              ? credit.fechaVencimiento
-              : credit.fechaVencimiento.toISOString().slice(0, 10),
+        fechaVencimiento: credit.fechaVencimiento,
         hoy: new Date().toLocaleDateString("en-CA", {
           timeZone: "America/Mexico_City",
         }),

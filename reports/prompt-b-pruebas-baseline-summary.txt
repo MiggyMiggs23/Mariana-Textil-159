@@ -1,0 +1,96 @@
+# Prompt B — baseline de pruebas antes de cualquier corrección
+
+## Comandos reproducidos
+
+Todos los comandos se ejecutaron desde el paquete correspondiente, sin
+levantar/reiniciar workflows, sin servidor de aplicación y con:
+
+`env -i PATH="$PATH" HOME="$HOME" NODE_ENV=test pnpm exec tsx --test ...`
+
+1. Backend focal Kardex (comando separado):
+
+`--test-name-pattern='document resolver only follows primary IDs|entry history uses the rollo FK|cancellation only inherits' src/kardex-sale-documents.contract.test.ts`
+
+2. Backend puro/contract:
+
+`src/kardex-block2.contract.test.ts src/clientes-bolsa.contract.test.ts src/clientes-estado-cuenta.contract.test.ts src/clientes-notas-credito.contract.test.ts src/clientes-pagos.contract.test.ts src/lib/clientes-aging.test.ts src/lib/clientes-create.test.ts src/lib/fecha-efectiva.test.ts`
+
+3. Frontend contract/unit/render:
+
+`src/components/cliente-nota-estado-badge.contract.test.ts src/components/cliente-nota-estado-badge.render.test.ts src/components/movimiento-documento-link.render.test.ts src/lib/date-only.contract.test.ts src/lib/fecha-efectiva.test.ts src/lib/pos-product-price.contract.test.ts src/pages/cartera.contract.test.ts src/pages/cliente-ticket-links.contract.test.ts src/pages/cobros-payment-methods.contract.test.ts src/pages/cobros-salidas-block4.contract.test.ts src/pages/detail-identity-links.render.test.ts src/pages/inventory-reference-links.contract.test.ts src/pages/nota.contract.test.ts src/pages/pos.contract.test.ts`
+
+## Conteo exacto reportado por Node test
+
+| Grupo | Tests | Pass | Fail | Skip | Todo | Cancelled |
+|---|---:|---:|---:|---:|---:|---:|
+| Backend Kardex focal | 3 | 3 | 0 | 0 | 0 | 0 |
+| Backend puro/contract | 50 | 48 | 2 | 0 | 0 | 0 |
+| Frontend contract/unit/render | 40 | 37 | 3 | 0 | 0 | 0 |
+| **Total baseline** | **93** | **88** | **5** | **0** | **0** | **0** |
+
+No hubo skips: los tres Kardex focales se ejecutaron con pattern en un
+proceso separado, por lo que Node reportó exactamente `tests 3`, `pass 3`,
+`skip 0`.
+
+## Fallos observados (sin ocultar ni modificar)
+
+### Backend — 2 fallos
+
+1. `src/clientes-notas-credito.contract.test.ts`
+   - Caso: `contrato de notas de crédito deriva los tres estados sin persistirlos`.
+   - Aserción: buscaba `function moneyState ... balanceCents ...`.
+   - El código leído actualmente expone `legacyNoteState` y deriva con
+     `deriveEstadoNota`; la aserción no coincide.
+
+2. `src/kardex-block2.contract.test.ts`
+   - Caso: `outgoing preset retains read scope and supplies destination,
+     documents, units and absolute totals`.
+   - Aserción: buscaba `route: \`/tickets/\${ticketId}\``.
+   - El source actual no contiene esa forma exacta.
+
+### Frontend — 3 fallos
+
+1. `src/components/cliente-nota-estado-badge.render.test.ts`
+   - Caso: `Los cuatro estados reales renderizan icono y estado, nunca un
+     importe en la insignia`.
+   - `ReferenceError: React is not defined` al renderizar el componente
+     TSX directamente con `tsx --test`.
+
+2. `src/pages/cliente-ticket-links.contract.test.ts`
+   - Caso: `the second client ticket row links by its real ticket id, not by
+     list position`.
+   - `ReferenceError: React is not defined` al renderizar
+     `ResponsiveTable` directamente con `tsx --test`.
+
+3. `src/pages/nota.contract.test.ts`
+   - Caso: `Block 4 functionality in ticket detail`.
+   - Aserción: buscaba `estadoNota === "PENDIENTE"`.
+   - El source actual usa la condición opuesta para mostrar el importe
+     original (`estadoNota !== "PENDIENTE"`).
+
+Las copias de evidencia completas, sin truncar ni resumir, están en:
+
+- `reports/prompt-b-pruebas-baseline-backend-kardex.txt`
+- `reports/prompt-b-pruebas-baseline-backend-pure.txt`
+- `reports/prompt-b-pruebas-baseline-frontend.txt`
+
+## Alcance y exclusiones auditadas
+
+- El baseline conservó cinco fallos; no se repararon pruebas ni se modificaron
+  los 69 vetos de rol. No se verificó la identidad exhaustiva de un conjunto
+  separado de “cinco frágiles”, por lo que no se afirma su exclusión ni se
+  inventa una lista de 74 pruebas.
+- Se excluyeron suites que importan `@workspace/db` en runtime, incluyendo
+  `admin-alertas-credit-risk.test.ts`, `fecha-efectiva-routes.test.ts` y la
+  suite DB de ajustes de clientes.
+- `notification-feed.contract.test.ts` y `pos-caja-final.contract.test.ts`
+  sólo leen fuentes de schema para contratos estáticos; no ejecutan
+  migraciones. Se excluyeron por alcance conservador schema/DB.
+- `clientes-estado-cuenta.contract.test.ts`, `clientes-bolsa.contract.test.ts`,
+  `clientes-pagos.contract.test.ts` y `kardex-block2.contract.test.ts` solo
+  leen fuentes/OpenAPI; no importan ni ejecutan routers, DB, auth o migraciones.
+- Los unitarios backend importan únicamente helpers puros; los renders que
+  requieren JSX bundleado conservaron su harness (`detail-identity-links` y
+  `movimiento-documento-link`).
+- El detalle de selección y los motivos de exclusión está en
+  `reports/prompt-b-pruebas-baseline-manifest.txt`.

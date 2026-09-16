@@ -1,0 +1,17 @@
+
+> @workspace/api-spec@0.0.0 codegen /home/runner/workspace/lib/api-spec
+> orval --config ./orval.config.ts && node ./fix-api-zod-barrel.mjs && pnpm -w run typecheck:libs
+
+🍻 orval v8.23.0 - A swagger client generator for typescript
+api-client-react Cleaning output folder
+🎉 api-client-react - Your OpenAPI spec has been converted into ready to use orval!
+zod Cleaning output folder
+🎉 zod - Your OpenAPI spec has been converted into ready to use orval!
+[fix-api-zod-barrel] Rewrote /home/runner/workspace/lib/api-zod/src/index.ts (704 direct + 24 aliased exports)
+
+> workspace@0.0.0 typecheck:libs /home/runner/workspace
+> tsc --build
+
+
+EXIT_CODE=0
+SHA256_COMPARISON=IDENTICAL

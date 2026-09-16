@@ -1,0 +1,18 @@
+✔ parser normaliza la ubicación y deduplica sólo al contar (2.94328ms)
+✔ parser conserva diagnósticos globales sin archivo (1.118603ms)
+✔ runner continúa después de fallas de libs y paquetes y reporta contextos (280.687831ms)
+✔ tsc real fuerza la continuación de referencias y después comprueba artifacts/scripts (3134.368768ms)
+✔ tsc ausente deja libraries UNVERIFIED y conserva código de error (153.819863ms)
+✔ crash de tsc con stderr parcial no acredita libraries (339.391766ms)
+✔ selección vacía aborta antes de ejecutar tsc (47.722299ms)
+✔ build conserva la barrera && después de typecheck (1.103964ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4042.646403
+
+EXIT_CODE=0

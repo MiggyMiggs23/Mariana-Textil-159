@@ -1,0 +1,35 @@
+$ TZ=America/Mexico_City artifacts/api-server/node_modules/.bin/tsx reports/prompt-b-fecha-runtime.ts derive
+
+## deriveTicketCreditData: string, Date y null
+{
+  "tz": "America/Mexico_City",
+  "fromString": {
+    "esCredito": true,
+    "importeCredito": "100.00",
+    "diasPlazo": 30,
+    "fechaVencimiento": "2026-10-02",
+    "saldoPendiente": "100.00"
+  },
+  "fromDate": {
+    "esCredito": true,
+    "importeCredito": "100.00",
+    "diasPlazo": 30,
+    "fechaVencimiento": "2026-10-02",
+    "saldoPendiente": "100.00"
+  },
+  "fromNull": {
+    "esCredito": true,
+    "importeCredito": "100.00",
+    "diasPlazo": 30,
+    "fechaVencimiento": null,
+    "saldoPendiente": "100.00"
+  },
+  "nonCredit": {
+    "esCredito": false,
+    "importeCredito": "0.00",
+    "diasPlazo": null,
+    "fechaVencimiento": null,
+    "saldoPendiente": "0.00"
+  },
+  "branchConclusion": "helper acepta Date, pero ambos valores normales conservan el mismo YYYY-MM-DD; la lectura Drizzle real aporta string"
+}

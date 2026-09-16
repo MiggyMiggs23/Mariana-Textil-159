@@ -1,0 +1,76 @@
+
+> workspace@0.0.0 build /home/runner/workspace
+> pnpm run typecheck && pnpm -r --no-bail --if-present run build
+
+
+> workspace@0.0.0 typecheck /home/runner/workspace
+> node ./scripts/src/typecheck-runner.mjs
+
+
+> @workspace/api-server@0.0.0 typecheck /home/runner/workspace/artifacts/api-server
+> tsc -p tsconfig.json --noEmit
+
+
+> @workspace/mariana-textil@0.0.0 typecheck /home/runner/workspace/artifacts/mariana-textil
+> tsc -p tsconfig.json --noEmit
+
+
+> @workspace/scripts@0.0.0 typecheck /home/runner/workspace/scripts
+> tsc -p tsconfig.json --noEmit
+
+
+=== Typecheck summary ===
+Packages selected: 3 artifacts/scripts; library results: 7
+PASS @workspace/scanned-code [library] (0 TypeScript errors)
+PASS @workspace/number-format [library] (0 TypeScript errors)
+PASS @workspace/metered-pricing [library] (0 TypeScript errors)
+PASS @workspace/db [library] (0 TypeScript errors)
+PASS @workspace/api-client-react [library] (0 TypeScript errors)
+PASS @workspace/api-zod [library] (0 TypeScript errors)
+PASS @workspace/libraries [library-stage] (0 TypeScript errors)
+PASS @workspace/api-server [package] (0 TypeScript errors)
+PASS @workspace/mariana-textil [package] (0 TypeScript errors)
+PASS @workspace/scripts [package] (0 TypeScript errors)
+Unique TypeScript diagnostics: 0
+Repeated diagnostic emissions: 0
+Process/parser failures: 0
+RESULT: PASS (all selected checks completed; 0 TypeScript errors)
+Scope: 10 of 11 workspace projects
+artifacts/api-server build$ node ./build.mjs
+artifacts/mariana-textil build$ vite build --config vite.config.ts
+artifacts/mariana-textil build: vite v7.3.6 building client environment for production...
+artifacts/mariana-textil build: transforming...
+artifacts/mariana-textil build: src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+artifacts/api-server build:   dist/index.mjs                       8.0mb ⚠️
+artifacts/api-server build:   dist/pino-worker.mjs               153.4kb
+artifacts/api-server build:   dist/pino-file.mjs                 142.1kb
+artifacts/api-server build:   dist/pino-pretty.mjs               114.4kb
+artifacts/api-server build:   dist/thread-stream-worker.mjs        7.3kb
+artifacts/api-server build:   dist/index.mjs.map                  14.0mb
+artifacts/api-server build:   dist/pino-worker.mjs.map           256.9kb
+artifacts/api-server build:   dist/pino-file.mjs.map             229.0kb
+artifacts/api-server build:   dist/pino-pretty.mjs.map           203.6kb
+artifacts/api-server build:   dist/thread-stream-worker.mjs.map   12.0kb
+artifacts/api-server build: ⚡ Done in 1812ms
+artifacts/api-server build: Done
+artifacts/mariana-textil build: src/components/ui/calendar.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+artifacts/mariana-textil build: src/components/ui/toggle-group.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+artifacts/mariana-textil build: src/components/ui/sheet.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+artifacts/mariana-textil build: src/components/ui/command.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+artifacts/mariana-textil build: ✓ 5341 modules transformed.
+artifacts/mariana-textil build: rendering chunks...
+artifacts/mariana-textil build: computing gzip size...
+artifacts/mariana-textil build: dist/public/index.html                                              1.33 kB │ gzip:   0.53 kB
+artifacts/mariana-textil build: dist/public/assets/mariana-textil-logo-monochrome-_7AVoW2A.png    166.39 kB
+artifacts/mariana-textil build: dist/public/assets/mariana-textil-logo-FFOiXRd3.png               818.20 kB
+artifacts/mariana-textil build: dist/public/assets/index-CTwFjwBL.css                             207.57 kB │ gzip:  31.70 kB
+artifacts/mariana-textil build: dist/public/assets/index-CJ5sQYvB.js                              458.30 kB │ gzip: 117.57 kB
+artifacts/mariana-textil build: dist/public/assets/index-DQkHrn5E.js                            2,644.22 kB │ gzip: 654.96 kB
+artifacts/mariana-textil build: ✓ built in 10.99s
+artifacts/mariana-textil build: (!) Some chunks are larger than 500 kB after minification. Consider:
+artifacts/mariana-textil build: - Using dynamic import() to code-split the application
+artifacts/mariana-textil build: - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+artifacts/mariana-textil build: - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+artifacts/mariana-textil build: Done
+
+EXIT_CODE=0

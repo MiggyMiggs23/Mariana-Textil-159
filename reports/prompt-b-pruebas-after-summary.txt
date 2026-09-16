@@ -1,0 +1,82 @@
+# Prompt B — resultado AFTER con el mismo manifest
+
+## Ejecución
+
+Se ejecutaron exactamente los tres comandos del baseline, sin discovery
+adicional, sin cambiar tests, sin corregir suites, sin DB, typecheck, build,
+servidor ni workflow. El manifest literal y las exclusiones son los mismos:
+
+- `reports/prompt-b-pruebas-baseline-manifest.txt`
+- `reports/prompt-b-pruebas-baseline-summary.txt`
+
+El Kardex focal conservó el mismo `--test-name-pattern` y se ejecutó en
+proceso separado.
+
+## Conteos AFTER comparados contra BASELINE
+
+| Grupo | Baseline tests/pass/fail/skip | AFTER tests/pass/fail/skip | Cambio |
+|---|---:|---:|---:|
+| Backend Kardex focal | 3 / 3 / 0 / 0 | 3 / 3 / 0 / 0 | 0 |
+| Backend puro/contract | 50 / 48 / 2 / 0 | 50 / 48 / 2 / 0 | 0 |
+| Frontend contract/unit/render | 40 / 37 / 3 / 0 | 40 / 37 / 3 / 0 | 0 |
+| **Total manifest** | **93 / 88 / 5 / 0** | **93 / 88 / 5 / 0** | **0** |
+
+Los tres Kardex focales siguen reportando `tests 3`, `pass 3`, `fail 0`,
+`skipped 0`. No hubo skips en ningún grupo.
+
+## Firmas de fallos AFTER
+
+Las cinco firmas son las mismas cinco conocidas del baseline; no apareció
+ningún fallo nuevo:
+
+### Backend (2)
+
+1. `src/clientes-notas-credito.contract.test.ts`
+   - `contrato de notas de crédito deriva los tres estados sin persistirlos`
+   - Sigue fallando la regex que busca `function moneyState ... balanceCents`.
+
+2. `src/kardex-block2.contract.test.ts`
+   - `outgoing preset retains read scope and supplies destination, documents, units and absolute totals`
+   - Sigue fallando la regex `route: \`/tickets/\${ticketId}\``.
+
+### Frontend (3)
+
+1. `src/components/cliente-nota-estado-badge.render.test.ts`
+   - `Los cuatro estados reales renderizan icono y estado, nunca un importe en la insignia`
+   - Sigue `ReferenceError: React is not defined`.
+
+2. `src/pages/cliente-ticket-links.contract.test.ts`
+   - `the second client ticket row links by its real ticket id, not by list position`
+   - Sigue `ReferenceError: React is not defined`.
+
+3. `src/pages/nota.contract.test.ts`
+   - `Block 4 functionality in ticket detail`
+   - Sigue fallando la regex `/estadoNota === "PENDIENTE"/`.
+
+La comparación de nombres de tests y firmas `AssertionError`/`ReferenceError`
+es idéntica. La única diferencia textual en el log backend puro está dentro
+del enorme payload `actual` truncado por Node, porque el source leído cambió
+con los fixes; no cambia la firma ni el conteo del fallo.
+
+## Copias de evidencia completas AFTER
+
+- `reports/prompt-b-pruebas-after-backend-kardex.txt`
+- `reports/prompt-b-pruebas-after-backend-pure.txt`
+- `reports/prompt-b-pruebas-after-frontend.txt`
+
+Las copias completas del baseline permanecen en los tres archivos
+`reports/prompt-b-pruebas-baseline-*.txt` para comparación directa. Los
+`.log` originales quedan ignorados por configuración; los `.txt` son la
+evidencia versionable del mismo contenido.
+
+## Limitación explícita
+
+El resultado `88 pass` significa únicamente que se conservaron las 88
+pruebas verdes dentro de este manifest focal de 93 pruebas. No es una
+afirmación de que todo el repositorio esté verde ni una ejecución completa
+del repositorio. Los cinco fallos del baseline se preservaron con las mismas
+firmas; no se repararon tests ni se modificaron los 69 vetos de rol. No se
+verificó la identidad exhaustiva de un conjunto separado de “cinco frágiles”,
+por lo que este informe no afirma su exclusión ni presenta una lista
+inventada de 74. Las exclusiones conservadoras de schema son lecturas
+estáticas y no ejecutan migraciones.

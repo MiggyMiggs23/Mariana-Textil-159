@@ -1,0 +1,142 @@
+# Prompt B — Los cuatro errores de tipos y el comando que los ocultaba
+
+## Contexto
+
+Durante meses el proyecto arrastró «dos errores de typecheck conocidos». La revisión
+del 15 de septiembre encontró que en realidad son **cuatro**: los dos de la API más
+dos en Alertas, en el frontend, que el comando principal nunca alcanzaba a reportar.
+
+Eso no es un detalle de conteo. Es un caso del patrón de falla más caro de este
+proyecto: **un comando que se detiene antes de terminar y cuyo resultado parcial se
+lee como si fuera el total**. Mientras el comando siga así, cualquier «typecheck
+limpio» futuro significa «limpio hasta donde alcanzó a llegar».
+
+Por eso este trabajo arregla primero el comando y después los errores. En ese orden.
+
+---
+
+## Bloque 1 — El comando de typecheck debe reportar todo
+
+En `package.json` de la raíz:
+
+```
+"typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
+```
+
+`pnpm -r` aborta en el primer paquete que falla. Como `artifacts/api-server` falla,
+`artifacts/mariana-textil` y `scripts` no llegan a ejecutarse nunca, y sus errores no
+aparecen en la salida. El `&&` entre `typecheck:libs` y el resto tiene el mismo
+efecto un nivel más arriba.
+
+Qué hacer:
+
+1. Cambiar el comando para que **ejecute todos los paquetes siempre** y reporte los
+   errores de todos, en lugar de detenerse en el primero. El código de salida debe
+   seguir siendo distinto de cero si cualquier paquete falla: queremos ver todo, no
+   aprobar lo que falla.
+2. Igual para el encadenamiento entre las librerías y los artefactos: que las
+   librerías fallando no impidan ver los errores de los artefactos.
+3. La salida debe dejar claro, al final, **cuántos errores hay en total y en qué
+   paquete está cada uno**. Hoy hay que deducirlo leyendo el scroll.
+4. Comprueba que `pnpm run build`, que invoca `typecheck` antes de construir, siga
+   fallando correctamente cuando hay errores. Este cambio no debe volver el build
+   permisivo.
+
+Antes y después de este cambio, ejecuta el comando y pega las dos salidas completas en
+el reporte. La comparación es la prueba de que el comando estaba ocultando trabajo.
+
+---
+
+## Bloque 2 — Inventario real de errores
+
+Con el comando ya corregido, ejecuta `pnpm run typecheck` y entrega la lista
+**completa** de errores: paquete, archivo, línea, código de TypeScript y mensaje.
+
+No des por buena la cifra de cuatro. Puede haber más que también estaban tapados.
+Si el total no es cuatro, ese es el hallazgo y debe reportarse tal cual.
+
+Los dos conocidos de la API:
+
+- `artifacts/api-server/src/lib/pos.ts:426` — `toISOString` sobre un valor cuyo tipo
+  quedó reducido a `never`, es decir una rama que el compilador considera inalcanzable.
+- `artifacts/api-server/src/routes/clientes.ts:1329` — propiedad `saldoPendiente`
+  declarada dos veces en el mismo objeto literal, en el Excel del estado de cuenta.
+  La primera está alrededor de la línea 1313.
+
+Los dos de Alertas están en `artifacts/mariana-textil/`; repórtalos con su ubicación
+exacta.
+
+---
+
+## Bloque 3 — Corregir, entendiendo qué hacía cada uno
+
+**No silencies ningún error.** Nada de `as any`, `@ts-ignore`, `@ts-expect-error` ni
+ensanchar un tipo para que deje de quejarse. Cada corrección tiene que explicar qué
+comportamiento real estaba mal.
+
+Para cada error, antes de tocarlo, contesta por escrito:
+
+- ¿Qué está haciendo hoy el código en tiempo de ejecución?
+- ¿El error señala una rama muerta, una rama viva mal tipada, o un dato que se pierde?
+- ¿La corrección cambia lo que ve el usuario? Si sí, dilo explícitamente.
+
+Dos que ya sabemos que tienen consecuencia visible:
+
+1. **`clientes.ts:1329`.** Una llave duplicada en un objeto literal no es cosmética:
+   el compilador y el bundler conservan **la última** y descartan la primera en
+   silencio. Esa columna del Excel del estado de cuenta está saliendo hoy con una de
+   las dos definiciones y nadie se enteraría. Determina cuál de las dos es la
+   correcta leyendo qué debe contener la columna, quédate con esa, elimina la otra y
+   **di cuál quedó y cuál se fue**. Si las dos calculaban lo mismo, demuéstralo.
+
+2. **`pos.ts:426`.** Una rama que TypeScript considera inalcanzable puede ser dos
+   cosas muy distintas: código muerto que sobra, o una guarda que el compilador cree
+   imposible pero que en producción sí ocurre porque el dato viene de la base con otro
+   tipo del declarado. Averigua cuál es antes de decidir si se borra la rama o se
+   corrige el tipo de origen. Ese campo es `fechaVencimiento`, y este proyecto ya
+   tiene una discrepancia abierta de un día en esa misma fecha entre la pantalla y el
+   documento impreso: **mira si están relacionadas**. Si lo están, repórtalo y no lo
+   corrijas aquí; es otra entrega.
+
+Para los dos de Alertas, aplica el mismo criterio.
+
+---
+
+## Bloque 4 — Que no vuelvan a entrar
+
+Una vez en cero, deja una comprobación que impida reintroducirlos. Revisa si el
+proyecto ya tiene un paso de CI o un hook que corra `typecheck`; si existe, comprueba
+que use el comando corregido. Si no existe, **no lo construyas por tu cuenta**:
+descríbeme qué recomendarías y espera decisión.
+
+---
+
+## Verificación
+
+1. `pnpm run typecheck` completo, con salida en cero y la salida textual pegada en el
+   reporte.
+2. `pnpm --filter @workspace/api-spec run codegen` sin diferencias.
+3. `pnpm run build` completo.
+4. Las suites existentes que ya pasaban siguen pasando, con su conteo antes y después.
+5. Si la corrección de `clientes.ts:1329` cambia el contenido del Excel del estado de
+   cuenta, genera el archivo y verifica la columna con un lector independiente. Que el
+   archivo se genere sin tronar no acredita que la columna traiga el dato correcto.
+
+## Restricciones
+
+- No crees usuarios, ADMIN ni sesiones de prueba en development.
+- No ejecutes `executeSql` de escritura ni migraciones.
+- No toques la regla de saldo a favor, el veto de las notas históricas ni nada del
+  Bloque 5 de la entrega anterior.
+- No arregles las cinco pruebas frágiles ni los 69 vetos de rol: son entregas propias.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que los errores de typecheck conocidos pasaron de dos a cero, con el detalle de qué
+   era cada uno y qué cambió en el comportamiento.
+2. **La regla derivada:** un comando de verificación que se detiene en el primer fallo
+   reporta un resultado parcial que se lee como total. Todo comando de verificación de
+   este proyecto debe recorrer todos los paquetes y reportar el total, aunque falle
+   alguno. Escríbela junto a las demás reglas de «verdes falsos».
+3. Si encontraste relación entre `pos.ts:426` y la discrepancia del vencimiento,
+   documéntala como pendiente abierto con la evidencia.

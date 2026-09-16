@@ -1359,7 +1359,6 @@ router.get(
             : centsToMoney(projected.saldoAFavorProyectadoCents);
          return {
         ...row,
-         saldoPendiente,
          estadoNota,
         ...(row.formaPago === "FACTURADO"
           ? (() => {
