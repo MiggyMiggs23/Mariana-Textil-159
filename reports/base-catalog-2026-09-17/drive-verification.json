@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "dumpSha256": "250e5cd778c711a00c60946e4bfac3b50d596a315d2da9c086089bab8b09ba76",
+  "dumpSizeBytes": 437723,
+  "downloadSha256": "250e5cd778c711a00c60946e4bfac3b50d596a315d2da9c086089bab8b09ba76",
+  "downloadSizeBytes": 437723,
+  "fileId": "1CDGSNa9U7BHepv_3AvoWKn85PhLCESTL",
+  "name": "Mariana-Textil-catalogo-Base-2026-09-17-001715.dump",
+  "webViewLink": "https://drive.google.com/file/d/1CDGSNa9U7BHepv_3AvoWKn85PhLCESTL/view?usp=drivesdk",
+  "verifiedAtUtc": "2026-09-17T06:19:02.686Z",
+  "sourceCapturedAtUtc": "2026-09-17T06:17:15.548Z",
+  "ownerOnly": true,
+  "restoreStatus": "PASS"
+}

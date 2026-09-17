@@ -1,0 +1,101 @@
+{
+  "operation": "BASE_CATALOG_APPROVED_OPERATOR",
+  "mode": "apply",
+  "status": "COMMITTED",
+  "sourceDatabase": "heliumdb",
+  "sourceSchema": "public",
+  "approvedSkus": [
+    "BOM-BAS",
+    "DUB-BAS2",
+    "GABCAM-BAS",
+    "GABDUC-BAS",
+    "LICMET-BAS",
+    "MIC-BAS",
+    "POL-BAS",
+    "SOC-BAS",
+    "TUL15-BAS",
+    "TUL70-BAS",
+    "TULEST-BAS",
+    "TULGLI-BAS"
+  ],
+  "protectedSkus": [
+    "ENC-BAS",
+    "FRACILBAB-BAS",
+    "MAN-BAS",
+    "PIQVER-BAS"
+  ],
+  "noApiStartup": true,
+  "noDbModuleInitializers": true,
+  "committed": true,
+  "preCommitValidationAtUtc": "2026-09-17T06:29:15.278Z",
+  "commitAcknowledgedAtUtc": "2026-09-17T06:29:15.421Z",
+  "newAuditIds": [
+    "3987",
+    "3988",
+    "3989",
+    "3990",
+    "3991",
+    "3992",
+    "3993",
+    "3994",
+    "3995",
+    "3996",
+    "3997",
+    "3998"
+  ],
+  "checkedSkus": [
+    "BOM-BAS",
+    "DUB-BAS2",
+    "GABCAM-BAS",
+    "GABDUC-BAS",
+    "LICMET-BAS",
+    "MIC-BAS",
+    "POL-BAS",
+    "SOC-BAS",
+    "TUL15-BAS",
+    "TUL70-BAS",
+    "TULEST-BAS",
+    "TULGLI-BAS"
+  ],
+  "beforeGates": {
+    "activeProducts": 1234,
+    "baseProducts": 16,
+    "historyDistinctProducts": 1010,
+    "historyRows": 1016
+  },
+  "afterGates": {
+    "activeProducts": 1222,
+    "baseProducts": 16,
+    "inactiveBaseSkus": [
+      "BOM-BAS",
+      "DUB-BAS2",
+      "GABCAM-BAS",
+      "GABDUC-BAS",
+      "LICMET-BAS",
+      "MIC-BAS",
+      "POL-BAS",
+      "SOC-BAS",
+      "TUL15-BAS",
+      "TUL70-BAS",
+      "TULEST-BAS",
+      "TULGLI-BAS"
+    ],
+    "historyDistinctProducts": 1010,
+    "historyRows": 1016
+  },
+  "wholeHashChecks": {
+    "allNonProductNonAuditTablesUnchanged": true,
+    "nonApprovedProductsUnchanged": true,
+    "oldAuditRowsUnchanged": true,
+    "precioHistorialUnchanged": true,
+    "productUpdatedAtUnchanged": true
+  },
+  "productTriggerScan": {
+    "noninternalProductTriggers": 0,
+    "noProductWriterTriggers": true
+  },
+  "sequenceFacts": {
+    "sequenceCount": 45,
+    "onlyAuditoriaIdSequenceChanged": true
+  }
+}

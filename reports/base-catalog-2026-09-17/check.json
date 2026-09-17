@@ -1,0 +1,57 @@
+{
+  "operation": "BASE_CATALOG_APPROVED_OPERATOR",
+  "mode": "check",
+  "status": "PASS_READ_ONLY",
+  "sourceDatabase": "heliumdb",
+  "sourceSchema": "public",
+  "approvedSkus": [
+    "BOM-BAS",
+    "DUB-BAS2",
+    "GABCAM-BAS",
+    "GABDUC-BAS",
+    "LICMET-BAS",
+    "MIC-BAS",
+    "POL-BAS",
+    "SOC-BAS",
+    "TUL15-BAS",
+    "TUL70-BAS",
+    "TULEST-BAS",
+    "TULGLI-BAS"
+  ],
+  "protectedSkus": [
+    "ENC-BAS",
+    "FRACILBAB-BAS",
+    "MAN-BAS",
+    "PIQVER-BAS"
+  ],
+  "noApiStartup": true,
+  "noDbModuleInitializers": true,
+  "readOnly": true,
+  "writesExecuted": false,
+  "gates": {
+    "activeProducts": 1234,
+    "baseProducts": 16,
+    "historyDistinctProducts": 1010,
+    "historyRows": 1016
+  },
+  "backup": {
+    "archiveSha256": "250e5cd778c711a00c60946e4bfac3b50d596a315d2da9c086089bab8b09ba76",
+    "archiveSizeBytes": 437723,
+    "snapshot": ".local/backups/prompt-h-block2-20260917001715-50167/source-snapshot.json"
+  },
+  "preservation": {
+    "applicationTableCount": 60,
+    "allCountsAndCanonicalHashesMatch": true,
+    "sequenceCount": 45,
+    "onlyAuditoriaIdSequenceChanged": false
+  },
+  "relationList": {
+    "schema": "public",
+    "count": 60,
+    "matchedSnapshot": true
+  },
+  "productTriggerScan": {
+    "noninternalProductTriggers": 0,
+    "noProductWriterTriggers": true
+  }
+}

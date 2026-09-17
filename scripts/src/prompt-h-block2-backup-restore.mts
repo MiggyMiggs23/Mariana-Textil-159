@@ -26,8 +26,9 @@ const execFileAsync = promisify(execFile);
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const BACKUPS = `${ROOT}/.local/backups`;
-const REPORTS = `${ROOT}/reports/prompt-h`;
-const APPROVAL = `${REPORTS}/aprobacion-listas-no-purga.md`;
+const baseCatalogScope = process.argv.includes("--catalog-base-approved");
+const REPORTS = `${ROOT}/reports/${baseCatalogScope ? "base-catalog-2026-09-17" : "prompt-h"}`;
+const APPROVAL = `${REPORTS}/${baseCatalogScope ? "aprobacion.md" : "aprobacion-listas-no-purga.md"}`;
 const PG_BIN = "/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin";
 const TZ = "America/Mexico_City";
 const LOCAL_SUPERUSER = "postgres";
@@ -844,7 +845,10 @@ purga cierre. La restauración no sembró usuarios ni identidad de aplicación.
 async function main(): Promise<void> {
   if (!existsSync(APPROVAL)) throw new Error("Owner approval file is missing.");
   const approval = await fs.readFile(APPROVAL, "utf8");
-  if (!/Apruebo las listas/i.test(approval) || !/respaldo/i.test(approval)) {
+  const approved = baseCatalogScope
+    ? /Apruebo la desactivación de los 12 candidatos/i.test(approval) && /respaldo nuevo/i.test(approval)
+    : /Apruebo las listas/i.test(approval) && /respaldo/i.test(approval);
+  if (!approved) {
     throw new Error("Owner approval does not authorize the backup scope.");
   }
   const sourceUrl = process.env.DATABASE_URL;
@@ -910,6 +914,15 @@ async function main(): Promise<void> {
       source, "SHOW transaction_read_only", [], "Verifying read-only source transaction",
     );
     if (txMode.transaction_read_only !== "on") throw new Error("Source transaction is not read-only.");
+    if (baseCatalogScope) {
+      const clients = await one<{ count: number }>(
+        source,
+        "SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend'",
+        [],
+        "Verifying paused source before catalog backup",
+      );
+      if (clients.count !== 0) throw new Error("Other source clients are connected; catalog backup blocked.");
+    }
     const exported = await one<{ snapshot: string }>(
       source, "SELECT pg_export_snapshot() AS snapshot", [], "Exporting source snapshot",
     );
