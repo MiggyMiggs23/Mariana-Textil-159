@@ -1,0 +1,34 @@
+▶ Tiempo Real Contract
+  ✖ renders principal row and secondary attention row in exact order (2952.314927ms)
+✖ Tiempo Real Contract (2954.398065ms)
+ℹ tests 1
+ℹ suites 1
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4981.929006
+
+✖ failing tests:
+
+test at src/pages/caja/tiempo-real.contract.test.ts:1:504
+✖ renders principal row and secondary attention row in exact order (2952.314927ms)
+  AssertionError [ERR_ASSERTION]: desktop: principal sales block must precede operational signals block
+      at before (/tmp/observable-caja-order-Zw28T0/artifacts/mariana-textil/src/pages/caja/tiempo-real.contract.test.ts:96:20)
+      at <anonymous> (/tmp/observable-caja-order-Zw28T0/artifacts/mariana-textil/src/pages/caja/tiempo-real.contract.test.ts:109:11)
+      at async withBrowserFixture (/tmp/observable-caja-order-Zw28T0/artifacts/mariana-textil/src/observable-test/browser.ts:443:12)
+      at async TestContext.<anonymous> (/tmp/observable-caja-order-Zw28T0/artifacts/mariana-textil/src/pages/caja/tiempo-real.contract.test.ts:23:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Promise.all (index 0)
+      at async Suite.run (node:internal/test_runner/test:1518:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/observable-caja-order-Zw28T0/artifacts/mariana-textil/tsconfig.render-tests.json

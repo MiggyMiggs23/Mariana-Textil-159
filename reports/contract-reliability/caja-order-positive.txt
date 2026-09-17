@@ -1,0 +1,12 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+▶ Tiempo Real Contract
+  ✔ renders principal row and secondary attention row in exact order (2183.894268ms)
+✔ Tiempo Real Contract (2184.868601ms)
+ℹ tests 1
+ℹ suites 1
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2910.509126

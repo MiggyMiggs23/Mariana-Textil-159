@@ -1,0 +1,13 @@
+▶ Tiempo Real Contract
+  ✔ renders principal row and secondary attention row in exact order (2222.840476ms)
+✔ Tiempo Real Contract (2223.879233ms)
+ℹ tests 1
+ℹ suites 1
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2906.262981
+
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/observable-caja-order-Zw28T0/artifacts/mariana-textil/tsconfig.render-tests.json

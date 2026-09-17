@@ -1576,3 +1576,17 @@ mtime_ms = 1789668845973
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f37fe09a-53d3-4f1c-9cb7-8c62deac9b74/14d27674-a98c-4532-b475-fa22b952a709"
 storage_version_token = "1789668891861529"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "56sRLSDNjcnlgtSbPc8zb"
+uri = "file://reports/contract-reliability/caja-order-resolution.md"
+type = "text"
+title = "Tiempo real: regla unificada y suite en verde"
+description = "Orden observable en tres tamaños, negativo real con restauración, seis desgloses y resultado final de 354 pruebas aprobadas."
+logical_id = "cc444aad-eac1-4f99-8ec6-0c8df7681807"
+content_hash = "sha256:a038067fd6ac08dc8a1324ca472389687c51a7d458ef12d3b0459be32beb8798"
+size = 4197
+mtime_ms = 1789669823301
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/cc444aad-eac1-4f99-8ec6-0c8df7681807/ce3f39fe-1890-4fd3-bb8f-9ebe0c61f39f"
+storage_version_token = "1789669847005410"
+content_type = "text/markdown"

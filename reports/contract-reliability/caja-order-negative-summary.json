@@ -1,0 +1,15 @@
+{
+  "generatedBy": "scripts/src/observable-caja-order-negative.mjs",
+  "productionWorkspaceChanged": false,
+  "isolatedMutation": "Swapped the complete principal sales row with the complete operational-signals row.",
+  "testFile": "src/pages/caja/tiempo-real.contract.test.ts",
+  "testName": "renders principal row and secondary attention row in exact order",
+  "viewports": [
+    1280,
+    390,
+    402
+  ],
+  "redExitCode": 1,
+  "restoredExitCode": 0,
+  "semanticFailure": "principal sales block must precede operational signals block"
+}

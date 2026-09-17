@@ -797,7 +797,7 @@ El `maxAge` de la galleta se mantiene igual al tope absoluto; si se separan, la 
 
 ## Caja en Tiempo Real
 
-Las cuatro tarjetas de ventas conservan el orden **Ventas (Total) → Contado cobrado → Ventas a crédito → Utilidad**. Una banda independiente de cobranza se sitúa entre esta fila y las señales operativas: no forma parte de la identidad de ventas. La fila de señales conserva **Ventas pendientes de cobro o autorización → Salidas en tránsito → Tickets cancelados → Salidas canceladas**. El criterio es **en curso antes que cancelado**: primero las dos tarjetas de reloj (ámbar cuando tienen contenido), después las dos de cancelación (rojo cuando tienen contenido). Las señales mantienen menor jerarquía visual que las cifras financieras. En pantallas estrechas se conserva este orden.
+El orden vigente de los bloques de Tiempo real, también en pantallas estrechas, es **Ventas → Señales operativas → Cobranza → Estado por Tienda**. Las filas de ventas y señales permanecen juntas porque son las dos que se consultan de un vistazo durante el día; intercalar cobranza las separaría. La cobranza es una banda independiente y no forma parte de la identidad de ventas. Las cuatro tarjetas de ventas conservan el orden **Ventas (Total) → Contado cobrado → Ventas a crédito → Utilidad**. La fila de señales conserva **Ventas pendientes de cobro o autorización → Salidas en tránsito → Tickets cancelados → Salidas canceladas**. El criterio es **en curso antes que cancelado**: primero las dos tarjetas de reloj (ámbar cuando tienen contenido), después las dos de cancelación (rojo cuando tienen contenido). Las señales mantienen menor jerarquía visual que las cifras financieras. En pantallas estrechas se conserva también el orden interno de cada fila.
 
 La tarjeta de pendientes cuenta tanto tickets vendidos sin cobrar como notas vendidas sin autorizar. Permanece fuera de Ventas hasta que Caja procese el documento. La alerta de 30 minutos se calcula solo para tickets: un ticket sin cobrar media hora después es un problema de mostrador, mientras una Nota sin autorizar no comparte esa urgencia y su vencimiento se vigila en Cartera. El texto secundario distingue cuántos tickets y cuántas notas están esperando.
 
@@ -1103,7 +1103,7 @@ La organización aprobada responde a decisiones, no a tipos de datos:
 ## Tablero: venta y cobranza — Prompt C
 
 - **Contado cobrado** renombra la anterior tarjeta Cobrado (Caja), conservando su cálculo, el identificador interno COBRADO y su desglose. La fila de cuatro tarjetas mantiene **Ventas = Contado cobrado + Ventas a crédito**; un abono no es una nueva venta ni reduce la venta a crédito histórica.
-- **Cobrado en el periodo**, como cifra con aclaración adjunta sin encabezado de sección propio, queda inmediatamente después de las dos filas de ventas y señales operativas, antes de Estado por Tienda. Consume `useSharedCuentasDestino` en `artifacts/mariana-textil/src/hooks/use-shared-cuentas-destino.ts`, igual que Cuentas Destino. Ambas usan el mismo endpoint y la función existente `getDestinationAccounts` de `artifacts/api-server/src/lib/admin-analytics.ts`. No hay un cálculo financiero alternativo de cobranza en el navegador ni una segunda implementación SQL.
+- **Cobrado en el periodo**, como cifra con aclaración adjunta sin encabezado de sección propio, sigue el orden de bloques definido en «Caja en Tiempo Real». Consume `useSharedCuentasDestino` en `artifacts/mariana-textil/src/hooks/use-shared-cuentas-destino.ts`, igual que Cuentas Destino. Ambas usan el mismo endpoint y la función existente `getDestinationAccounts` de `artifacts/api-server/src/lib/admin-analytics.ts`. No hay un cálculo financiero alternativo de cobranza en el navegador ni una segunda implementación SQL.
 - El total y los grupos Cobros directos, Abonos a notas (neto de reversos) y Saldo a favor (neto de reversos) vienen de `encabezado.cobrado`. Los enlaces reutilizan el detalle canónico conservando periodo, sitio y fuentes. Los filtros públicos de abonos incluyen sus reversos mediante la expansión existente del servidor. Carga o error de cobranza se muestran en su propia aclaración, sin ocultar las tarjetas de ventas.
 - El día de la nueva banda se obtiene explícitamente en `America/Mexico_City`, igual que el día del tablero en el servidor. No se interpreta la zona local del dispositivo como la del negocio.
 - La cobranza es un resultado contable neto sujeto al periodo, sitio y fuentes del reporte; por sí sola **no prueba una entrada física adicional de efectivo**. La diferencia entre consulta global y por sitio se conserva, no se corrige ni se unifica en esta entrega.
@@ -1309,6 +1309,15 @@ comprobar y su referencia en este documento. Si la regla no está documentada,
 se informa expresamente; una expectativa antigua no autoriza restablecer un
 flujo retirado. Las pruebas de interfaz montan los componentes reales y observan
 sus resultados e interacciones, no una copia de su implementación.
+
+**Si una prueba de contrato falla y el código parece correcto, primero se
+comprueba si la regla escrita es equivocada o contradictoria.** Se revisa el
+documento completo, se distingue a qué pantalla corresponde cada instrucción
+y se consulta la decisión del propietario si hay conflicto; ni la prueba ni
+la documentación se presumen infalibles. Confirmada la regla, se elimina la
+redacción sustituida y se conserva una sola declaración canónica con referencias
+desde las demás secciones, antes de decidir si hay que corregir la prueba o
+la aplicación. Un fallo no autoriza por sí solo a cambiar código correcto.
 
 **Una prueba nueva o reescrita solo se acepta después de verla fallar con el
 defecto que debe detectar.** La comprobación introduce el defecto en una copia
