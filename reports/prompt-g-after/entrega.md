@@ -1,4 +1,4 @@
-# Prompt G — corrección preparada; activación de API pendiente
+# Prompt G — corrección activada en desarrollo
 
 ## Resultado
 
@@ -39,8 +39,8 @@ Codegen repetido estable; builds API y frontend aprobados. Diez pruebas enfocada
 
 La etapa agregada `@workspace/libraries` también terminó en cero. Evidencia en `typecheck-root-final.log`, `typecheck-final-wording.log` y `test-final-wording.log`. No se afirma aprobación de toda la suite histórica.
 
-## Activación pendiente
+## Activación autorizada y ejecutada
 
-El workflow de API informa EADDRINUSE. Se confirmó de solo lectura que un proceso anterior de la propia API conserva el puerto 8080. No se detuvo ni se reinició la API en esta ampliación.
+El propietario autorizó expresamente reemplazar el proceso anterior y reiniciar normalmente la API. Se identificó el proceso de la propia API que conservaba 8080 y se detuvo mediante SIGTERM; después se reinició el workflow administrado.
 
-Activar el contrato requiere reemplazar el proceso anterior y arrancar normalmente la API. Sus inicializadores pueden escribir en la base; esta autorización de cambio de contrato no cubre ese reinicio. No se publicó una versión.
+El arranque terminó correctamente, los inicializadores no reportaron errores y el backfill de compras informó cero inserciones. Ambos workflows están funcionando. Evidencia: `activation-api.log`. La vista previa posterior mostró login/401: no equivale a verificar una nota real autenticada. No se crearon usuarios, sesiones ni movimientos de prueba. No se publicó una versión.
