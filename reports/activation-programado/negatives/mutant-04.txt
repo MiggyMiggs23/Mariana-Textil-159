@@ -1,0 +1,30 @@
+✖ BAJA bloqueada conserva el saldo para que el reverso ordinario restaure 50, no 100 (106.354282ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3718.042281
+
+✖ failing tests:
+
+test at src/lib/activar-rollo-programado.test.ts:1:7087
+✖ BAJA bloqueada conserva el saldo para que el reverso ordinario restaure 50, no 100 (106.354282ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '100.000'
+  - '50.000'
+  
+      at TestContext.<anonymous> (/tmp/activar-rollo-programado-mutants/mutant-04/src/lib/activar-rollo-programado.test.ts:296:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '100.000',
+    expected: '50.000',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

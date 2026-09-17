@@ -1,0 +1,11 @@
+--- artifacts/api-server/src/lib/inventario.ts	2026-09-17 20:43:12.997999331 +0000
++++ /tmp/activar-rollo-programado-mutants/mutant-04/src/lib/inventario.ts	2026-09-17 20:44:42.387331652 +0000
+@@ -1328,7 +1328,7 @@
+       return { rollo: duplicateRollo!, movimiento: dup };
+     }
+   }
+-  if (rollo.estado !== "PROGRAMADO") {
++  if (!["PROGRAMADO", "BAJA"].includes(rollo.estado)) {
+     const messageByState: Record<Exclude<EstadoRollo, "PROGRAMADO">, string> = {
+       BAJA:
+         "Solo un rollo PROGRAMADO puede activarse a DISPONIBLE. El rollo está en BAJA. Si la baja se registró por error, usa el reverso del movimiento por su vía correspondiente; si un faltante de auditoría reapareció, usa Reactivación de faltante.",

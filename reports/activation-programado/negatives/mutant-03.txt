@@ -1,0 +1,30 @@
+✖ DISPONIBLE niega recepción duplicada y MOSTRADOR se declara terminal (87.027767ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2832.576634
+
+✖ failing tests:
+
+test at src/lib/activar-rollo-programado.test.ts:1:6587
+✖ DISPONIBLE niega recepción duplicada y MOSTRADOR se declara terminal (87.027767ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'INVALID_TRANSITION'
+  - 'ACTIVATION_REQUIRES_PROGRAMADO'
+  
+      at TestContext.<anonymous> (/tmp/activar-rollo-programado-mutants/mutant-03/src/lib/activar-rollo-programado.test.ts:275:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'INVALID_TRANSITION',
+    expected: 'ACTIVATION_REQUIRES_PROGRAMADO',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

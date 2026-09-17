@@ -1,0 +1,10 @@
+mutant-01 exit=1 pattern=PROGRAMADO activa log=/tmp/activar-rollo-programado-mutants/mutant-01/red.log
+mutant-02 exit=1 pattern=BAJA, VENDIDO y EN_TRANSITO log=/tmp/activar-rollo-programado-mutants/mutant-02/red.log
+mutant-03 exit=1 pattern=DISPONIBLE niega log=/tmp/activar-rollo-programado-mutants/mutant-03/red.log
+mutant-04 exit=1 pattern=BAJA bloqueada log=/tmp/activar-rollo-programado-mutants/mutant-04/red.log
+mutant-05 exit=1 pattern=reintento exitoso log=/tmp/activar-rollo-programado-mutants/mutant-05/red.log
+mutant-06 exit=1 pattern=decisión usa el estado releído log=/tmp/activar-rollo-programado-mutants/mutant-06/red.log
+
+mutant-04 quantity evidence:
+    actual: '100.000',
+    expected: '50.000',

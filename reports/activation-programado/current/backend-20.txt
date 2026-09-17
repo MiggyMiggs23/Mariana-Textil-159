@@ -1,0 +1,28 @@
+✔ Prompt T clasifica los cinco sobrantes sin inventar registros y destaca vendido (5.353615ms)
+✔ Prompt T ADMIN y motivo no dependen de que la interfaz oculte botones (1.0944ms)
+✔ Prompt T investigar y devolver no resuelven pendiente hasta recepción real (0.302145ms)
+✔ Prompt T cierre normal sin diferencias y urgente incluso con solo piso mal acomodado (0.345751ms)
+✔ Prompt T evidencia exige baja íntegra sin reactivación ni reverso ni movimiento posterior (1.162282ms)
+✔ Prompt T motor reactiva mismo rollo en otro sitio, conserva baja y costos, kardex distinto y relación explícita (9.758374ms)
+✔ Prompt T reintento idempotente no duplica reactivación y UUID no admite otros datos (3.680205ms)
+✔ Prompt T vía propia rechaza rol, origen y motivo antes de consultar inventario (0.544432ms)
+✔ Prompt T relectura previa a FOR UPDATE rechaza par cambiado sin escribir movimiento (1.099643ms)
+✔ Prompt T reactivación rechaza documento comprometido o piso ajeno (2.615016ms)
+✔ Prompt T solo el nuevo tipo rechaza reverso ordinario sin escribir cancelación (5.008342ms)
+✔ Prompt T kardex enlaza la reaparición y su baja a la auditoría sin confundirla con cancelación (0.296497ms)
+✔ Prompt T resolver rechaza INVESTIGAR durante devolución y un histórico posterior no oculta recepción (2.804854ms)
+✔ Prompt T confirmación real termina con sobrante pendiente sin transferir ni recibir (2.365711ms)
+✔ Prompt T cerrar persiste aviso global ADMIN normal o urgente dentro de la misma transacción (1.67519ms)
+✔ reactivación primero impide revertir su baja exacta y conserva cantidad (9.704914ms)
+✔ reverso primero impide reactivar su baja exacta y conserva cantidad (1.973663ms)
+✔ reverso ordinario sigue permitido sin reactivación dedicada (1.580784ms)
+✔ proveniencia de otra baja o de otro rollo no bloquea el reverso (1.726824ms)
+✔ reverso completado durante espera del lock produce explicación relacionada antes de STALE_ROLL (0.820253ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1276.59928

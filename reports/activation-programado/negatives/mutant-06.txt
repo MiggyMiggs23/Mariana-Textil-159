@@ -1,0 +1,29 @@
+✖ la decisión usa el estado releído con FOR UPDATE tras esperar el lock (9.574281ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 969.710233
+
+✖ failing tests:
+
+test at src/lib/activar-rollo-programado.test.ts:1:8378
+✖ la decisión usa el estado releído con FOR UPDATE tras esperar el lock (9.574281ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(error instanceof InventarioError)
+  
+      at activationError (/tmp/activar-rollo-programado-mutants/mutant-06/src/lib/activar-rollo-programado.test.ts:223:10)
+      at async TestContext.<anonymous> (/tmp/activar-rollo-programado-mutants/mutant-06/src/lib/activar-rollo-programado.test.ts:327:17)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

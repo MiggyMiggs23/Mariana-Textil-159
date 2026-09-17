@@ -1,0 +1,14 @@
+✔ PROGRAMADO activa una sola RECEPCION sin alterar cantidad, costo, notas ni ubicación y refresca cache (4.001705ms)
+✔ BAJA, VENDIDO y EN_TRANSITO explican el flujo correcto sin mutación (1.029847ms)
+✔ DISPONIBLE niega recepción duplicada y MOSTRADOR se declara terminal (0.484183ms)
+✔ BAJA bloqueada conserva el saldo para que el reverso ordinario restaure 50, no 100 (1.580983ms)
+✔ reintento exitoso con el mismo UUID retorna la RECEPCION existente sin nueva transición (0.742533ms)
+✔ la decisión usa el estado releído con FOR UPDATE tras esperar el lock (0.363766ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7249.827485

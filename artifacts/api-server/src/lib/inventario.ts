@@ -1328,6 +1328,24 @@ export async function activarRollo(
       return { rollo: duplicateRollo!, movimiento: dup };
     }
   }
+  if (rollo.estado !== "PROGRAMADO") {
+    const messageByState: Record<Exclude<EstadoRollo, "PROGRAMADO">, string> = {
+      BAJA:
+        "Solo un rollo PROGRAMADO puede activarse a DISPONIBLE. El rollo está en BAJA. Si la baja se registró por error, usa el reverso del movimiento por su vía correspondiente; si un faltante de auditoría reapareció, usa Reactivación de faltante.",
+      VENDIDO:
+        "Solo un rollo PROGRAMADO puede activarse a DISPONIBLE. El rollo está VENDIDO. Si la venta se registró por error, usa el reverso por su vía correspondiente; si pertenece a un ticket, cancela ese ticket.",
+      EN_TRANSITO:
+        "Solo un rollo PROGRAMADO puede activarse a DISPONIBLE. El rollo está EN_TRANSITO; recibe o cancela su traslado.",
+      DISPONIBLE:
+        "Solo un rollo PROGRAMADO puede activarse a DISPONIBLE. El rollo ya está DISPONIBLE; no registres una recepción duplicada.",
+      MOSTRADOR:
+        "Solo un rollo PROGRAMADO puede activarse a DISPONIBLE. El rollo está en MOSTRADOR, un estado terminal.",
+    };
+    throw new InventarioError(
+      messageByState[rollo.estado],
+      "ACTIVATION_REQUIRES_PROGRAMADO",
+    );
+  }
   const [producto] = await tx
     .select({ unidad: productosTable.unidad })
     .from(productosTable)

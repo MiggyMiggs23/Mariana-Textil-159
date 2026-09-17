@@ -1,0 +1,11 @@
+--- artifacts/api-server/src/lib/inventario.ts	2026-09-17 20:43:12.997999331 +0000
++++ /tmp/activar-rollo-programado-mutants/mutant-01/src/lib/inventario.ts	2026-09-17 20:44:42.375395379 +0000
+@@ -1380,7 +1380,7 @@
+     .set({
+       estado: "DISPONIBLE",
+       cantidadActual: cantidadReal,
+-      cantidadInicial: cantidadReal, // align initial to received quantity
++      cantidadInicial: "49.000", // MUTANT
+       notas,
+     })
+     .where(eq(rollosTable.id, input.rolloId));

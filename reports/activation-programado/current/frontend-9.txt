@@ -1,0 +1,18 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.1 [39m[90m/home/runner/workspace/artifacts/mariana-textil[39m
+
+ [32m✓[39m src/lib/api-related-movement-error.dom.test.tsx[2m > [22mApiErrorDetails related inventory movement[2m > [22mrenders the backend explanation and exact roll movement link[32m 45[2mms[22m[39m
+ [32m✓[39m src/lib/api-related-movement-error.dom.test.tsx[2m > [22mApiErrorDetails related inventory movement[2m > [22mdoes not render a link when the supplied href does not exactly identify the related movement[32m 14[2mms[22m[39m
+ [32m✓[39m src/components/auditoria/reactivacion-faltante-dialog.test.tsx[2m > [22mReactivacionFaltanteDialog[2m > [22mbuilds the dedicated typed request without measurement or editable inventory fields[32m 2[2mms[22m[39m
+ [32m✓[39m src/components/auditoria/reactivacion-faltante-dialog.test.tsx[2m > [22mReactivacionFaltanteDialog[2m > [22msubmits original audit, appearance site/floor and reason once; an error stays open[33m 322[2mms[22m[39m
+ [32m✓[39m src/components/auditoria/reactivacion-faltante-dialog.test.tsx[2m > [22mReactivacionFaltanteDialog[2m > [22msuccess invalidates roll, context, inventory, origin audit and notification queries[32m 195[2mms[22m[39m
+ [32m✓[39m src/pages/rollo-detail-movement-navigation.dom.test.tsx[2m > [22mRolloDetail movement deep link[2m > [22mscrolls to and highlights the exact real kardex row from movimientoId[32m 155[2mms[22m[39m
+ [32m✓[39m src/pages/rollo-detail.test.tsx[2m > [22mRolloDetail reactivation[2m > [22ma BAJA roll opens the ROLLO entry point and labels reactivation as a distinct positive movement[32m 205[2mms[22m[39m
+ [32m✓[39m src/pages/auditorias-inventario.test.tsx[2m > [22mAuditoriasInventario Component[2m > [22ma CONFIRMADA origin separates financial/unknown surplus and opens its exact missing reactivation[33m 613[2mms[22m[39m
+ [32m✓[39m src/pages/auditorias-inventario.test.tsx[2m > [22mAuditoriasInventario Component[2m > [22mnotification deep-link changes select the exact audit on the mounted route[32m 75[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+[2m   Start at [22m 20:44:40
+[2m   Duration [22m 3.84s[2m (environment 44%, transform 24%, import 21%, tests 11%)[22m
+

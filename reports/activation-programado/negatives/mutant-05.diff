@@ -1,0 +1,12 @@
+--- artifacts/api-server/src/lib/inventario.ts	2026-09-17 20:43:12.997999331 +0000
++++ /tmp/activar-rollo-programado-mutants/mutant-05/src/lib/inventario.ts	2026-09-17 20:44:42.487400550 +0000
+@@ -1320,6 +1320,9 @@
+   if (!rollo) {
+     throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+   }
++  if (rollo.estado !== "PROGRAMADO") {
++    throw new InventarioError("MUTANT: guard before replay", "ACTIVATION_REQUIRES_PROGRAMADO");
++  }
+   if (input.uuidCliente) {
+     const dup = await checkUuidCliente(tx, input.uuidCliente);
+     if (dup) {

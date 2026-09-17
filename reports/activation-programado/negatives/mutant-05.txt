@@ -1,0 +1,23 @@
+✖ reintento exitoso con el mismo UUID retorna la RECEPCION existente sin nueva transición (2.213082ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1080.037466
+
+✖ failing tests:
+
+test at src/lib/activar-rollo-programado.test.ts:1:7874
+✖ reintento exitoso con el mismo UUID retorna la RECEPCION existente sin nueva transición (2.213082ms)
+  Error [InventarioError]: MUTANT: guard before replay
+      at activarRollo (/tmp/activar-rollo-programado-mutants/mutant-05/src/lib/inventario.ts:1324:11)
+      at async TestContext.<anonymous> (/tmp/activar-rollo-programado-mutants/mutant-05/src/lib/activar-rollo-programado.test.ts:312:18)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    code: 'ACTIVATION_REQUIRES_PROGRAMADO',
+    details: undefined,
+    movimientoRelacionado: undefined
+  }

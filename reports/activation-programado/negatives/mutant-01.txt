@@ -1,0 +1,28 @@
+✖ PROGRAMADO activa una sola RECEPCION sin alterar cantidad, costo, notas ni ubicación y refresca cache (5.211117ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1494.783884
+
+✖ failing tests:
+
+test at src/lib/activar-rollo-programado.test.ts:1:5099
+✖ PROGRAMADO activa una sola RECEPCION sin alterar cantidad, costo, notas ni ubicación y refresca cache (5.211117ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '49.000' !== '50.000'
+  
+      at TestContext.<anonymous> (/tmp/activar-rollo-programado-mutants/mutant-01/src/lib/activar-rollo-programado.test.ts:232:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '49.000',
+    expected: '50.000',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
