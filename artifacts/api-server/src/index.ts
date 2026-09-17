@@ -29,6 +29,7 @@ import {
   ensureChoferesSchema,
   ensureViajesSchema,
   ensureAuditoriaInventarioSchema,
+  ensureAuditoriaResolucionesSchema,
   ensurePisosSchema,
   ensureCuadreFiscalSchema,
   ensureCajaPermissions,
@@ -122,6 +123,7 @@ export async function ensureStartupSchemas(): Promise<void> {
       await initializer("ensureTicketAuthorizationSchema", () => ensureTicketAuthorizationSchema(startupPool));
       await initializer("ensureTicketLineTypesSchema", () => ensureTicketLineTypesSchema(startupPool));
       await initializer("ensureSalidasSchema", () => ensureSalidasSchema(startupPool));
+      await initializer("ensureAuditoriaResolucionesSchema", () => ensureAuditoriaResolucionesSchema(startupPool));
       await initializer("ensureDocumentFoliosSchema", () => ensureDocumentFoliosSchema(startupPool));
     });
     await phase("reporting and labels", async () => {

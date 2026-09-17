@@ -3690,6 +3690,14 @@ export const NotificationFeedEventKind = {
   CREDIT_NOTICE: 'CREDIT_NOTICE',
 } as const;
 
+export type NotificationFeedEventPriority = typeof NotificationFeedEventPriority[keyof typeof NotificationFeedEventPriority];
+
+
+export const NotificationFeedEventPriority = {
+  NORMAL: 'NORMAL',
+  URGENTE: 'URGENTE',
+} as const;
+
 /**
  * @nullable
  */
@@ -3730,6 +3738,7 @@ export interface NotificationFeedEvent {
   message: string;
   href: string;
   updatedAt: string;
+  priority?: NotificationFeedEventPriority;
   /** @nullable */
   siteId: number | null;
   /** @nullable */
@@ -3744,11 +3753,21 @@ export interface NotificationFeed {
   sessionKey: string;
 }
 
+export type NotificacionSistemaPriority = typeof NotificacionSistemaPriority[keyof typeof NotificacionSistemaPriority];
+
+
+export const NotificacionSistemaPriority = {
+  NORMAL: 'NORMAL',
+  URGENTE: 'URGENTE',
+} as const;
+
 export interface NotificacionSistema {
   id: number;
   tipo: string;
   titulo: string;
   mensaje: string;
+  priority?: NotificacionSistemaPriority;
+  href?: string;
   entidad: string;
   entidadId: string;
   /** @nullable */
@@ -4432,6 +4451,7 @@ export const TipoMovimiento = {
   AJUSTE_POSITIVO: 'AJUSTE_POSITIVO',
   AJUSTE_NEGATIVO: 'AJUSTE_NEGATIVO',
   CANCELACION: 'CANCELACION',
+  REACTIVACION_FALTANTE: 'REACTIVACION_FALTANTE',
 } as const;
 
 export type MotivoSalidaExtraordinaria = typeof MotivoSalidaExtraordinaria[keyof typeof MotivoSalidaExtraordinaria];
@@ -6868,6 +6888,63 @@ export const AuditoriaInventarioResultadoResolucion = {
   RESOLUCION_MANUAL: 'RESOLUCION_MANUAL',
 } as const;
 
+export type AuditoriaSobranteContextoCaso = typeof AuditoriaSobranteContextoCaso[keyof typeof AuditoriaSobranteContextoCaso];
+
+
+export const AuditoriaSobranteContextoCaso = {
+  DISPONIBLE_OTRO_SITIO: 'DISPONIBLE_OTRO_SITIO',
+  EN_TRANSITO_HACIA_SITIO: 'EN_TRANSITO_HACIA_SITIO',
+  APARTADO_SALIDA_ABIERTA: 'APARTADO_SALIDA_ABIERTA',
+  VENDIDO_FISICAMENTE_AQUI: 'VENDIDO_FISICAMENTE_AQUI',
+  SIN_REGISTRO_PREVIO: 'SIN_REGISTRO_PREVIO',
+  REQUIERE_INVESTIGACION: 'REQUIERE_INVESTIGACION',
+} as const;
+
+export interface AuditoriaDocumentoRelacionado {
+  tipo: string;
+  id: number;
+  folio: string;
+  href: string;
+}
+
+export type AuditoriaSobranteContextoEstadoResolucion = typeof AuditoriaSobranteContextoEstadoResolucion[keyof typeof AuditoriaSobranteContextoEstadoResolucion];
+
+
+export const AuditoriaSobranteContextoEstadoResolucion = {
+  PENDIENTE: 'PENDIENTE',
+  EN_INVESTIGACION: 'EN_INVESTIGACION',
+  EN_TRANSITO: 'EN_TRANSITO',
+  RESUELTO: 'RESUELTO',
+} as const;
+
+export interface AuditoriaSobranteDecision {
+  id: number;
+  decision: string;
+  motivo: string;
+  usuarioId: number;
+  usuario: string;
+  createdAt: string;
+  /** @nullable */
+  salidaId: number | null;
+}
+
+export interface AuditoriaSobranteContexto {
+  caso: AuditoriaSobranteContextoCaso;
+  grave: boolean;
+  /** @nullable */
+  sitioRegistradoId: number | null;
+  /** @nullable */
+  sitioRegistrado: string | null;
+  /** @nullable */
+  estadoRegistrado: string | null;
+  documentos: AuditoriaDocumentoRelacionado[];
+  pendiente: boolean;
+  estadoResolucion: AuditoriaSobranteContextoEstadoResolucion;
+  /** @nullable */
+  bloqueo: string | null;
+  historial: AuditoriaSobranteDecision[];
+}
+
 export interface AuditoriaInventarioResultado {
   serie: string;
   clasificacion: AuditoriaInventarioResultadoClasificacion;
@@ -6898,6 +6975,102 @@ export interface AuditoriaInventarioResultado {
   resolucion: AuditoriaInventarioResultadoResolucion;
   /** @nullable */
   escaneadoAt?: string | null;
+  sobrante?: AuditoriaSobranteContexto | null;
+}
+
+export type AuditoriaSobranteResolucionInputDecision = typeof AuditoriaSobranteResolucionInputDecision[keyof typeof AuditoriaSobranteResolucionInputDecision];
+
+
+export const AuditoriaSobranteResolucionInputDecision = {
+  DEJAR: 'DEJAR',
+  REGRESAR: 'REGRESAR',
+  INVESTIGAR: 'INVESTIGAR',
+} as const;
+
+export interface AuditoriaSobranteResolucionInput {
+  /**
+     * @minLength 1
+     * @maxLength 100
+     */
+  serie: string;
+  decision: AuditoriaSobranteResolucionInputDecision;
+  /**
+     * @minLength 10
+     * @maxLength 1000
+     */
+  motivo: string;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ */
+  uuidCliente: string;
+  /** @maxLength 200 */
+  transportista?: string;
+  /** @nullable */
+  pisoId?: number | null;
+}
+
+export type ReactivacionFaltanteInputOrigen = typeof ReactivacionFaltanteInputOrigen[keyof typeof ReactivacionFaltanteInputOrigen];
+
+
+export const ReactivacionFaltanteInputOrigen = {
+  AUDITORIA: 'AUDITORIA',
+  ROLLO: 'ROLLO',
+} as const;
+
+export interface ReactivacionFaltanteInput {
+  /** @minimum 1 */
+  auditoriaOrigenId: number;
+  origen: ReactivacionFaltanteInputOrigen;
+  /** @minimum 1 */
+  ubicacionId: number;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  pisoId: number | null;
+  /**
+     * @minLength 10
+     * @maxLength 1000
+     */
+  motivo: string;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$ */
+  uuidCliente: string;
+}
+
+export interface ReactivacionAuditoriaPosterior {
+  id: number;
+  ubicacionId: number;
+  folio: number;
+  cerradaAt: string;
+}
+
+export interface ReactivacionFaltanteContexto {
+  rolloId: number;
+  serie: string;
+  elegible: boolean;
+  /** @nullable */
+  bloqueo: string | null;
+  /** @nullable */
+  auditoriaOrigenId: number | null;
+  /** @nullable */
+  movimientoBajaId: number | null;
+  /** @nullable */
+  cantidadAnterior: string | null;
+  producto: string;
+  unidad: string;
+  /** @nullable */
+  costoUnitario: string | null;
+  /** @nullable */
+  recepcionId: number | null;
+  /** @nullable */
+  entradaFolio: string | null;
+  /** @nullable */
+  proveedorId: number | null;
+  /** @nullable */
+  proveedorNombre: string | null;
+  /** @nullable */
+  ubicacionBajaId: number | null;
+  /** @nullable */
+  ubicacionBaja: string | null;
+  auditoriasPosteriores: ReactivacionAuditoriaPosterior[];
 }
 
 export interface AuditoriaInventarioParticipante {

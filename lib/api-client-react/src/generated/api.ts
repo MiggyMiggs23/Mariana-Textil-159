@@ -44,6 +44,7 @@ import type {
   AuditoriaInventarioResumen,
   AuditoriaInventarioSitio,
   AuditoriaListResult,
+  AuditoriaSobranteResolucionInput,
   AutorizacionNotaProyeccion,
   AutorizarNotaInput,
   BajaCliente200,
@@ -276,6 +277,8 @@ import type {
   PurgaPreflight,
   PurgaResultado,
   RateLimitedResponse,
+  ReactivacionFaltanteContexto,
+  ReactivacionFaltanteInput,
   RecalcularInput,
   RecepcionSalidaInput,
   ReimpresionClienteNota,
@@ -6420,6 +6423,209 @@ export const useCancelAuditoriaInventario = <TError = ErrorType<ValidationErrorR
         TContext
       > => {
       return useMutation(getCancelAuditoriaInventarioMutationOptions(options));
+    }
+
+export const getResolverSobranteAuditoriaInventarioUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/auditorias/${id}/sobrantes/resolver`
+}
+
+export const resolverSobranteAuditoriaInventario = async (id: number,
+    auditoriaSobranteResolucionInput: AuditoriaSobranteResolucionInput, options?: Parameters<typeof customFetch>[1]): Promise<AuditoriaInventarioDetail> => {
+
+  return customFetch<AuditoriaInventarioDetail>(getResolverSobranteAuditoriaInventarioUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(auditoriaSobranteResolucionInput)
+  }
+);}
+
+
+
+
+
+export const getResolverSobranteAuditoriaInventarioMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolverSobranteAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaSobranteResolucionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resolverSobranteAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaSobranteResolucionInput>}, TContext> => {
+
+const mutationKey = ['resolverSobranteAuditoriaInventario'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resolverSobranteAuditoriaInventario>>, {id: number;data: BodyType<AuditoriaSobranteResolucionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  resolverSobranteAuditoriaInventario(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResolverSobranteAuditoriaInventarioMutationResult = NonNullable<Awaited<ReturnType<typeof resolverSobranteAuditoriaInventario>>>
+    export type ResolverSobranteAuditoriaInventarioMutationBody = BodyType<AuditoriaSobranteResolucionInput>
+    export type ResolverSobranteAuditoriaInventarioMutationError = ErrorType<unknown>
+
+    export const useResolverSobranteAuditoriaInventario = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolverSobranteAuditoriaInventario>>, TError,{id: number;data: BodyType<AuditoriaSobranteResolucionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resolverSobranteAuditoriaInventario>>,
+        TError,
+        {id: number;data: BodyType<AuditoriaSobranteResolucionInput>},
+        TContext
+      > => {
+      return useMutation(getResolverSobranteAuditoriaInventarioMutationOptions(options));
+    }
+
+export const getGetReactivacionFaltanteUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/reactivacion-faltante`
+}
+
+export const getReactivacionFaltante = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<ReactivacionFaltanteContexto> => {
+
+  return customFetch<ReactivacionFaltanteContexto>(getGetReactivacionFaltanteUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetReactivacionFaltanteQueryKey = (id: number,) => {
+    return [
+    `/api/inventario/rollos/${id}/reactivacion-faltante`
+    ] as const;
+    }
+
+
+export const getGetReactivacionFaltanteQueryOptions = <TData = Awaited<ReturnType<typeof getReactivacionFaltante>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReactivacionFaltante>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReactivacionFaltanteQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReactivacionFaltante>>> = ({ signal }) => getReactivacionFaltante(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReactivacionFaltante>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetReactivacionFaltanteQueryResult = NonNullable<Awaited<ReturnType<typeof getReactivacionFaltante>>>
+export type GetReactivacionFaltanteQueryError = ErrorType<unknown>
+
+
+
+export function useGetReactivacionFaltante<TData = Awaited<ReturnType<typeof getReactivacionFaltante>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReactivacionFaltante>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetReactivacionFaltanteQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getReactivarFaltanteUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/reactivacion-faltante`
+}
+
+export const reactivarFaltante = async (id: number,
+    reactivacionFaltanteInput: ReactivacionFaltanteInput, options?: Parameters<typeof customFetch>[1]): Promise<ReactivacionFaltanteContexto> => {
+
+  return customFetch<ReactivacionFaltanteContexto>(getReactivarFaltanteUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(reactivacionFaltanteInput)
+  }
+);}
+
+
+
+
+
+export const getReactivarFaltanteMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reactivarFaltante>>, TError,{id: number;data: BodyType<ReactivacionFaltanteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reactivarFaltante>>, TError,{id: number;data: BodyType<ReactivacionFaltanteInput>}, TContext> => {
+
+const mutationKey = ['reactivarFaltante'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reactivarFaltante>>, {id: number;data: BodyType<ReactivacionFaltanteInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reactivarFaltante(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReactivarFaltanteMutationResult = NonNullable<Awaited<ReturnType<typeof reactivarFaltante>>>
+    export type ReactivarFaltanteMutationBody = BodyType<ReactivacionFaltanteInput>
+    export type ReactivarFaltanteMutationError = ErrorType<unknown>
+
+    export const useReactivarFaltante = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reactivarFaltante>>, TError,{id: number;data: BodyType<ReactivacionFaltanteInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reactivarFaltante>>,
+        TError,
+        {id: number;data: BodyType<ReactivacionFaltanteInput>},
+        TContext
+      > => {
+      return useMutation(getReactivarFaltanteMutationOptions(options));
     }
 
 export const getConfirmAuditoriaInventarioUrl = (id: number,) => {

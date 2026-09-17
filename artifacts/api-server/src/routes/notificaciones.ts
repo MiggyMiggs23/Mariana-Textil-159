@@ -90,6 +90,7 @@ type FeedEvent = {
   href: string;
   updatedAt: string;
   siteId: number | null;
+  priority?: "NORMAL" | "URGENTE";
   estadoNota?: EstadoNota | null;
   action: {
     requestId: number; tipo: Kind; contraparte: string; documento: string;
@@ -290,6 +291,7 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
             : "AVISO",
         title: row.titulo,
         message: row.mensaje,
+        priority: row.prioridad === "URGENTE" ? "URGENTE" : "NORMAL",
         // The episode id is the durable notification identity. The stock
         // minimum screen validates the site against the header scope and
         // focuses the product from these query parameters.
@@ -298,7 +300,9 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
           systemRow.episodioProductoId != null &&
           systemRow.episodioUbicacionId != null
             ? `/inventario/stock-minimos?ubicacionId=${encodeURIComponent(String(systemRow.episodioUbicacionId))}&productoId=${encodeURIComponent(String(systemRow.episodioProductoId))}`
-            : row.entidad === "solicitudes_pago_dirigido"
+            : row.entidad === "auditorias_inventario"
+              ? `/inventario/auditorias?auditoriaId=${encodeURIComponent(row.entidadId)}`
+              : row.entidad === "solicitudes_pago_dirigido"
               ? "/pagos-dirigidos"
               : "/notificaciones",
         updatedAt: row.createdAt.toISOString(),
@@ -308,6 +312,37 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
     }
 
     if (user.rol === "ADMIN") {
+      const pendientesAuditoria = await db.execute(sql`
+        SELECT a.id, a.ubicacion_id, a.folio, u.nombre sitio, a.cerrada_at,
+          count(*)::int pendientes
+        FROM auditorias_inventario a JOIN ubicaciones u ON u.id=a.ubicacion_id
+        JOIN auditoria_inventario_escaneos e ON e.auditoria_id=a.id
+        LEFT JOIN LATERAL (
+          SELECT d.* FROM auditoria_sobrante_decisiones d
+          LEFT JOIN salidas rs ON rs.id=d.salida_id
+          LEFT JOIN salida_rollos rr ON rr.salida_id=d.salida_id AND rr.rollo_id=d.rollo_id
+          WHERE d.auditoria_id=a.id AND d.serie=e.serie
+          ORDER BY CASE WHEN d.decision='REGRESAR' AND rs.estado='EN_TRANSITO' AND rr.recibido=false THEN 2
+            WHEN d.decision='REGRESAR' AND rr.recibido=true THEN 1 ELSE 0 END DESC, d.id DESC LIMIT 1
+        ) d ON true
+        LEFT JOIN salida_rollos sr ON sr.salida_id=d.salida_id AND sr.rollo_id=d.rollo_id
+        WHERE a.estado IN ('CERRADA','CONFIRMADA')
+          AND NOT EXISTS (SELECT 1 FROM auditoria_inventario_snapshot s WHERE s.auditoria_id=a.id AND s.serie=e.serie)
+          AND NOT (COALESCE(d.decision='DEJAR', false) OR
+            COALESCE(d.decision='REGRESAR' AND sr.recibido=true, false) OR
+            (d.id IS NULL AND e.resolucion='APLICADA'))
+        GROUP BY a.id, a.ubicacion_id, a.folio, u.nombre, a.cerrada_at
+      `);
+      for (const row of pendientesAuditoria.rows as Array<Record<string, unknown>>) {
+        const event: FeedEvent = {
+          id: `audit-surplus:${row.id}`, kind: "SYSTEM", family: "ALERTA", priority: "URGENTE",
+          title: `Sobrantes pendientes · auditoría ${row.folio}`,
+          message: `${row.sitio}: ${row.pendientes} sobrantes siguen pendientes de resolución o recepción.`,
+          href: `/inventario/auditorias?auditoriaId=${row.id}`,
+          updatedAt: new Date(String(row.cerrada_at)).toISOString(), siteId: Number(row.ubicacion_id), action: null,
+        };
+        events.set(event.id, event);
+      }
       const [alerts, pendingDirected, creditNotifications] = await Promise.all([
         getAdminAlertas(),
         db
@@ -451,6 +486,8 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
         notificaciones: [],
         sistema: systemNotifications.map((row) => ({
           ...row,
+          priority: row.prioridad === "URGENTE" ? "URGENTE" : "NORMAL",
+          href: row.entidad === "auditorias_inventario" ? `/inventario/auditorias?auditoriaId=${row.entidadId}` : "/notificaciones",
           leidaAt: row.leidaAt?.toISOString() ?? null,
           createdAt: row.createdAt.toISOString(),
         })),
@@ -583,6 +620,8 @@ router.get("/notificaciones", async (req, res, next): Promise<void> => {
         ),
         sistema: systemNotifications.map((row) => ({
           ...row,
+          priority: row.prioridad === "URGENTE" ? "URGENTE" : "NORMAL",
+          href: row.entidad === "auditorias_inventario" ? `/inventario/auditorias?auditoriaId=${row.entidadId}` : "/notificaciones",
           leidaAt: row.leidaAt?.toISOString() ?? null,
           createdAt: row.createdAt.toISOString(),
         })),

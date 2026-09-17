@@ -20,6 +20,7 @@
  */
 
 import { createHash } from "node:crypto";
+import { getReactivacionContexto } from "./reactivacion-faltante-evidencia";
 import { and, eq, sql, desc, count, gte, inArray, lte } from "drizzle-orm";
 import {
   auditoriaTable,
@@ -2478,6 +2479,90 @@ export type RevertirMovimientoInput = {
   permitirCancelacionDocumento?: boolean;
 };
 
+/**
+ * Dedicated reappearance event, NOT a reversal. The general transition table and
+ * all existing reversal semantics remain untouched. Its provenance is stored in
+ * auditoria_faltante_reactivaciones, never movimientoOrigenId (cancellation FK).
+ */
+export async function reactivarFaltanteAuditoria(tx: Tx, input: {
+  rolloId: number; auditoriaOrigenId: number; origen: "AUDITORIA" | "ROLLO";
+  ubicacionId: number; pisoId: number | null; motivo: string; uuidCliente: string;
+  usuarioId: number; rol: string; ip: string;
+}) {
+  if (input.rol !== "ADMIN") throw new InventarioError("Solo ADMIN puede reactivar un faltante.", "ADMIN_REQUIRED");
+  if (!["AUDITORIA", "ROLLO"].includes(input.origen)) throw new InventarioError("La reactivación requiere la auditoría de origen o el detalle del rollo.", "INVALID_REACTIVATION_ORIGIN");
+  const motivo = input.motivo.trim();
+  if (motivo.length < 10 || motivo.length > 1000) throw new InventarioError("El motivo debe tener entre 10 y 1000 caracteres.", "JUSTIFICACION_REQUIRED");
+  await transactionAdvisoryLock(tx, ADVISORY_LOCK_NAMESPACES.INVENTORY_AUDIT_SITE, `reactivacion:${input.uuidCliente}`);
+  const duplicate = (await tx.execute(sql`SELECT * FROM auditoria_faltante_reactivaciones WHERE uuid_cliente=${input.uuidCliente}::uuid`)).rows[0] as Record<string, unknown> | undefined;
+  if (duplicate) {
+    if (Number(duplicate.rollo_id) !== input.rolloId || Number(duplicate.auditoria_origen_id) !== input.auditoriaOrigenId ||
+      Number(duplicate.ubicacion_aparicion_id) !== input.ubicacionId || duplicate.motivo !== motivo ||
+      Number(duplicate.usuario_id) !== input.usuarioId || duplicate.origen !== input.origen ||
+      (duplicate.piso_aparicion_id == null ? null : Number(duplicate.piso_aparicion_id)) !== input.pisoId) {
+      throw new InventarioError("El identificador ya se utilizó con otros datos.", "UUID_ALREADY_USED");
+    }
+    return getReactivacionContexto(tx, input.rolloId);
+  }
+  const uuidMovement = await tx.execute(sql`SELECT id FROM movimientos WHERE uuid_cliente=${input.uuidCliente}::uuid LIMIT 1`);
+  if (uuidMovement.rows.length) throw new InventarioError("El identificador pertenece a otro movimiento.", "UUID_ALREADY_USED");
+  const [candidate] = await tx.select().from(rollosTable).where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!candidate) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+  await lockInventoryPairs(tx, [
+    { productoId: candidate.productoId, ubicacionId: candidate.ubicacionId },
+    { productoId: candidate.productoId, ubicacionId: input.ubicacionId },
+  ]);
+  const [refreshed] = await tx.select().from(rollosTable).where(eq(rollosTable.id, input.rolloId)).limit(1);
+  if (!refreshed || refreshed.productoId !== candidate.productoId || refreshed.ubicacionId !== candidate.ubicacionId || refreshed.estado !== candidate.estado) {
+    throw new InventarioError("El rollo cambió mientras se esperaba. Vuelve a revisar.", "STALE_ROLL");
+  }
+  const [rollo] = await tx.select().from(rollosTable).where(eq(rollosTable.id, input.rolloId)).for("update").limit(1);
+  const evidence = await getReactivacionContexto(tx, input.rolloId);
+  if (!rollo || !evidence?.elegible || evidence.auditoriaOrigenId !== input.auditoriaOrigenId || evidence.cantidadAnterior == null || evidence.movimientoBajaId == null) {
+    throw new InventarioError("No existe una baja de auditoría íntegra y verificable pendiente de reactivación.", "INVALID_REACTIVATION_EVIDENCE");
+  }
+  await assertNoActiveVentaClienteReservation(tx, [rollo.id]);
+  const commitments = await tx.execute(sql`
+    SELECT sr.id FROM salida_rollos sr JOIN salidas s ON s.id=sr.salida_id
+    WHERE sr.rollo_id=${rollo.id} AND s.estado IN ('ARMANDO','EN_TRANSITO') AND sr.recibido=false LIMIT 1
+  `);
+  if (commitments.rows.length) throw new InventarioError("El rollo tiene una salida comprometida; resuelve primero el documento.", "ROLLO_RESERVED");
+  const [site] = await tx.select().from(ubicacionesTable).where(and(eq(ubicacionesTable.id, input.ubicacionId), eq(ubicacionesTable.activa, true))).limit(1);
+  if (!site || !["TIENDA", "BODEGA"].includes(site.tipo)) throw new InventarioError("Selecciona un sitio operativo activo.", "INVALID_LOCATION");
+  const floors = await tx.select().from(pisosTable).where(and(eq(pisosTable.ubicacionId, input.ubicacionId), eq(pisosTable.activo, true)));
+  if (floors.length ? !floors.some((p) => p.id === input.pisoId) : input.pisoId != null) throw new InventarioError("El piso debe estar activo y pertenecer al sitio donde apareció.", "INVALID_FLOOR");
+  await tx.update(rollosTable).set({
+    estado: "DISPONIBLE", cantidadActual: evidence.cantidadAnterior,
+    ubicacionId: input.ubicacionId, pisoId: input.pisoId,
+  }).where(eq(rollosTable.id, rollo.id));
+  const posteriores = evidence.auditoriasPosteriores.filter((a) => a.ubicacionId === input.ubicacionId);
+  const movimiento = await insertMovimiento(tx, {
+    rolloId: rollo.id, productoId: rollo.productoId, ubicacionId: input.ubicacionId,
+    tipo: "REACTIVACION_FALTANTE", cantidad: evidence.cantidadAnterior, usuarioId: input.usuarioId,
+    justificacion: `Reaparición física; baja de auditoría ${input.auditoriaOrigenId}, movimiento ${evidence.movimientoBajaId}: ${motivo}` +
+      (posteriores.length ? ` Auditorías posteriores cerradas en el sitio de aparición: ${posteriores.map((a) => a.id).join(", ")}. La reaparición es un hecho nuevo; no se reescriben los resultados anteriores.` : ""),
+    documentoTipo: "AUDITORIA_INVENTARIO", documentoId: String(input.auditoriaOrigenId),
+    revisado: true, uuidCliente: input.uuidCliente,
+  });
+  await tx.execute(sql`
+    INSERT INTO auditoria_faltante_reactivaciones(rollo_id,auditoria_origen_id,movimiento_baja_id,movimiento_reactivacion_id,
+      ubicacion_aparicion_id,piso_aparicion_id,cantidad_restaurada,usuario_id,motivo,origen,uuid_cliente,auditorias_posteriores)
+    VALUES(${rollo.id},${input.auditoriaOrigenId},${evidence.movimientoBajaId},${movimiento.id},${input.ubicacionId},${input.pisoId},
+      ${evidence.cantidadAnterior},${input.usuarioId},${motivo},${input.origen},${input.uuidCliente}::uuid,${JSON.stringify(posteriores)}::jsonb)
+  `);
+  await tx.insert(auditoriaTable).values({
+    usuarioId: input.usuarioId, modulo: "auditoria_inventario", accion: "REACTIVACION_FALTANTE",
+    entidad: "rollos", entidadId: String(rollo.id), sitioId: input.ubicacionId, ip: input.ip,
+    datosDespues: { auditoriaOrigenId: input.auditoriaOrigenId, movimientoBajaId: evidence.movimientoBajaId,
+      movimientoReactivacionId: movimiento.id, cantidadRestaurada: evidence.cantidadAnterior,
+      motivo, origen: input.origen, auditoriasPosteriores: posteriores,
+      relacion: "Reaparición posterior; se conserva íntegro el hecho de ausencia anterior." },
+  });
+  await refreshCache(tx, rollo.productoId, rollo.ubicacionId);
+  if (rollo.ubicacionId !== input.ubicacionId) await refreshCache(tx, rollo.productoId, input.ubicacionId);
+  return getReactivacionContexto(tx, input.rolloId);
+}
+
 const TICKET_OWNED_SALE_DOCUMENT_TYPES = new Set([
   "TICKET",
   "NOTA",
@@ -2509,6 +2594,12 @@ export async function revertirMovimiento(
 
   if (!orig) {
     throw new InventarioError("Movimiento no encontrado.", "MOVIMIENTO_NOT_FOUND");
+  }
+  if (orig.tipo === "REACTIVACION_FALTANTE") {
+    throw new InventarioError(
+      "Una reaparición física no es un reverso ordinario; no puede cancelarse por esta vía.",
+      "REACTIVATION_NOT_REVERSIBLE",
+    );
   }
   if (
     orig.tipo === "VENTA" &&

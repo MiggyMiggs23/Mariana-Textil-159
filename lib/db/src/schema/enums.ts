@@ -74,6 +74,7 @@ export const tipoMovimientoEnum = pgEnum("tipo_movimiento", [
   "AJUSTE_POSITIVO",
   "AJUSTE_NEGATIVO",
   "CANCELACION",
+  "REACTIVACION_FALTANTE",
 ]);
 
 export const motivoSalidaExtraordinariaEnum = pgEnum(

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSearch } from "wouter";
 import {
   getGetAuditoriaInventarioQueryKey,
   getListAuditoriasInventarioQueryKey,
@@ -16,12 +17,15 @@ import {
   getListRollosQueryKey,
   getListProductosQueryKey,
   getGetExistenciasAgrupadasQueryKey,
+  getGetReactivacionFaltanteQueryOptions,
   useCreateProducto,
   useListProductos,
+  type AuditoriaSobranteContexto,
+  type ReactivacionFaltanteContexto,
 } from "@workspace/api-client-react";
 import { PrintableDocumentHeader } from "@/components/printable-document-header";
 import { absoluteAppUrl, printWhenReady } from "@/lib/print";
-import { AlertTriangle, CheckCircle2, Loader2, Printer, ScanLine, XCircle, Play, Shuffle, Plus } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Loader2, Printer, ScanLine, XCircle, Play, Shuffle, Plus, Settings, Info } from "lucide-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { Badge } from "@/components/ui/badge";
@@ -49,12 +53,16 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { formatNumber, formatUnit } from "@workspace/number-format";
+import { AuditoriaSobranteResolutionDialog } from "@/components/auditoria/auditoria-sobrante-resolution-dialog";
+import { ReactivacionFaltanteDialog } from "@/components/auditoria/reactivacion-faltante-dialog";
+import { AuditoriaInventarioPrint } from "@/components/auditoria-inventario-print";
 
 function message(error: unknown): string {
   if (error && typeof error === "object" && "data" in error) {
     const data = (error as { data?: { error?: string } }).data;
     if (data?.error) return data.error;
   }
+  if (error instanceof Error) return error.message;
   return "No se pudo completar la operación.";
 }
 
@@ -71,6 +79,7 @@ export default function AuditoriasInventario() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: user } = useGetCurrentUser();
+  const search = useSearch();
   const sites = useListSitiosAuditoriaInventario();
   const audits = useListAuditoriasInventario();
   const [siteId, setSiteId] = useState("");
@@ -96,10 +105,51 @@ export default function AuditoriasInventario() {
     },
   });
   const createProduct = useCreateProducto();
+  const [resolvingSobrante, setResolvingSobrante] = useState<{ serie: string; contexto: AuditoriaSobranteContexto } | null>(null);
+  const [reactivacionContexto, setReactivacionContexto] = useState<{
+    rolloId: number;
+    contexto: ReactivacionFaltanteContexto;
+  } | null>(null);
+  const [isFetchingReactivacion, setIsFetchingReactivacion] = useState<number | null>(null);
+
+  const handleFetchReactivacion = async (rolloId: number, auditoriaOrigenId: number) => {
+    setIsFetchingReactivacion(rolloId);
+    try {
+      const result = await queryClient.fetchQuery(
+        getGetReactivacionFaltanteQueryOptions(rolloId),
+      );
+      if (result.elegible && result.auditoriaOrigenId === auditoriaOrigenId) {
+        setReactivacionContexto({ rolloId, contexto: result });
+      } else {
+        toast({
+          title: "Rollo no elegible para reactivación",
+          description:
+            result.bloqueo ||
+            "La baja verificable no pertenece a esta auditoría.",
+          variant: "destructive",
+        });
+      }
+    } catch (err: unknown) {
+      toast({
+        title: "No se pudo verificar la reactivación",
+        description: message(err),
+        variant: "destructive",
+      });
+    } finally {
+      setIsFetchingReactivacion(null);
+    }
+  };
 
   useEffect(() => {
     if (!siteId && sites.data?.length === 1) setSiteId(String(sites.data[0]!.id));
   }, [siteId, sites.data]);
+
+  useEffect(() => {
+    const requested = Number(new URLSearchParams(search).get("auditoriaId"));
+    if (Number.isInteger(requested) && requested > 0 && requested !== selectedId) {
+      setSelectedId(requested);
+    }
+  }, [search, selectedId]);
 
   useEffect(() => {
     if (selectedId == null && audits.data?.length) {
@@ -119,6 +169,12 @@ export default function AuditoriasInventario() {
         query.state.data?.estado === "ABIERTA" ? 3000 : false,
     },
   });
+
+  useEffect(() => {
+    if (detail.data && siteId !== String(detail.data.ubicacionId)) {
+      setSiteId(String(detail.data.ubicacionId));
+    }
+  }, [detail.data, siteId]);
 
   const { data: pisos } = useListPisosLocation(detail.data?.ubicacionId ?? 0, {
     query: { enabled: !!detail.data?.ubicacionId, queryKey: ['pisosLocation', detail.data?.ubicacionId ?? 0] }
@@ -457,6 +513,10 @@ export default function AuditoriasInventario() {
 
                     if (items.length === 0 && (isCuadro || isMalAcomodado)) return null;
 
+                    const ordinaryItems = isSobrante ? items.filter((row: any) => row.sobrante?.caso !== "VENDIDO_FISICAMENTE_AQUI" && row.sobrante?.caso !== "SIN_REGISTRO_PREVIO") : items;
+                    const soldItems = isSobrante ? items.filter((row: any) => row.sobrante?.caso === "VENDIDO_FISICAMENTE_AQUI") : [];
+                    const unknownItems = isSobrante ? items.filter((row: any) => row.sobrante?.caso === "SIN_REGISTRO_PREVIO") : [];
+
                     return (
                       <div key={kind} className="flex flex-col gap-3">
                         <div className="flex items-center justify-between border-b pb-2">
@@ -467,10 +527,140 @@ export default function AuditoriasInventario() {
                           <Badge variant="secondary" className="font-mono text-xs px-2">{items.length}</Badge>
                         </div>
 
-                        {items.length === 0 ? (
+                        {soldItems.length > 0 && (
+                          <div className="border border-destructive/30 bg-destructive/5 rounded-2xl overflow-hidden shadow-sm mb-4">
+                            <div className="bg-destructive/10 px-4 py-3 border-b border-destructive/20 flex items-center gap-3">
+                              <AlertTriangle className="text-destructive w-5 h-5 shrink-0" />
+                              <div className="flex-1">
+                                <h4 className="text-destructive font-bold text-sm">Riesgo Financiero: Vendidos Físicamente Aquí</h4>
+                                <p className="text-xs text-destructive/80 font-medium">Rollos facturados a clientes pero aún en el almacén. Riesgo de doble entrega.</p>
+                              </div>
+                            </div>
+                            <div className="p-0">
+                              <Table>
+                                <TableHeader className="bg-transparent">
+                                  <TableRow className="hover:bg-transparent border-b-border/60">
+                                    <TableHead className="w-[140px] font-semibold">Serie</TableHead>
+                                    <TableHead className="font-semibold">Producto</TableHead>
+                                    <TableHead className="w-[120px] text-right font-semibold">Cantidad</TableHead>
+                                    <TableHead className="w-[200px] font-semibold">Documentos</TableHead>
+                                    <TableHead className="w-[160px] font-semibold">Resolución</TableHead>
+                                    {user?.rol === "ADMIN" && <TableHead className="w-[110px] text-right"></TableHead>}
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {soldItems.map((r) => {
+                                    const row = r;
+                                    const sobrante = row.sobrante!;
+                                    return (
+                                      <TableRow key={row.serie} data-testid={`row-audit-result-sold-${row.serie}`} className="border-b-border/40 last:border-0 hover:bg-transparent">
+                                        <TableCell className="font-mono font-bold text-[13px]">{row.serie}</TableCell>
+                                        <TableCell className="text-[13px]">{row.producto}</TableCell>
+                                        <TableCell className="font-mono text-right text-[13px]">{row.cantidad != null ? formatNumber(row.cantidad, { kind: "quantity" }) : '-'} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
+                                        <TableCell className="text-xs">
+                                          {sobrante.documentos?.length > 0 ? (
+                                            <div className="flex flex-col gap-1">
+                                              {sobrante.documentos.map((doc, idx) => (
+                                                <a key={idx} href={doc.href} target="_blank" rel="noreferrer" className="text-primary hover:underline font-medium truncate max-w-[180px]">
+                                                  {doc.tipo}: {doc.folio}
+                                                </a>
+                                              ))}
+                                            </div>
+                                          ) : (
+                                            <span className="text-muted-foreground italic">Sin documentos</span>
+                                          )}
+                                        </TableCell>
+                                        <TableCell className="text-[13px] font-medium text-muted-foreground">
+                                          <div className="flex flex-col gap-0.5">
+                                            <span className={sobrante.estadoResolucion === 'PENDIENTE' ? 'text-amber-600' : 'text-emerald-600'}>{sobrante.estadoResolucion.replaceAll("_", " ")}</span>
+                                            {sobrante.historial?.length > 0 && <span className="text-[10px] text-muted-foreground truncate max-w-[120px]" title={sobrante.historial[0].decision}>{sobrante.historial[0].decision}</span>}
+                                          </div>
+                                        </TableCell>
+                                        {user?.rol === "ADMIN" && (
+                                          <TableCell className="text-right">
+                                            {sobrante.estadoResolucion !== "RESUELTO" && (
+                                              <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="h-7 text-xs font-semibold border-destructive text-destructive hover:bg-destructive hover:text-white"
+                                                onClick={() => setResolvingSobrante({ serie: row.serie, contexto: sobrante })}
+                                                disabled={detail.data?.estado !== "CONFIRMADA"}
+                                              >
+                                                Resolver
+                                              </Button>
+                                            )}
+                                          </TableCell>
+                                        )}
+                                      </TableRow>
+                                    );
+                                  })}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
+                        )}
+
+                        {unknownItems.length > 0 && (
+                          <div className="border border-amber-200 dark:border-amber-900/40 bg-amber-50 dark:bg-amber-950/20 rounded-2xl overflow-hidden shadow-sm mb-4">
+                            <div className="bg-amber-100/50 dark:bg-amber-900/30 px-4 py-3 border-b border-amber-200 dark:border-amber-900/40 flex items-center gap-3">
+                              <Info className="text-amber-600 dark:text-amber-400 w-5 h-5 shrink-0" />
+                              <div className="flex-1">
+                                <h4 className="text-amber-800 dark:text-amber-300 font-bold text-sm">Series Sin Registro</h4>
+                                <p className="text-xs text-amber-700/80 dark:text-amber-400/80 font-medium">Sólo se conserva la serie escaneada; no se inventan producto, cantidad, origen ni alta.</p>
+                              </div>
+                            </div>
+                            <div className="p-0">
+                              <Table>
+                                <TableHeader className="bg-transparent">
+                                  <TableRow className="hover:bg-transparent border-b-amber-200 dark:border-b-amber-900/40">
+                                    <TableHead className="w-[140px] font-semibold text-amber-900 dark:text-amber-300">Serie</TableHead>
+                                    <TableHead className="w-[160px] font-semibold text-amber-900 dark:text-amber-300">Resolución</TableHead>
+                                    {user?.rol === "ADMIN" && <TableHead className="w-[110px] text-right"></TableHead>}
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {unknownItems.map((r) => {
+                                    const row = r;
+                                    const sobrante = row.sobrante!;
+                                    return (
+                                      <TableRow key={row.serie} data-testid={`row-audit-result-unknown-${row.serie}`} className="border-b-amber-200 dark:border-b-amber-900/40 last:border-0 hover:bg-transparent">
+                                        <TableCell className="font-mono font-bold text-[13px] text-amber-900 dark:text-amber-200">{row.serie}</TableCell>
+                                        <TableCell className="text-[13px] font-medium text-amber-700 dark:text-amber-400">
+                                          <div className="flex flex-col gap-0.5">
+                                            <span className={sobrante.estadoResolucion === 'PENDIENTE' ? 'font-bold' : ''}>{sobrante.estadoResolucion.replaceAll("_", " ")}</span>
+                                            {sobrante.historial?.length > 0 && <span className="text-[10px] opacity-80 truncate max-w-[120px]" title={sobrante.historial[0].decision}>{sobrante.historial[0].decision}</span>}
+                                          </div>
+                                        </TableCell>
+                                        {user?.rol === "ADMIN" && (
+                                          <TableCell className="text-right">
+                                            {sobrante.estadoResolucion !== "RESUELTO" && (
+                                              <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className="h-7 text-xs font-semibold border-amber-300 text-amber-700 hover:bg-amber-100"
+                                                onClick={() => setResolvingSobrante({ serie: row.serie, contexto: sobrante })}
+                                                disabled={detail.data?.estado !== "CONFIRMADA"}
+                                              >
+                                                Resolver
+                                              </Button>
+                                            )}
+                                          </TableCell>
+                                        )}
+                                      </TableRow>
+                                    );
+                                  })}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
+                        )}
+
+                        {ordinaryItems.length === 0 ? (
+                          soldItems.length === 0 && unknownItems.length === 0 ? (
                           <div className="p-8 text-center rounded-2xl border border-dashed text-sm font-medium text-muted-foreground bg-muted/10" data-testid={`status-${kind.toLowerCase()}-empty`}>
                             No hay registros en esta categoría.
                           </div>
+                          ) : null
                         ) : (
                           <div className="border rounded-2xl overflow-hidden bg-card shadow-sm">
                             <div className="overflow-x-auto">
@@ -486,24 +676,71 @@ export default function AuditoriasInventario() {
                                     <TableHead className="w-[180px] font-semibold">{isMalAcomodado ? "Piso Real" : "Ubicación actual"}</TableHead>
                                     <TableHead className="w-[140px] font-semibold">Estado</TableHead>
                                     <TableHead className="w-[160px] font-semibold">Resolución</TableHead>
+                                    {(isSobrante || isFaltante) && user?.rol === "ADMIN" && (
+                                      <TableHead className="w-[110px] text-right"></TableHead>
+                                    )}
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                  {items.map((row) => (
-                                    <TableRow key={row.serie} data-testid={`row-audit-result-${row.serie}`} className="group border-b-border/40 last:border-0">
-                                      <TableCell className="font-mono font-bold text-[13px]">{row.serie}</TableCell>
-                                      <TableCell className="text-[13px]">{row.producto ?? <span className="text-muted-foreground italic">Sin registro</span>}</TableCell>
-                                      <TableCell className="font-mono text-right text-[13px]">{formatNumber(row.cantidad, { kind: "quantity" })} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
-                                      {isMalAcomodado && (
-                                        <TableCell className="text-[13px]">{row.pisoEsperado ?? <span className="text-muted-foreground italic">Sin piso</span>}</TableCell>
-                                      )}
-                                      <TableCell className="text-[13px]">{isMalAcomodado ? (row.pisoReal ?? <span className="text-muted-foreground italic">Desconocido</span>) : (row.ubicacionActual ?? <span className="text-muted-foreground italic">Desconocida</span>)}</TableCell>
-                                      <TableCell>
-                                        <Badge variant="outline" className="bg-background text-[10px] uppercase tracking-wider">{row.estadoActual}</Badge>
+                                  {ordinaryItems.map((r) => {
+                                    const row = r;
+                                    const sobrante = row.sobrante;
+
+                                    return (
+                                      <TableRow key={row.serie} data-testid={`row-audit-result-${row.serie}`} className="group border-b-border/40 last:border-0">
+                                        <TableCell className="py-2">
+                                          <div className="font-mono font-bold text-[13px]">{row.serie}</div>
+                                        </TableCell>
+                                        <TableCell className="text-[13px]">{row.producto ?? <span className="text-muted-foreground italic">Sin registro</span>}</TableCell>
+                                        <TableCell className="font-mono text-right text-[13px]">{row.cantidad != null ? formatNumber(row.cantidad, { kind: "quantity" }) : '-'} <span className="text-[10px] text-muted-foreground ml-1">{row.unidad ? formatUnit(row.unidad) : ""}</span></TableCell>
+                                        {isMalAcomodado && (
+                                          <TableCell className="text-[13px]">{row.pisoEsperado ?? <span className="text-muted-foreground italic">Sin piso</span>}</TableCell>
+                                        )}
+                                        <TableCell className="text-[13px]">{isMalAcomodado ? (row.pisoReal ?? <span className="text-muted-foreground italic">Desconocido</span>) : (row.ubicacionActual ?? <span className="text-muted-foreground italic">Desconocida</span>)}</TableCell>
+                                        <TableCell>
+                                          <Badge variant="outline" className="bg-background text-[10px] uppercase tracking-wider">{row.estadoActual}</Badge>
+                                        </TableCell>
+                                        <TableCell className="text-[13px] font-medium text-muted-foreground">
+                                        {sobrante ? (
+                                          <div className="flex flex-col gap-0.5">
+                                            <span className={sobrante.estadoResolucion === 'PENDIENTE' ? 'text-amber-600' : 'text-emerald-600'}>{sobrante.estadoResolucion.replaceAll("_", " ")}</span>
+                                            {sobrante.historial?.length > 0 && <span className="text-[10px] text-muted-foreground truncate max-w-[120px]" title={sobrante.historial[0].decision}>{sobrante.historial[0].decision}</span>}
+                                          </div>
+                                        ) : (
+                                          row.resolucion?.replaceAll("_", " ") ?? "PENDIENTE"
+                                        )}
                                       </TableCell>
-                                      <TableCell className="text-[13px] font-medium text-muted-foreground">{row.resolucion.replaceAll("_", " ")}</TableCell>
+                                      {(isSobrante || isFaltante) && user?.rol === "ADMIN" && (
+                                        <TableCell className="text-right">
+                                          {isSobrante && sobrante && sobrante.estadoResolucion !== "RESUELTO" && (
+                                            <Button
+                                              variant="outline"
+                                              size="sm"
+                                              className="h-7 text-xs font-semibold"
+                                              onClick={() => setResolvingSobrante({ serie: row.serie, contexto: sobrante })}
+                                              disabled={detail.data?.estado !== "CONFIRMADA"}
+                                              title={detail.data?.estado !== "CONFIRMADA" ? "Primero confirma y aplica la auditoría" : ""}
+                                            >
+                                              <Settings className="w-3 h-3 mr-1" />
+                                              Resolver
+                                            </Button>
+                                          )}
+                                          {isFaltante && row.rolloId && detail.data?.estado === "CONFIRMADA" && (
+                                            <Button
+                                              data-testid={`button-reactivate-audit-missing-${row.serie}`}
+                                              variant="outline"
+                                              size="sm"
+                                              className="h-7 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200"
+                                              disabled={isFetchingReactivacion === row.rolloId}
+                                              onClick={() => handleFetchReactivacion(row.rolloId!, detail.data!.id)}
+                                            >
+                                              {isFetchingReactivacion === row.rolloId ? "..." : "Reactivar"}
+                                            </Button>
+                                          )}
+                                        </TableCell>
+                                      )}
                                     </TableRow>
-                                  ))}
+                                  )})}
                                 </TableBody>
                               </Table>
                             </div>
@@ -520,29 +757,7 @@ export default function AuditoriasInventario() {
       )}
 
       {/* Print View */}
-      {detail.data && (
-        <article className="audit-inventory-print print-only bg-white text-black" data-testid="document-audit-print">
-          <PrintableDocumentHeader
-            className="gap-6 pb-3"
-            qrUrl={absoluteAppUrl(`/inventario/auditorias?auditoriaId=${detail.data.id}`)}
-            qrLabel={`QR para abrir auditoría ${detail.data.folioFormateado}`}
-            logoClassName="h-[100px] w-[100px]"
-          >
-            <div>
-              <div className="text-sm font-bold uppercase tracking-widest">Mariana Textil · Auditoría de Inventario</div>
-              <h1 className="mt-1 text-2xl font-bold">{detail.data.folioFormateado}</h1>
-              <div>{detail.data.nombreUbicacion} · Estado: {detail.data.estado}</div>
-              <div className="text-sm">Apertura: {new Date(detail.data.abiertaAt).toLocaleString("es-MX")} · Cierre: {detail.data.cerradaAt ? new Date(detail.data.cerradaAt).toLocaleString("es-MX") : "En curso"} · Duración: {duration(detail.data.abiertaAt, detail.data.cerradaAt)}</div>
-            </div>
-          </PrintableDocumentHeader>
-          <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">
-            <div>Snapshot<br /><b>{detail.data.totalSnapshot}</b></div><div>Escaneados<br /><b>{detail.data.totalEscaneados}</b></div><div>Cuadro<br /><b>{detail.data.cuadros}</b></div><div>Faltante<br /><b>{detail.data.faltantes}</b></div><div>Sobrante<br /><b>{detail.data.sobrantes}</b></div><div>Mal Acomodado<br /><b>{detail.data.malAcomodados || 0}</b></div>
-          </div>
-          {(["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const).map((kind) => <section key={kind} className="mb-4"><h2 className="border-b border-black font-bold">{kind.replace('_', ' ')} ({grouped[kind].length})</h2>{grouped[kind].map((row) => <div key={row.serie} className={`grid ${kind === "MAL_ACOMODADO" ? "grid-cols-[100px_1fr_100px_120px_120px_100px]" : "grid-cols-[100px_1fr_100px_130px_100px]"} border-b py-1 text-xs`}><b>{row.serie}</b><span>{row.producto ?? "Sin registro"}</span><span>{formatNumber(row.cantidad, { kind: "quantity" })} {row.unidad ? formatUnit(row.unidad) : ""}</span>{kind === "MAL_ACOMODADO" ? <><span>Esperado: {row.pisoEsperado ?? "Sin piso"}</span><span>Real: {row.pisoReal ?? "Desconocido"}</span></> : <span>{row.ubicacionActual ?? "Sin ubicación"}</span>}<span>{row.estadoActual}</span></div>)}</section>)}
-          <section><h2 className="font-bold">Participantes</h2>{detail.data.participantes.map((person) => <div key={person.usuarioId} className="text-sm">{person.nombre}: {person.escaneos} escaneos</div>)}</section>
-          <footer className="mt-14 grid grid-cols-2 gap-16 text-center text-sm"><div className="border-t border-black pt-2">Responsable de conteo</div><div className="border-t border-black pt-2">Autorización ADMIN</div></footer>
-        </article>
-      )}
+      {detail.data && <AuditoriaInventarioPrint detail={detail.data} />}
 
       <Dialog
         open={addColorOpen}
@@ -666,6 +881,30 @@ export default function AuditoriasInventario() {
         </DialogContent>
       </Dialog>
     </div>
+      {/* Resolucion Sobrantes Dialog */}
+      {resolvingSobrante && detail.data && (
+        <AuditoriaSobranteResolutionDialog
+          open={!!resolvingSobrante}
+          onOpenChange={(open) => !open && setResolvingSobrante(null)}
+          auditoriaId={detail.data.id}
+          ubicacionId={detail.data.ubicacionId}
+          serie={resolvingSobrante.serie}
+          contexto={resolvingSobrante.contexto}
+          onSuccess={() => setResolvingSobrante(null)}
+        />
+      )}
+      {reactivacionContexto && (
+        <ReactivacionFaltanteDialog
+          open
+          onOpenChange={(open) => {
+            if (!open) setReactivacionContexto(null);
+          }}
+          rolloId={reactivacionContexto.rolloId}
+          origen="AUDITORIA"
+          contexto={reactivacionContexto.contexto}
+          onSuccess={() => setReactivacionContexto(null)}
+        />
+      )}
     </AppLayout>
   );
 }

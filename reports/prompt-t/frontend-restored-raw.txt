@@ -1,0 +1,19 @@
+
+ RUN  v5.0.1 /tmp/prompt-t-frontend-mutant-workspace-a5VKI7/artifacts/mariana-textil
+
+ ✓ src/components/auditoria/reactivacion-faltante-dialog.test.tsx > ReactivacionFaltanteDialog > builds the dedicated typed request without measurement or editable inventory fields 2ms
+ ✓ src/components/auditoria/reactivacion-faltante-dialog.test.tsx > ReactivacionFaltanteDialog > submits original audit, appearance site/floor and reason once; an error stays open 224ms
+ ✓ src/components/auditoria/reactivacion-faltante-dialog.test.tsx > ReactivacionFaltanteDialog > success invalidates roll, context, inventory, origin audit and notification queries 35ms
+ ✓ src/pages/rollo-detail.test.tsx > RolloDetail reactivation > a BAJA roll opens the ROLLO entry point and labels reactivation as a distinct positive movement 176ms
+ ✓ src/pages/auditorias-inventario.test.tsx > AuditoriasInventario Component > a CONFIRMADA origin separates financial/unknown surplus and opens its exact missing reactivation 312ms
+ ✓ src/pages/auditorias-inventario.test.tsx > AuditoriasInventario Component > notification deep-link changes select the exact audit on the mounted route 67ms
+
+ Test Files  3 passed (3)
+      Tests  6 passed (6)
+   Start at  19:51:51
+   Duration  2.43s (environment 33%, transform 32%, import 22%, tests 13%)
+
+  Transform  transforming modules took 2.00s · 32% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+

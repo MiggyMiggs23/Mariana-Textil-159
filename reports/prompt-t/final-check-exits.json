@@ -1,0 +1,20 @@
+{
+  "typecheckExit": 0,
+  "suiteExit": 0,
+  "baseline": {
+    "tests": 354,
+    "pass": 354,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "current": {
+    "tests": 354,
+    "pass": 354,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  }
+}

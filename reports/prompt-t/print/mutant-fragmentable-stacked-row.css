@@ -1,0 +1,879 @@
+@import "tailwindcss";
+@plugin "tailwindcss-animate";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card-border: hsl(var(--card-border));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover-border: hsl(var(--popover-border));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-sale-action: hsl(var(--sale-action));
+  --color-sale-action-foreground: hsl(var(--sale-action-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --font-sans: var(--app-font-sans);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  --color-report-header: hsl(var(--report-header));
+  --color-report-header-foreground: hsl(var(--report-header-foreground));
+  --color-report-stripe: hsl(var(--report-stripe));
+  --color-report-accent-warm: hsl(var(--report-accent-warm));
+  --color-report-accent-warm-bg: hsl(var(--report-accent-warm-bg));
+  --color-report-positive: hsl(var(--report-positive));
+  --color-report-negative: hsl(var(--report-negative));
+  --color-report-text-muted: hsl(var(--report-text-muted));
+
+  --color-report-modality-rollos: hsl(var(--report-modality-rollos));
+  --color-report-modality-metraje: hsl(var(--report-modality-metraje));
+  --color-report-margin-high: hsl(var(--report-margin-high));
+  --color-report-margin-medium: hsl(var(--report-margin-medium));
+  --color-report-margin-low: hsl(var(--report-margin-low));
+  --color-report-abc-a: hsl(var(--report-abc-a));
+  --color-report-abc-b: hsl(var(--report-abc-b));
+  --color-report-abc-c: hsl(var(--report-abc-c));
+  --color-report-category-blue: hsl(var(--report-category-blue));
+  --color-report-category-copper: hsl(var(--report-category-copper));
+  --color-report-category-green: hsl(var(--report-category-green));
+  --color-report-category-violet: hsl(var(--report-category-violet));
+  --color-report-category-teal: hsl(var(--report-category-teal));
+  --color-report-category-amber: hsl(var(--report-category-amber));
+  --color-report-category-red: hsl(var(--report-category-red));
+  --color-report-category-sky: hsl(var(--report-category-sky));
+  --color-report-category-rose: hsl(var(--report-category-rose));
+}
+
+:root {
+  --background: 210 20% 98%; /* Light gray bg */
+  --foreground: 228 51% 15%; /* Mariana navy */
+  --card: 0 0% 100%;
+  --card-foreground: 228 51% 15%;
+  --card-border: 228 22% 90%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 228 51% 15%;
+  --popover-border: 228 22% 90%;
+  --primary: 226 72% 47%; /* Mariana royal blue */
+  --primary-foreground: 0 0% 100%;
+  /* Customer-sale creation only; it does not mean authorized, paid, or delivered. */
+  --sale-action: 24 94% 50%;
+  --sale-action-foreground: 0 0% 100%;
+  --secondary: 230 56% 95%;
+  --secondary-foreground: 226 58% 30%;
+  --muted: 228 33% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+  --accent: 232 54% 93%;
+  --accent-foreground: 226 58% 30%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 226 72% 47%;
+  --sidebar: 228 51% 15%; /* Mariana navy */
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-border: 229 52% 10%;
+  --sidebar-primary: 226 72% 47%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 228 43% 24%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-ring: 232 68% 75%;
+
+  /* Reportes Palette */
+  --report-header: 228 51% 15%; /* Azul profundo (navy) */
+  --report-header-foreground: 0 0% 100%;
+  --report-stripe: 210 20% 97%; /* Azul/gris muy claro */
+  --report-accent-warm: 25 70% 50%; /* Cobre/tierra para acentos */
+  --report-accent-warm-bg: 25 30% 95%; /* Fondo cálido muy suave */
+  --report-positive: 150 40% 35%; /* Verde sobrio */
+  --report-negative: 350 45% 45%; /* Rojo sobrio */
+  --report-text-muted: 30 15% 45%; /* Gris neutro cálido */
+
+  /* Semantic Aliases */
+  --report-modality-rollos: 226 72% 47%; /* Azul primario Mariana */
+  --report-modality-metraje: 25 70% 50%; /* Cobre/tierra */
+  --report-margin-high: 150 40% 35%; /* Verde */
+  --report-margin-medium: 35 90% 50%; /* Ambar */
+  --report-margin-low: 350 45% 45%; /* Rojo */
+  --report-abc-a: 228 51% 25%; /* Azul intenso */
+  --report-abc-b: 228 51% 45%; /* Azul medio */
+  --report-abc-c: 228 51% 65%; /* Azul claro */
+  --report-aging: 350 45%; /* HSL hue and saturation for aging, lightness varies */
+
+  /* Categorical chart fills: lighter than report headers and distinct at a glance. */
+  --report-category-blue: 220 62% 55%;
+  --report-category-copper: 25 65% 58%;
+  --report-category-green: 150 38% 45%;
+  --report-category-violet: 270 38% 58%;
+  --report-category-teal: 185 44% 42%;
+  --report-category-amber: 42 75% 52%;
+  --report-category-red: 350 42% 55%;
+  --report-category-sky: 205 60% 64%;
+  --report-category-rose: 330 42% 62%;
+
+  --app-font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --radius: 0.375rem; /* Firm, slightly rounded */
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+  --card-border: 217.2 32.6% 17.5%;
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+  --popover-border: 217.2 32.6% 17.5%;
+  --primary: 228 69% 55%;
+  --primary-foreground: 0 0% 100%;
+  --sale-action: 24 88% 58%;
+  --sale-action-foreground: 228 51% 15%;
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 228 69% 55%;
+  --sidebar: 222.2 84% 4.9%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-border: 217.2 32.6% 17.5%;
+  --sidebar-primary: 228 69% 55%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 217.2 32.6% 17.5%;
+  --sidebar-accent-foreground: 210 40% 98%;
+  --sidebar-ring: 228 69% 55%;
+
+  /* Reportes Palette (Dark Mode) */
+  --report-header: 228 40% 12%;
+  --report-header-foreground: 0 0% 100%;
+  --report-stripe: 226 20% 8%;
+  --report-accent-warm: 25 65% 55%;
+  --report-accent-warm-bg: 25 40% 12%;
+  --report-positive: 150 40% 45%;
+  --report-negative: 350 45% 55%;
+  --report-text-muted: 30 15% 65%;
+
+  /* Semantic Aliases (Dark Mode) */
+  --report-modality-rollos: 228 69% 55%;
+  --report-modality-metraje: 25 65% 55%;
+  --report-margin-high: 150 40% 45%;
+  --report-margin-medium: 35 90% 60%;
+  --report-margin-low: 350 45% 55%;
+  --report-abc-a: 228 51% 85%;
+  --report-abc-b: 228 51% 65%;
+  --report-abc-c: 228 51% 45%;
+  --report-aging: 350 45%;
+
+  --report-category-blue: 220 62% 64%;
+  --report-category-copper: 25 65% 64%;
+  --report-category-green: 150 38% 56%;
+  --report-category-violet: 270 40% 68%;
+  --report-category-teal: 185 44% 55%;
+  --report-category-amber: 42 75% 62%;
+  --report-category-red: 350 42% 65%;
+  --report-category-sky: 205 60% 70%;
+  --report-category-rose: 330 42% 70%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply font-sans antialiased bg-background text-foreground text-base;
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+.hoja-ventas-print {
+  display: none;
+}
+
+body.measure-thermal-ticket .print-ticket-container {
+  display: block !important;
+  position: absolute !important;
+  left: -10000px;
+  top: 0;
+  width: 72mm;
+  visibility: hidden;
+  pointer-events: none;
+  font-family: monospace;
+}
+
+body.measure-thermal-ticket .ticket-copy,
+body.measure-thermal-ticket .tabular-strip-page {
+  display: block;
+  width: 72mm;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body,
+  body * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body.print-80mm > *:not(#root) {
+    display: none !important;
+  }
+  body.print-credito > *:not(#root) {
+    display: none !important;
+  }
+  body.print-salida > *:not(#root) {
+    display: none !important;
+  }
+  body.print-entrada > *:not(#root) {
+    display: none !important;
+  }
+  body.print-viaje > *:not(#root) {
+    display: none !important;
+  }
+  body.print-corte > *:not(#root) {
+    display: none !important;
+  }
+  body.printing-labels > *:not(#root) {
+    display: none !important;
+  }
+  body.printing-label-sheet > *:not(#root) {
+    display: none !important;
+  }
+
+  body.print-viaje > .viaje-page:not(#root) {
+    display: block !important;
+  }
+  body.printing-labels > .etiquetas-print:not(#root) {
+    display: block !important;
+  }
+  body.printing-label-sheet > .etiquetas-print:not(#root) {
+    display: grid !important;
+  }
+  body.print-corte > *:not(#root):has(.corte-print) {
+    display: contents !important;
+  }
+
+  img[data-logo-variant],
+  img[data-logo-source] {
+    opacity: 1 !important;
+    object-fit: contain !important;
+  }
+
+  body.print-viaje {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body.print-viaje .viaje-document-shell {
+    display: contents !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body.print-viaje * {
+    visibility: hidden;
+  }
+  body.print-viaje .viaje-page,
+  body.print-viaje .viaje-page * {
+    visibility: visible;
+  }
+  body.print-viaje .viaje-page {
+    display: block !important;
+    position: static;
+    width: 215.5mm !important;
+    min-height: 0 !important;
+    height: 278.5mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    overflow: hidden !important;
+  }
+  body.print-viaje #root {
+    display: none !important;
+  }
+  #replit-dev-banner,
+  .replit-dev-banner,
+  [data-replit-dev-banner],
+  replit-dev-banner,
+  iframe[src*="replit.com"][src*="banner"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  @page label {
+    size: 100mm 70mm;
+    margin: 0;
+  }
+  @page viaje-page {
+    size: 216mm 279mm;
+    margin: 0;
+  }
+  .viaje-page-print {
+    page: viaje-page;
+  }
+
+  @page entrada-page {
+    size: 216mm 279mm;
+    margin: 0;
+  }
+  body.print-entrada {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body.print-entrada .entrada-document-shell {
+    display: contents !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body.print-entrada * {
+    visibility: hidden;
+  }
+  body.print-entrada .entrada-print-root,
+  body.print-entrada .entrada-print-root * {
+    visibility: visible;
+  }
+  body.print-entrada .entrada-print-root {
+    page: entrada-page;
+    display: block !important;
+    position: static;
+    width: 215.5mm;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0;
+    padding: 0;
+  }
+  body.print-entrada #root,
+  body.print-entrada #root *:has(.entrada-print-root) {
+    display: contents !important;
+  }
+  body.print-entrada #root *:not(:has(.entrada-print-root)):not(.entrada-print-root):not(.entrada-print-root *) {
+    display: none !important;
+  }
+  @page salida-page {
+    size: 210mm 148mm;
+    margin: 0;
+  }
+  body.print-salida {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  body.print-salida .salida-document-shell {
+    display: contents !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  body.print-salida * {
+    visibility: hidden;
+  }
+  body.print-salida .salida-print-root,
+  body.print-salida .salida-print-root * {
+    visibility: visible;
+  }
+  body.print-salida .salida-print-root {
+    page: salida-page;
+    display: block !important;
+    position: static;
+    width: 210mm;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0;
+    padding: 0;
+  }
+  body.print-salida #root,
+  body.print-salida #root *:has(.salida-print-root) {
+    display: contents !important;
+  }
+  body.print-salida #root *:not(:has(.salida-print-root)):not(.salida-print-root):not(.salida-print-root *) {
+    display: none !important;
+  }
+  @page credito-page {
+    size: 148mm 210mm;
+    margin: 0;
+  }
+  @page document {
+    size: letter portrait;
+    margin: 8mm;
+  }
+  @page audit-inventory {
+    size: letter portrait;
+    margin: 10mm;
+  }
+  body.print-auditoria-inventario * {
+    visibility: hidden;
+  }
+  body.print-auditoria-inventario .audit-inventory-print,
+  body.print-auditoria-inventario .audit-inventory-print * {
+    visibility: visible;
+  }
+  body.print-auditoria-inventario .audit-inventory-print {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    page: audit-inventory;
+  }
+  body.print-auditoria-inventario .audit-inventory-row,
+  body.print-auditoria-inventario .audit-inventory-signatures {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+  @page label-sheet {
+    size: letter portrait;
+    margin: 5mm;
+  }
+
+  body.printing-labels {
+    background: transparent;
+    margin: 0;
+    padding: 0;
+  }
+  body.printing-labels #root,
+  body.printing-label-sheet #root {
+    display: none !important;
+  }
+
+  body.printing-labels * {
+    visibility: hidden;
+  }
+
+  body.printing-labels .etiquetas-print,
+  body.printing-labels .etiquetas-print * {
+    visibility: visible;
+  }
+
+  body.printing-labels .etiquetas-print {
+    position: static;
+    left: auto;
+    top: auto;
+  }
+
+  /*
+   * EntradaEtiquetas passes its portal explicitly to printWhenReady.  Keep
+   * the old all-portals behavior for callers that do not pass a target, but
+   * when a target is present hide every other mounted label portal.
+   */
+  body.printing-labels.print-target-scoped
+    > .etiquetas-print:not(#root):not([data-print-target="active"]),
+  body.printing-label-sheet.print-target-scoped
+    > .etiquetas-print:not(#root):not([data-print-target="active"]) {
+    display: none !important;
+  }
+  body.printing-labels.print-target-scoped
+    > .etiquetas-print:not(#root)[data-print-target="active"] {
+    display: block !important;
+  }
+  body.printing-label-sheet.print-target-scoped
+    > .etiquetas-print:not(#root)[data-print-target="active"] {
+    display: grid !important;
+  }
+
+  body.printing-labels.print-target-scoped .etiquetas-print,
+  body.printing-label-sheet.print-target-scoped .etiquetas-print {
+    visibility: hidden !important;
+  }
+  body.printing-labels.print-target-scoped
+    .etiquetas-print[data-print-target="active"],
+  body.printing-labels.print-target-scoped
+    .etiquetas-print[data-print-target="active"] *,
+  body.printing-label-sheet.print-target-scoped
+    .etiquetas-print[data-print-target="active"],
+  body.printing-label-sheet.print-target-scoped
+    .etiquetas-print[data-print-target="active"] * {
+    visibility: visible !important;
+  }
+
+  body.printing-label-sheet {
+    background: white;
+    margin: 0;
+    padding: 0;
+  }
+
+  body.printing-label-sheet .etiquetas-print {
+    display: grid !important;
+  }
+
+  body.print-80mm {
+    background: white;
+  }
+
+  body.print-credito {
+    background: white;
+  }
+
+  body.print-corte {
+    background: white;
+  }
+
+  body.print-corte * {
+    visibility: hidden;
+  }
+
+  body.print-corte .corte-print,
+  body.print-corte .corte-print * {
+    visibility: visible;
+  }
+
+  body.print-corte .corte-print {
+    position: absolute;
+    inset: 0;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    border: 0;
+    box-shadow: none;
+  }
+
+  @page hoja-ventas {
+    size: letter portrait;
+    margin: 10mm;
+  }
+
+  body.print-hoja-ventas {
+    background: white;
+  }
+
+  body.print-hoja-ventas * {
+    visibility: hidden;
+  }
+
+  body.print-hoja-ventas .hoja-ventas-print,
+  body.print-hoja-ventas .hoja-ventas-print * {
+    visibility: visible;
+  }
+
+  body.print-hoja-ventas .hoja-ventas-print {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    color: black;
+    page: hoja-ventas;
+  }
+
+  .print-ticket-container {
+    width: 72mm;
+    margin: 0 auto;
+    font-family: monospace;
+    color: black;
+  }
+
+  .ticket-copy {
+    break-after: page;
+    break-inside: avoid-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+    width: 72mm;
+    margin: 0;
+  }
+
+  .ticket-product-block,
+  .ticket-summary {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .tabular-strip-page {
+    break-after: page;
+    break-inside: avoid-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+    width: 72mm;
+    margin: 0 auto;
+    color: black;
+    font-family: monospace;
+  }
+
+  .print-ticket-container > [data-thermal-page]:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  body.print-80mm * {
+    visibility: hidden;
+  }
+  body.print-80mm .print-80mm-only, body.print-80mm .print-80mm-only * {
+    visibility: visible;
+  }
+  body.print-80mm .print-80mm-only {
+    position: static;
+    display: block !important;
+  }
+  body.print-80mm #root,
+  body.print-80mm #root *:has(.print-80mm-only) {
+    display: contents !important;
+  }
+  body.print-80mm #root *:not(:has(.print-80mm-only)):not(.print-80mm-only):not(.print-80mm-only *) {
+    display: none !important;
+  }
+
+  body.print-credito * {
+    visibility: hidden;
+  }
+  body.print-credito .print-credito-only, body.print-credito .print-credito-only * {
+    visibility: visible;
+  }
+  body.print-credito .print-credito-only {
+    page: credito-page;
+    display: block !important;
+    position: static;
+  }
+  body.print-credito #root,
+  body.print-credito #root *:has(.print-credito-only) {
+    display: contents !important;
+  }
+  body.print-credito #root *:not(:has(.print-credito-only)):not(.print-credito-only):not(.print-credito-only *) {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .label-page {
+    page: label;
+    page-break-after: always;
+    page-break-inside: avoid;
+    width: 100mm;
+    height: 70mm;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .entrada-page-print {
+    page: entrada-page;
+    break-after: auto;
+    break-inside: avoid-page;
+    page-break-after: auto;
+    page-break-inside: avoid;
+    /* 0.5 mm de tolerancia evita que el redondeo CSS px de la caja exacta cree una hoja fantasma. */
+    width: 215.5mm !important;
+    height: 278.5mm !important;
+    margin: 0 !important;
+    /* 0.25 mm extra protects collapsed table borders and raster rounding. */
+    padding: 5.25mm !important;
+    box-sizing: border-box;
+    overflow: visible !important;
+  }
+
+  .entrada-page-print .series-table,
+  .entrada-page-print .series-table table,
+  .entrada-page-print .embedded-series,
+  .entrada-page-print .document-footer {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
+
+  .entrada-page-print + .entrada-page-print {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .salida-page-print {
+    page: salida-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+    width: 210mm !important;
+    height: 148mm !important;
+    margin: 0 !important;
+    padding: 5.25mm !important;
+    box-sizing: border-box;
+    overflow: visible !important;
+  }
+
+  .salida-page-print .salida-qr-white-pad {
+    background-color: #fff !important;
+  }
+
+  .credito-page-print {
+    page: credito-page;
+    page-break-after: always;
+    page-break-inside: avoid;
+    break-after: page;
+    break-inside: avoid-page;
+    width: 148mm !important;
+    height: 210mm !important;
+    margin: 0 !important;
+    padding: 5.25mm !important;
+    box-sizing: border-box;
+    overflow: visible !important;
+  }
+
+  /*
+   * A .35mm rule survives Chromium's PDF/printer rasterization.  Applying it
+   * per-cell (rather than relying on collapsed neighbours) guarantees each
+   * populated and intentionally blank product cell has all four black edges.
+   */
+  .document-product-grid th,
+  .document-product-grid td {
+    border: 0.35mm solid #000 !important;
+  }
+
+  .document-product-grid tr {
+    break-inside: avoid-page !important;
+    page-break-inside: avoid !important;
+  }
+
+  .entrada-page-print:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .salida-page-print:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .credito-page-print:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .etiquetas-print {
+    page: label;
+    width: 100mm;
+    margin: 0;
+    display: block !important;
+  }
+
+  .etiquetas-print .label-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .etiquetas-sheet-print {
+    page: label-sheet;
+    width: 200mm;
+    display: grid !important;
+    grid-template-columns: 100mm 100mm;
+    grid-auto-rows: 70mm;
+    align-content: start;
+  }
+
+  .etiquetas-sheet-print .sheet-label {
+    page: auto;
+    break-inside: avoid;
+    page-break-after: auto;
+    border: 0.2mm dashed #aaa;
+  }
+
+  .label-sheet-note {
+    display: block !important;
+    position: fixed;
+    bottom: 1mm;
+    left: 0;
+    width: 100%;
+    color: #666;
+    font-size: 7pt;
+    text-align: center;
+  }
+
+  .document-page:not(.entrada-page-print):not(.salida-page-print):not(.credito-page-print) {
+    page: document;
+  }
+
+  main {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .print-account-statement {
+    page: document;
+    color: #111827;
+    font-size: 10pt;
+  }
+
+  .print-account-statement h2 {
+    font-size: 18pt;
+    margin: 0 0 2mm;
+  }
+
+  .print-account-statement h3 {
+    font-size: 12pt;
+    margin: 7mm 0 2mm;
+  }
+
+  .print-account-statement table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .print-account-statement th,
+  .print-account-statement td {
+    border: 1px solid #d1d5db;
+    padding: 2mm;
+    vertical-align: top;
+  }
+
+  .print-account-statement th {
+    background: #f3f4f6 !important;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .print-account-statement tr {
+    break-inside: avoid;
+  }
+
+  .print-account-statement .amount {
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+@media print {
+ body.print-auditoria-inventario .audit-inventory-row {
+   display: block !important;
+   break-inside: auto !important;
+   page-break-inside: auto !important;
+ }
+ body.print-auditoria-inventario .audit-inventory-row > * { display: block !important; }
+ body.print-auditoria-inventario .audit-inventory-row[data-audit-row="SERIE0018"] > span:first-of-type {
+   break-before: page !important;
+   page-break-before: always !important;
+ }
+}

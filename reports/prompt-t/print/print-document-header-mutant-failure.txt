@@ -1,0 +1,395 @@
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/prompt-t-shared-header-clone-cyiEFD/app/tsconfig.render-tests.json
+✖ los documentos usan logo centrado y QR derecho compartidos (2.679823ms)
+✖ logo y QR documentales conservan su escala y el ticket usa logo físico de 25 mm (0.55786ms)
+✔ la nota interna lleva QR y la copia cliente conserva el espacio sin QR (0.262779ms)
+✔ el QR documental renderiza grande, conserva margen y se decodifica (24.389837ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 413.136692
+
+✖ failing tests:
+
+test at src/pages/print-document-header.contract.test.ts:1:682
+✖ los documentos usan logo centrado y QR derecho compartidos (2.679823ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /<PrintableDocumentHeader/. Input:
+  
+  'import type {\n' +
+    '  AuditoriaInventarioParticipante,\n' +
+    '  AuditoriaInventarioResultado,\n' +
+    '} from "@workspace/api-client-react";\n' +
+    'import { formatNumber, formatUnit } from "@workspace/number-format";\n' +
+    'import { absoluteAppUrl } from "@/lib/print";\n' +
+    'import { PrintableDocumentHeader } from "@/components/printable-document-header";\n' +
+    '\n' +
+    'type AuditoriaInventarioPrintDetail = {\n' +
+    '  id: number;\n' +
+    '  folioFormateado: string;\n' +
+    '  nombreUbicacion: string;\n' +
+    '  estado: string;\n' +
+    '  abiertaAt: string;\n' +
+    '  cerradaAt?: string | null;\n' +
+    '  totalSnapshot: number;\n' +
+    '  totalEscaneados: number;\n' +
+    '  cuadros: number;\n' +
+    '  faltantes: number;\n' +
+    '  sobrantes: number;\n' +
+    '  malAcomodados: number;\n' +
+    '  resultados: AuditoriaInventarioResultado[];\n' +
+    '  participantes: AuditoriaInventarioParticipante[];\n' +
+    '};\n' +
+    '\n' +
+    'export type AuditoriaInventarioPrintProps = {\n' +
+    '  detail: AuditoriaInventarioPrintDetail;\n' +
+    '};\n' +
+    '\n' +
+    'function duration(start: string, end?: string | null): string {\n' +
+    '  if (!end) return "En curso";\n' +
+    '  const seconds = Math.max(\n' +
+    '    0,\n' +
+    '    Math.round((new Date(end).getTime() - new Date(start).getTime()) / 1000),\n' +
+    '  );\n' +
+    '  const hours = Math.floor(seconds / 3600);\n' +
+    '  const minutes = Math.floor((seconds % 3600) / 60);\n' +
+    '  if (hours > 0) return `${hours} h ${minutes} min`;\n' +
+    '  return `${minutes} min`;\n' +
+    '}\n' +
+    '\n' +
+    'export function AuditoriaInventarioPrint({\n' +
+    '  detail,\n' +
+    '}: AuditoriaInventarioPrintProps) {\n' +
+    '  const grouped = {\n' +
+    '    CUADRO: detail.resultados.filter((row) => row.clasificacion === "CUADRO"),\n' +
+    '    FALTANTE: detail.resultados.filter(\n' +
+    '      (row) => row.clasificacion === "FALTANTE",\n' +
+    '    ),\n' +
+    '    SOBRANTE: detail.resultados.filter(\n' +
+    '      (row) => row.clasificacion === "SOBRANTE",\n' +
+    '    ),\n' +
+    '    MAL_ACOMODADO: detail.resultados.filter(\n' +
+    '      (row) => row.clasificacion === "MAL_ACOMODADO",\n' +
+    '    ),\n' +
+    '  };\n' +
+    '\n' +
+    '  return (\n' +
+    '    <article\n' +
+    '      className="audit-inventory-print print-only bg-white text-black"\n' +
+    '      data-testid="document-audit-print"\n' +
+    '    >\n' +
+    '      <section\n' +
+    '        className="gap-6 pb-3"\n' +
+    '        qrUrl={absoluteAppUrl(\n' +
+    '          `/inventario/auditorias?auditoriaId=${detail.id}`,\n' +
+    '        )}\n' +
+    '        qrLabel={`QR para abrir auditoría ${detail.folioFormateado}`}\n' +
+    '        logoClassName="h-[99px] w-[99px]"\n' +
+    '      >\n' +
+    '        <div>\n' +
+    '          <div className="text-sm font-bold uppercase tracking-widest">\n' +
+    '            Mariana Textil · Auditoría de Inventario\n' +
+    '          </div>\n' +
+    '          <h1 className="mt-1 text-2xl font-bold">{detail.folioFormateado}</h1>\n' +
+    '          <div>\n' +
+    '            {detail.nombreUbicacion} · Estado: {detail.estado}\n' +
+    '          </div>\n' +
+    '          <div className="text-sm">\n' +
+    '            Apertura: {new Date(detail.abiertaAt).toLocaleString("es-MX")} ·\n' +
+    '            Cierre:{" "}\n' +
+    '            {detail.cerradaAt\n' +
+    '              ? new Date(detail.cerradaAt).toLocaleString("es-MX")\n' +
+    '              : "En curso"}{" "}\n' +
+    '            · Duración: {duration(detail.abiertaAt, detail.cerradaAt)}\n' +
+    '          </div>\n' +
+    '        </div>\n' +
+    '      </section>\n' +
+    '      <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">\n' +
+    '        <div>\n' +
+    '          Snapshot\n' +
+    '          <br />\n' +
+    '          <b>{detail.totalSnapshot}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Escaneados\n' +
+    '          <br />\n' +
+    '          <b>{detail.totalEscaneados}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Cuadro\n' +
+    '          <br />\n' +
+    '          <b>{detail.cuadros}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Faltante\n' +
+    '          <br />\n' +
+    '          <b>{detail.faltantes}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Sobrante\n' +
+    '          <br />\n' +
+    '          <b>{detail.sobrantes}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Mal Acomodado\n' +
+    '          <br />\n' +
+    '          <b>{detail.malAcomodados || 0}</b>\n' +
+    '        </div>\n' +
+    '      </div>\n' +
+    '      {(\n' +
+    '        ["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const\n' +
+    '      ).map((kind) => (\n' +
+    '        <section key={kind} className="mb-4">\n' +
+    '          <h2 className="border-b border-black font-bold">\n' +
+    '            {kind.replace("_", " ")} ({grouped[kind].length})\n' +
+    '          </h2>\n' +
+    '          {grouped[kind].map((row) => (\n' +
+    '            <div\n' +
+    '              key={row.serie}\n' +
+    '              className={`audit-inventory-row grid ${\n' +
+    '                kind === "MAL_ACOMODADO"\n' +
+    '                  ? "grid-cols-[100px_1fr_100px_120px_120px_100px]"\n' +
+    '                  : "grid-cols-[100px_1fr_100px_130px_100px]"\n' +
+    '              } border-b py-1 text-xs`}\n' +
+    '              data-audit-row={row.serie}\n' +
+    '            >\n' +
+    '              <b>{row.serie}</b>\n' +
+    '              <span>{row.producto ?? "Sin registro"}</span>\n' +
+    '              <span>\n' +
+    '                {formatNumber(row.cantidad, { kind: "quantity" })}{" "}\n' +
+    '                {row.unidad ? formatUnit(row.unidad) : ""}\n' +
+    '              </span>\n' +
+    '              {kind === "MAL_ACOMODADO" ? (\n' +
+    '                <>\n' +
+    '                  <span>Esperado: {row.pisoEsperado ?? "Sin piso"}</span>\n' +
+    '                  <span>Real: {row.pisoReal ?? "Desconocido"}</span>\n' +
+    '                </>\n' +
+    '              ) : (\n' +
+    '                <span>{row.ubicacionActual ?? "Sin ubicación"}</span>\n' +
+    '              )}\n' +
+    '              <span>{row.estadoActual}</span>\n' +
+    '            </div>\n' +
+    '          ))}\n' +
+    '        </section>\n' +
+    '      ))}\n' +
+    '      <section>\n' +
+    '        <h2 className="font-bold">Participantes</h2>\n' +
+    '        {detail.participantes.map((person) => (\n' +
+    '          <div key={person.usuarioId} className="text-sm">\n' +
+    '            {person.nombre}: {person.escaneos} escaneos\n' +
+    '          </div>\n' +
+    '        ))}\n' +
+    '      </section>\n' +
+    '      <footer className="audit-inventory-signatures mt-14 grid grid-cols-2 gap-16 text-center text-sm">\n' +
+    '        <div className="border-t border-black pt-2">Responsable de conteo</div>\n' +
+    '        <div className="border-t border-black pt-2">Autorización ADMIN</div>\n' +
+    '      </footer>\n' +
+    '    </article>\n' +
+    '  );\n' +
+    '}'
+  
+      at TestContext.<anonymous> (/tmp/prompt-t-shared-header-clone-cyiEFD/app/src/pages/print-document-header.contract.test.ts:29:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import type {\n  AuditoriaInventarioParticipante,\n  AuditoriaInventarioResultado,\n} from "@workspace/api-client-react";\nimport { formatNumber, formatUnit } from "@workspace/number-format";\nimport { absoluteAppUrl } from "@/lib/print";\nimport { PrintableDocumentHeader } from "@/components/printable-document-header";\n\ntype AuditoriaInventarioPrintDetail = {\n  id: number;\n  folioFormateado: string;\n  nombreUbicacion: string;\n  estado: string;\n  abiertaAt: string;\n  cerradaAt?: string | null;\n  totalSnapshot: number;\n  totalEscaneados: number;\n  cuadros: number;\n  faltantes: number;\n  sobrantes: number;\n  malAcomodados: number;\n  resultados: AuditoriaInventarioResultado[];\n  participantes: AuditoriaInventarioParticipante[];\n};\n\nexport type AuditoriaInventarioPrintProps = {\n  detail: AuditoriaInventarioPrintDetail;\n};\n\nfunction duration(start: string, end?: string | null): string {\n  if (!end) return "En curso";\n  const seconds = Math.max(\n    0,\n    Math.round((new Date(end).getTime() - new Date(start).getTime()) / 1000),\n  );\n  const hours = Math.floor(seconds / 3600);\n  const minutes = Math.floor((seconds % 3600) / 60);\n  if (hours > 0) return `${hours} h ${minutes} min`;\n  return `${minutes} min`;\n}\n\nexport function AuditoriaInventarioPrint({\n  detail,\n}: AuditoriaInventarioPrintProps) {\n  const grouped = {\n    CUADRO: detail.resultados.filter((row) => row.clasificacion === "CUADRO"),\n    FALTANTE: detail.resultados.filter(\n      (row) => row.clasificacion === "FALTANTE",\n    ),\n    SOBRANTE: detail.resultados.filter(\n      (row) => row.clasificacion === "SOBRANTE",\n    ),\n    MAL_ACOMODADO: detail.resultados.filter(\n      (row) => row.clasificacion === "MAL_ACOMODADO",\n    ),\n  };\n\n  return (\n    <article\n      className="audit-inventory-print print-only bg-white text-black"\n      data-testid="document-audit-print"\n    >\n      <section\n        className="gap-6 pb-3"\n        qrUrl={absoluteAppUrl(\n          `/inventario/auditorias?auditoriaId=${detail.id}`,\n        )}\n        qrLabel={`QR para abrir auditoría ${detail.folioFormateado}`}\n        logoClassName="h-[99px] w-[99px]"\n      >\n        <div>\n          <div className="text-sm font-bold uppercase tracking-widest">\n            Mariana Textil · Auditoría de Inventario\n          </div>\n          <h1 className="mt-1 text-2xl font-bold">{detail.folioFormateado}</h1>\n          <div>\n            {detail.nombreUbicacion} · Estado: {detail.estado}\n          </div>\n          <div className="text-sm">\n            Apertura: {new Date(detail.abiertaAt).toLocaleString("es-MX")} ·\n            Cierre:{" "}\n            {detail.cerradaAt\n              ? new Date(detail.cerradaAt).toLocaleString("es-MX")\n              : "En curso"}{" "}\n            · Duración: {duration(detail.abiertaAt, detail.cerradaAt)}\n          </div>\n        </div>\n      </section>\n      <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">\n        <div>\n          Snapshot\n          <br />\n          <b>{detail.totalSnapshot}</b>\n        </div>\n        <div>\n          Escaneados\n          <br />\n          <b>{detail.totalEscaneados}</b>\n        </div>\n        <div>\n          Cuadro\n          <br />\n          <b>{detail.cuadros}</b>\n        </div>\n        <div>\n          Faltante\n          <br />\n          <b>{detail.faltantes}</b>\n        </div>\n        <div>\n          Sobrante\n          <br />\n          <b>{detail.sobrantes}</b>\n        </div>\n        <div>\n          Mal Acomodado\n          <br />\n          <b>{detail.malAcomodados || 0}</b>\n        </div>\n      </div>\n      {(\n        ["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const\n      ).map((kind) => (\n        <section key={kind} className="mb-4">\n          <h2 className="border-b border-black font-bold">\n            {kind.replace("_", " ")} ({grouped[kind].length})\n          </h2>\n          {grouped[kind].map((row) => (\n            <div\n              key={row.serie}\n              className={`audit-inventory-row grid ${\n                kind === "MAL_ACOMODADO"\n                  ? "grid-cols-[100px_1fr_100px_120px_120px_100px]"\n                  : "grid-cols-[100px_1fr_100px_130px_100px]"\n              } border-b py-1 text-xs`}\n              data-audit-row={row.serie}\n            >\n              <b>{row.serie}</b>\n              <span>{row.producto ?? "Sin registro"}</span>\n              <span>\n                {formatNumber(row.cantidad, { kind: "quantity" })}{" "}\n                {row.unidad ? formatUnit(row.unidad) : ""}\n              </span>\n              {kind === "MAL_ACOMODADO" ? (\n                <>\n                  <span>Esperado: {row.pisoEsperado ?? "Sin piso"}</span>\n                  <span>Real: {row.pisoReal ?? "Desconocido"}</span>\n                </>\n              ) : (\n                <span>{row.ubicacionActual ?? "Sin ubicación"}</span>\n              )}\n              <span>{row.estadoActual}</span>\n            </div>\n          ))}\n        </section>\n      ))}\n      <section>\n        <h2 className="font-bold">Participantes</h2>\n        {detail.participantes.map((person) => (\n          <div key={person.usuarioId} className="text-sm">\n            {person.nombre}: {person.escaneos} escaneos\n          </div>\n        ))}\n      </section>\n      <footer className="audit-inventory-signatures mt-14 grid grid-cols-2 gap-16 text-center text-sm">\n        <div className="border-t border-black pt-2">Responsable de conteo</div>\n        <div className="border-t border-black pt-2">Autorización ADMIN</div>\n      </footer>\n    </article>\n  );\n}',
+    expected: /<PrintableDocumentHeader/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at src/pages/print-document-header.contract.test.ts:1:1054
+✖ logo y QR documentales conservan su escala y el ticket usa logo físico de 25 mm (0.55786ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /logoClassName="h-\[100px\] w-\[100px\]"/. Input:
+  
+  'import type {\n' +
+    '  AuditoriaInventarioParticipante,\n' +
+    '  AuditoriaInventarioResultado,\n' +
+    '} from "@workspace/api-client-react";\n' +
+    'import { formatNumber, formatUnit } from "@workspace/number-format";\n' +
+    'import { absoluteAppUrl } from "@/lib/print";\n' +
+    'import { PrintableDocumentHeader } from "@/components/printable-document-header";\n' +
+    '\n' +
+    'type AuditoriaInventarioPrintDetail = {\n' +
+    '  id: number;\n' +
+    '  folioFormateado: string;\n' +
+    '  nombreUbicacion: string;\n' +
+    '  estado: string;\n' +
+    '  abiertaAt: string;\n' +
+    '  cerradaAt?: string | null;\n' +
+    '  totalSnapshot: number;\n' +
+    '  totalEscaneados: number;\n' +
+    '  cuadros: number;\n' +
+    '  faltantes: number;\n' +
+    '  sobrantes: number;\n' +
+    '  malAcomodados: number;\n' +
+    '  resultados: AuditoriaInventarioResultado[];\n' +
+    '  participantes: AuditoriaInventarioParticipante[];\n' +
+    '};\n' +
+    '\n' +
+    'export type AuditoriaInventarioPrintProps = {\n' +
+    '  detail: AuditoriaInventarioPrintDetail;\n' +
+    '};\n' +
+    '\n' +
+    'function duration(start: string, end?: string | null): string {\n' +
+    '  if (!end) return "En curso";\n' +
+    '  const seconds = Math.max(\n' +
+    '    0,\n' +
+    '    Math.round((new Date(end).getTime() - new Date(start).getTime()) / 1000),\n' +
+    '  );\n' +
+    '  const hours = Math.floor(seconds / 3600);\n' +
+    '  const minutes = Math.floor((seconds % 3600) / 60);\n' +
+    '  if (hours > 0) return `${hours} h ${minutes} min`;\n' +
+    '  return `${minutes} min`;\n' +
+    '}\n' +
+    '\n' +
+    'export function AuditoriaInventarioPrint({\n' +
+    '  detail,\n' +
+    '}: AuditoriaInventarioPrintProps) {\n' +
+    '  const grouped = {\n' +
+    '    CUADRO: detail.resultados.filter((row) => row.clasificacion === "CUADRO"),\n' +
+    '    FALTANTE: detail.resultados.filter(\n' +
+    '      (row) => row.clasificacion === "FALTANTE",\n' +
+    '    ),\n' +
+    '    SOBRANTE: detail.resultados.filter(\n' +
+    '      (row) => row.clasificacion === "SOBRANTE",\n' +
+    '    ),\n' +
+    '    MAL_ACOMODADO: detail.resultados.filter(\n' +
+    '      (row) => row.clasificacion === "MAL_ACOMODADO",\n' +
+    '    ),\n' +
+    '  };\n' +
+    '\n' +
+    '  return (\n' +
+    '    <article\n' +
+    '      className="audit-inventory-print print-only bg-white text-black"\n' +
+    '      data-testid="document-audit-print"\n' +
+    '    >\n' +
+    '      <section\n' +
+    '        className="gap-6 pb-3"\n' +
+    '        qrUrl={absoluteAppUrl(\n' +
+    '          `/inventario/auditorias?auditoriaId=${detail.id}`,\n' +
+    '        )}\n' +
+    '        qrLabel={`QR para abrir auditoría ${detail.folioFormateado}`}\n' +
+    '        logoClassName="h-[99px] w-[99px]"\n' +
+    '      >\n' +
+    '        <div>\n' +
+    '          <div className="text-sm font-bold uppercase tracking-widest">\n' +
+    '            Mariana Textil · Auditoría de Inventario\n' +
+    '          </div>\n' +
+    '          <h1 className="mt-1 text-2xl font-bold">{detail.folioFormateado}</h1>\n' +
+    '          <div>\n' +
+    '            {detail.nombreUbicacion} · Estado: {detail.estado}\n' +
+    '          </div>\n' +
+    '          <div className="text-sm">\n' +
+    '            Apertura: {new Date(detail.abiertaAt).toLocaleString("es-MX")} ·\n' +
+    '            Cierre:{" "}\n' +
+    '            {detail.cerradaAt\n' +
+    '              ? new Date(detail.cerradaAt).toLocaleString("es-MX")\n' +
+    '              : "En curso"}{" "}\n' +
+    '            · Duración: {duration(detail.abiertaAt, detail.cerradaAt)}\n' +
+    '          </div>\n' +
+    '        </div>\n' +
+    '      </section>\n' +
+    '      <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">\n' +
+    '        <div>\n' +
+    '          Snapshot\n' +
+    '          <br />\n' +
+    '          <b>{detail.totalSnapshot}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Escaneados\n' +
+    '          <br />\n' +
+    '          <b>{detail.totalEscaneados}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Cuadro\n' +
+    '          <br />\n' +
+    '          <b>{detail.cuadros}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Faltante\n' +
+    '          <br />\n' +
+    '          <b>{detail.faltantes}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Sobrante\n' +
+    '          <br />\n' +
+    '          <b>{detail.sobrantes}</b>\n' +
+    '        </div>\n' +
+    '        <div>\n' +
+    '          Mal Acomodado\n' +
+    '          <br />\n' +
+    '          <b>{detail.malAcomodados || 0}</b>\n' +
+    '        </div>\n' +
+    '      </div>\n' +
+    '      {(\n' +
+    '        ["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const\n' +
+    '      ).map((kind) => (\n' +
+    '        <section key={kind} className="mb-4">\n' +
+    '          <h2 className="border-b border-black font-bold">\n' +
+    '            {kind.replace("_", " ")} ({grouped[kind].length})\n' +
+    '          </h2>\n' +
+    '          {grouped[kind].map((row) => (\n' +
+    '            <div\n' +
+    '              key={row.serie}\n' +
+    '              className={`audit-inventory-row grid ${\n' +
+    '                kind === "MAL_ACOMODADO"\n' +
+    '                  ? "grid-cols-[100px_1fr_100px_120px_120px_100px]"\n' +
+    '                  : "grid-cols-[100px_1fr_100px_130px_100px]"\n' +
+    '              } border-b py-1 text-xs`}\n' +
+    '              data-audit-row={row.serie}\n' +
+    '            >\n' +
+    '              <b>{row.serie}</b>\n' +
+    '              <span>{row.producto ?? "Sin registro"}</span>\n' +
+    '              <span>\n' +
+    '                {formatNumber(row.cantidad, { kind: "quantity" })}{" "}\n' +
+    '                {row.unidad ? formatUnit(row.unidad) : ""}\n' +
+    '              </span>\n' +
+    '              {kind === "MAL_ACOMODADO" ? (\n' +
+    '                <>\n' +
+    '                  <span>Esperado: {row.pisoEsperado ?? "Sin piso"}</span>\n' +
+    '                  <span>Real: {row.pisoReal ?? "Desconocido"}</span>\n' +
+    '                </>\n' +
+    '              ) : (\n' +
+    '                <span>{row.ubicacionActual ?? "Sin ubicación"}</span>\n' +
+    '              )}\n' +
+    '              <span>{row.estadoActual}</span>\n' +
+    '            </div>\n' +
+    '          ))}\n' +
+    '        </section>\n' +
+    '      ))}\n' +
+    '      <section>\n' +
+    '        <h2 className="font-bold">Participantes</h2>\n' +
+    '        {detail.participantes.map((person) => (\n' +
+    '          <div key={person.usuarioId} className="text-sm">\n' +
+    '            {person.nombre}: {person.escaneos} escaneos\n' +
+    '          </div>\n' +
+    '        ))}\n' +
+    '      </section>\n' +
+    '      <footer className="audit-inventory-signatures mt-14 grid grid-cols-2 gap-16 text-center text-sm">\n' +
+    '        <div className="border-t border-black pt-2">Responsable de conteo</div>\n' +
+    '        <div className="border-t border-black pt-2">Autorización ADMIN</div>\n' +
+    '      </footer>\n' +
+    '    </article>\n' +
+    '  );\n' +
+    '}'
+  
+      at TestContext.<anonymous> (/tmp/prompt-t-shared-header-clone-cyiEFD/app/src/pages/print-document-header.contract.test.ts:45:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import type {\n  AuditoriaInventarioParticipante,\n  AuditoriaInventarioResultado,\n} from "@workspace/api-client-react";\nimport { formatNumber, formatUnit } from "@workspace/number-format";\nimport { absoluteAppUrl } from "@/lib/print";\nimport { PrintableDocumentHeader } from "@/components/printable-document-header";\n\ntype AuditoriaInventarioPrintDetail = {\n  id: number;\n  folioFormateado: string;\n  nombreUbicacion: string;\n  estado: string;\n  abiertaAt: string;\n  cerradaAt?: string | null;\n  totalSnapshot: number;\n  totalEscaneados: number;\n  cuadros: number;\n  faltantes: number;\n  sobrantes: number;\n  malAcomodados: number;\n  resultados: AuditoriaInventarioResultado[];\n  participantes: AuditoriaInventarioParticipante[];\n};\n\nexport type AuditoriaInventarioPrintProps = {\n  detail: AuditoriaInventarioPrintDetail;\n};\n\nfunction duration(start: string, end?: string | null): string {\n  if (!end) return "En curso";\n  const seconds = Math.max(\n    0,\n    Math.round((new Date(end).getTime() - new Date(start).getTime()) / 1000),\n  );\n  const hours = Math.floor(seconds / 3600);\n  const minutes = Math.floor((seconds % 3600) / 60);\n  if (hours > 0) return `${hours} h ${minutes} min`;\n  return `${minutes} min`;\n}\n\nexport function AuditoriaInventarioPrint({\n  detail,\n}: AuditoriaInventarioPrintProps) {\n  const grouped = {\n    CUADRO: detail.resultados.filter((row) => row.clasificacion === "CUADRO"),\n    FALTANTE: detail.resultados.filter(\n      (row) => row.clasificacion === "FALTANTE",\n    ),\n    SOBRANTE: detail.resultados.filter(\n      (row) => row.clasificacion === "SOBRANTE",\n    ),\n    MAL_ACOMODADO: detail.resultados.filter(\n      (row) => row.clasificacion === "MAL_ACOMODADO",\n    ),\n  };\n\n  return (\n    <article\n      className="audit-inventory-print print-only bg-white text-black"\n      data-testid="document-audit-print"\n    >\n      <section\n        className="gap-6 pb-3"\n        qrUrl={absoluteAppUrl(\n          `/inventario/auditorias?auditoriaId=${detail.id}`,\n        )}\n        qrLabel={`QR para abrir auditoría ${detail.folioFormateado}`}\n        logoClassName="h-[99px] w-[99px]"\n      >\n        <div>\n          <div className="text-sm font-bold uppercase tracking-widest">\n            Mariana Textil · Auditoría de Inventario\n          </div>\n          <h1 className="mt-1 text-2xl font-bold">{detail.folioFormateado}</h1>\n          <div>\n            {detail.nombreUbicacion} · Estado: {detail.estado}\n          </div>\n          <div className="text-sm">\n            Apertura: {new Date(detail.abiertaAt).toLocaleString("es-MX")} ·\n            Cierre:{" "}\n            {detail.cerradaAt\n              ? new Date(detail.cerradaAt).toLocaleString("es-MX")\n              : "En curso"}{" "}\n            · Duración: {duration(detail.abiertaAt, detail.cerradaAt)}\n          </div>\n        </div>\n      </section>\n      <div className="my-3 grid grid-cols-6 gap-2 text-center text-sm">\n        <div>\n          Snapshot\n          <br />\n          <b>{detail.totalSnapshot}</b>\n        </div>\n        <div>\n          Escaneados\n          <br />\n          <b>{detail.totalEscaneados}</b>\n        </div>\n        <div>\n          Cuadro\n          <br />\n          <b>{detail.cuadros}</b>\n        </div>\n        <div>\n          Faltante\n          <br />\n          <b>{detail.faltantes}</b>\n        </div>\n        <div>\n          Sobrante\n          <br />\n          <b>{detail.sobrantes}</b>\n        </div>\n        <div>\n          Mal Acomodado\n          <br />\n          <b>{detail.malAcomodados || 0}</b>\n        </div>\n      </div>\n      {(\n        ["CUADRO", "FALTANTE", "SOBRANTE", "MAL_ACOMODADO"] as const\n      ).map((kind) => (\n        <section key={kind} className="mb-4">\n          <h2 className="border-b border-black font-bold">\n            {kind.replace("_", " ")} ({grouped[kind].length})\n          </h2>\n          {grouped[kind].map((row) => (\n            <div\n              key={row.serie}\n              className={`audit-inventory-row grid ${\n                kind === "MAL_ACOMODADO"\n                  ? "grid-cols-[100px_1fr_100px_120px_120px_100px]"\n                  : "grid-cols-[100px_1fr_100px_130px_100px]"\n              } border-b py-1 text-xs`}\n              data-audit-row={row.serie}\n            >\n              <b>{row.serie}</b>\n              <span>{row.producto ?? "Sin registro"}</span>\n              <span>\n                {formatNumber(row.cantidad, { kind: "quantity" })}{" "}\n                {row.unidad ? formatUnit(row.unidad) : ""}\n              </span>\n              {kind === "MAL_ACOMODADO" ? (\n                <>\n                  <span>Esperado: {row.pisoEsperado ?? "Sin piso"}</span>\n                  <span>Real: {row.pisoReal ?? "Desconocido"}</span>\n                </>\n              ) : (\n                <span>{row.ubicacionActual ?? "Sin ubicación"}</span>\n              )}\n              <span>{row.estadoActual}</span>\n            </div>\n          ))}\n        </section>\n      ))}\n      <section>\n        <h2 className="font-bold">Participantes</h2>\n        {detail.participantes.map((person) => (\n          <div key={person.usuarioId} className="text-sm">\n            {person.nombre}: {person.escaneos} escaneos\n          </div>\n        ))}\n      </section>\n      <footer className="audit-inventory-signatures mt-14 grid grid-cols-2 gap-16 text-center text-sm">\n        <div className="border-t border-black pt-2">Responsable de conteo</div>\n        <div className="border-t border-black pt-2">Autorización ADMIN</div>\n      </footer>\n    </article>\n  );\n}',
+    expected: /logoClassName="h-\[100px\] w-\[100px\]"/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -7,6 +7,7 @@
  */
 import type { AuditoriaInventarioResultadoClasificacion } from './auditoriaInventarioResultadoClasificacion';
 import type { AuditoriaInventarioResultadoResolucion } from './auditoriaInventarioResultadoResolucion';
+import type { AuditoriaSobranteContexto } from './auditoriaSobranteContexto';
 
 export interface AuditoriaInventarioResultado {
   serie: string;
@@ -38,4 +39,5 @@ export interface AuditoriaInventarioResultado {
   resolucion: AuditoriaInventarioResultadoResolucion;
   /** @nullable */
   escaneadoAt?: Date | null;
+  sobrante?: AuditoriaSobranteContexto | null;
 }

@@ -9,6 +9,7 @@ import type { DirectedPaymentNotificationAction } from './directedPaymentNotific
 import type { NotificationFamily } from './notificationFamily';
 import type { NotificationFeedEventEstadoNota } from './notificationFeedEventEstadoNota';
 import type { NotificationFeedEventKind } from './notificationFeedEventKind';
+import type { NotificationFeedEventPriority } from './notificationFeedEventPriority';
 
 export interface NotificationFeedEvent {
   /** Identificador estable del evento para deduplicar sonido entre consultas */
@@ -19,6 +20,7 @@ export interface NotificationFeedEvent {
   message: string;
   href: string;
   updatedAt: Date;
+  priority?: NotificationFeedEventPriority;
   /** @nullable */
   siteId: number | null;
   /** @nullable */

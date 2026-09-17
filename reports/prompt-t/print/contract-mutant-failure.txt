@@ -1,0 +1,321 @@
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/prompt-t-contract-clone-72hznW/app/tsconfig.render-tests.json
+✖ audit inventory print keeps Letter geometry and indivisible rows (9.584655ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 280.483642
+
+✖ failing tests:
+
+test at src/components/auditoria-inventario-print.contract.test.ts:2:1316
+✖ audit inventory print keeps Letter geometry and indivisible rows (9.584655ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /body\.print-auditoria-inventario \.audit-inventory-row,[\s\S]*?body\.print-auditoria-inventario \.audit-inventory-signatures\s*\{[\s\S]*?break-inside:\s*avoid-page;[\s\S]*?page-break-inside:\s*avoid;/. Input:
+  
+  '@import "tailwindcss";\n' +
+    '@plugin "tailwindcss-animate";\n' +
+    '@plugin "@tailwindcss/typography";\n' +
+    '\n' +
+    '@custom-variant dark (&:is(.dark *));\n' +
+    '\n' +
+    '@theme inline {\n' +
+    '  --color-background: hsl(var(--background));\n' +
+    '  --color-foreground: hsl(var(--foreground));\n' +
+    '  --color-border: hsl(var(--border));\n' +
+    '  --color-input: hsl(var(--input));\n' +
+    '  --color-ring: hsl(var(--ring));\n' +
+    '\n' +
+    '  --color-card: hsl(var(--card));\n' +
+    '  --color-card-foreground: hsl(var(--card-foreground));\n' +
+    '  --color-card-border: hsl(var(--card-border));\n' +
+    '\n' +
+    '  --color-popover: hsl(var(--popover));\n' +
+    '  --color-popover-foreground: hsl(var(--popover-foreground));\n' +
+    '  --color-popover-border: hsl(var(--popover-border));\n' +
+    '\n' +
+    '  --color-primary: hsl(var(--primary));\n' +
+    '  --color-primary-foreground: hsl(var(--primary-foreground));\n' +
+    '  --color-sale-action: hsl(var(--sale-action));\n' +
+    '  --color-sale-action-foreground: hsl(var(--sale-action-foreground));\n' +
+    '\n' +
+    '  --color-secondary: hsl(var(--secondary));\n' +
+    '  --color-secondary-foreground: hsl(var(--secondary-foreground));\n' +
+    '\n' +
+    '  --color-muted: hsl(var(--muted));\n' +
+    '  --color-muted-foreground: hsl(var(--muted-foreground));\n' +
+    '\n' +
+    '  --color-accent: hsl(var(--accent));\n' +
+    '  --color-accent-foreground: hsl(var(--accent-foreground));\n' +
+    '\n' +
+    '  --color-destructive: hsl(var(--destructive));\n' +
+    '  --color-destructive-foreground: hsl(var(--destructive-foreground));\n' +
+    '\n' +
+    '  --color-sidebar: hsl(var(--sidebar));\n' +
+    '  --color-sidebar-foreground: hsl(var(--sidebar-foreground));\n' +
+    '  --color-sidebar-border: hsl(var(--sidebar-border));\n' +
+    '  --color-sidebar-primary: hsl(var(--sidebar-primary));\n' +
+    '  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));\n' +
+    '  --color-sidebar-accent: hsl(var(--sidebar-accent));\n' +
+    '  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));\n' +
+    '  --color-sidebar-ring: hsl(var(--sidebar-ring));\n' +
+    '\n' +
+    '  --font-sans: var(--app-font-sans);\n' +
+    '  --radius-sm: calc(var(--radius) - 4px);\n' +
+    '  --radius-md: calc(var(--radius) - 2px);\n' +
+    '  --radius-lg: var(--radius);\n' +
+    '\n' +
+    '  --color-report-header: hsl(var(--report-header));\n' +
+    '  --color-report-header-foreground: hsl(var(--report-header-foreground));\n' +
+    '  --color-report-stripe: hsl(var(--report-stripe));\n' +
+    '  --color-report-accent-warm: hsl(var(--report-accent-warm));\n' +
+    '  --color-report-accent-warm-bg: hsl(var(--report-accent-warm-bg));\n' +
+    '  --color-report-positive: hsl(var(--report-positive));\n' +
+    '  --color-report-negative: hsl(var(--report-negative));\n' +
+    '  --color-report-text-muted: hsl(var(--report-text-muted));\n' +
+    '\n' +
+    '  --color-report-modality-rollos: hsl(var(--report-modality-rollos));\n' +
+    '  --color-report-modality-metraje: hsl(var(--report-modality-metraje));\n' +
+    '  --color-report-margin-high: hsl(var(--report-margin-high));\n' +
+    '  --color-report-margin-medium: hsl(var(--report-margin-medium));\n' +
+    '  --color-report-margin-low: hsl(var(--report-margin-low));\n' +
+    '  --color-report-abc-a: hsl(var(--report-abc-a));\n' +
+    '  --color-report-abc-b: hsl(var(--report-abc-b));\n' +
+    '  --color-report-abc-c: hsl(var(--report-abc-c));\n' +
+    '  --color-report-category-blue: hsl(var(--report-category-blue));\n' +
+    '  --color-report-category-copper: hsl(var(--report-category-copper));\n' +
+    '  --color-report-category-green: hsl(var(--report-category-green));\n' +
+    '  --color-report-category-violet: hsl(var(--report-category-violet));\n' +
+    '  --color-report-category-teal: hsl(var(--report-category-teal));\n' +
+    '  --color-report-category-amber: hsl(var(--report-category-amber));\n' +
+    '  --color-report-category-red: hsl(var(--report-category-red));\n' +
+    '  --color-report-category-sky: hsl(var(--report-category-sky));\n' +
+    '  --color-report-category-rose: hsl(var(--report-category-rose));\n' +
+    '}\n' +
+    '\n' +
+    ':root {\n' +
+    '  --background: 210 20% 98%; /* Light gray bg */\n' +
+    '  --foreground: 228 51% 15%; /* Mariana navy */\n' +
+    '  --card: 0 0% 100%;\n' +
+    '  --card-foreground: 228 51% 15%;\n' +
+    '  --card-border: 228 22% 90%;\n' +
+    '  --popover: 0 0% 100%;\n' +
+    '  --popover-foreground: 228 51% 15%;\n' +
+    '  --popover-border: 228 22% 90%;\n' +
+    '  --primary: 226 72% 47%; /* Mariana royal blue */\n' +
+    '  --primary-foreground: 0 0% 100%;\n' +
+    '  /* Customer-sale creation only; it does not mean authorized, paid, or delivered. */\n' +
+    '  --sale-action: 24 94% 50%;\n' +
+    '  --sale-action-foreground: 0 0% 100%;\n' +
+    '  --secondary: 230 56% 95%;\n' +
+    '  --secondary-foreground: 226 58% 30%;\n' +
+    '  --muted: 228 33% 96%;\n' +
+    '  --muted-foreground: 215.4 16.3% 46.9%;\n' +
+    '  --accent: 232 54% 93%;\n' +
+    '  --accent-foreground: 226 58% 30%;\n' +
+    '  --destructive: 0 84.2% 60.2%;\n' +
+    '  --destructive-foreground: 210 40% 98%;\n' +
+    '  --border: 214.3 31.8% 91.4%;\n' +
+    '  --input: 214.3 31.8% 91.4%;\n' +
+    '  --ring: 226 72% 47%;\n' +
+    '  --sidebar: 228 51% 15%; /* Mariana navy */\n' +
+    '  --sidebar-foreground: 210 40% 98%;\n' +
+    '  --sidebar-border: 229 52% 10%;\n' +
+    '  --sidebar-primary: 226 72% 47%;\n' +
+    '  --sidebar-primary-foreground: 0 0% 100%;\n' +
+    '  --sidebar-accent: 228 43% 24%;\n' +
+    '  --sidebar-accent-foreground: 210 40% 98%;\n' +
+    '  --sidebar-ring: 232 68% 75%;\n' +
+    '\n' +
+    '  /* Reportes Palette */\n' +
+    '  --report-header: 228 51% 15%; /* Azul profundo (navy) */\n' +
+    '  --report-header-foreground: 0 0% 100%;\n' +
+    '  --report-stripe: 210 20% 97%; /* Azul/gris muy claro */\n' +
+    '  --report-accent-warm: 25 70% 50%; /* Cobre/tierra para acentos */\n' +
+    '  --report-accent-warm-bg: 25 30% 95%; /* Fondo cálido muy suave */\n' +
+    '  --report-positive: 150 40% 35%; /* Verde sobrio */\n' +
+    '  --report-negative: 350 45% 45%; /* Rojo sobrio */\n' +
+    '  --report-text-muted: 30 15% 45%; /* Gris neutro cálido */\n' +
+    '\n' +
+    '  /* Semantic Aliases */\n' +
+    '  --report-modality-rollos: 226 72% 47%; /* Azul primario Mariana */\n' +
+    '  --report-modality-metraje: 25 70% 50%; /* Cobre/tierra */\n' +
+    '  --report-margin-high: 150 40% 35%; /* Verde */\n' +
+    '  --report-margin-medium: 35 90% 50%; /* Ambar */\n' +
+    '  --report-margin-low: 350 45% 45%; /* Rojo */\n' +
+    '  --report-abc-a: 228 51% 25%; /* Azul intenso */\n' +
+    '  --report-abc-b: 228 51% 45%; /* Azul medio */\n' +
+    '  --report-abc-c: 228 51% 65%; /* Azul claro */\n' +
+    '  --report-aging: 350 45%; /* HSL hue and saturation for aging, lightness varies */\n' +
+    '\n' +
+    '  /* Categorical chart fills: lighter than report headers and distinct at a glance. */\n' +
+    '  --report-category-blue: 220 62% 55%;\n' +
+    '  --report-category-copper: 25 65% 58%;\n' +
+    '  --report-category-green: 150 38% 45%;\n' +
+    '  --report-category-violet: 270 38% 58%;\n' +
+    '  --report-category-teal: 185 44% 42%;\n' +
+    '  --report-category-amber: 42 75% 52%;\n' +
+    '  --report-category-red: 350 42% 55%;\n' +
+    '  --report-category-sky: 205 60% 64%;\n' +
+    '  --report-category-rose: 330 42% 62%;\n' +
+    '\n' +
+    "  --app-font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';\n" +
+    '  --radius: 0.375rem; /* Firm, slightly rounded */\n' +
+    '}\n' +
+    '\n' +
+    '.dark {\n' +
+    '  --background: 222.2 84% 4.9%;\n' +
+    '  --foreground: 210 40% 98%;\n' +
+    '  --card: 222.2 84% 4.9%;\n' +
+    '  --card-foreground: 210 40% 98%;\n' +
+    '  --card-border: 217.2 32.6% 17.5%;\n' +
+    '  --popover: 222.2 84% 4.9%;\n' +
+    '  --popover-foreground: 210 40% 98%;\n' +
+    '  --popover-border: 217.2 32.6% 17.5%;\n' +
+    '  --primary: 228 69% 55%;\n' +
+    '  --primary-foreground: 0 0% 100%;\n' +
+    '  --sale-action: 24 88% 58%;\n' +
+    '  --sale-action-foreground: 228 51% 15%;\n' +
+    '  --secondary: 217.2 32.6% 17.5%;\n' +
+    '  --secondary-foreground: 210 40% 98%;\n' +
+    '  --muted: 217.2 32.6% 17.5%;\n' +
+    '  --muted-foreground: 215 20.2% 65.1%;\n' +
+    '  --accent: 217.2 32.6% 17.5%;\n' +
+    '  --accent-foreground: 210 40% 98%;\n' +
+    '  --destructive: 0 62.8% 30.6%;\n' +
+    '  --destructive-foreground: 210 40% 98%;\n' +
+    '  --border: 217.2 32.6% 17.5%;\n' +
+    '  --input: 217.2 32.6% 17.5%;\n' +
+    '  --ring: 228 69% 55%;\n' +
+    '  --sidebar: 222.2 84% 4.9%;\n' +
+    '  --sidebar-foreground: 210 40% 98%;\n' +
+    '  --sidebar-border: 217.2 32.6% 17.5%;\n' +
+    '  --sidebar-primary: 228 69% 55%;\n' +
+    '  --sidebar-primary-foreground: 0 0% 100%;\n' +
+    '  --sidebar-accent: 217.2 32.6% 17.5%;\n' +
+    '  --sidebar-accent-foreground: 210 40% 98%;\n' +
+    '  --sidebar-ring: 228 69% 55%;\n' +
+    '\n' +
+    '  /* Reportes Palette (Dark Mode) */\n' +
+    '  --report-header: 228 40% 12%;\n' +
+    '  --report-header-foreground: 0 0% 100%;\n' +
+    '  --report-stripe: 226 20% 8%;\n' +
+    '  --report-accent-warm: 25 65% 55%;\n' +
+    '  --report-accent-warm-bg: 25 40% 12%;\n' +
+    '  --report-positive: 150 40% 45%;\n' +
+    '  --report-negative: 350 45% 55%;\n' +
+    '  --report-text-muted: 30 15% 65%;\n' +
+    '\n' +
+    '  /* Semantic Aliases (Dark Mode) */\n' +
+    '  --report-modality-rollos: 228 69% 55%;\n' +
+    '  --report-modality-metraje: 25 65% 55%;\n' +
+    '  --report-margin-high: 150 40% 45%;\n' +
+    '  --report-margin-medium: 35 90% 60%;\n' +
+    '  --report-margin-low: 350 45% 55%;\n' +
+    '  --report-abc-a: 228 51% 85%;\n' +
+    '  --report-abc-b: 228 51% 65%;\n' +
+    '  --report-abc-c: 228 51% 45%;\n' +
+    '  --report-aging: 350 45%;\n' +
+    '\n' +
+    '  --report-category-blue: 220 62% 64%;\n' +
+    '  --report-category-copper: 25 65% 64%;\n' +
+    '  --report-category-green: 150 38% 56%;\n' +
+    '  --report-category-violet: 270 40% 68%;\n' +
+    '  --report-category-teal: 185 44% 55%;\n' +
+    '  --report-category-amber: 42 75% 62%;\n' +
+    '  --report-category-red: 350 42% 65%;\n' +
+    '  --report-category-sky: 205 60% 70%;\n' +
+    '  --report-category-rose: 330 42% 70%;\n' +
+    '}\n' +
+    '\n' +
+    '@layer base {\n' +
+    '  * {\n' +
+    '    @apply border-border;\n' +
+    '  }\n' +
+    '  body {\n' +
+    '    @apply font-sans antialiased bg-background text-foreground text-base;\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    '.print-only {\n' +
+    '  display: none;\n' +
+    '}\n' +
+    '\n' +
+    '.hoja-ventas-print {\n' +
+    '  display: none;\n' +
+    '}\n' +
+    '\n' +
+    'body.measure-thermal-ticket .print-ticket-container {\n' +
+    '  display: block !important;\n' +
+    '  position: absolute !important;\n' +
+    '  left: -10000px;\n' +
+    '  top: 0;\n' +
+    '  width: 72mm;\n' +
+    '  visibility: hidden;\n' +
+    '  pointer-events: none;\n' +
+    '  font-family: monospace;\n' +
+    '}\n' +
+    '\n' +
+    'body.measure-thermal-ticket .ticket-copy,\n' +
+    'body.measure-thermal-ticket .tabular-strip-page {\n' +
+    '  display: block;\n' +
+    '  width: 72mm;\n' +
+    '  margin: 0;\n' +
+    '}\n' +
+    '\n' +
+    '@media print {\n' +
+    '  html,\n' +
+    '  body,\n' +
+    '  body * {\n' +
+    '    -webkit-print-color-adjust: exact !important;\n' +
+    '    print-color-adjust: exact !important;\n' +
+    '  }\n' +
+    '\n' +
+    '  body.print-80mm > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '  body.print-credito > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '  body.print-salida > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '  body.print-entrada > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '  body.print-viaje > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '  body.print-corte > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '  body.printing-labels > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '  body.printing-label-sheet > *:not(#root) {\n' +
+    '    display: none !important;\n' +
+    '  }\n' +
+    '\n' +
+    '  body.print-viaje > .viaje-page:not(#root) {\n' +
+    '    display: block !important;\n' +
+    '  }\n' +
+    '  body.printing-labels > .etiquetas-print:not(#root) {\n' +
+    '    display: block !important;\n' +
+    '  }\n' +
+    '  body.printing-label-sheet > .etiquetas-print:not(#root) {\n' +
+    '    display: grid !important;\n' +
+    '  }\n' +
+    '  body.print-corte > *:not(#roo'... 13054 more characters
+  
+      at TestContext.<anonymous> (/tmp/prompt-t-contract-clone-72hznW/app/src/components/auditoria-inventario-print.contract.test.ts:20:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `@import "tailwindcss";\n@plugin "tailwindcss-animate";\n@plugin "@tailwindcss/typography";\n\n@custom-variant dark (&:is(.dark *));\n\n@theme inline {\n  --color-background: hsl(var(--background));\n  --color-foreground: hsl(var(--foreground));\n  --color-border: hsl(var(--border));\n  --color-input: hsl(var(--input));\n  --color-ring: hsl(var(--ring));\n\n  --color-card: hsl(var(--card));\n  --color-card-foreground: hsl(var(--card-foreground));\n  --color-card-border: hsl(var(--card-border));\n\n  --color-popover: hsl(var(--popover));\n  --color-popover-foreground: hsl(var(--popover-foreground));\n  --color-popover-border: hsl(var(--popover-border));\n\n  --color-primary: hsl(var(--primary));\n  --color-primary-foreground: hsl(var(--primary-foreground));\n  --color-sale-action: hsl(var(--sale-action));\n  --color-sale-action-foreground: hsl(var(--sale-action-foreground));\n\n  --color-secondary: hsl(var(--secondary));\n  --color-secondary-foreground: hsl(var(--secondary-foreground));\n\n  --color-muted: hsl(var(--muted));\n  --color-muted-foreground: hsl(var(--muted-foreground));\n\n  --color-accent: hsl(var(--accent));\n  --color-accent-foreground: hsl(var(--accent-foreground));\n\n  --color-destructive: hsl(var(--destructive));\n  --color-destructive-foreground: hsl(var(--destructive-foreground));\n\n  --color-sidebar: hsl(var(--sidebar));\n  --color-sidebar-foreground: hsl(var(--sidebar-foreground));\n  --color-sidebar-border: hsl(var(--sidebar-border));\n  --color-sidebar-primary: hsl(var(--sidebar-primary));\n  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));\n  --color-sidebar-accent: hsl(var(--sidebar-accent));\n  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));\n  --color-sidebar-ring: hsl(var(--sidebar-ring));\n\n  --font-sans: var(--app-font-sans);\n  --radius-sm: calc(var(--radius) - 4px);\n  --radius-md: calc(var(--radius) - 2px);\n  --radius-lg: var(--radius);\n\n  --color-report-header: hsl(var(--report-header));\n  --color-report-header-foreground: hsl(var(--report-header-foreground));\n  --color-report-stripe: hsl(var(--report-stripe));\n  --color-report-accent-warm: hsl(var(--report-accent-warm));\n  --color-report-accent-warm-bg: hsl(var(--report-accent-warm-bg));\n  --color-report-positive: hsl(var(--report-positive));\n  --color-report-negative: hsl(var(--report-negative));\n  --color-report-text-muted: hsl(var(--report-text-muted));\n\n  --color-report-modality-rollos: hsl(var(--report-modality-rollos));\n  --color-report-modality-metraje: hsl(var(--report-modality-metraje));\n  --color-report-margin-high: hsl(var(--report-margin-high));\n  --color-report-margin-medium: hsl(var(--report-margin-medium));\n  --color-report-margin-low: hsl(var(--report-margin-low));\n  --color-report-abc-a: hsl(var(--report-abc-a));\n  --color-report-abc-b: hsl(var(--report-abc-b));\n  --color-report-abc-c: hsl(var(--report-abc-c));\n  --color-report-category-blue: hsl(var(--report-category-blue));\n  --color-report-category-copper: hsl(var(--report-category-copper));\n  --color-report-category-green: hsl(var(--report-category-green));\n  --color-report-category-violet: hsl(var(--report-category-violet));\n  --color-report-category-teal: hsl(var(--report-category-teal));\n  --color-report-category-amber: hsl(var(--report-category-amber));\n  --color-report-category-red: hsl(var(--report-category-red));\n  --color-report-category-sky: hsl(var(--report-category-sky));\n  --color-report-category-rose: hsl(var(--report-category-rose));\n}\n\n:root {\n  --background: 210 20% 98%; /* Light gray bg */\n  --foreground: 228 51% 15%; /* Mariana navy */\n  --card: 0 0% 100%;\n  --card-foreground: 228 51% 15%;\n  --card-border: 228 22% 90%;\n  --popover: 0 0% 100%;\n  --popover-foreground: 228 51% 15%;\n  --popover-border: 228 22% 90%;\n  --primary: 226 72% 47%; /* Mariana royal blue */\n  --primary-foreground: 0 0% 100%;\n  /* Customer-sale creation only; it does not mean authorized, paid, or delivered. */\n  --sale-action: 24 94% 50%;\n  --sale-action-foreground: 0 0% 100%;\n  --secondary: 230 56% 95%;\n  --secondary-foreground: 226 58% 30%;\n  --muted: 228 33% 96%;\n  --muted-foreground: 215.4 16.3% 46.9%;\n  --accent: 232 54% 93%;\n  --accent-foreground: 226 58% 30%;\n  --destructive: 0 84.2% 60.2%;\n  --destructive-foreground: 210 40% 98%;\n  --border: 214.3 31.8% 91.4%;\n  --input: 214.3 31.8% 91.4%;\n  --ring: 226 72% 47%;\n  --sidebar: 228 51% 15%; /* Mariana navy */\n  --sidebar-foreground: 210 40% 98%;\n  --sidebar-border: 229 52% 10%;\n  --sidebar-primary: 226 72% 47%;\n  --sidebar-primary-foreground: 0 0% 100%;\n  --sidebar-accent: 228 43% 24%;\n  --sidebar-accent-foreground: 210 40% 98%;\n  --sidebar-ring: 232 68% 75%;\n\n  /* Reportes Palette */\n  --report-header: 228 51% 15%; /* Azul profundo (navy) */\n  --report-header-foreground: 0 0% 100%;\n  --report-stripe: 210 20% 97%; /* Azul/gris muy claro */\n  --report-accent-warm: 25 70% 50%; /* Cobre/tierra para acentos */\n  --report-accent-warm-bg: 25 30% 95%; /* Fondo cálido muy suave */\n  --report-positive: 150 40% 35%; /* Verde sobrio */\n  --report-negative: 350 45% 45%; /* Rojo sobrio */\n  --report-text-muted: 30 15% 45%; /* Gris neutro cálido */\n\n  /* Semantic Aliases */\n  --report-modality-rollos: 226 72% 47%; /* Azul primario Mariana */\n  --report-modality-metraje: 25 70% 50%; /* Cobre/tierra */\n  --report-margin-high: 150 40% 35%; /* Verde */\n  --report-margin-medium: 35 90% 50%; /* Ambar */\n  --report-margin-low: 350 45% 45%; /* Rojo */\n  --report-abc-a: 228 51% 25%; /* Azul intenso */\n  --report-abc-b: 228 51% 45%; /* Azul medio */\n  --report-abc-c: 228 51% 65%; /* Azul claro */\n  --report-aging: 350 45%; /* HSL hue and saturation for aging, lightness varies */\n\n  /* Categorical chart fills: lighter than report headers and distinct at a glance. */\n  --report-category-blue: 220 62% 55%;\n  --report-category-copper: 25 65% 58%;\n  --report-category-green: 150 38% 45%;\n  --report-category-violet: 270 38% 58%;\n  --report-category-teal: 185 44% 42%;\n  --report-category-amber: 42 75% 52%;\n  --report-category-red: 350 42% 55%;\n  --report-category-sky: 205 60% 64%;\n  --report-category-rose: 330 42% 62%;\n\n  --app-font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';\n  --radius: 0.375rem; /* Firm, slightly rounded */\n}\n\n.dark {\n  --background: 222.2 84% 4.9%;\n  --foreground: 210 40% 98%;\n  --card: 222.2 84% 4.9%;\n  --card-foreground: 210 40% 98%;\n  --card-border: 217.2 32.6% 17.5%;\n  --popover: 222.2 84% 4.9%;\n  --popover-foreground: 210 40% 98%;\n  --popover-border: 217.2 32.6% 17.5%;\n  --primary: 228 69% 55%;\n  --primary-foreground: 0 0% 100%;\n  --sale-action: 24 88% 58%;\n  --sale-action-foreground: 228 51% 15%;\n  --secondary: 217.2 32.6% 17.5%;\n  --secondary-foreground: 210 40% 98%;\n  --muted: 217.2 32.6% 17.5%;\n  --muted-foreground: 215 20.2% 65.1%;\n  --accent: 217.2 32.6% 17.5%;\n  --accent-foreground: 210 40% 98%;\n  --destructive: 0 62.8% 30.6%;\n  --destructive-foreground: 210 40% 98%;\n  --border: 217.2 32.6% 17.5%;\n  --input: 217.2 32.6% 17.5%;\n  --ring: 228 69% 55%;\n  --sidebar: 222.2 84% 4.9%;\n  --sidebar-foreground: 210 40% 98%;\n  --sidebar-border: 217.2 32.6% 17.5%;\n  --sidebar-primary: 228 69% 55%;\n  --sidebar-primary-foreground: 0 0% 100%;\n  --sidebar-accent: 217.2 32.6% 17.5%;\n  --sidebar-accent-foreground: 210 40% 98%;\n  --sidebar-ring: 228 69% 55%;\n\n  /* Reportes Palette (Dark Mode) */\n  --report-header: 228 40% 12%;\n  --report-header-foreground: 0 0% 100%;\n  --report-stripe: 226 20% 8%;\n  --report-accent-warm: 25 65% 55%;\n  --report-accent-warm-bg: 25 40% 12%;\n  --report-positive: 150 40% 45%;\n  --report-negative: 350 45% 55%;\n  --report-text-muted: 30 15% 65%;\n\n  /* Semantic Aliases (Dark Mode) */\n  --report-modality-rollos: 228 69% 55%;\n  --report-modality-metraje: 25 65% 55%;\n  --report-margin-high: 150 40% 45%;\n  --report-margin-medium: 35 90% 60%;\n  --report-margin-low: 350 45% 55%;\n  --report-abc-a: 228 51% 85%;\n  --report-abc-b: 228 51% 65%;\n  --report-abc-c: 228 51% 45%;\n  --report-aging: 350 45%;\n\n  --report-category-blue: 220 62% 64%;\n  --report-category-copper: 25 65% 64%;\n  --report-category-green: 150 38% 56%;\n  --report-category-violet: 270 40% 68%;\n  --report-category-teal: 185 44% 55%;\n  --report-category-amber: 42 75% 62%;\n  --report-category-red: 350 42% 65%;\n  --report-category-sky: 205 60% 70%;\n  --report-category-rose: 330 42% 70%;\n}\n\n@layer base {\n  * {\n    @apply border-border;\n  }\n  body {\n    @apply font-sans antialiased bg-background text-foreground text-base;\n  }\n}\n\n.print-only {\n  display: none;\n}\n\n.hoja-ventas-print {\n  display: none;\n}\n\nbody.measure-thermal-ticket .print-ticket-container {\n  display: block !important;\n  position: absolute !important;\n  left: -10000px;\n  top: 0;\n  width: 72mm;\n  visibility: hidden;\n  pointer-events: none;\n  font-family: monospace;\n}\n\nbody.measure-thermal-ticket .ticket-copy,\nbody.measure-thermal-ticket .tabular-strip-page {\n  display: block;\n  width: 72mm;\n  margin: 0;\n}\n\n@media print {\n  html,\n  body,\n  body * {\n    -webkit-print-color-adjust: exact !important;\n    print-color-adjust: exact !important;\n  }\n\n  body.print-80mm > *:not(#root) {\n    display: none !important;\n  }\n  body.print-credito > *:not(#root) {\n    display: none !important;\n  }\n  body.print-salida > *:not(#root) {\n    display: none !important;\n  }\n  body.print-entrada > *:not(#root) {\n    display: none !important;\n  }\n  body.print-viaje > *:not(#root) {\n    display: none !important;\n  }\n  body.print-corte > *:not(#root) {\n    display: none !important;\n  }\n  body.printing-labels > *:not(#root) {\n    display: none !important;\n  }\n  body.printing-label-sheet > *:not(#root) {\n    display: none !important;\n  }\n\n  body.print-viaje > .viaje-page:not(#root) {\n    display: block !important;\n  }\n  body.printing-labels > .etiquetas-print:not(#root) {\n    display: block !important;\n  }\n  body.printing-label-sheet > .etiquetas-print:not(#root) {\n    display: grid !important;\n  }\n  body.print-corte > *:not(#roo`... 13054 more characters,
+    expected: /body\.print-auditoria-inventario \.audit-inventory-row,[\s\S]*?body\.print-auditoria-inventario \.audit-inventory-signatures\s*\{[\s\S]*?break-inside:\s*avoid-page;[\s\S]*?page-break-inside:\s*avoid;/,
+    operator: 'match',
+    diff: 'simple'
+  }

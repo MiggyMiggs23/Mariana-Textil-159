@@ -1,6 +1,7 @@
 import { Router, type Request, type Response, type NextFunction } from "express";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
+import { z } from "zod";
 import {
   CancelAuditoriaInventarioBody,
   CancelAuditoriaInventarioParams,
@@ -19,6 +20,14 @@ import {
   ScanAuditoriaInventarioBody,
   ScanAuditoriaInventarioParams,
   ScanAuditoriaInventarioResponse,
+  ResolverSobranteAuditoriaInventarioBody,
+  ResolverSobranteAuditoriaInventarioParams,
+  ResolverSobranteAuditoriaInventarioResponse,
+  GetReactivacionFaltanteParams,
+  GetReactivacionFaltanteResponse,
+  ReactivarFaltanteParams,
+  ReactivarFaltanteBody,
+  ReactivarFaltanteResponse,
 } from "@workspace/api-zod";
 import {
   auditoriasInventarioTable,
@@ -36,6 +45,9 @@ import {
   scanAuditoria,
   transitionAuditoria,
 } from "../lib/auditoria-inventario";
+import { resolverSobrante } from "../lib/auditoria-resoluciones";
+import { InventarioError, reactivarFaltanteAuditoria } from "../lib/inventario";
+import { getReactivacionContexto } from "../lib/reactivacion-faltante-evidencia";
 
 const router = Router();
 const ROLES = new Set(["ADMIN", "SUPERVISOR", "BODEGA", "SISTEMAS"]);
@@ -72,6 +84,11 @@ async function getVisibleHeader(req: Request, id: number) {
 }
 
 function handleError(error: unknown, res: Response, next: NextFunction): void {
+  if (error instanceof InventarioError) {
+    res.status(error.code === "ADMIN_REQUIRED" ? 403 : error.code.endsWith("NOT_FOUND") ? 404 : 409)
+      .json({ error: error.message, code: error.code });
+    return;
+  }
   if (error instanceof AuditoriaInventarioError) {
     const status =
       error.code === "NOT_FOUND"
@@ -296,5 +313,57 @@ router.post(
     }
   },
 );
+
+function requireDecisionAdmin(req: Request, res: Response, next: NextFunction): void {
+  if (req.auth?.user.rol !== "ADMIN") {
+    res.status(403).json({ error: "Solo ADMIN puede resolver sobrantes o reactivar faltantes." });
+    return;
+  }
+  next();
+}
+
+router.post("/auditorias/:id/sobrantes/resolver", requireSession, requierePermiso("auditoria_inventario", "autorizar"), requireDecisionAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const { id } = ResolverSobranteAuditoriaInventarioParams.parse(req.params);
+      const body = ResolverSobranteAuditoriaInventarioBody.parse(req.body);
+      z.string().uuid().parse(body.uuidCliente);
+      if (!Number.isSafeInteger(id) || body.pisoId != null && !Number.isSafeInteger(body.pisoId)) {
+        res.status(400).json({ error: "Identificadores inválidos." }); return;
+      }
+      const result = await db.transaction(async (tx) => {
+        await resolverSobrante(tx, { ...body, auditoriaId: id, usuarioId: req.auth!.user.id, rol: req.auth!.user.rol, ip: getRequestIp(req) });
+        return buildAuditoriaDetail(tx, id);
+      });
+      res.json(ResolverSobranteAuditoriaInventarioResponse.parse(result));
+    } catch (error) { handleError(error, res, next); }
+  });
+
+router.get("/rollos/:id/reactivacion-faltante", requireSession, requierePermiso("inventario", "ver"), requireDecisionAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const { id } = GetReactivacionFaltanteParams.parse(req.params);
+      if (!Number.isSafeInteger(id)) { res.status(400).json({ error: "Rollo inválido." }); return; }
+      const result = await db.transaction((tx) => getReactivacionContexto(tx, id));
+      if (!result) { res.status(404).json({ error: "Rollo no encontrado." }); return; }
+      res.json(GetReactivacionFaltanteResponse.parse(result));
+    } catch (error) { handleError(error, res, next); }
+  });
+
+router.post("/rollos/:id/reactivacion-faltante", requireSession, requierePermiso("auditoria_inventario", "autorizar"), requireDecisionAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const { id } = ReactivarFaltanteParams.parse(req.params);
+      const body = ReactivarFaltanteBody.strict().parse(req.body);
+      z.string().uuid().parse(body.uuidCliente);
+      if (![id, body.auditoriaOrigenId, body.ubicacionId, ...(body.pisoId == null ? [] : [body.pisoId])].every(Number.isSafeInteger)) {
+        res.status(400).json({ error: "Identificadores inválidos." }); return;
+      }
+      const result = await db.transaction((tx) => reactivarFaltanteAuditoria(tx, {
+        ...body, rolloId: id, usuarioId: req.auth!.user.id, rol: req.auth!.user.rol, ip: getRequestIp(req),
+      }));
+      res.json(ReactivarFaltanteResponse.parse(result));
+    } catch (error) { handleError(error, res, next); }
+  });
 
 export default router;

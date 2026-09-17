@@ -1,0 +1,6 @@
+{
+  "status": "EXPECTED_FAILURE",
+  "exitCode": 1,
+  "isolation": "CSS mutant built from /tmp; maintained runtime source was never modified",
+  "assertion": "every row series and final marker must remain on the same PDF page"
+}

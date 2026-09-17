@@ -1,0 +1,20 @@
+Prompt T focused frontend semantic-mutant verification
+
+Isolation:
+Fresh dependency-resolved copy under /tmp/prompt-t-frontend-mutant-workspace-a5VKI7/artifacts/mariana-textil.
+No runtime source file was modified by the mutant run.
+
+Semantic regressions introduced only in the isolated copy:
+1. Audit reactivation gated on CERRADA instead of CONFIRMADA.
+2. Mounted-route auditoriaId deep links ignored.
+3. Payload auditoriaOrigenId changed from the verified origin.
+4. Roll-detail reactivation gated on ACTIVO instead of BAJA.
+
+Result:
+EXPECTED FAIL (exit 1)
+Test Files: 3 failed
+Tests: 6 failed
+
+The unmodified working tree was verified green immediately before this isolated run:
+Test Files: 3 passed
+Tests: 6 passed

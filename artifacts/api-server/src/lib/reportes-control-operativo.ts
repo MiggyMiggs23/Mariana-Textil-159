@@ -247,7 +247,7 @@ async function loadInventoryAdjustments(
        LEFT JOIN rollos r ON r.id=m.rollo_id
        JOIN ubicaciones u ON u.id=m.ubicacion_id
       WHERE m.created_at >= $1 AND m.created_at <= $2
-        AND m.tipo IN ('AJUSTE_POSITIVO','AJUSTE_NEGATIVO','CANCELACION')
+        AND m.tipo IN ('AJUSTE_POSITIVO','AJUSTE_NEGATIVO','CANCELACION','REACTIVACION_FALTANTE')
         AND ($3::int[] IS NULL OR m.ubicacion_id=ANY($3::int[]))
       ORDER BY m.created_at DESC,m.id DESC`,
     [

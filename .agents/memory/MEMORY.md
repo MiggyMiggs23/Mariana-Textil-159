@@ -36,7 +36,7 @@
 - [Reglas sustituidas en replit.md](superseded-project-rules.md) — reescribir o eliminar la regla vieja; nunca conservar contradicciones con una nota de precedencia.
 - [Conciliación de tarjetas y desgloses](dashboard-breakdown-reconciliation.md) — cifra y detalle deben compartir predicado, fecha y fuente financiera; Crédito conserva el ledger.
 - [Enums históricos de solo lectura](historical-read-enums.md) — retirar una opción seleccionable no permite retirarla de respuestas que aún leen registros antiguos.
-- [Enteros OpenAPI con Orval y Zod 3](openapi-orval-zod3-integers.md) — `type: integer` genera `zod.int()` incompatible; validar enteros en el servidor.
+- [Enteros y UUID con Orval/Zod 3](openapi-orval-zod3-integers.md) — el generador puede emitir APIs de Zod 4; usar contratos equivalentes sin relajar validaciones.
 - [Límite de history en Safari](safari-history-write-throttling.md) — deduplicar estado y scroll; Safari bloquea ráfagas de `replaceState` que Chromium tolera.
 - [Rótulos financieros en pantallas estrechas](financial-labels-on-narrow-screens.md) — conservar el texto operativo literal; adaptar tipografía o acomodo, nunca abreviarlo.
 - [Preparación DB sin verdes falsos](test-database-preparation-failures.md) — validar salida y estructura; algunos CLI devuelven 0 tras errores y ADD COLUMN no reconcilia constraints.

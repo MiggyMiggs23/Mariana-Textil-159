@@ -25,6 +25,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -57,7 +58,8 @@ function eventTime(value: string): string {
   }).format(new Date(value));
 }
 
-function isStoredEvent(kind: string): boolean {
+function isStoredEvent(kind: string, id: string): boolean {
+  if (kind === "SYSTEM" && id.startsWith("audit-surplus:")) return false;
   return kind === "SYSTEM" || kind === "CREDIT_NOTICE";
 }
 
@@ -118,7 +120,7 @@ export function NotificationsBell({
     ? [...storedNotifications.data.sistema, ...storedNotifications.data.notificaciones]
         .filter((notification) => !notification.leidaAt).length
     : 0;
-  const derivedCount = events.filter((event) => !isStoredEvent(event.kind)).length;
+  const derivedCount = events.filter((event) => !isStoredEvent(event.kind, event.id)).length;
   const refreshDirected = () => {
     queryClient.invalidateQueries({ queryKey: getGetNotificationFeedQueryKey() });
     queryClient.invalidateQueries({ queryKey: getListSolicitudesPagoDirigidoQueryKey() });
@@ -209,14 +211,19 @@ export function NotificationsBell({
                     <div className="mt-0.5">{familyIcon(event.family)}</div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-3">
-                        <p className="text-sm font-semibold text-sidebar">{event.title}</p>
+                        <p className="text-sm font-semibold text-sidebar">
+                          {event.title}
+                          {(event as any).priority === "URGENTE" && (
+                            <Badge variant="destructive" className="ml-2 text-[9px] px-1 py-0 uppercase">Urgente</Badge>
+                          )}
+                        </p>
                         <span className="shrink-0 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                           {FAMILY_LABELS[event.family]}
                         </span>
                       </div>
                       <p className="mt-1 text-xs text-muted-foreground">{event.message}</p>
                       <p className="mt-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
-                        {isStoredEvent(event.kind)
+                        {isStoredEvent(event.kind, event.id)
                           ? "Notificación guardada · se marca como leída"
                           : "Evento derivado · se resuelve al atender la condición"}
                       </p>
@@ -233,7 +240,8 @@ export function NotificationsBell({
                         <Link
                           href={event.href}
                           onClick={() => {
-                            const systemId = event.kind === "SYSTEM"
+                            const isDerivedSystem = event.kind === "SYSTEM" && event.id.startsWith("audit-surplus:");
+                            const systemId = (event.kind === "SYSTEM" && !isDerivedSystem)
                               ? Number(event.id.replace("system:", ""))
                               : null;
                             if (systemId && Number.isInteger(systemId)) {

@@ -52,6 +52,7 @@ export const notificacionesSistemaTable = pgTable(
     tipo: text("tipo").notNull(),
     titulo: text("titulo").notNull(),
     mensaje: text("mensaje").notNull(),
+    prioridad: text("prioridad").notNull().default("NORMAL"),
     entidad: text("entidad").notNull(),
     entidadId: text("entidad_id").notNull(),
     destinatarioUsuarioId: integer("destinatario_usuario_id").references(

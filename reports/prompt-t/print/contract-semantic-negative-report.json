@@ -1,0 +1,11 @@
+{
+  "isolation": "/tmp/prompt-t-contract-clone-72hznW",
+  "workspaceMutated": false,
+  "semanticDefect": "removed the audit row and signatures anti-fragmentation CSS rule",
+  "mutantExitCode": 1,
+  "mutantTests": { "passed": 0, "failed": 1, "total": 1 },
+  "restoredExitCode": 0,
+  "restoredTests": { "passed": 1, "failed": 0, "total": 1 },
+  "mutantLog": ".local/prompt-t-verification/contract-mutant-failure.txt",
+  "restoredLog": ".local/prompt-t-verification/contract-restored-green.txt"
+}

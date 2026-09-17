@@ -461,7 +461,9 @@ async function enrichDocuments(rows: JoinedMovement[]) {
       movimientoOrigenId: row.movimientoOrigenId ?? null,
       justificacion: row.justificacion ?? null,
       revisadoPor: row.revisadoPor ?? null,
-      documentoEtiqueta: salidaInmediata
+      documentoEtiqueta: row.tipo === "REACTIVACION_FALTANTE"
+        ? `Reaparición de faltante · ${document.label}`
+        : salidaInmediata
         ? (row.tipo === "TRANSFERENCIA_SALIDA" ? "Salida a sitio" : "Entrada por salida")
         : document.label,
       documentoRuta: salidaInmediata && reference.id ? `/salidas/${reference.id}` : document.route,

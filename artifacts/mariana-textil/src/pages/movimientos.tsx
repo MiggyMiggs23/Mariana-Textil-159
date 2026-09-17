@@ -86,6 +86,7 @@ const TipoMovimientoLabels: Record<string, string> = {
   AJUSTE_POSITIVO: "Ajuste positivo",
   AJUSTE_NEGATIVO: "Ajuste negativo",
   CANCELACION: "Cancelación",
+  REACTIVACION_FALTANTE: "Reactivación de faltante",
 };
 
 const TipoMovimientoColors: Record<string, string> = {
@@ -99,6 +100,7 @@ const TipoMovimientoColors: Record<string, string> = {
   AJUSTE_POSITIVO: "bg-lime-100 text-lime-800 dark:bg-lime-900/40 dark:text-lime-300 border-lime-200 dark:border-lime-800",
   AJUSTE_NEGATIVO: "bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300 border-red-200 dark:border-red-800",
   CANCELACION: "bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700",
+  REACTIVACION_FALTANTE: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800",
 };
 
 function quantityColor(quantity: string) {

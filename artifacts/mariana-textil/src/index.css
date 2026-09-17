@@ -455,6 +455,11 @@ body.measure-thermal-ticket .tabular-strip-page {
     inset: 0;
     page: audit-inventory;
   }
+  body.print-auditoria-inventario .audit-inventory-row,
+  body.print-auditoria-inventario .audit-inventory-signatures {
+    break-inside: avoid-page;
+    page-break-inside: avoid;
+  }
   @page label-sheet {
     size: letter portrait;
     margin: 5mm;

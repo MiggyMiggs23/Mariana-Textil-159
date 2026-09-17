@@ -1,0 +1,13 @@
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/prompt-t-shared-header-clone-cyiEFD/app/tsconfig.render-tests.json
+✔ los documentos usan logo centrado y QR derecho compartidos (0.734252ms)
+✔ logo y QR documentales conservan su escala y el ticket usa logo físico de 25 mm (0.238034ms)
+✔ la nota interna lleva QR y la copia cliente conserva el espacio sin QR (0.166811ms)
+✔ el QR documental renderiza grande, conserva margen y se decodifica (23.188322ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 367.135222

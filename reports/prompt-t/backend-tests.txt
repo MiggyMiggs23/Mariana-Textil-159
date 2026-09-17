@@ -1,0 +1,23 @@
+✔ Prompt T clasifica los cinco sobrantes sin inventar registros y destaca vendido (0.762829ms)
+✔ Prompt T ADMIN y motivo no dependen de que la interfaz oculte botones (0.458608ms)
+✔ Prompt T investigar y devolver no resuelven pendiente hasta recepción real (0.122729ms)
+✔ Prompt T cierre normal sin diferencias y urgente incluso con solo piso mal acomodado (0.095536ms)
+✔ Prompt T evidencia exige baja íntegra sin reactivación ni reverso ni movimiento posterior (0.198556ms)
+✔ Prompt T motor reactiva mismo rollo en otro sitio, conserva baja y costos, kardex distinto y relación explícita (5.105021ms)
+✔ Prompt T reintento idempotente no duplica reactivación y UUID no admite otros datos (2.47793ms)
+✔ Prompt T vía propia rechaza rol, origen y motivo antes de consultar inventario (0.291353ms)
+✔ Prompt T relectura previa a FOR UPDATE rechaza par cambiado sin escribir movimiento (0.482184ms)
+✔ Prompt T reactivación rechaza documento comprometido o piso ajeno (1.418115ms)
+✔ Prompt T solo el nuevo tipo rechaza reverso ordinario sin escribir cancelación (1.550761ms)
+✔ Prompt T kardex enlaza la reaparición y su baja a la auditoría sin confundirla con cancelación (0.264836ms)
+✔ Prompt T resolver rechaza INVESTIGAR durante devolución y un histórico posterior no oculta recepción (1.597122ms)
+✔ Prompt T confirmación real termina con sobrante pendiente sin transferir ni recibir (2.21296ms)
+✔ Prompt T cerrar persiste aviso global ADMIN normal o urgente dentro de la misma transacción (1.509449ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 936.214012

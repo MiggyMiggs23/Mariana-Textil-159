@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: row 0018 was fragmented across a page edge
++ actual - expected
+
+  [
++   4
+-   5
+  ]
+
+    at verifyPdf (file:///home/runner/workspace/artifacts/mariana-textil/scripts/verify-auditoria-inventory-print.mjs:236:12)
+    at async file:///home/runner/workspace/artifacts/mariana-textil/scripts/verify-auditoria-inventory-print.mjs:296:7 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: [ 4 ],
+  expected: [ 5 ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.13.0

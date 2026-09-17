@@ -1,0 +1,126 @@
+workflow: artifacts/api-server: API Server
+status: RUNNING
+run_id: 6wYoDlsnaxwzmvedUDMdH
+timestamp: 2026-09-17T19:40:32.137Z
+
+
+> @workspace/api-server@0.0.0 dev /home/runner/workspace/artifacts/api-server
+> NODE_ENV=${NODE_ENV:-development} pnpm run build && pnpm run start
+
+
+> @workspace/api-server@0.0.0 build /home/runner/workspace/artifacts/api-server
+> node ./build.mjs
+
+
+  dist/index.mjs                       8.2mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.4kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                  14.2mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.6kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 3285ms
+
+> @workspace/api-server@0.0.0 start /home/runner/workspace/artifacts/api-server
+> node --enable-source-maps ./dist/index.mjs
+
+[19:40:21.849] INFO (191986): Schema initializer complete: ensureAuditSchema
+    durationMs: 684
+[19:40:21.955] INFO (191986): Schema initializer complete: ensureNotificacionesSchema
+    durationMs: 106
+[19:40:21.966] INFO (191986): Schema initializer complete: ensureStockMinimosSchema
+    durationMs: 11
+[19:40:21.969] INFO (191986): Schema initializer complete: ensureCamionetasSchema
+    durationMs: 3
+[19:40:21.971] INFO (191986): Schema initializer complete: ensureChoferesSchema
+    durationMs: 2
+[19:40:21.974] INFO (191986): Schema initializer complete: ensureViajesSchema
+    durationMs: 3
+[19:40:22.006] INFO (191986): Schema initializer complete: ensureEquiposSchema
+    durationMs: 32
+[19:40:22.072] INFO (191986): Schema initializer complete: ensurePagosProveedorSchema
+    durationMs: 67
+[19:40:22.233] INFO (191986): Schema initializer complete: ensureSolicitudesPagoDirigidoSchema
+    durationMs: 160
+[19:40:22.243] INFO (191986): Schema initializer complete: ensureAplicacionesPagoProveedorSchema
+    durationMs: 10
+[19:40:22.243] INFO (191986): Schema startup phase complete: audit and logistics
+    durationMs: 1079
+[19:40:22.248] INFO (191986): Schema initializer complete: ensureEstadoRolloSchema
+    durationMs: 5
+[19:40:22.253] INFO (191986): Schema initializer complete: ensureExtraordinaryExitsSchema
+    durationMs: 5
+[19:40:22.258] INFO (191986): Schema initializer complete: ensureProductUnitSchema
+    durationMs: 5
+[19:40:22.268] INFO (191986): Schema initializer complete: ensureProductMeterSchema
+    durationMs: 10
+[19:40:22.272] INFO (191986): Schema initializer complete: ensureProductPricingSchema
+    durationMs: 5
+[19:40:22.279] INFO (191986): Schema initializer complete: ensureProductColorSchema
+    durationMs: 7
+[19:40:22.282] INFO (191986): Schema initializer complete: ensureProductSpecificationsSchema
+    durationMs: 3
+[19:40:22.282] INFO (191986): Schema startup phase complete: inventory and products
+    durationMs: 39
+[19:40:22.289] INFO (191986): Schema initializer complete: ensureSupervisorRole
+    durationMs: 6
+[19:40:22.376] INFO (191986): Schema initializer complete: ensureAuditoriaInventarioSchema
+    durationMs: 87
+[19:40:22.384] INFO (191986): Schema initializer complete: ensurePisosSchema
+    durationMs: 8
+[19:40:22.384] INFO (191986): Roles SUPERVISOR, SISTEMAS y CONTADOR verificados
+    migratedSupportUsers: 0
+[19:40:22.384] INFO (191986): Schema startup phase complete: roles and inventory audit
+    durationMs: 102
+[19:40:22.565] INFO (191986): Schema initializer complete: ensureClientesSchema
+    durationMs: 181
+[19:40:22.570] INFO (191986): Schema initializer complete: ensureTicketIvaSchema
+    durationMs: 4
+[19:40:22.577] INFO (191986): Schema initializer complete: ensureCashSessionSchema
+    durationMs: 7
+[19:40:22.587] INFO (191986): Schema initializer complete: ensureTicketAuthorizationSchema
+    durationMs: 9
+[19:40:22.594] INFO (191986): Schema initializer complete: ensureTicketLineTypesSchema
+    durationMs: 8
+[19:40:22.725] INFO (191986): Schema initializer complete: ensureSalidasSchema
+    durationMs: 131
+[19:40:23.347] INFO (191986): Schema initializer complete: ensureAuditoriaResolucionesSchema
+    durationMs: 621
+[19:40:23.365] INFO (191986): Schema initializer complete: ensureDocumentFoliosSchema
+    durationMs: 18
+[19:40:23.365] INFO (191986): Schema startup phase complete: customers and tickets
+    durationMs: 981
+[19:40:23.372] INFO (191986): Schema initializer complete: ensurePendingCostsSchema
+    durationMs: 7
+[19:40:23.373] INFO (191986): Schema initializer complete: ensureAdminAnalyticsSchema
+    durationMs: 2
+[19:40:23.374] INFO (191986): Schema initializer complete: ensureCuadreFiscalSchema
+    durationMs: 1
+[19:40:23.380] INFO (191986): Schema initializer complete: ensureEtiquetasSchema
+    durationMs: 6
+[19:40:23.384] INFO (191986): Schema initializer complete: ensureCajaPermissions
+    durationMs: 4
+[19:40:23.388] INFO (191986): Schema initializer complete: ensureSalidasVentaPermissions
+    durationMs: 4
+[19:40:23.388] INFO (191986): Schema startup phase complete: reporting and labels
+    durationMs: 23
+[19:40:23.388] INFO (191986): Schema startup complete
+    durationMs: 2283
+[19:40:23.397] INFO (191986): Server listening
+    port: 8080
+[19:40:23.399] INFO (191986): Backfill de compras por proveedor completado
+    inserted: 0
+[19:40:23.838] INFO (191986): request completed
+    req: {
+      "id": 1,
+      "method": "GET",
+      "url": "/"
+    }
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 5

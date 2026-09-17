@@ -733,7 +733,44 @@ Los destinos de dinero conservan sus códigos internos y se presentan siempre en
 
 ## Parte 8 — Auditoría de inventario, purga y corte diario
 
-**Bitácora** es el registro de quién hizo qué en el sistema; es inmutable y vive en Configuración. **Conciliación de Kardex** compara el caché de existencias contra el kardex: el sistema contra sí mismo. **Auditoría de Inventario** compara el sistema contra la mercancía física y vive en Inventario. Los tres nombres deben decir qué compara cada uno. Al abrirse toma una fotografía de la existencia del sitio, contra la cual compara; varias personas escanean sobre la misma auditoría al mismo tiempo y un rollo repetido no se duplica. **La auditoría nunca corrige el inventario por su cuenta**: reporta, y ADMIN decide si se generan los ajustes. Solo cuenta rollos por QR; no verifica metros ni kilos.
+**Bitácora** es el registro de quién hizo qué en el sistema; es inmutable y vive en Configuración. **Conciliación de Kardex** compara el caché de existencias contra el kardex: el sistema contra sí mismo. **Auditoría de Inventario** compara el sistema contra la mercancía física y vive en Inventario. Los tres nombres deben decir qué compara cada uno. Al abrirse toma una fotografía de la existencia del sitio, contra la cual compara; varias personas escanean sobre la misma auditoría al mismo tiempo y un rollo repetido no se duplica. **Cerrar** termina el conteo y conserva su resultado; **Confirmar y aplicar**, reservado a ADMIN, aplica los faltantes y las correcciones de piso. No transfiere ni recibe sobrantes automáticamente. Solo cuenta rollos por QR; no verifica metros ni kilos.
+
+### Auditoría de inventario: resolución y reaparición de rollos
+
+- **Cuadre:** conserva el resultado del conteo, sin fabricar movimientos.
+- **Faltante:** mantiene el ajuste de baja existente, su cantidad cero, justificación, marca de revisado y vínculo a la auditoría.
+- **Mal acomodado:** corrige solamente el piso, sin kardex ni cambio de existencias.
+- **Sobrante:** conserva contexto y queda pendiente de decisión individual ADMIN; no impide cerrar ni confirmar la auditoría. No cambia el conteo, el escaneo, los participantes ni el orden de candados por producto y sitio.
+
+Los cinco casos de sobrante son:
+
+1. **Disponible en otro sitio:** desplazamiento físico no registrado; muestra el sitio registrado.
+2. **En tránsito hacia este sitio:** llegada pendiente de recepción en el sistema; enlaza el traslado y exige su recepción por el flujo normal.
+3. **Apartado en salida abierta:** mercancía comprometida; muestra el documento y no permite moverla antes de resolver ese compromiso.
+4. **Vendido y físicamente aquí:** incidencia financiera grave, presentada separadamente; se cobró mercancía que no salió. Muestra el documento de venta y no lo cancela ni regulariza automáticamente.
+5. **Sin registro previo:** solo serie escaneada y aviso de falta de datos verificables. No inventa producto, cantidad ni origen y no genera un alta.
+
+Los estados fuera de esos cinco casos se identifican expresamente como **Requiere investigación**, sin convertirlos en una clasificación falsa.
+
+ADMIN decide con motivo de 10 a 1000 caracteres:
+
+- **Dejar donde apareció:** regulariza expresamente el rollo no comprometido, dejando movimientos, autor, motivo y enlace a la auditoría.
+- **Regresar al sitio original:** requiere transportista y crea/envía un traslado normal desde el sitio donde apareció. Si antes debe regularizarse la ubicación, queda documentado como parte de la decisión. El rollo permanece EN_TRANSITO hasta que el destino lo reciba; elegir la opción no significa que ya llegó. Mientras esa devolución siga en tránsito no se acepta otra decisión que oculte su estado.
+- **Investigar:** agrega una decisión trazable y conserva el pendiente. No significa que el caso esté resuelto.
+
+Las decisiones, el contexto conservado y la evidencia de reactivación se agregan sin editar ni borrar hechos históricos; sus tablas rechazan UPDATE y DELETE.
+
+**Reactivación de faltantes:** es una vía adicional, exclusiva de ADMIN, desde la auditoría que originó la baja o el detalle del rollo, con motivo obligatorio de 10 a 1000 caracteres. Restaura el mismo rollo a DISPONIBLE con la cantidad exacta anterior acreditada por su baja, conservando serie, producto, costo y entrada. Permite el sitio donde apareció y su piso activo, incluso si son distintos al sitio de baja. **No se vuelve a medir ni se captura metraje: son rollos cerrados; se discute presencia, no cantidad.** Si no hay evidencia íntegra, se bloquea sin estimar. Se validan de nuevo evidencia, estado y compromisos bajo candados y se evita duplicar la operación.
+
+El kardex distingue **REACTIVACION_FALTANTE — Reactivación de faltante** de **CANCELACION — Reverso**. La baja permanece íntegra. Las auditorías posteriores cerradas en el sitio de aparición quedan vinculadas como hechos posteriores; no se reescribe el resultado anterior ni se presenta la reaparición como una cancelación.
+
+**Decisión aprobada sobre BAJA:** se conservan todas las vías anteriores de reverso, incluidas las generales y las de salidas extraordinarias. No se declara BAJA terminal ni se cierra su transición existente. Un reverso corrige un movimiento que no debió existir; una reactivación registra que el faltante apareció después. El nuevo tipo de reactivación no se revierte por el reverso genérico, cuyo cálculo no representa este hecho nuevo. Los riesgos de los reversos originales se reportan, no se corrigen sin autorización; véase `reports/prompt-t/flujos-disponible.md`.
+
+**Avisos:** cada nuevo cierre genera una notificación guardada para ADMIN, NORMAL si no hay diferencias y URGENTE si hay faltantes, sobrantes o mal acomodados. Enlaza el resultado de la auditoría. El sobrante pendiente es otra condición, derivada de su resolución y recepción: permanece visible durante investigación o tránsito y desaparece al resolverse realmente. Marcar leído el aviso del cierre no resuelve esa condición.
+
+**Impresión:** se conserva Letter vertical, margen de 10 mm, diseño y densidad; el encabezado no se repite. La protección contra cortes se aplica a renglones y firmas, sin cuotas artificiales de renglones por hoja.
+
+**Verificación ejecutada el 2026-09-17:** referencia aislada y entrega con 354/354 en la suite original, sin omisiones; `pnpm run typecheck` completo con cero errores. Pruebas nuevas: 15 de motor con dobles transaccionales, 6 de componentes montados y 1 contrato de impresión, todas vistas fallar ante defectos semánticos en copias aisladas y pasar al restaurarlas. Se comprobaron seis PDFs reales de 2/3/5 páginas, incluyendo descripciones envueltas; encabezado único, filas y firmas íntegras. API y frontend arrancaron; las consultas reales adicionales fueron exclusivamente de lectura. **No se afirma haber realizado una devolución/recepción ni una reactivación autenticada sobre mercancía real.** Evidencia, comandos y límites: `reports/prompt-t/verificacion.md`.
 
 Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el sistema. Un usuario que aparece en la bitácora o en el kardex nunca se borra: perder su rastro rompe la trazabilidad.
 

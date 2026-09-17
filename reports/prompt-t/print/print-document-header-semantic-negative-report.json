@@ -1,0 +1,14 @@
+{
+  "isolation": "/tmp/prompt-t-shared-header-clone-cyiEFD",
+  "workspaceMutated": false,
+  "semanticDefects": [
+    "replaced the audit component shared PrintableDocumentHeader with an ordinary section",
+    "changed the audit document logo from 100px to 99px"
+  ],
+  "mutantExitCode": 1,
+  "mutantTests": { "passed": 2, "failed": 2, "total": 4 },
+  "restoredExitCode": 0,
+  "restoredTests": { "passed": 4, "failed": 0, "total": 4 },
+  "mutantLog": ".local/prompt-t-verification/print-document-header-mutant-failure.txt",
+  "restoredLog": ".local/prompt-t-verification/print-document-header-restored-green.txt"
+}

@@ -3177,7 +3177,32 @@ export const CreateAuditoriaInventarioResponse = zod.object({
   "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
-  "escaneadoAt": zod.coerce.date().nullish()
+  "escaneadoAt": zod.coerce.date().nullish(),
+  "sobrante": zod.union([zod.object({
+  "caso": zod.enum(['DISPONIBLE_OTRO_SITIO', 'EN_TRANSITO_HACIA_SITIO', 'APARTADO_SALIDA_ABIERTA', 'VENDIDO_FISICAMENTE_AQUI', 'SIN_REGISTRO_PREVIO', 'REQUIERE_INVESTIGACION']),
+  "grave": zod.boolean(),
+  "sitioRegistradoId": zod.number().nullable(),
+  "sitioRegistrado": zod.string().nullable(),
+  "estadoRegistrado": zod.string().nullable(),
+  "documentos": zod.array(zod.object({
+  "tipo": zod.string(),
+  "id": zod.number(),
+  "folio": zod.string(),
+  "href": zod.string()
+})),
+  "pendiente": zod.boolean(),
+  "estadoResolucion": zod.enum(['PENDIENTE', 'EN_INVESTIGACION', 'EN_TRANSITO', 'RESUELTO']),
+  "bloqueo": zod.string().nullable(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "decision": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number(),
+  "usuario": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "salidaId": zod.number().nullable()
+}))
+}),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
   "usuarioId": zod.number(),
@@ -3236,7 +3261,32 @@ export const GetAuditoriaInventarioResponse = zod.object({
   "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
-  "escaneadoAt": zod.coerce.date().nullish()
+  "escaneadoAt": zod.coerce.date().nullish(),
+  "sobrante": zod.union([zod.object({
+  "caso": zod.enum(['DISPONIBLE_OTRO_SITIO', 'EN_TRANSITO_HACIA_SITIO', 'APARTADO_SALIDA_ABIERTA', 'VENDIDO_FISICAMENTE_AQUI', 'SIN_REGISTRO_PREVIO', 'REQUIERE_INVESTIGACION']),
+  "grave": zod.boolean(),
+  "sitioRegistradoId": zod.number().nullable(),
+  "sitioRegistrado": zod.string().nullable(),
+  "estadoRegistrado": zod.string().nullable(),
+  "documentos": zod.array(zod.object({
+  "tipo": zod.string(),
+  "id": zod.number(),
+  "folio": zod.string(),
+  "href": zod.string()
+})),
+  "pendiente": zod.boolean(),
+  "estadoResolucion": zod.enum(['PENDIENTE', 'EN_INVESTIGACION', 'EN_TRANSITO', 'RESUELTO']),
+  "bloqueo": zod.string().nullable(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "decision": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number(),
+  "usuario": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "salidaId": zod.number().nullable()
+}))
+}),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
   "usuarioId": zod.number(),
@@ -3322,7 +3372,32 @@ export const CloseAuditoriaInventarioResponse = zod.object({
   "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
-  "escaneadoAt": zod.coerce.date().nullish()
+  "escaneadoAt": zod.coerce.date().nullish(),
+  "sobrante": zod.union([zod.object({
+  "caso": zod.enum(['DISPONIBLE_OTRO_SITIO', 'EN_TRANSITO_HACIA_SITIO', 'APARTADO_SALIDA_ABIERTA', 'VENDIDO_FISICAMENTE_AQUI', 'SIN_REGISTRO_PREVIO', 'REQUIERE_INVESTIGACION']),
+  "grave": zod.boolean(),
+  "sitioRegistradoId": zod.number().nullable(),
+  "sitioRegistrado": zod.string().nullable(),
+  "estadoRegistrado": zod.string().nullable(),
+  "documentos": zod.array(zod.object({
+  "tipo": zod.string(),
+  "id": zod.number(),
+  "folio": zod.string(),
+  "href": zod.string()
+})),
+  "pendiente": zod.boolean(),
+  "estadoResolucion": zod.enum(['PENDIENTE', 'EN_INVESTIGACION', 'EN_TRANSITO', 'RESUELTO']),
+  "bloqueo": zod.string().nullable(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "decision": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number(),
+  "usuario": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "salidaId": zod.number().nullable()
+}))
+}),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
   "usuarioId": zod.number(),
@@ -3390,7 +3465,32 @@ export const CancelAuditoriaInventarioResponse = zod.object({
   "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
-  "escaneadoAt": zod.coerce.date().nullish()
+  "escaneadoAt": zod.coerce.date().nullish(),
+  "sobrante": zod.union([zod.object({
+  "caso": zod.enum(['DISPONIBLE_OTRO_SITIO', 'EN_TRANSITO_HACIA_SITIO', 'APARTADO_SALIDA_ABIERTA', 'VENDIDO_FISICAMENTE_AQUI', 'SIN_REGISTRO_PREVIO', 'REQUIERE_INVESTIGACION']),
+  "grave": zod.boolean(),
+  "sitioRegistradoId": zod.number().nullable(),
+  "sitioRegistrado": zod.string().nullable(),
+  "estadoRegistrado": zod.string().nullable(),
+  "documentos": zod.array(zod.object({
+  "tipo": zod.string(),
+  "id": zod.number(),
+  "folio": zod.string(),
+  "href": zod.string()
+})),
+  "pendiente": zod.boolean(),
+  "estadoResolucion": zod.enum(['PENDIENTE', 'EN_INVESTIGACION', 'EN_TRANSITO', 'RESUELTO']),
+  "bloqueo": zod.string().nullable(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "decision": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number(),
+  "usuario": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "salidaId": zod.number().nullable()
+}))
+}),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
   "usuarioId": zod.number(),
@@ -3400,6 +3500,190 @@ export const CancelAuditoriaInventarioResponse = zod.object({
   "ultimoAt": zod.coerce.date()
 }))
 }))
+
+
+
+
+
+export const ResolverSobranteAuditoriaInventarioParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const resolverSobranteAuditoriaInventarioBodySerieMax = 100;
+
+export const resolverSobranteAuditoriaInventarioBodyMotivoMin = 10;
+export const resolverSobranteAuditoriaInventarioBodyMotivoMax = 1000;
+
+export const resolverSobranteAuditoriaInventarioBodyUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$');
+export const resolverSobranteAuditoriaInventarioBodyTransportistaMax = 200;
+
+
+
+export const ResolverSobranteAuditoriaInventarioBody = zod.object({
+  "serie": zod.string().min(1).max(resolverSobranteAuditoriaInventarioBodySerieMax),
+  "decision": zod.enum(['DEJAR', 'REGRESAR', 'INVESTIGAR']),
+  "motivo": zod.string().min(resolverSobranteAuditoriaInventarioBodyMotivoMin).max(resolverSobranteAuditoriaInventarioBodyMotivoMax),
+  "uuidCliente": zod.string().regex(resolverSobranteAuditoriaInventarioBodyUuidClienteRegExp),
+  "transportista": zod.string().max(resolverSobranteAuditoriaInventarioBodyTransportistaMax).optional(),
+  "pisoId": zod.number().nullish()
+})
+
+export const resolverSobranteAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp = new RegExp('^-?\\d+(\\.\\d{1,3})?$');
+
+
+export const ResolverSobranteAuditoriaInventarioResponse = zod.object({
+  "id": zod.number(),
+  "folio": zod.number(),
+  "folioFormateado": zod.string(),
+  "ubicacionId": zod.number(),
+  "nombreUbicacion": zod.string(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA', 'CANCELADA', 'CONFIRMADA']),
+  "totalSnapshot": zod.number(),
+  "totalEscaneados": zod.number(),
+  "cuadros": zod.number(),
+  "faltantes": zod.number(),
+  "sobrantes": zod.number(),
+  "malAcomodados": zod.number(),
+  "abiertaAt": zod.coerce.date(),
+  "creadaPor": zod.string()
+}).and(zod.object({
+  "motivoCancelacion": zod.string().nullish(),
+  "cerradaAt": zod.coerce.date().nullish(),
+  "confirmadaAt": zod.coerce.date().nullish(),
+  "resultados": zod.array(zod.object({
+  "serie": zod.string(),
+  "clasificacion": zod.enum(['CUADRO', 'FALTANTE', 'SOBRANTE', 'MAL_ACOMODADO']),
+  "rolloId": zod.number().nullish(),
+  "producto": zod.string().nullish(),
+  "cantidad": zod.string().regex(resolverSobranteAuditoriaInventarioResponseTwoResultadosItemCantidadRegExp).nullable(),
+  "unidad": zod.string().nullable(),
+  "ubicacionActualId": zod.number().nullish(),
+  "ubicacionActual": zod.string().nullish(),
+  "pisoEsperadoId": zod.number().nullish(),
+  "pisoEsperado": zod.string().nullish(),
+  "pisoRealId": zod.number().nullish(),
+  "pisoReal": zod.string().nullish(),
+  "estadoActual": zod.string(),
+  "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
+  "escaneadoAt": zod.coerce.date().nullish(),
+  "sobrante": zod.union([zod.object({
+  "caso": zod.enum(['DISPONIBLE_OTRO_SITIO', 'EN_TRANSITO_HACIA_SITIO', 'APARTADO_SALIDA_ABIERTA', 'VENDIDO_FISICAMENTE_AQUI', 'SIN_REGISTRO_PREVIO', 'REQUIERE_INVESTIGACION']),
+  "grave": zod.boolean(),
+  "sitioRegistradoId": zod.number().nullable(),
+  "sitioRegistrado": zod.string().nullable(),
+  "estadoRegistrado": zod.string().nullable(),
+  "documentos": zod.array(zod.object({
+  "tipo": zod.string(),
+  "id": zod.number(),
+  "folio": zod.string(),
+  "href": zod.string()
+})),
+  "pendiente": zod.boolean(),
+  "estadoResolucion": zod.enum(['PENDIENTE', 'EN_INVESTIGACION', 'EN_TRANSITO', 'RESUELTO']),
+  "bloqueo": zod.string().nullable(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "decision": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number(),
+  "usuario": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "salidaId": zod.number().nullable()
+}))
+}),zod.null()]).optional()
+})),
+  "participantes": zod.array(zod.object({
+  "usuarioId": zod.number(),
+  "nombre": zod.string(),
+  "escaneos": zod.number(),
+  "primeroAt": zod.coerce.date(),
+  "ultimoAt": zod.coerce.date()
+}))
+}))
+
+
+
+
+
+export const GetReactivacionFaltanteParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+export const GetReactivacionFaltanteResponse = zod.object({
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "elegible": zod.boolean(),
+  "bloqueo": zod.string().nullable(),
+  "auditoriaOrigenId": zod.number().nullable(),
+  "movimientoBajaId": zod.number().nullable(),
+  "cantidadAnterior": zod.string().nullable(),
+  "producto": zod.string(),
+  "unidad": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "recepcionId": zod.number().nullable(),
+  "entradaFolio": zod.string().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "proveedorNombre": zod.string().nullable(),
+  "ubicacionBajaId": zod.number().nullable(),
+  "ubicacionBaja": zod.string().nullable(),
+  "auditoriasPosteriores": zod.array(zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "folio": zod.number(),
+  "cerradaAt": zod.coerce.date()
+}))
+})
+
+
+
+
+
+export const ReactivarFaltanteParams = zod.object({
+  "id": zod.coerce.number().min(1)
+})
+
+
+
+
+export const reactivarFaltanteBodyMotivoMin = 10;
+export const reactivarFaltanteBodyMotivoMax = 1000;
+
+export const reactivarFaltanteBodyUuidClienteRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$');
+
+
+export const ReactivarFaltanteBody = zod.object({
+  "auditoriaOrigenId": zod.number().min(1),
+  "origen": zod.enum(['AUDITORIA', 'ROLLO']),
+  "ubicacionId": zod.number().min(1),
+  "pisoId": zod.number().min(1).nullable(),
+  "motivo": zod.string().min(reactivarFaltanteBodyMotivoMin).max(reactivarFaltanteBodyMotivoMax),
+  "uuidCliente": zod.string().regex(reactivarFaltanteBodyUuidClienteRegExp)
+})
+
+export const ReactivarFaltanteResponse = zod.object({
+  "rolloId": zod.number(),
+  "serie": zod.string(),
+  "elegible": zod.boolean(),
+  "bloqueo": zod.string().nullable(),
+  "auditoriaOrigenId": zod.number().nullable(),
+  "movimientoBajaId": zod.number().nullable(),
+  "cantidadAnterior": zod.string().nullable(),
+  "producto": zod.string(),
+  "unidad": zod.string(),
+  "costoUnitario": zod.string().nullable(),
+  "recepcionId": zod.number().nullable(),
+  "entradaFolio": zod.string().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "proveedorNombre": zod.string().nullable(),
+  "ubicacionBajaId": zod.number().nullable(),
+  "ubicacionBaja": zod.string().nullable(),
+  "auditoriasPosteriores": zod.array(zod.object({
+  "id": zod.number(),
+  "ubicacionId": zod.number(),
+  "folio": zod.number(),
+  "cerradaAt": zod.coerce.date()
+}))
+})
 
 
 /**
@@ -3449,7 +3733,32 @@ export const ConfirmAuditoriaInventarioResponse = zod.object({
   "pisoReal": zod.string().nullish(),
   "estadoActual": zod.string(),
   "resolucion": zod.enum(['PENDIENTE', 'APLICADA', 'RESOLUCION_MANUAL']),
-  "escaneadoAt": zod.coerce.date().nullish()
+  "escaneadoAt": zod.coerce.date().nullish(),
+  "sobrante": zod.union([zod.object({
+  "caso": zod.enum(['DISPONIBLE_OTRO_SITIO', 'EN_TRANSITO_HACIA_SITIO', 'APARTADO_SALIDA_ABIERTA', 'VENDIDO_FISICAMENTE_AQUI', 'SIN_REGISTRO_PREVIO', 'REQUIERE_INVESTIGACION']),
+  "grave": zod.boolean(),
+  "sitioRegistradoId": zod.number().nullable(),
+  "sitioRegistrado": zod.string().nullable(),
+  "estadoRegistrado": zod.string().nullable(),
+  "documentos": zod.array(zod.object({
+  "tipo": zod.string(),
+  "id": zod.number(),
+  "folio": zod.string(),
+  "href": zod.string()
+})),
+  "pendiente": zod.boolean(),
+  "estadoResolucion": zod.enum(['PENDIENTE', 'EN_INVESTIGACION', 'EN_TRANSITO', 'RESUELTO']),
+  "bloqueo": zod.string().nullable(),
+  "historial": zod.array(zod.object({
+  "id": zod.number(),
+  "decision": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number(),
+  "usuario": zod.string(),
+  "createdAt": zod.coerce.date(),
+  "salidaId": zod.number().nullable()
+}))
+}),zod.null()]).optional()
 })),
   "participantes": zod.array(zod.object({
   "usuarioId": zod.number(),
@@ -3779,7 +4088,7 @@ export const ActivarRolloResponse = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -3934,7 +4243,7 @@ export const RevertSalidaExtraordinariaResponse = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -3996,7 +4305,7 @@ export const VenderRolloResponse = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -4063,7 +4372,7 @@ export const AjustarRolloResponse = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -4126,7 +4435,7 @@ export const RevertirMovimientoResponse = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -4183,7 +4492,7 @@ export const GetRolloResponse = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -4225,7 +4534,7 @@ export const GetInventarioMovimientoResponse = zod.object({
   "skuProducto": zod.string().nullish(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().nullish(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -4472,7 +4781,7 @@ export const getKardexQueryPageSizeMax = 100;
 
 export const GetKardexQueryParams = zod.object({
   "modo": zod.enum(['TODO_LO_QUE_SALIO']).optional().describe('Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.'),
-  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE'])).optional(),
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
@@ -4488,7 +4797,7 @@ export const GetKardexResponse = zod.object({
   "movimientos": zod.array(zod.object({
   "id": zod.number(),
   "createdAt": zod.coerce.date(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "productoId": zod.number(),
@@ -4546,7 +4855,7 @@ export const getKardexGroupedQueryPageSizeMax = 100;
 
 export const GetKardexGroupedQueryParams = zod.object({
   "modo": zod.enum(['TODO_LO_QUE_SALIO']).optional(),
-  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE'])).optional(),
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
@@ -4566,7 +4875,7 @@ export const GetKardexGroupedResponse = zod.object({
   "fechaMax": zod.coerce.date(),
   "latestDate": zod.coerce.date(),
   "latestMovementId": zod.number(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "ubicacionActiva": zod.boolean(),
@@ -4646,7 +4955,7 @@ export const ListKardexFiltersResponse = zod.object({
   "nombre": zod.string(),
   "activa": zod.boolean()
 })),
-  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']))
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']))
 })
 
 
@@ -4659,7 +4968,7 @@ export const exportKardexXlsxQueryIncluirUbicacionesInactivasDefault = false;
 
 export const ExportKardexXlsxQueryParams = zod.object({
   "modo": zod.enum(['TODO_LO_QUE_SALIO']).optional().describe('Preset de solo lectura. TODO_LO_QUE_SALIO fuerza VENTA, TRANSFERENCIA_SALIDA y SALIDA_MOSTRADOR, aun si tipos contiene otros valores.'),
-  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION'])).optional(),
+  "tipos": zod.array(zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE'])).optional(),
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
@@ -4683,7 +4992,7 @@ export const ListAjustesPendientesResponseItem = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -4719,7 +5028,7 @@ export const RevisarAjusteResponse = zod.object({
   "skuProducto": zod.string().optional(),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string().optional(),
-  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION']),
+  "tipo": zod.enum(['ALTA', 'RECEPCION', 'VENTA', 'DEVOLUCION', 'TRANSFERENCIA_SALIDA', 'TRANSFERENCIA_ENTRADA', 'SALIDA_MOSTRADOR', 'AJUSTE_POSITIVO', 'AJUSTE_NEGATIVO', 'CANCELACION', 'REACTIVACION_FALTANTE']),
   "cantidad": zod.string(),
   "saldoPosterior": zod.string(),
   "documentoTipo": zod.string().nullish(),
@@ -6071,6 +6380,8 @@ export const ListNotificacionesResponse = zod.object({
   "tipo": zod.string(),
   "titulo": zod.string(),
   "mensaje": zod.string(),
+  "priority": zod.enum(['NORMAL', 'URGENTE']).optional(),
+  "href": zod.string().optional(),
   "entidad": zod.string(),
   "entidadId": zod.string(),
   "leidaAt": zod.coerce.date().nullable(),
@@ -6121,6 +6432,7 @@ export const GetNotificationFeedResponse = zod.object({
   "message": zod.string(),
   "href": zod.string(),
   "updatedAt": zod.coerce.date(),
+  "priority": zod.enum(['NORMAL', 'URGENTE']).optional(),
   "siteId": zod.number().nullable(),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullish(),
   "action": zod.union([zod.object({

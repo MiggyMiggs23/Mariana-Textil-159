@@ -1873,6 +1873,60 @@ paths:
         "403": { $ref: "#/components/responses/Forbidden" }
         "404": { $ref: "#/components/responses/NotFound" }
         "409": { $ref: "#/components/responses/Conflict" }
+  /inventario/auditorias/{id}/sobrantes/resolver:
+    post:
+      operationId: resolverSobranteAuditoriaInventario
+      tags: [Inventario]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: number, minimum: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/AuditoriaSobranteResolucionInput" }
+      responses:
+        "200":
+          description: Decisión ADMIN registrada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/AuditoriaInventarioDetail" }
+  /inventario/rollos/{id}/reactivacion-faltante:
+    get:
+      operationId: getReactivacionFaltante
+      tags: [Inventario]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: number, minimum: 1 }
+      responses:
+        "200":
+          description: Evidencia de baja y contexto de reactivación (ADMIN)
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReactivacionFaltanteContexto" }
+    post:
+      operationId: reactivarFaltante
+      tags: [Inventario]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: number, minimum: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ReactivacionFaltanteInput" }
+      responses:
+        "200":
+          description: Reactivación registrada sin alterar el ajuste de baja
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/ReactivacionFaltanteContexto" }
   /inventario/auditorias/{id}/confirmar:
     post:
       operationId: confirmAuditoriaInventario
@@ -9624,6 +9678,7 @@ components:
         message: { type: string }
         href: { type: string }
         updatedAt: { type: string, format: date-time }
+        priority: { type: string, enum: [NORMAL, URGENTE] }
         siteId: { type: ["number", "null"] }
         estadoNota:
           { type: ["string", "null"], enum: [PENDIENTE, ABONO_PARCIAL, PAGADA, CON_RETRASO] }
@@ -10392,6 +10447,7 @@ components:
           AJUSTE_POSITIVO,
           AJUSTE_NEGATIVO,
           CANCELACION,
+          REACTIVACION_FALTANTE,
         ]
     MotivoSalidaExtraordinaria:
       type: string
@@ -11796,6 +11852,8 @@ components:
         tipo: { type: string }
         titulo: { type: string }
         mensaje: { type: string }
+        priority: { type: string, enum: [NORMAL, URGENTE] }
+        href: { type: string }
         entidad: { type: string }
         entidadId: { type: string }
         leidaAt: { type: ["string", "null"], format: date-time }
@@ -13686,6 +13744,92 @@ components:
         estadoActual: { type: string }
         resolucion: { type: string, enum: [PENDIENTE, APLICADA, RESOLUCION_MANUAL] }
         escaneadoAt: { type: [string, "null"], format: date-time }
+        sobrante:
+          oneOf:
+            - $ref: "#/components/schemas/AuditoriaSobranteContexto"
+            - type: "null"
+    AuditoriaSobranteResolucionInput:
+      type: object
+      required: [serie, decision, motivo, uuidCliente]
+      properties:
+        serie: { type: string, minLength: 1, maxLength: 100 }
+        decision: { type: string, enum: [DEJAR, REGRESAR, INVESTIGAR] }
+        motivo: { type: string, minLength: 10, maxLength: 1000 }
+        uuidCliente: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' }
+        transportista: { type: string, maxLength: 200 }
+        pisoId: { type: [number, "null"] }
+    AuditoriaDocumentoRelacionado:
+      type: object
+      required: [tipo, id, folio, href]
+      properties:
+        tipo: { type: string }
+        id: { type: number }
+        folio: { type: string }
+        href: { type: string }
+    AuditoriaSobranteDecision:
+      type: object
+      required: [id, decision, motivo, usuarioId, usuario, createdAt, salidaId]
+      properties:
+        id: { type: number }
+        decision: { type: string }
+        motivo: { type: string }
+        usuarioId: { type: number }
+        usuario: { type: string }
+        createdAt: { type: string, format: date-time }
+        salidaId: { type: [number, "null"] }
+    AuditoriaSobranteContexto:
+      type: object
+      required: [caso, grave, sitioRegistradoId, sitioRegistrado, estadoRegistrado, documentos, pendiente, estadoResolucion, bloqueo, historial]
+      properties:
+        caso: { type: string, enum: [DISPONIBLE_OTRO_SITIO, EN_TRANSITO_HACIA_SITIO, APARTADO_SALIDA_ABIERTA, VENDIDO_FISICAMENTE_AQUI, SIN_REGISTRO_PREVIO, REQUIERE_INVESTIGACION] }
+        grave: { type: boolean }
+        sitioRegistradoId: { type: [number, "null"] }
+        sitioRegistrado: { type: [string, "null"] }
+        estadoRegistrado: { type: [string, "null"] }
+        documentos: { type: array, items: { $ref: "#/components/schemas/AuditoriaDocumentoRelacionado" } }
+        pendiente: { type: boolean }
+        estadoResolucion: { type: string, enum: [PENDIENTE, EN_INVESTIGACION, EN_TRANSITO, RESUELTO] }
+        bloqueo: { type: [string, "null"] }
+        historial: { type: array, items: { $ref: "#/components/schemas/AuditoriaSobranteDecision" } }
+    ReactivacionFaltanteInput:
+      type: object
+      required: [auditoriaOrigenId, origen, ubicacionId, pisoId, motivo, uuidCliente]
+      properties:
+        auditoriaOrigenId: { type: number, minimum: 1 }
+        origen: { type: string, enum: [AUDITORIA, ROLLO] }
+        ubicacionId: { type: number, minimum: 1 }
+        pisoId: { type: [number, "null"], minimum: 1 }
+        motivo: { type: string, minLength: 10, maxLength: 1000 }
+        uuidCliente: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$' }
+    ReactivacionAuditoriaPosterior:
+      type: object
+      required: [id, ubicacionId, folio, cerradaAt]
+      properties:
+        id: { type: number }
+        ubicacionId: { type: number }
+        folio: { type: number }
+        cerradaAt: { type: string, format: date-time }
+    ReactivacionFaltanteContexto:
+      type: object
+      required: [rolloId, serie, elegible, bloqueo, auditoriaOrigenId, movimientoBajaId, cantidadAnterior, producto, unidad, costoUnitario, recepcionId, entradaFolio, proveedorId, proveedorNombre, ubicacionBajaId, ubicacionBaja, auditoriasPosteriores]
+      properties:
+        rolloId: { type: number }
+        serie: { type: string }
+        elegible: { type: boolean }
+        bloqueo: { type: [string, "null"] }
+        auditoriaOrigenId: { type: [number, "null"] }
+        movimientoBajaId: { type: [number, "null"] }
+        cantidadAnterior: { type: [string, "null"] }
+        producto: { type: string }
+        unidad: { type: string }
+        costoUnitario: { type: [string, "null"] }
+        recepcionId: { type: [number, "null"] }
+        entradaFolio: { type: [string, "null"] }
+        proveedorId: { type: [number, "null"] }
+        proveedorNombre: { type: [string, "null"] }
+        ubicacionBajaId: { type: [number, "null"] }
+        ubicacionBaja: { type: [string, "null"] }
+        auditoriasPosteriores: { type: array, items: { $ref: "#/components/schemas/ReactivacionAuditoriaPosterior" } }
     AuditoriaInventarioParticipante:
       type: object
       required: [usuarioId, nombre, escaneos, primeroAt, ultimoAt]

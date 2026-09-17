@@ -12,6 +12,7 @@ import {
   rollosTable,
   ubicacionesTable,
   usuariosTable,
+  notificacionesSistemaTable,
 } from "@workspace/db";
 import {
   ADVISORY_LOCK_NAMESPACES,
@@ -20,10 +21,9 @@ import {
 import {
   ajustarRollo,
   lockInventoryPairs,
-  recibirTransferencia,
-  transferirRolloInmediato,
   type Tx,
 } from "./inventario";
+import { getSobranteContexto, freezeSobranteContextos, prioridadCierreAuditoria } from "./auditoria-resoluciones";
 
 export class AuditoriaInventarioError extends Error {
   constructor(
@@ -331,6 +331,19 @@ export async function transitionAuditoria(
     ip: input.ip,
     datos: input.motivo ? { motivo: input.motivo.trim() } : undefined,
   });
+  if (input.action === "CERRAR") {
+    await freezeSobranteContextos(tx, header.id, header.ubicacionId);
+    const detail = await buildAuditoriaDetail(tx, header.id);
+    await tx.insert(notificacionesSistemaTable).values({
+      tipo: "AUDITORIA_INVENTARIO_CERRADA",
+      titulo: `Auditoría cerrada · ${detail.folioFormateado}`,
+      mensaje: `${detail.nombreUbicacion}: ${detail.faltantes} faltantes, ${detail.sobrantes} sobrantes y ${detail.malAcomodados} mal acomodados.`,
+      prioridad: prioridadCierreAuditoria(detail),
+      entidad: "auditorias_inventario",
+      entidadId: String(header.id),
+      destinatarioUsuarioId: null,
+    }).onConflictDoNothing();
+  }
 }
 
 export async function confirmAuditoria(
@@ -696,50 +709,9 @@ export async function confirmAuditoria(
       expected.estado === rollo.estado;
     if (!unchanged || rollo.ubicacionId === header.ubicacionId) {
       manual++;
-    } else if (rollo.estado === "DISPONIBLE") {
-      await transferirRolloInmediato(tx, {
-        rolloId: rollo.id,
-        ubicacionOrigenId: rollo.ubicacionId,
-        ubicacionDestinoId: header.ubicacionId,
-        usuarioId: input.usuarioId,
-        justificacion: `Sobrante confirmado en auditoría ${header.id}`,
-        documentoTipo: "AUDITORIA_INVENTARIO",
-        documentoId: String(header.id),
-        uuidCliente: stableUuid(`auditoria:${header.id}:sobrante:${rollo.id}`),
-        pisoDestinoId: pisoRealId,
-      });
-      relocated++;
-      resolucion = "APLICADA";
-      await audit(tx, {
-        usuarioId: input.usuarioId,
-        accion: "AJUSTE_SOBRANTE",
-        auditoriaId: header.id,
-        sitioId: header.ubicacionId,
-        ip: input.ip,
-        datos: { rolloId: rollo.id, origenId: rollo.ubicacionId, resolucion: "REUBICADO" },
-      });
-    } else if (rollo.estado === "EN_TRANSITO") {
-      await recibirTransferencia(tx, {
-        rolloId: rollo.id,
-        ubicacionDestinoId: header.ubicacionId,
-        usuarioId: input.usuarioId,
-        justificacion: `Sobrante confirmado en auditoría ${header.id}`,
-        documentoTipo: "AUDITORIA_INVENTARIO",
-        documentoId: String(header.id),
-        uuidCliente: null,
-        pisoDestinoId: pisoRealId,
-      });
-      relocated++;
-      resolucion = "APLICADA";
-      await audit(tx, {
-        usuarioId: input.usuarioId,
-        accion: "AJUSTE_SOBRANTE",
-        auditoriaId: header.id,
-        sitioId: header.ubicacionId,
-        ip: input.ip,
-        datos: { rolloId: rollo.id, origenId: rollo.ubicacionId, resolucion: "REUBICADO_DESDE_TRANSITO" },
-      });
     } else {
+      // Confirmation never transfers or receives a surplus. Only a later,
+      // individually justified ADMIN decision may regularize its whereabouts.
       manual++;
     }
     await tx
@@ -850,7 +822,7 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
     WHERE COALESCE(s.auditoria_id, e.auditoria_id) = ${id}
     ORDER BY clasificacion, serie
   `);
-  const resultados = (result.rows as Array<Record<string, unknown>>).map((row) => {
+  const resultados = await Promise.all((result.rows as Array<Record<string, unknown>>).map(async (row) => {
     const clasificacion = String(row.clasificacion);
     const resolucion =
       clasificacion === "FALTANTE"
@@ -874,8 +846,11 @@ export async function buildAuditoriaDetail(tx: Tx, id: number) {
       estadoActual: String(row.estado_actual),
       resolucion,
       escaneadoAt: row.escaneado_at == null ? null : new Date(String(row.escaneado_at)).toISOString(),
+      sobrante: clasificacion === "SOBRANTE"
+        ? await getSobranteContexto(tx, id, header.ubicacionId, String(row.serie))
+        : null,
     };
-  });
+  }));
   const participantsResult = await tx.execute(sql`
     SELECT ap.usuario_id, u.nombre, ap.escaneos,
       ap.primero_at, ap.ultimo_at

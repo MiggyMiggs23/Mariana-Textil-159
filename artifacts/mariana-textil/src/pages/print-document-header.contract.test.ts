@@ -18,7 +18,7 @@ const files = await Promise.all(
     "entrada-documento.tsx",
     "salida-documento.tsx",
     "viaje-documento.tsx",
-    "auditorias-inventario.tsx",
+    "../components/auditoria-inventario-print.tsx",
     "ticket-detail.tsx",
   ].map((name) => readFile(new URL(name, root), "utf8")),
 );

@@ -1,0 +1,40 @@
+workflow: artifacts/mariana-textil: web
+status: RUNNING
+run_id: IJ4Q6cm7L8ZOmIiJAZ-Dp
+timestamp: 2026-09-17T19:54:59.278Z
+
+
+> @workspace/mariana-textil@0.0.0 dev /home/runner/workspace/artifacts/mariana-textil
+> vite --config vite.config.ts --host 0.0.0.0
+
+[replit-cartographer] Loaded @theme tokens from /home/runner/workspace/artifacts/mariana-textil/src/index.css
+7:49:40 PM [vite] (client) Re-optimizing dependencies because lockfile has changed
+
+  VITE v7.3.6  ready in 2096 ms
+
+  ➜  Local:   http://localhost:20329/
+  ➜  Network: http://172.24.0.2:20329/
+  ➜  press h + enter to show help
+7:53:00 PM [vite] (client) hmr update /src/index.css
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

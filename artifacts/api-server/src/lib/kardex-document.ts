@@ -90,6 +90,12 @@ export function resolveDocument(
   creditMovementMap: Map<number, CreditMovementOwner> = new Map(),
 ): { label: string | null; route: string | null } {
   if (!reference.tipo || !reference.id) return { label: null, route: null };
+  if (reference.tipo === "AUDITORIA_INVENTARIO") {
+    const auditoriaId = Number(reference.id);
+    return Number.isSafeInteger(auditoriaId) && auditoriaId > 0
+      ? { label: `Auditoría ${auditoriaId}`, route: `/inventario/auditorias?auditoriaId=${auditoriaId}` }
+      : { label: null, route: null };
+  }
   if (reference.tipo === "ENTRADA") {
     const entry = entradaMap.get(Number(reference.id));
     return entry == null

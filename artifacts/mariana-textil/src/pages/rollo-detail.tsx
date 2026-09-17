@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
-import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloPiso, getListRollosQueryKey, getGetProductoQueryKey, useRevertSalidaExtraordinaria, getListSalidasExtraordinariasQueryKey } from "@workspace/api-client-react";
+import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloPiso, getListRollosQueryKey, getGetProductoQueryKey, useRevertSalidaExtraordinaria, getListSalidasExtraordinariasQueryKey, getGetReactivacionFaltanteQueryOptions, type ReactivacionFaltanteContexto } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -26,6 +26,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useRef } from "react";
 import { getApiErrorMessage } from "@/lib/api-error";
+
+import { ReactivacionFaltanteDialog } from "@/components/auditoria/reactivacion-faltante-dialog";
 
 export default function RolloDetail() {
   const { id } = useParams();
@@ -79,7 +81,27 @@ export default function RolloDetail() {
   const [revertJustificacion, setRevertJustificacion] = useState("");
   const [revertConfirmText, setRevertConfirmText] = useState("");
   const [reprintDialogOpen, setReprintDialogOpen] = useState(false);
+  const [reactivacionContexto, setReactivacionContexto] = useState<ReactivacionFaltanteContexto | null>(null);
+  const [isFetchingReactivacion, setIsFetchingReactivacion] = useState(false);
   const uuidClienteRef = useRef<string>(crypto.randomUUID());
+
+  const handleFetchReactivacion = async () => {
+    setIsFetchingReactivacion(true);
+    try {
+      const result = await queryClient.fetchQuery(
+        getGetReactivacionFaltanteQueryOptions(Number(id)),
+      );
+      if (result.elegible) {
+        setReactivacionContexto(result);
+      } else {
+        toast.error("Rollo no elegible para reactivación", { description: result.bloqueo || "El rollo no cumple los requisitos." });
+      }
+    } catch (err: any) {
+      toast.error("No se pudo verificar la reactivación", { description: err.data?.error || err.message });
+    } finally {
+      setIsFetchingReactivacion(false);
+    }
+  };
 
   const handleRevert = (movimientoId: number, justificacion: string) => {
     revertMutation.mutate({
@@ -154,7 +176,7 @@ export default function RolloDetail() {
                   <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                     <span className="font-mono bg-muted/50 px-2 py-0.5 rounded border">SKU: {rollo.skuProducto}</span>
                     <span className="flex items-center"><MapPin className="w-4 h-4 mr-1" /> {rollo.nombreUbicacion}</span>
-                    {((rollo as any).nombrePiso || canEdit) && (
+                    {(rollo.nombrePiso || canEdit) && (
                       <div className="flex items-center gap-2">
                         <Layers className="w-4 h-4 text-muted-foreground" />
                         {isEditingPiso ? (
@@ -175,10 +197,10 @@ export default function RolloDetail() {
                           </div>
                         ) : (
                           <>
-                            <span>{(rollo as any).nombrePiso || "Sin piso"}</span>
+                            <span>{rollo.nombrePiso || "Sin piso"}</span>
                             {canEdit && (
                               <Button variant="ghost" size="sm" className="h-6 px-2 text-xs" onClick={() => {
-                                setSelectedPiso((rollo as any).pisoId ? (rollo as any).pisoId.toString() : "none");
+                                setSelectedPiso(rollo.pisoId != null ? rollo.pisoId.toString() : "none");
                                 setIsEditingPiso(true);
                               }}>
                                 Cambiar
@@ -190,9 +212,22 @@ export default function RolloDetail() {
                     )}
                   </div>
                 </div>
-                <Badge variant="outline" className="shrink-0 text-sm bg-background">
-                  {rollo.estado}
-                </Badge>
+                <div className="flex flex-col items-end gap-2">
+                  <Badge variant="outline" className="shrink-0 text-sm bg-background">
+                    {rollo.estado}
+                  </Badge>
+                  {rollo.estado === "BAJA" && isAdmin && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200 shadow-sm font-semibold h-8"
+                      disabled={isFetchingReactivacion}
+                      onClick={handleFetchReactivacion}
+                    >
+                      {isFetchingReactivacion ? "Verificando..." : "Reactivar Faltante"}
+                    </Button>
+                  )}
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-8">
@@ -310,7 +345,7 @@ export default function RolloDetail() {
                 <TableBody>
                   {rollo.historial.map((mov) => {
                     const movementDocument = mov as typeof mov & MovimientoDocumentoReference;
-                    const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO'].includes(mov.tipo);
+                    const isPositive = ['ALTA', 'RECEPCION', 'TRANSFERENCIA_ENTRADA', 'AJUSTE_POSITIVO', 'REACTIVACION_FALTANTE'].includes(mov.tipo);
                     const isNegative = ['VENTA', 'TRANSFERENCIA_SALIDA', 'SALIDA_MOSTRADOR', 'AJUSTE_NEGATIVO', 'CANCELACION'].includes(mov.tipo);
 
                     const isExtraordinariaUnreversed = mov.tipo === 'AJUSTE_NEGATIVO' &&
@@ -324,7 +359,9 @@ export default function RolloDetail() {
                         </TableCell>
                         <TableCell>
                           <Badge variant={isPositive ? "default" : isNegative ? "destructive" : "secondary"} className="text-[10px]">
-                            {mov.tipo.replace('_', ' ')}
+                            {mov.tipo === "REACTIVACION_FALTANTE"
+                              ? "Reactivación de faltante"
+                              : mov.tipo.replaceAll("_", " ")}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm">{mov.nombreUbicacion}</TableCell>
@@ -445,6 +482,17 @@ export default function RolloDetail() {
           });
         }}
       />
+
+      {reactivacionContexto && (
+        <ReactivacionFaltanteDialog
+          open={!!reactivacionContexto}
+          onOpenChange={(open) => !open && setReactivacionContexto(null)}
+          rolloId={rollo.id}
+          origen="ROLLO"
+          contexto={reactivacionContexto}
+          onSuccess={() => setReactivacionContexto(null)}
+        />
+      )}
     </AppLayout>
   );
 }

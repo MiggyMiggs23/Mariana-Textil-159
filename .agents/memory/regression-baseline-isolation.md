@@ -20,3 +20,15 @@ versión anterior puede inventar una fecha de primer fallo.
 entradas existían, y contrastar el predicado con el padre. Distinguir el cambio
 causal verificable del primer registro de ejecución fallida; si no hay prueba
 de continuidad, no afirmar que llevaba fallando ininterrumpidamente.
+
+También hay que aislar las dependencias internas del workspace. Compartir un
+`node_modules` completo mediante un enlace puede hacer que el código de la
+referencia importe paquetes internos de la copia que se está modificando.
+
+**Why:** Una comparación aislada llegó a cargar contratos generados nuevos
+durante la ejecución de la referencia, produciendo fallos que no pertenecían
+al código de referencia.
+
+**How to apply:** Se pueden compartir dependencias externas inmutables, pero
+los enlaces a paquetes internos deben apuntar a los paquetes de la misma copia
+aislada. Comprobar las rutas de resolución antes de atribuir un rojo al commit.

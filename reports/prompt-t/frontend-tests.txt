@@ -1,0 +1,27 @@
+Prompt T focused frontend verification
+
+Command:
+cd artifacts/mariana-textil && pnpm exec tsc --noEmit -p tsconfig.json --pretty false
+
+Result:
+PASS (exit 0)
+
+Command:
+cd artifacts/mariana-textil && pnpm exec vitest run src/pages/auditorias-inventario.test.tsx src/pages/rollo-detail.test.tsx src/components/auditoria/reactivacion-faltante-dialog.test.tsx --environment jsdom --reporter=verbose
+
+Result:
+PASS (exit 0)
+Test Files: 3 passed
+Tests: 6 passed
+
+Coverage exercised:
+- Reactivation action only on the exact CONFIRMADA origin audit.
+- Roll-detail ROLLO entry point for a BAJA roll.
+- Typed payload with no metraje/editable inventory fields.
+- Double-submit lock and error-stays-open behavior.
+- Financial-risk and unknown-series partitioning.
+- Mounted-route audit deep links.
+- Exact quantity/unit and pending cost display.
+- Appearance-site filtering for later audits.
+- Roll, audit, context, inventory and notification invalidations.
+- Distinct positive kardex label for reactivation.

@@ -1,0 +1,56 @@
+{
+  "generatedAt": "2026-09-17T19:22:00.927Z",
+  "cssPath": "/home/runner/workspace/artifacts/mariana-textil/src/index.css",
+  "componentPath": "/home/runner/workspace/artifacts/mariana-textil/src/components/auditoria-inventario-print.tsx",
+  "browser": "Chromium 152.0.7977.64",
+  "cases": [
+    {
+      "scenario": "compacto",
+      "description": "nombres de producto compactos de una línea",
+      "expectedPages": 2,
+      "rows": 16,
+      "pdf": "/home/runner/workspace/.local/prompt-t-verification/auditoria-compacto-2-paginas-16-renglones.pdf",
+      "status": "PASS"
+    },
+    {
+      "scenario": "compacto",
+      "description": "nombres de producto compactos de una línea",
+      "expectedPages": 3,
+      "rows": 56,
+      "pdf": "/home/runner/workspace/.local/prompt-t-verification/auditoria-compacto-3-paginas-56-renglones.pdf",
+      "status": "PASS"
+    },
+    {
+      "scenario": "compacto",
+      "description": "nombres de producto compactos de una línea",
+      "expectedPages": 5,
+      "rows": 136,
+      "pdf": "/home/runner/workspace/.local/prompt-t-verification/auditoria-compacto-5-paginas-136-renglones.pdf",
+      "status": "PASS"
+    },
+    {
+      "scenario": "descripcion",
+      "description": "descripciones textiles reales que envuelven naturalmente",
+      "expectedPages": 2,
+      "rows": 8,
+      "pdf": "/home/runner/workspace/.local/prompt-t-verification/auditoria-descripcion-2-paginas-8-renglones.pdf",
+      "status": "PASS"
+    },
+    {
+      "scenario": "descripcion",
+      "description": "descripciones textiles reales que envuelven naturalmente",
+      "expectedPages": 3,
+      "rows": 27,
+      "pdf": "/home/runner/workspace/.local/prompt-t-verification/auditoria-descripcion-3-paginas-27-renglones.pdf",
+      "status": "PASS"
+    },
+    {
+      "scenario": "descripcion",
+      "description": "descripciones textiles reales que envuelven naturalmente",
+      "expectedPages": 5,
+      "rows": 67,
+      "pdf": "/home/runner/workspace/.local/prompt-t-verification/auditoria-descripcion-5-paginas-67-renglones.pdf",
+      "status": "PASS"
+    }
+  ]
+}
