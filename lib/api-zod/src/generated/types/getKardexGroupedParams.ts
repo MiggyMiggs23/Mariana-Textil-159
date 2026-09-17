@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { GetKardexGroupedModo } from './getKardexGroupedModo';
 import type { TipoMovimiento } from './tipoMovimiento';
 
@@ -14,8 +15,8 @@ tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;
 usuarioId?: number;
-desde?: Date;
-hasta?: Date;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 buscar?: string;
 incluirUbicacionesInactivas?: boolean;
 /**

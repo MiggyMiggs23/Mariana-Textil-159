@@ -34,6 +34,7 @@ const ticket = {
   diasPlazo: 15,
   fechaVencimiento: "2026-09-14",
   saldoPendiente: "50.00",
+  estadoNota: "PENDIENTE",
   telefonoCliente: "5551234567",
   correoCliente: "cliente@example.com",
   direccionCliente: "Calle Uno 20",
@@ -45,8 +46,12 @@ test("ticket detail contract exposes printable persisted credit data", () => {
   assert.equal(parsed.importeCredito, "125.00");
   assert.equal(parsed.diasPlazo, 15);
   assert.ok(parsed.fechaVencimiento);
-  assert.equal(parsed.fechaVencimiento.toISOString().slice(0, 10), "2026-09-14");
+  assert.match(ticket.fechaVencimiento, /^\d{4}-\d{2}-\d{2}$/);
+  assert.match(parsed.fechaVencimiento, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(parsed.fechaVencimiento, "2026-09-14");
+  assert.equal((parsed.fechaVencimiento as unknown) instanceof Date, false);
   assert.equal(parsed.saldoPendiente, "50.00");
+  assert.equal(parsed.estadoNota, "PENDIENTE");
   assert.equal(parsed.telefonoCliente, "5551234567");
   assert.equal(parsed.correoCliente, "cliente@example.com");
   assert.equal(parsed.direccionCliente, "Calle Uno 20");

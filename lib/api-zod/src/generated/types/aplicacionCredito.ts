@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AplicacionCreditoResultado } from './aplicacionCreditoResultado';
+import type { CalendarDate } from './calendarDate';
 
 export interface AplicacionCredito {
   /** @nullable */
@@ -13,8 +14,7 @@ export interface AplicacionCredito {
   /** @nullable */
   ticketId: number | null;
   movimientoVentaId: number;
-  /** @nullable */
-  vencimiento: Date | null;
+  vencimiento: CalendarDate | null;
   saldoAntes: string;
   aplicado: string;
   saldoDespues: string;

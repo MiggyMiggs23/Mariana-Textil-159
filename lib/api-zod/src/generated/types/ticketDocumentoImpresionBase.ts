@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { DocumentoTipoTicket } from './documentoTipoTicket';
 import type { EstadoTicket } from './estadoTicket';
 import type { TicketDocumentoImpresionBaseCopia } from './ticketDocumentoImpresionBaseCopia';
@@ -39,6 +40,5 @@ export interface TicketDocumentoImpresionBase {
   esCredito: boolean;
   /** @nullable */
   diasPlazo: TicketDocumentoImpresionBaseDiasPlazo;
-  /** @nullable */
-  fechaVencimiento: Date | null;
+  fechaVencimiento: CalendarDate | null;
 }

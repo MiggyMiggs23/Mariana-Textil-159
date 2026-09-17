@@ -21,6 +21,7 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { Link } from "wouter";
+import { formatDateOnlyMx } from "@/lib/date-only";
 import {
   Dialog,
   DialogContent,
@@ -796,7 +797,7 @@ export default function CajaTiempoReal() {
                           {breakdownConcept !== "CANCELADAS" && <TableCell>{item.cliente}</TableCell>}
                           <TableCell className="text-right font-mono">{formatNumber(item.importe, { kind: "money" })}</TableCell>
                           {breakdownConcept === "COBRADO" && <><TableCell>{item.formaPago}</TableCell><TableCell>{item.facturado ? "Sí" : "No"}</TableCell></>}
-                          {breakdownConcept === "CREDITO" && <><TableCell>{item.diasPlazo} días</TableCell><TableCell>{item.fechaVencimiento}</TableCell></>}
+                           {breakdownConcept === "CREDITO" && <><TableCell>{item.diasPlazo} días</TableCell><TableCell>{item.fechaVencimiento ? formatDateOnlyMx(item.fechaVencimiento) : ""}</TableCell></>}
                           {breakdownConcept === "PENDIENTE" && <><TableCell>{item.documentoTipo === "NOTA" ? "Nota" : "Ticket"}</TableCell><TableCell>{item.minutosEspera} min</TableCell></>}
                           {breakdownConcept === "CANCELADAS" && (
                             <>

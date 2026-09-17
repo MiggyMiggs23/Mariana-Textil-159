@@ -1,4 +1,5 @@
 import { projectCreditLedger } from "./credit-allocation";
+import { calendarDate } from "./date-only";
 
 export const CREDIT_TERMS = [7, 15, 30, 60] as const;
 export type CreditTerm = (typeof CREDIT_TERMS)[number];
@@ -166,9 +167,7 @@ export function deriveTicketCreditData(
     fechaVencimiento:
       sale?.fechaVencimiento == null
         ? null
-        : typeof sale.fechaVencimiento === "string"
-          ? sale.fechaVencimiento.slice(0, 10)
-          : sale.fechaVencimiento.toISOString().slice(0, 10),
+        : calendarDate(sale.fechaVencimiento),
     saldoPendiente: decimalMoney(outstanding),
   };
 }

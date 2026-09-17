@@ -5,11 +5,12 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { HojaVentasDiaSeccion } from './hojaVentasDiaSeccion';
 
 export interface HojaVentasDia {
   sitio: string;
-  fechaOperativa: Date;
+  fechaOperativa: CalendarDate;
   cerrada: boolean;
   /** @nullable */
   quienCerro: string | null;

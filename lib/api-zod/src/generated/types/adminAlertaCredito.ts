@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminAlertaCreditoEstadoNota } from './adminAlertaCreditoEstadoNota';
+import type { CalendarDate } from './calendarDate';
 
 export interface AdminAlertaCredito {
   movimientoId: number;
@@ -19,7 +20,7 @@ export interface AdminAlertaCredito {
   ticketFolio: number | null;
   /** Saldo vigente de la fila después de aplicar pagos FIFO. */
   importe: string;
-  fechaVencimiento: Date;
+  fechaVencimiento: CalendarDate;
   estadoNota: AdminAlertaCreditoEstadoNota;
   /** Días firmados contra hoy en Ciudad de México; negativo significa vencido. */
   diasRestantes: number;

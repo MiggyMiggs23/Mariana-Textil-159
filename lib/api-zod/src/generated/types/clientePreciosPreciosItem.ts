@@ -5,12 +5,13 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 
 export type ClientePreciosPreciosItem = {
   productoId: number;
   sku: string;
   precioUnitario: string;
-  fecha: Date;
+  fecha: CalendarDate;
   /** Promedio de las últimas 3 compras de ese producto */
   promedio3: string;
 };

@@ -57,6 +57,7 @@ import { DirectedPaymentHistory } from "@/components/directed-payment-history";
 import { ResponsiveTable } from "@/components/client-responsive-table";
 import { ClienteNotaEstadoBadge } from "@/components/cliente-nota-estado-badge";
 import { CREDIT_TERMS, type ClientCreditTerm } from "@/lib/credit-terms";
+import { formatDateOnlyMx } from "@/lib/date-only";
 
 const date = (value?: string) => value ? new Intl.DateTimeFormat("es-MX", { dateStyle: "medium" }).format(new Date(value)) : "—";
 
@@ -678,7 +679,7 @@ export default function ClienteDetail() {
             {bajaRequiresAuth && (
               <div className="rounded-md border p-3 space-y-3 bg-muted/20">
                 <p className="text-sm font-semibold text-amber-600">Requiere autorización de administrador</p>
-                <p className="text-xs text-muted-foreground">Saldo vencido: ${bajaRequiresAuth.monto} {bajaRequiresAuth.desde ? `desde ${bajaRequiresAuth.desde}` : ""}</p>
+                <p className="text-xs text-muted-foreground">Saldo vencido: ${bajaRequiresAuth.monto} {bajaRequiresAuth.desde ? `desde ${formatDateOnlyMx(bajaRequiresAuth.desde)}` : ""}</p>
                 <div className="space-y-2"><Label>Usuario ADMIN</Label><Input value={adminUser} onChange={e => setAdminUser(e.target.value)} /></div>
                 <div className="space-y-2"><Label>Contraseña ADMIN</Label><PasswordInput value={adminPass} onChange={e => setAdminPass(e.target.value)} autoComplete="current-password" /></div>
               </div>

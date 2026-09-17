@@ -5,10 +5,11 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 
 export type ListarHistorialEtiquetasParams = {
-fechaDesde?: Date;
-fechaHasta?: Date;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 sitioId?: number;
 usuarioId?: number;
 productoId?: number;

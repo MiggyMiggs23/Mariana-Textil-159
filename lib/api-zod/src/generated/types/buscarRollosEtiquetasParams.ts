@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { EstadoRollo } from './estadoRollo';
 
 export type BuscarRollosEtiquetasParams = {
@@ -15,8 +16,8 @@ q?: string;
 sitioId?: number;
 estado?: EstadoRollo;
 productoId?: number;
-fechaDesde?: Date;
-fechaHasta?: Date;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 folio?: number;
 /**
  * Solo rollos con tres o más reimpresiones cuyo último evento aún no cubre una revisión ADMIN

@@ -5,10 +5,9 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 
 export type ClientesAnaliticaPeriodo = {
-  /** @nullable */
-  desde: Date | null;
-  /** @nullable */
-  hasta: Date | null;
+  desde: CalendarDate | null;
+  hasta: CalendarDate | null;
 };

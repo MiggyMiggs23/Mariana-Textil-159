@@ -20,6 +20,7 @@ import { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { formatDateOnlyMx } from "@/lib/date-only";
 
 interface ClienteNotaCreditoProps {
   clienteId: number;
@@ -185,7 +186,7 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
             {nota.fechaVencimiento ? (
               <div className="flex flex-col items-center justify-center">
                 <div className={`text-2xl font-black leading-none ${estadoNota === "CON_RETRASO" ? "text-destructive" : ""}`}>
-                  {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}
+                  {formatDateOnlyMx(nota.fechaVencimiento)}
                 </div>
                 {estadoNota === "CON_RETRASO" && (
                   <div className="text-xs text-destructive font-bold mt-1.5 bg-destructive/10 px-2 py-0.5 rounded-full">

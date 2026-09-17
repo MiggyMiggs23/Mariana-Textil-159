@@ -1,0 +1,60 @@
+{
+  "status": "PASS_AFTER_READONLY",
+  "phase": "AFTER_FIX",
+  "verificationKind": "source-compiled reproduction, not live HTTP",
+  "execution": {
+    "command": "TZ=America/Mexico_City artifacts/api-server/node_modules/.bin/tsx scripts/src/prompt-o-after-readonly.ts",
+    "script": "scripts/src/prompt-o-after-readonly.ts",
+    "transaction": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "transactionRolledBack": true,
+    "apiStartup": false,
+    "sessionCreatedOrAuthenticated": false,
+    "databaseWrites": false,
+    "httpObservation": "NOT_RUN: backend was not activated after the source fix; no authenticated HTTP/browser claim."
+  },
+  "database": {
+    "database": "heliumdb",
+    "schema": "public",
+    "transactionReadOnly": "on",
+    "transactionIsolation": "repeatable read",
+    "ticketId": 106,
+    "folio": 1000,
+    "databaseCalendarDay": "2026-10-16"
+  },
+  "afterContract": {
+    "targetField": "GetClienteNotaCreditoResponse.shape.fechaVencimiento",
+    "generatedSchema": "zod.union([zod.string().regex(...YYYY-MM-DD...), zod.null()])",
+    "targetSerializedField": "2026-10-16",
+    "printSerializedField": "2026-10-16",
+    "screenFormatted": "16/10/2026",
+    "printFormatted": "16/10/2026",
+    "equal": true
+  },
+  "fourRepresentations": [
+    "DB calendar day = 2026-10-16",
+    "Target endpoint/source-compiled serialized field = 2026-10-16",
+    "Mounted/shared formatter output = 16/10/2026",
+    "Unchanged print formatter output = 16/10/2026"
+  ],
+  "boundaries": {
+    "dayOne": {
+      "input": "2026-09-01",
+      "schemaParsed": "2026-09-01",
+      "formatted": "01/09/2026"
+    },
+    "lastDay": {
+      "input": "2026-09-30",
+      "schemaParsed": "2026-09-30",
+      "formatted": "30/09/2026"
+    },
+    "todayAmericaMexicoCity": {
+      "input": "2026-09-16",
+      "schemaParsed": "2026-09-16",
+      "formatted": "16/09/2026"
+    }
+  },
+  "pii": {
+    "printed": false,
+    "credentialsPrinted": false
+  }
+}

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminRealtimeBreakdownItemDocumentoTipo } from './adminRealtimeBreakdownItemDocumentoTipo';
+import type { CalendarDate } from './calendarDate';
 
 export interface AdminRealtimeBreakdownItem {
   id: number;
@@ -19,8 +20,7 @@ export interface AdminRealtimeBreakdownItem {
   facturado: boolean | null;
   /** @nullable */
   diasPlazo: number | null;
-  /** @nullable */
-  fechaVencimiento: Date | null;
+  fechaVencimiento: CalendarDate | null;
   /** @nullable */
   documentoTipo: AdminRealtimeBreakdownItemDocumentoTipo;
   /** @nullable */

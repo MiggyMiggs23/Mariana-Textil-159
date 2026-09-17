@@ -12,6 +12,7 @@ import {
   type AccountDestinationCode,
 } from "@workspace/number-format";
 import { parseMexicoDateQuery } from "./mexico-date";
+import { calendarDate as calendarDateValue } from "./date-only";
 import { orderStores } from "./store-order";
 import {
   buildRealtimeCancellationReadModel,
@@ -875,9 +876,7 @@ export async function listRealtimeBreakdown(
         facturado: concepto === "COBRADO" ? Boolean(row.facturado) : null,
         diasPlazo: concepto === "CREDITO" ? Number(row.diasPlazo) : null,
         fechaVencimiento: concepto === "CREDITO" && row.fechaVencimiento
-          ? row.fechaVencimiento instanceof Date
-            ? row.fechaVencimiento.toISOString().slice(0, 10)
-            : String(row.fechaVencimiento).slice(0, 10)
+          ? calendarDateValue(row.fechaVencimiento as string | Date)
           : null,
         documentoTipo: concepto === "PENDIENTE" ? row.documentoTipo : null,
         minutosEspera: concepto === "PENDIENTE" ? Number(row.minutosEspera) : null,

@@ -42,7 +42,10 @@ async function resolveSourcePath(basePath: string): Promise<string> {
  * uses esbuild's automatic JSX transform and data URLs for image imports so
  * the test runner sees the same component modules without Vite-only loaders.
  */
-export async function loadRenderTestModule(entrySource: string) {
+export async function loadRenderTestModule(
+  entrySource: string,
+  options: { moduleAliases?: Record<string, string> } = {},
+) {
   // Keep the transient bundle under the app package so Node can resolve the
   // package's external React/UI dependencies from its node_modules folder.
   const temporaryDirectory = await mkdtemp(
@@ -87,6 +90,10 @@ export async function loadRenderTestModule(entrySource: string) {
                 | undefined,
             ) => void;
           }) {
+            esbuild.onResolve({ filter: /^[^./]/ }, (args) => {
+              const alias = options.moduleAliases?.[args.path];
+              return alias ? { path: alias } : undefined;
+            });
             esbuild.onResolve({ filter: /^@\// }, async (args) => ({
               path: await resolveSourcePath(
                 resolve(frontendRoot, "src", args.path.slice(2)),

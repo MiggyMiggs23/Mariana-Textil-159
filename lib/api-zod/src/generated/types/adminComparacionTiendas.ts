@@ -8,11 +8,12 @@
 import type { AdminStoreComparison } from './adminStoreComparison';
 import type { AdminStoreComparisonTotals } from './adminStoreComparisonTotals';
 import type { AdminStoreSalesPoint } from './adminStoreSalesPoint';
+import type { CalendarDate } from './calendarDate';
 
 export interface AdminComparacionTiendas {
   periodo: string;
-  desde: Date;
-  hasta: Date;
+  desde: CalendarDate;
+  hasta: CalendarDate;
   tiendas: AdminStoreComparison[];
   totales: AdminStoreComparisonTotals;
   promedioGeneralTicket: string;

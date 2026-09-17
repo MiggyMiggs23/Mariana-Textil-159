@@ -432,6 +432,34 @@ function sendError(error: unknown, res: Parameters<Parameters<typeof router.get>
   return false;
 }
 
+function parseSalidaDateBounds(query: {
+  fechaDesde?: string;
+  fechaHasta?: string;
+}): {
+  fechaDesde: Date | undefined;
+  fechaHasta: Date | undefined;
+  invalid: boolean;
+} {
+  // These SQL filters intentionally retain the historical UTC-midnight
+  // contract. Calendar-day response fields must remain strings, but changing
+  // this timestamp boundary would change existing inclusive gte/lte results.
+  const fechaDesde =
+    query.fechaDesde === undefined
+      ? undefined
+      : new Date(`${query.fechaDesde}T00:00:00.000Z`);
+  const fechaHasta =
+    query.fechaHasta === undefined
+      ? undefined
+      : new Date(`${query.fechaHasta}T00:00:00.000Z`);
+  return {
+    fechaDesde,
+    fechaHasta,
+    invalid:
+      (fechaDesde !== undefined && Number.isNaN(fechaDesde.getTime())) ||
+      (fechaHasta !== undefined && Number.isNaN(fechaHasta.getTime())),
+  };
+}
+
 router.get(
   "/salidas",
   requireSession,
@@ -439,13 +467,12 @@ router.get(
   async (req, res, next) => {
     try {
       const raw = req.query;
-      const query = ListSalidasQueryParams.parse({
-        ...raw,
-        fechaDesde:
-          typeof raw.fechaDesde === "string" ? new Date(raw.fechaDesde) : undefined,
-        fechaHasta:
-          typeof raw.fechaHasta === "string" ? new Date(raw.fechaHasta) : undefined,
-      });
+      const query = ListSalidasQueryParams.parse(raw);
+      const dateBounds = parseSalidaDateBounds(query);
+      if (dateBounds.invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
       const estados = query.estados
         ? query.estados.split(",").filter((value): value is EstadoSalida =>
             ESTADOS.includes(value as EstadoSalida),
@@ -489,8 +516,8 @@ router.get(
         productoId: query.productoId,
           usuarioId: query.usuarioId,
           search: query.search,
-        fechaDesde: query.fechaDesde,
-        fechaHasta: query.fechaHasta,
+        fechaDesde: dateBounds.fechaDesde,
+        fechaHasta: dateBounds.fechaHasta,
         page: Math.max(1, query.page ?? 1),
         pageSize: Math.min(100, Math.max(1, query.pageSize ?? 100)),
         visibleUbicacionId,
@@ -615,11 +642,12 @@ router.get(
   async (req, res, next) => {
     try {
       const raw = req.query;
-      const query = ExportarSalidasQueryParams.parse({
-        ...raw,
-        fechaDesde: typeof raw.fechaDesde === "string" ? new Date(raw.fechaDesde) : undefined,
-        fechaHasta: typeof raw.fechaHasta === "string" ? new Date(raw.fechaHasta) : undefined,
-      });
+      const query = ExportarSalidasQueryParams.parse(raw);
+      const dateBounds = parseSalidaDateBounds(query);
+      if (dateBounds.invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
       const auth = req.auth!;
       const visibleUbicacionId =
         auth.user.rol === "ADMIN" ||
@@ -636,7 +664,7 @@ router.get(
         estados, origenId: query.origenId,
         destinoId: auth.user.rol === "CAJA" ? auth.user.ubicacionId! : query.destinoId,
         productoId: query.productoId, usuarioId: query.usuarioId, search: query.search,
-        fechaDesde: query.fechaDesde, fechaHasta: query.fechaHasta, page: 1, pageSize: 100,
+        fechaDesde: dateBounds.fechaDesde, fechaHasta: dateBounds.fechaHasta, page: 1, pageSize: 100,
         visibleUbicacionId,
       });
       const workbook = new ExcelJS.Workbook();

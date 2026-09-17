@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { formatNumber } from "@workspace/number-format";
 import { Link } from "wouter";
 import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
+import { formatDateOnlyMx } from "@/lib/date-only";
 
 function ticketTime(value: string): string {
   return new Intl.DateTimeFormat("es-MX", {
@@ -252,7 +253,7 @@ export default function Alertas() {
                                </span>
                              </div>
                              <div className="text-xs font-medium text-foreground">
-                                Vencimiento: {credito.fechaVencimiento.slice(0, 10)}
+                                 Vencimiento: {formatDateOnlyMx(credito.fechaVencimiento)}
                              </div>
                            </div>
                            <div className="flex flex-col items-end gap-2 shrink-0">

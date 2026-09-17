@@ -1,0 +1,77 @@
+{
+  "status": "REPRODUCED_TARGET_MOUNTED_NOTE_SERIALIZED_SCHEMA",
+  "phase": "BEFORE_FIX",
+  "source": "Prompt O reproduction, actual production source and live database",
+  "execution": {
+    "command": "printf '{\"type\":\"module\"}\\n' >/tmp/package.json; TZ=America/Mexico_City artifacts/api-server/node_modules/.bin/tsx /tmp/reproduce-prompt-o-client-note.ts",
+    "script": "/tmp/reproduce-prompt-o-client-note.ts",
+    "transaction": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "rollback": true,
+    "apiStartup": false,
+    "sessionCreatedOrAuthenticated": false,
+    "databaseWrites": false
+  },
+  "database": {
+    "database": "heliumdb",
+    "schema": "public",
+    "transactionReadOnly": "on",
+    "transactionIsolation": "repeatable read",
+    "selectedTicketId": 106,
+    "selectedFolio": 1000,
+    "selectedMovimientoId": 51,
+    "ticketsFechaVencimientoSqlText": "2026-10-16",
+    "movimientosCreditoFechaVencimientoSqlText": "2026-10-16",
+    "exactSqlTextMatch": true,
+    "folio1005MatchingExactDueDateCount": 0,
+    "fallbackReason": "No eligible folio 1005; selected the one real exact-matching note (folio 1000)."
+  },
+  "targetEndpoint": {
+    "path": "GET /clientes/:clienteId/notas/:ticketId",
+    "productionSource": [
+      "artifacts/api-server/src/routes/clientes.ts:138-143 dateOnly",
+      "artifacts/api-server/src/routes/clientes.ts:1704-1710 movement query",
+      "artifacts/api-server/src/routes/clientes.ts:1740 dateOnly(movement.fechaVencimiento)",
+      "artifacts/api-server/src/routes/clientes.ts:1747-1766 GetClienteNotaCreditoResponse.parse and res.json"
+    ],
+    "routeDateOnlyIntermediate": "2026-10-16",
+    "schemaField": "GetClienteNotaCreditoResponse.shape.fechaVencimiento = zod.coerce.date().nullable()",
+    "schemaRuntimeIso": "2026-10-16T00:00:00.000Z",
+    "serializedField": "2026-10-16T00:00:00.000Z",
+    "serializedObject": "{\"fechaVencimiento\":\"2026-10-16T00:00:00.000Z\"}"
+  },
+  "mountedComponent": {
+    "source": [
+      "artifacts/mariana-textil/src/components/cliente-nota-credito.tsx:93-95 parseDate",
+      "artifacts/mariana-textil/src/components/cliente-nota-credito.tsx:185-188 format(parseDate(nota.fechaVencimiento), \"dd/MM/yyyy\")"
+    ],
+    "receivedField": "2026-10-16T00:00:00.000Z",
+    "productionParseDate": "new Date(dString.includes('T') ? dString : `${dString}T12:00:00`)",
+    "timezone": "America/Mexico_City",
+    "formattedValue": "15/10/2026"
+  },
+  "unchangedPrint": {
+    "productionSource": "projectTicketPrintDocument + artifacts/mariana-textil/src/lib/date-only.ts:1-8 formatDateOnlyMx",
+    "wireField": "2026-10-16",
+    "serializedField": "\"2026-10-16\"",
+    "formattedValue": "16/10/2026"
+  },
+  "fourRepresentations": [
+    "DB SQL::text = 2026-10-16",
+    "Target endpoint JSON = 2026-10-16T00:00:00.000Z",
+    "Mounted component display = 15/10/2026 in America/Mexico_City",
+    "Unchanged print path display = 16/10/2026"
+  ],
+  "boundary": "T and Z are introduced by GetClienteNotaCreditoResponse.shape.fechaVencimiento zod.coerce.date() when the route's YYYY-MM-DD calendar day is parsed as a Date; JSON serialization emits UTC midnight.",
+  "sameOriginField": "The target route reads movimientos_credito.fecha_vencimiento; the live exact SQL::text match confirms it equals tickets.fecha_vencimiento. The print projection copies ticket.fechaVencimiento from that same credit/ticket source.",
+  "httpObservation": {
+    "status": "NOT_APPROVED",
+    "authenticatedBrowser": false,
+    "unauthenticatedProbe": "Both detail and print paths returned HTTP 401 {\"error\":\"Debes iniciar sesión.\"}.",
+    "limitation": "No session was created, authenticated, or renewed; no authenticated HTTP/browser observation is claimed."
+  },
+  "pii": {
+    "printed": false,
+    "credentialsPrinted": false,
+    "customerNamesOrContactDataPrinted": false
+  }
+}

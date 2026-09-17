@@ -65,3 +65,4 @@
 - [CSS precompilado en maquetas](precompiled-preview-css.md) — esbuild no genera utilidades nuevas de Tailwind; comprobar el grid renderizado, no solo las clases.
 - [Vigencia al confirmar](review-confirmation-freshness.md) — el resumen no congela recursos compartidos; validar disponibilidad vigente y bloquear doble envío antes de esperar.
 - [Caché financiera y cambios de sesión](financial-cache-auth-transitions.md) — invalidar al iniciar sesión no impide mostrar datos previos; separar identidad/alcance y validar la respuesta.
+- [Calendario y filtros generados](calendar-contract-query-compatibility.md) — quitar coerción Date también afecta queries; conservar límites históricos, no cambiar qué registros seleccionan.

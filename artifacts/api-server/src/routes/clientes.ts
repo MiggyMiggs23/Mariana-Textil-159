@@ -43,11 +43,13 @@ import {
   creditStatus,
   deriveEstadoNota,
 } from "../lib/clientes-aging";
+import { calendarDate } from "../lib/date-only";
 import {
   loadCustomerCreditLedger,
   loadCustomerCreditProjectionInTransaction,
   loadCustomerCreditProjection,
   loadCustomerCreditProjections,
+  type CustomerCreditProjection,
 } from "../lib/credit-aging-read-model";
 import {
   isActiveNonSystemNameConflict,
@@ -137,9 +139,7 @@ function creditDueDays(fechaVencimiento: unknown): number {
 
 function dateOnly(value: unknown): string | null {
   if (value == null) return null;
-  return typeof value === "string"
-    ? value.slice(0, 10)
-    : (value as Date).toISOString().slice(0, 10);
+  return calendarDate(value as string | Date);
 }
 
 function todayMexicoCity(): string {
@@ -149,6 +149,107 @@ function todayMexicoCity(): string {
     month: "2-digit",
     day: "2-digit",
   }).format(new Date());
+}
+
+type EstadoCuentaExportRow = Record<string, any>;
+export type EstadoCuentaExportProjection = Pick<
+  CustomerCreditProjection,
+  "movementProjections" | "allCharges" | "balanceCents" | "overpaymentCents"
+>;
+
+/**
+ * Builds the exact estado-cuenta workbook used by the XLSX route.
+ *
+ * Kept separate from the query/HTTP handler so the production serialization
+ * can be verified with an in-memory statement fixture without a DB write or
+ * live request.
+ */
+export function buildEstadoCuentaWorkbook(
+  rows: EstadoCuentaExportRow[],
+  projection: EstadoCuentaExportProjection,
+): ExcelJS.Workbook {
+  const projectedMovements = new Map(
+    projection.movementProjections.map((movement) => [
+      movement.movementId,
+      movement,
+    ]),
+  );
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Estado de cuenta");
+  sheet.columns = [
+    { header: "Fecha", key: "fecha", width: 22 }, { header: "Tipo", key: "tipo", width: 18 },
+    { header: "Fecha de vencimiento", key: "fechaVencimiento", width: 22 },
+    { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },
+    { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },
+    { header: "Saldo a favor", key: "saldoAFavor", width: 18 },
+    { header: "Saldo deudor proyectado", key: "saldoDeudorProyectado", width: 24 },
+    { header: "Saldo a favor proyectado", key: "saldoAFavorProyectado", width: 24 },
+    { header: "Saldo pendiente", key: "saldoPendiente", width: 18 },
+    { header: "Estado de nota", key: "estadoNota", width: 18 },
+    { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },
+    { header: "Subtotal facturado", key: "subtotalFacturado", width: 18 }, { header: "IVA facturado", key: "ivaFacturado", width: 16 },
+    { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },
+  ];
+  sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.getColumn("subtotalFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.getColumn("ivaFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.addRows(rows.map((row) => {
+    const charge = projection.allCharges.find(
+      (candidate) => candidate.movimientoId === Number(row.id),
+    );
+    const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"
+      ? centsToMoney(charge.pendienteCents)
+      : null;
+    const estadoNota = charge && row.tipo === "VENTA_CREDITO"
+      ? deriveEstadoNota({
+          importeOriginal: centsToMoney(charge.originalCents),
+          saldoPendiente: saldoPendiente!,
+          fechaVencimiento: charge.dueAt,
+          hoy: todayMexicoCity(),
+        })
+      : null;
+    const projected = projectedMovements.get(Number(row.id));
+    const saldoDeudorProyectado = projected == null
+      ? null
+      : centsToMoney(projected.saldoDeudorProyectadoCents);
+    const saldoAFavorProyectado = projected == null
+      ? null
+      : centsToMoney(projected.saldoAFavorProyectadoCents);
+    return {
+      ...row,
+      fechaVencimiento: row.fechaVencimiento == null
+        ? null
+        : calendarDate(row.fechaVencimiento as string | Date),
+      estadoNota,
+      ...(row.formaPago === "FACTURADO"
+        ? (() => {
+            const breakdown = breakdownIvaIncluded(
+              Math.abs(moneyToCents(row.importe)),
+            );
+            return {
+              subtotalFacturado: breakdown.subtotalCents / 100,
+              ivaFacturado: breakdown.ivaCents / 100,
+            };
+          })()
+        : {}),
+      folio: row.folio == null ? "" : String(row.folio),
+      importe: toExcelNumber(row.importe),
+      saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico),
+      saldoDeudorProyectado: saldoDeudorProyectado == null ? null : toExcelNumber(saldoDeudorProyectado),
+      saldoAFavorProyectado: saldoAFavorProyectado == null ? null : toExcelNumber(saldoAFavorProyectado),
+      saldoPendiente: saldoPendiente == null ? null : toExcelNumber(saldoPendiente),
+    };
+  }));
+  const summary = sheet.addRow({
+    tipo: "SALDO ACTUAL PROYECTADO",
+    saldoActualProyectado: toExcelNumber(centsToMoney(projection.balanceCents)),
+    saldoAFavor: toExcelNumber(centsToMoney(projection.overpaymentCents)),
+    saldoPendiente: toExcelNumber(centsToMoney(projection.balanceCents)),
+    estadoNota: "SALDO_DEUDOR",
+  });
+  summary.getCell("saldoActualProyectado").numFmt = EXCEL_NUMBER_FORMAT.money;
+  return workbook;
 }
 
 /** Historical alias retained for clients that still read estado/resultado. */
@@ -1191,9 +1292,7 @@ router.get(
          fechaVencimiento:
            movement.fechaVencimiento == null
              ? null
-             : typeof movement.fechaVencimiento === "string"
-               ? movement.fechaVencimiento
-               : (movement.fechaVencimiento as Date).toISOString().slice(0, 10),
+              : dateOnly(movement.fechaVencimiento),
        }));
       res.json({
         clienteId: id,
@@ -1296,83 +1395,7 @@ router.get(
        ), loadCustomerCreditProjection(id, pool, {
          includeMovementProjections: true,
        })]);
-       const projectedMovements = new Map(
-         projection.movementProjections.map((movement) => [
-           movement.movementId,
-           movement,
-         ]),
-       );
-      const workbook = new ExcelJS.Workbook();
-      const sheet = workbook.addWorksheet("Estado de cuenta");
-      sheet.columns = [
-        { header: "Fecha", key: "fecha", width: 22 }, { header: "Tipo", key: "tipo", width: 18 },
-         { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },
-        { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },
-         { header: "Saldo a favor", key: "saldoAFavor", width: 18 },
-          { header: "Saldo deudor proyectado", key: "saldoDeudorProyectado", width: 24 },
-          { header: "Saldo a favor proyectado", key: "saldoAFavorProyectado", width: 24 },
-         { header: "Saldo pendiente", key: "saldoPendiente", width: 18 },
-         { header: "Estado de nota", key: "estadoNota", width: 18 },
-        { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },
-        { header: "Subtotal facturado", key: "subtotalFacturado", width: 18 }, { header: "IVA facturado", key: "ivaFacturado", width: 16 },
-        { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },
-      ];
-      sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.getColumn("subtotalFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.getColumn("ivaFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
-       sheet.addRows(result.rows.map((row) => {
-         const charge = projection.allCharges.find(
-           (candidate) => candidate.movimientoId === Number(row.id),
-         );
-         const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"
-           ? centsToMoney(charge.pendienteCents)
-           : null;
-         const estadoNota = charge && row.tipo === "VENTA_CREDITO"
-           ? deriveEstadoNota({
-               importeOriginal: centsToMoney(charge.originalCents),
-               saldoPendiente: saldoPendiente!,
-               fechaVencimiento: charge.dueAt,
-               hoy: todayMexicoCity(),
-             })
-           : null;
-          const projected = projectedMovements.get(Number(row.id));
-          const saldoDeudorProyectado = projected == null
-            ? null
-            : centsToMoney(projected.saldoDeudorProyectadoCents);
-          const saldoAFavorProyectado = projected == null
-            ? null
-            : centsToMoney(projected.saldoAFavorProyectadoCents);
-         return {
-        ...row,
-         estadoNota,
-        ...(row.formaPago === "FACTURADO"
-          ? (() => {
-              const breakdown = breakdownIvaIncluded(
-                Math.abs(moneyToCents(row.importe)),
-              );
-              return {
-                subtotalFacturado: breakdown.subtotalCents / 100,
-                ivaFacturado: breakdown.ivaCents / 100,
-              };
-            })()
-          : {}),
-        folio: row.folio == null ? "" : String(row.folio),
-        importe: toExcelNumber(row.importe),
-        saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico),
-         saldoDeudorProyectado: saldoDeudorProyectado == null ? null : toExcelNumber(saldoDeudorProyectado),
-         saldoAFavorProyectado: saldoAFavorProyectado == null ? null : toExcelNumber(saldoAFavorProyectado),
-         saldoPendiente: saldoPendiente == null ? null : toExcelNumber(saldoPendiente),
-       };
-       }));
-      const summary = sheet.addRow({
-        tipo: "SALDO ACTUAL PROYECTADO",
-        saldoActualProyectado: toExcelNumber(centsToMoney(projection.balanceCents)),
-         saldoAFavor: toExcelNumber(centsToMoney(projection.overpaymentCents)),
-         saldoPendiente: toExcelNumber(centsToMoney(projection.balanceCents)),
-         estadoNota: "SALDO_DEUDOR",
-      });
-      summary.getCell("saldoActualProyectado").numFmt = EXCEL_NUMBER_FORMAT.money;
+       const workbook = buildEstadoCuentaWorkbook(result.rows, projection);
       res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       res.attachment(`estado-cuenta-${id}.xlsx`);
       await workbook.xlsx.write(res);

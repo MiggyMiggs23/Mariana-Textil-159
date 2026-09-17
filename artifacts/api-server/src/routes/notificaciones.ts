@@ -23,6 +23,7 @@ import { pendingTicketPredicate } from "../lib/accounted-document";
 import { centsToMoney } from "../lib/credit-allocation";
 import { loadCustomerCreditProjections } from "../lib/credit-aging-read-model";
 import { deriveEstadoNota, type EstadoNota } from "../lib/clientes-aging";
+import { calendarDate } from "../lib/date-only";
 
 const router: IRouter = Router();
 router.use("/notificaciones", requireSession);
@@ -69,11 +70,6 @@ function present(
     leidaAt: row.leidaAt?.toISOString() ?? null,
     createdAt: row.createdAt.toISOString(),
   };
-}
-
-/** Convert pg/drizzle date values without timezone-shifting their calendar day. */
-function calendarDate(value: string | Date): string {
-  return typeof value === "string" ? value : value.toISOString().slice(0, 10);
 }
 
 function serializeNotificationDates<T extends {

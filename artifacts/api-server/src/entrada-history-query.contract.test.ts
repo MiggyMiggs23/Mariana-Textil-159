@@ -5,11 +5,12 @@ import { ListEntradasQueryParams } from "@workspace/api-zod";
 import { parseMexicoDateQuery } from "./lib/mexico-date";
 
 function parseEntradasReadQuery(raw: Record<string, unknown>) {
-  return ListEntradasQueryParams.parse({
-    ...raw,
-    fechaDesde: parseMexicoDateQuery(raw.fechaDesde, "start"),
-    fechaHasta: parseMexicoDateQuery(raw.fechaHasta, "end"),
-  });
+  const query = ListEntradasQueryParams.parse(raw);
+  return {
+    ...query,
+    fechaDesde: parseMexicoDateQuery(query.fechaDesde, "start"),
+    fechaHasta: parseMexicoDateQuery(query.fechaHasta, "end"),
+  };
 }
 
 test("GET /entradas round-trips strict HTML dates into Mexico boundaries", () => {
@@ -29,20 +30,18 @@ test("GET /entradas round-trips strict HTML dates into Mexico boundaries", () =>
 test("GET /entradas rejects malformed or impossible date-only filters", () => {
   assert.throws(
     () => parseEntradasReadQuery({ fechaDesde: "2026-8-22" }),
-    /Expected date/,
   );
   assert.throws(
     () => parseEntradasReadQuery({ fechaHasta: "2026-02-30" }),
-    /Expected date/,
   );
 });
 
-test("the entradas read handler normalizes dates before generated parsing", () => {
+test("the entradas read handler validates calendar strings before Mexico bounds", () => {
   const source = readFileSync(new URL("./routes/inventario.ts", import.meta.url), "utf8");
   assert.match(
     source,
-    /ListEntradasQueryParams\.parse\(\{\s*\.\.\.req\.query,\s*fechaDesde: parseMexicoDateQuery\(req\.query\.fechaDesde, "start"\),\s*fechaHasta: parseMexicoDateQuery\(req\.query\.fechaHasta, "end"\),/s,
+    /const q = ListEntradasQueryParams\.parse\(req\.query\);\s*const fechaDesde = parseMexicoDateQuery\(q\.fechaDesde, "start"\);\s*const fechaHasta = parseMexicoDateQuery\(q\.fechaHasta, "end"\);/s,
   );
-  assert.match(source, /if \(q\.fechaDesde\) conditions\.push\(gte\(entradasTable\.fecha, q\.fechaDesde\)\)/);
-  assert.match(source, /if \(q\.fechaHasta\) conditions\.push\(lte\(entradasTable\.fecha, q\.fechaHasta\)\)/);
+  assert.match(source, /if \(fechaDesde\) conditions\.push\(gte\(entradasTable\.fecha, fechaDesde\)\)/);
+  assert.match(source, /if \(fechaHasta\) conditions\.push\(lte\(entradasTable\.fecha, fechaHasta\)\)/);
 });

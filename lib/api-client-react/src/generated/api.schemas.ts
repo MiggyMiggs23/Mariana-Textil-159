@@ -218,7 +218,7 @@ export interface AuditoriaListResult {
 
 /**
  * Calendar day in YYYY-MM-DD; never coerced to an instant.
- * @pattern ^\d{4}-\d{2}-\d{2}$
+ * @pattern ^(?:(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8])))|(?:(?:\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$
  */
 export type CalendarDate = string;
 
@@ -1141,8 +1141,7 @@ export interface AdminRealtimeBreakdownItem {
   facturado: boolean | null;
   /** @nullable */
   diasPlazo: number | null;
-  /** @nullable */
-  fechaVencimiento: string | null;
+  fechaVencimiento: CalendarDate | null;
   /** @nullable */
   documentoTipo: AdminRealtimeBreakdownItemDocumentoTipo;
   /** @nullable */
@@ -1232,7 +1231,7 @@ export interface AdminAlertaCredito {
   ticketFolio: number | null;
   /** Saldo vigente de la fila después de aplicar pagos FIFO. */
   importe: string;
-  fechaVencimiento: string;
+  fechaVencimiento: CalendarDate;
   estadoNota: AdminAlertaCreditoEstadoNota;
   /** Días firmados contra hoy en Ciudad de México; negativo significa vencido. */
   diasRestantes: number;
@@ -1509,7 +1508,7 @@ export interface AdminDiferenciaGroup {
 }
 
 export interface AdminTrendPoint {
-  fecha: string;
+  fecha: CalendarDate;
   importe: string;
   diferenciaAbsoluta: string;
   /** Total de cortes cerrados en el periodo de la tendencia. */
@@ -1767,7 +1766,7 @@ export interface AdminCuentaDestinoMovimientos {
 }
 
 export interface AdminCuentaTrend {
-  fecha: string;
+  fecha: CalendarDate;
   cuentaDestino: string;
   importe: string;
 }
@@ -1898,8 +1897,7 @@ export interface AdminCuentasDestino {
 }
 
 export interface AdminStoreDay {
-  /** @nullable */
-  fecha: string | null;
+  fecha: CalendarDate | null;
   ventas: string;
 }
 
@@ -1964,7 +1962,7 @@ export interface AdminStoreComparisonTotals {
 }
 
 export interface AdminStoreSalesPoint {
-  fecha: string;
+  fecha: CalendarDate;
   ubicacionId: number;
   nombreUbicacion: string;
   ventas: string;
@@ -1972,8 +1970,8 @@ export interface AdminStoreSalesPoint {
 
 export interface AdminComparacionTiendas {
   periodo: string;
-  desde: string;
-  hasta: string;
+  desde: CalendarDate;
+  hasta: CalendarDate;
   tiendas: AdminStoreComparison[];
   totales: AdminStoreComparisonTotals;
   promedioGeneralTicket: string;
@@ -2596,8 +2594,7 @@ export interface ClienteCredito {
   diasCredito: ClienteCreditoDiasCredito;
   utilizacion: string;
   totalVencido: string;
-  /** @nullable */
-  primerVencimiento?: string | null;
+  primerVencimiento?: CalendarDate | null;
   /** @nullable */
   primeraCompra?: string | null;
   /** @nullable */
@@ -2640,7 +2637,7 @@ export type ClientePreciosPreciosItem = {
   productoId: number;
   sku: string;
   precioUnitario: string;
-  fecha: string;
+  fecha: CalendarDate;
   /** Promedio de las últimas 3 compras de ese producto */
   promedio3: string;
 };
@@ -2744,8 +2741,7 @@ export interface ClienteMovimiento {
   fechaEfectiva?: string;
   /** @nullable */
   diasPlazo?: ClienteMovimientoDiasPlazo;
-  /** @nullable */
-  fechaVencimiento?: string | null;
+  fechaVencimiento?: CalendarDate | null;
   /** @nullable */
   estado?: ClienteMovimientoEstado;
   /**
@@ -2880,8 +2876,7 @@ export interface AplicacionCredito {
   /** @nullable */
   ticketId: number | null;
   movimientoVentaId: number;
-  /** @nullable */
-  vencimiento: string | null;
+  vencimiento: CalendarDate | null;
   saldoAntes: string;
   aplicado: string;
   saldoDespues: string;
@@ -3074,8 +3069,7 @@ export interface TicketCredito {
   importeCredito: string;
   /** @nullable */
   diasPlazo: TicketCreditoDiasPlazo;
-  /** @nullable */
-  fechaVencimiento: string | null;
+  fechaVencimiento: CalendarDate | null;
   /** Saldo FIFO actual de la porción a crédito de esta venta */
   saldoPendiente: string;
   /** @nullable */
@@ -3236,8 +3230,7 @@ export interface ClienteNotaCreditoDetalle {
   saldoActual: string;
   estado: ClienteNotaCreditoDetalleEstado;
   estadoNota: ClienteNotaCreditoDetalleEstadoNota;
-  /** @nullable */
-  fechaVencimiento: string | null;
+  fechaVencimiento: CalendarDate | null;
   /** @minimum 0 */
   diasVencidos: number;
   abonos: ClienteNotaAbono[];
@@ -3537,10 +3530,8 @@ export interface ClientesCartera {
 }
 
 export type ClientesAnaliticaPeriodo = {
-  /** @nullable */
-  desde: string | null;
-  /** @nullable */
-  hasta: string | null;
+  desde: CalendarDate | null;
+  hasta: CalendarDate | null;
 };
 
 export type ClientesAnaliticaTopVentasItem = { [key: string]: unknown };
@@ -3606,7 +3597,7 @@ export interface NotificacionCredito {
   folio: number;
   importe: string;
   diasPlazo: NotificacionCreditoDiasPlazo;
-  fechaVencimiento: string;
+  fechaVencimiento: CalendarDate;
   cajeroId: number;
   cajeroNombre: string;
   tiendaId: number;
@@ -3647,7 +3638,7 @@ export interface AlertaCredito {
   /** @nullable */
   folio: number | null;
   pendiente: string;
-  fechaVencimiento: string;
+  fechaVencimiento: CalendarDate;
   diasVencido: number;
   estado: AlertaCreditoEstado;
   estadoNota: AlertaCreditoEstadoNota;
@@ -6382,8 +6373,7 @@ export interface TicketDocumentoImpresionBase {
   esCredito: boolean;
   /** @nullable */
   diasPlazo: TicketDocumentoImpresionBaseDiasPlazo;
-  /** @nullable */
-  fechaVencimiento: string | null;
+  fechaVencimiento: CalendarDate | null;
 }
 
 /**
@@ -6577,7 +6567,7 @@ export interface HojaVentasDiaSeccion {
 
 export interface HojaVentasDia {
   sitio: string;
-  fechaOperativa: string;
+  fechaOperativa: CalendarDate;
   cerrada: boolean;
   /** @nullable */
   quienCerro: string | null;
@@ -7147,8 +7137,8 @@ telas?: string[];
 colores?: string[];
 proveedorIds?: number[];
 ubicacionIds?: number[];
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 sort?: ListHistorialComprasProveedoresSort;
 direction?: ListHistorialComprasProveedoresDirection;
 /**
@@ -7186,11 +7176,11 @@ export type ListComprasProveedorParams = {
 /**
  * Fecha inicio (inclusive), formato YYYY-MM-DD
  */
-desde?: string;
+desde?: CalendarDate;
 /**
  * Fecha fin (inclusive), formato YYYY-MM-DD
  */
-hasta?: string;
+hasta?: CalendarDate;
 /**
  * Filtrar por estado de pago
  */
@@ -7219,38 +7209,38 @@ export type EstadoCuentaProveedorParams = {
 /**
  * Fecha inicio (inclusive), formato YYYY-MM-DD
  */
-desde?: string;
+desde?: CalendarDate;
 /**
  * Fecha fin (inclusive), formato YYYY-MM-DD
  */
-hasta?: string;
+hasta?: CalendarDate;
 };
 
 export type ListProveedorPagosParams = {
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 };
 
 export type EstadisticasProveedorParams = {
 /**
  * Fecha inicio del periodo, formato YYYY-MM-DD
  */
-desde: string;
+desde: CalendarDate;
 /**
  * Fecha fin del periodo, formato YYYY-MM-DD
  */
-hasta: string;
+hasta: CalendarDate;
 };
 
 export type GetProveedorUtilidadParams = {
 /**
  * Fecha inicial del instante de contabilización, inclusive
  */
-desde: string;
+desde: CalendarDate;
 /**
  * Fecha final del instante de contabilización, inclusive
  */
-hasta: string;
+hasta: CalendarDate;
 /**
  * Ubicación opcional; el servidor aplica el alcance del usuario
  * @minimum 1
@@ -7271,11 +7261,11 @@ export type ExportarProveedorXlsxParams = {
 /**
  * Fecha inicio, formato YYYY-MM-DD
  */
-desde?: string;
+desde?: CalendarDate;
 /**
  * Fecha fin, formato YYYY-MM-DD
  */
-hasta?: string;
+hasta?: CalendarDate;
 };
 
 export type ListContenedoresParams = {
@@ -7362,8 +7352,8 @@ export type ListEntradasParams = {
 folio?: string;
 proveedorId?: number;
 ubicacionId?: number;
-fechaDesde?: string;
-fechaHasta?: string;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 page?: number;
 pageSize?: number;
 };
@@ -7483,8 +7473,8 @@ tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;
 usuarioId?: number;
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 buscar?: string;
 incluirUbicacionesInactivas?: boolean;
 /**
@@ -7511,8 +7501,8 @@ tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;
 usuarioId?: number;
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 buscar?: string;
 incluirUbicacionesInactivas?: boolean;
 /**
@@ -7546,8 +7536,8 @@ tipos?: TipoMovimiento[];
 productoId?: number;
 ubicacionId?: number;
 usuarioId?: number;
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 buscar?: string;
 incluirUbicacionesInactivas?: boolean;
 };
@@ -7613,8 +7603,8 @@ ubicacionIds?: string;
 };
 
 export type GetClientesAnaliticaParams = {
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 };
 
 export type BajaClienteBody = {
@@ -7632,19 +7622,19 @@ export type BajaCliente200 = {
 export type UpdateClienteCredito200 = { [key: string]: unknown };
 
 export type GetClienteEstadoCuentaParams = {
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 tipo?: string;
 };
 
 export type GetClienteComprasParams = {
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 };
 
 export type GetClienteAnaliticaParams = {
-desde?: string;
-hasta?: string;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 };
 
 export type CreateClienteAjuste201 = { [key: string]: unknown };
@@ -7739,8 +7729,8 @@ destinoId?: number;
 productoId?: number;
 usuarioId?: number;
 search?: string;
-fechaDesde?: string;
-fechaHasta?: string;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 page?: number;
 pageSize?: number;
 };
@@ -7757,8 +7747,8 @@ folio: number;
 };
 
 export type ExportarSalidasParams = {
-fechaDesde?: string;
-fechaHasta?: string;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 origenId?: number;
 destinoId?: number;
 productoId?: number;
@@ -8169,8 +8159,8 @@ q?: string;
 sitioId?: number;
 estado?: EstadoRollo;
 productoId?: number;
-fechaDesde?: string;
-fechaHasta?: string;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 folio?: number;
 /**
  * Solo rollos con tres o más reimpresiones cuyo último evento aún no cubre una revisión ADMIN
@@ -8235,8 +8225,8 @@ export type CrearReimpresionEtiquetas201 = {
 };
 
 export type ListarHistorialEtiquetasParams = {
-fechaDesde?: string;
-fechaHasta?: string;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 sitioId?: number;
 usuarioId?: number;
 productoId?: number;
@@ -8259,8 +8249,8 @@ export type ListarHistorialEtiquetas200 = {
 };
 
 export type ExportarHistorialEtiquetasXlsxParams = {
-fechaDesde?: string;
-fechaHasta?: string;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 sitioId?: number;
 usuarioId?: number;
 productoId?: number;

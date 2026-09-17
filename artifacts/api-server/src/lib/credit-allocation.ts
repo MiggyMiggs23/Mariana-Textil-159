@@ -3,6 +3,8 @@
  * same algorithm can be reused by customer and supplier ledgers without
  * decimal rounding differences.
  */
+import { calendarDate } from "./date-only";
+
 export type CreditAllocationSource = { id: number; availableCents: number };
 export type CreditAllocationTarget = {
   id: number;
@@ -400,8 +402,7 @@ function projectCreditLedgerCore(movements: CreditLedgerMovement[]): {
     movimientoId: movement.id,
     ticketId: movement.ticketId,
     createdAt: movement.createdAt,
-    dueAt: movement.fechaVencimiento == null ? null : typeof movement.fechaVencimiento === "string"
-      ? movement.fechaVencimiento.slice(0, 10) : movement.fechaVencimiento.toISOString().slice(0, 10),
+    dueAt: movement.fechaVencimiento == null ? null : calendarDate(movement.fechaVencimiento),
     originalCents: Math.max(0, cents(movement.importe)),
     pendienteCents: balances.get(movement.id) ?? 0,
     folio: movement.folio ?? null,

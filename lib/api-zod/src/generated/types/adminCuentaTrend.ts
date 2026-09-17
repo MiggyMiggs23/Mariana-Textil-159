@@ -5,9 +5,10 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 
 export interface AdminCuentaTrend {
-  fecha: Date;
+  fecha: CalendarDate;
   cuentaDestino: string;
   importe: string;
 }

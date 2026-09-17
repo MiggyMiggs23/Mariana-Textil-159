@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { ClienteNotaAbono } from './clienteNotaAbono';
 import type { ClienteNotaCreditoDetalleEstado } from './clienteNotaCreditoDetalleEstado';
 import type { ClienteNotaCreditoDetalleEstadoNota } from './clienteNotaCreditoDetalleEstadoNota';
@@ -18,8 +19,7 @@ export interface ClienteNotaCreditoDetalle {
   saldoActual: string;
   estado: ClienteNotaCreditoDetalleEstado;
   estadoNota: ClienteNotaCreditoDetalleEstadoNota;
-  /** @nullable */
-  fechaVencimiento: Date | null;
+  fechaVencimiento: CalendarDate | null;
   /** @minimum 0 */
   diasVencidos: number;
   abonos: ClienteNotaAbono[];

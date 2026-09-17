@@ -85,6 +85,7 @@ import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigid
 import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
+import { formatDateOnlyMx } from "@/lib/date-only";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
@@ -391,7 +392,7 @@ function CarteraContent() {
                               <td className="p-4">
                                 {nota.fechaVencimiento ? (
                                   <span className="font-bold text-muted-foreground">
-                                    {format(parseDate(nota.fechaVencimiento), "dd/MM/yyyy")}
+                                    {formatDateOnlyMx(nota.fechaVencimiento)}
                                   </span>
                                 ) : "N/A"}
                               </td>

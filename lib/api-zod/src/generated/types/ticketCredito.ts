@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { TicketCreditoDiasPlazo } from './ticketCreditoDiasPlazo';
 import type { TicketCreditoEstadoNota } from './ticketCreditoEstadoNota';
 
@@ -16,8 +17,7 @@ export interface TicketCredito {
   importeCredito: string;
   /** @nullable */
   diasPlazo: TicketCreditoDiasPlazo;
-  /** @nullable */
-  fechaVencimiento: Date | null;
+  fechaVencimiento: CalendarDate | null;
   /** Saldo FIFO actual de la porción a crédito de esta venta */
   saldoPendiente: string;
   /** @nullable */

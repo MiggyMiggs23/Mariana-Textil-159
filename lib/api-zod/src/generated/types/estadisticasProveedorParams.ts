@@ -5,14 +5,15 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 
 export type EstadisticasProveedorParams = {
 /**
  * Fecha inicio del periodo, formato YYYY-MM-DD
  */
-desde: Date;
+desde: CalendarDate;
 /**
  * Fecha fin del periodo, formato YYYY-MM-DD
  */
-hasta: Date;
+hasta: CalendarDate;
 };

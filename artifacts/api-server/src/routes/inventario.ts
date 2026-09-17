@@ -980,15 +980,19 @@ inventarioRouter.get(
   requierePermiso("entradas", "ver"),
   async (req, res, next) => {
     try {
-      // The generated contract uses Date values at runtime, while this
-      // read-only endpoint intentionally accepts strict HTML date inputs.
-      // Normalize before parsing so YYYY-MM-DD filters are interpreted as
-      // Mexico business-day boundaries and malformed dates remain 400s.
-      const q = ListEntradasQueryParams.parse({
-        ...req.query,
-        fechaDesde: parseMexicoDateQuery(req.query.fechaDesde, "start"),
-        fechaHasta: parseMexicoDateQuery(req.query.fechaHasta, "end"),
-      });
+      // Keep calendar-day query values as strings through contract validation.
+      // Convert only after validation when the database needs Mexico-local
+      // timestamp bounds.
+      const q = ListEntradasQueryParams.parse(req.query);
+      const fechaDesde = parseMexicoDateQuery(q.fechaDesde, "start");
+      const fechaHasta = parseMexicoDateQuery(q.fechaHasta, "end");
+      if (
+        (q.fechaDesde !== undefined && fechaDesde === null) ||
+        (q.fechaHasta !== undefined && fechaHasta === null)
+      ) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
       const page = q.page ?? 1;
       const pageSize = q.pageSize ?? 20;
       const offset = (page - 1) * pageSize;
@@ -1029,8 +1033,8 @@ inventarioRouter.get(
         conditions.push(eq(entradasTable.ubicacionId, scopedUbicacionId));
       }
 
-      if (q.fechaDesde) conditions.push(gte(entradasTable.fecha, q.fechaDesde));
-      if (q.fechaHasta) conditions.push(lte(entradasTable.fecha, q.fechaHasta));
+      if (fechaDesde) conditions.push(gte(entradasTable.fecha, fechaDesde));
+      if (fechaHasta) conditions.push(lte(entradasTable.fecha, fechaHasta));
 
       const where = conditions.length ? and(...conditions) : undefined;
 
@@ -2052,19 +2056,30 @@ function normalizeKardexQuery(query: Record<string, unknown>) {
   if (typeof normalized.tipos === "string") {
     normalized.tipos = [normalized.tipos];
   }
-  for (const key of ["desde", "hasta"] as const) {
-    if (normalized[key] !== undefined) {
-      normalized[key] = parseMexicoDateQuery(
-        normalized[key],
-        key === "desde" ? "start" : "end",
-      );
-    }
-  }
   if (typeof normalized.incluirUbicacionesInactivas === "string") {
     normalized.incluirUbicacionesInactivas =
       normalized.incluirUbicacionesInactivas === "true";
   }
   return normalized;
+}
+
+function parseKardexDateBounds(query: {
+  desde?: string;
+  hasta?: string;
+}): {
+  desde: Date | undefined;
+  hasta: Date | undefined;
+  invalid: boolean;
+} {
+  const desde = parseMexicoDateQuery(query.desde, "start");
+  const hasta = parseMexicoDateQuery(query.hasta, "end");
+  return {
+    desde: desde ?? undefined,
+    hasta: hasta ?? undefined,
+    invalid:
+      (query.desde !== undefined && desde === null) ||
+      (query.hasta !== undefined && hasta === null),
+  };
 }
 
 function kardexFilters(
@@ -2101,6 +2116,11 @@ inventarioRouter.get(
   async (req, res, next) => {
     try {
       const q = GetKardexQueryParams.parse(normalizeKardexQuery(req.query));
+      const { invalid, ...dateBounds } = parseKardexDateBounds(q);
+      if (invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
       const auth = req.auth!;
       const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
         auth,
@@ -2117,7 +2137,7 @@ inventarioRouter.get(
         return;
       }
       const result = await queryKardex(
-        kardexFilters(q, scopedUbicacionId),
+        kardexFilters({ ...q, ...dateBounds }, scopedUbicacionId),
         { page: q.page, pageSize: q.pageSize },
       );
       const response = GetKardexResponse.parse({
@@ -2142,6 +2162,11 @@ inventarioRouter.get(
       const q = GetKardexGroupedQueryParams.parse(
         normalizeKardexQuery(req.query),
       );
+      const { invalid, ...dateBounds } = parseKardexDateBounds(q);
+      if (invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
       const auth = req.auth!;
       const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
         auth,
@@ -2158,7 +2183,7 @@ inventarioRouter.get(
         return;
       }
       const result = await queryKardexGrouped(
-        kardexFilters(q, scopedUbicacionId),
+        kardexFilters({ ...q, ...dateBounds }, scopedUbicacionId),
         { page: q.page, pageSize: q.pageSize },
       );
       res.json(GetKardexGroupedResponse.parse(result));
@@ -2209,6 +2234,11 @@ inventarioRouter.get(
       const q = ExportKardexXlsxQueryParams.parse(
         normalizeKardexQuery(req.query),
       );
+      const { invalid, ...dateBounds } = parseKardexDateBounds(q);
+      if (invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
       const auth = req.auth!;
       const { ubicacionId, scopeError } = resolveReadScope(auth, q.ubicacionId);
       if (scopeError) {
@@ -2222,7 +2252,7 @@ inventarioRouter.get(
         return;
       }
       const { movimientos } = await queryKardex(
-        kardexFilters(q, ubicacionId),
+        kardexFilters({ ...q, ...dateBounds }, ubicacionId),
       );
       const workbook = new ExcelJS.Workbook();
       workbook.creator = "Mariana Textil";

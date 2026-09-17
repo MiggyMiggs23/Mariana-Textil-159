@@ -19,10 +19,7 @@ router.get(
         ...ticket,
         createdAt: ticket.createdAt.toISOString(),
       })),
-      creditos: parsed.creditos.map((credito) => ({
-        ...credito,
-        fechaVencimiento: credito.fechaVencimiento.toISOString().slice(0, 10),
-      })),
+      creditos: parsed.creditos,
       salidasEnTransito: parsed.salidasEnTransito.map((salida) => ({
         ...salida,
         enviadaAt: salida.enviadaAt.toISOString(),

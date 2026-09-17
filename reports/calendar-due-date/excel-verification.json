@@ -1,0 +1,148 @@
+{
+  "auditSummary": {
+    "cartera": {
+      "dateFields": [
+        "routes/clientes.ts dateOnly/calendarDate for JSON and XLSX",
+        "credit-allocation.ts dueAt/calendarDate for projected charges"
+      ],
+      "dayFields": [
+        "creditDueDays",
+        "diasVencido"
+      ],
+      "derivedKind": "UTC-midnight ordinal calendar-label difference"
+    },
+    "cobros": {
+      "dateFields": [
+        "routes/notificaciones.ts calendarDate for notification fechaVencimiento",
+        "projected charge dueAt remains YYYY-MM-DD text"
+      ],
+      "dayFields": [
+        "diasVencido"
+      ],
+      "derivedKind": "UTC-midnight ordinal calendar-label difference"
+    },
+    "alerts": {
+      "dateFields": [
+        "lib/admin-alertas.ts projected dueAt is YYYY-MM-DD text",
+        "routes/admin-alertas.ts passes generated credit date strings unchanged"
+      ],
+      "dayFields": [
+        "diasRestantes"
+      ],
+      "derivedKind": "UTC-midnight ordinal calendar-label difference"
+    },
+    "testedBoundaries": [
+      "2026-01-01 day one",
+      "2026-01-31 month end",
+      "2024-02-29 leap day",
+      "2026-10-16 target date"
+    ]
+  },
+  "runs": [
+    {
+      "verification": "in-memory production estado-cuenta XLSX builder",
+      "timezone": "system",
+      "fixtureOnly": true,
+      "liveApi": false,
+      "databaseQueries": false,
+      "databaseWrites": false,
+      "parsedDueDateCells": [
+        {
+          "label": "2026-01-01",
+          "value": "2026-01-01",
+          "type": "string"
+        },
+        {
+          "label": "2026-01-31",
+          "value": "2026-01-31",
+          "type": "string"
+        },
+        {
+          "label": "2024-02-29",
+          "value": "2024-02-29",
+          "type": "string"
+        },
+        {
+          "label": "2026-10-16",
+          "value": "2026-10-16",
+          "type": "string"
+        }
+      ],
+      "assertions": [
+        "Fecha de vencimiento column is present",
+        "all parsed due dates are exact YYYY-MM-DD strings",
+        "ExcelJS parsed no Date objects or ISO timestamp suffixes"
+      ]
+    },
+    {
+      "verification": "in-memory production estado-cuenta XLSX builder",
+      "timezone": "America/Mexico_City",
+      "fixtureOnly": true,
+      "liveApi": false,
+      "databaseQueries": false,
+      "databaseWrites": false,
+      "parsedDueDateCells": [
+        {
+          "label": "2026-01-01",
+          "value": "2026-01-01",
+          "type": "string"
+        },
+        {
+          "label": "2026-01-31",
+          "value": "2026-01-31",
+          "type": "string"
+        },
+        {
+          "label": "2024-02-29",
+          "value": "2024-02-29",
+          "type": "string"
+        },
+        {
+          "label": "2026-10-16",
+          "value": "2026-10-16",
+          "type": "string"
+        }
+      ],
+      "assertions": [
+        "Fecha de vencimiento column is present",
+        "all parsed due dates are exact YYYY-MM-DD strings",
+        "ExcelJS parsed no Date objects or ISO timestamp suffixes"
+      ]
+    },
+    {
+      "verification": "in-memory production estado-cuenta XLSX builder",
+      "timezone": "Asia/Tokyo",
+      "fixtureOnly": true,
+      "liveApi": false,
+      "databaseQueries": false,
+      "databaseWrites": false,
+      "parsedDueDateCells": [
+        {
+          "label": "2026-01-01",
+          "value": "2026-01-01",
+          "type": "string"
+        },
+        {
+          "label": "2026-01-31",
+          "value": "2026-01-31",
+          "type": "string"
+        },
+        {
+          "label": "2024-02-29",
+          "value": "2024-02-29",
+          "type": "string"
+        },
+        {
+          "label": "2026-10-16",
+          "value": "2026-10-16",
+          "type": "string"
+        }
+      ],
+      "assertions": [
+        "Fecha de vencimiento column is present",
+        "all parsed due dates are exact YYYY-MM-DD strings",
+        "ExcelJS parsed no Date objects or ISO timestamp suffixes"
+      ]
+    }
+  ]
+}

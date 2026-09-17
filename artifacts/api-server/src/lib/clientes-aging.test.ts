@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
+  addCalendarDays,
   canLinkAdjustmentToTicket,
   creditDueDate,
   creditStatus,
@@ -15,6 +16,7 @@ import {
   authorizedCreditPredicate,
   collectedTicketPredicate,
 } from "./accounted-document";
+import { calendarDate } from "./date-only";
 
 test("canonical note states distinguish unpaid, partial, paid, and overdue partial", () => {
   const common = { importeOriginal: "100.00", fechaVencimiento: "2025-01-10", hoy: "2025-01-11" };
@@ -417,6 +419,43 @@ test("credit due dates support every mandatory term from Mexico City sale date",
   assert.equal(creditDueDate(sale, 15), "2026-09-14");
   assert.equal(creditDueDate(sale, 30), "2026-09-29");
   assert.equal(creditDueDate(sale, 60), "2026-10-29");
+});
+
+test("credit due-date boundaries use Mexico calendar labels, not sale instants", () => {
+  // Mexico City is still on the previous calendar day immediately before
+  // midnight and on the new day immediately after it.
+  assert.equal(
+    creditDueDate(new Date("2026-10-16T05:59:59.000Z"), 15),
+    "2026-10-30",
+  );
+  assert.equal(
+    creditDueDate(new Date("2026-10-16T06:00:00.000Z"), 15),
+    "2026-10-31",
+  );
+  assert.equal(creditStatus(100, "2026-10-16", "2026-10-16"), "POR_VENCER");
+  assert.equal(creditStatus(100, "2026-10-15", "2026-10-16"), "VENCIDA");
+});
+
+test("date-only database values retain their label when normalized for JSON and Excel", () => {
+  const dateLabels = [
+    ["2026-01-01", 2026, 1, 1],
+    ["2026-02-28", 2026, 2, 28],
+    ["2024-02-29", 2024, 2, 29],
+    ["2026-03-31", 2026, 3, 31],
+  ] as const;
+  for (const [label, year, month, day] of dateLabels) {
+    assert.match(calendarDate(label), /^\d{4}-\d{2}-\d{2}$/);
+    // Schema adapters can represent DATE as UTC midnight.
+    assert.equal(calendarDate(new Date(`${label}T00:00:00.000Z`)), label);
+    // pg's DATE parser can represent the same DATE at local midnight.
+    assert.equal(calendarDate(new Date(year, month - 1, day)), label);
+  }
+});
+
+test("calendar-day addition preserves month ends and leap days", () => {
+  assert.equal(addCalendarDays("2026-01-01", 7), "2026-01-08");
+  assert.equal(addCalendarDays("2026-01-31", 7), "2026-02-07");
+  assert.equal(addCalendarDays("2024-02-28", 7), "2024-03-06");
 });
 
 test("credit status boundaries are calculated at query time", () => {

@@ -1717,6 +1717,8 @@ export const GetAnaliticaGlobalProveedoresResponse = zod.object({
 /**
  * @summary Historial global de compras agrupado por entrada y producto
  */
+export const listHistorialComprasProveedoresQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listHistorialComprasProveedoresQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const listHistorialComprasProveedoresQuerySortDefault = `fecha`;
 export const listHistorialComprasProveedoresQueryDirectionDefault = `desc`;
 export const listHistorialComprasProveedoresQueryPageDefault = 1;
@@ -1731,8 +1733,8 @@ export const ListHistorialComprasProveedoresQueryParams = zod.object({
   "colores": zod.array(zod.coerce.string()).optional(),
   "proveedorIds": zod.array(zod.coerce.number().int()).optional(),
   "ubicacionIds": zod.array(zod.coerce.number().int()).optional(),
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional(),
+  "desde": zod.coerce.string().regex(listHistorialComprasProveedoresQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(listHistorialComprasProveedoresQueryHastaRegExp).optional(),
   "sort": zod.enum(['fecha', 'producto', 'proveedor', 'color', 'sitio', 'cantidad']).default(listHistorialComprasProveedoresQuerySortDefault),
   "direction": zod.enum(['asc', 'desc']).default(listHistorialComprasProveedoresQueryDirectionDefault),
   "page": zod.coerce.number().int().min(1).default(listHistorialComprasProveedoresQueryPageDefault),
@@ -1897,6 +1899,8 @@ export const ListComprasProveedorParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const listComprasProveedorQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listComprasProveedorQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const listComprasProveedorQueryPageDefault = 1;
 
 export const listComprasProveedorQueryPageSizeDefault = 20;
@@ -1905,8 +1909,8 @@ export const listComprasProveedorQueryPageSizeMax = 200;
 
 
 export const ListComprasProveedorQueryParams = zod.object({
-  "desde": zod.date().optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
-  "hasta": zod.date().optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD'),
+  "desde": zod.coerce.string().regex(listComprasProveedorQueryDesdeRegExp).optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
+  "hasta": zod.coerce.string().regex(listComprasProveedorQueryHastaRegExp).optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD'),
   "estado": zod.enum(['PAGADA', 'PARCIAL', 'PENDIENTE']).optional().describe('Filtrar por estado de pago'),
   "page": zod.coerce.number().min(1).default(listComprasProveedorQueryPageDefault),
   "pageSize": zod.coerce.number().min(1).max(listComprasProveedorQueryPageSizeMax).default(listComprasProveedorQueryPageSizeDefault)
@@ -1946,9 +1950,13 @@ export const EstadoCuentaProveedorParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const estadoCuentaProveedorQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const estadoCuentaProveedorQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const EstadoCuentaProveedorQueryParams = zod.object({
-  "desde": zod.date().optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
-  "hasta": zod.date().optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD')
+  "desde": zod.coerce.string().regex(estadoCuentaProveedorQueryDesdeRegExp).optional().describe('Fecha inicio (inclusive), formato YYYY-MM-DD'),
+  "hasta": zod.coerce.string().regex(estadoCuentaProveedorQueryHastaRegExp).optional().describe('Fecha fin (inclusive), formato YYYY-MM-DD')
 })
 
 export const EstadoCuentaProveedorResponse = zod.object({
@@ -1981,9 +1989,13 @@ export const ListProveedorPagosParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const listProveedorPagosQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listProveedorPagosQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ListProveedorPagosQueryParams = zod.object({
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional()
+  "desde": zod.coerce.string().regex(listProveedorPagosQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(listProveedorPagosQueryHastaRegExp).optional()
 })
 
 export const ListProveedorPagosResponse = zod.object({
@@ -2304,9 +2316,13 @@ export const EstadisticasProveedorParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const estadisticasProveedorQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const estadisticasProveedorQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const EstadisticasProveedorQueryParams = zod.object({
-  "desde": zod.date().describe('Fecha inicio del periodo, formato YYYY-MM-DD'),
-  "hasta": zod.date().describe('Fecha fin del periodo, formato YYYY-MM-DD')
+  "desde": zod.coerce.string().regex(estadisticasProveedorQueryDesdeRegExp).describe('Fecha inicio del periodo, formato YYYY-MM-DD'),
+  "hasta": zod.coerce.string().regex(estadisticasProveedorQueryHastaRegExp).describe('Fecha fin del periodo, formato YYYY-MM-DD')
 })
 
 export const EstadisticasProveedorResponse = zod.object({
@@ -2410,6 +2426,8 @@ export const GetProveedorUtilidadParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getProveedorUtilidadQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getProveedorUtilidadQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 export const getProveedorUtilidadQueryPageDefault = 1;
 
@@ -2419,8 +2437,8 @@ export const getProveedorUtilidadQueryPageSizeMax = 200;
 
 
 export const GetProveedorUtilidadQueryParams = zod.object({
-  "desde": zod.date().describe('Fecha inicial del instante de contabilización, inclusive'),
-  "hasta": zod.date().describe('Fecha final del instante de contabilización, inclusive'),
+  "desde": zod.coerce.string().regex(getProveedorUtilidadQueryDesdeRegExp).describe('Fecha inicial del instante de contabilización, inclusive'),
+  "hasta": zod.coerce.string().regex(getProveedorUtilidadQueryHastaRegExp).describe('Fecha final del instante de contabilización, inclusive'),
   "ubicacionId": zod.coerce.number().int().min(1).optional().describe('Ubicación opcional; el servidor aplica el alcance del usuario'),
   "page": zod.coerce.number().int().min(1).default(getProveedorUtilidadQueryPageDefault),
   "pageSize": zod.coerce.number().int().min(1).max(getProveedorUtilidadQueryPageSizeMax).default(getProveedorUtilidadQueryPageSizeDefault)
@@ -2478,9 +2496,13 @@ export const ExportarProveedorXlsxParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const exportarProveedorXlsxQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportarProveedorXlsxQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ExportarProveedorXlsxQueryParams = zod.object({
-  "desde": zod.date().optional().describe('Fecha inicio, formato YYYY-MM-DD'),
-  "hasta": zod.date().optional().describe('Fecha fin, formato YYYY-MM-DD')
+  "desde": zod.coerce.string().regex(exportarProveedorXlsxQueryDesdeRegExp).optional().describe('Fecha inicio, formato YYYY-MM-DD'),
+  "hasta": zod.coerce.string().regex(exportarProveedorXlsxQueryHastaRegExp).optional().describe('Fecha fin, formato YYYY-MM-DD')
 })
 
 export const ExportarProveedorXlsxResponse = zod.unknown()
@@ -2511,8 +2533,8 @@ export const GetCatalogosContenedoresResponse = zod.object({
 /**
  * @summary Lista paginada de contenedores
  */
-export const listContenedoresQueryFechaDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const listContenedoresQueryFechaHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContenedoresQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listContenedoresQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const listContenedoresQueryPageDefault = 1;
 
 export const listContenedoresQueryPageSizeDefault = 20;
@@ -2532,7 +2554,7 @@ export const ListContenedoresQueryParams = zod.object({
   "pageSize": zod.coerce.number().min(1).max(listContenedoresQueryPageSizeMax).default(listContenedoresQueryPageSizeDefault)
 })
 
-export const listContenedoresResponseItemsItemFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContenedoresResponseItemsItemFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
 export const ListContenedoresResponse = zod.object({
@@ -2577,8 +2599,8 @@ export const ListContenedoresResponse = zod.object({
 /**
  * @summary Registra mercancía en tránsito sin tocar inventario
  */
-export const createContenedorBodyFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const createContenedorBodyFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContenedorBodyFechaPedidoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const createContenedorBodyFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const createContenedorBodyLineasItemCantidadEsperadaRegExp = new RegExp('^\\d+(\\.\\d{1,3})?$');
 
 
@@ -2599,9 +2621,9 @@ export const CreateContenedorBody = zod.object({
 })).min(1)
 })
 
-export const createContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const createContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const createContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const createContenedorResponseFechaPedidoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const createContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const createContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
 export const CreateContenedorResponse = zod.object({
@@ -2679,7 +2701,7 @@ export const GetResumenContenedoresQueryParams = zod.object({
   "sitioDestinoId": zod.coerce.number().optional()
 })
 
-export const getResumenContenedoresResponseActualProximoOneFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getResumenContenedoresResponseActualProximoOneFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
 export const GetResumenContenedoresResponse = zod.object({
@@ -2826,7 +2848,7 @@ export const ListContenedoresDisponiblesEntradaQueryParams = zod.object({
   "ubicacionId": zod.coerce.number()
 })
 
-export const listContenedoresDisponiblesEntradaResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listContenedoresDisponiblesEntradaResponseFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
 export const ListContenedoresDisponiblesEntradaResponseItem = zod.object({
@@ -2844,9 +2866,9 @@ export const GetContenedorParams = zod.object({
   "id": zod.coerce.number()
 })
 
-export const getContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const getContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const getContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const getContenedorResponseFechaPedidoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
 export const GetContenedorResponse = zod.object({
@@ -2912,8 +2934,8 @@ export const UpdateContenedorParams = zod.object({
   "id": zod.coerce.number()
 })
 
-export const updateContenedorBodyOneFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const updateContenedorBodyOneFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContenedorBodyOneFechaPedidoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const updateContenedorBodyOneFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const updateContenedorBodyOneLineasItemCantidadEsperadaRegExp = new RegExp('^\\d+(\\.\\d{1,3})?$');
 
 
@@ -2934,9 +2956,9 @@ export const UpdateContenedorBody = zod.object({
 })).min(1)
 })
 
-export const updateContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const updateContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const updateContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const updateContenedorResponseFechaPedidoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const updateContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const updateContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
 export const UpdateContenedorResponse = zod.object({
@@ -3007,9 +3029,9 @@ export const CancelContenedorBody = zod.object({
   "motivo": zod.string().min(cancelContenedorBodyMotivoMin)
 })
 
-export const cancelContenedorResponseFechaPedidoOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const cancelContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const cancelContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const cancelContenedorResponseFechaPedidoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const cancelContenedorResponseFechaEstimadaLlegadaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const cancelContenedorResponseFechaRealLlegadaOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
 export const CancelContenedorResponse = zod.object({
@@ -3504,12 +3526,16 @@ export const CrearEntradaResponse = zod.object({
 /**
  * @summary Lista entradas con filtros para búsqueda y reimpresión
  */
+export const listEntradasQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listEntradasQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ListEntradasQueryParams = zod.object({
   "folio": zod.coerce.string().optional().describe('Folio numérico o formateado como DN-000503.'),
   "proveedorId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
-  "fechaDesde": zod.date().optional(),
-  "fechaHasta": zod.date().optional(),
+  "fechaDesde": zod.coerce.string().regex(listEntradasQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(listEntradasQueryFechaHastaRegExp).optional(),
   "page": zod.coerce.number().optional(),
   "pageSize": zod.coerce.number().optional()
 })
@@ -3780,8 +3806,8 @@ export const ActivarRolloResponse = zod.object({
  * @summary Lista salidas extraordinarias (solo ADMIN con permiso salidas/ver)
  */
 
-export const listSalidasExtraordinariasQueryFechaDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const listSalidasExtraordinariasQueryFechaHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listSalidasExtraordinariasQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listSalidasExtraordinariasQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const listSalidasExtraordinariasQueryPageDefault = 1;
 
 export const listSalidasExtraordinariasQueryPageSizeDefault = 20;
@@ -4434,6 +4460,8 @@ export const UpdateStockMinimoResponse = zod.object({
 /**
  * @summary Historial completo de movimientos, filtrable y paginado
  */
+export const getKardexQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getKardexQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const getKardexQueryIncluirUbicacionesInactivasDefault = false;
 export const getKardexQueryPageDefault = 1;
 
@@ -4448,8 +4476,8 @@ export const GetKardexQueryParams = zod.object({
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional(),
+  "desde": zod.coerce.string().regex(getKardexQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(getKardexQueryHastaRegExp).optional(),
   "buscar": zod.coerce.string().optional(),
   "incluirUbicacionesInactivas": zod.coerce.boolean().default(getKardexQueryIncluirUbicacionesInactivasDefault),
   "page": zod.coerce.number().min(1).default(getKardexQueryPageDefault),
@@ -4506,6 +4534,8 @@ export const GetKardexResponse = zod.object({
  * Presentación agrupada del kardex. Agrupa únicamente movimientos con documento verificado usando tipo interno, ID interno, tipo de movimiento y sitio. Los movimientos sin documento verificado permanecen individuales por ID para conservar su justificación. Las cantidades se mantienen separadas por unidad.
  * @summary Historial de movimientos agrupado por documento, tipo y sitio
  */
+export const getKardexGroupedQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getKardexGroupedQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const getKardexGroupedQueryIncluirUbicacionesInactivasDefault = false;
 export const getKardexGroupedQueryPageDefault = 1;
 
@@ -4520,8 +4550,8 @@ export const GetKardexGroupedQueryParams = zod.object({
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional(),
+  "desde": zod.coerce.string().regex(getKardexGroupedQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(getKardexGroupedQueryHastaRegExp).optional(),
   "buscar": zod.coerce.string().optional(),
   "incluirUbicacionesInactivas": zod.coerce.boolean().default(getKardexGroupedQueryIncluirUbicacionesInactivasDefault),
   "page": zod.coerce.number().min(1).default(getKardexGroupedQueryPageDefault),
@@ -4623,6 +4653,8 @@ export const ListKardexFiltersResponse = zod.object({
 /**
  * @summary Exporta el historial filtrado como XLSX
  */
+export const exportKardexXlsxQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportKardexXlsxQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const exportKardexXlsxQueryIncluirUbicacionesInactivasDefault = false;
 
 export const ExportKardexXlsxQueryParams = zod.object({
@@ -4631,8 +4663,8 @@ export const ExportKardexXlsxQueryParams = zod.object({
   "productoId": zod.coerce.number().optional(),
   "ubicacionId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional(),
+  "desde": zod.coerce.string().regex(exportKardexXlsxQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(exportKardexXlsxQueryHastaRegExp).optional(),
   "buscar": zod.coerce.string().optional(),
   "incluirUbicacionesInactivas": zod.coerce.boolean().default(exportKardexXlsxQueryIncluirUbicacionesInactivasDefault)
 })
@@ -4940,15 +4972,23 @@ export const GetClientesCarteraResponse = zod.object({
 /**
  * @summary Analítica global de clientes
  */
+export const getClientesAnaliticaQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getClientesAnaliticaQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetClientesAnaliticaQueryParams = zod.object({
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional()
+  "desde": zod.coerce.string().regex(getClientesAnaliticaQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(getClientesAnaliticaQueryHastaRegExp).optional()
 })
+
+export const getClientesAnaliticaResponsePeriodoDesdeOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getClientesAnaliticaResponsePeriodoHastaOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
 
 export const GetClientesAnaliticaResponse = zod.object({
   "periodo": zod.object({
-  "desde": zod.coerce.date().nullable(),
-  "hasta": zod.coerce.date().nullable()
+  "desde": zod.union([zod.string().regex(getClientesAnaliticaResponsePeriodoDesdeOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
+  "hasta": zod.union([zod.string().regex(getClientesAnaliticaResponsePeriodoHastaOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()])
 }),
   "ventas": zod.string(),
   "tickets": zod.number(),
@@ -5147,6 +5187,9 @@ export const GetClienteCreditoParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getClienteCreditoResponsePrimerVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetClienteCreditoResponse = zod.object({
   "clienteId": zod.number(),
   "limiteCredito": zod.string(),
@@ -5157,7 +5200,7 @@ export const GetClienteCreditoResponse = zod.object({
   "diasCredito": zod.union([zod.literal(0),zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]),
   "utilizacion": zod.string(),
   "totalVencido": zod.string(),
-  "primerVencimiento": zod.coerce.date().nullish(),
+  "primerVencimiento": zod.union([zod.string().regex(getClienteCreditoResponsePrimerVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]).optional(),
   "primeraCompra": zod.coerce.date().nullish(),
   "ultimaActividad": zod.coerce.date().nullish(),
   "antiguedad": zod.array(zod.record(zod.string(), zod.unknown())).optional()
@@ -5187,13 +5230,16 @@ export const GetClientePreciosParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getClientePreciosResponsePreciosItemFechaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetClientePreciosResponse = zod.object({
   "clienteId": zod.number(),
   "precios": zod.array(zod.object({
   "productoId": zod.number(),
   "sku": zod.string(),
   "precioUnitario": zod.string(),
-  "fecha": zod.coerce.date(),
+  "fecha": zod.string().regex(getClientePreciosResponsePreciosItemFechaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "promedio3": zod.string().describe('Promedio de las últimas 3 compras de ese producto')
 })),
   "nota": zod.string().nullish()
@@ -5207,11 +5253,18 @@ export const GetClienteEstadoCuentaParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getClienteEstadoCuentaQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getClienteEstadoCuentaQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetClienteEstadoCuentaQueryParams = zod.object({
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional(),
+  "desde": zod.coerce.string().regex(getClienteEstadoCuentaQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(getClienteEstadoCuentaQueryHastaRegExp).optional(),
   "tipo": zod.coerce.string().optional()
 })
+
+export const getClienteEstadoCuentaResponseMovimientosItemFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
 
 export const GetClienteEstadoCuentaResponse = zod.object({
   "clienteId": zod.number(),
@@ -5237,7 +5290,7 @@ export const GetClienteEstadoCuentaResponse = zod.object({
   "referencia": zod.string().nullish(),
   "fechaEfectiva": zod.coerce.date().optional(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
-  "fechaVencimiento": zod.coerce.date().nullish(),
+  "fechaVencimiento": zod.union([zod.string().regex(getClienteEstadoCuentaResponseMovimientosItemFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]).optional(),
   "estado": zod.enum(['VIGENTE', 'POR_VENCER', 'VENCIDA', 'PAGADA', 'SIN_PLAZO']).nullish(),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullish().describe('Estado canónico de la nota; estado conserva la clasificación de aging histórica.'),
   "sinPlazo": zod.boolean().optional(),
@@ -5255,9 +5308,13 @@ export const GetClienteComprasParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getClienteComprasQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getClienteComprasQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetClienteComprasQueryParams = zod.object({
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional()
+  "desde": zod.coerce.string().regex(getClienteComprasQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(getClienteComprasQueryHastaRegExp).optional()
 })
 
 export const GetClienteComprasResponse = zod.object({
@@ -5314,9 +5371,13 @@ export const GetClienteAnaliticaParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getClienteAnaliticaQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getClienteAnaliticaQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetClienteAnaliticaQueryParams = zod.object({
-  "desde": zod.date().optional(),
-  "hasta": zod.date().optional()
+  "desde": zod.coerce.string().regex(getClienteAnaliticaQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(getClienteAnaliticaQueryHastaRegExp).optional()
 })
 
 export const GetClienteAnaliticaResponse = zod.object({
@@ -5376,6 +5437,9 @@ export const CreateClientePagoBody = zod.object({
   "fechaEfectiva": zod.coerce.date().nullish()
 })
 
+export const createClientePagoResponseAsignacionesItemVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const CreateClientePagoResponse = zod.object({
   "id": zod.number(),
   "clienteId": zod.number(),
@@ -5385,7 +5449,7 @@ export const CreateClientePagoResponse = zod.object({
   "folio": zod.number().nullable(),
   "ticketId": zod.number().nullable(),
   "movimientoVentaId": zod.number(),
-  "vencimiento": zod.coerce.date().nullable(),
+  "vencimiento": zod.union([zod.string().regex(createClientePagoResponseAsignacionesItemVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoAntes": zod.string(),
   "aplicado": zod.string(),
   "saldoDespues": zod.string(),
@@ -5412,13 +5476,16 @@ export const PreviewClientePagoBody = zod.object({
   "fechaEfectiva": zod.coerce.date().nullish()
 })
 
+export const previewClientePagoResponseAsignacionesItemVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const PreviewClientePagoResponse = zod.object({
   "monto": zod.string(),
   "asignaciones": zod.array(zod.object({
   "folio": zod.number().nullable(),
   "ticketId": zod.number().nullable(),
   "movimientoVentaId": zod.number(),
-  "vencimiento": zod.coerce.date().nullable(),
+  "vencimiento": zod.union([zod.string().regex(previewClientePagoResponseAsignacionesItemVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoAntes": zod.string(),
   "aplicado": zod.string(),
   "saldoDespues": zod.string(),
@@ -5437,6 +5504,8 @@ export const GetClienteNotaCreditoParams = zod.object({
   "ticketId": zod.coerce.number()
 })
 
+export const getClienteNotaCreditoResponseTicketTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getClienteNotaCreditoResponseFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const getClienteNotaCreditoResponseDiasVencidosMin = 0;
 
 
@@ -5478,7 +5547,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "esCredito": zod.boolean(),
   "importeCredito": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(getClienteNotaCreditoResponseTicketTwoFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
@@ -5538,7 +5607,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "saldoActual": zod.string(),
   "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'PAGADA']),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(getClienteNotaCreditoResponseFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "diasVencidos": zod.number().min(getClienteNotaCreditoResponseDiasVencidosMin),
   "abonos": zod.array(zod.object({
   "movimientoPagoId": zod.number(),
@@ -5638,6 +5707,9 @@ export const ReversarClientePagoBody = zod.object({
   "motivo": zod.string().min(1).describe('Motivo obligatorio del movimiento inverso')
 })
 
+export const reversarClientePagoResponseFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ReversarClientePagoResponse = zod.object({
   "movimientoId": zod.number().optional(),
   "ticketId": zod.number().nullish(),
@@ -5660,7 +5732,7 @@ export const ReversarClientePagoResponse = zod.object({
   "referencia": zod.string().nullish(),
   "fechaEfectiva": zod.coerce.date().optional(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullish(),
-  "fechaVencimiento": zod.coerce.date().nullish(),
+  "fechaVencimiento": zod.union([zod.string().regex(reversarClientePagoResponseFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]).optional(),
   "estado": zod.enum(['VIGENTE', 'POR_VENCER', 'VENCIDA', 'PAGADA', 'SIN_PLAZO']).nullish(),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullish().describe('Estado canónico de la nota; estado conserva la clasificación de aging histórica.'),
   "sinPlazo": zod.boolean().optional(),
@@ -5968,6 +6040,11 @@ export const ValidarPrecioPosResponse = zod.object({
 /**
  * @summary Lista notificaciones persistentes visibles para el usuario y alertas de crédito para ADMIN
  */
+export const listNotificacionesResponseNotificacionesItemFechaVencimientoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listNotificacionesResponsePorVencerItemFechaVencimientoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listNotificacionesResponseVencidasItemFechaVencimientoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ListNotificacionesResponse = zod.object({
   "notificaciones": zod.array(zod.object({
   "id": zod.number(),
@@ -5977,7 +6054,7 @@ export const ListNotificacionesResponse = zod.object({
   "folio": zod.number(),
   "importe": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]),
-  "fechaVencimiento": zod.coerce.date(),
+  "fechaVencimiento": zod.string().regex(listNotificacionesResponseNotificacionesItemFechaVencimientoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "cajeroId": zod.number(),
   "cajeroNombre": zod.string(),
   "tiendaId": zod.number(),
@@ -6005,7 +6082,7 @@ export const ListNotificacionesResponse = zod.object({
   "clienteNombre": zod.string(),
   "folio": zod.number().nullable(),
   "pendiente": zod.string(),
-  "fechaVencimiento": zod.coerce.date(),
+  "fechaVencimiento": zod.string().regex(listNotificacionesResponsePorVencerItemFechaVencimientoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "diasVencido": zod.number(),
   "estado": zod.enum(['POR_VENCER', 'VENCIDA']),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO'])
@@ -6017,7 +6094,7 @@ export const ListNotificacionesResponse = zod.object({
   "clienteNombre": zod.string(),
   "folio": zod.number().nullable(),
   "pendiente": zod.string(),
-  "fechaVencimiento": zod.coerce.date(),
+  "fechaVencimiento": zod.string().regex(listNotificacionesResponseVencidasItemFechaVencimientoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "diasVencido": zod.number(),
   "estado": zod.enum(['POR_VENCER', 'VENCIDA']),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO'])
@@ -6131,6 +6208,9 @@ export const CrearTicketBody = zod.object({
 })).min(1)
 })
 
+export const crearTicketResponseTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const CrearTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -6166,7 +6246,7 @@ export const CrearTicketResponse = zod.object({
   "esCredito": zod.boolean(),
   "importeCredito": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(crearTicketResponseTwoFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
@@ -6392,6 +6472,9 @@ export const ObtenerTicketParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const obtenerTicketResponseTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ObtenerTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -6427,7 +6510,7 @@ export const ObtenerTicketResponse = zod.object({
   "esCredito": zod.boolean(),
   "importeCredito": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(obtenerTicketResponseTwoFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
@@ -6495,6 +6578,10 @@ export const ObtenerDocumentoImpresionTicketQueryParams = zod.object({
   "copia": zod.enum(['INTERNA', 'CLIENTE'])
 })
 
+export const obtenerDocumentoImpresionTicketResponseOneOneFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const obtenerDocumentoImpresionTicketResponseTwoOneFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
   "ticketId": zod.number(),
   "folio": zod.number(),
@@ -6516,7 +6603,7 @@ export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
   "facturado": zod.boolean(),
   "esCredito": zod.boolean(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable()
+  "fechaVencimiento": zod.union([zod.string().regex(obtenerDocumentoImpresionTicketResponseOneOneFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()])
 }).and(zod.object({
   "subtotal": zod.string(),
   "iva": zod.string(),
@@ -6558,7 +6645,7 @@ export const ObtenerDocumentoImpresionTicketResponse = zod.union([zod.object({
   "facturado": zod.boolean(),
   "esCredito": zod.boolean(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable()
+  "fechaVencimiento": zod.union([zod.string().regex(obtenerDocumentoImpresionTicketResponseTwoOneFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()])
 }).and(zod.object({
   "copia": zod.literal("CLIENTE"),
   "documentoTipo": zod.literal("NOTA"),
@@ -6598,6 +6685,9 @@ export const CancelarTicketBody = zod.object({
 }),zod.null()]).optional()
 })
 
+export const cancelarTicketResponseTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const CancelarTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -6633,7 +6723,7 @@ export const CancelarTicketResponse = zod.object({
   "esCredito": zod.boolean(),
   "importeCredito": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(cancelarTicketResponseTwoFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
@@ -6712,6 +6802,9 @@ export const CobrarTicketBody = zod.object({
   "facturado": zod.boolean().optional().describe('Al cobrar, activa la factura y su IVA para el ticket completo en la misma transacción.')
 })
 
+export const cobrarTicketResponseTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const CobrarTicketResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -6747,7 +6840,7 @@ export const CobrarTicketResponse = zod.object({
   "esCredito": zod.boolean(),
   "importeCredito": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(cobrarTicketResponseTwoFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
@@ -6844,6 +6937,9 @@ export const AutorizarNotaBody = zod.object({
   "aplicarSaldoAFavor": zod.string().regex(autorizarNotaBodyAplicarSaldoAFavorRegExp).default(autorizarNotaBodyAplicarSaldoAFavorDefault).describe('Campo legado aceptado por compatibilidad; el servidor lo ignora y aplica automáticamente por FIFO el menor entre el favor disponible y la nota.')
 })
 
+export const autorizarNotaResponseTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const AutorizarNotaResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -6879,7 +6975,7 @@ export const AutorizarNotaResponse = zod.object({
   "esCredito": zod.boolean(),
   "importeCredito": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(autorizarNotaResponseTwoFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
@@ -7022,6 +7118,9 @@ export const ObtenerCorteCajaParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const obtenerCorteCajaResponseHojaVentasDiaFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ObtenerCorteCajaResponse = zod.object({
   "sesion": zod.object({
   "id": zod.number(),
@@ -7113,7 +7212,7 @@ export const ObtenerCorteCajaResponse = zod.object({
   "diferencia": zod.string().nullable(),
   "hojaVentasDia": zod.object({
   "sitio": zod.string(),
-  "fechaOperativa": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(obtenerCorteCajaResponseHojaVentasDiaFechaOperativaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "cerrada": zod.boolean(),
   "quienCerro": zod.string().nullable(),
   "secciones": zod.array(zod.object({
@@ -7160,6 +7259,9 @@ export const cerrarSesionCajaBodyEfectivoContadoMin = 0;
 export const CerrarSesionCajaBody = zod.object({
   "efectivoContado": zod.number().min(cerrarSesionCajaBodyEfectivoContadoMin)
 })
+
+export const cerrarSesionCajaResponseHojaVentasDiaFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
 
 export const CerrarSesionCajaResponse = zod.object({
   "sesion": zod.object({
@@ -7252,7 +7354,7 @@ export const CerrarSesionCajaResponse = zod.object({
   "diferencia": zod.string().nullable(),
   "hojaVentasDia": zod.object({
   "sitio": zod.string(),
-  "fechaOperativa": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(cerrarSesionCajaResponseHojaVentasDiaFechaOperativaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "cerrada": zod.boolean(),
   "quienCerro": zod.string().nullable(),
   "secciones": zod.array(zod.object({
@@ -7362,6 +7464,10 @@ export const ListarProveedoresActivosCajaResponse = zod.array(ListarProveedoresA
 /**
  * @summary Lista salidas con filtros opcionales
  */
+export const listSalidasQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listSalidasQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ListSalidasQueryParams = zod.object({
   "estados": zod.coerce.string().optional().describe('Estados separados por comas'),
   "folio": zod.coerce.string().optional().describe('Folio numérico o formateado como DN-000503.'),
@@ -7370,8 +7476,8 @@ export const ListSalidasQueryParams = zod.object({
   "productoId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
   "search": zod.coerce.string().optional(),
-  "fechaDesde": zod.date().optional(),
-  "fechaHasta": zod.date().optional(),
+  "fechaDesde": zod.coerce.string().regex(listSalidasQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(listSalidasQueryFechaHastaRegExp).optional(),
   "page": zod.coerce.number().optional(),
   "pageSize": zod.coerce.number().optional()
 })
@@ -7989,6 +8095,9 @@ export const GenerarVentaDesdeSalidasBody = zod.union([zod.object({
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)])
 }))])
 
+export const generarVentaDesdeSalidasResponseTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GenerarVentaDesdeSalidasResponse = zod.object({
   "id": zod.number(),
   "folio": zod.number(),
@@ -8024,7 +8133,7 @@ export const GenerarVentaDesdeSalidasResponse = zod.object({
   "esCredito": zod.boolean(),
   "importeCredito": zod.string(),
   "diasPlazo": zod.union([zod.literal(7),zod.literal(15),zod.literal(30),zod.literal(60)]).nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(generarVentaDesdeSalidasResponseTwoFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "saldoPendiente": zod.string().describe('Saldo FIFO actual de la porción a crédito de esta venta'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']).nullable(),
   "telefonoCliente": zod.string().nullable(),
@@ -8113,9 +8222,13 @@ export const VerificarAutorizacionVentaSalidasResponse = zod.object({
 /**
  * @summary Exporta el historial de salidas
  */
+export const exportarSalidasQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportarSalidasQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ExportarSalidasQueryParams = zod.object({
-  "fechaDesde": zod.date().optional(),
-  "fechaHasta": zod.date().optional(),
+  "fechaDesde": zod.coerce.string().regex(exportarSalidasQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(exportarSalidasQueryFechaHastaRegExp).optional(),
   "origenId": zod.coerce.number().optional(),
   "destinoId": zod.coerce.number().optional(),
   "productoId": zod.coerce.number().optional(),
@@ -9311,6 +9424,9 @@ export const ListAdminRealtimeBreakdownQueryParams = zod.object({
   "pageSize": zod.coerce.number().int().min(1).max(listAdminRealtimeBreakdownQueryPageSizeMax).default(listAdminRealtimeBreakdownQueryPageSizeDefault)
 })
 
+export const listAdminRealtimeBreakdownResponseItemsItemOneFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ListAdminRealtimeBreakdownResponse = zod.object({
   "concepto": zod.enum(['COBRADO', 'CREDITO', 'PENDIENTE', 'CANCELADAS', 'SALIDAS_EN_TRANSITO', 'SALIDAS_CANCELADAS']),
   "items": zod.array(zod.union([zod.object({
@@ -9322,7 +9438,7 @@ export const ListAdminRealtimeBreakdownResponse = zod.object({
   "formaPago": zod.string().nullable(),
   "facturado": zod.boolean().nullable(),
   "diasPlazo": zod.number().nullable(),
-  "fechaVencimiento": zod.coerce.date().nullable(),
+  "fechaVencimiento": zod.union([zod.string().regex(listAdminRealtimeBreakdownResponseItemsItemOneFechaVencimientoOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "documentoTipo": zod.union([zod.literal('TICKET'),zod.literal('NOTA'),zod.literal(null)]).nullable(),
   "minutosEspera": zod.number().nullable(),
   "nombreUsuarioCancelacion": zod.string().nullable(),
@@ -9494,6 +9610,9 @@ export const GetCajaTiendaVentasGlobalResponse = zod.object({
  * Calcula el estado actual sin consultar ni crear registros de notificaciones.
  * @summary Alertas vivas de cobro pendiente, crédito y salidas en tránsito sin recibir
  */
+export const getAdminAlertasResponseCreditosItemFechaVencimientoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetAdminAlertasResponse = zod.object({
   "generatedAt": zod.coerce.date(),
   "total": zod.number().describe('Suma de documentosPendientes, creditos y salidasEnTransito.'),
@@ -9518,7 +9637,7 @@ export const GetAdminAlertasResponse = zod.object({
   "nota": zod.string().nullable(),
   "ticketFolio": zod.number().nullable(),
   "importe": zod.string().describe('Saldo vigente de la fila después de aplicar pagos FIFO.'),
-  "fechaVencimiento": zod.coerce.date(),
+  "fechaVencimiento": zod.string().regex(getAdminAlertasResponseCreditosItemFechaVencimientoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "estadoNota": zod.enum(['PENDIENTE', 'ABONO_PARCIAL', 'PAGADA', 'CON_RETRASO']),
   "diasRestantes": zod.number().describe('Días firmados contra hoy en Ciudad de México; negativo significa vencido.')
 })),
@@ -9607,6 +9726,9 @@ export const ListAdminCortesResponse = zod.object({
 export const GetAdminCorteParams = zod.object({
   "id": zod.coerce.number()
 })
+
+export const getAdminCorteResponseHojaVentasDiaFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
 
 export const GetAdminCorteResponse = zod.object({
   "sesion": zod.object({
@@ -9699,7 +9821,7 @@ export const GetAdminCorteResponse = zod.object({
   "diferencia": zod.string().nullable(),
   "hojaVentasDia": zod.object({
   "sitio": zod.string(),
-  "fechaOperativa": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(getAdminCorteResponseHojaVentasDiaFechaOperativaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "cerrada": zod.boolean(),
   "quienCerro": zod.string().nullable(),
   "secciones": zod.array(zod.object({
@@ -9774,6 +9896,9 @@ export const GetAdminDiferenciasQueryParams = zod.object({
   "agrupacion": zod.enum(['semana', 'mes']).default(getAdminDiferenciasQueryAgrupacionDefault)
 })
 
+export const getAdminDiferenciasResponseTendenciaItemFechaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetAdminDiferenciasResponse = zod.object({
   "resumen": zod.object({
   "cortes": zod.number(),
@@ -9817,7 +9942,7 @@ export const GetAdminDiferenciasResponse = zod.object({
   "porcentajeExactos": zod.string()
 })),
   "tendencia": zod.array(zod.object({
-  "fecha": zod.coerce.date(),
+  "fecha": zod.string().regex(getAdminDiferenciasResponseTendenciaItemFechaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "importe": zod.string(),
   "diferenciaAbsoluta": zod.string(),
   "cortes": zod.number().describe('Total de cortes cerrados en el periodo de la tendencia.'),
@@ -9848,6 +9973,7 @@ export const GetAdminCuentasDestinoQueryParams = zod.object({
   "preset": zod.enum(['hoy', 'semana', 'mes', 'trimestre', 'semestre', 'ano', 'custom']).optional().describe('Identifica el periodo de calendario para comparar tramos en curso equivalentes.')
 })
 
+export const getAdminCuentasDestinoResponseTendenciaItemFechaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const getAdminCuentasDestinoResponseMatrizFilasMin = 3;
 export const getAdminCuentasDestinoResponseMatrizFilasMax = 3;
 
@@ -9865,7 +9991,7 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "cajaFisicaFacturado": zod.string().describe('Efectivo facturado; solo es distinto de cero en la tarjeta de caja física.')
 })),
   "tendencia": zod.array(zod.object({
-  "fecha": zod.coerce.date(),
+  "fecha": zod.string().regex(getAdminCuentasDestinoResponseTendenciaItemFechaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "cuentaDestino": zod.string(),
   "importe": zod.string()
 })),
@@ -10175,10 +10301,17 @@ export const GetAdminComparacionTiendasQueryParams = zod.object({
   "hasta": zod.coerce.string().regex(getAdminComparacionTiendasQueryHastaRegExp).optional().describe('Día final en America\/Mexico_City')
 })
 
+export const getAdminComparacionTiendasResponseDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getAdminComparacionTiendasResponseHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getAdminComparacionTiendasResponseTiendasItemMejorDiaFechaOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getAdminComparacionTiendasResponseTiendasItemPeorDiaFechaOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getAdminComparacionTiendasResponseVentasPorFechaItemFechaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const GetAdminComparacionTiendasResponse = zod.object({
   "periodo": zod.string(),
-  "desde": zod.coerce.date(),
-  "hasta": zod.coerce.date(),
+  "desde": zod.string().regex(getAdminComparacionTiendasResponseDesdeRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "hasta": zod.string().regex(getAdminComparacionTiendasResponseHastaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "tiendas": zod.array(zod.object({
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
@@ -10191,11 +10324,11 @@ export const GetAdminComparacionTiendasResponse = zod.object({
   "diferenciaTicketPromedio": zod.string(),
   "tendenciaPorcentaje": zod.string(),
   "mejorDia": zod.object({
-  "fecha": zod.coerce.date().nullable(),
+  "fecha": zod.union([zod.string().regex(getAdminComparacionTiendasResponseTiendasItemMejorDiaFechaOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "ventas": zod.string()
 }),
   "peorDia": zod.object({
-  "fecha": zod.coerce.date().nullable(),
+  "fecha": zod.union([zod.string().regex(getAdminComparacionTiendasResponseTiendasItemPeorDiaFechaOneRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),zod.null()]),
   "ventas": zod.string()
 }),
   "cancelaciones": zod.number(),
@@ -10241,7 +10374,7 @@ export const GetAdminComparacionTiendasResponse = zod.object({
 }),
   "promedioGeneralTicket": zod.string(),
   "ventasPorFecha": zod.array(zod.object({
-  "fecha": zod.coerce.date(),
+  "fecha": zod.string().regex(getAdminComparacionTiendasResponseVentasPorFechaItemFechaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
   "ubicacionId": zod.number(),
   "nombreUbicacion": zod.string(),
   "ventas": zod.string()
@@ -10344,6 +10477,8 @@ export const ExportAdminCuentasDestinoPdfResponse = zod.unknown()
  */
 export const buscarRollosEtiquetasQueryQMax = 150;
 
+export const buscarRollosEtiquetasQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const buscarRollosEtiquetasQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const buscarRollosEtiquetasQueryPendientesRevisionDefault = false;
 export const buscarRollosEtiquetasQueryPageDefault = 1;
 
@@ -10357,8 +10492,8 @@ export const BuscarRollosEtiquetasQueryParams = zod.object({
   "sitioId": zod.coerce.number().optional(),
   "estado": zod.enum(['PROGRAMADO', 'DISPONIBLE', 'EN_TRANSITO', 'MOSTRADOR', 'VENDIDO', 'BAJA']).optional(),
   "productoId": zod.coerce.number().optional(),
-  "fechaDesde": zod.date().optional(),
-  "fechaHasta": zod.date().optional(),
+  "fechaDesde": zod.coerce.string().regex(buscarRollosEtiquetasQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(buscarRollosEtiquetasQueryFechaHastaRegExp).optional(),
   "folio": zod.coerce.number().optional(),
   "pendientesRevision": zod.coerce.boolean().default(buscarRollosEtiquetasQueryPendientesRevisionDefault).describe('Solo rollos con tres o más reimpresiones cuyo último evento aún no cubre una revisión ADMIN'),
   "page": zod.coerce.number().min(1).default(buscarRollosEtiquetasQueryPageDefault),
@@ -10545,6 +10680,8 @@ export const CrearReimpresionEtiquetasResponse = zod.object({
 /**
  * @summary Historial de reimpresiones exclusivo ADMIN
  */
+export const listarHistorialEtiquetasQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listarHistorialEtiquetasQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 export const listarHistorialEtiquetasQueryPageDefault = 1;
 
 export const listarHistorialEtiquetasQueryPageSizeDefault = 50;
@@ -10553,8 +10690,8 @@ export const listarHistorialEtiquetasQueryPageSizeMax = 100;
 
 
 export const ListarHistorialEtiquetasQueryParams = zod.object({
-  "fechaDesde": zod.date().optional(),
-  "fechaHasta": zod.date().optional(),
+  "fechaDesde": zod.coerce.string().regex(listarHistorialEtiquetasQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(listarHistorialEtiquetasQueryFechaHastaRegExp).optional(),
   "sitioId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
   "productoId": zod.coerce.number().optional(),
@@ -10588,9 +10725,13 @@ export const ListarHistorialEtiquetasResponse = zod.object({
 /**
  * @summary Exporta historial filtrado a Excel (ADMIN)
  */
+export const exportarHistorialEtiquetasXlsxQueryFechaDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportarHistorialEtiquetasXlsxQueryFechaHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
 export const ExportarHistorialEtiquetasXlsxQueryParams = zod.object({
-  "fechaDesde": zod.date().optional(),
-  "fechaHasta": zod.date().optional(),
+  "fechaDesde": zod.coerce.string().regex(exportarHistorialEtiquetasXlsxQueryFechaDesdeRegExp).optional(),
+  "fechaHasta": zod.coerce.string().regex(exportarHistorialEtiquetasXlsxQueryFechaHastaRegExp).optional(),
   "sitioId": zod.coerce.number().optional(),
   "usuarioId": zod.coerce.number().optional(),
   "productoId": zod.coerce.number().optional()
@@ -10956,8 +11097,8 @@ export const ExportReporteVistaPdfResponse = zod.unknown()
 /**
  * @summary Lista la auditoría newest-first para usuarios con permiso
  */
-export const listAuditoriaQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const listAuditoriaQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const listAuditoriaQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listAuditoriaQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 export const listAuditoriaQueryModuloMax = 80;
 
@@ -11011,8 +11152,8 @@ export const ListAuditoriaResponse = zod.object({
 /**
  * @summary Exporta el resultado filtrado completo con límite conservador
  */
-export const exportAuditoriaXlsxQueryDesdeRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
-export const exportAuditoriaXlsxQueryHastaRegExp = new RegExp('^\\d{4}-\\d{2}-\\d{2}$');
+export const exportAuditoriaXlsxQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportAuditoriaXlsxQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 export const exportAuditoriaXlsxQueryModuloMax = 80;
 

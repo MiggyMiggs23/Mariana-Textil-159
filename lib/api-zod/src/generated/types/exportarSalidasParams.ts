@@ -5,11 +5,12 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { EstadoSalida } from './estadoSalida';
 
 export type ExportarSalidasParams = {
-fechaDesde?: Date;
-fechaHasta?: Date;
+fechaDesde?: CalendarDate;
+fechaHasta?: CalendarDate;
 origenId?: number;
 destinoId?: number;
 productoId?: number;

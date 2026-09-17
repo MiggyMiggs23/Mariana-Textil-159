@@ -7,6 +7,7 @@
  */
 import type { AlertaCreditoEstado } from './alertaCreditoEstado';
 import type { AlertaCreditoEstadoNota } from './alertaCreditoEstadoNota';
+import type { CalendarDate } from './calendarDate';
 
 export interface AlertaCredito {
   movimientoId: number;
@@ -17,7 +18,7 @@ export interface AlertaCredito {
   /** @nullable */
   folio: number | null;
   pendiente: string;
-  fechaVencimiento: Date;
+  fechaVencimiento: CalendarDate;
   diasVencido: number;
   estado: AlertaCreditoEstado;
   estadoNota: AlertaCreditoEstadoNota;

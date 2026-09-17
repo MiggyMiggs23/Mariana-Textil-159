@@ -5,16 +5,17 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 
 export type GetProveedorUtilidadParams = {
 /**
  * Fecha inicial del instante de contabilización, inclusive
  */
-desde: Date;
+desde: CalendarDate;
 /**
  * Fecha final del instante de contabilización, inclusive
  */
-hasta: Date;
+hasta: CalendarDate;
 /**
  * Ubicación opcional; el servidor aplica el alcance del usuario
  * @minimum 1

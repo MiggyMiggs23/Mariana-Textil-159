@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { ClienteCreditoAntiguedadItem } from './clienteCreditoAntiguedadItem';
 import type { ClienteCreditoDiasCredito } from './clienteCreditoDiasCredito';
 
@@ -19,8 +20,7 @@ export interface ClienteCredito {
   diasCredito: ClienteCreditoDiasCredito;
   utilizacion: string;
   totalVencido: string;
-  /** @nullable */
-  primerVencimiento?: Date | null;
+  primerVencimiento?: CalendarDate | null;
   /** @nullable */
   primeraCompra?: Date | null;
   /** @nullable */

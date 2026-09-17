@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CalendarDate } from './calendarDate';
 import type { ListHistorialComprasProveedoresDirection } from './listHistorialComprasProveedoresDirection';
 import type { ListHistorialComprasProveedoresSort } from './listHistorialComprasProveedoresSort';
 
@@ -13,8 +14,8 @@ telas?: string[];
 colores?: string[];
 proveedorIds?: number[];
 ubicacionIds?: number[];
-desde?: Date;
-hasta?: Date;
+desde?: CalendarDate;
+hasta?: CalendarDate;
 sort?: ListHistorialComprasProveedoresSort;
 direction?: ListHistorialComprasProveedoresDirection;
 /**
