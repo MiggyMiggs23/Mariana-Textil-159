@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "mode": "OFFLINE_INJECTED_POSITIVE_GLOBAL_PARITY",
+  "restrictions": {
+    "noLiveDbClient": true,
+    "noInserts": true,
+    "noUsers": true,
+    "noSessions": true,
+    "noAuthenticatedHttp": true
+  },
+  "adapter": {
+    "sqlMocked": true,
+    "allowedStatements": "production client SELECTs only",
+    "financialProjection": "projectCreditLedger",
+    "newReadModel": "loadClientesCartera with injected loadProjections",
+    "legacyBody": "exact pinned source after TypeScript transpilation"
+  },
+  "baseline": {
+    "commit": "8da78b2f6351b164c220e4127467a79b541243af",
+    "carteraSourceSha256": "fa48776399fbde0ec4abaa15e71ed2cbb3d9f3d42d3a331c62a524dbfd0b4963",
+    "resumenSourceSha256": "bcef86f770c5cd88b576efc65352d6191bbf1e79d784491de96671199c0eaab9"
+  },
+  "fixtureCoverage": {
+    "activeNonSystemClients": 2,
+    "activeSystemClients": 1,
+    "inactiveNonSystemClients": 1,
+    "mixedDueDates": true,
+    "directedAbono": true,
+    "reversedDirectedAbono": true,
+    "positiveAjuste": true,
+    "fixedNow": "2026-01-20T12:00:00.000Z"
+  },
+  "parity": {
+    "status": "PASS",
+    "summary": {
+      "totalClientes": 3,
+      "clientesConSaldo": 3,
+      "totalCartera": "187.00",
+      "totalVencido": "87.00"
+    },
+    "rowCount": 2,
+    "legacyRowSha256": "fc4bbe4c178bec385c08e466d105227cb28482196efff2d88a3612fa0e325d50",
+    "canonicalRowSha256": "fc4bbe4c178bec385c08e466d105227cb28482196efff2d88a3612fa0e325d50",
+    "sortedRowIds": [
+      1,
+      2
+    ],
+    "allSummaryFieldsCompared": true,
+    "allRowFieldsCompared": true,
+    "systemAndInactiveExcludedFromRows": true
+  },
+  "globalExportSourceParity": {
+    "status": "PASS",
+    "xlsxBytes": 7548,
+    "xlsxSha256": "9e8ddeef47e00360b6690de0587afe86dbdeb7e1a06a1f95b553cbcca34fb6a9",
+    "pdfBytes": 1001,
+    "pdfSha256": "94919ae995c25afe0a2b1e7e1de65356a7f603f5abf783eec15553a9502db8a0",
+    "legacyAndCanonicalBytesEqual": true,
+    "sourceRowsStored": false
+  }
+}

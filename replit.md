@@ -1177,8 +1177,35 @@ Alcance aprobado: **Entradas, Movimientos y Sitios**. Usuarios conserva su lista
 - **Borrabilidad:** auditoría agregada de solo lectura en `reports/prompt-k/resultado.md`. Todos los sitios/usuarios existentes tienen referencias. Ninguno de los 3 sitios inactivos ni de los 23 usuarios inactivos cumple el criterio de estar libre de referencias. La búsqueda amplia encontró la ruta genérica **preexistente** `DELETE /api/purga/usuarios/:id`; no fue añadida ni modificada. Las referencias lógicas no resolubles se documentan por separado.
 - **Verificación:** typecheck completo sin errores, generación estable, contratos/puras y consulta real protegida de solo lectura. La base consultada no tiene movimientos: el éxito SQL con cero filas no acredita agrupación con datos reales. Las comprobaciones visuales aisladas usan componentes reales y datos sintéticos, no sesiones autenticadas. Evidencia y límites: `reports/prompt-k/entrega.md`. Reinicio normal con inicializadores autorizados, sin activar inspección ni crear registros de negocio o usuarios/sesiones de prueba.
 
-### Pendiente financiero abierto — alcance de Clientes
+## Cartera de Clientes — alcance conjunto aprobado
 
-**ABIERTO:** `GET /api/clientes/resumen` devuelve `totalClientes`, `clientesConSaldo`, `totalCartera` y `totalVencido` globales sin `resolveReadScope`. Su consumidor directo es la pestaña Cartera de Clientes; el inventario de hooks e invalidaciones está en `reports/prompt-k/resultado.md`. No se conectó este resumen a un nuevo tablero. La corrección requiere una entrega financiera independiente y una regla aprobada de atribución por sitio; filtrar únicamente IDs de clientes y seguir proyectando su ledger global no evita mezclar actividad de distintos sitios.
+**Implementado en código; activación de API pendiente de autorización de reinicio.** No dar esta protección por activa en el proceso anterior. El reinicio normal ejecuta inicializadores y puede escribir en la base; no se ejecutó durante esta entrega bajo la restricción de solo lectura. No activar el modo de inspección ni deshabilitar los procesos operativos silenciosamente.
+
+El alcance aprobado comprende **resumen, tabla de Cartera, Excel y PDF como una entrega conjunta**. Los cuatro endpoints (`/api/clientes/resumen`, `/api/clientes/cartera`, `/api/clientes/cartera.xlsx`, `/api/clientes/cartera.pdf`) usan un único servicio de lectura, `clientes-cartera-read-model.ts`, con el `resolveReadScope` existente. La pantalla usa una sola respuesta de Cartera para tarjetas y filas; los exportadores solo formatean el mismo modelo. No entregar una superficie protegida y las otras expuestas.
+
+**Atribución:** el sitio del cargo se determina con `movimientos_credito.ticket_id → tickets.ubicacion_id`, comprobando también la relación de cliente. La consulta SQL selecciona los cargos autorizados por sitio; la proyección canónica recibe siempre el ledger completo de cada cliente candidato. Solo después se toman los `pendienteCents` de los cargos autorizados. No cambiar FIFO, aplicaciones, proyección ni vencido: este último conserva fecha anterior a hoy en Ciudad de México.
+
+**Global y conteos:** conservar las cifras y universos anteriores: el resumen incluye todos los clientes activos; tabla/exportaciones excluyen al cliente sistema y filas sin deuda positiva. En alcance acotado, `totalClientes` cuenta clientes activos con notas del alcance, incluidas pagadas; `clientesConSaldo` cuenta los que tienen deuda pendiente allí. Cada cliente se cuenta una vez dentro de una selección múltiple. La pantalla distingue “Clientes activos” global de “Clientes con notas en este alcance”. Los conteos de distintos sitios no son aditivos si un cliente tiene notas en varios; los cargos positivos sin sitio atribuible permanecen solo en el global y también pueden impedir conciliar la suma monetaria de sitios con ese global.
+
+**Saldo a favor:** el global conserva su importe; en respuestas por sitio es `null` y en exportaciones se declara “No atribuible por sitio”. Nunca enviar el saldo a favor global y esconderlo en la pantalla, ni sustituir la falta de atribución por cero. No se corrigió la asimetría de reversos sin ubicación de cobranza ni el corte de caja.
+
+**Presentación:** respuesta y archivos declaran Global o los nombres de sitios efectivos. La selección múltiple no amplía permisos: Caja conserva su sitio incluso con un registro histórico TODAS; ADMIN/SUPERVISOR conservan su lectura autorizada. La pantalla no presenta ni exporta una respuesta cuyo contexto de sesión o alcance ya no corresponda.
+
+**Verificación ejecutada:** typecheck recursivo completo con cero errores; codegen estable al repetirlo; builds de API/frontend aprobados sin arrancar la API; 4 pruebas enfocadas de servidor/exportadores y 8 de contrato/interfaz aprobadas; revisión de alcance sin bloqueantes. Comparación real de solo lectura bajo REPEATABLE READ contra el código anterior aprobada, pero con cero filas de cartera con saldo: no acredita casos positivos por sí sola. La comparación adicional con casos positivos aislados ejecutó la proyección canónica y el código anterior fijado a una revisión inmutable; coinciden resumen, filas y orden. SQL autorizado probado con CTEs VALUES sin inserciones. Navegador aislado aprobado para selección de alcance, exportación y cambios de identidad con caché compartida; todas sus llamadas API fueron interceptadas. La vista previa real mostró login, sin sesión disponible; no se inició sesión. Evidencia y límites en `reports/portfolio-scope/entrega.md`. No se crearon usuarios, sesiones ni movimientos; no afirmar verificación autenticada.
+
+### Bloque 3 — otros endpoints financieros pendientes, sin corregir
+
+Todos son GET bajo `/api/clientes`; conservan sus problemas de alcance. Proteger Cartera no protege automáticamente el directorio ni la ficha del cliente.
+
+- Raíz `/api/clientes` y `/:id`: saldo, favor y límite global cuando hay permiso financiero; consumidores: directorio y ficha.
+- `/analitica` y `/analitica.xlsx`: ventas, costos, margen y riesgo; consumidores: pestaña Análisis de Clientes y exportación.
+- `/comportamiento-pago` y `/:id/comportamiento-pago`: indicadores de pago/riesgo; consumidores: listado y ficha.
+- `/:id/credito`: deuda, favor, disponible y vencido; consumidor: pestaña Crédito de la ficha.
+- `/:id/estado-cuenta`, `/:id/estado-cuenta/imprimir`, `/:id/estado-cuenta.xlsx`, `/:id/estado-cuenta.pdf`: movimientos y saldos; consumidores: estado de cuenta y exportaciones.
+- `/:id/compras`, `/:id/analitica`, `/:id/estadisticas`: compras, ventas, costos/utilidad e indicadores; consumidores: respectivas pestañas de la ficha.
+- `/:id/pagos` y `/:id/pagos/:pagoId`: abonos y detalle financiero; consumidores: historial y detalle de movimientos.
+- `/:id/notas/:ticketId` y `/:id/notas/:ticketId/reimprimir`: importes, pendientes y pagos de nota; consumidores: detalle y reimpresión.
+
+Inventario ampliado: `reports/portfolio-scope/pendientes.md`. Estas rutas no se corrigieron ni se conectaron a un nuevo tablero.
 
 La propuesta visual `reports/prompt-k/visual/propuesta-clientes.html` reutiliza el estilo de Proveedores, muestra valores sin conectar y no está integrada en la aplicación.

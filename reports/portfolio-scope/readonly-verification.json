@@ -1,0 +1,129 @@
+{
+  "status": "PASS",
+  "restrictions": {
+    "noInserts": true,
+    "noUsers": true,
+    "noSessions": true,
+    "noAuthenticatedHttp": true,
+    "noServerEntryPointImport": true
+  },
+  "baseline": {
+    "commit": "8da78b2f6351b164c220e4127467a79b541243af",
+    "carteraSha256": "a303313eb0741a3068b29944f046119326301fa97b0b0b99fba2535aaa89d21d",
+    "resumenSha256": "b9f777c37ad1ca8e339195663b0c7475073b1e617c8261ce28467e79dbfca583"
+  },
+  "identityBefore": {
+    "database": "heliumdb",
+    "schema": "public",
+    "transactionReadOnly": "on",
+    "isolation": "repeatable read"
+  },
+  "aggregateCountsBefore": {
+    "clientes": 7,
+    "ubicaciones": 11,
+    "movimientos_credito": 3,
+    "aplicaciones_credito": 2,
+    "solicitudes_pago_dirigido": 0,
+    "tickets": 1
+  },
+  "globalParity": {
+    "status": "PASS",
+    "rowCount": 0,
+    "comparison": "same read-only canonical projection query; legacy source executed from frozen HEAD capture",
+    "legacyRowSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "canonicalRowSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "summary": {
+      "totalClientes": 7,
+      "clientesConSaldo": 0,
+      "totalCartera": "0.00",
+      "totalVencido": "0.00"
+    },
+    "alcance": {
+      "tipo": "GLOBAL",
+      "ubicacionCount": 0,
+      "saldoAFavorDisponible": true
+    }
+  },
+  "actualDataLimitations": {
+    "portfolioRowsAvailable": false,
+    "creditMovementsAvailable": true,
+    "positiveActualPortfolioCasesClaimed": false,
+    "note": "Current DB returned no non-system client portfolio rows; positive evidence below is CTE-only."
+  },
+  "actualScopeChecks": {
+    "availableLocationCount": 11,
+    "selectedLocationCount": 2,
+    "singleAndMultiScope": "PASS",
+    "restricted403": "PASS",
+    "noAssignedScope403": "PASS",
+    "single": {
+      "rowCount": 0,
+      "locationIds": [
+        1
+      ]
+    },
+    "multi": {
+      "rowCount": 0,
+      "locationIds": [
+        1,
+        2
+      ]
+    }
+  },
+  "positiveAuthorizedChargeCte": {
+    "single-site-10": {
+      "requestedLocationCount": 1,
+      "returnedChargeCount": 4,
+      "returnedChargeIdsSha256": "9c5e035aacb7b9b54cee575ddd31b4e476739267b78a10284563e8f06ad6e202",
+      "expectedPositiveFixture": true
+    },
+    "single-site-20": {
+      "requestedLocationCount": 1,
+      "returnedChargeCount": 1,
+      "returnedChargeIdsSha256": "cb2128fa588a6c0496c6d771d91f263af38b9f56dfd7efdca2f2b424f0e0459b",
+      "expectedPositiveFixture": true
+    },
+    "multi-site-deduplicated": {
+      "requestedLocationCount": 3,
+      "returnedChargeCount": 5,
+      "returnedChargeIdsSha256": "7e60ffa9fcdd414e010092e271349796b05797d37dcafa9fa2f90a9eb5bdb7af",
+      "expectedPositiveFixture": true
+    }
+  },
+  "binaryExportContentFixtures": {
+    "xlsx": {
+      "bytes": 7455,
+      "sha256": "a004b107aae8890ee068a16e19b917cbd4a7c5a50ae2c2d6aa63e250c35c34bb",
+      "rowCount": 0,
+      "headers": [
+        "Cliente",
+        "Saldo",
+        "Saldo a favor",
+        "Vencido",
+        "Primer vencimiento",
+        "Sin plazo definido"
+      ]
+    },
+    "pdf": {
+      "bytes": 781,
+      "sha256": "5a7d5a80be64297f64e5c7bcaaeeaa6d22b79e3c8323a2aeb9d6ff6e4d745ea5",
+      "rowCount": 0,
+      "startsWithPdfHeader": true
+    },
+    "sourceRowsStored": false
+  },
+  "identityAfter": {
+    "database": "heliumdb",
+    "schema": "public",
+    "transactionReadOnly": "on",
+    "isolation": "repeatable read"
+  },
+  "aggregateCountsAfter": {
+    "clientes": 7,
+    "ubicaciones": 11,
+    "movimientos_credito": 3,
+    "aplicaciones_credito": 2,
+    "solicitudes_pago_dirigido": 0,
+    "tickets": 1
+  }
+}

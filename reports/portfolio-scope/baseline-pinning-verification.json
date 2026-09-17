@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "pinnedCommit": "8da78b2f6351b164c220e4127467a79b541243af",
+  "resolvedCommit": "8da78b2f6351b164c220e4127467a79b541243af",
+  "carteraSha256": "a303313eb0741a3068b29944f046119326301fa97b0b0b99fba2535aaa89d21d",
+  "resumenSha256": "b9f777c37ad1ca8e339195663b0c7475073b1e617c8261ce28467e79dbfca583",
+  "carteraMatchesFixture": true,
+  "resumenMatchesFixture": true,
+  "typescriptDiagnostics": 0,
+  "sourceRowsStored": false
+}

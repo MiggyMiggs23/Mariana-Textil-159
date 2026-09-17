@@ -3466,11 +3466,33 @@ export interface ClienteAnalitica {
   [key: string]: unknown;
  }
 
+export type CarteraAlcanceTipo = typeof CarteraAlcanceTipo[keyof typeof CarteraAlcanceTipo];
+
+
+export const CarteraAlcanceTipo = {
+  GLOBAL: 'GLOBAL',
+  SITIOS: 'SITIOS',
+} as const;
+
+export type CarteraAlcanceUbicacionesItem = {
+  /** @minimum 1 */
+  id: number;
+  nombre: string;
+};
+
+export interface CarteraAlcance {
+  tipo: CarteraAlcanceTipo;
+  ubicaciones: CarteraAlcanceUbicacionesItem[];
+  generadoEn: string;
+  saldoAFavorDisponible: boolean;
+}
+
 export interface ClientesResumen {
   totalClientes: number;
   clientesConSaldo: number;
   totalCartera: string;
   totalVencido: string;
+  alcance: CarteraAlcance;
 }
 
 export type ClienteCarteraItemAntiguedad = typeof ClienteCarteraItemAntiguedad[keyof typeof ClienteCarteraItemAntiguedad];
@@ -3489,14 +3511,29 @@ export interface ClienteCarteraItem {
   id: number;
   nombre: string;
   saldoActual: string;
-  saldoAFavor: string;
+  /** @nullable */
+  saldoAFavor: string | null;
+  porVencer: string;
+  '1_30': string;
+  '31_60': string;
+  '61_90': string;
+  mas90: string;
   antiguedad: ClienteCarteraItemAntiguedad;
   diasVencido: number;
-  sinPlazo?: string;
+  sinPlazo: string;
+}
+
+export interface ClientesCarteraResumen {
+  totalClientes: number;
+  clientesConSaldo: number;
+  totalCartera: string;
+  totalVencido: string;
 }
 
 export interface ClientesCartera {
   clientes: ClienteCarteraItem[];
+  resumen: ClientesCarteraResumen;
+  alcance: CarteraAlcance;
 }
 
 export type ClientesAnaliticaPeriodo = {
@@ -7527,6 +7564,19 @@ productoId?: number;
 ubicacionId?: number;
 };
 
+export type GetClientesResumenParams = {
+/**
+ * Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+ * @minimum 1
+ */
+ubicacionId?: number;
+/**
+ * Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+ * @pattern ^[1-9][0-9]*(,[1-9][0-9]*)*$
+ */
+ubicacionIds?: string;
+};
+
 export type ListCuentasIncobrablesParams = {
 fechaDesde?: string;
 fechaHasta?: string;
@@ -7547,6 +7597,19 @@ export type ListCuentasIncobrables200 = {
   filas?: ListCuentasIncobrables200FilasItem[];
   totalCuentas?: number;
   total?: number;
+};
+
+export type GetClientesCarteraParams = {
+/**
+ * Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+ * @minimum 1
+ */
+ubicacionId?: number;
+/**
+ * Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+ * @pattern ^[1-9][0-9]*(,[1-9][0-9]*)*$
+ */
+ubicacionIds?: string;
 };
 
 export type GetClientesAnaliticaParams = {
@@ -7585,6 +7648,32 @@ hasta?: string;
 };
 
 export type CreateClienteAjuste201 = { [key: string]: unknown };
+
+export type ExportClientesCarteraParams = {
+/**
+ * Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+ * @minimum 1
+ */
+ubicacionId?: number;
+/**
+ * Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+ * @pattern ^[1-9][0-9]*(,[1-9][0-9]*)*$
+ */
+ubicacionIds?: string;
+};
+
+export type ExportClientesCarteraPdfParams = {
+/**
+ * Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+ * @minimum 1
+ */
+ubicacionId?: number;
+/**
+ * Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+ * @pattern ^[1-9][0-9]*(,[1-9][0-9]*)*$
+ */
+ubicacionIds?: string;
+};
 
 export type BuscarPosParams = {
 /**

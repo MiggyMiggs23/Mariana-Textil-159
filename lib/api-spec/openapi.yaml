@@ -2812,6 +2812,17 @@ paths:
       operationId: getClientesResumen
       tags: [clientes]
       summary: Resumen de cartera (clientes_finanzas requerido)
+      parameters:
+        - name: ubicacionId
+          in: query
+          required: false
+          description: Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+          schema: { type: number, minimum: 1 }
+        - name: ubicacionIds
+          in: query
+          required: false
+          description: Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+          schema: { type: string, pattern: '^[1-9][0-9]*(,[1-9][0-9]*)*$' }
       responses:
         "200":
           description: Resumen de cartera
@@ -2911,6 +2922,17 @@ paths:
       operationId: getClientesCartera
       tags: [clientes]
       summary: Cartera y antigüedad de saldos
+      parameters:
+        - name: ubicacionId
+          in: query
+          required: false
+          description: Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+          schema: { type: number, minimum: 1 }
+        - name: ubicacionIds
+          in: query
+          required: false
+          description: Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+          schema: { type: string, pattern: '^[1-9][0-9]*(,[1-9][0-9]*)*$' }
       responses:
         "200":
           description: Cartera
@@ -3458,6 +3480,17 @@ paths:
     get:
       operationId: exportClientesCartera
       tags: [clientes]
+      parameters:
+        - name: ubicacionId
+          in: query
+          required: false
+          description: Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+          schema: { type: number, minimum: 1 }
+        - name: ubicacionIds
+          in: query
+          required: false
+          description: Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+          schema: { type: string, pattern: '^[1-9][0-9]*(,[1-9][0-9]*)*$' }
       responses:
         "200":
           description: Excel
@@ -3468,6 +3501,17 @@ paths:
     get:
       operationId: exportClientesCarteraPdf
       tags: [clientes]
+      parameters:
+        - name: ubicacionId
+          in: query
+          required: false
+          description: Ubicación única solicitada para el alcance. No combinar con ubicacionIds.
+          schema: { type: number, minimum: 1 }
+        - name: ubicacionIds
+          in: query
+          required: false
+          description: Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.
+          schema: { type: string, pattern: '^[1-9][0-9]*(,[1-9][0-9]*)*$' }
       responses:
         "200":
           description: PDF
@@ -9354,20 +9398,28 @@ components:
         actividad: { type: object, additionalProperties: true }
     ClientesResumen:
       type: object
-      required: [totalClientes, clientesConSaldo, totalCartera, totalVencido]
+      required: [totalClientes, clientesConSaldo, totalCartera, totalVencido, alcance]
       properties:
         totalClientes: { type: number }
         clientesConSaldo: { type: number }
         totalCartera: { type: string }
         totalVencido: { type: string }
+        alcance:
+          $ref: "#/components/schemas/CarteraAlcance"
     ClienteCarteraItem:
       type: object
-      required: [id, nombre, saldoActual, saldoAFavor, antiguedad, diasVencido]
+      required:
+        [id, nombre, saldoActual, saldoAFavor, porVencer, sinPlazo, "1_30", "31_60", "61_90", mas90, antiguedad, diasVencido]
       properties:
         id: { type: number }
         nombre: { type: string }
         saldoActual: { type: string }
-        saldoAFavor: { type: string }
+        saldoAFavor: { type: ["string", "null"] }
+        porVencer: { type: string }
+        "1_30": { type: string }
+        "31_60": { type: string }
+        "61_90": { type: string }
+        mas90: { type: string }
         antiguedad:
           type: string
           enum: [SIN_PLAZO, POR_VENCER, "1_30", "31_60", "61_90", MAS_90]
@@ -9375,12 +9427,41 @@ components:
         sinPlazo: { type: string }
     ClientesCartera:
       type: object
-      required: [clientes]
+      required: [clientes, resumen, alcance]
       properties:
         clientes:
           type: array
           items:
             $ref: "#/components/schemas/ClienteCarteraItem"
+        resumen:
+          $ref: "#/components/schemas/ClientesCarteraResumen"
+        alcance:
+          $ref: "#/components/schemas/CarteraAlcance"
+    ClientesCarteraResumen:
+      type: object
+      required: [totalClientes, clientesConSaldo, totalCartera, totalVencido]
+      properties:
+        totalClientes: { type: number }
+        clientesConSaldo: { type: number }
+        totalCartera: { type: string }
+        totalVencido: { type: string }
+    CarteraAlcance:
+      type: object
+      required: [tipo, ubicaciones, generadoEn, saldoAFavorDisponible]
+      properties:
+        tipo:
+          type: string
+          enum: [GLOBAL, SITIOS]
+        ubicaciones:
+          type: array
+          items:
+            type: object
+            required: [id, nombre]
+            properties:
+              id: { type: number, minimum: 1 }
+              nombre: { type: string }
+        generadoEn: { type: string, format: date-time }
+        saldoAFavorDisponible: { type: boolean }
     ClientesAnalitica:
       type: object
       additionalProperties: true

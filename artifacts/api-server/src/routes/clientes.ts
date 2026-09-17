@@ -1,4 +1,4 @@
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Response } from "express";
 import ExcelJS from "exceljs";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import {
@@ -69,6 +69,15 @@ import {
   FechaEfectivaValidationError,
   parseFechaEfectiva,
 } from "../lib/fecha-efectiva";
+import {
+  CarteraScopeError,
+  loadClientesCartera,
+} from "../lib/clientes-cartera-read-model";
+import {
+  renderClientesCarteraPdf,
+  renderClientesCarteraXlsx,
+} from "../lib/clientes-cartera-export";
+import { resolveReadScope } from "./inventario";
 
 const router: IRouter = Router();
 
@@ -234,40 +243,21 @@ function period(req: { query: Record<string, unknown> }) {
   }
   return { desde, hasta };
 }
-async function carteraReadModel() {
-  const clients = await pool.query<{ id: number; nombre: string }>(
-    "SELECT id,nombre FROM clientes WHERE activo AND NOT es_sistema",
-  );
-  const projections = await loadCustomerCreditProjections(clients.rows.map((client) => Number(client.id)));
-  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
-  return clients.rows.map((client) => {
-    const projection = projections.get(Number(client.id))!;
-    const charges = projection.charges;
-    const sum = (predicate: (due: string | null) => boolean) => charges.filter((charge) => predicate(charge.dueAt))
-      .reduce((total, charge) => total + charge.pendienteCents, 0);
-    const dueDays = (due: string | null) => due == null ? 0 : Math.max(0, Math.floor(
-      (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`)) / 86400000,
-    ));
-    const overdue = charges.filter((charge) => charge.dueAt != null && dueDays(charge.dueAt) > 0)
-      .map((charge) => charge.dueAt!).sort();
-    const oldestDays = overdue[0] == null ? 0 : dueDays(overdue[0]);
-    const age = oldestDays === 0 ? "POR_VENCER"
-      : oldestDays <= 30 ? "1_30"
-      : oldestDays <= 60 ? "31_60"
-      : oldestDays <= 90 ? "61_90" : "MAS_90";
-    const saldoAFavor = centsToMoney(projection.overpaymentCents);
-    return { id: Number(client.id), nombre: client.nombre, saldo: centsToMoney(sum(() => true)), saldoActual: centsToMoney(sum(() => true)), saldoAFavor,
-      porVencer: centsToMoney(sum((due) => due != null && due >= today)), sinPlazo: centsToMoney(sum((due) => due == null)),
-      "1_30": centsToMoney(sum((due) => dueDays(due) >= 1 && dueDays(due) <= 30)),
-      "31_60": centsToMoney(sum((due) => dueDays(due) >= 31 && dueDays(due) <= 60)),
-      "61_90": centsToMoney(sum((due) => dueDays(due) >= 61 && dueDays(due) <= 90)),
-      mas90: centsToMoney(sum((due) => dueDays(due) > 90)),
-      antiguedad: charges.length && charges.every((charge) => charge.dueAt == null) ? "SIN_PLAZO" : age,
-      diasVencido: overdue[0] ? Math.floor((Date.parse(`${today}T00:00:00Z`) - Date.parse(`${overdue[0]}T00:00:00Z`)) / 86400000) : 0,
-      vencido: centsToMoney(sum((due) => due != null && due < today)),
-      primerVencimiento: charges.map((charge) => charge.dueAt).filter(Boolean).sort()[0] ?? null,
-    };
-  }).filter((row) => row.saldoActual !== "0.00").sort((a, b) => Number(b.saldoActual) - Number(a.saldoActual));
+function carteraQuery(req: { query: Record<string, unknown> }) {
+  return {
+    ubicacionId: req.query.ubicacionId,
+    ubicacionIds: req.query.ubicacionIds,
+  };
+}
+
+function carteraScopeError(error: unknown, res: Response): boolean {
+  if (!(error instanceof CarteraScopeError)) return false;
+  res.status(error.status).json({ error: error.message });
+  return true;
+}
+
+function carteraReadDependencies() {
+  return { resolveReadScope };
 }
 
 // ── GET /clientes/resumen ─────────────────────────────────────────────────────
@@ -277,25 +267,16 @@ async function carteraReadModel() {
 router.get(
   "/clientes/resumen",
   requierePermiso("clientes_finanzas", "ver"),
-  async (_req, res, next): Promise<void> => {
+  async (req, res, next): Promise<void> => {
     try {
-       const result = await pool.query<{ id: number }>("SELECT id FROM clientes WHERE activo");
-       const projections = await loadCustomerCreditProjections(result.rows.map((row) => Number(row.id)));
-       const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/Mexico_City" });
-       const balances = [...projections.values()];
-      res.json({
-         totalClientes: result.rows.length,
-         clientesConSaldo: balances.filter((projection) => projection.balanceCents > 0).length,
-         totalCartera: centsToMoney(balances.reduce((sum, projection) => sum + projection.balanceCents, 0)),
-         totalVencido: centsToMoney(balances.reduce((sum, projection) => sum + projection.charges
-           .filter((charge) => charge.dueAt != null && charge.dueAt < today)
-           .reduce((subtotal, charge) => subtotal + charge.pendienteCents, 0), 0)),
-      });
+      const result = await loadClientesCartera(
+        req.auth!,
+        carteraQuery(req),
+        carteraReadDependencies(),
+      );
+      res.json({ ...result.resumen, alcance: result.alcance });
     } catch (e) {
-      if (e instanceof Error && e.message === "INVALID_PERIOD") {
-        res.status(400).json({ error: "Periodo inválido; usa YYYY-MM-DD." });
-        return;
-      }
+      if (carteraScopeError(e, res)) return;
       next(e);
     }
   },
@@ -467,10 +448,15 @@ router.post(
 router.get(
   "/clientes/cartera",
   requierePermiso("clientes_finanzas", "ver"),
-  async (_req, res, next): Promise<void> => {
+  async (req, res, next): Promise<void> => {
     try {
-      res.json({ clientes: await carteraReadModel() });
+      res.json(await loadClientesCartera(
+        req.auth!,
+        carteraQuery(req),
+        carteraReadDependencies(),
+      ));
     } catch (error) {
+      if (carteraScopeError(error, res)) return;
       next(error);
     }
   },
@@ -642,36 +628,21 @@ router.get(
 router.get(
   "/clientes/cartera.xlsx",
   requierePermiso("clientes_finanzas", "ver"),
-  async (_req, res, next): Promise<void> => {
+  async (req, res, next): Promise<void> => {
     try {
-      const result = { rows: await carteraReadModel() };
-      const workbook = new ExcelJS.Workbook();
-      const sheet = workbook.addWorksheet("Cartera");
-      sheet.columns = [
-        { header: "Cliente", key: "nombre", width: 30 },
-        { header: "Saldo", key: "saldo", width: 15 },
-         { header: "Saldo a favor", key: "saldoAFavor", width: 15 },
-        { header: "Vencido", key: "vencido", width: 15 },
-        { header: "Primer vencimiento", key: "primerVencimiento", width: 22 },
-        { header: "Sin plazo definido", key: "sinPlazo", width: 18 },
-      ];
-      sheet.getColumn("saldo").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.getColumn("vencido").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.getColumn("sinPlazo").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.addRows(result.rows.map((row) => ({
-        ...row,
-        saldo: toExcelNumber(row.saldo),
-        saldoAFavor: toExcelNumber(row.saldoAFavor),
-        vencido: toExcelNumber(row.vencido),
-        sinPlazo: toExcelNumber(row.sinPlazo),
-      })));
+      const result = await loadClientesCartera(
+        req.auth!,
+        carteraQuery(req),
+        carteraReadDependencies(),
+      );
+      const workbook = await renderClientesCarteraXlsx(result);
       res.type(
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       );
       res.attachment("cartera-clientes.xlsx");
-      await workbook.xlsx.write(res);
-      res.end();
+      res.send(workbook);
     } catch (error) {
+      if (carteraScopeError(error, res)) return;
       next(error);
     }
   },
@@ -680,20 +651,19 @@ router.get(
 router.get(
   "/clientes/cartera.pdf",
   requierePermiso("clientes_finanzas", "ver"),
-  async (_req, res, next): Promise<void> => {
+  async (req, res, next): Promise<void> => {
     try {
-      const result = { rows: await carteraReadModel() };
-      const pdf = createTextPdf(
-        "Cartera de clientes",
-        result.rows.map(
-          (row) =>
-            `${row.nombre} | saldo ${formatNumber(row.saldo, { kind: "money" })} | saldo a favor ${formatNumber(row.saldoAFavor, { kind: "money" })} | vencido ${formatNumber(row.vencido, { kind: "money" })} | sin plazo definido ${formatNumber(row.sinPlazo, { kind: "money" })}`,
-        ),
+      const result = await loadClientesCartera(
+        req.auth!,
+        carteraQuery(req),
+        carteraReadDependencies(),
       );
+      const pdf = renderClientesCarteraPdf(result);
       res.type("application/pdf");
       res.attachment("cartera-clientes.pdf");
       res.send(pdf);
     } catch (error) {
+      if (carteraScopeError(error, res)) return;
       next(error);
     }
   },

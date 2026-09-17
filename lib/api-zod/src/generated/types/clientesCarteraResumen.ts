@@ -5,12 +5,10 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
-import type { CarteraAlcance } from './carteraAlcance';
 
-export interface ClientesResumen {
+export interface ClientesCarteraResumen {
   totalClientes: number;
   clientesConSaldo: number;
   totalCartera: string;
   totalVencido: string;
-  alcance: CarteraAlcance;
 }

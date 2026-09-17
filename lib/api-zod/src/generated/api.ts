@@ -4762,11 +4762,32 @@ export const RecalcularExistenciasResponse = zod.object({
 /**
  * @summary Resumen de cartera (clientes_finanzas requerido)
  */
+
+export const getClientesResumenQueryUbicacionIdsRegExp = new RegExp('^[1-9][0-9]*(,[1-9][0-9]*)*$');
+
+
+export const GetClientesResumenQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Ubicación única solicitada para el alcance. No combinar con ubicacionIds.'),
+  "ubicacionIds": zod.coerce.string().regex(getClientesResumenQueryUbicacionIdsRegExp).optional().describe('Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.')
+})
+
+
+
+
 export const GetClientesResumenResponse = zod.object({
   "totalClientes": zod.number(),
   "clientesConSaldo": zod.number(),
   "totalCartera": zod.string(),
-  "totalVencido": zod.string()
+  "totalVencido": zod.string(),
+  "alcance": zod.object({
+  "tipo": zod.enum(['GLOBAL', 'SITIOS']),
+  "ubicaciones": zod.array(zod.object({
+  "id": zod.number().min(1),
+  "nombre": zod.string()
+})),
+  "generadoEn": zod.coerce.date(),
+  "saldoAFavorDisponible": zod.boolean()
+})
 })
 
 
@@ -4871,16 +4892,48 @@ export const CreateClienteResponse = zod.object({
 /**
  * @summary Cartera y antigüedad de saldos
  */
+
+export const getClientesCarteraQueryUbicacionIdsRegExp = new RegExp('^[1-9][0-9]*(,[1-9][0-9]*)*$');
+
+
+export const GetClientesCarteraQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Ubicación única solicitada para el alcance. No combinar con ubicacionIds.'),
+  "ubicacionIds": zod.coerce.string().regex(getClientesCarteraQueryUbicacionIdsRegExp).optional().describe('Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.')
+})
+
+
+
+
 export const GetClientesCarteraResponse = zod.object({
   "clientes": zod.array(zod.object({
   "id": zod.number(),
   "nombre": zod.string(),
   "saldoActual": zod.string(),
-  "saldoAFavor": zod.string(),
+  "saldoAFavor": zod.string().nullable(),
+  "porVencer": zod.string(),
+  "1_30": zod.string(),
+  "31_60": zod.string(),
+  "61_90": zod.string(),
+  "mas90": zod.string(),
   "antiguedad": zod.enum(['SIN_PLAZO', 'POR_VENCER', '1_30', '31_60', '61_90', 'MAS_90']),
   "diasVencido": zod.number(),
-  "sinPlazo": zod.string().optional()
-}))
+  "sinPlazo": zod.string()
+})),
+  "resumen": zod.object({
+  "totalClientes": zod.number(),
+  "clientesConSaldo": zod.number(),
+  "totalCartera": zod.string(),
+  "totalVencido": zod.string()
+}),
+  "alcance": zod.object({
+  "tipo": zod.enum(['GLOBAL', 'SITIOS']),
+  "ubicaciones": zod.array(zod.object({
+  "id": zod.number().min(1),
+  "nombre": zod.string()
+})),
+  "generadoEn": zod.coerce.date(),
+  "saldoAFavorDisponible": zod.boolean()
+})
 })
 
 
@@ -5664,8 +5717,26 @@ export const ExportClienteEstadoCuentaPdfParams = zod.object({
 export const ExportClienteEstadoCuentaPdfResponse = zod.unknown()
 
 
+
+export const exportClientesCarteraQueryUbicacionIdsRegExp = new RegExp('^[1-9][0-9]*(,[1-9][0-9]*)*$');
+
+
+export const ExportClientesCarteraQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Ubicación única solicitada para el alcance. No combinar con ubicacionIds.'),
+  "ubicacionIds": zod.coerce.string().regex(exportClientesCarteraQueryUbicacionIdsRegExp).optional().describe('Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.')
+})
+
 export const ExportClientesCarteraResponse = zod.unknown()
 
+
+
+export const exportClientesCarteraPdfQueryUbicacionIdsRegExp = new RegExp('^[1-9][0-9]*(,[1-9][0-9]*)*$');
+
+
+export const ExportClientesCarteraPdfQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).optional().describe('Ubicación única solicitada para el alcance. No combinar con ubicacionIds.'),
+  "ubicacionIds": zod.coerce.string().regex(exportClientesCarteraPdfQueryUbicacionIdsRegExp).optional().describe('Lista separada por comas de ubicaciones solicitadas. No combinar con ubicacionId.')
+})
 
 export const ExportClientesCarteraPdfResponse = zod.unknown()
 

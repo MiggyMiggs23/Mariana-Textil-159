@@ -1,0 +1,48 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [4 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R >> >> /Contents 5 0 R >>
+endobj
+5 0 obj
+<< /Length 446 >>
+stream
+BT
+/F1 9 Tf
+36 806 Td
+11 TL
+(Cartera de clientes) Tj
+T*
+(Pagina 1 de 1) Tj
+T*
+(Alcance: SITIOS | ubicaciones: Matriz Textil, Sucursal Norte | generado: 2026-02-01T12:00:00.000Z) Tj
+T*
+(Resumen: 1 clientes | 1 con saldo | cartera $1,234.50 | vencido $234.50) Tj
+T*
+(Saldo a favor: No atribuible por sitio) Tj
+T*
+(Fixture Cliente Multi | saldo $1,234.50 | saldo a favor No atribuible por sitio | vencido $234.50 | sin plazo definido $0.00) Tj
+T*
+ET
+endstream
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000185 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+808
+%%EOF

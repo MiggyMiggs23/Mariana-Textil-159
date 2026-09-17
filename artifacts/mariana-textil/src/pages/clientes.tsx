@@ -3,16 +3,16 @@ import { Link } from "wouter";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { ArrowUpDown, Loader2, LockKeyhole, Plus, Search, Users } from "lucide-react";
 import {
-  getGetClientesResumenQueryKey,
   getGetClientesCarteraQueryKey,
   getGetClienteCreditoQueryKey,
   getGetCurrentUserQueryKey,
   getListClientesQueryKey,
+  getListLocationsQueryKey,
   getListCuentasIncobrablesQueryKey,
-  useGetClientesResumen,
   useGetClientesCartera,
   useGetClienteCredito,
   useGetCurrentUser,
+  useListLocations,
   useListClientes,
   useCreateCliente,
   useListCuentasIncobrables,
@@ -32,7 +32,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { hasPermission, Modules } from "@/lib/permisos";
-import { downloadClientFile } from "@/lib/clientes-api";
+import {
+  carteraAuthPartition,
+  carteraEffectiveScope,
+  carteraScopeContractError,
+  carteraScopeKey,
+  carteraScopePath,
+  carteraScopeQuery,
+  downloadClientFile,
+} from "@/lib/clientes-api";
 import { getGlobalAnalytics } from "@/lib/clientes-api";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatNumber } from "@workspace/number-format";
@@ -46,22 +54,67 @@ export default function Clientes() {
   const [sort, setSort] = useHistoryEntryState<"name" | "recent">("clientes.sort", "name");
   const [analyticsMonths, setAnalyticsMonths] = useHistoryEntryState("clientes.analytics-months", "12");
   const [activeTab, setActiveTab] = useHistoryEntryState("clientes.tab", "clientes");
+  const [carteraLocationIds, setCarteraLocationIds] = useState<number[]>([]);
   const [createOpen, setCreateOpen] = useState(false);
-  const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
+  const userQuery = useGetCurrentUser({
+    query: {
+      queryKey: getGetCurrentUserQueryKey(),
+      refetchOnMount: "always",
+    },
+  });
+  const user = userQuery.data;
+  const authReady = userQuery.isFetched && !userQuery.isFetching && Boolean(user);
   const canFinances = hasPermission(user, Modules.CLIENTES_FINANZAS, "ver") && user?.rol !== "SUPERVISOR";
   const canCredit = hasPermission(user, Modules.CLIENTES_CREDITO, "ver") && user?.rol !== "SUPERVISOR";
   const canCreate = hasPermission(user, Modules.CLIENTES, "crear");
-  const clientsQuery = useListClientes({ query: { queryKey: getListClientesQueryKey() } });
-  const summaryQuery = useGetClientesResumen({
-    query: { enabled: canFinances, queryKey: getGetClientesResumenQueryKey() },
+  const clientsQuery = useListClientes({ query: { enabled: activeTab === "clientes", queryKey: getListClientesQueryKey() } });
+  const effectiveCarteraScope = carteraEffectiveScope(user);
+  const canSelectCarteraScope = effectiveCarteraScope.kind === "UNRESTRICTED";
+  const authPartition = carteraAuthPartition(user);
+  const locationsQuery = useListLocations(undefined, {
+    query: {
+      enabled: authReady && canFinances && effectiveCarteraScope.kind !== "INVALID" && canSelectCarteraScope && activeTab === "cartera",
+      queryKey: [...getListLocationsQueryKey(), authPartition],
+    },
   });
-  const carteraQuery = useGetClientesCartera({
-    query: { enabled: canFinances, queryKey: getGetClientesCarteraQueryKey() },
+  const carteraScope = useMemo(
+    () => (canSelectCarteraScope ? { ubicacionIds: carteraLocationIds } : {}),
+    [canSelectCarteraScope, carteraLocationIds],
+  );
+  const carteraParams = useMemo(() => carteraScopeQuery(carteraScope), [carteraScope]);
+  const carteraQuery = useGetClientesCartera(carteraParams, {
+    query: {
+      enabled: authReady && canFinances && effectiveCarteraScope.kind !== "INVALID" && activeTab === "cartera",
+      queryKey: [...getGetClientesCarteraQueryKey(carteraParams), carteraScopeKey(carteraScope), authPartition],
+    },
   });
+  const carteraData = carteraQuery.data;
+  const carteraScopeError = authReady ? carteraScopeContractError(carteraData, user, carteraScope) : null;
+  const carteraReady = Boolean(authReady && carteraData && !carteraQuery.isLoading && !carteraQuery.isError && !carteraScopeError);
+  const carteraDisplayData = carteraReady ? carteraData : undefined;
+  const carteraError = carteraScopeError
+    ?? (carteraQuery.isError ? carteraQuery.error : null)
+    ?? (userQuery.isError ? userQuery.error : null);
+  const carteraLoading = !authReady || userQuery.isFetching || carteraQuery.isLoading;
+  const [exportingCartera, setExportingCartera] = useState(false);
+  const exportCartera = async (extension: "xlsx" | "pdf") => {
+    if (!carteraReady || exportingCartera) return;
+    setExportingCartera(true);
+    try {
+      await downloadClientFile(
+        carteraScopePath(`/clientes/cartera.${extension}`, carteraScope),
+        `cartera-clientes.${extension}`,
+      );
+    } catch (error) {
+      toast.error("No se pudo descargar la cartera.", { description: getApiErrorMessage(error) });
+    } finally {
+      setExportingCartera(false);
+    }
+  };
   const analyticsPeriod = useMemo(() => { const now = new Date(); const start = new Date(); start.setMonth(start.getMonth() - Number(analyticsMonths)); return { desde: start.toISOString().slice(0, 10), hasta: now.toISOString().slice(0, 10) }; }, [analyticsMonths]);
-  const analyticsQuery = useQuery({ queryKey: ["clientes-global-analytics", analyticsPeriod], queryFn: () => getGlobalAnalytics(analyticsPeriod), enabled: canFinances });
+  const analyticsQuery = useQuery({ queryKey: ["clientes-global-analytics", analyticsPeriod], queryFn: () => getGlobalAnalytics(analyticsPeriod), enabled: canFinances && activeTab === "analisis" });
   const behaviorQuery = useListarComportamientoPagoClientes({
-    query: { enabled: canCredit, queryKey: getListarComportamientoPagoClientesQueryKey() },
+    query: { enabled: canCredit && activeTab === "comportamiento", queryKey: getListarComportamientoPagoClientesQueryKey() },
   });
   const [behaviorColor, setBehaviorColor] = useState("ALL");
   const [behaviorSort, setBehaviorSort] = useState("PERCENTAGE");
@@ -172,17 +225,49 @@ export default function Clientes() {
             )}
           </TabsContent>
           <TabsContent value="cartera" className="space-y-4">
-            <SummaryPanel loading={summaryQuery.isLoading} error={summaryQuery.isError ? summaryQuery.error : null} values={[
-              ["Cartera total", formatNumber(summaryQuery.data?.totalCartera, { kind: "money" })],
-              ["Saldo vencido", formatNumber(summaryQuery.data?.totalVencido, { kind: "money" })],
-              ["Clientes con saldo", String(summaryQuery.data?.clientesConSaldo ?? 0)],
-              ["Clientes activos", String(summaryQuery.data?.totalClientes ?? 0)],
-            ]} />
+            {canSelectCarteraScope && (
+              <CarteraScopeSelector
+                locations={locationsQuery.data ?? []}
+                selectedIds={carteraLocationIds}
+                onChange={setCarteraLocationIds}
+                loading={locationsQuery.isLoading}
+                error={locationsQuery.isError ? locationsQuery.error : null}
+              />
+            )}
+            {carteraScopeError && (
+              <p className="text-sm text-destructive" role="alert" data-testid="cartera-scope-error">{carteraScopeError}</p>
+            )}
+            {carteraDisplayData?.alcance && (
+              <p className="text-sm text-muted-foreground" data-testid="cartera-scope-label">
+                Alcance: <span className="font-medium text-foreground">{formatCarteraScopeLabel(carteraDisplayData.alcance)}</span>
+                {" · "}Generado {new Date(carteraDisplayData.alcance.generadoEn).toLocaleString("es-MX")}
+              </p>
+            )}
+            <SummaryPanel
+              loading={carteraLoading}
+              error={carteraError}
+              values={[
+                ["Cartera total", formatNumber(carteraDisplayData?.resumen.totalCartera, { kind: "money" })],
+                ["Saldo vencido", formatNumber(carteraDisplayData?.resumen.totalVencido, { kind: "money" })],
+                ["Clientes con saldo", String(carteraDisplayData?.resumen.clientesConSaldo ?? 0)],
+                [
+                  carteraDisplayData?.alcance.tipo === "SITIOS" ? "Clientes con notas en este alcance" : "Clientes activos",
+                  String(carteraDisplayData?.resumen.totalClientes ?? 0),
+                ],
+              ]}
+            />
             <Card>
-              <CardHeader className="flex-row items-center justify-between"><CardTitle>Antigüedad de cartera</CardTitle><Button variant="outline" size="sm" onClick={() => downloadClientFile("/clientes/cartera.xlsx", "cartera-clientes.xlsx")} data-testid="button-export-client-analytics"><DownloadIcon />Excel</Button></CardHeader>
-              <CardContent>{carteraQuery.isLoading ? <Skeleton className="h-24 w-full" /> : carteraQuery.isError ? <p className="text-destructive">No se pudo cargar la cartera.</p> : <div className="grid gap-3 sm:grid-cols-5">{["POR_VENCER", "1_30", "31_60", "61_90", "MAS_90"].map((bucket) => { const total = (carteraQuery.data?.clientes ?? []).filter((item) => item.antiguedad === bucket).reduce((sum, item) => sum + Number(item.saldoActual), 0); return <div key={bucket} className="rounded-lg border p-3"><p className="text-xs text-muted-foreground">{bucket.replace("_", "–").replace("POR_VENCER", "Por vencer").replace("MAS_90", "+90 días")}</p><p className="mt-1 font-bold">{formatNumber(total, { kind: "money" })}</p></div>; })}</div>}<p className="mt-3 text-sm text-muted-foreground">Agrupa el saldo monetario pendiente de todos los sitios permitidos por días desde su vencimiento al corte actual.</p></CardContent>
+              <CardHeader className="flex-row items-center justify-between">
+                <CardTitle>Antigüedad de cartera</CardTitle>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" onClick={() => void exportCartera("xlsx")} disabled={!carteraReady || exportingCartera} data-testid="button-export-client-analytics">
+                    <DownloadIcon />Excel
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>{carteraLoading ? <Skeleton className="h-24 w-full" /> : carteraError ? <p className="text-destructive" role="alert">{getApiErrorMessage(carteraError, "No se pudo cargar la cartera.")}</p> : <div className="grid gap-3 sm:grid-cols-5">{["POR_VENCER", "1_30", "31_60", "61_90", "MAS_90"].map((bucket) => { const total = (carteraDisplayData?.clientes ?? []).filter((item) => item.antiguedad === bucket).reduce((sum, item) => sum + Number(item.saldoActual), 0); return <div key={bucket} className="rounded-lg border p-3"><p className="text-xs text-muted-foreground">{bucket.replace("_", "–").replace("POR_VENCER", "Por vencer").replace("MAS_90", "+90 días")}</p><p className="mt-1 font-bold">{formatNumber(total, { kind: "money" })}</p></div>; })}</div>}<p className="mt-3 text-sm text-muted-foreground">Agrupa el saldo monetario pendiente por días desde su vencimiento al corte actual. Un cliente se muestra en la categoría de su nota más antigua.</p></CardContent>
             </Card>
-            <Card><CardHeader><CardTitle>Clientes con saldo</CardTitle></CardHeader><CardContent><div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Antigüedad</TableHead><TableHead>Días vencido</TableHead><TableHead className="text-right">Saldo</TableHead></TableRow></TableHeader><TableBody>{(carteraQuery.data?.clientes ?? []).map((item) => <TableRow key={item.id} className={item.diasVencido > 0 ? "bg-amber-50" : ""}><TableCell><Link className="font-medium hover:underline" href={`/clientes/${item.id}`}>{item.nombre}</Link></TableCell><TableCell>{item.antiguedad}</TableCell><TableCell>{item.diasVencido}</TableCell><TableCell className="text-right font-mono">{formatNumber(item.saldoActual, { kind: "money" })}</TableCell></TableRow>)}</TableBody></Table></div><p className="mt-3 text-sm text-muted-foreground">Lista el saldo monetario y la antigüedad vigente de cada cliente en todos los sitios permitidos, sin depender del periodo de análisis.</p></CardContent></Card>
+            <Card><CardHeader><CardTitle>Clientes con saldo</CardTitle></CardHeader><CardContent>{carteraLoading ? <Skeleton className="h-32 w-full" /> : carteraError ? <p className="text-destructive" role="alert">{getApiErrorMessage(carteraError, "No se pudo cargar la cartera.")}</p> : <div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Cliente</TableHead><TableHead>Antigüedad</TableHead><TableHead>Días vencido</TableHead><TableHead className="text-right">Saldo</TableHead></TableRow></TableHeader><TableBody>{(carteraDisplayData?.clientes ?? []).map((item) => <TableRow key={item.id} className={item.diasVencido > 0 ? "bg-amber-50" : ""}><TableCell><Link className="font-medium hover:underline" href={`/clientes/${item.id}`}>{item.nombre}</Link></TableCell><TableCell>{item.antiguedad}</TableCell><TableCell>{item.diasVencido}</TableCell><TableCell className="text-right font-mono">{formatNumber(item.saldoActual, { kind: "money" })}</TableCell></TableRow>)}</TableBody></Table></div>}<p className="mt-3 text-sm text-muted-foreground">Lista el saldo monetario y la antigüedad vigente de cada cliente en el alcance del servidor, sin depender del periodo de análisis.</p></CardContent></Card>
           </TabsContent>
           <TabsContent value="analisis">
             <div className="mb-4 flex justify-end"><Select value={analyticsMonths} onValueChange={setAnalyticsMonths}><SelectTrigger className="w-52"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="3">Últimos 3 meses</SelectItem><SelectItem value="6">Últimos 6 meses</SelectItem><SelectItem value="12">Últimos 12 meses</SelectItem><SelectItem value="24">Últimos 24 meses</SelectItem></SelectContent></Select></div>
@@ -442,6 +527,60 @@ function ClientField({ label, value, onChange, type = "text", testId }: {
 }
 
 function DownloadIcon() { return <span aria-hidden="true" className="mr-1">↓</span>; }
+function formatCarteraScopeLabel(alcance: { tipo: "GLOBAL" | "SITIOS"; ubicaciones: Array<{ id: number; nombre: string }> }) {
+  if (alcance.tipo === "GLOBAL") return "Global";
+  const names = alcance.ubicaciones.map((ubicacion) => ubicacion.nombre);
+  return names.length === 1 ? `Sitio: ${names[0]}` : `Sitios: ${names.join(", ")}`;
+}
+
+function CarteraScopeSelector({
+  locations,
+  selectedIds,
+  onChange,
+  loading,
+  error,
+}: {
+  locations: Array<{ id: number; nombre: string; activa?: boolean }>;
+  selectedIds: number[];
+  onChange: (ids: number[]) => void;
+  loading: boolean;
+  error: unknown;
+}) {
+  const activeLocations = locations.filter((location) => location.activa !== false);
+  const toggleLocation = (id: number) => {
+    onChange(selectedIds.includes(id) ? selectedIds.filter((current) => current !== id) : [...selectedIds, id].sort((a, b) => a - b));
+  };
+  return (
+    <Card>
+      <CardContent className="space-y-3 p-4">
+        <div>
+          <p className="text-sm font-medium">Alcance de cartera</p>
+          <p className="text-xs text-muted-foreground">Global o uno o más sitios. El servidor valida y aplica el alcance final.</p>
+        </div>
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Seleccionar alcance de cartera">
+          <Button type="button" size="sm" variant={selectedIds.length === 0 ? "default" : "outline"} onClick={() => onChange([])} aria-pressed={selectedIds.length === 0} data-testid="cartera-scope-global">
+            Global
+          </Button>
+          {loading ? <Skeleton className="h-9 w-32" /> : activeLocations.map((location) => (
+            <Button
+              key={location.id}
+              type="button"
+              size="sm"
+              variant={selectedIds.includes(location.id) ? "default" : "outline"}
+              onClick={() => toggleLocation(location.id)}
+              aria-pressed={selectedIds.includes(location.id)}
+              data-testid={`cartera-scope-${location.id}`}
+            >
+              {location.nombre}
+            </Button>
+          ))}
+        </div>
+        {Boolean(error) && <p className="text-sm text-destructive" role="alert">{getApiErrorMessage(error, "No se pudieron cargar los sitios.")}</p>}
+      </CardContent>
+    </Card>
+  );
+}
+
 function AnalyticsTable({ title, rows }: { title: string; rows: string[][] }) {
   const explanations: Record<string, string> = {
     "Top por ventas": "Ordena clientes por ventas monetarias del periodo elegido; las líneas sin costo siguen contando en ventas.",

@@ -11,8 +11,14 @@ export interface ClienteCarteraItem {
   id: number;
   nombre: string;
   saldoActual: string;
-  saldoAFavor: string;
+  /** @nullable */
+  saldoAFavor: string | null;
+  porVencer: string;
+  '1_30': string;
+  '31_60': string;
+  '61_90': string;
+  mas90: string;
   antiguedad: ClienteCarteraItemAntiguedad;
   diasVencido: number;
-  sinPlazo?: string;
+  sinPlazo: string;
 }
