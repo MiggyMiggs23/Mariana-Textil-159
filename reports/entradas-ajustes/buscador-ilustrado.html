@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Buscador de productos — propuesta ilustrada</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eef2f8;color:#17213d;font:15px/1.45 system-ui,-apple-system,sans-serif;padding:32px}
+main{max-width:1050px;margin:auto}.eyebrow{font-size:12px;font-weight:700;letter-spacing:1.5px;color:#3859b5}h1{font-size:29px;line-height:1.15;margin:8px 0 12px}header p{color:#596579;margin:0 0 24px}.panels{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+section{background:white;border:1px solid #d6dfed;border-radius:14px;padding:22px;min-width:0}h2{font-size:18px;margin:0 0 16px}label{display:block;font-size:13px;font-weight:600;margin-bottom:6px}.field{border:1px solid #9babce;border-radius:7px;min-height:42px;padding:10px 12px;color:#536178;background:white}.search{border-color:#3156bb;box-shadow:0 0 0 2px #3156bb12}
+.list{border:1px solid #d6dfed;border-radius:8px;margin-top:8px;overflow:hidden}.option{padding:12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;border-bottom:1px solid #e4e9f2}.option:last-child{border-bottom:0}.option:first-child{background:#edf2ff}.fabric{font-weight:500;overflow-wrap:anywhere}.color{font-weight:700;overflow-wrap:anywhere;color:#17213d;margin:2px 0}.sku{font:11px/1.5 ui-monospace,monospace;color:#677389;overflow-wrap:anywhere}.unit{font-size:10px;font-weight:700;background:#e5eaf2;border-radius:4px;padding:4px 6px;align-self:start;color:#47546b}.chosen{margin-top:10px;padding:14px;border:1px solid #bdcce7;border-radius:8px;background:#f7f9fd}.chosen-head{font-size:10px;font-weight:700;letter-spacing:.8px;color:#526689;margin-bottom:7px}.chosen-body{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px}.note{display:flex;gap:10px;align-items:flex-start;margin-top:18px;color:#4e5d73;font-size:13px}.number{display:flex;align-items:center;justify-content:center;width:24px;height:24px;background:#3156bb;color:white;font-size:12px;font-weight:700;border-radius:50%;flex-shrink:0}.note strong{color:#17213d}.details{border-top:1px solid #e2e8f2;margin-top:20px;padding-top:18px;color:#526078;font-size:13px}.details p{margin:0 0 10px}footer{font-size:12px;color:#627189;margin-top:18px}
+@media(max-width:650px){body{padding:18px}.panels{grid-template-columns:1fr;gap:16px}h1{font-size:24px}header p{font-size:13px;margin-bottom:18px}section{padding:16px}h2{font-size:17px}.option{padding:10px}.desktop-extra{display:none}.note{margin-top:12px}footer{font-size:11px}}
+</style>
+</head>
+<body><main>
+<header><div class="eyebrow">ENTRADAS · PROPUESTA, NO IMPLEMENTADA</div>
+<h1>El color siempre se ve completo</h1>
+<p>Tela, color y SKU separados. Sin letra más pequeña para hacer caber el nombre.</p></header>
+<div class="panels">
+<section>
+<h2>1. Al buscar un producto</h2>
+<label>Producto</label><div class="field search">Campesina Flor</div>
+<div class="list">
+<div class="option"><div><div class="fabric">Campesina Flor Margarita</div><div class="color">Amarillo Mango</div><div class="sku">CAMFLOMAR-AMA</div></div><span class="unit">METRO</span></div>
+<div class="option"><div><div class="fabric">Campesina Flor Margarita</div><div class="color">Verde Bandera</div><div class="sku">CAMFLOMAR-VER</div></div><span class="unit">METRO</span></div>
+<div class="option desktop-extra"><div><div class="fabric">Campesina Flor Mediana</div><div class="color">Verde Bandera</div><div class="sku">CAMFLOMED-VER3</div></div><span class="unit">METRO</span></div>
+</div>
+<div class="note"><span class="number">1</span><div><strong>El color tiene su propio renglón.</strong><br>Si necesita más espacio, continúa abajo; nunca termina en «…».</div></div>
+</section>
+<section>
+<h2>2. Después de seleccionarlo</h2>
+<label>Producto</label><div class="field">Mezclilla Diamantina 10 Oz — Indigo Rayada</div>
+<div class="chosen"><div class="chosen-head">PRODUCTO SELECCIONADO</div><div class="chosen-body"><div><div class="fabric">Mezclilla Diamantina 10 Oz</div><div class="color">Indigo Rayada</div><div class="sku">MEZDIA10-IND2</div></div><span class="unit">METRO</span></div></div>
+<div class="note"><span class="number">2</span><div><strong>La selección queda visible completa.</strong><br>Este resumen permanece debajo del campo, incluso con la lista cerrada.</div></div>
+<div class="details desktop-extra"><p><strong>Tela:</strong> conserva su tamaño y puede ocupar varios renglones.</p><p><strong>Color:</strong> íntegro y destacado con la misma tipografía.</p><p><strong>SKU y unidad:</strong> siguen disponibles, separados del nombre.</p></div>
+</section>
+</div>
+<footer>Ejemplos del catálogo real de 1,234 productos. Ilustración para aprobar la distribución; no modifica la captura.</footer>
+</main></body></html>

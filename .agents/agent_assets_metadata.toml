@@ -1464,3 +1464,31 @@ mtime_ms = 1789611242846
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bffca9c1-28ab-4e2e-8923-fa521a407179/b7f03562-fe85-4b17-8734-abf16b6178f2"
 storage_version_token = "1789611277537906"
 content_type = "text/html"
+
+[[outputs]]
+id = "ZaCqzAO8zWfaK9Yya0x20"
+uri = "file://reports/entradas-ajustes/buscador-escritorio.png"
+type = "image"
+title = "Propuesta ilustrada — escritorio"
+description = "A la izquierda, opciones con tela y color separados. A la derecha, el producto seleccionado con su color completo."
+logical_id = "dc052ed0-d1d7-4c5d-845e-a98060987334"
+content_hash = "sha256:9d9b569784ab78fe371f03fd8e6e3ac56e49d94a0856b893e043014c51942dae"
+size = 253263
+mtime_ms = 1789611853478
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/dc052ed0-d1d7-4c5d-845e-a98060987334/190a277f-af99-499a-b44a-778eaf62e387"
+storage_version_token = "1789611865343417"
+content_type = "image/png"
+
+[[outputs]]
+id = "-szT7sOwn1c9xejhUeUfw"
+uri = "file://reports/entradas-ajustes/buscador-movil.png"
+type = "image"
+title = "Propuesta ilustrada — móvil de 402 px"
+description = "La misma distribución adaptada a teléfono. Es una propuesta: todavía no está implementada."
+logical_id = "92e7ee90-db6d-4950-9af9-bac587d5e56c"
+content_hash = "sha256:ee86fd233403d6cdecff5dd3006ccd7516e4414b8cf02c5cbe97dd32f3241368"
+size = 199512
+mtime_ms = 1789611853762
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/92e7ee90-db6d-4950-9af9-bac587d5e56c/2f333420-95d3-4949-afaa-228384ee2042"
+storage_version_token = "1789611865964970"
+content_type = "image/png"
