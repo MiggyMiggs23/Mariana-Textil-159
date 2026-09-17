@@ -1179,7 +1179,7 @@ Alcance aprobado: **Entradas, Movimientos y Sitios**. Usuarios conserva su lista
 
 ## Cartera de Clientes — alcance conjunto aprobado
 
-**Implementado en código; activación de API pendiente de autorización de reinicio.** No dar esta protección por activa en el proceso anterior. El reinicio normal ejecuta inicializadores y puede escribir en la base; no se ejecutó durante esta entrega bajo la restricción de solo lectura. No activar el modo de inspección ni deshabilitar los procesos operativos silenciosamente.
+**Implementado y activado en el entorno de desarrollo mediante reinicio normal autorizado por el propietario.** API y frontend arrancaron correctamente; los inicializadores terminaron sin errores y el backfill de compras informó cero inserciones. No se usó modo de inspección ni se deshabilitaron procesos operativos. Las cuatro rutas rechazan solicitudes sin sesión con HTTP 401. Esto confirma el arranque y la protección de autenticación, no sustituye la verificación funcional autenticada por sitio. No se publicó esta versión como parte de la activación.
 
 El alcance aprobado comprende **resumen, tabla de Cartera, Excel y PDF como una entrega conjunta**. Los cuatro endpoints (`/api/clientes/resumen`, `/api/clientes/cartera`, `/api/clientes/cartera.xlsx`, `/api/clientes/cartera.pdf`) usan un único servicio de lectura, `clientes-cartera-read-model.ts`, con el `resolveReadScope` existente. La pantalla usa una sola respuesta de Cartera para tarjetas y filas; los exportadores solo formatean el mismo modelo. No entregar una superficie protegida y las otras expuestas.
 

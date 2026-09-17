@@ -2,9 +2,11 @@
 
 ## Estado
 
-Código y verificaciones aisladas terminados. **Activación de la nueva API pendiente de autorización para el reinicio normal.** No se declara protegido el proceso de API que continúa ejecutando la versión anterior.
+Código y verificaciones aisladas terminados. **Nueva API activada en desarrollo mediante reinicio normal autorizado expresamente por el propietario.** También se reinició el frontend. Ambos workflows están en ejecución.
 
-No se reinició la API: su arranque normal ejecuta inicializadores que pueden escribir en la base y vuelve a iniciar procesos operativos de compras y mínimos. No se cambió al modo de inspección ni se deshabilitaron esos procesos. La autorización de implementar no se interpretó como permiso para contradecir la restricción explícita de no escribir en la base.
+La activación se mantuvo pendiente hasta recibir autorización expresa, porque el arranque normal ejecuta inicializadores que pueden escribir en la base y vuelve a iniciar procesos operativos de compras y mínimos. Tras recibirla se ejecutó el reinicio normal, sin modo de inspección ni deshabilitar procesos. Los inicializadores terminaron sin errores; el backfill de compras informó cero inserciones. Evidencia de arranque: `activation-api.log` y `activation-web.log`.
+
+Después del reinicio, las cuatro rutas (resumen, cartera, XLSX y PDF) respondieron HTTP 401 a solicitudes sin sesión. La vista previa volvió a mostrar login correctamente. Esta comprobación no crea una sesión ni demuestra la respuesta financiera de un usuario autenticado.
 
 ## Entrega indivisible
 
@@ -36,5 +38,5 @@ Las primeras ejecuciones fallidas del verificador eran problemas de preparación
 - No se crearon usuarios, sesiones, clientes, entradas ni movimientos reales.
 - Las pruebas de navegador interceptan todas las solicitudes API; no verifican una sesión, permisos reales ni una descarga autenticada.
 - La vista previa real mostró login sin sesión disponible. No se intentó iniciar sesión ni se presenta esa pantalla como aprobación funcional de Cartera.
-- No se activó todavía el backend nuevo. La entrega no está cerrada operativamente mientras falte el reinicio autorizado.
+- La activación corresponde al entorno de desarrollo; no se publicó una nueva versión.
 - Los demás endpoints siguen pendientes, sin corregir: `pendientes.md` y el Bloque 3 de `replit.md`.
