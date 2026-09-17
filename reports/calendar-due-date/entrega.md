@@ -2,7 +2,7 @@
 
 ## Estado
 
-Implementación y verificaciones de código terminadas. Activación de la API pendiente: no se ha reiniciado el proceso bajo la restricción de no escribir en la base. El arranque normal tiene inicializadores con escrituras; requiere autorización específica.
+Implementación y verificaciones de código terminadas. API y frontend activados en desarrollo mediante reinicio normal autorizado expresamente por el propietario. Los inicializadores terminaron sin errores y el backfill de compras registró cero inserciones. Evidencia: `activation-api.log` y `activation-web.log`. La vista previa posterior al reinicio cargó correctamente y mostró login/401; esto no sustituye la comprobación autenticada de la nota y su impresión.
 
 ## Reproducción antes y después
 
@@ -50,6 +50,6 @@ Evidencia: `reproduction-before.*`, `reproduction-after.*`, `excel-verification.
 
 La vista previa real mostró login y HTTP 401, sin sesión disponible. **La comprobación en navegador con la nota real y su impresión no está aprobada.** No se inició sesión para simularla.
 
-No se alteró el cálculo de vencimiento al autorizar, POS ni los documentos impresos. No se ejecutaron escrituras en la base ni se reinició la API. No se publicó una versión.
+No se alteró el cálculo de vencimiento al autorizar, POS ni los documentos impresos. Las verificaciones se ejecutaron sin escrituras de prueba; posteriormente se autorizó y ejecutó el reinicio normal con sus inicializadores habituales. No se crearon usuarios, sesiones ni movimientos de prueba. No se publicó una versión.
 
 No se afirma que toda la suite histórica del repositorio esté aprobada: una ejecución exploratoria de otros contratos antiguos presentó discrepancias de fixtures/aserciones ajenas a la corrección; no se modificaron indiscriminadamente. La evidencia de aprobación se limita a las verificaciones nombradas arriba.
