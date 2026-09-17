@@ -378,24 +378,18 @@ export async function getSalesSummary(filters: AnalyticsFilters) {
           COALESCE(SUM(l.importe),0) importe_margen,
           COUNT(*) FILTER (WHERE l.costo_total_congelado IS NULL)::int excluidas
        FROM ticket_lineas l JOIN filtered f ON f.id=l.ticket_id
-        WHERE f.estado='VENDIDO'
-          AND ((f.documento_tipo='TICKET' AND f.cobrado)
-            OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))
+        WHERE ${accountedDocumentPredicate("f")}
         GROUP BY l.ticket_id
      )
      SELECT
-       COALESCE(SUM(f.total) FILTER (WHERE f.estado='VENDIDO' AND
-         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text ventas,
+       COALESCE(SUM(f.total) FILTER (WHERE ${accountedDocumentPredicate("f")}),0)::text ventas,
         COALESCE(SUM(f.total) FILTER (WHERE ${collectedTicketPredicate("f")}),0)::text cobrado,
        (SELECT importe FROM pending) pendiente,
-       COALESCE(SUM(f.subtotal) FILTER (WHERE f.estado='VENDIDO' AND
-         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text subtotal,
-       COALESCE(SUM(f.iva) FILTER (WHERE f.estado='VENDIDO' AND
-         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))),0)::text iva,
+       COALESCE(SUM(f.subtotal) FILTER (WHERE ${accountedDocumentPredicate("f")}),0)::text subtotal,
+       COALESCE(SUM(f.iva) FILTER (WHERE ${accountedDocumentPredicate("f")}),0)::text iva,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.costo),0)::text END costo,
         CASE WHEN COALESCE(SUM(l.excluidas),0)>0 THEN NULL ELSE COALESCE(SUM(l.importe_margen-l.costo),0)::text END margen,
-       COUNT(*) FILTER (WHERE f.estado='VENDIDO' AND
-         ((f.documento_tipo='TICKET' AND f.cobrado) OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA')))::int tickets,
+       COUNT(*) FILTER (WHERE ${accountedDocumentPredicate("f")})::int tickets,
        COUNT(p.ticket_id)::int "ticketsCobrados",
        (SELECT tickets FROM pending) "documentosPendientes",
        (SELECT COUNT(*)::int FROM cancellations) cancelaciones,
@@ -438,9 +432,7 @@ export async function getSessionMargin(sesionId: number) {
        COUNT(*) FILTER
           (WHERE l.costo_total_congelado IS NULL)::int excluidas
      FROM tickets t JOIN ticket_lineas l ON l.ticket_id=t.id
-      WHERE t.sesion_caja_id=$1 AND t.estado='VENDIDO'
-        AND ((t.documento_tipo='TICKET' AND t.cobrado)
-          OR (t.documento_tipo='NOTA' AND t.autorizacion_estado='AUTORIZADA'))`,
+      WHERE t.sesion_caja_id=$1 AND ${accountedDocumentPredicate("t")}`,
     [sesionId],
   );
   const row = result.rows[0]!;

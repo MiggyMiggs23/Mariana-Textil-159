@@ -1,0 +1,123 @@
+# Prompt S — Unificar las copias del predicado de documento contabilizado
+
+## El defecto
+
+Existe una función canónica, `accountedDocumentPredicate`, en
+`artifacts/api-server/src/lib/accounted-document.ts`. Define qué documento cuenta: un
+TICKET cobrado o una NOTA autorizada.
+
+En `artifacts/api-server/src/lib/admin-analytics.ts` esa función **se usa en diez
+lugares** y, al lado, **el mismo predicado está escrito a mano en ocho más**:
+
+```
+((f.documento_tipo='TICKET' AND f.cobrado)
+  OR (f.documento_tipo='NOTA' AND f.autorizacion_estado='AUTORIZADA'))
+```
+
+Siete de esas copias están **dentro de `getSalesSummary`**, que es la consulta que
+alimenta el tablero de Tiempo real. La octava está más abajo, en el desglose por
+ubicación.
+
+Hoy las dieciocho coinciden. **El defecto no es que estén mal: es que el día que la
+regla cambie, diez cambian y ocho no.** Y nadie se entera hasta que dos pantallas
+muestran cifras distintas para el mismo hecho.
+
+Este es el patrón de falla más caro del proyecto, escrito en `replit.md`:
+
+> Dos consultas para el mismo hecho. Es el más frecuente. Siempre divergen. Regla: una
+> sola función, usada por todos los consumidores.
+
+Ya pasó con el resumen fiscal, con el feed de caja, con los tickets cancelados y con
+Cobrado. Aquí está sembrado ocho veces en el mismo archivo donde vive la función que
+debía evitarlo.
+
+---
+
+## Bloque 0 — Inventario exacto antes de tocar nada
+
+1. Localiza **todas** las copias literales del predicado en el repositorio, no solo en
+   `admin-analytics.ts`. Reporta archivo, línea y el alias de tabla que usa cada una.
+2. Reporta también las **variantes parciales**: lugares que comprueban solo una parte de
+   la condición. Por ejemplo, una rama que comprueba `documento_tipo='NOTA' AND
+   autorizacion_estado='AUTORIZADA'` sin la parte de TICKET, o una que comprueba
+   `estado='VENDIDO'` donde debería comprobar el predicado completo.
+   **Esas variantes no son copias: son diferencias de comportamiento.** No las
+   unifiques sin decírmelo.
+3. Para cada copia, di si es **idéntica** al predicado canónico o si **difiere**. Si
+   alguna difiere, esa es un hallazgo: repórtala con la diferencia exacta y **no la
+   toques**.
+4. Confirma qué alias de tabla admite hoy `accountedDocumentPredicate` y si sirve para
+   todos los casos encontrados.
+
+**Presenta el inventario antes de continuar.** Si el número no es ocho, ese es el
+resultado.
+
+---
+
+## Bloque 1 — Sustituir solo lo idéntico
+
+1. Sustituye cada copia **literalmente idéntica** por una llamada a
+   `accountedDocumentPredicate` con su alias.
+2. **No cambies el SQL de ninguna otra forma.** Ni formato, ni orden de condiciones, ni
+   paréntesis, ni nada que no sea la sustitución. Esta entrega debe ser legible como un
+   diff mecánico.
+3. Las variantes parciales del Bloque 0.2 **no se tocan en esta entrega**. Quedan
+   reportadas.
+4. Si una copia usa un alias que la función no admite, extiéndela para admitirlo en vez
+   de dejar la copia. Pero **la extensión no cambia la condición**.
+
+---
+
+## Bloque 2 — Impedir que vuelvan
+
+Una sustitución sin guardia se deshace en la siguiente entrega que escriba SQL a mano.
+
+Agrega una prueba que recorra el código fuente y **falle si aparece una copia literal
+del predicado** fuera de `accounted-document.ts`. Debe detectar la forma completa y
+tolerar diferencias de espaciado.
+
+Si ya existe una prueba de este tipo para otro predicado compartido, sigue su patrón en
+vez de inventar uno nuevo.
+
+---
+
+## Verificación
+
+**La verificación principal es que ninguna cifra cambia.** Esta entrega no debe alterar
+un solo número.
+
+1. **Paridad de resultados:** ejecuta las consultas afectadas contra los mismos datos,
+   antes y después, y compara **campo por campo**. Cualquier diferencia significa que
+   alguna copia no era idéntica: detente y repórtala.
+2. La prueba de identidad entre la cobranza del tablero y el Cobrado de Cuentas Destino
+   sigue pasando.
+3. La conciliación tarjeta/detalle sigue pasando: mismo conteo y mismo importe a través
+   de todas las páginas.
+4. La identidad Ventas = Contado cobrado + Ventas a crédito sigue cumpliéndose.
+5. Todas las pruebas existentes de analítica, caja, cartera y reportes siguen pasando,
+   con su conteo antes y después.
+6. La prueba del Bloque 2 falla si se reintroduce una copia. **Compruébalo
+   introduciendo una a propósito, viendo que falla, y quitándola.** Una prueba que
+   nunca se vio fallar no acredita nada.
+7. `pnpm run typecheck` completo en cero, con el verificador corregido.
+8. Codegen sin diferencias: este cambio no toca contratos.
+
+## Restricciones
+
+- **No cambies la definición del predicado canónico.** Solo su uso.
+- No unifiques variantes parciales ni condiciones que difieran.
+- No reorganices, reformatees ni «mejores» el SQL de paso.
+- No toques `destinationReadModel`, el reparto FIFO ni la proyección de crédito.
+- No crees usuarios ni sesiones de prueba, no escribas en la base.
+- No continúes con el Prompt P ni cierres su Grupo 1: siguen detenidos.
+- No corrijas la atribución de sitio de los abonos: está en diseño y es entrega propia.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Cuántas copias había, dónde estaban y que quedaron unificadas, **corrigiendo el
+   conteo anterior** que decía dos.
+2. Qué variantes parciales quedaron sin unificar y por qué, como pendientes abiertos con
+   su diferencia exacta.
+3. Que existe una prueba que impide reintroducir copias literales del predicado, y que
+   se comprobó viéndola fallar.
+4. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

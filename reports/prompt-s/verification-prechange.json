@@ -1,0 +1,78 @@
+{
+  "report": "Prompt S independent verification — pre-change capture",
+  "status": "prepared; final working-tree parity is blocked until the six mechanical replacements exist",
+  "baseline": {
+    "gitHead": "075bfdbeb7180756a2e5b4cda8985757ceb9aba7",
+    "archive": "/tmp/prompt-s-baseline",
+    "adminAnalyticsSha256": "6ebfb2e158a78bfa187bea3096fdb3bcc6a26dcd8d3c863ae6fb5af200d90f80",
+    "watchedModulesReplaced": false
+  },
+  "inventory": {
+    "exactFullPredicateCopies": 6,
+    "canonicalAliasesAccepted": "Any SQL alias string; default t",
+    "copies": [
+      { "file": "artifacts/api-server/src/lib/admin-analytics.ts", "lines": "382-383", "alias": "f", "function": "getSalesSummary.lines", "identical": true },
+      { "file": "artifacts/api-server/src/lib/admin-analytics.ts", "line": 388, "alias": "f", "function": "getSalesSummary.ventas", "identical": true },
+      { "file": "artifacts/api-server/src/lib/admin-analytics.ts", "line": 392, "alias": "f", "function": "getSalesSummary.subtotal", "identical": true },
+      { "file": "artifacts/api-server/src/lib/admin-analytics.ts", "line": 394, "alias": "f", "function": "getSalesSummary.iva", "identical": true },
+      { "file": "artifacts/api-server/src/lib/admin-analytics.ts", "line": 398, "alias": "f", "function": "getSalesSummary.tickets", "identical": true },
+      { "file": "artifacts/api-server/src/lib/admin-analytics.ts", "lines": "442-443", "alias": "t", "function": "getSessionMargin", "identical": true }
+    ],
+    "partialVariantsLeftUntouched": [
+      {
+        "file": "artifacts/api-server/src/lib/admin-analytics.ts",
+        "line": 369,
+        "expression": "f.estado='VENDIDO' AND f.cobrado",
+        "difference": "Cash-payment CTE subset; does not test document type or authorized notes."
+      },
+      {
+        "file": "artifacts/api-server/src/lib/admin-analytics.ts",
+        "line": 920,
+        "expression": "$4='CREDITO' AND t.documento_tipo='NOTA' AND t.autorizacion_estado='AUTORIZADA'",
+        "difference": "Payment-method branch, already bounded by the canonical predicate; selects only credit-note rows."
+      },
+      {
+        "file": "artifacts/api-server/src/lib/admin-analytics.ts",
+        "line": 1242,
+        "expression": "t.estado='VENDIDO' AND t.cobrado",
+        "difference": "Cash-session operational count; lacks document type and authorized-note branch."
+      }
+    ]
+  },
+  "fixtureParity": {
+    "status": "pass",
+    "execution": "old HEAD archive and a temporary six-replacement clone were esbuild-bundled with a pool-only adapter; no application module initializer or server entrypoint was imported",
+    "transaction": "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "functions": {
+      "getSalesSummary": {
+        "fieldsCompared": ["ventas", "cobrado", "pendiente", "subtotal", "iva", "costo", "margen", "margenPorcentaje", "tickets", "ticketsCobrados", "documentosPendientes", "cancelaciones", "importeCancelaciones", "lineasExcluidasMargen"],
+        "result": "field-for-field equal"
+      },
+      "getSessionMargin": {
+        "fieldsCompared": ["costo", "margen", "margenPorcentaje", "lineasExcluidasMargen"],
+        "result": "field-for-field equal"
+      }
+    },
+    "fixtureCases": ["charged-ticket", "authorized-note", "pending-ticket", "pending-note", "cancelled", "nullable-cobrado", "zero-amount", "null-cost"],
+    "temporaryReplacementCount": 6
+  },
+  "freshReadonlyDatabaseCounts": {
+    "transaction": "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "tickets": 1,
+    "charged_tickets": 0,
+    "authorized_notes": 1,
+    "pending_tickets": 0,
+    "pending_notes": 0,
+    "cancelled": 0,
+    "nullable_cobrado": 0,
+    "credit_rows": 1,
+    "ticket_sites": 1,
+    "accounted_sites": 1,
+    "containsPii": false
+  },
+  "notRun": [
+    "Final same-snapshot old-versus-working-tree execution for global, every site, and multiple periods: current source still has all six literals.",
+    "Real-dataset card/detail pagination and financial identities: reserved for the same final transaction so no time-separated snapshot is represented as parity.",
+    "Application test/typecheck/codegen/workflow actions: outside this verification-only scope."
+  ]
+}

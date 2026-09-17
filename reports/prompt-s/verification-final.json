@@ -1,0 +1,152 @@
+{
+  "report": "Prompt S independent final verification",
+  "status": "pass",
+  "baseline": {
+    "commit": "075bfdbeb7180756a2e5b4cda8985757ceb9aba7",
+    "source": "/tmp/prompt-s-baseline (git archive captured before the six replacements)",
+    "watchedModulesReplaced": false
+  },
+  "workingTree": {
+    "exactFullPredicateCopiesOutsideCanonical": 0,
+    "adminAnalyticsCanonicalCallCount": 22,
+    "baselineCanonicalCallCount": 16,
+    "mechanicalIncrease": 6
+  },
+  "databaseExecution": {
+    "transaction": "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "singleClient": true,
+    "writeSqlRejected": true,
+    "applicationInitializersImported": false,
+    "serverEntrypointImported": false,
+    "queryAdapter": "one direct pg client, forwarding generated SQL; no canned real-data rows",
+    "generatedQueryCalls": 94,
+    "generatedQueryCallsByMode": {
+      "cteFixture": 4,
+      "realData": 90
+    }
+  },
+  "affectedFunctionParity": {
+    "comparison": "archived HEAD before vs actual current working-tree module after, in the same transaction and with identical arguments",
+    "allReturnedFieldsCompared": true,
+    "excludedFields": [],
+    "getSalesSummaryFields": [
+      "ventas",
+      "cobrado",
+      "pendiente",
+      "subtotal",
+      "iva",
+      "costo",
+      "margen",
+      "margenPorcentaje",
+      "tickets",
+      "ticketsCobrados",
+      "documentosPendientes",
+      "cancelaciones",
+      "importeCancelaciones",
+      "lineasExcluidasMargen"
+    ],
+    "getSessionMarginFields": [
+      "costo",
+      "margen",
+      "margenPorcentaje",
+      "lineasExcluidasMargen"
+    ],
+    "realScopes": {
+      "sites": ["global", "site-1", "site-2", "site-3"],
+      "periods": ["all-time", "observed-accounted-window"],
+      "getSalesSummaryPairs": 8,
+      "getSessionMarginPairs": 1,
+      "fieldDifferences": []
+    },
+    "realResults": {
+      "global": {
+        "all-time": { "ventas": "16000.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "16000.00", "iva": "0.00", "costo": "13000.00", "margen": "3000.00", "margenPorcentaje": "18.75", "tickets": 1, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 },
+        "observed-accounted-window": { "ventas": "16000.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "16000.00", "iva": "0.00", "costo": "13000.00", "margen": "3000.00", "margenPorcentaje": "18.75", "tickets": 1, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 }
+      },
+      "site-1": {
+        "all-time": { "ventas": "0.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "0.00", "iva": "0.00", "costo": "0.00", "margen": "0.00", "margenPorcentaje": "0.00", "tickets": 0, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 },
+        "observed-accounted-window": { "ventas": "0.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "0.00", "iva": "0.00", "costo": "0.00", "margen": "0.00", "margenPorcentaje": "0.00", "tickets": 0, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 }
+      },
+      "site-2": {
+        "all-time": { "ventas": "16000.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "16000.00", "iva": "0.00", "costo": "13000.00", "margen": "3000.00", "margenPorcentaje": "18.75", "tickets": 1, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 },
+        "observed-accounted-window": { "ventas": "16000.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "16000.00", "iva": "0.00", "costo": "13000.00", "margen": "3000.00", "margenPorcentaje": "18.75", "tickets": 1, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 }
+      },
+      "site-3": {
+        "all-time": { "ventas": "0.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "0.00", "iva": "0.00", "costo": "0.00", "margen": "0.00", "margenPorcentaje": "0.00", "tickets": 0, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 },
+        "observed-accounted-window": { "ventas": "0.00", "cobrado": "0.00", "pendiente": "0.00", "subtotal": "0.00", "iva": "0.00", "costo": "0.00", "margen": "0.00", "margenPorcentaje": "0.00", "tickets": 0, "ticketsCobrados": 0, "documentosPendientes": 0, "cancelaciones": 0, "importeCancelaciones": "0.00", "lineasExcluidasMargen": 0 }
+      }
+    },
+    "session43": {
+      "costo": "13000.00",
+      "margen": "3000.00",
+      "margenPorcentaje": "18.75",
+      "lineasExcluidasMargen": 0
+    }
+  },
+  "cteValuesActualSqlParity": {
+    "cases": ["charged-ticket", "authorized-note", "pending-ticket", "pending-note", "cancelled", "nullable-cobrado", "zero-amount", "null-cost"],
+    "oldAndActualCurrentResultsEqual": true,
+    "getSalesSummary": { "ventas": "300.00", "cobrado": "100.00", "pendiente": "120.00", "subtotal": "258.62", "iva": "41.38", "costo": null, "margen": null, "margenPorcentaje": null, "tickets": 3, "ticketsCobrados": 2, "documentosPendientes": 3, "cancelaciones": 1, "importeCancelaciones": "70.00", "lineasExcluidasMargen": 1 },
+    "getSessionMargin": { "costo": null, "margen": null, "margenPorcentaje": null, "lineasExcluidasMargen": 1 }
+  },
+  "realDataIdentities": {
+    "salesEqualsContadoPlusCredito": { "pass": true, "globalAllTime": { "ventas": "16000.00", "contado": "0.00", "credito": "16000.00" } },
+    "dashboardCobranzaBandEqualsCuentasDestinoTotal": {
+      "pass": true,
+      "sourceContract": {
+        "sharedHookUsesSingleGeneratedEndpoint": true,
+        "dashboardUsesSharedHook": true,
+        "destinationUsesSharedHook": true,
+        "dashboardReadsHeaderCobradoTotal": true,
+        "dashboardIncludesPOSAbonoAndSaldoFavorGroups": true
+      },
+      "sameCanonicalResponse": {
+        "totalCobrado": "18000.00",
+        "headerCobradoTotal": "18000.00",
+        "contado": "0.00",
+        "abonos": "16000.00",
+        "saldosFavor": "2000.00"
+      }
+    },
+    "operationalContadoCardEqualsCuentasDestinoContado": {
+      "pass": true,
+      "globalAllTime": { "operationalContadoCard": "0.00", "cuentasDestinoContado": "0.00" },
+      "notTheDashboardCobranzaBand": true
+    },
+    "operationalContadoCardDetailAllPages": {
+      "pass": true,
+      "globalAllTime": { "cardTotal": 0, "detailRows": 0, "amount": "0.00", "pageRequests": 1, "positiveCoverage": false }
+    },
+    "positiveCteOperationalCardDetailAllPages": {
+      "pass": true,
+      "actualFunctions": ["getSalesSummary", "listRealtimeBreakdown"],
+      "concept": "COBRADO",
+      "card": { "cobrado": "180.00", "ticketsCobrados": 3 },
+      "pageSize1": { "total": 3, "detailRows": 3, "amount": "180.00", "pageRequests": 3, "positiveCoverage": true },
+      "pageSize2": { "total": 3, "detailRows": 3, "amount": "180.00", "pageRequests": 2, "positiveCoverage": true }
+    },
+    "destinationCardDetailAllPages": {
+      "pass": true,
+      "globalObservedWindow": { "cardTotal": 1, "detailRows": 1, "amount": "16000.00", "pageRequests": 1, "positiveCoverage": true }
+    },
+    "allScopesAndPeriodsPassed": true,
+    "note": "The dashboard cobranza band is header.cobrado.total / totalCobrado, including net ABONO and ABONO_SALDO_FAVOR reversals. The separate operational Contado cobrado card is not that band."
+  },
+  "freshSnapshotPopulation": {
+    "activeStoreIds": [1, 2, 3],
+    "accountedDocuments": 1,
+    "credit_rows": 1,
+    "historicalSnapshotsMerged": false,
+    "containsPii": false
+  },
+  "commands": [
+    "git archive --format=tar HEAD artifacts/api-server/src/lib | tar -xf - -C /tmp/prompt-s-baseline",
+    "node /tmp/prompt-s-final-verify.mjs",
+    "node /tmp/prompt-s-cobranza-band.mjs",
+    "node /tmp/prompt-s-cte-positive-detail.mjs",
+    "rg -n -U --pcre2 '(same-alias whitespace-tolerant full predicate)' artifacts --glob '!**/node_modules/**'"
+  ],
+  "notRun": [
+    "No workflow operation, application API, server entrypoint, initializer, broad test suite, typecheck, or codegen was run by this independent verifier."
+  ]
+}
