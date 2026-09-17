@@ -1590,3 +1590,17 @@ mtime_ms = 1789669823301
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/cc444aad-eac1-4f99-8ec6-0c8df7681807/ce3f39fe-1890-4fd3-bb8f-9ebe0c61f39f"
 storage_version_token = "1789669847005410"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "04Te0WNbv9qW_wnOiiB6M"
+uri = "file://reports/prompt-u-plan-de-implementacion.md"
+type = "text"
+title = "Prompt U — Plan de implementación"
+description = "Nueve entregas con dependencias, impactos, verificaciones, pendientes y anexo técnico. Incluye ocho preguntas finales; no implementa cambios ni reanuda P."
+logical_id = "b5315b49-0528-4ff4-a802-4a21d45eef24"
+content_hash = "sha256:591115ea49d272099305398f9949c0ce3409e5b5a09b351ebb08ba9f4efb2ee4"
+size = 66327
+mtime_ms = 1789679268210
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/b5315b49-0528-4ff4-a802-4a21d45eef24/8c67917e-6ac1-4e44-8178-1b89e4d3ada1"
+storage_version_token = "1789679273008152"
+content_type = "text/markdown"
