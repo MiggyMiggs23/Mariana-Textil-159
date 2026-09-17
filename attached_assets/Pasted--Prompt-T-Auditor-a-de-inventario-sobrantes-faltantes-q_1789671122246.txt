@@ -1,0 +1,199 @@
+# Prompt T — Auditoría de inventario: sobrantes, faltantes que reaparecen, impresión y alertas
+
+## Contexto del negocio
+
+Es un negocio de **rollos cerrados**. Lo que se gana es por volumen y los márgenes son
+bajos. El riesgo no es que falten metros de un rollo: es que **falte el rollo completo**.
+
+De ahí se deriva la regla que gobierna toda esta entrega: **la cantidad nunca está en
+disputa, la presencia sí.** Un rollo que reaparece no se vuelve a medir.
+
+Lee los cuatro temas antes de empezar. El segundo y el tercero cambian comportamiento;
+los otros dos son presentación y aviso.
+
+---
+
+## Tema 1 — El primer renglón de la segunda página sale cortado
+
+En el documento impreso de auditoría, el primer rollo de la segunda página se parte
+entre las dos hojas.
+
+El encabezado **no debe repetirse** en las páginas siguientes: así está bien y no
+cambia. Lo que falta es que **ningún renglón se parta entre páginas**.
+
+- Aplica la misma técnica que ya impide que el pie de firmas se parta en otros
+  documentos. Revisa cómo está resuelto ahí y reutilízalo.
+- **No cambies tamaños de papel, márgenes ni el diseño.**
+- **No bajes el número de renglones por hoja para que el problema deje de verse.** Si te
+  ves tentado a eso, la causa no está encontrada. Esa práctica está prohibida por
+  escrito.
+
+Verifica generando el documento con conteos que paginen en dos, tres y cinco hojas, y
+comprobando que ningún renglón queda partido en ninguna orilla.
+
+---
+
+## Tema 2 — Un sobrante debe decir qué es, y ADMIN decide
+
+Hoy, al cerrar la auditoría, un rollo sobrante que estaba DISPONIBLE en otro sitio se
+**transfiere automáticamente** mediante `transferirRolloInmediato`. Eso mueve mercancía
+fuera de otro sitio sin que nadie lo autorice y sin que ese sitio se entere. Una
+transferencia normal tiene origen, tránsito y recepción; esta se las salta.
+
+### 2.1 Decir qué es
+
+Para cada rollo sobrante, muestra **qué es y de dónde viene**: en qué sitio estaba, su
+estado, y si está comprometido en un documento, con **enlace a ese documento**. Los
+cinco casos a distinguir, y cada uno significa algo distinto:
+
+- **Disponible en otro sitio** — se movió sin registrar. Problema de proceso.
+- **En tránsito hacia este sitio** — llegó y nadie lo recibió en el sistema.
+- **Apartado en una salida abierta** — puede reventar una entrega comprometida.
+- **Vendido, y sigue físicamente aquí** — se cobró mercancía que no salió. **Este es el
+  caso grave y debe leerse como tal**, no como un renglón más de la lista.
+- **Sin registro previo** — no existe en ninguna parte.
+
+### 2.2 ADMIN decide
+
+El cierre **deja de transferir solo**. Cada sobrante de otro sitio queda **pendiente de
+resolución**, y ADMIN elige entre tres opciones:
+
+- Dejarlo donde apareció.
+- Regresarlo a su sitio original.
+- Marcarlo para investigar antes de decidir.
+
+Un rollo comprometido en una venta o en una salida abierta **nunca se resuelve
+automáticamente**, aunque ADMIN elija dejarlo: primero hay que ver qué pasó con ese
+documento.
+
+### 2.3 La auditoría sí cierra
+
+Los cuadres y los faltantes se aplican como hoy. **Solo los sobrantes de otro sitio
+quedan pendientes.** Congelar el inventario esperando una decisión sería peor que el
+problema.
+
+Cuando ADMIN resuelve, el movimiento se registra con su justificación, su autor y su
+enlace a la auditoría, como hoy. **Nada se borra ni se edita.**
+
+---
+
+## Tema 3 — Un faltante que reaparece
+
+Hoy esto **no tiene solución en el sistema**, y es un caso que va a ocurrir seguido: un
+rollo mal contado, uno escondido detrás de otro, uno que se llevaron sin registrar.
+
+Al cerrar la auditoría, un faltante recibe un ajuste que lo deja en `BAJA` con cantidad
+cero. Y en la tabla de transiciones de `artifacts/api-server/src/lib/inventario.ts`,
+alrededor de la línea 408, **`BAJA` no tiene ninguna transición de salida**: es un
+estado terminal.
+
+Consecuencia: si el rollo aparece mañana, no hay forma de revivirlo. Habría que darlo de
+alta como rollo nuevo con serie nueva, perdiendo su entrada, su proveedor, su costo y su
+kardex — y dejando dos series para una misma tela física.
+
+### Qué construir
+
+**Reactivación del rollo original**, no un alta nueva.
+
+1. El rollo vuelve a `DISPONIBLE` **con sus mismas características**: su serie, su
+   producto, su cantidad anterior a la baja, su costo y su entrada. **No se vuelve a
+   medir ni se pide metraje**: en este negocio los rollos son cerrados y lo que estaba
+   en disputa era la presencia, no la cantidad.
+2. Se puede ubicar en **el sitio donde apareció**, que no tiene por qué ser el mismo del
+   que se dio de baja. Si aparece en otro sitio, se reactiva y se ubica ahí, con su piso.
+3. **Es un movimiento nuevo, nunca un borrado.** El ajuste de baja se conserva íntegro.
+   La historia queda completa: se dio de baja en tal auditoría, reapareció tal día, quién
+   lo autorizó y con qué motivo.
+4. **Tres candados**, porque abrir la salida de `BAJA` en general permitiría revivir un
+   rollo que sí se perdió:
+   - Solo ADMIN.
+   - Solo desde la auditoría que lo dio de baja o desde el detalle del rollo.
+   - **Motivo obligatorio**, con el mismo mínimo que usan las cancelaciones y los
+     reversos.
+5. La transición de `BAJA` a `DISPONIBLE` se habilita **únicamente por esta vía**. No la
+   abras como transición general de la tabla: si cualquier flujo puede sacar un rollo de
+   baja, dejaste de tener un estado terminal y pierdes la garantía.
+6. Si el rollo reaparece en un sitio donde ya se cerró otra auditoría posterior, **esa
+   auditoría tenía razón y la anterior estaba mal**. Deja constancia de esa relación en
+   lugar de resolverla en silencio.
+
+### Antes de implementar
+
+**Preséntame cómo quedaría**, con la pantalla desde donde se reactiva y qué pide.
+También dime **qué otros flujos podrían verse afectados** por habilitar esa transición,
+aunque sea por una vía acotada.
+
+---
+
+## Tema 4 — Alertas al cerrar
+
+Dos niveles, no uno:
+
+- **Toda auditoría cerrada** notifica a ADMIN, prioridad normal.
+- **Una auditoría con diferencias** —faltantes, sobrantes o mal acomodados— notifica con
+  **prioridad urgente**. Si todas fueran urgentes, en tres meses nadie las abriría.
+
+La alerta lleva **al resultado de la auditoría con sus diferencias**, y desde ahí a cada
+rollo y a cada documento involucrado. Ninguna cifra es un callejón sin salida.
+
+Respeta la distinción que ya existe en el sistema: una auditoría cerrada es un **hecho
+ocurrido**, así que es notificación guardada, no alerta derivada que quede viva para
+siempre. En cambio, un **sobrante pendiente de resolución** es una condición vigente y
+debe seguir visible hasta que ADMIN decida.
+
+---
+
+## Lo que NO cambia
+
+- **El tratamiento del faltante al cerrar.** Sigue dándose de baja con su ajuste, su
+  justificación, su marca de revisado y su enlace a la auditoría. Eso está bien resuelto
+  y solo se le agrega la vuelta del Tema 3.
+- El mal acomodado sigue corrigiendo su piso **sin generar movimiento de kardex ni de
+  existencias**. Está marcado así a propósito en el código.
+- Los candados por par producto y ubicación del motor de inventario.
+- El conteo, el escaneo, los participantes y la mecánica de la auditoría.
+
+---
+
+## Verificación
+
+1. Documento impreso paginado en dos, tres y cinco hojas, **sin un solo renglón
+   partido**, y con el encabezado sin repetirse.
+2. Un sobrante de **cada uno de los cinco casos**, mostrando lo que le corresponde y con
+   su enlace al documento cuando lo tenga.
+3. Que el cierre **ya no transfiere solo**, y que la auditoría cierra aunque queden
+   sobrantes pendientes.
+4. Que un rollo comprometido en venta o en salida abierta **no se resuelve
+   automáticamente**.
+5. Reactivación de un faltante: vuelve a DISPONIBLE con su serie, su cantidad, su costo y
+   su entrada intactos; el ajuste de baja se conserva; queda el movimiento nuevo con su
+   motivo y su autor.
+6. Reactivación en **un sitio distinto** al de la baja.
+7. Que la transición de BAJA **sigue cerrada** para todos los demás flujos. Pruébalo
+   intentándola por otra vía y comprobando que se rechaza.
+8. Las dos alertas, con su prioridad y su enlace al resultado.
+9. `pnpm run typecheck` completo en cero y **la suite en verde: 354/354 con cero
+   omisiones**, que es el estado del commit de referencia `68568f62`. Si aparece un rojo
+   nuevo, lo trajo esta entrega.
+10. Cada prueba nueva **vista fallar** con su defecto introducido antes de aprobar.
+
+## Restricciones
+
+- No crees usuarios, ADMIN ni sesiones de prueba.
+- No borres ni edites movimientos, ajustes ni registros de auditoría.
+- No abras la transición desde BAJA como transición general.
+- No cambies tamaños de papel, márgenes ni capacidades de renglones por hoja.
+- No toques el Prompt P ni cierres su Grupo 1.
+- **Preséntame los diseños de los Temas 2 y 3 antes de implementarlos.** En los dos,
+  ADMIN va a decidir sobre mercancía real.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Qué hace el cierre con cada clasificación, con la lista de los cinco casos de
+   sobrante y qué significa cada uno.
+2. Que un faltante se puede reactivar, por qué vía, con qué candados, y que **conserva
+   sus características sin volver a medirse** porque son rollos cerrados.
+3. Que `BAJA` deja de ser terminal **únicamente** por esa vía, y sigue cerrada para todo
+   lo demás.
+4. Las dos alertas y su distinción entre hecho ocurrido y condición vigente.
+5. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.
