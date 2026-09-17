@@ -5,8 +5,10 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { ErrorMovimientoRelacionado } from './errorMovimientoRelacionado';
 
 export interface Error {
   error: string;
   code?: string;
+  movimientoRelacionado?: ErrorMovimientoRelacionado;
 }

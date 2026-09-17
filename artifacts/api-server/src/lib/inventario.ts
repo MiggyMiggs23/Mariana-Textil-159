@@ -157,10 +157,33 @@ export class InventarioError extends Error {
     message: string,
     public readonly code: string,
     public readonly details?: unknown,
+    public readonly movimientoRelacionado?: {
+      rolloId: number;
+      movimientoId: number;
+      href: string;
+    },
   ) {
     super(message);
     this.name = "InventarioError";
   }
+}
+
+export function inventarioErrorEnvelope(error: InventarioError): {
+  error: string;
+  code: string;
+  movimientoRelacionado?: {
+    rolloId: number;
+    movimientoId: number;
+    href: string;
+  };
+} {
+  return {
+    error: error.message,
+    code: error.code,
+    ...(error.movimientoRelacionado
+      ? { movimientoRelacionado: error.movimientoRelacionado }
+      : {}),
+  };
 }
 
 // ── Series allocation ─────────────────────────────────────────────────────────
@@ -2513,11 +2536,42 @@ export async function reactivarFaltanteAuditoria(tx: Tx, input: {
     { productoId: candidate.productoId, ubicacionId: input.ubicacionId },
   ]);
   const [refreshed] = await tx.select().from(rollosTable).where(eq(rollosTable.id, input.rolloId)).limit(1);
-  if (!refreshed || refreshed.productoId !== candidate.productoId || refreshed.ubicacionId !== candidate.ubicacionId || refreshed.estado !== candidate.estado) {
+  if (!refreshed || refreshed.productoId !== candidate.productoId || refreshed.ubicacionId !== candidate.ubicacionId) {
     throw new InventarioError("El rollo cambió mientras se esperaba. Vuelve a revisar.", "STALE_ROLL");
   }
   const [rollo] = await tx.select().from(rollosTable).where(eq(rollosTable.id, input.rolloId)).for("update").limit(1);
   const evidence = await getReactivacionContexto(tx, input.rolloId);
+  if (
+    rollo &&
+    evidence?.auditoriaOrigenId === input.auditoriaOrigenId &&
+    evidence.movimientoBajaId != null
+  ) {
+    const reversalResult = await tx.execute(sql`
+      SELECT id
+      FROM movimientos
+      WHERE movimiento_origen_id=${evidence.movimientoBajaId}
+        AND rollo_id=${rollo.id}
+        AND tipo='CANCELACION'
+      LIMIT 1
+    `);
+    const reversal = reversalResult.rows[0] as { id: unknown } | undefined;
+    if (reversal) {
+      const movimientoId = Number(reversal.id);
+      throw new InventarioError(
+        "Este faltante de auditoría no puede reactivarse porque su baja ya fue revertida. Consulta el movimiento de reversión relacionado.",
+        "AUDIT_WRITEOFF_ALREADY_REVERSED",
+        undefined,
+        {
+          rolloId: rollo.id,
+          movimientoId,
+          href: `/inventario/rollos/${rollo.id}?movimientoId=${movimientoId}`,
+        },
+      );
+    }
+  }
+  if (refreshed.estado !== candidate.estado) {
+    throw new InventarioError("El rollo cambió mientras se esperaba. Vuelve a revisar.", "STALE_ROLL");
+  }
   if (!rollo || !evidence?.elegible || evidence.auditoriaOrigenId !== input.auditoriaOrigenId || evidence.cantidadAnterior == null || evidence.movimientoBajaId == null) {
     throw new InventarioError("No existe una baja de auditoría íntegra y verificable pendiente de reactivación.", "INVALID_REACTIVATION_EVIDENCE");
   }
@@ -2662,6 +2716,30 @@ export async function revertirMovimiento(
     .limit(1);
 
   if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+
+  const reactivationResult = await tx.execute(sql`
+    SELECT movimiento_reactivacion_id
+    FROM auditoria_faltante_reactivaciones
+    WHERE movimiento_baja_id=${orig.id}
+      AND rollo_id=${orig.rolloId}
+    LIMIT 1
+  `);
+  const reactivation = reactivationResult.rows[0] as {
+    movimiento_reactivacion_id: unknown;
+  } | undefined;
+  if (reactivation) {
+    const movimientoId = Number(reactivation.movimiento_reactivacion_id);
+    throw new InventarioError(
+      "Esta baja de auditoría no puede revertirse porque el mismo rollo ya fue reactivado desde ella. Consulta el movimiento de reactivación relacionado.",
+      "AUDIT_WRITEOFF_ALREADY_REACTIVATED",
+      undefined,
+      {
+        rolloId: rollo.id,
+        movimientoId,
+        href: `/inventario/rollos/${rollo.id}?movimientoId=${movimientoId}`,
+      },
+    );
+  }
 
   // Determine restoration: CANCELACION records the inverse signed quantity
   const inversaCantidad = formatQuantityThousandthsBigInt(

@@ -58,6 +58,12 @@ Se conservaron Letter vertical, margen de 10 mm, diseño y densidad. Los conteos
 
 ## Riesgo conservado y reportado
 
+**Estado posterior:** la advertencia descrita a continuación quedó corregida
+por autorización expresa del usuario. El reverso de la misma baja y su
+reactivación se excluyen entre sí. Esta sección conserva el resultado histórico
+del cierre de T; la verificación vigente está en
+`../single-roll-return/verificacion.md`.
+
 El análisis estático identificó una interacción importante: **revertir el ajuste de baja original después de reactivar el rollo puede volver a sumar su cantidad**. No se cambió ese reverso, conforme a la instrucción expresa de conservarlos todos.
 
 También se identificaron cancelaciones y recepciones de documentos que restauran disponibilidad, incluida la cancelación de un traslado en tránsito, que devuelve al origen sin una recepción independiente. No se modificaron esos flujos. El detalle está en `flujos-disponible.md`.

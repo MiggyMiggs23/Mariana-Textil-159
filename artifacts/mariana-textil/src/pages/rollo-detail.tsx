@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, Link } from "wouter";
+import { useEffect, useState } from "react";
+import { useParams, Link, useSearch } from "wouter";
 import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import { useGetRollo, getGetRolloQueryKey, useListPisosLocation, useUpdateRolloPiso, getListRollosQueryKey, getGetProductoQueryKey, useRevertSalidaExtraordinaria, getListSalidasExtraordinariasQueryKey, getGetReactivacionFaltanteQueryOptions, type ReactivacionFaltanteContexto } from "@workspace/api-client-react";
@@ -25,12 +25,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useRef } from "react";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 
 import { ReactivacionFaltanteDialog } from "@/components/auditoria/reactivacion-faltante-dialog";
 
 export default function RolloDetail() {
   const { id } = useParams();
+  const search = useSearch();
+  const requestedMovimientoId = (() => {
+    const value = Number(new URLSearchParams(search).get("movimientoId"));
+    return Number.isInteger(value) && value > 0 ? value : null;
+  })();
   const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });
   const isAdmin = user?.rol === Role.ADMIN;
   const canEdit = hasPermission(user, Modules.INVENTARIO, "editar");
@@ -85,6 +90,15 @@ export default function RolloDetail() {
   const [isFetchingReactivacion, setIsFetchingReactivacion] = useState(false);
   const uuidClienteRef = useRef<string>(crypto.randomUUID());
 
+  useEffect(() => {
+    if (requestedMovimientoId == null || !rollo?.historial.some((mov) => mov.id === requestedMovimientoId)) {
+      return;
+    }
+    const row = document.getElementById(`movimiento-${requestedMovimientoId}`);
+    row?.scrollIntoView?.({ behavior: "smooth", block: "center" });
+    row?.focus({ preventScroll: true });
+  }, [requestedMovimientoId, rollo?.historial]);
+
   const handleFetchReactivacion = async () => {
     setIsFetchingReactivacion(true);
     try {
@@ -97,7 +111,9 @@ export default function RolloDetail() {
         toast.error("Rollo no elegible para reactivación", { description: result.bloqueo || "El rollo no cumple los requisitos." });
       }
     } catch (err: any) {
-      toast.error("No se pudo verificar la reactivación", { description: err.data?.error || err.message });
+      toast.error("No se pudo verificar la reactivación", {
+        description: <ApiErrorDetails error={err} />,
+      });
     } finally {
       setIsFetchingReactivacion(false);
     }
@@ -353,7 +369,14 @@ export default function RolloDetail() {
                                                        !rollo.historial.some(m => m.movimientoOrigenId === mov.id);
 
                     return (
-                      <TableRow key={mov.id}>
+                      <TableRow
+                        key={mov.id}
+                        id={`movimiento-${mov.id}`}
+                        tabIndex={-1}
+                        aria-current={requestedMovimientoId === mov.id ? "true" : undefined}
+                        data-testid={`rollo-movement-row-${mov.id}`}
+                        className={requestedMovimientoId === mov.id ? "bg-primary/10 ring-2 ring-inset ring-primary/50" : undefined}
+                      >
                         <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                           {format(new Date(mov.createdAt), "dd/MM/yyyy HH:mm")}
                         </TableCell>

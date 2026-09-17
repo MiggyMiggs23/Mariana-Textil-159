@@ -37,6 +37,7 @@ import {
   useReactivarFaltante,
 } from "@workspace/api-client-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
+import { ApiErrorDetails } from "@/lib/api-error";
 
 interface ReactivacionFaltanteDialogProps {
   open: boolean;
@@ -45,14 +46,6 @@ interface ReactivacionFaltanteDialogProps {
   origen: "AUDITORIA" | "ROLLO";
   contexto: ReactivacionFaltanteContexto;
   onSuccess: () => void;
-}
-
-function mutationErrorMessage(error: unknown): string {
-  if (error && typeof error === "object" && "data" in error) {
-    const data = (error as { data?: { error?: string } }).data;
-    if (data?.error) return data.error;
-  }
-  return error instanceof Error ? error.message : "No se pudo completar la reactivación.";
 }
 
 export function buildReactivacionFaltanteInput(input: {
@@ -153,7 +146,14 @@ export function ReactivacionFaltanteDialog({
       },
       onError: (error) => {
         submitLockRef.current = false;
-        toast.error("Error al reactivar", { description: mutationErrorMessage(error) });
+        toast.error("Error al reactivar", {
+          description: (
+            <ApiErrorDetails
+              error={error}
+              fallback="No se pudo completar la reactivación."
+            />
+          ),
+        });
       },
     });
   };

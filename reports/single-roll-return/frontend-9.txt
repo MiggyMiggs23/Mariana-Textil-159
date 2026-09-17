@@ -1,0 +1,18 @@
+
+ RUN  v5.0.1 /home/runner/workspace/artifacts/mariana-textil
+
+ ✓ src/lib/api-related-movement-error.dom.test.tsx > ApiErrorDetails related inventory movement > renders the backend explanation and exact roll movement link 35ms
+ ✓ src/lib/api-related-movement-error.dom.test.tsx > ApiErrorDetails related inventory movement > does not render a link when the supplied href does not exactly identify the related movement 3ms
+ ✓ src/components/auditoria/reactivacion-faltante-dialog.test.tsx > ReactivacionFaltanteDialog > builds the dedicated typed request without measurement or editable inventory fields 2ms
+ ✓ src/components/auditoria/reactivacion-faltante-dialog.test.tsx > ReactivacionFaltanteDialog > submits original audit, appearance site/floor and reason once; an error stays open 184ms
+ ✓ src/components/auditoria/reactivacion-faltante-dialog.test.tsx > ReactivacionFaltanteDialog > success invalidates roll, context, inventory, origin audit and notification queries 59ms
+ ✓ src/pages/rollo-detail-movement-navigation.dom.test.tsx > RolloDetail movement deep link > scrolls to and highlights the exact real kardex row from movimientoId 98ms
+ ✓ src/pages/auditorias-inventario.test.tsx > AuditoriasInventario Component > a CONFIRMADA origin separates financial/unknown surplus and opens its exact missing reactivation 334ms
+ ✓ src/pages/auditorias-inventario.test.tsx > AuditoriasInventario Component > notification deep-link changes select the exact audit on the mounted route 69ms
+ ✓ src/pages/rollo-detail.test.tsx > RolloDetail reactivation > a BAJA roll opens the ROLLO entry point and labels reactivation as a distinct positive movement 237ms
+
+ Test Files  5 passed (5)
+      Tests  9 passed (9)
+   Start at  20:21:58
+   Duration  2.61s (environment 45%, import 26%, transform 19%, tests 10%)
+

@@ -327,6 +327,7 @@ export * from './equipoChecklistUpdate';
 export * from './equipoInput';
 export * from './equipoUpdate';
 export * from './error';
+export * from './errorMovimientoRelacionado';
 export * from './estadisticasPorColor';
 export * from './estadisticasPorMes';
 export * from './estadisticasPorProducto';

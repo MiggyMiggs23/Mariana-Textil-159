@@ -56,6 +56,7 @@ import { formatNumber, formatUnit } from "@workspace/number-format";
 import { AuditoriaSobranteResolutionDialog } from "@/components/auditoria/auditoria-sobrante-resolution-dialog";
 import { ReactivacionFaltanteDialog } from "@/components/auditoria/reactivacion-faltante-dialog";
 import { AuditoriaInventarioPrint } from "@/components/auditoria-inventario-print";
+import { ApiErrorDetails } from "@/lib/api-error";
 
 function message(error: unknown): string {
   if (error && typeof error === "object" && "data" in error) {
@@ -132,7 +133,7 @@ export default function AuditoriasInventario() {
     } catch (err: unknown) {
       toast({
         title: "No se pudo verificar la reactivación",
-        description: message(err),
+        description: <ApiErrorDetails error={err} />,
         variant: "destructive",
       });
     } finally {

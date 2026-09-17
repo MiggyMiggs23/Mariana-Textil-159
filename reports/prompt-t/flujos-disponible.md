@@ -1,5 +1,10 @@
 # Revisión de flujos existentes que pueden dejar un rollo DISPONIBLE
 
+> Documento histórico del cierre de T. La advertencia de reactivación seguida
+> de reverso de la misma baja fue corregida posteriormente por autorización
+> expresa: ambos órdenes quedan excluidos entre sí para esa baja y ese rollo.
+> Estado vigente y otros hallazgos: `../single-roll-return/verificacion.md`.
+
 Revisión de código realizada durante Prompt T. No es una prueba operativa con
 mercancía real. Los reversos existentes se conservan por instrucción expresa
 del usuario; no se agregan restricciones a esos reversos.

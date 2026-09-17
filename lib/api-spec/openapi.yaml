@@ -8529,6 +8529,18 @@ components:
           type: string
         code:
           type: string
+        movimientoRelacionado:
+          type: object
+          required: [rolloId, movimientoId, href]
+          properties:
+            rolloId:
+              type: number
+              minimum: 1
+            movimientoId:
+              type: number
+              minimum: 1
+            href:
+              type: string
     Camioneta:
       type: object
       required:

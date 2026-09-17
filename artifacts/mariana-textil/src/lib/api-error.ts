@@ -22,6 +22,35 @@ function browserHref(value: unknown, fallback: string | null): string | null {
   return value;
 }
 
+type RelatedInventoryMovement = {
+  rolloId: number;
+  movimientoId: number;
+  href: string;
+};
+
+function relatedInventoryMovement(error: unknown): RelatedInventoryMovement | null {
+  if (!error || typeof error !== "object") return null;
+  const data = (error as { data?: Record<string, unknown> }).data;
+  const related = data?.movimientoRelacionado;
+  if (!related || typeof related !== "object") return null;
+  const record = related as Record<string, unknown>;
+  const rolloId = record.rolloId;
+  const movimientoId = record.movimientoId;
+  if (
+    typeof rolloId !== "number" ||
+    !Number.isInteger(rolloId) ||
+    rolloId <= 0 ||
+    typeof movimientoId !== "number" ||
+    !Number.isInteger(movimientoId) ||
+    movimientoId <= 0
+  ) {
+    return null;
+  }
+  const expectedHref = `/inventario/rollos/${rolloId}?movimientoId=${movimientoId}`;
+  if (record.href !== expectedHref) return null;
+  return { rolloId, movimientoId, href: expectedHref };
+}
+
 export function getApiErrorMessage(
   error: unknown,
   fallback = "No se pudo completar la operación.",
@@ -46,9 +75,27 @@ export function getApiErrorMessage(
   return details ? `${base} · ${details}` : base;
 }
 
-export function ApiErrorDetails({ error }: { error: unknown }): ReactNode {
+export function ApiErrorDetails({
+  error,
+  fallback,
+}: {
+  error: unknown;
+  fallback?: string;
+}): ReactNode {
   const data = error && typeof error === "object" ? (error as { data?: Record<string, unknown> }).data : undefined;
-  if (!Array.isArray(data?.details)) return getApiErrorMessage(error);
+  const relatedMovement = relatedInventoryMovement(error);
+  if (relatedMovement) {
+    const linkProps = {
+      className: "block font-medium underline",
+      href: relatedMovement.href,
+      "data-testid": "link-related-inventory-movement",
+    };
+    return createElement("span", { className: "space-y-1" },
+      createElement("span", { className: "block" }, getApiErrorMessage(error, fallback)),
+      createElement(Link, linkProps, `Ver movimiento relacionado #${relatedMovement.movimientoId}`),
+    );
+  }
+  if (!Array.isArray(data?.details)) return getApiErrorMessage(error, fallback);
   if (data.code === "ROLLO_BLOQUEADO") {
     return createElement("span", { className: "space-y-1" },
       createElement("strong", { className: "block text-red-700" }, "ROLLO BLOQUEADO"),

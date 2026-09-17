@@ -30,7 +30,7 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { Search, AlertTriangle, Check, X, FileEdit, Box, ChevronRight, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { getApiErrorMessage } from "@/lib/api-error";
+import { ApiErrorDetails, getApiErrorMessage } from "@/lib/api-error";
 import { formatNumber } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
@@ -242,8 +242,9 @@ export default function Ajustes() {
           queryClient.invalidateQueries({ queryKey: getListRollosQueryKey() });
         },
         onError: (err: unknown) => {
-          const msg = getApiErrorMessage(err, "Error al rechazar");
-          toast.error("Error", { description: msg });
+          toast.error("Error", {
+            description: <ApiErrorDetails error={err} fallback="Error al rechazar" />,
+          });
         }
       });
     }

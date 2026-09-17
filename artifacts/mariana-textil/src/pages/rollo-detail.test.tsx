@@ -7,6 +7,7 @@ import RolloDetail from "./rollo-detail";
 
 vi.mock("wouter", () => ({
   useParams: () => ({ id: "999" }),
+  useSearch: () => "",
   Link: ({ children, href }: { children: React.ReactNode; href: string }) => <a href={href}>{children}</a>,
 }));
 vi.mock("@/components/layout/app-layout", () => ({

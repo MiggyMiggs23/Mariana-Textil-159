@@ -111,6 +111,7 @@ import {
   recalcularExistencias,
   revisarAjuste,
   InventarioError,
+  inventarioErrorEnvelope,
   crearSalidaExtraordinaria,
 } from "../lib/inventario";
 import {
@@ -1582,7 +1583,13 @@ inventarioRouter.post(
           e.code === "ROLLO_NOT_FOUND" || e.code === "MOVIMIENTO_NOT_FOUND"
             ? 404
             : 400;
-        res.status(status).json({ error: e.message });
+        res.status(status).json(
+          e.movimientoRelacionado
+            ? {
+                ...inventarioErrorEnvelope(e),
+              }
+            : { error: e.message },
+        );
         return;
       }
       next(e);

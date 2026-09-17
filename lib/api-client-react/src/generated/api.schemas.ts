@@ -1999,9 +1999,18 @@ export interface ServerTime {
   zonaHoraria: ServerTimeZonaHoraria;
 }
 
+export type ErrorMovimientoRelacionado = {
+  /** @minimum 1 */
+  rolloId: number;
+  /** @minimum 1 */
+  movimientoId: number;
+  href: string;
+};
+
 export interface Error {
   error: string;
   code?: string;
+  movimientoRelacionado?: ErrorMovimientoRelacionado;
 }
 
 export type CamionetaTipo = typeof CamionetaTipo[keyof typeof CamionetaTipo];

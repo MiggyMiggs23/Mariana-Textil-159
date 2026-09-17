@@ -325,6 +325,7 @@ export * from "./generated/types/equipoChecklistUpdate";
 export * from "./generated/types/equipoInput";
 export * from "./generated/types/equipoUpdate";
 export * from "./generated/types/error";
+export * from "./generated/types/errorMovimientoRelacionado";
 export * from "./generated/types/estadisticasPorColor";
 export * from "./generated/types/estadisticasPorMes";
 export * from "./generated/types/estadisticasPorProducto";

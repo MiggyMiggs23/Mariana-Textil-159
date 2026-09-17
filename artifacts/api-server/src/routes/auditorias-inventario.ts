@@ -46,7 +46,11 @@ import {
   transitionAuditoria,
 } from "../lib/auditoria-inventario";
 import { resolverSobrante } from "../lib/auditoria-resoluciones";
-import { InventarioError, reactivarFaltanteAuditoria } from "../lib/inventario";
+import {
+  InventarioError,
+  inventarioErrorEnvelope,
+  reactivarFaltanteAuditoria,
+} from "../lib/inventario";
 import { getReactivacionContexto } from "../lib/reactivacion-faltante-evidencia";
 
 const router = Router();
@@ -86,7 +90,7 @@ async function getVisibleHeader(req: Request, id: number) {
 function handleError(error: unknown, res: Response, next: NextFunction): void {
   if (error instanceof InventarioError) {
     res.status(error.code === "ADMIN_REQUIRED" ? 403 : error.code.endsWith("NOT_FOUND") ? 404 : 409)
-      .json({ error: error.message, code: error.code });
+      .json(inventarioErrorEnvelope(error));
     return;
   }
   if (error instanceof AuditoriaInventarioError) {
