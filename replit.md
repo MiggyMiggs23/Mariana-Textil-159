@@ -59,6 +59,40 @@ La revisión del flujo encontró además un panel de validación y un bloqueo de
 
 # Mariana Textil
 
+## Estándar de composición del sistema
+
+### Reglas comunes y referencias canónicas
+
+- **Color.** El color codifica información, nunca decora; cada uso tiene un significado explicable en una frase y escrito junto al código. Si no puede explicarse así, no se usa.
+- **Navegación de cifras.** Ninguna cifra es un callejón sin salida: abre el detalle de los documentos que la componen y desde ese detalle se llega al documento por su folio. Se conservan los filtros y la conciliación aplicables; la identidad de la ruta se rige por «Decisiones de la Parte 9 — Identidad de navegación», sin inventar destinos.
+- **Identificadores del renglón.** Aplicar la regla de «Decisiones de la Parte 9» sobre destinos propios de cada identificador, columnas decorativas y excepciones documentales; esa es su única definición.
+- **Estado de nota y pendiente.** Aplicar «Abonos, estados y saldo a favor — Estados canónicos de nota» para el contenido de la insignia y el campo independiente del pendiente; no redefinirlos por pantalla.
+- **Encendido de Tiempo real.** Aplicar la decisión cerrada del propietario en «Tablero: venta y cobranza»; este estándar no autoriza reinterpretar sus colores.
+- **Unidades.** Aplicar la resolución y las etiquetas de «Parte 10 — Catálogo por tela y unidad BOLSA», sin otra definición local.
+
+### Composición
+
+- **Jerarquía.** Cada pantalla declara qué cifra manda: lo principal se lee primero y lo subordinado como subordinado. Una cifra en cero no ocupa el espacio de una importante; se compone por importancia, no por simetría, sin eliminar información.
+- **Agrupación.** Las tarjetas se agrupan por la pregunta que contestan, no por cuántas caben en un renglón, y las cifras del mismo nivel se presentan del mismo tamaño. Un dato que aclara otra cifra va pegado a ella como desglose, nunca como sección con título propio.
+- **Iconos.** Un icono ubica, no adorna ni clasifica: se usan los del sistema, sin introducir una librería nueva, y un conjunto de tarjetas del mismo nivel los lleva todos o ninguno. El color del icono no codifica información.
+- **Respiración.** Nada se encima: ni rótulos sobre cifras, ni porcentajes sobre importes, ni bloques colgando con espacio vacío al lado. Los títulos y sus valores llevan separación real.
+- **Componentes compartidos.** Se reutilizan las tarjetas, tablas e insignias existentes. No se escriben por separado componentes equivalentes que terminarían divergiendo.
+- **Enlaces visibles.** Lo que se puede abrir se distingue de lo que no. Un identificador enlazado se ve enlazado.
+- **Teléfono.** Toda pantalla se comprueba a 402 px y al apilar conserva el orden y la agrupación de escritorio. Las tablas anchas conservan su desplazamiento horizontal y la página nunca se desplaza de lado.
+- **Datos incómodos.** La composición se comprueba con los nombres más largos del catálogo, los importes de más dígitos, un sitio con caja cerrada y todo en cero. Una maqueta con cifras redondas no basta para aprobarla.
+
+### Lo que la composición no autoriza
+
+1. **Rediseñar no es quitar.** Ninguna cifra, desglose, tabla, gráfica ni enlace existente desaparece por composición; cada entrega incluye la tabla del antes y después de cada cifra y el inventario de qué había y dónde quedó.
+2. **Referencia externa, no especificación.** Una referencia visual o maqueta no conoce todas las reglas del sistema; lo que no representa se conserva.
+3. **No cambia cálculos.** Si un cambio visual exige tocar una consulta o un predicado, deja de ser composición: se detiene y se reporta.
+4. **No sustituye alcance del servidor.** Tapar una cifra en pantalla no es una restricción ni sustituye un filtro del servidor.
+
+### Entrega y aprobación
+
+- **Propuesta antes de implementar.** Cuando un cambio reorganiza una pantalla, se presenta la composición al propietario antes de implementarla, aunque el encargo no lo pida expresamente.
+- **Vocabulario del negocio.** Los rótulos de estados, encabezados de sección y nombres de documentos los decide el propietario. El agente propone, no los renombra unilateralmente.
+
 ## POS y Caja — regla contable vigente
 
 **Nada cuenta hasta que caja lo procesa.** Un Ticket entra a Ventas, Contado cobrado y Utilidad únicamente al cobrarse; una Nota entra a Ventas, Ventas a crédito y Utilidad únicamente al autorizarse. La identidad es **Ventas = Contado cobrado + Ventas a crédito**. Contado cobrado es el nombre de la anterior tarjeta Cobrado (Caja), sin cambiar su cálculo. La cobranza del periodo es otra medición, descrita en «Cuentas Destino» y «Tablero: venta y cobranza»; la decisión de nomenclatura e interpretación conjunta sigue abierta en «Cobrado: dos definiciones sin reconciliar». Pendiente de cobro queda fuera de Ventas y es solo un indicador operativo. La autorización de Nota tiene estado y evento durable propios; nunca se infiere de `estado='VENDIDO'`.
@@ -537,7 +571,7 @@ La pantalla contiene **Vendido**, **Por cobrar (notas de crédito al día)** y *
 
 La matriz cruza facturación con forma de cobro, contiene solo ventas (`POS` y `CREDITO`) y cuadra con Vendido por renglón y por columna. Abonos y saldos a favor van en un renglón separado de cobranza, sin exigir que la nota sea de un periodo anterior. El servidor verifica el cierre y la interfaz muestra cualquier descuadre en vez de ajustarlo u ocultarlo. Toda forma de pago sin columna propia cae en **Otras**, para que ninguna desaparezca en silencio. Los importes vienen del servidor salvo **Efectivo sin factura = Efectivo cobrado − Efectivo facturado**, usando los dos valores de la misma respuesta. Esta excepción exige igualdad exacta en centavos y una prueba de regresión que falle ante un descuadre; los tres importes deben tener el mismo peso visual, sin relegar facturado o sin factura a etiquetas pequeñas. Autorización textual: `reports/prompt-j/autorizacion-efectivo-sin-factura.md`. También están autorizados los dos porcentajes visuales de efectivo facturado y sin factura sobre Cobrado, sin recalcular otras cifras ni variaciones. La composición fue aprobada e integrada; la diferencia usa centavos enteros y su prueba rechaza una alteración de un centavo. Esto no acredita recorridos autenticados ni casos de operaciones reales ausentes en la base verificada.
 
-Ninguna cifra de Cuentas Destino es un callejón sin salida: cada importe abre el mismo detalle canónico de movimientos, con sus filtros, y desde ahí el folio lleva al documento de origen. La suma del detalle debe cuadrar al centavo con la cifra que lo abrió. El nombre visible de «Caja en Tiempo Real» es ahora «Tiempo real»; este renombre no modifica su funcionamiento ni la barra lateral.
+Cuentas Destino aplica «Estándar de composición del sistema — Navegación de cifras» mediante el mismo detalle canónico de movimientos, conservando sus filtros. La suma del detalle debe cuadrar al centavo con la cifra que lo abrió. El nombre visible de «Caja en Tiempo Real» es ahora «Tiempo real»; este renombre no modifica su funcionamiento ni la barra lateral.
 
 La comparación con el periodo anterior es opcional, usa un solo interruptor y arranca apagada; el rango inicial es Hoy. Cuando está apagada, el resumen no consulta el periodo anterior. Dentro del detalle se compara siempre. Un periodo en curso se compara contra el mismo tramo transcurrido —medio día contra medio día, no contra un día completo— y un periodo cerrado contra el periodo anterior completo. Si no existe base anterior, la variación es un guion con “sin periodo anterior”, nunca 100%.
 
@@ -693,7 +727,7 @@ Todas las notificaciones suenan, para todos los usuarios, sin interruptor dentro
 
 El algoritmo compartido de reparto es `allocateCreditFifo`, en `artifacts/api-server/src/lib/credit-allocation.ts`, usado para abonos y proyección de antigüedad de clientes/proveedores. La regla de mantenimiento es no crear otra implementación. Las pruebas de integración leen su base de `TEST_DATABASE_URL` y verifican con `current_database()` que no sea la de desarrollo; ningún nombre de base va escrito a mano en el código.
 
-En Reportes, el color codifica información y nunca decora: modalidad, signo, rango, categoría o estado. Cada color debe tener un significado documentado; si no puede explicarse en una frase, no se usa.
+Reportes aplica «Estándar de composición del sistema — Color» a modalidad, signo, rango, categoría o estado.
 
 Los destinos de dinero conservan sus códigos internos y se presentan siempre en este orden: **Efectivo**, **Cuentas No Fiscales**, **Cuentas Fiscales**, **Ventas a Crédito**. Las etiquetas se resuelven desde `@workspace/number-format`; no deben duplicarse en frontend, API, PDF o XLSX.
 
@@ -781,7 +815,7 @@ La tarjeta de pendientes cuenta tanto tickets vendidos sin cobrar como notas ven
 
 El ámbar de **Ventas pendientes de cobro o autorización** y **Salidas en tránsito** significa **“sigue en curso y requiere atención”**. El rojo de **Tickets cancelados** y **Salidas canceladas** significa **“revisa esto”**, no error: cancelar es una operación legítima, pero merece visibilidad porque puede señalar una merma o una cancelación extraordinaria. Ambas tarjetas usan el mismo tono rojo suave. Superar el umbral estricto del 10% mantiene la alerta `CANCELACIONES_ALTAS`, pero no intensifica el color de Tickets cancelados.
 
-En este tablero **el color indica que hay algo que atender, no decora una categoría**. Las cuatro tarjetas operativas se muestran con fondo neutro y borde suave, como las principales, cuando su conteo e importe son cero. Si alguno es distinto de cero, se encienden con pastel suave: ámbar para pendientes y tránsito, rojo para cancelaciones. Así un documento con importe cero también recibe atención. Tickets cancelados usa exactamente la misma paleta que Salidas canceladas, sin fondo reforzado, anillo oscuro ni franja adicional por la tasa. Su jerarquía secundaria se establece por menor altura y tamaño de cifra. Mantener títulos y cifras legibles en teléfono y favorecer contraste alto para las pantallas de tienda con mucha luz; una simulación visual no sustituye una comprobación física bajo la iluminación de Cruces.
+**Decisión cerrada del propietario — encendido de las tarjetas operativas de Tiempo real.** En este tablero el color indica que hay algo que atender, no una categoría. Las cuatro tarjetas operativas se muestran con fondo neutro y borde suave, como las principales, cuando su conteo e importe son cero. Si alguno es distinto de cero, se encienden con pastel suave: ámbar para pendientes y tránsito, rojo para cancelaciones. Así un documento con importe cero también recibe atención. Tickets cancelados usa exactamente la misma paleta que Salidas canceladas, sin fondo reforzado, anillo oscuro ni franja adicional por la tasa. Su jerarquía secundaria se establece por menor altura y tamaño de cifra. Mantener títulos y cifras legibles en teléfono y favorecer contraste alto para las pantallas de tienda con mucha luz; una simulación visual no sustituye una comprobación física bajo la iluminación de Cruces.
 
 Un ticket cancelado se marca de forma inequívoca en sus tres representaciones: la pantalla abre con una banda roja que muestra quién canceló, cuándo y el motivo; cada copia térmica repite una marca grande al principio y al final con usuario y fecha; la Nota A5 conserva su sello diagonal rojo, rotado y enmarcado.
 
