@@ -44,7 +44,16 @@ async function resolveSourcePath(basePath: string): Promise<string> {
  */
 export async function loadRenderTestModule(
   entrySource: string,
-  options: { moduleAliases?: Record<string, string> } = {},
+  options: {
+    moduleAliases?: Record<string, string>;
+    /**
+     * Test-only absolute module paths that must stay external. This is useful
+     * for CommonJS backend packages: bundling them into an ESM fixture breaks
+     * their own dynamic `require()` calls, while an absolute external import
+     * still resolves each package's real sibling dependencies.
+     */
+    externalModuleAliases?: Record<string, string>;
+  } = {},
 ) {
   // Keep the transient bundle under the app package so Node can resolve the
   // package's external React/UI dependencies from its node_modules folder.
@@ -93,6 +102,12 @@ export async function loadRenderTestModule(
             esbuild.onResolve({ filter: /^[^./]/ }, (args) => {
               const alias = options.moduleAliases?.[args.path];
               return alias ? { path: alias } : undefined;
+            });
+            esbuild.onResolve({ filter: /^[^./]/ }, (args) => {
+              const externalAlias = options.externalModuleAliases?.[args.path];
+              return externalAlias
+                ? { path: externalAlias, external: true }
+                : undefined;
             });
             esbuild.onResolve({ filter: /^@\// }, async (args) => ({
               path: await resolveSourcePath(

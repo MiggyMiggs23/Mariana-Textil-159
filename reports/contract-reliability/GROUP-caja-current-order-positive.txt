@@ -1,0 +1,12 @@
+CAJA_CURRENT_ORDER={"mounted":true,"signalTop":203,"cobranzaTop":374}
+✔ documented current Cobranza geometry (2184.21749ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2973.444412
+
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/observable-caja-negative-PqHDV8/artifacts/mariana-textil/tsconfig.render-tests.json

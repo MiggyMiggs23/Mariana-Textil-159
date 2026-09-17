@@ -1,0 +1,22 @@
+{
+  "generatedBy": "scripts/src/observable-caja-negative.mjs",
+  "rewrittenFile": "src/pages/caja/tiempo-real-breakdown.contract.test.ts",
+  "testCount": 1,
+  "oldToNew": {
+    "realtime cards have fixed order and exactly six cards open their own detail": "realtime cards open the detail that matches their displayed data for click and Enter"
+  },
+  "mutants": [
+    {
+      "name": "wrong-cobrado-detail",
+      "testName": "realtime cards open the detail that matches their displayed data for click and Enter",
+      "redExitCode": 1,
+      "restoredExitCode": 0
+    }
+  ],
+  "blockedFunctionalCase": {
+    "unchangedFile": "src/pages/caja/tiempo-real.contract.test.ts",
+    "requirement": "Cobranza separated before signals",
+    "observation": "Chrome places the pending signal above the Cobranza band.",
+    "accreditation": "Not a negative test: this is a documented existing product conflict in an isolated copy."
+  }
+}

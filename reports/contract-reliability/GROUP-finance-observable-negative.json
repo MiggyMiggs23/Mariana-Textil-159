@@ -1,0 +1,34 @@
+{
+  "generatedBy": "scripts/src/observable-finance-negative.mjs",
+  "runner": "scripts/src/frontend-test-runner.mjs --root <isolated clone> --test-name-pattern <name> <file>",
+  "fixtures": "In-memory endpoint payloads parsed by their exported response schemas before each real component/page mount.",
+  "mutants": [
+    {
+      "name": "utility-visible-on-load",
+      "testFile": "src/client-utility-card.contract.test.ts",
+      "oldTestName": "client utility starts visually hidden and exposes a touch-friendly toggle",
+      "newTestName": "client utility starts visually hidden and exposes a touch-friendly toggle",
+      "redExitCode": 1,
+      "restoredExitCode": 0,
+      "assertion": "utility begins obscured on a newly mounted client page"
+    },
+    {
+      "name": "authorization-favor-preview-not-applied",
+      "testFile": "src/components/cliente-saldo-a-favor.contract.test.ts",
+      "oldTestName": "cash authorization offers favor without selecting it automatically",
+      "newTestName": "cash authorization previews the server-calculated automatic favor application",
+      "redExitCode": 1,
+      "restoredExitCode": 0,
+      "assertion": "the real Cobros authorization dialog presents the automatic server preview without a manual favor control"
+    },
+    {
+      "name": "note-partial-badge-erased",
+      "testFile": "src/pages/nota.contract.test.ts",
+      "oldTestName": "Block 4 functionality in ticket detail",
+      "newTestName": "Block 4 functionality in ticket detail",
+      "redExitCode": 1,
+      "restoredExitCode": 0,
+      "assertion": "ABONO_PARCIAL keeps its canonical badge label free of currency"
+    }
+  ]
+}

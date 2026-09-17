@@ -15,6 +15,10 @@ Las pruebas de producción también deben arrancar el artefacto construido con s
 
 **How to apply:** Después de añadir una biblioteca con fuentes o recursos de ejecución, verificar el arranque del bundle real con sus reglas de dependencias externas y rutas de recursos. La prueba aislada del generador es complementaria, no sustituta.
 
+Para cargadores de pruebas Node, usar también el corredor canónico. Un
+evaluador CommonJS puede proporcionar `require` global y ocultar errores
+que sí aparecen al importar el mismo bundle bajo ESM.
+
 Los datos simulados deben atravesar el esquema de respuesta del endpoint exacto antes de alimentar un componente real.
 
 **Why:** Una prueba montó el componente correcto pero añadió un estado que el esquema del detalle eliminaba. Mostró una insignia correcta que la respuesta real nunca podía producir; el SELECT del servidor sí tenía el campo, pero eso no demostraba que llegara al navegador.
@@ -34,3 +38,14 @@ sustituía una fragilidad por otra.
 observar el componente real. SSR no calcula CSS: declarar ese límite y
 comprobar todos los representantes, incluidas las etiquetas derivadas de
 estados comerciales, sin acoplarse a clases ni conteos fijos.
+
+Al reescribir un contrato monolítico, conservar todas sus obligaciones vigentes,
+no sólo la primera aserción que fallaba.
+
+**Why:** Sustituir un contrato de varias pantallas y exportaciones por una sola
+tarjeta produjo un verde parcial que había eliminado cobertura válida.
+
+**How to apply:** Inventariar las comprobaciones anteriores y asignar a cada una
+un resultado observable. La fragilidad de una aserción textual no autoriza
+eliminar su obligación. Antes de declarar imposible el aislamiento, comprobar
+los generadores públicos y los handlers registrados por el router real.

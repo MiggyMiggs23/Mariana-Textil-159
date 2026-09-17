@@ -1,0 +1,647 @@
+[frontend-test-runner] 99 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+✔ Ambas pantallas consumen el mismo hook para cobranza (identidad de fuente) (0.903998ms)
+✔ El tablero llama a la función para leer el dinero del periodo sin cálculo manual (0.343485ms)
+✔ La guarda rechaza una consulta paralela o el reemplazo de la fuente común (122.527873ms)
+✔ El hook real entrega intactos importe y fuentes, con idénticos filtros y query key (40.642294ms)
+✔ Un error de cobranza no oculta las cuatro tarjetas existentes (0.184231ms)
+✔ Los grupos POS/ABONO/saldos a favor tienen accesores espejo (0.314678ms)
+✔ client utility starts visually hidden and exposes a touch-friendly toggle (2838.486046ms)
+✔ client utility is server-gated and declares every excluded no-cost line (1.208966ms)
+✔ SISTEMAS navigation follows its matrix without POS and with its account-destination policy (1.729023ms)
+✔ CONTADOR gets complete CAJA and read-only destinations, without forbidden sections (0.421815ms)
+✔ permission filtering never returns an empty navigation section (0.611561ms)
+✔ CAJA navigation follows effective overrides after the strict default (0.162708ms)
+✔ ticket detail preserves POS/Cobros readers and explicit fiscal reviewers (12.940553ms)
+✔ routes use matrix permissions while notifications remain admin-only (1.503208ms)
+✔ Cobros administrative controls follow effective CORTES permissions (1.666374ms)
+✔ CampoEscaneo keeps keyboard and camera scans on the same delivery path (8.911273ms)
+✔ every CampoEscaneo usage is discovered and explicitly classified (523.492452ms)
+✔ all series scanners resolve the same QR through the CampoEscaneo dispatcher (305.526575ms)
+✔ raw document and quantity scanners preserve their input (274.559854ms)
+✔ the delivery scanner is a classified series consumer of the shared normalizer (0.917097ms)
+✔ CampoEscaneo releases camera resources (0.799199ms)
+✔ SKU mismatch warnings are visible and do not block roll operations (1.509348ms)
+✔ ResponsiveTable keeps the ticket destination while accepting explicit row destinations (4.80237ms)
+✔ credit statement rows link ABONO, REVERSO, and AJUSTE without changing VENTA links (4.323699ms)
+✔ the existing account return highlight is preserved for desktop and mobile (1.084329ms)
+✔ note payment rows expose a real movement-detail anchor and keep the reparto flow (1.006255ms)
+✔ movement detail route is finance-guarded and audit links never invent a client (2.40266ms)
+✔ roll history consumes the shared resolved movement-document component (1.061295ms)
+✔ SSR renders generated calendar dates identically to production print output (26.678049ms)
+✔ nota state presentation is shared and keeps canonical backend states (4.895993ms)
+✔ affected credit views use the shared state badge (2.009237ms)
+✔ Los cuatro estados reales renderizan icono y estado, nunca un importe en la insignia (13.313249ms)
+✔ customer payment receipt exposes excess and resulting favor (8.047929ms)
+✔ cash authorization previews the server-calculated automatic favor application (2414.760411ms)
+✔ desactivar usuario: bloquea texto distinto y permite coincidencia literal (0.657325ms)
+✔ cambiar rol: bloquea texto distinto y permite coincidencia literal (0.082056ms)
+✔ cancelar ticket cobrado: bloquea texto distinto y permite coincidencia literal (0.057591ms)
+✔ ajuste de inventario mayor a 10 rollos: bloquea texto distinto y permite coincidencia literal (0.105045ms)
+✔ borrar cliente: bloquea texto distinto y permite coincidencia literal (0.059435ms)
+✔ desactivar sitio: bloquea texto distinto y permite coincidencia literal (0.048475ms)
+✔ salida a mostrador mayor a 5 rollos: bloquea texto distinto y permite coincidencia literal (0.050108ms)
+✔ Entradas opens history first and keeps the capture engine mounted (1.136785ms)
+✔ Entradas history preserves server filters, folio ordering, and document links (0.342567ms)
+✔ roll label keeps the supplied monochrome mark large and renders its name as text (4.779957ms)
+✔ roll label preserves its 100 by 70 millimetre page and QR sizing (0.953033ms)
+✔ product name and quantity use named discrete font steps without silent truncation (0.940845ms)
+✔ label refits after fonts load and before print while preserving three decimals (0.961737ms)
+✔ document and ticket actions stack safely on phones (5.380492ms)
+✔ client and roll detail retain responsive action and movement layouts (1.484552ms)
+✔ money input formats Mexican thousands separators while preserving decimals (0.800824ms)
+✔ money input accepts pasted grouped and ungrouped values equivalently (0.112075ms)
+✔ money input rejects negatives, invalid characters, and a third decimal (0.103984ms)
+✔ money input keeps the caret beside a digit inserted in the middle (0.248324ms)
+✔ money input keeps the caret after a leading decimal and never returns a negative position (0.147065ms)
+✔ all three payment dialogs reuse the formatted input and keep numeric payloads (7.011657ms)
+✔ document links use the resolved primary-key route, not the displayed folio (6.433324ms)
+✔ a null route is explicit and never rebuilt from a document id (0.634547ms)
+✔ a movement without any document reference remains an unlinked label (0.386997ms)
+✔ notification audio requires activation and serializes deduplicated events (1.095025ms)
+✔ route changes cancel active audio and discard only the previous feed (0.148091ms)
+✔ a feed event arriving in the navigation render remains playable (0.78584ms)
+✔ local operational sounds use the exclusive serialized audio queue (0.207132ms)
+✔ the selected summary keeps the complete product identity below the input (353.162421ms)
+✔ all real catalog rows use un-clipped tela, color, and SKU lines (3.688594ms)
+✔ pending search follows dirty, selected, and cleared input states (1.518734ms)
+✔ Qué comprar consume los campos canónicos del reporte (1.093059ms)
+✔ la tabla y la evidencia se pueden usar en pantallas estrechas (0.325785ms)
+✔ la evidencia separa episodios previos del conteo del periodo (0.139499ms)
+✔ every backend report chart and table id has a visible explanation (7.855428ms)
+✔ statistics outside Reportes render their sentence below each audited surface (1.331786ms)
+✔ header site replaces a malicious or stale URL site (1.200584ms)
+✔ global header removes a stale URL site instead of widening or narrowing scope (0.173172ms)
+✔ preset ranges use Mexico City calendar dates (15.499696ms)
+✔ comparison query creates one site-scoped copy per authorized site (0.274595ms)
+✔ PROPIA cannot turn a global comparison URL into a wider scope (0.176705ms)
+✔ non-ADMIN users cannot activate comparison even with a forged TODAS scope (0.124904ms)
+✔ legacy report destinations map to the composed tabs (0.28973ms)
+✔ export parameters include current mode, filters, and cash controls (0.270333ms)
+✔ customer-sale assembly keeps a visible circular roll counter in sync with scans (2062.943423ms)
+✔ restaura listas legibles y descarta valores sintácticamente inválidos (1.638562ms)
+✔ normaliza la URL y conserva parámetros ajenos al criterio compartido (0.1727ms)
+✔ elimina selecciones que ya no existen en catálogos reales (0.215333ms)
+✔ the active toaster centers emergent notifications at the top (0.662007ms)
+✔ un ajuste de exactamente 10 unidades no requiere confirmación (0.66573ms)
+✔ un ajuste positivo mayor a 10 unidades requiere confirmación (0.289715ms)
+✔ un ajuste negativo mayor a 10 unidades requiere confirmación (0.138341ms)
+✔ una baja de más de 10 unidades requiere confirmación (0.12839ms)
+✔ color options collapse case and edge whitespace without merging different colors (10.776164ms)
+✔ filtering before grouping retains only matching variants and visible counts (0.350082ms)
+✔ cartera scope serializes global, single-site, and multi-site requests (1.065897ms)
+✔ cartera exports carry the resolved request scope (0.175533ms)
+✔ auth partition prevents an expired session from reusing the previous identity cache (0.289607ms)
+✔ same user id still partitions cartera when role or assigned scope changes (0.092408ms)
+✔ cached global response is rejected for a newly restricted assigned-site user (0.172761ms)
+✔ current assigned-site response is accepted only when metadata proves that scope (0.133623ms)
+✔ CAJA remains restricted even when legacy alcanceConsulta is TODAS (0.165449ms)
+✔ CAJA without an assigned site fails closed, while ADMIN and SUPERVISOR stay unrestricted (0.152017ms)
+✔ habitual credit prefill accepts only supported non-zero terms (0.819172ms)
+✔ habitual term is applied once per credit activation and remains overridable (0.154836ms)
+✔ credit activation without a habitual term requires an explicit choice (0.088968ms)
+✔ parses exact real-cent precision without binary floating point (0.695099ms)
+✔ preserves a negative sign and one-place decimals (0.242458ms)
+✔ supports large seven-digit money values exactly (0.140724ms)
+✔ rejects values with more precision than cents (0.401591ms)
+✔ rejects an intentionally wrong-cent invariant (0.132481ms)
+✔ date-only calendar boundaries keep their persisted day in Mexico (12.24995ms)
+✔ generated calendar wire value stays a string for date-only consumers (1.491906ms)
+✔ documentoTipoLabel centraliza los nombres visibles y conserva tipos desconocidos (0.593586ms)
+✔ la insignia usa autorizacionEstado de la respuesta real parseada (2.639169ms)
+✔ los errores canónicos cambian solo el nombre del documento y los demás se conservan (0.423399ms)
+✔ la insignia del documento separa procesamiento en Caja de estado de deuda (0.593228ms)
+✔ separa los totales por unidad y conserva todos los productos (1.046931ms)
+✔ marca cantidades malformadas sin convertirlas en cero ni sumar infinito (0.223876ms)
+✔ los guardas puros bloquean cantidades inválidas y conservan proveedor con líneas (0.105033ms)
+✔ September 15 is sent as September 15 in Mexico City (0.781456ms)
+✔ the date-only helper returns an explicit offset-bearing instant (0.897793ms)
+✔ blank dates keep the server-now path (0.179056ms)
+✔ invalid calendar dates are rejected (0.39633ms)
+✔ today is derived in Mexico City rather than browser local time (0.261474ms)
+✔ elige el inicio fijo de los roles operativos principales (0.810158ms)
+✔ elige para otros roles la primera ruta raíz que ya permiten sus permisos (0.286682ms)
+✔ back is allowed only when this app session created a previous entry (0.678074ms)
+✔ a reload-like new session cannot leave the application through back (0.108212ms)
+✔ app hrefs retain the configured base path (0.207977ms)
+✔ new entries inherit the latest global session state (0.611779ms)
+✔ equivalent page-state values do not require another history write (0.18564ms)
+✔ scroll persistence skips replaceState when every position is unchanged (0.372671ms)
+✔ all requested detail pages use the shared back link and fixed fallback (1.237948ms)
+✔ ticket auto-print keeps tracked state and uses a base-aware URL (0.417933ms)
+✔ coalesces real scroll persistence and preserves positions before push/back (4.723282ms)
+✔ mantiene metros, kilos, bolsas y rollos separados en una suma mixta (1.567546ms)
+✔ suma strings guardados antes de aplicar el redondeo visible (0.479325ms)
+✔ un subconjunto filtrado no incluye filas ausentes (0.235999ms)
+✔ 100 visibles seleccionan como máximo 50 y nunca IDs fuera de la vista (1.266564ms)
+✔ 15 etiquetas de varios productos sobreviven cambios de resultados (0.315584ms)
+✔ cash aggregate links preserve exact period and authorized site filters (1.019734ms)
+✔ origin query ids accept only positive safe integer ids (0.446221ms)
+✔ opaque movement ids preserve their exact source representation (0.304375ms)
+✔ origin date filters accept calendar dates and ignore missing or invalid values (0.327368ms)
+✔ exact movement selection walks every paginated page (0.885426ms)
+✔ POS distingue precio ausente de un precio capturado en cero (0.593198ms)
+✔ POS bloquea antes de mutar el carrito y presenta el precio ausente (4.848227ms)
+✔ groups trimmed case-insensitive telas and preserves first spelling (1.67129ms)
+✔ bulk selectability follows mode and fragmented-sale constraints (0.184308ms)
+✔ below-cost warning uses every selected row's active-mode cost (0.160037ms)
+✔ la impresión espera fuentes, imágenes y dos frames antes de abrir el diálogo (0.561027ms)
+✔ los colores y logos se conservan en todos los medios impresos (0.22296ms)
+✔ la impresión de etiquetas puede limitarse al portal activo sin cambiar los demás callers (0.122041ms)
+✔ report href validation permits only internal relative navigation (0.654374ms)
+✔ report href selection prefers explicit hrefKey and supports safe legacy aliases (0.254361ms)
+✔ rechaza cantidades declaradas fraccionarias o no positivas (0.696956ms)
+✔ aplica el metraje uniforme a los 105 rollos en blanco (0.707929ms)
+✔ volver a aplicar solo llena blancos y conserva cinco correcciones (0.162625ms)
+✔ sobrescribir todos elimina ajustes y aplica la nueva base (0.107679ms)
+✔ restaurar un rollo ajustado lo devuelve al grupo uniforme (0.162657ms)
+✔ el contador mantiene los rollos pendientes en blanco (0.080118ms)
+✔ conserva cinco ediciones sucesivas entre 190 rollos y calcula el total real (0.346547ms)
+✔ regresar manualmente al valor base quita la marca de ajuste (0.089588ms)
+✔ history eligibility preserves state and site boundaries (0.771283ms)
+✔ transfer detail and history eligibility cover every lifecycle state, role, and site (0.4151ms)
+✔ customer-sale eligibility remains origin-only and pre-delivery (0.205716ms)
+✔ history eligibility requires authorization, including zero-permission users (0.097103ms)
+✔ detail keeps the legacy CAJA transfer branch separate from history (0.08018ms)
+✔ ticket sections use the persisted line modality and independent subtotals (0.739225ms)
+✔ empty ticket modalities remain empty so their headings can be omitted (0.162927ms)
+✔ thermal summary counts actual NORMAL items once across unlike units (0.13231ms)
+✔ price-less print lines group without inventing economic values (0.294984ms)
+✔ priced print lines preserve grouped sale totals (0.200119ms)
+✔ tabular strips group only identified NORMAL rolls by color deterministically (6.96742ms)
+✔ tabular strips never mix metres, kilos, and bags in one false total (0.225769ms)
+✔ product selectors and ticket totals derive units from the generated enum (5.498104ms)
+✔ unit labels have the prescribed visible values (0.678884ms)
+✔ inventoried visible unit surfaces use the shared formatter (15.760852ms)
+✔ Task 62 quantity surfaces render bag totals separately when present (3.857039ms)
+✔ Task PIEZA dashboard and reception summaries use the shared formatter (0.892506ms)
+✔ client validation reports all invalid fields before submit (0.601739ms)
+✔ editing allows a blank password but validates a replacement (0.239916ms)
+✔ each user can mark their visible stored notifications read from the panel (0.721794ms)
+✔ stored and derived events are visibly explained (0.16622ms)
+✔ notification popover remains bounded on phones (0.12756ms)
+✔ Ajustes integra la confirmación textual antes de enviar ajustes grandes (4.963718ms)
+✔ Ajustes no envía la mutación antes de solicitar la confirmación (1.491668ms)
+✔ Ajustes opens the immutable movement query only through enabled lifecycle state (1.171105ms)
+✔ la estación de auditoría integra contrato, escáner, polling e impresión (8.447771ms)
+✔ amber: zero is neutral even with a stale threshold flag (0.741596ms)
+✔ amber: count OR amount activates attention, including free documents (0.164933ms)
+✔ red: zero is neutral even with a stale threshold flag (0.098522ms)
+✔ red: count OR amount activates attention, including free documents (0.107808ms)
+✔ the server flag alone distinguishes normal and elevated cancellation tones (0.202669ms)
+✔ missing data does not create a colored warning (0.069624ms)
+✔ embedded CajaComparativo uses the computed header window as custom (0.979466ms)
+✔ standalone CajaComparativo keeps preset requests date-free (0.112543ms)
+✔ standalone CajaComparativo still sends dates for custom period (0.093921ms)
+✔ Cortes consumes report date/site filters and opens sesionId through the existing detail hook (6.336942ms)
+▶ Cuentas Destino Contract
+  ✔ generates correct query key for cuentas destino list with location scope (1.013274ms)
+  ✔ generates correct query key for cuenta destino detalle including matrix cell filters (0.161635ms)
+  ✔ renders server-owned reconciled values without financial formulas (0.86096ms)
+  ✔ passes matrix and inconsistency filters to the real detail page (0.497077ms)
+  ✔ uses wouter search and location hooks for url state with default today and off (0.352124ms)
+  ✔ handles nullable previous display without +100% logic (0.463934ms)
+  ✔ includes fuente filter in the links to the detail page (0.565167ms)
+  ✔ uses the literal collection labels and links credit movements to the exact account row (0.52528ms)
+  ✔ keeps destination comparison links scoped to the previous period (0.823745ms)
+✔ Cuentas Destino Contract (6.355305ms)
+✔ realtime cards open the detail that matches their displayed data for click and Enter (5642.814474ms)
+✔ realtime detail stays in a responsive dialog with folio as its only row link (1.530026ms)
+✔ salida cards show counts only; cancelled tickets and all detail rows retain amounts (1.642482ms)
+✔ realtime credit card uses dashboard aggregate without pending alert styling (4.379521ms)
+▶ Tiempo Real Contract
+  ✖ renders principal row and secondary attention row in exact order (3.143585ms)
+  ✔ explains color semantics with concise code comments (0.438562ms)
+  ✔ SALIDAS drilldown columns/link rule (0.47001ms)
+  ✔ CANCELADAS drilldown columns/link rule (0.491187ms)
+  ✔ shared boolean use for cancellation (0.392077ms)
+  ✔ pluralizes dashboard counts and always shows the server cancellation rate, even without sales (0.376128ms)
+✖ Tiempo Real Contract (6.21945ms)
+✔ CajaTiempoReal has exactly one Ver ventas link per store (5.40749ms)
+✔ TiendaVentas route is correctly defined and protected (1.059722ms)
+✔ TiendaVentas page implements URL filters and responsive table (1.452226ms)
+✔ Cartera functionality respects block 2 constraints (6.276588ms)
+✔ Block 3 functionality in payment dialog (1.239935ms)
+✔ credit term UX lives in note creation and ticket Cobros has no credit option (2.146456ms)
+✔ the second client ticket row links by its real ticket id, not by list position (18.337952ms)
+✔ primary collection offers only equal-width cash and transfer controls (1.200223ms)
+✔ split payments offer only cash and transfer while metreado remains cash-only (0.744622ms)
+✔ invoice status comes only from the ticket and never changes the payment amount (0.538651ms)
+✔ invoiced sales are emphasized without changing the normal document label (2774.149031ms)
+✔ Bloque 4 only renders cash outs in Mariana and warns old sessions (5.018274ms)
+✔ detail links use real IDs when displayed folios differ (9.364953ms)
+✔ nullable identity fields remain visible but unlinked (0.99103ms)
+✔ the note link closes only for an unmodified primary click (0.295282ms)
+✔ client and provider tables use accessible primary-name detail links (8.443979ms)
+✔ table inventory has no obsolete Ver detalle column (11.839168ms)
+✔ detail-capable table identifiers resolve their controlled primary keys (4343.712414ms)
+✔ la entrada conserva su formato global y firma solo la última hoja global (0.87111ms)
+✔ la entrada agrega un listado compacto de todas las series por producto (0.424267ms)
+✔ los globales conservan cada producto y unidad por separado (0.114335ms)
+✔ la celda global conserva tela y color completos sin duplicar el SKU (0.775238ms)
+✔ la entrada se aísla para impresión sin ocultar su contenido (0.153579ms)
+✔ la entrada conserva una caja de página segura y traslada fondo y borde al frame interior (0.170031ms)
+✔ la lista conserva enlaces permanentes y visibles al documento (0.192711ms)
+✔ el documento muestra el sitio y nunca expone el id interno del proveedor (0.154355ms)
+✔ mantiene proveedor y bloquea el selector con líneas capturadas (0.844079ms)
+✔ valida de nuevo justo antes de la única mutación (0.263135ms)
+✔ revalida disponibilidad fresca del contenedor antes de mutar (0.1557ms)
+✔ la aplicación uniforme no está disponible cuando no quedan rollos en blanco (0.710525ms)
+✔ reserva espacios separados para cantidad, unidad y cámara en la captura (8272.667042ms)
+✔ equipos form exposes exactly the seven catalog types in display order (5.624795ms)
+✔ equipos list sorts all seven catalog types in the same display order (1.064484ms)
+✔ equipment checklist UI consumes server checklist items without defining a duplicate catalog (1.059554ms)
+✔ la reimpresión espera a que los datos estén montados antes de imprimir (0.917061ms)
+✔ la acción superior imprime toda la selección y la acción por renglón se conserva (0.23696ms)
+✔ la autorización bloquea motivos de nueve caracteres y repeticiones de alto riesgo (0.180751ms)
+✔ todos los accesos de reimpresión usan el diálogo compartido y su invalidación central (0.169762ms)
+✔ el reporte renderizado recorre todo el catálogo y denuncia cualquier desbordamiento (0.150769ms)
+✔ el QR completo cabe dentro de la tercera columna con margen blanco (0.07233ms)
+✔ entry and exit folio views consume the formatted API folio (9.720773ms)
+✔ exit reception resolves QR by internal id and manual formatted or numeric folios (1.499905ms)
+✔ Caja conserva el corte y no imprime hoja diaria de ventas (0.757483ms)
+✔ alta y edición de proveedor conservan casing y acentos en nombre y país (5.679274ms)
+✔ alta y edición de camioneta conservan nombre, marca y modelo; placas siguen en mayúsculas (2.217852ms)
+✔ alta y edición de producto conservan tela y color; SKU sigue en mayúsculas (3.215669ms)
+✔ importación de productos conserva casing y acentos con clave canónica solo para comparar (1.250474ms)
+✔ Entrada keeps 216x279mm paper and uses its measured safe content box (8.078295ms)
+✔ Salida page specifies A5 landscape and has correct control signatures (1.70305ms)
+✔ Labels have exact physical size without padding (1.250085ms)
+✔ Replit development banner is hidden from every print medium (1.23933ms)
+✔ every print mode collapses body siblings outside the application root (1.225836ms)
+✔ Thermal label uses spacing instead of vertical dividers and enlarges logo and QR (2.010528ms)
+✔ Credit notes print exactly A5 portrait in two copies with internal QR (2.860748ms)
+✔ Nota print conditionally renders customer header, credit terms, legal text, and IVA (1.529291ms)
+✔ Credit-note pagination keeps eight complete rows with its measured readable legal footer (1.045154ms)
+✔ Cash Ticket only exposes the measured 80mm thermal format (1.923976ms)
+✔ Thermal ticket renders vertical product blocks with unit-safe quantities (1.047826ms)
+✔ three complete logical ticket pages precede single tabular add-ons (1.460376ms)
+✔ thermal summary is the same indivisible two-row box in all three copies (1.385547ms)
+✔ six distinct products stay assigned to each measured logical copy (0.993709ms)
+✔ Viaje isolates one exact letter page for printing (2.570957ms)
+✔ ticket detail screen band and thermal beginning/end on every copy (2.440732ms)
+✔ unchanged A5 watermark (1.986356ms)
+✔ Detalle de Rollos ofrece selección visible con estado mixto y límite explícito (0.620668ms)
+✔ las tarjetas detienen la navegación al seleccionar y solo reimprimen la selección visible (0.181353ms)
+✔ las selecciones se limpian al cambiar contexto y se podan al cambiar resultados (0.14532ms)
+✔ el diálogo de impresión permanece montado fuera de TabsContent mientras imprime (0.172674ms)
+✔ adjustment series links use the roll primary id (5.284059ms)
+✔ conciliation product links use the product primary id (1.034519ms)
+✔ kardex document cells keep desktop and mobile resolved-route branches (1838.002203ms)
+✔ ticket links use the validated real ticket id, never list position (0.973899ms)
+✔ movement filters and pagination restore with SPA history entries (0.4205ms)
+✔ Block 4 functionality in ticket detail (7459.764865ms)
+✔ Block 4 functionality in cobros (1.342552ms)
+✔ Nota keeps the 5.25mm root safe area and uses an inner ink frame (1.038946ms)
+✔ POS uses the BOLSA threshold and whole-bag quantity UX (7.088419ms)
+✔ tabular printing is unchecked client-only state and does not change TicketInput (1.589035ms)
+✔ POS sends generated notes directly to the printable ticket detail (2.382294ms)
+✔ scanner auto-add is limited to exact available roll scans (1.380596ms)
+✔ normal cart groups by product but expands checkout back to individual rolls (3.024003ms)
+✔ cart rows isolate long product details from price, quantity, amount, and removal controls (2.321552ms)
+✔ METRO metered lines require explicit same-site physical source allocations (1.767714ms)
+✔ editing a METRO quantity and removing a cart line cannot retain stale source quantities (2.3649ms)
+✔ pricing groups default closed, search opens them, and mode clears selection (0.724721ms)
+✔ group and child selection honor active-mode selectability (0.246526ms)
+✔ bulk contract validates, confirms below cost, mutates, and refreshes (0.216889ms)
+✔ group financial cells explicitly remain unaggregated (0.163591ms)
+✔ price list renders and filters missing prices explicitly (0.819621ms)
+✔ detail starts an empty first-price form without presenting zero (0.134797ms)
+✔ los documentos usan logo centrado y QR derecho compartidos (0.852227ms)
+✔ logo y QR documentales conservan su escala y el ticket usa logo físico de 25 mm (0.318233ms)
+✔ la nota interna lleva QR y la copia cliente conserva el espacio sin QR (0.305087ms)
+✔ el QR documental renderiza grande, conserva margen y se decodifica (21.428016ms)
+✔ product catalog keeps textile specification columns hidden until selected (5.179308ms)
+✔ product detail displays units and gates editing by effective permission (1.065704ms)
+✔ catálogo agrupado conserva unidad, especificaciones y totales separados (3147.987135ms)
+✔ precio sugerido opcional conserva null, cero y la presentación requerida (2.725041ms)
+✔ la expansión automática no reescribe un Set que ya contiene los mismos grupos (1.456061ms)
+✔ cada superficie Prompt G obtiene el nombre visible desde el helper compartido (6.342866ms)
+✔ entradas usa la unidad compartida también para la captura de piezas (1.444051ms)
+✔ Block 5 functionality in proveedor UI (6.128378ms)
+✔ Block 6 reversos functionality in clientes UI (5.416356ms)
+✔ Block 6 reversos functionality in proveedores UI (1.420851ms)
+✔ la salida usa A5 horizontal, caja segura interna y diez renglones medidos (1.021539ms)
+✔ encabezado, metadatos, totales, observaciones y tres firmas permanecen visibles (0.390942ms)
+✔ la salida no imprime series y el detalle conserva el inventario serializado (0.166163ms)
+✔ ningún texto impreso baja de 7.5 puntos ni se recorta con truncado (0.254975ms)
+✔ la salida conserva color, logo y QR con marco blanco (0.201981ms)
+✔ history uses the shared cancellation dialog for its responsive rows (5.724601ms)
+✔ shared cancellation invalidates salida, stock, and linked ticket caches (1.128408ms)
+✔ history row layout has quantity branches, date without hour, and cancelled styles (6.29949ms)
+✔ history hides only closed delivery triggers without changing detail or verification gates (2.335391ms)
+✔ salida status presentation contains exactly the five lifecycle labels (11.0967ms)
+✔ customer-sale presentation derives the history labels without changing EstadoSalida (0.291243ms)
+✔ desktop and mobile salida rows mount the production status badge with their fixture state (2693.387828ms)
+✔ salida list, detail, and delivery dialog have cross-session freshness and lifecycle invalidations (40.305726ms)
+✔ structured roll and delivery errors retain safe clickable ownership links (5.010511ms)
+✔ POS and salida scan/creation workflows render structured API details (3.604344ms)
+✔ ENTREGADA stays printable while the real detail omits cancellation for every actor matrix branch (714.353107ms)
+✔ linked cancellation explicitly invokes generated salida cancellation atomically (1.481758ms)
+✔ pending-sale client context is nullable and opens the POS mode (6.231265ms)
+✔ pending-sale generation requires an active issuing store in the request (1.137397ms)
+✔ linked-sale printing is immediate and does not print an authorization stamp (1.782308ms)
+✔ authorized-undelivered alerts use the generated typed collection (1.037517ms)
+✔ la alerta puede abrir stock mínimo con sitio y producto sin crear otro selector (0.752558ms)
+✔ el enlace mantiene el alcance operativo y enfoca el producto con sus cifras (0.216303ms)
+✔ la tabla de captura es desplazable y sus controles tienen nombre accesible (0.119115ms)
+✔ supplier utility UI consumes the generated, gated paginated contract (6.12269ms)
+✔ supplier utility does not expose monetary rows outside supplier finance gating (1.467234ms)
+✔ supplier utility browser fixture includes ancillary response arrays (1.720538ms)
+✔ salidas viewers can mount linked ticket trace without widening role access (4.888402ms)
+✔ ticket mutation controls do not inherit salidas view permission (1.140198ms)
+✔ the administrative catalog requests inactive locations only for ADMIN (0.591057ms)
+✔ inactive locations are clearly marked and can be reactivated (0.15764ms)
+✔ the page explains that sites are deactivated rather than deleted (0.16742ms)
+✔ Task 51 frontend contract keeps dispatch documents operational and price-free (91.478792ms)
+✔ historial vive solo en la pestaña global de Proveedores (6.160282ms)
+✔ tabla conserva seis columnas, enlace único, unidad, sticky y altura limitada (1.069733ms)
+✔ una acción de filtro escribe la dirección exactamente una vez (3.74857ms)
+✔ monetary profit labels use Utilidad while percentages remain Margen (10780.276753ms)
+ℹ tests 354
+ℹ suites 2
+ℹ pass 353
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 47226.709105
+
+✖ failing tests:
+
+test at src/pages/caja/tiempo-real.contract.test.ts:1:351
+✖ renders principal row and secondary attention row in exact order (3.143585ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /grid-cols-1 md:grid-cols-2 xl:grid-cols-4[\s\S]*Ventas \(Total\)[\s\S]*Cobrado \(Caja\)[\s\S]*Ventas a crédito[\s\S]*Utilidad/. Input:
+  
+  'import { useState } from "react";\n' +
+    'import { useQuery } from "@tanstack/react-query";\n' +
+    'import { AppLayout } from "@/components/layout/app-layout";\n' +
+    'import {\n' +
+    '  useGetAdminRealtimeDashboard,\n' +
+    '  useGetAdminRealtimePending,\n' +
+    '  getGetAdminRealtimeDashboardQueryKey,\n' +
+    '  getGetAdminRealtimePendingQueryKey,\n' +
+    '  AdminRealtimeStore,\n' +
+    '  AdminPendingSummaryTiendasItem\n' +
+    '} from "@workspace/api-client-react";\n' +
+    'import { useSharedCuentasDestino } from "@/hooks/use-shared-cuentas-destino";\n' +
+    'import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";\n' +
+    'import { useLocationScope } from "@/lib/location-scope";\n' +
+    'import { attentionCardTone } from "./attention-card-tone";\n' +
+    'import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";\n' +
+    'import { Button } from "@/components/ui/button";\n' +
+    'import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";\n' +
+    'import { RefreshCw, Activity, AlertCircle, Ban, Clock, Banknote, ShoppingBag, Loader2, CreditCard, LineChart, Users, Store } from "lucide-react";\n' +
+    'import { formatNumber, formatUnit } from "@workspace/number-format";\n' +
+    'import { format, parseISO } from "date-fns";\n' +
+    'import { es } from "date-fns/locale";\n' +
+    'import { Link } from "wouter";\n' +
+    'import { formatDateOnlyMx } from "@/lib/date-only";\n' +
+    'import {\n' +
+    '  Dialog,\n' +
+    '  DialogContent,\n' +
+    '  DialogDescription,\n' +
+    '  DialogHeader,\n' +
+    '  DialogTitle,\n' +
+    '} from "@/components/ui/dialog";\n' +
+    'import "./tiempo-real-layout.css";\n' +
+    '\n' +
+    'type BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE" | "CANCELADAS" | "SALIDAS_EN_TRANSITO" | "SALIDAS_CANCELADAS";\n' +
+    'type BreakdownItem = {\n' +
+    '  id: number;\n' +
+    '  folio: number;\n' +
+    '  hora: string;\n' +
+    '  cliente: string;\n' +
+    '  importe: string;\n' +
+    '  formaPago: string | null;\n' +
+    '  facturado: boolean | null;\n' +
+    '  diasPlazo: number | null;\n' +
+    '  fechaVencimiento: string | null;\n' +
+    '  documentoTipo: "TICKET" | "NOTA" | null;\n' +
+    '  minutosEspera: number | null;\n' +
+    '  nombreUsuarioCancelacion: string | null;\n' +
+    '  canceladoAt: string | null;\n' +
+    '  motivoCancelacion: string | null;\n' +
+    '};\n' +
+    'type SalidaBreakdownItem = {\n' +
+    '  salidaId: number;\n' +
+    '  folio: number;\n' +
+    '  origenId: number;\n' +
+    '  origen: string;\n' +
+    '  destinoId: number | null;\n' +
+    '  destino: string | null;\n' +
+    '  clienteId: number | null;\n' +
+    '  cliente: string | null;\n' +
+    '  fecha: string;\n' +
+    '  importe: string;\n' +
+    '  href: string;\n' +
+    '};\n' +
+    'type Breakdown = {\n' +
+    '  concepto: BreakdownConcept;\n' +
+    '  items: (BreakdownItem | SalidaBreakdownItem)[];\n' +
+    '  total: number;\n' +
+    '  page: number;\n' +
+    '  pageSize: number;\n' +
+    '  montoTotal: string;\n' +
+    '};\n' +
+    '\n' +
+    'function formatCountLabel(\n' +
+    '  value: number,\n' +
+    '  singular: string,\n' +
+    '  plural: string,\n' +
+    ') {\n' +
+    '  return `${formatNumber(value, { kind: "count" })} ${value === 1 ? singular : plural}`;\n' +
+    '}\n' +
+    '\n' +
+    'async function fetchBreakdown(\n' +
+    '  concepto: BreakdownConcept,\n' +
+    '  ubicacionId: number | null,\n' +
+    '  page: number,\n' +
+    '): Promise<Breakdown> {\n' +
+    '  const params = new URLSearchParams({ concepto, page: String(page), pageSize: "50" });\n' +
+    '  if (ubicacionId) params.set("ubicacionId", String(ubicacionId));\n' +
+    '  const response = await fetch(`/api/admin/dashboard/realtime/desglose?${params}`, {\n' +
+    '    credentials: "include",\n' +
+    '  });\n' +
+    '  if (!response.ok) throw new Error("No se pudo cargar el desglose.");\n' +
+    '  return response.json();\n' +
+    '}\n' +
+    '\n' +
+    'export default function CajaTiempoReal() {\n' +
+    '  const { selectedLocationId } = useLocationScope();\n' +
+    '  const [breakdownConcept, setBreakdownConcept] = useState<BreakdownConcept | null>(null);\n' +
+    '  const [breakdownPage, setBreakdownPage] = useState(1);\n' +
+    '  const breakdown = useQuery({\n' +
+    '    queryKey: ["admin-realtime-breakdown", breakdownConcept, selectedLocationId, breakdownPage],\n' +
+    '    queryFn: () => fetchBreakdown(breakdownConcept!, selectedLocationId, breakdownPage),\n' +
+    '    enabled: breakdownConcept !== null,\n' +
+    '  });\n' +
+    '\n' +
+    '  const todayStr = new Intl.DateTimeFormat("en-CA", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).format(new Date());\n' +
+    '  const { data: cuentasData, isLoading: cuentasLoading, isError: cuentasError, refetch: refetchCuentas } = useSharedCuentasDestino(\n' +
+    '    selectedLocationId ?? undefined,\n' +
+    '    todayStr,\n' +
+    '    todayStr,\n' +
+    '    "hoy"\n' +
+    '  );\n' +
+    '\n' +
+    '  const {\n' +
+    '    data: dashboard,\n' +
+    '    isLoading: dashLoading,\n' +
+    '    isError: dashError,\n' +
+    '    refetch: refetchDash,\n' +
+    '    dataUpdatedAt: dashUpdatedAt\n' +
+    '  } = useGetAdminRealtimeDashboard(\n' +
+    '    selectedLocationId ? { ubicacionId: selectedLocationId } : undefined,\n' +
+    '    {\n' +
+    '      query: {\n' +
+    '        refetchInterval: 300000,\n' +
+    '        queryKey: getGetAdminRealtimeDashboardQueryKey(selectedLocationId ? { ubicacionId: selectedLocationId } : undefined)\n' +
+    '      }\n' +
+    '    }\n' +
+    '  );\n' +
+    '\n' +
+    '  const {\n' +
+    '    data: pending,\n' +
+    '    isLoading: pendingLoading,\n' +
+    '    isError: pendingError,\n' +
+    '    refetch: refetchPending,\n' +
+    '    dataUpdatedAt: pendingUpdatedAt\n' +
+    '  } = useGetAdminRealtimePending(\n' +
+    '    selectedLocationId ? { ubicacionId: selectedLocationId } : undefined,\n' +
+    '    {\n' +
+    '      query: {\n' +
+    '        refetchInterval: 30000,\n' +
+    '        queryKey: getGetAdminRealtimePendingQueryKey(selectedLocationId ? { ubicacionId: selectedLocationId } : undefined)\n' +
+    '      }\n' +
+    '    }\n' +
+    '  );\n' +
+    '\n' +
+    '  const isLoading = dashLoading;\n' +
+    '  const isError = dashError || pendingError;\n' +
+    '\n' +
+    '  const handleRefresh = () => {\n' +
+    '    refetchDash();\n' +
+    '    refetchPending();\n' +
+    '    refetchCuentas();\n' +
+    '  };\n' +
+    '\n' +
+    '  const lastUpdated = Math.max(dashUpdatedAt, pendingUpdatedAt);\n' +
+    '\n' +
+    '  const totals = dashboard?.totales;\n' +
+    '  const mergedPendingAmount = pending?.importe ?? totals?.pendiente ?? "0";\n' +
+    '  const mergedPendingCount = pending?.tickets ?? totals?.documentosPendientes ?? 0;\n' +
+    '  const pendingTickets = pending?.ticketsSinCobrar\n' +
+    '    ?? dashboard?.pendientes.ticketsSinCobrar\n' +
+    '    ?? mergedPendingCount;\n' +
+    '  const pendingNotes = pending?.notasSinAutorizar\n' +
+    '    ?? dashboard?.pendientes.notasSinAutorizar\n' +
+    '    ?? 0;\n' +
+    '  const pendingTone = attentionCardTone("amber", mergedPendingCount, mergedPendingAmount);\n' +
+    '  const cancelledTone = attentionCardTone("red", dashboard?.cancelaciones.tickets, dashboard?.cancelaciones.importe);\n' +
+    '  const transitTone = attentionCardTone("amber", dashboard?.salidasEnTransito.conteo, dashboard?.salidasEnTransito.importe);\n' +
+    '  const cancelledExitsTone = attentionCardTone("red", dashboard?.salidasCanceladas.conteo, dashboard?.salidasCanceladas.importe);\n' +
+    '  const isSalidaBreakdown = breakdownConcept === "SALIDAS_EN_TRANSITO" || breakdownConcept === "SALIDAS_CANCELADAS";\n' +
+    '  const openBreakdown = (concepto: BreakdownConcept) => {\n' +
+    '    setBreakdownPage(1);\n' +
+    '    setBreakdownConcept(concepto);\n' +
+    '  };\n' +
+    '\n' +
+    '  // Merge tiendas with pending per store\n' +
+    '  const mergedStores = (dashboard?.tiendas || []).map((store) => {\n' +
+    '    const pStore = pending?.tiendas?.find(p => p.ubicacionId === store.ubicacionId);\n' +
+    '    return {\n' +
+    '      ...store,\n' +
+    '      pendiente: pStore?.pendiente ?? store.pendiente,\n' +
+    '      pendientes30Min: pStore?.pendientes30Min ?? store.pendientes30Min,\n' +
+    '      alertas: pStore?.alertas ?? store.alertas\n' +
+    '    };\n' +
+    '  });\n' +
+    '\n' +
+    '  const detailHref = (fuentes: string[]) => {\n' +
+    '    const params = new URLSearchParams({ desde: todayStr, hasta: todayStr, preset: "hoy" });\n' +
+    '    if (selectedLocationId != null) params.set("ubicacionId", String(selectedLocationId));\n' +
+    '    fuentes.forEach((fuente) => params.append("fuente", fuente));\n' +
+    '    return `/caja/cuentas-destino/TODAS?${params.toString()}`;\n' +
+    '  };\n' +
+    '\n' +
+    '  const header = cuentasData?.encabezado;\n' +
+    '  const cobranzaStat = header ? {\n' +
+    '    title: "Cobrado en el periodo",\n' +
+    '    amount: header.cobrado.total,\n' +
+    '    fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],\n' +
+    '    breakdown: [\n' +
+    '       { label: "Cobros directos", amount: header.cobrado.contado, fuentes: ["POS"] },\n' +
+    '       { label: "Abonos a notas (neto de reversos)", amount: header.cobrado.abonos, fuentes: ["ABONO"] },\n' +
+    '       { label: "Saldo a favor (neto de reversos)", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] },\n' +
+    '    ],\n' +
+    '    className: "border-l-4 border-l-primary",\n' +
+    '  } : null;\n' +
+    '\n' +
+    '  return (\n' +
+    '    <AppLayout>\n' +
+    '      <div className="tiempo-real-layout max-w-[1600px] mx-auto space-y-6">\n' +
+    '        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-6">\n' +
+    '          <div>\n' +
+    '            <h1 className="text-3xl font-bold tracking-tight text-sidebar flex items-center gap-2">\n' +
+    '              <Activity className="h-8 w-8 text-primary" />\n' +
+    '              Tiempo real\n' +
+    '            </h1>\n' +
+    '            <p className="text-muted-foreground mt-1">\n' +
+    '              Monitoreo operativo de cobros.\n' +
+    '            </p>\n' +
+    '          </div>\n' +
+    '          <div className="flex items-center gap-4 text-sm">\n' +
+    '            {lastUpdated > 0 && (\n' +
+    '              <span className="text-muted-foreground flex items-center gap-1">\n' +
+    '                <Clock className="h-4 w-4" />\n' +
+    '                Actualizado: {format(new Date(lastUpdated), "HH:mm:ss", { locale: es })}\n' +
+    '              </span>\n' +
+    '            )}\n' +
+    '            <Button variant="outline" onClick={handleRefresh} disabled={dashLoading || pendingLoading}>\n' +
+    '              <RefreshCw className={`mr-2 h-4 w-4 ${(dashLoading || pendingLoading) ? "animate-spin" : ""}`} />\n' +
+    '              Actualizar\n' +
+    '            </Button>\n' +
+    '          </div>\n' +
+    '        </div>\n' +
+    '\n' +
+    '        {isLoading ? (\n' +
+    '          <div className="h-[400px] flex items-center justify-center">\n' +
+    '            <Loader2 className="h-12 w-12 animate-spin text-primary opacity-50" />\n' +
+    '          </div>\n' +
+    '        ) : isError ? (\n' +
+    '          <div className="h-[200px] flex flex-col items-center justify-center text-destructive bg-destructive/5 rounded-xl border border-destructive/20">\n' +
+    '            <AlertCircle className="h-10 w-10 mb-2 opacity-80" />\n' +
+    '            <p className="font-semibold">No se pudo cargar o actualizar el tablero</p>\n' +
+    '            <p className="text-sm opacity-80 mt-1">Es posible que la conexión esté intermitente.</p>\n' +
+    '            <Button variant="outline" className="mt-4" onClick={handleRefresh}>Intentar de nuevo</Button>\n' +
+    '          </div>\n' +
+    '        ) : totals ? (\n' +
+    '          <div className="space-y-6 animate-in fade-in duration-500">\n' +
+    '            <div className="flex flex-col gap-4">\n' +
+    '              <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">\n' +
+    '              <Card className="border-sidebar/10 shadow-sm recon-top-card">\n' +
+    '                <div className="recon-icon-box blue">\n' +
+    '         '... 35886 more characters
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/tiempo-real.contract.test.ts:11:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at node:internal/test_runner/test:1516:71
+      at node:internal/per_context/primordials:466:82
+      at new Promise (<anonymous>)
+      at new SafePromise (node:internal/per_context/primordials:435:3)
+      at node:internal/per_context/primordials:466:9
+      at Array.map (<anonymous>) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { useState } from "react";\nimport { useQuery } from "@tanstack/react-query";\nimport { AppLayout } from "@/components/layout/app-layout";\nimport {\n  useGetAdminRealtimeDashboard,\n  useGetAdminRealtimePending,\n  getGetAdminRealtimeDashboardQueryKey,\n  getGetAdminRealtimePendingQueryKey,\n  AdminRealtimeStore,\n  AdminPendingSummaryTiendasItem\n} from "@workspace/api-client-react";\nimport { useSharedCuentasDestino } from "@/hooks/use-shared-cuentas-destino";\nimport { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";\nimport { useLocationScope } from "@/lib/location-scope";\nimport { attentionCardTone } from "./attention-card-tone";\nimport { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";\nimport { Button } from "@/components/ui/button";\nimport { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";\nimport { RefreshCw, Activity, AlertCircle, Ban, Clock, Banknote, ShoppingBag, Loader2, CreditCard, LineChart, Users, Store } from "lucide-react";\nimport { formatNumber, formatUnit } from "@workspace/number-format";\nimport { format, parseISO } from "date-fns";\nimport { es } from "date-fns/locale";\nimport { Link } from "wouter";\nimport { formatDateOnlyMx } from "@/lib/date-only";\nimport {\n  Dialog,\n  DialogContent,\n  DialogDescription,\n  DialogHeader,\n  DialogTitle,\n} from "@/components/ui/dialog";\nimport "./tiempo-real-layout.css";\n\ntype BreakdownConcept = "COBRADO" | "CREDITO" | "PENDIENTE" | "CANCELADAS" | "SALIDAS_EN_TRANSITO" | "SALIDAS_CANCELADAS";\ntype BreakdownItem = {\n  id: number;\n  folio: number;\n  hora: string;\n  cliente: string;\n  importe: string;\n  formaPago: string | null;\n  facturado: boolean | null;\n  diasPlazo: number | null;\n  fechaVencimiento: string | null;\n  documentoTipo: "TICKET" | "NOTA" | null;\n  minutosEspera: number | null;\n  nombreUsuarioCancelacion: string | null;\n  canceladoAt: string | null;\n  motivoCancelacion: string | null;\n};\ntype SalidaBreakdownItem = {\n  salidaId: number;\n  folio: number;\n  origenId: number;\n  origen: string;\n  destinoId: number | null;\n  destino: string | null;\n  clienteId: number | null;\n  cliente: string | null;\n  fecha: string;\n  importe: string;\n  href: string;\n};\ntype Breakdown = {\n  concepto: BreakdownConcept;\n  items: (BreakdownItem | SalidaBreakdownItem)[];\n  total: number;\n  page: number;\n  pageSize: number;\n  montoTotal: string;\n};\n\nfunction formatCountLabel(\n  value: number,\n  singular: string,\n  plural: string,\n) {\n  return `${formatNumber(value, { kind: "count" })} ${value === 1 ? singular : plural}`;\n}\n\nasync function fetchBreakdown(\n  concepto: BreakdownConcept,\n  ubicacionId: number | null,\n  page: number,\n): Promise<Breakdown> {\n  const params = new URLSearchParams({ concepto, page: String(page), pageSize: "50" });\n  if (ubicacionId) params.set("ubicacionId", String(ubicacionId));\n  const response = await fetch(`/api/admin/dashboard/realtime/desglose?${params}`, {\n    credentials: "include",\n  });\n  if (!response.ok) throw new Error("No se pudo cargar el desglose.");\n  return response.json();\n}\n\nexport default function CajaTiempoReal() {\n  const { selectedLocationId } = useLocationScope();\n  const [breakdownConcept, setBreakdownConcept] = useState<BreakdownConcept | null>(null);\n  const [breakdownPage, setBreakdownPage] = useState(1);\n  const breakdown = useQuery({\n    queryKey: ["admin-realtime-breakdown", breakdownConcept, selectedLocationId, breakdownPage],\n    queryFn: () => fetchBreakdown(breakdownConcept!, selectedLocationId, breakdownPage),\n    enabled: breakdownConcept !== null,\n  });\n\n  const todayStr = new Intl.DateTimeFormat("en-CA", {\n    timeZone: "America/Mexico_City",\n    year: "numeric",\n    month: "2-digit",\n    day: "2-digit",\n  }).format(new Date());\n  const { data: cuentasData, isLoading: cuentasLoading, isError: cuentasError, refetch: refetchCuentas } = useSharedCuentasDestino(\n    selectedLocationId ?? undefined,\n    todayStr,\n    todayStr,\n    "hoy"\n  );\n\n  const {\n    data: dashboard,\n    isLoading: dashLoading,\n    isError: dashError,\n    refetch: refetchDash,\n    dataUpdatedAt: dashUpdatedAt\n  } = useGetAdminRealtimeDashboard(\n    selectedLocationId ? { ubicacionId: selectedLocationId } : undefined,\n    {\n      query: {\n        refetchInterval: 300000,\n        queryKey: getGetAdminRealtimeDashboardQueryKey(selectedLocationId ? { ubicacionId: selectedLocationId } : undefined)\n      }\n    }\n  );\n\n  const {\n    data: pending,\n    isLoading: pendingLoading,\n    isError: pendingError,\n    refetch: refetchPending,\n    dataUpdatedAt: pendingUpdatedAt\n  } = useGetAdminRealtimePending(\n    selectedLocationId ? { ubicacionId: selectedLocationId } : undefined,\n    {\n      query: {\n        refetchInterval: 30000,\n        queryKey: getGetAdminRealtimePendingQueryKey(selectedLocationId ? { ubicacionId: selectedLocationId } : undefined)\n      }\n    }\n  );\n\n  const isLoading = dashLoading;\n  const isError = dashError || pendingError;\n\n  const handleRefresh = () => {\n    refetchDash();\n    refetchPending();\n    refetchCuentas();\n  };\n\n  const lastUpdated = Math.max(dashUpdatedAt, pendingUpdatedAt);\n\n  const totals = dashboard?.totales;\n  const mergedPendingAmount = pending?.importe ?? totals?.pendiente ?? "0";\n  const mergedPendingCount = pending?.tickets ?? totals?.documentosPendientes ?? 0;\n  const pendingTickets = pending?.ticketsSinCobrar\n    ?? dashboard?.pendientes.ticketsSinCobrar\n    ?? mergedPendingCount;\n  const pendingNotes = pending?.notasSinAutorizar\n    ?? dashboard?.pendientes.notasSinAutorizar\n    ?? 0;\n  const pendingTone = attentionCardTone("amber", mergedPendingCount, mergedPendingAmount);\n  const cancelledTone = attentionCardTone("red", dashboard?.cancelaciones.tickets, dashboard?.cancelaciones.importe);\n  const transitTone = attentionCardTone("amber", dashboard?.salidasEnTransito.conteo, dashboard?.salidasEnTransito.importe);\n  const cancelledExitsTone = attentionCardTone("red", dashboard?.salidasCanceladas.conteo, dashboard?.salidasCanceladas.importe);\n  const isSalidaBreakdown = breakdownConcept === "SALIDAS_EN_TRANSITO" || breakdownConcept === "SALIDAS_CANCELADAS";\n  const openBreakdown = (concepto: BreakdownConcept) => {\n    setBreakdownPage(1);\n    setBreakdownConcept(concepto);\n  };\n\n  // Merge tiendas with pending per store\n  const mergedStores = (dashboard?.tiendas || []).map((store) => {\n    const pStore = pending?.tiendas?.find(p => p.ubicacionId === store.ubicacionId);\n    return {\n      ...store,\n      pendiente: pStore?.pendiente ?? store.pendiente,\n      pendientes30Min: pStore?.pendientes30Min ?? store.pendientes30Min,\n      alertas: pStore?.alertas ?? store.alertas\n    };\n  });\n\n  const detailHref = (fuentes: string[]) => {\n    const params = new URLSearchParams({ desde: todayStr, hasta: todayStr, preset: "hoy" });\n    if (selectedLocationId != null) params.set("ubicacionId", String(selectedLocationId));\n    fuentes.forEach((fuente) => params.append("fuente", fuente));\n    return `/caja/cuentas-destino/TODAS?${params.toString()}`;\n  };\n\n  const header = cuentasData?.encabezado;\n  const cobranzaStat = header ? {\n    title: "Cobrado en el periodo",\n    amount: header.cobrado.total,\n    fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],\n    breakdown: [\n       { label: "Cobros directos", amount: header.cobrado.contado, fuentes: ["POS"] },\n       { label: "Abonos a notas (neto de reversos)", amount: header.cobrado.abonos, fuentes: ["ABONO"] },\n       { label: "Saldo a favor (neto de reversos)", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] },\n    ],\n    className: "border-l-4 border-l-primary",\n  } : null;\n\n  return (\n    <AppLayout>\n      <div className="tiempo-real-layout max-w-[1600px] mx-auto space-y-6">\n        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-6">\n          <div>\n            <h1 className="text-3xl font-bold tracking-tight text-sidebar flex items-center gap-2">\n              <Activity className="h-8 w-8 text-primary" />\n              Tiempo real\n            </h1>\n            <p className="text-muted-foreground mt-1">\n              Monitoreo operativo de cobros.\n            </p>\n          </div>\n          <div className="flex items-center gap-4 text-sm">\n            {lastUpdated > 0 && (\n              <span className="text-muted-foreground flex items-center gap-1">\n                <Clock className="h-4 w-4" />\n                Actualizado: {format(new Date(lastUpdated), "HH:mm:ss", { locale: es })}\n              </span>\n            )}\n            <Button variant="outline" onClick={handleRefresh} disabled={dashLoading || pendingLoading}>\n              <RefreshCw className={`mr-2 h-4 w-4 ${(dashLoading || pendingLoading) ? "animate-spin" : ""}`} />\n              Actualizar\n            </Button>\n          </div>\n        </div>\n\n        {isLoading ? (\n          <div className="h-[400px] flex items-center justify-center">\n            <Loader2 className="h-12 w-12 animate-spin text-primary opacity-50" />\n          </div>\n        ) : isError ? (\n          <div className="h-[200px] flex flex-col items-center justify-center text-destructive bg-destructive/5 rounded-xl border border-destructive/20">\n            <AlertCircle className="h-10 w-10 mb-2 opacity-80" />\n            <p className="font-semibold">No se pudo cargar o actualizar el tablero</p>\n            <p className="text-sm opacity-80 mt-1">Es posible que la conexión esté intermitente.</p>\n            <Button variant="outline" className="mt-4" onClick={handleRefresh}>Intentar de nuevo</Button>\n          </div>\n        ) : totals ? (\n          <div className="space-y-6 animate-in fade-in duration-500">\n            <div className="flex flex-col gap-4">\n              <div className="grid w-full min-w-0 grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">\n              <Card className="border-sidebar/10 shadow-sm recon-top-card">\n                <div className="recon-icon-box blue">\n         '... 35886 more characters,
+    expected: /grid-cols-1 md:grid-cols-2 xl:grid-cols-4[\s\S]*Ventas \(Total\)[\s\S]*Cobrado \(Caja\)[\s\S]*Ventas a crédito[\s\S]*Utilidad/,
+    operator: 'match',
+    diff: 'simple'
+  }

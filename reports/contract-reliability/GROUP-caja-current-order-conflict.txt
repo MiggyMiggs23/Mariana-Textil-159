@@ -1,0 +1,27 @@
+✖ documented requirement conflict: Cobranza before signals (2992.987792ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5679.747523
+
+✖ failing tests:
+
+test at src/caja-current-order.evidence.test.ts:14:400
+✖ documented requirement conflict: Cobranza before signals (2992.987792ms)
+  AssertionError [ERR_ASSERTION]: DOCUMENTED CONFLICT: Cobranza must be before signals
+      at TestContext.<anonymous> (/tmp/observable-caja-negative-PqHDV8/artifacts/mariana-textil/src/caja-current-order.evidence.test.ts:42:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/observable-caja-negative-PqHDV8/artifacts/mariana-textil/tsconfig.render-tests.json

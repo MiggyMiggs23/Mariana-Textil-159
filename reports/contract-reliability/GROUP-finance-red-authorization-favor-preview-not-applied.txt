@@ -1,0 +1,39 @@
+✖ cash authorization previews the server-calculated automatic favor application (2106.820841ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2949.079786
+
+✖ failing tests:
+
+test at src/components/cliente-saldo-a-favor.contract.test.ts:1:722
+✖ cash authorization previews the server-calculated automatic favor application (2106.820841ms)
+  AssertionError [ERR_ASSERTION]: the real Cobros authorization dialog presents the automatic server preview without a manual favor control
+  + actual - expected
+  
+    {
+  +   aplicado: false,
+  -   aplicado: true,
+      disponible: true,
+      manualControl: false,
+      remanente: true
+    }
+  
+      at <anonymous> (/tmp/finance-observable-clone-OeVwAF/artifacts/mariana-textil/src/components/cliente-saldo-a-favor.contract.test.ts:123:14)
+      at async withBrowserFixture (/tmp/finance-observable-clone-OeVwAF/artifacts/mariana-textil/src/observable-test/browser.ts:431:12)
+      at async TestContext.<anonymous> (/tmp/finance-observable-clone-OeVwAF/artifacts/mariana-textil/src/components/cliente-saldo-a-favor.contract.test.ts:90:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: { disponible: true, aplicado: false, remanente: true, manualControl: false },
+    expected: { disponible: true, aplicado: true, remanente: true, manualControl: false },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/finance-observable-clone-OeVwAF/artifacts/mariana-textil/tsconfig.render-tests.json

@@ -1,0 +1,11 @@
+✔ cash authorization previews the server-calculated automatic favor application (2070.144455ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2709.541011
+
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/finance-observable-clone-OeVwAF/artifacts/mariana-textil/tsconfig.render-tests.json

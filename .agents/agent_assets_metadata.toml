@@ -1562,3 +1562,17 @@ mtime_ms = 1789662360340
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ee4bcc1a-a3e4-43c7-81d0-697a31b1f72f/7a36f684-d9a8-4961-a86b-a1b655fbedf2"
 storage_version_token = "1789662409157694"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "OGkeXrzPcuA0_UgW1KrLG"
+uri = "file://reports/contract-reliability/README.md"
+type = "text"
+title = "Verificación de contratos: 9 acreditados y 1 pendiente"
+description = "Conteos antes y después, los nueve negativos con salida 1/0, typecheck completo en cero y evidencia del bloqueo de orden en Caja."
+logical_id = "f37fe09a-53d3-4f1c-9cb7-8c62deac9b74"
+content_hash = "sha256:fb0d5a3f1d957816c07017c150a11af27527459ed13f10510d1bd14ecd90f036"
+size = 7085
+mtime_ms = 1789668845973
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f37fe09a-53d3-4f1c-9cb7-8c62deac9b74/14d27674-a98c-4532-b475-fa22b952a709"
+storage_version_token = "1789668891861529"
+content_type = "text/markdown"

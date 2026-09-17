@@ -1,0 +1,11 @@
+✔ Block 4 functionality in ticket detail (7270.863201ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7914.31726
+
+[frontend-test-runner] 1 file(s); tsconfig=/tmp/finance-observable-clone-1rPnE3/artifacts/mariana-textil/tsconfig.render-tests.json

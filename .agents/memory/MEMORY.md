@@ -27,7 +27,7 @@
 - [Cursor visual en PDFs automatizados](automated-pdf-cursor.md) — distinguir una hoja del controlador visual del desbordamiento real mediante objetos y texto del PDF.
 - [Deuda de Entradas con costos pendientes](pending-entry-supplier-debt.md) — no estimar una COMPRA; el cargo nace al capturar el costo real y la recepción sigue permitida.
 - [Identificadores de proveedor en la interfaz](supplier-identifiers-ui.md) — nunca mostrar IDs numéricos; usar nombre de proveedor o sitio según el contexto.
-- [Pruebas sobre componentes realmente montados](mounted-component-tests.md) — una prueba visual debe verificar el componente importado por la app, no un duplicado sin uso.
+- [Pruebas sobre componentes realmente montados](mounted-component-tests.md) — montar código real, validar fixtures y conservar cobertura al reescribir contratos.
 - [Inicializadores en bases de prueba](test-database-startup-initializers.md) — después de push/seed, arrancar la API antes de probar restricciones creadas por inicializadores.
 - [Índices aditivos con drift de esquema](additive-index-schema-drift.md) — si push propone truncar por drift ajeno, abortar y aplicar solo DDL aditivo explícito.
 - [Defectos ajenos detectados en validación](validation-discovered-security-fixes.md) — corregirlos con autorización y en commit separado; auditar equivalentes antes de ampliar la tanda.

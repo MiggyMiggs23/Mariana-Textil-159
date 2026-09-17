@@ -1296,3 +1296,27 @@ Resultado: `reports/prompt-s/entrega.md`. Se sustituyeron únicamente las seis c
 **Verificado en esta sesión:** paridad de todos los campos de las dos funciones afectadas sobre un mismo snapshot real de solo lectura, ocho pares de resumen y margen de sesión; casos adicionales con SQL real sobre CTE `VALUES`, sin escrituras. Se comprobó la banda de Cobranza contra el total canónico de Cuentas Destino, separada de Contado cobrado; también la identidad de ventas y la conciliación positiva de tres filas/$180 en tres y dos páginas. Guardia 3/3. `pnpm run typecheck` completo terminó en cero; el último ajuste de la guardia se volvió a comprobar con typecheck de API. Codegen ejecutado sin diferencias.
 
 **No está toda la regresión en verde:** el mismo manifiesto de 28 archivos dio 215 pruebas, 210 aprobadas y cinco fallos idénticos antes/después. Son dos aserciones de `pos-caja-final.contract.test.ts`, una de `tiempo-real-breakdown.contract.test.ts`, una de `tiempo-real.contract.test.ts` y una de `detail-link-tables.contract.test.ts`; no se alteraron para aprobar artificialmente. Suites de integración con escrituras quedaron fuera. No se reiniciaron servicios, ejecutaron inicializadores ni crearon usuarios/sesiones; no se acredita activación o navegación autenticada. Prompt P sigue detenido y su Grupo 1 sin cerrar.
+
+## Regla de aceptación de pruebas de contrato
+
+Una prueba de contrato comprueba **comportamiento observable, nunca la forma
+textual del código**. No depende de nombres de variables, ternarios escritos
+literalmente, orden de clases CSS, condiciones textuales ni número de
+apariciones de una cadena en la fuente.
+
+Antes de escribir o reescribir una prueba, se declara la regla vigente que debe
+comprobar y su referencia en este documento. Si la regla no está documentada,
+se informa expresamente; una expectativa antigua no autoriza restablecer un
+flujo retirado. Las pruebas de interfaz montan los componentes reales y observan
+sus resultados e interacciones, no una copia de su implementación.
+
+**Una prueba nueva o reescrita solo se acepta después de verla fallar con el
+defecto que debe detectar.** La comprobación introduce el defecto en una copia
+aislada, ejecuta el corredor real y conserva el código de salida y la aserción
+semántica fallida. Un error de importación, compilación o preparación no acredita
+esa detección. Se retira el defecto de la misma copia y se exige aprobación.
+Nunca se sustituyen temporalmente archivos servidos por la aplicación.
+
+No se omiten pruebas para obtener verde ni se cambia el comportamiento de la
+aplicación para satisfacer una expectativa. Si una reescritura requiere cambiar
+la aplicación, se detiene ese caso y se reporta para decisión del propietario.

@@ -1,0 +1,25 @@
+{
+  "script": "scripts/src/observable-identity-negative.mjs",
+  "testCount": 3,
+  "renamedTests": [],
+  "results": [
+    {
+      "id": "cobros-facturado-rojo",
+      "redExit": 1,
+      "restoredExit": 0,
+      "name": "invoiced sales are emphasized without changing the normal document label"
+    },
+    {
+      "id": "kardex-ruta-resuelta",
+      "redExit": 1,
+      "restoredExit": 0,
+      "name": "kardex document cells keep desktop and mobile resolved-route branches"
+    },
+    {
+      "id": "proveedor-utilidad-margen",
+      "redExit": 1,
+      "restoredExit": 0,
+      "name": "monetary profit labels use Utilidad while percentages remain Margen"
+    }
+  ]
+}

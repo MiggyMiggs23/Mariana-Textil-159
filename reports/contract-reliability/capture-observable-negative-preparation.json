@@ -1,0 +1,6 @@
+{
+  "suite": "observable-capture-negative",
+  "status": "superseded-preparation-error",
+  "error": "The first isolated clone lacked its root node_modules symlink, so the canonical runner could not resolve tsx.",
+  "resolution": "The renamed capture negative script creates read-only clone symlinks for root dependencies, workspace libraries, and api-server before executing the selected cases."
+}

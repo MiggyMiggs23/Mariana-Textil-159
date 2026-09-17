@@ -1,0 +1,25 @@
+{
+  "suite": "observable-capture-negative",
+  "mapping": {
+    "sale-counter": "source-pattern assertions → mounted page scan/add/remove counter behavior",
+    "entradas-capture-layout": "source-pattern assertions → mounted capture geometry and shared unit behavior"
+  },
+  "cases": [
+    {
+      "id": "sale-counter",
+      "file": "src/components/salida-venta-cliente-nueva.contract.test.ts",
+      "testName": "customer-sale assembly keeps a visible circular roll counter in sync with scans",
+      "negativeExit": 1,
+      "negativeAssertion": true,
+      "restoredExit": 0
+    },
+    {
+      "id": "entradas-capture-layout",
+      "file": "src/pages/entradas-roll-capture.contract.test.ts",
+      "testName": "reserva espacios separados para cantidad, unidad y cámara en la captura",
+      "negativeExit": 1,
+      "negativeAssertion": true,
+      "restoredExit": 0
+    }
+  ]
+}

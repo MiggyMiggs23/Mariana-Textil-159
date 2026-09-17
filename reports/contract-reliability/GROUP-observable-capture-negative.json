@@ -1,0 +1,45 @@
+{
+  "suite": "observable-GRUPO-negative",
+  "cases": [
+    {
+      "id": "sale-counter",
+      "negativeExit": 1,
+      "negativeAssertion": true,
+      "restoredExit": 0,
+      "testName": "customer-sale assembly keeps a visible circular roll counter in sync with scans",
+      "file": "src/components/salida-venta-cliente-nueva.contract.test.ts"
+    },
+    {
+      "id": "entradas-capture-layout",
+      "negativeExit": 1,
+      "negativeAssertion": true,
+      "restoredExit": 0,
+      "testName": "reserva espacios separados para cantidad, unidad y cámara en la captura",
+      "file": "src/pages/entradas-roll-capture.contract.test.ts"
+    },
+    {
+      "id": "cobros-facturado-rojo",
+      "negativeExit": 1,
+      "negativeAssertion": true,
+      "restoredExit": 0,
+      "testName": "invoiced sales are emphasized without changing the normal document label",
+      "file": "src/pages/cobros-payment-methods.contract.test.ts"
+    },
+    {
+      "id": "kardex-documento-ruta",
+      "negativeExit": 1,
+      "negativeAssertion": true,
+      "restoredExit": 0,
+      "testName": "kardex document cells keep desktop and mobile resolved-route branches",
+      "file": "src/pages/inventory-reference-links.contract.test.ts"
+    },
+    {
+      "id": "proveedor-utilidad-margen",
+      "negativeExit": 1,
+      "negativeAssertion": true,
+      "restoredExit": 0,
+      "testName": "monetary profit labels use Utilidad while percentages remain Margen",
+      "file": "src/utilidad-nomenclature.contract.test.ts"
+    }
+  ]
+}
