@@ -1450,3 +1450,17 @@ mtime_ms = 1789589814964
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/b2382122-95bb-4bde-9668-c671c69e9753/0ccfab26-0ba6-4021-a0c2-6a138b0d5e29"
 storage_version_token = "1789589902161259"
 content_type = "text/html"
+
+[[outputs]]
+id = "ar9rLms4mgGJV9ItM2onx"
+uri = "file://reports/entradas-ajustes/propuesta-buscador.html"
+type = "text"
+title = "Propuesta de buscador: tela y color completos"
+description = "Diseño previo a implementación, con ejemplos del catálogo real y comprobación de los 1,234 productos en escritorio y móvil."
+logical_id = "bffca9c1-28ab-4e2e-8923-fa521a407179"
+content_hash = "sha256:a39ae802c2c44444f4f32494fc572da47a17026089686dc1c81e0a404428b209"
+size = 315062
+mtime_ms = 1789611242846
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bffca9c1-28ab-4e2e-8923-fa521a407179/b7f03562-fe85-4b17-8734-abf16b6178f2"
+storage_version_token = "1789611277537906"
+content_type = "text/html"

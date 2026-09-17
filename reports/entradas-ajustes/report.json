@@ -1,0 +1,221 @@
+{
+  "proposalOnly": true,
+  "productionChanges": 0,
+  "databaseWrites": 0,
+  "usersCustomersSuppliersRead": false,
+  "expectedCatalogCount": 1234,
+  "actualCatalogCount": 1234,
+  "countMismatch": false,
+  "catalogSnapshot": "reports/entradas-ajustes/catalogo.json",
+  "queryIdentity": {
+    "database": "heliumdb",
+    "schema": "public",
+    "read_only": "on"
+  },
+  "database": {
+    "source": "@workspace/db exported application pool",
+    "poolConfigSource": "lib/db/src/index.ts",
+    "dedicatedClient": true,
+    "connectionStringRead": "effective DATABASE_URL through application pool; not logged",
+    "poolSettings": {
+      "max": "DB_POOL_MAX (default 30; bounded 1..100)",
+      "idleTimeoutMillis": "DB_POOL_IDLE_TIMEOUT_MS (default 30000)",
+      "connectionTimeoutMillis": "DB_POOL_CONNECTION_TIMEOUT_MS (default 5000)",
+      "statementTimeoutMillis": "DB_STATEMENT_TIMEOUT_MS (default 30000)",
+      "queryTimeoutMillis": "DB_QUERY_TIMEOUT_MS (default 35000)"
+    }
+  },
+  "schema": {
+    "canonicalTable": "productos",
+    "source": "lib/db/src/schema/productos.ts",
+    "columnsSelected": [
+      "id",
+      "sku",
+      "tela",
+      "color",
+      "unidad",
+      "activo"
+    ]
+  },
+  "apiHandler": {
+    "source": "artifacts/api-server/src/routes/inventario.ts",
+    "route": "GET /entradas/catalogos",
+    "selection": [
+      "id",
+      "sku",
+      "tela",
+      "color",
+      "unidad",
+      "activo"
+    ],
+    "activeOnly": true,
+    "predicate": "WHERE productos.activo = true",
+    "order": [
+      "tela ASC",
+      "color ASC"
+    ]
+  },
+  "counts": {
+    "all": 1234,
+    "active": 1234,
+    "inactive": 0
+  },
+  "longest": {
+    "tela": {
+      "length": 26,
+      "rows": [
+        {
+          "id": 114,
+          "sku": "MEZDIA10-IND",
+          "tela": "Mezclilla Diamantina 10 Oz",
+          "color": "Indigo Lisa",
+          "unidad": "METRO",
+          "valor": "Mezclilla Diamantina 10 Oz"
+        },
+        {
+          "id": 1720,
+          "sku": "MEZDIA10-IND2",
+          "tela": "Mezclilla Diamantina 10 Oz",
+          "color": "Indigo Rayada",
+          "unidad": "METRO",
+          "valor": "Mezclilla Diamantina 10 Oz"
+        }
+      ]
+    },
+    "color": {
+      "length": 18,
+      "rows": [
+        {
+          "id": 1262,
+          "sku": "GABGAP170-BLA2",
+          "tela": "Gabardina Gap 1.70",
+          "color": "Blanco Sandorizado",
+          "unidad": "METRO",
+          "valor": "Blanco Sandorizado"
+        },
+        {
+          "id": 1721,
+          "sku": "GUA100-BLA",
+          "tela": "Guata 100",
+          "color": "Blanca S/Comprimir",
+          "unidad": "METRO",
+          "valor": "Blanca S/Comprimir"
+        },
+        {
+          "id": 1722,
+          "sku": "GUA150-BLA2",
+          "tela": "Guata 150",
+          "color": "Blanca S/Comprimir",
+          "unidad": "METRO",
+          "valor": "Blanca S/Comprimir"
+        },
+        {
+          "id": 1723,
+          "sku": "GUA200-BLA2",
+          "tela": "Guata 200",
+          "color": "Blanca S/Comprimir",
+          "unidad": "METRO",
+          "valor": "Blanca S/Comprimir"
+        },
+        {
+          "id": 1724,
+          "sku": "GUA70-BLA2",
+          "tela": "Guata 70",
+          "color": "Blanca S/Comprimir",
+          "unidad": "METRO",
+          "valor": "Blanca S/Comprimir"
+        }
+      ]
+    },
+    "sku": {
+      "length": 14,
+      "rows": [
+        {
+          "id": 1917,
+          "sku": "CAMFLOCHI-VER2",
+          "tela": "Campesina Flor Chica",
+          "color": "Verde Bandera",
+          "unidad": "METRO",
+          "valor": "CAMFLOCHI-VER2"
+        },
+        {
+          "id": 1947,
+          "sku": "CAMFLOGRA-VER2",
+          "tela": "Campesina Flor Grande",
+          "color": "Verde Limon",
+          "unidad": "METRO",
+          "valor": "CAMFLOGRA-VER2"
+        },
+        {
+          "id": 1953,
+          "sku": "CAMFLOMAR-VER2",
+          "tela": "Campesina Flor Margarita",
+          "color": "Verde Limon",
+          "unidad": "METRO",
+          "valor": "CAMFLOMAR-VER2"
+        },
+        {
+          "id": 1934,
+          "sku": "CAMFLOMED-VER3",
+          "tela": "Campesina Flor Mediana",
+          "color": "Verde Bandera",
+          "unidad": "METRO",
+          "valor": "CAMFLOMED-VER3"
+        },
+        {
+          "id": 1930,
+          "sku": "CAMFLOMED-VER2",
+          "tela": "Campesina Flor Mediana",
+          "color": "Verde Limon",
+          "unidad": "METRO",
+          "valor": "CAMFLOMED-VER2"
+        }
+      ]
+    }
+  },
+  "recommendation": "own line for tela (wrap), own line for full color (wrap without clamp), distinct SKU line, unit at right; closed selected summary separate from input",
+  "alternatives": {
+    "colorColumn": "Rejected: long color steals narrow option width.",
+    "truncateTelaOnly": "Rejected: can hide fabric distinction.",
+    "reduceFont": "Rejected: loses readability.",
+    "currentSingleLineTruncate": "Rejected: color is currently in a truncating line."
+  },
+  "geometry": {
+    "method": "Playwright Chromium local file with all catalog rows; no API, network, auth, sessions, or writes",
+    "sourceFontStack": "Inter, ui-sans-serif, system-ui, sans-serif (same app root stack)",
+    "computedFontLimitation": "Inter was not requested from an external source; report records the effective local fallback if unavailable.",
+    "viewports": {
+      "mobile": {
+        "width": 402,
+        "optionWidth": 354
+      },
+      "desktop": {
+        "width": 1280,
+        "optionWidth": 640
+      }
+    },
+    "measurement": {
+      "mobile": {
+        "rowsMeasured": 1234,
+        "crop": 0,
+        "overlap": 0,
+        "optionWidth": 354,
+        "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
+        "fontLoaded": false
+      },
+      "desktop": {
+        "rowsMeasured": 1234,
+        "crop": 0,
+        "overlap": 0,
+        "optionWidth": 640,
+        "fontFamily": "Inter, ui-sans-serif, system-ui, sans-serif",
+        "fontLoaded": false
+      }
+    }
+  },
+  "files": {
+    "catalog": "reports/entradas-ajustes/catalogo.json",
+    "report": "reports/entradas-ajustes/report.json",
+    "proposal": "reports/entradas-ajustes/propuesta-buscador.html"
+  }
+}
