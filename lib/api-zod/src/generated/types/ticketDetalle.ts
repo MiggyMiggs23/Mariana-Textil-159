@@ -8,6 +8,7 @@
 import type { DocumentoTipoTicket } from './documentoTipoTicket';
 import type { SalidaVentaLink } from './salidaVentaLink';
 import type { TicketCredito } from './ticketCredito';
+import type { TicketDetalleAutorizacionEstado } from './ticketDetalleAutorizacionEstado';
 import type { TicketDetalleDiasCreditoCliente } from './ticketDetalleDiasCreditoCliente';
 import type { TicketLinea } from './ticketLinea';
 import type { TicketPago } from './ticketPago';
@@ -16,6 +17,8 @@ import type { ViajeTicketLink } from './viajeTicketLink';
 
 export type TicketDetalle = TicketResumen & TicketCredito & ({
   documentoTipo: DocumentoTipoTicket;
+  /** Estado de autorización persistido del documento; se omite en respuestas antiguas. */
+  autorizacionEstado?: TicketDetalleAutorizacionEstado;
   /** @nullable */
   nombreDestinatario?: string | null;
   /** @nullable */

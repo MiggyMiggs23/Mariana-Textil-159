@@ -1492,3 +1492,45 @@ mtime_ms = 1789611853762
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/92e7ee90-db6d-4950-9af9-bac587d5e56c/2f333420-95d3-4949-afaa-228384ee2042"
 storage_version_token = "1789611865964970"
 content_type = "image/png"
+
+[[outputs]]
+id = "dEsIxuBxuE4Ek2ZUfMtBh"
+uri = "file://reports/prompt-g-after/montages/quantity-comparison.jpg"
+type = "image"
+title = "Captura de cantidades — antes y después"
+description = "Prueba aislada en escritorio y 402 px. La composición existente no mostró solapamiento; se conservó."
+logical_id = "9fcb4798-e59b-45cf-aa83-4a526c06f095"
+content_hash = "sha256:d922745f0267198bbd7e41db418bfdbaaae51669ec96f31b9009feee3a98ff6b"
+size = 158291
+mtime_ms = 1789618388570
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9fcb4798-e59b-45cf-aa83-4a526c06f095/404f0278-9da3-425f-87f3-e7e3ecb0c0e4"
+storage_version_token = "1789619731212060"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "KGri3HzRnzW_aIupPS14O"
+uri = "file://reports/prompt-g-after/montages/ticket-header-comparison.jpg"
+type = "image"
+title = "Nombre del documento — antes y después"
+description = "Componentes reales con nota sintética: el título y las acciones distinguen Nota de Ticket."
+logical_id = "c1bfd68f-19d9-4bcc-a731-672471b61b09"
+content_hash = "sha256:db4678fce64b1b4f630aa15a4a25e0044101fbd5a630df885e11ea9354dc3fb8"
+size = 37247
+mtime_ms = 1789619531126
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c1bfd68f-19d9-4bcc-a731-672471b61b09/6932413a-a448-4421-8abf-3602da076156"
+storage_version_token = "1789619731863896"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "vxWHFkbwPUGZnMe7v4Q90"
+uri = "file://reports/prompt-g-after/montages/ticket-badges-comparison.jpg"
+type = "image"
+title = "Insignias — antes y después"
+description = "Datos sintéticos validados por el esquema corregido: Nota autorizada y ABONO PARCIAL. No es una sesión real autenticada."
+logical_id = "04eaa5af-9811-4c87-85a2-1f7248112d23"
+content_hash = "sha256:7e909b363cf5e60e69c5141b56509da2891f62d2c8447aff1e836c1dfd62bca1"
+size = 131872
+mtime_ms = 1789619531766
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/04eaa5af-9811-4c87-85a2-1f7248112d23/b26bb306-0eaa-4ac1-b059-221a2ed3e51a"
+storage_version_token = "1789619732512976"
+content_type = "image/jpeg"

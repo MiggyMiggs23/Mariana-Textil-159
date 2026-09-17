@@ -13053,6 +13053,10 @@ components:
           properties:
             documentoTipo:
               $ref: "#/components/schemas/DocumentoTipoTicket"
+            autorizacionEstado:
+              type: string
+              enum: [NO_APLICA, PENDIENTE, AUTORIZADA]
+              description: Estado de autorización persistido del documento; se omite en respuestas antiguas.
             nombreDestinatario: { type: ["string", "null"] }
             direccionEntregaSnapshot: { type: ["string", "null"] }
             convertidoANotaPorCobro:

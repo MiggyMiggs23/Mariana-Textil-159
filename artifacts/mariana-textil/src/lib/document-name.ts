@@ -1,3 +1,5 @@
+import { getApiErrorMessage } from "@/lib/api-error";
+
 export type DocumentoStatusPresentation = {
   label: string;
   className: string;
@@ -8,7 +10,35 @@ export function documentoTipoLabel(
 ): string {
   if (tipo === "NOTA") return "Nota";
   if (tipo === "TICKET") return "Ticket";
-  return tipo ?? "Documento";
+  return tipo || "Documento";
+}
+
+const canonicalDocumentErrorMessages: Record<string, (nombre: string) => string> = {
+  "Ticket no encontrado.": (nombre) =>
+    `${nombre} no ${nombre === "Nota" ? "encontrada" : "encontrado"}.`,
+  "No tienes permiso para consultar este ticket.": (nombre) =>
+    `${nombre}: no tienes permiso para consultar este documento.`,
+  "El ticket ya está cancelado.": (nombre) =>
+    `${nombre === "Nota" ? "La" : "El"} ${nombre.toLowerCase()} ya está ${nombre === "Nota" ? "cancelada" : "cancelado"}.`,
+  "No se puede cobrar un ticket cancelado.": (nombre) =>
+    `${nombre}: no se puede ${nombre === "Nota" ? "autorizar" : "cobrar"} un documento cancelado.`,
+  "El ticket ya fue cobrado.": (nombre) =>
+    nombre === "Nota" ? `${nombre}: el documento ya fue procesado en Caja.` : `${nombre} ya fue cobrado.`,
+  "Se requiere una sesión de caja abierta en la ubicación del ticket.": (nombre) =>
+    `${nombre}: se requiere una sesión de caja abierta en la ubicación del documento.`,
+};
+
+/**
+ * Rewords only canonical document phrases emitted by the existing API.
+ * Unknown server messages remain exact so their useful cause is not hidden.
+ */
+export function documentoErrorMessage(
+  error: unknown,
+  documentoTipo: string | null | undefined,
+  fallback = "No se pudo completar la operación.",
+): string {
+  const message = getApiErrorMessage(error, fallback);
+  return canonicalDocumentErrorMessages[message]?.(documentoTipoLabel(documentoTipo)) ?? message;
 }
 
 export function documentoStatusPresentation({

@@ -702,6 +702,7 @@ export * from './ticketCredito';
 export * from './ticketCreditoDiasPlazo';
 export * from './ticketCreditoEstadoNota';
 export * from './ticketDetalle';
+export * from './ticketDetalleAutorizacionEstado';
 export * from './ticketDetalleDiasCreditoCliente';
 export * from './ticketDocumentoImpresion';
 export * from './ticketDocumentoImpresionBase';

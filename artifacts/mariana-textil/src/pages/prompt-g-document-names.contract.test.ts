@@ -36,6 +36,16 @@ test("cada superficie Prompt G obtiene el nombre visible desde el helper compart
     /Se cancelará \$\{documentoNombre\} #\$\{ticket\.folio\} y se revertirán/,
   );
   assert.doesNotMatch(sources[0], /de este\s+ticket/);
+  assert.doesNotMatch(sources[0], /cancelar el \$\{documentoNombre/);
+  assert.doesNotMatch(sources[0], /\$\{documentoNombre\} cancelado correctamente/);
+  for (const text of [
+    "${documentoNombre}: ingresa un motivo de cancelación",
+    "${documentoNombre}: se requieren credenciales de administrador para cancelar",
+    "${documentoNombre}: cancelación completada correctamente",
+    "${documentoNombre}: no se pudo completar la cancelación.",
+  ]) {
+    assert.ok(sources[0].includes(text), `Mensaje compartido ausente: ${text}`);
+  }
 });
 
 test("entradas usa la unidad compartida también para la captura de piezas", async () => {

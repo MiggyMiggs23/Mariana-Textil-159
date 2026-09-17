@@ -5555,6 +5555,7 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
@@ -6254,6 +6255,7 @@ export const CrearTicketResponse = zod.object({
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
@@ -6518,6 +6520,7 @@ export const ObtenerTicketResponse = zod.object({
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
@@ -6731,6 +6734,7 @@ export const CancelarTicketResponse = zod.object({
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
@@ -6848,6 +6852,7 @@ export const CobrarTicketResponse = zod.object({
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
@@ -6983,6 +6988,7 @@ export const AutorizarNotaResponse = zod.object({
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),
@@ -8141,6 +8147,7 @@ export const GenerarVentaDesdeSalidasResponse = zod.object({
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
+  "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
   "direccionEntregaSnapshot": zod.string().nullish(),
   "convertidoANotaPorCobro": zod.boolean().describe('Indica que esta operación de cobro convirtió el comprobante de TICKET a NOTA por incluir crédito.'),

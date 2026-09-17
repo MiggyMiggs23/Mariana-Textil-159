@@ -3094,6 +3094,18 @@ export const DocumentoTipoTicket = {
 } as const;
 
 /**
+ * Estado de autorización persistido del documento; se omite en respuestas antiguas.
+ */
+export type TicketDetalleAutorizacionEstado = typeof TicketDetalleAutorizacionEstado[keyof typeof TicketDetalleAutorizacionEstado];
+
+
+export const TicketDetalleAutorizacionEstado = {
+  NO_APLICA: 'NO_APLICA',
+  PENDIENTE: 'PENDIENTE',
+  AUTORIZADA: 'AUTORIZADA',
+} as const;
+
+/**
  * Plazo habitual permitido del cliente; null cuando no está configurado.
  * @nullable
  */
@@ -3204,6 +3216,8 @@ export interface TicketPago {
 
 export type TicketDetalle = TicketResumen & TicketCredito & ({
   documentoTipo: DocumentoTipoTicket;
+  /** Estado de autorización persistido del documento; se omite en respuestas antiguas. */
+  autorizacionEstado?: TicketDetalleAutorizacionEstado;
   /** @nullable */
   nombreDestinatario?: string | null;
   /** @nullable */

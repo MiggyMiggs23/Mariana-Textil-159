@@ -679,6 +679,7 @@ export * from "./generated/types/ticketCredito";
 export * from "./generated/types/ticketCreditoDiasPlazo";
 export * from "./generated/types/ticketCreditoEstadoNota";
 export * from "./generated/types/ticketDetalle";
+export * from "./generated/types/ticketDetalleAutorizacionEstado";
 export * from "./generated/types/ticketDetalleDiasCreditoCliente";
 export * from "./generated/types/ticketDocumentoImpresion";
 export * from "./generated/types/ticketDocumentoImpresionBase";

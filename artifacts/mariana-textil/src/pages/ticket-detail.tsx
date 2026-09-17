@@ -10,7 +10,6 @@ import {
   Role,
   useGetCurrentUser,
   getGetCurrentUserQueryKey,
-  TicketDetalle,
   useObtenerDocumentoImpresionTicket,
   getObtenerDocumentoImpresionTicketQueryKey,
   getGetSalidaQueryKey,
@@ -40,7 +39,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { hasPermission, Modules } from "@/lib/permisos";
-import { getApiErrorMessage } from "@/lib/api-error";
 import { PasswordInput } from "@/components/ui/password-input";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import {
@@ -58,6 +56,7 @@ import { useReimprimirClienteNota } from "@workspace/api-client-react";
 import { formatDateOnlyMx } from "@/lib/date-only";
 import {
   documentoStatusPresentation,
+  documentoErrorMessage,
   documentoTipoLabel,
 } from "@/lib/document-name";
 
@@ -116,7 +115,7 @@ export default function TicketDetailPage() {
   });
 
   const documentoNombre = documentoTipoLabel(ticket?.documentoTipo);
-  const isNota = ticket ? (ticket as TicketDetalle).documentoTipo === "NOTA" : false;
+  const isNota = ticket?.documentoTipo === "NOTA";
 
   const { data: printInterna, isLoading: printInternaLoading, isError: printInternaError } = useObtenerDocumentoImpresionTicket(
     ticketId,
@@ -162,7 +161,7 @@ export default function TicketDetailPage() {
       ? printWhenReady("print-credito")
       : thermalPrintRoot.current
         ? printThermalTicket(thermalPrintRoot.current)
-        : Promise.reject(new Error("No se encontró el ticket térmico."));
+        : Promise.reject(new Error(`No se encontró el ${documentoNombre.toLowerCase()} térmico.`));
     void printPromise.then(() => {
       if (cancelled) return;
       window.history.replaceState(
@@ -184,13 +183,13 @@ export default function TicketDetailPage() {
 
   const handlePrintNota = () => {
     if (!isPrintReady) return;
-    if (ticket?.clienteId && (ticket as TicketDetalle).esCredito) {
+    if (ticket?.clienteId && ticket.esCredito) {
       reimprimirNota.mutate({ id: ticket.clienteId, ticketId }, {
         onSuccess: () => {
           void printWhenReady("print-credito");
         },
         onError: (err) => {
-          toast({ title: `${documentoNombre}: no se pudo auditar reimpresión`, description: getApiErrorMessage(err), variant: "destructive" });
+          toast({ title: `${documentoNombre}: no se pudo auditar reimpresión`, description: documentoErrorMessage(err, ticket?.documentoTipo), variant: "destructive" });
         }
       });
     } else {
@@ -201,14 +200,14 @@ export default function TicketDetailPage() {
   const handleCancelar = () => {
     setPasswordVisibilityResetKey((current) => current + 1);
     if (!motivo.trim()) {
-      toast({ title: `Debes ingresar un motivo para cancelar el ${documentoNombre.toLowerCase()}`, variant: "destructive" });
+      toast({ title: `${documentoNombre}: ingresa un motivo de cancelación`, variant: "destructive" });
       return;
     }
 
     if (user?.rol !== Role.ADMIN) {
       if (!adminUser || !adminPass) {
         toast({
-          title: `Se requieren credenciales de administrador para cancelar el ${documentoNombre.toLowerCase()}`,
+          title: `${documentoNombre}: se requieren credenciales de administrador para cancelar`,
           variant: "destructive",
         });
         return;
@@ -227,7 +226,7 @@ export default function TicketDetailPage() {
       { id: ticketId, data: { motivo, credencialesAdmin } },
       {
         onSuccess: () => {
-          toast({ title: `${documentoNombre} cancelado correctamente` });
+          toast({ title: `${documentoNombre}: cancelación completada correctamente` });
           setCancelOpen(false);
           setCancelConfirmationOpen(false);
           setAdminPass("");
@@ -242,9 +241,10 @@ export default function TicketDetailPage() {
         onError: (err: unknown) => {
           toast({
             title: "Error al cancelar",
-            description: getApiErrorMessage(
+            description: documentoErrorMessage(
               err,
-              `No se pudo cancelar el ${documentoNombre.toLowerCase()}.`,
+              ticket?.documentoTipo,
+              `${documentoNombre}: no se pudo completar la cancelación.`,
             ),
             variant: "destructive",
           });
@@ -268,8 +268,9 @@ export default function TicketDetailPage() {
           No se pudo cargar el documento
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          {getApiErrorMessage(
+          {documentoErrorMessage(
             ticketError,
+            undefined,
             "Intenta consultar el documento nuevamente.",
           )}
         </p>
@@ -302,9 +303,7 @@ export default function TicketDetailPage() {
   const documentoEstado = documentoStatusPresentation({
     documentoTipo: ticket.documentoTipo,
     cobrado: ticket.cobrado,
-    autorizacionEstado: (
-      ticket as TicketDetalle & { autorizacionEstado?: string | null }
-    ).autorizacionEstado,
+    autorizacionEstado: ticket.autorizacionEstado,
   });
   const { rollos: uiRollos, metraje: uiMetraje } = groupTicketLinesByModality(ticket.lineas, showRolls);
   const { rollos: printRollos, metraje: printMetraje } = groupTicketLinesByModality(ticket.lineas, false);
@@ -410,9 +409,9 @@ export default function TicketDetailPage() {
                 Entrega: {ticket.direccionEntregaEfectiva}
               </div>
             )}
-            {(ticket as TicketDetalle & { viaje?: { id: number; folio: number } | null }).viaje && (
-              <Link className="mt-1 block text-sm text-primary underline" href={`/viajes/${(ticket as TicketDetalle & { viaje: { id: number } }).viaje.id}`}>
-                En viaje #{(ticket as TicketDetalle & { viaje: { folio: number } }).viaje.folio}
+            {ticket.viaje && (
+              <Link className="mt-1 block text-sm text-primary underline" href={`/viajes/${ticket.viaje.id}`}>
+                En viaje #{ticket.viaje.folio}
               </Link>
             )}
             {ticket.salidas?.map((salida) => (
@@ -626,7 +625,7 @@ export default function TicketDetailPage() {
         </CardFooter>
       </Card>
 
-      {ticket.clienteId && (ticket as TicketDetalle).esCredito && (
+      {ticket.clienteId && ticket.esCredito && (
         <ClienteNotaCredito clienteId={ticket.clienteId} ticketId={ticket.id} />
       )}
 
