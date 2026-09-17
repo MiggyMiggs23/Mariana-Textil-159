@@ -1,0 +1,25 @@
+✖ catálogo agrupado conserva unidad, especificaciones y totales separados (3053.818197ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3385.449136
+
+✖ failing tests:
+
+test at ../../../../../tmp/behavior-links-units-negative-AjabJR/artifacts/mariana-textil/src/pages/productos.contract.test.ts:1:251
+✖ catálogo agrupado conserva unidad, especificaciones y totales separados (3053.818197ms)
+  AssertionError [ERR_ASSERTION]: all four units are offered by the unit filter
+      at TestContext.<anonymous> (/tmp/behavior-links-units-negative-AjabJR/artifacts/mariana-textil/src/pages/productos.contract.test.ts:34:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

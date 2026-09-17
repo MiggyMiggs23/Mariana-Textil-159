@@ -1,0 +1,13 @@
+✔ structured roll and delivery errors retain safe clickable ownership links (24.453671ms)
+✔ POS and salida scan/creation workflows render structured API details (7.265301ms)
+✔ ENTREGADA stays printable while the real detail omits cancellation for every actor matrix branch (754.128337ms)
+✔ linked cancellation explicitly invokes generated salida cancellation atomically (1.725144ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1015.396643
+

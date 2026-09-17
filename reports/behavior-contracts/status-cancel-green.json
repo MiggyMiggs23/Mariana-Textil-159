@@ -1,0 +1,9 @@
+{
+  "generatedBy": "scripts/src/behavior-status-cancel-negative.mjs",
+  "command": "tsx --test src/pages/salidas-status.contract.test.ts src/pages/salidas-venta-errors.contract.test.ts",
+  "exitCode": 0,
+  "passed": true,
+  "renderMode": "SSR",
+  "responsiveCoverage": "The same real page flow runs at desktop and phone window widths; every mounted lifecycle label is confined to the observed real badge.",
+  "limitation": "SSR does not evaluate CSS visibility or layout. Every lifecycle representative, including hidden markup, must use the real badge with the same data; valid repeated representatives are allowed without coupling to CSS classes."
+}

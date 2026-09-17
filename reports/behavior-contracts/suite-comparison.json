@@ -1,0 +1,38 @@
+{
+  "before": {
+    "files": 99,
+    "tests": 354,
+    "pass": 337,
+    "fail": 17,
+    "skipped": 0
+  },
+  "after": {
+    "files": 99,
+    "tests": 354,
+    "pass": 342,
+    "fail": 12,
+    "skipped": 0
+  },
+  "newFailures": [],
+  "remainingFailures": [
+    "client utility starts visually hidden and exposes a touch-friendly toggle",
+    "Los cuatro estados reales renderizan icono y estado, nunca un importe en la insignia",
+    "cash authorization offers favor without selecting it automatically",
+    "customer-sale assembly keeps a visible circular roll counter in sync with scans",
+    "realtime cards have fixed order and exactly six cards open their own detail",
+    "Tiempo Real Contract",
+    "the second client ticket row links by its real ticket id, not by list position",
+    "invoiced sales are emphasized without changing the normal document label",
+    "reserva espacios separados para cantidad, unidad y cámara en la captura",
+    "kardex document cells keep desktop and mobile resolved-route branches",
+    "Block 4 functionality in ticket detail",
+    "monetary profit labels use Utilidad while percentages remain Margen"
+  ],
+  "resolvedFailures": [
+    "statistics outside Reportes render their sentence below each audited surface",
+    "detail-capable table identifiers have one primary link and declared routes",
+    "catálogo agrupado conserva unidad, especificaciones y totales separados",
+    "desktop and mobile salida rows render the same shared component from salida.estado",
+    "ENTREGADA is present in salida maps, generated state filter, and closed-detail behavior"
+  ]
+}

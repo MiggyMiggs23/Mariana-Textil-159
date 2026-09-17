@@ -1,0 +1,14 @@
+✔ client and provider tables use accessible primary-name detail links (9.28522ms)
+✔ table inventory has no obsolete Ver detalle column (18.17654ms)
+✔ detail-capable table identifiers resolve their controlled primary keys (4095.193693ms)
+✔ catálogo agrupado conserva unidad, especificaciones y totales separados (3976.41232ms)
+✔ precio sugerido opcional conserva null, cero y la presentación requerida (2.692957ms)
+✔ la expansión automática no reescribe un Set que ya contiene los mismos grupos (1.075713ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4446.359703

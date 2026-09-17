@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import {
+  behaviorLinkHref,
+  loadBehaviorLinksUnitsPages,
+  renderBehaviorLinksUnitsPage,
+} from "../behavior-links-units-render";
 
 const root = new URL("../../../../", import.meta.url);
-const primaryLinkClass =
-  "text-primary underline underline-offset-4 hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 const tableFiles = [
   "ajustes.tsx", "auditoria/index.tsx", "auditorias-inventario.tsx",
   "caja/comparativo.tsx", "caja/cortes.tsx", "caja/cuenta-destino-detalle.tsx",
@@ -71,37 +74,34 @@ test("table inventory has no obsolete Ver detalle column", async () => {
   }
 });
 
-test("detail-capable table identifiers have one primary link and declared routes", async () => {
-  const [app, productos, movimientos, entradasPendientes, salidas, viajes, contenedores] =
-    await Promise.all([
-      readFile(new URL("artifacts/mariana-textil/src/App.tsx", root), "utf8"),
-      readFile(new URL("artifacts/mariana-textil/src/pages/productos.tsx", root), "utf8"),
-      readFile(new URL("artifacts/mariana-textil/src/pages/movimientos.tsx", root), "utf8"),
-      readFile(new URL("artifacts/mariana-textil/src/pages/entradas-pendientes-costo.tsx", root), "utf8"),
-      readFile(new URL("artifacts/mariana-textil/src/pages/salidas.tsx", root), "utf8"),
-      readFile(new URL("artifacts/mariana-textil/src/pages/viajes.tsx", root), "utf8"),
-      readFile(new URL("artifacts/mariana-textil/src/pages/contenedores/index.tsx", root), "utf8"),
-    ]);
+test("detail-capable table identifiers resolve their controlled primary keys", async () => {
+  const pages = await loadBehaviorLinksUnitsPages();
+  pages.setBehaviorFixture({
+    user: { id: 1, nombre: "Admin", rol: "ADMIN", alcanceConsulta: "TODAS", permisos: [] },
+    productos: [{ id: 701, tela: "Tela enlace", color: "Color enlace", sku: "SKU-701", unidad: "METRO", rollos: 1, cantidad: "3", sitiosConExistencia: 1, activo: true }],
+    movimientos: { grupos: [{ groupId: "grupo-309", latestDate: "2026-02-10T12:00:00.000Z", fechaMin: "2026-02-10T12:00:00.000Z", fechaMax: "2026-02-10T12:00:00.000Z", tipo: "ALTA", documentoRuta: null, documentoTipo: null, documentoId: null, documentoEtiqueta: null, ticketId: null, justificacion: null, productos: [{ telaProducto: "Tela enlace", colorProducto: "Color enlace", skuProducto: "SKU-701" }], nombreUbicacion: "Central", ubicacionActiva: true, ubicacionId: 1, distinctRolloCount: 1, totalesPorUnidad: [{ unidad: "METRO", cantidad: "3" }], usuarios: [], partialitiesMerged: 1, rollos: [{ movementId: 901, rolloId: 309, serie: "ROLLO-SERIE-309", cantidad: "3", unidad: "METRO", referenciaRolloRuta: "/inventario/rollos/309" }] }], resumen: { totalMetros: "3", totalKilos: "0", totalBolsas: "0", totalPiezas: "0" }, total: 1, page: 1, totalPages: 1 },
+    kardexFilters: { tipos: [], ubicaciones: [], productos: [], usuarios: [] },
+    entradasPendientes: { items: [{ id: 211, folioFormateado: "EP-0088", fecha: "2026-02-10", nombreUbicacion: "Central", nombreProveedor: "Proveedor", rollosPendientes: 1, totalMetros: "3", totalKilos: "0", totalBolsas: "0", nombreUsuario: "Admin", overdue48h: false }] },
+    salidas: { items: [{ id: 401, folioFormateado: "SAL-0042", createdAt: "2026-02-10T12:00:00.000Z", nombreOrigen: "Central", nombreDestino: "Norte", modalidad: "TRASLADO", totalCantidadSolicitada: "3", totalCantidadEnviada: "3", estado: "ARMANDO" }], total: 1, pageSize: 100 },
+    ubicacionesSalida: [], usuarios: [],
+    viajes: [{ id: 501, folioFormateado: "VIA-0007", nombreOrigen: "Central", salidaAt: "2026-02-10T12:00:00.000Z", camioneta: "Camioneta 1", chofer: "Chofer", documentos: 1 }],
+    contenedores: { items: [{ id: 601, folio: 73, proveedor: "Proveedor", referencia: "REF", sitioDestino: "Central", estado: "EN_TRANSITO", diasParaLlegar: 4, fechaEstimadaLlegada: "2026-02-20", lineasCount: 0 }], total: 1, pageSize: 20 },
+    catalogosContenedores: { proveedores: [], sitios: [], productos: [] },
+  });
 
-  for (const route of [
-    "/productos/:id", "/inventario/rollos/:id", "/entradas/:id/documento",
-    "/salidas/:id", "/tickets/:id", "/viajes/:id", "/contenedores/:id",
-  ]) {
-    assert.match(app, new RegExp(`path="${route}"`));
-  }
+  const productHtml = renderBehaviorLinksUnitsPage(pages.Productos, { "productos.expanded-telas": new Set(["Tela enlace"]) }, pages.BehaviorLocationScopeProvider);
+  const movementHtml = renderBehaviorLinksUnitsPage(pages.Movimientos, { "movimientos.expanded-groups": ["grupo-309"] }, pages.BehaviorLocationScopeProvider);
+  const pendingHtml = renderBehaviorLinksUnitsPage(pages.EntradasPendientesCosto, {}, pages.BehaviorLocationScopeProvider);
+  const salidaHtml = renderBehaviorLinksUnitsPage(pages.Salidas, {}, pages.BehaviorLocationScopeProvider);
+  const viajeHtml = renderBehaviorLinksUnitsPage(pages.Viajes, {}, pages.BehaviorLocationScopeProvider);
+  const contenedorHtml = renderBehaviorLinksUnitsPage(pages.Contenedores, {}, pages.BehaviorLocationScopeProvider);
 
-  for (const [source, href, identifier] of [
-    [productos, /href=\{`\/productos\/\$\{p\.id\}`\}/, /\{p\.color\}/],
-    [movimientos, /href=\{row\.referenciaRolloRuta\}/, /\{row\.serie\}/],
-    [entradasPendientes, /href=\{`\/entradas\/\$\{item\.id\}\/documento`\}/, /\{item\.folioFormateado\}/],
-    [salidas, /href=\{`\/salidas\/\$\{salida\.id\}`\}/, /\{salida\.folioFormateado\}/],
-    [viajes, /href=\{`\/viajes\/\$\{viaje\.id\}`\}/, /\{viaje\.folioFormateado\}/],
-    [contenedores, /href=\{`\/contenedores\/\$\{item\.id\}`\}/, /\{item\.folio\.toString\(\)\.padStart/],
-  ] as const) {
-    assert.match(source, href);
-    assert.match(source, identifier);
-    assert.match(source, new RegExp(primaryLinkClass.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
-  }
+  assert.equal(behaviorLinkHref(productHtml, "Color enlace"), "/productos/701");
+  assert.equal(behaviorLinkHref(movementHtml, "ROLLO-SERIE-309"), "/inventario/rollos/309");
+  assert.equal(behaviorLinkHref(pendingHtml, "#EP-0088"), "/entradas/211/documento");
+  assert.equal(behaviorLinkHref(salidaHtml, "SAL-0042"), "/salidas/401");
+  assert.equal(behaviorLinkHref(viajeHtml, "VIA-0007"), "/viajes/501");
+  assert.equal(behaviorLinkHref(contenedorHtml, "#00073"), "/contenedores/601");
 
-  assert.doesNotMatch(movimientos, /(?:link|mobile-link)-doc-/);
+  assert.notEqual(behaviorLinkHref(movementHtml, "ROLLO-SERIE-309"), "/inventario/rollos/ROLLO-SERIE-309");
 });

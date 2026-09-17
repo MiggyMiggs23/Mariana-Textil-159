@@ -1,0 +1,36 @@
+✔ structured roll and delivery errors retain safe clickable ownership links (5.802988ms)
+✔ POS and salida scan/creation workflows render structured API details (3.72225ms)
+✖ ENTREGADA stays printable while the real detail omits cancellation for every actor matrix branch (2.202181ms)
+✔ linked cancellation explicitly invokes generated salida cancellation atomically (2.17407ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 250.551054
+
+✖ failing tests:
+
+test at src/pages/salidas-venta-errors.contract.test.ts:1:1680
+✖ ENTREGADA stays printable while the real detail omits cancellation for every actor matrix branch (2.202181ms)
+  AssertionError [ERR_ASSERTION]: ENTREGADA is closed for VENTA_CLIENTE/ADMIN/site-10/authorized-true
+  
+  true !== false
+  
+      at TestContext.<anonymous> (/tmp/status-cancel-mutant-dALTdK/artifacts/mariana-textil/src/pages/salidas-venta-errors.contract.test.ts:91:18)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

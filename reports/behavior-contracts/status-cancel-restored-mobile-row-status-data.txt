@@ -1,0 +1,13 @@
+✔ salida status presentation contains exactly the five lifecycle labels (7.202037ms)
+✔ customer-sale presentation derives the history labels without changing EstadoSalida (0.334226ms)
+✔ desktop and mobile salida rows mount the production status badge with their fixture state (3088.664175ms)
+✔ salida list, detail, and delivery dialog have cross-session freshness and lifecycle invalidations (36.286612ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3771.815258
+

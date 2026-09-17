@@ -1548,3 +1548,17 @@ mtime_ms = 1789622847078
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/57ef63b5-ba8c-468b-a09d-967455cd00a8/c52a473e-b9e7-4151-9430-0f51ac011558"
 storage_version_token = "1789622864768472"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "KnudiOFvgxqwKODVtsk4u"
+uri = "file://reports/behavior-contracts/README.md"
+type = "text"
+title = "Verificación del Bloque 1"
+description = "Resultados antes/después, seis defectos deliberados con restauración verde, comandos y límites de la verificación."
+logical_id = "ee4bcc1a-a3e4-43c7-81d0-697a31b1f72f"
+content_hash = "sha256:57da1aa3c768f91dc3af2f4e3e1ba35a942bfd069190be559f509879189f6fd5"
+size = 6321
+mtime_ms = 1789662360340
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ee4bcc1a-a3e4-43c7-81d0-697a31b1f72f/7a36f684-d9a8-4961-a86b-a1b655fbedf2"
+storage_version_token = "1789662409157694"
+content_type = "text/markdown"

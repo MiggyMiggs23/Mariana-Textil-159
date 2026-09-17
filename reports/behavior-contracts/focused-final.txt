@@ -1,0 +1,24 @@
+✔ every backend report chart and table id has a visible explanation (2.55563ms)
+✔ statistics outside Reportes render their sentence below each audited surface (1.47134ms)
+✔ client and provider tables use accessible primary-name detail links (28.413983ms)
+✔ table inventory has no obsolete Ver detalle column (13.444636ms)
+✔ detail-capable table identifiers resolve their controlled primary keys (3901.218266ms)
+✔ catálogo agrupado conserva unidad, especificaciones y totales separados (3842.512711ms)
+✔ precio sugerido opcional conserva null, cero y la presentación requerida (3.011759ms)
+✔ la expansión automática no reescribe un Set que ya contiene los mismos grupos (0.899821ms)
+✔ salida status presentation contains exactly the five lifecycle labels (15.873289ms)
+✔ customer-sale presentation derives the history labels without changing EstadoSalida (0.469711ms)
+✔ desktop and mobile salida rows mount the production status badge with their fixture state (3339.055176ms)
+✔ salida list, detail, and delivery dialog have cross-session freshness and lifecycle invalidations (50.755612ms)
+✔ structured roll and delivery errors retain safe clickable ownership links (16.086019ms)
+✔ POS and salida scan/creation workflows render structured API details (4.461669ms)
+✔ ENTREGADA stays printable while the real detail omits cancellation for every actor matrix branch (1105.947688ms)
+✔ linked cancellation explicitly invokes generated salida cancellation atomically (3.562994ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4285.891414

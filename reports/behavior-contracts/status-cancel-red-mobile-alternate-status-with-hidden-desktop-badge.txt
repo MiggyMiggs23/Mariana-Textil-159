@@ -1,0 +1,32 @@
+✔ salida status presentation contains exactly the five lifecycle labels (7.209634ms)
+✔ customer-sale presentation derives the history labels without changing EstadoSalida (0.266687ms)
+✖ desktop and mobile salida rows mount the production status badge with their fixture state (2976.291716ms)
+✔ salida list, detail, and delivery dialog have cross-session freshness and lifecycle invalidations (37.53863ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3671.232745
+
+✖ failing tests:
+
+test at src/pages/salidas-status.contract.test.ts:1:3270
+✖ desktop and mobile salida rows mount the production status badge with their fixture state (2976.291716ms)
+  AssertionError [ERR_ASSERTION]: mobile has no Cancelada label outside an observed real badge, including hidden markup
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (/tmp/status-cancel-mutant-CX66lE/artifacts/mariana-textil/src/pages/salidas-status.contract.test.ts:218:16)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

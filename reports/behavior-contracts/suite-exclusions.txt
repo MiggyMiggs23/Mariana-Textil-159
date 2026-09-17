@@ -1,0 +1,3 @@
+artifacts/mariana-textil/src/pages/entrada-etiquetas-pdf-regression.test.mjs	unsafe: child_process/network/browser workflow; requires running web app
+artifacts/mariana-textil/src/pages/laser-documents-pdf-regression.test.mjs	unsafe: child_process/network/browser workflow; requires running web app
+artifacts/mariana-textil/src/pages/laser-other-documents-pdf-regression.test.mjs	unsafe: child_process/network/browser workflow; requires running web app

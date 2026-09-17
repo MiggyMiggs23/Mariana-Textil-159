@@ -1,0 +1,31 @@
+✖ detail-capable table identifiers resolve their controlled primary keys (3113.23598ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3421.916667
+
+✖ failing tests:
+
+test at ../../../../../tmp/behavior-links-units-negative-25Uru3/artifacts/mariana-textil/src/pages/detail-link-tables.contract.test.ts:1:2543
+✖ detail-capable table identifiers resolve their controlled primary keys (3113.23598ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '/productos/SKU-701'
+  - '/productos/701'
+                ^
+  
+      at TestContext.<anonymous> (/tmp/behavior-links-units-negative-25Uru3/artifacts/mariana-textil/src/pages/detail-link-tables.contract.test.ts:99:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '/productos/SKU-701',
+    expected: '/productos/701',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

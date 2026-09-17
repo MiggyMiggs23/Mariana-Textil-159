@@ -1,0 +1,29 @@
+{
+  "generatedBy": "scripts/src/behavior-status-cancel-negative.mjs",
+  "mutants": [
+    {
+      "name": "mobile-row-status-data",
+      "exitCode": 1,
+      "restoredExitCode": 0,
+      "assertionMessage": "mobile renders the production badge label for every status representative"
+    },
+    {
+      "name": "mobile-alternate-status-with-hidden-desktop-badge",
+      "exitCode": 1,
+      "restoredExitCode": 0,
+      "assertionMessage": "mobile has no Cancelada label outside an observed real badge, including hidden markup"
+    },
+    {
+      "name": "mobile-alternate-sales-status-with-hidden-desktop-badge",
+      "exitCode": 1,
+      "restoredExitCode": 0,
+      "assertionMessage": "mobile has no Por autorizar label outside an observed real badge, including hidden markup"
+    },
+    {
+      "name": "allow-delivered-cancellation",
+      "exitCode": 1,
+      "restoredExitCode": 0,
+      "assertionMessage": "ENTREGADA is closed for VENTA_CLIENTE/ADMIN/site-10/authorized-true"
+    }
+  ]
+}

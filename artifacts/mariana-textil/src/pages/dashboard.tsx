@@ -130,6 +130,14 @@ export default function Dashboard() {
               </Table>
             )}
           </CardContent>
+          <p
+            data-testid="dashboard-inventory-explanation"
+            className="px-6 pb-6 pt-3 text-sm text-muted-foreground"
+          >
+            Suma la cantidad actual y cuenta los rollos disponibles por sitio,
+            separando metros, kilos, bolsas y piezas. Respeta el alcance de
+            consulta y no incluye mercancía en tránsito.
+          </p>
         </Card>
       </div>
     </AppLayout>
