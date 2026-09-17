@@ -1618,3 +1618,17 @@ mtime_ms = 1789683435269
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3958a1bc-7c47-4e1e-b81d-8619219b8ef1/b13b629f-c27c-42e2-9b87-a152fd363ed8"
 storage_version_token = "1789683494268928"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "yXwVgwMAxvdDuYJUxtp4h"
+uri = "file://reports/e1-sql/entrega-completa.md"
+type = "text"
+title = "E1 — SQL literal, bloqueos, reversión y respaldo"
+description = "27 sentencias de propuesta y 28 de reversión, reproducidas completas y con hashes. Borrador no ejecutado: falta confirmar la identidad actual desde el pool de la API."
+logical_id = "6527daf4-c5a7-430a-826b-6c82febad9fa"
+content_hash = "sha256:89e75eff4fff6c5a70b7047346f9b6bcce51637990f355fe9aa263213a6c4426"
+size = 50633
+mtime_ms = 1789684742149
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6527daf4-c5a7-430a-826b-6c82febad9fa/97f542a0-f36a-41cd-aa26-ae0e5df8fbbf"
+storage_version_token = "1789684771656643"
+content_type = "text/markdown"

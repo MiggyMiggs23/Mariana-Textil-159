@@ -14,3 +14,9 @@ Para diagnosticar datos ausentes, una integración Neon instalada no demuestra q
 **Why:** Un conector puede resolver una base parcial o distinta; no encontrar allí movimientos no demuestra que falten en la aplicación.
 
 **How to apply:** Identificar el pool configurado y comprobar `current_database()` y las tablas necesarias mediante solo lectura antes de interpretar conteos. Distinguir la conexión del shell de posibles overrides del workflow y no atribuir un caso concreto a datos que no se han encontrado.
+
+La API puede responder por loopback y aparecer activa en los workflows sin que su proceso sea visible desde el shell del agente. Eso no autoriza a sustituir una comprobación dentro de su pool por una consulta desde otra conexión.
+
+**Why:** Se observó un servicio activo cuyo PID aparecía en logs pero no en los procesos accesibles. Un informe histórico del pool o un GET de salud no demuestra su conexión actual.
+
+**How to apply:** Si se exige identidad desde el proceso actual y no se dispone de acceso seguro a él, declarar la confirmación bloqueada y mantener el SQL en NO-GO. No reiniciar normalmente para diagnosticar: los inicializadores pueden escribir antes de la autorización.
