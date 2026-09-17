@@ -37,7 +37,7 @@ import {
 import { requireSession } from "../middlewares/auth";
 import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
-import { createTextPdf } from "../lib/pdf";
+import { createLatin1TextPdf } from "../lib/pdf";
 import {
   canLinkAdjustmentToTicket,
   creditStatus,
@@ -75,6 +75,15 @@ import {
   CarteraScopeError,
   loadClientesCartera,
 } from "../lib/clientes-cartera-read-model";
+import {
+  GLOBAL_CREDIT_SCOPE_LABEL,
+  SCOPED_DETAIL_LABEL,
+  buildEstadoCuentaExportReadQuery,
+  resolveClienteFinancialReadScope,
+  scopeDescription,
+  ticketScopeClause,
+  type ClienteFinancialReadScope,
+} from "../lib/clientes-financial-read-scope";
 import {
   renderClientesCarteraPdf,
   renderClientesCarteraXlsx,
@@ -156,6 +165,51 @@ export type EstadoCuentaExportProjection = Pick<
   CustomerCreditProjection,
   "movementProjections" | "allCharges" | "balanceCents" | "overpaymentCents"
 >;
+export type EstadoCuentaGlobalCreditSummary = {
+  deudaActual: string;
+  saldoAFavor: string;
+  limiteCredito: string;
+  creditoDisponible: string;
+};
+
+function globalCreditSummary(
+  limiteCredito: string,
+  projection: EstadoCuentaExportProjection,
+): EstadoCuentaGlobalCreditSummary {
+  const deudaActual = centsToMoney(projection.balanceCents);
+  const saldoAFavor = centsToMoney(projection.overpaymentCents);
+  return {
+    deudaActual,
+    saldoAFavor,
+    limiteCredito,
+    creditoDisponible: Math.max(0, Number(limiteCredito) - Number(deudaActual)).toFixed(2),
+  };
+}
+
+function addFinancialScopeWorksheet(
+  workbook: ExcelJS.Workbook,
+  scope: ClienteFinancialReadScope,
+  summary?: EstadoCuentaGlobalCreditSummary,
+): void {
+  const includeScopedGlobalSummary = scope.tipo === "SITIOS" && summary != null;
+  const sheet = workbook.addWorksheet("Alcance");
+  sheet.columns = [{ width: 32 }, { width: 88 }];
+  sheet.addRows([
+    ["Alcance aplicado", scope.tipo],
+    ["Sitios autorizados", scopeDescription(scope)],
+    ["Resumen global de crédito", GLOBAL_CREDIT_SCOPE_LABEL],
+    ["Detalle", SCOPED_DETAIL_LABEL],
+    ["Límite de crédito", includeScopedGlobalSummary ? toExcelNumber(summary.limiteCredito) : "No incluido en este archivo"],
+    ["Deuda actual", includeScopedGlobalSummary ? toExcelNumber(summary.deudaActual) : "No incluido en este archivo"],
+    ["Saldo a favor", includeScopedGlobalSummary ? toExcelNumber(summary.saldoAFavor) : "No incluido en este archivo"],
+    ["Crédito disponible", includeScopedGlobalSummary ? toExcelNumber(summary.creditoDisponible) : "No incluido en este archivo"],
+  ]);
+  if (includeScopedGlobalSummary) {
+    for (const row of [5, 6, 7, 8]) {
+      sheet.getCell(`B${row}`).numFmt = EXCEL_NUMBER_FORMAT.money;
+    }
+  }
+}
 
 /**
  * Builds the exact estado-cuenta workbook used by the XLSX route.
@@ -167,6 +221,13 @@ export type EstadoCuentaExportProjection = Pick<
 export function buildEstadoCuentaWorkbook(
   rows: EstadoCuentaExportRow[],
   projection: EstadoCuentaExportProjection,
+  scope: ClienteFinancialReadScope = {
+    tipo: "GLOBAL",
+    ubicaciones: [],
+    generadoEn: "",
+    saldoAFavorDisponible: true,
+  },
+  summary?: EstadoCuentaGlobalCreditSummary,
 ): ExcelJS.Workbook {
   const projectedMovements = new Map(
     projection.movementProjections.map((movement) => [
@@ -194,6 +255,7 @@ export function buildEstadoCuentaWorkbook(
   sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;
   sheet.getColumn("subtotalFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
   sheet.getColumn("ivaFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;
+  const includeGlobalRowBalances = scope.tipo === "GLOBAL";
   sheet.addRows(rows.map((row) => {
     const charge = projection.allCharges.find(
       (candidate) => candidate.movimientoId === Number(row.id),
@@ -235,21 +297,166 @@ export function buildEstadoCuentaWorkbook(
         : {}),
       folio: row.folio == null ? "" : String(row.folio),
       importe: toExcelNumber(row.importe),
-      saldoCorridoHistorico: toExcelNumber(row.saldoCorridoHistorico),
-      saldoDeudorProyectado: saldoDeudorProyectado == null ? null : toExcelNumber(saldoDeudorProyectado),
-      saldoAFavorProyectado: saldoAFavorProyectado == null ? null : toExcelNumber(saldoAFavorProyectado),
-      saldoPendiente: saldoPendiente == null ? null : toExcelNumber(saldoPendiente),
+       // The complete ledger is still projected before this point.  These
+       // cumulative numeric values would disclose other sites in a scoped
+       // export, so only the approved global summary carries them there.
+       saldoCorridoHistorico: includeGlobalRowBalances
+         ? toExcelNumber(row.saldoCorridoHistorico)
+         : null,
+       saldoDeudorProyectado: includeGlobalRowBalances && saldoDeudorProyectado != null
+         ? toExcelNumber(saldoDeudorProyectado)
+         : null,
+       saldoAFavorProyectado: includeGlobalRowBalances && saldoAFavorProyectado != null
+         ? toExcelNumber(saldoAFavorProyectado)
+         : null,
+       saldoPendiente: includeGlobalRowBalances && saldoPendiente != null
+         ? toExcelNumber(saldoPendiente)
+         : null,
     };
   }));
-  const summary = sheet.addRow({
+  const summaryRow = sheet.addRow({
     tipo: "SALDO ACTUAL PROYECTADO",
     saldoActualProyectado: toExcelNumber(centsToMoney(projection.balanceCents)),
     saldoAFavor: toExcelNumber(centsToMoney(projection.overpaymentCents)),
     saldoPendiente: toExcelNumber(centsToMoney(projection.balanceCents)),
     estadoNota: "SALDO_DEUDOR",
   });
-  summary.getCell("saldoActualProyectado").numFmt = EXCEL_NUMBER_FORMAT.money;
+  summaryRow.getCell("saldoActualProyectado").numFmt = EXCEL_NUMBER_FORMAT.money;
+  addFinancialScopeWorksheet(workbook, scope, summary);
   return workbook;
+}
+
+export function buildAnaliticaClientesWorkbook(
+  rows: Array<Record<string, any>>,
+  scope: ClienteFinancialReadScope,
+): ExcelJS.Workbook {
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Analítica");
+  sheet.columns = [
+    { header: "Cliente", key: "cliente", width: 28 },
+    { header: "Folio", key: "folio", width: 12 },
+    { header: "Fecha", key: "fecha", width: 22 },
+    { header: "Subtotal", key: "subtotal", width: 14 },
+    { header: "Modalidad", key: "modalidad", width: 14 },
+    { header: "Unidad", key: "unidad", width: 12 },
+    { header: "Cantidad", key: "cantidad", width: 14 },
+    { header: "Utilidad", key: "margen", width: 14 },
+  ];
+  sheet.getColumn("subtotal").numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.getColumn("cantidad").numFmt = EXCEL_NUMBER_FORMAT.quantity;
+  sheet.getColumn("margen").numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.addRows(rows.map((row) => ({
+    ...row,
+    modalidad: row.tipo === "METREADO" ? "METRAJE" : "ROLLO",
+    folio: row.folio == null ? "" : String(row.folio),
+    subtotal: toExcelNumber(row.subtotal),
+    cantidad: toExcelNumber(row.cantidad),
+    margen: row.margen == null ? null : toExcelNumber(row.margen),
+  })));
+  addFinancialScopeWorksheet(workbook, scope);
+  return workbook;
+}
+
+function htmlEscape(value: unknown): string {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
+function statementRowPresentation(
+  row: EstadoCuentaExportRow,
+  projection: EstadoCuentaExportProjection,
+  includeGlobalRowBalances: boolean,
+) {
+  const charge = projection.allCharges.find(
+    (candidate) => candidate.movimientoId === Number(row.id),
+  );
+  const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"
+    ? centsToMoney(charge.pendienteCents)
+    : null;
+  const estadoNota = charge && row.tipo === "VENTA_CREDITO"
+    ? deriveEstadoNota({
+        importeOriginal: centsToMoney(charge.originalCents),
+        saldoPendiente: saldoPendiente!,
+        fechaVencimiento: charge.dueAt,
+        hoy: todayMexicoCity(),
+      })
+    : null;
+  const projected = new Map(
+    projection.movementProjections.map((movement) => [
+      movement.movementId,
+      movement,
+    ]),
+  ).get(Number(row.id));
+  return {
+    saldoPendiente: includeGlobalRowBalances ? saldoPendiente : null,
+    estadoNota,
+    projected: includeGlobalRowBalances ? projected : undefined,
+  };
+}
+
+export function renderEstadoCuentaPrintHtml(
+  clienteNombre: string,
+  rows: EstadoCuentaExportRow[],
+  projection: EstadoCuentaExportProjection,
+  scope: ClienteFinancialReadScope,
+  summary: EstadoCuentaGlobalCreditSummary,
+): string {
+  const bodyRows = rows.map((item) => {
+    const { saldoPendiente, estadoNota, projected } = statementRowPresentation(
+      item,
+      projection,
+      scope.tipo === "GLOBAL",
+    );
+    const globalValue = (value: string | null | undefined) =>
+      scope.tipo === "GLOBAL"
+        ? formatNumber(value, { kind: "money" })
+        : "No incluido por alcance de sitio";
+    return `<tr><td>${htmlEscape(new Date(item.created_at ?? item.fecha).toLocaleDateString("es-MX"))}</td><td>${htmlEscape(item.tipo)}</td><td>${htmlEscape(formatNumber(item.importe, { kind: "money" }))}</td><td>${htmlEscape(globalValue(item.saldoCorridoHistorico))}</td><td>${htmlEscape(globalValue(projected == null ? null : centsToMoney(projected.saldoDeudorProyectadoCents)))}</td><td>${htmlEscape(globalValue(projected == null ? null : centsToMoney(projected.saldoAFavorProyectadoCents)))}</td><td>${htmlEscape(globalValue(saldoPendiente))}</td><td>${htmlEscape(estadoNota)}</td><td>${htmlEscape(item.notas)}</td></tr>`;
+  }).join("");
+  const summarySection = scope.tipo === "GLOBAL"
+    ? `<p>Saldo actual proyectado: ${htmlEscape(formatNumber(centsToMoney(projection.balanceCents), { kind: "money" }))}</p><p>Saldo a favor: ${htmlEscape(formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" }))}</p>`
+    : `<p>${GLOBAL_CREDIT_SCOPE_LABEL}</p><p>Deuda actual global: ${htmlEscape(formatNumber(summary.deudaActual, { kind: "money" }))}</p><p>Saldo a favor global: ${htmlEscape(formatNumber(summary.saldoAFavor, { kind: "money" }))}</p><p>Límite de crédito global: ${htmlEscape(formatNumber(summary.limiteCredito, { kind: "money" }))}</p><p>Crédito disponible global: ${htmlEscape(formatNumber(summary.creditoDisponible, { kind: "money" }))}</p>`;
+  const scopeMetadata = `<p>${GLOBAL_CREDIT_SCOPE_LABEL}</p><p>${SCOPED_DETAIL_LABEL}</p><p>Alcance aplicado: ${htmlEscape(scope.tipo)} (${htmlEscape(scopeDescription(scope))})</p>`;
+  return `<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${htmlEscape(clienteNombre)}</h2><section>${summarySection}${scope.tipo === "GLOBAL" ? scopeMetadata : `<p>${SCOPED_DETAIL_LABEL}</p><p>Alcance aplicado: ${htmlEscape(scope.tipo)} (${htmlEscape(scopeDescription(scope))})</p>`}</section><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo corrido histórico</th><th>Saldo deudor proyectado</th><th>Saldo a favor proyectado</th><th>Saldo pendiente</th><th>Estado de nota</th><th>Notas</th></tr></thead><tbody>${bodyRows}</tbody></table></body></html>`;
+}
+
+export function renderEstadoCuentaPdf(
+  clienteId: number,
+  rows: EstadoCuentaExportRow[],
+  projection: EstadoCuentaExportProjection,
+  scope: ClienteFinancialReadScope,
+  summary: EstadoCuentaGlobalCreditSummary,
+): Buffer {
+  const renderedRows = rows.map((row) => {
+        if (scope.tipo === "GLOBAL") {
+          const { saldoPendiente, estadoNota, projected } = statementRowPresentation(
+            row,
+            projection,
+            true,
+          );
+          return `${new Date(row.created_at ?? row.fecha).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico ${formatNumber(row.saldoCorridoHistorico, { kind: "money" })} | saldo deudor proyectado ${formatNumber(centsToMoney(projected?.saldoDeudorProyectadoCents ?? 0), { kind: "money" })} | saldo a favor proyectado ${formatNumber(centsToMoney(projected?.saldoAFavorProyectadoCents ?? 0), { kind: "money" })} | saldo pendiente ${formatNumber(saldoPendiente, { kind: "money" })} | estado ${estadoNota ?? "-"} | folio ${row.folio ?? "-"}`;
+        }
+        const { estadoNota } = statementRowPresentation(row, projection, false);
+        return `${new Date(row.created_at ?? row.fecha).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico No incluido por alcance de sitio | saldo deudor proyectado No incluido por alcance de sitio | saldo a favor proyectado No incluido por alcance de sitio | saldo pendiente No incluido por alcance de sitio | estado ${estadoNota ?? "-"} | folio ${row.folio ?? "-"}`;
+      });
+  if (scope.tipo === "GLOBAL") {
+    return createLatin1TextPdf(
+      `Estado de cuenta - cliente ${clienteId} - saldo actual proyectado ${formatNumber(centsToMoney(projection.balanceCents), { kind: "money" })} - saldo a favor ${formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" })}`,
+      [...renderedRows, GLOBAL_CREDIT_SCOPE_LABEL, SCOPED_DETAIL_LABEL, `Alcance aplicado: ${scope.tipo} | sitios autorizados: ${scopeDescription(scope)}`],
+    );
+  }
+  return createLatin1TextPdf(
+    `Estado de cuenta - cliente ${clienteId}`,
+    [
+      GLOBAL_CREDIT_SCOPE_LABEL,
+      `Deuda actual global ${formatNumber(summary.deudaActual, { kind: "money" })} | saldo a favor global ${formatNumber(summary.saldoAFavor, { kind: "money" })} | límite de crédito global ${formatNumber(summary.limiteCredito, { kind: "money" })} | crédito disponible global ${formatNumber(summary.creditoDisponible, { kind: "money" })}`,
+      SCOPED_DETAIL_LABEL,
+      `Alcance aplicado: ${scope.tipo} | sitios autorizados: ${scopeDescription(scope)}`,
+      ...renderedRows,
+    ],
+  );
 }
 
 /** Historical alias retained for clients that still read estado/resultado. */
@@ -679,6 +886,13 @@ router.get(
   async (req, res, next): Promise<void> => {
     try {
       const { desde, hasta } = period(req);
+      const scope = await resolveClienteFinancialReadScope(
+        req.auth!,
+        carteraQuery(req),
+        pool,
+        resolveReadScope,
+      );
+      const siteClause = ticketScopeClause(scope, "t", 3);
       const result = await pool.query(
         `SELECT c.nombre AS cliente, t.folio, ${accountedDocumentAt("t")} AS fecha,
           t.subtotal::text,l.tipo,p.unidad,l.cantidad::text,
@@ -690,37 +904,17 @@ router.get(
           WHERE ${accountedDocumentPredicate("t")}
            AND ($1::date IS NULL OR ${accountedDocumentAt("t")} >= $1::date)
            AND ($2::date IS NULL OR ${accountedDocumentAt("t")} < $2::date + interval '1 day')
+            ${siteClause.text}
           ORDER BY ${accountedDocumentAt("t")} DESC`,
-        [desde, hasta],
+        [desde, hasta, ...siteClause.values],
       );
-      const workbook = new ExcelJS.Workbook();
-      const sheet = workbook.addWorksheet("Analítica");
-      sheet.columns = [
-        { header: "Cliente", key: "cliente", width: 28 },
-        { header: "Folio", key: "folio", width: 12 },
-        { header: "Fecha", key: "fecha", width: 22 },
-        { header: "Subtotal", key: "subtotal", width: 14 },
-        { header: "Modalidad", key: "modalidad", width: 14 },
-        { header: "Unidad", key: "unidad", width: 12 },
-        { header: "Cantidad", key: "cantidad", width: 14 },
-        { header: "Utilidad", key: "margen", width: 14 },
-      ];
-      sheet.getColumn("subtotal").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.getColumn("cantidad").numFmt = EXCEL_NUMBER_FORMAT.quantity;
-      sheet.getColumn("margen").numFmt = EXCEL_NUMBER_FORMAT.money;
-      sheet.addRows(result.rows.map((row) => ({
-        ...row,
-        modalidad: row.tipo === "METREADO" ? "METRAJE" : "ROLLO",
-        folio: row.folio == null ? "" : String(row.folio),
-        subtotal: toExcelNumber(row.subtotal),
-        cantidad: toExcelNumber(row.cantidad),
-        margen: row.margen == null ? null : toExcelNumber(row.margen),
-      })));
+      const workbook = buildAnaliticaClientesWorkbook(result.rows, scope);
       res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       res.setHeader("Content-Disposition", 'attachment; filename="analitica-clientes.xlsx"');
       await workbook.xlsx.write(res);
       res.end();
     } catch (error) {
+      if (carteraScopeError(error, res)) return;
       next(error);
     }
   },
@@ -1316,59 +1510,36 @@ router.get(
         res.status(400).json({ error: "ID inválido." });
         return;
       }
+      const scope = await resolveClienteFinancialReadScope(
+        req.auth!,
+        carteraQuery(req),
+        pool,
+        resolveReadScope,
+      );
       const client = await pool.query(
-        "SELECT nombre FROM clientes WHERE id=$1",
+        'SELECT nombre,limite_credito::text AS "limiteCredito" FROM clientes WHERE id=$1',
         [id],
       );
       if (!client.rows[0]) {
         res.status(404).json({ error: "Cliente no encontrado." });
         return;
       }
+      const statementQuery = buildEstadoCuentaExportReadQuery(id, scope);
       const [movements, projection] = await Promise.all([pool.query(
-         `SELECT id, created_at, tipo, importe::text, notas,
-            ticket_id, fecha_vencimiento,
-           SUM(importe) OVER (ORDER BY created_at, id)::text AS "saldoCorridoHistorico"
-         FROM movimientos_credito WHERE cliente_id=$1
-         ORDER BY created_at, id`,
-        [id],
-       ), loadCustomerCreditProjection(id, pool, {
+        statementQuery.text,
+        [...statementQuery.values],
+      ), loadCustomerCreditProjection(id, pool, {
          includeMovementProjections: true,
        })]);
-       const projectedMovements = new Map(
-         projection.movementProjections.map((movement) => [
-           movement.movementId,
-           movement,
-         ]),
-       );
-      const escape = (value: unknown) =>
-        String(value ?? "")
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;");
-      const rows = movements.rows
-        .map(
-          (item) => {
-            const charge = projection.allCharges.find(
-              (candidate) => candidate.movimientoId === Number(item.id),
-            );
-            const saldoPendiente = charge && item.tipo === "VENTA_CREDITO"
-              ? centsToMoney(charge.pendienteCents)
-              : null;
-            const estadoNota = charge && item.tipo === "VENTA_CREDITO"
-              ? deriveEstadoNota({
-                  importeOriginal: centsToMoney(charge.originalCents),
-                  saldoPendiente: saldoPendiente!,
-                  fechaVencimiento: charge.dueAt,
-                  hoy: todayMexicoCity(),
-                })
-              : null;
-             const projected = projectedMovements.get(Number(item.id));
-             return `<tr><td>${escape(new Date(item.created_at).toLocaleDateString("es-MX"))}</td><td>${escape(item.tipo)}</td><td>${escape(formatNumber(item.importe, { kind: "money" }))}</td><td>${escape(formatNumber(item.saldoCorridoHistorico, { kind: "money" }))}</td><td>${escape(formatNumber(centsToMoney(projected?.saldoDeudorProyectadoCents ?? 0), { kind: "money" }))}</td><td>${escape(formatNumber(centsToMoney(projected?.saldoAFavorProyectadoCents ?? 0), { kind: "money" }))}</td><td>${escape(formatNumber(saldoPendiente, { kind: "money" }))}</td><td>${escape(estadoNota)}</td><td>${escape(item.notas)}</td></tr>`;
-          },
-        )
-        .join("");
-       res.type("html").send(`<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estado de cuenta</title><style>@page{size:A4;margin:15mm}body{font:12px Arial}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:6px;text-align:left}@media print{button{display:none}}</style></head><body><button onclick="print()">Imprimir / guardar PDF</button><h1>Estado de cuenta</h1><h2>${escape(client.rows[0].nombre)}</h2><p>Saldo actual proyectado: ${escape(formatNumber(centsToMoney(projection.balanceCents), { kind: "money" }))}</p><p>Saldo a favor: ${escape(formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" }))}</p><table><thead><tr><th>Fecha</th><th>Movimiento</th><th>Importe</th><th>Saldo corrido histórico</th><th>Saldo deudor proyectado</th><th>Saldo a favor proyectado</th><th>Saldo pendiente</th><th>Estado de nota</th><th>Notas</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+      res.type("html").send(renderEstadoCuentaPrintHtml(
+        client.rows[0].nombre,
+        movements.rows,
+        projection,
+        scope,
+        globalCreditSummary(client.rows[0].limiteCredito, projection),
+      ));
     } catch (error) {
+      if (carteraScopeError(error, res)) return;
       next(error);
     }
   },
@@ -1384,23 +1555,39 @@ router.get(
         res.status(400).json({ error: "ID inválido." });
         return;
       }
-      const [result, projection] = await Promise.all([pool.query(
-         `SELECT m.id,m.created_at AS fecha,m.tipo,m.importe::text AS importe,
-           m.fecha_vencimiento AS "fechaVencimiento",
-          m.forma_pago AS "formaPago",m.referencia,t.folio AS folio,
-          u.nombre AS usuario,SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS "saldoCorridoHistorico"
-         FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
-         JOIN usuarios u ON u.id=m.usuario_id WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
+      const scope = await resolveClienteFinancialReadScope(
+        req.auth!,
+        carteraQuery(req),
+        pool,
+        resolveReadScope,
+      );
+      const client = await pool.query<{ limiteCredito: string }>(
+        'SELECT limite_credito::text AS "limiteCredito" FROM clientes WHERE id=$1',
         [id],
-       ), loadCustomerCreditProjection(id, pool, {
+      );
+      if (!client.rows[0]) {
+        res.status(404).json({ error: "Cliente no encontrado." });
+        return;
+      }
+      const statementQuery = buildEstadoCuentaExportReadQuery(id, scope);
+      const [result, projection] = await Promise.all([pool.query(
+        statementQuery.text,
+        [...statementQuery.values],
+      ), loadCustomerCreditProjection(id, pool, {
          includeMovementProjections: true,
        })]);
-       const workbook = buildEstadoCuentaWorkbook(result.rows, projection);
+       const workbook = buildEstadoCuentaWorkbook(
+         result.rows,
+         projection,
+         scope,
+         globalCreditSummary(client.rows[0].limiteCredito, projection),
+       );
       res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       res.attachment(`estado-cuenta-${id}.xlsx`);
       await workbook.xlsx.write(res);
       res.end();
     } catch (error) {
+      if (carteraScopeError(error, res)) return;
       next(error);
     }
   },
@@ -1416,48 +1603,39 @@ router.get(
         res.status(400).json({ error: "ID inválido." });
         return;
       }
-      const [result, projection] = await Promise.all([pool.query(
-         `SELECT m.id,m.created_at,m.tipo,m.importe::text,t.folio,
-          SUM(m.importe) OVER (ORDER BY m.created_at,m.id)::text AS "saldoCorridoHistorico"
-         FROM movimientos_credito m LEFT JOIN tickets t ON t.id=m.ticket_id
-         WHERE m.cliente_id=$1 ORDER BY m.created_at,m.id`,
+      const scope = await resolveClienteFinancialReadScope(
+        req.auth!,
+        carteraQuery(req),
+        pool,
+        resolveReadScope,
+      );
+      const client = await pool.query<{ limiteCredito: string }>(
+        'SELECT limite_credito::text AS "limiteCredito" FROM clientes WHERE id=$1',
         [id],
-       ), loadCustomerCreditProjection(id, pool, {
+      );
+      if (!client.rows[0]) {
+        res.status(404).json({ error: "Cliente no encontrado." });
+        return;
+      }
+      const statementQuery = buildEstadoCuentaExportReadQuery(id, scope);
+      const [result, projection] = await Promise.all([pool.query(
+        statementQuery.text,
+        [...statementQuery.values],
+      ), loadCustomerCreditProjection(id, pool, {
          includeMovementProjections: true,
        })]);
-       const projectedMovements = new Map(
-         projection.movementProjections.map((movement) => [
-           movement.movementId,
-           movement,
-         ]),
+       const pdf = renderEstadoCuentaPdf(
+         id,
+         result.rows,
+         projection,
+         scope,
+         globalCreditSummary(client.rows[0].limiteCredito, projection),
        );
-      const pdf = createTextPdf(
-         `Estado de cuenta - cliente ${id} - saldo actual proyectado ${formatNumber(centsToMoney(projection.balanceCents), { kind: "money" })} - saldo a favor ${formatNumber(centsToMoney(projection.overpaymentCents), { kind: "money" })}`,
-        result.rows.map((row) =>
-           (() => {
-             const charge = projection.allCharges.find(
-               (candidate) => candidate.movimientoId === Number(row.id),
-             );
-             const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"
-               ? centsToMoney(charge.pendienteCents)
-               : null;
-             const estadoNota = charge && row.tipo === "VENTA_CREDITO"
-               ? deriveEstadoNota({
-                   importeOriginal: centsToMoney(charge.originalCents),
-                   saldoPendiente: saldoPendiente!,
-                   fechaVencimiento: charge.dueAt,
-                   hoy: todayMexicoCity(),
-                 })
-               : null;
-              const projected = projectedMovements.get(Number(row.id));
-              return `${new Date(row.created_at).toISOString().slice(0, 10)} | ${row.tipo} | ${formatNumber(row.importe, { kind: "money" })} | saldo corrido histórico ${formatNumber(row.saldoCorridoHistorico, { kind: "money" })} | saldo deudor proyectado ${formatNumber(centsToMoney(projected?.saldoDeudorProyectadoCents ?? 0), { kind: "money" })} | saldo a favor proyectado ${formatNumber(centsToMoney(projected?.saldoAFavorProyectadoCents ?? 0), { kind: "money" })} | saldo pendiente ${formatNumber(saldoPendiente, { kind: "money" })} | estado ${estadoNota ?? "-"} | folio ${row.folio ?? "-"}`;
-           })(),
-        ),
-      );
       res.type("application/pdf");
       res.attachment(`estado-cuenta-${id}.pdf`);
       res.send(pdf);
     } catch (error) {
+      if (carteraScopeError(error, res)) return;
       next(error);
     }
   },

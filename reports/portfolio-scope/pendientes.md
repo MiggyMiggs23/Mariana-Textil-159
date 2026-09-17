@@ -1,5 +1,11 @@
 # Bloque 3 — otras lecturas financieras sin alcance
 
+## Estado de la ejecución posterior
+
+Se aprobó conservar globales únicamente deuda actual, saldo a favor, límite y disponible, con permisos financieros, y restringir todo el detalle por sitio. Las dos leyendas son obligatorias, también dentro de archivos. **Ninguna fila de este inventario se declara cerrada todavía.**
+
+La ejecución se detuvo en el primer grupo de exportaciones: el filtro inicial por ticket omite abonos ordinarios sin ticket, falta atribuir sus porciones desde la proyección global, se suprime indebidamente saldo pendiente de notas locales y permanece una clasificación global no autorizada en el XLSX. Los cambios son parciales y no aprobados; no se reinició la API para activarlos. Grupos 2–4 no iniciados. Evidencia y comparación aislada antes/después: `reports/financial-read-scope/group-1.md`.
+
 Inventario de código. Todos los endpoints listados son GET y tienen prefijo `/api/clientes`. No se modificaron en esta entrega. La protección de Cartera no protege automáticamente el directorio, la ficha ni las demás pestañas.
 
 | Endpoint | Información económica | Consumidor |
