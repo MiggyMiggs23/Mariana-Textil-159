@@ -1212,3 +1212,13 @@ Todos son GET bajo `/api/clientes`; conservan sus problemas de alcance. Proteger
 Inventario ampliado: `reports/portfolio-scope/pendientes.md`. Estas rutas no se corrigieron ni se conectaron a un nuevo tablero.
 
 La propuesta visual `reports/prompt-k/visual/propuesta-clientes.html` reutiliza el estilo de Proveedores, muestra valores sin conectar y no está integrada en la aplicación.
+
+## Prompt G — presentación parcial, entrega detenida
+
+Se detuvo la entrega al comprobar que el detalle no recibe `autorizacionEstado`: el lector lo selecciona, pero `ObtenerTicketResponse` lo elimina y `TicketDetalle` no lo declara. Exponerlo exige cambiar el contrato, expresamente fuera del alcance original. No inferir autorización desde `cobrado`, ni aprobar una prueba cuyo fixture añade ese campo.
+
+Los cambios de trabajo centralizan nombres en `documentoTipoLabel` y eliminan el rótulo manual “Piezas” en captura a favor de `formatUnit` (“Pzas.”). `/tickets/:id` se conserva. No se cambió la composición del campo: las pruebas aisladas ya demostraban ausencia de solapamiento a 402 px y escritorio con hasta 309 dígitos finitos.
+
+La propuesta de insignia de documento es “Nota autorizada / Nota por autorizar” o “Ticket cobrado / Ticket por cobrar”; verde significa procesamiento de Caja completado, ámbar acción de Caja pendiente y azul falta de confirmación. **La parte de autorización no está validada contra el contrato real ni se declara entregada.** La insignia de cobranza de la nota permanece intacta.
+
+La evidencia simulada de “Nota autorizada” fue invalidada al detectar el campo adicional del fixture. Typecheck recursivo en cero no resuelve este bloqueo. No se verificaron pantallas autenticadas ni se crearon usuarios, sesiones o datos. Detalle: `reports/prompt-g-after/bloqueo.md`. Se requiere decisión del propietario antes de ampliar el alcance.

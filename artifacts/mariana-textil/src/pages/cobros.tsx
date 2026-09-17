@@ -86,6 +86,7 @@ import { hasPermission, Modules } from "@/lib/permisos";
 import { Textarea } from "@/components/ui/textarea";
 import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
 import { formatDateOnlyMx } from "@/lib/date-only";
+import { documentoTipoLabel } from "@/lib/document-name";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
@@ -1536,7 +1537,7 @@ function CobrosContent() {
                             </span>
                           ) : (
                             <span className={`font-bold text-xl ${t.documentoTipo === "NOTA" ? "text-indigo-700" : "text-sidebar"}`}>
-                              {t.documentoTipo === "NOTA" ? "Nota" : "Ticket"} folio {formatNumber(t.folio, { kind: "identifier" })}
+                              {documentoTipoLabel(t.documentoTipo)} folio {formatNumber(t.folio, { kind: "identifier" })}
                             </span>
                           )}
                         </div>

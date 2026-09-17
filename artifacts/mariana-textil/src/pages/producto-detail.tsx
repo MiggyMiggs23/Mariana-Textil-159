@@ -35,6 +35,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { formatNumber, formatQuantityForCsv, formatUnit } from "@workspace/number-format";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { documentoTipoLabel } from "@/lib/document-name";
 import {
   Dialog,
   DialogContent,
@@ -901,7 +902,7 @@ export default function ProductoDetail() {
                             {formatNumber(mov.saldoPosterior, { kind: "quantity" })}
                           </TableCell>
                           <TableCell className="text-xs text-muted-foreground max-w-[200px] truncate" title={mov.justificacion || mov.documentoId || ''}>
-                            {mov.documentoTipo && `${mov.documentoTipo} ${mov.documentoId || ''} `}
+                            {mov.documentoTipo && `${documentoTipoLabel(mov.documentoTipo)} ${mov.documentoId || ''} `}
                             {mov.justificacion}
                           </TableCell>
                         </TableRow>

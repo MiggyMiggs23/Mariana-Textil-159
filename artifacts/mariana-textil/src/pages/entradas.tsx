@@ -85,10 +85,6 @@ const isValidUnitCost = (value: string): boolean => {
   );
 };
 
-const formatCaptureUnit = (unit: string | null | undefined): string => (
-  unit?.trim().toUpperCase() === "PIEZA" ? "Piezas" : formatUnit(unit)
-);
-
 export default function Entradas() {
   const queryClient = useQueryClient();
 
@@ -374,7 +370,7 @@ export default function Entradas() {
   );
   const capturedRollCount = capCantidades.filter((qty) => qty.trim() !== "").length;
   const captureCounts = getRollCaptureCounts(capCantidades, uniformBaseline, editedQtyIndexes);
-  const captureUnitLabel = formatCaptureUnit(selectedProduct?.unidad);
+  const captureUnitLabel = formatUnit(selectedProduct?.unidad);
   const blankRollCount = captureCounts.blank;
   const adjustedRollCount = captureCounts.adjusted;
   const uniformRollCount = captureCounts.uniform;

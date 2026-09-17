@@ -40,6 +40,7 @@ import {
   type CodigoEscaneadoInterpretado,
 } from "@workspace/scanned-code";
 import { parsePositiveQueryId } from "@/lib/origin-drilldown";
+import { documentoTipoLabel } from "@/lib/document-name";
 
 export function parseAjusteMovementId(search: string | null | undefined): number | null {
   return parsePositiveQueryId(search, "movementId");
@@ -620,7 +621,7 @@ export default function Ajustes() {
               <div>
                 <p className="text-xs font-semibold uppercase text-muted-foreground">Documento</p>
                 <p>{movementDetail.data.documentoTipo && movementDetail.data.documentoId
-                  ? `${movementDetail.data.documentoTipo} #${movementDetail.data.documentoId}`
+                   ? `${documentoTipoLabel(movementDetail.data.documentoTipo)} #${movementDetail.data.documentoId}`
                   : "Sin documento"}</p>
               </div>
               <div>

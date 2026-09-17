@@ -56,6 +56,10 @@ import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto"
 import { ClienteNotaCredito } from "@/components/cliente-nota-credito";
 import { useReimprimirClienteNota } from "@workspace/api-client-react";
 import { formatDateOnlyMx } from "@/lib/date-only";
+import {
+  documentoStatusPresentation,
+  documentoTipoLabel,
+} from "@/lib/document-name";
 
 export function RolloSerieLink({
   rolloId,
@@ -111,6 +115,7 @@ export default function TicketDetailPage() {
     },
   });
 
+  const documentoNombre = documentoTipoLabel(ticket?.documentoTipo);
   const isNota = ticket ? (ticket as TicketDetalle).documentoTipo === "NOTA" : false;
 
   const { data: printInterna, isLoading: printInternaLoading, isError: printInternaError } = useObtenerDocumentoImpresionTicket(
@@ -185,7 +190,7 @@ export default function TicketDetailPage() {
           void printWhenReady("print-credito");
         },
         onError: (err) => {
-          toast({ title: "No se pudo auditar reimpresión", description: getApiErrorMessage(err), variant: "destructive" });
+          toast({ title: `${documentoNombre}: no se pudo auditar reimpresión`, description: getApiErrorMessage(err), variant: "destructive" });
         }
       });
     } else {
@@ -196,14 +201,14 @@ export default function TicketDetailPage() {
   const handleCancelar = () => {
     setPasswordVisibilityResetKey((current) => current + 1);
     if (!motivo.trim()) {
-      toast({ title: "Debes ingresar un motivo", variant: "destructive" });
+      toast({ title: `Debes ingresar un motivo para cancelar el ${documentoNombre.toLowerCase()}`, variant: "destructive" });
       return;
     }
 
     if (user?.rol !== Role.ADMIN) {
       if (!adminUser || !adminPass) {
         toast({
-          title: "Se requieren credenciales de administrador",
+          title: `Se requieren credenciales de administrador para cancelar el ${documentoNombre.toLowerCase()}`,
           variant: "destructive",
         });
         return;
@@ -222,7 +227,7 @@ export default function TicketDetailPage() {
       { id: ticketId, data: { motivo, credencialesAdmin } },
       {
         onSuccess: () => {
-          toast({ title: "Ticket cancelado correctamente" });
+          toast({ title: `${documentoNombre} cancelado correctamente` });
           setCancelOpen(false);
           setCancelConfirmationOpen(false);
           setAdminPass("");
@@ -239,7 +244,7 @@ export default function TicketDetailPage() {
             title: "Error al cancelar",
             description: getApiErrorMessage(
               err,
-              "No se pudo cancelar el ticket.",
+              `No se pudo cancelar el ${documentoNombre.toLowerCase()}.`,
             ),
             variant: "destructive",
           });
@@ -260,12 +265,12 @@ export default function TicketDetailPage() {
     return (
       <div className="p-8 text-center" role="alert">
         <h2 className="text-xl font-semibold text-destructive">
-          No se pudo cargar el ticket
+          No se pudo cargar el documento
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           {getApiErrorMessage(
             ticketError,
-            "Intenta consultar el ticket nuevamente.",
+            "Intenta consultar el documento nuevamente.",
           )}
         </p>
         <Button
@@ -283,7 +288,7 @@ export default function TicketDetailPage() {
     return (
       <div className="p-8 text-center">
         <h2 className="text-xl font-semibold text-destructive">
-          Ticket no encontrado
+          Documento no encontrado
         </h2>
         <Button variant="link" className="mt-4" asChild>
           <AppBackLink fallbackHref={returnPath}>
@@ -294,6 +299,13 @@ export default function TicketDetailPage() {
     );
   }
 
+  const documentoEstado = documentoStatusPresentation({
+    documentoTipo: ticket.documentoTipo,
+    cobrado: ticket.cobrado,
+    autorizacionEstado: (
+      ticket as TicketDetalle & { autorizacionEstado?: string | null }
+    ).autorizacionEstado,
+  });
   const { rollos: uiRollos, metraje: uiMetraje } = groupTicketLinesByModality(ticket.lineas, showRolls);
   const { rollos: printRollos, metraje: printMetraje } = groupTicketLinesByModality(ticket.lineas, false);
   const printProductBlocks = [
@@ -334,7 +346,7 @@ export default function TicketDetailPage() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-sidebar">
-              Ticket #{ticket.folio}
+              {documentoNombre} #{ticket.folio}
             </h1>
             <p className="text-muted-foreground text-sm">
               {ticket.nombreUbicacion}
@@ -350,22 +362,22 @@ export default function TicketDetailPage() {
               setPasswordVisibilityResetKey((current) => current + 1);
               setCancelOpen(true);
             }}>
-              <Ban className="h-4 w-4 mr-2" /> Cancelar Ticket
+              <Ban className="h-4 w-4 mr-2" /> Cancelar {documentoNombre}
             </Button>
           )}
           {isNota ? (
             <Button className="w-full sm:w-auto" onClick={handlePrintNota} disabled={!isPrintReady || printInternaLoading || printClienteLoading}>
-              <FileText className="h-4 w-4 mr-2" /> Imprimir Nota
+              <FileText className="h-4 w-4 mr-2" /> Imprimir {documentoNombre}
             </Button>
           ) : (
             <Button className="w-full sm:w-auto" onClick={handlePrint80mm}>
-              <Printer className="h-4 w-4 mr-2" /> Imprimir Ticket (80mm)
+              <Printer className="h-4 w-4 mr-2" /> Imprimir {documentoNombre} (80mm)
             </Button>
           )}
         </div>
       </div>
 
-      {/* Visor de Ticket (Pantalla / Carta) */}
+      {/* Visor de documento (Pantalla / Carta) */}
       <Card className="no-print shadow-md overflow-hidden">
         <CardHeader className="flex flex-col items-start justify-between gap-4 border-b bg-sidebar/5 sm:flex-row">
           <div>
@@ -384,20 +396,8 @@ export default function TicketDetailPage() {
           </div>
           <div className="text-left sm:text-right">
             {ticket.estado !== EstadoTicket.CANCELADO && (
-              <div
-                className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${
-                  ticket.cobrado === true
-                    ? "bg-emerald-100 text-emerald-700"
-                    : ticket.cobrado === false
-                      ? "bg-amber-100 text-amber-700"
-                      : "bg-primary/10 text-primary"
-                }`}
-              >
-                {ticket.cobrado === true
-                  ? "PAGADO"
-                  : ticket.cobrado === false
-                    ? "PENDIENTE"
-                    : "REGISTRADO"}
+              <div className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${documentoEstado.className}`}>
+                {documentoEstado.label}
               </div>
             )}
             {ticket.clienteId && (
@@ -1028,8 +1028,7 @@ export default function TicketDetailPage() {
               <ShieldAlert className="h-5 w-5" /> Confirmar Cancelación
             </DialogTitle>
             <DialogDescription>
-              Esta acción revertirá los movimientos de inventario de este
-              ticket. Esta acción no se puede deshacer.
+              {`Se revertirán los movimientos de inventario correspondientes a ${documentoNombre} #${ticket.folio}. Esta acción no se puede deshacer.`}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -1091,11 +1090,11 @@ export default function TicketDetailPage() {
       <ConfirmacionTextoExacto
         open={cancelConfirmationOpen}
         onOpenChange={setCancelConfirmationOpen}
-        titulo="Cancelar ticket cobrado"
-        descripcion="Se cancelará el ticket con folio indicado y se revertirán sus movimientos de inventario."
+        titulo={`Cancelar ${documentoNombre}`}
+        descripcion={`Se cancelará ${documentoNombre} #${ticket.folio} y se revertirán sus movimientos de inventario.`}
         textoRequerido={String(ticket.folio)}
-        etiqueta="Confirmación del folio"
-        textoConfirmar="Cancelar definitivamente"
+        etiqueta={`Confirmación del folio de ${documentoNombre}`}
+        textoConfirmar={`Cancelar ${documentoNombre.toLowerCase()} definitivamente`}
         pendiente={cancelarTicket.isPending}
         onConfirm={executeCancelar}
       />
