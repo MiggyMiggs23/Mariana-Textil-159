@@ -1534,3 +1534,17 @@ mtime_ms = 1789619531766
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/04eaa5af-9811-4c87-85a2-1f7248112d23/b26bb306-0eaa-4ac1-b059-221a2ed3e51a"
 storage_version_token = "1789619732512976"
 content_type = "image/jpeg"
+
+[[outputs]]
+id = "yNxuYn2I-NsnMesMW3fy0"
+uri = "file://reports/prompt-q-diseno-atribucion-sitio.md"
+type = "text"
+title = "Prompt Q — Diseño de atribución de sitio y caja"
+description = "Documento de decisión para los socios: estado actual, opciones, consecuencias, recomendaciones y nueve preguntas finales. Sin implementación."
+logical_id = "57ef63b5-ba8c-468b-a09d-967455cd00a8"
+content_hash = "sha256:6996fa99610431a0cbeaf0c43f18938c53789637eb37f3d84c54d4ae6a5d4130"
+size = 34472
+mtime_ms = 1789622847078
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/57ef63b5-ba8c-468b-a09d-967455cd00a8/c52a473e-b9e7-4151-9430-0f51ac011558"
+storage_version_token = "1789622864768472"
+content_type = "text/markdown"
