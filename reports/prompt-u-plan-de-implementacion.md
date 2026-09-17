@@ -31,7 +31,7 @@ No se someten de nuevo a votación. La respuesta posterior modifica expresamente
 | 1 | Sitio guardado explícitamente en cada movimiento nuevo; sesión para el efectivo físico. No inferir después el sitio desde la nota. | E1, E2 |
 | 2 | Anticipos y saldo a favor sin nota, con sitio de recepción y recibo impreso. | E1, E3 |
 | 3 | FIFO global por defecto. Para un cobro solicitado como dirigido: ADMIN autoriza al momento o se conserva sin aplicar hasta autorización; no se reparte FIFO durante esa espera. | E1, E3, E5, E7 |
-| 4 | El ajuste sin nota se atribuye a la tienda de la nota que lo originó, con evidencia de esa relación. | E1 |
+| 4 | El ajuste se atribuye a la tienda de la nota que lo originó, con evidencia de esa relación. Si no puede identificarse esa nota, se captura con tienda elegida y justificación obligatoria, según la precisión posterior de E1. | E1 |
 | 5 | Ingreso/devolución física y corrección contable se distinguen obligatoriamente. | E1, E2, E7 |
 | 6 | La devolución física sale de la caja abierta de hoy; no modifica el corte de recepción original. | E2 |
 | 7 | Los tres movimientos señalados quedan «Sin sitio determinado», con atribución posterior posible y trazable. | E1, E7 |
@@ -142,10 +142,12 @@ La autoridad de cualquier ADMIN para el dirigido procede de la **nueva decisión
 
 **Tamaño: grande. Decisiones: 1, 4, 5, 7; base de 2, 3, 6 y 8.**
 
-- **Construye:** origen explícito de todos los nuevos movimientos de crédito, relación a sesión cuando hay efectivo real y distinción obligatoria de ingreso, devolución y corrección contable. Incluye ventas a crédito, abonos ordinarios y dirigidos, reversos y ajustes; no solo el formulario de abono. El ajuste sin nota necesita una referencia comprobable a la nota que lo originó. Conserva identificador de la operación para evitar un cobro duplicado.
+- **Precisión aprobada tras el Bloque 0:** exactamente una naturaleza obligatoria en cada movimiento nuevo: ingreso físico, devolución física, corrección contable u operación de crédito sin movimiento de dinero. Esta última corresponde a la venta a crédito y a su reverso automático sin dinero físico. Matriz de los siete productores, aprobación textual de diseño, clave aislada por productor y restricciones de verificación en `reports/e1-bloque0-decisiones-aprobadas.md`; no es autorización de escrituras en la base ni prueba de implementación.
+- **Construye:** origen explícito de todos los nuevos movimientos de crédito, relación a sesión cuando hay efectivo real y exactamente una de las cuatro naturalezas aprobadas. Incluye ventas a crédito, abonos ordinarios y dirigidos, reversos y ajustes; no solo el formulario de abono. El ajuste conserva una referencia comprobable a la nota que lo originó cuando es identificable; si no lo es, exige tienda elegida y justificación obligatoria, sin bloquear la captura por esa ausencia. Conserva identificador de la operación para evitar un cobro duplicado.
+- **Omisión del plan detectada:** la baja por incobrable también inserta un `AJUSTE` mediante SQL directo en `artifacts/api-server/src/routes/clientes-admin.ts:185–190`. Queda cubierta expresamente, como corrección contable, además del ajuste manual y de los demás productores.
 - **Base nueva:** distinguir el comprobante de recepción del efecto sobre crédito. Para dinero dirigido en espera, conservar cliente, monto, saldo todavía sin aplicar, fecha/hora real de recepción, sitio, medio/cuenta, sesión si es efectivo y motivo/referencia. No insertar un abono ordinario que el cálculo pueda consumir antes de autorizar.
 - **Históricos:** deja los tres indeterminados y prepara atribución posterior con evidencia. No adivina sitio por usuario, banco, fecha o nota. Conserva la identidad y fecha del movimiento al relacionar evidencia antigua, porque un ID por sí solo puede haberse reutilizado tras una purga.
-- **Dependencias:** ninguna entrega de U; requiere resolver las preguntas 1 y 2 del cierre y autorización de escrituras. **La esperan directamente E2 e, indirectamente, E3, E4, E5, E7, E9 y E12.**
+- **Dependencias:** ninguna entrega de U; diseño aprobado en la constancia del Bloque 0, pero requiere autorización separada de escrituras. La atribución real de históricos espera la evidencia y decisión del propietario; no se ejecuta en E1. **La esperan directamente E2 e, indirectamente, E3, E4, E5, E7, E9 y E12.**
 - **Qué toca:** registro de crédito, captura actual del cliente y productores automáticos; comprobaciones de origen, permisos, auditoría, consultas de evidencia y futura atribución. Detalle técnico E1/A1/A7.
 - **Qué puede desalinearse:** aplicaciones móviles/web con cargas antiguas, aprobación de dirigidos, autorización de notas, reversos, ajustes, estado de cuenta y consultas que todavía deducen sitio. La estructura nueva no se libera con productores viejos que omitan sus datos obligatorios.
 - **Cifras globales:** agregar evidencia o asignar una tienda no cambia deuda, saldo a favor, Ventas o cobranza total. Cambian únicamente los repartos por sitio y el subtotal «Sin sitio determinado» al atribuir un histórico. Un cobro nuevo retenido sí aumenta dinero recibido y pendiente de aplicación, pero no deuda/favor/disponible. Ningún histórico se convierte automáticamente en dinero retenido.
@@ -460,7 +462,7 @@ En cada fila, `src/...` abreviado conserva la raíz del artefacto nombrado inmed
 - Consumidores: `artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx`, `cliente-nota-credito.tsx`; estados/documento en `pages/ticket-detail.tsx`.
 - Contratos actuales/nuevos: `lib/api-spec/openapi.yaml`, generación en `lib/api-client-react` y `lib/api-zod`; documentar entradas de origen/naturaleza/sesión, evidencia y resultados de vista previa sin añadir deducciones silenciosas. Nueva atribución histórica exige esquema/rutas/permisos propios; nombre final propuesto, no endpoint existente.
 - Para el nuevo cobro retenido, proponer un registro separado con `fechaRecepcion`, importe/pendiente, cliente, sitio/sesión/medio y vínculo único a solicitudes/aplicaciones. Los nombres son ilustrativos. No registrar `ABONO` consumible ni `saldoAFavor` utilizable antes de autorización. Captura, evidencia del cobro y efecto de caja deben ser atómicos.
-- Productores adicionales a inventariar al implementar E1: autorización de nota y movimientos de reverso/ajuste de `artifacts/api-server/src/lib/pos.ts` y rutas de clientes, además de `routes/pagos-dirigidos.ts`. No limitar el cambio a ABONO.
+- Productores cubiertos por E1: autorización de nota y reverso automático de `artifacts/api-server/src/lib/pos.ts`, abono/reverso/ajuste de las rutas de clientes, dirigido en `routes/pagos-dirigidos.ts` y **ajuste por baja incobrable en `routes/clientes-admin.ts:185–190`, omitido en el inventario anterior del plan**. La matriz completa revisada consta en `reports/e1-bloque0-decisiones-aprobadas.md`. No limitar el cambio a ABONO.
 - Referencias de regresión: pruebas de crédito/FIFO bajo `artifacts/api-server/src/lib/`, contratos de notas y estados de cuenta; no ejecutar `inventario.test.ts` ni suites financieras con escrituras como si fueran pruebas puras.
 
 ### A2. Proyección frente a aplicaciones — E1, E5, E7
@@ -574,10 +576,10 @@ En cada fila, `src/...` abreviado conserva la raíz del artefacto nombrado inmed
 
 E5 ya no es reasignación: es aplicación diferida, grande pero sin retirar pagos de notas liquidadas. El cobro retenido solo se activa con comprobante, control de espera, aplicación autorizada y reportes conciliados. E6/E8 siguen pudiendo adelantarse. P no se reanuda con esta actualización.
 
-**Preguntas anteriores que siguen abiertas:**
+**Preguntas anteriores: estado tras las precisiones de E1 (se conserva la numeración):**
 
-1. **Atribución histórica:** ¿quién puede asignar o rectificar la tienda de uno de los tres movimientos y qué comprobante debe adjuntar?
-2. **Ajuste sin origen identificable:** si no se puede identificar la nota que originó el ajuste, ¿se deja pendiente de aclaración hasta identificarla?
+1. **Atribución histórica — facultad resuelta:** ADMIN y SUPERVISOR, con evidencia y motivo obligatorios, mediante hecho aparte inmutable. Sigue pendiente del propietario determinar qué evidencia concreta es suficiente y el sitio real de cada histórico; no se atribuyen en E1.
+2. **Ajuste sin origen identificable — resuelto:** se captura con tienda elegida y justificación obligatoria; no se bloquea hasta encontrar la nota ni se inventa una relación documental.
 3. **Devoluciones físicas:** ¿se permiten parciales y devoluciones de pagos ya aplicados, además de devolver favor, y quién las autoriza? La salida en caja abierta de hoy ya está decidida.
 
 **Preguntas nuevas y procedimiento aún pendiente:**

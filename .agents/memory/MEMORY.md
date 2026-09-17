@@ -68,3 +68,4 @@
 - [Calendario y filtros generados](calendar-contract-query-compatibility.md) — quitar coerción Date también afecta queries; conservar límites históricos, no cambiar qué registros seleccionan.
 - [Resumen global de crédito y detalle por sitio](customer-credit-scope-exception.md) — excepción limitada a cuatro cifras; FIFO global, detalle restringido y leyendas dentro de archivos.
 - [Pruebas negativas de guardias](source-guard-negative-proof.md) — exigir fallo del proceso real en un árbol aislado y cubrir las extensiones mantenidas.
+- [Naturaleza del crédito](credit-movement-nature-decisions.md) — venta a crédito y cancelación sin dinero no son correcciones; cuatro categorías obligatorias, diseño aprobado.

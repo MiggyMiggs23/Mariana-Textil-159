@@ -1604,3 +1604,17 @@ mtime_ms = 1789682319257
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/b5315b49-0528-4ff4-a802-4a21d45eef24/73d25b3c-014a-4d9a-a848-ccd0e488ac0e"
 storage_version_token = "1789682375062901"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "1IcioYFQ-A3bpQ7lIo3sK"
+uri = "file://reports/e1-bloque0-decisiones-aprobadas.md"
+type = "text"
+title = "E1 — Decisiones aprobadas y clasificación de productores"
+description = "Aprobación textual de diseño, matriz de siete productores, cuatro naturalezas obligatorias, aislamiento de claves y límites de verificación. No autoriza escrituras en la base."
+logical_id = "3958a1bc-7c47-4e1e-b81d-8619219b8ef1"
+content_hash = "sha256:439002302d409de84f8798226d518928a397a9c8e7da14cce507b4113083fd90"
+size = 9854
+mtime_ms = 1789683435269
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3958a1bc-7c47-4e1e-b81d-8619219b8ef1/b13b629f-c27c-42e2-9b87-a152fd363ed8"
+storage_version_token = "1789683494268928"
+content_type = "text/markdown"
