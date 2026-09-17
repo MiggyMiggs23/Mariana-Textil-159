@@ -1,0 +1,80 @@
+{
+  "verification": "Entradas + ProductCombobox isolated mounted UI verification",
+  "status": "passed",
+  "passMode": "focused-followup-only",
+  "generatedAt": "2026-09-17T02:42:28.311Z",
+  "honestLimitation": "No authenticated E2E: no login, session, database, real API, user creation, or production POST.",
+  "productionSources": [
+    "artifacts/mariana-textil/src/pages/entradas.tsx",
+    "artifacts/mariana-textil/src/components/product-combobox.tsx"
+  ],
+  "sourceVersions": {
+    "entradasSha256": "902ce7dba933a116fb9161019c5b447cedc5dba51313ae3446fde313a68e0534",
+    "productComboboxSha256": "436e08a31762f9437d928308e8adf325ad7be7536d813cc3d94619784fb34f18"
+  },
+  "priorFullPassEvidence": "reports/entradas-ajustes/runtime-evidence.json (prior full pass; only its fresh-container failure was rechecked here)",
+  "harness": ".local/entradas-ajustes-check",
+  "evidence": {
+    "catalog": {
+      "path": "reports/entradas-ajustes/catalogo.json",
+      "sha256": "a34a2013ac78b42eb77b628105c43bc66a01f33cdcd22c5c4335f3f96b2089ab",
+      "count": 1234,
+      "selected": [
+        {
+          "id": 1770,
+          "sku": "ALE-BLA",
+          "label": "Alemanisco Blanco",
+          "unidad": "METRO"
+        },
+        {
+          "id": 1748,
+          "sku": "ALA-BEI",
+          "label": "Alaska Beige",
+          "unidad": "KILO"
+        },
+        {
+          "id": 956,
+          "sku": "CAS15MM-ORO",
+          "label": "Cascabel 15 Mm Oro",
+          "unidad": "BOLSA"
+        },
+        {
+          "id": 2006,
+          "sku": "JERCOC-AMA",
+          "label": "Jerga Cocina Amarilla",
+          "unidad": "PIEZA"
+        }
+      ]
+    },
+    "constraints": {
+      "databaseWrites": 0,
+      "apiMutations": "intercepted-only",
+      "liveApi": false,
+      "network": "local fixture routes only",
+      "authenticationVerified": false,
+      "sessionOrUserCreation": false
+    },
+    "checks": [
+      {
+        "freshContainerUnavailable": {
+          "mutations": 0,
+          "refetches": 2
+        }
+      },
+      {
+        "refetchError": {
+          "retainedReview": true,
+          "retryMutations": 1
+        }
+      },
+      {
+        "pendingDuplicateConfirm": {
+          "mutations": 1,
+          "asyncRefetchHeld": true
+        }
+      }
+    ],
+    "screenshots": []
+  },
+  "failures": []
+}

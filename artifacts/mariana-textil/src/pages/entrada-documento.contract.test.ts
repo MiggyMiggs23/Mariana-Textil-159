@@ -2,11 +2,14 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const [documentPage, entryList, styles] = await Promise.all([
+const [documentPage, entryList, styles, catalogSource, entryHistory] = await Promise.all([
   readFile(new URL("./entrada-documento.tsx", import.meta.url), "utf8"),
   readFile(new URL("./entradas.tsx", import.meta.url), "utf8"),
   readFile(new URL("../index.css", import.meta.url), "utf8"),
+  readFile(new URL("../../../../reports/entradas-ajustes/catalogo.json", import.meta.url), "utf8"),
+  readFile(new URL("../components/entrada-history.tsx", import.meta.url), "utf8"),
 ]);
+const catalog = JSON.parse(catalogSource);
 
 test("la entrada conserva su formato global y firma solo la última hoja global", () => {
   assert.match(documentPage, /const rowsPerPage = 10/);
@@ -61,6 +64,38 @@ test("los globales conservan cada producto y unidad por separado", () => {
   assert.doesNotMatch(documentPage, /const totalQty = entrada\.lineas\.reduce/);
 });
 
+test("la celda global conserva tela y color completos sin duplicar el SKU", () => {
+  const products = catalog.products;
+  assert.equal(products.length, catalog.counts.all);
+  assert.equal(products.length, 1234);
+  assert.ok(
+    products.every(
+      (product) =>
+        typeof product.sku === "string" &&
+        product.sku.trim() &&
+        typeof product.tela === "string" &&
+        product.tela.trim() &&
+        typeof product.color === "string" &&
+        product.color.trim(),
+    ),
+    "el catálogo completo debe aportar SKU, tela y color para cada producto",
+  );
+
+  const productCell = documentPage.slice(
+    documentPage.indexOf('<td className="document-product-name'),
+    documentPage.indexOf("</td>", documentPage.indexOf('<td className="document-product-name')) + 5,
+  );
+  assert.match(productCell, /linea\.telaProducto/);
+  assert.match(productCell, /linea\.colorProducto/);
+  assert.match(productCell, /block break-words leading-tight/);
+  assert.doesNotMatch(productCell, /truncate/);
+  assert.doesNotMatch(productCell, /linea\.skuProducto/);
+  assert.match(documentPage, /<th[^>]*>SKU<\/th>/);
+  assert.match(documentPage, /<td className="py-1 px-3 font-mono text-\[10px\] text-gray-600">\{linea\.skuProducto\}<\/td>/);
+  assert.match(documentPage, /producto: `\$\{linea\.telaProducto\} \$\{linea\.colorProducto\}`/);
+  assert.match(documentPage, /sku: linea\.skuProducto/);
+});
+
 test("la entrada se aísla para impresión sin ocultar su contenido", () => {
   assert.match(documentPage, /printWhenReady\("print-entrada"\)/);
   assert.match(documentPage, /entrada-print-root/);
@@ -85,10 +120,11 @@ test("la entrada conserva una caja de página segura y traslada fondo y borde al
 });
 
 test("la lista conserva enlaces permanentes y visibles al documento", () => {
-  assert.match(entryList, /useListEntradas/);
-  assert.match(entryList, /href=\{`\/entradas\/\$\{entrada\.id\}\/documento`\}/);
-  assert.match(entryList, /text-blue-700 underline/);
-  assert.match(entryList, /imprimir o guardar nuevamente/);
+  assert.match(entryList, /<EntradaHistory catalogos=\{catalogos\} ubicaciones=\{ubicaciones\}/);
+  assert.match(entryHistory, /useListEntradas/);
+  assert.match(entryHistory, /href=\{`\/entradas\/\$\{entrada\.id\}\/documento`\}/);
+  assert.match(entryHistory, /text-blue-700 underline/);
+  assert.match(entryHistory, /imprime o guarda nuevamente/);
 });
 
 test("el documento muestra el sitio y nunca expone el id interno del proveedor", () => {

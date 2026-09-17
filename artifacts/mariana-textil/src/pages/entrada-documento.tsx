@@ -34,16 +34,17 @@ export default function EntradaDocumento() {
   const documentUrl = absoluteAppUrl(`/entradas/${entrada.id}/documento`);
 
   /*
-   * Under the fixture's existing product truncation, the long SKU/Sitio labels
+   * Under the fixture's existing long-label wrapping, the long SKU/Sitio labels
    * wrap into multiple lines (up to three in a measured cell), making each
    * populated bordered global row 54 px tall. That is fixture-specific rather
-   * than a universal maximum for shorter site labels. At 96 CSS px/in the
-   * 5.25 mm inset leaves a 774.828125 × 1012.9375 px frame. The full 10-row
-   * table occupies 590 px (y=329.828125 to 919.828125), followed by the
-   * 96 px footer and 16 px bottom strip; all fit before frame y=1032.765625.
-   * An eleventh 54 px row exceeds that full-footer reserve. PDF probes
-   * 1/10/11/12 preserve all content, including dedicated series sheets,
-   * with ink at least 5.2917 mm from every physical PDF edge.
+   * than a universal maximum for shorter site labels. The tela/color cell below
+   * deliberately keeps both complete labels on separate lines, so it must not
+   * use truncation to meet this measured invariant. At 96 CSS px/in the 5.25
+   * mm inset leaves a 774.828125 × 1012.9375 px frame. The full 10-row table
+   * occupies 590 px (y=329.828125 to 919.828125), followed by the 96 px footer
+   * and 16 px bottom strip; all fit before frame y=1032.765625. An eleventh 54 px row exceeds
+   * that full-footer reserve. PDF probes 1/10/11/12 preserve all content, including dedicated
+   * series sheets, with ink at least 5.2917 mm from every physical PDF edge.
    */
   const rowsPerPage = 10;
   const globalPageCount = Math.max(1, Math.ceil(entrada.lineas.length / rowsPerPage));
@@ -211,7 +212,10 @@ export default function EntradaDocumento() {
                     return (
                       <tr key={index} className="h-[25px] border-b border-gray-200 even:bg-gray-50">
                         <td className="py-1 px-3 text-center text-gray-500 text-xs">{formatNumber(globalIndex, { kind: "count" })}</td>
-                        <td className="py-1 px-3 font-bold text-xs text-black truncate max-w-[250px]">{linea.skuProducto} - {linea.telaProducto} {linea.colorProducto}</td>
+                        <td className="document-product-name py-1 px-3 text-xs text-black max-w-[250px]">
+                          <span className="block break-words leading-tight font-bold">{linea.telaProducto}</span>
+                          <span className="block break-words leading-tight font-medium text-gray-700">{linea.colorProducto}</span>
+                        </td>
                         <td className="py-1 px-3 text-center font-bold text-xs">{formatNumber(linea.rollosCount, { kind: "count" })}</td>
                         <td className="py-1 px-3 text-right text-xs font-medium">{formatNumber(linea.cantidadTotal, { kind: "quantity" })} {formatUnit(linea.unidadProducto)}</td>
                         <td className="py-1 px-3 font-mono text-[10px] text-gray-600">{linea.skuProducto}</td>

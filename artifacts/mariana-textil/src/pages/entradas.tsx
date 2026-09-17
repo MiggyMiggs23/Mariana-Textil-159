@@ -52,6 +52,7 @@ import {
   updateEditedRollIndexes,
   updateRollQuantity,
 } from "@/lib/roll-capture-state";
+import { buildEntradaReviewTotals, shouldPreserveProvider } from "@/lib/entrada-review";
 import { Link } from "wouter";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { CampoEscaneo } from "@/components/campo-escaneo";
@@ -132,7 +133,10 @@ export default function Entradas() {
   const [autoDerivedProveedorId, setAutoDerivedProveedorId] = useState<string | null>(null);
   const [observaciones, setObservaciones] = useState<string>("");
 
-  const { data: contenedoresDisponibles } = useListContenedoresDisponiblesEntrada(
+  const {
+    data: contenedoresDisponibles,
+    refetch: refetchContenedoresDisponibles,
+  } = useListContenedoresDisponiblesEntrada(
     { ubicacionId: Number(ubicacionId) },
     {
       query: {
@@ -151,6 +155,7 @@ export default function Entradas() {
   const [productoId, setProductoId] = useState<string>("");
   const [costoUnitario, setCostoUnitario] = useState<string>("");
   const [declaredCount, setDeclaredCount] = useState<string>("");
+  const [hasPendingProductSearch, setHasPendingProductSearch] = useState(false);
 
   const [lineas, setLineas] = useState<DraftLinea[]>([]);
   const [selectedLines, setSelectedLines] = useState<Set<string>>(new Set());
@@ -164,6 +169,9 @@ export default function Entradas() {
   // Modals state
   const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);
   const [isConfirmCancelOpen, setIsConfirmCancelOpen] = useState(false);
+  const [isProviderChangeOpen, setIsProviderChangeOpen] = useState(false);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Capture state
   const [capDraftId, setCapDraftId] = useState("");
@@ -180,8 +188,14 @@ export default function Entradas() {
   const [uniformQty, setUniformQty] = useState("");
   const [uniformBaseline, setUniformBaseline] = useState<string | null>(null);
   const [editedQtyIndexes, setEditedQtyIndexes] = useState<Set<number>>(new Set());
+  const [captureFormBeforeOpen, setCaptureFormBeforeOpen] = useState<{
+    productoId: string;
+    costoUnitario: string;
+    declaredCount: string;
+  } | null>(null);
 
   const qtyInputRef = useRef<HTMLInputElement>(null);
+  const submitLockRef = useRef(false);
 
   const [resultado, setResult] = useState<EntradaDetail | null>(null);
   const [activeTab, setActiveTab] = useHistoryEntryState<"historial" | "captura">(
@@ -217,7 +231,7 @@ export default function Entradas() {
   const handleUbicacionChange = (value: string) => {
     setUbicacionId(value);
     setContenedorId("none");
-    if (proveedorId !== "none" && proveedorId === autoDerivedProveedorId) {
+    if (!shouldPreserveProvider(lineas.length) && proveedorId !== "none" && proveedorId === autoDerivedProveedorId) {
       setProveedorId("none");
     }
     setAutoDerivedProveedorId(null);
@@ -235,17 +249,66 @@ export default function Entradas() {
     setAutoDerivedProveedorId(null); // Manual change overrides auto-derivation
   };
 
+  const resetCaptureForm = () => {
+    setProductoId("");
+    setCostoUnitario("");
+    setDeclaredCount("");
+    setHasPendingProductSearch(false);
+    setCapDraftId("");
+    setCapCantidades([]);
+    setCapPisos([]);
+    setCapCurrentQty("");
+    setCapCurrentPiso(null);
+    setEditingQtyIndex(null);
+    setEditingQtyValue("");
+    setEditingPisoValue(null);
+    setEditingOriginalQty("");
+    setEditingOriginalWasAdjusted(false);
+    setIsEditingLine(false);
+    setUniformQty("");
+    setUniformBaseline(null);
+    setEditedQtyIndexes(new Set());
+    setCaptureFormBeforeOpen(null);
+  };
+
+  const attemptProviderChange = () => {
+    if (lineas.length > 0) {
+      setIsProviderChangeOpen(true);
+      return;
+    }
+    handleProveedorChange("none");
+  };
+
+  const confirmProviderChange = () => {
+    setLineas([]);
+    setSelectedLines(new Set());
+    setExpandedLines(new Set());
+    resetCaptureForm();
+    setIsProviderChangeOpen(false);
+    setProveedorId("none");
+    setAutoDerivedProveedorId(null);
+    setContenedorId("none");
+    setUuidCliente(crypto.randomUUID());
+  };
+
   const handleContenedorChange = (value: string) => {
-    setContenedorId(value);
     if (value !== "none") {
       const selectedCont = contenedoresDisponibles?.find(c => c.id.toString() === value);
       if (selectedCont) {
         const provIdStr = selectedCont.proveedorId.toString();
+        if (shouldPreserveProvider(lineas.length) && proveedorId !== provIdStr) {
+          toast.error("El contenedor pertenece a otro proveedor", {
+            description: "Confirma el cambio de proveedor para vaciar primero las líneas capturadas.",
+          });
+          return;
+        }
+        setContenedorId(value);
         setProveedorId(provIdStr);
         setAutoDerivedProveedorId(provIdStr);
       }
     } else {
-      if (proveedorId === autoDerivedProveedorId) {
+      setContenedorId(value);
+      if (!shouldPreserveProvider(lineas.length) && proveedorId === autoDerivedProveedorId) {
         setProveedorId("none");
       }
       setAutoDerivedProveedorId(null);
@@ -266,6 +329,7 @@ export default function Entradas() {
       return;
     }
 
+    setCaptureFormBeforeOpen({ productoId, costoUnitario, declaredCount });
     setCapDraftId(crypto.randomUUID());
     setCapCantidades(createBlankRollQuantities(Number(declaredCount)));
     setCapPisos(Array(Number(declaredCount)).fill(null));
@@ -284,6 +348,7 @@ export default function Entradas() {
   };
 
   const handleEditLine = (linea: DraftLinea) => {
+    setCaptureFormBeforeOpen({ productoId, costoUnitario, declaredCount });
     setProductoId(linea.productoId);
     setCostoUnitario(linea.costoUnitario || "");
     setDeclaredCount(linea.declaredCount.toString());
@@ -500,11 +565,32 @@ export default function Entradas() {
   };
 
   const attemptCancelCapture = () => {
-    if (capCantidades.some((qty) => qty.trim() !== "") && !isEditingLine) {
+    if (capCantidades.some((qty) => qty.trim() !== "")) {
       setIsConfirmCancelOpen(true);
     } else {
       setIsCaptureModalOpen(false);
+      if (isEditingLine) {
+        const previous = captureFormBeforeOpen;
+        setProductoId(previous?.productoId || "");
+        setCostoUnitario(previous?.costoUnitario || "");
+        setDeclaredCount(previous?.declaredCount || "");
+        setIsEditingLine(false);
+        setCaptureFormBeforeOpen(null);
+      }
     }
+  };
+
+  const discardOpenCapture = () => {
+    const previous = captureFormBeforeOpen;
+    setIsConfirmCancelOpen(false);
+    setIsCaptureModalOpen(false);
+    if (isEditingLine) {
+      setProductoId(previous?.productoId || "");
+      setCostoUnitario(previous?.costoUnitario || "");
+      setDeclaredCount(previous?.declaredCount || "");
+      setIsEditingLine(false);
+    }
+    setCaptureFormBeforeOpen(null);
   };
 
   const handleConfirmCapture = () => {
@@ -578,6 +664,7 @@ export default function Entradas() {
     }
 
     setIsCaptureModalOpen(false);
+    setCaptureFormBeforeOpen(null);
   };
 
   const handleRemoveLinea = (id: string) => {
@@ -620,53 +707,136 @@ export default function Entradas() {
   const discardWholeDraft = () => {
     if (lineas.length === 0 || window.confirm("¿Seguro que deseas cancelar toda la entrada? Se perderá todo lo capturado.")) {
       setLineas([]);
-      setProductoId("");
-      setCostoUnitario("");
-      setDeclaredCount("");
+      setSelectedLines(new Set());
+      setExpandedLines(new Set());
+      resetCaptureForm();
+      setIsReviewOpen(false);
       setUuidCliente(crypto.randomUUID());
     }
   };
 
-  const totalRollos = lineas.reduce((acc, l) => acc + l.cantidades.length, 0);
-  const totalQtyGeneral = lineas.reduce((acc, l) => acc + l.cantidades.reduce((a, b) => a + parseFloat(b), 0), 0);
+  const reviewTotals = buildEntradaReviewTotals(lineas);
+  const totalRollos = reviewTotals.rollCount;
   const totalCostoGeneral = lineas.reduce((acc, l) => {
     const qtySum = l.cantidades.reduce((a, b) => a + parseFloat(b), 0);
     return acc + (qtySum * parseFloat(l.costoUnitario || "0"));
   }, 0);
 
   const isFormValid = ubicacionId && lineas.length > 0;
+  const hasPendingProductCapture = Boolean(
+    productoId
+    || declaredCount
+    || (showCost && costoUnitario)
+    || hasPendingProductSearch,
+  );
+  const providerName = proveedorId === "none"
+    ? "Sin proveedor"
+    : proveedores?.find((proveedor) => proveedor.id.toString() === proveedorId)?.nombre || "Proveedor no disponible";
+  const locationName = ubicaciones?.find((ubicacion) => ubicacion.id.toString() === ubicacionId)?.nombre
+    || user?.ubicacion?.nombre
+    || "Sitio no disponible";
+  const reviewUnitTotals = [
+    "METRO",
+    "KILO",
+    "BOLSA",
+    "PIEZA",
+  ].filter((unit) => reviewTotals.quantitiesByUnit[unit] !== undefined)
+    .map((unit) => [unit, reviewTotals.quantitiesByUnit[unit]] as [string, number])
+    .concat(
+      Object.entries(reviewTotals.quantitiesByUnit)
+        .filter(([unit]) => !["METRO", "KILO", "BOLSA", "PIEZA"].includes(unit)),
+    );
 
-  const handleSubmit = () => {
+  const validateBeforeSave = (availableContainers = contenedoresDisponibles): boolean => {
     if (!isFormValid) {
       toast.error("La entrada está incompleta", {
         description: "Selecciona un sitio y agrega al menos una línea.",
       });
-      return;
+      return false;
+    }
+    if (hasPendingProductCapture) {
+      toast.error("Hay una captura de producto sin confirmar", {
+        description: "Confirma la línea o cancela explícitamente su captura antes de guardar.",
+      });
+      return false;
     }
     if (showCost && lineas.some((linea) => !isValidUnitCost(linea.costoUnitario || ""))) {
       toast.error("El costo unitario debe ser mayor a cero.");
-      return;
+      return false;
+    }
+    if (reviewTotals.invalidQuantities.length > 0) {
+      const invalid = reviewTotals.invalidQuantities[0];
+      toast.error("Hay una cantidad inválida en la captura.", {
+        description: `Revisa la cantidad del rollo ${invalid.quantityIndex + 1} de la línea ${invalid.lineIndex + 1}.`,
+      });
+      return false;
     }
 
     if (contenedorId && contenedorId !== "none") {
-      const isAvailable = contenedoresDisponibles?.some(c => c.id.toString() === contenedorId);
+      const isAvailable = availableContainers?.some(c => c.id.toString() === contenedorId);
       if (!isAvailable) {
         setContenedorId("none");
         toast.error("El contenedor seleccionado ya no está disponible para esta ubicación.", {
           description: "Se ha desvinculado la entrada del contenedor. Revisa tu selección."
         });
-        return;
+        return false;
       }
-      const selectedCont = contenedoresDisponibles?.find(c => c.id.toString() === contenedorId);
+      const selectedCont = availableContainers?.find(c => c.id.toString() === contenedorId);
       if (selectedCont && selectedCont.proveedorId.toString() !== proveedorId) {
         setContenedorId("none");
         toast.error("El proveedor seleccionado no coincide con el proveedor del contenedor", {
           description: "Se ha desvinculado el contenedor. Revisa tu selección."
         });
-        return;
+        return false;
       }
     }
 
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (submitLockRef.current || isSubmitting || crearEntrada.isPending) return;
+    if (!validateBeforeSave()) return;
+    setIsReviewOpen(true);
+  };
+
+  const handleConfirmReview = async () => {
+    if (submitLockRef.current || isSubmitting || crearEntrada.isPending) return;
+    if (!validateBeforeSave()) {
+      setIsReviewOpen(false);
+      return;
+    }
+
+    submitLockRef.current = true;
+    setIsSubmitting(true);
+    if (contenedorId && contenedorId !== "none") {
+      let freshContainers: typeof contenedoresDisponibles;
+      try {
+        const freshResult = await refetchContenedoresDisponibles();
+        if (freshResult.error || !freshResult.data) {
+          toast.error("No se pudo verificar el contenedor", {
+            description: "Revisa la conexión e intenta nuevamente. La captura se conservó.",
+          });
+          submitLockRef.current = false;
+          setIsSubmitting(false);
+          return;
+        }
+        freshContainers = freshResult.data;
+      } catch {
+        toast.error("No se pudo verificar el contenedor", {
+          description: "Revisa la conexión e intenta nuevamente. La captura se conservó.",
+        });
+        submitLockRef.current = false;
+        setIsSubmitting(false);
+        return;
+      }
+      if (!validateBeforeSave(freshContainers)) {
+        submitLockRef.current = false;
+        setIsSubmitting(false);
+        setIsReviewOpen(false);
+        return;
+      }
+    }
     crearEntrada.mutate({
       data: {
         ubicacionId: Number(ubicacionId),
@@ -715,6 +885,7 @@ export default function Entradas() {
         if (autoPrintLabels) {
           window.open(`${baseUrl}/entradas/${data.id}/etiquetas`, '_blank');
         }
+        setIsReviewOpen(false);
       },
       onError: (err: unknown) => {
         const msg = getApiErrorMessage(
@@ -722,6 +893,8 @@ export default function Entradas() {
           "No se pudo registrar la entrada. Revisa los datos e intenta nuevamente.",
         );
         toast.error("No se registró la entrada", { description: msg });
+        submitLockRef.current = false;
+        setIsSubmitting(false);
       }
     });
   };
@@ -772,6 +945,9 @@ export default function Entradas() {
                 setProductoId("");
                 setCostoUnitario("");
                 setDeclaredCount("");
+                setHasPendingProductSearch(false);
+                submitLockRef.current = false;
+                setIsSubmitting(false);
                 setUuidCliente(crypto.randomUUID());
               }}>Nueva Entrada</Button>
             </CardFooter>
@@ -859,6 +1035,7 @@ export default function Entradas() {
                     products={(productos as any) ?? []}
                     value={productoId}
                     onValueChange={setProductoId}
+                    onPendingSearchChange={setHasPendingProductSearch}
                     placeholder="Escribe tela, color o SKU..."
                     testId="input-entrada-producto"
                   />
@@ -936,17 +1113,40 @@ export default function Entradas() {
 
                 <div className="space-y-2">
                   <Label>Proveedor</Label>
-                  <Select value={proveedorId} onValueChange={handleProveedorChange}>
-                    <SelectTrigger data-testid="select-entrada-proveedor">
-                      <SelectValue placeholder="Sin proveedor" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="none">Sin proveedor</SelectItem>
-                      {proveedores?.filter(p => p.activo).map(p => (
-                        <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="flex items-center gap-2">
+                    <Select
+                      value={proveedorId}
+                      onValueChange={handleProveedorChange}
+                      disabled={lineas.length > 0}
+                    >
+                      <SelectTrigger data-testid="select-entrada-proveedor">
+                        <SelectValue placeholder="Sin proveedor" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Sin proveedor</SelectItem>
+                        {proveedores?.filter(p => p.activo).map(p => (
+                          <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {lineas.length > 0 && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={attemptProviderChange}
+                        disabled={isSubmitting || crearEntrada.isPending}
+                        data-testid="btn-change-entrada-provider"
+                      >
+                        Cambiar proveedor
+                      </Button>
+                    )}
+                  </div>
+                  {lineas.length > 0 && (
+                    <p className="text-xs text-muted-foreground">
+                      Bloqueado mientras haya líneas capturadas. Cambiarlo vaciará la captura.
+                    </p>
+                  )}
                 </div>
 
                 {ubicacionId && contenedoresDisponibles && contenedoresDisponibles.length > 0 && (
@@ -1117,7 +1317,15 @@ export default function Entradas() {
                     <TableCell colSpan={4} className="text-right text-lg">TOTAL GENERAL:</TableCell>
                     <TableCell className="text-right text-lg">{formatNumber(totalRollos, { kind: "count" })}</TableCell>
                     <TableCell></TableCell>
-                    <TableCell className="text-right text-lg">{formatNumber(totalQtyGeneral, { kind: "quantity" })}</TableCell>
+                    <TableCell className="text-right text-sm">
+                      <div className="flex flex-wrap justify-end gap-x-3 gap-y-1">
+                        {reviewUnitTotals.map(([unit, quantity]) => (
+                          <span key={unit}>
+                            {unit}: {formatNumber(quantity, { kind: "quantity" })}
+                          </span>
+                        ))}
+                      </div>
+                    </TableCell>
                     <TableCell></TableCell>
                     <TableCell className="text-right text-lg text-emerald-700">{formatNumber(totalCostoGeneral, { kind: "money" })}</TableCell>
                     <TableCell></TableCell>
@@ -1146,11 +1354,11 @@ export default function Entradas() {
             </Button>
             <Button
               className="flex-1 sm:flex-none bg-[#1e3a8a] hover:bg-[#1e3a8a]/90 text-white shadow-md"
-              disabled={!isFormValid || crearEntrada.isPending}
+               disabled={!isFormValid || crearEntrada.isPending || isSubmitting}
               onClick={handleSubmit}
               data-testid="btn-save-entrada"
             >
-              {crearEntrada.isPending ? "Guardando..." : "Guardar entrada"}
+               {crearEntrada.isPending || isSubmitting ? "Guardando..." : "Guardar entrada"}
             </Button>
           </div>
         </div>
@@ -1575,10 +1783,121 @@ export default function Entradas() {
               Continuar capturando
             </Button>
             <Button variant="destructive" onClick={() => {
-              setIsConfirmCancelOpen(false);
-              setIsCaptureModalOpen(false);
+              discardOpenCapture();
             }}>
               Sí, descartar línea
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* PROVIDER CHANGE CONFIRMATION */}
+      <Dialog open={isProviderChangeOpen} onOpenChange={setIsProviderChangeOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>¿Cambiar proveedor?</DialogTitle>
+            <DialogDescription>
+              Para cambiar de proveedor se vaciarán las {lineas.length} líneas capturadas.
+              Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="mt-4">
+            <Button
+              variant="outline"
+              onClick={() => setIsProviderChangeOpen(false)}
+              data-testid="btn-cancel-provider-change"
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmProviderChange}
+              data-testid="btn-confirm-provider-change"
+            >
+              Sí, vaciar captura
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* REVIEW BEFORE SAVE */}
+      <Dialog
+        open={isReviewOpen}
+        onOpenChange={(open) => {
+          if (!open && !isSubmitting) setIsReviewOpen(false);
+        }}
+      >
+        <DialogContent className="sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Revisar entrada antes de guardar</DialogTitle>
+            <DialogDescription>
+              Verifica los datos. La entrada no se guardará ni se imprimirá hasta confirmar.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 text-sm">
+            <div className="grid grid-cols-1 gap-3 rounded-md border bg-muted/20 p-4 sm:grid-cols-2">
+              <div>
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Proveedor</div>
+                <div className="font-semibold" data-testid="review-provider">{providerName}</div>
+              </div>
+              <div>
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Sitio</div>
+                <div className="font-semibold" data-testid="review-location">{locationName}</div>
+              </div>
+              <div>
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Líneas</div>
+                <div className="font-semibold" data-testid="review-line-count">{reviewTotals.lineCount}</div>
+              </div>
+              <div>
+                <div className="text-xs font-semibold uppercase text-muted-foreground">Total de rollos</div>
+                <div className="font-semibold" data-testid="review-roll-count">
+                  {formatNumber(reviewTotals.rollCount, { kind: "count" })}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-2 font-semibold">Cantidad total por unidad</div>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4" data-testid="review-quantity-totals">
+                {reviewUnitTotals.length === 0 ? (
+                  <span className="text-muted-foreground">Sin cantidades</span>
+                ) : (
+                  reviewUnitTotals.map(([unit, quantity]) => (
+                    <div key={unit} className="rounded-md border bg-background p-2">
+                      <div className="text-xs font-semibold uppercase text-muted-foreground">{unit}</div>
+                      <div className="font-bold">{formatNumber(quantity, { kind: "quantity" })}</div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-2 font-semibold">Productos</div>
+              <ul className="max-h-48 list-disc space-y-1 overflow-y-auto rounded-md border bg-background p-3 pl-7">
+                {reviewTotals.products.map((productName, index) => (
+                  <li key={`${productName}-${index}`} className="break-words whitespace-normal">
+                    {productName}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <DialogFooter className="mt-2">
+            <Button
+              variant="outline"
+              onClick={() => setIsReviewOpen(false)}
+              disabled={isSubmitting || crearEntrada.isPending}
+              data-testid="btn-cancel-entrada-review"
+            >
+              Cancelar y volver
+            </Button>
+            <Button
+              onClick={handleConfirmReview}
+              disabled={isSubmitting || crearEntrada.isPending}
+              data-testid="btn-confirm-entrada-review"
+            >
+              {isSubmitting || crearEntrada.isPending ? "Guardando..." : "Confirmar y guardar"}
             </Button>
           </DialogFooter>
         </DialogContent>

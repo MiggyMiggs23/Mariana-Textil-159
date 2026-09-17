@@ -134,13 +134,26 @@ const expectedTextContracts = freeze({
   ]),
 });
 
-function entryLine(index) {
+const entradaLongestCatalogLabel = freeze({
+  sku: "MEZDIA10-IND",
+  tela: "Mezclilla Diamantina 10 Oz",
+  color: "Indigo Lisa",
+});
+
+function entryLine(index, { catalogLongestLabels = false } = {}) {
   const ordinal = String(index + 1).padStart(4, "0");
+  const label = catalogLongestLabels
+    ? entradaLongestCatalogLabel
+    : {
+        sku: `SKU-ENTRADA-${ordinal}`,
+        tela: `Tela fixture ${ordinal}`,
+        color: index % 2 === 0 ? "Azul fixture" : "Rojo fixture",
+      };
   return {
     productoId: index + 1,
-    skuProducto: `SKU-ENTRADA-${ordinal}`,
-    telaProducto: `Tela fixture ${ordinal}`,
-    colorProducto: index % 2 === 0 ? "Azul fixture" : "Rojo fixture",
+    skuProducto: label.sku,
+    telaProducto: label.tela,
+    colorProducto: label.color,
     unidadProducto: "METRO",
     costoUnitario: null,
     rollosCount: 1,
@@ -163,8 +176,8 @@ function entryRollo(index) {
   };
 }
 
-function buildEntrada(id, count) {
-  const lineas = Array.from({ length: count }, (_, index) => entryLine(index));
+function buildEntrada(id, count, options = {}) {
+  const lineas = Array.from({ length: count }, (_, index) => entryLine(index, options));
   return freeze({
     id,
     folio: id,
@@ -437,9 +450,9 @@ const configuredProbeCounts = freeze({
   viaje: freeze({ count1: 1, max: 10 }),
 });
 
-const entradaCount1 = buildEntrada(71001, configuredProbeCounts.entrada.count1);
-const entradaCount10 = buildEntrada(71010, 10);
-const entradaMeasured11 = buildEntrada(71011, 11);
+const entradaCount1 = buildEntrada(71001, configuredProbeCounts.entrada.count1, { catalogLongestLabels: true });
+const entradaCount10 = buildEntrada(71010, 10, { catalogLongestLabels: true });
+const entradaMeasured11 = buildEntrada(71011, 11, { catalogLongestLabels: true });
 const entradaMeasured12 = buildEntrada(71012, 12);
 const entradaMax = buildEntrada(71023, configuredProbeCounts.entrada.max);
 const entradaOverflow = buildEntrada(71024, configuredProbeCounts.entrada.overflow);

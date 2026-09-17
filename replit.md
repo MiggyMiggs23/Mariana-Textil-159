@@ -1155,6 +1155,18 @@ El modo optativo de inspección sigue disponible en el código, pero **no está 
 
 **ABIERTO:** el detalle de movimiento de crédito todavía no tiene verificación autenticada con operaciones reales actuales. Los movimientos **43 a 50 desaparecieron con la purga**. Las pruebas con respaldos históricos y casos sintéticos no cierran este pendiente. Se cerrará cuando existan movimientos nuevos y se complete la comprobación autenticada con esos registros; no crear movimientos artificiales ni restaurar los eliminados para aparentar esa verificación.
 
+## Entradas — revisión antes del guardado y color completo
+
+La propuesta ilustrada del buscador fue aprobada por el propietario: tela, color y SKU en líneas separadas, con color completo sin truncamiento, y resumen completo de la selección debajo del campo. Conservar el tamaño legible de letra y la unidad a la derecha. Verificar contra el catálogo completo vigente, no únicamente ejemplos; el snapshot de esta entrega contiene 1,234 productos activos consultados en solo lectura.
+
+Con al menos una línea capturada, el proveedor queda bloqueado. Cambiarlo exige una confirmación explícita de pérdida de líneas; cancelar conserva la captura. Quitar un contenedor o cambiar de sitio no permite eludir ese bloqueo. Se mantienen la desvinculación de contenedores incompatibles y las validaciones transaccionales del servidor.
+
+Guardar abre primero un resumen con proveedor y sitio por nombre, número de líneas, total de rollos, cantidades separadas por METRO/KILO/BOLSA/PIEZA y cada producto con color completo. Una búsqueda o captura de producto pendiente impide omitirlo silenciosamente. Cancelar el resumen no modifica la captura; solo confirmar permite el POST y, tras éxito, las impresiones previamente seleccionadas. Al confirmar se vuelve a comprobar la disponibilidad del contenedor.
+
+En el documento de Entrada, Producto muestra tela y color, mientras SKU permanece únicamente en su columna. Salida ya separa esos campos; la nota no tiene una columna de SKU adicional y conserva su única aparición. No cambiar su paginación para retirar un duplicado inexistente.
+
+Las pruebas aisladas usan componentes reales y catálogo real, con respuestas operativas interceptadas: no acreditan una sesión autenticada ni crean entradas, usuarios o sesiones reales. Evidencia de esta entrega en `reports/entradas-ajustes/`.
+
 ## Listados y navegación — Prompt K
 
 Alcance aprobado: **Entradas, Movimientos y Sitios**. Usuarios conserva su listado/filtro existente. No se agregó borrado; Clientes y Proveedores productivos no se modificaron.

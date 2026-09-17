@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Check, Search } from "lucide-react";
 import type { Producto } from "@workspace/api-client-react";
@@ -11,6 +12,7 @@ type ProductComboboxProps = {
   placeholder?: string;
   testId?: string;
   activeOnly?: boolean;
+  onPendingSearchChange?: (pending: boolean) => void;
 };
 
 function normalizeSearch(value: string): string {
@@ -31,6 +33,7 @@ export function ProductCombobox({
   placeholder = "Escribe tela, color o SKU...",
   testId = "input-product-search",
   activeOnly = true,
+  onPendingSearchChange,
 }: ProductComboboxProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const previousValueRef = useRef(value);
@@ -76,6 +79,10 @@ export function ProductCombobox({
     setHighlightedIndex(0);
   }, [query]);
 
+  useEffect(() => {
+    onPendingSearchChange?.(Boolean(query.trim()) && !selected);
+  }, [onPendingSearchChange, query, selected?.id]);
+
   const selectProduct = (product: Producto) => {
     onValueChange(String(product.id));
     setQuery(productLabel(product));
@@ -89,6 +96,11 @@ export function ProductCombobox({
         role="combobox"
         aria-expanded={open}
         aria-controls={`${testId}-results`}
+        aria-activedescendant={
+          open && filtered[highlightedIndex]
+            ? `${testId}-option-${filtered[highlightedIndex].id}`
+            : undefined
+        }
         autoComplete="off"
         value={query}
         placeholder={placeholder}
@@ -144,6 +156,7 @@ export function ProductCombobox({
               <button
                 key={product.id}
                 type="button"
+                id={`${testId}-option-${product.id}`}
                 role="option"
                 aria-selected={String(product.id) === value}
                 className={`flex w-full items-center justify-between gap-4 rounded-sm px-3 py-2 text-left transition-colors ${
@@ -158,11 +171,23 @@ export function ProductCombobox({
                   selectProduct(product);
                 }}
               >
-                <span className="min-w-0">
-                  <span className="block truncate font-medium">
-                    {product.tela} — {product.color}
+                <span className="min-w-0 flex-1">
+                  <span
+                    className="block whitespace-normal break-words font-medium"
+                    style={{ overflowWrap: "anywhere" }}
+                  >
+                    {product.tela}
                   </span>
-                  <span className="block truncate font-mono text-xs text-muted-foreground">
+                  <span
+                    className="mt-0.5 block whitespace-normal break-words font-semibold"
+                    style={{ overflowWrap: "anywhere" }}
+                  >
+                    {product.color}
+                  </span>
+                  <span
+                    className="block break-all font-mono text-xs text-muted-foreground"
+                    style={{ overflowWrap: "anywhere" }}
+                  >
                     {product.sku}
                   </span>
                 </span>
@@ -172,6 +197,41 @@ export function ProductCombobox({
               </button>
             ))
           )}
+        </div>
+      )}
+      {selected && (
+        <div
+          className="mt-2 rounded-md border border-border/70 bg-muted/30 p-3"
+          data-testid={`${testId}-selected-summary`}
+        >
+          <div className="mb-2 text-[10px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+            Producto seleccionado
+          </div>
+          <div className="flex items-start justify-between gap-3">
+            <span className="min-w-0 flex-1">
+              <span
+                className="block whitespace-normal break-words font-medium"
+                style={{ overflowWrap: "anywhere" }}
+              >
+                {selected.tela}
+              </span>
+              <span
+                className="mt-0.5 block whitespace-normal break-words font-semibold"
+                style={{ overflowWrap: "anywhere" }}
+              >
+                {selected.color}
+              </span>
+              <span
+                className="block break-all font-mono text-xs text-muted-foreground"
+                style={{ overflowWrap: "anywhere" }}
+              >
+                {selected.sku}
+              </span>
+            </span>
+            <span className="shrink-0 rounded bg-muted px-2 py-1 text-[10px] font-bold">
+              {formatUnit(selected.unidad)}
+            </span>
+          </div>
         </div>
       )}
     </div>

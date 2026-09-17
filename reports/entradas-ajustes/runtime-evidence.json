@@ -1,0 +1,211 @@
+{
+  "verification": "Entradas + ProductCombobox isolated mounted UI verification",
+  "status": "failed",
+  "generatedAt": "2026-09-17T02:40:21.533Z",
+  "honestLimitation": "No authenticated E2E: no login, session, database, real API, user creation, or production POST.",
+  "productionSources": [
+    "artifacts/mariana-textil/src/pages/entradas.tsx",
+    "artifacts/mariana-textil/src/components/product-combobox.tsx"
+  ],
+  "harness": ".local/entradas-ajustes-check",
+  "evidence": {
+    "catalog": {
+      "path": "reports/entradas-ajustes/catalogo.json",
+      "sha256": "a34a2013ac78b42eb77b628105c43bc66a01f33cdcd22c5c4335f3f96b2089ab",
+      "count": 1234,
+      "selected": [
+        {
+          "id": 1770,
+          "sku": "ALE-BLA",
+          "label": "Alemanisco Blanco",
+          "unidad": "METRO"
+        },
+        {
+          "id": 1748,
+          "sku": "ALA-BEI",
+          "label": "Alaska Beige",
+          "unidad": "KILO"
+        },
+        {
+          "id": 956,
+          "sku": "CAS15MM-ORO",
+          "label": "Cascabel 15 Mm Oro",
+          "unidad": "BOLSA"
+        },
+        {
+          "id": 2006,
+          "sku": "JERCOC-AMA",
+          "label": "Jerga Cocina Amarilla",
+          "unidad": "PIEZA"
+        }
+      ]
+    },
+    "constraints": {
+      "databaseWrites": 0,
+      "apiMutations": "intercepted-only",
+      "liveApi": false,
+      "network": "local fixture routes only",
+      "authenticationVerified": false,
+      "sessionOrUserCreation": false
+    },
+    "checks": [
+      {
+        "providerLocked": true,
+        "cancelRetainedLine": true,
+        "confirmClearedLine": true,
+        "incompatibleContainerRefused": true
+      },
+      {
+        "failure": {
+          "check": "fresh-container-revalidation",
+          "selector": "button[data-testid=\"btn-confirm-entrada-review\"] / POST /api/inventario/entradas",
+          "message": "fresh unavailable container must prevent mutation\n\n1 !== 0\n",
+          "observedMutationCount": 1,
+          "observedPayload": {
+            "ubicacionId": 7,
+            "proveedorId": 501,
+            "contenedorId": 801,
+            "observaciones": null,
+            "uuidCliente": "ec47c0d5-ea29-43be-b826-b5f8dcd57275",
+            "lineas": [
+              {
+                "productoId": 1770,
+                "costoUnitario": "1.00",
+                "cantidades": [
+                  "6"
+                ]
+              }
+            ]
+          }
+        }
+      },
+      {
+        "editedRolls": [
+          "11",
+          "21"
+        ],
+        "deletedAndRecaptured": true,
+        "pendingCaptureBlocked": true
+      },
+      {
+        "review": {
+          "provider": "Proveedor Norte",
+          "location": "Matriz Textil",
+          "lines": 4,
+          "rolls": 4,
+          "units": [
+            "METRO",
+            "KILO",
+            "BOLSA",
+            "PIEZA"
+          ]
+        },
+        "saveCancelled": true
+      },
+      {
+        "reviewMobileScreenshot": "reports/entradas-ajustes/screenshots/review-mobile.jpg"
+      },
+      {
+        "errorRetainedDraft": true,
+        "retryMutations": 2,
+        "exactPayload": {
+          "ubicacionId": 7,
+          "proveedorId": 501,
+          "observaciones": null,
+          "uuidCliente": "433b00de-0eb0-45cb-b179-6e4f57c15861",
+          "lineas": [
+            {
+              "productoId": 1770,
+              "costoUnitario": "1.00",
+              "cantidades": [
+                "12"
+              ]
+            }
+          ]
+        },
+        "windowOpenAfterSuccess": [
+          "/entradas/9901/documento",
+          "/entradas/9901/etiquetas"
+        ]
+      }
+    ],
+    "screenshots": [
+      {
+        "viewport": "mobile",
+        "selectedProduct": {
+          "id": 1720,
+          "label": "Mezclilla Diamantina 10 Oz Indigo Rayada",
+          "sku": "MEZDIA10-IND2"
+        },
+        "inputBox": {
+          "x": 41,
+          "y": 449,
+          "width": 320,
+          "height": 40
+        },
+        "optionBox": {
+          "x": 46,
+          "y": 498,
+          "width": 310,
+          "height": 82
+        },
+        "summaryBox": {
+          "x": 41,
+          "y": 497,
+          "width": 320,
+          "height": 115
+        }
+      },
+      {
+        "viewport": "desktop",
+        "selectedProduct": {
+          "id": 1720,
+          "label": "Mezclilla Diamantina 10 Oz Indigo Rayada",
+          "sku": "MEZDIA10-IND2"
+        },
+        "inputBox": {
+          "x": 89,
+          "y": 325,
+          "width": 350,
+          "height": 40
+        },
+        "optionBox": {
+          "x": 94,
+          "y": 374,
+          "width": 340,
+          "height": 82
+        },
+        "summaryBox": {
+          "x": 89,
+          "y": 373,
+          "width": 350,
+          "height": 115
+        }
+      }
+    ]
+  },
+  "failures": [
+    {
+      "check": "fresh-container-revalidation",
+      "selector": "button[data-testid=\"btn-confirm-entrada-review\"] / POST /api/inventario/entradas",
+      "message": "fresh unavailable container must prevent mutation\n\n1 !== 0\n",
+      "observedMutationCount": 1,
+      "observedPayload": {
+        "ubicacionId": 7,
+        "proveedorId": 501,
+        "contenedorId": 801,
+        "observaciones": null,
+        "uuidCliente": "ec47c0d5-ea29-43be-b826-b5f8dcd57275",
+        "lineas": [
+          {
+            "productoId": 1770,
+            "costoUnitario": "1.00",
+            "cantidades": [
+              "6"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

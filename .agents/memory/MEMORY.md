@@ -63,3 +63,4 @@
 - [Compuertas de operaciones destructivas](destructive-operator-evidence.md) — ejecutar las mismas validaciones previas en modo de solo lectura contra evidencia real; pruebas puras no bastan.
 - [Tamaños móviles aprobados en Caja](approved-financial-mobile-sizing.md) — igualar destinos en escritorio no autoriza agrandar las tarjetas móviles ya aprobadas.
 - [CSS precompilado en maquetas](precompiled-preview-css.md) — esbuild no genera utilidades nuevas de Tailwind; comprobar el grid renderizado, no solo las clases.
+- [Vigencia al confirmar](review-confirmation-freshness.md) — el resumen no congela recursos compartidos; validar disponibilidad vigente y bloquear doble envío antes de esperar.

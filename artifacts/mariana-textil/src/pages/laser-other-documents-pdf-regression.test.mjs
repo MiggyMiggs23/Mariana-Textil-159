@@ -45,7 +45,7 @@ const ARTIFACT_DIR =
   process.env.LASER_OTHER_DOCUMENT_PDF_ARTIFACT_DIR ??
   path.join(os.tmpdir(), "laser-other-documents-pdf-regression");
 const CHROMIUM_BIN = process.env.CHROMIUM_BIN ?? "/repl/tools/bin/chromium";
-const SAFE_MM = 5;
+const SAFE_MM = 5.25;
 const TOLERANCE_MM = 0;
 const RASTER_DPI = 96;
 
@@ -337,6 +337,17 @@ async function measureMountedRoute(page, scenario) {
       const rows = Array.from(
         document.querySelectorAll(selectors.row),
       ).map((row) => box(row));
+      const seriesRows = selectors.seriesGrid
+        ? Array.from(document.querySelectorAll(selectors.seriesGrid)).flatMap((section) =>
+            Array.from(section.querySelectorAll("tbody tr")).map((row) => {
+              const cells = Array.from(row.children);
+              return {
+                product: String(cells[0]?.textContent ?? "").replace(/\s+/gu, " ").trim(),
+                sku: String(cells[1]?.textContent ?? "").replace(/\s+/gu, " ").trim(),
+              };
+            }),
+          )
+        : [];
       const noteSections = frameElements
         .filter((frame) => frame.classList.contains("nota-page-frame"))
         .map((frame) => ({
@@ -349,6 +360,7 @@ async function measureMountedRoute(page, scenario) {
         pages: pageElements.map((element) => box(element)),
         frames: frameElements.map((element) => box(element)),
         rows,
+        seriesRows,
         pageCount: pageElements.length,
         rowCount: rows.length,
         noteSections,
@@ -383,6 +395,39 @@ function assertMountedSafeFrame(measurement, scenario) {
     assert(frame.y >= page.y - 0.5);
     assert(frame.right <= page.right + 0.5);
     assert(frame.bottom <= page.bottom + 0.5);
+  }
+}
+
+function assertEntradaMeasuredRowGeometry(measurement, scenario) {
+  if (
+    scenario.kind !== "entrada" ||
+    !["measured10", "measured11"].includes(scenario.fixtureName)
+  ) {
+    return;
+  }
+
+  const expectedGlobalPages = Math.ceil(scenario.count / 10);
+  assert.equal(
+    measurement.rows.length,
+    expectedGlobalPages * 10,
+    `${scenario.name} must retain ten measured global slots per page`,
+  );
+  assert(
+    measurement.rows.every((row) => row.height <= 54.5),
+    `${scenario.name} global rows must stay within the measured 54 px row invariant`,
+  );
+}
+
+function assertEntradaSeriesCells(measurement, scenario) {
+  if (scenario.kind !== "entrada") return;
+
+  for (const row of measurement.seriesRows ?? []) {
+    assert(row.product, `${scenario.name} series row must retain its tela/color label`);
+    assert(row.sku, `${scenario.name} series row must retain its own SKU cell`);
+    assert(
+      !row.product.includes(row.sku),
+      `${scenario.name} series product cell must not duplicate its SKU`,
+    );
   }
 }
 
@@ -533,6 +578,8 @@ async function runScenario(browser, scenario, rasterTool) {
     report.layout = await measureMountedRoute(page, scenario);
     assert.equal(report.layout.pageCount, scenario.expectedDomPageCount);
     assertMountedSafeFrame(report.layout, scenario);
+    assertEntradaMeasuredRowGeometry(report.layout, scenario);
+    assertEntradaSeriesCells(report.layout, scenario);
 
     const pdfPath = path.join(ARTIFACT_DIR, `${scenario.name}.pdf`);
     try {

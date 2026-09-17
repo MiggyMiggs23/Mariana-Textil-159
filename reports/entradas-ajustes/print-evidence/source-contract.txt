@@ -1,0 +1,308 @@
+✔ la entrada conserva su formato global y firma solo la última hoja global (1.086261ms)
+✔ la entrada agrega un listado compacto de todas las series por producto (0.412568ms)
+✔ los globales conservan cada producto y unidad por separado (0.106584ms)
+✔ la celda global conserva tela y color completos sin duplicar el SKU (0.46929ms)
+✔ la entrada se aísla para impresión sin ocultar su contenido (0.145919ms)
+✔ la entrada conserva una caja de página segura y traslada fondo y borde al frame interior (0.161884ms)
+✖ la lista conserva enlaces permanentes y visibles al documento (2.255732ms)
+✔ el documento muestra el sitio y nunca expone el id interno del proveedor (0.174913ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 7
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 145.069904
+
+✖ failing tests:
+
+test at src/pages/entrada-documento.contract.test.ts:1:5718
+✖ la lista conserva enlaces permanentes y visibles al documento (2.255732ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /href=\{`\/entradas\/\$\{entrada\.id\}\/documento`\}/. Input:
+  
+  'import React, { useState, useRef, useEffect } from "react";\n' +
+    'import { AppLayout } from "@/components/layout/app-layout";\n' +
+    'import { ProductCombobox } from "@/components/product-combobox";\n' +
+    'import {\n' +
+    '  useGetCatalogosEntrada,\n' +
+    '  getGetCatalogosEntradaQueryKey,\n' +
+    '  useListLocations,\n' +
+    '  useCrearEntrada,\n' +
+    '  useGetCurrentUser,\n' +
+    '  getListLocationsQueryKey,\n' +
+    '  getGetCurrentUserQueryKey,\n' +
+    '  getListEntradasQueryKey,\n' +
+    '  getGetDashboardQueryKey,\n' +
+    '  getListRollosQueryKey,\n' +
+    '  getGetExistenciasQueryKey,\n' +
+    '  useGetFechaServidor,\n' +
+    '  getGetFechaServidorQueryKey,\n' +
+    '  useListEntradasPendientesCosto,\n' +
+    '  getListEntradasPendientesCostoQueryKey,\n' +
+    '  useCountEntradasPendientesCosto,\n' +
+    '  getCountEntradasPendientesCostoQueryKey,\n' +
+    '  useListContenedoresDisponiblesEntrada,\n' +
+    '  getListContenedoresDisponiblesEntradaQueryKey,\n' +
+    '  getListContenedoresQueryKey,\n' +
+    '  getGetResumenContenedoresQueryKey,\n' +
+    '  getGetContenedorQueryKey,\n' +
+    '  Role,\n' +
+    '  EntradaDetail,\n' +
+    '  useListPisosLocation,\n' +
+    '} from "@workspace/api-client-react";\n' +
+    'import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";\n' +
+    'import { Button } from "@/components/ui/button";\n' +
+    'import { Input } from "@/components/ui/input";\n' +
+    'import { Label } from "@/components/ui/label";\n' +
+    'import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";\n' +
+    'import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";\n' +
+    'import { Checkbox } from "@/components/ui/checkbox";\n' +
+    'import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";\n' +
+    'import { Badge } from "@/components/ui/badge";\n' +
+    'import { toast } from "sonner";\n' +
+    'import { Plus, Trash2, CheckCircle2, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw } from "lucide-react";\n' +
+    'import { useQueryClient } from "@tanstack/react-query";\n' +
+    'import { getApiErrorMessage } from "@/lib/api-error";\n' +
+    'import {\n' +
+    '  applyUniformToBlankRolls,\n' +
+    '  createBlankRollQuantities,\n' +
+    '  createUniformRollQuantities,\n' +
+    '  getRollCaptureCounts,\n' +
+    '  isAdjustedRoll,\n' +
+    '  isValidDeclaredRollCount,\n' +
+    '  resetRollToUniform,\n' +
+    '  updateEditedRollIndexes,\n' +
+    '  updateRollQuantity,\n' +
+    '} from "@/lib/roll-capture-state";\n' +
+    'import { buildEntradaReviewTotals } from "@/lib/entrada-review";\n' +
+    'import { Link } from "wouter";\n' +
+    'import { formatNumber, formatUnit } from "@workspace/number-format";\n' +
+    'import { CampoEscaneo } from "@/components/campo-escaneo";\n' +
+    'import { useHistoryEntryState } from "@/lib/internal-navigation";\n' +
+    'import { hasPermission, Modules } from "@/lib/permisos";\n' +
+    'import { EntradaHistory } from "@/components/entrada-history";\n' +
+    'import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";\n' +
+    '\n' +
+    'type DraftLinea = {\n' +
+    '  id: string;\n' +
+    '  productoId: string;\n' +
+    '  productoName: string;\n' +
+    '  productoSKU: string;\n' +
+    '  productoUnidad: string;\n' +
+    '  costoUnitario?: string;\n' +
+    '  declaredCount: number;\n' +
+    '  cantidades: string[];\n' +
+    '  pisos: (string | null)[];\n' +
+    '  uniformBaseline: string | null;\n' +
+    '  adjustedIndexes: number[];\n' +
+    '};\n' +
+    '\n' +
+    'const isValidUnitCost = (value: string): boolean => {\n' +
+    '  const parsed = Number(value);\n' +
+    '  return (\n' +
+    '    value.trim() !== "" &&\n' +
+    '    Number.isFinite(parsed) &&\n' +
+    '    parsed > 0 &&\n' +
+    '    Number(parsed.toFixed(2)) > 0\n' +
+    '  );\n' +
+    '};\n' +
+    '\n' +
+    'const formatCaptureUnit = (unit: string | null | undefined): string => (\n' +
+    '  unit?.trim().toUpperCase() === "PIEZA" ? "Piezas" : formatUnit(unit)\n' +
+    ');\n' +
+    '\n' +
+    'export default function Entradas() {\n' +
+    '  const queryClient = useQueryClient();\n' +
+    '\n' +
+    '  const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });\n' +
+    '  const showCost = user?.rol === Role.ADMIN;\n' +
+    '\n' +
+    '  const {\n' +
+    '    data: catalogos,\n' +
+    '    isError: catalogosFailed,\n' +
+    '  } = useGetCatalogosEntrada({ query: { queryKey: getGetCatalogosEntradaQueryKey() } });\n' +
+    '\n' +
+    '  const productos = catalogos?.productos;\n' +
+    '  const proveedores = catalogos?.proveedores;\n' +
+    '\n' +
+    '  const {\n' +
+    '    data: ubicaciones,\n' +
+    '    isError: ubicacionesFailed,\n' +
+    '  } = useListLocations(undefined, {\n' +
+    '    query: {\n' +
+    '      enabled: user?.rol === Role.ADMIN,\n' +
+    '      queryKey: getListLocationsQueryKey()\n' +
+    '    }\n' +
+    '  });\n' +
+    '  const {\n' +
+    '    data: serverTime,\n' +
+    '    isError: serverTimeFailed,\n' +
+    '  } = useGetFechaServidor({\n' +
+    '    query: {\n' +
+    '      queryKey: getGetFechaServidorQueryKey(),\n' +
+    '      refetchInterval: 60_000,\n' +
+    '    },\n' +
+    '  });\n' +
+    '\n' +
+    '  const [ubicacionId, setUbicacionId] = useState<string>("");\n' +
+    '  const { data: pisos } = useListPisosLocation(Number(ubicacionId), {\n' +
+    "    query: { enabled: !!ubicacionId, queryKey: ['pisosLocation', Number(ubicacionId)] }\n" +
+    '  });\n' +
+    '  const pisosActivos = pisos?.filter(p => p.activo) || [];\n' +
+    '\n' +
+    '  const [proveedorId, setProveedorId] = useState<string>("none");\n' +
+    '  const [contenedorId, setContenedorId] = useState<string>("none");\n' +
+    '  const [autoDerivedProveedorId, setAutoDerivedProveedorId] = useState<string | null>(null);\n' +
+    '  const [observaciones, setObservaciones] = useState<string>("");\n' +
+    '\n' +
+    '  const { data: contenedoresDisponibles } = useListContenedoresDisponiblesEntrada(\n' +
+    '    { ubicacionId: Number(ubicacionId) },\n' +
+    '    {\n' +
+    '      query: {\n' +
+    '        enabled: !!ubicacionId,\n' +
+    '        queryKey: getListContenedoresDisponiblesEntradaQueryKey({ ubicacionId: Number(ubicacionId) })\n' +
+    '      }\n' +
+    '    }\n' +
+    '  );\n' +
+    '\n' +
+    '  const crearEntrada = useCrearEntrada();\n' +
+    '\n' +
+    '  // General data (draft wide)\n' +
+    '  const [uuidCliente, setUuidCliente] = useState(() => crypto.randomUUID());\n' +
+    '\n' +
+    '  // Detalle del artículo state (form state)\n' +
+    '  const [productoId, setProductoId] = useState<string>("");\n' +
+    '  const [costoUnitario, setCostoUnitario] = useState<string>("");\n' +
+    '  const [declaredCount, setDeclaredCount] = useState<string>("");\n' +
+    '\n' +
+    '  const [lineas, setLineas] = useState<DraftLinea[]>([]);\n' +
+    '  const [selectedLines, setSelectedLines] = useState<Set<string>>(new Set());\n' +
+    '  const [expandedLines, setExpandedLines] = useState<Set<string>>(new Set());\n' +
+    '  const [mostrarFiltros, setMostrarFiltros] = useState(false);\n' +
+    '\n' +
+    '  // Printing preferences\n' +
+    '  const [autoPrintDoc, setAutoPrintDoc] = useState(true);\n' +
+    '  const [autoPrintLabels, setAutoPrintLabels] = useState(true);\n' +
+    '\n' +
+    '  // Modals state\n' +
+    '  const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);\n' +
+    '  const [isConfirmCancelOpen, setIsConfirmCancelOpen] = useState(false);\n' +
+    '  const [isProviderChangeOpen, setIsProviderChangeOpen] = useState(false);\n' +
+    '  const [isReviewOpen, setIsReviewOpen] = useState(false);\n' +
+    '  const [isSubmitting, setIsSubmitting] = useState(false);\n' +
+    '\n' +
+    '  // Capture state\n' +
+    '  const [capDraftId, setCapDraftId] = useState("");\n' +
+    '  const [capCantidades, setCapCantidades] = useState<string[]>([]);\n' +
+    '  const [capPisos, setCapPisos] = useState<(string | null)[]>([]);\n' +
+    '  const [capCurrentQty, setCapCurrentQty] = useState("");\n' +
+    '  const [capCurrentPiso, setCapCurrentPiso] = useState<string | null>(null);\n' +
+    '  const [editingQtyIndex, setEditingQtyIndex] = useState<number | null>(null);\n' +
+    '  const [editingQtyValue, setEditingQtyValue] = useState("");\n' +
+    '  const [editingPisoValue, setEditingPisoValue] = useState<string | null>(null);\n' +
+    '  const [editingOriginalQty, setEditingOriginalQty] = useState("");\n' +
+    '  const [editingOriginalWasAdjusted, setEditingOriginalWasAdjusted] = useState(false);\n' +
+    '  const [isEditingLine, setIsEditingLine] = useState(false);\n' +
+    '  const [uniformQty, setUniformQty] = useState("");\n' +
+    '  const [uniformBaseline, setUniformBaseline] = useState<string | null>(null);\n' +
+    '  const [editedQtyIndexes, setEditedQtyIndexes] = useState<Set<number>>(new Set());\n' +
+    '  const [captureFormBeforeOpen, setCaptureFormBeforeOpen] = useState<{\n' +
+    '    productoId: string;\n' +
+    '    costoUnitario: string;\n' +
+    '    declaredCount: string;\n' +
+    '  } | null>(null);\n' +
+    '\n' +
+    '  const qtyInputRef = useRef<HTMLInputElement>(null);\n' +
+    '\n' +
+    '  const [resultado, setResult] = useState<EntradaDetail | null>(null);\n' +
+    '  const [activeTab, setActiveTab] = useHistoryEntryState<"historial" | "captura">(\n' +
+    '    "entradas.tab",\n' +
+    '    "historial",\n' +
+    '  );\n' +
+    '\n' +
+    '  const selectedProduct = productos?.find(p => p.id.toString() === productoId);\n' +
+    '  const canCreate = hasPermission(user, Modules.ENTRADAS, "crear");\n' +
+    '  const showCapture = canCreate && activeTab === "captura";\n' +
+    '  const serverDateLabel = serverTime\n' +
+    '    ? new Intl.DateTimeFormat("es-MX", {\n' +
+    '        dateStyle: "long",\n' +
+    '        timeStyle: "medium",\n' +
+    '        timeZone: serverTime.zonaHoraria,\n' +
+    '      }).format(new Date(serverTime.fecha))\n' +
+    '    : "Consultando hora del servidor…";\n' +
+    '\n' +
+    '  // Set default location for non-admin\n' +
+    '  useEffect(() => {\n' +
+    '    if (user && user.rol !== Role.ADMIN && user.ubicacion) {\n' +
+    '      setUbicacionId(user.ubicacion.id.toString());\n' +
+    '    }\n' +
+    '  }, [user]);\n' +
+    '\n' +
+    '  // Focus input when capture modal opens\n' +
+    '  useEffect(() => {\n' +
+    '    if (isCaptureModalOpen) {\n' +
+    '      setTimeout(() => qtyInputRef.current?.focus(), 100);\n' +
+    '    }\n' +
+    '  }, [isCaptureModalOpen]);\n' +
+    '\n' +
+    '  const handleUbicacionChange = (value: string) => {\n' +
+    '    setUbicacionId(value);\n' +
+    '    setContenedorId("none");\n' +
+    '    if (proveedorId !== "none" && proveedorId === autoDerivedProveedorId) {\n' +
+    '      setProveedorId("none");\n' +
+    '    }\n' +
+    '    setAutoDerivedProveedorId(null);\n' +
+    '  };\n' +
+    '\n' +
+    '  const handleProveedorChange = (value: string) => {\n' +
+    '    setProveedorId(value);\n' +
+    '    if (contenedorId !== "none" && contenedoresDisponibles) {\n' +
+    '      const selectedCont = contenedoresDisponibles.find(c => c.id.toString() === contenedorId);\n' +
+    '      if (selectedCont && selectedCont.proveedorId.toString() !== value) {\n' +
+    '        setContenedorId("none");\n' +
+    '        toast.info("El contenedor seleccionado se ha desvinculado porque no coincide con el nuevo proveedor.");\n' +
+    '      }\n' +
+    '    }\n' +
+    '    setAutoDerivedProveedorId(null); // Manual change overrides auto-derivation\n' +
+    '  };\n' +
+    '\n' +
+    '  const resetCaptureForm = () => {\n' +
+    '    setProductoId("");\n' +
+    '    setCostoUnitario("");\n' +
+    '    setDeclaredCount("");\n' +
+    '    setCapDraftId("");\n' +
+    '    setCapCantidades([]);\n' +
+    '    setCapPisos([]);\n' +
+    '    setCapCurrentQty("");\n' +
+    '    setCapCurrentPiso(null);\n' +
+    '    setEditingQtyIndex(null);\n' +
+    '    setEditingQtyValue("");\n' +
+    '    setEditingPisoValue(null);\n' +
+    '    setEditingOriginalQty("");\n' +
+    '    setEditingOriginalWasAdjusted(false);\n' +
+    '    setIsEditingLine(false);\n' +
+    '    setUniformQty("");\n' +
+    '    setUniformBaseline(null);\n' +
+    '    setEditedQtyIndexes(new Set());\n' +
+    '    setCaptureFormBeforeOpen(null);\n' +
+    '  };\n' +
+    '\n' +
+    '  const attemptProviderChange = () => {\n' +
+    '    if (lineas.length > 0) {\n' +
+    '      setIsProvi'... 72105 more characters
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/entrada-documento.contract.test.ts:123:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: `import React, { useState, useRef, useEffect } from "react";\nimport { AppLayout } from "@/components/layout/app-layout";\nimport { ProductCombobox } from "@/components/product-combobox";\nimport {\n  useGetCatalogosEntrada,\n  getGetCatalogosEntradaQueryKey,\n  useListLocations,\n  useCrearEntrada,\n  useGetCurrentUser,\n  getListLocationsQueryKey,\n  getGetCurrentUserQueryKey,\n  getListEntradasQueryKey,\n  getGetDashboardQueryKey,\n  getListRollosQueryKey,\n  getGetExistenciasQueryKey,\n  useGetFechaServidor,\n  getGetFechaServidorQueryKey,\n  useListEntradasPendientesCosto,\n  getListEntradasPendientesCostoQueryKey,\n  useCountEntradasPendientesCosto,\n  getCountEntradasPendientesCostoQueryKey,\n  useListContenedoresDisponiblesEntrada,\n  getListContenedoresDisponiblesEntradaQueryKey,\n  getListContenedoresQueryKey,\n  getGetResumenContenedoresQueryKey,\n  getGetContenedorQueryKey,\n  Role,\n  EntradaDetail,\n  useListPisosLocation,\n} from "@workspace/api-client-react";\nimport { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";\nimport { Button } from "@/components/ui/button";\nimport { Input } from "@/components/ui/input";\nimport { Label } from "@/components/ui/label";\nimport { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";\nimport { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";\nimport { Checkbox } from "@/components/ui/checkbox";\nimport { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";\nimport { Badge } from "@/components/ui/badge";\nimport { toast } from "sonner";\nimport { Plus, Trash2, CheckCircle2, Calculator, Printer, FileText, ChevronDown, ChevronRight, Edit2, AlertTriangle, RotateCcw } from "lucide-react";\nimport { useQueryClient } from "@tanstack/react-query";\nimport { getApiErrorMessage } from "@/lib/api-error";\nimport {\n  applyUniformToBlankRolls,\n  createBlankRollQuantities,\n  createUniformRollQuantities,\n  getRollCaptureCounts,\n  isAdjustedRoll,\n  isValidDeclaredRollCount,\n  resetRollToUniform,\n  updateEditedRollIndexes,\n  updateRollQuantity,\n} from "@/lib/roll-capture-state";\nimport { buildEntradaReviewTotals } from "@/lib/entrada-review";\nimport { Link } from "wouter";\nimport { formatNumber, formatUnit } from "@workspace/number-format";\nimport { CampoEscaneo } from "@/components/campo-escaneo";\nimport { useHistoryEntryState } from "@/lib/internal-navigation";\nimport { hasPermission, Modules } from "@/lib/permisos";\nimport { EntradaHistory } from "@/components/entrada-history";\nimport { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";\n\ntype DraftLinea = {\n  id: string;\n  productoId: string;\n  productoName: string;\n  productoSKU: string;\n  productoUnidad: string;\n  costoUnitario?: string;\n  declaredCount: number;\n  cantidades: string[];\n  pisos: (string | null)[];\n  uniformBaseline: string | null;\n  adjustedIndexes: number[];\n};\n\nconst isValidUnitCost = (value: string): boolean => {\n  const parsed = Number(value);\n  return (\n    value.trim() !== "" &&\n    Number.isFinite(parsed) &&\n    parsed > 0 &&\n    Number(parsed.toFixed(2)) > 0\n  );\n};\n\nconst formatCaptureUnit = (unit: string | null | undefined): string => (\n  unit?.trim().toUpperCase() === "PIEZA" ? "Piezas" : formatUnit(unit)\n);\n\nexport default function Entradas() {\n  const queryClient = useQueryClient();\n\n  const { data: user } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey() } });\n  const showCost = user?.rol === Role.ADMIN;\n\n  const {\n    data: catalogos,\n    isError: catalogosFailed,\n  } = useGetCatalogosEntrada({ query: { queryKey: getGetCatalogosEntradaQueryKey() } });\n\n  const productos = catalogos?.productos;\n  const proveedores = catalogos?.proveedores;\n\n  const {\n    data: ubicaciones,\n    isError: ubicacionesFailed,\n  } = useListLocations(undefined, {\n    query: {\n      enabled: user?.rol === Role.ADMIN,\n      queryKey: getListLocationsQueryKey()\n    }\n  });\n  const {\n    data: serverTime,\n    isError: serverTimeFailed,\n  } = useGetFechaServidor({\n    query: {\n      queryKey: getGetFechaServidorQueryKey(),\n      refetchInterval: 60_000,\n    },\n  });\n\n  const [ubicacionId, setUbicacionId] = useState<string>("");\n  const { data: pisos } = useListPisosLocation(Number(ubicacionId), {\n    query: { enabled: !!ubicacionId, queryKey: ['pisosLocation', Number(ubicacionId)] }\n  });\n  const pisosActivos = pisos?.filter(p => p.activo) || [];\n\n  const [proveedorId, setProveedorId] = useState<string>("none");\n  const [contenedorId, setContenedorId] = useState<string>("none");\n  const [autoDerivedProveedorId, setAutoDerivedProveedorId] = useState<string | null>(null);\n  const [observaciones, setObservaciones] = useState<string>("");\n\n  const { data: contenedoresDisponibles } = useListContenedoresDisponiblesEntrada(\n    { ubicacionId: Number(ubicacionId) },\n    {\n      query: {\n        enabled: !!ubicacionId,\n        queryKey: getListContenedoresDisponiblesEntradaQueryKey({ ubicacionId: Number(ubicacionId) })\n      }\n    }\n  );\n\n  const crearEntrada = useCrearEntrada();\n\n  // General data (draft wide)\n  const [uuidCliente, setUuidCliente] = useState(() => crypto.randomUUID());\n\n  // Detalle del artículo state (form state)\n  const [productoId, setProductoId] = useState<string>("");\n  const [costoUnitario, setCostoUnitario] = useState<string>("");\n  const [declaredCount, setDeclaredCount] = useState<string>("");\n\n  const [lineas, setLineas] = useState<DraftLinea[]>([]);\n  const [selectedLines, setSelectedLines] = useState<Set<string>>(new Set());\n  const [expandedLines, setExpandedLines] = useState<Set<string>>(new Set());\n  const [mostrarFiltros, setMostrarFiltros] = useState(false);\n\n  // Printing preferences\n  const [autoPrintDoc, setAutoPrintDoc] = useState(true);\n  const [autoPrintLabels, setAutoPrintLabels] = useState(true);\n\n  // Modals state\n  const [isCaptureModalOpen, setIsCaptureModalOpen] = useState(false);\n  const [isConfirmCancelOpen, setIsConfirmCancelOpen] = useState(false);\n  const [isProviderChangeOpen, setIsProviderChangeOpen] = useState(false);\n  const [isReviewOpen, setIsReviewOpen] = useState(false);\n  const [isSubmitting, setIsSubmitting] = useState(false);\n\n  // Capture state\n  const [capDraftId, setCapDraftId] = useState("");\n  const [capCantidades, setCapCantidades] = useState<string[]>([]);\n  const [capPisos, setCapPisos] = useState<(string | null)[]>([]);\n  const [capCurrentQty, setCapCurrentQty] = useState("");\n  const [capCurrentPiso, setCapCurrentPiso] = useState<string | null>(null);\n  const [editingQtyIndex, setEditingQtyIndex] = useState<number | null>(null);\n  const [editingQtyValue, setEditingQtyValue] = useState("");\n  const [editingPisoValue, setEditingPisoValue] = useState<string | null>(null);\n  const [editingOriginalQty, setEditingOriginalQty] = useState("");\n  const [editingOriginalWasAdjusted, setEditingOriginalWasAdjusted] = useState(false);\n  const [isEditingLine, setIsEditingLine] = useState(false);\n  const [uniformQty, setUniformQty] = useState("");\n  const [uniformBaseline, setUniformBaseline] = useState<string | null>(null);\n  const [editedQtyIndexes, setEditedQtyIndexes] = useState<Set<number>>(new Set());\n  const [captureFormBeforeOpen, setCaptureFormBeforeOpen] = useState<{\n    productoId: string;\n    costoUnitario: string;\n    declaredCount: string;\n  } | null>(null);\n\n  const qtyInputRef = useRef<HTMLInputElement>(null);\n\n  const [resultado, setResult] = useState<EntradaDetail | null>(null);\n  const [activeTab, setActiveTab] = useHistoryEntryState<"historial" | "captura">(\n    "entradas.tab",\n    "historial",\n  );\n\n  const selectedProduct = productos?.find(p => p.id.toString() === productoId);\n  const canCreate = hasPermission(user, Modules.ENTRADAS, "crear");\n  const showCapture = canCreate && activeTab === "captura";\n  const serverDateLabel = serverTime\n    ? new Intl.DateTimeFormat("es-MX", {\n        dateStyle: "long",\n        timeStyle: "medium",\n        timeZone: serverTime.zonaHoraria,\n      }).format(new Date(serverTime.fecha))\n    : "Consultando hora del servidor…";\n\n  // Set default location for non-admin\n  useEffect(() => {\n    if (user && user.rol !== Role.ADMIN && user.ubicacion) {\n      setUbicacionId(user.ubicacion.id.toString());\n    }\n  }, [user]);\n\n  // Focus input when capture modal opens\n  useEffect(() => {\n    if (isCaptureModalOpen) {\n      setTimeout(() => qtyInputRef.current?.focus(), 100);\n    }\n  }, [isCaptureModalOpen]);\n\n  const handleUbicacionChange = (value: string) => {\n    setUbicacionId(value);\n    setContenedorId("none");\n    if (proveedorId !== "none" && proveedorId === autoDerivedProveedorId) {\n      setProveedorId("none");\n    }\n    setAutoDerivedProveedorId(null);\n  };\n\n  const handleProveedorChange = (value: string) => {\n    setProveedorId(value);\n    if (contenedorId !== "none" && contenedoresDisponibles) {\n      const selectedCont = contenedoresDisponibles.find(c => c.id.toString() === contenedorId);\n      if (selectedCont && selectedCont.proveedorId.toString() !== value) {\n        setContenedorId("none");\n        toast.info("El contenedor seleccionado se ha desvinculado porque no coincide con el nuevo proveedor.");\n      }\n    }\n    setAutoDerivedProveedorId(null); // Manual change overrides auto-derivation\n  };\n\n  const resetCaptureForm = () => {\n    setProductoId("");\n    setCostoUnitario("");\n    setDeclaredCount("");\n    setCapDraftId("");\n    setCapCantidades([]);\n    setCapPisos([]);\n    setCapCurrentQty("");\n    setCapCurrentPiso(null);\n    setEditingQtyIndex(null);\n    setEditingQtyValue("");\n    setEditingPisoValue(null);\n    setEditingOriginalQty("");\n    setEditingOriginalWasAdjusted(false);\n    setIsEditingLine(false);\n    setUniformQty("");\n    setUniformBaseline(null);\n    setEditedQtyIndexes(new Set());\n    setCaptureFormBeforeOpen(null);\n  };\n\n  const attemptProviderChange = () => {\n    if (lineas.length > 0) {\n      setIsProvi`... 72105 more characters,
+    expected: /href=\{`\/entradas\/\$\{entrada\.id\}\/documento`\}/,
+    operator: 'match',
+    diff: 'simple'
+  }
