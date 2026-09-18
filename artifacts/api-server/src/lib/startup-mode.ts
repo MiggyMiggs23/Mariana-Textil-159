@@ -33,6 +33,7 @@ export type StartupMode =
 
 export interface StartupCreditFeatureState {
   incomeCapture: boolean;
+  abonoEvidence: boolean;
   returnCapture: boolean;
   pendingReceipts: boolean;
   historicalAttribution: boolean;
@@ -100,6 +101,7 @@ export function startupMode(
   env: Record<string, string | undefined>,
   creditFeatures: StartupCreditFeatureState = {
     incomeCapture: false,
+    abonoEvidence: false,
     returnCapture: false,
     pendingReceipts: false,
     historicalAttribution: false,
@@ -112,6 +114,9 @@ export function startupMode(
     || creditFeatures.historicalAttribution
   ) {
     throw new Error("Limited startup requires return, pending and historical credit features closed.");
+  }
+  if (creditFeatures.incomeCapture !== creditFeatures.abonoEvidence) {
+    throw new Error("Cash income capture and mandatory A+C evidence must be enabled or closed together.");
   }
   if (creditFeatures.incomeCapture && requested !== "EXPLICIT_LIMITED") {
     throw new Error("Cash income capture requires EXPLICIT_LIMITED preflight; refusing startup.");

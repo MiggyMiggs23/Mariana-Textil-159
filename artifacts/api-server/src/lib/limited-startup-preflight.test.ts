@@ -164,16 +164,32 @@ test("limited mode requires the exact approved JSON state; normal remains unchan
   }), /unexpected JSON shape/);
   assert.throws(() => startupMode({ API_STARTUP_MODE: "TYPO" }), /refusing normal startup fallthrough/);
   assert.throws(() => startupMode({}, {
-    incomeCapture: true, returnCapture: false, pendingReceipts: false,
+    incomeCapture: true, abonoEvidence: true, returnCapture: false, pendingReceipts: false,
     historicalAttribution: false,
   }), /requires EXPLICIT_LIMITED/);
+  assert.throws(() => startupMode({}, {
+    incomeCapture: true, abonoEvidence: false, returnCapture: false, pendingReceipts: false,
+    historicalAttribution: false,
+  }), /mandatory A\+C evidence/);
   assert.throws(() => startupMode({
     API_STARTUP_MODE: "EXPLICIT_LIMITED",
     API_LIMITED_STARTUP_APPROVAL: JSON.stringify(approval),
   }, {
-    incomeCapture: true, returnCapture: false, pendingReceipts: false,
+    incomeCapture: true, abonoEvidence: true, returnCapture: false, pendingReceipts: false,
     historicalAttribution: false,
   }), /guardState mismatch/);
+});
+
+test("enabled A+C evidence requires its schema before limited startup can listen", async () => {
+  const fake = fakePool();
+  await assert.rejects(
+    runLimitedStartupPreflight(fake.pool, approval, LIMITED_SCHEMA_MANIFEST, {
+      requireAbonoEvidence: true,
+    }),
+    /A\+C evidence column mismatch/,
+  );
+  assert.equal(fake.calls.at(-1), "ROLLBACK");
+  assert.equal(fake.releases, 1);
 });
 
 test("read-only preflight commits only after schema and all three old guards match", async () => {

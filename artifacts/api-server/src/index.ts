@@ -44,6 +44,7 @@ import {
   CREDIT_PENDING_RECEIPTS_ENABLED,
 } from "./lib/credit-evidence-contract";
 import { CREDIT_HISTORICAL_ATTRIBUTION_ENABLED } from "./lib/credit-evidence-read";
+import { CREDIT_ABONO_REFUND_EVIDENCE_ENABLED } from "./lib/credit-abono-evidence";
 import {
   runLimitedStartupPreflight,
   buildDrizzleSchemaManifest,
@@ -157,6 +158,7 @@ export async function startServer() {
   // This does not change request authorization or the normal production boot.
   const mode = startupMode(process.env, {
     incomeCapture: CREDIT_CASH_INCOME_CAPTURE_ENABLED,
+    abonoEvidence: CREDIT_ABONO_REFUND_EVIDENCE_ENABLED,
     returnCapture: CREDIT_CASH_RETURN_CAPTURE_ENABLED,
     pendingReceipts: CREDIT_PENDING_RECEIPTS_ENABLED,
     historicalAttribution: CREDIT_HISTORICAL_ATTRIBUTION_ENABLED,
@@ -171,6 +173,7 @@ export async function startServer() {
       pool as unknown as ReadonlyPreflightPool,
       mode.approval,
       buildDrizzleSchemaManifest(databaseSchema),
+      { requireAbonoEvidence: CREDIT_ABONO_REFUND_EVIDENCE_ENABLED },
     );
     logger.warn({
       startupMode: mode.approval.mode,

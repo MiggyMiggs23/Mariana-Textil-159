@@ -42,13 +42,14 @@ function safetyChecks(text: string) {
   assert.match(text, /assertCreditCaptureEnabled\(evidence, "EFECTIVO", "REVERSO_ABONO", "REVERSO"\)/);
   assert.match(text, /loadCustomerCreditProjectionInTransaction/);
   assert.match(text, /SELECT id FROM aplicaciones_credito WHERE abono_movimiento_id/);
-  assert.match(text, /evidencia_no_aplicada_e2 WHERE fuente/);
+  assert.match(text, /FROM evidencia_no_aplicada_e2 p/);
+  assert.match(text, /JOIN finalizaciones_abono_e2 f[\s\S]*f\.resultado='UNUSED'/);
   assert.match(text, /assertRefundReplay/);
 }
 test("source barriers and isolated negative proofs", () => {
   safetyChecks(service);
   for (const token of ["assertCreditRefundEnabled();\n  return db.transaction", 'assertCreditCaptureEnabled(evidence, "EFECTIVO", "REVERSO_ABONO", "REVERSO")',
-    "evidencia_no_aplicada_e2 WHERE fuente", "SELECT id FROM aplicaciones_credito WHERE abono_movimiento_id"]) {
+    "FROM evidencia_no_aplicada_e2 p", "SELECT id FROM aplicaciones_credito WHERE abono_movimiento_id"]) {
     assert.throws(() => safetyChecks(service.replace(token, "REMOVED")));
   }
 });

@@ -28,6 +28,10 @@ import {
   claimCreditOperation, insertCreditMovementE1, CreditEvidenceError,
   type CreditEvidenceInput,
 } from "../lib/credit-evidence";
+import {
+  evaluateAbonoEvidence,
+  finalizePhysicalAbonoEvidence,
+} from "../lib/credit-abono-evidence";
 
 const router: IRouter = Router();
 router.use("/pagos-dirigidos", requireSession);
@@ -177,7 +181,20 @@ async function apply(tx: Tx, request: DirectedPaymentRequest, userId: number, ev
     ? (await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning())[0]!
     : await insertCreditMovementE1(tx, { clienteId: request.entidadId, ticketId: doc.ticket_id!, importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }, evidence!, "ABONO_DIRIGIDO");
   if (supplier) await tx.insert(aplicacionesPagoProveedorTable).values({ pagoProveedorId: movement.id, compraProveedorId: doc.id, importe: amount });
-  else await tx.insert(aplicacionesCreditoTable).values({ abonoMovimientoId: movement.id, ventaMovimientoId: doc.id, importe: amount });
+  else {
+    await tx.insert(aplicacionesCreditoTable).values({ abonoMovimientoId: movement.id, ventaMovimientoId: doc.id, importe: amount });
+    await finalizePhysicalAbonoEvidence(tx, {
+      movementId: movement.id,
+      productor: "ABONO_DIRIGIDO",
+      formaPago: request.formaPago,
+      cuentaDestino: request.cuentaDestino,
+      evidence: evidence!,
+      evaluation: evaluateAbonoEvidence(requestedCents, [{
+        targetId: Number(doc.id),
+        appliedCents: requestedCents,
+      }]),
+    });
+  }
   return movement;
 }
 

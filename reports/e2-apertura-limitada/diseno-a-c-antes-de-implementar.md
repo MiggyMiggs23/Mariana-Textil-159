@@ -1,5 +1,7 @@
 # A + C: integración propuesta antes de implementar
 
+**Estado posterior:** el propietario aprobó este diseño y autorizó construir offline. Se produjo una implementación candidata inactiva y se pausó en un punto coherente al fallar la reconstrucción prioritaria del bundle. Tiene 40 pruebas focalizadas aprobadas y typecheck API sin errores, pero no está terminada ni verificada para apertura. Faltan revisión independiente, reconciliación SQL, negativos ampliados y validación global; ver `evidencia-a-c/estado-offline.md`. El texto siguiente conserva el diseño aprobado.
+
 ## Decisión y límites
 
 El propietario eligió A + C: conservar evidencia desde el primer abono y decidir aparte cuándo abrir la captura. Acepta que devolver no sea inmediato; no acepta perder una futura devolución elegible por falta de evidencia.

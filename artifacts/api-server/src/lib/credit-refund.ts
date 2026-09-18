@@ -19,8 +19,11 @@ export async function attestNewRetainedReceiptForRefund(tx: Tx, cobroClave: stri
   await tx.execute(sql`SELECT e2_attest_new_retained(${cobroClave}::uuid)`);
 }
 export async function attestNewAbonoForRefund(tx: Tx, abonoId: number): Promise<void> {
-  assertCreditRefundEnabled();
-  await tx.execute(sql`SELECT e2_attest_new_abono(${abonoId})`);
+  void tx;
+  throw new CreditEvidenceError(
+    `E2: el hook anterior no puede atestar indiscriminadamente el abono ${abonoId}; usa la finalización A+C posterior a la proyección.`,
+    409,
+  );
 }
 
 /** Sole public execution entry. Gate precedes even opening a DB transaction. */
@@ -56,8 +59,10 @@ export async function refundCreditReceipt(req: Request, input: CreditRefundInput
       .where(eq(clientesTable.id, input.clienteId)).for("update").limit(1);
     if (!customer) throw new CreditEvidenceError("E2: cliente no encontrado.", 404);
     // Positive producer evidence is mandatory; no inference from absent applications.
-    const proof = await tx.execute<any>(sql`SELECT * FROM evidencia_no_aplicada_e2 WHERE fuente=${key}
-      AND cliente_id=${input.clienteId} AND importe=${input.importe}::numeric FOR UPDATE`);
+    const proof = await tx.execute<any>(sql`SELECT p.* FROM evidencia_no_aplicada_e2 p
+      JOIN finalizaciones_abono_e2 f ON f.abono_id=p.abono_id AND f.resultado='UNUSED'
+      WHERE p.fuente=${key} AND p.cliente_id=${input.clienteId}
+        AND p.importe=${input.importe}::numeric FOR UPDATE OF p,f`);
     if (!proof.rows[0]) throw new CreditEvidenceError("E2: falta prueba positiva de recepción íntegra nunca aplicada.", 409);
     let original: typeof movimientosCreditoTable.$inferSelect | undefined;
     if (input.origen === "ABONO") {

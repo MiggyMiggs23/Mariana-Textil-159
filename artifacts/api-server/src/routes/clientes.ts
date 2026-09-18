@@ -94,6 +94,10 @@ import {
   assertCreditEvidenceScope, claimCreditOperation, insertCreditMovementE1,
   assertCreditCaptureEnabled, CreditEvidenceError,
 } from "../lib/credit-evidence";
+import {
+  evaluateAbonoEvidence,
+  finalizePhysicalAbonoEvidence,
+} from "../lib/credit-abono-evidence";
 
 const router: IRouter = Router();
 
@@ -2256,6 +2260,20 @@ router.post(
           0,
         );
         const sourceRemainderCents = moneyToCents(importe) - appliedCents;
+        await finalizePhysicalAbonoEvidence(tx, {
+          movementId: created!.id,
+          productor: "ABONO_ORDINARIO",
+          formaPago: body.formaPago,
+          cuentaDestino: body.cuentaDestino,
+          evidence,
+          evaluation: evaluateAbonoEvidence(
+            moneyToCents(importe),
+            allocations.map(({ targetId, appliedCents: allocated }) => ({
+              targetId,
+              appliedCents: allocated,
+            })),
+          ),
+        });
         await tx.insert(auditoriaTable).values({
           usuarioId: req.auth!.user.id,
           accion: "PAGO_CLIENTE",

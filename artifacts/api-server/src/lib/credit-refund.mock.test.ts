@@ -59,7 +59,7 @@ function harness(options: { e2?: boolean; e1?: boolean; role?: string; missingPr
         if (q.includes("pg_advisory_xact_lock")) return { rows: [] };
         if (q.includes("SELECT id FROM sesiones_caja")) return { rows: [{ id: 4 }] };
         if (q.includes("SELECT contenido")) return { rows: draft.refund ? [draft.refund] : [] };
-        if (q.includes("SELECT * FROM evidencia")) {
+        if (q.includes("FROM evidencia_no_aplicada_e2")) {
           events.push("proof");
           return { rows: options.missingProof ? [] : [{ fuente: "proof" }] };
         }

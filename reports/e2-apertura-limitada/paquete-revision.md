@@ -10,7 +10,9 @@ El backend preparado mantiene separados y cerrados el ingreso y la devolución. 
 
 **Permisos cotejados después contra respaldo:** cero cambios de valores efectivos y de las 3,968 decisiones de acceso; las diferencias de contenido en permisos son únicamente los `updated_at` conocidos. Evidencia: `permisos-respaldo/resultado.md`. El bloqueo por bundle distinto permanece.
 
-**Diseño A + C para revisar antes de implementar:** `diseno-a-c-antes-de-implementar.md`. Ningún código ni SQL de esa integración se implementó.
+**Diseño A + C aprobado; candidato offline incompleto:** se inició la implementación inactiva y se pausó al fallar la reconstrucción prioritaria del bundle. Pasaron 40 pruebas focalizadas y el typecheck API; faltan revisión independiente, reconciliación SQL, negativos ampliados y validación global. Ver `evidencia-a-c/estado-offline.md`. Los SQL y parches de apertura anteriores no constituyen un paquete actualizado listo para ejecutar junto con este candidato.
+
+**Reconstrucción posterior detenida:** el commit anunciado `7cb77f8cfc6287fa51325a25122c48af392a7ada` produjo un hash distinto del exigido. No se instaló ni arrancó; no se repitió la compilación. Ver `reconstruccion/resultado.md` y la lectura preparatoria separada en `reconstruccion/esquema-lectura-previa-al-stop.md`. Ambos workflows están sin iniciar al cierre de esta etapa.
 
 ## Índice de entregables
 

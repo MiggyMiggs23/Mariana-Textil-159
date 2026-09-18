@@ -206,10 +206,47 @@ export interface LimitedPreflightResult {
   checked: { columns: number; constraints: number; indexes: number; guards: number };
 }
 
+export const ABONO_EVIDENCE_COLUMNS = [
+  ["finalizaciones_abono_e2", "abono_id", "integer"],
+  ["finalizaciones_abono_e2", "operacion_productor", "text"],
+  ["finalizaciones_abono_e2", "operacion_clave", "uuid"],
+  ["finalizaciones_abono_e2", "cliente_id", "integer"],
+  ["finalizaciones_abono_e2", "importe", "numeric"],
+  ["finalizaciones_abono_e2", "resultado", "text"],
+  ["finalizaciones_abono_e2", "aplicado", "numeric"],
+  ["finalizaciones_abono_e2", "evaluacion", "jsonb"],
+  ["finalizaciones_abono_e2", "contrato_revision", "text"],
+  ["evidencia_no_aplicada_e2", "fuente", "text"],
+  ["evidencia_no_aplicada_e2", "abono_id", "integer"],
+  ["evidencia_no_aplicada_e2", "cliente_id", "integer"],
+  ["evidencia_no_aplicada_e2", "importe", "numeric"],
+] as const;
+
+const ABONO_EVIDENCE_TRIGGER_EXPECTATIONS = [
+  ["finalizaciones_abono_e2", "e2_finalization_immutable", 58, "e2_reject_evidence_mutation", false],
+  ["finalizaciones_abono_e2", "e2_validate_abono_finalization", 7, "e2_validate_abono_finalization", false],
+  ["evidencia_no_aplicada_e2", "e2_proof_immutable", 58, "e2_reject_evidence_mutation", false],
+  ["evidencia_no_aplicada_e2", "e2_validate_unused_proof", 7, "e2_validate_unused_proof", false],
+  ["movimientos_credito", "e2_abono_finalization_complete", 5, "e2_require_abono_finalization", true],
+] as const;
+
+const ABONO_EVIDENCE_FUNCTION_HASHES: Record<string, string> = {
+  e2_reject_evidence_mutation: "4e4d98bf9efa299671f666d86e8285a76438cdf492ef529bd8f7f0cf359da25a",
+  e2_validate_abono_finalization: "969c7e130cad8e60312dafccb8ae2691b5063e0ab161564fa02f0efcab87f47d",
+  e2_validate_unused_proof: "e915b3f612dd005ace543f569317e45e13ddd407a2fa5f799a2e7198a2d62cec",
+  e2_finalize_new_abono: "a8ff080835bd6873e6ae2ec0c88a92ba4bf74b1d9e131a886fb20df7368bf32f",
+  e2_require_abono_finalization: "00b144c8bb2ee32872575043373e1b93c299622bd03effeac7026b5bdf4378d1",
+};
+
+export interface LimitedPreflightOptions {
+  requireAbonoEvidence?: boolean;
+}
+
 export async function runLimitedStartupPreflight(
   pool: ReadonlyPreflightPool,
   approval: LimitedStartupApproval,
   manifest: LimitedSchemaManifest = LIMITED_SCHEMA_MANIFEST,
+  options: LimitedPreflightOptions = {},
 ): Promise<LimitedPreflightResult> {
   const client = await pool.connect();
   let transactionOpen = false;
@@ -294,6 +331,91 @@ export async function runLimitedStartupPreflight(
     });
     if (missingIndexes.length) {
       throw new Error(`Limited startup index mismatch: ${missingIndexes.join(", ")}`);
+    }
+
+    if (options.requireAbonoEvidence) {
+      const evidenceColumns = await client.query(`
+        SELECT table_name, column_name, data_type
+        FROM information_schema.columns
+        WHERE table_schema = 'public'
+          AND table_name IN ('finalizaciones_abono_e2','evidencia_no_aplicada_e2')
+      `);
+      const actualEvidenceColumns = new Set(evidenceColumns.rows.map(
+        (row) => `${row.table_name}.${row.column_name}:${row.data_type}`,
+      ));
+      const missingEvidenceColumns = ABONO_EVIDENCE_COLUMNS
+        .map(([table, column, type]) => `${table}.${column}:${type}`)
+        .filter((entry) => !actualEvidenceColumns.has(entry));
+      if (missingEvidenceColumns.length) {
+        throw new Error(`Limited startup A+C evidence column mismatch: ${missingEvidenceColumns.join(", ")}`);
+      }
+      const evidenceCatalog = await client.query(`
+        SELECT c.relname AS table_name, t.tgname AS trigger_name, t.tgenabled,
+               t.tgtype, t.tgconstraint <> 0 AS has_constraint,
+               p.proname AS function_name, p.prosrc, p.prokind, p.provolatile,
+               p.proparallel, p.prosecdef, p.proleakproof, p.proisstrict,
+               p.proretset, p.proacl, p.proconfig,
+               l.lanname AS language_name, r.rolname AS owner_name,
+               pg_get_function_result(p.oid) AS result_type,
+               pg_get_function_identity_arguments(p.oid) AS identity_arguments,
+               octet_length(t.tgargs) AS args_length, t.tgattr::text AS trigger_attr,
+               t.tgparentid <> 0 AS has_parent, t.tgqual IS NOT NULL AS has_qual
+        FROM pg_trigger t
+        JOIN pg_class c ON c.oid=t.tgrelid
+        JOIN pg_namespace n ON n.oid=c.relnamespace
+        JOIN pg_proc p ON p.oid=t.tgfoid
+        JOIN pg_namespace fn ON fn.oid=p.pronamespace
+        JOIN pg_language l ON l.oid=p.prolang
+        JOIN pg_roles r ON r.oid=p.proowner
+        WHERE n.nspname='public' AND fn.nspname='public'
+          AND t.tgname = ANY($1::text[]) AND NOT t.tgisinternal
+      `, [[...ABONO_EVIDENCE_TRIGGER_EXPECTATIONS.map(([, trigger]) => trigger)]]);
+      if (evidenceCatalog.rows.length !== ABONO_EVIDENCE_TRIGGER_EXPECTATIONS.length) {
+        throw new Error("Limited startup A+C evidence trigger inventory mismatch.");
+      }
+      for (const [table, trigger, type, functionName, constrained] of ABONO_EVIDENCE_TRIGGER_EXPECTATIONS) {
+        const row = evidenceCatalog.rows.find((candidate) => candidate.trigger_name === trigger);
+        const expectedHash = ABONO_EVIDENCE_FUNCTION_HASHES[functionName];
+        const sourceHash = createHash("sha256").update(String(row?.prosrc ?? ""), "utf8").digest("hex");
+        if (!row || row.table_name !== table || row.tgenabled !== "O"
+          || Number(row.tgtype) !== type || row.function_name !== functionName
+          || row.has_constraint !== constrained || Number(row.args_length) !== 0
+          || row.trigger_attr !== "" || row.has_parent !== false || row.has_qual !== false
+          || row.prokind !== "f" || row.provolatile !== "v" || row.proparallel !== "u"
+          || row.prosecdef !== false || row.proleakproof !== false
+          || row.proisstrict !== false || row.proretset !== false || row.proacl !== null
+          || JSON.stringify(row.proconfig) !== JSON.stringify(["search_path=pg_catalog, public"])
+          || row.language_name !== "plpgsql" || row.owner_name !== "postgres"
+          || row.result_type !== "trigger" || row.identity_arguments !== ""
+          || sourceHash !== expectedHash) {
+          throw new Error(`Limited startup A+C evidence trigger ${trigger} mismatch.`);
+        }
+      }
+      const finalizer = await client.query(`
+        SELECT p.prosrc, p.prokind, p.provolatile, p.proparallel, p.prosecdef,
+               p.proleakproof, p.proisstrict, p.proretset, p.proacl, p.proconfig,
+               l.lanname AS language_name, r.rolname AS owner_name,
+               pg_get_function_result(p.oid) AS result_type,
+               pg_get_function_identity_arguments(p.oid) AS identity_arguments
+        FROM pg_proc p
+        JOIN pg_namespace n ON n.oid=p.pronamespace
+        JOIN pg_language l ON l.oid=p.prolang
+        JOIN pg_roles r ON r.oid=p.proowner
+        WHERE n.nspname='public' AND p.proname='e2_finalize_new_abono'
+      `);
+      const row = finalizer.rows[0];
+      const sourceHash = createHash("sha256").update(String(row?.prosrc ?? ""), "utf8").digest("hex");
+      if (finalizer.rows.length !== 1 || !row
+        || row.prokind !== "f" || row.provolatile !== "v" || row.proparallel !== "u"
+        || row.prosecdef !== false || row.proleakproof !== false
+        || row.proisstrict !== false || row.proretset !== false || row.proacl !== null
+        || JSON.stringify(row.proconfig) !== JSON.stringify(["search_path=pg_catalog, public"])
+        || row.language_name !== "plpgsql" || row.owner_name !== "postgres"
+        || row.result_type !== "void"
+        || row.identity_arguments !== "p_abono_id integer, p_productor text, p_resultado text, p_aplicado_cents bigint, p_evaluacion jsonb, p_contrato_revision text"
+        || sourceHash !== ABONO_EVIDENCE_FUNCTION_HASHES.e2_finalize_new_abono) {
+        throw new Error("Limited startup A+C evidence finalizer mismatch.");
+      }
     }
 
     const guardsResult = await client.query(`
