@@ -1,0 +1,74 @@
+{
+  "status": "PASS_EFFECTIVE_VALUES_IDENTICAL",
+  "stop": false,
+  "observedAtUtc": "2026-09-18 21:44:38.392451+00",
+  "currentIdentity": {
+    "database": "heliumdb",
+    "oid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "backup": {
+    "capturedAtUtc": "2026-09-18T18:48:23.953Z",
+    "archive": ".local/backups/e10-operativo-20260918124823-63437/e10-operativo-20260918124823-63437.dump",
+    "archiveBytes": 497065,
+    "expectedSha256": "4f126fdc916a548bf8bdc3af7310a2acd3a3808fbf5dcd0c4c7afb0d85f51d0e",
+    "observedSha256": "4f126fdc916a548bf8bdc3af7310a2acd3a3808fbf5dcd0c4c7afb0d85f51d0e",
+    "restoreVerification": "PASS"
+  },
+  "tables": {
+    "permisos_rol": {
+      "backupRows": 192,
+      "currentRows": 192,
+      "added": 0,
+      "deleted": 0,
+      "effectiveValueChanges": 0,
+      "idOrUpdatedPorChanges": 0,
+      "updatedAtChanges": 70,
+      "backupEffectiveSha256": "36d31d9c309875e285cd348372d54485fe5731e24e386909a1ba11bb4b80548a",
+      "currentEffectiveSha256": "36d31d9c309875e285cd348372d54485fe5731e24e386909a1ba11bb4b80548a"
+    },
+    "permisos_ubicacion": {
+      "backupRows": 54,
+      "currentRows": 54,
+      "added": 0,
+      "deleted": 0,
+      "effectiveValueChanges": 0,
+      "idOrUpdatedPorChanges": 0,
+      "updatedAtChanges": 54,
+      "backupEffectiveSha256": "82d5886431fddcf8bacc6f61b333e9ea7aa3c10d77c3df02f346652b2de7b502",
+      "currentEffectiveSha256": "82d5886431fddcf8bacc6f61b333e9ea7aa3c10d77c3df02f346652b2de7b502"
+    },
+    "permisos_usuario": {
+      "backupRows": 0,
+      "currentRows": 0,
+      "added": 0,
+      "deleted": 0,
+      "effectiveValueChanges": 0,
+      "idOrUpdatedPorChanges": 0,
+      "updatedAtChanges": 0,
+      "backupEffectiveSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "currentEffectiveSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "usuarios_permissionInputs": {
+      "backupRows": 31,
+      "currentRows": 31,
+      "added": 0,
+      "deleted": 0,
+      "roleLocationActiveOrScopeChanges": 0,
+      "backupSha256": "f5a7e24f7dcdeb5f4f2f359a73bb6e8c6cee50e2d546a70194772873b96bc11a",
+      "currentSha256": "f5a7e24f7dcdeb5f4f2f359a73bb6e8c6cee50e2d546a70194772873b96bc11a"
+    }
+  },
+  "effectiveMatrix": {
+    "users": 31,
+    "modulesPerUser": 32,
+    "backupCells": 992,
+    "currentCells": 992,
+    "actionValuesPerSide": 3968,
+    "changedCells": 0,
+    "backupSha256": "a305a672a33a6846244dd48389a2d82bf02795fbb8d78b1d547ffbed79e0cc8e",
+    "currentSha256": "a305a672a33a6846244dd48389a2d82bf02795fbb8d78b1d547ffbed79e0cc8e"
+  }
+}

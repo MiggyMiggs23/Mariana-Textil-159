@@ -8,6 +8,10 @@ El backend preparado mantiene separados y cerrados el ingreso y la devolución. 
 
 **Resultado posterior de la recuperación autorizada:** se detuvo antes de arrancar la API. La identidad operativa y las tres guardas E1 coinciden, pero un intento automático de arranque normal reemplazó el bundle autorizado y dejó actualizaciones persistentes en filas de permisos. No se encontró una copia del bundle anterior. Las lecturas no encontraron transacciones cliente abiertas/preparadas ni nuevas operaciones de negocio de las categorías comprobadas desde el reinicio. No se afirma ausencia total de efectos: ver `recuperacion/resultado.md`. El frontend está en ejecución; la API queda detenida. La autorización de recuperar la versión anterior no autoriza sustituirla por la compilación encontrada.
 
+**Permisos cotejados después contra respaldo:** cero cambios de valores efectivos y de las 3,968 decisiones de acceso; las diferencias de contenido en permisos son únicamente los `updated_at` conocidos. Evidencia: `permisos-respaldo/resultado.md`. El bloqueo por bundle distinto permanece.
+
+**Diseño A + C para revisar antes de implementar:** `diseno-a-c-antes-de-implementar.md`. Ningún código ni SQL de esa integración se implementó.
+
 ## Índice de entregables
 
 | Parte | Archivo |
@@ -62,7 +66,7 @@ La apertura limitada no instala ni registra la evidencia positiva que exige la d
 
 Con la implementación actual, un abono recibido durante esta apertura carecería de esa prueba. **Activar devoluciones después no lo convertiría automáticamente en devolvible**, aunque conservase saldo íntegro sin aplicar. El esquema preparado exige evidencia en la transacción de origen y no contempla backfill.
 
-**Condición bloqueante ordenada por el propietario:** no se activa la apertura limitada hasta resolver la evidencia necesaria para la devolución. No basta aceptar la ausencia de prueba ni prometer que una activación futura la recuperará. El propietario decidirá entre conservar prueba desde el primer abono, admitir otra evidencia suficiente o posponer la apertura hasta que E2 pueda devolver. Ninguna alternativa está elegida ni autorizada para implementarse. La recuperación del servicio anterior es independiente de esta decisión.
+**Decisión y condición bloqueante del propietario:** A + C: conservar la evidencia desde el primer abono y decidir aparte cuándo abrir. Acepta la falta de devolución inmediata, no la pérdida de elegibilidad futura por falta de evidencia. La integración debe presentarse antes de implementarse, sin conectar indiscriminadamente el hook ni cambiar FIFO. La apertura queda bloqueada hasta construir y verificar la evidencia y obtener autorización de apertura separada. Solo es devolvible el importe íntegro nunca aplicado; aplicado o parcialmente usado es otro alcance. La recuperación del servicio anterior es independiente.
 
 No se añadió por cuenta propia una restricción al saldo a favor, una excepción de devolución, una tabla alternativa ni una inferencia histórica.
 

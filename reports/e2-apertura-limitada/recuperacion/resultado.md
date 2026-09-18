@@ -1,5 +1,11 @@
 # Recuperación exclusiva del servicio anterior — detención preventiva
 
+## Comprobación posterior solicitada por el propietario
+
+La comparación con el respaldo E10 autorizado confirmó **cero diferencias de permisos efectivos**: 192 permisos de rol, 54 de ubicación, cero overrides por usuario y los atributos relevantes de 31 usuarios coinciden. La matriz de 3,968 decisiones de acceso también coincide. En las tablas de permisos, solo difieren 70 y 54 `updated_at`, respectivamente. Ver `../permisos-respaldo/resultado.md`.
+
+Esto resuelve la incertidumbre sobre valores efectivos de permisos; no sustituye el bundle perdido ni autoriza reanudar la API. El informe original de detención se conserva a continuación.
+
 ## Dictamen
 
 **STOP / NO ARRANCADO.** La identidad y las tres guardas E1 coincidieron, pero

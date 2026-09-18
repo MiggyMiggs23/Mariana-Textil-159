@@ -2,7 +2,7 @@
 
 ## Condición del propietario
 
-**La apertura limitada está bloqueada hasta resolver esta dependencia.** No se eligió ni implementó ninguna opción. La autorización de recuperación permite recuperar únicamente el servicio anterior; no habilita ingresos de crédito, devoluciones ni cambios de evidencia.
+**Decisión posterior del propietario: A + C.** Generar evidencia desde el primer abono y decidir aparte cuándo abrir la captura. Acepta que no haya devolución inmediata; la apertura sigue bloqueada hasta construir y verificar la evidencia. Antes de implementar debe presentarse cómo integrar sin cambiar FIFO ni atestar indiscriminadamente abonos aplicados. B no fue elegida. La comparación siguiente conserva los costos y límites discutidos, no concede autorización de implementación ni ejecución.
 
 ## Qué significa “poder devolver”
 
