@@ -58,6 +58,8 @@ import { ResponsiveTable } from "@/components/client-responsive-table";
 import { ClienteNotaEstadoBadge } from "@/components/cliente-nota-estado-badge";
 import { CREDIT_TERMS, type ClientCreditTerm } from "@/lib/credit-terms";
 import { formatDateOnlyMx } from "@/lib/date-only";
+import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
+import { ClienteCreditEvidence } from "@/components/cliente-credit-evidence";
 
 const date = (value?: string) => value ? new Intl.DateTimeFormat("es-MX", { dateStyle: "medium" }).format(new Date(value)) : "—";
 
@@ -271,6 +273,8 @@ function StatementResponsiveTable({
 }
 
 export default function ClienteDetail() {
+  const adjustmentEvidence = useCreditEvidenceDraft("CORRECCION_CONTABLE");
+  const badDebtEvidence = useCreditEvidenceDraft("CORRECCION_CONTABLE");
   const [, params] = useRoute("/clientes/:id");
   const search = useSearch();
   const id = Number(params?.id);
@@ -294,6 +298,7 @@ export default function ClienteDetail() {
   const [bajaOpen, setBajaOpen] = useState(false);
   const [bajaConfirmationOpen, setBajaConfirmationOpen] = useState(false);
   const [bajaMotivo, setBajaMotivo] = useState("");
+  const [badDebtAmount, setBadDebtAmount] = useState("");
   const [bajaRequiresAuth, setBajaRequiresAuth] = useState<{ monto: string; desde: string | null } | null>(null);
   const [adminUser, setAdminUser] = useState("");
   const [adminPass, setAdminPass] = useState("");
@@ -358,7 +363,7 @@ export default function ClienteDetail() {
     return Array.from(months, ([month, total]) => ({ month, total })).reverse();
   }, [filteredPurchases]);
 
-  const adjustment = useMutation({ mutationFn: () => createAdjustment(id, { importe: Number(adjustmentAmount), motivo: reason }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ predicate: (query) => { const key = query.queryKey[0]; return typeof key === "string" && key.startsWith("/api/clientes/"); } }); setAdjustmentOpen(false); setAdjustmentAmount(""); setReason(""); toast({ title: "Ajuste registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el ajuste", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
+  const adjustment = useMutation({ mutationFn: () => createAdjustment(id, { importe: Number(adjustmentAmount), motivo: reason, ...adjustmentEvidence.build("AJUSTE_MANUAL", { id, importe: Number(adjustmentAmount), motivo: reason }), origenJustificacion: adjustmentEvidence.justification.trim() }), onSuccess: () => { adjustmentEvidence.reset(); queryClient.invalidateQueries({ queryKey: getGetClienteEstadoCuentaQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ predicate: (query) => { const key = query.queryKey[0]; return typeof key === "string" && key.startsWith("/api/clientes/"); } }); setAdjustmentOpen(false); setAdjustmentAmount(""); setReason(""); toast({ title: "Ajuste registrado" }); }, onError: (error) => toast({ title: "No se pudo registrar el ajuste", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
   const creditUpdate = useMutation({ mutationFn: () => updateCreditTerms(id, { limiteCredito: Number(creditLimit), diasCredito: Number(creditDays) as ClientCreditTerm }), onSuccess: () => { queryClient.invalidateQueries({ queryKey: getGetClienteCreditoQueryKey(id) }); queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) }); setCreditOpen(false); toast({ title: "Crédito actualizado" }); }, onError: (error) => toast({ title: "No se pudo actualizar", description: getApiErrorMessage(error, "Intenta de nuevo."), variant: "destructive" }) });
 
   const updateClient = useUpdateCliente();
@@ -397,14 +402,26 @@ export default function ClienteDetail() {
   };
 
   const executeConfirmedBaja = () => {
+    const hasBadDebt = Number(saldoDeudorProyectado) > 0 || !!bajaRequiresAuth;
+    if (hasBadDebt && (badDebtEvidence.problem() || Number(badDebtAmount) <= 0)) {
+      toast({ title: "Origen incobrable requerido", description: badDebtEvidence.problem() ?? "Confirma el monto incobrable.", variant: "destructive" });
+      return;
+    }
     executeBaja.mutate({
       id, data: {
         motivo: bajaMotivo,
+        ...(hasBadDebt ? {
+          montoIncobrable: Number(badDebtAmount),
+          ...badDebtEvidence.build("BAJA_INCOBRABLE", { id, motivo: bajaMotivo, montoIncobrable: Number(badDebtAmount) }),
+        } : {}),
         adminUsuario: adminUser || undefined,
         adminPassword: adminPass || undefined
       }
     }, {
       onSuccess: (res) => {
+        badDebtEvidence.reset();
+        setBadDebtAmount("");
+        queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && query.queryKey[0].startsWith("/api/clientes") });
         queryClient.invalidateQueries({ queryKey: getGetClienteQueryKey(id) });
         setBajaOpen(false);
           setBajaConfirmationOpen(false);
@@ -583,6 +600,7 @@ export default function ClienteDetail() {
           {(canFinances || canPrices) && <TabsContent value="analitica" className="space-y-4"><Period value={period} onChange={setPeriod} />{canFinances && <QueryState query={stats}><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"><Kpi label="Compra acumulada" value={formatNumber(stats.data?.totalCompras, { kind: "money" })} /><Kpi label="Tickets" value={formatNumber(stats.data?.comprasCount, { kind: "count" })} /><Kpi label="Ticket promedio" value={formatNumber(Number(stats.data?.totalCompras ?? 0) / Math.max(1, stats.data?.comprasCount ?? 0), { kind: "money" })} /><Kpi label={formatUnit("METRO")} value={formatNumber(stats.data?.metros, { kind: "quantity" })} /><Kpi label={formatUnit("KILO")} value={formatNumber(stats.data?.kilos, { kind: "quantity" })} /><Kpi label={formatUnit("BOLSA")} value={formatNumber(stats.data?.bolsas, { kind: "quantity" })} /><Kpi label="Costo identificable" value={formatNumber(stats.data?.costo, { kind: "money" })} /><Kpi label="Utilidad identificable" value={formatNumber(stats.data?.margen, { kind: "money" })} /></div>{(stats.data?.lineasSinCosto ?? 0) > 0 && <p className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">Utilidad pendiente: {formatNumber(stats.data?.lineasSinCosto, { kind: "count" })} línea(s) no tienen costo congelado.</p>}<Card className="mt-4"><CardHeader><CardTitle>Compras por mes</CardTitle></CardHeader><CardContent>{chartData.length ? <div className="h-72" data-testid="chart-client-purchases"><ResponsiveContainer width="100%" height="100%"><BarChart data={chartData}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} /><XAxis dataKey="month" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} /><YAxis tickFormatter={(v) => `$${v/1000}k`} tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))', fontWeight: 500 }} /><Tooltip formatter={(value) => formatNumber(Number(value), { kind: "money" })} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} contentStyle={{ borderRadius: '6px', fontSize: '13px', border: '1px solid hsl(var(--border))', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} /><Bar dataKey="total" fill={getCategoricalChartColor(0)} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></div> : <p className="py-12 text-center text-muted-foreground">Sin datos para graficar en este periodo.</p>}<p className="mt-3 text-sm text-muted-foreground">Suma el total con IVA de ventas del cliente por mes dentro del periodo elegido.</p></CardContent></Card></QueryState>}{canPrices && <QueryState query={prices}><Card className="mt-4"><CardHeader><CardTitle>Precios negociados recientes</CardTitle></CardHeader><CardContent><ResponsiveTable headers={["Fecha", "SKU", "Precio", "Promedio últimas 3"]} rows={(prices.data?.precios ?? []).map((item) => ({ id: item.productoId, cells: [date(item.fecha), item.sku, formatNumber(item.precioUnitario, { kind: "money" }), formatNumber(item.promedio3, { kind: "money" })] }))} empty="No hay precios registrados." /><p className="mt-3 text-sm text-muted-foreground">Lista precios unitarios monetarios negociados recientemente y su promedio de las tres últimas operaciones.</p></CardContent></Card></QueryState>}{canFinances && payments.data?.pagos?.length ? <p className="text-sm text-muted-foreground">{formatNumber(payments.data.pagos.length, { kind: "count" })} pago(s) registrados en el historial.</p> : null}</TabsContent>}
           {canFinances && <ClientAnalyticsBlocks query={analytics} />}
         </Tabs>
+        {canFinances && <ClienteCreditEvidence clienteId={id} />}
         {canViewSaleExits && !client.esSistema && (
           <Link href={`/pos?salidaClienteId=${id}`} className="inline-flex rounded-md border px-3 py-2 text-sm font-medium text-primary hover:bg-muted">
             Ver salidas pendientes a cobro de este cliente
@@ -610,7 +628,7 @@ export default function ClienteDetail() {
           }}
         />
 
-        <Dialog open={adjustmentOpen} onOpenChange={setAdjustmentOpen}><DialogContent><DialogHeader><DialogTitle>Ajuste de saldo</DialogTitle></DialogHeader><div className="space-y-3"><Label>Importe (positivo o negativo)</Label><Input type="number" step="0.01" value={adjustmentAmount} onChange={(e) => setAdjustmentAmount(e.target.value)} /><Label>Motivo (mínimo 10 caracteres)</Label><Textarea value={reason} onChange={(e) => setReason(e.target.value)} /></div><DialogFooter><Button onClick={() => adjustment.mutate()} disabled={!Number(adjustmentAmount) || reason.trim().length < 10 || adjustment.isPending}>Registrar ajuste</Button></DialogFooter></DialogContent></Dialog>
+        <Dialog open={adjustmentOpen} onOpenChange={setAdjustmentOpen}><DialogContent className="max-h-[85vh] overflow-y-auto"><DialogHeader><DialogTitle>Ajuste de saldo</DialogTitle></DialogHeader><div className="space-y-3"><CreditEvidenceFields draft={adjustmentEvidence} kind="correction" /><Label>Importe (positivo o negativo)</Label><Input type="number" step="0.01" value={adjustmentAmount} onChange={(e) => setAdjustmentAmount(e.target.value)} /><Label>Motivo (mínimo 10 caracteres)</Label><Textarea value={reason} onChange={(e) => setReason(e.target.value)} /></div><DialogFooter><Button onClick={() => adjustment.mutate()} disabled={!Number(adjustmentAmount) || reason.trim().length < 10 || !!adjustmentEvidence.problem() || adjustment.isPending}>Registrar ajuste</Button></DialogFooter></DialogContent></Dialog>
         <Dialog open={creditOpen} onOpenChange={setCreditOpen}><DialogContent><DialogHeader><DialogTitle>Editar términos de crédito</DialogTitle></DialogHeader><div className="space-y-3"><Label>Límite de crédito</Label><Input type="number" min="0" value={creditLimit} onChange={(e) => setCreditLimit(e.target.value)} /><Label>Plazo habitual de crédito</Label><Select value={creditDays || "0"} onValueChange={setCreditDays}><SelectTrigger data-testid="select-edit-client-credit-days"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="0">Sin plazo habitual</SelectItem>{CREDIT_TERMS.map((term) => <SelectItem key={term} value={String(term)}>{term} días</SelectItem>)}</SelectContent></Select></div><DialogFooter><Button onClick={() => creditUpdate.mutate()} disabled={Number(creditLimit) < 0 || creditUpdate.isPending}>Guardar términos</Button></DialogFooter></DialogContent></Dialog>
       </div>
 
@@ -675,6 +693,11 @@ export default function ClienteDetail() {
             <div className="space-y-2">
               <Label>Motivo de la baja (mínimo 20 caracteres)</Label>
               <Textarea value={bajaMotivo} onChange={e => setBajaMotivo(e.target.value)} />
+              {(Number(saldoDeudorProyectado) > 0 || !!bajaRequiresAuth) && <>
+                <Label>Monto incobrable a autorizar</Label>
+                <Input type="number" min="0.01" step="0.01" value={badDebtAmount} onChange={event => setBadDebtAmount(event.target.value)} />
+                <CreditEvidenceFields draft={badDebtEvidence} kind="correction" />
+              </>}
             </div>
             {bajaRequiresAuth && (
               <div className="rounded-md border p-3 space-y-3 bg-muted/20">

@@ -22,6 +22,16 @@ const { compile } = tailwindRequire("@tailwindcss/node") as {
     options: { base: string; from: string; onDependency: (path: string) => void },
   ) => Promise<{ build: (candidates: string[]) => string }>;
 };
+const registerGuardedLoopback = (
+  globalThis as typeof globalThis & {
+    [key: symbol]: ((port: number, kind: "fixture" | "cdp") => string) | undefined;
+  }
+)[Symbol.for("e1.offline.guard.registerLoopback")];
+const unregisterGuardedLoopback = (
+  globalThis as typeof globalThis & {
+    [key: symbol]: ((port: number) => void) | undefined;
+  }
+)[Symbol.for("e1.offline.guard.unregisterLoopback")];
 
 type Viewport = { width: number; height: number };
 
@@ -316,6 +326,7 @@ export async function withBrowserFixture<T>(
   let profileDirectory: string | undefined;
   let cdp: CdpConnection | undefined;
   let targetId: string | undefined;
+  let debugPort: number | undefined;
   const browserStderr: string[] = [];
   const runtimeExceptions: string[] = [];
   try {
@@ -325,12 +336,15 @@ export async function withBrowserFixture<T>(
     browser = spawn("/repl/tools/bin/chromium", [
       "--headless=new", "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage",
       "--renderer-process-limit=1", "--disable-background-networking",
-      "--disable-background-timer-throttling",
+      "--disable-background-timer-throttling", "--disable-component-update",
+      "--disable-default-apps", "--disable-domain-reliability", "--disable-sync",
+      "--metrics-recording-only", "--no-first-run", "--no-proxy-server",
+      "--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1",
       "--remote-debugging-address=127.0.0.1", "--remote-debugging-port=0",
       `--user-data-dir=${profileDirectory}`, "about:blank",
     ], { stdio: ["ignore", "ignore", "pipe"] });
     browser.stderr?.on("data", (chunk) => browserStderr.push(String(chunk)));
-    const debugPort = await new Promise<number>((resolvePort, reject) => {
+    debugPort = await new Promise<number>((resolvePort, reject) => {
       const deadline = Date.now() + 10_000;
       const probe = () => {
         readFile(join(profileDirectory!, "DevToolsActivePort"), "utf8")
@@ -341,6 +355,10 @@ export async function withBrowserFixture<T>(
       };
       probe();
     });
+    if (process.env.E1_OFFLINE_STATIC_FIXTURE === "1" && !registerGuardedLoopback) {
+      throw new Error("E1 static fixture mode requires the offline guard");
+    }
+    registerGuardedLoopback?.(debugPort, "cdp");
     const version = await fetchJson(`http://127.0.0.1:${debugPort}/json/version`);
     cdp = await connectCdp(version.webSocketDebuggerUrl);
     const target = await cdp.call("Target.createTarget", { url: "about:blank" });
@@ -464,6 +482,7 @@ export async function withBrowserFixture<T>(
       browser.stderr?.destroy();
       browser.unref();
     }
+    if (debugPort !== undefined) unregisterGuardedLoopback?.(debugPort);
     if (profileDirectory) await rm(profileDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
     if (fixtureServer) await fixtureServer.close();
     await rm(fixtureDirectory, { recursive: true, force: true });

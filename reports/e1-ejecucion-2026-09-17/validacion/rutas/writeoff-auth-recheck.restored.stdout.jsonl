@@ -1,0 +1,11 @@
+{"type":"test:pass","name":"missing ADMIN credentials open the authorization UI; invalid credentials cannot replay","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":1,"failed":0,"passed":1,"cancelled":0,"skipped":0,"todo":0,"topLevel":1,"suites":0}}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"tests 1","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"suites 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"pass 1","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"fail 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"cancelled 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"skipped 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"todo 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"duration_ms 253.59778","details":{"type":null,"error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":1,"failed":0,"passed":1,"cancelled":0,"skipped":0,"todo":0,"topLevel":1,"suites":0}}

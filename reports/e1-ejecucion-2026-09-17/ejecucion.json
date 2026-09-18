@@ -1,0 +1,78 @@
+{
+  "status": "FAIL",
+  "startedAtUtc": "2026-09-17T23:09:48.323Z",
+  "prerequisites": {
+    "hashes": [
+      {
+        "path": "reports/e1-ejecucion-2026-09-17/autorizacion.md",
+        "sha256": "f7d60db4cb9d163c97294eecb71714c242ea75b8f0926c599c9772c9448d60db"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/operativo-propuesto/01.sql",
+        "sha256": "680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f"
+      },
+      {
+        "path": ".local/backups/prompt-h-block2-20260917165108-3655/source-snapshot.json",
+        "sha256": "f8716f44d8e8781c64d4c3f0ae4f7639185dd84a194667b5c7432c687005bfe9"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/migrated.json",
+        "sha256": "9c9fa6b9c66c08b0682e9d5e20e1cece0c64323cc31394a9deac3cc23832f031"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/api-pool-identity.json",
+        "sha256": "ea8d4e23880ecb2714962b022ffb907de804b0a3d0fb83807363254864849429"
+      },
+      {
+        "path": "scripts/src/e1-approved-migration.mts",
+        "sha256": "3aa6d4907494ccdfc29b85fd2415f0e4ddb3e001f0197439e8a9f74bbca22d8f"
+      },
+      {
+        "path": "scripts/src/prompt-h-block2-backup-restore.mts",
+        "sha256": "757e831b2b61feff93c3136896309c6e4aae1150dff574aa9db47d7e7b35534f"
+      },
+      {
+        "path": "scripts/src/e1-disposable-rehearsal.mts",
+        "sha256": "13f3c9c2ca82916110ad7afbb634528febb49227d943b22536b4f9fb1c47546e"
+      }
+    ],
+    "archiveSha256": "583ac96297ca40573aa96249e2b25de68812f98bd7b675214473932fe81f2925",
+    "cloneKeptFilesystemOnly": true,
+    "remoteDriveNotRecontacted": true
+  },
+  "sqlSha256": "680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f",
+  "statements": [],
+  "commitSent": false,
+  "commitResponse": false,
+  "preflightStatus": "FAIL",
+  "ddlStatementsSent": 0,
+  "noDDL": true,
+  "automaticRetries": 0,
+  "s08FinishToCommitMs": null,
+  "s08FinishToCommitSentMs": null,
+  "comparisonExclusions": {
+    "source": [
+      "physical database size only"
+    ],
+    "migrated": [
+      "database metadata (identity checked separately)",
+      "column ordinal_position",
+      "OID-derived internal FK trigger name (all other semantics checked)"
+    ]
+  },
+  "watchdog": {
+    "fired": false,
+    "budgetMs": 30000
+  },
+  "error": {
+    "message": "Database/network operation failed; inspect status and SQLSTATE.",
+    "code": "ENOENT"
+  },
+  "transactionTotalMs": 0,
+  "resolutionError": {
+    "message": "Database/network operation failed; inspect status and SQLSTATE.",
+    "code": "ENOENT"
+  },
+  "commitOutcome": "UNRESOLVED_REQUIRES_MANUAL_REVIEW",
+  "finishedAtUtc": "2026-09-17T23:09:48.327Z"
+}

@@ -1,5 +1,13 @@
 import { pgEnum } from "drizzle-orm/pg-core";
 
+/** Exact enum installed by the separately approved E1 operational DDL. */
+export const naturalezaCreditoE1Enum = pgEnum("naturaleza_credito_e1", [
+  "INGRESO_FISICO",
+  "DEVOLUCION_FISICA",
+  "CORRECCION_CONTABLE",
+  "OPERACION_CREDITO_SIN_DINERO",
+]);
+
 export const tipoUbicacionEnum = pgEnum("tipo_ubicacion", [
   "TIENDA",
   "BODEGA",

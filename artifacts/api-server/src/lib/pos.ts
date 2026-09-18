@@ -1,4 +1,10 @@
 import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
+import type { Request } from "express";
+import {
+  assertCreditEvidenceAccess, assertCreditEvidenceScope, claimCreditOperation,
+  insertCreditMovementE1, readCreditEvidenceInput, CreditEvidenceError,
+  type CreditEvidenceInput,
+} from "./credit-evidence";
 import {
   auditoriaTable,
   autorizacionesNotaTable,
@@ -1267,6 +1273,10 @@ export async function cancelarTicket(
     autorizadoPor: number;
     motivo: string;
     ip: string;
+    creditEvidence?: unknown;
+    creditRequest?: Request;
+    /** Internal caller marker, never request data: suppress ancillary writes on replay. */
+    onCreditReplay?: () => void;
   },
   includeCosts: boolean,
 ) {
@@ -1285,6 +1295,28 @@ export async function cancelarTicket(
     .limit(1);
   if (!ticket) {
     throw new PosError("Ticket no encontrado.", "TICKET_NOT_FOUND", 404);
+  }
+  let creditEvidence: CreditEvidenceInput | undefined;
+  if (ticket.credito && ticket.documentoTipo === "NOTA" && ticket.autorizacionEstado === "AUTORIZADA") {
+    creditEvidence = readCreditEvidenceInput(input.creditEvidence);
+    if (!input.creditRequest) throw new CreditEvidenceError("E1: falta contexto de acceso operativo. Actualiza la aplicación.");
+    if (input.creditRequest.auth?.user.id !== input.usuarioId) throw new CreditEvidenceError("E1: el actor debe coincidir con la sesión autenticada.", 403);
+    await assertCreditEvidenceAccess(input.creditRequest, creditEvidence, tx);
+    await assertCreditEvidenceAccess(input.creditRequest, { ...creditEvidence, sitioOrigenId: ticket.ubicacionId }, tx);
+    const operation = await claimCreditOperation(tx, {
+      productor: "CANCELACION_VENTA_CREDITO", clave: creditEvidence.operacionClave,
+      naturaleza: creditEvidence.naturaleza, actorId: input.usuarioId,
+      contenido: {
+        ticketId: ticket.id, clienteId: ticket.clienteId, importe: ticket.total,
+        motivo, autorizadoPor: input.autorizadoPor, requestedSalidaId: input.requestedSalidaId ?? null,
+        evidencia: creditEvidence, metadata: { origen: "CANCELACION_TICKET", ticketFolio: ticket.folio },
+      },
+    });
+    if (operation.replay) {
+      input.onCreditReplay?.();
+      return buildTicketDetail(tx, ticket.id, includeCosts, false);
+    }
+    await assertCreditEvidenceScope(input.creditRequest, creditEvidence, tx);
   }
   if (ticket.estado === "CANCELADO") {
     throw new PosError(
@@ -1383,7 +1415,13 @@ export async function cancelarTicket(
           )
           .for("update")
       : [];
+  if (creditEvidence && creditCharges.length !== 1) {
+    throw new CreditEvidenceError("E1: no existe un único cargo recuperable para cancelar; requiere revisión.", 409);
+  }
   if (ticket.clienteId != null && creditCharges.length > 0) {
+    if (creditCharges.length !== 1 || !creditEvidence) {
+      throw new CreditEvidenceError("E1: cancelación requiere un único cargo y evidencia explícita; requiere revisión.", 409);
+    }
     const [clienteCredito] = await tx
       .select({ id: clientesTable.id, activo: clientesTable.activo })
       .from(clientesTable)
@@ -1410,8 +1448,8 @@ export async function cancelarTicket(
           ),
         )
         .limit(1);
-      if (existingReverse) continue;
-      await tx.insert(movimientosCreditoTable).values({
+      if (existingReverse) throw new CreditEvidenceError("E1: el cargo ya fue reversado con otra operación.", 409);
+      await insertCreditMovementE1(tx, {
         clienteId: ticket.clienteId,
         ticketId: ticket.id,
         tipo: "REVERSO",
@@ -1424,7 +1462,7 @@ export async function cancelarTicket(
           origen: "CANCELACION_TICKET",
           ticketFolio: ticket.folio,
         }),
-      });
+      }, creditEvidence, "CANCELACION_VENTA_CREDITO");
     }
   }
 
@@ -1790,9 +1828,11 @@ export async function autorizarNota(
   tx: Tx,
   input: {
     ticketId: number;
-    sesionCajaId: number;
+    sesionCajaId?: number;
     usuarioId: number;
     ip: string;
+    creditEvidence?: unknown;
+    creditRequest?: Request;
     /**
      * Deprecated client field.  It is accepted for backwards compatibility,
      * but the server ignores it and computes the automatic FIFO favor
@@ -1802,21 +1842,38 @@ export async function autorizarNota(
   },
   includeCosts: boolean,
 ) {
+  const creditEvidence = readCreditEvidenceInput(input.creditEvidence);
+  if (!input.creditRequest) throw new CreditEvidenceError("E1: falta contexto de acceso operativo. Actualiza la aplicación.");
+  if (input.creditRequest.auth?.user.id !== input.usuarioId) throw new CreditEvidenceError("E1: el actor debe coincidir con la sesión autenticada.", 403);
+  await assertCreditEvidenceAccess(input.creditRequest, creditEvidence, tx);
   const [ticket] = await tx.select().from(ticketsTable)
     .where(eq(ticketsTable.id, input.ticketId)).for("update").limit(1);
   if (!ticket) throw new PosError("Nota no encontrada.", "NOTE_NOT_FOUND", 404);
+  await assertCreditEvidenceAccess(input.creditRequest, { ...creditEvidence, sitioOrigenId: ticket.ubicacionId }, tx);
+  const operation = await claimCreditOperation(tx, {
+    productor: "VENTA_CREDITO", clave: creditEvidence.operacionClave,
+    naturaleza: creditEvidence.naturaleza, actorId: input.usuarioId,
+    contenido: {
+      ticketId: ticket.id, clienteId: ticket.clienteId, importe: ticket.total,
+      diasPlazo: ticket.diasPlazo, fechaVencimiento: ticket.fechaVencimiento,
+      evidencia: creditEvidence, metadata: { origen: "AUTORIZACION_NOTA" },
+    },
+  });
+  if (operation.replay) return buildTicketDetail(tx, ticket.id, includeCosts);
+  await assertCreditEvidenceScope(input.creditRequest, creditEvidence, tx);
   if (ticket.documentoTipo !== "NOTA" || !ticket.credito || !isCreditTerm(ticket.diasPlazo)) {
     throw new PosError("El documento no es una nota de crédito válida.", "NOT_A_CREDIT_NOTE", 409);
   }
   if (ticket.estado !== "VENDIDO") throw new PosError("La nota está cancelada.", "NOTE_CANCELLED", 409);
-  // Retrying the same request is safe: the ticket-level unique authorization
-  // evidence is the idempotency key and no second receipt is ever created.
   if (ticket.autorizacionEstado === "AUTORIZADA") {
-    return buildTicketDetail(tx, ticket.id, includeCosts);
+    throw new PosError("La nota ya fue autorizada con otra operación.", "ALREADY_AUTHORIZED", 409);
   }
   const [sesion] = await tx.select().from(sesionesCajaTable)
-    .where(eq(sesionesCajaTable.id, input.sesionCajaId)).for("update").limit(1);
-  if (!sesion || sesion.estado !== "ABIERTA" || sesion.ubicacionId !== ticket.ubicacionId) {
+    .where(and(
+      eq(sesionesCajaTable.ubicacionId, ticket.ubicacionId), eq(sesionesCajaTable.estado, "ABIERTA"),
+      input.sesionCajaId == null ? undefined : eq(sesionesCajaTable.id, input.sesionCajaId),
+    )).for("update").limit(1);
+  if (!sesion || sesion.estado !== "ABIERTA" || sesion.cerradaAt != null || sesion.ubicacionId !== ticket.ubicacionId) {
     throw new PosError("Se requiere una sesión de caja abierta en la ubicación de la nota.", "OPEN_SESSION_REQUIRED", 409);
   }
   await transactionAdvisoryLock(tx, ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT, ticket.clienteId);
@@ -1855,7 +1912,7 @@ export async function autorizarNota(
       409,
     );
   }
-  const [movement] = await tx.insert(movimientosCreditoTable).values({
+  const movement = await insertCreditMovementE1(tx, {
     clienteId: ticket.clienteId, ticketId: ticket.id, tipo: "VENTA_CREDITO",
     importe: decimalMoney(importe), usuarioId: input.usuarioId, formaPago: "CREDITO",
     notas: `Nota ${ticket.folio}`,
@@ -1863,7 +1920,7 @@ export async function autorizarNota(
       origen: "AUTORIZACION_NOTA",
     }),
     diasPlazo: ticket.diasPlazo, fechaVencimiento: ticket.fechaVencimiento!,
-  }).returning();
+  }, creditEvidence, "VENTA_CREDITO");
   const afterNote = await loadCustomerCreditLedgerInTransaction(ticket.clienteId, tx);
   const afterProjection = projectCreditLedger(afterNote);
   const noteAllocations = afterProjection.allocations.filter(

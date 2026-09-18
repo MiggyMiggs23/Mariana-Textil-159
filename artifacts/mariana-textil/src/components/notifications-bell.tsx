@@ -5,6 +5,7 @@ import {
   getCountNotificacionesNoLeidasQueryKey,
   getListNotificacionesQueryKey,
   getListSolicitudesPagoDirigidoQueryKey,
+  listSolicitudesPagoDirigido,
   NotificationFamily,
   useAprobarSolicitudPagoDirigido,
   useGetNotificationFeed,
@@ -33,6 +34,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { pickCreditEvidence } from "@/lib/credit-evidence";
 
 const FAMILY_LABELS: Record<NotificationFamily, string> = {
   AVISO: "Aviso",
@@ -76,6 +78,7 @@ export function NotificationsBell({
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const approve = useAprobarSolicitudPagoDirigido();
+  const [loadingApproval, setLoadingApproval] = useState(false);
   const reject = useRechazarSolicitudPagoDirigido();
   const markAllStored = useMarkAllNotificacionesRead({
     mutation: {
@@ -126,11 +129,31 @@ export function NotificationsBell({
     queryClient.invalidateQueries({ queryKey: getListSolicitudesPagoDirigidoQueryKey() });
     queryClient.invalidateQueries({ queryKey: ["/api/clientes"] });
     queryClient.invalidateQueries({ queryKey: ["/api/proveedores"] });
+    queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && query.queryKey[0].startsWith("/api/clientes/") });
   };
-  const approveDirected = (requestId: number) => approve.mutate({ id: requestId }, {
-    onSuccess: () => { refreshDirected(); toast({ title: "Pago dirigido aprobado" }); },
-    onError: (error) => toast({ title: "No se pudo aprobar", description: getApiErrorMessage(error), variant: "destructive" }),
-  });
+  const approveDirected = async (requestId: number) => {
+    if (loadingApproval || approve.isPending) return;
+    setLoadingApproval(true);
+    try {
+      // The notification carries only the request ID. Read its original E1
+      // intent instead of inventing a site, nature or fresh retry identity.
+      const requests = await queryClient.fetchQuery({
+        queryKey: getListSolicitudesPagoDirigidoQueryKey(),
+        queryFn: () => listSolicitudesPagoDirigido(),
+        staleTime: 0,
+      });
+      const request = requests.solicitudes.find(item => item.id === requestId);
+      if (!request) throw new Error("No se encontró la solicitud en tu alcance. Actualiza las notificaciones.");
+      const data = request.tipo === "CLIENTE" ? pickCreditEvidence(request) : {};
+      await approve.mutateAsync({ id: requestId, data });
+      refreshDirected();
+      toast({ title: "Pago dirigido aprobado" });
+    } catch (error) {
+      toast({ title: "No se pudo aprobar", description: getApiErrorMessage(error), variant: "destructive" });
+    } finally {
+      setLoadingApproval(false);
+    }
+  };
   const rejectDirected = () => {
     if (rejecting == null || motivoRechazo.trim().length < 10) return;
     reject.mutate({ id: rejecting, data: { motivoRechazo: motivoRechazo.trim() } }, {
@@ -232,8 +255,8 @@ export function NotificationsBell({
                           <p className="text-xs"><strong>{event.action.documento}</strong> · {event.action.contraparte}</p>
                           <p className="text-xs text-muted-foreground">{event.action.motivo}</p>
                           <div className="flex gap-2">
-                            <Button size="sm" disabled={approve.isPending || reject.isPending} onClick={() => approveDirected(event.action!.requestId)}>Aprobar</Button>
-                            <Button size="sm" variant="destructive" disabled={approve.isPending || reject.isPending} onClick={() => { setRejecting(event.action!.requestId); setMotivoRechazo(""); }}>Rechazar</Button>
+                            <Button size="sm" disabled={loadingApproval || approve.isPending || reject.isPending} onClick={() => approveDirected(event.action!.requestId)}>Aprobar</Button>
+                            <Button size="sm" variant="destructive" disabled={loadingApproval || approve.isPending || reject.isPending} onClick={() => { setRejecting(event.action!.requestId); setMotivoRechazo(""); }}>Rechazar</Button>
                           </div>
                         </div>
                       ) : (

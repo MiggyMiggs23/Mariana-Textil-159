@@ -33,6 +33,8 @@ await Promise.all([
     const account = ${JSON.stringify(financeUtilityAccount)};
     const result = (data) => ({ data, isLoading: false, isError: false, isFetching: false, error: null, refetch() {} });
     export const useGetCurrentUser = () => result({ rol: "ADMIN", permisos: [] });
+    export const useListLocations = () => result([]);
+    export const useGetClienteEvidenciaCredito = () => result({ clienteId: client.id, atribucionHabilitada: false, movimientos: [] });
     export const useGetCliente = () => result(client);
     export const useGetClienteCredito = () => result({});
     export const useGetClienteEstadoCuenta = () => result(account);
@@ -94,13 +96,14 @@ test("client utility starts visually hidden and exposes a touch-friendly toggle"
       import { Router } from "wouter";
       import { memoryLocation } from "wouter/memory-location";
       import ClienteDetail from ${JSON.stringify(new URL("./pages/cliente-detail.tsx", import.meta.url).pathname)};
+      import { LocationScopeProvider } from ${JSON.stringify(new URL("./lib/location-scope.tsx", import.meta.url).pathname)};
       const location = memoryLocation({ path: "/clientes/41" });
       export default function Fixture() {
         const boot = Number(window.name || "0") + 1;
         window.name = String(boot);
         return <Router hook={location.hook}>
           <output data-testid="finance-utility-boot">{boot}</output>
-          <ClienteDetail />
+          <LocationScopeProvider><ClienteDetail /></LocationScopeProvider>
         </Router>;
       }
     `,

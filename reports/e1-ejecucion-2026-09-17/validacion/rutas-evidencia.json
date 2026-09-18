@@ -1,0 +1,1274 @@
+[
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/package.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/package.json"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/report.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/report.json"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/before.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/before.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/before.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/legacy-message.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/legacy-message.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/legacy-message.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/legacy-message.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/credential-whitelist.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/credential-whitelist.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/credential-whitelist.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/credential-whitelist.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/producer-nature.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/producer-nature.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/producer-nature.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/producer-nature.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/money-sign.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/money-sign.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/money-sign.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/money-sign.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/key-order.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/key-order.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/key-order.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/key-order.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/canonical-secrets.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/canonical-secrets.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/canonical-secrets.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/canonical-secrets.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/false-cash-session.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/false-cash-session.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/false-cash-session.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/false-cash-session.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/cash-open.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/cash-open.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/cash-open.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/cash-open.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/cross-site-access.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/cross-site-access.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/cross-site-access.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/cross-site-access.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/replay-falls-through.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/replay-falls-through.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/replay-falls-through.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/replay-falls-through.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/new-claim-is-replay.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/new-claim-is-replay.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/new-claim-is-replay.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/new-claim-is-replay.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/immutable-content-bypass.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/immutable-content-bypass.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/immutable-content-bypass.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/immutable-content-bypass.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/missing-movement-success.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/missing-movement-success.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/missing-movement-success.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/missing-movement-success.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/retained-gate-bypass.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/retained-gate-bypass.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/retained-gate-bypass.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/retained-gate-bypass.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/movement-producer-isolation.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/movement-producer-isolation.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/movement-producer-isolation.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/movement-producer-isolation.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/atomic-loser-success.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/atomic-loser-success.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/atomic-loser-success.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/atomic-loser-success.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/origin-inferred-from-ticket.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/origin-inferred-from-ticket.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/note-site-bypass.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/note-site-bypass.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/note-site-bypass.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/note-site-bypass.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/restored.jsonl"
+  },
+  {
+    "original": "/tmp/e1-core-mutants-0wfIOT/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/core/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/report.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/report.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/01/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/01/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/02/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/02/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/03/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/03/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/04/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/04/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/05/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/05/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/06/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/06/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/07/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/07/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/08/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/08/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/09/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/09/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/10/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/10/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/11/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/11/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/12/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/12/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/13/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/13/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/baseline.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/baseline.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/baseline.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/baseline.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/mutant.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/mutant.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/mutant.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/mutant.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/restored.meta.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/restored.meta.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/restored.compile.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/restored.compile.json"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-evidence-mutants-jnUHcE/14/restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/evidencia/14/restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/baseline.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/baseline.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/baseline.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/baseline.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/report.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/report.json"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/ordinary-replay-order.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/ordinary-replay-order.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/ordinary-replay-order.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/ordinary-replay-order.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/reverse-replay-order.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/reverse-replay-order.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/reverse-replay-order.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/reverse-replay-order.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/access-recheck.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/access-recheck.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/access-recheck.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/access-recheck.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/manual-note-owner.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/manual-note-owner.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/manual-note-owner.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/manual-note-owner.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-secret-whitelist.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-secret-whitelist.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-secret-whitelist.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-secret-whitelist.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-uuid.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-uuid.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-uuid.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-uuid.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-replay-order.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-replay-order.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-replay-order.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-replay-order.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-approval-binding.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-approval-binding.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-approval-binding.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-approval-binding.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-cash-gate.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-cash-gate.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-cash-gate.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/directed-cash-gate.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-replay-order.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-replay-order.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-replay-order.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-replay-order.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-auth-recheck.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-auth-recheck.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-auth-recheck.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-auth-recheck.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.mutant.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-credentials-code.mutant.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.mutant.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-credentials-code.mutant.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.restored.stdout.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-credentials-code.restored.stdout.jsonl"
+  },
+  {
+    "original": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.restored.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/rutas/writeoff-credentials-code.restored.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/package.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/package.json"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/tsconfig.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/tsconfig.json"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-before.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-before.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-before.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-before.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/result.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/result.json"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-retry-key.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-retry-key.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-retry-key.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-retry-key.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-accepted-key.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-accepted-key.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-accepted-key.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-accepted-key.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-producer-key.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-producer-key.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-producer-key.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-producer-key.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-draft-content.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-draft-content.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-draft-content.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-draft-content.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-cash-gate.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-cash-gate.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-cash-gate.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-cash-gate.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-pending-gate.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-pending-gate.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-pending-gate.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-pending-gate.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-attribution-gate.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-attribution-gate.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-attribution-gate.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-attribution-gate.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-nature-required.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-nature-required.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-nature-required.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-nature-required.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-site-required.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-site-required.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-site-required.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-site-required.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-correction-evidence.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-correction-evidence.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-correction-evidence.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-correction-evidence.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-no-session.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-no-session.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-no-session.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-no-session.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-whitelist.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-whitelist.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-whitelist.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-whitelist.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-exact-time.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-exact-time.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-exact-time.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-exact-time.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-snapshot.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-snapshot.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-snapshot.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-snapshot.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-predecessor.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-predecessor.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-predecessor.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-mutant-predecessor.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-after.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-after.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-after.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/frontend-after.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-before.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-before.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-before.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-before.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-site.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-required-site.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-site.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-required-site.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-integer-site.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-integer-site.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-integer-site.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-integer-site.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-key.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-required-key.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-key.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-required-key.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-uuid-format.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-uuid-format.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-uuid-format.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-uuid-format.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-fourth-nature.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-fourth-nature.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-fourth-nature.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-fourth-nature.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-attribution-date.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-attribution-date.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-attribution-date.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-attribution-date.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-snapshot-origin.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-snapshot-origin.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-snapshot-origin.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-mutant-snapshot-origin.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-after.jsonl",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-after.jsonl"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-after.stderr.txt",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/schema-after.stderr.txt"
+  },
+  {
+    "original": "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-zod/package.json",
+    "preservado": "reports/e1-ejecucion-2026-09-17/validacion/frontend-contratos/lib/api-zod/package.json"
+  }
+]

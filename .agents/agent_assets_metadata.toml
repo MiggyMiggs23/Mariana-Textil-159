@@ -1632,3 +1632,87 @@ mtime_ms = 1789684742149
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6527daf4-c5a7-430a-826b-6c82febad9fa/97f542a0-f36a-41cd-aa26-ae0e5df8fbbf"
 storage_version_token = "1789684771656643"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "IQv4gjsdHFpBBsUwNP2f_"
+uri = "file://reports/e1-ensayo-2026-09-17/entrega-completa.md"
+type = "text"
+title = "E1 — respaldo verificado, ensayo medido y SQL para autorización"
+description = "Identidad actual, respaldo y Drive verificados, 27/27 y 28/28 sentencias ensayadas, cancelación comprobada y SQL operativo literal con hashes. No se ejecutó la migración operativa."
+logical_id = "fad3f6a1-64c8-408a-afeb-c86fcfad3f8a"
+content_hash = "sha256:a267481b8e6a76d9e3ddb05ebcd69c9689a4113e2c7a5750b32c109cfba17daf"
+size = 55478
+mtime_ms = 1789686064428
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/fad3f6a1-64c8-408a-afeb-c86fcfad3f8a/b2c74a60-7377-4e7c-9742-a2072853b9f0"
+storage_version_token = "1789686091990726"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "6ilOXojkA6xDGh7rIDUA8"
+uri = "file://reports/e1-ejecucion-2026-09-17/informe-e1.html"
+type = "html"
+title = "E1 — Resultado y pendientes"
+description = "Migración confirmada, validación permitida y pruebas negativas. La API sigue pausada; la comprobación transaccional real permanece pendiente."
+logical_id = "c5cb650c-840b-42f6-bfad-b74cb4df6935"
+content_hash = "sha256:046a82cfb755a1a28dba0990381a9c205f5f4ebbc048c95e8e12f2dd83660d8f"
+size = 15457
+mtime_ms = 1789688927684
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c5cb650c-840b-42f6-bfad-b74cb4df6935/54ca93ad-deac-4ed2-a301-f2ceb7103835"
+storage_version_token = "1789688957311447"
+content_type = "text/html"
+
+[[outputs]]
+id = "9kCTYTLSaOdr1BKA4-uIB"
+uri = "file://reports/e1-ejecucion-2026-09-17/revision-previa-ensayo-clon.html"
+type = "html"
+title = "Ensayo E1 — Script y alcance antes de ejecutar"
+description = "Contiene los seis scripts completos, SQL, fixtures, siete productores, 103 comprobaciones y guardas exclusivas del clon."
+logical_id = "9ae6d0cc-40dc-4d9a-a1cc-9e2421d297bb"
+content_hash = "sha256:54dbfaf5f45416b16d7634ce49563c2ac662a7ecf3099df239d98126d03e78eb"
+size = 137157
+mtime_ms = 1789690185444
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9ae6d0cc-40dc-4d9a-a1cc-9e2421d297bb/7fc82790-57ad-405c-9728-8cc0b404f4be"
+storage_version_token = "1789690185971446"
+content_type = "text/html"
+
+[[outputs]]
+id = "g3FYq2B4tjTwXFVEcu6Ta"
+uri = "file://reports/e1-ejecucion-2026-09-17/resultado-ensayo-clon.html"
+type = "html"
+title = "E1 — Resultado real del ensayo en el clon"
+description = "100/103 controles aprobados; siete productores probados y tres brechas SQL demostradas. Incluye cada control y las escrituras efectivas."
+logical_id = "69f529bd-a6ab-4437-953c-f2ca53039d6b"
+content_hash = "sha256:e0c760d8933622742e2cdff0df8966f51b85310dae879de606215e7cbe159046"
+size = 21422
+mtime_ms = 1789690433204
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/69f529bd-a6ab-4437-953c-f2ca53039d6b/9bed1fc6-111d-4095-bc85-3bcddb08a006"
+storage_version_token = "1789690433935737"
+content_type = "text/html"
+
+[[outputs]]
+id = "bL6sG0OJi5BP6PS-gvPgf"
+uri = "file://reports/e1-guardas-temporales-2026-09-18/sql-y-alcance.html"
+type = "html"
+title = "E1 — SQL de las tres guardas y cómo retirarlas"
+description = "SQL exacto, retiro independiente, 84 controles previstos y ejecución limitada al clon. Sin autorización operativa."
+logical_id = "3a5180e2-d9b7-41c5-af40-129f1cb10c5b"
+content_hash = "sha256:cd216ca9cffd6f5a3999a658c128272db112def9dd36566b5f875cbf3bc2b603"
+size = 15296
+mtime_ms = 1789691724387
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3a5180e2-d9b7-41c5-af40-129f1cb10c5b/e63fdcb1-0a29-4f90-b4c4-2f67d1453a1f"
+storage_version_token = "1789691725081546"
+content_type = "text/html"
+
+[[outputs]]
+id = "TRO4KD1rsaekw2alGTMcK"
+uri = "file://reports/e1-guardas-temporales-2026-09-18/entrega-sql-y-ensayo.html"
+type = "html"
+title = "E1 — SQL de guardas y ensayo 84/84"
+description = "SQL completo propuesto, retirada independiente, mensajes de rechazo y tiempos reales. Aplicación operativa pendiente de autorización."
+logical_id = "21f142d3-5335-4b11-97c5-a400afde1f1f"
+content_hash = "sha256:e0bd04a0160ad31c5faaef505614e6916a621d27b715373b4cb61a707d1568e4"
+size = 12515
+mtime_ms = 1789692050092
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/21f142d3-5335-4b11-97c5-a400afde1f1f/c938b2a0-91a6-4b39-8031-c7ea3800d259"
+storage_version_token = "1789692050640232"
+content_type = "text/html"

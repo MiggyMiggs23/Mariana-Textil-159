@@ -20,8 +20,23 @@ export const ListSolicitudesPagoDirigidoQueryParams = zod.object({
   "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']).optional()
 })
 
+export const listSolicitudesPagoDirigidoResponseSolicitudesItemSitioOrigenIdMultipleOf = 1;
+
+export const listSolicitudesPagoDirigidoResponseSolicitudesItemOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const listSolicitudesPagoDirigidoResponseSolicitudesItemSesionCajaIdMultipleOf = 1;
+
+export const listSolicitudesPagoDirigidoResponseSolicitudesItemNotaOrigenIdMultipleOf = 1;
+
+
+
 export const ListSolicitudesPagoDirigidoResponse = zod.object({
   "solicitudes": zod.array(zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(listSolicitudesPagoDirigidoResponseSolicitudesItemSitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(listSolicitudesPagoDirigidoResponseSolicitudesItemOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(listSolicitudesPagoDirigidoResponseSolicitudesItemSesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(listSolicitudesPagoDirigidoResponseSolicitudesItemNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "id": zod.number(),
   "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
   "entidadId": zod.number(),
@@ -52,6 +67,13 @@ export const ListSolicitudesPagoDirigidoResponse = zod.object({
 /**
  * @summary Solicita una excepción de aplicación FIFO; ADMIN la aplica inmediatamente
  */
+export const createSolicitudPagoDirigidoBodySitioOrigenIdMultipleOf = 1;
+
+export const createSolicitudPagoDirigidoBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const createSolicitudPagoDirigidoBodySesionCajaIdMultipleOf = 1;
+
+export const createSolicitudPagoDirigidoBodyNotaOrigenIdMultipleOf = 1;
+
 
 
 export const createSolicitudPagoDirigidoBodyImporteExclusiveMin = 0;
@@ -62,6 +84,12 @@ export const createSolicitudPagoDirigidoBodyMotivoMin = 10;
 
 
 export const CreateSolicitudPagoDirigidoBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(createSolicitudPagoDirigidoBodySitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(createSolicitudPagoDirigidoBodyOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(createSolicitudPagoDirigidoBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(createSolicitudPagoDirigidoBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
   "entidadId": zod.number().min(1),
   "documentoMovimientoId": zod.number().min(1),
@@ -74,7 +102,22 @@ export const CreateSolicitudPagoDirigidoBody = zod.object({
   "motivo": zod.string().min(createSolicitudPagoDirigidoBodyMotivoMin)
 })
 
+export const createSolicitudPagoDirigidoResponseSitioOrigenIdMultipleOf = 1;
+
+export const createSolicitudPagoDirigidoResponseOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const createSolicitudPagoDirigidoResponseSesionCajaIdMultipleOf = 1;
+
+export const createSolicitudPagoDirigidoResponseNotaOrigenIdMultipleOf = 1;
+
+
+
 export const CreateSolicitudPagoDirigidoResponse = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(createSolicitudPagoDirigidoResponseSitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(createSolicitudPagoDirigidoResponseOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(createSolicitudPagoDirigidoResponseSesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(createSolicitudPagoDirigidoResponseNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "id": zod.number(),
   "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
   "entidadId": zod.number(),
@@ -111,6 +154,24 @@ export const AprobarSolicitudPagoDirigidoParams = zod.object({
   "id": zod.coerce.number().min(1)
 })
 
+export const aprobarSolicitudPagoDirigidoBodySitioOrigenIdMultipleOf = 1;
+
+export const aprobarSolicitudPagoDirigidoBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const aprobarSolicitudPagoDirigidoBodySesionCajaIdMultipleOf = 1;
+
+export const aprobarSolicitudPagoDirigidoBodyNotaOrigenIdMultipleOf = 1;
+
+
+
+export const AprobarSolicitudPagoDirigidoBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(aprobarSolicitudPagoDirigidoBodySitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(aprobarSolicitudPagoDirigidoBodyOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(aprobarSolicitudPagoDirigidoBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(aprobarSolicitudPagoDirigidoBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish()
+}).describe('Para CLIENTE exige los metadatos y UUID de la solicitud original; PROVEEDOR no escribe crédito E1.')
+
 export const AprobarSolicitudPagoDirigidoResponse = zod.object({
   "solicitudId": zod.number(),
   "movimientoId": zod.number(),
@@ -136,7 +197,22 @@ export const RechazarSolicitudPagoDirigidoBody = zod.object({
   "motivoRechazo": zod.string().min(rechazarSolicitudPagoDirigidoBodyMotivoRechazoMin)
 })
 
+export const rechazarSolicitudPagoDirigidoResponseSitioOrigenIdMultipleOf = 1;
+
+export const rechazarSolicitudPagoDirigidoResponseOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const rechazarSolicitudPagoDirigidoResponseSesionCajaIdMultipleOf = 1;
+
+export const rechazarSolicitudPagoDirigidoResponseNotaOrigenIdMultipleOf = 1;
+
+
+
 export const RechazarSolicitudPagoDirigidoResponse = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(rechazarSolicitudPagoDirigidoResponseSitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(rechazarSolicitudPagoDirigidoResponseOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(rechazarSolicitudPagoDirigidoResponseSesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(rechazarSolicitudPagoDirigidoResponseNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "id": zod.number(),
   "tipo": zod.enum(['CLIENTE', 'PROVEEDOR']),
   "entidadId": zod.number(),
@@ -5132,6 +5208,175 @@ export const GetClientesResumenResponse = zod.object({
 })
 
 
+export const getClienteEvidenciaCreditoPathClienteIdMultipleOf = 1;
+
+
+
+export const GetClienteEvidenciaCreditoParams = zod.object({
+  "clienteId": zod.coerce.number().min(1).multipleOf(getClienteEvidenciaCreditoPathClienteIdMultipleOf)
+})
+
+export const getClienteEvidenciaCreditoQueryUbicacionIdMultipleOf = 1;
+
+
+
+export const GetClienteEvidenciaCreditoQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().min(1).multipleOf(getClienteEvidenciaCreditoQueryUbicacionIdMultipleOf).optional(),
+  "prepararAtribucion": zod.coerce.boolean().optional()
+})
+
+export const getClienteEvidenciaCreditoResponseClienteIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemMovimientoIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemIdentidadSnapshotClienteIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemIdentidadSnapshotTicketIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemIdentidadSnapshotMovimientoOrigenIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemSitioOrigenOriginalIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneMovimientoIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdentidadSnapshotClienteIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdentidadSnapshotTicketIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdentidadSnapshotMovimientoOrigenIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneAnteriorIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneSitioOrigenIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneUsuarioIdMultipleOf = 1;
+
+export const getClienteEvidenciaCreditoResponseMovimientosItemSitioDeterminadoIdMultipleOf = 1;
+
+
+
+export const GetClienteEvidenciaCreditoResponse = zod.object({
+  "clienteId": zod.number().multipleOf(getClienteEvidenciaCreditoResponseClienteIdMultipleOf),
+  "atribucionHabilitada": zod.boolean(),
+  "movimientos": zod.array(zod.object({
+  "movimientoId": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemMovimientoIdMultipleOf),
+  "movimientoCreatedAt": zod.string(),
+  "identidadSnapshot": zod.object({
+  "cliente_id": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemIdentidadSnapshotClienteIdMultipleOf),
+  "tipo": zod.string(),
+  "importe": zod.number(),
+  "ticket_id": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemIdentidadSnapshotTicketIdMultipleOf).nullable(),
+  "movimiento_origen_id": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemIdentidadSnapshotMovimientoOrigenIdMultipleOf).nullable()
+}),
+  "sitioOrigenOriginalId": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemSitioOrigenOriginalIdMultipleOf).nullable(),
+  "naturalezaOriginal": zod.union([zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']),zod.null()]),
+  "ultimaAtribucion": zod.union([zod.object({
+  "id": zod.string().regex(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdRegExp),
+  "movimientoId": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneMovimientoIdMultipleOf),
+  "movimientoCreatedAt": zod.string(),
+  "identidadSnapshot": zod.object({
+  "cliente_id": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdentidadSnapshotClienteIdMultipleOf),
+  "tipo": zod.string(),
+  "importe": zod.number(),
+  "ticket_id": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdentidadSnapshotTicketIdMultipleOf).nullable(),
+  "movimiento_origen_id": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneIdentidadSnapshotMovimientoOrigenIdMultipleOf).nullable()
+}),
+  "anteriorId": zod.string().regex(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneAnteriorIdRegExp).nullable(),
+  "sitioOrigenId": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneSitioOrigenIdMultipleOf),
+  "evidencia": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemUltimaAtribucionOneUsuarioIdMultipleOf),
+  "createdAt": zod.string()
+}),zod.null()]),
+  "sitioDeterminadoId": zod.number().multipleOf(getClienteEvidenciaCreditoResponseMovimientosItemSitioDeterminadoIdMultipleOf).nullable(),
+  "sitioEtiqueta": zod.string()
+}))
+})
+
+
+/**
+ * @summary Vía futura ADMIN/SUPERVISOR; deshabilitada en E1
+ */
+export const atribuirClienteCreditoPathClienteIdMultipleOf = 1;
+
+
+
+export const AtribuirClienteCreditoParams = zod.object({
+  "clienteId": zod.coerce.number().min(1).multipleOf(atribuirClienteCreditoPathClienteIdMultipleOf)
+})
+
+export const atribuirClienteCreditoBodyIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const atribuirClienteCreditoBodyMovimientoIdMultipleOf = 1;
+
+export const atribuirClienteCreditoBodyIdentidadSnapshotClienteIdMultipleOf = 1;
+
+export const atribuirClienteCreditoBodyIdentidadSnapshotTicketIdMultipleOf = 1;
+
+export const atribuirClienteCreditoBodyIdentidadSnapshotMovimientoOrigenIdMultipleOf = 1;
+
+export const atribuirClienteCreditoBodySitioOrigenIdMultipleOf = 1;
+
+
+
+export const atribuirClienteCreditoBodyAnteriorIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+
+
+export const AtribuirClienteCreditoBody = zod.object({
+  "id": zod.string().regex(atribuirClienteCreditoBodyIdRegExp).optional(),
+  "movimientoId": zod.number().min(1).multipleOf(atribuirClienteCreditoBodyMovimientoIdMultipleOf),
+  "movimientoCreatedAt": zod.string().describe('Fecha SQL exacta con microsegundos; no convertir a Date.'),
+  "identidadSnapshot": zod.object({
+  "cliente_id": zod.number().multipleOf(atribuirClienteCreditoBodyIdentidadSnapshotClienteIdMultipleOf),
+  "tipo": zod.string(),
+  "importe": zod.number(),
+  "ticket_id": zod.number().multipleOf(atribuirClienteCreditoBodyIdentidadSnapshotTicketIdMultipleOf).nullable(),
+  "movimiento_origen_id": zod.number().multipleOf(atribuirClienteCreditoBodyIdentidadSnapshotMovimientoOrigenIdMultipleOf).nullable()
+}),
+  "sitioOrigenId": zod.number().min(1).multipleOf(atribuirClienteCreditoBodySitioOrigenIdMultipleOf),
+  "evidencia": zod.string().min(1),
+  "motivo": zod.string().min(1),
+  "anteriorId": zod.string().regex(atribuirClienteCreditoBodyAnteriorIdRegExp).nullable()
+})
+
+export const atribuirClienteCreditoResponseAtribucionIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const atribuirClienteCreditoResponseAtribucionMovimientoIdMultipleOf = 1;
+
+export const atribuirClienteCreditoResponseAtribucionIdentidadSnapshotClienteIdMultipleOf = 1;
+
+export const atribuirClienteCreditoResponseAtribucionIdentidadSnapshotTicketIdMultipleOf = 1;
+
+export const atribuirClienteCreditoResponseAtribucionIdentidadSnapshotMovimientoOrigenIdMultipleOf = 1;
+
+export const atribuirClienteCreditoResponseAtribucionAnteriorIdRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const atribuirClienteCreditoResponseAtribucionSitioOrigenIdMultipleOf = 1;
+
+export const atribuirClienteCreditoResponseAtribucionUsuarioIdMultipleOf = 1;
+
+
+
+export const AtribuirClienteCreditoResponse = zod.object({
+  "atribucion": zod.object({
+  "id": zod.string().regex(atribuirClienteCreditoResponseAtribucionIdRegExp),
+  "movimientoId": zod.number().multipleOf(atribuirClienteCreditoResponseAtribucionMovimientoIdMultipleOf),
+  "movimientoCreatedAt": zod.string(),
+  "identidadSnapshot": zod.object({
+  "cliente_id": zod.number().multipleOf(atribuirClienteCreditoResponseAtribucionIdentidadSnapshotClienteIdMultipleOf),
+  "tipo": zod.string(),
+  "importe": zod.number(),
+  "ticket_id": zod.number().multipleOf(atribuirClienteCreditoResponseAtribucionIdentidadSnapshotTicketIdMultipleOf).nullable(),
+  "movimiento_origen_id": zod.number().multipleOf(atribuirClienteCreditoResponseAtribucionIdentidadSnapshotMovimientoOrigenIdMultipleOf).nullable()
+}),
+  "anteriorId": zod.string().regex(atribuirClienteCreditoResponseAtribucionAnteriorIdRegExp).nullable(),
+  "sitioOrigenId": zod.number().multipleOf(atribuirClienteCreditoResponseAtribucionSitioOrigenIdMultipleOf),
+  "evidencia": zod.string(),
+  "motivo": zod.string(),
+  "usuarioId": zod.number().multipleOf(atribuirClienteCreditoResponseAtribucionUsuarioIdMultipleOf),
+  "createdAt": zod.string()
+}),
+  "replay": zod.boolean()
+})
+
+
 export const ListCuentasIncobrablesQueryParams = zod.object({
   "fechaDesde": zod.date().optional(),
   "fechaHasta": zod.date().optional()
@@ -5412,15 +5657,31 @@ export const BajaClienteParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const bajaClienteBodySitioOrigenIdMultipleOf = 1;
+
+export const bajaClienteBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const bajaClienteBodySesionCajaIdMultipleOf = 1;
+
+export const bajaClienteBodyNotaOrigenIdMultipleOf = 1;
+
 export const bajaClienteBodyMotivoMin = 20;
+
+export const bajaClienteBodyMontoIncobrableExclusiveMin = 0;
 
 
 
 export const BajaClienteBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(bajaClienteBodySitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(bajaClienteBodyOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(bajaClienteBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(bajaClienteBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "motivo": zod.string().min(bajaClienteBodyMotivoMin),
+  "montoIncobrable": zod.number().gt(bajaClienteBodyMontoIncobrableExclusiveMin).optional(),
   "adminUsuario": zod.string().optional(),
   "adminPassword": zod.string().optional()
-})
+}).describe('Si existe baja incobrable exige montoIncobrable y metadatos E1 de corrección.')
 
 export const BajaClienteResponse = zod.object({
   "resultado": zod.string().optional(),
@@ -5733,11 +5994,24 @@ export const CreateClientePagoParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const createClientePagoBodySitioOrigenIdMultipleOf = 1;
+
+export const createClientePagoBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const createClientePagoBodySesionCajaIdMultipleOf = 1;
+
+export const createClientePagoBodyNotaOrigenIdMultipleOf = 1;
+
 export const createClientePagoBodyImporteMin = 0.01;
 
 
 
 export const CreateClientePagoBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(createClientePagoBodySitioOrigenIdMultipleOf),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']),
+  "operacionClave": zod.string().regex(createClientePagoBodyOperacionClaveRegExp),
+  "sesionCajaId": zod.number().min(1).multipleOf(createClientePagoBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(createClientePagoBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "importe": zod.number().min(createClientePagoBodyImporteMin),
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO']),
   "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
@@ -6010,11 +6284,30 @@ export const ReversarClientePagoParams = zod.object({
   "pagoId": zod.coerce.number()
 })
 
+export const reversarClientePagoBodySitioOrigenIdMultipleOf = 1;
+
+export const reversarClientePagoBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const reversarClientePagoBodySesionCajaIdMultipleOf = 1;
+
+export const reversarClientePagoBodyNotaOrigenIdMultipleOf = 1;
+
+
+export const reversarClientePagoBodyImporteExclusiveMin = 0;
 
 
 
 export const ReversarClientePagoBody = zod.object({
-  "motivo": zod.string().min(1).describe('Motivo obligatorio del movimiento inverso')
+  "sitioOrigenId": zod.number().min(1).multipleOf(reversarClientePagoBodySitioOrigenIdMultipleOf),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']),
+  "operacionClave": zod.string().regex(reversarClientePagoBodyOperacionClaveRegExp),
+  "sesionCajaId": zod.number().min(1).multipleOf(reversarClientePagoBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(reversarClientePagoBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
+  "motivo": zod.string().min(1),
+  "importe": zod.number().gt(reversarClientePagoBodyImporteExclusiveMin),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO']).optional(),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional(),
+  "referencia": zod.string().nullish()
 })
 
 export const reversarClientePagoResponseFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
@@ -6070,11 +6363,24 @@ export const CreateClienteAjusteParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const createClienteAjusteBodySitioOrigenIdMultipleOf = 1;
+
+export const createClienteAjusteBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const createClienteAjusteBodySesionCajaIdMultipleOf = 1;
+
+export const createClienteAjusteBodyNotaOrigenIdMultipleOf = 1;
+
 export const createClienteAjusteBodyMotivoMin = 10;
 
 
 
 export const CreateClienteAjusteBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(createClienteAjusteBodySitioOrigenIdMultipleOf),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']),
+  "operacionClave": zod.string().regex(createClienteAjusteBodyOperacionClaveRegExp),
+  "sesionCajaId": zod.number().min(1).multipleOf(createClienteAjusteBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(createClienteAjusteBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullable(),
   "importe": zod.number(),
   "motivo": zod.string().min(createClienteAjusteBodyMotivoMin),
   "referencia": zod.string().nullish(),
@@ -6984,6 +7290,13 @@ export const CancelarTicketParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const cancelarTicketBodySitioOrigenIdMultipleOf = 1;
+
+export const cancelarTicketBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const cancelarTicketBodySesionCajaIdMultipleOf = 1;
+
+export const cancelarTicketBodyNotaOrigenIdMultipleOf = 1;
+
 export const cancelarTicketBodyMotivoMax = 1000;
 
 export const cancelarTicketBodyCredencialesAdminOneUsuarioMax = 64;
@@ -6993,6 +7306,12 @@ export const cancelarTicketBodyCredencialesAdminOnePasswordMax = 128;
 
 
 export const CancelarTicketBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(cancelarTicketBodySitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(cancelarTicketBodyOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(cancelarTicketBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(cancelarTicketBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "motivo": zod.string().min(1).max(cancelarTicketBodyMotivoMax),
   "credencialesAdmin": zod.union([zod.object({
   "usuario": zod.string().min(1).max(cancelarTicketBodyCredencialesAdminOneUsuarioMax),
@@ -7246,13 +7565,26 @@ export const AutorizarNotaParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const autorizarNotaBodySitioOrigenIdMultipleOf = 1;
+
+export const autorizarNotaBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const autorizarNotaBodySesionCajaIdMultipleOf = 1;
+
+export const autorizarNotaBodyNotaOrigenIdMultipleOf = 1;
+
 export const autorizarNotaBodyAplicarSaldoAFavorDefault = `0.00`;
 export const autorizarNotaBodyAplicarSaldoAFavorRegExp = new RegExp('^\\d+(\\.\\d{1,2})?$');
 
 
 export const AutorizarNotaBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(autorizarNotaBodySitioOrigenIdMultipleOf),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']),
+  "operacionClave": zod.string().regex(autorizarNotaBodyOperacionClaveRegExp),
+  "sesionCajaId": zod.number().min(1).multipleOf(autorizarNotaBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(autorizarNotaBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "aplicarSaldoAFavor": zod.string().regex(autorizarNotaBodyAplicarSaldoAFavorRegExp).default(autorizarNotaBodyAplicarSaldoAFavorDefault).describe('Campo legado aceptado por compatibilidad; el servidor lo ignora y aplica automáticamente por FIFO el menor entre el favor disponible y la nota.')
-})
+}).describe('La autorización de crédito exige sitio operativo explícito, UUID y OPERACION_CREDITO_SIN_DINERO.')
 
 export const autorizarNotaResponseTwoFechaVencimientoOneRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
@@ -9073,12 +9405,25 @@ export const CancelarSalidaParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const cancelarSalidaBodySitioOrigenIdMultipleOf = 1;
+
+export const cancelarSalidaBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const cancelarSalidaBodySesionCajaIdMultipleOf = 1;
+
+export const cancelarSalidaBodyNotaOrigenIdMultipleOf = 1;
+
 export const cancelarSalidaBodyMotivoMin = 10;
 
 
 
 
 export const CancelarSalidaBody = zod.object({
+  "sitioOrigenId": zod.number().min(1).multipleOf(cancelarSalidaBodySitioOrigenIdMultipleOf).optional(),
+  "naturaleza": zod.enum(['INGRESO_FISICO', 'DEVOLUCION_FISICA', 'CORRECCION_CONTABLE', 'OPERACION_CREDITO_SIN_DINERO']).optional(),
+  "operacionClave": zod.string().regex(cancelarSalidaBodyOperacionClaveRegExp).optional(),
+  "sesionCajaId": zod.number().min(1).multipleOf(cancelarSalidaBodySesionCajaIdMultipleOf).nullish(),
+  "notaOrigenId": zod.number().min(1).multipleOf(cancelarSalidaBodyNotaOrigenIdMultipleOf).nullish(),
+  "origenJustificacion": zod.string().nullish(),
   "motivo": zod.string().min(cancelarSalidaBodyMotivoMin),
   "pisoRetornoId": zod.number().min(1).optional(),
   "adminUsuario": zod.string().optional(),

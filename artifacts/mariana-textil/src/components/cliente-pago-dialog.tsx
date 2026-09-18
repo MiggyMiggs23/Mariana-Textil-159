@@ -22,6 +22,8 @@ import {
   todayInMexicoCity,
 } from "@/lib/fecha-efectiva";
 import { format } from "date-fns";
+import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Step = "form" | "preview" | "success";
 
@@ -42,6 +44,8 @@ export function ClientePagoDialog({
   defaultAmount,
   onSuccess
 }: ClientePagoDialogProps) {
+  const evidence = useCreditEvidenceDraft();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<Step>("form");
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"EFECTIVO" | "TRANSFERENCIA" | "FACTURADO">("EFECTIVO");
@@ -70,6 +74,7 @@ export function ClientePagoDialog({
   // Reset form when modal opens/closes
   useEffect(() => {
     if (open) {
+      evidence.reset();
       setStep("form");
       setAmount(defaultAmount || "");
       setPaymentMethod("EFECTIVO");
@@ -108,6 +113,10 @@ export function ClientePagoDialog({
   };
 
   const handlePreview = () => {
+    if (evidence.problem(paymentMethod)) {
+      toast({ title: "Origen requerido", description: evidence.problem(paymentMethod)!, variant: "destructive" });
+      return;
+    }
     if (!amount || Number(amount) <= 0) {
       toast({ title: "Importe inválido", description: "El importe debe ser mayor a cero.", variant: "destructive" });
       return;
@@ -137,12 +146,20 @@ export function ClientePagoDialog({
   };
 
   const submitPayment = () => {
-    if (!destinationAccount) return;
+    if (!destinationAccount || evidence.problem(paymentMethod)) return;
     const fechaEfectiva = buildMexicoCityEffectiveDate(effectiveDate);
+    const metadata = evidence.build(mode === "DIRIGIDO" ? "ABONO_DIRIGIDO" : "ABONO_ORDINARIO",
+      { clienteId, amount, paymentMethod, destinationAccount, reference, paymentNotes, fechaEfectiva, selectedMovementId, motivo }, paymentMethod);
+    const accepted = () => {
+      evidence.accepted();
+      queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && (query.queryKey[0].startsWith("/api/clientes") || query.queryKey[0].startsWith("/api/pagos-dirigidos")) });
+      onSuccess?.();
+    };
     if (mode === "DIRIGIDO") {
       if (!selectedMovementId || motivo.trim().length < 10) return;
       createDirectedPayment.mutate({
         data: {
+          ...metadata,
           tipo: "CLIENTE", entidadId: clienteId, documentoMovimientoId: selectedMovementId,
           importe: Number(amount), formaPago: paymentMethod, cuentaDestino: destinationAccount,
           referencia: reference || undefined, notas: paymentNotes || undefined,
@@ -150,7 +167,7 @@ export function ClientePagoDialog({
           motivo: motivo.trim(),
         },
       }, {
-        onSuccess: (data) => { setRealResult(data as unknown as ClientePago); setStep("success"); onSuccess?.(); },
+        onSuccess: (data) => { setRealResult(data as unknown as ClientePago); setStep("success"); accepted(); },
         onError: (error) => toast({ title: "Error al solicitar pago dirigido", description: getApiErrorMessage(error, "Intenta de nuevo"), variant: "destructive" }),
       });
       return;
@@ -160,6 +177,7 @@ export function ClientePagoDialog({
       {
         id: clienteId,
         data: {
+          ...metadata,
           importe: Number(amount),
           formaPago: paymentMethod,
           cuentaDestino: destinationAccount as "CAJA_FISICA" | "CUENTA_FISCAL" | "CUENTA_NO_FISCAL",
@@ -172,7 +190,7 @@ export function ClientePagoDialog({
         onSuccess: (data) => {
           setRealResult(data);
           setStep("success");
-          if (onSuccess) onSuccess();
+          accepted();
         },
         onError: (error) => {
           toast({
@@ -185,7 +203,7 @@ export function ClientePagoDialog({
     );
   };
 
-  const isFormValid = Number(amount) > 0 && destinationAccount !== "";
+  const isFormValid = Number(amount) > 0 && destinationAccount !== "" && !evidence.problem(paymentMethod);
   const isSubmitting = createPayment.isPending || createDirectedPayment.isPending;
 
   return (
@@ -212,6 +230,7 @@ export function ClientePagoDialog({
 
         {step === "form" && (
           <div className="space-y-5 p-6 bg-secondary/10">
+            <CreditEvidenceFields draft={evidence} kind="payment" medium={paymentMethod} />
             <div className="space-y-2">
               <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Aplicación</Label>
               <Select value={mode} onValueChange={(value: "FIFO" | "DIRIGIDO") => { setMode(value); setSelectedMovementId(null); }}>
@@ -249,7 +268,7 @@ export function ClientePagoDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="EFECTIVO" className="font-medium py-3">Efectivo</SelectItem>
+                    <SelectItem value="EFECTIVO" disabled={evidence.nature !== "CORRECCION_CONTABLE"} className="font-medium py-3">Efectivo (captura física deshabilitada)</SelectItem>
                     <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
                     <SelectItem value="FACTURADO" className="font-medium py-3">Facturado</SelectItem>
                   </SelectContent>
@@ -449,7 +468,7 @@ export function ClientePagoDialog({
               </Button>
               <Button
                 onClick={submitPayment}
-                 disabled={isSubmitting || (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10))}
+                 disabled={isSubmitting || !isFormValid || (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10))}
                 className="font-bold h-10 px-8"
               >
                  {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}

@@ -1,0 +1,2993 @@
+{
+  "status": "PASS",
+  "tempRoot": "/tmp/e1-core-mutants-0wfIOT",
+  "guard": "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+  "mainBaselineLog": "/tmp/e1-backend-baseline-loader.log",
+  "actualInventory": {
+    "pure": 15,
+    "actualAdapter": 16,
+    "total": 31,
+    "priorCountCorrection": "15+16=31, not 16+16=32"
+  },
+  "sourceHashes": {
+    "credit-evidence-contract.ts": "4b64e56a77d2683cb444d9fac20daa3d26800c6f7dcae82d9f1efdd24cc57bde",
+    "credit-evidence.ts": "85c54fb59116e87fc76f36d8dd2cf60571ea66c089129b61de2766bef44a2a88",
+    "credit-evidence-contract.test.ts": "5281ae832cad4e18216f8561fb9be4e285c597c8f08fd09ca20f41bffbb7ac1a",
+    "credit-evidence.mock.test.ts": "47b0e4de6e39303eb20c02cbe379f45bb797d6a4b204248d6997969611e64ccd"
+  },
+  "mutations": [
+    {
+      "id": "legacy-message",
+      "defect": "Legacy rejection loses its required update-app instruction",
+      "targets": [
+        "E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature",
+        "actual credit request adapter reports legacy update-app error before required generated-schema validation"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/legacy-message.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/legacy-message.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n",
+                "stack": "Error [ERR_TEST_FAILURE]: The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:27:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual credit request adapter reports legacy update-app error before required generated-schema validation",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.",
+                "stack": "Error [ERR_TEST_FAILURE]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.",
+                  "stack": "AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:143:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n",
+            "stack": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:27:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual credit request adapter reports legacy update-app error before required generated-schema validation",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.",
+            "stack": "AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:143:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "credential-whitelist",
+      "defect": "Parser leaks raw request properties into evidence",
+      "targets": [
+        "E1 evidence parser whitelists and normalizes without credentials"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/credential-whitelist.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/credential-whitelist.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 evidence parser whitelists and normalizes without credentials",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:35:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 evidence parser whitelists and normalizes without credentials",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:35:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "producer-nature",
+      "defect": "Credit sale wrongly admits accounting correction",
+      "targets": [
+        "E1 four exact natures and seven-producer compatibility cannot default to correction"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/producer-nature.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/producer-nature.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 four exact natures and seven-producer compatibility cannot default to correction",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected exception.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected exception.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:43:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 four exact natures and seven-producer compatibility cannot default to correction",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected exception.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:43:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "money-sign",
+      "defect": "Canonical amount incorrectly retains a negative zero sign",
+      "targets": [
+        "E1 exact money normalization rejects rounding and overflow"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/money-sign.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/money-sign.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 exact money normalization rejects rounding and overflow",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:60:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 exact money normalization rejects rounding and overflow",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:60:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "key-order",
+      "defect": "Canonical JSON becomes sensitive to object insertion order",
+      "targets": [
+        "E1 canonical JSON recursively sorts keys and preserves intent order and exact instants"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/key-order.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/key-order.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 canonical JSON recursively sorts keys and preserves intent order and exact instants",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:70:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 canonical JSON recursively sorts keys and preserves intent order and exact instants",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:70:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "canonical-secrets",
+      "defect": "Canonical JSON admits password/session credential properties",
+      "targets": [
+        "E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/canonical-secrets.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/canonical-secrets.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected exception.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected exception.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:80:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected exception.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:80:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "false-cash-session",
+      "defect": "Nonphysical correction is allowed to charge a cash session",
+      "targets": [
+        "E1 correction never invents cash session; physical bank transfer never accepts drawer"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/false-cash-session.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/false-cash-session.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 correction never invents cash session; physical bank transfer never accepts drawer",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected exception.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected exception.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:86:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 correction never invents cash session; physical bank transfer never accepts drawer",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected exception.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:86:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "cash-open",
+      "defect": "New physical credit cash capture is activated",
+      "targets": [
+        "E1 new physical cash receipt and refund remain closed, correction is not physical cash",
+        "actual insertion adapters reject new physical cash and pending receipt before any query/write"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/cash-open.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/cash-open.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 new physical cash receipt and refund remain closed, correction is not physical cash",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:97:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual insertion adapters reject new physical cash and pending receipt before any query/write",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected rejection.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected rejection.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:266:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 new physical cash receipt and refund remain closed, correction is not physical cash",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:97:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual insertion adapters reject new physical cash and pending receipt before any query/write",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected rejection.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:266:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "cross-site-access",
+      "defect": "An operational actor can write/replay outside its current site",
+      "targets": [
+        "E1 current actor/site access rejects role, inactive actor and moved site even on replay",
+        "actual access/scope adapters check current site and role before replay without requiring open session"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/cross-site-access.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/cross-site-access.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 current actor/site access rejects role, inactive actor and moved site even on replay",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected exception.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected exception.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:111:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual access/scope adapters check current site and role before replay without requiring open session",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected rejection.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected rejection.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:209:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 current actor/site access rejects role, inactive actor and moved site even on replay",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected exception.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:111:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual access/scope adapters check current site and role before replay without requiring open session",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected rejection.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:209:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "replay-falls-through",
+      "defect": "Committed operation is mislabeled non-replay, repeating domain work",
+      "targets": [
+        "E1 same content replays original result before repeated domain validation/side effects",
+        "E1 ON CONFLICT loser reloads immutable winner instead of repeating writes",
+        "actual claim adapter atomically inserts once and replays immutable movement without another write"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/replay-falls-through.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/replay-falls-through.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 same content replays original result before repeated domain validation/side effects",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nfalse !== true\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at operation (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:144:12)\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:152:20)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "E1 ON CONFLICT loser reloads immutable winner instead of repeating writes",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:190:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual claim adapter atomically inserts once and replays immutable movement without another write",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nfalse !== true\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:134:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 same content replays original result before repeated domain validation/side effects",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at operation (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:144:12)\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:152:20)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "E1 ON CONFLICT loser reloads immutable winner instead of repeating writes",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:190:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual claim adapter atomically inserts once and replays immutable movement without another write",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:134:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "new-claim-is-replay",
+      "defect": "A newly claimed producer operation is incorrectly treated as existing",
+      "targets": [
+        "E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/new-claim-is-replay.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/new-claim-is-replay.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:159:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:159:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "immutable-content-bypass",
+      "defect": "Replay ignores changed canonical actor/nature/intent",
+      "targets": [
+        "E1 reused key with changed amount, actor, metadata or nature conflicts",
+        "actual claim adapter conflicts on changed actor, nature or whitelisted intent"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/immutable-content-bypass.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/immutable-content-bypass.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 reused key with changed amount, actor, metadata or nature conflicts",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected rejection.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected rejection.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:173:6)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual claim adapter conflicts on changed actor, nature or whitelisted intent",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected rejection.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected rejection.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:165:6)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 reused key with changed amount, actor, metadata or nature conflicts",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected rejection.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:173:6)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual claim adapter conflicts on changed actor, nature or whitelisted intent",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected rejection.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:165:6)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "missing-movement-success",
+      "defect": "An incomplete committed reservation becomes a stub replay success",
+      "targets": [
+        "E1 committed operation without movement fails explicitly, never stub success",
+        "actual claim adapter rejects missing movement and incomplete operation reservation"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/missing-movement-success.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/missing-movement-success.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 committed operation without movement fails explicitly, never stub success",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected rejection.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected rejection.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:197:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual claim adapter rejects missing movement and incomplete operation reservation",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected rejection.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected rejection.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:196:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 committed operation without movement fails explicitly, never stub success",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected rejection.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:197:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual claim adapter rejects missing movement and incomplete operation reservation",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected rejection.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:196:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "retained-gate-bypass",
+      "defect": "Disabled pending-receipt claim reaches storage",
+      "targets": [
+        "E1 retained receipt gate rejects before any storage call and never becomes an ABONO"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/retained-gate-bypass.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/retained-gate-bypass.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "E1 retained receipt gate rejects before any storage call and never becomes an ABONO",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden",
+                "stack": "Error [ERR_TEST_FAILURE]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden",
+                  "stack": "AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:207:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "E1 retained receipt gate rejects before any storage call and never becomes an ABONO",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden",
+            "stack": "AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:207:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "movement-producer-isolation",
+      "defect": "Directed replay fetches an ordinary producer's movement by the same UUID",
+      "targets": [
+        "actual claim adapter isolates equal UUID across producers in both claim and movement lookup"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/movement-producer-isolation.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/movement-producer-isolation.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "actual claim adapter isolates equal UUID across producers in both claim and movement lookup",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\n71 !== 72\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n71 !== 72\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\n71 !== 72\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n71 !== 72\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:179:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "actual claim adapter isolates equal UUID across producers in both claim and movement lookup",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\n71 !== 72\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n71 !== 72\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:179:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "atomic-loser-success",
+      "defect": "Actual adapter ignores ON CONFLICT result and calls the loser newly inserted",
+      "targets": [
+        "actual claim adapter loses composite uniqueness race and reloads the completed winner"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/atomic-loser-success.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/atomic-loser-success.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "actual claim adapter loses composite uniqueness race and reloads the completed winner",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\n0 !== 1\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n0 !== 1\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\n0 !== 1\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:187:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "actual claim adapter loses composite uniqueness race and reloads the completed winner",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\n0 !== 1\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:187:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "origin-inferred-from-ticket",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "targets": [
+        "actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO",
+        "actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO",
+        "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO",
+        "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO",
+        "actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO",
+        "actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL",
+        "actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nnull !== 2\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nnull !== 2\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nnull !== 2\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nnull !== 2\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nnull !== 2\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nnull !== 2\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          },
+          {
+            "type": "test:fail",
+            "name": "actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\nnull !== 2\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        },
+        {
+          "name": "actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+            "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    },
+    {
+      "id": "note-site-bypass",
+      "defect": "Explicit note evidence can refer to a different customer's/site's note",
+      "targets": [
+        "actual movement helper validates explicit note identity rather than inferring its site"
+      ],
+      "result": {
+        "exitCode": 1,
+        "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/note-site-bypass.jsonl",
+        "stderrPath": "/tmp/e1-core-mutants-0wfIOT/note-site-bypass.stderr.txt",
+        "results": [
+          {
+            "type": "test:fail",
+            "name": "actual movement helper validates explicit note identity rather than inferring its site",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected rejection.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected rejection.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:282:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ]
+      },
+      "assertions": [
+        {
+          "name": "actual movement helper validates explicit note identity rather than inferring its site",
+          "failed": true,
+          "assertion": {
+            "name": "AssertionError",
+            "code": "ERR_ASSERTION",
+            "message": "Missing expected rejection.",
+            "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:282:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+            "failureType": null,
+            "cause": null,
+            "errors": []
+          }
+        }
+      ],
+      "proven": true
+    }
+  ],
+  "cases": [
+    {
+      "name": "E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Legacy rejection loses its required update-app instruction",
+      "mutationId": "legacy-message",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/legacy-message.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n",
+        "stack": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Actualiza la aplicación/. Input:\n\n'CreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:27:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 evidence parser whitelists and normalizes without credentials",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Parser leaks raw request properties into evidence",
+      "mutationId": "credential-whitelist",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/credential-whitelist.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   credencialesAdmin: {\n+     password: 'not-persisted'\n+   },\n    naturaleza: 'CORRECCION_CONTABLE',\n    notaOrigenId: null,\n    operacionClave: '10000000-0000-4000-8000-000000000001',\n    origenJustificacion: 'evidencia',\n+   password: 'not-persisted',\n    sesionCajaId: null,\n+   sessionToken: 'not-persisted',\n    sitioOrigenId: 2\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:35:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 four exact natures and seven-producer compatibility cannot default to correction",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Credit sale wrongly admits accounting correction",
+      "mutationId": "producer-nature",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/producer-nature.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected exception.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:43:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 exact money normalization rejects rounding and overflow",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Canonical amount incorrectly retains a negative zero sign",
+      "mutationId": "money-sign",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/money-sign.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'-0.00' !== '0.00'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:60:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 canonical JSON recursively sorts keys and preserves intent order and exact instants",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Canonical JSON becomes sensitive to object insertion order",
+      "mutationId": "key-order",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/key-order.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '{\"z\":[{\"c\":2,\"a\":1}],\"amount\":\"12.30\",\"date\":\"2026-09-17T18:00:00.000Z\"}'\n- '{\"date\":\"2026-09-17T18:00:00.000Z\",\"amount\":\"12.30\",\"z\":[{\"a\":1,\"c\":2}]}'\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:70:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Canonical JSON admits password/session credential properties",
+      "mutationId": "canonical-secrets",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/canonical-secrets.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected exception.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:80:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 correction never invents cash session; physical bank transfer never accepts drawer",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Nonphysical correction is allowed to charge a cash session",
+      "mutationId": "false-cash-session",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/false-cash-session.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected exception.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:86:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 new physical cash receipt and refund remain closed, correction is not physical cash",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "New physical credit cash capture is activated",
+      "mutationId": "cash-open",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/cash-open.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:97:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 current actor/site access rejects role, inactive actor and moved site even on replay",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "An operational actor can write/replay outside its current site",
+      "mutationId": "cross-site-access",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/cross-site-access.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected exception.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:111:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 same content replays original result before repeated domain validation/side effects",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Committed operation is mislabeled non-replay, repeating domain work",
+      "mutationId": "replay-falls-through",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/replay-falls-through.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at operation (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:144:12)\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:152:20)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "A newly claimed producer operation is incorrectly treated as existing",
+      "mutationId": "new-claim-is-replay",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/new-claim-is-replay.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:159:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 reused key with changed amount, actor, metadata or nature conflicts",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Replay ignores changed canonical actor/nature/intent",
+      "mutationId": "immutable-content-bypass",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/immutable-content-bypass.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected rejection.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:173:6)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 ON CONFLICT loser reloads immutable winner instead of repeating writes",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Committed operation is mislabeled non-replay, repeating domain work",
+      "mutationId": "replay-falls-through",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/replay-falls-through.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   movement: null,\n+   replay: false\n-   movement: {\n-     id: 71\n-   },\n-   replay: true\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:190:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 committed operation without movement fails explicitly, never stub success",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "An incomplete committed reservation becomes a stub replay success",
+      "mutationId": "missing-movement-success",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/missing-movement-success.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected rejection.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:197:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "E1 retained receipt gate rejects before any storage call and never becomes an ABONO",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Disabled pending-receipt claim reaches storage",
+      "mutationId": "retained-gate-bypass",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/retained-gate-bypass.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden",
+        "stack": "AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nError: forbidden\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence-contract.test.ts:207:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual claim adapter atomically inserts once and replays immutable movement without another write",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Committed operation is mislabeled non-replay, repeating domain work",
+      "mutationId": "replay-falls-through",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/replay-falls-through.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nfalse !== true\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:134:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual credit request adapter reports legacy update-app error before required generated-schema validation",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Legacy rejection loses its required update-app instruction",
+      "mutationId": "legacy-message",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/legacy-message.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.",
+        "stack": "AssertionError [ERR_ASSERTION]: The validation function is expected to return \"true\". Received false\n\nCaught error:\n\nCreditEvidenceError: Faltan datos E1 de origen, naturaleza y operación. Reintenta.\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:143:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual claim adapter conflicts on changed actor, nature or whitelisted intent",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Replay ignores changed canonical actor/nature/intent",
+      "mutationId": "immutable-content-bypass",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/immutable-content-bypass.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected rejection.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:165:6)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual claim adapter isolates equal UUID across producers in both claim and movement lookup",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Directed replay fetches an ordinary producer's movement by the same UUID",
+      "mutationId": "movement-producer-isolation",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/movement-producer-isolation.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\n71 !== 72\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n71 !== 72\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:179:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual claim adapter loses composite uniqueness race and reloads the completed winner",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Actual adapter ignores ON CONFLICT result and calls the loser newly inserted",
+      "mutationId": "atomic-loser-success",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/atomic-loser-success.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\n0 !== 1\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:187:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual claim adapter rejects missing movement and incomplete operation reservation",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "An incomplete committed reservation becomes a stub replay success",
+      "mutationId": "missing-movement-success",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/missing-movement-success.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected rejection.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:196:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual access/scope adapters check current site and role before replay without requiring open session",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "An operational actor can write/replay outside its current site",
+      "mutationId": "cross-site-access",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/cross-site-access.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected rejection.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:209:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "mutationId": "origin-inferred-from-ticket",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "mutationId": "origin-inferred-from-ticket",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "mutationId": "origin-inferred-from-ticket",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "mutationId": "origin-inferred-from-ticket",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "mutationId": "origin-inferred-from-ticket",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "mutationId": "origin-inferred-from-ticket",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "All seven producers lose explicit origin and infer it from an unrelated ticket ID",
+      "mutationId": "origin-inferred-from-ticket",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/origin-inferred-from-ticket.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Expected values to be strictly equal:\n\nnull !== 2\n",
+        "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nnull !== 2\n\n    at TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:247:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual insertion adapters reject new physical cash and pending receipt before any query/write",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "New physical credit cash capture is activated",
+      "mutationId": "cash-open",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/cash-open.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected rejection.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:266:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    },
+    {
+      "name": "actual movement helper validates explicit note identity rather than inferring its site",
+      "before": "PASS",
+      "beforeLog": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+      "defect": "Explicit note evidence can refer to a different customer's/site's note",
+      "mutationId": "note-site-bypass",
+      "mutant": "FAIL_ASSERTION",
+      "mutantLog": "/tmp/e1-core-mutants-0wfIOT/note-site-bypass.jsonl",
+      "assertion": {
+        "name": "AssertionError",
+        "code": "ERR_ASSERTION",
+        "message": "Missing expected rejection.",
+        "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e1-core-mutants-0wfIOT/credit-evidence.mock.test.ts:282:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+        "failureType": null,
+        "cause": null,
+        "errors": []
+      },
+      "restored": "PASS",
+      "restoredLog": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl"
+    }
+  ],
+  "uncovered": [],
+  "workspaceUntouched": true,
+  "before": {
+    "exitCode": 0,
+    "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/before.jsonl",
+    "stderrPath": "/tmp/e1-core-mutants-0wfIOT/before.stderr.txt",
+    "results": [
+      {
+        "type": "test:pass",
+        "name": "E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 evidence parser whitelists and normalizes without credentials",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 four exact natures and seven-producer compatibility cannot default to correction",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 exact money normalization rejects rounding and overflow",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 canonical JSON recursively sorts keys and preserves intent order and exact instants",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 correction never invents cash session; physical bank transfer never accepts drawer",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 new physical cash receipt and refund remain closed, correction is not physical cash",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 current actor/site access rejects role, inactive actor and moved site even on replay",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 same content replays original result before repeated domain validation/side effects",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 reused key with changed amount, actor, metadata or nature conflicts",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 ON CONFLICT loser reloads immutable winner instead of repeating writes",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 committed operation without movement fails explicitly, never stub success",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 retained receipt gate rejects before any storage call and never becomes an ABONO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter atomically inserts once and replays immutable movement without another write",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual credit request adapter reports legacy update-app error before required generated-schema validation",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter conflicts on changed actor, nature or whitelisted intent",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter isolates equal UUID across producers in both claim and movement lookup",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter loses composite uniqueness race and reloads the completed winner",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter rejects missing movement and incomplete operation reservation",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual access/scope adapters check current site and role before replay without requiring open session",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual insertion adapters reject new physical cash and pending receipt before any query/write",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual movement helper validates explicit note identity rather than inferring its site",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      }
+    ]
+  },
+  "restored": {
+    "exitCode": 0,
+    "stdoutPath": "/tmp/e1-core-mutants-0wfIOT/restored.jsonl",
+    "stderrPath": "/tmp/e1-core-mutants-0wfIOT/restored.stderr.txt",
+    "results": [
+      {
+        "type": "test:pass",
+        "name": "E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 evidence parser whitelists and normalizes without credentials",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 four exact natures and seven-producer compatibility cannot default to correction",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 exact money normalization rejects rounding and overflow",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 canonical JSON recursively sorts keys and preserves intent order and exact instants",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 correction never invents cash session; physical bank transfer never accepts drawer",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 new physical cash receipt and refund remain closed, correction is not physical cash",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 current actor/site access rejects role, inactive actor and moved site even on replay",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 same content replays original result before repeated domain validation/side effects",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 reused key with changed amount, actor, metadata or nature conflicts",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 ON CONFLICT loser reloads immutable winner instead of repeating writes",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 committed operation without movement fails explicitly, never stub success",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "E1 retained receipt gate rejects before any storage call and never becomes an ABONO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter atomically inserts once and replays immutable movement without another write",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual credit request adapter reports legacy update-app error before required generated-schema validation",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter conflicts on changed actor, nature or whitelisted intent",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter isolates equal UUID across producers in both claim and movement lookup",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter loses composite uniqueness race and reloads the completed winner",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual claim adapter rejects missing movement and incomplete operation reservation",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual access/scope adapters check current site and role before replay without requiring open session",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual insertion adapters reject new physical cash and pending receipt before any query/write",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      },
+      {
+        "type": "test:pass",
+        "name": "actual movement helper validates explicit note identity rather than inferring its site",
+        "skip": false,
+        "nesting": 0,
+        "message": null,
+        "details": {
+          "type": "test",
+          "error": null
+        },
+        "counts": null
+      }
+    ]
+  },
+  "stagedRestored": true
+}

@@ -45,6 +45,15 @@ export function getGetClientePagoDetalleQueryKey() {
 export function useGetCurrentUser() {
   return { data: undefined };
 }
+export function getGetCurrentUserQueryKey() {
+  return ["/api/auth/me"];
+}
+export function useListLocations() {
+  return { data: [], isLoading: false, isError: false, error: null };
+}
+export function getListLocationsQueryKey(params) {
+  return ["/api/locations", ...(params ? [params] : [])];
+}
 export function useReversarClientePago() {
   return { mutate() {}, isPending: false };
 }
@@ -59,11 +68,18 @@ let renderModule: {
 try {
   renderModule = await loadRenderTestModule(
     `
-      import { ClienteNotaCredito } from ${JSON.stringify(
+      import React from "react";
+      import { ClienteNotaCredito as RealClienteNotaCredito } from ${JSON.stringify(
         new URL("./cliente-nota-credito.tsx", import.meta.url).pathname,
       )};
+      import { LocationScopeProvider } from ${JSON.stringify(
+        new URL("../lib/location-scope.tsx", import.meta.url).pathname,
+      )};
       import { setCalendarDate } from "@workspace/api-client-react";
-      export { ClienteNotaCredito, setCalendarDate };
+      export function ClienteNotaCredito(props) {
+        return <LocationScopeProvider><RealClienteNotaCredito {...props} /></LocationScopeProvider>;
+      }
+      export { setCalendarDate };
     `,
     { moduleAliases: { "@workspace/api-client-react": apiClientStubPath } },
   );

@@ -48,7 +48,6 @@ import type {
   AutorizacionNotaProyeccion,
   AutorizarNotaInput,
   BajaCliente200,
-  BajaClienteBody,
   BorradorSalidaResult,
   BuscarPosParams,
   BuscarRollosEtiquetas200,
@@ -67,6 +66,7 @@ import type {
   Cliente,
   ClienteAjusteInput,
   ClienteAnalitica,
+  ClienteBajaInput,
   ClienteCompras,
   ClienteCredito,
   ClienteCreditoUpdate,
@@ -84,6 +84,7 @@ import type {
   ClientePagoPreviewInput,
   ClientePagos,
   ClientePrecios,
+  ClienteReversoInput,
   ClienteUpdate,
   ClientesAnalitica,
   ClientesCartera,
@@ -105,6 +106,10 @@ import type {
   CrearReimpresionEtiquetas201,
   CrearReimpresionEtiquetasBody,
   CreateClienteAjuste201,
+  CreditAttributionInput,
+  CreditAttributionResult,
+  CreditDirectedApprovalInput,
+  CreditEvidence,
   CuadreFiscalDiferenciaInput,
   CuadreFiscalPeriodoInput,
   CuadreFiscalRegistro,
@@ -157,6 +162,7 @@ import type {
   GetClienteAnaliticaParams,
   GetClienteComprasParams,
   GetClienteEstadoCuentaParams,
+  GetClienteEvidenciaCreditoParams,
   GetClientesAnaliticaParams,
   GetClientesCarteraParams,
   GetClientesResumenParams,
@@ -543,14 +549,15 @@ export const getAprobarSolicitudPagoDirigidoUrl = (id: number,) => {
 /**
  * @summary Aprueba y aplica una solicitud de pago dirigido (ADMIN)
  */
-export const aprobarSolicitudPagoDirigido = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<SolicitudPagoDirigidoAplicada> => {
+export const aprobarSolicitudPagoDirigido = async (id: number,
+    creditDirectedApprovalInput: CreditDirectedApprovalInput, options?: Parameters<typeof customFetch>[1]): Promise<SolicitudPagoDirigidoAplicada> => {
 
   return customFetch<SolicitudPagoDirigidoAplicada>(getAprobarSolicitudPagoDirigidoUrl(id),
   {
     ...options,
-    method: 'POST'
-
-
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(creditDirectedApprovalInput)
   }
 );}
 
@@ -559,8 +566,8 @@ export const aprobarSolicitudPagoDirigido = async (id: number, options?: Paramet
 
 
 export const getAprobarSolicitudPagoDirigidoMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number;data: BodyType<CreditDirectedApprovalInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number;data: BodyType<CreditDirectedApprovalInput>}, TContext> => {
 
 const mutationKey = ['aprobarSolicitudPagoDirigido'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -572,10 +579,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, {id: number}> = (props) => {
-          const {id} = props ?? {};
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, {id: number;data: BodyType<CreditDirectedApprovalInput>}> = (props) => {
+          const {id,data} = props ?? {};
 
-          return  aprobarSolicitudPagoDirigido(id,requestOptions)
+          return  aprobarSolicitudPagoDirigido(id,data,requestOptions)
         }
 
 
@@ -586,18 +593,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type AprobarSolicitudPagoDirigidoMutationResult = NonNullable<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>>
-
+    export type AprobarSolicitudPagoDirigidoMutationBody = BodyType<CreditDirectedApprovalInput>
     export type AprobarSolicitudPagoDirigidoMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
 
     /**
  * @summary Aprueba y aplica una solicitud de pago dirigido (ADMIN)
  */
 export const useAprobarSolicitudPagoDirigido = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>, TError,{id: number;data: BodyType<CreditDirectedApprovalInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof aprobarSolicitudPagoDirigido>>,
         TError,
-        {id: number},
+        {id: number;data: BodyType<CreditDirectedApprovalInput>},
         TContext
       > => {
       return useMutation(getAprobarSolicitudPagoDirigidoMutationOptions(options));
@@ -9395,6 +9402,161 @@ export function useGetClientesResumen<TData = Awaited<ReturnType<typeof getClien
 
 
 
+export const getGetClienteEvidenciaCreditoUrl = (clienteId: number,
+    params?: GetClienteEvidenciaCreditoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/clientes/${clienteId}/evidencia-credito?${stringifiedParams}` : `/api/clientes/${clienteId}/evidencia-credito`
+}
+
+export const getClienteEvidenciaCredito = async (clienteId: number,
+    params?: GetClienteEvidenciaCreditoParams, options?: Parameters<typeof customFetch>[1]): Promise<CreditEvidence> => {
+
+  return customFetch<CreditEvidence>(getGetClienteEvidenciaCreditoUrl(clienteId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetClienteEvidenciaCreditoQueryKey = (clienteId: number,
+    params?: GetClienteEvidenciaCreditoParams,) => {
+    return [
+    `/api/clientes/${clienteId}/evidencia-credito`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetClienteEvidenciaCreditoQueryOptions = <TData = Awaited<ReturnType<typeof getClienteEvidenciaCredito>>, TError = ErrorType<ForbiddenResponse>>(clienteId: number,
+    params?: GetClienteEvidenciaCreditoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEvidenciaCredito>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetClienteEvidenciaCreditoQueryKey(clienteId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getClienteEvidenciaCredito>>> = ({ signal }) => getClienteEvidenciaCredito(clienteId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clienteId !== null && clienteId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getClienteEvidenciaCredito>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetClienteEvidenciaCreditoQueryResult = NonNullable<Awaited<ReturnType<typeof getClienteEvidenciaCredito>>>
+export type GetClienteEvidenciaCreditoQueryError = ErrorType<ForbiddenResponse>
+
+
+
+export function useGetClienteEvidenciaCredito<TData = Awaited<ReturnType<typeof getClienteEvidenciaCredito>>, TError = ErrorType<ForbiddenResponse>>(
+ clienteId: number,
+    params?: GetClienteEvidenciaCreditoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getClienteEvidenciaCredito>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetClienteEvidenciaCreditoQueryOptions(clienteId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getAtribuirClienteCreditoUrl = (clienteId: number,) => {
+
+
+
+
+  return `/api/clientes/${clienteId}/atribuciones-credito`
+}
+
+/**
+ * @summary Vía futura ADMIN/SUPERVISOR; deshabilitada en E1
+ */
+export const atribuirClienteCredito = async (clienteId: number,
+    creditAttributionInput: CreditAttributionInput, options?: Parameters<typeof customFetch>[1]): Promise<CreditAttributionResult> => {
+
+  return customFetch<CreditAttributionResult>(getAtribuirClienteCreditoUrl(clienteId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(creditAttributionInput)
+  }
+);}
+
+
+
+
+
+export const getAtribuirClienteCreditoMutationOptions = <TError = ErrorType<ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof atribuirClienteCredito>>, TError,{clienteId: number;data: BodyType<CreditAttributionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof atribuirClienteCredito>>, TError,{clienteId: number;data: BodyType<CreditAttributionInput>}, TContext> => {
+
+const mutationKey = ['atribuirClienteCredito'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof atribuirClienteCredito>>, {clienteId: number;data: BodyType<CreditAttributionInput>}> = (props) => {
+          const {clienteId,data} = props ?? {};
+
+          return  atribuirClienteCredito(clienteId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AtribuirClienteCreditoMutationResult = NonNullable<Awaited<ReturnType<typeof atribuirClienteCredito>>>
+    export type AtribuirClienteCreditoMutationBody = BodyType<CreditAttributionInput>
+    export type AtribuirClienteCreditoMutationError = ErrorType<ForbiddenResponse | ConflictResponse>
+
+    /**
+ * @summary Vía futura ADMIN/SUPERVISOR; deshabilitada en E1
+ */
+export const useAtribuirClienteCredito = <TError = ErrorType<ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof atribuirClienteCredito>>, TError,{clienteId: number;data: BodyType<CreditAttributionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof atribuirClienteCredito>>,
+        TError,
+        {clienteId: number;data: BodyType<CreditAttributionInput>},
+        TContext
+      > => {
+      return useMutation(getAtribuirClienteCreditoMutationOptions(options));
+    }
+
 export const getListCuentasIncobrablesUrl = (params?: ListCuentasIncobrablesParams,) => {
   const normalizedParams = new URLSearchParams();
 
@@ -10024,14 +10186,14 @@ export const getBajaClienteUrl = (id: number,) => {
 }
 
 export const bajaCliente = async (id: number,
-    bajaClienteBody: BajaClienteBody, options?: Parameters<typeof customFetch>[1]): Promise<BajaCliente200> => {
+    clienteBajaInput: ClienteBajaInput, options?: Parameters<typeof customFetch>[1]): Promise<BajaCliente200> => {
 
   return customFetch<BajaCliente200>(getBajaClienteUrl(id),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(bajaClienteBody)
+    body: JSON.stringify(clienteBajaInput)
   }
 );}
 
@@ -10040,8 +10202,8 @@ export const bajaCliente = async (id: number,
 
 
 export const getBajaClienteMutationOptions = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<BajaClienteBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<BajaClienteBody>}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<ClienteBajaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<ClienteBajaInput>}, TContext> => {
 
 const mutationKey = ['bajaCliente'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -10053,7 +10215,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bajaCliente>>, {id: number;data: BodyType<BajaClienteBody>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof bajaCliente>>, {id: number;data: BodyType<ClienteBajaInput>}> = (props) => {
           const {id,data} = props ?? {};
 
           return  bajaCliente(id,data,requestOptions)
@@ -10067,15 +10229,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type BajaClienteMutationResult = NonNullable<Awaited<ReturnType<typeof bajaCliente>>>
-    export type BajaClienteMutationBody = BodyType<BajaClienteBody>
+    export type BajaClienteMutationBody = BodyType<ClienteBajaInput>
     export type BajaClienteMutationError = ErrorType<unknown>
 
     export const useBajaCliente = <TError = ErrorType<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<BajaClienteBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof bajaCliente>>, TError,{id: number;data: BodyType<ClienteBajaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof bajaCliente>>,
         TError,
-        {id: number;data: BodyType<BajaClienteBody>},
+        {id: number;data: BodyType<ClienteBajaInput>},
         TContext
       > => {
       return useMutation(getBajaClienteMutationOptions(options));
@@ -11396,14 +11558,14 @@ export const getReversarClientePagoUrl = (id: number,
  */
 export const reversarClientePago = async (id: number,
     pagoId: number,
-    motivoReversoInput: MotivoReversoInput, options?: Parameters<typeof customFetch>[1]): Promise<ClienteMovimiento> => {
+    clienteReversoInput: ClienteReversoInput, options?: Parameters<typeof customFetch>[1]): Promise<ClienteMovimiento> => {
 
   return customFetch<ClienteMovimiento>(getReversarClientePagoUrl(id,pagoId),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(motivoReversoInput)
+    body: JSON.stringify(clienteReversoInput)
   }
 );}
 
@@ -11412,8 +11574,8 @@ export const reversarClientePago = async (id: number,
 
 
 export const getReversarClientePagoMutationOptions = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<ClienteReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<ClienteReversoInput>}, TContext> => {
 
 const mutationKey = ['reversarClientePago'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -11425,7 +11587,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reversarClientePago>>, {id: number;pagoId: number;data: BodyType<MotivoReversoInput>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reversarClientePago>>, {id: number;pagoId: number;data: BodyType<ClienteReversoInput>}> = (props) => {
           const {id,pagoId,data} = props ?? {};
 
           return  reversarClientePago(id,pagoId,data,requestOptions)
@@ -11439,18 +11601,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type ReversarClientePagoMutationResult = NonNullable<Awaited<ReturnType<typeof reversarClientePago>>>
-    export type ReversarClientePagoMutationBody = BodyType<MotivoReversoInput>
+    export type ReversarClientePagoMutationBody = BodyType<ClienteReversoInput>
     export type ReversarClientePagoMutationError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>
 
     /**
  * @summary Revierte un abono con un movimiento inverso inmutable
  */
 export const useReversarClientePago = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarClientePago>>, TError,{id: number;pagoId: number;data: BodyType<ClienteReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof reversarClientePago>>,
         TError,
-        {id: number;pagoId: number;data: BodyType<MotivoReversoInput>},
+        {id: number;pagoId: number;data: BodyType<ClienteReversoInput>},
         TContext
       > => {
       return useMutation(getReversarClientePagoMutationOptions(options));
@@ -13840,7 +14002,7 @@ export const getAutorizarNotaUrl = (id: number,) => {
  * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
  */
 export const autorizarNota = async (id: number,
-    autorizarNotaInput?: AutorizarNotaInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
+    autorizarNotaInput: AutorizarNotaInput, options?: Parameters<typeof customFetch>[1]): Promise<TicketDetalle> => {
 
   return customFetch<TicketDetalle>(getAutorizarNotaUrl(id),
   {
@@ -13856,8 +14018,8 @@ export const autorizarNota = async (id: number,
 
 
 export const getAutorizarNotaMutationOptions = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data?: BodyType<AutorizarNotaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data?: BodyType<AutorizarNotaInput>}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data: BodyType<AutorizarNotaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data: BodyType<AutorizarNotaInput>}, TContext> => {
 
 const mutationKey = ['autorizarNota'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -13869,7 +14031,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof autorizarNota>>, {id: number;data?: BodyType<AutorizarNotaInput>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof autorizarNota>>, {id: number;data: BodyType<AutorizarNotaInput>}> = (props) => {
           const {id,data} = props ?? {};
 
           return  autorizarNota(id,data,requestOptions)
@@ -13883,18 +14045,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type AutorizarNotaMutationResult = NonNullable<Awaited<ReturnType<typeof autorizarNota>>>
-    export type AutorizarNotaMutationBody = BodyType<AutorizarNotaInput> | undefined
+    export type AutorizarNotaMutationBody = BodyType<AutorizarNotaInput>
     export type AutorizarNotaMutationError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
 
     /**
  * @summary Autoriza una nota y emite su cargo de crédito de forma transaccional
  */
 export const useAutorizarNota = <TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data?: BodyType<AutorizarNotaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof autorizarNota>>, TError,{id: number;data: BodyType<AutorizarNotaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof autorizarNota>>,
         TError,
-        {id: number;data?: BodyType<AutorizarNotaInput>},
+        {id: number;data: BodyType<AutorizarNotaInput>},
         TContext
       > => {
       return useMutation(getAutorizarNotaMutationOptions(options));

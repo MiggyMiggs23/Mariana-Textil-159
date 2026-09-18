@@ -1,5 +1,5 @@
 /** Typed callers for documented client endpoints that are newer than generated API hooks. */
-import type { ClienteCarteraItem, ClientesCartera, CurrentUser } from "@workspace/api-client-react";
+import type { ClienteCarteraItem, ClientesCartera, CurrentUser, ClienteAjusteInput } from "@workspace/api-client-react";
 export type Period = { desde?: string; hasta?: string };
 export type AccountMovement = { movimientoId: number; ticketId?: number | null; tipo?: string; importe?: string; fecha?: string; fechaEfectiva?: string; notas?: string | null; saldoCorrido?: string; nombreUsuario?: string | null; formaPago?: string | null; desgloseIva?: { subtotal: string; iva: string } | null; referencia?: string | null; ticketFolio?: string | null };
 export type Account = { clienteId: number; movimientos: AccountMovement[]; saldoActual: string };
@@ -134,7 +134,7 @@ export const getGlobalAnalytics = (period: Period) => api<GlobalAnalytics>(`/cli
 export const getPortfolio = () => api<CarteraResponse>("/clientes/cartera");
 export const getPortfolioForScope = (scope: CarteraScope) => api<CarteraResponse>(carteraScopePath("/clientes/cartera", scope));
 export const updateCreditTerms = (id: number, data: { limiteCredito: number; diasCredito: number }) => api<{ clienteId: number; limiteCredito: string; diasCredito: number }>(`/clientes/${id}/credito`, { method: "PATCH", body: JSON.stringify(data) });
-export const createAdjustment = (id: number, data: { importe: number; motivo: string }) => api<{ id: number }>(`/clientes/${id}/ajustes`, { method: "POST", body: JSON.stringify(data) });
+export const createAdjustment = (id: number, data: ClienteAjusteInput) => api<{ id: number }>(`/clientes/${id}/ajustes`, { method: "POST", body: JSON.stringify(data) });
 export const downloadClientFile = async (path: string, name: string) => {
   const response = await fetch(`/api${path}`, { credentials: "include" });
   if (!response.ok) throw new Error("No se pudo descargar el archivo.");

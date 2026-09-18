@@ -88,6 +88,7 @@ import {
   validarPrecioPos,
 } from "../lib/pos";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import { CreditEvidenceError, readCreditEvidenceInput, readCreditEvidenceBeforeBody } from "../lib/credit-evidence";
 import {
   loadCustomerCreditProjection,
   loadCustomerCreditLedgerInTransaction,
@@ -105,6 +106,10 @@ function handlePosError(
   res: Response,
   next: NextFunction,
 ): void {
+  if (error instanceof CreditEvidenceError) {
+    res.status(error.status).json({ error: error.message, code: "CREDIT_EVIDENCE_E1" });
+    return;
+  }
   if (error instanceof PosError) {
     res.status(error.status).json({ error: error.message, code: error.code });
     return;
@@ -712,6 +717,9 @@ router.post(
             autorizadoPor,
             motivo: body.motivo,
             ip: getRequestIp(req),
+            creditEvidence: current.credito && current.autorizacionEstado === "AUTORIZADA"
+              ? readCreditEvidenceInput(req.body) : undefined,
+            creditRequest: req,
           },
           !terminal,
         ),
@@ -797,27 +805,11 @@ router.post(
   async (req, res, next): Promise<void> => {
     try {
       const params = AutorizarNotaParams.parse(req.params);
-      const body = AutorizarNotaBody.parse(req.body ?? {});
-       const [ticket] = await db.select({
-         ubicacionId: ticketsTable.ubicacionId,
-         autorizacionEstado: ticketsTable.autorizacionEstado,
-       })
-        .from(ticketsTable).where(eq(ticketsTable.id, params.id)).limit(1);
-      if (!ticket) { res.status(404).json({ error: "Nota no encontrada." }); return; }
-      assertOperationalLocation(req, ticket.ubicacionId);
-       if (ticket.autorizacionEstado === "AUTORIZADA") {
-         res.json(
-           AutorizarNotaResponse.parse(
-             await buildTicketDetail(db, params.id, true),
-           ),
-         );
-         return;
-       }
-      const [session] = await db.select({ id: sesionesCajaTable.id }).from(sesionesCajaTable)
-        .where(and(eq(sesionesCajaTable.ubicacionId, ticket.ubicacionId), eq(sesionesCajaTable.estado, "ABIERTA"))).limit(1);
-      if (!session) throw new PosError("Abre una sesión de caja antes de autorizar.", "OPEN_SESSION_REQUIRED", 409);
+      const { body, evidence: creditEvidence } = readCreditEvidenceBeforeBody(
+        req.body, value => AutorizarNotaBody.parse(value),
+      );
       const result = await db.transaction((tx) => autorizarNota(tx, {
-        ticketId: params.id, sesionCajaId: session.id,
+        ticketId: params.id, creditEvidence, creditRequest: req,
          usuarioId: req.auth!.user.id, ip: getRequestIp(req),
          aplicarSaldoAFavor: body.aplicarSaldoAFavor,
       }, true));

@@ -1,0 +1,17 @@
+{"type":"test:pass","name":"E1 retry keeps UUID until an accepted response","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 producer and changed logical draft cannot share an operation key","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 all three activation gates stay closed","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 site and nature are explicit, without inherited defaults","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 correction requires its own justification, never a cash session","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 directed approval copies only original metadata and UUID, not credentials","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 attribution preparation preserves exact timestamp, full identity and predecessor","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":7,"failed":0,"passed":7,"cancelled":0,"skipped":0,"todo":0,"topLevel":7,"suites":0}}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"tests 7","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"suites 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"pass 7","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"fail 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"cancelled 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"skipped 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"todo 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"duration_ms 1220.620229","details":{"type":null,"error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":7,"failed":0,"passed":7,"cancelled":0,"skipped":0,"todo":0,"topLevel":7,"suites":0}}

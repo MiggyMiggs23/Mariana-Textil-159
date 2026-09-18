@@ -1,0 +1,665 @@
+{
+  "status": "PASS",
+  "startedAtUtc": "2026-09-17T23:13:25.733Z",
+  "prerequisites": {
+    "hashes": [
+      {
+        "path": "reports/e1-ejecucion-2026-09-17/autorizacion.md",
+        "sha256": "f7d60db4cb9d163c97294eecb71714c242ea75b8f0926c599c9772c9448d60db"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/operativo-propuesto/01.sql",
+        "sha256": "680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f"
+      },
+      {
+        "path": ".local/backups/prompt-h-block2-20260917165108-3655/source-snapshot.json",
+        "sha256": "f8716f44d8e8781c64d4c3f0ae4f7639185dd84a194667b5c7432c687005bfe9"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/migrated.json",
+        "sha256": "9c9fa6b9c66c08b0682e9d5e20e1cece0c64323cc31394a9deac3cc23832f031"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/api-pool-identity.json",
+        "sha256": "ea8d4e23880ecb2714962b022ffb907de804b0a3d0fb83807363254864849429"
+      },
+      {
+        "path": "scripts/src/e1-approved-migration.mts",
+        "sha256": "4fbf789cf26862fed9fa6b2e384b473be93b9458be8c9cb704ad7a48ce8e3c5c"
+      },
+      {
+        "path": "scripts/src/prompt-h-block2-backup-restore.mts",
+        "sha256": "757e831b2b61feff93c3136896309c6e4aae1150dff574aa9db47d7e7b35534f"
+      },
+      {
+        "path": "scripts/src/e1-disposable-rehearsal.mts",
+        "sha256": "13f3c9c2ca82916110ad7afbb634528febb49227d943b22536b4f9fb1c47546e"
+      }
+    ],
+    "archiveSha256": "583ac96297ca40573aa96249e2b25de68812f98bd7b675214473932fe81f2925",
+    "cloneKeptFilesystemOnly": true,
+    "remoteDriveNotRecontacted": true
+  },
+  "sqlSha256": "680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f",
+  "statements": [
+    {
+      "id": "S01",
+      "startedAfterBeginMs": 0.081838,
+      "status": "PASS",
+      "command": "BEGIN",
+      "elapsedMs": 0.41982600000000003
+    },
+    {
+      "id": "S02",
+      "startedAfterBeginMs": 0.509078,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.42770299999999994
+    },
+    {
+      "id": "S03",
+      "startedAfterBeginMs": 0.942027,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.2614160000000001
+    },
+    {
+      "id": "S04",
+      "startedAfterBeginMs": 1.215606,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.308114
+    },
+    {
+      "id": "S05",
+      "startedAfterBeginMs": 1.528778,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.22425399999999995
+    },
+    {
+      "id": "S06",
+      "startedAfterBeginMs": 1.757508,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.23211199999999987
+    },
+    {
+      "id": "S07",
+      "startedAfterBeginMs": 483.782675,
+      "status": "PASS",
+      "command": "DO",
+      "elapsedMs": 14.284643000000017
+    },
+    {
+      "id": "S08",
+      "startedAfterBeginMs": 502.436443,
+      "status": "PASS",
+      "command": "LOCK",
+      "elapsedMs": 0.7345859999999789
+    },
+    {
+      "id": "S09",
+      "startedAfterBeginMs": 506.567871,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 87.20367800000002
+    },
+    {
+      "id": "S10",
+      "startedAfterBeginMs": 593.781277,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 287.18297399999994
+    },
+    {
+      "id": "S11",
+      "startedAfterBeginMs": 880.984426,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 20.816865000000007
+    },
+    {
+      "id": "S12",
+      "startedAfterBeginMs": 901.839002,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 69.656113
+    },
+    {
+      "id": "S13",
+      "startedAfterBeginMs": 971.508185,
+      "status": "PASS",
+      "command": "ALTER",
+      "elapsedMs": 3.045182999999952
+    },
+    {
+      "id": "S14",
+      "startedAfterBeginMs": 974.565871,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 4.642787999999996
+    },
+    {
+      "id": "S15",
+      "startedAfterBeginMs": 979.220239,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 93.14780999999994
+    },
+    {
+      "id": "S16",
+      "startedAfterBeginMs": 1072.378965,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 2.687648999999965
+    },
+    {
+      "id": "S17",
+      "startedAfterBeginMs": 1075.078175,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 0.7149609999999029
+    },
+    {
+      "id": "S18",
+      "startedAfterBeginMs": 1075.802531,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 1.4842919999998685
+    },
+    {
+      "id": "S19",
+      "startedAfterBeginMs": 1077.296267,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 0.5960649999999532
+    },
+    {
+      "id": "S20",
+      "startedAfterBeginMs": 1077.900718,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 0.6851639999999861
+    },
+    {
+      "id": "S21",
+      "startedAfterBeginMs": 1078.594118,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 1.4150139999999283
+    },
+    {
+      "id": "S22",
+      "startedAfterBeginMs": 1080.01818,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 0.41893400000003567
+    },
+    {
+      "id": "S23",
+      "startedAfterBeginMs": 1080.444512,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 2.0644419999998718
+    },
+    {
+      "id": "S24",
+      "startedAfterBeginMs": 1082.520725,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 0.7311859999999797
+    },
+    {
+      "id": "S25",
+      "startedAfterBeginMs": 1083.260943,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 0.5852350000000115
+    },
+    {
+      "id": "S26",
+      "startedAfterBeginMs": 1083.854271,
+      "status": "PASS",
+      "command": "CREATE",
+      "elapsedMs": 0.8384710000000268
+    },
+    {
+      "id": "S27",
+      "startedAfterBeginMs": 1089.467411,
+      "status": "PASS",
+      "command": "COMMIT",
+      "elapsedMs": 19.276337999999896
+    }
+  ],
+  "commitSent": true,
+  "commitResponse": true,
+  "preflightStatus": "PASS",
+  "ddlStatementsSent": 18,
+  "noDDL": false,
+  "automaticRetries": 0,
+  "s08FinishToCommitMs": 605.5718949999999,
+  "s08FinishToCommitSentMs": 586.3082989999999,
+  "infrastructureRetry": false,
+  "nameArrayRetry": true,
+  "previousEvidencePreserved": true,
+  "comparisonExclusions": {
+    "source": [
+      "physical database size only"
+    ],
+    "migrated": [
+      "database metadata (identity checked separately)",
+      "column ordinal_position",
+      "sequence log_cnt only for clone/source semantics; operational preflight/postflight sequence values preserved exactly",
+      "OID-derived internal FK trigger name (all other semantics checked)"
+    ]
+  },
+  "watchdog": {
+    "fired": false,
+    "budgetMs": 30000
+  },
+  "apiBefore": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:13:25.741Z"
+  },
+  "initialExclusive": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "preflightIdentity": {
+    "status": "PASS",
+    "expectedSha256": "c755fb173de11b2e9481ad57ca937949483ae5f8708f0b7643fef7e81b376c07",
+    "observedSha256": "c755fb173de11b2e9481ad57ca937949483ae5f8708f0b7643fef7e81b376c07",
+    "defaultSchema": "pg_catalog",
+    "backendPid": 327,
+    "readOnly": "off"
+  },
+  "preflightExclusive": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "preflight": {
+    "status": "PASS",
+    "categories": {
+      "tables": {
+        "status": "PASS",
+        "expectedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6",
+        "observedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6",
+        "expectedCount": 63,
+        "observedCount": 63
+      },
+      "tableEvidence": {
+        "status": "PASS",
+        "expectedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+        "observedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+        "expectedCount": 63,
+        "observedCount": 63
+      },
+      "columns": {
+        "status": "PASS",
+        "expectedSha256": "ec1e1602a7d5e263f1268f5aef99401dc96d64796fb6d369d18cda3a7f8fe833",
+        "observedSha256": "ec1e1602a7d5e263f1268f5aef99401dc96d64796fb6d369d18cda3a7f8fe833",
+        "expectedCount": 634,
+        "observedCount": 634
+      },
+      "constraints": {
+        "status": "PASS",
+        "expectedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5",
+        "observedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5",
+        "expectedCount": 310,
+        "observedCount": 310
+      },
+      "indexes": {
+        "status": "PASS",
+        "expectedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e",
+        "observedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e",
+        "expectedCount": 227,
+        "observedCount": 227
+      },
+      "functions": {
+        "status": "PASS",
+        "expectedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10",
+        "observedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10",
+        "expectedCount": 50,
+        "observedCount": 50
+      },
+      "triggers": {
+        "status": "PASS",
+        "expectedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f",
+        "observedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f",
+        "expectedCount": 17,
+        "observedCount": 17
+      },
+      "sequences": {
+        "status": "PASS",
+        "expectedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "observedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "databaseIgnoringPhysicalSizeOnly": {
+        "status": "PASS",
+        "expectedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a",
+        "observedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a"
+      },
+      "sequenceState": {
+        "status": "PASS",
+        "expectedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "observedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "expectedCount": 47,
+        "observedCount": 47
+      }
+    },
+    "tables": 63,
+    "triggers": 17,
+    "e1Objects": 0
+  },
+  "apiBeforeS08": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:13:26.287Z"
+  },
+  "exclusiveBeforeS08": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "apiBeforeS09": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:13:26.291Z"
+  },
+  "exclusiveBeforeS09": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "apiBeforeS27": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:13:26.873Z"
+  },
+  "exclusiveBeforeS27": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "commitSentAfterBeginMs": 1089.476484,
+  "commitResponseAfterBeginMs": 1108.736308,
+  "transactionTotalMs": 1114.728949,
+  "apiAfter": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:13:26.903Z"
+  },
+  "resolutionIdentity": {
+    "status": "PASS",
+    "expectedSha256": "c755fb173de11b2e9481ad57ca937949483ae5f8708f0b7643fef7e81b376c07",
+    "observedSha256": "c755fb173de11b2e9481ad57ca937949483ae5f8708f0b7643fef7e81b376c07",
+    "defaultSchema": "public",
+    "backendPid": 328,
+    "readOnly": "on"
+  },
+  "resolutionExclusive": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "expectedBeforeComparison": {
+    "status": "FAIL",
+    "categories": {
+      "tables": {
+        "status": "FAIL",
+        "expectedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6",
+        "observedSha256": "468ec6aaf04489d53fabe7b2a6a27e9874487b85454726fb35bdb32752249621",
+        "expectedCount": 63,
+        "observedCount": 66
+      },
+      "tableEvidence": {
+        "status": "FAIL",
+        "expectedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+        "observedSha256": "aad4d3f521b5ddffe383492d2a062da0a1436db0515305e1b1f26b93e18aeb76",
+        "expectedCount": 63,
+        "observedCount": 66
+      },
+      "columns": {
+        "status": "FAIL",
+        "expectedSha256": "ec1e1602a7d5e263f1268f5aef99401dc96d64796fb6d369d18cda3a7f8fe833",
+        "observedSha256": "640a9c20fd346c22106cf6ac1996cbb04863212a8bd647af6fcde7a775cdcee0",
+        "expectedCount": 634,
+        "observedCount": 671
+      },
+      "constraints": {
+        "status": "FAIL",
+        "expectedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5",
+        "observedSha256": "cafb8f1c226738c77a185f4a6b0507fd36b17312730403eb8590a56ee2992ded",
+        "expectedCount": 310,
+        "observedCount": 340
+      },
+      "indexes": {
+        "status": "FAIL",
+        "expectedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e",
+        "observedSha256": "4c7af6e00e784dbb07b26d9a7fe73f8f778b9f19436dddc53def849fa1d15817",
+        "expectedCount": 227,
+        "observedCount": 232
+      },
+      "functions": {
+        "status": "FAIL",
+        "expectedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10",
+        "observedSha256": "2b3c2c69663d0e7a94984a5d91d5f0fc37fda188b20006e9a15694b72d56c432",
+        "expectedCount": 50,
+        "observedCount": 55
+      },
+      "triggers": {
+        "status": "FAIL",
+        "expectedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f",
+        "observedSha256": "f5f011c9c9dc0b9b28f9ac5b64f9e5db0ec94e32b34376e4c993220d20ecf84a",
+        "expectedCount": 17,
+        "observedCount": 23
+      },
+      "sequences": {
+        "status": "PASS",
+        "expectedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "observedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "databaseIgnoringPhysicalSizeOnly": {
+        "status": "PASS",
+        "expectedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a",
+        "observedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a"
+      },
+      "sequenceState": {
+        "status": "PASS",
+        "expectedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "observedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "expectedCount": 47,
+        "observedCount": 47
+      }
+    },
+    "tables": 66,
+    "triggers": 23
+  },
+  "expectedAfterComparison": {
+    "status": "PASS",
+    "categories": {
+      "tables": {
+        "status": "PASS",
+        "expectedSha256": "468ec6aaf04489d53fabe7b2a6a27e9874487b85454726fb35bdb32752249621",
+        "observedSha256": "468ec6aaf04489d53fabe7b2a6a27e9874487b85454726fb35bdb32752249621",
+        "expectedCount": 66,
+        "observedCount": 66
+      },
+      "tableEvidence": {
+        "status": "PASS",
+        "expectedSha256": "aad4d3f521b5ddffe383492d2a062da0a1436db0515305e1b1f26b93e18aeb76",
+        "observedSha256": "aad4d3f521b5ddffe383492d2a062da0a1436db0515305e1b1f26b93e18aeb76",
+        "expectedCount": 66,
+        "observedCount": 66
+      },
+      "columns": {
+        "status": "PASS",
+        "expectedSha256": "6baae79f7ccbe2e44e0657c81b5afe621df17b7c817b1454dfe03302e7418a6e",
+        "observedSha256": "6baae79f7ccbe2e44e0657c81b5afe621df17b7c817b1454dfe03302e7418a6e",
+        "expectedCount": 671,
+        "observedCount": 671
+      },
+      "constraints": {
+        "status": "PASS",
+        "expectedSha256": "cafb8f1c226738c77a185f4a6b0507fd36b17312730403eb8590a56ee2992ded",
+        "observedSha256": "cafb8f1c226738c77a185f4a6b0507fd36b17312730403eb8590a56ee2992ded",
+        "expectedCount": 340,
+        "observedCount": 340
+      },
+      "indexes": {
+        "status": "PASS",
+        "expectedSha256": "4c7af6e00e784dbb07b26d9a7fe73f8f778b9f19436dddc53def849fa1d15817",
+        "observedSha256": "4c7af6e00e784dbb07b26d9a7fe73f8f778b9f19436dddc53def849fa1d15817",
+        "expectedCount": 232,
+        "observedCount": 232
+      },
+      "functions": {
+        "status": "PASS",
+        "expectedSha256": "2b3c2c69663d0e7a94984a5d91d5f0fc37fda188b20006e9a15694b72d56c432",
+        "observedSha256": "2b3c2c69663d0e7a94984a5d91d5f0fc37fda188b20006e9a15694b72d56c432",
+        "expectedCount": 55,
+        "observedCount": 55
+      },
+      "triggers": {
+        "status": "PASS",
+        "expectedSha256": "f5f011c9c9dc0b9b28f9ac5b64f9e5db0ec94e32b34376e4c993220d20ecf84a",
+        "observedSha256": "f5f011c9c9dc0b9b28f9ac5b64f9e5db0ec94e32b34376e4c993220d20ecf84a",
+        "expectedCount": 23,
+        "observedCount": 23
+      },
+      "sequences": {
+        "status": "PASS",
+        "expectedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "observedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "sequenceState": {
+        "status": "PASS",
+        "expectedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "observedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "views": {
+        "status": "PASS",
+        "expectedSha256": "edfc19fadb47f6efe26db6247ce82650d958bce40a6c9dcb843b4359cb442e07",
+        "observedSha256": "edfc19fadb47f6efe26db6247ce82650d958bce40a6c9dcb843b4359cb442e07",
+        "expectedCount": 1,
+        "observedCount": 1
+      },
+      "types": {
+        "status": "PASS",
+        "expectedSha256": "c4c08ea0cbbe047363b04d4a09b05bcdad8f847f1860329b544981f3a16aa132",
+        "observedSha256": "c4c08ea0cbbe047363b04d4a09b05bcdad8f847f1860329b544981f3a16aa132",
+        "expectedCount": 178,
+        "observedCount": 178
+      },
+      "sequenceValues": {
+        "status": "PASS",
+        "expectedSha256": "3ce638522259744a9e1c0ff552ce197205bc60a69b92046e023af37e5d2ef5f4",
+        "observedSha256": "3ce638522259744a9e1c0ff552ce197205bc60a69b92046e023af37e5d2ef5f4",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "internalTriggerSemantics": {
+        "status": "PASS",
+        "expectedSha256": "58dab9de4ee3497b21527ff79dc7d0c685fd093d675c83346885e49f9205f02a",
+        "observedSha256": "58dab9de4ee3497b21527ff79dc7d0c685fd093d675c83346885e49f9205f02a",
+        "expectedCount": 728,
+        "observedCount": 728
+      }
+    },
+    "tables": 66,
+    "triggers": 23
+  },
+  "conservation": {
+    "status": "PASS",
+    "sourceBefore": {
+      "tables": 63,
+      "triggers": 17
+    },
+    "sourceAfter": {
+      "tables": 66,
+      "triggers": 23
+    },
+    "all63FullRowHashesIncludeDatesAmountsAndEveryOriginalField": true,
+    "projectedExpectedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+    "projectedObservedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+    "newTables": [
+      {
+        "schema": "public",
+        "table": "atribuciones_credito_e1",
+        "relkind": "r",
+        "count": "0",
+        "orderedCanonicalRowHash": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "table": "cobros_credito_pendientes_e1",
+        "relkind": "r",
+        "count": "0",
+        "orderedCanonicalRowHash": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "table": "operaciones_credito_e1",
+        "relkind": "r",
+        "count": "0",
+        "orderedCanonicalRowHash": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "sevenNewColumnsAllNull": true,
+    "projectedLedger": {
+      "count": "3",
+      "hash": "ba02f7b3e028d90d22d8094d3b716ae1"
+    },
+    "oldInternalTriggersIncludingNamesPreserved": true,
+    "fullOperationalSequenceStatePreserved": true
+  },
+  "commitOutcome": "COMMITTED_VERIFIED",
+  "apiRemainsStopped": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:13:29.654Z"
+  },
+  "finishedAtUtc": "2026-09-17T23:13:29.657Z"
+}

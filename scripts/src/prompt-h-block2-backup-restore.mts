@@ -27,8 +27,14 @@ const execFileAsync = promisify(execFile);
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const BACKUPS = `${ROOT}/.local/backups`;
 const baseCatalogScope = process.argv.includes("--catalog-base-approved");
-const REPORTS = `${ROOT}/reports/${baseCatalogScope ? "base-catalog-2026-09-17" : "prompt-h"}`;
-const APPROVAL = `${REPORTS}/${baseCatalogScope ? "aprobacion.md" : "aprobacion-listas-no-purga.md"}`;
+const e1ApprovedScope = process.argv.includes("--e1-approved");
+const REPORTS = `${ROOT}/reports/${
+  e1ApprovedScope ? "e1-ensayo-2026-09-17" : baseCatalogScope ? "base-catalog-2026-09-17" : "prompt-h"
+}`;
+const APPROVAL = `${REPORTS}/${
+  e1ApprovedScope ? "autorizacion.md" : baseCatalogScope ? "aprobacion.md" : "aprobacion-listas-no-purga.md"
+}`;
+const E1_IDENTITY = `${ROOT}/reports/e1-ensayo-2026-09-17/api-pool-identity.json`;
 const PG_BIN = "/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin";
 const TZ = "America/Mexico_City";
 const LOCAL_SUPERUSER = "postgres";
@@ -66,6 +72,11 @@ interface SequenceState extends Row {
   schema: string;
   sequence_name: string;
   last_value: string | null;
+}
+
+export interface E1Baseline {
+  catalogue: Catalogue;
+  sequenceState: SequenceState[];
 }
 
 interface Snapshot {
@@ -495,6 +506,13 @@ async function readCatalogue(client: Client): Promise<Catalogue> {
   };
 }
 
+export async function collectE1Baseline(client: Client): Promise<E1Baseline> {
+  return {
+    catalogue: await readCatalogue(client),
+    sequenceState: await sequenceState(client),
+  };
+}
+
 function compareRows(source: Row[], restored: Row[], keyFields: string[]): string[] {
   const left = source.map(stable).sort();
   const right = restored.map(stable).sort();
@@ -845,9 +863,12 @@ purga cierre. La restauración no sembró usuarios ni identidad de aplicación.
 async function main(): Promise<void> {
   if (!existsSync(APPROVAL)) throw new Error("Owner approval file is missing.");
   const approval = await fs.readFile(APPROVAL, "utf8");
-  const approved = baseCatalogScope
-    ? /Apruebo la desactivación de los 12 candidatos/i.test(approval) && /respaldo nuevo/i.test(approval)
-    : /Apruebo las listas/i.test(approval) && /respaldo/i.test(approval);
+  const e1UserQuote = approval.split("\n").filter((line) => /^\s*>/.test(line)).join("\n");
+  const approved = e1ApprovedScope
+    ? /respaldo/i.test(e1UserQuote) && /API pausado/i.test(e1UserQuote) && /ensayo/i.test(e1UserQuote)
+    : baseCatalogScope
+      ? /Apruebo la desactivación de los 12 candidatos/i.test(approval) && /respaldo nuevo/i.test(approval)
+      : /Apruebo las listas/i.test(approval) && /respaldo/i.test(approval);
   if (!approved) {
     throw new Error("Owner approval does not authorize the backup scope.");
   }
@@ -897,6 +918,7 @@ async function main(): Promise<void> {
     });
     source = sourceClient;
     await source.connect();
+    await source.query("SET TIME ZONE 'UTC'");
     const identity = await one<{ database_name: string; server_version: string; server_version_num: string }>(
       source,
       "SELECT current_database() AS database_name, current_setting('server_version') AS server_version, current_setting('server_version_num') AS server_version_num",
@@ -907,14 +929,55 @@ async function main(): Promise<void> {
     if (!identity.server_version.startsWith("16.10")) {
       throw new Error("Source identity is not PostgreSQL 16.10.");
     }
-    await source.query("SET TIME ZONE 'UTC'");
+    if (e1ApprovedScope) {
+      const identityEvidence = JSON.parse(await fs.readFile(E1_IDENTITY, "utf8")) as {
+        identity?: Record<string, unknown>;
+      };
+      const expected = identityEvidence.identity;
+      if (!expected) throw new Error("E1 API pool identity evidence has no identity object.");
+      const identityFields = [
+        "database_name", "database_oid", "server_version", "database_role",
+        "server_started_at", "server_address", "server_port",
+      ];
+      if (
+        identityFields.some((field) => !(field in expected)) ||
+        expected.server_address !== null ||
+        expected.server_port !== null
+      ) {
+        throw new Error("E1 API pool identity evidence has an invalid identity shape.");
+      }
+      const sourceIdentity = await one<Record<string, unknown>>(
+        source,
+        `SELECT current_database()::text AS database_name,
+                (SELECT oid::text FROM pg_database WHERE datname = current_database()) AS database_oid,
+                current_setting('server_version')::text AS server_version,
+                current_user::text AS database_role,
+                pg_postmaster_start_time()::text AS server_started_at,
+                inet_server_addr()::text AS server_address,
+                inet_server_port()::int AS server_port`,
+        [],
+        "Matching source to current API pool identity",
+      );
+      const expectedIdentity = {
+        database_name: expected.database_name,
+        database_oid: expected.database_oid === undefined ? undefined : String(expected.database_oid),
+        server_version: expected.server_version,
+        database_role: expected.database_role,
+        server_started_at: expected.server_started_at,
+        server_address: expected.server_address,
+        server_port: expected.server_port,
+      };
+      if (stable(sourceIdentity) !== stable(expectedIdentity)) {
+        throw new Error("Source SQL identity does not match the current API pool identity evidence.");
+      }
+    }
     await source.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
     sourceTransactionOpen = true;
     const txMode = await one<{ transaction_read_only: string }>(
       source, "SHOW transaction_read_only", [], "Verifying read-only source transaction",
     );
     if (txMode.transaction_read_only !== "on") throw new Error("Source transaction is not read-only.");
-    if (baseCatalogScope) {
+    if (baseCatalogScope || e1ApprovedScope) {
       const clients = await one<{ count: number }>(
         source,
         "SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend'",
@@ -1026,9 +1089,12 @@ async function main(): Promise<void> {
   }, null, 2));
 }
 
-await main().catch((error: unknown) => {
-  // The detailed sanitized report is written by main.  Keep process output
-  // terse and never print DATABASE_URL or child process diagnostics.
-  console.error(`Prompt H Block 2 failed: ${error instanceof Error ? error.message : "unknown failure"}`);
-  process.exitCode = 1;
-});
+const mainModulePath = process.argv[1] ? resolve(process.argv[1]) : "";
+if (mainModulePath === fileURLToPath(import.meta.url)) {
+  await main().catch((error: unknown) => {
+    // The detailed sanitized report is written by main.  Keep process output
+    // terse and never print DATABASE_URL or child process diagnostics.
+    console.error(`Prompt H Block 2 failed: ${error instanceof Error ? error.message : "unknown failure"}`);
+    process.exitCode = 1;
+  });
+}

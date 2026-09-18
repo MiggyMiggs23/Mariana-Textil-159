@@ -1,0 +1,154 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>E1 — Guardas SQL comprobadas en el clon</title><style>body{margin:0;background:#f3f5f8;font:16px/1.6 system-ui;color:#172538}main{max-width:1040px;margin:auto;padding:30px;background:white}h1{font-size:29px;line-height:1.25}.notice{border-left:5px solid #b26e16;background:#fff6e1;padding:18px}.metrics{display:flex;gap:16px;flex-wrap:wrap;margin:24px 0}.metrics div{background:#edf5f1;padding:18px;flex:1;min-width:150px}.metrics strong{display:block;font-size:27px}pre{font:13px/1.6 monospace;background:#f5f7fa;padding:18px;white-space:pre-wrap;overflow-wrap:anywhere}summary{cursor:pointer;font-weight:650;padding:18px 0}small{color:#566779}</style><main><small>MARIANA TEXTIL · RESULTADO DEL ENSAYO</small><h1>Tres guardas SQL independientes, comprobadas y removibles</h1><div class="notice"><strong>Instaladas sólo en el clon. Pendiente de autorización operativa.</strong><br>La API sigue pausada. No se tocó la base operativa ni se habilitaron capturas.</div><div class="metrics"><div><strong>84 / 84</strong>Controles aprobados</div><div><strong>29.141 ms</strong>Instalación → COMMIT confirmado</div><div><strong>5.689 s</strong>Ensayo supervisado</div></div><p>Ingreso y devolución de efectivo, cobros retenidos y atribuciones se rechazan con mensajes explícitos. Al retirar una guarda, sólo su vía queda abierta; las otras dos siguen bloqueando. Las tres se reinstalaron y todas las filas existentes se conservaron.</p><details open><summary>SQL transaccional propuesto — NO autorizado para la operativa</summary><pre>-- PROPUESTA: NO AUTORIZADA PARA LA BASE OPERATIVA.
+-- Requiere envoltura externa de identidad, preflight y supervisor de 30 segundos.
+-- Mismas seis sentencias DDL y orden transaccional ensayados en el clon.
+BEGIN;
+SET LOCAL lock_timeout='2s';
+SET LOCAL statement_timeout='15s';
+SET LOCAL idle_in_transaction_session_timeout='5s';
+LOCK TABLE public."atribuciones_credito_e1", public."cobros_credito_pendientes_e1", public."movimientos_credito" IN SHARE ROW EXCLUSIVE MODE;
+
+-- Fragment: run ONLY inside the reviewed identity-checked transaction.
+-- Additive removable gate. Existing permanent E1 integrity remains unchanged.
+CREATE FUNCTION public.e1_guard_cash_capture_closed()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+AS $gate_cash$
+BEGIN
+  IF NEW.forma_pago::text = 'EFECTIVO'
+     AND NEW.naturaleza::text IN ('INGRESO_FISICO', 'DEVOLUCION_FISICA') THEN
+    RAISE EXCEPTION USING
+      ERRCODE = 'E1C01',
+      MESSAGE = 'E1: la captura física de efectivo de crédito está deshabilitada.';
+  END IF;
+  RETURN NEW;
+END;
+$gate_cash$;
+
+-- AFTER checks the final inserted row after all BEFORE INSERT transformations.
+CREATE TRIGGER zz_e1_cash_capture_closed
+AFTER INSERT ON public.movimientos_credito
+FOR EACH ROW EXECUTE FUNCTION public.e1_guard_cash_capture_closed();
+
+-- Fragment: run ONLY inside the reviewed identity-checked transaction.
+CREATE FUNCTION public.e1_guard_pending_receipts_closed()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+AS $gate_pending$
+BEGIN
+  RAISE EXCEPTION USING
+    ERRCODE = 'E1P01',
+    MESSAGE = 'E1: el cobro retenido de crédito está deshabilitado.';
+  RETURN NULL;
+END;
+$gate_pending$;
+
+-- Permanent row integrity checks run first; zero-row INSERT is also rejected.
+CREATE TRIGGER zz_e1_pending_receipts_closed
+AFTER INSERT ON public.cobros_credito_pendientes_e1
+FOR EACH STATEMENT EXECUTE FUNCTION public.e1_guard_pending_receipts_closed();
+
+-- Fragment: run ONLY inside the reviewed identity-checked transaction.
+CREATE FUNCTION public.e1_guard_historical_attribution_closed()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path = pg_catalog, public
+AS $gate_attribution$
+BEGIN
+  RAISE EXCEPTION USING
+    ERRCODE = 'E1A01',
+    MESSAGE = 'E1: la atribución histórica de crédito está deshabilitada.';
+  RETURN NULL;
+END;
+$gate_attribution$;
+
+CREATE TRIGGER zz_e1_historical_attribution_closed
+AFTER INSERT ON public.atribuciones_credito_e1
+FOR EACH STATEMENT EXECUTE FUNCTION public.e1_guard_historical_attribution_closed();
+
+COMMIT;
+</pre></details><details><summary>Retiro independiente: 11-remove-cash.sql</summary><pre>-- Independent retirement. Requires separate feature/readiness authorization.
+-- Never CASCADE; absence or unexpected dependency is a refusal.
+DROP TRIGGER zz_e1_cash_capture_closed ON public.movimientos_credito;
+DROP FUNCTION public.e1_guard_cash_capture_closed();</pre></details><details><summary>Retiro independiente: 12-remove-pending.sql</summary><pre>-- Independent retirement. Requires separate feature/readiness authorization.
+DROP TRIGGER zz_e1_pending_receipts_closed ON public.cobros_credito_pendientes_e1;
+DROP FUNCTION public.e1_guard_pending_receipts_closed();</pre></details><details><summary>Retiro independiente: 13-remove-attribution.sql</summary><pre>-- Independent retirement. Historical evidence + explicit owner approval required.
+DROP TRIGGER zz_e1_historical_attribution_closed ON public.atribuciones_credito_e1;
+DROP FUNCTION public.e1_guard_historical_attribution_closed();</pre></details><details open><summary>Resultados, mediciones y condiciones de retirada</summary><pre># E1 — guardas SQL removibles: ensayo completado
+
+**PASS: 84/84 controles. Instaladas únicamente en el clon. Base operativa sin cambios; API pausada.**
+
+## Qué se propone aplicar, pendiente de otra autorización
+
+Tres funciones y tres triggers adicionales. No se modifica ninguna función, trigger ni restricción permanente de E1. Las seis sentencias DDL exactas están en sql/01-install-cash.sql, sql/02-install-pending.sql y sql/03-install-attribution.sql. La propuesta transaccional reunida está en instalacion-transaccional-propuesta.sql: mismos fragmentos, orden, límites y candado que se midieron; su presentación NO autoriza ejecutarla en la operativa ni sustituye la comprobación de identidad y el supervisor externo.
+
+SHA-256 de la propuesta transaccional: `4ec88685b4c3d1e8906e10734e2e2ef46c94885c829c1a6f865b872bff7f55e5`. Los hashes individuales de los seis archivos de instalación/retiro figuran en `alcance-y-retiro.md`.
+
+| Guarda | Rechazo explícito | Retirada independiente |
+|---|---|---|
+| Efectivo físico de crédito, entrante y devolución | E1C01: E1: la captura física de efectivo de crédito está deshabilitada. | sql/11-remove-cash.sql |
+| Cobros retenidos | E1P01: E1: el cobro retenido de crédito está deshabilitado. | sql/12-remove-pending.sql |
+| Atribución histórica | E1A01: E1: la atribución histórica de crédito está deshabilitada. | sql/13-remove-attribution.sql |
+
+La guarda de efectivo comprueba la fila final AFTER INSERT y sólo bloquea EFECTIVO con INGRESO_FISICO o DEVOLUCION_FISICA. No confunde una corrección contable con efectivo recibido. Las otras dos son AFTER INSERT STATEMENT: bloquean la captura entera, incluso un INSERT de cero filas. Las validaciones permanentes de cada fila conservan su orden y sus errores.
+
+**Ninguna guarda transforma, reclasifica ni guarda de otro modo una entrada prohibida.** Las pruebas de bloqueo exigieron el SQLSTATE y mensaje exactos y comprobaron ausencia de cambios persistentes; las de retirada exigieron que la fila admitida tuviera exactamente los datos pretendidos.
+
+## Qué se probó
+
+- 24 controles de evidencia y validación permanente: todos aprobados, incluidas las tres sondas que antes exponían las brechas SQL.
+- Siete fases de seis controles: todas instaladas; retirada y reinstalación individual de efectivo, pendientes y atribución.
+- Dos fases de nueve controles: inventario, siete combinaciones permitidas de productor/contrato y conservación, antes y después de todos los retiros.
+- La retirada de cada guarda abrió sólo su vía. Las otras dos siguieron rechazando con sus propios mensajes. La retirada de efectivo permitió tanto el ingreso como la devolución física sintéticos.
+- Se reinstaló cada guarda desde su archivo original; las definiciones finales coincidieron exactamente con las instaladas al inicio.
+
+Los siete productores conservan compatibilidad SQL con contratos válidos permitidos. Esto no se presenta como una segunda ejecución de sus rutas: las pruebas reales de rutas de la entrega anterior siguen documentadas por separado. Tampoco es una prueba de concurrencia, inventario físico ni interfaz.
+
+## Medición real en el clon
+
+| Transacción | BEGIN → COMMIT confirmado | Candado adquirido → confirmación de COMMIT |
+|---|---:|---:|
+| install-all | 29.141 ms | 28.675 ms |
+| remove-cash | 21.164 ms | 20.757 ms |
+| reinstall-cash | 9.899 ms | 9.624 ms |
+| remove-pending | 10.664 ms | 10.313 ms |
+| reinstall-pending | 46.427 ms | 45.670 ms |
+| remove-attribution | 6.008 ms | 5.487 ms |
+| reinstall-attribution | 5.199 ms | 4.837 ms |
+
+**Instalación conjunta: 29.141 ms. Ensayo supervisado: 5.689 s.** Inicio registrado 2026-09-18T00:35:33.283Z y fin 2026-09-18T00:35:38.972Z, equivalentes al 17 de septiembre, 18:35:33–18:35:38, Ciudad de México. El total no incluye la lectura de manifiestos anterior al inicio registrado.
+
+Los siete COMMIT recibieron confirmación; los siete backends DDL cerraron y se comprobó su desaparición. Ningún supervisor de 30 segundos se agotó. Espera/adquisición inicial del candado: 0.212 ms. El tiempo de candado mostrado llega hasta la confirmación recibida por el cliente, no mide el instante interno exacto en que PostgreSQL lo liberó.
+
+Son tiempos locales de este clon, no una promesa de duración operativa. En un destino con actividad, la espera puede variar; el límite de espera de candado es 2 s y el de sentencia 15 s. Si el COMMIT fuera ambiguo, se detiene y se inspecciona: no se reintenta ni se adivina una reparación.
+
+## Conservación
+
+- Las 66 tablas conservaron exactamente sus filas y conteos, incluyendo los fixtures del ensayo anterior. Huella completa final igual a la inicial.
+- Las 55 funciones y los 23 triggers permanentes inspeccionados conservaron sus definiciones y estados. Se agregaron sólo las tres funciones y tres triggers temporales.
+- Los tres históricos originales siguen intactos y sin campos E1 atribuidos.
+- Ledger: 16 filas; operaciones: 13; cobros retenidos: 0; atribuciones: 0, antes y después.
+- Todos los fixtures y las inserciones de diagnóstico de este ensayo se revirtieron. Esto no afirma que los nextval locales se reviertan: una secuencia puede avanzar pese al rollback.
+- Cero conexiones a la base operativa. Sin API, login, bootstrap, inicializadores, activación de flags ni cambios del respaldo o Drive.
+
+## Cómo se retirarán cuando corresponda
+
+Cada archivo 11/12/13 contiene sólo dos instrucciones: DROP TRIGGER de esa tabla y DROP FUNCTION de esa guarda. Deben ejecutarse en una transacción con identidad comprobada, límites y candado de su tabla. No hay CASCADE, IF EXISTS, función compartida ni modificación de las validaciones permanentes. Una ausencia o dependencia inesperada hace fallar la transacción. Las guardas restantes no se tocan.
+
+- **Efectivo:** retirar cuando E2 (corte/devolución) y E3 (captura/recibo) estén completos, coordinados y autorizados.
+- **Cobros retenidos:** retirar cuando E3 y E5, sus permisos y sus lectores permitan ver, aplicar y conciliar lo recibido. No basta con poder insertarlo.
+- **Atribución histórica:** retirar únicamente al autorizar su flujo y las reglas de evidencia/origen. El plan no la asigna automáticamente a E2, E3 o E5.
+
+Quitar la guarda SQL no habilita por sí solo la aplicación; sus flags y autorizaciones también necesitan la entrega correspondiente. El estado final del clon queda con **las tres guardas presentes y cerradas**.
+
+## Estado y evidencia
+
+**La corrección está comprobada en el clon, no aplicada a la operativa. Se espera autorización operativa separada. No se reanuda la API.**
+
+- resultado-medido.json: 84 resultados, siete transacciones, mediciones y conservación.
+- revision-previa.json: manifiesto exacto presentado antes de ejecutar.
+- ejecucion.log: proceso finalizado con código 0 y PASS.
+- sql-y-alcance.html: SQL y condiciones de retirada presentados.
+- Autorización del clon: reports/e1-ejecucion-2026-09-17/autorizacion-guardas-clon.md.
+</pre></details><p><small>Los tiempos corresponden al clon local; no garantizan la duración en otro destino. Retirar la guarda SQL no activa por sí solo la función en la aplicación.</small></p></main></html>

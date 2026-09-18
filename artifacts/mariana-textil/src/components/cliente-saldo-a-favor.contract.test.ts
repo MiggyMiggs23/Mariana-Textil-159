@@ -18,7 +18,7 @@ test("customer payment receipt exposes excess and resulting favor", async () => 
   assert.match(source, /receipt-payment-excess/);
 });
 
-test("cash authorization previews the server-calculated automatic favor application", async () => {
+test("cash authorization previews the server-calculated automatic favor application", async (t) => {
   const financeCashFixtureDirectory = await mkdtemp(join(tmpdir(), "finance-cash-"));
   const financeCashApiPath = join(financeCashFixtureDirectory, "api-client-react.ts");
   const financeCashLayoutPath = join(financeCashFixtureDirectory, "layout.tsx");
@@ -53,6 +53,7 @@ test("cash authorization previews the server-calculated automatic favor applicat
         export * from "/home/runner/workspace/lib/api-client-react/src/index.ts";
         const result = (data) => ({ data, isLoading: false, isError: false, isFetching: false, error: null, refetch() {} });
         export const useGetCurrentUser = () => result({ rol: "ADMIN", permisos: [] });
+        export const useListLocations = () => result([]);
         export const useObtenerSesionCajaActual = () => result(${JSON.stringify(session)});
         export const useListarTicketsCaja = () => result(${JSON.stringify(tickets)});
         export const useObtenerProyeccionAutorizacionNota = () => result(${JSON.stringify(projection)});
@@ -106,23 +107,63 @@ test("cash authorization previews the server-calculated automatic favor applicat
       await page.waitFor(`Array.from(document.querySelectorAll("button")).some((button) => button.textContent?.trim() === "Autorizar")`);
       await page.evaluate(`Array.from(document.querySelectorAll("button")).find((button) => button.textContent?.trim() === "Autorizar")?.click()`);
       await page.waitFor(`document.querySelector('[role="dialog"]') !== null`);
-      const preview = await page.evaluate<{
-        disponible: boolean; aplicado: boolean; remanente: boolean; manualControl: boolean;
+      const observation = await page.evaluate<{
+        preview: { disponible: boolean; aplicado: boolean; remanente: boolean; manualControl: boolean };
+        controls: { tag: string; role: string | null; name: string }[];
+        injectionDetected: boolean; afterRemovalDetected: boolean;
       }>(`
         (() => {
           const dialog = document.querySelector('[role="dialog"]');
+          if (!dialog) throw new Error("Authorization dialog is missing");
           const value = (id) => document.querySelector('[data-testid="' + id + '"]')?.textContent ?? "";
-          return {
+          const controls = () => Array.from(dialog.querySelectorAll('input:not([type="hidden"]), textarea, select, [role="radio"], [role="combobox"], [contenteditable="true"]'));
+          const controlName = (control) => [
+            control.getAttribute("aria-label"),
+            ...(control.getAttribute("aria-labelledby") ?? "").split(/\\s+/).filter(Boolean)
+              .map(id => document.getElementById(id)?.textContent ?? ""),
+            ...Array.from(control.labels ?? []).map(label => label.textContent ?? ""),
+            control.getAttribute("name"), control.getAttribute("id"),
+          ].filter(Boolean).join(" ");
+          // Operational site/note metadata is editable, but monetary favor
+          // application must remain exclusively the automatic server preview.
+          const hasManualFavorControl = () => controls().some(control =>
+            /favor|(?:importe|monto|saldo).*aplic|aplic.*(?:importe|monto|saldo)/i.test(controlName(control)));
+          const originalControls = controls().map(control => ({
+            tag: control.tagName, role: control.getAttribute("role"), name: controlName(control),
+          }));
+          const preview = {
             disponible: value("text-authorization-saldo-a-favor-disponible").includes("500.00"),
             aplicado: value("text-authorization-saldo-a-favor-aplicado").includes("500.00"),
             remanente: value("text-authorization-saldo-a-favor-remanente").includes("0.00"),
-            manualControl: Boolean(dialog?.querySelector('input:not([type="hidden"]), textarea, select, [role="radio"], [role="combobox"], [contenteditable="true"]')),
+            manualControl: hasManualFavorControl(),
+          };
+          // Positive control for the detector, only in this fixture DOM. The
+          // input intentionally relies on its associated label, not aria-label.
+          const probe = document.createElement("div");
+          const label = document.createElement("label");
+          label.htmlFor = "manual-money-probe";
+          label.textContent = "Importe de saldo a favor a aplicar manualmente";
+          const input = document.createElement("input");
+          input.id = label.htmlFor;
+          input.type = "number";
+          input.step = "0.01";
+          probe.append(label, input);
+          let injectionDetected;
+          dialog.append(probe);
+          try { injectionDetected = hasManualFavorControl(); }
+          finally { probe.remove(); }
+          return {
+            preview, controls: originalControls, injectionDetected,
+            afterRemovalDetected: hasManualFavorControl(),
           };
         })()
       `);
-      assert.deepEqual(preview, {
+      t.diagnostic("Authorization dialog controls: " + JSON.stringify(observation.controls));
+      assert.deepEqual(observation.preview, {
         disponible: true, aplicado: true, remanente: true, manualControl: false,
       }, "the real Cobros authorization dialog presents the automatic server preview without a manual favor control");
+      assert.equal(observation.injectionDetected, true, "a labelled manual monetary favor input must be detected");
+      assert.equal(observation.afterRemovalDetected, false, "the temporary manual-favor probe is removed from the fixture");
     });
   } finally {
     await rm(financeCashFixtureDirectory, { recursive: true, force: true });

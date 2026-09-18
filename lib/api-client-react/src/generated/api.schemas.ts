@@ -69,6 +69,16 @@ export interface MotivoRechazoPagoDirigidoInput {
   motivoRechazo: string;
 }
 
+export type CreditNature = typeof CreditNature[keyof typeof CreditNature];
+
+
+export const CreditNature = {
+  INGRESO_FISICO: 'INGRESO_FISICO',
+  DEVOLUCION_FISICA: 'DEVOLUCION_FISICA',
+  CORRECCION_CONTABLE: 'CORRECCION_CONTABLE',
+  OPERACION_CREDITO_SIN_DINERO: 'OPERACION_CREDITO_SIN_DINERO',
+} as const;
+
 export type SolicitudPagoDirigidoTipo = typeof SolicitudPagoDirigidoTipo[keyof typeof SolicitudPagoDirigidoTipo];
 
 
@@ -87,6 +97,23 @@ export const SolicitudPagoDirigidoEstado = {
 } as const;
 
 export interface SolicitudPagoDirigido {
+  /** @minimum 1 */
+  sitioOrigenId?: number;
+  naturaleza?: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave?: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
   id: number;
   tipo: SolicitudPagoDirigidoTipo;
   entidadId: number;
@@ -126,6 +153,256 @@ export interface SolicitudesPagoDirigidoResult {
   solicitudes: SolicitudPagoDirigido[];
 }
 
+export interface CreditEvidenceInput {
+  /** @minimum 1 */
+  sitioOrigenId: number;
+  naturaleza: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
+}
+
+/**
+ * Para CLIENTE exige los metadatos y UUID de la solicitud original; PROVEEDOR no escribe crédito E1.
+ */
+export interface CreditDirectedApprovalInput {
+  /** @minimum 1 */
+  sitioOrigenId?: number;
+  naturaleza?: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave?: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
+}
+
+/**
+ * Si existe baja incobrable exige montoIncobrable y metadatos E1 de corrección.
+ */
+export interface ClienteBajaInput {
+  /** @minimum 1 */
+  sitioOrigenId?: number;
+  naturaleza?: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave?: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
+  /** @minLength 20 */
+  motivo: string;
+  /** @exclusiveMinimum 0 */
+  montoIncobrable?: number;
+  adminUsuario?: string;
+  adminPassword?: string;
+}
+
+export type ClienteReversoInputFormaPago = typeof ClienteReversoInputFormaPago[keyof typeof ClienteReversoInputFormaPago];
+
+
+export const ClienteReversoInputFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
+} as const;
+
+export type ClienteReversoInputCuentaDestino = typeof ClienteReversoInputCuentaDestino[keyof typeof ClienteReversoInputCuentaDestino];
+
+
+export const ClienteReversoInputCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export interface ClienteReversoInput {
+  /** @minimum 1 */
+  sitioOrigenId: number;
+  naturaleza: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
+  /** @minLength 1 */
+  motivo: string;
+  /** @exclusiveMinimum 0 */
+  importe: number;
+  formaPago?: ClienteReversoInputFormaPago;
+  cuentaDestino?: ClienteReversoInputCuentaDestino;
+  /** @nullable */
+  referencia?: string | null;
+}
+
+export interface CreditIdentitySnapshot {
+  cliente_id: number;
+  tipo: string;
+  importe: number;
+  /** @nullable */
+  ticket_id: number | null;
+  /** @nullable */
+  movimiento_origen_id: number | null;
+}
+
+export interface CreditAttributionInput {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  id?: string;
+  /** @minimum 1 */
+  movimientoId: number;
+  /** Fecha SQL exacta con microsegundos; no convertir a Date. */
+  movimientoCreatedAt: string;
+  identidadSnapshot: CreditIdentitySnapshot;
+  /** @minimum 1 */
+  sitioOrigenId: number;
+  /** @minLength 1 */
+  evidencia: string;
+  /** @minLength 1 */
+  motivo: string;
+  /**
+     * @nullable
+     * @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+     */
+  anteriorId: string | null;
+}
+
+export interface CreditAttribution {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  id: string;
+  movimientoId: number;
+  movimientoCreatedAt: string;
+  identidadSnapshot: CreditIdentitySnapshot;
+  /**
+     * @nullable
+     * @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+     */
+  anteriorId: string | null;
+  sitioOrigenId: number;
+  evidencia: string;
+  motivo: string;
+  usuarioId: number;
+  createdAt: string;
+}
+
+export interface CreditMovementEvidence {
+  movimientoId: number;
+  movimientoCreatedAt: string;
+  identidadSnapshot: CreditIdentitySnapshot;
+  /** @nullable */
+  sitioOrigenOriginalId: number | null;
+  naturalezaOriginal: CreditNature | null;
+  ultimaAtribucion: CreditAttribution | null;
+  /** @nullable */
+  sitioDeterminadoId: number | null;
+  sitioEtiqueta: string;
+}
+
+export interface CreditEvidence {
+  clienteId: number;
+  atribucionHabilitada: boolean;
+  movimientos: CreditMovementEvidence[];
+}
+
+export interface CreditAttributionResult {
+  atribucion: CreditAttribution;
+  replay: boolean;
+}
+
+export type CreditPendingReceiptInputNaturaleza = typeof CreditPendingReceiptInputNaturaleza[keyof typeof CreditPendingReceiptInputNaturaleza];
+
+
+export const CreditPendingReceiptInputNaturaleza = {
+  INGRESO_FISICO: 'INGRESO_FISICO',
+} as const;
+
+export type CreditPendingReceiptInputMedio = typeof CreditPendingReceiptInputMedio[keyof typeof CreditPendingReceiptInputMedio];
+
+
+export const CreditPendingReceiptInputMedio = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+  FACTURADO: 'FACTURADO',
+} as const;
+
+export type CreditPendingReceiptInputCuentaDestino = typeof CreditPendingReceiptInputCuentaDestino[keyof typeof CreditPendingReceiptInputCuentaDestino];
+
+
+export const CreditPendingReceiptInputCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+/**
+ * Soporte futuro exclusivamente. COBRO_PENDIENTE permanece deshabilitado en E1 y nunca se inserta como abono.
+ */
+export interface CreditPendingReceiptInput {
+  /** @minimum 1 */
+  sitioOrigenId: number;
+  naturaleza: CreditPendingReceiptInputNaturaleza;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
+  /** @minimum 1 */
+  clienteId: number;
+  /** @exclusiveMinimum 0 */
+  importe: number;
+  fechaReal: string;
+  medio: CreditPendingReceiptInputMedio;
+  cuentaDestino: CreditPendingReceiptInputCuentaDestino;
+  /** @nullable */
+  motivo?: string | null;
+  /** @nullable */
+  referencia?: string | null;
+}
+
 export type SolicitudPagoDirigidoInputTipo = typeof SolicitudPagoDirigidoInputTipo[keyof typeof SolicitudPagoDirigidoInputTipo];
 
 
@@ -135,6 +412,23 @@ export const SolicitudPagoDirigidoInputTipo = {
 } as const;
 
 export interface SolicitudPagoDirigidoInput {
+  /** @minimum 1 */
+  sitioOrigenId?: number;
+  naturaleza?: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave?: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
   tipo: SolicitudPagoDirigidoInputTipo;
   /** @minimum 1 */
   entidadId: number;
@@ -2918,7 +3212,27 @@ export interface ClientePagoPreviewInput {
   fechaEfectiva?: string | null;
 }
 
+/**
+ * La autorización de crédito exige sitio operativo explícito, UUID y OPERACION_CREDITO_SIN_DINERO.
+ */
 export interface AutorizarNotaInput {
+  /** @minimum 1 */
+  sitioOrigenId: number;
+  naturaleza: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
   /**
      * Campo legado aceptado por compatibilidad; el servidor lo ignora y aplica automáticamente por FIFO el menor entre el favor disponible y la nota.
      * @pattern ^\d+(\.\d{1,2})?$
@@ -3435,6 +3749,23 @@ export const ClientePagoInputCuentaDestino = {
 } as const;
 
 export interface ClientePagoInput {
+  /** @minimum 1 */
+  sitioOrigenId: number;
+  naturaleza: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
   /** @minimum 0.01 */
   importe: number;
   formaPago: ClientePagoInputFormaPago;
@@ -3448,6 +3779,23 @@ export interface ClientePagoInput {
 }
 
 export interface ClienteAjusteInput {
+  /** @minimum 1 */
+  sitioOrigenId: number;
+  naturaleza: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion: string | null;
   importe: number;
   /** @minLength 10 */
   motivo: string;
@@ -5516,6 +5864,23 @@ export interface BorradorSalidaResult {
 }
 
 export interface MotivoSalidaInput {
+  /** @minimum 1 */
+  sitioOrigenId?: number;
+  naturaleza?: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave?: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
   /** @minLength 10 */
   motivo: string;
   /** @minimum 1 */
@@ -6305,6 +6670,23 @@ export interface TicketCobroInput {
 }
 
 export interface TicketCancelacionInput {
+  /** @minimum 1 */
+  sitioOrigenId?: number;
+  naturaleza?: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave?: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
   /**
      * @minLength 1
      * @maxLength 1000
@@ -7763,6 +8145,14 @@ ubicacionId?: number;
 ubicacionIds?: string;
 };
 
+export type GetClienteEvidenciaCreditoParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId?: number;
+prepararAtribucion?: boolean;
+};
+
 export type ListCuentasIncobrablesParams = {
 fechaDesde?: string;
 fechaHasta?: string;
@@ -7801,13 +8191,6 @@ ubicacionIds?: string;
 export type GetClientesAnaliticaParams = {
 desde?: CalendarDate;
 hasta?: CalendarDate;
-};
-
-export type BajaClienteBody = {
-  /** @minLength 20 */
-  motivo: string;
-  adminUsuario?: string;
-  adminPassword?: string;
 };
 
 export type BajaCliente200 = {

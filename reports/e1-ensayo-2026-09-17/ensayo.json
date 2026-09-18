@@ -1,0 +1,1214 @@
+{
+  "status": "PASS",
+  "startedAtUtc": "2026-09-17T22:55:38.889Z",
+  "rounds": [
+    {
+      "name": "normal-migration-27",
+      "syntheticCancellationTest": false,
+      "watchdogBudgetMs": 30000,
+      "backendPid": 3986,
+      "statements": [
+        {
+          "id": "S01",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.211818,
+          "elapsedMs": 0.288807,
+          "status": "PASS",
+          "command": "BEGIN"
+        },
+        {
+          "id": "S02",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.514033,
+          "elapsedMs": 0.383837,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S03",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.904286,
+          "elapsedMs": 0.16039799999999993,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S04",
+          "synthetic": false,
+          "startedAfterBeginMs": 1.079556,
+          "elapsedMs": 0.12985000000000002,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S05",
+          "synthetic": false,
+          "startedAfterBeginMs": 1.213756,
+          "elapsedMs": 2.6687819999999998,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S06",
+          "synthetic": false,
+          "startedAfterBeginMs": 3.88961,
+          "elapsedMs": 0.18994899999999992,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S07",
+          "synthetic": false,
+          "startedAfterBeginMs": 4.084591,
+          "elapsedMs": 13.481736999999999,
+          "status": "PASS",
+          "command": "DO"
+        },
+        {
+          "id": "S08",
+          "synthetic": false,
+          "startedAfterBeginMs": 17.57321,
+          "elapsedMs": 0.35484399999999994,
+          "status": "PASS",
+          "command": "LOCK"
+        },
+        {
+          "id": "S09",
+          "synthetic": false,
+          "startedAfterBeginMs": 17.931812,
+          "elapsedMs": 1.3317499999999995,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S10",
+          "synthetic": false,
+          "startedAfterBeginMs": 19.295054,
+          "elapsedMs": 10.571380999999999,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S11",
+          "synthetic": false,
+          "startedAfterBeginMs": 29.874207,
+          "elapsedMs": 8.335747000000005,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S12",
+          "synthetic": false,
+          "startedAfterBeginMs": 38.214779,
+          "elapsedMs": 266.674088,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S13",
+          "synthetic": false,
+          "startedAfterBeginMs": 304.898822,
+          "elapsedMs": 1.723177000000021,
+          "status": "PASS",
+          "command": "ALTER"
+        },
+        {
+          "id": "S14",
+          "synthetic": false,
+          "startedAfterBeginMs": 306.6258,
+          "elapsedMs": 2.83248999999995,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S15",
+          "synthetic": false,
+          "startedAfterBeginMs": 309.465406,
+          "elapsedMs": 1.1408340000000408,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S16",
+          "synthetic": false,
+          "startedAfterBeginMs": 310.609723,
+          "elapsedMs": 0.32440000000002556,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S17",
+          "synthetic": false,
+          "startedAfterBeginMs": 310.936651,
+          "elapsedMs": 0.39045400000003383,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S18",
+          "synthetic": false,
+          "startedAfterBeginMs": 311.329838,
+          "elapsedMs": 0.5069670000000315,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S19",
+          "synthetic": false,
+          "startedAfterBeginMs": 311.839293,
+          "elapsedMs": 0.23750799999999117,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S20",
+          "synthetic": false,
+          "startedAfterBeginMs": 312.07991,
+          "elapsedMs": 0.28101700000001983,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S21",
+          "synthetic": false,
+          "startedAfterBeginMs": 312.363361,
+          "elapsedMs": 0.13452399999999898,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S22",
+          "synthetic": false,
+          "startedAfterBeginMs": 312.50023,
+          "elapsedMs": 0.3043040000000019,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S23",
+          "synthetic": false,
+          "startedAfterBeginMs": 312.8069,
+          "elapsedMs": 0.12335000000001628,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S24",
+          "synthetic": false,
+          "startedAfterBeginMs": 312.932622,
+          "elapsedMs": 0.1996000000000322,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S25",
+          "synthetic": false,
+          "startedAfterBeginMs": 313.134903,
+          "elapsedMs": 0.11927900000000591,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S26",
+          "synthetic": false,
+          "startedAfterBeginMs": 313.256504,
+          "elapsedMs": 0.11512599999997519,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S27",
+          "synthetic": false,
+          "startedAfterBeginMs": 313.37425,
+          "elapsedMs": 5.481278999999972,
+          "status": "PASS",
+          "command": "COMMIT"
+        }
+      ],
+      "committed": true,
+      "totalMs": 321.518553,
+      "s08FinishToCommitMs": 300.926937,
+      "s08FinishToTerminationMs": null,
+      "watchdog": {
+        "fired": false
+      }
+    },
+    {
+      "name": "normal-conditional-reversal-28",
+      "syntheticCancellationTest": false,
+      "watchdogBudgetMs": 30000,
+      "backendPid": 3987,
+      "statements": [
+        {
+          "id": "S01",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.034124,
+          "elapsedMs": 0.10698799999999999,
+          "status": "PASS",
+          "command": "BEGIN"
+        },
+        {
+          "id": "S02",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.142829,
+          "elapsedMs": 0.112036,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S03",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.256255,
+          "elapsedMs": 0.095829,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S04",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.353854,
+          "elapsedMs": 0.07812000000000002,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S05",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.433317,
+          "elapsedMs": 0.066473,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S06",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.500991,
+          "elapsedMs": 0.08182699999999998,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S07",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.583982,
+          "elapsedMs": 4.093034,
+          "status": "PASS",
+          "command": "DO"
+        },
+        {
+          "id": "S08",
+          "synthetic": false,
+          "startedAfterBeginMs": 4.681391,
+          "elapsedMs": 0.2427830000000002,
+          "status": "PASS",
+          "command": "LOCK"
+        },
+        {
+          "id": "S09",
+          "synthetic": false,
+          "startedAfterBeginMs": 4.925763,
+          "elapsedMs": 1.4393279999999997,
+          "status": "PASS",
+          "command": "DO"
+        },
+        {
+          "id": "S10",
+          "synthetic": false,
+          "startedAfterBeginMs": 6.367521,
+          "elapsedMs": 2.1427829999999997,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S11",
+          "synthetic": false,
+          "startedAfterBeginMs": 8.514284,
+          "elapsedMs": 0.22409500000000016,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S12",
+          "synthetic": false,
+          "startedAfterBeginMs": 8.740554,
+          "elapsedMs": 0.12039900000000081,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S13",
+          "synthetic": false,
+          "startedAfterBeginMs": 8.862244,
+          "elapsedMs": 0.2676020000000001,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S14",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.131808,
+          "elapsedMs": 0.16810100000000006,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S15",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.301532,
+          "elapsedMs": 0.11396500000000032,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S16",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.417111,
+          "elapsedMs": 0.10671199999999992,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S17",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.524998,
+          "elapsedMs": 0.12443700000000035,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S18",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.650695,
+          "elapsedMs": 0.08746999999999971,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S19",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.739324,
+          "elapsedMs": 0.10512699999999953,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S20",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.845624,
+          "elapsedMs": 0.08751599999999904,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S21",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.934302,
+          "elapsedMs": 0.3540599999999987,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S22",
+          "synthetic": false,
+          "startedAfterBeginMs": 10.289532,
+          "elapsedMs": 0.14928700000000106,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S23",
+          "synthetic": false,
+          "startedAfterBeginMs": 10.440149,
+          "elapsedMs": 1.8575169999999996,
+          "status": "PASS",
+          "command": "ALTER"
+        },
+        {
+          "id": "S24",
+          "synthetic": false,
+          "startedAfterBeginMs": 12.299367,
+          "elapsedMs": 1.291404,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S25",
+          "synthetic": false,
+          "startedAfterBeginMs": 13.593048,
+          "elapsedMs": 1.671418000000001,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S26",
+          "synthetic": false,
+          "startedAfterBeginMs": 15.267744,
+          "elapsedMs": 0.7621520000000004,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S27",
+          "synthetic": false,
+          "startedAfterBeginMs": 16.031736,
+          "elapsedMs": 0.1421100000000024,
+          "status": "PASS",
+          "command": "DROP"
+        },
+        {
+          "id": "S28",
+          "synthetic": false,
+          "startedAfterBeginMs": 16.175151,
+          "elapsedMs": 4.840251000000002,
+          "status": "PASS",
+          "command": "COMMIT"
+        }
+      ],
+      "committed": true,
+      "totalMs": 23.049311,
+      "s08FinishToCommitMs": 16.09031,
+      "s08FinishToTerminationMs": null,
+      "watchdog": {
+        "fired": false
+      }
+    },
+    {
+      "name": "extra-synthetic-cancellation",
+      "syntheticCancellationTest": true,
+      "watchdogBudgetMs": 1000,
+      "backendPid": 3988,
+      "statements": [
+        {
+          "id": "S01",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.024382,
+          "elapsedMs": 0.11722300000000001,
+          "status": "PASS",
+          "command": "BEGIN"
+        },
+        {
+          "id": "S02",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.143509,
+          "elapsedMs": 0.12609700000000001,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S03",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.270975,
+          "elapsedMs": 0.11184,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S04",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.384114,
+          "elapsedMs": 0.07243,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S05",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.457742,
+          "elapsedMs": 0.06075900000000001,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S06",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.519747,
+          "elapsedMs": 0.06205000000000005,
+          "status": "PASS",
+          "command": "SET"
+        },
+        {
+          "id": "S07",
+          "synthetic": false,
+          "startedAfterBeginMs": 0.583056,
+          "elapsedMs": 8.521866,
+          "status": "PASS",
+          "command": "DO"
+        },
+        {
+          "id": "S08",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.10693,
+          "elapsedMs": 0.1328599999999991,
+          "status": "PASS",
+          "command": "LOCK"
+        },
+        {
+          "id": "S09",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.240938,
+          "elapsedMs": 0.5588630000000006,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S10",
+          "synthetic": false,
+          "startedAfterBeginMs": 9.801486,
+          "elapsedMs": 9.302416000000001,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S11",
+          "synthetic": false,
+          "startedAfterBeginMs": 19.106837,
+          "elapsedMs": 10.388360000000002,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S12",
+          "synthetic": false,
+          "startedAfterBeginMs": 29.498678,
+          "elapsedMs": 137.06985699999998,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S13",
+          "synthetic": false,
+          "startedAfterBeginMs": 166.572805,
+          "elapsedMs": 1.9964910000000202,
+          "status": "PASS",
+          "command": "ALTER"
+        },
+        {
+          "id": "S14",
+          "synthetic": false,
+          "startedAfterBeginMs": 168.571327,
+          "elapsedMs": 2.693517000000014,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S15",
+          "synthetic": false,
+          "startedAfterBeginMs": 171.268242,
+          "elapsedMs": 1.1222370000000126,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S16",
+          "synthetic": false,
+          "startedAfterBeginMs": 172.395089,
+          "elapsedMs": 0.40823199999999815,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S17",
+          "synthetic": false,
+          "startedAfterBeginMs": 172.80537,
+          "elapsedMs": 0.2728119999999876,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S18",
+          "synthetic": false,
+          "startedAfterBeginMs": 173.079907,
+          "elapsedMs": 0.38813000000001807,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S19",
+          "synthetic": false,
+          "startedAfterBeginMs": 173.469447,
+          "elapsedMs": 0.16263000000000716,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S20",
+          "synthetic": false,
+          "startedAfterBeginMs": 173.633377,
+          "elapsedMs": 0.3586439999999982,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S21",
+          "synthetic": false,
+          "startedAfterBeginMs": 173.993561,
+          "elapsedMs": 0.16438400000001252,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S22",
+          "synthetic": false,
+          "startedAfterBeginMs": 174.159236,
+          "elapsedMs": 0.13906000000000063,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S23",
+          "synthetic": false,
+          "startedAfterBeginMs": 174.299502,
+          "elapsedMs": 0.2190830000000119,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S24",
+          "synthetic": false,
+          "startedAfterBeginMs": 174.520116,
+          "elapsedMs": 0.120900000000006,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S25",
+          "synthetic": false,
+          "startedAfterBeginMs": 174.642239,
+          "elapsedMs": 0.10527600000000348,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "S26",
+          "synthetic": false,
+          "startedAfterBeginMs": 174.74875,
+          "elapsedMs": 0.09933000000000902,
+          "status": "PASS",
+          "command": "CREATE"
+        },
+        {
+          "id": "SYNTHETIC_BEFORE_COMMIT",
+          "synthetic": true,
+          "startedAfterBeginMs": 174.853302,
+          "elapsedMs": 827.856938,
+          "status": "FAIL",
+          "error": {
+            "message": "terminating connection due to administrator command",
+            "code": "57P01"
+          }
+        }
+      ],
+      "committed": false,
+      "totalMs": 1103.604355,
+      "s08FinishToCommitMs": null,
+      "s08FinishToTerminationMs": 1094.351738,
+      "watchdog": {
+        "fired": true,
+        "firedAfterBeginMs": 1001.052635,
+        "terminateReturned": true,
+        "backendAbsent": true
+      },
+      "error": {
+        "message": "terminating connection due to administrator command",
+        "code": "57P01"
+      }
+    }
+  ],
+  "scope": "Disposable clone only; no source/backup/Drive execution",
+  "timingClaimsBeforeExecution": "none",
+  "target": {
+    "database": "restore_disposable_20260917165108-3655",
+    "socketDirectory": "/tmp/prompt-h-block2-20260917165108-3655-3655",
+    "clusterDirectory": "/home/runner/workspace/.local/backups/prompt-h-block2-20260917165108-3655/restore-cluster",
+    "port": 5432,
+    "superuserRole": "postgres"
+  },
+  "prerequisites": {
+    "metadataPath": "/home/runner/workspace/reports/e1-ensayo-2026-09-17/block2-restore-metadata.json",
+    "metadataSha256": "0c7c34263a24a583528e634e42982ae49bf3b373c546852f6b3b0a8eb81b8555",
+    "drivePath": "/home/runner/workspace/reports/e1-ensayo-2026-09-17/drive-verification.json",
+    "driveVerificationSha256": "94ffa387ac12eebb7abb46c76c1a3445b8d0bc379baba4a6cdc75af84c431356",
+    "archiveSha256": "583ac96297ca40573aa96249e2b25de68812f98bd7b675214473932fe81f2925",
+    "archiveSizeBytes": 464990,
+    "capturedAtUtc": "2026-09-17T22:51:08.099Z"
+  },
+  "transforms": [
+    {
+      "originalPath": "/home/runner/workspace/reports/e1-sql/01-propuesta.sql",
+      "originalSha256": "15148edc4555b90a0007dba4536c0a60ecb9904f5885b457ade99b2fe72d931a",
+      "targetPath": "/home/runner/workspace/reports/e1-ensayo-2026-09-17/rehearsaldraftpatch/01.sql",
+      "targetSha256": "c48b2b8532ce2f2b05a767786250d5af871333ccf0280b44d856115f709cb84c",
+      "numberedStatementCount": 27,
+      "changes": [
+        {
+          "line": 2,
+          "before": "-- CANDIDATO: heliumdb/public, PostgreSQL 16, según informe anterior;",
+          "after": "-- CANDIDATO: restore_disposable_20260917165108-3655/public, PostgreSQL 16, según informe anterior;"
+        },
+        {
+          "line": 41,
+          "before": "  RAISE EXCEPTION 'E1_NO_GO: identidad actual del pool de la API no confirmada; este borrador no puede ejecutarse';",
+          "after": null
+        },
+        {
+          "line": 42,
+          "before": "  IF current_database() <> 'heliumdb' THEN",
+          "after": "  IF current_database() <> 'restore_disposable_20260917165108-3655' THEN"
+        },
+        {
+          "line": 43,
+          "before": "    RAISE EXCEPTION 'Destino incorrecto: se requiere heliumdb; recibido %', current_database();",
+          "after": "    RAISE EXCEPTION 'Destino incorrecto: se requiere restore_disposable_20260917165108-3655; recibido %', current_database();"
+        }
+      ],
+      "numberedStatements": [
+        {
+          "id": "S01",
+          "sha256": "ef84d8cd1cb848ccda678eafd99759c666c102f8393e2e78f620c6c6053e7772"
+        },
+        {
+          "id": "S02",
+          "sha256": "643af8bcb2dd0579288bf11963b24ec7206f8361c04b030fa15c618c73adec7f"
+        },
+        {
+          "id": "S03",
+          "sha256": "0ed914a97a20712394bccf355381f1bdbfdf7b09ae53743e6aa1e13b4a783ac7"
+        },
+        {
+          "id": "S04",
+          "sha256": "bce14b734b4bdb7c4b716539e22397b510a13f892b42dcb4d5b6fd06438324f0"
+        },
+        {
+          "id": "S05",
+          "sha256": "02502f292a9f73da31a0ab504c7d0ca49c3a3277ad431afc9d7e544c265943a8"
+        },
+        {
+          "id": "S06",
+          "sha256": "eb607a11cbd736d1df93e491b03f89a6f5208bb9014a43c2e6a17f53266a2464"
+        },
+        {
+          "id": "S07",
+          "sha256": "c028d714a3ad59a3687a3bafbbdbc2b981773509814b4529da566ed20bce28b9"
+        },
+        {
+          "id": "S08",
+          "sha256": "efef6ea100b6c386ce0cb1882d3aa2e0cce93e6aa599c843f94b6a10a7be0176"
+        },
+        {
+          "id": "S09",
+          "sha256": "9242214e88effadc39abc6b7b296723f9ec0d8815139b05213a5346d85a3d442"
+        },
+        {
+          "id": "S10",
+          "sha256": "46a1945fcdfecf819b2762920d6a15c1faae9b6bafaf0110377b384e35eae246"
+        },
+        {
+          "id": "S11",
+          "sha256": "7130a80d7a6c11147fb2b96a5db3a4ded4bf09506a643f6ae0fa02ebcb682e96"
+        },
+        {
+          "id": "S12",
+          "sha256": "e8eca6e20518afc296987a956addb987a6fb193cf89301bed9fd40b5d940d442"
+        },
+        {
+          "id": "S13",
+          "sha256": "14e38351085b0d59d17c42b58c299f9ff7f66e838dabc5654e6fc854c473b755"
+        },
+        {
+          "id": "S14",
+          "sha256": "1b04f5dc13c97cd54ff937f7daaafca7dbdfb9f8e78b615fdfed73f2978c2cdd"
+        },
+        {
+          "id": "S15",
+          "sha256": "56bef9d849381f70b1c036814e122f7ce4ed472db8895ae50ab4c0d753355e7c"
+        },
+        {
+          "id": "S16",
+          "sha256": "bb27069722a12669d8d932568c3ff7140e256082f41fb82da9b4c8d1b3d489f1"
+        },
+        {
+          "id": "S17",
+          "sha256": "a6cbe0a7132e09b46667d1459e6c403ecebe5e6d9924cd67d25d24dc96cdceb7"
+        },
+        {
+          "id": "S18",
+          "sha256": "0c654399253a9194c23b374adabed7afdf06b8a8d0a3a460f4281a4a78b460da"
+        },
+        {
+          "id": "S19",
+          "sha256": "5cac1dd9b836e866d08af6f1804192da66c2e3eac0d5588c5d9916f73b932c26"
+        },
+        {
+          "id": "S20",
+          "sha256": "7c6f858d2b0658138d4a921bd6989d75472e6612f4d57cbb269cf88a6cd58c50"
+        },
+        {
+          "id": "S21",
+          "sha256": "7964bf9d3789bdb4728f246c01afbe4202fa557e086506d05eb45e5ed23a4a32"
+        },
+        {
+          "id": "S22",
+          "sha256": "4da171b50cbd85fb51ead7e5b0d3237c25bdcb0b171a000f0d21c76a0c40d7d9"
+        },
+        {
+          "id": "S23",
+          "sha256": "dd83ac9d5da3ed63a0825a77a2a21631d4763f107202c5da5615d48a372da59d"
+        },
+        {
+          "id": "S24",
+          "sha256": "3337b440129bd85ba32f2863eb039e454fc9ffebe242b7aec2a9b0c36fb47521"
+        },
+        {
+          "id": "S25",
+          "sha256": "b0ea7cb9b09198ce46eace64fd22873e007826a15640fbea53f51f660abd751f"
+        },
+        {
+          "id": "S26",
+          "sha256": "c3437ca5699e4d3c77fa84ce642c23482c45fdea93e6bf6756c8ba1377c4ab34"
+        },
+        {
+          "id": "S27",
+          "sha256": "6117ac630be8a22d6d3df4e907ad44528767055c4fdb89486d68fd3b3606674a"
+        }
+      ]
+    },
+    {
+      "originalPath": "/home/runner/workspace/reports/e1-sql/02-reversion-condicionada.sql",
+      "originalSha256": "d2324e980e128f264ea64187df932f48ae8386e1a830c2b958675d1bb3b9b7e7",
+      "targetPath": "/home/runner/workspace/reports/e1-ensayo-2026-09-17/rehearsaldraftpatch/02.sql",
+      "targetSha256": "299033e1e36c49c11e6ac33ca5b0b26f222d08d84b01ed59294cb52fdb325c5d",
+      "numberedStatementCount": 28,
+      "changes": [
+        {
+          "line": 2,
+          "before": "-- CANDIDATO heliumdb/public, PostgreSQL 16; NO confirmado actualmente por API.",
+          "after": "-- CANDIDATO restore_disposable_20260917165108-3655/public, PostgreSQL 16; NO confirmado actualmente por API."
+        },
+        {
+          "line": 33,
+          "before": "  RAISE EXCEPTION 'E1_NO_GO: identidad actual y propiedad de objetos no confirmadas; reversión no habilitada';",
+          "after": null
+        },
+        {
+          "line": 34,
+          "before": "  IF current_database() <> 'heliumdb' THEN",
+          "after": "  IF current_database() <> 'restore_disposable_20260917165108-3655' THEN"
+        },
+        {
+          "line": 35,
+          "before": "    RAISE EXCEPTION 'Destino incorrecto: se requiere heliumdb; recibido %', current_database();",
+          "after": "    RAISE EXCEPTION 'Destino incorrecto: se requiere restore_disposable_20260917165108-3655; recibido %', current_database();"
+        }
+      ],
+      "numberedStatements": [
+        {
+          "id": "S01",
+          "sha256": "ef84d8cd1cb848ccda678eafd99759c666c102f8393e2e78f620c6c6053e7772"
+        },
+        {
+          "id": "S02",
+          "sha256": "643af8bcb2dd0579288bf11963b24ec7206f8361c04b030fa15c618c73adec7f"
+        },
+        {
+          "id": "S03",
+          "sha256": "0ed914a97a20712394bccf355381f1bdbfdf7b09ae53743e6aa1e13b4a783ac7"
+        },
+        {
+          "id": "S04",
+          "sha256": "bce14b734b4bdb7c4b716539e22397b510a13f892b42dcb4d5b6fd06438324f0"
+        },
+        {
+          "id": "S05",
+          "sha256": "02502f292a9f73da31a0ab504c7d0ca49c3a3277ad431afc9d7e544c265943a8"
+        },
+        {
+          "id": "S06",
+          "sha256": "eb607a11cbd736d1df93e491b03f89a6f5208bb9014a43c2e6a17f53266a2464"
+        },
+        {
+          "id": "S07",
+          "sha256": "55fe1753bfc22b0f9e4ec541d5207e9358ac6b6a1bd3d453a6ad0c795d40ac2f"
+        },
+        {
+          "id": "S08",
+          "sha256": "99121e8f31c0532c6d041bb8394b78f6c46c25091e8731a32a8ebc4249b33f9a"
+        },
+        {
+          "id": "S09",
+          "sha256": "5f93066ef3ee247a2518cb83dafe979091a1625b9965311de2e8d4b6bc87a406"
+        },
+        {
+          "id": "S10",
+          "sha256": "b1dbdffb859fa8f0c9660f66ba497682543db186e366f0ebb0a1a73f3f0e6009"
+        },
+        {
+          "id": "S11",
+          "sha256": "fd49b7a8e40e654573798bc179fb2970f20255a3b9eb01c37294e9170c6cb588"
+        },
+        {
+          "id": "S12",
+          "sha256": "b549db10da82d667ff51e2182c135580f5c562e4c0c23ab6096d235b7ae37e25"
+        },
+        {
+          "id": "S13",
+          "sha256": "5071ffbcd7e8b7fdede73c3279cc01b9ee406deeafc3eaf502b56af61acd033c"
+        },
+        {
+          "id": "S14",
+          "sha256": "385181f73c44fb5f2e86f2a11601044aa10876e82935190c59e4bbab0e5ae5f4"
+        },
+        {
+          "id": "S15",
+          "sha256": "8f71ecea2b693fb6afc7f3f147f519e4e09cadd2cc81ed9a66884d18c2b60c81"
+        },
+        {
+          "id": "S16",
+          "sha256": "9e5849aaf5c4229b3ae7622004f318592c75f0c6ef5119bd35f097c5999aa4bb"
+        },
+        {
+          "id": "S17",
+          "sha256": "ae2b4c69954e980eae1e7f57ad4ea1868dd3546af08f8897cca91de61b57ee04"
+        },
+        {
+          "id": "S18",
+          "sha256": "a04ba77c875e6f246e6e368e9fc331bd59a903753e5dae46f784018e0ad3ae50"
+        },
+        {
+          "id": "S19",
+          "sha256": "3137b9b5c094d265241adef0d04ef090863de02f650d8cab6e196b31d82f99f1"
+        },
+        {
+          "id": "S20",
+          "sha256": "84691137a035ec47b8d9dc3dde4e9a1658cd3689a718c003f23b1c7943e5815f"
+        },
+        {
+          "id": "S21",
+          "sha256": "0234f1f7c1bf7a1dd7d6c5f1213fa69bdd20b1059141ff6a13d83978344b4278"
+        },
+        {
+          "id": "S22",
+          "sha256": "73c90b2a2c4efc5c176c3cf5e88d1bc800d2a64ab3462d2ef661480c110c5289"
+        },
+        {
+          "id": "S23",
+          "sha256": "28b6b9c7ad6ee368fdfd0a2ef4771605fbd5b4d006d30271aecaed40f3cbb189"
+        },
+        {
+          "id": "S24",
+          "sha256": "119c14e24b4c5e93a09841ddec05c126083ea622ce80d6e019327c08ba04a51a"
+        },
+        {
+          "id": "S25",
+          "sha256": "83077ad5cd5026613edea9883343e2a5965485471a5b1a97452cfde5bb1e09ba"
+        },
+        {
+          "id": "S26",
+          "sha256": "f1fa4ab523b0a9573dc2c61536f2a8aa973a8ebbb04838a5130be4e4e2a8b0b5"
+        },
+        {
+          "id": "S27",
+          "sha256": "f7321af9a6dd950e0e5c31289c890bcc40f0b096efa1dc8166bbad68933eb41b"
+        },
+        {
+          "id": "S28",
+          "sha256": "cfd4d51157cd2e8107d4cc309034765771b2956f3f264e9c73499d1519f578dd"
+        }
+      ]
+    }
+  ],
+  "baselineTableCount": 63,
+  "baselineTriggerCount": 17,
+  "migrationVerification": {
+    "status": "PASS",
+    "categories": {
+      "tables": true,
+      "tableEvidence": true,
+      "constraints": true,
+      "indexes": true,
+      "functions": true,
+      "triggers": true,
+      "sequences": true,
+      "columns": true,
+      "database": true,
+      "sequenceState": true,
+      "internalTriggers": true,
+      "views": true,
+      "types": true,
+      "sequenceValues": true
+    },
+    "beforeSemanticSha256": "06aee606e72b54f287e75b61c048aac04b1131c87484701c6e7f695d906d0987",
+    "afterSemanticSha256": "06aee606e72b54f287e75b61c048aac04b1131c87484701c6e7f695d906d0987",
+    "tableCount": 63,
+    "noninternalTriggerCount": 17,
+    "columnComparisonOnlyExclusion": "ordinal_position (physical attnum)",
+    "physicalDatabaseSizeTelemetry": {
+      "before": "17019363",
+      "after": "17183203"
+    },
+    "actualMigratedTableCount": 66,
+    "actualMigratedNoninternalTriggerCount": 23,
+    "newTables": [
+      {
+        "schema": "public",
+        "table": "atribuciones_credito_e1",
+        "relkind": "r",
+        "count": "0",
+        "orderedCanonicalRowHash": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "table": "cobros_credito_pendientes_e1",
+        "relkind": "r",
+        "count": "0",
+        "orderedCanonicalRowHash": "d41d8cd98f00b204e9800998ecf8427e"
+      },
+      {
+        "schema": "public",
+        "table": "operaciones_credito_e1",
+        "relkind": "r",
+        "count": "0",
+        "orderedCanonicalRowHash": "d41d8cd98f00b204e9800998ecf8427e"
+      }
+    ],
+    "newColumnsAllNull": true,
+    "ledgerExcludedColumns": [
+      "sitio_origen_id",
+      "sesion_caja_id",
+      "naturaleza",
+      "operacion_productor",
+      "operacion_clave",
+      "nota_origen_id",
+      "origen_justificacion"
+    ],
+    "projectedLedgerHash": {
+      "count": "3",
+      "hash": "ba02f7b3e028d90d22d8094d3b716ae1"
+    },
+    "allowedChanges": {
+      "newTables": [
+        "operaciones_credito_e1",
+        "cobros_credito_pendientes_e1",
+        "atribuciones_credito_e1"
+      ],
+      "newFunctions": [
+        "impedir_mutacion_credito_e1",
+        "validar_contexto_credito_e1",
+        "validar_movimiento_credito_e1",
+        "validar_cobro_pendiente_e1",
+        "validar_atribucion_credito_e1"
+      ],
+      "newTriggers": [
+        "movimientos_credito.movimientos_validos_e1",
+        "cobros_credito_pendientes_e1.cobros_validos_e1",
+        "atribuciones_credito_e1.atribuciones_validas_e1",
+        "operaciones_credito_e1.operaciones_inmutables_e1",
+        "cobros_credito_pendientes_e1.cobros_inmutables_e1",
+        "atribuciones_credito_e1.atribuciones_inmutables_e1"
+      ],
+      "ledgerForeignKeys": [
+        "movimientos_sitio_fk_e1",
+        "movimientos_sesion_fk_e1",
+        "movimientos_nota_fk_e1",
+        "movimientos_operacion_fk_e1"
+      ],
+      "ledgerIndex": "movimientos_operacion_uq_e1",
+      "internalTriggers": "Only FK triggers belonging to the three new tables or four added ledger FKs",
+      "view": "saldos_cobros_credito_e1",
+      "enum": "naturaleza_credito_e1"
+    }
+  },
+  "rollbackVerification": {
+    "status": "PASS",
+    "categories": {
+      "tables": true,
+      "tableEvidence": true,
+      "constraints": true,
+      "indexes": true,
+      "functions": true,
+      "triggers": true,
+      "sequences": true,
+      "columns": true,
+      "database": true,
+      "sequenceState": true,
+      "internalTriggers": true,
+      "views": true,
+      "types": true,
+      "sequenceValues": true
+    },
+    "beforeSemanticSha256": "06aee606e72b54f287e75b61c048aac04b1131c87484701c6e7f695d906d0987",
+    "afterSemanticSha256": "06aee606e72b54f287e75b61c048aac04b1131c87484701c6e7f695d906d0987",
+    "tableCount": 63,
+    "noninternalTriggerCount": 17,
+    "columnComparisonOnlyExclusion": "ordinal_position (physical attnum)",
+    "physicalDatabaseSizeTelemetry": {
+      "before": "17019363",
+      "after": "17117667"
+    }
+  },
+  "ledgerUnblocked": {
+    "status": "PASS",
+    "elapsedMs": 0.359968,
+    "count": "3",
+    "queryTimeoutMs": 2500
+  },
+  "cancellationVerification": {
+    "status": "PASS",
+    "actualTermination": {
+      "fired": true,
+      "firedAfterBeginMs": 1001.052635,
+      "terminateReturned": true,
+      "backendAbsent": true
+    },
+    "syntheticSleepReached": true,
+    "syntheticSleepError": {
+      "message": "terminating connection due to administrator command",
+      "code": "57P01"
+    },
+    "commitAttempted": false,
+    "baselineComparison": {
+      "status": "PASS",
+      "categories": {
+        "tables": true,
+        "tableEvidence": true,
+        "constraints": true,
+        "indexes": true,
+        "functions": true,
+        "triggers": true,
+        "sequences": true,
+        "columns": true,
+        "database": true,
+        "sequenceState": true,
+        "internalTriggers": true,
+        "views": true,
+        "types": true,
+        "sequenceValues": true
+      },
+      "beforeSemanticSha256": "06aee606e72b54f287e75b61c048aac04b1131c87484701c6e7f695d906d0987",
+      "afterSemanticSha256": "06aee606e72b54f287e75b61c048aac04b1131c87484701c6e7f695d906d0987",
+      "tableCount": 63,
+      "noninternalTriggerCount": 17,
+      "columnComparisonOnlyExclusion": "ordinal_position (physical attnum)",
+      "physicalDatabaseSizeTelemetry": {
+        "before": "17019363",
+        "after": "17248739"
+      }
+    },
+    "normalDdlTiming": false
+  },
+  "originalsUnchanged": {
+    "status": "PASS",
+    "files": [
+      {
+        "file": "01-propuesta.sql",
+        "sha256": "15148edc4555b90a0007dba4536c0a60ecb9904f5885b457ade99b2fe72d931a",
+        "expectedSha256": "15148edc4555b90a0007dba4536c0a60ecb9904f5885b457ade99b2fe72d931a"
+      },
+      {
+        "file": "02-reversion-condicionada.sql",
+        "sha256": "d2324e980e128f264ea64187df932f48ae8386e1a830c2b958675d1bb3b9b7e7",
+        "expectedSha256": "d2324e980e128f264ea64187df932f48ae8386e1a830c2b958675d1bb3b9b7e7"
+      }
+    ]
+  },
+  "finishedAtUtc": "2026-09-17T22:55:41.354Z"
+}

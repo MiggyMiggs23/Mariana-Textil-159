@@ -1,0 +1,342 @@
+{
+  "status": "FAIL",
+  "startedAtUtc": "2026-09-17T23:11:38.548Z",
+  "prerequisites": {
+    "hashes": [
+      {
+        "path": "reports/e1-ejecucion-2026-09-17/autorizacion.md",
+        "sha256": "f7d60db4cb9d163c97294eecb71714c242ea75b8f0926c599c9772c9448d60db"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/operativo-propuesto/01.sql",
+        "sha256": "680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f"
+      },
+      {
+        "path": ".local/backups/prompt-h-block2-20260917165108-3655/source-snapshot.json",
+        "sha256": "f8716f44d8e8781c64d4c3f0ae4f7639185dd84a194667b5c7432c687005bfe9"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/migrated.json",
+        "sha256": "9c9fa6b9c66c08b0682e9d5e20e1cece0c64323cc31394a9deac3cc23832f031"
+      },
+      {
+        "path": "reports/e1-ensayo-2026-09-17/api-pool-identity.json",
+        "sha256": "ea8d4e23880ecb2714962b022ffb907de804b0a3d0fb83807363254864849429"
+      },
+      {
+        "path": "scripts/src/e1-approved-migration.mts",
+        "sha256": "6ddfaa6edb49c1a095b8599df584b60869aac6a4408c688cdb7ff35690e511b3"
+      },
+      {
+        "path": "scripts/src/prompt-h-block2-backup-restore.mts",
+        "sha256": "757e831b2b61feff93c3136896309c6e4aae1150dff574aa9db47d7e7b35534f"
+      },
+      {
+        "path": "scripts/src/e1-disposable-rehearsal.mts",
+        "sha256": "13f3c9c2ca82916110ad7afbb634528febb49227d943b22536b4f9fb1c47546e"
+      }
+    ],
+    "archiveSha256": "583ac96297ca40573aa96249e2b25de68812f98bd7b675214473932fe81f2925",
+    "cloneKeptFilesystemOnly": true,
+    "remoteDriveNotRecontacted": true
+  },
+  "sqlSha256": "680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f",
+  "statements": [
+    {
+      "id": "S01",
+      "startedAfterBeginMs": 0.135223,
+      "status": "PASS",
+      "command": "BEGIN",
+      "elapsedMs": 0.567804
+    },
+    {
+      "id": "S02",
+      "startedAfterBeginMs": 0.713731,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.7209199999999999
+    },
+    {
+      "id": "S03",
+      "startedAfterBeginMs": 1.444751,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.388903
+    },
+    {
+      "id": "S04",
+      "startedAfterBeginMs": 1.851216,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.36375199999999985
+    },
+    {
+      "id": "S05",
+      "startedAfterBeginMs": 2.222853,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.43120199999999986
+    },
+    {
+      "id": "S06",
+      "startedAfterBeginMs": 2.660795,
+      "status": "PASS",
+      "command": "SET",
+      "elapsedMs": 0.36625700000000005
+    }
+  ],
+  "commitSent": false,
+  "commitResponse": false,
+  "preflightStatus": "FAIL",
+  "ddlStatementsSent": 0,
+  "noDDL": true,
+  "automaticRetries": 0,
+  "s08FinishToCommitMs": null,
+  "s08FinishToCommitSentMs": null,
+  "infrastructureRetry": true,
+  "previousEvidencePreserved": true,
+  "comparisonExclusions": {
+    "source": [
+      "physical database size only"
+    ],
+    "migrated": [
+      "database metadata (identity checked separately)",
+      "column ordinal_position",
+      "sequence log_cnt only for clone/source semantics; operational preflight/postflight sequence values preserved exactly",
+      "OID-derived internal FK trigger name (all other semantics checked)"
+    ]
+  },
+  "watchdog": {
+    "fired": false,
+    "budgetMs": 30000
+  },
+  "apiBefore": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:11:38.557Z"
+  },
+  "initialExclusive": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "error": {
+    "message": "Unexpected default schema/search_path.",
+    "code": null
+  },
+  "rollbackUncommittedResponse": true,
+  "transactionTotalMs": 8.560935,
+  "apiAfter": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:11:39.113Z"
+  },
+  "resolutionIdentity": {
+    "status": "PASS",
+    "expectedSha256": "c755fb173de11b2e9481ad57ca937949483ae5f8708f0b7643fef7e81b376c07",
+    "observedSha256": "c755fb173de11b2e9481ad57ca937949483ae5f8708f0b7643fef7e81b376c07",
+    "defaultSchema": "public",
+    "backendPid": 320,
+    "readOnly": "on"
+  },
+  "resolutionExclusive": {
+    "status": "PASS",
+    "otherClientBackends": 0,
+    "preparedTransactions": 0
+  },
+  "expectedBeforeComparison": {
+    "status": "PASS",
+    "categories": {
+      "tables": {
+        "status": "PASS",
+        "expectedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6",
+        "observedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6",
+        "expectedCount": 63,
+        "observedCount": 63
+      },
+      "tableEvidence": {
+        "status": "PASS",
+        "expectedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+        "observedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+        "expectedCount": 63,
+        "observedCount": 63
+      },
+      "columns": {
+        "status": "PASS",
+        "expectedSha256": "ec1e1602a7d5e263f1268f5aef99401dc96d64796fb6d369d18cda3a7f8fe833",
+        "observedSha256": "ec1e1602a7d5e263f1268f5aef99401dc96d64796fb6d369d18cda3a7f8fe833",
+        "expectedCount": 634,
+        "observedCount": 634
+      },
+      "constraints": {
+        "status": "PASS",
+        "expectedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5",
+        "observedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5",
+        "expectedCount": 310,
+        "observedCount": 310
+      },
+      "indexes": {
+        "status": "PASS",
+        "expectedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e",
+        "observedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e",
+        "expectedCount": 227,
+        "observedCount": 227
+      },
+      "functions": {
+        "status": "PASS",
+        "expectedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10",
+        "observedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10",
+        "expectedCount": 50,
+        "observedCount": 50
+      },
+      "triggers": {
+        "status": "PASS",
+        "expectedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f",
+        "observedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f",
+        "expectedCount": 17,
+        "observedCount": 17
+      },
+      "sequences": {
+        "status": "PASS",
+        "expectedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "observedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "databaseIgnoringPhysicalSizeOnly": {
+        "status": "PASS",
+        "expectedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a",
+        "observedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a"
+      },
+      "sequenceState": {
+        "status": "PASS",
+        "expectedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "observedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "expectedCount": 47,
+        "observedCount": 47
+      }
+    },
+    "tables": 63,
+    "triggers": 17
+  },
+  "expectedAfterComparison": {
+    "status": "FAIL",
+    "categories": {
+      "tables": {
+        "status": "FAIL",
+        "expectedSha256": "468ec6aaf04489d53fabe7b2a6a27e9874487b85454726fb35bdb32752249621",
+        "observedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6",
+        "expectedCount": 66,
+        "observedCount": 63
+      },
+      "tableEvidence": {
+        "status": "FAIL",
+        "expectedSha256": "aad4d3f521b5ddffe383492d2a062da0a1436db0515305e1b1f26b93e18aeb76",
+        "observedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+        "expectedCount": 66,
+        "observedCount": 63
+      },
+      "columns": {
+        "status": "FAIL",
+        "expectedSha256": "6baae79f7ccbe2e44e0657c81b5afe621df17b7c817b1454dfe03302e7418a6e",
+        "observedSha256": "925afcf093d40fe985ac3fc71103860f26fc766f3024f92618f8ae306bd976a5",
+        "expectedCount": 671,
+        "observedCount": 634
+      },
+      "constraints": {
+        "status": "FAIL",
+        "expectedSha256": "cafb8f1c226738c77a185f4a6b0507fd36b17312730403eb8590a56ee2992ded",
+        "observedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5",
+        "expectedCount": 340,
+        "observedCount": 310
+      },
+      "indexes": {
+        "status": "FAIL",
+        "expectedSha256": "4c7af6e00e784dbb07b26d9a7fe73f8f778b9f19436dddc53def849fa1d15817",
+        "observedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e",
+        "expectedCount": 232,
+        "observedCount": 227
+      },
+      "functions": {
+        "status": "FAIL",
+        "expectedSha256": "2b3c2c69663d0e7a94984a5d91d5f0fc37fda188b20006e9a15694b72d56c432",
+        "observedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10",
+        "expectedCount": 55,
+        "observedCount": 50
+      },
+      "triggers": {
+        "status": "FAIL",
+        "expectedSha256": "f5f011c9c9dc0b9b28f9ac5b64f9e5db0ec94e32b34376e4c993220d20ecf84a",
+        "observedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f",
+        "expectedCount": 23,
+        "observedCount": 17
+      },
+      "sequences": {
+        "status": "PASS",
+        "expectedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "observedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "sequenceState": {
+        "status": "PASS",
+        "expectedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "observedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "views": {
+        "status": "FAIL",
+        "expectedSha256": "edfc19fadb47f6efe26db6247ce82650d958bce40a6c9dcb843b4359cb442e07",
+        "observedSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "expectedCount": 1,
+        "observedCount": 0
+      },
+      "types": {
+        "status": "FAIL",
+        "expectedSha256": "c4c08ea0cbbe047363b04d4a09b05bcdad8f847f1860329b544981f3a16aa132",
+        "observedSha256": "798af37bb1bf2e7ed3e5f6ccd79b56871ba644d6d6860a00f6165e9f90e7bf2a",
+        "expectedCount": 178,
+        "observedCount": 168
+      },
+      "sequenceValues": {
+        "status": "PASS",
+        "expectedSha256": "3ce638522259744a9e1c0ff552ce197205bc60a69b92046e023af37e5d2ef5f4",
+        "observedSha256": "3ce638522259744a9e1c0ff552ce197205bc60a69b92046e023af37e5d2ef5f4",
+        "expectedCount": 47,
+        "observedCount": 47
+      },
+      "internalTriggerSemantics": {
+        "status": "FAIL",
+        "expectedSha256": "58dab9de4ee3497b21527ff79dc7d0c685fd093d675c83346885e49f9205f02a",
+        "observedSha256": "3e78664c3165e095830a8dffd39e58197a2ceb8629dc177535678cc81b15b5ca",
+        "expectedCount": 728,
+        "observedCount": 672
+      }
+    },
+    "tables": 63,
+    "triggers": 17
+  },
+  "commitOutcome": "NOT_COMMITTED_VERIFIED",
+  "apiRemainsStopped": {
+    "status": "PASS",
+    "port": 8080,
+    "allLocalListenersAbsent": true,
+    "loopbackConnectionRefused": true,
+    "ipv6TableAbsent": true,
+    "ipv4Probe": "ECONNREFUSED",
+    "ipv6Probe": "EAFNOSUPPORT",
+    "observedAtUtc": "2026-09-17T23:11:39.926Z"
+  },
+  "finishedAtUtc": "2026-09-17T23:11:39.928Z"
+}

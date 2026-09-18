@@ -16,6 +16,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatAccountDestination, formatNumber } from "@workspace/number-format";
+import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface SolicitudPagoDirigidoDialogProps {
   open: boolean;
@@ -38,6 +40,8 @@ export function SolicitudPagoDirigidoDialog({
   saldoPendiente,
   onSuccess
 }: SolicitudPagoDirigidoDialogProps) {
+  const evidence = useCreditEvidenceDraft();
+  const queryClient = useQueryClient();
   const [step, setStep] = useState<"form" | "success">("form");
   const [amount, setAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("TRANSFERENCIA");
@@ -54,6 +58,7 @@ export function SolicitudPagoDirigidoDialog({
 
   useEffect(() => {
     if (open) {
+      evidence.reset();
       setStep("form");
       setAmount(String(saldoPendiente));
       setPaymentMethod("TRANSFERENCIA");
@@ -73,6 +78,7 @@ export function SolicitudPagoDirigidoDialog({
   }, [paymentMethod, tipo]);
 
   const handleSubmit = () => {
+    if (tipo === "CLIENTE" && evidence.problem(paymentMethod)) return;
     if (motivo.trim().length < 10) {
       toast({ title: "Motivo insuficiente", description: "El motivo debe tener al menos 10 caracteres.", variant: "destructive" });
       return;
@@ -89,6 +95,7 @@ export function SolicitudPagoDirigidoDialog({
     createSolicitud.mutate(
       {
         data: {
+          ...(tipo === "CLIENTE" ? evidence.build("ABONO_DIRIGIDO", { entidadId, documentoMovimientoId, amount, paymentMethod, destinationAccount, effectiveDate, reference, paymentNotes, motivo }, paymentMethod) : {}),
           tipo,
           entidadId,
           documentoMovimientoId,
@@ -103,6 +110,8 @@ export function SolicitudPagoDirigidoDialog({
       },
       {
         onSuccess: (data) => {
+          evidence.accepted();
+          queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && (query.queryKey[0].startsWith("/api/clientes") || query.queryKey[0].startsWith("/api/pagos-dirigidos")) });
           setResultState(data.estado);
           setStep("success");
           if (onSuccess) onSuccess();
@@ -119,6 +128,7 @@ export function SolicitudPagoDirigidoDialog({
   };
 
   const isFormValid =
+    (tipo !== "CLIENTE" || !evidence.problem(paymentMethod)) &&
     Number(amount) > 0 &&
     Number(amount) <= Number(saldoPendiente) &&
     motivo.trim().length >= 10 &&
@@ -146,6 +156,7 @@ export function SolicitudPagoDirigidoDialog({
 
         {step === "form" && (
           <div className="space-y-5 p-6 bg-secondary/10 max-h-[60vh] overflow-y-auto">
+            {tipo === "CLIENTE" && <CreditEvidenceFields draft={evidence} kind="payment" medium={paymentMethod} />}
             <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm p-4 rounded-lg flex gap-3 items-start shadow-sm">
               <Info className="w-5 h-5 shrink-0 mt-0.5 text-amber-600" />
               <p>
@@ -183,7 +194,7 @@ export function SolicitudPagoDirigidoDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="EFECTIVO" className="font-medium py-3">Efectivo</SelectItem>
+                    <SelectItem value="EFECTIVO" disabled={tipo === "CLIENTE" && evidence.nature !== "CORRECCION_CONTABLE"} className="font-medium py-3">Efectivo</SelectItem>
                     <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
                     <SelectItem value="FACTURADO" className="font-medium py-3">Facturado</SelectItem>
                   </SelectContent>

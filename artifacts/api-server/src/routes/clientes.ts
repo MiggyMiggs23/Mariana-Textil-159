@@ -89,6 +89,11 @@ import {
   renderClientesCarteraXlsx,
 } from "../lib/clientes-cartera-export";
 import { resolveReadScope } from "./inventario";
+import {
+  readCreditEvidenceInput, canonicalCreditMoney, assertCreditEvidenceAccess,
+  assertCreditEvidenceScope, claimCreditOperation, insertCreditMovementE1,
+  CreditEvidenceError,
+} from "../lib/credit-evidence";
 
 const router: IRouter = Router();
 
@@ -2147,7 +2152,17 @@ router.post(
         }
         throw error;
       }
+      const evidence = readCreditEvidenceInput(req.body);
       const body = CreateClientePagoBody.parse(req.body);
+      const intent = {
+        clienteId: id, importe: canonicalCreditMoney(body.importe),
+        formaPago: body.formaPago, cuentaDestino: body.cuentaDestino,
+        referencia: body.referencia ?? null, notas: body.notas ?? null,
+        fechaEfectiva: req.body?.fechaEfectiva == null ? null : fechaEfectiva.toISOString(),
+        ticketId: req.body?.ticketId == null ? null : Number(req.body.ticketId),
+        destinos: [],
+        ...evidence,
+      };
       if (!["EFECTIVO", "TRANSFERENCIA", "FACTURADO"].includes(body.formaPago)) {
         res.status(400).json({ error: "Forma de pago inválida." });
         return;
@@ -2161,6 +2176,22 @@ router.post(
         return;
       }
       const result = await db.transaction(async (tx) => {
+        await assertCreditEvidenceAccess(req, evidence, tx);
+        const claim = await claimCreditOperation(tx, {
+          productor: "ABONO_ORDINARIO", clave: evidence.operacionClave,
+          naturaleza: evidence.naturaleza, actorId: req.auth!.user.id, contenido: intent,
+        });
+        if (claim.replay) {
+          const audit = await tx.select({ data: auditoriaTable.datosDespues })
+            .from(auditoriaTable).where(and(
+              eq(auditoriaTable.accion, "PAGO_CLIENTE"),
+              sql`${auditoriaTable.datosDespues}->>'movimientoCreditoId' = ${String(claim.movement.id)}`,
+            )).limit(1);
+          const saved = audit[0]?.data as { asignaciones: ReturnType<typeof presentAllocations>; saldoAFavor: string; saldoAFavorGenerado: string } | undefined;
+          if (!saved) throw new CreditEvidenceError("No se encontró la respuesta auditada del abono original.", 409);
+          return { created: claim.movement, asignaciones: saved.asignaciones, saldoAFavor: saved.saldoAFavor, saldoAFavorGenerado: saved.saldoAFavorGenerado };
+        }
+        await assertCreditEvidenceScope(req, evidence, tx);
         await transactionAdvisoryLock(
           tx,
           ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
@@ -2172,14 +2203,12 @@ router.post(
           .where(eq(clientesTable.id, id))
           .for("update")
           .limit(1);
-        if (!client) return null;
+        if (!client) throw new CreditEvidenceError("Cliente no encontrado.", 404);
         if (!client.activo) throw new Error("INACTIVE_CLIENT");
         if (req.body?.ticketId != null) throw new Error("DIRECTED_PAYMENT");
         const importe = body.importe.toFixed(2);
         if (client.esSistema) throw new Error("SYSTEM_CLIENT_CREDIT");
-        const [created] = await tx
-          .insert(movimientosCreditoTable)
-          .values({
+        const created = await insertCreditMovementE1(tx, {
             clienteId: id,
             ticketId: null,
             tipo: "ABONO",
@@ -2201,8 +2230,7 @@ router.post(
               notas: body.notas ?? null,
               fechaCaptura: new Date().toISOString(),
             }),
-          })
-          .returning();
+          }, evidence, "ABONO_ORDINARIO");
         const projection = await loadCustomerCreditProjectionInTransaction(
           id,
           tx,
@@ -2265,6 +2293,9 @@ router.post(
         }),
       );
     } catch (e) {
+      if (e instanceof CreditEvidenceError) {
+        res.status(e.statusCode).json({ error: e.message }); return;
+      }
       if (e instanceof Error && e.message === "SYSTEM_CLIENT_CREDIT") {
         res.status(400).json({ error: "Venta a Público no admite movimientos de crédito." });
         return;
@@ -2295,7 +2326,28 @@ router.post(
       if (!clienteId || !pagoId || !motivo) {
         res.status(400).json({ error: "ID y motivo son obligatorios." }); return;
       }
+      const evidence = readCreditEvidenceInput(req.body);
+      const importe = canonicalCreditMoney(req.body?.importe);
+      if (Number(importe) <= 0) throw new CreditEvidenceError("Declara el importe positivo del abono a reversar.", 400);
+      const physical = evidence.naturaleza === "DEVOLUCION_FISICA";
+      const formaPago = physical ? req.body?.formaPago : null;
+      const cuentaDestino = physical ? req.body?.cuentaDestino : null;
+      const referencia = typeof req.body?.referencia === "string" ? req.body.referencia.trim() : null;
+      if (physical && (!["EFECTIVO", "TRANSFERENCIA", "FACTURADO"].includes(formaPago) || !isValidPaymentDestination(formaPago, cuentaDestino))) {
+        throw new CreditEvidenceError("Declara el medio y cuenta de la devolución real.", 400);
+      }
+      if (physical && formaPago === "TRANSFERENCIA" && !referencia) {
+        throw new CreditEvidenceError("La devolución por transferencia requiere referencia.", 400);
+      }
       const reverso = await db.transaction(async (tx) => {
+        await assertCreditEvidenceAccess(req, evidence, tx);
+        const claim = await claimCreditOperation(tx, {
+          productor: "REVERSO_ABONO", clave: evidence.operacionClave,
+          naturaleza: evidence.naturaleza, actorId: req.auth!.user.id,
+          contenido: { clienteId, pagoId, importe, motivo, formaPago, cuentaDestino, referencia, destinos: [{ movimientoOrigenId: pagoId, importe }], ...evidence },
+        });
+        if (claim.replay) return claim.movement;
+        await assertCreditEvidenceScope(req, evidence, tx);
         await transactionAdvisoryLock(
           tx,
           ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
@@ -2306,6 +2358,9 @@ router.post(
           WHERE id=${pagoId} AND cliente_id=${clienteId} AND tipo='ABONO' FOR UPDATE`);
         const abono = original.rows[0];
         if (!abono) throw new Error("PAYMENT_NOT_FOUND");
+        if (canonicalCreditMoney(Math.abs(Number(abono.importe))) !== importe) {
+          throw new CreditEvidenceError("El importe declarado no coincide con el abono original.", 409);
+        }
         const prior = await tx.execute(sql`
           SELECT id FROM movimientos_credito
           WHERE tipo='REVERSO' AND movimiento_origen_id=${pagoId}`);
@@ -2313,12 +2368,13 @@ router.post(
         const apps = await tx.execute(sql`
           SELECT venta_movimiento_id, importe::text AS importe FROM aplicaciones_credito
           WHERE abono_movimiento_id=${pagoId} ORDER BY id`);
-        const [created] = await tx.insert(movimientosCreditoTable).values({
+        const created = await insertCreditMovementE1(tx, {
           clienteId, tipo: "REVERSO", importe: Math.abs(Number(abono.importe)).toFixed(2),
           movimientoOrigenId: pagoId, usuarioId: req.auth!.user.id, notas: motivo,
+          formaPago, cuentaDestino, referencia,
           createdAt: new Date(),
           metadata: JSON.stringify({ origen: "REVERSO_ABONO", motivo }),
-        }).returning();
+        }, evidence, "REVERSO_ABONO");
         await tx.insert(auditoriaTable).values({
           usuarioId: req.auth!.user.id, accion: "REVERSAR_PAGO_CLIENTE",
           entidad: "movimientos_credito", entidadId: String(created!.id),
@@ -2336,6 +2392,9 @@ router.post(
       });
       res.status(201).json(reverso);
     } catch (error) {
+      if (error instanceof CreditEvidenceError) {
+        res.status(error.statusCode).json({ error: error.message }); return;
+      }
       if (error instanceof Error && error.message === "PAYMENT_NOT_FOUND") {
         res.status(404).json({ error: "El abono no corresponde al cliente." }); return;
       }
@@ -2381,7 +2440,33 @@ router.post(
         });
         return;
       }
+      const evidence = readCreditEvidenceInput(req.body);
+      if (!evidence.notaOrigenId && !evidence.origenJustificacion?.trim()) {
+        throw new CreditEvidenceError("Elige tienda y justifica el origen si no puedes identificar la nota.", 400);
+      }
+      if (ticketId != null && evidence.notaOrigenId !== ticketId) {
+        throw new CreditEvidenceError("La nota de origen debe coincidir con el ticket del ajuste.", 400);
+      }
+      const referencia = typeof req.body?.referencia === "string" ? req.body.referencia : null;
       const result = await db.transaction(async (tx) => {
+        await assertCreditEvidenceAccess(req, evidence, tx);
+        const claim = await claimCreditOperation(tx, {
+          productor: "AJUSTE_MANUAL", clave: evidence.operacionClave,
+          naturaleza: evidence.naturaleza, actorId: req.auth!.user.id,
+          contenido: {
+            clienteId: id, importe: canonicalCreditMoney(importe), motivo, ticketId, referencia,
+            destinos: ticketId == null ? [] : [{ ticketId, importe: canonicalCreditMoney(importe) }],
+            fechaEfectiva: req.body?.fechaEfectiva == null ? null : fechaEfectiva.toISOString(), ...evidence,
+          },
+        });
+        if (claim.replay) return claim.movement;
+        await assertCreditEvidenceScope(req, evidence, tx);
+        if (evidence.notaOrigenId != null) {
+          const [note] = await tx.select({ id: ticketsTable.id }).from(ticketsTable)
+            .where(and(eq(ticketsTable.id, evidence.notaOrigenId), eq(ticketsTable.clienteId, id),
+              eq(ticketsTable.ubicacionId, evidence.sitioOrigenId))).limit(1);
+          if (!note) throw new CreditEvidenceError("La nota de origen no pertenece al cliente y sitio autorizado.", 400);
+        }
         const [client] = await tx
           .select({
             id: clientesTable.id,
@@ -2392,7 +2477,7 @@ router.post(
           .where(eq(clientesTable.id, id))
           .for("update")
           .limit(1);
-        if (!client) return null;
+        if (!client) throw new CreditEvidenceError("Cliente no encontrado.", 404);
         if (!client.activo) throw new Error("INACTIVE_CLIENT");
         if (client.esSistema) throw new Error("SYSTEM_CLIENT_CREDIT");
         if (ticketId != null) {
@@ -2408,26 +2493,20 @@ router.post(
             .limit(1);
           if (!ticket) throw new Error("INVALID_PAYMENT_TICKET");
         }
-        const [created] = await tx
-          .insert(movimientosCreditoTable)
-          .values({
+        const created = await insertCreditMovementE1(tx, {
             clienteId: id,
             tipo: "AJUSTE",
             importe: importe.toFixed(2),
             usuarioId: req.auth!.user.id,
             notas: motivo,
             ticketId,
-            referencia:
-              typeof req.body?.referencia === "string"
-                ? req.body.referencia
-                : null,
+            referencia,
             createdAt: fechaEfectiva,
             metadata: JSON.stringify({
               origen: "AJUSTE_MANUAL",
               ip: getRequestIp(req),
             }),
-          })
-          .returning();
+          }, evidence, "AJUSTE_MANUAL");
         await tx.insert(auditoriaTable).values({
           usuarioId: req.auth!.user.id,
           accion: "AJUSTE_CREDITO",
@@ -2449,6 +2528,9 @@ router.post(
       }
       res.status(201).json(result);
     } catch (error) {
+      if (error instanceof CreditEvidenceError) {
+        res.status(error.statusCode).json({ error: error.message }); return;
+      }
       if (error instanceof Error && error.message === "SYSTEM_CLIENT_CREDIT") {
         res.status(400).json({ error: "Venta a Público no admite ajustes de crédito." });
         return;

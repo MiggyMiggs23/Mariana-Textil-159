@@ -10,6 +10,13 @@ import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import { loadCustomerCreditProjection } from "../lib/credit-aging-read-model";
 import { isPostgresUniqueViolation } from "../lib/postgres-errors";
+import { drizzle } from "drizzle-orm/node-postgres";
+import type { Tx } from "../lib/inventario";
+import {
+  readCreditEvidenceInput, canonicalCreditMoney, assertCreditEvidenceAccess,
+  assertCreditEvidenceScope, claimCreditOperation, insertCreditMovementE1,
+  CreditEvidenceError,
+} from "../lib/credit-evidence";
 
 const router: IRouter = Router();
 router.use("/clientes", requireSession);
@@ -71,6 +78,71 @@ router.post(
     const client = await pool.connect();
     try {
       await client.query("BEGIN");
+      // Keep the existing pg transaction; the adapter never opens a second connection.
+      const tx = drizzle(client) as unknown as Tx;
+      const authorizingWriteoff = req.body?.montoIncobrable != null ||
+        req.body?.adminUsuario != null || req.body?.adminPassword != null;
+      const evidence = authorizingWriteoff ? readCreditEvidenceInput(req.body) : null;
+      let authorizedId: number | null = null;
+      let authorizedAmount: string | null = null;
+      const motivo = typeof req.body?.motivo === "string" ? req.body.motivo.trim() : "";
+      if (evidence) {
+        authorizedAmount = canonicalCreditMoney(req.body?.montoIncobrable);
+        if (Number(authorizedAmount) <= 0 || motivo.length < 20) {
+          throw new CreditEvidenceError("Declara monto incobrable positivo y motivo de al menos 20 caracteres.");
+        }
+        const { adminUsuario, adminPassword } = req.body as Record<string, unknown>;
+        if (typeof adminUsuario !== "string" || typeof adminPassword !== "string") {
+          await client.query("ROLLBACK");
+          res.status(401).json({
+            error: "Se requieren credenciales de un ADMIN activo: usuario y contraseña.",
+            code: "ADMIN_CREDENTIALS_REQUIRED",
+            requiereAutorizacion: true,
+          });
+          return;
+        }
+        const auth = await client.query(
+          `SELECT id FROM usuarios WHERE usuario=$1 AND rol='ADMIN' AND activo
+            AND password_hash=crypt($2,password_hash)`,
+          [normalizeUsername(adminUsuario), adminPassword],
+        );
+        if (!auth.rows[0]) throw new CreditEvidenceError("Las credenciales del ADMIN no son válidas.", 401);
+        authorizedId = Number(auth.rows[0].id);
+        await assertCreditEvidenceAccess(req, evidence, tx);
+        const claim = await claimCreditOperation(tx, {
+          productor: "BAJA_INCOBRABLE", clave: evidence.operacionClave,
+          naturaleza: evidence.naturaleza, actorId: req.auth!.user.id,
+          contenido: {
+            clienteId: id, montoIncobrable: authorizedAmount, motivo,
+            destinos: [],
+            autorizadoPor: authorizedId, ...evidence,
+          },
+        });
+        if (claim.replay) {
+          const audit = await client.query(
+            `SELECT datos_despues FROM auditoria WHERE accion='BAJA_INCOBRABLE'
+              AND entidad='clientes' AND entidad_id=$1
+              AND datos_despues->>'movimientoCreditoId'=$2 ORDER BY id LIMIT 1`,
+            [String(id), String(claim.movement.id)],
+          );
+          if (!audit.rows[0]) throw new CreditEvidenceError("No se encontró la respuesta auditada de la baja original.", 409);
+          const saved = audit.rows[0].datos_despues;
+          await client.query("COMMIT");
+          res.json({
+            clienteId: id, resultado: "DESACTIVADO_INCOBRABLE", movimientoId: claim.movement.id,
+            saldoAnterior: saved.monto, montoIncobrable: saved.monto, desdeCuando: saved.desdeCuando,
+          });
+          return;
+        }
+        await assertCreditEvidenceScope(req, evidence, tx);
+        if (evidence.notaOrigenId != null) {
+          const note = await client.query(
+            `SELECT id FROM tickets WHERE id=$1 AND cliente_id=$2 AND ubicacion_id=$3 AND documento_tipo='NOTA'`,
+            [evidence.notaOrigenId, id, evidence.sitioOrigenId],
+          );
+          if (!note.rows[0]) throw new CreditEvidenceError("La nota de origen no pertenece al cliente y sitio autorizado.");
+        }
+      }
       await transactionAdvisoryLock(
         client,
         ADVISORY_LOCK_NAMESPACES.CUSTOMER_CREDIT,
@@ -104,6 +176,9 @@ router.post(
       );
        const projection = await loadCustomerCreditProjection(id, client);
       const saldo = projection.balanceCents / 100;
+      if (authorizedAmount != null && canonicalCreditMoney(saldo.toFixed(2)) !== authorizedAmount) {
+        throw new CreditEvidenceError("El saldo cambió; revisa el monto incobrable antes de autorizar.", 409);
+      }
       const tickets = Number(state.rows[0].tickets);
       const movimientos = Number(state.rows[0].movimientos);
       if (saldo <= 0 && tickets === 0 && movimientos === 0) {
@@ -144,7 +219,6 @@ router.post(
         }); return;
       }
       const { adminUsuario, adminPassword } = (req.body ?? {}) as Record<string, unknown>;
-      const motivo = typeof req.body?.motivo === "string" ? req.body.motivo.trim() : "";
       if (typeof adminUsuario !== "string" || typeof adminPassword !== "string") {
         await client.query("ROLLBACK");
         res.status(401).json({
@@ -182,29 +256,35 @@ router.post(
           desdeCuando,
         }); return;
       }
-      await client.query(
-        `INSERT INTO movimientos_credito
-          (cliente_id,tipo,importe,usuario_id,notas,es_incobrable,motivo_incobrable,autorizado_por)
-         VALUES($1,'AJUSTE',$2,$3,$4,true,$4,$5)`,
-        [id, (-saldo).toFixed(2), req.auth!.user.id, motivo, autorizador.id],
-      );
+      if (!evidence || authorizedId !== Number(autorizador.id)) {
+        throw new CreditEvidenceError("Faltan datos E1 de la baja incobrable. Actualiza la aplicación.");
+      }
+      const movement = await insertCreditMovementE1(tx, {
+        clienteId: id, tipo: "AJUSTE", importe: (-saldo).toFixed(2),
+        usuarioId: req.auth!.user.id, notas: motivo, esIncobrable: true,
+        motivoIncobrable: motivo, autorizadoPor: authorizedId,
+      }, evidence, "BAJA_INCOBRABLE");
       await client.query("UPDATE clientes SET activo=false,updated_at=now() WHERE id=$1", [id]);
       await client.query(
         `INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,datos_despues,ip)
          VALUES($1,'BAJA_INCOBRABLE','clientes',$2,$3,$4)`,
         [req.auth!.user.id, String(id), JSON.stringify({
           ejecutadoPor: req.auth!.user.id, autorizadoPor: autorizador.id,
+          movimientoCreditoId: movement.id,
           monto: saldo.toFixed(2), montoVencido: montoVencido.toFixed(2),
           desdeCuando, motivo,
         }), getRequestIp(req)],
       );
       await client.query("COMMIT");
       res.json({
-        clienteId: id, resultado: "DESACTIVADO_INCOBRABLE",
+        clienteId: id, resultado: "DESACTIVADO_INCOBRABLE", movimientoId: movement.id,
         saldoAnterior: saldo.toFixed(2), montoIncobrable: saldo.toFixed(2), desdeCuando,
       });
     } catch (error) {
       await client.query("ROLLBACK").catch(() => undefined);
+      if (error instanceof CreditEvidenceError) {
+        res.status(error.statusCode).json({ error: error.message }); return;
+      }
       next(error);
     } finally { client.release(); }
   },

@@ -21,6 +21,13 @@ import { getRequestIp } from "../lib/request";
 import { loadCustomerCreditProjectionInTransaction } from "../lib/credit-aging-read-model";
 import { centsToMoney, moneyToCents } from "../lib/credit-allocation";
 import type { Tx } from "../lib/inventario";
+import {
+  readCreditEvidenceInput, canonicalCreditContent, canonicalCreditMoney,
+  assertCreditProducerNature, assertCreditCaptureEnabled, assertCreditEvidenceScope,
+  assertCreditEvidenceAccess, assertCreditPhysicalContext,
+  claimCreditOperation, insertCreditMovementE1, CreditEvidenceError,
+  type CreditEvidenceInput,
+} from "../lib/credit-evidence";
 
 const router: IRouter = Router();
 router.use("/pagos-dirigidos", requireSession);
@@ -57,6 +64,36 @@ type DirectedRequestRawRow = {
   estado: "PENDIENTE" | "APROBADA" | "RECHAZADA"; created_at: Date;
 };
 
+/** Deliberately whitelist monetary intent; never persist raw HTTP/auth fields. */
+export function directedCreditIntent(data: Payment, evidence: CreditEvidenceInput) {
+  return {
+    tipo: data.tipo, entidadId: data.entidadId, documentoMovimientoId: data.documentoMovimientoId,
+    importe: canonicalCreditMoney(data.importe), formaPago: data.formaPago,
+    destinos: [{ ventaMovimientoId: data.documentoMovimientoId, importe: canonicalCreditMoney(data.importe) }],
+    cuentaDestino: data.cuentaDestino ?? null,
+    fechaEfectiva: data.fechaEfectiva ? new Date(data.fechaEfectiva).toISOString() : null,
+    referencia: data.referencia ?? null, notas: data.notas ?? null, motivo: data.motivo,
+    ...evidence,
+  };
+}
+
+type DirectedE1 = { evidence: CreditEvidenceInput; intent: ReturnType<typeof directedCreditIntent> };
+async function loadDirectedEvidence(tx: Tx, id: number): Promise<DirectedE1> {
+  const audit = await tx.execute<{ e1: DirectedE1 }>(sql`
+    SELECT datos_despues->'e1' e1 FROM auditoria
+    WHERE entidad='solicitudes_pago_dirigido' AND entidad_id=${String(id)}
+      AND accion IN ('SOLICITAR_PAGO_DIRIGIDO','APROBAR_APLICAR_PAGO_DIRIGIDO')
+      AND datos_despues->'e1' IS NOT NULL ORDER BY id LIMIT 1`);
+  if (!audit.rows[0]?.e1) throw new CreditEvidenceError("Solicitud antigua sin origen E1. Actualiza la aplicación y registra una nueva solicitud.", 400);
+  return audit.rows[0].e1;
+}
+
+export function assertDirectedApprovalIdentity(stored: DirectedE1, supplied: CreditEvidenceInput) {
+  if (canonicalCreditContent(stored.evidence) !== canonicalCreditContent(supplied)) {
+    throw new CreditEvidenceError("La identidad y el origen deben coincidir con la solicitud dirigida original.", 409);
+  }
+}
+
 async function notifyRequesterResolved(
   tx: Tx,
   request: { id: number; solicitanteId: number; estado: "APROBADA" | "RECHAZADA" },
@@ -75,7 +112,13 @@ const positiveId = (value: unknown) => Number.isInteger(Number(value)) && Number
 function parsePayment(body: unknown): Payment | null {
   const parsed = CreateSolicitudPagoDirigidoBody.safeParse(body);
   if (!parsed.success || parsed.data.motivo.trim().length < 10) return null;
-  return { ...parsed.data, motivo: parsed.data.motivo.trim(), referencia: parsed.data.referencia ?? null, notas: parsed.data.notas ?? null, cuentaDestino: parsed.data.cuentaDestino ?? null, fechaEfectiva: parsed.data.fechaEfectiva ?? null };
+  return {
+    tipo: parsed.data.tipo, entidadId: parsed.data.entidadId,
+    documentoMovimientoId: parsed.data.documentoMovimientoId, importe: parsed.data.importe,
+    formaPago: parsed.data.formaPago, motivo: parsed.data.motivo.trim(),
+    referencia: parsed.data.referencia ?? null, notas: parsed.data.notas ?? null,
+    cuentaDestino: parsed.data.cuentaDestino ?? null, fechaEfectiva: parsed.data.fechaEfectiva ?? null,
+  };
 }
 
 async function assertDocumentBalance(tx: Tx, request: Pick<DirectedPaymentInput, "tipo" | "entidadId" | "documentoMovimientoId" | "importe">) {
@@ -124,14 +167,15 @@ async function assertDocumentBalance(tx: Tx, request: Pick<DirectedPaymentInput,
   return doc;
 }
 
-async function apply(tx: Tx, request: DirectedPaymentRequest, userId: number) {
+async function apply(tx: Tx, request: DirectedPaymentRequest, userId: number, evidence?: CreditEvidenceInput) {
   const supplier = request.tipo === "PROVEEDOR";
   const doc = await assertDocumentBalance(tx, request);
   const requestedCents = moneyToCents(request.importe);
   const amount = centsToMoney(requestedCents);
-  const [movement] = supplier
-    ? await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning()
-    : await tx.insert(movimientosCreditoTable).values({ clienteId: request.entidadId, ticketId: doc.ticket_id!, importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }).returning();
+  if (!supplier && !evidence) throw new CreditEvidenceError("Falta el origen E1. Actualiza la aplicación.", 400);
+  const movement = supplier
+    ? (await tx.insert(pagosProveedorTable).values({ proveedorId: request.entidadId, importe: `-${amount}`, tipo: "PAGO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", referencia: request.referencia, notas: request.notas, fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), usuarioId: userId }).returning())[0]!
+    : await insertCreditMovementE1(tx, { clienteId: request.entidadId, ticketId: doc.ticket_id!, importe: `-${amount}`, tipo: "ABONO", formaPago: request.formaPago as "EFECTIVO" | "TRANSFERENCIA" | "FACTURADO", cuentaDestino: request.cuentaDestino, referencia: request.referencia, notas: request.notas, usuarioId: userId, createdAt: request.fechaEfectiva ? new Date(request.fechaEfectiva) : new Date(), metadata: JSON.stringify({ origen: "PAGO_DIRIGIDO", solicitudId: request.id, motivo: request.motivo }) }, evidence!, "ABONO_DIRIGIDO");
   if (supplier) await tx.insert(aplicacionesPagoProveedorTable).values({ pagoProveedorId: movement.id, compraProveedorId: doc.id, importe: amount });
   else await tx.insert(aplicacionesCreditoTable).values({ abonoMovimientoId: movement.id, ventaMovimientoId: doc.id, importe: amount });
   return movement;
@@ -205,18 +249,32 @@ router.get("/pagos-dirigidos", async (req, res, next): Promise<void> => {
       ${filters.estado ? sql`AND estado=${filters.estado}` : sql``}
       ${req.auth!.user.rol === "ADMIN" ? sql`` : sql`AND solicitante_id=${req.auth!.user.id}`}
       ORDER BY created_at DESC, id DESC`);
-    res.json(ListSolicitudesPagoDirigidoResponse.parse({ solicitudes: rows.rows.map(present) }));
+    const response = ListSolicitudesPagoDirigidoResponse.parse({ solicitudes: rows.rows.map(present) });
+    const requests = await Promise.all(response.solicitudes.map(async (request) => {
+      if (request.tipo !== "CLIENTE") return request;
+      const audit = await db.execute<{ evidence: CreditEvidenceInput }>(sql`
+        SELECT datos_despues->'e1'->'evidence' evidence FROM auditoria
+        WHERE entidad='solicitudes_pago_dirigido' AND entidad_id=${String(request.id)}
+          AND datos_despues->'e1' IS NOT NULL ORDER BY id LIMIT 1`);
+      return { ...request, ...(audit.rows[0]?.evidence ?? {}) };
+    }));
+    res.json({ ...response, solicitudes: requests });
   } catch (error) { next(error); }
 });
 
 router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
   try {
+    // Validate legacy customer producers before generated schemas can mask the
+    // actionable update-app error. Supplier payment behavior is unchanged.
+    const rawEvidence = req.body?.tipo === "CLIENTE" ? readCreditEvidenceInput(req.body) : undefined;
     const data = parsePayment(req.body);
     if (!data) { res.status(400).json({ error: "Datos inválidos; motivo de al menos 10 caracteres es obligatorio." }); return; }
     if (req.auth!.user.rol !== "ADMIN") {
       const permission = await resolvePermiso(req.auth!.user.id, req.auth!.user.rol, data.tipo === "CLIENTE" ? "clientes_finanzas" : "proveedores_finanzas");
       if (!permission?.puedeCrear) { res.status(403).json({ error: "No tienes permiso para solicitar este pago dirigido." }); return; }
     }
+    const evidence = data.tipo === "CLIENTE" ? rawEvidence ?? readCreditEvidenceInput(req.body) : undefined;
+    const e1 = evidence ? { evidence, intent: directedCreditIntent(data, evidence) } : undefined;
     const effectiveDate = data.fechaEfectiva ? new Date(data.fechaEfectiva) : new Date();
     if (Number.isNaN(effectiveDate.getTime()) || effectiveDate > new Date() || Math.round(data.importe * 100) < 1) { res.status(400).json({ error: "Fecha efectiva inválida o futura, o monto menor a un centavo." }); return; }
     const valid = data.tipo === "CLIENTE"
@@ -237,13 +295,47 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
           throw new Error("DIRECTED_DOCUMENT_OUT_OF_SCOPE");
         }
       }
+      if (e1) {
+        await assertCreditEvidenceAccess(req, e1.evidence, tx);
+        // Submission is an authorization request, NOT a receipt. Serialize its UUID
+        // and retain its identity in the same existing immutable audit transaction.
+        await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext('E1_ABONO_DIRIGIDO'), hashtext(${e1.evidence.operacionClave}))`);
+        const previous = await tx.execute<{ request_id: string; actor: number; e1: DirectedE1 }>(sql`
+          SELECT entidad_id request_id, usuario_id actor, datos_despues->'e1' e1 FROM auditoria
+          WHERE entidad='solicitudes_pago_dirigido'
+            AND datos_despues->'e1'->'evidence'->>'operacionClave'=${e1.evidence.operacionClave}
+            AND accion IN ('SOLICITAR_PAGO_DIRIGIDO','APROBAR_APLICAR_PAGO_DIRIGIDO')
+          ORDER BY id LIMIT 1`);
+        if (previous.rows[0]) {
+          const old = previous.rows[0];
+          if (Number(old.actor) !== req.auth!.user.id || canonicalCreditContent(old.e1.intent) !== canonicalCreditContent(e1.intent)) {
+            throw new CreditEvidenceError("La clave de operación ya identifica otro contenido de pago dirigido.", 409);
+          }
+          const existing = await tx.select().from(solicitudesPagoDirigidoTable)
+            .where(sql`${solicitudesPagoDirigidoTable.id}=${Number(old.request_id)}`).limit(1);
+          if (!existing[0]) throw new CreditEvidenceError("La solicitud original ya no está disponible.", 409);
+          return { request: existing[0], movement: null };
+        }
+        if (isAdmin) {
+          const claim = await claimCreditOperation(tx, {
+            productor: "ABONO_DIRIGIDO", clave: e1.evidence.operacionClave,
+            naturaleza: e1.evidence.naturaleza, actorId: req.auth!.user.id,
+            contenido: e1.intent,
+          });
+          if (claim.replay) throw new CreditEvidenceError("La operación pertenece a otra solicitud.", 409);
+        }
+        assertCreditProducerNature("ABONO_DIRIGIDO", e1.evidence.naturaleza);
+        await assertCreditEvidenceScope(req, e1.evidence, tx);
+        assertCreditCaptureEnabled(e1.evidence, data.formaPago);
+        assertCreditPhysicalContext(e1.evidence, data.formaPago, data.cuentaDestino);
+      }
       await assertDocumentBalance(tx, data);
       const snapshot = await snapshots(tx, data, req.auth!.user.id);
       const [request] = await tx.insert(solicitudesPagoDirigidoTable).values({
         ...data, importe: data.importe.toFixed(2), solicitanteId: req.auth!.user.id,
         ...snapshot, estado: "PENDIENTE",
       }).returning();
-      const movement = isAdmin ? await apply(tx, request!, req.auth!.user.id) : null;
+      const movement = isAdmin ? await apply(tx, request!, req.auth!.user.id, evidence) : null;
       let saved = request!;
       if (movement) {
         const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
@@ -254,11 +346,12 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
           estado: "APROBADA",
         });
       }
-      await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: isAdmin ? "APROBAR_APLICAR_PAGO_DIRIGIDO" : "SOLICITAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(request!.id), datosDespues: { ...data, movimientoId: movement?.id ?? null }, ip: getRequestIp(req) });
+      await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: isAdmin ? "APROBAR_APLICAR_PAGO_DIRIGIDO" : "SOLICITAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(request!.id), datosDespues: { ...data, ...(e1 ? { e1 } : {}), movimientoId: movement?.id ?? null }, ip: getRequestIp(req) });
       return { request: saved, movement };
     });
-    res.status(201).json(CreateSolicitudPagoDirigidoResponse.parse(present(result.request)));
+    res.status(201).json({ ...CreateSolicitudPagoDirigidoResponse.parse(present(result.request)), ...(evidence ?? {}) });
   } catch (error) {
+    if (error instanceof CreditEvidenceError) { res.status(error.statusCode).json({ error: error.message }); return; }
     if (error instanceof Error && error.message === "DIRECTED_DOCUMENT_NOT_FOUND") { res.status(404).json({ error: "Documento no encontrado." }); return; }
     if (error instanceof Error && error.message === "DIRECTED_DOCUMENT_OUT_OF_SCOPE") { res.status(403).json({ error: "El documento no pertenece a tu sitio." }); return; }
     if (error instanceof Error && error.message === "DIRECTED_AMOUNT_EXCEEDS_DOCUMENT") { res.status(409).json({ error: "El monto excede el saldo del documento." }); return; }
@@ -272,6 +365,33 @@ router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, re
     const result = await db.transaction(async (tx) => {
       const found = await tx.execute<DirectedRequestRawRow>(sql`SELECT * FROM solicitudes_pago_dirigido WHERE id=${id} FOR UPDATE`);
       const request = found.rows[0]; if (!request) throw new Error("REQUEST_NOT_FOUND");
+      let evidence: CreditEvidenceInput | undefined;
+      if (request.tipo === "CLIENTE") {
+        evidence = readCreditEvidenceInput(req.body);
+        const e1 = await loadDirectedEvidence(tx, id);
+        assertDirectedApprovalIdentity(e1, evidence);
+        await assertCreditEvidenceAccess(req, evidence, tx);
+        const claim = await claimCreditOperation(tx, {
+          productor: "ABONO_DIRIGIDO", clave: evidence.operacionClave,
+          naturaleza: evidence.naturaleza, actorId: req.auth!.user.id,
+          contenido: e1.intent,
+        });
+        if (claim.replay) {
+          if (request.movimiento_id !== claim.movement.id) throw new CreditEvidenceError("La operación pertenece a otra solicitud.", 409);
+          return claim.movement;
+        }
+        await assertCreditEvidenceScope(req, evidence, tx);
+        const currentIntent = directedCreditIntent({
+          tipo: request.tipo, entidadId: request.entidad_id,
+          documentoMovimientoId: request.documento_movimiento_id,
+          importe: Number(request.importe), formaPago: request.forma_pago,
+          cuentaDestino: request.cuenta_destino, fechaEfectiva: request.fecha_efectiva,
+          referencia: request.referencia, notas: request.notas, motivo: request.motivo,
+        }, evidence);
+        if (canonicalCreditContent(currentIntent) !== canonicalCreditContent(e1.intent)) {
+          throw new CreditEvidenceError("El contenido de la solicitud cambió desde su captura.", 409);
+        }
+      }
       if (request.estado !== "PENDIENTE") throw new Error("REQUEST_ALREADY_RESOLVED");
       const movement = await apply(tx, {
         ...request,
@@ -280,7 +400,7 @@ router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, re
         formaPago: request.forma_pago,
         cuentaDestino: request.cuenta_destino,
         fechaEfectiva: request.fecha_efectiva,
-      }, req.auth!.user.id);
+      }, req.auth!.user.id, evidence);
       const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
       await tx.update(solicitudesPagoDirigidoTable).set({ estado: "APROBADA", autorizadorId: req.auth!.user.id, autorizadorNombre: String(authorizer.rows[0]?.nombre ?? ""), movimientoId: movement.id, resueltaAt: new Date() }).where(sql`${solicitudesPagoDirigidoTable.id}=${id}`);
       await notifyRequesterResolved(tx, {
@@ -293,6 +413,7 @@ router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, re
     });
     res.status(201).json(AprobarSolicitudPagoDirigidoResponse.parse({ solicitudId: id, movimientoId: result.id, estado: "APROBADA" }));
   } catch (error) {
+    if (error instanceof CreditEvidenceError) { res.status(error.statusCode).json({ error: error.message }); return; }
     if (error instanceof Error && error.message === "REQUEST_NOT_FOUND") { res.status(404).json({ error: "Solicitud no encontrada." }); return; }
     if (error instanceof Error && error.message === "REQUEST_ALREADY_RESOLVED") { res.status(409).json({ error: "La solicitud ya fue resuelta." }); return; }
     if (error instanceof Error && error.message === "DIRECTED_DOCUMENT_NOT_FOUND") { res.status(404).json({ error: "Documento no encontrado." }); return; }

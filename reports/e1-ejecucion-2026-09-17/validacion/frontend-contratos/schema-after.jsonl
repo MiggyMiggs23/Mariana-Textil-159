@@ -1,0 +1,13 @@
+{"type":"test:pass","name":"E1 generated payment schema rejects omitted origin/key and malformed UUID","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 generated POS contract has exactly the four SQL nature values","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 generated attribution schema retains exact microseconds and full snapshot","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":3,"failed":0,"passed":3,"cancelled":0,"skipped":0,"todo":0,"topLevel":3,"suites":0}}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"tests 3","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"suites 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"pass 3","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"fail 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"cancelled 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"skipped 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"todo 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"duration_ms 1551.628312","details":{"type":null,"error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":3,"failed":0,"passed":3,"cancelled":0,"skipped":0,"todo":0,"topLevel":3,"suites":0}}

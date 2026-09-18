@@ -1,0 +1,21 @@
+{"type":"test:pass","name":"ordinary replay returns saved monetary response before live business state","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"reversal replay wins over already-reversed state without inheriting nature","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"revoked operational access prevents replay and identity claim","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"manual note from another customer/site is rejected before financial writes","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"directed canonical intent whitelists destination and excludes all credential fields","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"directed approval cannot approve another UUID or changed nature/site","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"directed approved replay returns original movement before resolved-state errors","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"mounted directed approval rejects another UUID before claiming or applying","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"directed new physical cash is fenced before request or financial writes","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"bad-debt replay rechecks ADMIN credentials and returns original audited amounts","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"missing ADMIN credentials open the authorization UI; invalid credentials cannot replay","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":11,"failed":0,"passed":11,"cancelled":0,"skipped":0,"todo":0,"topLevel":11,"suites":0}}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"tests 11","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"suites 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"pass 11","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"fail 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"cancelled 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"skipped 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"todo 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"duration_ms 1014.741922","details":{"type":null,"error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":11,"failed":0,"passed":11,"cancelled":0,"skipped":0,"todo":0,"topLevel":11,"suites":0}}

@@ -1,0 +1,42 @@
+{"type":"test:pass","name":"E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 evidence parser whitelists and normalizes without credentials","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 four exact natures and seven-producer compatibility cannot default to correction","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 exact money normalization rejects rounding and overflow","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 canonical JSON recursively sorts keys and preserves intent order and exact instants","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 correction never invents cash session; physical bank transfer never accepts drawer","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 new physical cash receipt and refund remain closed, correction is not physical cash","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 current actor/site access rejects role, inactive actor and moved site even on replay","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 same content replays original result before repeated domain validation/side effects","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 reused key with changed amount, actor, metadata or nature conflicts","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 ON CONFLICT loser reloads immutable winner instead of repeating writes","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 committed operation without movement fails explicitly, never stub success","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"E1 retained receipt gate rejects before any storage call and never becomes an ABONO","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":15,"failed":0,"passed":15,"cancelled":0,"skipped":0,"todo":0,"topLevel":15,"suites":0}}
+{"type":"test:pass","name":"actual claim adapter atomically inserts once and replays immutable movement without another write","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual credit request adapter reports legacy update-app error before required generated-schema validation","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual claim adapter conflicts on changed actor, nature or whitelisted intent","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual claim adapter isolates equal UUID across producers in both claim and movement lookup","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual claim adapter loses composite uniqueness race and reloads the completed winner","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual claim adapter rejects missing movement and incomplete operation reservation","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual access/scope adapters check current site and role before replay without requiring open session","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual insertion adapters reject new physical cash and pending receipt before any query/write","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:pass","name":"actual movement helper validates explicit note identity rather than inferring its site","skip":false,"nesting":0,"message":null,"details":{"type":"test","error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":16,"failed":0,"passed":16,"cancelled":0,"skipped":0,"todo":0,"topLevel":16,"suites":0}}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"tests 31","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"suites 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"pass 31","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"fail 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"cancelled 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"skipped 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"todo 0","details":{"type":null,"error":null},"counts":null}
+{"type":"test:diagnostic","name":null,"skip":false,"nesting":0,"message":"duration_ms 1742.006761","details":{"type":null,"error":null},"counts":null}
+{"type":"test:summary","name":null,"skip":false,"nesting":null,"message":null,"details":{"type":null,"error":null},"counts":{"tests":31,"failed":0,"passed":31,"cancelled":0,"skipped":0,"todo":0,"topLevel":31,"suites":0}}

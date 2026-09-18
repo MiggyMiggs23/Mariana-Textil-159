@@ -75,6 +75,7 @@ test("Block 4 functionality in ticket detail", async () => {
         export const useGetClienteNotaCredito = () => result(${JSON.stringify(nota)});
         export const useGetClientePagoDetalle = () => result(${JSON.stringify(payment)});
         export const useGetCurrentUser = () => result({ rol: "ADMIN", permisos: [] });
+        export const useListLocations = () => result([]);
         export const useReversarClientePago = () => ({ mutate() {}, isPending: false });
         export const getGetClienteNotaCreditoQueryKey = () => [];
         export const getGetClientePagoDetalleQueryKey = () => [];
@@ -87,7 +88,8 @@ test("Block 4 functionality in ticket detail", async () => {
         entrySource: `
           import React from "react";
           import { ClienteNotaCredito } from ${JSON.stringify(new URL("../components/cliente-nota-credito.tsx", import.meta.url).pathname)};
-          export default function Fixture() { return <ClienteNotaCredito clienteId={41} ticketId={1005} />; }
+          import { LocationScopeProvider } from ${JSON.stringify(new URL("../lib/location-scope.tsx", import.meta.url).pathname)};
+          export default function Fixture() { return <LocationScopeProvider><ClienteNotaCredito clienteId={41} ticketId={1005} /></LocationScopeProvider>; }
         `,
         moduleAliases: {
           "@workspace/api-client-react": financeNotaApiPath,

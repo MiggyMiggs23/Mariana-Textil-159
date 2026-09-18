@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
+import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
 import {
   useObtenerSesionCajaActual,
   useAbrirSesionCaja,
@@ -1151,6 +1152,7 @@ function AutorizacionNotaDialog({
   onOpenChange: (open: boolean) => void;
   onAutorizada: () => void;
 }) {
+  const evidence = useCreditEvidenceDraft("OPERACION_CREDITO_SIN_DINERO");
   const autorizar = useAutorizarNota();
   const { data: projection, isLoading, error } = useObtenerProyeccionAutorizacionNota(
     ticketId || 0,
@@ -1161,7 +1163,7 @@ function AutorizacionNotaDialog({
   );
   // Authorization and every resulting balance come from the server
   // projection. There is deliberately no client-side favor amount override.
-  const canAuthorize = projection?.autorizable === true && !autorizar.isPending;
+  const canAuthorize = projection?.autorizable === true && !autorizar.isPending && !evidence.problem();
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -1171,6 +1173,8 @@ function AutorizacionNotaDialog({
             La autorización registra la venta a crédito en Caja.
           </DialogDescription>
         </DialogHeader>
+        <CreditEvidenceFields draft={evidence} kind="credit" />
+        {autorizar.isError && <p role="alert" className="text-sm text-destructive">{getApiErrorMessage(autorizar.error, "No se pudo autorizar; el reintento conserva la misma operación.")}</p>}
         {isLoading ? (
           <div className="flex justify-center p-8"><Loader2 className="h-8 w-8 animate-spin" /></div>
         ) : error ? (
@@ -1221,8 +1225,8 @@ function AutorizacionNotaDialog({
           <Button
             disabled={!ticketId || !canAuthorize}
             onClick={() => ticketId && autorizar.mutate(
-              { id: ticketId },
-              { onSuccess: onAutorizada },
+              { id: ticketId, data: evidence.build("VENTA_CREDITO", { ticketId }) },
+              { onSuccess: () => { evidence.accepted(); onAutorizada(); } },
             )}
           >
             {autorizar.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

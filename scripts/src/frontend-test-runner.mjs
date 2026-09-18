@@ -1,11 +1,13 @@
 #!/usr/bin/env node
-import { access, readFile, stat } from "node:fs/promises";
+import { access, readFile, realpath, stat } from "node:fs/promises";
 import { spawnSync } from "node:child_process";
 import { constants } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+const scriptsRequire = createRequire(join(scriptRoot, "scripts/package.json"));
 const usage = `Usage:
   node scripts/src/frontend-test-runner.mjs [options] [test-file ...]
 
@@ -17,6 +19,7 @@ Options:
   --manifest <file>             Explicit manifest (default: <app-root>/test-manifests/safe.txt)
   --file <test-file>            Run one file; may be repeated
   --test-name-pattern <pattern> Pass Node's test-name filter through to tsx
+  --offline-preload <file>      Absolute, verified CommonJS preload for the child
   -h, --help                    Show this help
 
 With no test files, the safe manifest is required, non-empty, and every listed
@@ -103,6 +106,11 @@ async function main() {
     } else if (argument === "--test-name-pattern") {
       options.testNamePattern = optionValue(argv, index, argument);
       index += 1;
+    } else if (argument.startsWith("--offline-preload=")) {
+      options.offlinePreload = argument.slice("--offline-preload=".length);
+    } else if (argument === "--offline-preload") {
+      options.offlinePreload = optionValue(argv, index, argument);
+      index += 1;
     } else if (argument.startsWith("-")) {
       throw new Error(`Unknown option: ${argument}`);
     } else {
@@ -112,16 +120,25 @@ async function main() {
 
   const appRoot = options.appRoot ?? join(options.root, "artifacts/mariana-textil");
   const tsconfigPath = join(appRoot, "tsconfig.render-tests.json");
-  const tsxBinary = join(
-    appRoot,
-    "node_modules",
-    ".bin",
-    process.platform === "win32" ? "tsx.cmd" : "tsx",
-  );
+  const tsxLoader = scriptsRequire.resolve("tsx");
   await Promise.all([
     requireFile(tsconfigPath, "Automatic-JSX tsconfig"),
-    requireFile(tsxBinary, "tsx executable"),
+    requireFile(tsxLoader, "tsx loader"),
   ]);
+  const canonicalPreload = await realpath(
+    join(scriptRoot, "scripts/src/offline-test-guard.cjs"),
+  );
+  let offlinePreload = canonicalPreload;
+  if (options.offlinePreload !== undefined) {
+    if (!isAbsolute(options.offlinePreload)) {
+      throw new Error("--offline-preload must be an absolute path");
+    }
+    await requireFile(options.offlinePreload, "Offline preload");
+    offlinePreload = await realpath(options.offlinePreload);
+    if (offlinePreload !== canonicalPreload) {
+      throw new Error(`--offline-preload must resolve to ${canonicalPreload}`);
+    }
+  }
 
   const selected = [...options.files, ...positionalFiles];
   const files = selected.length
@@ -134,8 +151,10 @@ async function main() {
   await Promise.all(files.map((file) => requireFile(file, "Selected test file")));
 
   const tsxArguments = [
-    "--tsconfig",
-    tsconfigPath,
+    "--require",
+    offlinePreload,
+    "--import",
+    tsxLoader,
     "--test",
     // Browser-backed contracts must not start one Chromium per CPU at once.
     "--test-concurrency=2",
@@ -147,12 +166,14 @@ async function main() {
   console.error(
     `[frontend-test-runner] ${files.length} file(s); tsconfig=${tsconfigPath}`,
   );
-  const result = spawnSync(tsxBinary, tsxArguments, {
+  const result = spawnSync(process.execPath, tsxArguments, {
     cwd: appRoot,
     env: {
       PATH: process.env.PATH ?? "",
       HOME: process.env.HOME ?? "",
       NODE_ENV: "test",
+      E1_OFFLINE_STATIC_FIXTURE: "1",
+      TSX_TSCONFIG_PATH: tsconfigPath,
     },
     stdio: "inherit",
   });

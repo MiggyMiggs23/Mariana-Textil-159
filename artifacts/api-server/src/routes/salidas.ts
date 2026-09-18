@@ -63,6 +63,7 @@ import {
 } from "../lib/salidas";
 import { buildTicketDetail, cancelarTicket, crearTicket, PosError } from "../lib/pos";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import { CreditEvidenceError, readCreditEvidenceInput } from "../lib/credit-evidence";
 import {
   EXCEL_NUMBER_FORMAT,
   toExcelNumber,
@@ -413,6 +414,10 @@ function errorStatus(error: InventarioError): number {
 }
 
 function sendError(error: unknown, res: Parameters<Parameters<typeof router.get>[1]>[1]): boolean {
+  if (error instanceof CreditEvidenceError) {
+    res.status(error.status).json({ error: error.message, code: "CREDIT_EVIDENCE_E1" });
+    return true;
+  }
   if (error instanceof PosError) {
     res.status(error.status).json({ error: error.message, code: error.code });
     return true;
@@ -907,6 +912,7 @@ router.post(
       const auth = req.auth!;
       const result = await db.transaction(async (tx) => {
         let autorizadoPorId: number | null = null;
+        let creditReplay = false;
         if (auth.user.rol !== "ADMIN") {
           if (!body.adminUsuario || !body.adminPassword) {
             throw new InventarioError("Se requieren credenciales de un administrador activo.", "ADMIN_AUTH_REQUIRED");
@@ -924,6 +930,16 @@ router.post(
         if (!header) throw new InventarioError("Salida no encontrada.", "SALIDA_NOT_FOUND");
         const detail = await cancelarSalidaODocumentoLigado(header, {
           cancelarDocumento: async (ticketId, requestedSalidaId) => {
+              // Classification only, never a canceled/delivered-state guard.
+              // cancelarTicket owns current access + atomic claim/replay before
+              // those guards and before any inventory/ledger/audit side effect.
+              const [document] = await tx.select({
+                credito: ticketsTable.credito, documentoTipo: ticketsTable.documentoTipo,
+                autorizacionEstado: ticketsTable.autorizacionEstado,
+              }).from(ticketsTable).where(eq(ticketsTable.id, ticketId)).limit(1);
+              const creditEvidence = document?.credito && document.documentoTipo === "NOTA" &&
+                document.autorizacionEstado === "AUTORIZADA"
+                ? readCreditEvidenceInput(req.body) : undefined;
               await cancelarTicket(tx, {
                 ticketId,
                 requestedSalidaId,
@@ -931,12 +947,15 @@ router.post(
                 autorizadoPor: autorizadoPorId ?? auth.user.id,
                 motivo: body.motivo,
                 ip: req.ip || req.socket.remoteAddress || "desconocida",
+                creditEvidence,
+                creditRequest: req,
+                onCreditReplay: () => { creditReplay = true; },
               }, false);
           },
           buildSalida: () => buildSalidaDetail(tx, id),
           cancelarSalida: (pisoRetornoId) => cancelarSalida(tx, id, auth.user.id, body.motivo, pisoRetornoId),
         }, body.pisoRetornoId ?? null);
-        if (autorizadoPorId != null) {
+        if (!creditReplay && autorizadoPorId != null) {
           await tx.update(salidasTable).set({ autorizadoPorId }).where(eq(salidasTable.id, id));
         }
         return detail;

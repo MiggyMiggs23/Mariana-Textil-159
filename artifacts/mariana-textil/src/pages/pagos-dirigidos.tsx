@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dialog";
 import { Loader2, Check, X, RefreshCw, Activity, ArrowRight, HandCoins } from "lucide-react";
 import { Link } from "wouter";
+import { pickCreditEvidence } from "@/lib/credit-evidence";
 
 export default function PagosDirigidos() {
   const queryClient = useQueryClient();
@@ -58,12 +59,22 @@ export default function PagosDirigidos() {
   const [motivoRechazo, setMotivoRechazo] = useState("");
 
   const handleAprobar = (id: number) => {
-    aprobar.mutate({ id }, {
+    const solicitud = data?.solicitudes.find(item => item.id === id);
+    if (!solicitud) return;
+    let metadata = {};
+    try {
+      if (solicitud.tipo === "CLIENTE") metadata = pickCreditEvidence(solicitud);
+    } catch (error) {
+      toast({ title: "Solicitud sin origen E1", description: getApiErrorMessage(error), variant: "destructive" });
+      return;
+    }
+    aprobar.mutate({ id, data: metadata }, {
       onSuccess: () => {
         toast({ title: "Solicitud aprobada exitosamente." });
         queryClient.invalidateQueries({ queryKey: ["/api/pagos-dirigidos"] });
         queryClient.invalidateQueries({ queryKey: ["/api/clientes"] });
         queryClient.invalidateQueries({ queryKey: ["/api/proveedores"] });
+        queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && query.queryKey[0].startsWith("/api/clientes/") });
       },
       onError: (err) => {
         toast({ title: "Error al aprobar", description: getApiErrorMessage(err), variant: "destructive" });

@@ -1,0 +1,1179 @@
+{
+  "status": "PASS",
+  "priorReportPath": "/tmp/e1-route-mutants-FCRNm2/report.json",
+  "authorizedTestOnlyChanges": [
+    "Replay revalidated committed site/session state",
+    "Already-reversed state must not be read on replay",
+    "Invalid origin reached customer mutation",
+    "Disabled cash reached business balance or request writes",
+    "Replay read changed balance or changed customer"
+  ],
+  "stage": "/tmp/e1-route-mutants-assertions-vgJ9yv",
+  "guard": "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+  "tsx": "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+  "testPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts",
+  "inventory": [
+    "ordinary replay returns saved monetary response before live business state",
+    "reversal replay wins over already-reversed state without inheriting nature",
+    "revoked operational access prevents replay and identity claim",
+    "manual note from another customer/site is rejected before financial writes",
+    "directed canonical intent whitelists destination and excludes all credential fields",
+    "directed approval cannot approve another UUID or changed nature/site",
+    "directed approved replay returns original movement before resolved-state errors",
+    "mounted directed approval rejects another UUID before claiming or applying",
+    "directed new physical cash is fenced before request or financial writes",
+    "bad-debt replay rechecks ADMIN credentials and returns original audited amounts",
+    "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay"
+  ],
+  "authoredTests": 11,
+  "plannedMutants": 12,
+  "workspaceHashesBefore": {
+    "e1-customer-mutations.offline.test.ts": "b9beec814cdf8ac554a77522912e4dd576be1dd1ae44b91b689b5ee66aff459e",
+    "clientes.ts": "25405414d60c1aa06d01eb7ca06be610cce7bc3c1c11b42d5b88ab699b2a2a08",
+    "clientes-admin.ts": "1da57a7b1f1c5f198925c312db8bd6bb91e0a764bedb9d74a4d431cf4184e28e",
+    "pagos-dirigidos.ts": "ff86d0b0645f02ec45936f61cc6e1f11daa3b7cf963e146d8858d3ea6ad8ff2f"
+  },
+  "cases": [
+    {
+      "mutant": "ordinary-replay-order",
+      "testname": "ordinary replay returns saved monetary response before live business state",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^ordinary replay returns saved monetary response before live business state$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "ordinary-replay-order",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "ordinary replay returns saved monetary response before live business state",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Replay revalidated committed site/session state",
+                "stack": "Error [ERR_TEST_FAILURE]: Replay revalidated committed site/session state",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Replay revalidated committed site/session state",
+                  "stack": "AssertionError [ERR_ASSERTION]: Replay revalidated committed site/session state\n    at assertCreditEvidenceScope (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:184:55)\n    at eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:1863:68)\n    at async eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:1845:22)\n    at async invoke (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:171:3)\n    at async TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:187:18)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "ordinary replay returns saved monetary response before live business state"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^ordinary replay returns saved monetary response before live business state$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "ordinary replay returns saved monetary response before live business state"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/ordinary-replay-order.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "reverse-replay-order",
+      "testname": "reversal replay wins over already-reversed state without inheriting nature",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^reversal replay wins over already-reversed state without inheriting nature$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "reverse-replay-order",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "reversal replay wins over already-reversed state without inheriting nature",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Already-reversed state must not be read on replay",
+                "stack": "Error [ERR_TEST_FAILURE]: Already-reversed state must not be read on replay",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Already-reversed state must not be read on replay",
+                  "stack": "AssertionError [ERR_ASSERTION]: Already-reversed state must not be read on replay\n    at Object.execute (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:196:35)\n    at eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:2019:35)\n    at async eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:2003:23)\n    at async invoke (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:171:3)\n    at async TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:204:18)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "reversal replay wins over already-reversed state without inheriting nature"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^reversal replay wins over already-reversed state without inheriting nature$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "reversal replay wins over already-reversed state without inheriting nature"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/reverse-replay-order.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "access-recheck",
+      "testname": "revoked operational access prevents replay and identity claim",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^revoked operational access prevents replay and identity claim$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "access-recheck",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "revoked operational access prevents replay and identity claim",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\n201 !== 403\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n201 !== 403\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\n201 !== 403\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n201 !== 403\n\n    at TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:218:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "revoked operational access prevents replay and identity claim"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^revoked operational access prevents replay and identity claim$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "revoked operational access prevents replay and identity claim"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/access-recheck.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "manual-note-owner",
+      "testname": "manual note from another customer/site is rejected before financial writes",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^manual note from another customer/site is rejected before financial writes$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "manual-note-owner",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "manual note from another customer/site is rejected before financial writes",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Invalid origin reached customer mutation",
+                "stack": "Error [ERR_TEST_FAILURE]: Invalid origin reached customer mutation",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Invalid origin reached customer mutation",
+                  "stack": "AssertionError [ERR_ASSERTION]: Invalid origin reached customer mutation\n    at Object.select (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:225:68)\n    at eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:2144:35)\n    at async eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:2116:22)\n    at async invoke (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:171:3)\n    at async TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:228:18)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "manual note from another customer/site is rejected before financial writes"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^manual note from another customer/site is rejected before financial writes$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "manual note from another customer/site is rejected before financial writes"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/manual-note-owner.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "directed-secret-whitelist",
+      "testname": "directed canonical intent whitelists destination and excludes all credential fields",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed canonical intent whitelists destination and excludes all credential fields$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "directed-secret-whitelist",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "directed canonical intent whitelists destination and excludes all credential fields",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'not-a-real-secret'\n- undefined\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'not-a-real-secret'\n- undefined\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'not-a-real-secret'\n- undefined\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'not-a-real-secret'\n- undefined\n\n    at TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:241:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "directed canonical intent whitelists destination and excludes all credential fields"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed canonical intent whitelists destination and excludes all credential fields$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "directed canonical intent whitelists destination and excludes all credential fields"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-secret-whitelist.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "directed-uuid",
+      "testname": "directed approval cannot approve another UUID or changed nature/site",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed approval cannot approve another UUID or changed nature/site$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "directed-uuid",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "directed approval cannot approve another UUID or changed nature/site",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Missing expected exception.",
+                "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Missing expected exception.",
+                  "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:253:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "directed approval cannot approve another UUID or changed nature/site"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed approval cannot approve another UUID or changed nature/site$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "directed approval cannot approve another UUID or changed nature/site"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-uuid.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "directed-replay-order",
+      "testname": "directed approved replay returns original movement before resolved-state errors",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed approved replay returns original movement before resolved-state errors$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "directed-replay-order",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "directed approved replay returns original movement before resolved-state errors",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\n400 !== 201\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n400 !== 201\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\n400 !== 201\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n400 !== 201\n\n    at TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:271:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "directed approved replay returns original movement before resolved-state errors"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed approved replay returns original movement before resolved-state errors$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "directed approved replay returns original movement before resolved-state errors"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-replay-order.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "directed-approval-binding",
+      "testname": "mounted directed approval rejects another UUID before claiming or applying",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^mounted directed approval rejects another UUID before claiming or applying$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "directed-approval-binding",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "mounted directed approval rejects another UUID before claiming or applying",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\n201 !== 409\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n201 !== 409\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\n201 !== 409\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n201 !== 409\n\n    at TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:293:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "mounted directed approval rejects another UUID before claiming or applying"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^mounted directed approval rejects another UUID before claiming or applying$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "mounted directed approval rejects another UUID before claiming or applying"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-approval-binding.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "directed-cash-gate",
+      "testname": "directed new physical cash is fenced before request or financial writes",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed new physical cash is fenced before request or financial writes$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "directed-cash-gate",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "directed new physical cash is fenced before request or financial writes",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Disabled cash reached business balance or request writes",
+                "stack": "Error [ERR_TEST_FAILURE]: Disabled cash reached business balance or request writes",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Disabled cash reached business balance or request writes",
+                  "stack": "AssertionError [ERR_ASSERTION]: Disabled cash reached business balance or request writes\n    at Object.execute (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:303:14)\n    at assertDocumentBalance (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:105:29)\n    at async eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:329:7)\n    at async eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:284:20)\n    at async invoke (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:171:3)\n    at async TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:307:18)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "directed new physical cash is fenced before request or financial writes"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^directed new physical cash is fenced before request or financial writes$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "directed new physical cash is fenced before request or financial writes"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/directed-cash-gate.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "writeoff-replay-order",
+      "testname": "bad-debt replay rechecks ADMIN credentials and returns original audited amounts",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^bad-debt replay rechecks ADMIN credentials and returns original audited amounts$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "writeoff-replay-order",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "bad-debt replay rechecks ADMIN credentials and returns original audited amounts",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Replay read changed balance or changed customer",
+                "stack": "Error [ERR_TEST_FAILURE]: Replay read changed balance or changed customer",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Replay read changed balance or changed customer",
+                  "stack": "AssertionError [ERR_ASSERTION]: Replay read changed balance or changed customer\n    at Object.query (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:323:14)\n    at eval (eval at loadRoute (file:///tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:1:6237), <anonymous>:176:35)\n    at async invoke (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:171:3)\n    at async TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:337:18)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "bad-debt replay rechecks ADMIN credentials and returns original audited amounts"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^bad-debt replay rechecks ADMIN credentials and returns original audited amounts$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "bad-debt replay rechecks ADMIN credentials and returns original audited amounts"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-replay-order.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "writeoff-auth-recheck",
+      "testname": "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^missing ADMIN credentials open the authorization UI; invalid credentials cannot replay$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "writeoff-auth-recheck",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n\n409 !== 401\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n409 !== 401\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n\n409 !== 401\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n409 !== 401\n\n    at TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:360:12)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^missing ADMIN credentials open the authorization UI; invalid credentials cannot replay$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-auth-recheck.restored.stderr.txt"
+      }
+    },
+    {
+      "mutant": "writeoff-credentials-code",
+      "testname": "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay",
+      "assertionProven": true,
+      "failed": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^missing ADMIN credentials open the authorization UI; invalid credentials cannot replay$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": "writeoff-credentials-code",
+        "exitCode": 1,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [],
+        "failures": [
+          {
+            "type": "test:fail",
+            "name": "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay",
+            "skip": false,
+            "nesting": 0,
+            "message": null,
+            "details": {
+              "type": "test",
+              "error": {
+                "name": "Error",
+                "code": "ERR_TEST_FAILURE",
+                "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ADMIN_AUTH_REQUIRED'\n- 'ADMIN_CREDENTIALS_REQUIRED'\n         ^\n",
+                "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ADMIN_AUTH_REQUIRED'\n- 'ADMIN_CREDENTIALS_REQUIRED'\n         ^\n",
+                "failureType": "testCodeFailure",
+                "cause": {
+                  "name": "AssertionError",
+                  "code": "ERR_ASSERTION",
+                  "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ADMIN_AUTH_REQUIRED'\n- 'ADMIN_CREDENTIALS_REQUIRED'\n         ^\n",
+                  "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'ADMIN_AUTH_REQUIRED'\n- 'ADMIN_CREDENTIALS_REQUIRED'\n         ^\n\n    at TestContext.<anonymous> (/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts:363:14)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+                  "failureType": null,
+                  "cause": null,
+                  "errors": []
+                },
+                "errors": []
+              }
+            },
+            "counts": null
+          }
+        ],
+        "assertionFailureNames": [
+          "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay"
+        ],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.mutant.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.mutant.stderr.txt"
+      },
+      "restored": {
+        "command": [
+          "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+          "--require",
+          "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+          "--import",
+          "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+          "--test",
+          "--test-concurrency=1",
+          "--test-reporter",
+          "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+          "--test-name-pattern=^missing ADMIN credentials open the authorization UI; invalid credentials cannot replay$",
+          "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+        ],
+        "mutant": null,
+        "exitCode": 0,
+        "signal": null,
+        "spawnError": null,
+        "parseError": null,
+        "infrastructureError": false,
+        "passNames": [
+          "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay"
+        ],
+        "failures": [],
+        "assertionFailureNames": [],
+        "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.restored.stdout.jsonl",
+        "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/writeoff-credentials-code.restored.stderr.txt"
+      }
+    }
+  ],
+  "baseline": {
+    "command": [
+      "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+      "--require",
+      "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+      "--import",
+      "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter",
+      "/home/runner/workspace/scripts/src/e1-evidence-mutant-reporter.mjs",
+      "/tmp/e1-route-mutants-assertions-vgJ9yv/artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts"
+    ],
+    "mutant": null,
+    "exitCode": 0,
+    "signal": null,
+    "spawnError": null,
+    "parseError": null,
+    "infrastructureError": false,
+    "passNames": [
+      "ordinary replay returns saved monetary response before live business state",
+      "reversal replay wins over already-reversed state without inheriting nature",
+      "revoked operational access prevents replay and identity claim",
+      "manual note from another customer/site is rejected before financial writes",
+      "directed canonical intent whitelists destination and excludes all credential fields",
+      "directed approval cannot approve another UUID or changed nature/site",
+      "directed approved replay returns original movement before resolved-state errors",
+      "mounted directed approval rejects another UUID before claiming or applying",
+      "directed new physical cash is fenced before request or financial writes",
+      "bad-debt replay rechecks ADMIN credentials and returns original audited amounts",
+      "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay"
+    ],
+    "failures": [],
+    "assertionFailureNames": [],
+    "stdoutPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/baseline.stdout.jsonl",
+    "stderrPath": "/tmp/e1-route-mutants-assertions-vgJ9yv/baseline.stderr.txt"
+  },
+  "workspaceHashesAfter": {
+    "e1-customer-mutations.offline.test.ts": "b9beec814cdf8ac554a77522912e4dd576be1dd1ae44b91b689b5ee66aff459e",
+    "clientes.ts": "25405414d60c1aa06d01eb7ca06be610cce7bc3c1c11b42d5b88ab699b2a2a08",
+    "clientes-admin.ts": "1da57a7b1f1c5f198925c312db8bd6bb91e0a764bedb9d74a4d431cf4184e28e",
+    "pagos-dirigidos.ts": "ff86d0b0645f02ec45936f61cc6e1f11daa3b7cf963e146d8858d3ea6ad8ff2f"
+  },
+  "workspaceUntouchedDuringRuns": true,
+  "productionUnchangedFromPriorRun": true,
+  "copyHashesUnchanged": true,
+  "assertionProven": 12,
+  "testsWithAssertionProof": [
+    "ordinary replay returns saved monetary response before live business state",
+    "reversal replay wins over already-reversed state without inheriting nature",
+    "revoked operational access prevents replay and identity claim",
+    "manual note from another customer/site is rejected before financial writes",
+    "directed canonical intent whitelists destination and excludes all credential fields",
+    "directed approval cannot approve another UUID or changed nature/site",
+    "directed approved replay returns original movement before resolved-state errors",
+    "mounted directed approval rejects another UUID before claiming or applying",
+    "directed new physical cash is fenced before request or financial writes",
+    "bad-debt replay rechecks ADMIN credentials and returns original audited amounts",
+    "missing ADMIN credentials open the authorization UI; invalid credentials cannot replay"
+  ],
+  "testsWithoutAssertionProof": []
+}

@@ -1,0 +1,6 @@
+# E1 pure/offline backend tests only. Paths are relative to artifacts/api-server.
+src/lib/credit-evidence-contract.test.ts
+src/lib/credit-evidence.mock.test.ts
+src/lib/credit-evidence-read.test.ts
+src/routes/e1-customer-mutations.offline.test.ts
+../../lib/api-spec/e1-contract.test.ts

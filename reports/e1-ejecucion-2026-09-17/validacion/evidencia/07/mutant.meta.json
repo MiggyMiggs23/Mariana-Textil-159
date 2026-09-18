@@ -1,0 +1,74 @@
+{
+  "inputs": {
+    "credit-evidence-read.ts": {
+      "bytes": 15690,
+      "imports": [
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "credit-evidence-read.test.ts": {
+      "bytes": 12792,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:test",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "credit-evidence-read.ts",
+          "kind": "import-statement",
+          "original": "./credit-evidence-read"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "mutant.test.mjs.map": {
+      "imports": [],
+      "exports": [],
+      "inputs": {},
+      "bytes": 44465
+    },
+    "mutant.test.mjs": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:test",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "credit-evidence-read.test.ts",
+      "inputs": {
+        "credit-evidence-read.test.ts": {
+          "bytesInOutput": 11769
+        },
+        "credit-evidence-read.ts": {
+          "bytesInOutput": 12218
+        }
+      },
+      "bytes": 24121
+    }
+  }
+}

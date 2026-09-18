@@ -5,10 +5,28 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { CreditNature } from './creditNature';
 import type { SolicitudPagoDirigidoEstado } from './solicitudPagoDirigidoEstado';
 import type { SolicitudPagoDirigidoTipo } from './solicitudPagoDirigidoTipo';
 
 export interface SolicitudPagoDirigido {
+  /** @minimum 1 */
+  sitioOrigenId?: number;
+  naturaleza?: CreditNature;
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave?: string;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  notaOrigenId?: number | null;
+  /** @nullable */
+  origenJustificacion?: string | null;
   id: number;
   tipo: SolicitudPagoDirigidoTipo;
   entidadId: number;

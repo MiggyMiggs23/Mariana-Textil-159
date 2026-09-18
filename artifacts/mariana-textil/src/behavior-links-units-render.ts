@@ -29,6 +29,7 @@ let fixture = {};
 export function setBehaviorFixture(next) { fixture = next; }
 const result = (key) => ({ data: fixture[key], isLoading: false, isError: false, isFetching: false });
 export function useGetCurrentUser() { return result("user"); }
+export function useListLocations() { return result("locations"); }
 export function useListProductos() { return result("productos"); }
 export function useCreateProducto() { return { mutate() {}, isPending: false }; }
 export function usePreviewImportProductos() { return { mutate() {}, isPending: false }; }
@@ -55,6 +56,10 @@ export function useListNotificaciones() { return result("notificaciones"); }
 export function useMarkAllNotificacionesRead() { return { mutate() {}, isPending: false }; }
 export function useMarkNotificacionRead() { return { mutate() {}, isPending: false }; }
 export function useAprobarSolicitudPagoDirigido() { return { mutate() {}, isPending: false }; }
+export async function listSolicitudesPagoDirigido() {
+  if (!fixture.solicitudesPagoDirigido) throw new Error("Directed-payment fixture was not configured");
+  return fixture.solicitudesPagoDirigido;
+}
 export function useRechazarSolicitudPagoDirigido() { return { mutate() {}, isPending: false }; }
 export function useGetSalidaRecepcion() { return result("salidaRecepcion"); }
 export function useListSalidasRecepcion() { return result("salidasRecepcion"); }
@@ -70,6 +75,7 @@ export function useCreateSalidaExtraordinaria() { return { mutate() {}, isPendin
 export function useListRollos() { return result("rollos"); }
 export const getListProductosQueryKey = () => ["productos"];
 export const getGetCurrentUserQueryKey = () => ["usuario"];
+export const getListLocationsQueryKey = (params) => ["/api/locations", ...(params ? [params] : [])];
 export const getGetKardexGroupedQueryKey = () => ["kardex"];
 export const getListEntradasPendientesCostoQueryKey = () => ["entradas-pendientes"];
 export const getGetEntradaQueryKey = () => ["entrada"];

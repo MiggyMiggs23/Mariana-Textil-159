@@ -117,6 +117,11 @@ paths:
       operationId: aprobarSolicitudPagoDirigido
       tags: [clientes, proveedores]
       summary: Aprueba y aplica una solicitud de pago dirigido (ADMIN)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreditDirectedApprovalInput" }
       parameters:
         [
           {
@@ -2889,6 +2894,46 @@ paths:
         "403":
           $ref: "#/components/responses/Forbidden"
 
+  /clientes/{clienteId}/evidencia-credito:
+    get:
+      operationId: getClienteEvidenciaCredito
+      tags: [clientes]
+      parameters:
+        - { name: clienteId, in: path, required: true, schema: { type: number, multipleOf: 1, minimum: 1 } }
+        - { name: ubicacionId, in: query, schema: { type: number, multipleOf: 1, minimum: 1 } }
+        - { name: prepararAtribucion, in: query, schema: { type: boolean } }
+      responses:
+        "200":
+          description: Evidencia separada del libro inmutable, sin inferir origen histórico
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CreditEvidence" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+  /clientes/{clienteId}/atribuciones-credito:
+    post:
+      operationId: atribuirClienteCredito
+      tags: [clientes]
+      summary: Vía futura ADMIN/SUPERVISOR; deshabilitada en E1
+      parameters:
+        - { name: clienteId, in: path, required: true, schema: { type: number, multipleOf: 1, minimum: 1 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreditAttributionInput" }
+      responses:
+        "200":
+          description: Reintento idéntico de atribución
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CreditAttributionResult" }
+        "201":
+          description: Atribución futura insertada, movimiento original intacto
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CreditAttributionResult" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /cuentas-incobrables:
     get:
       operationId: listCuentasIncobrables
@@ -3079,12 +3124,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required: [motivo]
-              properties:
-                motivo: { type: string, minLength: 20 }
-                adminUsuario: { type: string }
-                adminPassword: { type: string }
+              $ref: "#/components/schemas/ClienteBajaInput"
       responses:
         "200":
           description: OK
@@ -3455,7 +3495,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/MotivoReversoInput" }
+            schema: { $ref: "#/components/schemas/ClienteReversoInput" }
       responses:
         "201":
           description: Reverso registrado
@@ -4150,7 +4190,7 @@ paths:
       parameters:
         - $ref: "#/components/parameters/TicketId"
       requestBody:
-        required: false
+        required: true
         content:
           application/json:
             schema:
@@ -6402,11 +6442,134 @@ components:
         solicitudes:
           type: array
           items: { $ref: "#/components/schemas/SolicitudPagoDirigido" }
+    CreditNature:
+      type: string
+      enum: [INGRESO_FISICO, DEVOLUCION_FISICA, CORRECCION_CONTABLE, OPERACION_CREDITO_SIN_DINERO]
+    CreditEvidenceInput:
+      type: object
+      required: [sitioOrigenId, naturaleza, operacionClave]
+      properties: &creditEvidenceProperties
+        sitioOrigenId: { type: number, multipleOf: 1, minimum: 1 }
+        naturaleza: { $ref: "#/components/schemas/CreditNature" }
+        operacionClave: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+        sesionCajaId: { type: ["number", "null"], multipleOf: 1, minimum: 1 }
+        notaOrigenId: { type: ["number", "null"], multipleOf: 1, minimum: 1 }
+        origenJustificacion: { type: ["string", "null"] }
+    CreditDirectedApprovalInput:
+      type: object
+      description: Para CLIENTE exige los metadatos y UUID de la solicitud original; PROVEEDOR no escribe crédito E1.
+      properties:
+        <<: *creditEvidenceProperties
+    ClienteBajaInput:
+      type: object
+      required: [motivo]
+      description: Si existe baja incobrable exige montoIncobrable y metadatos E1 de corrección.
+      properties:
+        <<: *creditEvidenceProperties
+        motivo: { type: string, minLength: 20 }
+        montoIncobrable: { type: number, exclusiveMinimum: 0 }
+        adminUsuario: { type: string }
+        adminPassword: { type: string }
+    ClienteReversoInput:
+      type: object
+      required: [motivo, importe, sitioOrigenId, naturaleza, operacionClave]
+      properties:
+        <<: *creditEvidenceProperties
+        motivo: { type: string, minLength: 1 }
+        importe: { type: number, exclusiveMinimum: 0 }
+        formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA, FACTURADO] }
+        cuentaDestino: { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        referencia: { type: ["string", "null"] }
+    CreditIdentitySnapshot:
+      type: object
+      additionalProperties: false
+      required: [cliente_id, tipo, importe, ticket_id, movimiento_origen_id]
+      properties:
+        cliente_id: { type: number, multipleOf: 1 }
+        tipo: { type: string }
+        importe: { type: number }
+        ticket_id: { type: ["number", "null"], multipleOf: 1 }
+        movimiento_origen_id: { type: ["number", "null"], multipleOf: 1 }
+    CreditAttributionInput:
+      type: object
+      additionalProperties: false
+      required: [movimientoId, movimientoCreatedAt, identidadSnapshot, sitioOrigenId, evidencia, motivo, anteriorId]
+      properties:
+        id: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+        movimientoId: { type: number, multipleOf: 1, minimum: 1 }
+        movimientoCreatedAt: { type: string, description: Fecha SQL exacta con microsegundos; no convertir a Date. }
+        identidadSnapshot: { $ref: "#/components/schemas/CreditIdentitySnapshot" }
+        sitioOrigenId: { type: number, multipleOf: 1, minimum: 1 }
+        evidencia: { type: string, minLength: 1 }
+        motivo: { type: string, minLength: 1 }
+        anteriorId: { type: ["string", "null"], pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+    CreditAttribution:
+      type: object
+      required: [id, movimientoId, movimientoCreatedAt, identidadSnapshot, anteriorId, sitioOrigenId, evidencia, motivo, usuarioId, createdAt]
+      properties:
+        id: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+        movimientoId: { type: number, multipleOf: 1 }
+        movimientoCreatedAt: { type: string }
+        identidadSnapshot: { $ref: "#/components/schemas/CreditIdentitySnapshot" }
+        anteriorId: { type: ["string", "null"], pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+        sitioOrigenId: { type: number, multipleOf: 1 }
+        evidencia: { type: string }
+        motivo: { type: string }
+        usuarioId: { type: number, multipleOf: 1 }
+        createdAt: { type: string }
+    CreditMovementEvidence:
+      type: object
+      required: [movimientoId, movimientoCreatedAt, identidadSnapshot, sitioOrigenOriginalId, naturalezaOriginal, ultimaAtribucion, sitioDeterminadoId, sitioEtiqueta]
+      properties:
+        movimientoId: { type: number, multipleOf: 1 }
+        movimientoCreatedAt: { type: string }
+        identidadSnapshot: { $ref: "#/components/schemas/CreditIdentitySnapshot" }
+        sitioOrigenOriginalId: { type: ["number", "null"], multipleOf: 1 }
+        naturalezaOriginal:
+          oneOf:
+            - $ref: "#/components/schemas/CreditNature"
+            - type: "null"
+        ultimaAtribucion:
+          oneOf:
+            - $ref: "#/components/schemas/CreditAttribution"
+            - type: "null"
+        sitioDeterminadoId: { type: ["number", "null"], multipleOf: 1 }
+        sitioEtiqueta: { type: string }
+    CreditEvidence:
+      type: object
+      required: [clienteId, atribucionHabilitada, movimientos]
+      properties:
+        clienteId: { type: number, multipleOf: 1 }
+        atribucionHabilitada: { type: boolean }
+        movimientos:
+          type: array
+          items: { $ref: "#/components/schemas/CreditMovementEvidence" }
+    CreditAttributionResult:
+      type: object
+      required: [atribucion, replay]
+      properties:
+        atribucion: { $ref: "#/components/schemas/CreditAttribution" }
+        replay: { type: boolean }
+    CreditPendingReceiptInput:
+      type: object
+      description: Soporte futuro exclusivamente. COBRO_PENDIENTE permanece deshabilitado en E1 y nunca se inserta como abono.
+      required: [clienteId, importe, fechaReal, sitioOrigenId, naturaleza, operacionClave, medio, cuentaDestino]
+      properties:
+        <<: *creditEvidenceProperties
+        naturaleza: { type: string, enum: [INGRESO_FISICO] }
+        clienteId: { type: number, multipleOf: 1, minimum: 1 }
+        importe: { type: number, exclusiveMinimum: 0 }
+        fechaReal: { type: string, format: date-time }
+        medio: { type: string, enum: [EFECTIVO, TRANSFERENCIA, FACTURADO] }
+        cuentaDestino: { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        motivo: { type: ["string", "null"] }
+        referencia: { type: ["string", "null"] }
     SolicitudPagoDirigidoInput:
       type: object
       required:
         [tipo, entidadId, documentoMovimientoId, importe, formaPago, motivo]
       properties:
+        <<: *creditEvidenceProperties
         tipo: { type: string, enum: [CLIENTE, PROVEEDOR] }
         entidadId: { type: number, minimum: 1 }
         documentoMovimientoId: { type: number, minimum: 1 }
@@ -6438,6 +6601,7 @@ components:
           createdAt,
         ]
       properties:
+        <<: *creditEvidenceProperties
         id: { type: number }
         tipo: { type: string, enum: [CLIENTE, PROVEEDOR] }
         entidadId: { type: number }
@@ -9227,7 +9391,10 @@ components:
         fechaEfectiva: { type: ["string", "null"], format: date-time }
     AutorizarNotaInput:
       type: object
+      required: [sitioOrigenId, naturaleza, operacionClave]
+      description: La autorización de crédito exige sitio operativo explícito, UUID y OPERACION_CREDITO_SIN_DINERO.
       properties:
+        <<: *creditEvidenceProperties
         aplicarSaldoAFavor:
           type: string
           pattern: '^\d+(\.\d{1,2})?$'
@@ -9419,8 +9586,9 @@ components:
         reimpresoAt: { type: string, format: date-time }
     ClientePagoInput:
       type: object
-      required: [importe, formaPago, cuentaDestino]
+      required: [importe, formaPago, cuentaDestino, sitioOrigenId, naturaleza, operacionClave]
       properties:
+        <<: *creditEvidenceProperties
         importe: { type: number, minimum: 0.01 }
         formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA, FACTURADO] }
         cuentaDestino:
@@ -9430,8 +9598,9 @@ components:
         fechaEfectiva: { type: ["string", "null"], format: date-time }
     ClienteAjusteInput:
       type: object
-      required: [importe, motivo]
+      required: [importe, motivo, sitioOrigenId, naturaleza, operacionClave, origenJustificacion]
       properties:
+        <<: *creditEvidenceProperties
         importe: { type: number }
         motivo: { type: string, minLength: 10 }
         referencia: { type: ["string", "null"] }
@@ -11634,6 +11803,7 @@ components:
       type: object
       required: [motivo]
       properties:
+        <<: *creditEvidenceProperties
         motivo: { type: string, minLength: 10 }
         pisoRetornoId: { type: number, minimum: 1 }
         adminUsuario: { type: string }
@@ -12858,6 +13028,7 @@ components:
       type: object
       required: [motivo]
       properties:
+        <<: *creditEvidenceProperties
         motivo: { type: string, minLength: 1, maxLength: 1000 }
         credencialesAdmin:
           oneOf:

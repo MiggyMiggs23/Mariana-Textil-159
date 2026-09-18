@@ -1,0 +1,168 @@
+{
+  "runtime": {
+    "apiPid": 306,
+    "constructorName": "BoundPool",
+    "hasQuery": true
+  },
+  "bundle": "file:///home/runner/workspace/artifacts/api-server/dist/index.mjs",
+  "queryMethodLine": 33381,
+  "sql": {
+    "identity": "SELECT current_database() AS database_name,\n    (SELECT oid FROM pg_database WHERE datname=current_database()) AS database_oid,\n    current_schema() AS schema_name, current_user AS database_role,\n    current_setting('server_version') AS server_version,\n    inet_server_addr() AS server_address, inet_server_port() AS server_port,\n    pg_backend_pid() AS backend_pid, pg_postmaster_start_time()::text AS server_started_at,\n    current_setting('transaction_read_only') AS transaction_read_only,\n    clock_timestamp()::text AS observed_at",
+    "inventory": "SELECT\n    (SELECT count(*)::int FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace\n      WHERE n.nspname='public' AND c.relkind='r') AS public_tables,\n    (SELECT count(*)::int FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid\n      JOIN pg_namespace n ON n.oid=c.relnamespace\n      WHERE n.nspname='public' AND NOT t.tgisinternal) AS noninternal_triggers,\n    (SELECT count(*)::int FROM public.movimientos_credito) AS credit_movements,\n    (SELECT pg_total_relation_size('public.movimientos_credito')) AS credit_bytes,\n    (SELECT count(*)::int FROM pg_event_trigger WHERE evtenabled <> 'D') AS active_event_triggers,\n    (SELECT jsonb_agg(c.relname ORDER BY c.relname) FROM pg_class c\n      JOIN pg_namespace n ON n.oid=c.relnamespace\n      WHERE n.nspname='public' AND c.relkind='r') AS tables,\n    (SELECT jsonb_agg(jsonb_build_object('table', c.relname, 'trigger', t.tgname)\n      ORDER BY c.relname,t.tgname) FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid\n      JOIN pg_namespace n ON n.oid=c.relnamespace\n      WHERE n.nspname='public' AND NOT t.tgisinternal) AS triggers"
+  },
+  "identity": {
+    "database_name": "heliumdb",
+    "database_oid": 16384,
+    "schema_name": "public",
+    "database_role": "postgres",
+    "server_version": "16.10",
+    "server_address": null,
+    "server_port": null,
+    "backend_pid": 257,
+    "server_started_at": "2026-09-17 21:43:07.917935+00",
+    "transaction_read_only": "on",
+    "observed_at": "2026-09-17 22:46:46.894065+00"
+  },
+  "inventory": {
+    "public_tables": 63,
+    "noninternal_triggers": 17,
+    "credit_movements": 3,
+    "credit_bytes": "73728",
+    "active_event_triggers": 0,
+    "tables": [
+      "aplicaciones_credito",
+      "aplicaciones_pago_proveedor",
+      "auditoria",
+      "auditoria_faltante_reactivaciones",
+      "auditoria_inventario_escaneos",
+      "auditoria_inventario_folio",
+      "auditoria_inventario_participantes",
+      "auditoria_inventario_snapshot",
+      "auditoria_sobrante_contextos",
+      "auditoria_sobrante_decisiones",
+      "auditorias_inventario",
+      "autorizaciones_nota",
+      "camionetas",
+      "choferes",
+      "cliente_documentos",
+      "clientes",
+      "contenedor_lineas",
+      "contenedores",
+      "cuadre_fiscal_registros",
+      "entrada_folio",
+      "entradas",
+      "equipos",
+      "equipos_checklist",
+      "existencias",
+      "movimientos",
+      "movimientos_credito",
+      "notificaciones_credito",
+      "notificaciones_sistema",
+      "pagos_proveedor",
+      "permisos_rol",
+      "permisos_ubicacion",
+      "permisos_usuario",
+      "pisos",
+      "precio_historial",
+      "productos",
+      "proveedores",
+      "reimpresiones_etiqueta",
+      "revisiones_etiqueta",
+      "rollos",
+      "salida_folio",
+      "salida_lineas",
+      "salida_rollos",
+      "salidas",
+      "salidas_dinero_caja",
+      "series_consecutivo",
+      "sesiones",
+      "sesiones_caja",
+      "sesiones_caja_dias",
+      "solicitudes_pago_dirigido",
+      "stock_minimo_episodios",
+      "stock_minimo_sitios",
+      "stock_minimos",
+      "ticket_folio",
+      "ticket_linea_consumos",
+      "ticket_lineas",
+      "ticket_pagos",
+      "tickets",
+      "ubicaciones",
+      "usuarios",
+      "viaje_folio",
+      "viaje_salidas",
+      "viaje_tickets",
+      "viajes"
+    ],
+    "triggers": [
+      {
+        "table": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_inmutables"
+      },
+      {
+        "table": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_validas"
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_append_only"
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_validar_insert"
+      },
+      {
+        "table": "auditoria",
+        "trigger": "auditoria_append_only"
+      },
+      {
+        "table": "auditoria",
+        "trigger": "auditoria_enriquecer_insert"
+      },
+      {
+        "table": "auditoria_faltante_reactivaciones",
+        "trigger": "auditoria_faltante_reactivaciones_append_only"
+      },
+      {
+        "table": "auditoria_sobrante_contextos",
+        "trigger": "auditoria_sobrante_contextos_append_only"
+      },
+      {
+        "table": "auditoria_sobrante_decisiones",
+        "trigger": "auditoria_sobrante_decisiones_append_only"
+      },
+      {
+        "table": "movimientos_credito",
+        "trigger": "movimientos_credito_inmutables"
+      },
+      {
+        "table": "movimientos_credito",
+        "trigger": "movimientos_credito_reversos_validos"
+      },
+      {
+        "table": "pagos_proveedor",
+        "trigger": "pagos_proveedor_inmutables"
+      },
+      {
+        "table": "reimpresiones_etiqueta",
+        "trigger": "reimpresiones_etiqueta_inmutable"
+      },
+      {
+        "table": "revisiones_etiqueta",
+        "trigger": "revisiones_etiqueta_inmutable"
+      },
+      {
+        "table": "revisiones_etiqueta",
+        "trigger": "revisiones_etiqueta_reimpresion_fk_check"
+      },
+      {
+        "table": "ticket_linea_consumos",
+        "trigger": "ticket_linea_consumos_append_only"
+      },
+      {
+        "table": "ticket_pagos",
+        "trigger": "ticket_pagos_inmutables"
+      }
+    ]
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "startedAtUtc": "2026-09-17T22:57:47.412Z",
+  "mode": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; SET LOCAL timezone=UTC",
+  "sourceWrites": 0,
+  "expectedSnapshot": ".local/backups/prompt-h-block2-20260917165108-3655/source-snapshot.json",
+  "checks": {
+    "identity": {
+      "status": "PASS",
+      "fieldsChecked": [
+        "database_name",
+        "database_oid",
+        "database_role",
+        "server_version",
+        "server_address",
+        "server_port",
+        "server_started_at"
+      ],
+      "expectedEvidenceSha256": "b8e3eafd6ba7af80a651d12f192758773841540c36acd1f900ebd3da06324ebf",
+      "observedEvidenceSha256": "b8e3eafd6ba7af80a651d12f192758773841540c36acd1f900ebd3da06324ebf",
+      "unixSocketAddressAndPortNull": true,
+      "transactionReadOnly": "on"
+    },
+    "clientBackends": {
+      "status": "PASS",
+      "otherClientBackends": 0
+    },
+    "sourceSnapshot": {
+      "tables": {
+        "status": "PASS",
+        "expectedCount": 63,
+        "observedCount": 63,
+        "expectedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6",
+        "observedSha256": "c15a58ab10592f146ae63902dee2fdde66ec9bf84b3f855d13b435165c418bc6"
+      },
+      "tableEvidence": {
+        "status": "PASS",
+        "expectedCount": 63,
+        "observedCount": 63,
+        "expectedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3",
+        "observedSha256": "26126ecd66a5c9a71b121da60c4e7883957c5901508bb1c2475c16c7b21708c3"
+      },
+      "columns": {
+        "status": "PASS",
+        "expectedCount": 634,
+        "observedCount": 634,
+        "expectedSha256": "ec1e1602a7d5e263f1268f5aef99401dc96d64796fb6d369d18cda3a7f8fe833",
+        "observedSha256": "ec1e1602a7d5e263f1268f5aef99401dc96d64796fb6d369d18cda3a7f8fe833"
+      },
+      "constraints": {
+        "status": "PASS",
+        "expectedCount": 310,
+        "observedCount": 310,
+        "expectedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5",
+        "observedSha256": "250c3974da971f095b75836c84393db9a468319316bcb985d9c750b5676cd1a5"
+      },
+      "indexes": {
+        "status": "PASS",
+        "expectedCount": 227,
+        "observedCount": 227,
+        "expectedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e",
+        "observedSha256": "35962875d11684114b9a322af8d5d2cb39506e353180c55d6ab6810e11575c4e"
+      },
+      "functions": {
+        "status": "PASS",
+        "expectedCount": 50,
+        "observedCount": 50,
+        "expectedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10",
+        "observedSha256": "57db131e3ec057a4f6aabea31880f81d9706197257a2c3844c84900f74016d10"
+      },
+      "triggers": {
+        "status": "PASS",
+        "expectedCount": 17,
+        "observedCount": 17,
+        "expectedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f",
+        "observedSha256": "2f8a7fad096ea206998d8c58ef986076d15ac66bababbf2c530d09014af1c35f"
+      },
+      "sequences": {
+        "status": "PASS",
+        "expectedCount": 47,
+        "observedCount": 47,
+        "expectedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7",
+        "observedSha256": "9faa2811c94a26033acc813a1b3b74d449773eba05db2ddb661af454f9bce5c7"
+      },
+      "databaseIgnoringPhysicalSizeOnly": {
+        "status": "PASS",
+        "expectedFieldCount": 6,
+        "observedFieldCount": 6,
+        "expectedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a",
+        "observedSha256": "a36a2481f1cacae7ab209f850373e79cedd63f9adfe3e769ef61151cabb7b46a"
+      },
+      "sequenceStateAfterDump": {
+        "status": "PASS",
+        "expectedCount": 47,
+        "observedCount": 47,
+        "expectedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a",
+        "observedSha256": "6f6d1472d1582947a0756f8c00377218a9a6c8ad21558fb6f7b2aa064269f80a"
+      }
+    },
+    "e1Objects": {
+      "status": "PASS",
+      "count": 0
+    }
+  },
+  "finishedAtUtc": "2026-09-17T22:57:48.370Z",
+  "summary": {
+    "tablesVerified": 63,
+    "tableCountsAndHashesVerified": 63,
+    "columnsVerified": 634,
+    "constraintsVerified": 310,
+    "indexesVerified": 227,
+    "functionsVerified": 50,
+    "triggersVerified": 17,
+    "sequencesVerified": 47,
+    "sequenceStatesVerified": 47,
+    "e1Objects": 0,
+    "otherClientBackends": 0
+  }
+}

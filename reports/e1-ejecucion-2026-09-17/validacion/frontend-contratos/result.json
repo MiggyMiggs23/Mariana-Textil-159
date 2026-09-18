@@ -1,0 +1,5660 @@
+{
+  "stage": "/tmp/e1-frontend-schema-mutants-ZAi83c",
+  "guard": "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+  "loader": "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+  "originalHashes": {
+    "artifacts/mariana-textil/src/lib/credit-evidence.ts": "8c8987f72748aa0bd738b1531737eccff53f89e7e5825c6cb9273dda469e4d3a",
+    "artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts": "18be0d835b2f05ec25b84b3a4e834adf99cb99f5845e9db6c3ebd62ebf4182c2",
+    "lib/api-spec/e1-contract.test.ts": "45066ea95ab28267ed3ea2faa5434d23318fd4664d611ec72e79d12887141589",
+    "lib/api-spec/openapi.yaml": "a736c69324cdb1cb1d9c1101af510b6649fc528bb3cad58fc7017639841b9f34",
+    "lib/api-zod/src/generated/api.ts": "665a3e5797d080070b2efc00e8411797d3a58d192963b5699b3d5ee571d2da56",
+    "lib/api-zod/package.json": "07009861b2ba8decccb4e9d78d743cb7273bd91915231b5eb1463b296efca13e",
+    "reports/e1-ensayo-2026-09-17/operativo-propuesto/01.sql": "680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f",
+    "scripts/src/e1-evidence-mutant-reporter.mjs": "13a5cc4b8679e57371e5921ed21ce5abc3019cc4b081dc955f6da150d1e81cc3"
+  },
+  "runs": [
+    {
+      "suite": "frontend",
+      "phase": "before",
+      "testName": null,
+      "mutant": null,
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-before.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-before.stderr.txt",
+      "outputSha256": "f9e0a7780648ebb5916793f380167a6a4ea21657b1268343aba0c3814eb113d5",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:pass",
+          "name": "E1 retry keeps UUID until an accepted response",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 producer and changed logical draft cannot share an operation key",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 all three activation gates stay closed",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 site and nature are explicit, without inherited defaults",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 correction requires its own justification, never a cash session",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 directed approval copies only original metadata and UUID, not credentials",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 7,
+            "failed": 0,
+            "passed": 7,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 7,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 7",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 7",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1220.620229",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 7,
+            "failed": 0,
+            "passed": 7,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 7,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 retry keeps UUID until an accepted response",
+      "mutant": "retry-key",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 retry keeps UUID until an accepted response$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-retry-key.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-retry-key.stderr.txt",
+      "outputSha256": "49cb999bc654f3a6704a4580a7e2a5162447efc8b9274d4798c0a0b0098d0211",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 retry keeps UUID until an accepted response",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n\n'uuid-2' !== 'uuid-1'\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n'uuid-2' !== 'uuid-1'\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n\n'uuid-2' !== 'uuid-1'\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'uuid-2' !== 'uuid-1'\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:47:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1211.585425",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n'uuid-2' !== 'uuid-1'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'uuid-2' !== 'uuid-1'\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:47:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 retry keeps UUID until an accepted response",
+      "mutant": "accepted-key",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 retry keeps UUID until an accepted response$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-accepted-key.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-accepted-key.stderr.txt",
+      "outputSha256": "be8d3aa7aaf166344fde4e8d8c42e2d143c896b1311dbaa544515e9bb2095eae",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 retry keeps UUID until an accepted response",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:50:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1203.837754",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:50:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 producer and changed logical draft cannot share an operation key",
+      "mutant": "producer-key",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 producer and changed logical draft cannot share an operation key$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-producer-key.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-producer-key.stderr.txt",
+      "outputSha256": "990131d2e2df71492a204ebdd05f4c68bf02180e84d41719e44930266a3aba85",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 producer and changed logical draft cannot share an operation key",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:57:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1094.182483",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:57:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 producer and changed logical draft cannot share an operation key",
+      "mutant": "draft-content",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 producer and changed logical draft cannot share an operation key$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-draft-content.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-draft-content.stderr.txt",
+      "outputSha256": "a4f11cd8bcbcd9c80b95c0a1d3d9a38bf17e634d69fd021637c94be9b580fe4e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 producer and changed logical draft cannot share an operation key",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:57:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1142.989566",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected \"actual\" to be strictly unequal to:\n\n'uuid-1'\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:57:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 all three activation gates stay closed",
+      "mutant": "cash-gate",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 all three activation gates stay closed$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-cash-gate.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-cash-gate.stderr.txt",
+      "outputSha256": "470af33d78f8a90f5ff8d4bfd54a2c8a596ff40760be9ec7889b02655534da97",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 all three activation gates stay closed",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:63:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1026.080118",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:63:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 all three activation gates stay closed",
+      "mutant": "pending-gate",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 all three activation gates stay closed$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-pending-gate.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-pending-gate.stderr.txt",
+      "outputSha256": "032126dbe62e837cac3facbc8f691c1a646df10e37b24f9fa707486381e4e6a7",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 all three activation gates stay closed",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:64:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1273.170739",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:64:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 all three activation gates stay closed",
+      "mutant": "attribution-gate",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 all three activation gates stay closed$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-attribution-gate.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-attribution-gate.stderr.txt",
+      "outputSha256": "77f7a22e11ee6dceb9fef1f441155932cf334ff58133d56d16691efe1690af19",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 all three activation gates stay closed",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:65:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1159.3075",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:65:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 site and nature are explicit, without inherited defaults",
+      "mutant": "nature-required",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 site and nature are explicit, without inherited defaults$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-nature-required.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-nature-required.stderr.txt",
+      "outputSha256": "c94de19c9dfe93fd86d47bc15b3d53944b522f686437ad5dee16620d68282a5c",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 site and nature are explicit, without inherited defaults",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ sitioOrigenId: 3 }, \"TRANSFERENCIA\"))\n",
+              "stack": "Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ sitioOrigenId: 3 }, \"TRANSFERENCIA\"))\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ sitioOrigenId: 3 }, \"TRANSFERENCIA\"))\n",
+                "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ sitioOrigenId: 3 }, \"TRANSFERENCIA\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:71:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1195.987412",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ sitioOrigenId: 3 }, \"TRANSFERENCIA\"))\n",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ sitioOrigenId: 3 }, \"TRANSFERENCIA\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:71:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 site and nature are explicit, without inherited defaults",
+      "mutant": "site-required",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 site and nature are explicit, without inherited defaults$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-site-required.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-site-required.stderr.txt",
+      "outputSha256": "2a154d0e36cbbf46d79893c8915f468e9292b544052ef75b28e02e2dc769542e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 site and nature are explicit, without inherited defaults",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ naturaleza: \"INGRESO_FISICO\" }, \"TRANSFERENCIA\"))\n",
+              "stack": "Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ naturaleza: \"INGRESO_FISICO\" }, \"TRANSFERENCIA\"))\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ naturaleza: \"INGRESO_FISICO\" }, \"TRANSFERENCIA\"))\n",
+                "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ naturaleza: \"INGRESO_FISICO\" }, \"TRANSFERENCIA\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:70:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1104.814001",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ naturaleza: \"INGRESO_FISICO\" }, \"TRANSFERENCIA\"))\n",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ naturaleza: \"INGRESO_FISICO\" }, \"TRANSFERENCIA\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:70:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 correction requires its own justification, never a cash session",
+      "mutant": "correction-evidence",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 correction requires its own justification, never a cash session$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-correction-evidence.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-correction-evidence.stderr.txt",
+      "outputSha256": "8e71701e2635d6a5ecda101b1f0faf654df6da0d6e36f96a0cf21fed82fe6491",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 correction requires its own justification, never a cash session",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem(correction, \"EFECTIVO\"))\n",
+              "stack": "Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem(correction, \"EFECTIVO\"))\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem(correction, \"EFECTIVO\"))\n",
+                "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem(correction, \"EFECTIVO\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:77:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1076.554807",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem(correction, \"EFECTIVO\"))\n",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem(correction, \"EFECTIVO\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:77:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 correction requires its own justification, never a cash session",
+      "mutant": "no-session",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 correction requires its own justification, never a cash session$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-no-session.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-no-session.stderr.txt",
+      "outputSha256": "a2c1941fe38783f4f397bd717a06c5f9d5cc6205613439a122eed20ebb682d41",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 correction requires its own justification, never a cash session",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: \"Recaptura documentada\", sesionCajaId: 8 }, \"EFECTIVO\"))\n",
+              "stack": "Error [ERR_TEST_FAILURE]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: \"Recaptura documentada\", sesionCajaId: 8 }, \"EFECTIVO\"))\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: \"Recaptura documentada\", sesionCajaId: 8 }, \"EFECTIVO\"))\n",
+                "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: \"Recaptura documentada\", sesionCajaId: 8 }, \"EFECTIVO\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:79:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1101.321637",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: \"Recaptura documentada\", sesionCajaId: 8 }, \"EFECTIVO\"))\n",
+          "stack": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: \"Recaptura documentada\", sesionCajaId: 8 }, \"EFECTIVO\"))\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:79:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 directed approval copies only original metadata and UUID, not credentials",
+      "mutant": "whitelist",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 directed approval copies only original metadata and UUID, not credentials$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-whitelist.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-whitelist.stderr.txt",
+      "outputSha256": "6c90eb96c01fa5d3f900c0364208cc2af494979314aa825d279b347f51f00edc",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 directed approval copies only original metadata and UUID, not credentials",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   adminPassword: 'never-persist',\n+   motivo: 'not metadata',\n    naturaleza: 'INGRESO_FISICO',\n    notaOrigenId: null,\n    operacionClave: '706b124d-92aa-44b2-94ef-586a45ad412c',\n    origenJustificacion: null,\n+   password: 'never-persist',\n    sesionCajaId: null,\n+   sessionToken: 'never-persist',\n    sitioOrigenId: 3\n  }\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   adminPassword: 'never-persist',\n+   motivo: 'not metadata',\n    naturaleza: 'INGRESO_FISICO',\n    notaOrigenId: null,\n    operacionClave: '706b124d-92aa-44b2-94ef-586a45ad412c',\n    origenJustificacion: null,\n+   password: 'never-persist',\n    sesionCajaId: null,\n+   sessionToken: 'never-persist',\n    sitioOrigenId: 3\n  }\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   adminPassword: 'never-persist',\n+   motivo: 'not metadata',\n    naturaleza: 'INGRESO_FISICO',\n    notaOrigenId: null,\n    operacionClave: '706b124d-92aa-44b2-94ef-586a45ad412c',\n    origenJustificacion: null,\n+   password: 'never-persist',\n    sesionCajaId: null,\n+   sessionToken: 'never-persist',\n    sitioOrigenId: 3\n  }\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   adminPassword: 'never-persist',\n+   motivo: 'not metadata',\n    naturaleza: 'INGRESO_FISICO',\n    notaOrigenId: null,\n    operacionClave: '706b124d-92aa-44b2-94ef-586a45ad412c',\n    origenJustificacion: null,\n+   password: 'never-persist',\n    sesionCajaId: null,\n+   sessionToken: 'never-persist',\n    sitioOrigenId: 3\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:85:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1075.633912",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   adminPassword: 'never-persist',\n+   motivo: 'not metadata',\n    naturaleza: 'INGRESO_FISICO',\n    notaOrigenId: null,\n    operacionClave: '706b124d-92aa-44b2-94ef-586a45ad412c',\n    origenJustificacion: null,\n+   password: 'never-persist',\n    sesionCajaId: null,\n+   sessionToken: 'never-persist',\n    sitioOrigenId: 3\n  }\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   adminPassword: 'never-persist',\n+   motivo: 'not metadata',\n    naturaleza: 'INGRESO_FISICO',\n    notaOrigenId: null,\n    operacionClave: '706b124d-92aa-44b2-94ef-586a45ad412c',\n    origenJustificacion: null,\n+   password: 'never-persist',\n    sesionCajaId: null,\n+   sessionToken: 'never-persist',\n    sitioOrigenId: 3\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:85:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+      "mutant": "exact-time",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 attribution preparation preserves exact timestamp, full identity and predecessor$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-exact-time.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-exact-time.stderr.txt",
+      "outputSha256": "ff0a42a0530a462dfb1ac66cd15ce3fe2c277b90112e25767c7d4a0c34ac09ad",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-09-15T12:13:14.123Z'\n- '2026-09-15 12:13:14.123456+00'\n             ^\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-09-15T12:13:14.123Z'\n- '2026-09-15 12:13:14.123456+00'\n             ^\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-09-15T12:13:14.123Z'\n- '2026-09-15 12:13:14.123456+00'\n             ^\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-09-15T12:13:14.123Z'\n- '2026-09-15 12:13:14.123456+00'\n             ^\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:103:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1267.499649",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-09-15T12:13:14.123Z'\n- '2026-09-15 12:13:14.123456+00'\n             ^\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ '2026-09-15T12:13:14.123Z'\n- '2026-09-15 12:13:14.123456+00'\n             ^\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:103:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+      "mutant": "snapshot",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 attribution preparation preserves exact timestamp, full identity and predecessor$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-snapshot.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-snapshot.stderr.txt",
+      "outputSha256": "26bd80a615eedd5217c3a14e7b47b5b505f27e7a74f278a07486ffb579b8cd91",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    cliente_id: 2,\n    importe: 125,\n+   movimiento_origen_id: null,\n-   movimiento_origen_id: 5,\n    ticket_id: 6,\n    tipo: 'REVERSO'\n  }\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    cliente_id: 2,\n    importe: 125,\n+   movimiento_origen_id: null,\n-   movimiento_origen_id: 5,\n    ticket_id: 6,\n    tipo: 'REVERSO'\n  }\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    cliente_id: 2,\n    importe: 125,\n+   movimiento_origen_id: null,\n-   movimiento_origen_id: 5,\n    ticket_id: 6,\n    tipo: 'REVERSO'\n  }\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    cliente_id: 2,\n    importe: 125,\n+   movimiento_origen_id: null,\n-   movimiento_origen_id: 5,\n    ticket_id: 6,\n    tipo: 'REVERSO'\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:104:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1324.798678",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    cliente_id: 2,\n    importe: 125,\n+   movimiento_origen_id: null,\n-   movimiento_origen_id: 5,\n    ticket_id: 6,\n    tipo: 'REVERSO'\n  }\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n    cliente_id: 2,\n    importe: 125,\n+   movimiento_origen_id: null,\n-   movimiento_origen_id: 5,\n    ticket_id: 6,\n    tipo: 'REVERSO'\n  }\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:104:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "mutant",
+      "testName": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+      "mutant": "predecessor",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 attribution preparation preserves exact timestamp, full identity and predecessor$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-predecessor.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-predecessor.stderr.txt",
+      "outputSha256": "8bc1651a62876c3f3df2da61ec705a26187abf0ce042abf381841e7340bbaf32",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- '706b124d-92aa-44b2-94ef-586a45ad412c'\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- '706b124d-92aa-44b2-94ef-586a45ad412c'\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- '706b124d-92aa-44b2-94ef-586a45ad412c'\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- '706b124d-92aa-44b2-94ef-586a45ad412c'\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:105:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 4734.400962",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- '706b124d-92aa-44b2-94ef-586a45ad412c'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- '706b124d-92aa-44b2-94ef-586a45ad412c'\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts:105:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "frontend",
+      "phase": "after",
+      "testName": null,
+      "mutant": null,
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-after.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-after.stderr.txt",
+      "outputSha256": "d06a80a7119017dc97ed0f037b909e8c424b007f1dd974f465de074d36b6c9e1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:pass",
+          "name": "E1 retry keeps UUID until an accepted response",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 producer and changed logical draft cannot share an operation key",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 all three activation gates stay closed",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 site and nature are explicit, without inherited defaults",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 correction requires its own justification, never a cash session",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 directed approval copies only original metadata and UUID, not credentials",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 7,
+            "failed": 0,
+            "passed": 7,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 7,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 7",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 7",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 3847.023882",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 7,
+            "failed": 0,
+            "passed": 7,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 7,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "before",
+      "testName": null,
+      "mutant": null,
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-before.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-before.stderr.txt",
+      "outputSha256": "0a409da3e028214086ff41af7df741ed89c867dcb5a891e6a9b9021fb7437e28",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:pass",
+          "name": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 generated POS contract has exactly the four SQL nature values",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 generated attribution schema retains exact microseconds and full snapshot",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 3,
+            "failed": 0,
+            "passed": 3,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 3,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 3",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 3",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 4652.81332",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 3,
+            "failed": 0,
+            "passed": 3,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 3,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "mutant",
+      "testName": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+      "mutant": "required-site",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 generated payment schema rejects omitted origin/key and malformed UUID$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-site.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-site.stderr.txt",
+      "outputSha256": "a5e8f47b2b7f5ef885253b6a6b69ebb165bf2e118b023c5f68d01a8d568757a3",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "sitioOrigenId\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: sitioOrigenId\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "sitioOrigenId\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: sitioOrigenId\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:43:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 5145.667674",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "sitioOrigenId\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: sitioOrigenId\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:43:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "mutant",
+      "testName": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+      "mutant": "integer-site",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 generated payment schema rejects omitted origin/key and malformed UUID$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-integer-site.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-integer-site.stderr.txt",
+      "outputSha256": "4dbc77d380cf32abbb83f89fc06e7c141c5a38bcc66f73fe66cd76cdb3f815a7",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:46:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 5219.045771",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:46:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "mutant",
+      "testName": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+      "mutant": "required-key",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 generated payment schema rejects omitted origin/key and malformed UUID$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-key.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-key.stderr.txt",
+      "outputSha256": "1396707f8826653653e1f100c42669bdda9f71d4ff72df38fc2d293d423637e9",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "operacionClave\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: operacionClave\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "operacionClave\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: operacionClave\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:43:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 2260.613232",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "operacionClave\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: operacionClave\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:43:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "mutant",
+      "testName": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+      "mutant": "uuid-format",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 generated payment schema rejects omitted origin/key and malformed UUID$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-uuid-format.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-uuid-format.stderr.txt",
+      "outputSha256": "e2a5e744ab4c6ae89495f280b247897408d5d8920083b5e328fe150c6edfd321",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:45:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1553.639695",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:45:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "mutant",
+      "testName": "E1 generated POS contract has exactly the four SQL nature values",
+      "mutant": "fourth-nature",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 generated POS contract has exactly the four SQL nature values$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-fourth-nature.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-fourth-nature.stderr.txt",
+      "outputSha256": "b37165d7c4a33a58437421a4c09119484e33f40d4262c3b50b0c1b5fc4b2b18d",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 generated POS contract has exactly the four SQL nature values",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'INGRESO_FISICO',\n    'DEVOLUCION_FISICA',\n    'CORRECCION_CONTABLE',\n+   'OPERACION_CREDITO_SIN_MOVIMIENTO'\n-   'OPERACION_CREDITO_SIN_DINERO'\n  ]\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'INGRESO_FISICO',\n    'DEVOLUCION_FISICA',\n    'CORRECCION_CONTABLE',\n+   'OPERACION_CREDITO_SIN_MOVIMIENTO'\n-   'OPERACION_CREDITO_SIN_DINERO'\n  ]\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'INGRESO_FISICO',\n    'DEVOLUCION_FISICA',\n    'CORRECCION_CONTABLE',\n+   'OPERACION_CREDITO_SIN_MOVIMIENTO'\n-   'OPERACION_CREDITO_SIN_DINERO'\n  ]\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'INGRESO_FISICO',\n    'DEVOLUCION_FISICA',\n    'CORRECCION_CONTABLE',\n+   'OPERACION_CREDITO_SIN_MOVIMIENTO'\n-   'OPERACION_CREDITO_SIN_DINERO'\n  ]\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:56:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1533.839744",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'INGRESO_FISICO',\n    'DEVOLUCION_FISICA',\n    'CORRECCION_CONTABLE',\n+   'OPERACION_CREDITO_SIN_MOVIMIENTO'\n-   'OPERACION_CREDITO_SIN_DINERO'\n  ]\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    'INGRESO_FISICO',\n    'DEVOLUCION_FISICA',\n    'CORRECCION_CONTABLE',\n+   'OPERACION_CREDITO_SIN_MOVIMIENTO'\n-   'OPERACION_CREDITO_SIN_DINERO'\n  ]\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:56:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "mutant",
+      "testName": "E1 generated attribution schema retains exact microseconds and full snapshot",
+      "mutant": "attribution-date",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 generated attribution schema retains exact microseconds and full snapshot$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-attribution-date.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-attribution-date.stderr.txt",
+      "outputSha256": "082b6f96a687511bc67b511a8d6ebe40b5fd1f861313bc76328c507d4c057549",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 generated attribution schema retains exact microseconds and full snapshot",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 2026-09-15T12:13:14.123Z\n- '2026-09-15 12:13:14.123456+00'\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 2026-09-15T12:13:14.123Z\n- '2026-09-15 12:13:14.123456+00'\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 2026-09-15T12:13:14.123Z\n- '2026-09-15 12:13:14.123456+00'\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 2026-09-15T12:13:14.123Z\n- '2026-09-15 12:13:14.123456+00'\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:68:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1524.328314",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 2026-09-15T12:13:14.123Z\n- '2026-09-15 12:13:14.123456+00'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 2026-09-15T12:13:14.123Z\n- '2026-09-15 12:13:14.123456+00'\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:68:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "mutant",
+      "testName": "E1 generated attribution schema retains exact microseconds and full snapshot",
+      "mutant": "snapshot-origin",
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "--test-name-pattern=^E1 generated attribution schema retains exact microseconds and full snapshot$",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 1,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-snapshot-origin.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-snapshot-origin.stderr.txt",
+      "outputSha256": "15761530393ddb26f437d930f3928f92c5c2b9e3cd8a27b26032dd250737500f",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:fail",
+          "name": "E1 generated attribution schema retains exact microseconds and full snapshot",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": {
+              "name": "Error",
+              "code": "ERR_TEST_FAILURE",
+              "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+              "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\ntrue !== false\n",
+              "failureType": "testCodeFailure",
+              "cause": {
+                "name": "AssertionError",
+                "code": "ERR_ASSERTION",
+                "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+                "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:70:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+                "failureType": null,
+                "cause": null,
+                "errors": []
+              },
+              "errors": []
+            }
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 1",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1445.519007",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 1,
+            "failed": 1,
+            "passed": 0,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 1,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [
+        {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\ntrue !== false\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at TestContext.<anonymous> (/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts:70:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        }
+      ],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    },
+    {
+      "suite": "schema",
+      "phase": "after",
+      "testName": null,
+      "mutant": null,
+      "command": [
+        "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+        "--require",
+        "/home/runner/workspace/scripts/src/offline-test-guard.cjs",
+        "--import",
+        "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx/dist/loader.mjs",
+        "--test",
+        "--test-reporter=/tmp/e1-frontend-schema-mutants-ZAi83c/scripts/src/e1-evidence-mutant-reporter.mjs",
+        "/tmp/e1-frontend-schema-mutants-ZAi83c/lib/api-spec/e1-contract.test.ts"
+      ],
+      "exitCode": 0,
+      "signal": null,
+      "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-after.jsonl",
+      "stderr": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-after.stderr.txt",
+      "outputSha256": "09f65dfc93edc0b178ee758189d44ccbcf0f4c8ebcf6b581f016199174497865",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "events": [
+        {
+          "type": "test:pass",
+          "name": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 generated POS contract has exactly the four SQL nature values",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:pass",
+          "name": "E1 generated attribution schema retains exact microseconds and full snapshot",
+          "skip": false,
+          "nesting": 0,
+          "message": null,
+          "details": {
+            "type": "test",
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 3,
+            "failed": 0,
+            "passed": 3,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 3,
+            "suites": 0
+          }
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "tests 3",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "suites 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "pass 3",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "fail 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "cancelled 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "skipped 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "todo 0",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:diagnostic",
+          "name": null,
+          "skip": false,
+          "nesting": 0,
+          "message": "duration_ms 1551.628312",
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": null
+        },
+        {
+          "type": "test:summary",
+          "name": null,
+          "skip": false,
+          "nesting": null,
+          "message": null,
+          "details": {
+            "type": null,
+            "error": null
+          },
+          "counts": {
+            "tests": 3,
+            "failed": 0,
+            "passed": 3,
+            "cancelled": 0,
+            "skipped": 0,
+            "todo": 0,
+            "topLevel": 3,
+            "suites": 0
+          }
+        }
+      ],
+      "assertionErrors": [],
+      "infrastructureFailure": false,
+      "parseError": null,
+      "meaningful": true,
+      "originalUnchanged": true
+    }
+  ],
+  "testcaseCoverage": [
+    {
+      "suite": "frontend",
+      "testName": "E1 retry keeps UUID until an accepted response",
+      "observed": [
+        {
+          "mutant": "retry-key",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-retry-key.jsonl",
+          "outputSha256": "49cb999bc654f3a6704a4580a7e2a5162447efc8b9274d4798c0a0b0098d0211",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "accepted-key",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-accepted-key.jsonl",
+          "outputSha256": "be8d3aa7aaf166344fde4e8d8c42e2d143c896b1311dbaa544515e9bb2095eae",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "frontend",
+      "testName": "E1 producer and changed logical draft cannot share an operation key",
+      "observed": [
+        {
+          "mutant": "producer-key",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-producer-key.jsonl",
+          "outputSha256": "990131d2e2df71492a204ebdd05f4c68bf02180e84d41719e44930266a3aba85",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "draft-content",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-draft-content.jsonl",
+          "outputSha256": "a4f11cd8bcbcd9c80b95c0a1d3d9a38bf17e634d69fd021637c94be9b580fe4e",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "frontend",
+      "testName": "E1 all three activation gates stay closed",
+      "observed": [
+        {
+          "mutant": "cash-gate",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-cash-gate.jsonl",
+          "outputSha256": "470af33d78f8a90f5ff8d4bfd54a2c8a596ff40760be9ec7889b02655534da97",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "pending-gate",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-pending-gate.jsonl",
+          "outputSha256": "032126dbe62e837cac3facbc8f691c1a646df10e37b24f9fa707486381e4e6a7",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "attribution-gate",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-attribution-gate.jsonl",
+          "outputSha256": "77f7a22e11ee6dceb9fef1f441155932cf334ff58133d56d16691efe1690af19",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "frontend",
+      "testName": "E1 site and nature are explicit, without inherited defaults",
+      "observed": [
+        {
+          "mutant": "nature-required",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-nature-required.jsonl",
+          "outputSha256": "c94de19c9dfe93fd86d47bc15b3d53944b522f686437ad5dee16620d68282a5c",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "site-required",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-site-required.jsonl",
+          "outputSha256": "2a154d0e36cbbf46d79893c8915f468e9292b544052ef75b28e02e2dc769542e",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "frontend",
+      "testName": "E1 correction requires its own justification, never a cash session",
+      "observed": [
+        {
+          "mutant": "correction-evidence",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-correction-evidence.jsonl",
+          "outputSha256": "8e71701e2635d6a5ecda101b1f0faf654df6da0d6e36f96a0cf21fed82fe6491",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "no-session",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-no-session.jsonl",
+          "outputSha256": "a2c1941fe38783f4f397bd717a06c5f9d5cc6205613439a122eed20ebb682d41",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "frontend",
+      "testName": "E1 directed approval copies only original metadata and UUID, not credentials",
+      "observed": [
+        {
+          "mutant": "whitelist",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-whitelist.jsonl",
+          "outputSha256": "6c90eb96c01fa5d3f900c0364208cc2af494979314aa825d279b347f51f00edc",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "frontend",
+      "testName": "E1 attribution preparation preserves exact timestamp, full identity and predecessor",
+      "observed": [
+        {
+          "mutant": "exact-time",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-exact-time.jsonl",
+          "outputSha256": "ff0a42a0530a462dfb1ac66cd15ce3fe2c277b90112e25767c7d4a0c34ac09ad",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "snapshot",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-snapshot.jsonl",
+          "outputSha256": "26bd80a615eedd5217c3a14e7b47b5b505f27e7a74f278a07486ffb579b8cd91",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "predecessor",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/frontend-mutant-predecessor.jsonl",
+          "outputSha256": "8bc1651a62876c3f3df2da61ec705a26187abf0ce042abf381841e7340bbaf32",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "schema",
+      "testName": "E1 generated payment schema rejects omitted origin/key and malformed UUID",
+      "observed": [
+        {
+          "mutant": "required-site",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-site.jsonl",
+          "outputSha256": "a5e8f47b2b7f5ef885253b6a6b69ebb165bf2e118b023c5f68d01a8d568757a3",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "integer-site",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-integer-site.jsonl",
+          "outputSha256": "4dbc77d380cf32abbb83f89fc06e7c141c5a38bcc66f73fe66cd76cdb3f815a7",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "required-key",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-required-key.jsonl",
+          "outputSha256": "1396707f8826653653e1f100c42669bdda9f71d4ff72df38fc2d293d423637e9",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "uuid-format",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-uuid-format.jsonl",
+          "outputSha256": "e2a5e744ab4c6ae89495f280b247897408d5d8920083b5e328fe150c6edfd321",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "schema",
+      "testName": "E1 generated POS contract has exactly the four SQL nature values",
+      "observed": [
+        {
+          "mutant": "fourth-nature",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-fourth-nature.jsonl",
+          "outputSha256": "b37165d7c4a33a58437421a4c09119484e33f40d4262c3b50b0c1b5fc4b2b18d",
+          "observedAssertionFailure": true
+        }
+      ]
+    },
+    {
+      "suite": "schema",
+      "testName": "E1 generated attribution schema retains exact microseconds and full snapshot",
+      "observed": [
+        {
+          "mutant": "attribution-date",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-attribution-date.jsonl",
+          "outputSha256": "082b6f96a687511bc67b511a8d6ebe40b5fd1f861313bc76328c507d4c057549",
+          "observedAssertionFailure": true
+        },
+        {
+          "mutant": "snapshot-origin",
+          "output": "/tmp/e1-frontend-schema-mutants-ZAi83c/schema-mutant-snapshot-origin.jsonl",
+          "outputSha256": "15761530393ddb26f437d930f3928f92c5c2b9e3cd8a27b26032dd250737500f",
+          "observedAssertionFailure": true
+        }
+      ]
+    }
+  ],
+  "originalUnchanged": true,
+  "totals": {
+    "cases": 10,
+    "unobservedCases": 0,
+    "mutantRuns": 22,
+    "meaningfulFailures": 22,
+    "greenSuiteRuns": 4
+  },
+  "status": "PASS"
+}

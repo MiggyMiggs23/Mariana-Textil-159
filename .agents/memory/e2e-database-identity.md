@@ -15,8 +15,8 @@ Para diagnosticar datos ausentes, una integración Neon instalada no demuestra q
 
 **How to apply:** Identificar el pool configurado y comprobar `current_database()` y las tablas necesarias mediante solo lectura antes de interpretar conteos. Distinguir la conexión del shell de posibles overrides del workflow y no atribuir un caso concreto a datos que no se han encontrado.
 
-La API puede responder por loopback y aparecer activa en los workflows sin que su proceso sea visible desde el shell del agente. Eso no autoriza a sustituir una comprobación dentro de su pool por una consulta desde otra conexión.
+No declarar inaccesible el proceso de la API porque un filtro de procesos por `node` no lo encuentra: Node puede mostrar `MainThread` como nombre de proceso.
 
-**Why:** Se observó un servicio activo cuyo PID aparecía en logs pero no en los procesos accesibles. Un informe histórico del pool o un GET de salud no demuestra su conexión actual.
+**Why:** Un filtro por nombre produjo un diagnóstico incorrecto de inaccesibilidad. El PID de los logs sí estaba disponible y su ejecutable confirmó que era Node; se pudo consultar el pool existente sin reiniciar.
 
-**How to apply:** Si se exige identidad desde el proceso actual y no se dispone de acceso seguro a él, declarar la confirmación bloqueada y mantener el SQL en NO-GO. No reiniciar normalmente para diagnosticar: los inicializadores pueden escribir antes de la autorización.
+**How to apply:** Examinar la lista completa y comprobar el ejecutable/CWD del PID conocido antes de concluir que falta acceso. El GET de salud y una identidad histórica no sustituyen la consulta actual del pool. No reiniciar normalmente para diagnosticar: los inicializadores pueden escribir antes de la autorización.

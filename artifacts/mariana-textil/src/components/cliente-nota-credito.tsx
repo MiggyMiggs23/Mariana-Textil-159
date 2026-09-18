@@ -17,6 +17,8 @@ import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-no
 import { Input } from "@/components/ui/input";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { useGetCurrentUser, useReversarClientePago } from "@workspace/api-client-react";
+import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -111,6 +113,10 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
   const [reversoPagoId, setReversoPagoId] = useState<number | null>(null);
   const [reversoMotivo, setReversoMotivo] = useState("");
   const [reversoConfirm, setReversoConfirm] = useState("");
+  const reversalEvidence = useCreditEvidenceDraft();
+  const [refundMedium, setRefundMedium] = useState<"TRANSFERENCIA" | "FACTURADO">("TRANSFERENCIA");
+  const [refundAccount, setRefundAccount] = useState<"CUENTA_FISCAL" | "CUENTA_NO_FISCAL">("CUENTA_FISCAL");
+  const [refundReference, setRefundReference] = useState("");
   const { data: user } = useGetCurrentUser();
   const reversarPago = useReversarClientePago();
   const { toast } = useToast();
@@ -260,7 +266,7 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
                               variant="destructive"
                               size="sm"
                               className="h-8 text-xs font-bold"
-                              onClick={() => setReversoPagoId(abono.movimientoPagoId)}
+                              onClick={() => { reversalEvidence.reset(); setReversoPagoId(abono.movimientoPagoId); setRefundReference(""); }}
                             >
                               <Ban className="h-4 w-4 mr-1" /> Reversar
                             </Button>
@@ -343,7 +349,7 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
           setReversoConfirm("");
         }
       }}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-destructive flex items-center gap-2">
               <Ban className="h-5 w-5" /> Reversar Abono
@@ -354,6 +360,13 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
               Esta acción anulará el pago y restaurará los saldos pendientes de todas las notas afectadas por el mismo.
             </p>
             <div className="space-y-2">
+              <CreditEvidenceFields draft={reversalEvidence} kind="reversal" medium={reversalEvidence.nature === "DEVOLUCION_FISICA" ? refundMedium : undefined} />
+              {reversalEvidence.nature === "DEVOLUCION_FISICA" && <div className="space-y-2">
+                <p className="text-xs">La devolución física en efectivo está deshabilitada. Declara la transferencia realmente devuelta.</p>
+                <Select value={refundMedium} onValueChange={value => setRefundMedium(value as typeof refundMedium)}><SelectTrigger aria-label="Medio de devolución"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="TRANSFERENCIA">Transferencia</SelectItem><SelectItem value="FACTURADO">Facturado</SelectItem></SelectContent></Select>
+                <Select value={refundAccount} onValueChange={value => setRefundAccount(value as typeof refundAccount)}><SelectTrigger aria-label="Cuenta de devolución"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="CUENTA_FISCAL">Cuenta fiscal</SelectItem><SelectItem value="CUENTA_NO_FISCAL">Cuenta no fiscal</SelectItem></SelectContent></Select>
+                <Input aria-label="Referencia de devolución" value={refundReference} onChange={event => setRefundReference(event.target.value)} />
+              </div>}
               <label className="text-xs font-bold text-sidebar uppercase tracking-wider">Motivo del reverso</label>
               <Input
                 value={reversoMotivo}
@@ -375,13 +388,20 @@ export function ClienteNotaCredito({ clienteId, ticketId }: ClienteNotaCreditoPr
             <Button variant="ghost" onClick={() => setReversoPagoId(null)}>Cancelar</Button>
             <Button
               variant="destructive"
-              disabled={reversoConfirm !== "REVERSAR" || reversoMotivo.trim().length < 5 || reversarPago.isPending}
+              disabled={reversoConfirm !== "REVERSAR" || reversoMotivo.trim().length < 5 || !!reversalEvidence.problem(refundMedium) || reversarPago.isPending}
               onClick={() => {
                 if (reversoPagoId) {
+                  const original = nota?.abonos.find(abono => abono.movimientoPagoId === reversoPagoId);
+                  if (!original) return;
+                  const intent = {
+                    motivo: reversoMotivo, importe: Number(original.montoTotalAbono),
+                    ...(reversalEvidence.nature === "DEVOLUCION_FISICA" ? { formaPago: refundMedium, cuentaDestino: refundAccount, referencia: refundReference || null } : {}),
+                  };
                   reversarPago.mutate(
-                    { id: clienteId, pagoId: reversoPagoId, data: { motivo: reversoMotivo } },
+                    { id: clienteId, pagoId: reversoPagoId, data: { ...intent, ...reversalEvidence.build("REVERSO_ABONO", { clienteId, pagoId: reversoPagoId, ...intent }, refundMedium) } },
                     {
                       onSuccess: () => {
+                        reversalEvidence.reset();
                         toast({ title: "Abono reversado exitosamente" });
                         setReversoPagoId(null);
                         setReversoMotivo("");

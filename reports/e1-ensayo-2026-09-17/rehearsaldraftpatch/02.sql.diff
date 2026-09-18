@@ -1,0 +1,13 @@
+--- /home/runner/workspace/reports/e1-sql/02-reversion-condicionada.sql
++++ /home/runner/workspace/reports/e1-ensayo-2026-09-17/rehearsaldraftpatch/02.sql
+@@ -2,1 +2,1 @@
+--- CANDIDATO heliumdb/public, PostgreSQL 16; NO confirmado actualmente por API.
++-- CANDIDATO restore_disposable_20260917165108-3655/public, PostgreSQL 16; NO confirmado actualmente por API.
+@@ -33,1 +32,0 @@
+-  RAISE EXCEPTION 'E1_NO_GO: identidad actual y propiedad de objetos no confirmadas; reversión no habilitada';
+@@ -34,1 +33,1 @@
+-  IF current_database() <> 'heliumdb' THEN
++  IF current_database() <> 'restore_disposable_20260917165108-3655' THEN
+@@ -35,1 +34,1 @@
+-    RAISE EXCEPTION 'Destino incorrecto: se requiere heliumdb; recibido %', current_database();
++    RAISE EXCEPTION 'Destino incorrecto: se requiere restore_disposable_20260917165108-3655; recibido %', current_database();

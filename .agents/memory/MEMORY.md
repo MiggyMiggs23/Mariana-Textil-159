@@ -69,3 +69,5 @@
 - [Resumen global de crédito y detalle por sitio](customer-credit-scope-exception.md) — excepción limitada a cuatro cifras; FIFO global, detalle restringido y leyendas dentro de archivos.
 - [Pruebas negativas de guardias](source-guard-negative-proof.md) — exigir fallo del proceso real en un árbol aislado y cubrir las extensiones mantenidas.
 - [Naturaleza del crédito](credit-movement-nature-decisions.md) — venta a crédito y cancelación sin dinero no son correcciones; cuatro categorías obligatorias, diseño aprobado.
+- [Puertas de captura y SQL directo](database-capture-gates.md) — probar INSERT válidos con rollback; flags cerrados en la aplicación no demuestran cierre en PostgreSQL.
+- [Reconfirmación enfocada](scoped-test-reconfirmation.md) — aceptada tras una pasada completa si los demás resultados siguen válidos; distinguirla de una segunda pasada global.

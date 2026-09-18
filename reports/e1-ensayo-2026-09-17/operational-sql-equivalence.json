@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "files": [
+    {
+      "file": "01.sql",
+      "statements": 27,
+      "changedBlocks": [
+        "S07"
+      ],
+      "ddlBlocksIdenticalToRehearsedOriginal": true
+    },
+    {
+      "file": "02.sql",
+      "statements": 28,
+      "changedBlocks": [
+        "S07"
+      ],
+      "ddlBlocksIdenticalToRehearsedOriginal": true
+    }
+  ]
+}

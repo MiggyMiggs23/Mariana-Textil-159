@@ -4,14 +4,18 @@ import {
   boolean,
   check,
   date,
+  foreignKey,
   index,
   integer,
+  jsonb,
   numeric,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
   uniqueIndex,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
@@ -22,6 +26,7 @@ import {
   estadoTicketEnum,
   formaPagoCuentaEnum,
   formaPagoTicketEnum,
+  naturalezaCreditoE1Enum,
   tipoMovimientoCreditoEnum,
   tipoTicketEnum,
 } from "./enums";
@@ -291,6 +296,59 @@ export const ticketPagosTable = pgTable(
   (table) => [index("ticket_pagos_ticket_idx").on(table.ticketId)],
 );
 
+/** E1 metadata only: runtime never creates these objects. Approved SQL owns
+ * MATCH FULL / NOT VALID foreign keys and immutable/context triggers, which
+ * Drizzle's table DSL cannot express. Do not regenerate operational DDL here. */
+export const operacionesCreditoE1Table = pgTable("operaciones_credito_e1", {
+  productor: text("productor").notNull(),
+  clave: uuid("clave").notNull(),
+  naturaleza: naturalezaCreditoE1Enum("naturaleza").notNull(),
+  usuarioId: integer("usuario_id").notNull(),
+  solicitudCanonica: jsonb("solicitud_canonica").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(sql`transaction_timestamp()`),
+}, (table) => [
+  primaryKey({ name: "operaciones_pk_e1", columns: [table.productor, table.clave] }),
+  foreignKey({ name: "operaciones_actor_fk_e1", columns: [table.usuarioId], foreignColumns: [usuariosTable.id] }),
+  check("operaciones_json_ck_e1", sql`jsonb_typeof(${table.solicitudCanonica}) = 'object' AND ${table.solicitudCanonica} <> '{}'::jsonb`),
+  check("operaciones_fecha_ck_e1", sql`isfinite(${table.createdAt})`),
+  check("operaciones_productor_naturaleza_ck_e1", sql`
+    (${table.productor} IN ('VENTA_CREDITO', 'CANCELACION_VENTA_CREDITO') AND ${table.naturaleza} = 'OPERACION_CREDITO_SIN_DINERO')
+    OR (${table.productor} IN ('AJUSTE_MANUAL', 'BAJA_INCOBRABLE') AND ${table.naturaleza} = 'CORRECCION_CONTABLE')
+    OR (${table.productor} IN ('ABONO_ORDINARIO', 'ABONO_DIRIGIDO') AND ${table.naturaleza} IN ('INGRESO_FISICO', 'CORRECCION_CONTABLE'))
+    OR (${table.productor} = 'REVERSO_ABONO' AND ${table.naturaleza} IN ('DEVOLUCION_FISICA', 'CORRECCION_CONTABLE'))
+    OR (${table.productor} = 'COBRO_PENDIENTE' AND ${table.naturaleza} = 'INGRESO_FISICO')`),
+]);
+
+export const cobrosCreditoPendientesE1Table = pgTable("cobros_credito_pendientes_e1", {
+  operacionProductor: text("operacion_productor").notNull(),
+  operacionClave: uuid("operacion_clave").notNull(),
+  naturaleza: naturalezaCreditoE1Enum("naturaleza").notNull(),
+  clienteId: integer("cliente_id").notNull(),
+  importe: numeric("importe", { precision: 12, scale: 2 }).notNull(),
+  fechaReal: timestamp("fecha_real", { withTimezone: true }).notNull(),
+  sitioOrigenId: integer("sitio_origen_id").notNull(),
+  medio: formaPagoCuentaEnum("medio").notNull(),
+  cuentaDestino: text("cuenta_destino").notNull(),
+  sesionCajaId: integer("sesion_caja_id"),
+  motivo: text("motivo"),
+  referencia: text("referencia"),
+  usuarioId: integer("usuario_id").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(sql`transaction_timestamp()`),
+}, (table) => [
+  primaryKey({ name: "cobros_pk_e1", columns: [table.operacionProductor, table.operacionClave] }),
+  foreignKey({ name: "cobros_operacion_fk_e1", columns: [table.operacionProductor, table.operacionClave], foreignColumns: [operacionesCreditoE1Table.productor, operacionesCreditoE1Table.clave] }),
+  foreignKey({ name: "cobros_cliente_fk_e1", columns: [table.clienteId], foreignColumns: [clientesTable.id] }),
+  foreignKey({ name: "cobros_sitio_fk_e1", columns: [table.sitioOrigenId], foreignColumns: [ubicacionesTable.id] }),
+  foreignKey({ name: "cobros_sesion_fk_e1", columns: [table.sesionCajaId], foreignColumns: [sesionesCajaTable.id] }),
+  foreignKey({ name: "cobros_actor_fk_e1", columns: [table.usuarioId], foreignColumns: [usuariosTable.id] }),
+  check("cobros_productor_ck_e1", sql`${table.operacionProductor} = 'COBRO_PENDIENTE' AND ${table.naturaleza} = 'INGRESO_FISICO'`),
+  check("cobros_importe_ck_e1", sql`${table.importe} > 0 AND ${table.importe} NOT IN ('NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric)`),
+  check("cobros_fecha_ck_e1", sql`isfinite(${table.fechaReal}) AND isfinite(${table.createdAt})`),
+  check("cobros_evidencia_ck_e1", sql`NULLIF(btrim(${table.motivo}), '') IS NOT NULL OR NULLIF(btrim(${table.referencia}), '') IS NOT NULL`),
+  check("cobros_medio_cuenta_ck_e1", sql`(${table.medio} = 'EFECTIVO' AND ${table.cuentaDestino} = 'CAJA_FISICA' AND ${table.sesionCajaId} IS NOT NULL)
+    OR (${table.medio} IN ('TRANSFERENCIA', 'FACTURADO') AND ${table.cuentaDestino} IN ('CUENTA_FISCAL', 'CUENTA_NO_FISCAL') AND ${table.sesionCajaId} IS NULL)`),
+]);
+
 /**
  * Immutable customer-credit ledger. VENTA_CREDITO creates a receivable;
  * ABONO is negative. REVERSO is negative only when cancelling a credit sale,
@@ -323,6 +381,14 @@ export const movimientosCreditoTable = pgTable(
     fechaVencimiento: date("fecha_vencimiento"),
     esIncobrable: boolean("es_incobrable").notNull().default(false),
     motivoIncobrable: text("motivo_incobrable"),
+    // Nullable, without defaults: historical rows remain unclassified.
+    sitioOrigenId: integer("sitio_origen_id"),
+    sesionCajaId: integer("sesion_caja_id"),
+    naturaleza: naturalezaCreditoE1Enum("naturaleza"),
+    operacionProductor: text("operacion_productor"),
+    operacionClave: uuid("operacion_clave"),
+    notaOrigenId: integer("nota_origen_id"),
+    origenJustificacion: text("origen_justificacion"),
     autorizadoPor: integer("autorizado_por").references(() => usuariosTable.id),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
@@ -334,6 +400,11 @@ export const movimientosCreditoTable = pgTable(
       table.createdAt,
     ),
     index("movimientos_credito_ticket_idx").on(table.ticketId),
+    foreignKey({ name: "movimientos_operacion_fk_e1", columns: [table.operacionProductor, table.operacionClave], foreignColumns: [operacionesCreditoE1Table.productor, operacionesCreditoE1Table.clave] }),
+    foreignKey({ name: "movimientos_sitio_fk_e1", columns: [table.sitioOrigenId], foreignColumns: [ubicacionesTable.id] }),
+    foreignKey({ name: "movimientos_sesion_fk_e1", columns: [table.sesionCajaId], foreignColumns: [sesionesCajaTable.id] }),
+    foreignKey({ name: "movimientos_nota_fk_e1", columns: [table.notaOrigenId], foreignColumns: [ticketsTable.id] }),
+    uniqueIndex("movimientos_operacion_uq_e1").on(table.operacionProductor, table.operacionClave).where(sql`${table.operacionProductor} IS NOT NULL`),
     uniqueIndex("movimientos_credito_reverso_origen_uidx")
       .on(table.movimientoOrigenId)
       .where(sql`${table.tipo} = 'REVERSO' AND ${table.movimientoOrigenId} IS NOT NULL`),
@@ -355,6 +426,31 @@ export const movimientosCreditoTable = pgTable(
     ),
   ],
 );
+
+export const atribucionesCreditoE1Table = pgTable("atribuciones_credito_e1", {
+  id: uuid("id").notNull(),
+  movimientoId: integer("movimiento_id").notNull(),
+  // String mode preserves PostgreSQL microseconds for historical identity.
+  movimientoCreatedAt: timestamp("movimiento_created_at", { withTimezone: true, mode: "string" }).notNull(),
+  identidadSnapshot: jsonb("identidad_snapshot").$type<Record<string, unknown>>().notNull(),
+  sitioOrigenId: integer("sitio_origen_id").notNull(),
+  evidencia: text("evidencia").notNull(),
+  motivo: text("motivo").notNull(),
+  usuarioId: integer("usuario_id").notNull(),
+  anteriorId: uuid("anterior_id"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().default(sql`transaction_timestamp()`),
+}, (table) => [
+  primaryKey({ name: "atribuciones_pk_e1", columns: [table.id] }),
+  foreignKey({ name: "atribuciones_movimiento_fk_e1", columns: [table.movimientoId], foreignColumns: [movimientosCreditoTable.id] }),
+  foreignKey({ name: "atribuciones_sitio_fk_e1", columns: [table.sitioOrigenId], foreignColumns: [ubicacionesTable.id] }),
+  foreignKey({ name: "atribuciones_actor_fk_e1", columns: [table.usuarioId], foreignColumns: [usuariosTable.id] }),
+  foreignKey({ name: "atribuciones_anterior_fk_e1", columns: [table.anteriorId], foreignColumns: [table.id] }),
+  unique("atribuciones_cadena_uq_e1").on(table.movimientoId, table.anteriorId).nullsNotDistinct(),
+  check("atribuciones_anterior_ck_e1", sql`${table.anteriorId} IS NULL OR ${table.anteriorId} <> ${table.id}`),
+  check("atribuciones_evidencia_ck_e1", sql`btrim(${table.evidencia}) <> '' AND btrim(${table.motivo}) <> ''`),
+  check("atribuciones_json_ck_e1", sql`jsonb_typeof(${table.identidadSnapshot}) = 'object'`),
+  check("atribuciones_fecha_ck_e1", sql`isfinite(${table.movimientoCreatedAt}) AND isfinite(${table.createdAt})`),
+]);
 
 /** Persistent administrator review queue for issued customer credit. */
 export const notificacionesCreditoTable = pgTable(

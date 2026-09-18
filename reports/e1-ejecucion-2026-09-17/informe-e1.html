@@ -1,0 +1,149 @@
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>E1 — Resultado y pendientes</title><style>body{margin:0;background:#f3f5f8;color:#152337;font:16px/1.6 system-ui,sans-serif}main{max-width:980px;margin:40px auto;padding:32px;background:white;border:1px solid #dce2eb;border-radius:12px}h1{font-size:30px;line-height:1.2}h2{margin-top:32px;font-size:22px}p{max-width:86ch}.status{padding:16px 20px;border-left:5px solid #b76620;background:#fff6e9}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px 0}.fact{padding:16px;background:#f1f5fb;border-radius:8px}.fact strong{display:block;font-size:26px}table{border-collapse:collapse;width:100%}td,th{padding:12px;text-align:left;border-bottom:1px solid #dce2eb;vertical-align:top}th{background:#f3f5f8}small{color:#4c5f75}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.6 ui-monospace,monospace;background:#f8fafc;padding:18px;border-radius:8px}summary{cursor:pointer;font-weight:650;padding:12px 0}@media(max-width:600px){main{margin:0;padding:20px;border:0;border-radius:0}.facts{grid-template-columns:1fr}h1{font-size:25px}}</style><main><small>MARIANA TEXTIL · 17 DE SEPTIEMBRE DE 2026</small><h1>E1 — Migración aplicada y código verificado dentro del alcance permitido</h1><div class="status"><strong>La API permanece pausada. E1 no se declara cerrado.</strong><br>Falta la comprobación transaccional real de los productores en PostgreSQL; requiere un alcance de escritura adicional, todavía no autorizado.</div><div class="facts"><div class="fact"><strong>27 / 27</strong>Sentencias confirmadas</div><div class="fact"><strong>0</strong>Errores de TypeScript</div><div class="fact"><strong>66 / 66</strong>Pruebas nuevas vistas fallar y pasar</div></div><h2>Migración y conservación</h2><ul><li>COMMIT confirmado en 1.109 s; total supervisado: 1.115 s. Supervisor de 30 segundos no agotado.</li><li>Las 63 tablas y los 17 triggers anteriores se conservaron. Resultado: 66 tablas y 23 triggers.</li><li>Los tres movimientos históricos conservan importes, fechas y todos sus campos originales. Sus siete columnas E1 siguen nulas.</li><li>Las tres tablas E1 están vacías. No hubo recapturas ni atribuciones.</li><li>Clon original y respaldo de Drive conservados.</li></ul><h2>Código y pruebas</h2><table><tr><th>Comprobación</th><th>Resultado</th></tr><tr><td>Siete productores y sus interfaces</td><td>Origen explícito, cuatro naturalezas, sesión coherente y reintentos con identidad compuesta.</td></tr><tr><td>Typecheck completo</td><td>Sin errores; comprobación frontend posterior también aprobada.</td></tr><tr><td>Backend y contratos E1</td><td>59 / 59 aprobadas, sin omitidas.</td></tr><tr><td>Frontend permitido</td><td>361 casos cubiertos: pasada global 360/361 y confirmación enfocada 2/2 después de corregir el detector del único fallo.</td></tr><tr><td>Pruebas negativas nuevas</td><td>66 casos observados con AssertionError ante defectos concretos y aprobados al restaurar; ningún caso sin prueba negativa.</td></tr><tr><td>Capturas y atribución</td><td>Efectivo físico, cobros retenidos y atribución histórica siguen deshabilitados.</td></tr></table><p><small>No se afirma una única pasada frontend final con salida 0, ni la ejecución de toda la batería del repositorio. Las suites que requieren usuarios, sesiones o escrituras financieras no autorizadas no se ejecutaron. Los mocks no acreditan transacciones PostgreSQL reales.</small></p><h2>Pendiente antes de reanudar</h2><p>Comprobar los siete productores con transacciones reales, concurrencia, reintentos confirmados y rollback conjunto de sus efectos. El borrador para una segunda base desechable identifica los límites, pero aún necesita un script fijado, un manifiesto de registros elegibles y el inventario definitivo de efectos indirectos antes de solicitar autorización de ejecución.</p><p>No se levantó la API, no se inició sesión y no se publicó. La evidencia histórica suficiente y el lugar real de recepción siguen siendo decisiones del propietario.</p><details><summary>Informe de validación completo</summary><pre># E1 — validación del código y límite de reanudación
+
+## Estado
+
+**Código E1 implementado y comprobaciones permitidas terminadas. E1 NO se declara cerrado ni la API lista para reanudarse. La API permanece pausada.**
+
+El DDL autorizado quedó confirmado y verificado; véase `migracion-aplicada.md`. La comprobación transaccional real de los productores nuevos no se ejecutó: requiere escrituras adicionales, no incluidas en la autorización de las 27 sentencias, ni siquiera dentro del clon.
+
+## Implementación
+
+- Siete productores: venta a crédito, cancelación de venta a crédito, abono ordinario, abono dirigido, reverso de abono, ajuste manual y baja incobrable.
+- Adaptados los accesos POS, clientes, autorizaciones dirigidas, notificaciones y cancelación desde Salidas. Esta última es otro acceso al mismo productor, no un octavo productor.
+- Origen explícito, cuatro naturalezas exactas, sesión coherente cuando corresponda y errores claros para solicitudes antiguas.
+- Identidad compuesta productor + UUID; contenido canónico limitado a campos permitidos, sin credenciales. Autorización actual antes de devolver un reintento; validaciones de estado mutable y efectos posteriores solamente para una operación nueva.
+- Contratos OpenAPI, validadores y clientes generados, formularios y evidencia histórica preparados. Compatibilidad con Zod 3 conservada sin quitar validación de enteros ni UUID.
+- Históricos sin origen inferido. Atribución separada y append-only, con instante exacto, identidad completa, evidencia, motivo y cadena.
+- Captura física de efectivo, cobros retenidos y atribución histórica: **las tres puertas siguen cerradas**. No se activaron ni se ejecutaron operaciones reales.
+- No se cambió FIFO, deuda, favor, cálculo del límite ni los candados de producto–ubicación.
+
+## Comprobaciones ejecutadas
+
+| Comprobación | Resultado y alcance |
+|---|---|
+| Typecheck canónico de todo el workspace | PASS; 0 diagnósticos únicos y 0 fallos de proceso/parser |
+| Typecheck frontend posterior a los ajustes de fixtures | PASS; código de salida 0 |
+| Manifiesto E1 backend/contratos, cinco archivos explícitos | 59/59 PASS, sin omitidas |
+| Manifiesto frontend permitido, 100 archivos explícitos | 361 casos cubiertos mediante pasada global y confirmación enfocada, detalle abajo |
+| Pruebas nuevas frente a defectos introducidos | 66/66 casos vistos fallar con AssertionError y pasar al restaurar; ningún caso sin prueba negativa |
+| Revisión independiente de integración y permisos | Sin bloqueantes concretos restantes en el código revisado |
+| Vista previa | Frontend muestra login; no se inició sesión. HTTP 502 esperado por la API pausada |
+
+### Precisión sobre la suite frontend
+
+No se afirma una única pasada global final con salida 0. La última pasada completa ejecutó **361 casos: 360 pasaron y uno falló**. Ese fallo era del detector de la prueba: confundía el nuevo selector de sitio con una aplicación manual de favor. Se corrigió únicamente el detector, conservando las cifras y el comportamiento financiero, y se ejecutó su archivo enfocado: **2/2 PASS**.
+
+La prueba además insertó temporalmente un control monetario de favor etiquetado en el DOM aislado, demostró que el detector sí lo encuentra, lo retiró y confirmó su ausencia. Los otros 360 casos no quedaron invalidados por esa modificación exclusiva de la prueba. No quedan fallos conocidos sin resolver dentro del manifiesto permitido.
+
+La cobertura combinada es de **420 casos distintos: 361 frontend + 59 backend/contratos**. No equivale a ejecutar toda la batería del repositorio: las suites de integración que crean usuarios, sesiones o registros financieros y las exclusiones PDF/red previamente inventariadas no se ejecutaron.
+
+### Pruebas negativas nuevas
+
+| Grupo | Casos nuevos observados en rojo y verde | Defectos concretos |
+|---|---:|---:|
+| Contrato puro y adaptadores reales con Drizzle simulado | 31 | 18 |
+| Lectura y atribución de evidencia con consultas simuladas | 14 | 14 |
+| Productores de clientes y autorizaciones, handlers ejecutados con dependencias interceptadas | 11 | 12 |
+| Ayudas frontend y esquemas generados | 10 | 22 |
+| **Total** | **66** | **66** |
+
+Los defectos se aplicaron en copias aisladas bajo `/tmp` o en memoria sobre esas copias, nunca en módulos productivos vigilados. Las huellas de los originales se conservaron. Fallos de compilador, loader o infraestructura no se contaron como pruebas negativas.
+
+Los primeros informes conservan los errores encontrados: lanzamiento incompatible con el aislamiento, generación Zod incompatible, mocks incompletos y detector visual demasiado amplio. No se borraron ni se contaron como aprobados. Las correcciones fueron verificadas con el alcance indicado.
+
+## Aislamiento
+
+- Backend: conexiones y sockets bloqueados, incluidos pool y conexión singleton de las pruebas de adaptadores.
+- Frontend: fixtures estáticos locales y Chromium, no la aplicación ni su API. Solamente servidores HTTP marcados en `127.0.0.1` con puerto efímero; rutas estáticas limitadas e interceptación de los demás orígenes.
+- Comprobaciones del aislamiento: 5432, 8080, sockets Unix y orígenes ajenos rechazados; modo estricto del backend conservado.
+- Procesos de prueba sin credenciales operativas heredadas. El valor de conexión simulado no puede conectarse.
+- Ninguna creación de usuarios o sesiones de aplicación/caja; ninguna escritura real de datos mediante las pruebas.
+- Typecheck separado, con entorno limpio; no se presenta su proceso como una prueba con bloqueo de sockets.
+
+## Evidencia conservada
+
+- `validacion/core/report.json`
+- `validacion/evidencia/report.json`
+- `validacion/rutas/report.json`
+- `validacion/frontend-contratos/result.json`
+- `validacion/rutas-evidencia.json`: correspondencia entre rutas temporales originales y copias conservadas.
+- `validacion/e1-backend-baseline-loader.log`
+- `validacion/e1-frontend-static-fixtures.log`
+- `validacion/e1-cash-favor-focused.log`
+- `validacion/e1-typecheck-corrected.log`
+- `validacion/e1-typecheck-frontend-final.log`
+- `frontend-con-api-pausada.jpg`
+
+## Pendiente antes de certificar reanudación
+
+Los mocks no prueban que los siete productores completen transacciones PostgreSQL reales, ni los round-trips JSONB/fecha/numeric, la convivencia de triggers, las esperas de unicidad concurrentes o el rollback conjunto de ledger, aplicaciones, auditoría, inventario y notificaciones.
+
+`propuesta-verificacion-aislada.md` documenta el diseño de una segunda base desechable, sin tocar la operativa, el clon conservado ni Drive. **Es un borrador, no un alcance ejecutable autorizado:** faltan el script fijado, manifiesto de registros elegibles, inventario final de efectos indirectos y límites exactos de filas. No se solicita ni presume autorización de escritura sobre ese borrador. El SQL de migración contiene una comprobación de identidad operativa que no puede trasladarse ciegamente al ensayo.
+
+No se levantó la API ni se importó su arranque para verificarla. No se publicó. El clon original y el respaldo de Drive se conservan hasta cerrar E1.
+
+La suficiencia de la evidencia histórica y el sitio real de recepción de cada histórico siguen siendo decisiones del propietario; no se deducen ni se ejecutan en esta entrega.</pre></details><details><summary>Informe de migración y tiempos</summary><pre># E1 — migración operativa aplicada
+
+Estado: **PASS — COMMITTED_VERIFIED**. API pausada durante la ejecución y después; no se ha autorizado ni realizado su reanudación.
+
+Autorización previa: autorizacion.md. SQL aplicado: reports/e1-ensayo-2026-09-17/operativo-propuesto/01.sql, SHA-256 680f8f4d339d20775dabeb540c43d4945391652f1eabd6e0162f3a1ca48ce57f.
+
+## Ejecución y conservación
+
+- 27/27 sentencias confirmadas; COMMIT enviado y respuesta confirmada.
+- Identidad exacta y comparación completa contra el respaldo inmediatamente antes del DDL: PASS, cero objetos E1.
+- Tiempo hasta confirmar COMMIT: 1108.736 ms.
+- Total supervisado, incluido preflight dentro de la transacción y cierre de conexiones: 1114.729 ms.
+- Bloqueo S08 adquirido → COMMIT confirmado: 605.572 ms.
+- Supervisor total de 30 segundos activo, no agotado. Conexión de control abierta antes de BEGIN.
+- Las 63 tablas previas conservaron conteos y huellas de todos sus campos; los tres movimientos conservan importe, fecha y contenido originales.
+- Las siete columnas nuevas de los históricos siguen NULL. No hubo recaptura ni atribución.
+- Tablas: 63 → 66. Triggers no internos: 17 → 23. Los anteriores conservaron definición/estado; también sus triggers internos y las 47 secuencias, incluyendo estado completo operativo.
+- Tres tablas E1 nuevas vacías; ninguna captura activada.
+- Comprobación posterior desde conexión nueva READ ONLY: resultado confirmado, no se presumió rollback ni se repitió DDL.
+- Clon desechable y respaldo de Drive conservados; no se borraron ni alteraron durante la migración.
+
+## Intentos previos conservados
+
+1. ejecucion.json: el control de IPv6 encontró /proc/net/tcp6 ausente. Se detuvo ANTES de abrir conexiones a la base, cero sentencias.
+2. ejecucion-after-ipv6-probe.json: tras BEGIN y cinco SET, el controlador devolvió name[] como texto en vez de array JavaScript. Se confirmó en READ ONLY que el esquema era correcto; hubo ROLLBACK confirmado y comparación integral con el respaldo PASS. Cero DDL y cero COMMIT enviados.
+3. ejecucion-after-name-array.json: usó to_json(current_schemas(false)) para verificar la representación correcta, sin relajar la identidad. Ejecutó por única vez el DDL autorizado y confirmó su resultado.
+
+Los reintentos fueron explícitos y condicionados a la evidencia de ausencia de DDL/COMMIT; cada uno conserva un archivo de ejecución único. No se eliminó ningún informe anterior. El SQL autorizado nunca cambió.
+
+## Tiempos por sentencia
+
+| Sentencia | Resultado | Milisegundos |
+|---|---|---:|
+| S01 | PASS | 0.420 |
+| S02 | PASS | 0.428 |
+| S03 | PASS | 0.261 |
+| S04 | PASS | 0.308 |
+| S05 | PASS | 0.224 |
+| S06 | PASS | 0.232 |
+| S07 | PASS | 14.285 |
+| S08 | PASS | 0.735 |
+| S09 | PASS | 87.204 |
+| S10 | PASS | 287.183 |
+| S11 | PASS | 20.817 |
+| S12 | PASS | 69.656 |
+| S13 | PASS | 3.045 |
+| S14 | PASS | 4.643 |
+| S15 | PASS | 93.148 |
+| S16 | PASS | 2.688 |
+| S17 | PASS | 0.715 |
+| S18 | PASS | 1.484 |
+| S19 | PASS | 0.596 |
+| S20 | PASS | 0.685 |
+| S21 | PASS | 1.415 |
+| S22 | PASS | 0.419 |
+| S23 | PASS | 2.064 |
+| S24 | PASS | 0.731 |
+| S25 | PASS | 0.585 |
+| S26 | PASS | 0.838 |
+| S27 | PASS | 19.276 |
+
+## Límites de verificación
+
+Este informe acredita la migración y conservación, no que el código de E1 esté listo para operar. La validación del código se documenta separadamente. La autorización de escritura no incluye fixtures financieros, ni siquiera en el clon; no se ejecutan pruebas transaccionales de aplicación hasta contar con alcance textual específico. No se crean usuarios ni sesiones de prueba. La API continúa pausada.
+</pre></details><p><small>Evidencia conservada en reports/e1-ejecucion-2026-09-17/. Incluye resultados, logs y correspondencia de archivos de las pruebas negativas.</small></p></main></html>

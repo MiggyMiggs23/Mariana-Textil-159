@@ -6,9 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type BajaClienteBody = {
-  /** @minLength 20 */
-  motivo: string;
-  adminUsuario?: string;
-  adminPassword?: string;
+export type GetClienteEvidenciaCreditoParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId?: number;
+prepararAtribucion?: boolean;
 };

@@ -1,4 +1,5 @@
 import { useState, type ReactNode } from "react";
+import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
 import {
   getGetExistenciasAgrupadasQueryKey,
   getGetExistenciasQueryKey,
@@ -102,6 +103,7 @@ export function SalidaCancelDialog({
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const cancelMutation = useCancelarSalida();
+  const creditEvidence = useCreditEvidenceDraft("OPERACION_CREDITO_SIN_DINERO");
   const [open, setOpen] = useState(false);
   const [freshSalida, setFreshSalida] = useState<RefreshedSalida | null>(
     null,
@@ -125,6 +127,7 @@ export function SalidaCancelDialog({
 
   const isAdmin = user?.rol === Role.ADMIN;
   const currentSalida = freshSalida ?? salida;
+  const needsCreditEvidence = currentSalida.documentoVenta?.documentoTipo === "NOTA";
   const isTransitTransfer =
     freshSalida?.modalidad !== "VENTA_CLIENTE" &&
     freshSalida?.estado === "EN_TRANSITO";
@@ -247,6 +250,10 @@ export function SalidaCancelDialog({
   const onCancel = () => {
     const trimmedMotivo = motivo.trim();
     if (!freshSalida || !hasFreshEligibility) return;
+    if (needsCreditEvidence && creditEvidence.problem()) {
+      toast({ title: "Origen de crédito requerido", description: creditEvidence.problem()!, variant: "destructive" });
+      return;
+    }
     setPasswordVisibilityResetKey((current) => current + 1);
     if (trimmedMotivo.length < 10) {
       toast({
@@ -291,6 +298,7 @@ export function SalidaCancelDialog({
         id: freshSalida.id,
         data: {
           motivo: trimmedMotivo,
+          ...(needsCreditEvidence ? creditEvidence.build("CANCELACION_VENTA_CREDITO", { ticketId: freshSalida.documentoVenta!.id, motivo: trimmedMotivo }) : {}),
           ...returnFloorData,
           ...(!isAdmin
             ? { adminUsuario: adminUsername, adminPassword }
@@ -299,6 +307,8 @@ export function SalidaCancelDialog({
       },
       {
         onSuccess: async () => {
+          creditEvidence.accepted();
+          queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && query.queryKey[0].startsWith("/api/clientes") });
           const grouped = Boolean(freshSalida.documentoVenta);
           await invalidateAfterCancellation(freshSalida);
           toast({
@@ -472,6 +482,7 @@ export function SalidaCancelDialog({
                     />
                   </div>
                 )}
+                {needsCreditEvidence && <CreditEvidenceFields draft={creditEvidence} kind="credit" />}
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={resetDialog}>
@@ -483,6 +494,7 @@ export function SalidaCancelDialog({
                   onClick={onCancel}
                   disabled={
                     cancelMutation.isPending ||
+                    (needsCreditEvidence && !!creditEvidence.problem()) ||
                     motivo.trim().length < 10 ||
                     !returnFloorsReady ||
                     (returnFloorRequired && !hasValidReturnFloorSelection) ||

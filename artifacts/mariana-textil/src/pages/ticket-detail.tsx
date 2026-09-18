@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from "react";
+import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
 import { useRoute, Link } from "wouter";
 import { AppBackLink, appHref } from "@/lib/internal-navigation";
 import {
@@ -132,6 +133,7 @@ export default function TicketDetailPage() {
   const isPrintReady = !isNota || (!!printInterna && !!printCliente);
 
   const cancelarTicket = useCancelarTicket();
+  const cancellationEvidence = useCreditEvidenceDraft("OPERACION_CREDITO_SIN_DINERO");
   const autoPrintStarted = useRef(false);
   const thermalPrintRoot = useRef<HTMLDivElement>(null);
   const reimprimirNota = useReimprimirClienteNota();
@@ -218,14 +220,21 @@ export default function TicketDetailPage() {
   };
 
   const executeCancelar = () => {
+    const needsCreditEvidence = ticket?.esCredito === true;
+    if (needsCreditEvidence && cancellationEvidence.problem()) {
+      toast({ title: "Sitio de origen requerido", description: cancellationEvidence.problem()!, variant: "destructive" });
+      return;
+    }
     const credencialesAdmin =
       user?.rol === Role.ADMIN
         ? null
         : { usuario: adminUser, password: adminPass };
     cancelarTicket.mutate(
-      { id: ticketId, data: { motivo, credencialesAdmin } },
+      { id: ticketId, data: { motivo, credencialesAdmin, ...(needsCreditEvidence ? cancellationEvidence.build("CANCELACION_VENTA_CREDITO", { ticketId, motivo }) : {}) } },
       {
         onSuccess: () => {
+          cancellationEvidence.accepted();
+          queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && query.queryKey[0].startsWith("/api/clientes") });
           toast({ title: `${documentoNombre}: cancelación completada correctamente` });
           setCancelOpen(false);
           setCancelConfirmationOpen(false);
@@ -1021,7 +1030,7 @@ export default function TicketDetailPage() {
           setPasswordVisibilityResetKey((current) => current + 1);
         }
       }}>
-        <DialogContent className="sm:max-w-md no-print">
+        <DialogContent className="sm:max-w-md no-print max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-destructive flex items-center gap-2">
               <ShieldAlert className="h-5 w-5" /> Confirmar Cancelación
@@ -1031,6 +1040,7 @@ export default function TicketDetailPage() {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
+            {ticket.esCredito && <CreditEvidenceFields draft={cancellationEvidence} kind="credit" />}
             <div className="space-y-2">
               <Label>Motivo de cancelación</Label>
               <Textarea
