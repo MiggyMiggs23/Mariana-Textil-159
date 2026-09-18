@@ -1,0 +1,78 @@
+{
+  "resolution": {
+    "status": "RUNNING_INSPECTION",
+    "startedAtUtc": "2026-09-18T22:16:58Z",
+    "startedAtMexico": "2026-09-18T16:16:58",
+    "readonlyPreflight": "PASS",
+    "inspectionMessageObserved": true,
+    "port": 8080,
+    "health": {
+      "path": "/api/healthz",
+      "statusCode": 200,
+      "body": {
+        "status": "ok"
+      }
+    },
+    "permissionsAfterCorrectBoot": {
+      "roleTimestampsUpdated": 0,
+      "siteTimestampsUpdated": 0,
+      "permisosRolSequence": 34004,
+      "permisosUbicacionSequence": 9828
+    }
+  },
+  "observedAtUtc": "2026-09-18T22:14:15Z",
+  "fromUtc": "2026-09-18T22:10:44Z",
+  "readOnly": true,
+  "rolledBack": true,
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "schema": {
+    "tables": 69,
+    "rows": 1519,
+    "sha256": "37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8",
+    "e1ClosedGuardsMatch": true
+  },
+  "newBusinessRows": {
+    "tickets": 0,
+    "ticketPayments": 0,
+    "cashSessionsOpened": 0,
+    "cashSessionsClosed": 0,
+    "creditMovements": 0,
+    "auditRows": 0,
+    "fondoMovements": 0,
+    "fondoCounts": 0,
+    "creditNotifications": 0,
+    "systemNotifications": 0
+  },
+  "permissions": {
+    "roleRows": 192,
+    "siteRows": 54,
+    "userOverrideRows": 0,
+    "userResolverInputs": 31,
+    "effectiveChanges": 0,
+    "matrixDecisions": 3968,
+    "matrixChanged": 0,
+    "matrixSha256": "a305a672a33a6846244dd48389a2d82bf02795fbb8d78b1d547ffbed79e0cc8e",
+    "roleRowsUpdatedSinceIncident": 70,
+    "siteRowsUpdatedSinceIncident": 54
+  },
+  "sequences": {
+    "permisosRolLastValue": 34004,
+    "permisosUbicacionLastValue": 9828,
+    "previousDocumentedValues": {
+      "permisosRolLastValue": 33917,
+      "permisosUbicacionLastValue": 9774,
+      "note": "No immediate pre-restart snapshot existed."
+    }
+  },
+  "transactions": {
+    "otherClientOpen": 0,
+    "idleInTransaction": 0,
+    "prepared": 0
+  }
+}

@@ -1,6 +1,16 @@
 # Resultado de la reconstrucción
 
-## Dictamen
+## Decisión posterior del propietario
+
+El propietario aclaró que la procedencia autorizada es el commit limpio y aceptó
+expresamente el resultado `3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98`
+del commit `7cb77f8cfc6287fa51325a25122c48af392a7ada`.
+
+La detención descrita debajo fue correcta bajo la instrucción anterior, pero ya
+no es el estado de autorización vigente. La nueva identidad, comprobaciones y
+modo acotado están en `autorizacion-bundle-7cb.md`.
+
+## Dictamen de la instrucción anterior
 
 **STOP: EL HASH NO COINCIDIÓ.**
 
