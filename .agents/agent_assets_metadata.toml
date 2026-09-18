@@ -1716,3 +1716,17 @@ mtime_ms = 1789692050092
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/21f142d3-5335-4b11-97c5-a400afde1f1f/c938b2a0-91a6-4b39-8031-c7ea3800d259"
 storage_version_token = "1789692050640232"
 content_type = "text/html"
+
+[[outputs]]
+id = "JfWdeUsXtx6r3V9-cq4zc"
+uri = "file://reports/e1-guardas-operativa-2026-09-18/resultado-operativo.md"
+type = "text"
+title = "E1 — Resultado de instalación operativa"
+description = "COMMITTED_VERIFIED: tres guardas activas, 15/15 controles, cero compras insertadas por el arranque y conservación verificada. API pausada."
+logical_id = "7d142600-420d-4240-ae68-7b7c654b7de1"
+content_hash = "sha256:3846600a3fa6205d38ae261e534c6a1b0027c85e4f18aa852a7a1b4956fa1ecf"
+size = 8886
+mtime_ms = 1789748090205
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7d142600-420d-4240-ae68-7b7c654b7de1/78dbc11d-cf90-45c6-810e-75127cf10a1b"
+storage_version_token = "1789748210264844"
+content_type = "text/markdown"

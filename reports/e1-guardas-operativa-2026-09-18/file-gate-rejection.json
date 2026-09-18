@@ -1,0 +1,14 @@
+{
+  "status": "REJECTED_BEFORE_OPERATIONAL_RUN_CLAIM",
+  "stage": "file-only-execution-gate",
+  "failedPredicate": "apiStopped.observedAtUtc <= approvedAtUtc",
+  "originalApprovalSha256": "878f27c78b0ef5852593940090a0b08eeca786a14b1ce2f18b1b6d87c0bdab32",
+  "approvedAtUtc": "2026-09-18T16:10:08.593Z",
+  "apiStoppedObservedAtUtc": "2026-09-18T16:10:08.605Z",
+  "deltaMilliseconds": 12,
+  "ddlConnectionsOpened": 0,
+  "ddlCommandsSent": 0,
+  "commitSent": false,
+  "originalApprovalPreserved": "startup-approval-rejected-timestamp.json",
+  "correction": "Regenerate approval time after preserved stop observation; no measurement or safety condition changed"
+}

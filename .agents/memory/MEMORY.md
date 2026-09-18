@@ -71,3 +71,4 @@
 - [Naturaleza del crédito](credit-movement-nature-decisions.md) — venta a crédito y cancelación sin dinero no son correcciones; cuatro categorías obligatorias, diseño aprobado.
 - [Puertas de captura y SQL directo](database-capture-gates.md) — probar INSERT válidos con rollback; flags cerrados en la aplicación no demuestran cierre en PostgreSQL.
 - [Reconfirmación enfocada](scoped-test-reconfirmation.md) — aceptada tras una pasada completa si los demás resultados siguen válidos; distinguirla de una segunda pasada global.
+- [Semántica de autorizaciones](operator-authorization-meaning.md) — aclarar sentencias frente a objetos antes de escribir; una discrepancia documental no demuestra drift ni amplía el DDL.

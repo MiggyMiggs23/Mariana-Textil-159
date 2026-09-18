@@ -1,0 +1,163 @@
+{
+  "kind": "e1-identity-window",
+  "status": "success",
+  "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+  "apiPid": 3276,
+  "controllerStartedAt": "2026-09-18T16:07:55.445Z",
+  "preloadStartedAt": "2026-09-18T16:08:09.323Z",
+  "completedAt": "2026-09-18T16:08:13.785Z",
+  "hardDeadlineMs": 1789747809323,
+  "identitySaved": true,
+  "identityPath": "reports/e1-guardas-operativa-2026-09-18/api-pool-identity.json",
+  "startupMode": "normal",
+  "startupWritesSuppressed": false,
+  "httpPolicy": "Only exact GET /api/healthz; all other HTTP 503; upgrades/CONNECT destroyed",
+  "bundle": {
+    "path": "/home/runner/workspace/artifacts/api-server/dist/index.mjs",
+    "url": "file:///home/runner/workspace/artifacts/api-server/dist/index.mjs",
+    "queryMethodLine": 33381,
+    "compiledBundleSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+    "runtimeScriptSourceSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+    "diskAfterCaptureSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+    "runtimeMatchesDisk": true,
+    "sourceBuildVerification": "Owner must separately verify E1 source/build provenance; equal hashes prove running bundle equals disk, not source freshness"
+  },
+  "boot": {
+    "observedAt": "2026-09-18T16:08:13.588Z",
+    "health": {
+      "status": "ok"
+    },
+    "guard": {
+      "kind": "e1-identity-window",
+      "status": "waiting-for-inspector",
+      "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+      "apiPid": 3276,
+      "processStartTicks": "292703",
+      "startedAtMs": 1789747689323,
+      "hardDeadlineMs": 1789747809323,
+      "bundlePath": "/home/runner/workspace/artifacts/api-server/dist/index.mjs",
+      "startupMode": "normal",
+      "httpPolicy": "Only exact GET /api/healthz; all other HTTP 503; upgrades/CONNECT destroyed",
+      "stopWorkflowRequired": true,
+      "compiledBundleSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+      "listeningPort": 8080,
+      "blockedRequests": 5,
+      "destroyedUpgrades": 2,
+      "passedHealthRequests": 1,
+      "gateInstalled": true,
+      "gracefulShutdownInstalled": true
+    },
+    "completionBasis": "Real HTTP health after listen (which follows awaited ensureStartupSchemas), plus installed SIGTERM graceful shutdown",
+    "backgroundTasks": "Normal purchase backfill and stock monitor are not suppressed; they may still run and are drained/aborted by existing shutdown"
+  },
+  "gateBeforeEntry": {
+    "status": "PASS",
+    "observedAtUtc": "2026-09-18T16:08:09.739Z",
+    "phase": "before Runtime.runIfWaitingForDebugger; no application entry/imports released",
+    "apiPid": 3276,
+    "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+    "cases": [
+      {
+        "event": "request",
+        "method": "GET",
+        "url": "/api/healthz",
+        "allowed": true,
+        "reached": true,
+        "status": null,
+        "ended": false,
+        "pass": true
+      },
+      {
+        "event": "request",
+        "method": "POST",
+        "url": "/api/healthz",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "request",
+        "method": "GET",
+        "url": "/api/healthz?x=1",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "request",
+        "method": "POST",
+        "url": "/api/clientes",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "checkContinue",
+        "method": "POST",
+        "url": "/api/clientes",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "checkExpectation",
+        "method": "POST",
+        "url": "/api/clientes",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "upgrade",
+        "reached": false,
+        "destroyed": true,
+        "pass": true
+      },
+      {
+        "event": "connect",
+        "reached": false,
+        "destroyed": true,
+        "pass": true
+      }
+    ],
+    "gate": {
+      "kind": "e1-identity-window",
+      "status": "waiting-for-inspector",
+      "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+      "apiPid": 3276,
+      "processStartTicks": "292703",
+      "startedAtMs": 1789747689323,
+      "hardDeadlineMs": 1789747809323,
+      "bundlePath": "/home/runner/workspace/artifacts/api-server/dist/index.mjs",
+      "startupMode": "normal",
+      "httpPolicy": "Only exact GET /api/healthz; all other HTTP 503; upgrades/CONNECT destroyed",
+      "stopWorkflowRequired": true,
+      "compiledBundleSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+      "listeningPort": null,
+      "blockedRequests": 5,
+      "destroyedUpgrades": 2,
+      "passedHealthRequests": 1,
+      "gateInstalled": true,
+      "gracefulShutdownInstalled": false
+    }
+  },
+  "shutdown": {
+    "target": "actual API child only",
+    "sigtermSent": true,
+    "forced": false,
+    "exited": true,
+    "observedAt": "2026-09-18T16:08:13.782Z"
+  },
+  "stopWorkflowRequired": true,
+  "ownerAction": "STOP the managed API workflow immediately; remove temporary NODE_OPTIONS preload. No automatic retry/start is authorized."
+}

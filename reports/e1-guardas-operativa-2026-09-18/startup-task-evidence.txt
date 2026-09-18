@@ -1,0 +1,129 @@
+
+> @workspace/api-server@0.0.0 dev /home/runner/workspace/artifacts/api-server
+> NODE_ENV=${NODE_ENV:-development} pnpm run build && pnpm run start
+
+
+> @workspace/api-server@0.0.0 build /home/runner/workspace/artifacts/api-server
+> node ./build.mjs
+
+
+  dist/index.mjs                       8.3mb ⚠️
+  dist/pino-worker.mjs               153.4kb
+  dist/pino-file.mjs                 142.1kb
+  dist/pino-pretty.mjs               114.4kb
+  dist/thread-stream-worker.mjs        7.3kb
+  dist/index.mjs.map                  14.4mb
+  dist/pino-worker.mjs.map           256.9kb
+  dist/pino-file.mjs.map             229.0kb
+  dist/pino-pretty.mjs.map           203.6kb
+  dist/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 3316ms
+
+> @workspace/api-server@0.0.0 start /home/runner/workspace/artifacts/api-server
+> node --enable-source-maps ./dist/index.mjs
+
+Debugger listening on [loopback inspector URL omitted]
+For help, see: https://nodejs.org/en/docs/inspector
+Debugger attached.
+[16:08:12.386] INFO (3276): Schema initializer complete: ensureAuditSchema
+    durationMs: 25
+[16:08:12.390] INFO (3276): Schema initializer complete: ensureNotificacionesSchema
+    durationMs: 4
+[16:08:12.399] INFO (3276): Schema initializer complete: ensureStockMinimosSchema
+    durationMs: 9
+[16:08:12.402] INFO (3276): Schema initializer complete: ensureCamionetasSchema
+    durationMs: 2
+[16:08:12.404] INFO (3276): Schema initializer complete: ensureChoferesSchema
+    durationMs: 2
+[16:08:12.408] INFO (3276): Schema initializer complete: ensureViajesSchema
+    durationMs: 4
+[16:08:12.698] INFO (3276): Schema initializer complete: ensureEquiposSchema
+    durationMs: 290
+[16:08:12.713] INFO (3276): Schema initializer complete: ensurePagosProveedorSchema
+    durationMs: 15
+[16:08:12.724] INFO (3276): Schema initializer complete: ensureSolicitudesPagoDirigidoSchema
+    durationMs: 10
+[16:08:12.732] INFO (3276): Schema initializer complete: ensureAplicacionesPagoProveedorSchema
+    durationMs: 8
+[16:08:12.732] INFO (3276): Schema startup phase complete: audit and logistics
+    durationMs: 372
+[16:08:12.736] INFO (3276): Schema initializer complete: ensureEstadoRolloSchema
+    durationMs: 4
+[16:08:12.743] INFO (3276): Schema initializer complete: ensureExtraordinaryExitsSchema
+    durationMs: 7
+[16:08:12.748] INFO (3276): Schema initializer complete: ensureProductUnitSchema
+    durationMs: 5
+[16:08:12.753] INFO (3276): Schema initializer complete: ensureProductMeterSchema
+    durationMs: 5
+[16:08:12.758] INFO (3276): Schema initializer complete: ensureProductPricingSchema
+    durationMs: 6
+[16:08:12.764] INFO (3276): Schema initializer complete: ensureProductColorSchema
+    durationMs: 6
+[16:08:12.769] INFO (3276): Schema initializer complete: ensureProductSpecificationsSchema
+    durationMs: 5
+[16:08:12.769] INFO (3276): Schema startup phase complete: inventory and products
+    durationMs: 37
+[16:08:12.783] INFO (3276): Schema initializer complete: ensureSupervisorRole
+    durationMs: 13
+[16:08:12.795] INFO (3276): Schema initializer complete: ensureAuditoriaInventarioSchema
+    durationMs: 13
+[16:08:12.801] INFO (3276): Schema initializer complete: ensurePisosSchema
+    durationMs: 6
+[16:08:12.802] INFO (3276): Roles SUPERVISOR, SISTEMAS y CONTADOR verificados
+    migratedSupportUsers: 0
+[16:08:12.802] INFO (3276): Schema startup phase complete: roles and inventory audit
+    durationMs: 32
+[16:08:12.868] INFO (3276): Schema initializer complete: ensureClientesSchema
+    durationMs: 66
+[16:08:12.877] INFO (3276): Schema initializer complete: ensureTicketIvaSchema
+    durationMs: 9
+[16:08:12.884] INFO (3276): Schema initializer complete: ensureCashSessionSchema
+    durationMs: 7
+[16:08:12.890] INFO (3276): Schema initializer complete: ensureTicketAuthorizationSchema
+    durationMs: 6
+[16:08:12.900] INFO (3276): Schema initializer complete: ensureTicketLineTypesSchema
+    durationMs: 9
+[16:08:12.923] INFO (3276): Schema initializer complete: ensureSalidasSchema
+    durationMs: 24
+[16:08:12.930] INFO (3276): Schema initializer complete: ensureAuditoriaResolucionesSchema
+    durationMs: 7
+[16:08:12.949] INFO (3276): Schema initializer complete: ensureDocumentFoliosSchema
+    durationMs: 18
+[16:08:12.949] INFO (3276): Schema startup phase complete: customers and tickets
+    durationMs: 147
+[16:08:12.963] INFO (3276): Schema initializer complete: ensurePendingCostsSchema
+    durationMs: 14
+[16:08:12.964] INFO (3276): Schema initializer complete: ensureAdminAnalyticsSchema
+    durationMs: 1
+[16:08:12.965] INFO (3276): Schema initializer complete: ensureCuadreFiscalSchema
+    durationMs: 1
+[16:08:12.973] INFO (3276): Schema initializer complete: ensureEtiquetasSchema
+    durationMs: 7
+[16:08:12.978] INFO (3276): Schema initializer complete: ensureCajaPermissions
+    durationMs: 5
+[16:08:12.984] INFO (3276): Schema initializer complete: ensureSalidasVentaPermissions
+    durationMs: 7
+[16:08:12.984] INFO (3276): Schema startup phase complete: reporting and labels
+    durationMs: 35
+[16:08:12.984] INFO (3276): Schema startup complete
+    durationMs: 677
+[16:08:13.409] INFO (3276): Server listening
+    port: 8080
+[16:08:13.411] INFO (3276): Backfill de compras por proveedor completado
+    inserted: 0
+[16:08:13.587] INFO (3276): request completed
+    req: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 8
+Debugger ending on [loopback inspector URL omitted]
+For help, see: https://nodejs.org/en/docs/inspector
+[16:08:13.666] INFO (3276): Evaluador de stock mínimo detenido
+[16:08:13.666] INFO (3276): Server shutdown complete
+    signal: "SIGTERM"

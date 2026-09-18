@@ -11,7 +11,7 @@ Secuencia obligatoria:
 1. Arrancar con el código E1 adaptado, no el anterior.
 2. Obtener `current_database()` desde el pool real del proceso API, como en Prompt H.
 3. Detener inmediatamente la API. Nadie debe operar durante la ventana.
-4. Con la API pausada, revalidar el inventario E1 aprobado —referido por el propietario como los 27 objetos— y la ausencia de las guardas. No sustituir un inventario de catálogo por el número de sentencias del archivo anterior; conservar la evidencia exacta. Cualquier diferencia exige detenerse.
+4. Con la API pausada, revalidar el inventario E1 completo aprobado: los **60 objetos con sus definiciones**, las siete columnas E1 y la ausencia de las guardas. El propietario aclaró expresamente que 27 era el número de sentencias, no de objetos. La referencia es `inventario-e1-referencia.json`, contrastada con la evidencia de la migración aplicada. Cualquier diferencia exige detenerse.
 5. Ejecutar la instalación supervisada de **tres funciones y tres triggers temporales y removibles sobre heliumdb**, sin tocar funciones, triggers ni restricciones permanentes de E1.
 
 Ante fallo o comportamiento inesperado del arranque: **detenerse y reportarlo, sin instalar guardas ni reparar automáticamente**.
@@ -25,6 +25,16 @@ Antes del arranque se informó al propietario:
 - Se medirán y registrarán los efectos de esta ventana por separado. No se presentarán como efectos de la instalación de guardas, ni se ocultarán como cambios irrelevantes.
 
 El propietario aclaró que los efectos reproducibles de arranque mencionados no constituyen contaminación, pero deben quedar documentados. Esto no autoriza escrituras financieras inesperadas ni una reparación automática si algo difiere de lo previsto.
+
+### Confirmación posterior del propietario, antes de abrir la ventana
+
+- Aprobó usar el inventario completo de **60 objetos y sus definiciones**, además de las columnas E1 y la ausencia de guardas.
+- El DDL sigue limitado a **tres funciones y tres triggers**, sin repetir la migración anterior.
+- Exigió contar por separado las filas insertadas por el **backfill de compras a proveedores**. **Si inserta alguna fila, detenerse y reportarlo antes del DDL.** Un fallo, cancelación o falta de evidencia de su resultado no equivale a cero.
+- Confirmó documentar permisos, notificaciones y episodios de stock mínimo con evidencia anterior y posterior al arranque, separada de la instalación.
+- Exigió confirmar el bloqueo HTTP **antes de cargar la aplicación/inicializadores**, no instalarlo después de escuchar.
+- Exigió confirmar que los **1,170 archivos cotejados incluyen los siete productores adaptados**.
+- Ratificó identidad desde el pool real, pausa antes del DDL, supervisor, resolución real de COMMIT ambiguo y conservación del clon y respaldo.
 
 ## Exclusión de operaciones durante la ventana
 

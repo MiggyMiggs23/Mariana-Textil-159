@@ -1,0 +1,345 @@
+{
+  "source": "API_POOL",
+  "capturedAtUtc": "2026-09-18T16:08:13.657Z",
+  "kind": "e1-actual-api-pool-identity",
+  "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+  "runtime": {
+    "apiPid": 3276,
+    "constructorName": "BoundPool",
+    "hasQuery": true
+  },
+  "bundle": {
+    "path": "/home/runner/workspace/artifacts/api-server/dist/index.mjs",
+    "url": "file:///home/runner/workspace/artifacts/api-server/dist/index.mjs",
+    "queryMethodLine": 33381,
+    "compiledBundleSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+    "runtimeScriptSourceSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+    "diskAfterCaptureSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+    "runtimeMatchesDisk": true,
+    "sourceBuildVerification": "Owner must separately verify E1 source/build provenance; equal hashes prove running bundle equals disk, not source freshness"
+  },
+  "boot": {
+    "observedAt": "2026-09-18T16:08:13.588Z",
+    "health": {
+      "status": "ok"
+    },
+    "guard": {
+      "kind": "e1-identity-window",
+      "status": "waiting-for-inspector",
+      "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+      "apiPid": 3276,
+      "processStartTicks": "292703",
+      "startedAtMs": 1789747689323,
+      "hardDeadlineMs": 1789747809323,
+      "bundlePath": "/home/runner/workspace/artifacts/api-server/dist/index.mjs",
+      "startupMode": "normal",
+      "httpPolicy": "Only exact GET /api/healthz; all other HTTP 503; upgrades/CONNECT destroyed",
+      "stopWorkflowRequired": true,
+      "compiledBundleSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+      "listeningPort": 8080,
+      "blockedRequests": 5,
+      "destroyedUpgrades": 2,
+      "passedHealthRequests": 1,
+      "gateInstalled": true,
+      "gracefulShutdownInstalled": true
+    },
+    "completionBasis": "Real HTTP health after listen (which follows awaited ensureStartupSchemas), plus installed SIGTERM graceful shutdown",
+    "backgroundTasks": "Normal purchase backfill and stock monitor are not suppressed; they may still run and are drained/aborted by existing shutdown"
+  },
+  "gateBeforeEntry": {
+    "status": "PASS",
+    "observedAtUtc": "2026-09-18T16:08:09.739Z",
+    "phase": "before Runtime.runIfWaitingForDebugger; no application entry/imports released",
+    "apiPid": 3276,
+    "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+    "cases": [
+      {
+        "event": "request",
+        "method": "GET",
+        "url": "/api/healthz",
+        "allowed": true,
+        "reached": true,
+        "status": null,
+        "ended": false,
+        "pass": true
+      },
+      {
+        "event": "request",
+        "method": "POST",
+        "url": "/api/healthz",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "request",
+        "method": "GET",
+        "url": "/api/healthz?x=1",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "request",
+        "method": "POST",
+        "url": "/api/clientes",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "checkContinue",
+        "method": "POST",
+        "url": "/api/clientes",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "checkExpectation",
+        "method": "POST",
+        "url": "/api/clientes",
+        "allowed": false,
+        "reached": false,
+        "status": 503,
+        "ended": true,
+        "pass": true
+      },
+      {
+        "event": "upgrade",
+        "reached": false,
+        "destroyed": true,
+        "pass": true
+      },
+      {
+        "event": "connect",
+        "reached": false,
+        "destroyed": true,
+        "pass": true
+      }
+    ],
+    "gate": {
+      "kind": "e1-identity-window",
+      "status": "waiting-for-inspector",
+      "nonce": "ac98f6bb-ad45-4e65-8263-94439d463b0b",
+      "apiPid": 3276,
+      "processStartTicks": "292703",
+      "startedAtMs": 1789747689323,
+      "hardDeadlineMs": 1789747809323,
+      "bundlePath": "/home/runner/workspace/artifacts/api-server/dist/index.mjs",
+      "startupMode": "normal",
+      "httpPolicy": "Only exact GET /api/healthz; all other HTTP 503; upgrades/CONNECT destroyed",
+      "stopWorkflowRequired": true,
+      "compiledBundleSha256": "e844210b0558ba5db648d65972491c12372ef6f24a4d324a37af026bf11cb370",
+      "listeningPort": null,
+      "blockedRequests": 5,
+      "destroyedUpgrades": 2,
+      "passedHealthRequests": 1,
+      "gateInstalled": true,
+      "gracefulShutdownInstalled": false
+    }
+  },
+  "sql": {
+    "identity": "SELECT current_database() AS database_name,\n  (SELECT oid::text FROM pg_database WHERE datname=current_database()) AS database_oid,\n  current_schema() AS schema_name, current_user AS database_role,\n  current_setting('server_version') AS server_version, version() AS version,\n   inet_server_addr()::text AS server_address, inet_server_port() AS server_port,\n  pg_backend_pid() AS backend_pid, pg_postmaster_start_time()::text AS server_started_at,\n  current_setting('transaction_read_only') AS transaction_read_only,\n  current_setting('data_directory') AS data_directory,\n  current_setting('unix_socket_directories') AS unix_socket_directories,\n  current_setting('listen_addresses') AS listen_addresses,\n   current_setting('port') AS configured_port,\n   to_json(current_schemas(false)) AS search_schemas,\n   current_setting('session_replication_role') AS replication_role,\n   clock_timestamp()::text AS observed_at",
+    "inventory": "SELECT\n  (SELECT count(*)::int FROM pg_class c JOIN pg_namespace n ON n.oid=c.relnamespace\n    WHERE n.nspname='public' AND c.relkind='r') AS public_tables,\n  (SELECT count(*)::int FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid\n    JOIN pg_namespace n ON n.oid=c.relnamespace\n    WHERE n.nspname='public' AND NOT t.tgisinternal) AS noninternal_triggers,\n  (SELECT count(*)::int FROM public.movimientos_credito) AS credit_movements,\n  (SELECT pg_total_relation_size('public.movimientos_credito')) AS credit_bytes,\n  (SELECT count(*)::int FROM pg_event_trigger WHERE evtenabled <> 'D') AS active_event_triggers,\n  (SELECT jsonb_agg(c.relname ORDER BY c.relname) FROM pg_class c\n    JOIN pg_namespace n ON n.oid=c.relnamespace\n    WHERE n.nspname='public' AND c.relkind='r') AS tables,\n  (SELECT jsonb_agg(jsonb_build_object('table', c.relname, 'trigger', t.tgname)\n    ORDER BY c.relname,t.tgname) FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid\n    JOIN pg_namespace n ON n.oid=c.relnamespace\n    WHERE n.nspname='public' AND NOT t.tgisinternal) AS triggers"
+  },
+  "identity": {
+    "database_name": "heliumdb",
+    "database_oid": "16384",
+    "schema_name": "public",
+    "database_role": "postgres",
+    "server_version": "16.10",
+    "version": "PostgreSQL 16.10 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit",
+    "server_address": null,
+    "server_port": null,
+    "backend_pid": 139,
+    "server_started_at": "2026-09-18 15:21:20.26807+00",
+    "transaction_read_only": "on",
+    "data_directory": "/var/lib/postgresql/data",
+    "unix_socket_directories": "/run/postgresql",
+    "listen_addresses": "",
+    "configured_port": "5432",
+    "search_schemas": [
+      "public"
+    ],
+    "replication_role": "origin",
+    "observed_at": "2026-09-18 16:08:13.595455+00"
+  },
+  "inventory": {
+    "public_tables": 66,
+    "noninternal_triggers": 23,
+    "credit_movements": 3,
+    "credit_bytes": "81920",
+    "active_event_triggers": 0,
+    "tables": [
+      "aplicaciones_credito",
+      "aplicaciones_pago_proveedor",
+      "atribuciones_credito_e1",
+      "auditoria",
+      "auditoria_faltante_reactivaciones",
+      "auditoria_inventario_escaneos",
+      "auditoria_inventario_folio",
+      "auditoria_inventario_participantes",
+      "auditoria_inventario_snapshot",
+      "auditoria_sobrante_contextos",
+      "auditoria_sobrante_decisiones",
+      "auditorias_inventario",
+      "autorizaciones_nota",
+      "camionetas",
+      "choferes",
+      "cliente_documentos",
+      "clientes",
+      "cobros_credito_pendientes_e1",
+      "contenedor_lineas",
+      "contenedores",
+      "cuadre_fiscal_registros",
+      "entrada_folio",
+      "entradas",
+      "equipos",
+      "equipos_checklist",
+      "existencias",
+      "movimientos",
+      "movimientos_credito",
+      "notificaciones_credito",
+      "notificaciones_sistema",
+      "operaciones_credito_e1",
+      "pagos_proveedor",
+      "permisos_rol",
+      "permisos_ubicacion",
+      "permisos_usuario",
+      "pisos",
+      "precio_historial",
+      "productos",
+      "proveedores",
+      "reimpresiones_etiqueta",
+      "revisiones_etiqueta",
+      "rollos",
+      "salida_folio",
+      "salida_lineas",
+      "salida_rollos",
+      "salidas",
+      "salidas_dinero_caja",
+      "series_consecutivo",
+      "sesiones",
+      "sesiones_caja",
+      "sesiones_caja_dias",
+      "solicitudes_pago_dirigido",
+      "stock_minimo_episodios",
+      "stock_minimo_sitios",
+      "stock_minimos",
+      "ticket_folio",
+      "ticket_linea_consumos",
+      "ticket_lineas",
+      "ticket_pagos",
+      "tickets",
+      "ubicaciones",
+      "usuarios",
+      "viaje_folio",
+      "viaje_salidas",
+      "viaje_tickets",
+      "viajes"
+    ],
+    "triggers": [
+      {
+        "table": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_inmutables"
+      },
+      {
+        "table": "aplicaciones_credito",
+        "trigger": "aplicaciones_credito_validas"
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_append_only"
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "trigger": "aplicaciones_pago_proveedor_validar_insert"
+      },
+      {
+        "table": "atribuciones_credito_e1",
+        "trigger": "atribuciones_inmutables_e1"
+      },
+      {
+        "table": "atribuciones_credito_e1",
+        "trigger": "atribuciones_validas_e1"
+      },
+      {
+        "table": "auditoria",
+        "trigger": "auditoria_append_only"
+      },
+      {
+        "table": "auditoria",
+        "trigger": "auditoria_enriquecer_insert"
+      },
+      {
+        "table": "auditoria_faltante_reactivaciones",
+        "trigger": "auditoria_faltante_reactivaciones_append_only"
+      },
+      {
+        "table": "auditoria_sobrante_contextos",
+        "trigger": "auditoria_sobrante_contextos_append_only"
+      },
+      {
+        "table": "auditoria_sobrante_decisiones",
+        "trigger": "auditoria_sobrante_decisiones_append_only"
+      },
+      {
+        "table": "cobros_credito_pendientes_e1",
+        "trigger": "cobros_inmutables_e1"
+      },
+      {
+        "table": "cobros_credito_pendientes_e1",
+        "trigger": "cobros_validos_e1"
+      },
+      {
+        "table": "movimientos_credito",
+        "trigger": "movimientos_credito_inmutables"
+      },
+      {
+        "table": "movimientos_credito",
+        "trigger": "movimientos_credito_reversos_validos"
+      },
+      {
+        "table": "movimientos_credito",
+        "trigger": "movimientos_validos_e1"
+      },
+      {
+        "table": "operaciones_credito_e1",
+        "trigger": "operaciones_inmutables_e1"
+      },
+      {
+        "table": "pagos_proveedor",
+        "trigger": "pagos_proveedor_inmutables"
+      },
+      {
+        "table": "reimpresiones_etiqueta",
+        "trigger": "reimpresiones_etiqueta_inmutable"
+      },
+      {
+        "table": "revisiones_etiqueta",
+        "trigger": "revisiones_etiqueta_inmutable"
+      },
+      {
+        "table": "revisiones_etiqueta",
+        "trigger": "revisiones_etiqueta_reimpresion_fk_check"
+      },
+      {
+        "table": "ticket_linea_consumos",
+        "trigger": "ticket_linea_consumos_append_only"
+      },
+      {
+        "table": "ticket_pagos",
+        "trigger": "ticket_pagos_inmutables"
+      }
+    ]
+  }
+}

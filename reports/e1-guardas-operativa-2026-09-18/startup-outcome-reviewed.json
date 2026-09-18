@@ -1,0 +1,17 @@
+{
+  "status": "REVIEWED_COMPLETE",
+  "reviewedBy": "parent-reviewed-startup-task-evidence",
+  "windowResultSha256": "a95ea12c2274a3082b1ac74484e58fd83b20b6d07655eba10eb859eeaffad09a",
+  "outcome": {
+    "backfill": "completed",
+    "initializers": "completed",
+    "stock": "stopped-without-observed-error",
+    "shutdown": "confirmed"
+  },
+  "evidenceSources": [
+    {
+      "path": "reports/e1-guardas-operativa-2026-09-18/startup-task-evidence.txt",
+      "sha256": "53826ebb4028dad08fadc14e770d94b7ba72e000b1628fcc2f36e4f50a2733bd"
+    }
+  ]
+}

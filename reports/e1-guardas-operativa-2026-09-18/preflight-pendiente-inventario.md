@@ -25,11 +25,11 @@ Se conserva la lista completa en `inventario-e1-referencia.json`, SHA-256 `d2512
 
 **Esto no demuestra que haya cambiado la base actual.** Es una discrepancia entre la cantidad literal solicitada y la referencia documental; no se consultó el estado operativo actual ni se reinterpretó la autorización.
 
-## Decisión pendiente
+## Aclaración resuelta por el propietario
 
-Confirmar si se debe usar como referencia el **inventario completo de la migración aplicada**, con los 60 objetos enumerados y sus definiciones, además de las siete columnas E1 y el resto de comprobaciones de conservación. La instalación autorizada seguiría limitada a las mismas tres funciones y tres triggers removibles; no se ampliaría el DDL.
+El propietario confirmó que debe usarse el **inventario completo de la migración aplicada**, con los 60 objetos enumerados y sus definiciones, además de las siete columnas E1 y el resto de comprobaciones de conservación. La instalación autorizada sigue limitada a las mismas tres funciones y tres triggers removibles; no se amplía el DDL.
 
-Hasta esa aclaración, no se abre la ventana ni se habilita el instalador.
+La aclaración documental está resuelta. La ventana y el DDL aún requieren las verificaciones previas y posteriores detalladas en `autorizacion-ventana-e-instalacion.md`, incluida la condición adicional de **cero inserciones del backfill de compras a proveedores**.
 
 ## Preparación conservada, no ejecutada
 
