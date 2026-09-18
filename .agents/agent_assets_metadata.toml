@@ -1730,3 +1730,45 @@ mtime_ms = 1789748090205
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7d142600-420d-4240-ae68-7b7c654b7de1/78dbc11d-cf90-45c6-810e-75127cf10a1b"
 storage_version_token = "1789748210264844"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "oSE89SaT3x3uhutQt477Y"
+uri = "file://reports/e1-reanudacion-2026-09-18/capturas/pago-inicial-transferencia.png"
+type = "image"
+title = "Abono: Transferencia al abrir"
+description = "Formulario real revisado sin registrar movimientos; cuenta e importe vacíos."
+logical_id = "db4e3eef-606f-4ddb-a9d9-179002dfb28e"
+content_hash = "sha256:29e9944de51748bba88890d716174ca4ff176fdbbcd592542332f5001cbea230"
+size = 93500
+mtime_ms = 1789749352357
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/db4e3eef-606f-4ddb-a9d9-179002dfb28e/330bab6c-79f6-4c31-94d9-f3a149a48609"
+storage_version_token = "1789749926854525"
+content_type = "image/png"
+
+[[outputs]]
+id = "bO7OaAihf3Or4LiFHZs3S"
+uri = "file://reports/e1-reanudacion-2026-09-18/capturas/cobros-mariana-sitio-filtrado.png"
+type = "image"
+title = "Cobros: sitio Mariana"
+description = "Se mostró Apertura de Caja. No se ingresó fondo ni se abrió turno."
+logical_id = "e4ab0502-bcf3-4c55-a1c9-04b8c8ed7466"
+content_hash = "sha256:ef45776da304771daf1cc190c4c747996ba34e34674adb383269d4962fa63eee"
+size = 72002
+mtime_ms = 1789749818737
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e4ab0502-bcf3-4c55-a1c9-04b8c8ed7466/58d074fd-d831-465a-bb77-127bda400fbf"
+storage_version_token = "1789749927614927"
+content_type = "image/png"
+
+[[outputs]]
+id = "7jVKWcj1SplYiQCyfQwhR"
+uri = "file://reports/e1-reanudacion-2026-09-18/control-inicial.md"
+type = "text"
+title = "Resultado del control inicial E1"
+description = "Arranque, conservación de datos, recorrido ADMIN, límites y verificaciones pendientes."
+logical_id = "2d562497-082c-44c4-8b2e-78597eaae9c7"
+content_hash = "sha256:8cad567994967b5f96645474b3bb3ae0d8cc5e4a5a80b7b8179da4b8abb5f1f8"
+size = 8260
+mtime_ms = 1789749903580
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2d562497-082c-44c4-8b2e-78597eaae9c7/bf4b9b18-0c1d-4bc6-805b-e50d50781af3"
+storage_version_token = "1789749928411798"
+content_type = "text/markdown"

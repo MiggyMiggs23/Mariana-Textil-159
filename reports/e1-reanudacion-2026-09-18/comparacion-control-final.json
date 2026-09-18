@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "beforeSha256": "d110ac27afccded20e7f8e6be22565fac190e4c1df9be30c8b980967a800e8c5",
+  "afterSha256": "40730757e84429446103126e59d62759b0a58072acf5550728f03913a0ffa99e",
+  "changedTables": [
+    "auditoria",
+    "usuarios"
+  ],
+  "catalogueChanged": [],
+  "financialChanged": [],
+  "startup": {
+    "effectChanged": [],
+    "supplierUnchanged": true,
+    "supplierLedger": {
+      "added": 0,
+      "deleted": 0,
+      "updated": 0,
+      "unchanged": 2
+    },
+    "supplierCandidates": {
+      "beforeCount": 0,
+      "afterCount": 0,
+      "delta": {
+        "added": 0,
+        "deleted": 0,
+        "updated": 0,
+        "unchanged": 0
+      }
+    },
+    "permissionEffects": [
+      {
+        "table": "permisos_rol",
+        "counts": {
+          "added": 0,
+          "deleted": 0,
+          "updated": 0,
+          "unchanged": 192
+        },
+        "onlyUpdatedAt": true,
+        "invalidUpdates": []
+      },
+      {
+        "table": "permisos_ubicacion",
+        "counts": {
+          "added": 0,
+          "deleted": 0,
+          "updated": 0,
+          "unchanged": 54
+        },
+        "onlyUpdatedAt": true,
+        "invalidUpdates": []
+      },
+      {
+        "table": "permisos_usuario",
+        "counts": {
+          "added": 0,
+          "deleted": 0,
+          "updated": 0,
+          "unchanged": 0
+        },
+        "onlyUpdatedAt": true,
+        "invalidUpdates": []
+      }
+    ],
+    "financialTablesUnchanged": true,
+    "stockEffects": []
+  },
+  "browser": {
+    "permittedChangedTables": [
+      "auditoria",
+      "usuarios"
+    ],
+    "uncertainOrForbiddenChangedTables": [],
+    "note": "Table hashes only; permitted names are reported, never auto-approved."
+  },
+  "status": "REVIEW",
+  "sha256": "5ec2fe902b7f8af8d832ebf57fe79c27b7a809f5d4c8b9cb6b49b743dc05c4e8"
+}

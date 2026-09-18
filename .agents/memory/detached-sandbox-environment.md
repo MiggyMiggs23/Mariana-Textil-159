@@ -14,3 +14,9 @@ Un servicio iniciado por `pg_ctl` dentro de un comando finito puede desaparecer 
 **Why:** La limpieza de procesos hijos de la herramienta no equivale a detener o borrar la base; los archivos de la restauración permanecen, pero el proceso que la sirve puede dejar de existir.
 
 **How to apply:** Si una restauración desechable debe quedar disponible entre turnos, ejecutar su `postgres` directamente como tarea de shell en segundo plano, con socket privado y sin escucha de red. Comprobar conexión después de arrancarlo. Distinguir siempre ese proceso local del API pausado: conservar la restauración no autoriza reiniciar la aplicación.
+
+El cuaderno del navegador de pruebas puede compartir archivos con el workspace sin heredar sus secretos. No confundir esa frontera con credenciales ausentes o un fallo de login de la aplicación.
+
+**Why:** Se comprobó presencia de credenciales en el shell, pero ausencia/inaccesibilidad en el cuaderno; insistir con APIs de entorno del navegador no las hizo disponibles. La sesión real sí funcionó al obtenerla mediante el login normal desde el runtime autorizado.
+
+**How to apply:** Cuando el usuario autorice autenticación real, usar credenciales existentes sólo en el proceso que las hereda y transferir únicamente la sesión mediante un archivo temporal protegido fuera del proyecto. Nunca imprimir valores, inyectarlos en el frontend ni guardarlos en informes. Verificar el rol efectivo, cerrar sesión normalmente y eliminar el archivo. Una cuenta ADMIN no acredita cobertura CAJA.

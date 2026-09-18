@@ -27,6 +27,10 @@ import { useQueryClient } from "@tanstack/react-query";
 
 type Step = "form" | "preview" | "success";
 
+// Temporal en E1: revisar este default al liberar efectivo en E2 + E3.
+// No restaurar efectivo automáticamente sin revisar la captura habilitada.
+const DEFAULT_CREDIT_PAYMENT_METHOD = "TRANSFERENCIA" as const;
+
 export interface ClientePagoDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -48,8 +52,8 @@ export function ClientePagoDialog({
   const queryClient = useQueryClient();
   const [step, setStep] = useState<Step>("form");
   const [amount, setAmount] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"EFECTIVO" | "TRANSFERENCIA" | "FACTURADO">("EFECTIVO");
-  const [destinationAccount, setDestinationAccount] = useState<"CAJA_FISICA" | "CUENTA_FISCAL" | "CUENTA_NO_FISCAL" | "">("CAJA_FISICA");
+  const [paymentMethod, setPaymentMethod] = useState<"EFECTIVO" | "TRANSFERENCIA" | "FACTURADO">(DEFAULT_CREDIT_PAYMENT_METHOD);
+  const [destinationAccount, setDestinationAccount] = useState<"CAJA_FISICA" | "CUENTA_FISCAL" | "CUENTA_NO_FISCAL" | "">("");
   const [reference, setReference] = useState("");
   const [paymentNotes, setPaymentNotes] = useState("");
   const [effectiveDate, setEffectiveDate] = useState("");
@@ -77,8 +81,8 @@ export function ClientePagoDialog({
       evidence.reset();
       setStep("form");
       setAmount(defaultAmount || "");
-      setPaymentMethod("EFECTIVO");
-      setDestinationAccount("CAJA_FISICA");
+      setPaymentMethod(DEFAULT_CREDIT_PAYMENT_METHOD);
+      setDestinationAccount("");
       setReference("");
       setPaymentNotes("");
       setMode("FIFO");
