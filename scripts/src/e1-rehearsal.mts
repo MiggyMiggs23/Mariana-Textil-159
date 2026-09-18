@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import { readFile, readdir, realpath, stat, mkdir, writeFile, rename } from "node:fs/promises";
 import { dirname, resolve, relative } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import net from "node:net";
 import { syncBuiltinESMExports } from "node:module";
 import pg from "pg";
@@ -22,6 +22,12 @@ const MODULES = [
   ["customer", "scripts/src/e1-rehearsal-customer-cases.mts", "runCustomerCases"],
   ["evidence", "scripts/src/e1-rehearsal-evidence-cases.mts", "runEvidenceCases"],
 ] as const;
+type RehearsalResult = Awaited<ReturnType<
+  typeof import("./e1-rehearsal-pos-cases.mts").runPosCases |
+  typeof import("./e1-rehearsal-customer-cases.mts").runCustomerCases |
+  typeof import("./e1-rehearsal-evidence-cases.mts").runEvidenceCases
+>>;
+type RehearsalCase = RehearsalResult["cases"][number];
 type Json = Record<string, any>;
 
 async function sourceManifest() {
@@ -61,7 +67,7 @@ function installGuards() {
   };
   (net.Server.prototype as any).listen = function () { throw new Error("REFUSED: API/listener startup"); };
   globalThis.fetch = async () => { throw new Error("REFUSED: outbound fetch"); };
-  const originalConnect = pg.Client.prototype.connect;
+  const originalConnect: (this: pg.Client) => Promise<pg.Client> = pg.Client.prototype.connect;
   (pg.Client.prototype as any).connect = function (callback?: (error?: Error) => void) {
     const c = this as pg.Client;
     const p = (c as any).connectionParameters;
@@ -228,23 +234,39 @@ async function main() {
     await assertClone(pool);
     const { createRehearsalLoader } = await import("./e1-rehearsal-loader.mts");
     const loader = createRehearsalLoader({ pool, workspaceRoot: ROOT });
-    const modules = await Promise.all(MODULES.map(async ([name, path, entrypoint]) => ({
-      name, entrypoint, module: await import(pathToFileURL(resolve(ROOT, path)).href),
-    })));
-    for (const { name, module, entrypoint } of modules)
-      assert.equal(typeof module[entrypoint], "function", `Missing ${entrypoint}: ${name}`);
+    const modules = await Promise.all(MODULES.map(async ([name, , entrypoint]) => {
+      // Literal imports retain the actual module contracts; still loaded only
+      // after the destination guards and clone identity checks above.
+      switch (name) {
+        case "pos": {
+          const module = await import("./e1-rehearsal-pos-cases.mts");
+          return { name, entrypoint, run: module.runPosCases, fixtureSql: module.POS_FIXTURE_SQL };
+        }
+        case "customer": {
+          const module = await import("./e1-rehearsal-customer-cases.mts");
+          return { name, entrypoint, run: module.runCustomerCases };
+        }
+        case "evidence": {
+          const module = await import("./e1-rehearsal-evidence-cases.mts");
+          return { name, entrypoint, run: module.runEvidenceCases };
+        }
+      }
+    }));
+    for (const { name, run, entrypoint } of modules)
+      assert.equal(typeof run, "function", `Missing ${entrypoint}: ${name}`);
     report.stages.push({ name: stage, status: "PASS" });
 
-    for (const { name, module, entrypoint } of modules) {
+    for (const module of modules) {
+      const { name, run } = module;
       stage = `cases:${name}`;
-      const recorded: any[] = [];
+      const recorded: RehearsalCase[] = [];
       try {
         if (name === "pos") {
           const fixtureClient = await pool.connect();
           try {
-            assert.equal(typeof module.POS_FIXTURE_SQL, "string", "Exact POS fixture SQL required");
+            assert.equal(typeof module.fixtureSql, "string", "Exact POS fixture SQL required");
             await fixtureClient.query("BEGIN");
-            await fixtureClient.query(module.POS_FIXTURE_SQL);
+            await fixtureClient.query(module.fixtureSql);
             await fixtureClient.query("COMMIT");
           } catch (error) {
             await fixtureClient.query("ROLLBACK");
@@ -253,20 +275,21 @@ async function main() {
         }
         // Customer owns its fixture transaction; evidence owns rollback-only
         // fixtures per case. Never execute their exported fixtureSql here.
-        const result = await module[entrypoint]({
+        const result: RehearsalResult = await run({
           pool, loadModule: loader.loadModule,
-          record: (value: any) => { recorded.push(value); if (returnedFailure(value)) failed = true; },
+          record: (value: RehearsalCase) => { recorded.push(value); if (returnedFailure(value)) failed = true; },
         });
         assert.ok((result && typeof result === "object") || recorded.length, `${name} returned no case evidence`);
-        const cases = Array.isArray(result?.cases) ? result.cases : recorded;
+        const cases: RehearsalCase[] = Array.isArray(result?.cases) ? result.cases : recorded;
         assert.equal(cases.length, { pos: 20, customer: 59, evidence: 24 }[name],
           `Incomplete case coverage in ${name}`);
-        assert.equal(new Set(cases.map((item: any) => item.name)).size, cases.length, "Duplicate case names");
+        assert.equal(new Set(cases.map((item) => item.name)).size, cases.length, "Duplicate case names");
         for (const callbackCase of recorded) {
-          const returnedCase = cases.find((item: any) => item.name === callbackCase.name);
+          const returnedCase = cases.find((item) => item.name === callbackCase.name);
           assert.deepEqual(returnedCase, callbackCase, "Returned and callback case evidence disagree");
         }
-        const { cases: _duplicatedCases, preservation, ...metadata } = result ?? {};
+        const { cases: _duplicatedCases, preservation, ...metadata } =
+          "preservation" in result ? result : { ...result, preservation: undefined };
         report.modules[name] = {
           ...metadata, cases,
           ...(preservation ? { preservationSummary: { status: preservation.status, details: preservation.details } } : {}),

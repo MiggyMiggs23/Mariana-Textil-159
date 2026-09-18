@@ -209,8 +209,9 @@ export async function runCustomerCases(context: CustomerCaseContext) {
   }
 
   async function negatives(spec: RequestSpec) {
-    for (const missing of ["sitioOrigenId", "naturaleza"]) {
-      const body = { ...spec.body, operacionClave: key(counter++) }; delete body[missing];
+    for (const missing of ["sitioOrigenId", "naturaleza"] as const) {
+      const { [missing]: _omitted, ...remaining } = spec.body;
+      const body = { ...remaining, operacionClave: key(counter++) };
       await reject({ ...spec, body }, `missing ${missing}`, 400, /Actualiza/i);
     }
     const legacy = { ...spec.body };

@@ -1504,6 +1504,23 @@ La fase aislada quedó verificada con el router real, PostgreSQL retenido y una
 vista privada de navegador posteriormente detenida. La comprobación final
 postnavegador es sólo lectura y conserva las 66 tablas originales, permitiendo
 únicamente anexos de Fondo y su auditoría `FONDO`; no equivale a habilitación
-operativa ni declara E10 cerrado. Permanecen fuera de E10 seis errores de tipos
-preexistentes de E1 en la raíz y las restricciones globales del corredor de
-pruebas; no se reinterpretan como fallos ni como cierres de E10.
+operativa ni declara E10 cerrado. La entrega aislada detectó seis errores de
+tipos en archivos de ensayo de E1; el diagnóstico posterior confirmó que eran
+regresiones respecto de la línea base aceptada, no errores presentes en ella.
+Su pertenencia a E1 no permite descontarlos del resultado global. Las
+restricciones globales del corredor de pruebas siguen vigentes.
+
+### Evidencia de verificación vinculada a una revisión exacta
+
+Toda afirmación de verificación debe registrar el hash completo de la revisión
+exacta sobre la que se ejecutó, junto con el comando, alcance y código de salida.
+Un log sin su hash no acredita la verificación: no permite reproducirla ni
+saber si el árbol cambió después. No sustituir esa identidad por «HEAD»,
+«estado actual», una fecha o el nombre de la entrega.
+
+Si se comprueba un árbol aún sin commit, registrar su hash de árbol Git y
+verificar que coincide exactamente con el árbol del commit que después se
+declara comprobado; vincular también ese hash de commit en la evidencia
+conservada. No atribuir resultados a cambios posteriores a la ejecución.
+Los archivos no versionados que afecten a la comprobación, las versiones de
+herramientas y el estado de las dependencias deben quedar identificados.

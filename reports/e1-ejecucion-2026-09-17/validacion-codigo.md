@@ -1,5 +1,31 @@
 # E1 — validación del código y límite de reanudación
 
+## Rectificación de la afirmación de typecheck — 2026-09-18
+
+La fila histórica «Typecheck canónico de todo el workspace | PASS; 0
+diagnósticos únicos y 0 fallos de proceso/parser» se conserva más abajo como
+registro de lo que se informó, **pero no acredita el árbol en el que se
+incorporó este documento**.
+
+La reproducción histórica del diagnóstico comprobó:
+
+- `68568f62dde1e6974188b91d847ea874b15734ff`: typecheck completo en cero.
+- `7983384be5b3f7544c635cdb08963206c80aa4e0`, que incorporó este documento:
+  cuatro errores nuevos en los archivos de ensayo de `scripts/`.
+- `e9735b2c3ecd715a7581a8560cb735f4d1507967`: otros dos errores nuevos en el
+  archivo de reanudación; seis en total.
+
+El log conservado `validacion/e1-typecheck-corrected.log` **no fija la revisión
+sobre la que se ejecutó**. No permite atribuir su resultado a aquel árbol,
+reproducir exactamente esa ejecución ni determinar si el árbol cambió después.
+No se conoce, a partir de ese log, el instante relativo entre la comprobación
+y la incorporación de los archivos defectuosos. No se presenta su cero como
+evidencia válida de esos commits.
+
+Esta rectificación no borra la afirmación original ni cambia retroactivamente
+su resultado. Los seis diagnósticos son regresiones respecto de la línea base
+aceptada, no errores que puedan descontarse por pertenecer a E1.
+
 **Actualización posterior:** el ensayo real en el clon ya se ejecutó bajo una nueva autorización: **100/103 PASS y tres brechas de cierre frente a SQL directo**. Véase [resultado-ensayo-clon.md](resultado-ensayo-clon.md). El resto de este documento conserva el estado anterior, al terminar la verificación offline.
 
 ## Estado

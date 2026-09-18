@@ -9,7 +9,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
 import {
-  collectStartupEffects, compareStartupEffects, type StartupEffectsSnapshot,
+  collectStartupEffects, compareStartupEffects, STARTUP_EFFECTS_TABLES, type StartupEffectsSnapshot,
 } from "./e1-startup-effects.mts";
 
 type Row = Record<string, any>;
@@ -225,11 +225,13 @@ async function compare(beforePath: string, afterPath: string, output: string) {
   const changedTables = Object.keys(before.tables).filter(name =>
     canonical(before.tables[name]) !== canonical(after.tables[name]));
   const startup = changedEffects(before.startupEffects, after.startupEffects);
-  const counts = (name: string) => startup.tables[name]?.counts ??
+  const counts = (name: keyof typeof startup.tables) => startup.tables[name]?.counts ??
     { added: 0, deleted: 0, updated: 0, unchanged: 0 };
-  const effectChanged = Object.entries(startup.tables).filter(([, value]: any) =>
-    value.counts.added + value.counts.deleted + value.counts.updated > 0).map(([name]) => name);
-  const permissionEffects = ["permisos_rol", "permisos_ubicacion", "permisos_usuario"].map(name => {
+  const effectChanged = STARTUP_EFFECTS_TABLES.filter(name => {
+    const { counts } = startup.tables[name];
+    return counts.added + counts.deleted + counts.updated > 0;
+  });
+  const permissionEffects = (["permisos_rol", "permisos_ubicacion", "permisos_usuario"] as const).map(name => {
     const delta = startup.tables[name];
     const invalidUpdates = (delta?.updated ?? []).filter((row: any) =>
       row.fields.some((field: any) => field.field !== "updated_at"));
