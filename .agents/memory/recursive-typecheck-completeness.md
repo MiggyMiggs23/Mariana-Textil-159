@@ -16,3 +16,17 @@ Además, un proyecto que importa otro puede repetir sus mismos diagnósticos.
 individualmente. Contar errores únicos por archivo y ubicación, no por
 repeticiones entre paquetes. No afirmar que no hay otros errores a partir
 del primer fallo del orquestador.
+
+La atribución «preexistente» debe indicar contra qué línea base se comprobó.
+Un HEAD anterior a la entrega no sustituye el último punto de aceptación
+explícito del propietario.
+
+**Why:** Reproducir errores en el HEAD previo puede ocultar regresiones
+introducidas después de un cierre aceptado en cero. El nombre del módulo no
+demuestra que el error existiera cuando ese módulo se dio por cerrado.
+
+**How to apply:** Contrastar el punto de aceptación y los commits que añaden
+los diagnósticos, con sus padres inmediatos, en copias temporales. Guardar la
+revisión exacta junto al log. Los enlaces de paquetes internos deben resolver
+los fuentes históricos de la copia, no el workspace actual. Separar evidencia
+medida de inferencias y no atribuir a un árbol completo un log sin revisión.
