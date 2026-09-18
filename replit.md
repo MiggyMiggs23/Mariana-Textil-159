@@ -1433,3 +1433,77 @@ Nunca se sustituyen temporalmente archivos servidos por la aplicación.
 No se omiten pruebas para obtener verde ni se cambia el comportamiento de la
 aplicación para satisfacer una expectativa. Si una reescritura requiere cambiar
 la aplicación, se detiene ese caso y se reporta para decisión del propietario.
+
+## E10 — Fondo de Mariana
+
+**Estado de habilitación:** fase aislada PostgreSQL, HTTP y navegador verificada;
+no habilitado en la operativa. La vista privada ya fue detenida. Las banderas
+`FONDO_E10_ENABLED` y `VITE_FONDO_E10_ENABLED` permanecen apagadas por omisión.
+Migración, arranque y habilitación operativos requieren autorización textual
+separada. Movimientos, historial y arqueo se habilitan juntos, nunca un piloto
+de movimientos sin arqueo.
+
+### Reglas canónicas de E10
+
+Fuente: especificación E10 del propietario y
+`reports/e10-autorizacion-fase-aislada-2026-09-18.md`. Estas son reglas nuevas;
+no sustituyen las reglas del fondo inicial de una sesión de Caja.
+
+- Hay un único Fondo, siempre en la ubicación Mariana identificada por el
+  servidor. No existe selección de tienda ni saldo editable.
+- Sólo el rol real `ADMIN` puede obtener pantalla, datos, movimientos, detalles
+  o archivos. Un permiso configurable no concede acceso a otro rol. La
+  exclusividad incluye auditoría y exportaciones genéricas; no se difunden
+  datos del Fondo mediante notificaciones generales ni totales compartidos.
+- El saldo procede de la suma exacta del libro, en centavos. Su navegación
+  abre los movimientos que lo explican; cada movimiento y arqueo tiene detalle.
+- El primer ingreso lleva motivo «saldo inicial» y reconoce efectivo existente,
+  no una venta, cobro de cliente ni capital nuevo. Se conserva la evidencia de
+  conciliación y la declaración de no duplicar efectivo ya registrado en Caja
+  o entregas. El propietario debe contar y reconocer el importe real.
+- Los siguientes ingresos directos distinguen capital y otros ingresos. Todos
+  los movimientos llevan motivo. Un retiro genérico no registra ni sustituye
+  un pago a proveedor.
+- No se edita ni elimina un movimiento. Se corrige mediante un inverso exacto,
+  enlazado y único, conservando el original. El inverso es una corrección
+  contable, no evidencia de una nueva entrada o salida física; puede dejar un
+  saldo contable negativo que se muestra expresamente. Un retiro ordinario no
+  puede exceder el saldo disponible.
+- El arqueo persiste saldo de referencia, efectivo contado, diferencia
+  `contado - saldo`, fecha, autor, motivo y versión de movimientos. No genera
+  ajuste monetario. Si cambia el libro durante el conteo, exige revisar el
+  conteo; no sustituye silenciosamente el saldo de referencia.
+- Escrituras e inversos comparten un candado propio. Los reintentos idénticos
+  no duplican; reutilizar la clave con otro contenido se rechaza. Saldo e
+  historial se leen sobre la misma instantánea.
+- Ningún movimiento del Fondo modifica Ventas, Contado cobrado, cobranza,
+  deuda de clientes, crédito/FIFO, cierres de tienda ni inventario. No se
+  reutiliza el saldo de Caja ni se etiqueta como efectivo total de empresa una
+  cifra cuya composición no esté conciliada.
+- E9 (recepción de tiendas) y E12 (pagos a proveedor) siguen sin conexión ni
+  accesos habilitados. No se reanuda Prompt P ni se cierra su Grupo 1.
+
+### Frontera del ensayo
+
+Sólo la copia local fijada en
+`reports/e10-aislado-2026-09-18/aislamiento.json` admite escrituras del ensayo:
+Fondo ficticio y auditoría asociada. El arnés verifica socket, nombre e
+identidad efectiva y rechaza otros destinos. Se conservan las identidades
+restauradas, sin altas de usuarios ni creación/copia de sesiones de autenticación.
+Los contextos de autorización del arnés no equivalen a una prueba de login.
+La copia se conserva hasta el cierre completo de E10.
+
+La preparación comprobó la equivalencia semántica de las 66 tablas originales
+con el respaldo consistente, exceptuando las filas de sesiones omitidas.
+Esto no acredita por sí solo las pruebas funcionales: sus resultados, tiempos,
+límites y el inventario SQL se registran en
+`reports/e10-aislado-2026-09-18/`. No se declara E10 cerrado por tener código o
+por aprobar una selección parcial de suites.
+
+La fase aislada quedó verificada con el router real, PostgreSQL retenido y una
+vista privada de navegador posteriormente detenida. La comprobación final
+postnavegador es sólo lectura y conserva las 66 tablas originales, permitiendo
+únicamente anexos de Fondo y su auditoría `FONDO`; no equivale a habilitación
+operativa ni declara E10 cerrado. Permanecen fuera de E10 seis errores de tipos
+preexistentes de E1 en la raíz y las restricciones globales del corredor de
+pruebas; no se reinterpretan como fallos ni como cierres de E10.

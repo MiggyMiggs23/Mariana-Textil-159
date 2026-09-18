@@ -1,0 +1,449 @@
+{
+  "status": "PASS",
+  "mode": "FINAL_READ_ONLY_POST_BROWSER",
+  "finishedAtUtc": "2026-09-18T18:10:34.062Z",
+  "elapsedMilliseconds": 952.982307,
+  "destination": {
+    "database": "e10_ensayo_20260918",
+    "data_directory": "/home/runner/workspace/.local/backups/e10-20260918-isolated/cluster",
+    "socket": "/tmp/e10-0918-pg",
+    "address": null,
+    "system_identifier": "7686927739928200230"
+  },
+  "baseline": {
+    "originalTables": 66,
+    "currentTables": 69,
+    "comparisons": [
+      {
+        "table": "aplicaciones_credito",
+        "count": "2",
+        "canonicalHash": "d82a8e46a1ce2c0d2acb78bc2518cf3e",
+        "status": "MATCH"
+      },
+      {
+        "table": "aplicaciones_pago_proveedor",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "atribuciones_credito_e1",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria",
+        "count": "3454",
+        "canonicalHash": "37599eae790b1fc881b6f581065c3086",
+        "status": "MATCH_NON_FONDO_BASELINE"
+      },
+      {
+        "table": "auditoria_faltante_reactivaciones",
+        "count": "1",
+        "canonicalHash": "d730f14f5fce59c4b467839cec90e770",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_escaneos",
+        "count": "107",
+        "canonicalHash": "799e2e362fce692c2bf8385f30016cd5",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_folio",
+        "count": "11",
+        "canonicalHash": "c4c0affd5ebf624177216b1566d2b2bc",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_participantes",
+        "count": "3",
+        "canonicalHash": "b557da945480fb84010bdffc35a5f0bd",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_inventario_snapshot",
+        "count": "106",
+        "canonicalHash": "63d489e37f42e34dbb761967b6de96f1",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_sobrante_contextos",
+        "count": "1",
+        "canonicalHash": "6919bd7a5b59ad5a8c562e67267aa702",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditoria_sobrante_decisiones",
+        "count": "2",
+        "canonicalHash": "9b08cc5b49f6abe576d31270a9cf5a0d",
+        "status": "MATCH"
+      },
+      {
+        "table": "auditorias_inventario",
+        "count": "3",
+        "canonicalHash": "879c19e964dd973196afe5118d5131ac",
+        "status": "MATCH"
+      },
+      {
+        "table": "autorizaciones_nota",
+        "count": "1",
+        "canonicalHash": "becd903687f0a945c90adacce1b2cf02",
+        "status": "MATCH"
+      },
+      {
+        "table": "camionetas",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "choferes",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "cliente_documentos",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "clientes",
+        "count": "7",
+        "canonicalHash": "57547451eec364bf428e41924ded0b49",
+        "status": "MATCH"
+      },
+      {
+        "table": "cobros_credito_pendientes_e1",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "contenedor_lineas",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "contenedores",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "cuadre_fiscal_registros",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "entrada_folio",
+        "count": "11",
+        "canonicalHash": "33cf7f2dd99825ee4431af068c14f673",
+        "status": "MATCH"
+      },
+      {
+        "table": "entradas",
+        "count": "2",
+        "canonicalHash": "70e195bc754bfddcdaf715eb7b889a82",
+        "status": "MATCH"
+      },
+      {
+        "table": "equipos",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "equipos_checklist",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "existencias",
+        "count": "43",
+        "canonicalHash": "bd251b54d1ba827a249016dccddd53c8",
+        "status": "MATCH"
+      },
+      {
+        "table": "movimientos",
+        "count": "369",
+        "canonicalHash": "2bbe4acd57126cc175acc3b73c57efd7",
+        "status": "MATCH"
+      },
+      {
+        "table": "movimientos_credito",
+        "count": "3",
+        "canonicalHash": "1589e22c43931b99e512d7469b8c2ead",
+        "status": "MATCH"
+      },
+      {
+        "table": "notificaciones_credito",
+        "count": "1",
+        "canonicalHash": "344c64426fde9345a2206016df136935",
+        "status": "MATCH"
+      },
+      {
+        "table": "notificaciones_sistema",
+        "count": "13",
+        "canonicalHash": "eb6ae5a46853cc8ebb29be8d04293b92",
+        "status": "MATCH"
+      },
+      {
+        "table": "operaciones_credito_e1",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "pagos_proveedor",
+        "count": "2",
+        "canonicalHash": "e6553e601dae0e6b59f006e765d121be",
+        "status": "MATCH"
+      },
+      {
+        "table": "permisos_rol",
+        "count": "192",
+        "canonicalHash": "9636b6a5eb7f7bc8bf15e7136b959167",
+        "status": "MATCH"
+      },
+      {
+        "table": "permisos_ubicacion",
+        "count": "54",
+        "canonicalHash": "14df647b2f5396e488ee5f35099f6527",
+        "status": "MATCH"
+      },
+      {
+        "table": "permisos_usuario",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "pisos",
+        "count": "2",
+        "canonicalHash": "8102d14ea78d41728fa8d9cec170c1ef",
+        "status": "MATCH"
+      },
+      {
+        "table": "precio_historial",
+        "count": "1016",
+        "canonicalHash": "64f5ec3242e70cdfe37e1a242c26b506",
+        "status": "MATCH"
+      },
+      {
+        "table": "productos",
+        "count": "1234",
+        "canonicalHash": "2309c740fd99a3f52f1766e82b483aef",
+        "status": "MATCH"
+      },
+      {
+        "table": "proveedores",
+        "count": "27",
+        "canonicalHash": "4a0020d06fb591411ff067f4140e5994",
+        "status": "MATCH"
+      },
+      {
+        "table": "reimpresiones_etiqueta",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "revisiones_etiqueta",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "rollos",
+        "count": "340",
+        "canonicalHash": "ce26182ea023ad8efe1814cb700a14f7",
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_folio",
+        "count": "11",
+        "canonicalHash": "65d7699b5f275f55df058c3bdb3f4c48",
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_lineas",
+        "count": "1",
+        "canonicalHash": "634d0170c651da0e5d8e1d041c3c9bfd",
+        "status": "MATCH"
+      },
+      {
+        "table": "salida_rollos",
+        "count": "5",
+        "canonicalHash": "82cc0b962e43898fd61062d2da592b58",
+        "status": "MATCH"
+      },
+      {
+        "table": "salidas",
+        "count": "1",
+        "canonicalHash": "8b732bcdf16acd84ecf51ed8aa16564f",
+        "status": "MATCH"
+      },
+      {
+        "table": "salidas_dinero_caja",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "series_consecutivo",
+        "count": "1",
+        "canonicalHash": "3f3acff6822a16db7a45c149f68c6b07",
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones",
+        "count": "0",
+        "baselineCount": "0",
+        "status": "MATCH_OMITTED"
+      },
+      {
+        "table": "sesiones_caja",
+        "count": "1",
+        "canonicalHash": "50b0c0f5586c67747628a5f6721c20e7",
+        "status": "MATCH"
+      },
+      {
+        "table": "sesiones_caja_dias",
+        "count": "1",
+        "canonicalHash": "6e8b2a1f942eaa4f9b7020e2b8bc7ddc",
+        "status": "MATCH"
+      },
+      {
+        "table": "solicitudes_pago_dirigido",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimo_episodios",
+        "count": "3",
+        "canonicalHash": "ee466b3b81125f83760eacd3addc2dd4",
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimo_sitios",
+        "count": "1",
+        "canonicalHash": "17a13e555dc56c6b9871558bd51ba05c",
+        "status": "MATCH"
+      },
+      {
+        "table": "stock_minimos",
+        "count": "3",
+        "canonicalHash": "60b15edc65d0fa3cbaf651c9427fc0ae",
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_folio",
+        "count": "1",
+        "canonicalHash": "0e7e5f344a82c286b3432004f60e5e10",
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_linea_consumos",
+        "count": "5",
+        "canonicalHash": "57a8ebcb4318e954c01e62287ee3cf55",
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_lineas",
+        "count": "5",
+        "canonicalHash": "19c2c2a6dfdc6b4b86d0e6a2c12b50bd",
+        "status": "MATCH"
+      },
+      {
+        "table": "ticket_pagos",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "tickets",
+        "count": "1",
+        "canonicalHash": "9b94166cb286468ae865f9d55d6e2573",
+        "status": "MATCH"
+      },
+      {
+        "table": "ubicaciones",
+        "count": "11",
+        "canonicalHash": "024961124e5a29d6f6e1c4053687a948",
+        "status": "MATCH"
+      },
+      {
+        "table": "usuarios",
+        "count": "31",
+        "canonicalHash": "7c2617fe80fba0675a08ae217bc0d6d5",
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_folio",
+        "count": "11",
+        "canonicalHash": "6e50856eaa1e8d3930a630e7ec415f7d",
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_salidas",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "viaje_tickets",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      },
+      {
+        "table": "viajes",
+        "count": "0",
+        "canonicalHash": "d41d8cd98f00b204e9800998ecf8427e",
+        "status": "MATCH"
+      }
+    ],
+    "allOriginalRowsPreserved": true,
+    "auditAllowance": {
+      "baselineNonFondo": 3454,
+      "fondoAppends": 21,
+      "onlyFondoExcludedFromBaselineComparison": true
+    }
+  },
+  "accounts": {
+    "usuarios": 31,
+    "sesiones": 0
+  },
+  "financial": {
+    "ventas": "16000.00",
+    "contadoCobrado": "0.00",
+    "cobranzaClientes": "0.00",
+    "deudaClientes": "0.00",
+    "window": {
+      "desde": "2000-01-01T00:00:00.000Z",
+      "hasta": "2099-12-31T23:59:59.999Z",
+      "scope": "GLOBAL ADMIN, active clients"
+    },
+    "unchangedFromMainTrial": true
+  },
+  "fondo": {
+    "movimientos": 18,
+    "saldo": "-1000.00",
+    "saldoCentavos": "-100000",
+    "arqueos": 3,
+    "ultimoOrdinal": "18",
+    "browserRows": {
+      "capital": 1,
+      "inverso": 1
+    }
+  },
+  "noWritesExecuted": true
+}

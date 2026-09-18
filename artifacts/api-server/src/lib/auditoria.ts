@@ -2,8 +2,21 @@ import { sql } from "drizzle-orm";
 import { db } from "@workspace/db";
 import { resolveAuditedCreditMovementOwner } from "./auditoria-owner";
 import { resolveKardexDocument } from "./kardex-document";
-
-export const AUDIT_EXPORT_LIMIT = 10_000;
+import {
+  AUDIT_EXPORT_LIMIT,
+  exportAuditoriaQuery,
+  getAuditoriaQuery,
+  listAuditoriaQuery,
+  type AuditoriaFilters,
+} from "./auditoria-queries";
+export {
+  AUDIT_EXPORT_LIMIT,
+  exportAuditoriaQuery,
+  getAuditoriaQuery,
+  listAuditoriaQuery,
+  nonFondoAuditSql,
+  type AuditoriaFilters,
+} from "./auditoria-queries";
 
 export const AUDIT_ACTION_COVERAGE = Object.freeze({
   loginFallido: { accion: "LOGIN_FALLIDO", entidad: "usuarios" },
@@ -14,17 +27,6 @@ export const AUDIT_ACTION_COVERAGE = Object.freeze({
   aperturaCaja: { accion: "ABRIR_CAJA", entidad: "sesiones_caja" },
   corteCaja: { accion: "CERRAR_CAJA", entidad: "sesiones_caja" },
 });
-
-export type AuditoriaFilters = {
-  desde?: string;
-  hasta?: string;
-  usuarioId?: number;
-  rol?: string;
-  modulo?: string;
-  accion?: string;
-  sitioId?: number;
-  search?: string;
-};
 
 type Row = Record<string, unknown>;
 type AuditoriaEntry = {
@@ -49,32 +51,6 @@ type AuditoriaDetail = AuditoriaEntry & {
   datosAntes: Record<string, unknown> | null;
   datosDespues: Record<string, unknown> | null;
 };
-
-function whereSql(filters: AuditoriaFilters) {
-  const conditions = [];
-  if (filters.desde) {
-    conditions.push(
-      sql`a.created_at >= (${filters.desde}::date::timestamp AT TIME ZONE 'America/Mexico_City')`,
-    );
-  }
-  if (filters.hasta) {
-    conditions.push(
-      sql`a.created_at < ((${filters.hasta}::date + 1)::timestamp AT TIME ZONE 'America/Mexico_City')`,
-    );
-  }
-  if (filters.usuarioId) conditions.push(sql`a.usuario_id = ${filters.usuarioId}`);
-  if (filters.rol) conditions.push(sql`a.rol_snapshot = ${filters.rol}`);
-  if (filters.modulo) conditions.push(sql`a.modulo = ${filters.modulo}`);
-  if (filters.accion) conditions.push(sql`a.accion = ${filters.accion}`);
-  if (filters.sitioId) conditions.push(sql`a.sitio_id = ${filters.sitioId}`);
-  if (filters.search) {
-    const term = `%${filters.search.trim()}%`;
-    conditions.push(sql`(a.entidad ILIKE ${term} OR COALESCE(a.entidad_id, '') ILIKE ${term})`);
-  }
-  return conditions.length
-    ? sql`WHERE ${sql.join(conditions, sql` AND `)}`
-    : sql``;
-}
 
 export function presentAuditoria(
   row: Row,
@@ -125,12 +101,6 @@ export function presentAuditoria(
     datosDespues: (row.datos_despues as Record<string, unknown> | null) ?? null,
   };
 }
-
-const selection = sql`
-  a.id, a.created_at, a.usuario_id, a.usuario_snapshot AS usuario, a.rol_snapshot,
-  a.accion, a.modulo, a.entidad, a.entidad_id, a.sitio_id,
-  a.sitio_snapshot, a.ip, a.datos_antes, a.datos_despues
-`;
 
 type MovementOwnerRow = {
   id: number | string;
@@ -194,14 +164,11 @@ export async function listAuditoria(
   filters: AuditoriaFilters,
   page: number,
   pageSize: number,
+  includeConfidentialFondo = false,
 ) {
-  const result = await db.execute(sql`
-    SELECT ${selection}, COUNT(*) OVER()::int AS total
-    FROM auditoria a
-    ${whereSql(filters)}
-    ORDER BY a.created_at DESC, a.id DESC
-    LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
-  `);
+  const result = await db.execute(
+    listAuditoriaQuery(filters, page, pageSize, includeConfidentialFondo),
+  );
   const rows = result.rows as Row[];
   const owners = await auditedMovementOwners(rows);
   return {
@@ -212,26 +179,21 @@ export async function listAuditoria(
   };
 }
 
-export async function getAuditoria(id: string) {
-  const result = await db.execute(sql`
-    SELECT ${selection}
-    FROM auditoria a
-    WHERE a.id = ${id}::bigint LIMIT 1
-  `);
+export async function getAuditoria(id: string, includeConfidentialFondo = false) {
+  const result = await db.execute(getAuditoriaQuery(id, includeConfidentialFondo));
   const row = result.rows[0] as Row | undefined;
   if (!row) return null;
   const owners = await auditedMovementOwners([row]);
   return presentAuditoria(row, true, owners.get(String(row.id)));
 }
 
-export async function exportAuditoriaRows(filters: AuditoriaFilters) {
-  const result = await db.execute(sql`
-    SELECT ${selection}
-    FROM auditoria a
-    ${whereSql(filters)}
-    ORDER BY a.created_at DESC, a.id DESC
-    LIMIT ${AUDIT_EXPORT_LIMIT + 1}
-  `);
+export async function exportAuditoriaRows(
+  filters: AuditoriaFilters,
+  includeConfidentialFondo = false,
+) {
+  const result = await db.execute(
+    exportAuditoriaQuery(filters, includeConfidentialFondo),
+  );
   const rows = result.rows as Row[];
   if (rows.length > AUDIT_EXPORT_LIMIT) {
     throw new Error("AUDIT_EXPORT_LIMIT");

@@ -6136,6 +6136,178 @@ paths:
           content:
             application/json:
               schema: { $ref: "#/components/schemas/PurgaConflicto" }
+  /fondo:
+    get:
+      operationId: getFondo
+      tags: [fondo]
+      responses:
+        "200":
+          description: Resumen contable del Fondo físico de Mariana
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoResumen" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /fondo/movimientos:
+    get:
+      operationId: listFondoMovimientos
+      tags: [fondo]
+      parameters:
+        - { name: desde, in: query, schema: { type: string, format: date } }
+        - { name: hasta, in: query, schema: { type: string, format: date } }
+        - { name: naturaleza, in: query, schema: { $ref: "#/components/schemas/FondoNaturaleza" } }
+        - { name: categoria, in: query, schema: { $ref: "#/components/schemas/FondoCategoria" } }
+      responses:
+        "200":
+          description: Libro completo y saldo en una misma instantánea
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoMovimientosResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createFondoMovimiento
+      tags: [fondo]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FondoMovimientoInput" }
+      responses:
+        "201":
+          description: Movimiento creado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoMovimiento" }
+        "200":
+          description: Repetición idempotente
+          headers:
+            Idempotent-Replay: { schema: { type: string, const: "true" } }
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoMovimiento" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /fondo/movimientos/{id}:
+    get:
+      operationId: getFondoMovimiento
+      tags: [fondo]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' } }
+      responses:
+        "200":
+          description: Detalle enlazado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoMovimiento" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /fondo/movimientos/{id}/inverso:
+    post:
+      operationId: reverseFondoMovimiento
+      tags: [fondo]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FondoInversoInput" }
+      responses:
+        "201":
+          description: Inverso contable creado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoMovimiento" }
+        "200":
+          description: Repetición idempotente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoMovimiento" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /fondo/arqueos:
+    get:
+      operationId: listFondoArqueos
+      tags: [fondo]
+      parameters:
+        - { name: desde, in: query, schema: { type: string, format: date } }
+        - { name: hasta, in: query, schema: { type: string, format: date } }
+      responses:
+        "200":
+          description: Historial completo de conteos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoArqueosResult" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+    post:
+      operationId: createFondoArqueo
+      tags: [fondo]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/FondoArqueoInput" }
+      responses:
+        "201":
+          description: Conteo persistido sin ajuste monetario
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoArqueo" }
+        "200":
+          description: Repetición idempotente
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoArqueo" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /fondo/arqueos/{id}:
+    get:
+      operationId: getFondoArqueo
+      tags: [fondo]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' } }
+      responses:
+        "200":
+          description: Conteo y valores de referencia
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FondoArqueo" }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+  /fondo/exportar:
+    get:
+      operationId: exportFondoCsv
+      tags: [fondo]
+      parameters:
+        - name: tipo
+          in: query
+          required: true
+          schema: { type: string, enum: [movimientos, arqueos] }
+      responses:
+        "200":
+          description: CSV completo, sólo ADMIN
+          content:
+            text/csv:
+              schema: { type: string }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
 components:
   parameters:
     PurgaEntidad:
@@ -6377,6 +6549,163 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    FondoMoney:
+      type: string
+      maxLength: 20
+      pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$'
+    FondoSignedMoney:
+      type: string
+      pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$'
+    FondoId:
+      type: string
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    FondoCategoria:
+      type: string
+      enum: [SALDO_INICIAL, CAPITAL, OTRO_INGRESO, RETIRO]
+    FondoNaturaleza:
+      type: string
+      enum: [INGRESO, RETIRO]
+    FondoAutor:
+      type: object
+      additionalProperties: false
+      required: [id, nombre]
+      properties:
+        id: { type: number }
+        nombre: { type: string }
+    FondoMovimiento:
+      type: object
+      additionalProperties: false
+      required: [id, ordinal, fondoId, naturaleza, categoria, importe, importeFirmado, motivo, fecha, autor, esInverso, advertencia, conciliacionInicial, originalId, inversoId]
+      properties:
+        id: { $ref: "#/components/schemas/FondoId" }
+        ordinal: { type: string, pattern: '^[1-9][0-9]*$' }
+        fondoId: { $ref: "#/components/schemas/FondoId" }
+        naturaleza: { $ref: "#/components/schemas/FondoNaturaleza" }
+        categoria: { $ref: "#/components/schemas/FondoCategoria" }
+        importe: { $ref: "#/components/schemas/FondoMoney" }
+        importeFirmado: { $ref: "#/components/schemas/FondoSignedMoney" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+        fecha: { type: string, format: date-time }
+        autor: { $ref: "#/components/schemas/FondoAutor" }
+        esInverso: { type: boolean }
+        advertencia:
+          type: [string, "null"]
+          enum: ["Corrección contable; no representa un movimiento físico nuevo.", null]
+        conciliacionInicial:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoConciliacionInicial" }
+            - { type: "null" }
+        originalId:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoId" }
+            - { type: "null" }
+        inversoId:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoId" }
+            - { type: "null" }
+    FondoConciliacionInicial:
+      type: object
+      additionalProperties: false
+      required: [efectivoFisicoContado, declaracionSinDuplicacion, evidencia]
+      properties:
+        efectivoFisicoContado: { $ref: "#/components/schemas/FondoMoney" }
+        declaracionSinDuplicacion: { type: boolean, const: true }
+        evidencia: { type: string, minLength: 1, maxLength: 1000 }
+    FondoMovimientoInput:
+      type: object
+      additionalProperties: false
+      required: [idempotencyKey, categoria, importe, motivo]
+      properties:
+        idempotencyKey: { $ref: "#/components/schemas/FondoId" }
+        categoria: { $ref: "#/components/schemas/FondoCategoria" }
+        importe: { $ref: "#/components/schemas/FondoMoney" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+        conciliacionInicial: { $ref: "#/components/schemas/FondoConciliacionInicial" }
+    FondoInversoInput:
+      type: object
+      additionalProperties: false
+      required: [idempotencyKey, motivo]
+      properties:
+        idempotencyKey: { $ref: "#/components/schemas/FondoId" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+    FondoArqueo:
+      type: object
+      additionalProperties: false
+      required: [id, fondoId, saldoSistema, efectivoContado, diferencia, versionSaldo, fecha, autor, motivo]
+      properties:
+        id: { $ref: "#/components/schemas/FondoId" }
+        fondoId: { $ref: "#/components/schemas/FondoId" }
+        saldoSistema: { $ref: "#/components/schemas/FondoSignedMoney" }
+        efectivoContado: { $ref: "#/components/schemas/FondoMoney" }
+        diferencia: { $ref: "#/components/schemas/FondoSignedMoney" }
+        versionSaldo:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoId" }
+            - { type: "null" }
+        fecha: { type: string, format: date-time }
+        autor: { $ref: "#/components/schemas/FondoAutor" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+    FondoArqueoInput:
+      type: object
+      additionalProperties: false
+      required: [idempotencyKey, efectivoContado, expectedVersionSaldo, motivo]
+      properties:
+        idempotencyKey: { $ref: "#/components/schemas/FondoId" }
+        efectivoContado: { $ref: "#/components/schemas/FondoMoney" }
+        expectedVersionSaldo:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoId" }
+            - { type: "null" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+    FondoArqueosResult:
+      type: object
+      additionalProperties: false
+      required: [items, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/FondoArqueo" } }
+        total: { type: number, minimum: 0 }
+    FondoMovimientosResult:
+      type: object
+      additionalProperties: false
+      required: [items, saldo, versionSaldo, total]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/FondoMovimiento" } }
+        saldo: { $ref: "#/components/schemas/FondoSignedMoney" }
+        versionSaldo:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoId" }
+            - { type: "null" }
+        total: { type: number, minimum: 0 }
+    FondoResumen:
+      type: object
+      additionalProperties: false
+      required: [fondo, saldo, versionSaldo, totalMovimientos, ultimoMovimientoFecha, ultimoArqueo]
+      properties:
+        fondo:
+          type: object
+          additionalProperties: false
+          required: [id, nombre, ubicacion]
+          properties:
+            id: { $ref: "#/components/schemas/FondoId" }
+            nombre: { type: string, const: "Fondo de Mariana" }
+            ubicacion:
+              type: object
+              additionalProperties: false
+              required: [id, nombre]
+              properties:
+                id: { type: number }
+                nombre: { type: string }
+        saldo: { $ref: "#/components/schemas/FondoSignedMoney" }
+        versionSaldo:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoId" }
+            - { type: "null" }
+        totalMovimientos: { type: number, minimum: 0 }
+        ultimoMovimientoFecha: { type: [string, "null"], format: date-time }
+        ultimoArqueo:
+          oneOf:
+            - { $ref: "#/components/schemas/FondoArqueo" }
+            - { type: "null" }
     PurgaReferencia:
       type: object
       required: [tipo, cantidad]

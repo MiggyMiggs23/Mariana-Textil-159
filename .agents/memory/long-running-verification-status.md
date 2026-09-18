@@ -14,3 +14,9 @@ Si la restauración debe sobrevivir entre llamadas, ejecutar el proceso PostgreS
 **Why:** El entorno puede terminar el PostgreSQL hijo al finalizar el comando de respaldo, aunque ese comando haya completado y verificado correctamente la restauración.
 
 **How to apply:** Ante una conexión local rechazada, comprobar y volver a arrancar únicamente el clúster desechable existente mediante su socket Unix. No renovar el respaldo del origen ni reiniciar la API para resolver la vida útil del proceso local. Detener la tarea desechable al terminar.
+
+Los tiempos de una fase reanudable sólo se atribuyen a la ejecución real de esa fase, no a la comprobación de que ya estaba hecha.
+
+**Why:** Una reanudación midió un no-op de milisegundos y lo rotuló como restauración completa. La equivalencia de la copia estaba comprobada, pero no demostraba esa duración.
+
+**How to apply:** Medir hasta la salida terminal del subproceso que realiza el trabajo. Conservar las duraciones originales por intento; si faltan, declarar la fase no medida. No repetir una restauración o modificar una copia conservada sólo para obtener una cifra. Una orden expresa de conservarla prevalece sobre el cierre habitual de recursos desechables.

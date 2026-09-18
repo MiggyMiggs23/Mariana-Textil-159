@@ -5,6 +5,173 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+/**
+ * @maxLength 20
+ * @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$
+ */
+export type FondoMoney = string;
+
+/**
+ * @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$
+ */
+export type FondoSignedMoney = string;
+
+/**
+ * @pattern ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+ */
+export type FondoId = string;
+
+export type FondoCategoria = typeof FondoCategoria[keyof typeof FondoCategoria];
+
+
+export const FondoCategoria = {
+  SALDO_INICIAL: 'SALDO_INICIAL',
+  CAPITAL: 'CAPITAL',
+  OTRO_INGRESO: 'OTRO_INGRESO',
+  RETIRO: 'RETIRO',
+} as const;
+
+export type FondoNaturaleza = typeof FondoNaturaleza[keyof typeof FondoNaturaleza];
+
+
+export const FondoNaturaleza = {
+  INGRESO: 'INGRESO',
+  RETIRO: 'RETIRO',
+} as const;
+
+export interface FondoAutor {
+  id: number;
+  nombre: string;
+}
+
+/**
+ * @nullable
+ */
+export type FondoMovimientoAdvertencia = typeof FondoMovimientoAdvertencia[keyof typeof FondoMovimientoAdvertencia] | null;
+
+
+export const FondoMovimientoAdvertencia = {
+  'Corrección_contable;_no_representa_un_movimiento_físico_nuevo': 'Corrección contable; no representa un movimiento físico nuevo.',
+} as const;
+
+export interface FondoConciliacionInicial {
+  efectivoFisicoContado: FondoMoney;
+  declaracionSinDuplicacion: true;
+  /**
+     * @minLength 1
+     * @maxLength 1000
+     */
+  evidencia: string;
+}
+
+export interface FondoMovimiento {
+  id: FondoId;
+  /** @pattern ^[1-9][0-9]*$ */
+  ordinal: string;
+  fondoId: FondoId;
+  naturaleza: FondoNaturaleza;
+  categoria: FondoCategoria;
+  importe: FondoMoney;
+  importeFirmado: FondoSignedMoney;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+  fecha: string;
+  autor: FondoAutor;
+  esInverso: boolean;
+  /** @nullable */
+  advertencia: FondoMovimientoAdvertencia;
+  conciliacionInicial: FondoConciliacionInicial | null;
+  originalId: FondoId | null;
+  inversoId: FondoId | null;
+}
+
+export interface FondoMovimientoInput {
+  idempotencyKey: FondoId;
+  categoria: FondoCategoria;
+  importe: FondoMoney;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+  conciliacionInicial?: FondoConciliacionInicial;
+}
+
+export interface FondoInversoInput {
+  idempotencyKey: FondoId;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+}
+
+export interface FondoArqueo {
+  id: FondoId;
+  fondoId: FondoId;
+  saldoSistema: FondoSignedMoney;
+  efectivoContado: FondoMoney;
+  diferencia: FondoSignedMoney;
+  versionSaldo: FondoId | null;
+  fecha: string;
+  autor: FondoAutor;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+}
+
+export interface FondoArqueoInput {
+  idempotencyKey: FondoId;
+  efectivoContado: FondoMoney;
+  expectedVersionSaldo: FondoId | null;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+}
+
+export interface FondoArqueosResult {
+  items: FondoArqueo[];
+  /** @minimum 0 */
+  total: number;
+}
+
+export interface FondoMovimientosResult {
+  items: FondoMovimiento[];
+  saldo: FondoSignedMoney;
+  versionSaldo: FondoId | null;
+  /** @minimum 0 */
+  total: number;
+}
+
+export type FondoResumenFondoUbicacion = {
+  id: number;
+  nombre: string;
+};
+
+export type FondoResumenFondo = {
+  id: FondoId;
+  nombre: 'Fondo de Mariana';
+  ubicacion: FondoResumenFondoUbicacion;
+};
+
+export interface FondoResumen {
+  fondo: FondoResumenFondo;
+  saldo: FondoSignedMoney;
+  versionSaldo: FondoId | null;
+  /** @minimum 0 */
+  totalMovimientos: number;
+  /** @nullable */
+  ultimoMovimientoFecha: string | null;
+  ultimoArqueo: FondoArqueo | null;
+}
+
 export interface PurgaReferencia {
   tipo: string;
   cantidad: number;
@@ -9169,4 +9336,28 @@ choferId?: number;
 origenId?: number;
 destino?: string;
 };
+
+export type ListFondoMovimientosParams = {
+desde?: CalendarDate;
+hasta?: CalendarDate;
+naturaleza?: FondoNaturaleza;
+categoria?: FondoCategoria;
+};
+
+export type ListFondoArqueosParams = {
+desde?: CalendarDate;
+hasta?: CalendarDate;
+};
+
+export type ExportFondoCsvParams = {
+tipo: ExportFondoCsvTipo;
+};
+
+export type ExportFondoCsvTipo = typeof ExportFondoCsvTipo[keyof typeof ExportFondoCsvTipo];
+
+
+export const ExportFondoCsvTipo = {
+  movimientos: 'movimientos',
+  arqueos: 'arqueos',
+} as const;
 

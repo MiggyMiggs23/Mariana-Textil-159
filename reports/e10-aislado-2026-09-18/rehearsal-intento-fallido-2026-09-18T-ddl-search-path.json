@@ -1,0 +1,28 @@
+{
+  "status": "FAIL",
+  "terminalExit": 1,
+  "startedAtUtc": "2026-09-18T17:36:13.307Z",
+  "commands": {
+    "review": "pnpm --filter @workspace/scripts exec tsx src/e10-rehearsal.mts --review",
+    "execute": "pnpm --filter @workspace/scripts exec tsx src/e10-rehearsal.mts --execute --ack E10_PINNED_RETAINED_COPY_ONLY"
+  },
+  "destination": {
+    "database": "e10_ensayo_20260918",
+    "dataDirectory": "/home/runner/workspace/.local/backups/e10-20260918-isolated/cluster",
+    "socket": "/tmp/e10-0918-pg",
+    "backendAddress": null,
+    "backendPort": null,
+    "nonTcp": true,
+    "systemIdentifier": "7686927739928200230",
+    "manifestSha256": "8e099439c71f67f81a619b047049d9e52d46208645ee3eef93b06982e46cba35"
+  },
+  "error": {
+    "name": "error",
+    "code": "42501",
+    "message": "permission denied to create \"pg_catalog.fondo_mariana\""
+  },
+  "failedStage": "authorized-e10-ddl-transaction",
+  "timings": {
+    "totalMilliseconds": 222.129071
+  }
+}

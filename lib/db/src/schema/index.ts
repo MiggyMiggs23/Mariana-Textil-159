@@ -13,6 +13,7 @@ export * from "./entradas";
 export * from "./etiquetas";
 export * from "./equipos";
 export * from "./enums";
+export * from "./fondo";
 export * from "./locations";
 export * from "./pagos-proveedor";
 export * from "./precio-historial";

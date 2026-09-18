@@ -98,3 +98,4 @@ src/pages/viajes.contract.test.ts
 src/proveedores-historial.contract.test.ts
 src/utilidad-nomenclature.contract.test.ts
 src/lib/credit-evidence.contract.test.ts
+src/components/fondo/fondo-summary.contract.test.ts

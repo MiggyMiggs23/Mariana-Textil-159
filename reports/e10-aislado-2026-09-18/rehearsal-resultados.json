@@ -1,0 +1,375 @@
+{
+  "status": "PASS",
+  "terminalExit": 0,
+  "startedAtUtc": "2026-09-18T17:57:36.531Z",
+  "commands": {
+    "review": "pnpm --filter @workspace/scripts exec tsx src/e10-rehearsal.mts --review",
+    "execute": "pnpm --filter @workspace/scripts exec tsx src/e10-rehearsal.mts --execute --ack E10_PINNED_RETAINED_COPY_ONLY"
+  },
+  "destination": {
+    "database": "e10_ensayo_20260918",
+    "dataDirectory": "/home/runner/workspace/.local/backups/e10-20260918-isolated/cluster",
+    "socket": "/tmp/e10-0918-pg",
+    "backendAddress": null,
+    "backendPort": null,
+    "nonTcp": true,
+    "systemIdentifier": "7686927739928200230",
+    "manifestSha256": "8e099439c71f67f81a619b047049d9e52d46208645ee3eef93b06982e46cba35"
+  },
+  "timings": {
+    "ddlMilliseconds": 2661.090829,
+    "truncateSupplementMilliseconds": null,
+    "totalMilliseconds": 2409.532937,
+    "totalScope": "final verification process; atomic DDL duration is preserved separately from its earlier attempt"
+  },
+  "resume": {
+    "priorEvidence": "reports/e10-aislado-2026-09-18/rehearsal-intento-fallido-2026-09-18T173642Z-bom.json",
+    "reason": "harness-only UTF-8 BOM decoding assertion corrected; DDL not repeated; append-only fixtures reused"
+  },
+  "truncateSupplement": {
+    "alreadyPresentAndVerified": true,
+    "timing": "Earlier actual application duration unavailable; no-op verification is not reported as application time."
+  },
+  "cases": {
+    "status": "PASS",
+    "elapsedMilliseconds": 1891.328164,
+    "timings": [
+      {
+        "name": "authorization-and-validation",
+        "milliseconds": 99.766231,
+        "assertions": 134
+      },
+      {
+        "name": "ledger-idempotency-and-inverse",
+        "milliseconds": 105.806707,
+        "assertions": 22
+      },
+      {
+        "name": "arqueo-persistence-stale-and-replay",
+        "milliseconds": 98.365359,
+        "assertions": 11
+      },
+      {
+        "name": "mixed-writes-and-race-inverse",
+        "milliseconds": 45.721567,
+        "assertions": 3
+      },
+      {
+        "name": "sql-immutability-and-fixed-location",
+        "milliseconds": 61.514981,
+        "assertions": 11
+      },
+      {
+        "name": "exports-and-confidential-audit-readers",
+        "milliseconds": 404.019604,
+        "assertions": 18
+      },
+      {
+        "name": "canonical-financial-readers-after-each-fondo-write",
+        "milliseconds": 751.095573,
+        "assertions": 8
+      },
+      {
+        "name": "negative-balance-and-insufficient-withdrawal",
+        "milliseconds": 40.605491,
+        "assertions": 4
+      }
+    ],
+    "assertionCount": 211,
+    "finalLedger": {
+      "saldo": "-100000",
+      "count": "16"
+    },
+    "evidence": {
+      "destination": {
+        "database": "e10_ensayo_20260918",
+        "dataDirectory": "/home/runner/workspace/.local/backups/e10-20260918-isolated/cluster",
+        "socket": "/tmp/e10-0918-pg",
+        "backendAddress": null,
+        "backendPort": null,
+        "nonTcp": true,
+        "systemIdentifier": "7686927739928200230",
+        "manifestSha256": "8e099439c71f67f81a619b047049d9e52d46208645ee3eef93b06982e46cba35"
+      },
+      "httpBoundary": {
+        "listener": "127.0.0.1:35931",
+        "authentication": "standalone in-process AuthContext; no login, renewal, user, or session writes",
+        "router": "actual createFondoRouter; no normal API index startup"
+      },
+      "retry": {
+        "resumedAfterHarnessAssertionFix": true,
+        "reason": "Prior run committed append-only fixtures before a harness-only BOM decoding assertion failed."
+      },
+      "conciliation": {
+        "itemCount": 12,
+        "sumCents": "-100000",
+        "saldo": "-1000.00"
+      },
+      "arqueos": {
+        "surplus": {
+          "id": "db479228-4dfd-4229-bba8-0fc40457c589",
+          "fondoId": "d5341229-8ade-4b32-b779-55740876e092",
+          "saldoSistema": "1250.25",
+          "efectivoContado": "1255.75",
+          "diferencia": "5.50",
+          "versionSaldo": "e63c414d-144f-4548-abb6-45757b117022",
+          "fecha": "2026-09-18T17:36:46.612Z",
+          "autor": {
+            "id": 1,
+            "nombre": "Administrador"
+          },
+          "motivo": "arqueo fixture sobrante"
+        },
+        "shortage": {
+          "id": "b97acafe-94c2-403c-92e8-8ee8ee8a46d6",
+          "fondoId": "d5341229-8ade-4b32-b779-55740876e092",
+          "saldoSistema": "1250.25",
+          "efectivoContado": "1240.00",
+          "diferencia": "-10.25",
+          "versionSaldo": "e63c414d-144f-4548-abb6-45757b117022",
+          "fecha": "2026-09-18T17:36:46.641Z",
+          "autor": {
+            "id": 1,
+            "nombre": "Administrador"
+          },
+          "motivo": "arqueo fixture faltante"
+        },
+        "persistedAfterNewConnection": true
+      },
+      "genericAuditBoundary": {
+        "rowsCreatedByFondoOnly": 14,
+        "nonAdminListDetailAndXlsxSourceExcluded": true,
+        "adminIncluded": true,
+        "note": "Production pure list/detail/XLSX-source query builders compiled and executed through connectExactE10; no singleton DB or requireSession."
+      },
+      "canonicalFinancialReaderProbes": [
+        {
+          "label": "after CAPITAL 123.45",
+          "movimientoId": "48043376-46bb-4bb4-9667-3402ff0b0c33",
+          "naturaleza": "INGRESO",
+          "importe": "123.45",
+          "readers": {
+            "ventas": "16000.00",
+            "contadoCobrado": "0.00",
+            "cobranzaClientes": "0.00",
+            "deudaClientes": "0.00",
+            "window": {
+              "desde": "2000-01-01T00:00:00.000Z",
+              "hasta": "2099-12-31T23:59:59.999Z",
+              "scope": "GLOBAL ADMIN, active clients"
+            },
+            "sources": {
+              "ventas": "production getSalesSummary().ventas",
+              "contadoCobrado": "production getSalesSummary().cobrado",
+              "cobranzaClientes": "production getDestinationCollectedAmount(..., CUENTAS_POR_COBRAR)",
+              "deudaClientes": "production readClientesCartera(...).resumen.totalCartera (FIFO ledger projection)",
+              "databaseAlias": "test-only esbuild alias to guarded SELECT/WITH-only pool; production files unchanged"
+            }
+          }
+        },
+        {
+          "label": "after inverse RETIRO 123.45",
+          "movimientoId": "da2da05b-90be-4bd2-b914-dfd970dbcbff",
+          "naturaleza": "RETIRO",
+          "importe": "123.45",
+          "readers": {
+            "ventas": "16000.00",
+            "contadoCobrado": "0.00",
+            "cobranzaClientes": "0.00",
+            "deudaClientes": "0.00",
+            "window": {
+              "desde": "2000-01-01T00:00:00.000Z",
+              "hasta": "2099-12-31T23:59:59.999Z",
+              "scope": "GLOBAL ADMIN, active clients"
+            },
+            "sources": {
+              "ventas": "production getSalesSummary().ventas",
+              "contadoCobrado": "production getSalesSummary().cobrado",
+              "cobranzaClientes": "production getDestinationCollectedAmount(..., CUENTAS_POR_COBRAR)",
+              "deudaClientes": "production readClientesCartera(...).resumen.totalCartera (FIFO ledger projection)",
+              "databaseAlias": "test-only esbuild alias to guarded SELECT/WITH-only pool; production files unchanged"
+            }
+          }
+        },
+        {
+          "label": "after CAPITAL 23.45",
+          "movimientoId": "8b154100-c602-45d8-adc7-43b070cf1111",
+          "naturaleza": "INGRESO",
+          "importe": "23.45",
+          "readers": {
+            "ventas": "16000.00",
+            "contadoCobrado": "0.00",
+            "cobranzaClientes": "0.00",
+            "deudaClientes": "0.00",
+            "window": {
+              "desde": "2000-01-01T00:00:00.000Z",
+              "hasta": "2099-12-31T23:59:59.999Z",
+              "scope": "GLOBAL ADMIN, active clients"
+            },
+            "sources": {
+              "ventas": "production getSalesSummary().ventas",
+              "contadoCobrado": "production getSalesSummary().cobrado",
+              "cobranzaClientes": "production getDestinationCollectedAmount(..., CUENTAS_POR_COBRAR)",
+              "deudaClientes": "production readClientesCartera(...).resumen.totalCartera (FIFO ledger projection)",
+              "databaseAlias": "test-only esbuild alias to guarded SELECT/WITH-only pool; production files unchanged"
+            }
+          }
+        },
+        {
+          "label": "after inverse RETIRO 23.45",
+          "movimientoId": "ece91c89-461d-4e48-9baf-3ce0d1a75eb8",
+          "naturaleza": "RETIRO",
+          "importe": "23.45",
+          "readers": {
+            "ventas": "16000.00",
+            "contadoCobrado": "0.00",
+            "cobranzaClientes": "0.00",
+            "deudaClientes": "0.00",
+            "window": {
+              "desde": "2000-01-01T00:00:00.000Z",
+              "hasta": "2099-12-31T23:59:59.999Z",
+              "scope": "GLOBAL ADMIN, active clients"
+            },
+            "sources": {
+              "ventas": "production getSalesSummary().ventas",
+              "contadoCobrado": "production getSalesSummary().cobrado",
+              "cobranzaClientes": "production getDestinationCollectedAmount(..., CUENTAS_POR_COBRAR)",
+              "deudaClientes": "production readClientesCartera(...).resumen.totalCartera (FIFO ledger projection)",
+              "databaseAlias": "test-only esbuild alias to guarded SELECT/WITH-only pool; production files unchanged"
+            }
+          }
+        }
+      ],
+      "preservation": {
+        "legacyReaders": {
+          "before": {
+            "ventas": "16000.00",
+            "contadoCobrado": "0.00",
+            "cobranzaClientes": "0.00",
+            "deudaClientes": "0.00",
+            "window": {
+              "desde": "2000-01-01T00:00:00.000Z",
+              "hasta": "2099-12-31T23:59:59.999Z",
+              "scope": "GLOBAL ADMIN, active clients"
+            },
+            "sources": {
+              "ventas": "production getSalesSummary().ventas",
+              "contadoCobrado": "production getSalesSummary().cobrado",
+              "cobranzaClientes": "production getDestinationCollectedAmount(..., CUENTAS_POR_COBRAR)",
+              "deudaClientes": "production readClientesCartera(...).resumen.totalCartera (FIFO ledger projection)",
+              "databaseAlias": "test-only esbuild alias to guarded SELECT/WITH-only pool; production files unchanged"
+            }
+          },
+          "after": {
+            "ventas": "16000.00",
+            "contadoCobrado": "0.00",
+            "cobranzaClientes": "0.00",
+            "deudaClientes": "0.00",
+            "window": {
+              "desde": "2000-01-01T00:00:00.000Z",
+              "hasta": "2099-12-31T23:59:59.999Z",
+              "scope": "GLOBAL ADMIN, active clients"
+            },
+            "sources": {
+              "ventas": "production getSalesSummary().ventas",
+              "contadoCobrado": "production getSalesSummary().cobrado",
+              "cobranzaClientes": "production getDestinationCollectedAmount(..., CUENTAS_POR_COBRAR)",
+              "deudaClientes": "production readClientesCartera(...).resumen.totalCartera (FIFO ledger projection)",
+              "databaseAlias": "test-only esbuild alias to guarded SELECT/WITH-only pool; production files unchanged"
+            }
+          },
+          "unchanged": true
+        },
+        "accounts": {
+          "before": {
+            "usuarios": {
+              "feasible": true,
+              "count": "31",
+              "digest": "33f08016f438af2d35d10d6646d56a00"
+            },
+            "sesiones": {
+              "feasible": true,
+              "count": "0",
+              "digest": "d41d8cd98f00b204e9800998ecf8427e"
+            },
+            "roles": {
+              "feasible": false,
+              "reason": "table absent"
+            }
+          },
+          "after": {
+            "usuarios": {
+              "feasible": true,
+              "count": "31",
+              "digest": "33f08016f438af2d35d10d6646d56a00"
+            },
+            "sesiones": {
+              "feasible": true,
+              "count": "0",
+              "digest": "d41d8cd98f00b204e9800998ecf8427e"
+            },
+            "roles": {
+              "feasible": false,
+              "reason": "table absent"
+            }
+          },
+          "unchanged": true
+        }
+      }
+    },
+    "fixturePolicy": "append-only Fondo and associated auditoria only; retained; no cleanup DELETE"
+  },
+  "baseline": {
+    "originalTableCount": 66,
+    "afterTableCount": 69,
+    "originalSchemaSha256": "6baae79f7ccbe2e44e0657c81b5afe621df17b7c817b1454dfe03302e7418a6e",
+    "afterSchemaSha256": "d05e73d4b581044f700ce424a359019514a423348d077250030badcf95d08f6a",
+    "objectsBefore": {
+      "tables": {
+        "count": 66,
+        "sha256": "4a1f44d148db7899fae2474d35d1f4d4de6d42ab8f3088589a0fad4c50f58485"
+      },
+      "tableEvidence": {
+        "count": 66,
+        "sha256": "e5c807b958ef8760e6f698e1db49db4c343f1a061ef00d65eca1133356c19d34"
+      },
+      "columns": {
+        "count": 671,
+        "sha256": "6baae79f7ccbe2e44e0657c81b5afe621df17b7c817b1454dfe03302e7418a6e"
+      },
+      "constraints": {
+        "count": 340,
+        "sha256": "15336a0fa7d59b660d9bbb1244536d157896e04e270c5d889aad4051146440f5"
+      },
+      "indexes": {
+        "count": 232,
+        "sha256": "53e60b1951c910524a9bbc4f72b7e3cbf5ef100cd9ab42615696f5e3cfe14d4f"
+      },
+      "functions": {
+        "count": 22,
+        "sha256": "a31805ceaf0f7096efb469a33479ff0d6b7fe6981e44c2bc29e71dc61f947fd0"
+      },
+      "triggers": {
+        "count": 26,
+        "sha256": "5efe5a24d6656eb53b9d00e6ce5858d9ea74db2cc518938c48c3a29eebb40726"
+      },
+      "sequences": {
+        "count": 47,
+        "sha256": "98b9eeefc640f5d58e5f3a5d78a1b073417a1b3af2516803d8f1099585f43ac3"
+      }
+    },
+    "objectsAfter": {
+      "tables": 69,
+      "triggers": 34,
+      "functions": 62
+    },
+    "addedTables": [
+      "fondo_mariana",
+      "fondo_movimientos",
+      "fondo_arqueos"
+    ],
+    "originalRowsPreserved": true,
+    "onlyLegacyAppendAllowed": "auditoria/FONDO"
+  },
+  "finishedAtUtc": "2026-09-18T17:57:38.941Z"
+}

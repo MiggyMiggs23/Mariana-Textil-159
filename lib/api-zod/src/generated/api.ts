@@ -12080,3 +12080,438 @@ export const DeleteRegistroInactivoResponse = zod.object({
 })
 
 
+export const getFondoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoResponseSaldoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoResponseVersionSaldoOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoResponseTotalMovimientosMin = 0;
+
+export const getFondoResponseUltimoArqueoOneIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoResponseUltimoArqueoOneFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoResponseUltimoArqueoOneSaldoSistemaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoResponseUltimoArqueoOneEfectivoContadoMax = 20;
+
+
+export const getFondoResponseUltimoArqueoOneEfectivoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoResponseUltimoArqueoOneDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoResponseUltimoArqueoOneVersionSaldoOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoResponseUltimoArqueoOneMotivoMax = 500;
+
+
+
+export const GetFondoResponse = zod.object({
+  "fondo": zod.object({
+  "id": zod.string().regex(getFondoResponseFondoIdRegExp),
+  "nombre": zod.literal("Fondo de Mariana"),
+  "ubicacion": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+})
+}),
+  "saldo": zod.string().regex(getFondoResponseSaldoRegExp),
+  "versionSaldo": zod.union([zod.string().regex(getFondoResponseVersionSaldoOneRegExp),zod.null()]),
+  "totalMovimientos": zod.number().min(getFondoResponseTotalMovimientosMin),
+  "ultimoMovimientoFecha": zod.coerce.date().nullable(),
+  "ultimoArqueo": zod.union([zod.object({
+  "id": zod.string().regex(getFondoResponseUltimoArqueoOneIdRegExp),
+  "fondoId": zod.string().regex(getFondoResponseUltimoArqueoOneFondoIdRegExp),
+  "saldoSistema": zod.string().regex(getFondoResponseUltimoArqueoOneSaldoSistemaRegExp),
+  "efectivoContado": zod.string().max(getFondoResponseUltimoArqueoOneEfectivoContadoMax).regex(getFondoResponseUltimoArqueoOneEfectivoContadoRegExp),
+  "diferencia": zod.string().regex(getFondoResponseUltimoArqueoOneDiferenciaRegExp),
+  "versionSaldo": zod.union([zod.string().regex(getFondoResponseUltimoArqueoOneVersionSaldoOneRegExp),zod.null()]),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "motivo": zod.string().min(1).max(getFondoResponseUltimoArqueoOneMotivoMax)
+}),zod.null()])
+})
+
+
+export const listFondoMovimientosQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listFondoMovimientosQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
+export const ListFondoMovimientosQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listFondoMovimientosQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(listFondoMovimientosQueryHastaRegExp).optional(),
+  "naturaleza": zod.enum(['INGRESO', 'RETIRO']).optional(),
+  "categoria": zod.enum(['SALDO_INICIAL', 'CAPITAL', 'OTRO_INGRESO', 'RETIRO']).optional()
+})
+
+export const listFondoMovimientosResponseItemsItemIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoMovimientosResponseItemsItemOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
+export const listFondoMovimientosResponseItemsItemFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoMovimientosResponseItemsItemImporteMax = 20;
+
+
+export const listFondoMovimientosResponseItemsItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listFondoMovimientosResponseItemsItemImporteFirmadoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listFondoMovimientosResponseItemsItemMotivoMax = 500;
+
+export const listFondoMovimientosResponseItemsItemConciliacionInicialOneEfectivoFisicoContadoMax = 20;
+
+
+export const listFondoMovimientosResponseItemsItemConciliacionInicialOneEfectivoFisicoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listFondoMovimientosResponseItemsItemConciliacionInicialOneEvidenciaMax = 1000;
+
+export const listFondoMovimientosResponseItemsItemOriginalIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoMovimientosResponseItemsItemInversoIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoMovimientosResponseSaldoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listFondoMovimientosResponseVersionSaldoOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoMovimientosResponseTotalMin = 0;
+
+
+
+export const ListFondoMovimientosResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string().regex(listFondoMovimientosResponseItemsItemIdRegExp),
+  "ordinal": zod.string().regex(listFondoMovimientosResponseItemsItemOrdinalRegExp),
+  "fondoId": zod.string().regex(listFondoMovimientosResponseItemsItemFondoIdRegExp),
+  "naturaleza": zod.enum(['INGRESO', 'RETIRO']),
+  "categoria": zod.enum(['SALDO_INICIAL', 'CAPITAL', 'OTRO_INGRESO', 'RETIRO']),
+  "importe": zod.string().max(listFondoMovimientosResponseItemsItemImporteMax).regex(listFondoMovimientosResponseItemsItemImporteRegExp),
+  "importeFirmado": zod.string().regex(listFondoMovimientosResponseItemsItemImporteFirmadoRegExp),
+  "motivo": zod.string().min(1).max(listFondoMovimientosResponseItemsItemMotivoMax),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "esInverso": zod.boolean(),
+  "advertencia": zod.union([zod.literal('Corrección contable; no representa un movimiento físico nuevo.'),zod.literal(null)]).nullable(),
+  "conciliacionInicial": zod.union([zod.object({
+  "efectivoFisicoContado": zod.string().max(listFondoMovimientosResponseItemsItemConciliacionInicialOneEfectivoFisicoContadoMax).regex(listFondoMovimientosResponseItemsItemConciliacionInicialOneEfectivoFisicoContadoRegExp),
+  "declaracionSinDuplicacion": zod.literal(true),
+  "evidencia": zod.string().min(1).max(listFondoMovimientosResponseItemsItemConciliacionInicialOneEvidenciaMax)
+}),zod.null()]),
+  "originalId": zod.union([zod.string().regex(listFondoMovimientosResponseItemsItemOriginalIdOneRegExp),zod.null()]),
+  "inversoId": zod.union([zod.string().regex(listFondoMovimientosResponseItemsItemInversoIdOneRegExp),zod.null()])
+})),
+  "saldo": zod.string().regex(listFondoMovimientosResponseSaldoRegExp),
+  "versionSaldo": zod.union([zod.string().regex(listFondoMovimientosResponseVersionSaldoOneRegExp),zod.null()]),
+  "total": zod.number().min(listFondoMovimientosResponseTotalMin)
+})
+
+
+export const createFondoMovimientoBodyIdempotencyKeyRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoMovimientoBodyImporteMax = 20;
+
+
+export const createFondoMovimientoBodyImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoMovimientoBodyMotivoMax = 500;
+
+export const createFondoMovimientoBodyConciliacionInicialEfectivoFisicoContadoMax = 20;
+
+
+export const createFondoMovimientoBodyConciliacionInicialEfectivoFisicoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoMovimientoBodyConciliacionInicialEvidenciaMax = 1000;
+
+
+
+export const CreateFondoMovimientoBody = zod.object({
+  "idempotencyKey": zod.string().regex(createFondoMovimientoBodyIdempotencyKeyRegExp),
+  "categoria": zod.enum(['SALDO_INICIAL', 'CAPITAL', 'OTRO_INGRESO', 'RETIRO']),
+  "importe": zod.string().max(createFondoMovimientoBodyImporteMax).regex(createFondoMovimientoBodyImporteRegExp),
+  "motivo": zod.string().min(1).max(createFondoMovimientoBodyMotivoMax),
+  "conciliacionInicial": zod.object({
+  "efectivoFisicoContado": zod.string().max(createFondoMovimientoBodyConciliacionInicialEfectivoFisicoContadoMax).regex(createFondoMovimientoBodyConciliacionInicialEfectivoFisicoContadoRegExp),
+  "declaracionSinDuplicacion": zod.literal(true),
+  "evidencia": zod.string().min(1).max(createFondoMovimientoBodyConciliacionInicialEvidenciaMax)
+}).optional()
+})
+
+export const createFondoMovimientoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoMovimientoResponseOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
+export const createFondoMovimientoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoMovimientoResponseImporteMax = 20;
+
+
+export const createFondoMovimientoResponseImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoMovimientoResponseImporteFirmadoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoMovimientoResponseMotivoMax = 500;
+
+export const createFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoMax = 20;
+
+
+export const createFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoMovimientoResponseConciliacionInicialOneEvidenciaMax = 1000;
+
+export const createFondoMovimientoResponseOriginalIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoMovimientoResponseInversoIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+
+
+export const CreateFondoMovimientoResponse = zod.object({
+  "id": zod.string().regex(createFondoMovimientoResponseIdRegExp),
+  "ordinal": zod.string().regex(createFondoMovimientoResponseOrdinalRegExp),
+  "fondoId": zod.string().regex(createFondoMovimientoResponseFondoIdRegExp),
+  "naturaleza": zod.enum(['INGRESO', 'RETIRO']),
+  "categoria": zod.enum(['SALDO_INICIAL', 'CAPITAL', 'OTRO_INGRESO', 'RETIRO']),
+  "importe": zod.string().max(createFondoMovimientoResponseImporteMax).regex(createFondoMovimientoResponseImporteRegExp),
+  "importeFirmado": zod.string().regex(createFondoMovimientoResponseImporteFirmadoRegExp),
+  "motivo": zod.string().min(1).max(createFondoMovimientoResponseMotivoMax),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "esInverso": zod.boolean(),
+  "advertencia": zod.union([zod.literal('Corrección contable; no representa un movimiento físico nuevo.'),zod.literal(null)]).nullable(),
+  "conciliacionInicial": zod.union([zod.object({
+  "efectivoFisicoContado": zod.string().max(createFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoMax).regex(createFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoRegExp),
+  "declaracionSinDuplicacion": zod.literal(true),
+  "evidencia": zod.string().min(1).max(createFondoMovimientoResponseConciliacionInicialOneEvidenciaMax)
+}),zod.null()]),
+  "originalId": zod.union([zod.string().regex(createFondoMovimientoResponseOriginalIdOneRegExp),zod.null()]),
+  "inversoId": zod.union([zod.string().regex(createFondoMovimientoResponseInversoIdOneRegExp),zod.null()])
+})
+
+
+export const getFondoMovimientoPathIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+
+
+export const GetFondoMovimientoParams = zod.object({
+  "id": zod.coerce.string().regex(getFondoMovimientoPathIdRegExp)
+})
+
+export const getFondoMovimientoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoMovimientoResponseOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
+export const getFondoMovimientoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoMovimientoResponseImporteMax = 20;
+
+
+export const getFondoMovimientoResponseImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoMovimientoResponseImporteFirmadoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoMovimientoResponseMotivoMax = 500;
+
+export const getFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoMax = 20;
+
+
+export const getFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoMovimientoResponseConciliacionInicialOneEvidenciaMax = 1000;
+
+export const getFondoMovimientoResponseOriginalIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoMovimientoResponseInversoIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+
+
+export const GetFondoMovimientoResponse = zod.object({
+  "id": zod.string().regex(getFondoMovimientoResponseIdRegExp),
+  "ordinal": zod.string().regex(getFondoMovimientoResponseOrdinalRegExp),
+  "fondoId": zod.string().regex(getFondoMovimientoResponseFondoIdRegExp),
+  "naturaleza": zod.enum(['INGRESO', 'RETIRO']),
+  "categoria": zod.enum(['SALDO_INICIAL', 'CAPITAL', 'OTRO_INGRESO', 'RETIRO']),
+  "importe": zod.string().max(getFondoMovimientoResponseImporteMax).regex(getFondoMovimientoResponseImporteRegExp),
+  "importeFirmado": zod.string().regex(getFondoMovimientoResponseImporteFirmadoRegExp),
+  "motivo": zod.string().min(1).max(getFondoMovimientoResponseMotivoMax),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "esInverso": zod.boolean(),
+  "advertencia": zod.union([zod.literal('Corrección contable; no representa un movimiento físico nuevo.'),zod.literal(null)]).nullable(),
+  "conciliacionInicial": zod.union([zod.object({
+  "efectivoFisicoContado": zod.string().max(getFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoMax).regex(getFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoRegExp),
+  "declaracionSinDuplicacion": zod.literal(true),
+  "evidencia": zod.string().min(1).max(getFondoMovimientoResponseConciliacionInicialOneEvidenciaMax)
+}),zod.null()]),
+  "originalId": zod.union([zod.string().regex(getFondoMovimientoResponseOriginalIdOneRegExp),zod.null()]),
+  "inversoId": zod.union([zod.string().regex(getFondoMovimientoResponseInversoIdOneRegExp),zod.null()])
+})
+
+
+export const reverseFondoMovimientoPathIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+
+
+export const ReverseFondoMovimientoParams = zod.object({
+  "id": zod.coerce.string().regex(reverseFondoMovimientoPathIdRegExp)
+})
+
+export const reverseFondoMovimientoBodyIdempotencyKeyRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const reverseFondoMovimientoBodyMotivoMax = 500;
+
+
+
+export const ReverseFondoMovimientoBody = zod.object({
+  "idempotencyKey": zod.string().regex(reverseFondoMovimientoBodyIdempotencyKeyRegExp),
+  "motivo": zod.string().min(1).max(reverseFondoMovimientoBodyMotivoMax)
+})
+
+export const reverseFondoMovimientoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const reverseFondoMovimientoResponseOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
+export const reverseFondoMovimientoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const reverseFondoMovimientoResponseImporteMax = 20;
+
+
+export const reverseFondoMovimientoResponseImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const reverseFondoMovimientoResponseImporteFirmadoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const reverseFondoMovimientoResponseMotivoMax = 500;
+
+export const reverseFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoMax = 20;
+
+
+export const reverseFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const reverseFondoMovimientoResponseConciliacionInicialOneEvidenciaMax = 1000;
+
+export const reverseFondoMovimientoResponseOriginalIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const reverseFondoMovimientoResponseInversoIdOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+
+
+export const ReverseFondoMovimientoResponse = zod.object({
+  "id": zod.string().regex(reverseFondoMovimientoResponseIdRegExp),
+  "ordinal": zod.string().regex(reverseFondoMovimientoResponseOrdinalRegExp),
+  "fondoId": zod.string().regex(reverseFondoMovimientoResponseFondoIdRegExp),
+  "naturaleza": zod.enum(['INGRESO', 'RETIRO']),
+  "categoria": zod.enum(['SALDO_INICIAL', 'CAPITAL', 'OTRO_INGRESO', 'RETIRO']),
+  "importe": zod.string().max(reverseFondoMovimientoResponseImporteMax).regex(reverseFondoMovimientoResponseImporteRegExp),
+  "importeFirmado": zod.string().regex(reverseFondoMovimientoResponseImporteFirmadoRegExp),
+  "motivo": zod.string().min(1).max(reverseFondoMovimientoResponseMotivoMax),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "esInverso": zod.boolean(),
+  "advertencia": zod.union([zod.literal('Corrección contable; no representa un movimiento físico nuevo.'),zod.literal(null)]).nullable(),
+  "conciliacionInicial": zod.union([zod.object({
+  "efectivoFisicoContado": zod.string().max(reverseFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoMax).regex(reverseFondoMovimientoResponseConciliacionInicialOneEfectivoFisicoContadoRegExp),
+  "declaracionSinDuplicacion": zod.literal(true),
+  "evidencia": zod.string().min(1).max(reverseFondoMovimientoResponseConciliacionInicialOneEvidenciaMax)
+}),zod.null()]),
+  "originalId": zod.union([zod.string().regex(reverseFondoMovimientoResponseOriginalIdOneRegExp),zod.null()]),
+  "inversoId": zod.union([zod.string().regex(reverseFondoMovimientoResponseInversoIdOneRegExp),zod.null()])
+})
+
+
+export const listFondoArqueosQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listFondoArqueosQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
+export const ListFondoArqueosQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listFondoArqueosQueryDesdeRegExp).optional(),
+  "hasta": zod.coerce.string().regex(listFondoArqueosQueryHastaRegExp).optional()
+})
+
+export const listFondoArqueosResponseItemsItemIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoArqueosResponseItemsItemFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoArqueosResponseItemsItemSaldoSistemaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listFondoArqueosResponseItemsItemEfectivoContadoMax = 20;
+
+
+export const listFondoArqueosResponseItemsItemEfectivoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listFondoArqueosResponseItemsItemDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listFondoArqueosResponseItemsItemVersionSaldoOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const listFondoArqueosResponseItemsItemMotivoMax = 500;
+
+export const listFondoArqueosResponseTotalMin = 0;
+
+
+
+export const ListFondoArqueosResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string().regex(listFondoArqueosResponseItemsItemIdRegExp),
+  "fondoId": zod.string().regex(listFondoArqueosResponseItemsItemFondoIdRegExp),
+  "saldoSistema": zod.string().regex(listFondoArqueosResponseItemsItemSaldoSistemaRegExp),
+  "efectivoContado": zod.string().max(listFondoArqueosResponseItemsItemEfectivoContadoMax).regex(listFondoArqueosResponseItemsItemEfectivoContadoRegExp),
+  "diferencia": zod.string().regex(listFondoArqueosResponseItemsItemDiferenciaRegExp),
+  "versionSaldo": zod.union([zod.string().regex(listFondoArqueosResponseItemsItemVersionSaldoOneRegExp),zod.null()]),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "motivo": zod.string().min(1).max(listFondoArqueosResponseItemsItemMotivoMax)
+})),
+  "total": zod.number().min(listFondoArqueosResponseTotalMin)
+})
+
+
+export const createFondoArqueoBodyIdempotencyKeyRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoArqueoBodyEfectivoContadoMax = 20;
+
+
+export const createFondoArqueoBodyEfectivoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoArqueoBodyExpectedVersionSaldoOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoArqueoBodyMotivoMax = 500;
+
+
+
+export const CreateFondoArqueoBody = zod.object({
+  "idempotencyKey": zod.string().regex(createFondoArqueoBodyIdempotencyKeyRegExp),
+  "efectivoContado": zod.string().max(createFondoArqueoBodyEfectivoContadoMax).regex(createFondoArqueoBodyEfectivoContadoRegExp),
+  "expectedVersionSaldo": zod.union([zod.string().regex(createFondoArqueoBodyExpectedVersionSaldoOneRegExp),zod.null()]),
+  "motivo": zod.string().min(1).max(createFondoArqueoBodyMotivoMax)
+})
+
+export const createFondoArqueoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoArqueoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoArqueoResponseSaldoSistemaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoArqueoResponseEfectivoContadoMax = 20;
+
+
+export const createFondoArqueoResponseEfectivoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoArqueoResponseDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createFondoArqueoResponseVersionSaldoOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const createFondoArqueoResponseMotivoMax = 500;
+
+
+
+export const CreateFondoArqueoResponse = zod.object({
+  "id": zod.string().regex(createFondoArqueoResponseIdRegExp),
+  "fondoId": zod.string().regex(createFondoArqueoResponseFondoIdRegExp),
+  "saldoSistema": zod.string().regex(createFondoArqueoResponseSaldoSistemaRegExp),
+  "efectivoContado": zod.string().max(createFondoArqueoResponseEfectivoContadoMax).regex(createFondoArqueoResponseEfectivoContadoRegExp),
+  "diferencia": zod.string().regex(createFondoArqueoResponseDiferenciaRegExp),
+  "versionSaldo": zod.union([zod.string().regex(createFondoArqueoResponseVersionSaldoOneRegExp),zod.null()]),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "motivo": zod.string().min(1).max(createFondoArqueoResponseMotivoMax)
+})
+
+
+export const getFondoArqueoPathIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+
+
+export const GetFondoArqueoParams = zod.object({
+  "id": zod.coerce.string().regex(getFondoArqueoPathIdRegExp)
+})
+
+export const getFondoArqueoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoArqueoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoArqueoResponseSaldoSistemaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoArqueoResponseEfectivoContadoMax = 20;
+
+
+export const getFondoArqueoResponseEfectivoContadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoArqueoResponseDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getFondoArqueoResponseVersionSaldoOneRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
+export const getFondoArqueoResponseMotivoMax = 500;
+
+
+
+export const GetFondoArqueoResponse = zod.object({
+  "id": zod.string().regex(getFondoArqueoResponseIdRegExp),
+  "fondoId": zod.string().regex(getFondoArqueoResponseFondoIdRegExp),
+  "saldoSistema": zod.string().regex(getFondoArqueoResponseSaldoSistemaRegExp),
+  "efectivoContado": zod.string().max(getFondoArqueoResponseEfectivoContadoMax).regex(getFondoArqueoResponseEfectivoContadoRegExp),
+  "diferencia": zod.string().regex(getFondoArqueoResponseDiferenciaRegExp),
+  "versionSaldo": zod.union([zod.string().regex(getFondoArqueoResponseVersionSaldoOneRegExp),zod.null()]),
+  "fecha": zod.coerce.date(),
+  "autor": zod.object({
+  "id": zod.number(),
+  "nombre": zod.string()
+}),
+  "motivo": zod.string().min(1).max(getFondoArqueoResponseMotivoMax)
+})
+
+
+export const ExportFondoCsvQueryParams = zod.object({
+  "tipo": zod.enum(['movimientos', 'arqueos'])
+})
+
+export const ExportFondoCsvResponse = zod.unknown()
+
+

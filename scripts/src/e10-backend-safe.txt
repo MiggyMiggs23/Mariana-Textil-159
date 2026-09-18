@@ -1,0 +1,8 @@
+# E10 reviewed pure/offline backend tests. Paths are relative to artifacts/api-server.
+src/lib/credit-evidence-contract.test.ts
+src/lib/credit-evidence.mock.test.ts
+src/lib/credit-evidence-read.test.ts
+src/routes/e1-customer-mutations.offline.test.ts
+src/e10-generic-readers-privacy.contract.test.ts
+src/lib/fondo.test.ts
+../../lib/api-spec/e1-contract.test.ts

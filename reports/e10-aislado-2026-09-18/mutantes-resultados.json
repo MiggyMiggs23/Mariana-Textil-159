@@ -1,0 +1,218 @@
+{
+  "status": "PARTIAL",
+  "boundary": "actual copied source trees; pure contract process; no DB connection",
+  "fixedGreen": {
+    "exitCode": 0,
+    "milliseconds": 907.73318,
+    "stdoutTail": [
+      "ℹ skipped 0",
+      "ℹ todo 0",
+      "ℹ duration_ms 516.817321"
+    ]
+  },
+  "mutants": [
+    {
+      "name": "cent-money-number-rounding",
+      "file": "src/lib/fondo.ts",
+      "from": "const result = BigInt(units) * 100n + BigInt(cents);",
+      "to": "const result = BigInt(Math.trunc(Number(units) * 100 + Number(cents)));",
+      "detects": "exact cent conversion beyond Number safe integer range",
+      "processNonzero": true,
+      "proofKind": "observable pure behavior",
+      "canonicalBehaviorRed": true,
+      "exitCode": 1,
+      "milliseconds": 518.749995,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-intrinsic-admin-guard",
+      "file": "src/routes/fondo.ts",
+      "from": "if (!req.auth || req.auth.user.rol !== \"ADMIN\") {\n    res.status(403)",
+      "to": "if (false) {\n    res.status(403)",
+      "detects": "standalone intrinsic ADMIN denial before router data access",
+      "processNonzero": true,
+      "proofKind": "observable pure behavior",
+      "canonicalBehaviorRed": true,
+      "exitCode": 1,
+      "milliseconds": 565.49868,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-csv-formula-neutralization",
+      "file": "src/routes/fondo.ts",
+      "from": "return /^[\\u0000-\\u0020]*[=+\\-@]/.test(value) ? `'${value}` : value;",
+      "to": "return value;",
+      "detects": "formula-leading user text in CSV",
+      "processNonzero": true,
+      "proofKind": "observable pure behavior",
+      "canonicalBehaviorRed": true,
+      "exitCode": 1,
+      "milliseconds": 519.722633,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-initial-reconciliation-presentation",
+      "file": "src/lib/fondo.ts",
+      "from": "conciliacionInicial: row.conciliacion_inicial,",
+      "to": "conciliacionInicial: undefined,",
+      "detects": "initial reconciliation evidence remains reachable in detail",
+      "processNonzero": true,
+      "proofKind": "observable pure behavior",
+      "canonicalBehaviorRed": true,
+      "exitCode": 1,
+      "milliseconds": 635.397636,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "collapsed-idempotency-canonical-payload",
+      "file": "src/lib/fondo.ts",
+      "from": "export function canonicalPayload(value: unknown): string {",
+      "to": "export function canonicalPayload(value: unknown): string { if (value && typeof value === \"object\") return \"{}\";",
+      "detects": "changed idempotency payload differs from original",
+      "processNonzero": true,
+      "proofKind": "observable pure behavior",
+      "canonicalBehaviorRed": true,
+      "exitCode": 1,
+      "milliseconds": 507.44994,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-site-and-unknown-query-validation",
+      "file": "src/routes/fondo.ts",
+      "from": "const strictEmpty = z.object({}).strict();",
+      "to": "const strictEmpty = z.object({}).passthrough();",
+      "detects": "source-level strict unknown query/site rejection guard",
+      "processNonzero": true,
+      "proofKind": "source-architecture only (not canonical behavior proof)",
+      "canonicalBehaviorRed": false,
+      "exitCode": 1,
+      "milliseconds": 584.499913,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-inverse-of-inverse-guard",
+      "file": "src/lib/fondo.ts",
+      "from": "if (original.original_id) throw new FondoError",
+      "to": "if (false && original.original_id) throw new FondoError",
+      "detects": "source-level inverse immutability guard",
+      "processNonzero": true,
+      "proofKind": "source-architecture only (not canonical behavior proof)",
+      "canonicalBehaviorRed": false,
+      "exitCode": 1,
+      "milliseconds": 613.804426,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-persisted-arqueo-difference",
+      "file": "src/lib/fondo.ts",
+      "from": "const counted = parseMoney(input.efectivoContado); const difference = counted - state.saldo;",
+      "to": "const counted = parseMoney(input.efectivoContado); const difference = 0n;",
+      "detects": "source-level counted-minus-book persisted difference",
+      "processNonzero": true,
+      "proofKind": "source-architecture only (not canonical behavior proof)",
+      "canonicalBehaviorRed": false,
+      "exitCode": 1,
+      "milliseconds": 630.999077,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-stale-version-check",
+      "file": "src/lib/fondo.ts",
+      "from": "if (state.version !== input.expectedVersionSaldo) throw new FondoError",
+      "to": "if (false) throw new FondoError",
+      "detects": "source-level stale displayed-version conflict",
+      "processNonzero": true,
+      "proofKind": "source-architecture only (not canonical behavior proof)",
+      "canonicalBehaviorRed": false,
+      "exitCode": 1,
+      "milliseconds": 477.156189,
+      "stderrTail": [
+        ""
+      ]
+    },
+    {
+      "name": "removed-normal-withdrawal-invariant",
+      "file": "src/lib/fondo.ts",
+      "from": "if (naturaleza === \"RETIRO\" && state.saldo < amount) throw new FondoError",
+      "to": "if (false) throw new FondoError",
+      "detects": "source-level insufficient normal withdrawal guard",
+      "processNonzero": true,
+      "proofKind": "source-architecture only (not canonical behavior proof)",
+      "canonicalBehaviorRed": false,
+      "exitCode": 1,
+      "milliseconds": 489.309585,
+      "stderrTail": [
+        ""
+      ]
+    }
+  ],
+  "exactBehaviorCoverage": [
+    {
+      "name": "cent-money-number-rounding",
+      "detects": "exact cent conversion beyond Number safe integer range"
+    },
+    {
+      "name": "removed-intrinsic-admin-guard",
+      "detects": "standalone intrinsic ADMIN denial before router data access"
+    },
+    {
+      "name": "removed-csv-formula-neutralization",
+      "detects": "formula-leading user text in CSV"
+    },
+    {
+      "name": "removed-initial-reconciliation-presentation",
+      "detects": "initial reconciliation evidence remains reachable in detail"
+    },
+    {
+      "name": "collapsed-idempotency-canonical-payload",
+      "detects": "changed idempotency payload differs from original"
+    }
+  ],
+  "architectureOnlyNonzero": [
+    {
+      "name": "removed-site-and-unknown-query-validation",
+      "detects": "source-level strict unknown query/site rejection guard"
+    },
+    {
+      "name": "removed-inverse-of-inverse-guard",
+      "detects": "source-level inverse immutability guard"
+    },
+    {
+      "name": "removed-persisted-arqueo-difference",
+      "detects": "source-level counted-minus-book persisted difference"
+    },
+    {
+      "name": "removed-stale-version-check",
+      "detects": "source-level stale displayed-version conflict"
+    },
+    {
+      "name": "removed-normal-withdrawal-invariant",
+      "detects": "source-level insufficient normal withdrawal guard"
+    }
+  ],
+  "blockedCanonicalBehaviorProof": [
+    "removed-site-and-unknown-query-validation",
+    "removed-inverse-of-inverse-guard",
+    "removed-persisted-arqueo-difference",
+    "removed-stale-version-check",
+    "removed-normal-withdrawal-invariant",
+    "database-level trigger removal mutants",
+    "simultaneous scheduling mutant"
+  ]
+}

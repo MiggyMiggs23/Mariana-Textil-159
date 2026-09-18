@@ -1786,3 +1786,17 @@ mtime_ms = 1789751490220
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/16184cbb-dac0-4abf-b115-a17722283886/303ca960-97fb-49b8-ba17-db81eded3a5f"
 storage_version_token = "1789751512073480"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "pr_v7LQ_bgFF3XoTm4BYZ"
+uri = "file://reports/e10-aislado-2026-09-18/informe-final.html"
+type = "html"
+title = "E10 — Resultado aislado y SQL operativo revisable"
+description = "Resultados, tiempos medidos, conservación de datos, límites pendientes y SQL consolidado íntegro. No aplicado a heliumdb."
+logical_id = "f40c6168-d6de-4698-bbea-2113de94abee"
+content_hash = "sha256:99cebaf23c2b1925323ddd59df9bac81c087222eef4d628d59fc3f31c0cdd430"
+size = 18118
+mtime_ms = 1789755304176
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f40c6168-d6de-4698-bbea-2113de94abee/cf965434-dfa3-424a-b908-c1d21498a2ad"
+storage_version_token = "1789755351756101"
+content_type = "text/html"

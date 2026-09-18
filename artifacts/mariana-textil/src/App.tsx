@@ -66,6 +66,11 @@ import ViajeNuevo from "@/pages/viaje-nuevo";
 import ViajeDetail from "@/pages/viaje-detail";
 import ViajeDocumento from "@/pages/viaje-documento";
 import AuditoriasInventario from "@/pages/auditorias-inventario";
+import FondoSummary from "@/pages/fondo/index";
+import FondoMovimientos from "@/pages/fondo/movimientos";
+import FondoMovimientoDetail from "@/pages/fondo/movimiento-detail";
+import FondoArqueos from "@/pages/fondo/arqueos";
+import FondoArqueoDetail from "@/pages/fondo/arqueo-detail";
 
 import Equipos from "@/pages/equipos";
 
@@ -503,6 +508,13 @@ function Router() {
             />
           )}
         />
+        
+        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo" component={() => <ProtectedRoute component={FondoSummary} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/movimientos" component={() => <ProtectedRoute component={FondoMovimientos} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/movimientos/:id" component={() => <ProtectedRoute component={FondoMovimientoDetail} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos" component={() => <ProtectedRoute component={FondoArqueos} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos/:id" component={() => <ProtectedRoute component={FondoArqueoDetail} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+
         <Route
           path="/pagos-dirigidos"
           component={() => <ProtectedRoute component={RedirectPagosDirigidos} allowedModule={Modules.REPORTES} />}

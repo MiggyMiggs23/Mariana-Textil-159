@@ -30,7 +30,9 @@ router.get("/auditoria", async (req, res): Promise<void> => {
     return;
   }
   const { page, pageSize, ...filters } = parsed.data;
-  res.json(ListAuditoriaResponse.parse(await listAuditoria(filters, page, pageSize)));
+  res.json(ListAuditoriaResponse.parse(
+    await listAuditoria(filters, page, pageSize, req.auth!.user.rol === "ADMIN"),
+  ));
 });
 
 router.get("/auditoria/export.xlsx", async (req, res): Promise<void> => {
@@ -41,7 +43,10 @@ router.get("/auditoria/export.xlsx", async (req, res): Promise<void> => {
   }
   let rows;
   try {
-    rows = await exportAuditoriaRows(parsed.data);
+    rows = await exportAuditoriaRows(
+      parsed.data,
+      req.auth!.user.rol === "ADMIN",
+    );
   } catch (error) {
     if (error instanceof Error && error.message === "AUDIT_EXPORT_LIMIT") {
       res.status(400).json({
@@ -77,7 +82,10 @@ router.get("/auditoria/:id", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
-  const result = await getAuditoria(String(parsed.data.id));
+  const result = await getAuditoria(
+    String(parsed.data.id),
+    req.auth!.user.rol === "ADMIN",
+  );
   if (!result) {
     res.status(404).json({ error: "Registro de bitácora no encontrado." });
     return;

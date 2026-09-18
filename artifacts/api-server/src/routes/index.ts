@@ -31,6 +31,9 @@ import purgaRouter from "./purga";
 import cajaVentasRouter from "./caja-ventas";
 import equiposRouter from "./equipos";
 import stockMinimosRouter from "./stock-minimos";
+import { pool } from "@workspace/db";
+import { requireRole, requireSession } from "../middlewares/auth";
+import { createFondoRouter } from "./fondo";
 
 const router: IRouter = Router();
 
@@ -65,6 +68,10 @@ router.use(choferesRouter);
 router.use(viajesRouter);
 router.use(equiposRouter);
 router.use(stockMinimosRouter);
+router.use(createFondoRouter({
+  db: pool as unknown as import("../lib/fondo").FondoPool,
+  authorizeAdmin: [requireSession, requireRole("ADMIN")],
+}));
 router.use(purgaRouter);
 
 export default router;

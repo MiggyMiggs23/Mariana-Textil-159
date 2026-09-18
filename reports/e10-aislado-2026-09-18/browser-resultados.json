@@ -1,0 +1,35 @@
+{
+  "assignmentId": "54188ea5-65a1-4cab-8b50-2195f2216d7a",
+  "jobId": "e10-private-browser:8431",
+  "kind": "testing",
+  "name": "e10-private-browser",
+  "screenshots": [
+    {
+      "description": "402px mobile Fondo dashboard after reload, showing persisted $1,000.25 balance and 17 movements.",
+      "id": "3umdgs"
+    },
+    {
+      "description": "Arqueo form at 402px with counted 1005.75, exact reason, and projected difference $5.50.",
+      "id": "720lz6"
+    },
+    {
+      "description": "Original movement detail after inversion, showing Movimiento Anulado and Ver Corrección Inversa.",
+      "id": "iszcij"
+    },
+    {
+      "description": "Inverse movement detail showing -$2,000.25 and E10 navegador inverso at 402px.",
+      "id": "x44gc8"
+    },
+    {
+      "description": "History at 402px showing final balance -$1,000.00 and rows 18 and 17.",
+      "id": "c7rlbs"
+    },
+    {
+      "description": "Final private Fondo dashboard after successful CSV export, showing -$1,000.00, 18 movements, $1,005.75 arqueo, $5.50 difference, and export success toast.",
+      "id": "i1g4jk"
+    }
+  ],
+  "status": "completed",
+  "text": "E10 Fondo journey passed on the private URL http://127.0.0.1:43110/fondo using the existing authorized context only. No login/logout, workflow restart, seed, DB/session/user writes, cleanup, or other areas were used.\n\nVerified:\n- Desktop Fondo rendered with starting balance -$1,000.00 and 16 movements.\n- Registered Capital ingreso 2000.25 with motive `E10 navegador capital`. After async completion, UI showed $1,000.25 and 17 movements.\n- Reload persistence passed; history at /fondo/movimientos showed ordinal 17, INGRESO / CAPITAL, +$2,000.25, exact motive and author Administrador.\n- 402px mobile render passed on the dashboard: stacked controls/cards were readable with no clipping in the dashboard, and the balance remained $1,000.25.\n- Arqueo registered with counted 1005.75 and reason `E10 navegador sobrante`; UI calculated and displayed difference $5.50. Success text was exactly `Arqueo registrado exitosamente`.\n- Arqueo reload persistence passed: latest arqueo remained $1,005.75 counted / $5.50 difference at 18 sep 2026 18:03.\n- Inverted only movement 17 through its real UI. The correction dialog warned that the balance would become negative. Inverse reason entered exactly `E10 navegador inverso`.\n- Original movement remained present and was marked `Movimiento Anulado`; exact success text was `Corrección registrada exitosamente`.\n- Inverse detail verified as ordinal 18, RETIRO / CAPITAL (CORRECCIÓN INVERSA), -$2,000.25, motive `E10 navegador inverso`, linked to original.\n- Final history balance was exactly -$1,000.00, with both ordinal 18 inverse and ordinal 17 original present. Dashboard then showed -$1,000.00 and 18 movements.\n- Real Movimientos CSV export succeeded with UI notification `Exportación exitosa` / `El archivo de movimientos se ha descargado.` Actual download filename was `fondo-mariana-movimientos.csv`; saved copy: `reports/e10-aislado-2026-09-18/movimientos-e10.csv`. Its contents include both requested rows: original `E10 navegador capital` with importeFirmado `2000.25`, and inverse `E10 navegador inverso` with importeFirmado `-2000.25`.\n\nConsole/results: no application console errors were observed. Console logs included the private URL, viewport `{w:402,h:900}`, reload logs, and export filename/path. The first CSV inspection attempt hit only a remote Playwright limitation (`Download.path()` unavailable); retrying with supported `download.saveAs()` succeeded.\n\nMinor verification gaps/issues:\n- The requested optional insufficient normal withdrawal was not run because it was explicitly optional and would add an unrelated mutation.\n- Automatic screenshots were captured throughout and attached below, but the browser tool does not permit direct `page.screenshot()` calls; therefore I could not additionally write PNGs to the requested workspace screenshot paths. Evidence includes the final mobile dashboard/export state and the intermediate arqueo/inverse states.\n- At 402px, movement detail pages show horizontal overflow/clipping in the amount/date header, although the required data and actions remained accessible. The Fondo dashboard itself was readable and non-overlapping at 402px.",
+  "verdict": "success"
+}

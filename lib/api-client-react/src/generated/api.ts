@@ -141,6 +141,7 @@ import type {
   ExportClientesCarteraPdfParams,
   ExportContenedoresPdfParams,
   ExportContenedoresXlsxParams,
+  ExportFondoCsvParams,
   ExportKardexXlsxParams,
   ExportReporteSeccionPdfParams,
   ExportReporteSeccionXlsxParams,
@@ -149,6 +150,14 @@ import type {
   ExportarHistorialEtiquetasXlsxParams,
   ExportarProveedorXlsxParams,
   ExportarSalidasParams,
+  FondoArqueo,
+  FondoArqueoInput,
+  FondoArqueosResult,
+  FondoInversoInput,
+  FondoMovimiento,
+  FondoMovimientoInput,
+  FondoMovimientosResult,
+  FondoResumen,
   ForbiddenResponse,
   GenerarVentaDesdeSalidasInput,
   GetAdminComparacionTiendasParams,
@@ -204,6 +213,8 @@ import type {
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
   ListEquiposParams,
+  ListFondoArqueosParams,
+  ListFondoMovimientosParams,
   ListHistorialComprasProveedoresParams,
   ListKardexFiltersParams,
   ListLocationsParams,
@@ -20016,4 +20027,647 @@ export const useDeleteRegistroInactivo = <TError = ErrorType<ValidationErrorResp
       > => {
       return useMutation(getDeleteRegistroInactivoMutationOptions(options));
     }
+
+export const getGetFondoUrl = () => {
+
+
+
+
+  return `/api/fondo`
+}
+
+export const getFondo = async ( options?: Parameters<typeof customFetch>[1]): Promise<FondoResumen> => {
+
+  return customFetch<FondoResumen>(getGetFondoUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFondoQueryKey = () => {
+    return [
+    `/api/fondo`
+    ] as const;
+    }
+
+
+export const getGetFondoQueryOptions = <TData = Awaited<ReturnType<typeof getFondo>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFondo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFondoQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFondo>>> = ({ signal }) => getFondo({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFondo>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFondoQueryResult = NonNullable<Awaited<ReturnType<typeof getFondo>>>
+export type GetFondoQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+
+export function useGetFondo<TData = Awaited<ReturnType<typeof getFondo>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFondo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFondoQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListFondoMovimientosUrl = (params?: ListFondoMovimientosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/fondo/movimientos?${stringifiedParams}` : `/api/fondo/movimientos`
+}
+
+export const listFondoMovimientos = async (params?: ListFondoMovimientosParams, options?: Parameters<typeof customFetch>[1]): Promise<FondoMovimientosResult> => {
+
+  return customFetch<FondoMovimientosResult>(getListFondoMovimientosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListFondoMovimientosQueryKey = (params?: ListFondoMovimientosParams,) => {
+    return [
+    `/api/fondo/movimientos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListFondoMovimientosQueryOptions = <TData = Awaited<ReturnType<typeof listFondoMovimientos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListFondoMovimientosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFondoMovimientos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListFondoMovimientosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFondoMovimientos>>> = ({ signal }) => listFondoMovimientos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFondoMovimientos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListFondoMovimientosQueryResult = NonNullable<Awaited<ReturnType<typeof listFondoMovimientos>>>
+export type ListFondoMovimientosQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+
+export function useListFondoMovimientos<TData = Awaited<ReturnType<typeof listFondoMovimientos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListFondoMovimientosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFondoMovimientos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListFondoMovimientosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateFondoMovimientoUrl = () => {
+
+
+
+
+  return `/api/fondo/movimientos`
+}
+
+export const createFondoMovimiento = async (fondoMovimientoInput: FondoMovimientoInput, options?: Parameters<typeof customFetch>[1]): Promise<FondoMovimiento> => {
+
+  return customFetch<FondoMovimiento>(getCreateFondoMovimientoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(fondoMovimientoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateFondoMovimientoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFondoMovimiento>>, TError,{data: BodyType<FondoMovimientoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createFondoMovimiento>>, TError,{data: BodyType<FondoMovimientoInput>}, TContext> => {
+
+const mutationKey = ['createFondoMovimiento'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createFondoMovimiento>>, {data: BodyType<FondoMovimientoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createFondoMovimiento(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateFondoMovimientoMutationResult = NonNullable<Awaited<ReturnType<typeof createFondoMovimiento>>>
+    export type CreateFondoMovimientoMutationBody = BodyType<FondoMovimientoInput>
+    export type CreateFondoMovimientoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>
+
+    export const useCreateFondoMovimiento = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFondoMovimiento>>, TError,{data: BodyType<FondoMovimientoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createFondoMovimiento>>,
+        TError,
+        {data: BodyType<FondoMovimientoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateFondoMovimientoMutationOptions(options));
+    }
+
+export const getGetFondoMovimientoUrl = (id: string,) => {
+
+
+
+
+  return `/api/fondo/movimientos/${id}`
+}
+
+export const getFondoMovimiento = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<FondoMovimiento> => {
+
+  return customFetch<FondoMovimiento>(getGetFondoMovimientoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFondoMovimientoQueryKey = (id: string,) => {
+    return [
+    `/api/fondo/movimientos/${id}`
+    ] as const;
+    }
+
+
+export const getGetFondoMovimientoQueryOptions = <TData = Awaited<ReturnType<typeof getFondoMovimiento>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFondoMovimiento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFondoMovimientoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFondoMovimiento>>> = ({ signal }) => getFondoMovimiento(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFondoMovimiento>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFondoMovimientoQueryResult = NonNullable<Awaited<ReturnType<typeof getFondoMovimiento>>>
+export type GetFondoMovimientoQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+
+export function useGetFondoMovimiento<TData = Awaited<ReturnType<typeof getFondoMovimiento>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFondoMovimiento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFondoMovimientoQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getReverseFondoMovimientoUrl = (id: string,) => {
+
+
+
+
+  return `/api/fondo/movimientos/${id}/inverso`
+}
+
+export const reverseFondoMovimiento = async (id: string,
+    fondoInversoInput: FondoInversoInput, options?: Parameters<typeof customFetch>[1]): Promise<FondoMovimiento> => {
+
+  return customFetch<FondoMovimiento>(getReverseFondoMovimientoUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(fondoInversoInput)
+  }
+);}
+
+
+
+
+
+export const getReverseFondoMovimientoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reverseFondoMovimiento>>, TError,{id: string;data: BodyType<FondoInversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reverseFondoMovimiento>>, TError,{id: string;data: BodyType<FondoInversoInput>}, TContext> => {
+
+const mutationKey = ['reverseFondoMovimiento'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reverseFondoMovimiento>>, {id: string;data: BodyType<FondoInversoInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reverseFondoMovimiento(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReverseFondoMovimientoMutationResult = NonNullable<Awaited<ReturnType<typeof reverseFondoMovimiento>>>
+    export type ReverseFondoMovimientoMutationBody = BodyType<FondoInversoInput>
+    export type ReverseFondoMovimientoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    export const useReverseFondoMovimiento = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reverseFondoMovimiento>>, TError,{id: string;data: BodyType<FondoInversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reverseFondoMovimiento>>,
+        TError,
+        {id: string;data: BodyType<FondoInversoInput>},
+        TContext
+      > => {
+      return useMutation(getReverseFondoMovimientoMutationOptions(options));
+    }
+
+export const getListFondoArqueosUrl = (params?: ListFondoArqueosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/fondo/arqueos?${stringifiedParams}` : `/api/fondo/arqueos`
+}
+
+export const listFondoArqueos = async (params?: ListFondoArqueosParams, options?: Parameters<typeof customFetch>[1]): Promise<FondoArqueosResult> => {
+
+  return customFetch<FondoArqueosResult>(getListFondoArqueosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListFondoArqueosQueryKey = (params?: ListFondoArqueosParams,) => {
+    return [
+    `/api/fondo/arqueos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListFondoArqueosQueryOptions = <TData = Awaited<ReturnType<typeof listFondoArqueos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params?: ListFondoArqueosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFondoArqueos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListFondoArqueosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listFondoArqueos>>> = ({ signal }) => listFondoArqueos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listFondoArqueos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListFondoArqueosQueryResult = NonNullable<Awaited<ReturnType<typeof listFondoArqueos>>>
+export type ListFondoArqueosQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+
+export function useListFondoArqueos<TData = Awaited<ReturnType<typeof listFondoArqueos>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params?: ListFondoArqueosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listFondoArqueos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListFondoArqueosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateFondoArqueoUrl = () => {
+
+
+
+
+  return `/api/fondo/arqueos`
+}
+
+export const createFondoArqueo = async (fondoArqueoInput: FondoArqueoInput, options?: Parameters<typeof customFetch>[1]): Promise<FondoArqueo> => {
+
+  return customFetch<FondoArqueo>(getCreateFondoArqueoUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(fondoArqueoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateFondoArqueoMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFondoArqueo>>, TError,{data: BodyType<FondoArqueoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createFondoArqueo>>, TError,{data: BodyType<FondoArqueoInput>}, TContext> => {
+
+const mutationKey = ['createFondoArqueo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createFondoArqueo>>, {data: BodyType<FondoArqueoInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createFondoArqueo(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateFondoArqueoMutationResult = NonNullable<Awaited<ReturnType<typeof createFondoArqueo>>>
+    export type CreateFondoArqueoMutationBody = BodyType<FondoArqueoInput>
+    export type CreateFondoArqueoMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>
+
+    export const useCreateFondoArqueo = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createFondoArqueo>>, TError,{data: BodyType<FondoArqueoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createFondoArqueo>>,
+        TError,
+        {data: BodyType<FondoArqueoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateFondoArqueoMutationOptions(options));
+    }
+
+export const getGetFondoArqueoUrl = (id: string,) => {
+
+
+
+
+  return `/api/fondo/arqueos/${id}`
+}
+
+export const getFondoArqueo = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<FondoArqueo> => {
+
+  return customFetch<FondoArqueo>(getGetFondoArqueoUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetFondoArqueoQueryKey = (id: string,) => {
+    return [
+    `/api/fondo/arqueos/${id}`
+    ] as const;
+    }
+
+
+export const getGetFondoArqueoQueryOptions = <TData = Awaited<ReturnType<typeof getFondoArqueo>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFondoArqueo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetFondoArqueoQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getFondoArqueo>>> = ({ signal }) => getFondoArqueo(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getFondoArqueo>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetFondoArqueoQueryResult = NonNullable<Awaited<ReturnType<typeof getFondoArqueo>>>
+export type GetFondoArqueoQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>
+
+
+
+export function useGetFondoArqueo<TData = Awaited<ReturnType<typeof getFondoArqueo>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getFondoArqueo>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetFondoArqueoQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportFondoCsvUrl = (params: ExportFondoCsvParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/fondo/exportar?${stringifiedParams}` : `/api/fondo/exportar`
+}
+
+export const exportFondoCsv = async (params: ExportFondoCsvParams, options?: Parameters<typeof customFetch>[1]): Promise<string> => {
+
+  return customFetch<string>(getExportFondoCsvUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportFondoCsvQueryKey = (params?: ExportFondoCsvParams,) => {
+    return [
+    `/api/fondo/exportar`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportFondoCsvQueryOptions = <TData = Awaited<ReturnType<typeof exportFondoCsv>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(params: ExportFondoCsvParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportFondoCsv>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportFondoCsvQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportFondoCsv>>> = ({ signal }) => exportFondoCsv(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportFondoCsv>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportFondoCsvQueryResult = NonNullable<Awaited<ReturnType<typeof exportFondoCsv>>>
+export type ExportFondoCsvQueryError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>
+
+
+
+export function useExportFondoCsv<TData = Awaited<ReturnType<typeof exportFondoCsv>>, TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse>>(
+ params: ExportFondoCsvParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportFondoCsv>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportFondoCsvQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 

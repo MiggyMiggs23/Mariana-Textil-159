@@ -29,12 +29,31 @@ const router: IRouter = Router();
 router.use("/notificaciones", requireSession);
 
 function visibleSystemNotifications(user: { id: number; rol: string }) {
-  return user.rol === "ADMIN"
+  const recipient = user.rol === "ADMIN"
     ? or(
         isNull(notificacionesSistemaTable.destinatarioUsuarioId),
         eq(notificacionesSistemaTable.destinatarioUsuarioId, user.id),
       )
     : eq(notificacionesSistemaTable.destinatarioUsuarioId, user.id);
+  return and(recipient, nonFondoSystemNotification());
+}
+
+/**
+ * Generic notification surfaces never expose Fondo data. This applies before
+ * reads, counts and mutations, including ADMIN, because Fondo owns no global
+ * notification channel.
+ */
+export function nonFondoSystemNotification() {
+  return sql`NOT (
+    lower(${notificacionesSistemaTable.entidad}) IN
+      ('fondo_mariana', 'fondo_movimiento', 'fondo_movimientos',
+       'fondo_arqueo', 'fondo_arqueos')
+    OR LEFT(upper(${notificacionesSistemaTable.tipo}), 6) = 'FONDO_'
+    OR COALESCE(${notificacionesSistemaTable.titulo}, '') ~*
+      '(fondo_mariana|fondo_movimientos?|fondo_arqueos?|FONDO_)'
+    OR COALESCE(${notificacionesSistemaTable.mensaje}, '') ~*
+      '(fondo_mariana|fondo_movimientos?|fondo_arqueos?|FONDO_)'
+  )`;
 }
 
 /**

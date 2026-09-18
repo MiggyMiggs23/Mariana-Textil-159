@@ -49,3 +49,9 @@ tarjeta produjo un verde parcial que había eliminado cobertura válida.
 un resultado observable. La fragilidad de una aserción textual no autoriza
 eliminar su obligación. Antes de declarar imposible el aislamiento, comprobar
 los generadores públicos y los handlers registrados por el router real.
+
+Para probar filtros de confidencialidad, usar las formas que emiten los productores reales de eventos; no deducirlas del nombre de las tablas.
+
+**Why:** Un fixture atribuyó a Caja un módulo que el productor real utilizaba para el Fondo. Ajustar el filtro a ese fixture permitió que los eventos reales del Fondo pasaran, aunque las pruebas simuladas quedaran verdes.
+
+**How to apply:** Derivar módulo, acción y entidad del productor canónico, incluyendo variantes de ingreso, inverso y arqueo. Los controles negativos de otros dominios también deben usar eventos reales. Ejecutar los generadores SQL usados por producción sobre datos controlados, no reconstrucciones aproximadas de sus consultas.

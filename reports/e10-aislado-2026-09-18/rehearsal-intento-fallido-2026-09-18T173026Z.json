@@ -1,0 +1,27 @@
+{
+  "status": "FAIL",
+  "terminalExit": 1,
+  "startedAtUtc": "2026-09-18T17:30:26.603Z",
+  "commands": {
+    "review": "pnpm --filter @workspace/scripts exec tsx src/e10-rehearsal.mts --review",
+    "execute": "pnpm --filter @workspace/scripts exec tsx src/e10-rehearsal.mts --execute --ack E10_PINNED_RETAINED_COPY_ONLY"
+  },
+  "destination": {
+    "database": "e10_ensayo_20260918",
+    "dataDirectory": "/home/runner/workspace/.local/backups/e10-20260918-isolated/cluster",
+    "socket": "/tmp/e10-0918-pg",
+    "backendAddress": null,
+    "backendPort": null,
+    "nonTcp": true,
+    "systemIdentifier": "7686927739928200230",
+    "manifestSha256": "ecbf991eba7cece3e38ebc6121c73140ddac69b1006e3f22bcde7f8e72dd0e3a"
+  },
+  "error": {
+    "name": "error",
+    "code": "42501",
+    "detail": "Details suppressed: SQL values and connection strings are never written to the report."
+  },
+  "timings": {
+    "totalMilliseconds": 180.458907
+  }
+}

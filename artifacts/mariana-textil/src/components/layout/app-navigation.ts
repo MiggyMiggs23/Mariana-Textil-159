@@ -87,6 +87,13 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    title: "FONDO MARIANA",
+    hiddenForRoles: import.meta.env?.VITE_FONDO_E10_ENABLED === "true" ? undefined : ["ADMIN", "TERMINAL", "CAJA", "SUPERVISOR", "BODEGA", "SISTEMAS", "CONTADOR"],
+    items: [
+      { name: "Resumen de Fondo", path: "/fondo", icon: Wallet, module: Modules.COBROS_PAGOS, allowedRoles: ["ADMIN"], isClickable: true },
+    ],
+  },
+  {
     title: "DIRECTORIO",
     items: [
       { name: "Clientes", path: "/clientes", icon: UserSquare2, module: Modules.CLIENTES, isClickable: true },

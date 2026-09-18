@@ -1,0 +1,232 @@
+{
+  "status": "READY",
+  "retained": true,
+  "createdAtUtc": "2026-09-18T17:28:25.931Z",
+  "authorization": "reports/e10-autorizacion-fase-aislada-2026-09-18.md",
+  "target": {
+    "socketDirectory": "/tmp/e10-0918-pg",
+    "port": 55432,
+    "database": "e10_ensayo_20260918",
+    "dataDirectory": "/home/runner/workspace/.local/backups/e10-20260918-isolated/cluster",
+    "systemIdentifier": "7686927739928200230",
+    "role": "postgres",
+    "listenAddresses": "",
+    "backendNetworkAddress": null
+  },
+  "postgres": {
+    "binaryDirectory": "/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin",
+    "serverVersion": "16.10"
+  },
+  "backup": {
+    "privateDirectory": "/home/runner/workspace/.local/backups/e10-20260918-isolated",
+    "dumpSha256": "54517646209227aadab0997e7c1af0824ce19eabd66c043f6b44e4f8b488a4c9",
+    "dumpSizeBytes": 496088
+  },
+  "omission": {
+    "table": "public.sesiones",
+    "schemaRetained": true,
+    "rowsRestored": 0
+  },
+  "guards": {
+    "allowlistBeforeConnectRequired": true,
+    "actualIdentityVerified": true,
+    "unixSocketOnly": true
+  },
+  "verification": {
+    "status": "PASS",
+    "categories": {
+      "tables": true,
+      "tableEvidence": true,
+      "columns": true,
+      "constraints": true,
+      "indexes": true,
+      "functions": true,
+      "triggers": true,
+      "sequences": true
+    },
+    "sourceSummary": {
+      "tables": {
+        "count": 66,
+        "sha256": "4a1f44d148db7899fae2474d35d1f4d4de6d42ab8f3088589a0fad4c50f58485"
+      },
+      "tableEvidence": {
+        "count": 66,
+        "sha256": "e5c807b958ef8760e6f698e1db49db4c343f1a061ef00d65eca1133356c19d34"
+      },
+      "columns": {
+        "count": 671,
+        "sha256": "6baae79f7ccbe2e44e0657c81b5afe621df17b7c817b1454dfe03302e7418a6e"
+      },
+      "constraints": {
+        "count": 340,
+        "sha256": "15336a0fa7d59b660d9bbb1244536d157896e04e270c5d889aad4051146440f5"
+      },
+      "indexes": {
+        "count": 232,
+        "sha256": "53e60b1951c910524a9bbc4f72b7e3cbf5ef100cd9ab42615696f5e3cfe14d4f"
+      },
+      "functions": {
+        "count": 22,
+        "sha256": "a31805ceaf0f7096efb469a33479ff0d6b7fe6981e44c2bc29e71dc61f947fd0"
+      },
+      "triggers": {
+        "count": 26,
+        "sha256": "5efe5a24d6656eb53b9d00e6ce5858d9ea74db2cc518938c48c3a29eebb40726"
+      },
+      "sequences": {
+        "count": 47,
+        "sha256": "98b9eeefc640f5d58e5f3a5d78a1b073417a1b3af2516803d8f1099585f43ac3"
+      }
+    },
+    "restoredSummary": {
+      "tables": {
+        "count": 66,
+        "sha256": "4a1f44d148db7899fae2474d35d1f4d4de6d42ab8f3088589a0fad4c50f58485"
+      },
+      "tableEvidence": {
+        "count": 66,
+        "sha256": "e5c807b958ef8760e6f698e1db49db4c343f1a061ef00d65eca1133356c19d34"
+      },
+      "columns": {
+        "count": 671,
+        "sha256": "6baae79f7ccbe2e44e0657c81b5afe621df17b7c817b1454dfe03302e7418a6e"
+      },
+      "constraints": {
+        "count": 340,
+        "sha256": "15336a0fa7d59b660d9bbb1244536d157896e04e270c5d889aad4051146440f5"
+      },
+      "indexes": {
+        "count": 232,
+        "sha256": "53e60b1951c910524a9bbc4f72b7e3cbf5ef100cd9ab42615696f5e3cfe14d4f"
+      },
+      "functions": {
+        "count": 22,
+        "sha256": "a31805ceaf0f7096efb469a33479ff0d6b7fe6981e44c2bc29e71dc61f947fd0"
+      },
+      "triggers": {
+        "count": 26,
+        "sha256": "5efe5a24d6656eb53b9d00e6ce5858d9ea74db2cc518938c48c3a29eebb40726"
+      },
+      "sequences": {
+        "count": 47,
+        "sha256": "98b9eeefc640f5d58e5f3a5d78a1b073417a1b3af2516803d8f1099585f43ac3"
+      }
+    },
+    "existingActorsMatched": true,
+    "usersCreated": 0,
+    "sessionsCreated": 0
+  },
+  "actorInventory": {
+    "existingActorIds": [
+      "1",
+      "107",
+      "117",
+      "124",
+      "135",
+      "147",
+      "159",
+      "170",
+      "178",
+      "189",
+      "19",
+      "197",
+      "198",
+      "20",
+      "208",
+      "225",
+      "231",
+      "232",
+      "233",
+      "26",
+      "27",
+      "33",
+      "34",
+      "40",
+      "41",
+      "46",
+      "56",
+      "67",
+      "82",
+      "90",
+      "97"
+    ],
+    "roleCounts": [
+      {
+        "role": "ADMIN",
+        "count": 22
+      },
+      {
+        "role": "BODEGA",
+        "count": 2
+      },
+      {
+        "role": "CAJA",
+        "count": 5
+      },
+      {
+        "role": "SUPERVISOR",
+        "count": 1
+      },
+      {
+        "role": "TERMINAL",
+        "count": 1
+      }
+    ],
+    "locationRoleCounts": [
+      {
+        "location_id": "1",
+        "role": "CAJA",
+        "count": 2
+      },
+      {
+        "location_id": "1",
+        "role": "TERMINAL",
+        "count": 1
+      },
+      {
+        "location_id": "458",
+        "role": "CAJA",
+        "count": 3
+      },
+      {
+        "location_id": "5",
+        "role": "BODEGA",
+        "count": 2
+      },
+      {
+        "location_id": "5",
+        "role": "SUPERVISOR",
+        "count": 1
+      },
+      {
+        "location_id": null,
+        "role": "ADMIN",
+        "count": 22
+      }
+    ]
+  },
+  "timings": {
+    "snapshotMs": 801.341207,
+    "dumpMs": 1094.056888,
+    "initMs": 6485.327407,
+    "restoreMs": null,
+    "verificationMs": 247.102861,
+    "totalFinalizeMs": 308.416528,
+    "restoreTimingStatus": "UNMEASURED: restore completed in an earlier failed semantic-verification attempt; the recorded 5.311 ms was a reentrant no-op and was discarded"
+  },
+  "prohibitedActions": {
+    "sourceWrites": false,
+    "sourceLogin": false,
+    "apiRestart": false,
+    "initializer": false,
+    "seeds": false,
+    "driveModification": false,
+    "e10MigrationApplied": false
+  },
+  "retainedProcess": {
+    "processPid": 18258,
+    "backgroundShellTaskId": null,
+    "launchMethod": "direct detached postgres process via execution runtime",
+    "readyVerified": true
+  }
+}
