@@ -39,6 +39,7 @@ export type BrowserFixtureOptions = {
   entrySource: string;
   moduleAliases?: Record<string, string>;
   viewport?: Viewport;
+  tailwindSourceFiles?: string[];
 };
 
 type CdpReply = { id?: number; result?: Record<string, unknown>; error?: { message?: string; code?: number }; method?: string; params?: Record<string, unknown>; sessionId?: string };
@@ -172,7 +173,7 @@ function tailwindCandidates(source: string) {
   return source.match(/[A-Za-z0-9_!:[\]\/.%#(),=-]+/g) ?? [];
 }
 
-async function buildRealCss(extraSource: string) {
+async function buildRealCss(extraSource: string, extraSourceFiles: string[] = []) {
   const cssPath = join(frontendRoot, "src/index.css");
   const [cssSource, files] = await Promise.all([
     readFile(cssPath, "utf8"),
@@ -183,7 +184,7 @@ async function buildRealCss(extraSource: string) {
     from: cssPath,
     onDependency() {},
   });
-  const allSource = await Promise.all(files.map((file) => readFile(file, "utf8")));
+  const allSource = await Promise.all([...files, ...extraSourceFiles].map((file) => readFile(file, "utf8")));
   return compiler.build([
     ...tailwindCandidates(extraSource),
     ...allSource.flatMap(tailwindCandidates),
@@ -265,7 +266,7 @@ async function bundleFixture(
   });
   return {
     javascript: await readFile(bundlePath, "utf8"),
-    css: await buildRealCss(options.entrySource),
+    css: await buildRealCss(options.entrySource, options.tailwindSourceFiles),
   };
 }
 
@@ -316,6 +317,7 @@ export async function withBrowserFixture<T>(
     fill(selector: string, value: string): Promise<void>;
     press(selector: string, key: string): Promise<void>;
     viewport(width: number, height: number): Promise<void>;
+    screenshot(path: string): Promise<void>;
   }) => Promise<T>,
 ): Promise<T> {
   // Keeping the entry below the package lets esbuild resolve the production
@@ -442,10 +444,20 @@ export async function withBrowserFixture<T>(
         await evaluate(`(() => {
           const element = document.querySelector(${JSON.stringify(selector)});
           if (!(element instanceof HTMLElement)) throw new Error("No existe: " + ${JSON.stringify(selector)});
-          element.focus();
+          if (document.activeElement !== element && !document.querySelector('[role="listbox"]')) element.focus();
         })()`);
-        const code = key === "Enter" ? "Enter" : key;
-        const keyCode = key === "Enter" ? 13 : key.length === 1 ? key.charCodeAt(0) : 0;
+        const code = key;
+        const keyCode = key === "Enter"
+          ? 13
+          : key === "ArrowDown"
+            ? 40
+            : key === "ArrowUp"
+              ? 38
+              : key === "Escape"
+                ? 27
+                : key === "End"
+                  ? 35
+                : key.length === 1 ? key.toUpperCase().charCodeAt(0) : 0;
         await sessionCall("Input.dispatchKeyEvent", {
           type: "keyDown", key, code, windowsVirtualKeyCode: keyCode, nativeVirtualKeyCode: keyCode,
         });
@@ -456,6 +468,14 @@ export async function withBrowserFixture<T>(
       async viewport(width: number, height: number) {
         await sessionCall("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: false });
         await evaluate("window.dispatchEvent(new Event('resize'))");
+      },
+      async screenshot(path: string) {
+        const capture = await sessionCall("Page.captureScreenshot", {
+          format: "png",
+          captureBeyondViewport: false,
+          fromSurface: true,
+        });
+        await writeFile(resolve(path), Buffer.from(String(capture.data), "base64"));
       },
     };
     return await usePage(page);

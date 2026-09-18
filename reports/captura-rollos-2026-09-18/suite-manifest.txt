@@ -1,0 +1,8 @@
+src/components/campo-escaneo.contract.test.ts
+src/components/entrada-history.contract.test.ts
+src/lib/entrada-review.test.ts
+src/lib/roll-capture-state.test.ts
+src/lib/unit-labels.contract.test.ts
+src/pages/entrada-documento.contract.test.ts
+src/pages/entradas-requirements.contract.test.ts
+src/pages/entradas-roll-capture.contract.test.ts

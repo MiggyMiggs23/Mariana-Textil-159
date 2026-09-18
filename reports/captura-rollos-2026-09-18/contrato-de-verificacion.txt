@@ -1,0 +1,31 @@
+Referencia: solicitud del propietario del 18/09/2026 (regla de interfaz nueva, no documentada previamente).
+
+La matriz monta Entradas real con API totalmente sustituida y sin red. Comprueba 1 y 20 rollos en 1280 px y 402 px, usando Primer Piso como piso activo real principal; también conserva Planta Baja y un nombre sintético largo exclusivamente para estrés visual.
+
+Comando enfocado:
+node ../../scripts/src/frontend-test-runner.mjs src/pages/entradas-roll-capture.contract.test.ts
+
+Comando final (misma suite enfocada más pruebas nuevas):
+node ../../scripts/src/frontend-test-runner.mjs src/pages/entradas-roll-capture.contract.test.ts src/pages/entradas-roll-capture.visual.test.ts
+
+Resultado final: 6/6 aprobadas. El componente AFTER probado y fotografiado tuvo SHA-256
+14de377b254aca7b4a085a323b6127eec208a538592a53d29aa73476e5c288f0.
+
+Comprobaciones geométricas observadas en 1280x800 y 402x874:
+- sin desbordamiento horizontal del diálogo;
+- cantidad antes de piso, y Siguiente rollo después del piso en una fila completa;
+- etiquetas visibles asociadas a los controles de cantidad y piso;
+- nombre completo Primer Piso en las cuatro capturas;
+- nombre sintético largo completo, sin desbordamiento horizontal, en la interacción de estrés;
+- la cámara simulada queda disponible y separada de cantidad/unidad (sin afirmar hardware físico).
+
+Comportamiento montado:
+- piso obligatorio por rollo;
+- editar, vaciar y recapturar antes de confirmar;
+- piso general único aplicado a todos;
+- Aplicar completa blancos sin reemplazar el ajuste manual;
+- Sobrescribir no cambia cantidades si se cancela y las reemplaza si se confirma;
+- contadores uniforme/ajustado/en blanco y Rollo N de X observados.
+
+Prueba negativa: negative-frozen-old.log ejecuta el mismo corredor contra Entradas congelado
+7cb77f8; termina con exit_code=1 por la aserción semántica del control de piso separado.

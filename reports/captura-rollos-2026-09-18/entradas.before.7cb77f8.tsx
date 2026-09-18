@@ -1393,152 +1393,130 @@ export default function Entradas() {
             </div>
           </DialogHeader>
 
-          <div className="min-h-0 flex-1 overflow-y-auto bg-background custom-scrollbar">
-            <div className="flex flex-col">
-              {/* Input area */}
-              <div className="p-5 shrink-0 bg-background border-b space-y-5">
-                {/* Bulk Area */}
-                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4" data-testid="group-bulk-capture">
-                  <div className="mb-4">
-                    <div className="font-bold text-sm">
-                      Captura en Lote
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Llena los {declaredCount || "—"} rollos de una vez y después corrige únicamente las excepciones.
-                    </div>
+          <div className="flex-1 flex flex-col overflow-hidden bg-background">
+            {/* Input area */}
+            <div className="p-5 shrink-0 shadow-sm z-10 bg-background border-b space-y-4">
+              <div className="rounded-lg border border-primary/20 bg-primary/5 p-4">
+                <div className="mb-3">
+                  <div className="font-bold text-sm">
+                    Todos los rollos con la misma {selectedProduct?.unidad === "KILO" ? "peso" : selectedProduct?.unidad === "BOLSA" ? "cantidad de bolsas por caja" : "cantidad en metros"}
                   </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Left Column: Uniform Qty */}
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="roll-uniform-quantity" className="text-xs font-bold text-primary/80 uppercase">Cantidad uniforme</Label>
-                      <div className="flex min-w-0 items-center rounded-md border border-input bg-background shadow-sm focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-                        <Input
-                          id="roll-uniform-quantity"
-                          type="number"
-                          min={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
-                          step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
-                          value={uniformQty}
-                          onChange={(event) => setUniformQty(event.target.value)}
-                          placeholder="0.00"
-                          className="h-10 min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-lg font-bold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                          data-testid="input-uniform-qty"
-                        />
-                        <span className="shrink-0 whitespace-nowrap px-3 text-xs font-bold text-muted-foreground border-l bg-muted/20" data-testid="uniform-qty-unit">
-                          {captureUnitLabel}
-                        </span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 mt-1">
-                        <Button
-                          type="button"
-                          onClick={handleApplyUniformQty}
-                          disabled={!uniformQty || blankRollCount === 0}
-                          className="w-full h-auto min-h-10 py-2 whitespace-normal text-xs"
-                          data-testid="button-apply-uniform"
-                        >
-                          {blankRollCount === Number(declaredCount)
-                            ? "Aplicar a todos"
-                            : `Aplicar a los ${blankRollCount} rollos restantes`}
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={handleOverwriteUniformQty}
-                          disabled={!uniformQty}
-                          className="w-full h-auto min-h-10 py-2 whitespace-normal text-xs"
-                          data-testid="button-overwrite-uniform"
-                        >
-                          Sobrescribir todos
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Right Column: Floor */}
-                    <div className="flex flex-col gap-2">
-                      {pisosActivos.length > 0 && (
-                        <>
-                          <Label htmlFor="roll-bulk-floor" className="text-xs font-bold text-primary/80 uppercase">Asignar todos a piso</Label>
-                          <Select value={capCurrentPiso || "none"} onValueChange={(v) => {
-                            const val = v === "none" ? null : v;
-                            setCapCurrentPiso(val);
-                            if (val) setCapPisos(prev => prev.map(() => val));
-                          }}>
-                            <SelectTrigger id="roll-bulk-floor" className="w-full bg-background h-auto min-h-[2.5rem] py-2 [&>span]:line-clamp-none [&>span]:whitespace-normal [&>span]:text-left" data-testid="trigger-bulk-floor">
-                              <SelectValue placeholder="Seleccionar piso..." />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="none">Sin piso (elegir individualmente)</SelectItem>
-                              {pisosActivos.map(p => (
-                                <SelectItem key={p.id} value={p.id.toString()} className="whitespace-normal py-2">{p.nombre}</SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </>
-                      )}
-                      {adjustedRollCount > 0 && (
-                        <p className="mt-2 text-xs font-medium text-amber-700">
-                          Hay {adjustedRollCount} {adjustedRollCount === 1 ? "rollo ajustado" : "rollos ajustados"} que “Aplicar” conservará.
-                        </p>
-                      )}
-                    </div>
+                  <div className="text-xs text-muted-foreground">
+                    Llena los {declaredCount || "—"} rollos de una vez y después corrige únicamente las excepciones.
                   </div>
                 </div>
-
-                {/* Single Capture Area */}
-                <div className="flex flex-col gap-3" data-testid="group-capture-next">
-                  <Label htmlFor="roll-current-quantity" className="text-xs font-bold">Cantidad de este rollo</Label>
-                  <CampoEscaneo
-                    id="roll-current-quantity"
-                    ref={qtyInputRef}
-                    type="number"
-                    step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
-                    placeholder={selectedProduct?.unidad === "BOLSA" ? "0" : "0.00"}
-                    value={capCurrentQty}
-                    onChange={setCapCurrentQty}
-                    onScan={handleAddQty}
-                    interpretRollCode={false}
-                    className="h-20 min-w-0 flex-1 px-3 text-center text-2xl font-black sm:text-4xl"
-                    containerClassName="h-20 w-full"
-                    trailingContent={(
-                      <span className="flex h-20 shrink-0 items-center whitespace-nowrap px-4 text-xl font-bold text-muted-foreground border-l bg-muted/20" data-testid="capture-qty-unit">
-                        {captureUnitLabel}
-                      </span>
-                    )}
-                    data-testid="input-capture-qty"
-                  />
-
-                  {pisosActivos.length > 0 && (
-                    <div className="w-full space-y-2">
-                      <Label htmlFor="roll-current-floor" className="text-xs font-bold">Piso de este rollo</Label>
-                      <Select value={capCurrentPiso || "none"} onValueChange={(v) => setCapCurrentPiso(v === "none" ? null : v)}>
-                        <SelectTrigger id="roll-current-floor" className="h-auto min-h-[3.5rem] py-2 w-full bg-muted/20 border-2 font-semibold text-sm text-left [&>span]:line-clamp-none [&>span]:whitespace-normal [&>span]:text-left" data-testid="trigger-single-floor">
-                          <SelectValue placeholder="Elegir Piso" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="none">Sin piso</SelectItem>
-                          {pisosActivos.map(p => (
-                            <SelectItem key={p.id} value={p.id.toString()} className="whitespace-normal py-2">{p.nombre}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <div className="flex min-w-0 flex-1 items-center rounded-md border border-input bg-background shadow-sm focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+                    <Input
+                      type="number"
+                      min={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
+                      step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
+                      value={uniformQty}
+                      onChange={(event) => setUniformQty(event.target.value)}
+                      placeholder="0.00"
+                      className="h-10 min-w-0 flex-1 rounded-none border-0 bg-transparent px-3 text-lg font-bold shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                      data-testid="input-uniform-qty"
+                    />
+                    <span className="shrink-0 whitespace-nowrap px-3 text-xs font-bold text-muted-foreground" data-testid="uniform-qty-unit">
+                      {captureUnitLabel}
+                    </span>
+                  </div>
                   <Button
                     type="button"
-                    onClick={() => handleAddQty()}
-                    className="h-14 w-full bg-primary hover:bg-primary/90 text-sm font-bold"
-                    disabled={!capCurrentQty || blankRollCount === 0 || (pisosActivos.length > 0 && !capCurrentPiso)}
-                    data-testid="button-add-captured-roll"
+                    onClick={handleApplyUniformQty}
+                    disabled={!uniformQty || blankRollCount === 0}
+                    data-testid="button-apply-uniform"
                   >
-                    <Plus className="w-5 h-5 mr-2" />
-                    Siguiente rollo
+                    {blankRollCount === Number(declaredCount)
+                      ? "Aplicar a todos"
+                      : `Aplicar a los ${blankRollCount} rollos restantes`}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleOverwriteUniformQty}
+                    disabled={!uniformQty}
+                    data-testid="button-overwrite-uniform"
+                  >
+                    Sobrescribir todos
                   </Button>
                 </div>
+                {pisosActivos.length > 0 && (
+                  <div className="mt-3 flex items-center gap-2">
+                    <Label className="text-xs">Asignar todos a piso:</Label>
+                    <Select value={capCurrentPiso || "none"} onValueChange={(v) => {
+                      const val = v === "none" ? null : v;
+                      setCapCurrentPiso(val);
+                      if (val) setCapPisos(prev => prev.map(() => val));
+                    }}>
+                      <SelectTrigger className="h-8 text-xs bg-background w-64">
+                        <SelectValue placeholder="Seleccionar piso..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="none">Sin piso (elegir individualmente)</SelectItem>
+                        {pisosActivos.map(p => (
+                          <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+                {adjustedRollCount > 0 && (
+                  <p className="mt-2 text-xs font-medium text-amber-700">
+                    Hay {adjustedRollCount} {adjustedRollCount === 1 ? "rollo ajustado" : "rollos ajustados"} que “Aplicar” conservará.
+                  </p>
+                )}
               </div>
 
-              {/* List area */}
-              <div className="flex-1 p-4 space-y-2 bg-muted/5">
+              <div className="flex min-w-0 flex-col items-stretch gap-3 sm:flex-row">
+                <CampoEscaneo
+                  ref={qtyInputRef}
+                  type="number"
+                  step={selectedProduct?.unidad === "BOLSA" ? "1" : "0.01"}
+                  placeholder={selectedProduct?.unidad === "BOLSA" ? "0" : "0.00"}
+                  value={capCurrentQty}
+                  onChange={setCapCurrentQty}
+                  onScan={handleAddQty}
+                  interpretRollCode={false}
+                  className="h-20 min-w-0 flex-1 px-3 text-center text-2xl font-black sm:text-4xl"
+                  containerClassName="h-20 min-w-0 flex-1"
+                  trailingContent={(
+                    <span className="flex h-20 shrink-0 items-center whitespace-nowrap px-2 text-xl font-bold text-muted-foreground" data-testid="capture-qty-unit">
+                      {captureUnitLabel}
+                    </span>
+                  )}
+                  data-testid="input-capture-qty"
+                />
+
+                {pisosActivos.length > 0 && (
+                  <Select value={capCurrentPiso || "none"} onValueChange={(v) => setCapCurrentPiso(v === "none" ? null : v)}>
+                    <SelectTrigger className="h-20 w-full sm:w-48 bg-muted/20 border-2 font-semibold text-xs text-left">
+                      <SelectValue placeholder="Elegir Piso" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Sin piso</SelectItem>
+                      {pisosActivos.map(p => (
+                        <SelectItem key={p.id} value={p.id.toString()}>{p.nombre}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+
+                <Button
+                  type="button"
+                  onClick={() => handleAddQty()}
+                  className="h-20 px-8 bg-primary hover:bg-primary/90 w-full sm:w-auto text-sm"
+                  disabled={!capCurrentQty || blankRollCount === 0 || (pisosActivos.length > 0 && !capCurrentPiso)}
+                  data-testid="button-add-captured-roll"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  Siguiente rollo
+                </Button>
+              </div>
+            </div>
+
+            {/* List area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-muted/5 custom-scrollbar">
               {capturedRollCount === 0 ? (
                 <div className="h-full flex items-center justify-center text-muted-foreground flex-col">
                   <Calculator className="w-16 h-16 opacity-10 mb-4" />
@@ -1698,7 +1676,6 @@ export default function Entradas() {
                   );
                 })
               )}
-            </div>
             </div>
 
             {/* Live Totals Row */}
