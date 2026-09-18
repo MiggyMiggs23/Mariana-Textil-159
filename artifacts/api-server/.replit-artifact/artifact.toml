@@ -10,7 +10,11 @@ name = "API Server"
 paths = ["/api"]
 
 [services.development]
-run = "pnpm --filter @workspace/api-server run dev"
+run = "test $(sha256sum artifacts/api-server/dist/index.mjs | cut -d' ' -f1) = 655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2 && exec node --enable-source-maps artifacts/api-server/dist/index.mjs"
+
+[services.development.env]
+API_INSPECTION_BOOT = "1"
+NODE_ENV = "development"
 
 [services.production]
 

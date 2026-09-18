@@ -1,36 +1,230 @@
-<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Revisión de apertura limitada — Mariana Textil</title><style>body{font-family:system-ui,sans-serif;color:#172338;background:#f2f4f7;margin:0}main{max-width:1000px;margin:auto;background:white;padding:32px}h1{font-size:26px}aside{background:#fff1cc;padding:16px;border-left:4px solid #b77800}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.6 ui-monospace,monospace}section{margin-top:32px;border-top:1px solid #ccd4df;padding-top:20px}@media print{body{background:white}main{padding:0}section{break-before:page}pre{font-size:10px}}</style><main><h1>Mariana Textil · Apertura limitada</h1><aside><strong>Preparación, no autorización de ejecución.</strong> Ninguna apertura ni SQL aplicado. El entorno se reinició externamente; los servicios están detenidos. No repitas una operación interrumpida sin comprobar si quedó guardada.</aside><section><h2>Lista para el mostrador</h2><pre># Primer corte histórico — lista de mostrador
+<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Recuperación y opciones de devolución</title><style>body{font-family:system-ui,sans-serif;color:#172338;background:#f2f4f7;margin:0}main{max-width:1000px;margin:auto;background:white;padding:32px}aside{background:#fff1cc;padding:16px;border-left:4px solid #b77800}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.6 ui-monospace,monospace}section{margin-top:32px;border-top:1px solid #ccd4df;padding-top:20px}@media print{main{padding:0}section{break-before:page}pre{font-size:10px}}</style><main><h1>Mariana Textil · Estado y decisiones pendientes</h1><aside><strong>API no recuperada: arranque detenido.</strong> Identidad y guardas E1 coinciden, pero el bundle cambió y hubo escrituras automáticas. La captura limitada permanece bloqueada hasta resolver su evidencia de devolución. Ninguna opción fue elegida ni implementada.</aside><section><h2>Recuperación: detenida por discrepancias</h2><pre># Recuperación exclusiva del servicio anterior — detención preventiva
 
-Este corte se hace con la versión actualmente habilitada, **antes de poner E2 en ejecución**. Su finalidad es tener una referencia histórica real. No prueba el sumando de abonos físicos ni el snapshot de un nuevo cierre E2.
+## Dictamen
 
-## Antes de cerrar
+**STOP / NO ARRANCADO.** La identidad y las tres guardas E1 coincidieron, pero
+aparecieron dos condiciones contrarias a la autorización:
 
-- [ ] Sitio: ____________________  Sesión de caja: ____________________
-- [ ] Fecha y persona que abrió: ____________________
-- [ ] Fondo inicial real en el cajón: $____________________
-- [ ] Cada ticket en efectivo: folio e importe cobrado en efectivo anotados.
-- [ ] Ticket de transferencia: folio, importe y comprobante conservados. Su importe **no se suma al efectivo**.
-- [ ] No hay operaciones pendientes de terminar. Se pausa el registro en esa sesión mientras se toma la referencia y se cuenta.
-- [ ] Captura del resumen previo al cierre, con esperado y desglose por medios de pago.
-- [ ] Cálculo independiente: fondo inicial + importes efectivamente cobrados en efectivo. Si hubo otra operación real que toca el cajón, anotarla y conservar su documento.
-- [ ] Conteo físico independiente: $____________________
+1. el bundle en disco ya no tiene el hash autorizado;
+2. el intento automático de arranque normal posterior al reinicio sí produjo
+   escrituras de inicialización.
 
-Si entregaste cambio, cuenta como ingreso únicamente lo cobrado por la venta, no todo el efectivo recibido antes de entregar el cambio.
+No se arrancó la API. El workflow API quedó detenido. El frontend ya existente
+continúa ejecutándose y no se reinició.
 
-## Cierre y conservación
+Autorización previa: `autorizacion.md`.
 
-- [ ] Cerrar con el importe realmente contado; no ajustarlo para conseguir diferencia cero.
-- [ ] Anotar número de corte, esperado, contado y diferencia.
-- [ ] Conservar el detalle y la impresión/archivo disponible.
-- [ ] Evitar modificar o cancelar los tickets del corte hasta que se tome la referencia. Si el negocio lo necesita, avisar antes y conservar evidencia de antes/después.
+## Preflight de lectura
 
-## Evitar
+Lectura observada entre `2026-09-18 21:30:01+00` y
+`2026-09-18 21:34:19+00` mediante la base de desarrollo administrada que aporta
+las credenciales runtime de la aplicación. No se leyó el clon E10.
 
-- Mezclar dinero de otros cajones, dinero personal o transferencias.
-- Agregar o retirar dinero sin registrarlo. Una operación legítima necesaria no debe ocultarse: se documenta.
-- Capturar el abono bloqueado como corrección u otra naturaleza.
-- Inventar operaciones o forzar una diferencia cero.
+La identidad coincidió con la referencia operativa aceptada de
+`reports/e10-operativo-2026-09-18/resultado-operativo.md`:
 
-No se necesitan importes predeterminados ni operaciones ficticias. Si existe una discrepancia, conservarla es más útil que ocultarla.</pre></section><section><h2>Paquete de revisión</h2><p>Los scripts SQL y parches exactos están en el proyecto, en las rutas y con los hashes indicados a continuación.</p><pre># Apertura limitada E2/E3 — paquete de revisión, no de ejecución
+- base `heliumdb`;
+- OID `16384`;
+- esquema `public`;
+- rol `postgres`;
+- PostgreSQL `16.10`.
+
+Las tres guardas están presentes, habilitadas y exactamente cerradas. En cada
+caso se comprobaron tabla/función en `public`, `tgtype`, `tgenabled='O'`, cero
+argumentos/atributos, ausencia de constraint/parent/qual, retorno `trigger`,
+`plpgsql`, owner `postgres`, `SECURITY INVOKER`, volatilidad/parallel,
+`proacl IS NULL`, `search_path=pg_catalog, public` y EXECUTE efectivo de
+`PUBLIC` vía grantee OID 0 sin grant option.
+
+| Guarda | Tipo trigger | SHA-256 de `prosrc` | Resultado |
+|---|---:|---|---|
+| E1C01 efectivo | 5 | `994ad4041bf1f8d96e0dbafcb81f07829d915f32598b4fd3721560c77461c6fd` | exacta/cerrada |
+| E1P01 retenidos | 4 | `50840f6e50fd29907e4458a55170599877512db315b659dba10ff4f1c41ef5c5` | exacta/cerrada |
+| E1A01 atribución | 4 | `25f74b9765fef1eb3578915706fe7bd8bece469d20ced5ed9cd67e4cbb5e8365` | exacta/cerrada |
+
+El inventario actual (`69` tablas, `34` triggers no internos y `62` funciones
+en `public`) es compatible con los objetos E1 más la instalación E10 ya
+autorizada y verificada: E10 añadió tres tablas, ocho triggers y cuatro
+funciones. `evidencia_no_aplicada_e2` y la tabla de devolución no existen. Fondo
+mantiene cero movimientos y cero arqueos.
+
+## Estado transaccional y operaciones
+
+En las dos lecturas posteriores:
+
+- otras transacciones cliente abiertas: `0`;
+- sesiones `idle in transaction`: `0`;
+- transacciones preparadas: `0`;
+- esperas de lock observadas en la primera lectura: `0`.
+
+Desde el reinicio de PostgreSQL (`2026-09-18 21:26:23.072369+00`) se observaron:
+
+- tickets nuevos: `0`;
+- pagos de ticket nuevos: `0`;
+- aperturas/cierres de caja: `0` / `0`;
+- movimientos de crédito nuevos: `0`;
+- filas nuevas de auditoría: `0`;
+- movimientos/arqueos de Fondo: `0` / `0`.
+
+Persisten dos sesiones de caja marcadas `ABIERTA`, IDs `43` y `44`, abiertas
+antes del reinicio (`2026-09-17 01:27:10+00` y
+`2026-09-18 19:27:28+00`). No fueron creadas por esta recuperación. El último
+movimiento de crédito y la última auditoría observados también son anteriores
+al reinicio (`19:27:45+00` y `19:29:03+00`).
+
+Esto confirma ausencia **actual** de transacciones abiertas y ausencia de esas
+operaciones de negocio después del reinicio. No se presenta como prueba general
+de que nunca pudo ocurrir un COMMIT anterior.
+
+## Escrituras automáticas detectadas
+
+Sí hubo un estado persistente producido por el arranque automático del
+workspace:
+
+- `permisos_rol`: 70 filas con `updated_at` entre
+  `21:26:24.589377+00` y `21:26:25.425432+00`;
+- `permisos_ubicacion`: 54 filas con `updated_at =
+  21:26:25.425432+00`;
+- secuencias observadas: `permisos_rol_id_seq = 33917` y
+  `permisos_ubicacion_id_seq = 9774`.
+
+Los tiempos empiezan inmediatamente después del inicio de PostgreSQL. Son el
+patrón ya documentado para los inicializadores normales: actualizan
+`updated_at` de permisos y consumen secuencias. Esta recuperación no ejecutó
+ese comando; al comenzar se encontró el workflow API en estado `finished` y
+configurado todavía con:
+
+`pnpm --filter @workspace/api-server run dev`
+
+El script `dev` ejecuta `build` y después `start`. No se conservó scrollback de
+logs tras el reinicio, por lo que no se atribuyen otros efectos no demostrados.
+La evidencia de base sí demuestra las escrituras anteriores y basta para
+detener la recuperación.
+
+## Drift del bundle
+
+Hash exigido por la autorización:
+
+`655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2`
+
+Hash encontrado antes de intentar arrancar:
+
+`75d1e77f34e040af2c05e86befd6e2a6f288ca5fa5683f52a2919651c31794b9`
+
+El archivo actual mide `9,395,387` bytes y tiene `mtime`
+`2026-09-18 21:26:20.952011597+00`, durante el reinicio y antes del nuevo inicio
+de PostgreSQL. No se encontró en el workspace otra copia con el hash
+`655cad…`. Esta recuperación no ejecutó build ni codegen y no modificó el
+bundle.
+
+Al preparar el arranque autorizado se sustituyó primero la configuración del
+servicio administrado por ejecución directa. Tras detectar el drift, el
+propietario autorizó una corrección exclusivamente preventiva: el comando
+gestionado final es exactamente:
+
+```text
+test $(sha256sum artifacts/api-server/dist/index.mjs | cut -d' ' -f1) = 655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2 &amp;&amp; exec node --enable-source-maps artifacts/api-server/dist/index.mjs
+```
+
+Se mantienen `API_INSPECTION_BOOT=1` y `NODE_ENV=development` dentro del
+servicio. La comparación ocurre antes de importar o ejecutar `dist`; un
+mismatch termina con estado distinto de cero, sin alternativa, build ni
+invocación de Node. También evita que un futuro intento use el comando `dev`
+que construye.
+
+Se probó únicamente la expresión aislada de comparación de hash, sin ejecutar
+el wrapper ni importar la aplicación. Resultado:
+`HASH_GUARD_COMPARISON=REFUSED`, con el hash observado `75d1e77f…`. Es el
+rechazo esperado.
+
+La herramienta de configuración no arrancó el workflow. Su estado final sigue
+siendo `finished`, sin proceso API. No se invocó restart. Esta configuración
+queda como barrera preventiva del bundle autorizado, no como autorización para
+arrancar ni como selección/recuperación del bundle actual.
+
+## Acciones no realizadas
+
+- cero restart/start de API;
+- cero build, codegen o modificación de `dist`;
+- cero DDL/DML, fixtures, migraciones, usuarios o sesiones de prueba;
+- cero arranque/restauración del clon E10;
+- cero aplicación o activación E2;
+- cero login o captura viva;
+- cero reinicio del frontend.
+
+La recuperación sólo puede continuar con una nueva decisión sobre qué bundle
+exacto se autoriza. No debe reconstruirse ni sustituirse silenciosamente el
+hash perdido.</pre></section><section><h2>Opciones sin elegir</h2><pre># Opciones para resolver la evidencia de devolución
+
+## Condición del propietario
+
+**La apertura limitada está bloqueada hasta resolver esta dependencia.** No se eligió ni implementó ninguna opción. La autorización de recuperación permite recuperar únicamente el servicio anterior; no habilita ingresos de crédito, devoluciones ni cambios de evidencia.
+
+## Qué significa “poder devolver”
+
+Con las reglas E2 preparadas, la devolución exige importe íntegro, nunca aplicado, sin reverso, origen físico en efectivo y evidencia suficiente, además de permisos, sitio, sesión, disponibilidad y controles de concurrencia.
+
+Registrar un origen no significa que todo abono sea devolvible. Devolver importes parciales o abonos ya utilizados exigiría cambiar esas reglas expresamente; no forma parte de ninguna opción aquí comparada.
+
+Los costos siguientes son de esfuerzo relativo, riesgo y demora operativa. No son una cotización monetaria ni horas garantizadas: todavía falta elegir el alcance y autorizar su implementación y verificación.
+
+## A. Generar evidencia desde el primer abono
+
+**Trabajo necesario**
+
+- Registrar el origen físico y la identidad inmutable de cada recepción aplicable.
+- Separar el registro/atestación de evidencia del permiso para devolver dinero. El hook actual depende del permiso de devolución, que sigue apagado.
+- Integrar los productores ordinario y dirigido dentro de la transacción original, con orden compatible con las aplicaciones legítimas y el FIFO existente.
+- Distinguir prueba de origen de atestación “nunca aplicado”: el hook actual inserta en `evidencia_no_aplicada_e2` y rechaza abonos ya aplicados. Llamarlo indiscriminadamente después de todo abono rompería pagos legítimos.
+- Preparar y revisar las tablas, funciones, guardas y preflight necesarios; mantener la devolución cerrada mientras no se autorice por separado.
+- Verificar atomicidad, rollback, productores omitidos, aplicación inmediata/posterior, concurrencia, duplicados, reinicios y conservación de evidencia.
+
+**Costo:** medio–alto de implementación y verificación; requiere ampliar el SQL propuesto, no solo cambiar una bandera o agregar una llamada.
+
+**Resultado:** los nuevos abonos conservarían evidencia suficiente para evaluar su futura devolución, cuando cumplan las reglas. No reconstruye evidencia antigua.
+
+**Límite operativo:** por sí sola esta opción **no permite devolver de inmediato**: la devolución continúa cerrada hasta completar y autorizar E2. Si se exige disponibilidad de devolución desde el primer día de captura, debe combinarse con C.
+
+## B. Admitir otra evidencia suficiente
+
+**Trabajo necesario**
+
+- Definir qué evidencia inmutable demuestra cliente, importe, origen físico, sitio/sesión y el historial relevante de uso del dinero.
+- Revisar los datos realmente conservados antes de afirmar que esa evidencia existe y es suficiente.
+- Cambiar y versionar la política/validación de elegibilidad, no simplemente retirar el requisito de prueba.
+- Mantener rechazo explícito ante datos incompletos o ambiguos. Un saldo actual, un corte o la ausencia actual de aplicaciones no demuestran por sí solos “nunca aplicado”.
+- Verificar aplicaciones y deshacer aplicaciones, reversos, historia incompleta, duplicados, fraude y concurrencia. Cualquier tratamiento manual o excepción requiere autorización adicional.
+
+**Costo:** alto o muy alto, con más incertidumbre y revisión histórica que A. Si la evidencia nunca se guardó, puede resultar imposible acreditar ciertos casos.
+
+**Resultado:** podría admitir orígenes demostrables por otro contrato de evidencia. No garantiza rescatar todos los abonos ni autoriza atribuir o completar historia automáticamente.
+
+**Límite operativo:** tampoco habilita por sí sola la devolución física. Exige que el flujo E2 esté completo, probado y autorizado. No equivale a aceptar saldos o declaraciones como prueba.
+
+## C. Posponer la captura hasta que E2 pueda devolver
+
+**Trabajo inmediato:** mantener ingreso y devolución cerrados, sin aceptar nuevos abonos de este flujo. Continuar el primer corte histórico con tickets.
+
+**Trabajo antes de abrir:** completar el mecanismo de evidencia elegido —A, B o una combinación revisada— y el flujo de devolución, autorizar SQL y ejecución, comprobar atomicidad/concurrencia y acordar la activación coordinada.
+
+**Costo:** bajo inmediato; costo total de completar E2 y mayor espera para habilitar la captura. Evita crear durante esa espera abonos sin una vía operativa de devolución.
+
+**Resultado:** cuando se abra la captura, E2 ya podrá devolver los casos que cumplan sus reglas. No elimina el trabajo de evidencia ni recupera historia incompleta.
+
+## Cómo se relacionan
+
+A y B determinan **cómo probar el origen y la elegibilidad**. C determina **cuándo abrir la captura**. Por eso C puede combinarse con A o B; no son tres opciones necesariamente excluyentes.
+
+Ninguna cambia el primer corte histórico de tickets, modifica FIFO por cuenta propia ni levanta guardas existentes sin autorización.
+
+## Referencias revisadas
+
+- `artifacts/api-server/src/lib/credit-refund.ts`: hooks, permiso de devolución, selección de evidencia, historial y bloqueos.
+- `artifacts/api-server/src/lib/credit-refund-contract.ts`: flujo inactivo y diferencia entre candidato y elegibilidad.
+- `artifacts/api-server/src/routes/clientes.ts`: productor ordinario y aplicaciones de crédito.
+- `artifacts/api-server/src/lib/credit-evidence.ts`: controles del productor y contexto físico.
+- `reports/e2/sql/credit-refunds-prepared.sql`: evidencia, inmutabilidad y exigencia de transacción original.
+- `artifacts/api-server/src/lib/caja-cash-ledger.ts` y `caja-corte-reader.ts`: alcance de los datos y snapshots del corte; no constituyen por sí mismos un certificado de elegibilidad.</pre></section><section><h2>Paquete de revisión actualizado</h2><pre># Apertura limitada E2/E3 — paquete de revisión, no de ejecución
 
 ## Estado
 
@@ -38,7 +232,7 @@ Preparado conforme a `autorizacion-preparacion.md`. No se aplicó SQL, no se act
 
 El backend preparado mantiene separados y cerrados el ingreso y la devolución. Los parches de activación están archivados, no aplicados. El candidato frontend completo también permanece como parche offline, no como código servido.
 
-**Interrupción del entorno al finalizar:** el workspace se reinició externamente y ambos workflows quedaron detenidos. No se ordenó ese reinicio ni se arrancaron después. El bundle anterior sigue en disco con SHA-256 `655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2`. El proceso previo ya no está vivo. No se puede afirmar que la aplicación siga sirviendo ni que el último corte/operación del propietario haya quedado guardado: requiere comprobación de lectura antes de repetirlo.
+**Resultado posterior de la recuperación autorizada:** se detuvo antes de arrancar la API. La identidad operativa y las tres guardas E1 coinciden, pero un intento automático de arranque normal reemplazó el bundle autorizado y dejó actualizaciones persistentes en filas de permisos. No se encontró una copia del bundle anterior. Las lecturas no encontraron transacciones cliente abiertas/preparadas ni nuevas operaciones de negocio de las categorías comprobadas desde el reinicio. No se afirma ausencia total de efectos: ver `recuperacion/resultado.md`. El frontend está en ejecución; la API queda detenida. La autorización de recuperar la versión anterior no autoriza sustituirla por la compilación encontrada.
 
 ## Índice de entregables
 
@@ -94,7 +288,7 @@ La apertura limitada no instala ni registra la evidencia positiva que exige la d
 
 Con la implementación actual, un abono recibido durante esta apertura carecería de esa prueba. **Activar devoluciones después no lo convertiría automáticamente en devolvible**, aunque conservase saldo íntegro sin aplicar. El esquema preparado exige evidencia en la transacción de origen y no contempla backfill.
 
-Antes de solicitar ejecución hay que resolver esta dependencia o aceptar explícitamente su consecuencia. La recomendación es preparar la conservación de evidencia de origen antes de abrir la captura, **sin habilitar la devolución física**; eso requiere ampliar y revisar el alcance, no ejecutarlo silenciosamente como parte de este paquete.
+**Condición bloqueante ordenada por el propietario:** no se activa la apertura limitada hasta resolver la evidencia necesaria para la devolución. No basta aceptar la ausencia de prueba ni prometer que una activación futura la recuperará. El propietario decidirá entre conservar prueba desde el primer abono, admitir otra evidencia suficiente o posponer la apertura hasta que E2 pueda devolver. Ninguna alternativa está elegida ni autorizada para implementarse. La recuperación del servicio anterior es independiente de esta decisión.
 
 No se añadió por cuenta propia una restricción al saldo a favor, una excepción de devolución, una tabla alternativa ni una inferencia histórica.
 
@@ -120,7 +314,7 @@ Este documento no es esa autorización y no sustituye ensayos PostgreSQL de conc
 - Typecheck canónico final: **exit 0**, cuatro paquetes de artefactos/scripts y siete resultados de bibliotecas, **cero diagnósticos**. El primer fallo TS2345 de una prueba nueva se conserva como evidencia; la reconfirmación final está en `verificacion/final-reconfirm-summary.txt`.
 - Fuente productiva final: **4,065 archivos**, SHA-256 agregado `b34c6d2c40ac307b964d5712322a286d8ea92ad1e510594d763c1461b47448fb`, sin cambios durante la comprobación. Las comprobaciones de cada grupo pueden solaparse; no se suman como pruebas independientes.
 - La última reconfirmación repitió solo los 17 tests de arranque afectados y el typecheck; no repitió los 154 tests no afectados.
-- El bundle anterior se conservó byte a byte. La comprobación visual final no pudo cargar porque el entorno se reinició; no se inició el servidor para obtener una captura favorable.
+- Durante las comprobaciones offline el bundle anterior se conservó byte a byte. La comprobación visual final no pudo cargar durante el reinicio. La revisión posterior de recuperación detectó que el arranque automático lo había reemplazado; no se inició el bundle distinto para obtener una captura favorable.
 
 ## Hashes de SQL y parches revisados
 

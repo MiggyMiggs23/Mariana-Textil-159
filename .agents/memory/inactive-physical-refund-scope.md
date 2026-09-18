@@ -23,4 +23,4 @@ Cuando una prueba solo puede registrarse en la transacción de origen, la futura
 
 **Why:** Una recepción legítima puede quedarse sin elegibilidad demostrable para devolución aunque conserve íntegro el saldo y la devolución se habilite más adelante.
 
-**How to apply:** Revisar la conservación de evidencia antes de abrir el productor. Separar registrar la prueba de habilitar la devolución; cualquier alcance limitado que omita la prueba debe explicarse y aceptarse expresamente, no suponerse reparable mediante backfill.
+**How to apply:** Revisar la conservación de evidencia antes de abrir el productor. Separar registrar la prueba de habilitar la devolución; no suponer que una activación posterior o un backfill recuperarán una prueba que debía nacer en la transacción original. Consultar las condiciones de autorización vigentes en replit.md antes de proponer una apertura.

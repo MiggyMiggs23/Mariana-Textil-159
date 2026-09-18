@@ -2,6 +2,8 @@
 
 El workspace se reinició externamente al finalizar la preparación; ambos workflows quedaron detenidos. El bundle anterior existe y conserva SHA-256 `655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2`.
 
+**Nota posterior:** la frase anterior describe la observación previa a la recuperación, no el estado vigente. La recuperación fue autorizada condicionalmente y se detuvo: identidad y guardas coinciden, pero el bundle anterior ya había sido reemplazado y hubo escrituras automáticas de inicialización. Ver `recuperacion/resultado.md`. No se arrancó la API ni se eligió otra versión.
+
 ## Alcance propuesto para autorización independiente
 
 1. Comprobar por lectura la identidad de la base operativa y el estado de la última operación/corte que el propietario indique. No repetir tickets, pagos, cierres ni otra operación.

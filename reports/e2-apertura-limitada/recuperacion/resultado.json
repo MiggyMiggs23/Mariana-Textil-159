@@ -1,0 +1,59 @@
+{
+  "status": "STOP",
+  "apiStartedByRecovery": false,
+  "apiWorkflowStopped": true,
+  "frontendRestarted": false,
+  "identity": {
+    "database": "heliumdb",
+    "oid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersion": "16.10",
+    "matchesApprovedOperationalIdentity": true
+  },
+  "guards": {
+    "allThreeExactClosed": true,
+    "E1C01ProsrcSha256": "994ad4041bf1f8d96e0dbafcb81f07829d915f32598b4fd3721560c77461c6fd",
+    "E1P01ProsrcSha256": "50840f6e50fd29907e4458a55170599877512db315b659dba10ff4f1c41ef5c5",
+    "E1A01ProsrcSha256": "25f74b9765fef1eb3578915706fe7bd8bece469d20ced5ed9cd67e4cbb5e8365"
+  },
+  "currentTransactionState": {
+    "otherOpenClientTransactions": 0,
+    "idleInTransaction": 0,
+    "preparedTransactions": 0
+  },
+  "businessRowsAfterDatabaseRestart": {
+    "tickets": 0,
+    "ticketPayments": 0,
+    "cashSessionsOpened": 0,
+    "cashSessionsClosed": 0,
+    "creditMovements": 0,
+    "auditRows": 0,
+    "fundMovements": 0,
+    "fundCounts": 0
+  },
+  "automaticStartupEffectsAfterDatabaseRestart": {
+    "permissionRoleRowsTouched": 70,
+    "permissionSiteRowsTouched": 54,
+    "firstObservedAtUtc": "2026-09-18T21:26:24.589377Z",
+    "lastObservedAtUtc": "2026-09-18T21:26:25.425432Z"
+  },
+  "bundle": {
+    "authorizedSha256": "655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2",
+    "observedSha256": "75d1e77f34e040af2c05e86befd6e2a6f288ca5fa5683f52a2919651c31794b9",
+    "match": false,
+    "modifiedByRecovery": false
+  },
+  "preventiveManagedCommand": {
+    "exact": "test $(sha256sum artifacts/api-server/dist/index.mjs | cut -d' ' -f1) = 655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2 && exec node --enable-source-maps artifacts/api-server/dist/index.mjs",
+    "inspectionBoot": "1",
+    "nodeEnv": "development",
+    "workflowStateAfterConfiguration": "finished",
+    "isolatedHashComparison": "REFUSED",
+    "applicationImported": false
+  },
+  "stopReasons": [
+    "Authorized old bundle hash is no longer present",
+    "Automatic normal startup touched permission rows after workspace restart"
+  ]
+}

@@ -6,7 +6,7 @@ Preparado conforme a `autorizacion-preparacion.md`. No se aplicó SQL, no se act
 
 El backend preparado mantiene separados y cerrados el ingreso y la devolución. Los parches de activación están archivados, no aplicados. El candidato frontend completo también permanece como parche offline, no como código servido.
 
-**Interrupción del entorno al finalizar:** el workspace se reinició externamente y ambos workflows quedaron detenidos. No se ordenó ese reinicio ni se arrancaron después. El bundle anterior sigue en disco con SHA-256 `655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2`. El proceso previo ya no está vivo. No se puede afirmar que la aplicación siga sirviendo ni que el último corte/operación del propietario haya quedado guardado: requiere comprobación de lectura antes de repetirlo.
+**Resultado posterior de la recuperación autorizada:** se detuvo antes de arrancar la API. La identidad operativa y las tres guardas E1 coinciden, pero un intento automático de arranque normal reemplazó el bundle autorizado y dejó actualizaciones persistentes en filas de permisos. No se encontró una copia del bundle anterior. Las lecturas no encontraron transacciones cliente abiertas/preparadas ni nuevas operaciones de negocio de las categorías comprobadas desde el reinicio. No se afirma ausencia total de efectos: ver `recuperacion/resultado.md`. El frontend está en ejecución; la API queda detenida. La autorización de recuperar la versión anterior no autoriza sustituirla por la compilación encontrada.
 
 ## Índice de entregables
 
@@ -62,7 +62,7 @@ La apertura limitada no instala ni registra la evidencia positiva que exige la d
 
 Con la implementación actual, un abono recibido durante esta apertura carecería de esa prueba. **Activar devoluciones después no lo convertiría automáticamente en devolvible**, aunque conservase saldo íntegro sin aplicar. El esquema preparado exige evidencia en la transacción de origen y no contempla backfill.
 
-Antes de solicitar ejecución hay que resolver esta dependencia o aceptar explícitamente su consecuencia. La recomendación es preparar la conservación de evidencia de origen antes de abrir la captura, **sin habilitar la devolución física**; eso requiere ampliar y revisar el alcance, no ejecutarlo silenciosamente como parte de este paquete.
+**Condición bloqueante ordenada por el propietario:** no se activa la apertura limitada hasta resolver la evidencia necesaria para la devolución. No basta aceptar la ausencia de prueba ni prometer que una activación futura la recuperará. El propietario decidirá entre conservar prueba desde el primer abono, admitir otra evidencia suficiente o posponer la apertura hasta que E2 pueda devolver. Ninguna alternativa está elegida ni autorizada para implementarse. La recuperación del servicio anterior es independiente de esta decisión.
 
 No se añadió por cuenta propia una restricción al saldo a favor, una excepción de devolución, una tabla alternativa ni una inferencia histórica.
 
@@ -88,7 +88,7 @@ Este documento no es esa autorización y no sustituye ensayos PostgreSQL de conc
 - Typecheck canónico final: **exit 0**, cuatro paquetes de artefactos/scripts y siete resultados de bibliotecas, **cero diagnósticos**. El primer fallo TS2345 de una prueba nueva se conserva como evidencia; la reconfirmación final está en `verificacion/final-reconfirm-summary.txt`.
 - Fuente productiva final: **4,065 archivos**, SHA-256 agregado `b34c6d2c40ac307b964d5712322a286d8ea92ad1e510594d763c1461b47448fb`, sin cambios durante la comprobación. Las comprobaciones de cada grupo pueden solaparse; no se suman como pruebas independientes.
 - La última reconfirmación repitió solo los 17 tests de arranque afectados y el typecheck; no repitió los 154 tests no afectados.
-- El bundle anterior se conservó byte a byte. La comprobación visual final no pudo cargar porque el entorno se reinició; no se inició el servidor para obtener una captura favorable.
+- Durante las comprobaciones offline el bundle anterior se conservó byte a byte. La comprobación visual final no pudo cargar durante el reinicio. La revisión posterior de recuperación detectó que el arranque automático lo había reemplazado; no se inició el bundle distinto para obtener una captura favorable.
 
 ## Hashes de SQL y parches revisados
 
