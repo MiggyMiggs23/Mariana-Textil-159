@@ -1772,3 +1772,17 @@ mtime_ms = 1789749903580
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/2d562497-082c-44c4-8b2e-78597eaae9c7/bf4b9b18-0c1d-4bc6-805b-e50d50781af3"
 storage_version_token = "1789749928411798"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "Lp-I3IWxIAyhnORNIUfGm"
+uri = "file://reports/e10-bloque-0-y-alcance-propuesto-2026-09-18.md"
+type = "text"
+title = "E10 — Bloque 0 y alcance para autorización"
+description = "Patrones confirmados, fase aislada propuesta, exclusiones y límites de verificación. No autoriza escrituras por sí mismo."
+logical_id = "16184cbb-dac0-4abf-b115-a17722283886"
+content_hash = "sha256:88654d8cc7b5a144dc36ee0e4acc16afb5d98a7bef0cc6f34c18e054d5c34cbe"
+size = 11798
+mtime_ms = 1789751490220
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/16184cbb-dac0-4abf-b115-a17722283886/303ca960-97fb-49b8-ba17-db81eded3a5f"
+storage_version_token = "1789751512073480"
+content_type = "text/markdown"
