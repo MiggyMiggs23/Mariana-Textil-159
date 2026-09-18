@@ -92,7 +92,7 @@ import { resolveReadScope } from "./inventario";
 import {
   readCreditEvidenceInput, canonicalCreditMoney, assertCreditEvidenceAccess,
   assertCreditEvidenceScope, claimCreditOperation, insertCreditMovementE1,
-  CreditEvidenceError,
+  assertCreditCaptureEnabled, CreditEvidenceError,
 } from "../lib/credit-evidence";
 
 const router: IRouter = Router();
@@ -2175,6 +2175,9 @@ router.post(
         res.status(400).json({ error: "Fecha efectiva inválida o futura." });
         return;
       }
+      // Source-controlled E3 gate precedes claims, locks and any database work.
+      // Opening income never opens returns or retained receipts.
+      assertCreditCaptureEnabled(evidence, body.formaPago, "ABONO_ORDINARIO", "ABONO");
       const result = await db.transaction(async (tx) => {
         await assertCreditEvidenceAccess(req, evidence, tx);
         const claim = await claimCreditOperation(tx, {
@@ -2330,6 +2333,12 @@ router.post(
       const importe = canonicalCreditMoney(req.body?.importe);
       if (Number(importe) <= 0) throw new CreditEvidenceError("Declara el importe positivo del abono a reversar.", 400);
       const physical = evidence.naturaleza === "DEVOLUCION_FISICA";
+      if (physical) {
+        // E2 physical refunds have a separate inactive workflow; accounting corrections stay separate.
+        const { assertCreditRefundEnabled } = await import("../lib/credit-refund-contract");
+        assertCreditRefundEnabled();
+        throw new CreditEvidenceError("Usa el flujo dedicado de devolución física E2.", 409);
+      }
       const formaPago = physical ? req.body?.formaPago : null;
       const cuentaDestino = physical ? req.body?.cuentaDestino : null;
       const referencia = typeof req.body?.referencia === "string" ? req.body.referencia.trim() : null;

@@ -1,0 +1,50 @@
+E2 apertura limitada — verificación final segura
+baseline_revision=80eaa93d
+baseline_rerun=no
+manifests=exact same 13 backend files and 6 frontend files
+
+backend_tests=131
+backend_pass=126
+backend_fail=5
+backend_terminal_exit=1
+frontend_tests=23
+frontend_pass=23
+frontend_fail=0
+frontend_terminal_exit=0
+current_total_tests=154
+current_total_pass=149
+current_total_fail=5
+known_failure_set_exactly_matches_baseline=yes
+new_test_failures=0
+
+count_difference_from_prior_149=+5
+count_explanation=inside the same selected credit-evidence baseline file, one former combined closed-gate test was replaced by six split-gate/rollback/scope tests; exact manifests did not change
+
+root_typecheck_command=env -i PATH="$PATH" HOME="$HOME" NODE_ENV=test pnpm run typecheck
+root_typecheck_terminal_exit=1
+typecheck_result=FAIL; all selected checks attempted
+typecheck_unique_diagnostics=1
+typecheck_repeated_diagnostics=0
+typecheck_process_or_parser_failures=0
+typecheck_exact_diagnostic=artifacts/api-server/src/lib/limited-startup-preflight.test.ts:287:48 TS2345: Argument of type 'undefined' is not assignable to parameter of type 'AssertPredicate'.
+typecheck_edits_made=none
+
+production_source_manifest_files=4065
+production_source_before_sha256=33e108f2559dd2e2040dbb481bf3d557d5ac1090417430a58e845e271ffa9ad4
+production_source_after_sha256=33e108f2559dd2e2040dbb481bf3d557d5ac1090417430a58e845e271ffa9ad4
+production_source_unchanged=yes
+
+protected_bundle=artifacts/api-server/dist/index.mjs
+protected_bundle_expected_sha256=655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2
+protected_bundle_before_sha256=655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2
+protected_bundle_after_sha256=655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2
+protected_bundle_unchanged=yes
+
+database_queries=0
+database_writes=0
+http_network=blocked_by_guard
+database_initializers=not_run
+server_or_api_start_restart=none
+build_or_dist_command=none
+global_browser_suite=not_run
+implementation_edits=none

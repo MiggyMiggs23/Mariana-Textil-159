@@ -1,0 +1,27 @@
+TAP version 13
+# Subtest: wrong return session/site rejected; isolated removal of scope fails negative proof
+not ok 1 - wrong return session/site rejected; isolated removal of scope fails negative proof
+  ---
+  duration_ms: 13.401418
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:1:6163'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:152:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1222.074073

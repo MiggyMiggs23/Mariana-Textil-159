@@ -50,6 +50,12 @@ un resultado observable. La fragilidad de una aserción textual no autoriza
 eliminar su obligación. Antes de declarar imposible el aislamiento, comprobar
 los generadores públicos y los handlers registrados por el router real.
 
+Las capturas visuales deben esperar el cierre efectivo de menús y la finalización de sus transiciones, no sólo el cambio del valor seleccionado.
+
+**Why:** Un selector ya mostraba el piso elegido mientras su menú de salida seguía superpuesto y semitransparente sobre los campos. La imagen no representaba el estado estable del formulario.
+
+**How to apply:** Esperar que desaparezca el menú, que terminen las transiciones y que las fuentes estén listas antes de fotografiar; no ocultar componentes con CSS exclusivo de la prueba.
+
 Para probar filtros de confidencialidad, usar las formas que emiten los productores reales de eventos; no deducirlas del nombre de las tablas.
 
 **Why:** Un fixture atribuyó a Caja un módulo que el productor real utilizaba para el Fondo. Ajustar el filtro a ese fixture permitió que los eventos reales del Fondo pasaran, aunque las pruebas simuladas quedaran verdes.

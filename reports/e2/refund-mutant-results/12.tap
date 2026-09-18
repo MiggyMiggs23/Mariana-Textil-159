@@ -1,0 +1,27 @@
+TAP version 13
+# Subtest: negative proof: retained service cannot omit its E1 gate
+not ok 1 - negative proof: retained service cannot omit its E1 gate
+  ---
+  duration_ms: 7.299413
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:1:11326'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:258:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1026.333126

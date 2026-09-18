@@ -1,0 +1,31 @@
+E2 apertura limitada — reconfirmación FINAL
+previous_result_preserved=resultado-final.txt retains the prior TS2345 failure without alteration
+baseline_or_154_manifest_rerun=no
+
+boot_focused_manifest_files=3
+boot_focused_tests=17
+boot_focused_pass=17
+boot_focused_fail=0
+boot_focused_terminal_exit=0
+boot_guard=canonical offline preload; explicit files; native Node test runner with tsx loader; clean environment without secrets
+
+root_typecheck_terminal_exit=0
+typecheck_packages=4 artifacts/scripts plus 7 library results
+typecheck_unique_diagnostics=0
+typecheck_repeated_diagnostics=0
+typecheck_process_or_parser_failures=0
+typecheck_result=PASS; all selected checks completed
+
+production_source_manifest_files=4065
+production_source_before_sha256=b34c6d2c40ac307b964d5712322a286d8ea92ad1e510594d763c1461b47448fb
+production_source_after_sha256=b34c6d2c40ac307b964d5712322a286d8ea92ad1e510594d763c1461b47448fb
+production_source_unchanged=yes
+
+protected_bundle=artifacts/api-server/dist/index.mjs
+protected_bundle_sha256=655cad5082301d1456184fac8206f317bc0c88e9a33afe4679f806a62e1010c2
+protected_bundle_unchanged=yes
+
+database_queries_or_writes=0
+app_server_dist_workflow_actions=none
+implementation_edits=none
+task_done=yes

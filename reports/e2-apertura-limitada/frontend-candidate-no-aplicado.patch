@@ -1,0 +1,333 @@
+diff --git a/artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx b/artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx
+index 003bbfff415f2ce1682af7952f19e8494a2d972f..e107f5ebec0f89148fdbc15f4730814a62d8ae39 100644
+--- a/artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx
++++ b/artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx
+@@ -1,4 +1,4 @@
+-import { useState, useEffect } from "react";
++import { useState, useEffect, useRef } from "react";
+ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
+ import { Button } from "@/components/ui/button";
+ import { Input } from "@/components/ui/input";
+@@ -11,6 +11,8 @@ import {
+   useCreateClientePago,
+   useCreateSolicitudPagoDirigido,
+   usePreviewClientePago,
++  useObtenerSesionCajaActual,
++  getObtenerSesionCajaActualQueryKey,
+   type ClientePago,
+   type ClientePagoPreview,
+ } from "@workspace/api-client-react";
+@@ -23,6 +25,7 @@ import {
+ } from "@/lib/fecha-efectiva";
+ import { format } from "date-fns";
+ import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
++import { CREDIT_CASH_INCOME_CLIENT_ENABLED } from "@/lib/credit-evidence";
+ import { useQueryClient } from "@tanstack/react-query";
+ 
+ type Step = "form" | "preview" | "success";
+@@ -50,6 +53,7 @@ export function ClientePagoDialog({
+ }: ClientePagoDialogProps) {
+   const evidence = useCreditEvidenceDraft();
+   const queryClient = useQueryClient();
++  const submitLock = useRef(false);
+   const [step, setStep] = useState<Step>("form");
+   const [amount, setAmount] = useState("");
+   const [paymentMethod, setPaymentMethod] = useState<"EFECTIVO" | "TRANSFERENCIA" | "FACTURADO">(DEFAULT_CREDIT_PAYMENT_METHOD);
+@@ -74,11 +78,41 @@ export function ClientePagoDialog({
+   const previewPayment = usePreviewClientePago();
+   const createPayment = useCreateClientePago();
+   const createDirectedPayment = useCreateSolicitudPagoDirigido();
++  const selectedSiteId = Number(evidence.site || 0);
++  const cashSessionQuery = useObtenerSesionCajaActual(
++    { ubicacionId: selectedSiteId },
++    {
++      query: {
++        enabled: open && CREDIT_CASH_INCOME_CLIENT_ENABLED && paymentMethod === "EFECTIVO"
++          && evidence.nature === "INGRESO_FISICO" && selectedSiteId > 0,
++        queryKey: getObtenerSesionCajaActualQueryKey({ ubicacionId: selectedSiteId }),
++        retry: false,
++      },
++    },
++  );
++  const cashSession = cashSessionQuery.data?.sesion ?? null;
++  const cashSessionProblem = paymentMethod !== "EFECTIVO" ? null
++    : !CREDIT_CASH_INCOME_CLIENT_ENABLED
++      ? "El ingreso físico en efectivo permanece pendiente de activación limitada."
++      : evidence.nature !== "INGRESO_FISICO"
++        ? "Efectivo sólo está permitido para un ingreso físico real; no uses corrección contable."
++        : selectedSiteId <= 0
++          ? "Selecciona el sitio real antes de consultar su caja."
++          : cashSessionQuery.isLoading || cashSessionQuery.isFetching
++            ? "Validando la sesión de caja actual…"
++            : cashSessionQuery.isError
++              ? "No se pudo validar la sesión de caja actual. Efectivo permanece bloqueado."
++              : !cashSession
++                ? "No hay una sesión de caja ABIERTA para el sitio seleccionado. Efectivo permanece bloqueado."
++                : cashSession.ubicacionId !== selectedSiteId || cashSession.estado !== "ABIERTA" || cashSession.cerradaAt !== null
++                  ? "La sesión de caja actual no corresponde al sitio seleccionado o ya no está abierta."
++                  : null;
+ 
+   // Reset form when modal opens/closes
+   useEffect(() => {
+     if (open) {
+       evidence.reset();
++      submitLock.current = false;
+       setStep("form");
+       setAmount(defaultAmount || "");
+       setPaymentMethod(DEFAULT_CREDIT_PAYMENT_METHOD);
+@@ -109,6 +143,14 @@ export function ClientePagoDialog({
+     // Invalidate preview if any field changes while we are on preview step (actually handled by input onChange, but this is a safeguard)
+   }, [paymentMethod]);
+ 
++  useEffect(() => {
++    if (paymentMethod === "EFECTIVO" && (!CREDIT_CASH_INCOME_CLIENT_ENABLED || evidence.nature !== "INGRESO_FISICO")) {
++      setPaymentMethod(DEFAULT_CREDIT_PAYMENT_METHOD);
++      setDestinationAccount("");
++      handleInputChange();
++    }
++  }, [evidence.nature, paymentMethod]);
++
+   const handleInputChange = () => {
+     if (step === "preview") {
+       setStep("form");
+@@ -117,6 +159,10 @@ export function ClientePagoDialog({
+   };
+ 
+   const handlePreview = () => {
++    if (cashSessionProblem) {
++      toast({ title: "Caja requerida", description: cashSessionProblem, variant: "destructive" });
++      return;
++    }
+     if (evidence.problem(paymentMethod)) {
+       toast({ title: "Origen requerido", description: evidence.problem(paymentMethod)!, variant: "destructive" });
+       return;
+@@ -139,6 +185,7 @@ export function ClientePagoDialog({
+           setStep("preview");
+         },
+         onError: (error) => {
++          submitLock.current = false;
+           toast({
+             title: "Error al previsualizar",
+             description: getApiErrorMessage(error, "Verifica el importe e intenta de nuevo."),
+@@ -149,22 +196,54 @@ export function ClientePagoDialog({
+     );
+   };
+ 
+-  const submitPayment = () => {
++  const submitPayment = async () => {
++    if (submitLock.current || createPayment.isPending || createDirectedPayment.isPending) return;
+     if (!destinationAccount || evidence.problem(paymentMethod)) return;
++    if (cashSessionProblem) {
++      toast({ title: "Caja requerida", description: cashSessionProblem, variant: "destructive" });
++      return;
++    }
++    if (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10)) return;
++
++    submitLock.current = true;
++    let verifiedCashSession = cashSession;
++    if (paymentMethod === "EFECTIVO") {
++      const refreshed = await cashSessionQuery.refetch();
++      verifiedCashSession = refreshed.data?.sesion ?? null;
++      if (refreshed.isError || !verifiedCashSession
++        || verifiedCashSession.ubicacionId !== selectedSiteId
++        || verifiedCashSession.estado !== "ABIERTA"
++        || verifiedCashSession.cerradaAt !== null) {
++        submitLock.current = false;
++        toast({
++          title: "Caja requerida",
++          description: "La sesión de caja dejó de estar abierta o ya no corresponde al sitio. No se envió el abono.",
++          variant: "destructive",
++        });
++        return;
++      }
++    }
++
+     const fechaEfectiva = buildMexicoCityEffectiveDate(effectiveDate);
+-    const metadata = evidence.build(mode === "DIRIGIDO" ? "ABONO_DIRIGIDO" : "ABONO_ORDINARIO",
+-      { clienteId, amount, paymentMethod, destinationAccount, reference, paymentNotes, fechaEfectiva, selectedMovementId, motivo }, paymentMethod);
++    const producer = mode === "DIRIGIDO" ? "ABONO_DIRIGIDO" : "ABONO_ORDINARIO";
++    const cashContext = paymentMethod === "EFECTIVO" && verifiedCashSession
++      ? { sesionCajaId: verifiedCashSession.id, sitioOrigenId: verifiedCashSession.ubicacionId }
++      : null;
++    const metadataDraft = evidence.build(producer,
++      { clienteId, amount, paymentMethod, destinationAccount, reference, paymentNotes, fechaEfectiva, selectedMovementId, motivo, cashContext }, paymentMethod);
++    const metadata = cashContext
++      ? { ...metadataDraft, naturaleza: "INGRESO_FISICO" as const, ...cashContext }
++      : metadataDraft;
+     const accepted = () => {
+       evidence.accepted();
+       queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && (query.queryKey[0].startsWith("/api/clientes") || query.queryKey[0].startsWith("/api/pagos-dirigidos")) });
+       onSuccess?.();
+     };
+     if (mode === "DIRIGIDO") {
+-      if (!selectedMovementId || motivo.trim().length < 10) return;
+       createDirectedPayment.mutate({
+         data: {
+           ...metadata,
+-          tipo: "CLIENTE", entidadId: clienteId, documentoMovimientoId: selectedMovementId,
++          tipo: "CLIENTE", entidadId: clienteId, documentoMovimientoId: selectedMovementId!,
+           importe: Number(amount), formaPago: paymentMethod, cuentaDestino: destinationAccount,
+           referencia: reference || undefined, notas: paymentNotes || undefined,
+           fechaEfectiva: fechaEfectiva ?? undefined,
+@@ -172,7 +251,7 @@ export function ClientePagoDialog({
+         },
+       }, {
+         onSuccess: (data) => { setRealResult(data as unknown as ClientePago); setStep("success"); accepted(); },
+-        onError: (error) => toast({ title: "Error al solicitar pago dirigido", description: getApiErrorMessage(error, "Intenta de nuevo"), variant: "destructive" }),
++        onError: (error) => { submitLock.current = false; toast({ title: "Error al solicitar pago dirigido", description: getApiErrorMessage(error, "Intenta de nuevo"), variant: "destructive" }); },
+       });
+       return;
+     }
+@@ -197,6 +276,7 @@ export function ClientePagoDialog({
+           accepted();
+         },
+         onError: (error) => {
++          submitLock.current = false;
+           toast({
+             title: "Error al registrar pago",
+             description: getApiErrorMessage(error, "Intenta de nuevo"),
+@@ -207,7 +287,7 @@ export function ClientePagoDialog({
+     );
+   };
+ 
+-  const isFormValid = Number(amount) > 0 && destinationAccount !== "" && !evidence.problem(paymentMethod);
++  const isFormValid = Number(amount) > 0 && destinationAccount !== "" && !evidence.problem(paymentMethod) && !cashSessionProblem;
+   const isSubmitting = createPayment.isPending || createDirectedPayment.isPending;
+ 
+   return (
+@@ -259,24 +339,27 @@ export function ClientePagoDialog({
+ 
+               <div className="space-y-2">
+                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Forma de Pago</Label>
+-                <Select
++                <select
+                   value={paymentMethod}
+-                  onValueChange={(value) => {
++                  onChange={(event) => {
++                    const value = event.target.value;
+                     if (value === "EFECTIVO" || value === "TRANSFERENCIA" || value === "FACTURADO") {
+                       setPaymentMethod(value);
+                       handleInputChange();
+                     }
+                   }}
++                  className="h-12 w-full rounded-md border-2 bg-white px-3 text-sm"
++                  data-testid="cliente-payment-method"
+                 >
+-                  <SelectTrigger className="h-12 bg-white border-2">
+-                    <SelectValue />
+-                  </SelectTrigger>
+-                  <SelectContent>
+-                    <SelectItem value="EFECTIVO" disabled={evidence.nature !== "CORRECCION_CONTABLE"} className="font-medium py-3">Efectivo (captura física deshabilitada)</SelectItem>
+-                    <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
+-                    <SelectItem value="FACTURADO" className="font-medium py-3">Facturado</SelectItem>
+-                  </SelectContent>
+-                </Select>
++                  <option value="EFECTIVO" disabled={!CREDIT_CASH_INCOME_CLIENT_ENABLED || evidence.nature !== "INGRESO_FISICO"}>Efectivo (ingreso físico)</option>
++                  <option value="TRANSFERENCIA">Transferencia</option>
++                  <option value="FACTURADO">Facturado</option>
++                </select>
++                {paymentMethod === "EFECTIVO" && (
++                  <p role={cashSessionProblem ? "alert" : "status"} className={`text-xs ${cashSessionProblem ? "text-destructive" : "text-emerald-700"}`} data-testid="cash-session-status">
++                    {cashSessionProblem ?? `${cashSession!.nombreUbicacion} · Sesión #${cashSession!.id} ABIERTA`}
++                  </p>
++                )}
+               </div>
+ 
+               <div className="space-y-2">
+@@ -286,23 +369,22 @@ export function ClientePagoDialog({
+                     {formatAccountDestination(paymentMethod === "EFECTIVO" ? "CAJA_FISICA" : "CUENTA_FISCAL")}
+                   </div>
+                 ) : (
+-                  <Select
++                  <select
+                     value={destinationAccount}
+-                    onValueChange={(value) => {
++                    onChange={(event) => {
++                      const value = event.target.value;
+                       if (value === "CUENTA_FISCAL" || value === "CUENTA_NO_FISCAL") {
+                         setDestinationAccount(value);
+                         handleInputChange();
+                       }
+                     }}
++                    className="h-12 w-full rounded-md border-2 bg-white px-3 text-sm"
++                    data-testid="cliente-payment-destination"
+                   >
+-                    <SelectTrigger className="h-12 bg-white border-2">
+-                      <SelectValue placeholder="Selecciona..." />
+-                    </SelectTrigger>
+-                    <SelectContent>
+-                      <SelectItem value="CUENTA_NO_FISCAL" className="font-medium py-3">{formatAccountDestination("CUENTA_NO_FISCAL")}</SelectItem>
+-                      <SelectItem value="CUENTA_FISCAL" className="font-medium py-3">{formatAccountDestination("CUENTA_FISCAL")}</SelectItem>
+-                    </SelectContent>
+-                  </Select>
++                    <option value="">Selecciona...</option>
++                    <option value="CUENTA_NO_FISCAL">{formatAccountDestination("CUENTA_NO_FISCAL")}</option>
++                    <option value="CUENTA_FISCAL">{formatAccountDestination("CUENTA_FISCAL")}</option>
++                  </select>
+                 )}
+               </div>
+             </div>
+diff --git a/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts b/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts
+index f45073fb2ddf81805984e3034fc35f0991683b65..ed30e0c01ad5b811b9452128cef80d1f5fabda6f 100644
+--- a/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts
++++ b/artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts
+@@ -14,7 +14,8 @@ const mutations: Record<string, [string, string]> = {
+   "accepted-key": ["accepted() { signature = null; key = null; }", "accepted() {}"],
+   "producer-key": ["JSON.stringify([producer, intent])", "JSON.stringify(intent)"],
+   "draft-content": ["signature !== next || key === null", "key === null"],
+-  "cash-gate": ["CREDIT_CASH_CAPTURE_ENABLED = false", "CREDIT_CASH_CAPTURE_ENABLED = true"],
++  "income-gate": ["CREDIT_CASH_INCOME_CLIENT_ENABLED = false", "CREDIT_CASH_INCOME_CLIENT_ENABLED = true"],
++  "return-gate": ["CREDIT_CASH_RETURN_CLIENT_ENABLED = false", "CREDIT_CASH_RETURN_CLIENT_ENABLED = true"],
+   "pending-gate": ["CREDIT_PENDING_RECEIPTS_ENABLED = false", "CREDIT_PENDING_RECEIPTS_ENABLED = true"],
+   "attribution-gate": ["CREDIT_ATTRIBUTION_ENABLED = false", "CREDIT_ATTRIBUTION_ENABLED = true"],
+   "nature-required": ['if (!input.naturaleza || !Object.hasOwn(creditNatureLabels, input.naturaleza))', "if (false)"],
+@@ -59,11 +60,13 @@ test("E1 producer and changed logical draft cannot share an operation key", () =
+   assert.notEqual(draft.keyFor("ABONO_ORDINARIO", { ...metadata, naturaleza: "CORRECCION_CONTABLE" }), before);
+ });
+ 
+-test("E1 all three activation gates stay closed", () => {
+-  assert.equal(helpers.CREDIT_CASH_CAPTURE_ENABLED, false);
++test("client income and return cash gates remain separate and closed", () => {
++  assert.equal(helpers.CREDIT_CASH_INCOME_CLIENT_ENABLED, false);
++  assert.equal(helpers.CREDIT_CASH_RETURN_CLIENT_ENABLED, false);
+   assert.equal(helpers.CREDIT_PENDING_RECEIPTS_ENABLED, false);
+   assert.equal(helpers.CREDIT_ATTRIBUTION_ENABLED, false);
+-  assert.match(helpers.creditEvidenceProblem(metadata, "EFECTIVO")!, /deshabilitada/);
++  assert.match(helpers.creditEvidenceProblem(metadata, "EFECTIVO")!, /pendiente de activación limitada/);
++  assert.match(helpers.creditEvidenceProblem({ ...metadata, naturaleza: "DEVOLUCION_FISICA" }, "EFECTIVO")!, /permanece inactiva/);
+ });
+ 
+ test("E1 site and nature are explicit, without inherited defaults", () => {
+@@ -75,7 +78,7 @@ test("E1 site and nature are explicit, without inherited defaults", () => {
+ test("E1 correction requires its own justification, never a cash session", () => {
+   const correction = { ...metadata, naturaleza: "CORRECCION_CONTABLE" as const };
+   assert.ok(helpers.creditEvidenceProblem(correction, "EFECTIVO"));
+-  assert.equal(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: "Recaptura documentada, no entró efectivo" }, "EFECTIVO"), null);
++  assert.match(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: "Recaptura documentada, no entró efectivo" }, "EFECTIVO")!, /no puede usarse como ingreso/);
+   assert.ok(helpers.creditEvidenceProblem({ ...correction, origenJustificacion: "Recaptura documentada", sesionCajaId: 8 }, "EFECTIVO"));
+   assert.ok(helpers.creditEvidenceProblem({ ...metadata, sesionCajaId: 8 }, "TRANSFERENCIA"));
+ });
+diff --git a/artifacts/mariana-textil/src/lib/credit-evidence.ts b/artifacts/mariana-textil/src/lib/credit-evidence.ts
+index 8714b60be8e98469c395ec69e2f16eeeef1c5ca2..c941fb1617bbc73ef400325fedfe6dc1c838c3ee 100644
+--- a/artifacts/mariana-textil/src/lib/credit-evidence.ts
++++ b/artifacts/mariana-textil/src/lib/credit-evidence.ts
+@@ -1,6 +1,7 @@
+ import type { CreditEvidenceInput, CreditNature, CreditMovementEvidence, CreditAttributionInput } from "@workspace/api-client-react";
+ 
+-export const CREDIT_CASH_CAPTURE_ENABLED = false;
++export const CREDIT_CASH_INCOME_CLIENT_ENABLED = false;
++export const CREDIT_CASH_RETURN_CLIENT_ENABLED = false;
+ export const CREDIT_PENDING_RECEIPTS_ENABLED = false;
+ export const CREDIT_ATTRIBUTION_ENABLED = false;
+ export const creditNatureLabels: Record<CreditNature, string> = {
+@@ -31,7 +32,9 @@ export function creditEvidenceProblem(input: Partial<CreditEvidenceInput>, mediu
+   if (!Number.isSafeInteger(input.sitioOrigenId) || Number(input.sitioOrigenId) <= 0) return "Selecciona el sitio operativo de origen; no se deduce de la nota.";
+   if (!input.naturaleza || !Object.hasOwn(creditNatureLabels, input.naturaleza)) return "Selecciona explícitamente la naturaleza del movimiento.";
+   const physical = input.naturaleza === "INGRESO_FISICO" || input.naturaleza === "DEVOLUCION_FISICA";
+-  if (physical && medium === "EFECTIVO" && !CREDIT_CASH_CAPTURE_ENABLED) return "La captura nueva de efectivo de crédito está deshabilitada en E1.";
++  if (input.naturaleza === "INGRESO_FISICO" && medium === "EFECTIVO" && !CREDIT_CASH_INCOME_CLIENT_ENABLED) return "El ingreso físico en efectivo permanece pendiente de activación limitada.";
++  if (input.naturaleza === "DEVOLUCION_FISICA" && medium === "EFECTIVO" && !CREDIT_CASH_RETURN_CLIENT_ENABLED) return "La devolución física en efectivo permanece inactiva.";
++  if (input.naturaleza === "CORRECCION_CONTABLE" && medium === "EFECTIVO") return "Una corrección contable no puede usarse como ingreso de efectivo.";
+   if ((!physical || medium !== "EFECTIVO") && input.sesionCajaId != null) return "Las transferencias y correcciones no llevan sesión de caja.";
+   if (input.naturaleza === "CORRECCION_CONTABLE" && !input.origenJustificacion?.trim()) return "La corrección exige justificación del origen y evidencia de la recaptura.";
+   return null;

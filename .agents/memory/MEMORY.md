@@ -73,3 +73,4 @@
 - [Reconfirmación enfocada](scoped-test-reconfirmation.md) — aceptada tras una pasada completa si los demás resultados siguen válidos; distinguirla de una segunda pasada global.
 - [Semántica de autorizaciones](operator-authorization-meaning.md) — aclarar sentencias frente a objetos antes de escribir; una discrepancia documental no demuestra drift ni amplía el DDL.
 - [Esquema destino del DDL](ddl-target-schema.md) — declarar el esquema de creación; un search_path endurecido para lecturas puede dirigir DDL sin calificar a pg_catalog.
+- [Devolución física inactiva](inactive-physical-refund-scope.md) — preparar el flujo no autoriza abrir ni eludir las guardas; activación y escrituras requieren autorización aparte.

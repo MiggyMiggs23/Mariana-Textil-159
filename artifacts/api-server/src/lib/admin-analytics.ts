@@ -1,4 +1,6 @@
-import { pool } from "@workspace/db";
+import { pool, db } from "@workspace/db";
+import { readSessionCash } from "./caja-corte-reader";
+import { cashCents, cashMoney } from "./caja-cash-ledger";
 import {
   accountedDocumentAt,
   accountedDocumentPredicate,
@@ -1216,17 +1218,12 @@ export async function listCuts(
     filters.ubicacionId ?? null,
     extra.cajeroId ?? null,
     extra.numeroCorte ?? null,
-    extra.soloConDiferencia ?? false,
-    pageSize,
-    (page - 1) * pageSize,
   ];
   const base = `($1::timestamptz IS NULL OR s.abierta_at >= $1)
     AND ($2::timestamptz IS NULL OR s.abierta_at <= $2)
     AND ($3::int IS NULL OR s.ubicacion_id=$3)`;
   const extraWhere = `AND ($4::int IS NULL OR s.usuario_id=$4)
-    AND ($5::int IS NULL OR s.id=$5)
-    AND (NOT $6::boolean OR (s.efectivo_contado IS NOT NULL AND
-      s.efectivo_contado-s.fondo_inicial-COALESCE(x.efectivo,0) <> 0))`;
+    AND ($5::int IS NULL OR s.id=$5)`;
   const lateral = `LEFT JOIN LATERAL (
     SELECT COALESCE(SUM(t.total) FILTER (WHERE t.estado='VENDIDO'),0) vendido,
       COALESCE(SUM(p.importe) FILTER (WHERE t.estado='VENDIDO'),0) total,
@@ -1235,8 +1232,7 @@ export async function listCuts(
       COUNT(DISTINCT t.id) FILTER (WHERE t.estado='CANCELADO') cancelados
     FROM tickets t LEFT JOIN ticket_pagos p ON p.ticket_id=t.id WHERE t.sesion_caja_id=s.id
   ) x ON true`;
-  const [rows, count, totals] = await Promise.all([
-    pool.query(
+  const rows = await pool.query(
       `SELECT s.id,s.ubicacion_id "ubicacionId",u.nombre "nombreUbicacion",
         s.usuario_id "usuarioId",usr.nombre "nombreUsuario",s.abierta_at "abiertaAt",
         s.cerrada_at "cerradaAt",s.estado,s.fondo_inicial::text "fondoInicial",
@@ -1250,41 +1246,39 @@ export async function listCuts(
        FROM sesiones_caja s JOIN ubicaciones u ON u.id=s.ubicacion_id
        JOIN usuarios usr ON usr.id=s.usuario_id
        ${lateral} WHERE ${base} ${extraWhere}
-       ORDER BY s.abierta_at DESC LIMIT $7 OFFSET $8`,
+        ORDER BY s.abierta_at DESC`,
       values,
-    ),
-    pool.query(`SELECT COUNT(*)::int total FROM sesiones_caja s ${lateral}
-      WHERE ${base} ${extraWhere}`, values.slice(0, 6)),
-    pool.query(`SELECT COALESCE(SUM(x.vendido),0)::text vendido,
-      COALESCE(SUM(x.total),0)::text cobrado,
-      COALESCE(SUM(s.fondo_inicial+x.efectivo),0)::text "efectivoEsperado",
-      COALESCE(SUM(s.efectivo_contado),0)::text "efectivoContado",
-      COALESCE(SUM(s.efectivo_contado-s.fondo_inicial-x.efectivo),0)::text diferencia,
-      COALESCE(SUM(x.cobrados),0)::int tickets
-      FROM sesiones_caja s ${lateral} WHERE ${base} ${extraWhere}`, values.slice(0, 6)),
-  ]);
+    );
+  // Resolve cash BEFORE difference filtering, counting, totals or paging.
+  // Old closed admin cuts intentionally retain their original no-outflows formula.
+  const resolved = await Promise.all(rows.rows.map(async row => ({
+    ...row,
+    ...await readSessionCash(db, row, { efectivoEsperado: decimal(row.efectivoEsperado), diferencia: row.diferencia == null ? null : decimal(row.diferencia) }),
+  })));
+  const filtered = resolved.filter(row => !extra.soloConDiferencia || (row.diferencia != null && cashCents(row.diferencia) !== 0n));
+  const sum = (key: string) => cashMoney(filtered.reduce((total, row) => total + cashCents(row[key] ?? "0"), 0n));
   return {
-    items: rows.rows.map((row) => ({
+    items: filtered.slice((page - 1) * pageSize, page * pageSize).map((row) => ({
       ...row,
       abiertaAt: new Date(row.abiertaAt).toISOString(),
       cerradaAt: row.cerradaAt ? new Date(row.cerradaAt).toISOString() : null,
       fondoInicial: decimal(row.fondoInicial),
       vendido: decimal(row.vendido),
       totalCobrado: decimal(row.totalCobrado),
-      efectivoEsperado: decimal(row.efectivoEsperado),
+      efectivoEsperado: row.efectivoEsperado,
       efectivoContado: row.efectivoContado == null ? null : decimal(row.efectivoContado),
-      diferencia: row.diferencia == null ? null : decimal(row.diferencia),
+      diferencia: row.diferencia,
     })),
-    total: Number(count.rows[0]!.total),
+    total: filtered.length,
     page,
     pageSize,
     totales: {
-      vendido: decimal(totals.rows[0]!.vendido),
-      cobrado: decimal(totals.rows[0]!.cobrado),
-      efectivoEsperado: decimal(totals.rows[0]!.efectivoEsperado),
-      efectivoContado: decimal(totals.rows[0]!.efectivoContado),
-      diferencia: decimal(totals.rows[0]!.diferencia),
-      tickets: Number(totals.rows[0]!.tickets),
+      vendido: decimal(sum("vendido")),
+      cobrado: decimal(sum("totalCobrado")),
+      efectivoEsperado: sum("efectivoEsperado"),
+      efectivoContado: sum("efectivoContado"),
+      diferencia: sum("diferencia"),
+      tickets: filtered.reduce((total, row) => total + Number(row.ticketsCobrados), 0),
     },
   };
 }

@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: negative copy skipping current role check exposes stale-role failure
+not ok 1 - negative copy skipping current role check exposes stale-role failure
+  ---
+  duration_ms: 83.272289
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts:1:6056'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    201 !== 200
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 200
+  actual: 201
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts:138:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1121.406595

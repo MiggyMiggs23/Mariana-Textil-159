@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link } from "wouter";
+import { CorteEfectivoDesglose } from "@/components/corte-efectivo-desglose";
 
 export function CorteTicketFolioLink({
   ticketId,
@@ -306,6 +307,8 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
           </div>
         </div>
       )}
+
+      <CorteEfectivoDesglose desglose={corte.efectivoDesglose} />
     </div>
   );
 }

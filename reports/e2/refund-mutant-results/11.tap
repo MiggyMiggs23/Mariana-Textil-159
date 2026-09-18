@@ -1,0 +1,41 @@
+TAP version 13
+# Subtest: isolated future simulation rejects partial receipts and a second UUID for one source
+not ok 1 - isolated future simulation rejects partial receipts and a second UUID for one source
+  ---
+  duration_ms: 6.765287
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:1:10687'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /incompatible/. Input:
+    
+    'CreditEvidenceError: E2: error no clasificado.'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'E2: error no clasificado.'
+  stack: |-
+    evalmachine.<anonymous>:75:23
+    async Object.transaction (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:85:20)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:243:5)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:243:5)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1036.128915

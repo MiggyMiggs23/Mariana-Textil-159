@@ -103,5 +103,7 @@ Se conservan hasta que E10 cierre:
    `/tmp/prompt-h-block2-20260918124823-63437-63437`, puerto 5432,
    base `restore_disposable_20260918124823-63437`.
 
-La comprobación global de tipos se documentará con su revisión exacta por
-separado; el PASS de instalación SQL no sustituye esa comprobación.
+El typecheck global posterior pasó con cero diagnósticos y cero fallos de
+proceso/parser en la revisión `7cb77f8cfc6287fa51325a25122c48af392a7ada`.
+La evidencia exacta está en `verificacion-revision.md`; el PASS de instalación
+SQL no sustituye esa comprobación ni se atribuye a revisiones posteriores.

@@ -27,5 +27,14 @@ Comportamiento montado:
 - Sobrescribir no cambia cantidades si se cancela y las reemplaza si se confirma;
 - contadores uniforme/ajustado/en blanco y Rollo N de X observados.
 
-Prueba negativa: negative-frozen-old.log ejecuta el mismo corredor contra Entradas congelado
-7cb77f8; termina con exit_code=1 por la aserción semántica del control de piso separado.
+Diagnóstico histórico: negative-frozen-old.log ejecuta el mismo corredor contra Entradas
+congelado 7cb77f8; termina con exit_code=1 porque esa versión todavía no exponía el
+identificador del control de piso separado. Este diagnóstico de identidad no se presenta
+como la prueba negativa geométrica.
+
+Prueba negativa geométrica: negative-geometry-flex-row.log parte de una copia temporal
+aislada del artefacto CURRENT, conserva IDs, etiquetas y handlers, y cambia únicamente
+group-capture-next de flex-col a flex-row. El corredor canónico termina con exit_code=1
+en la aserción observable “cantidad queda antes del piso” (false !== true), no durante
+preparación, importación ni montaje. La copia mutante se eliminó después de la ejecución;
+la aplicación y las pruebas vigentes no se modificaron ni se volvieron a ejecutar.

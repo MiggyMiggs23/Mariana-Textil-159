@@ -1,0 +1,437 @@
+{
+  "executedAt": "2026-09-18T20:36:09.734Z",
+  "tempRoot": "/tmp/e2-refund-negative-L7K3C0",
+  "baselinePass": true,
+  "offlineGuard": "net/tcp/dgram/http/https/fetch denied; VM dependency allowlists in frozen tests; DB URLs blank",
+  "productionAndFrozenTestsUnchanged": true,
+  "before": {
+    "artifacts/api-server/src/lib/credit-refund.ts": "3d508c56d6cd97e375f31c76d255baefa4d7402733bddb0ce742396140ea8603",
+    "artifacts/api-server/src/lib/credit-refund-contract.ts": "0e3506e9f402a6af1332a88c82b9fcd281b6537709a15edabd9af8f0de34d5f1",
+    "artifacts/api-server/src/lib/credit-evidence-contract.ts": "4b64e56a77d2683cb444d9fac20daa3d26800c6f7dcae82d9f1efdd24cc57bde",
+    "artifacts/api-server/src/routes/credit-refunds.ts": "ecb709abc46f7631ba28b7aa66f5cb86d331a189f4ead32dbbd7b2032ea42b3c",
+    "reports/e2/sql/credit-refunds-prepared.sql": "531ce662b6310a1c7a9ca8b503181b2031910c9ea7de8b157482880a30720858",
+    "artifacts/api-server/src/lib/credit-allocation.ts": "3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599",
+    "artifacts/api-server/src/lib/date-only.ts": "276ab049be90f250780441e82738f9f845b4faf1e22e336625b0027ba3697b68",
+    "artifacts/api-server/src/lib/credit-refund.mock.test.ts": "42d732a712d3fa5673fb4a9dcdeb86ecc98771c059eb09eccfc73f7366ba1108",
+    "artifacts/api-server/src/lib/credit-refund.safe.test.ts": "a1b9cd8e16effbcd4c4bd54a0437eb08da94c9b75a6bd0e0b7ead6f33a44cc4f",
+    "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts": "af9d29aa38b466a23e243790e511418414402ac4ad74e4813db7569a57e4b125"
+  },
+  "after": {
+    "artifacts/api-server/src/lib/credit-refund.ts": "3d508c56d6cd97e375f31c76d255baefa4d7402733bddb0ce742396140ea8603",
+    "artifacts/api-server/src/lib/credit-refund-contract.ts": "0e3506e9f402a6af1332a88c82b9fcd281b6537709a15edabd9af8f0de34d5f1",
+    "artifacts/api-server/src/lib/credit-evidence-contract.ts": "4b64e56a77d2683cb444d9fac20daa3d26800c6f7dcae82d9f1efdd24cc57bde",
+    "artifacts/api-server/src/routes/credit-refunds.ts": "ecb709abc46f7631ba28b7aa66f5cb86d331a189f4ead32dbbd7b2032ea42b3c",
+    "reports/e2/sql/credit-refunds-prepared.sql": "531ce662b6310a1c7a9ca8b503181b2031910c9ea7de8b157482880a30720858",
+    "artifacts/api-server/src/lib/credit-allocation.ts": "3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599",
+    "artifacts/api-server/src/lib/date-only.ts": "276ab049be90f250780441e82738f9f845b4faf1e22e336625b0027ba3697b68",
+    "artifacts/api-server/src/lib/credit-refund.mock.test.ts": "42d732a712d3fa5673fb4a9dcdeb86ecc98771c059eb09eccfc73f7366ba1108",
+    "artifacts/api-server/src/lib/credit-refund.safe.test.ts": "a1b9cd8e16effbcd4c4bd54a0437eb08da94c9b75a6bd0e0b7ead6f33a44cc4f",
+    "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts": "af9d29aa38b466a23e243790e511418414402ac4ad74e4813db7569a57e4b125"
+  },
+  "tests": [
+    {
+      "id": 1,
+      "test": "cross-store ADMIN refund uses current cash B without changing receipt A, both origins",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "outflow posted to wrong session",
+      "mutation": {
+        "from": "values({ sesionCajaId: input.sesionCajaId,",
+        "to": "values({ sesionCajaId: 1,"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "01.tap",
+      "evidence": "|-",
+      "limitation": null
+    },
+    {
+      "id": 2,
+      "test": "wrong return session/site rejected; isolated removal of scope fails negative proof",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "return session/site scope omitted",
+      "mutation": {
+        "from": "await assertCreditEvidenceScope(req, evidence, tx);",
+        "to": ""
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "02.tap",
+      "evidence": "'Missing expected rejection.'",
+      "limitation": null
+    },
+    {
+      "id": 3,
+      "test": "isolated restoration of original-site restriction fails required cross-store acceptance",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "source incompatibility misclassified in error contract",
+      "mutation": {
+        "from": "E2: abono físico original incompatible.",
+        "to": "E2: error no clasificado."
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "03.tap",
+      "evidence": "|-",
+      "limitation": "error-reporting semantic defect; does not independently prove every business branch"
+    },
+    {
+      "id": 4,
+      "test": "actual service locks customer row before proof/source/projection in ABONO order",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "customer UPDATE weakened to SHARE",
+      "mutation": {
+        "from": ".where(eq(clientesTable.id, input.clienteId)).for(\"update\").limit(1);",
+        "to": ".where(eq(clientesTable.id, input.clienteId)).for(\"share\").limit(1);"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "04.tap",
+      "evidence": "'customer FOR UPDATE must actually execute'",
+      "limitation": null
+    },
+    {
+      "id": 5,
+      "test": "negative proof: isolated service copy without customer FOR UPDATE fails orchestration assertion",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "redundant row lock masks removed-lock mutant",
+      "mutation": {
+        "from": "if (!customer) throw new CreditEvidenceError(\"E2: cliente no encontrado.\", 404);",
+        "to": "if (!customer) throw new CreditEvidenceError(\"E2: cliente no encontrado.\", 404); await tx.select().from(clientesTable).where(eq(clientesTable.id, input.clienteId)).for(\"update\").limit(1);"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "05.tap",
+      "evidence": "'Missing expected exception.'",
+      "limitation": "meta-test of mutant sensitivity; redundant lock/guard is not a production business defect"
+    },
+    {
+      "id": 6,
+      "test": "production gate prevents even entering transaction",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund-contract.ts",
+      "defect": "refund gate enabled",
+      "mutation": {
+        "from": "CREDIT_REFUNDS_ENABLED = false",
+        "to": "CREDIT_REFUNDS_ENABLED = true"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "06.tap",
+      "evidence": "|-",
+      "limitation": null
+    },
+    {
+      "id": 7,
+      "test": "isolated E2-open simulation still hits ORIGINAL E1 rejection, zero committed effects",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "E1 cash assertion removed",
+      "mutation": {
+        "from": "assertCreditCaptureEnabled(evidence, \"EFECTIVO\");",
+        "to": ""
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "07.tap",
+      "evidence": "'Missing expected rejection.'",
+      "limitation": null
+    },
+    {
+      "id": 8,
+      "test": "isolated future simulation: both origins, exact replay, single outflow, reversal only ABONO",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "stored replay response altered",
+      "mutation": {
+        "from": "return prior.rows[0].respuesta as CreditRefundReply;",
+        "to": "return { ...prior.rows[0].respuesta, salidaId: 999 } as CreditRefundReply;"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "08.tap",
+      "evidence": "|-",
+      "limitation": null
+    },
+    {
+      "id": 9,
+      "test": "isolated future simulation: current authorization, positive proof, history, projection, session, rollback",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "current ADMIN requirement removed",
+      "mutation": {
+        "from": " || actor.rol !== \"ADMIN\"",
+        "to": ""
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "09.tap",
+      "evidence": "'Missing expected rejection.'",
+      "limitation": null
+    },
+    {
+      "id": 10,
+      "test": "exact replay survives session closure but not loss of current ADMIN role",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "authorization error contract lost",
+      "mutation": {
+        "from": "E2: sólo ADMIN activo puede devolver.",
+        "to": "E2: operación denegada."
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "10.tap",
+      "evidence": "|-",
+      "limitation": "error-reporting semantic defect; does not independently prove every business branch"
+    },
+    {
+      "id": 11,
+      "test": "isolated future simulation rejects partial receipts and a second UUID for one source",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "partial receipt error misclassified",
+      "mutation": {
+        "from": "E2: abono físico original incompatible.",
+        "to": "E2: error no clasificado."
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "11.tap",
+      "evidence": "|-",
+      "limitation": "error-reporting semantic defect; does not independently prove every business branch"
+    },
+    {
+      "id": 12,
+      "test": "negative proof: retained service cannot omit its E1 gate",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "second E1 assertion masks missing-first-guard mutant",
+      "mutation": {
+        "from": "assertCreditCaptureEnabled(evidence, \"EFECTIVO\");",
+        "to": "assertCreditCaptureEnabled(evidence, \"EFECTIVO\"); assertCreditCaptureEnabled({ ...evidence }, \"EFECTIVO\");"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "12.tap",
+      "evidence": "'Missing expected rejection.'",
+      "limitation": "meta-test of mutant sensitivity; redundant lock/guard is not a production business defect"
+    },
+    {
+      "id": 13,
+      "test": "negative proof: removing gate in isolated compiled copy defeats zero-transaction assertion",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-evidence-contract.ts",
+      "defect": "original E1 disabled error contract lost",
+      "mutation": {
+        "from": "E1: la captura nueva de efectivo de crédito permanece deshabilitada.",
+        "to": "E1: operación denegada."
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "13.tap",
+      "evidence": "|-",
+      "limitation": "error-reporting semantic defect; does not independently prove every business branch"
+    },
+    {
+      "id": 14,
+      "test": "gate cannot be opened by environment or body",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund-contract.ts",
+      "defect": "refund gate enabled",
+      "mutation": {
+        "from": "CREDIT_REFUNDS_ENABLED = false",
+        "to": "CREDIT_REFUNDS_ENABLED = true"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "14.tap",
+      "evidence": "'Missing expected exception.'",
+      "limitation": null
+    },
+    {
+      "id": 15,
+      "test": "canonical DTO, origin exclusivity, reason and identifiers",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund-contract.ts",
+      "defect": "blank reason accepted",
+      "mutation": {
+        "from": "if (!motivo || motivo.length > 500)",
+        "to": "if (motivo.length > 500)"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "15.tap",
+      "evidence": "'Missing expected exception.'",
+      "limitation": null
+    },
+    {
+      "id": 16,
+      "test": "idempotency rejects any changed canonical field",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund-contract.ts",
+      "defect": "changed replay fields accepted",
+      "mutation": {
+        "from": "Object.entries(input).some(([k, v]) => (stored as Record<string, unknown>)[k] !== v)",
+        "to": "Object.entries(input).some(() => false)"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "16.tap",
+      "evidence": "'Missing expected exception.'",
+      "limitation": null
+    },
+    {
+      "id": 17,
+      "test": "original E1 cash rejection survives E2",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-evidence-contract.ts",
+      "defect": "original E1 cash gate enabled",
+      "mutation": {
+        "from": "CREDIT_CASH_CAPTURE_ENABLED = false",
+        "to": "CREDIT_CASH_CAPTURE_ENABLED = true"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "17.tap",
+      "evidence": "'Missing expected exception.'",
+      "limitation": null
+    },
+    {
+      "id": 18,
+      "test": "source barriers and isolated negative proofs",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/lib/credit-refund.ts",
+      "defect": "required cash gate source architecture removed",
+      "mutation": {
+        "from": "assertCreditCaptureEnabled(evidence, \"EFECTIVO\");",
+        "to": ""
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "18.tap",
+      "evidence": "|-",
+      "limitation": "static architecture assertion, not PostgreSQL execution"
+    },
+    {
+      "id": 19,
+      "test": "DDL reuses exact original guard on proof and refund; no E1 replacement",
+      "testFile": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+      "mutatedSource": "reports/e2/sql/credit-refunds-prepared.sql",
+      "defect": "one E1 SQL trigger no longer uses original guard",
+      "mutation": {
+        "from": "EXECUTE FUNCTION public.e1_guard_cash_capture_closed()",
+        "to": "EXECUTE FUNCTION public.e2_immutable()"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "19.tap",
+      "evidence": "|-",
+      "limitation": "static architecture assertion, not PostgreSQL execution"
+    },
+    {
+      "id": 20,
+      "test": "GET returns original ABONO/retained documents and today's cash in a different store, always inactive",
+      "testFile": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/routes/credit-refunds.ts",
+      "defect": "GET falsely advertises active refund",
+      "mutation": {
+        "from": "enabled: false",
+        "to": "enabled: true"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "20.tap",
+      "evidence": "|-",
+      "limitation": null
+    },
+    {
+      "id": 21,
+      "test": "GET rechecks actual ADMIN/active; rejects unauthenticated/invalid/missing customer before source reads",
+      "testFile": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/routes/credit-refunds.ts",
+      "defect": "GET trusts stale role",
+      "mutation": {
+        "from": " || actor.rows[0].rol !== \"ADMIN\"",
+        "to": ""
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "21.tap",
+      "evidence": "|-",
+      "limitation": null
+    },
+    {
+      "id": 22,
+      "test": "empty documents still return independently existing open sessions, never invent evidence",
+      "testFile": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/routes/credit-refunds.ts",
+      "defect": "GET hides real sessions when no candidates",
+      "mutation": {
+        "from": "sesiones: sessions.rows",
+        "to": "sesiones: sources.rows.length ? sessions.rows : []"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "22.tap",
+      "evidence": "|-",
+      "limitation": null
+    },
+    {
+      "id": 23,
+      "test": "negative copies removing customer/physical/date/site filters fail query safety assertions",
+      "testFile": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/routes/credit-refunds.ts",
+      "defect": "GET masks query safety rejection",
+      "mutation": {
+        "from": "next(error);",
+        "to": "next(new Error(\"masked read failure\"));"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "23.tap",
+      "evidence": "|-",
+      "limitation": "error-reporting semantic defect; does not independently prove every business branch"
+    },
+    {
+      "id": 24,
+      "test": "negative copy skipping current role check exposes stale-role failure",
+      "testFile": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/routes/credit-refunds.ts",
+      "defect": "GET wrong success status",
+      "mutation": {
+        "from": "res.status(200).json(response)",
+        "to": "res.status(201).json(response)"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "24.tap",
+      "evidence": "|-",
+      "limitation": null
+    },
+    {
+      "id": 25,
+      "test": "negative copy restricting today's sessions to receipt site fails cross-store query contract",
+      "testFile": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+      "mutatedSource": "artifacts/api-server/src/routes/credit-refunds.ts",
+      "defect": "GET masks session-filter rejection",
+      "mutation": {
+        "from": "next(error);",
+        "to": "next(new Error(\"masked read failure\"));"
+      },
+      "status": 1,
+      "assertionFailure": true,
+      "log": "25.tap",
+      "evidence": "|-",
+      "limitation": "error-reporting semantic defect; does not independently prove every business branch"
+    }
+  ],
+  "gaps": [],
+  "strictBusinessDefectGaps": [5, 12],
+  "staticOnly": [18, 19],
+  "interpretation": "25 observed target AssertionError failures, not 25 independent business-defect proofs. Rows 5/12 mutate redundancy to audit existing negative meta-tests; rows 18/19 are static architecture/DDL checks. Error-contract mutations are labelled per row; grouped cases are not exhaustive branch mutation coverage."
+}

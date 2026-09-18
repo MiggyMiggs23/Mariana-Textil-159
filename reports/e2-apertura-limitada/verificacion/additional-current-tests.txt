@@ -1,0 +1,6 @@
+E2/E3 income and return cash permissions are separate and both remain closed
+E2/E3 source has split gates; isolated source mutants fail the architecture check
+E3 future income permission only admits exact ABONO cash tuple and never cash returns
+E3 rollback from income=true to false blocks only new captures
+actual scope adapter requires an open drawer in the exact active store
+cash rollback gate is absent from historical evidence reader source

@@ -1,0 +1,477 @@
+{
+  "baselineExit": 0,
+  "temp": "/tmp/e2-cash-mutants-1R1zhF",
+  "sourceSha256": {
+    "caja-cash-ledger.test.ts": "7d90417a81325bf6b3161938eeb46fdf5298c632c75849f81ccdca31961eebbe",
+    "caja-corte-reader.mock.test.ts": "e2b6d4ad2ca44d6ee45a46fac1789eb59f5db552ef33be86b75f495ddb51fb09",
+    "caja-admin-cash.mock.test.ts": "99bfba2cf6c43da88e4a0194b4ff88e51cf753dfa03800e3d47b71be898ef696",
+    "caja-close.mock.test.ts": "836721d937059cfce5ab988961cc9a7d45064d23d20a364afb82f74e4163c6f2",
+    "caja-cash-ledger.ts": "d5663a1e88af3e4443f919fc280dd349cbf208893dc5ea4eb841b73690e7b78a",
+    "caja-corte-reader.ts": "827dd2340c99e0a50b497e5902c545d15fe44b2f0c3f31b621d61ea8338338fb",
+    "admin-analytics.ts": "2304f6c4a543086d390a450a8a894169d51c1fbff6a3339c65d30f1ea1ab7d6c",
+    "pos.ts": "ab55e46987913e49ca5e1881ba2666ba7b6a10df24106f1703ea7e011fcd04e1"
+  },
+  "tests": [
+    "E2 sums five disjoint buckets with exact cents, including large values",
+    "E2 rejects duplicate physical identity across retained and abono, never amount-dedupes",
+    "E2 excludes transfers, accounting corrections, other sessions and reversal evidence",
+    "E2 reads a receipt once regardless of attached notes/applications",
+    "E2 fails closed for unsupported pending conversion or missing immutable identity",
+    "E2 rejects fractional, nonfinite and malformed physical amounts",
+    "E2 closed legacy keeps exact per-surface values and never reads current receipts",
+    "E2 closed valid snapshot is immutable even if live session values differ",
+    "E2 corrupt snapshots fail explicitly and never fall back to legacy or live",
+    "E2 open sessions use canonical cash, not legacy or stale snapshot",
+    "E2 production reader closed legacy consults only close audit, retaining surface data",
+    "E2 production reader selects immutable snapshot and rejects malformed snapshots without live queries",
+    "E2 production reader scopes live queries to session and emits only existing document routes",
+    "E2 admin resolves canonical differences and totals before pagination, preserving legacy admin",
+    "E2 close locks session, calculates before state update and inserts snapshot in existing close audit before final read",
+    "E2 close audit failure propagates to transaction caller, no successful close reply or frozen read"
+  ],
+  "records": [
+    {
+      "id": "01-applied-receipt-multiplied",
+      "test": "E2 reads a receipt once regardless of attached notes/applications",
+      "defect": "Supported E1 ABONO counted once per attached application instead of receipt.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "106eee73fb36d5bf37527b365173d441443bf804d84d786e47f8f4d17af55dcb",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly equal:\n\n'30.09' !== '10.03'\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n'30.09' !== '10.03'\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n'30.09' !== '10.03'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'30.09' !== '10.03'\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:51:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "02-retained-omitted",
+      "test": "E2 sums five disjoint buckets with exact cents, including large values",
+      "defect": "Retained bucket omitted from physical expected cash.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "a64a4b1ca834063d8bcd9aa24ddc63e1017b0c9784f508b9e55092aec8fa594a",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    '100.01',\n    '20.02',\n    '10.03',\n    '12.01',\n    '3.04',\n+   '127.02'\n-   '139.03'\n  ]\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    '100.01',\n    '20.02',\n    '10.03',\n    '12.01',\n    '3.04',\n+   '127.02'\n-   '139.03'\n  ]\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    '100.01',\n    '20.02',\n    '10.03',\n    '12.01',\n    '3.04',\n+   '127.02'\n-   '139.03'\n  ]\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n    '100.01',\n    '20.02',\n    '10.03',\n    '12.01',\n    '3.04',\n+   '127.02'\n-   '139.03'\n  ]\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:25:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "03-shared-receipt-namespace-lost",
+      "test": "E2 rejects duplicate physical identity across retained and abono, never amount-dedupes",
+      "defect": "Same receipt can be counted as both retained and abono.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "2045a5261ffd6988a404f2f8922d57231a974a7f2ecb93481f300ae80ccc4a9c",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Missing expected exception.",
+        "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Missing expected exception.",
+          "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:32:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "04-accounting-enters-cash",
+      "test": "E2 excludes transfers, accounting corrections, other sessions and reversal evidence",
+      "defect": "Accounting ABONO is wrongly admitted into physical cash.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "f3737f9ecdba15d6d0d06f4f473031fc7e9ca16275f8b63560cf8d8b2dd96a9a",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     evidencia: {\n+       fecha: null,\n+       motivo: null,\n+       proveedorId: null,\n+       referencia: null,\n+       usuarioId: null\n+     },\n+     folio: null,\n+     href: '/clientes/4/movimientos/3',\n+     id: 'ABONO_ORDINARIO:receipt-a',\n+     importe: '10.03',\n+     origen: 'ABONO'\n+   }\n+ ]\n- []\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     evidencia: {\n+       fecha: null,\n+       motivo: null,\n+       proveedorId: null,\n+       referencia: null,\n+       usuarioId: null\n+     },\n+     folio: null,\n+     href: '/clientes/4/movimientos/3',\n+     id: 'ABONO_ORDINARIO:receipt-a',\n+     importe: '10.03',\n+     origen: 'ABONO'\n+   }\n+ ]\n- []\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     evidencia: {\n+       fecha: null,\n+       motivo: null,\n+       proveedorId: null,\n+       referencia: null,\n+       usuarioId: null\n+     },\n+     folio: null,\n+     href: '/clientes/4/movimientos/3',\n+     id: 'ABONO_ORDINARIO:receipt-a',\n+     importe: '10.03',\n+     origen: 'ABONO'\n+   }\n+ ]\n- []\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     evidencia: {\n+       fecha: null,\n+       motivo: null,\n+       proveedorId: null,\n+       referencia: null,\n+       usuarioId: null\n+     },\n+     folio: null,\n+     href: '/clientes/4/movimientos/3',\n+     id: 'ABONO_ORDINARIO:receipt-a',\n+     importe: '10.03',\n+     origen: 'ABONO'\n+   }\n+ ]\n- []\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:44:10)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "05-conversion-without-origin-admitted",
+      "test": "E2 fails closed for unsupported pending conversion or missing immutable identity",
+      "defect": "Unsupported pending conversion is admitted without immutable origin link.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "6e543fa588712c4ec03753f7775adfc1033730a56314cb8d40027de9383f4c02",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Missing expected exception.",
+        "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Missing expected exception.",
+          "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:60:13)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "06-fractional-cent-accepted",
+      "test": "E2 rejects fractional, nonfinite and malformed physical amounts",
+      "defect": "Money parser admits fractional cents.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "fd5f27d97f9bef2ab5b1d25dc4434e1fa07fd0c81e2b0fed4a2c654658cb8c8f",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Missing expected exception.",
+        "stack": "Error [ERR_TEST_FAILURE]: Missing expected exception.",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Missing expected exception.",
+          "stack": "AssertionError [ERR_ASSERTION]: Missing expected exception.\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:66:12)\n    at Test.runInAsyncScope (node:async_hooks:214:14)\n    at Test.run (node:internal/test_runner/test:1106:25)\n    at Test.start (node:internal/test_runner/test:1003:17)\n    at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "07-old-closed-recomputed",
+      "test": "E2 closed legacy keeps exact per-surface values and never reads current receipts",
+      "defect": "Legacy closed surfaces recalculate with current receipts.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "6ee1436c279aa49b523bd7dc5456fb2abf8f9e071ac5b4b16d8182ecf88ba3ba",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   diferencia: null,\n+   efectivoEsperado: '139.03'\n-   diferencia: '23.01',\n-   efectivoEsperado: '116.99'\n  }\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   diferencia: null,\n+   efectivoEsperado: '139.03'\n-   diferencia: '23.01',\n-   efectivoEsperado: '116.99'\n  }\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   diferencia: null,\n+   efectivoEsperado: '139.03'\n-   diferencia: '23.01',\n-   efectivoEsperado: '116.99'\n  }\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  {\n+   diferencia: null,\n+   efectivoEsperado: '139.03'\n-   diferencia: '23.01',\n-   efectivoEsperado: '116.99'\n  }\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:76:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "08-frozen-values-overridden",
+      "test": "E2 closed valid snapshot is immutable even if live session values differ",
+      "defect": "Closed E2 snapshot is replaced by mutable legacy values.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "197b61e4b74bb0cb1d60882416f72d80ae3e56f10fdd6b81601d1639cafef799",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly equal:\n\n'1' !== '139.03'\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n'1' !== '139.03'\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n'1' !== '139.03'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'1' !== '139.03'\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:86:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "09-cross-session-snapshot",
+      "test": "E2 corrupt snapshots fail explicitly and never fall back to legacy or live",
+      "defect": "Snapshot for another session is silently accepted.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "188dc9b2a9728f3322f292fbe9d7eec6434f8154509854632709645c0cc5708e",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Missing expected rejection.",
+        "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Missing expected rejection.",
+          "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:100:5)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "10-open-still-legacy",
+      "test": "E2 open sessions use canonical cash, not legacy or stale snapshot",
+      "defect": "Open session bypasses canonical calculation.",
+      "target": "caja-cash-ledger.ts",
+      "mutationSha256": "f54cb65db938aa28fa52bc9c497b09d82c368be9b55fbb0b90bdf49522f7b2d6",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly equal:\n\n'0' !== '139.03'\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n'0' !== '139.03'\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n'0' !== '139.03'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'0' !== '139.03'\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-cash-ledger.test.ts:112:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "11-legacy-audit-not-scoped",
+      "test": "E2 production reader closed legacy consults only close audit, retaining surface data",
+      "defect": "Closed-session audit lookup omits session identity.",
+      "target": "caja-corte-reader.ts",
+      "mutationSha256": "faf62b887737c396479e4f76654485e2dc3903cd5671339ff2540a9ff4591fd7",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "The input did not match the regular expression /\"7\"/. Input:\n\n'[[\"and\",[\"eq\",\"auditoriaTable.accion\",\"CERRAR_CAJA\"],[\"eq\",\"auditoriaTable.entidad\",\"sesiones_caja\"],[\"eq\",\"auditoriaTable.entidadId\",\"wrong-session\"]]]'\n",
+        "stack": "Error [ERR_TEST_FAILURE]: The input did not match the regular expression /\"7\"/. Input:\n\n'[[\"and\",[\"eq\",\"auditoriaTable.accion\",\"CERRAR_CAJA\"],[\"eq\",\"auditoriaTable.entidad\",\"sesiones_caja\"],[\"eq\",\"auditoriaTable.entidadId\",\"wrong-session\"]]]'\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "The input did not match the regular expression /\"7\"/. Input:\n\n'[[\"and\",[\"eq\",\"auditoriaTable.accion\",\"CERRAR_CAJA\"],[\"eq\",\"auditoriaTable.entidad\",\"sesiones_caja\"],[\"eq\",\"auditoriaTable.entidadId\",\"wrong-session\"]]]'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /\"7\"/. Input:\n\n'[[\"and\",[\"eq\",\"auditoriaTable.accion\",\"CERRAR_CAJA\"],[\"eq\",\"auditoriaTable.entidad\",\"sesiones_caja\"],[\"eq\",\"auditoriaTable.entidadId\",\"wrong-session\"]]]'\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-corte-reader.mock.test.ts:47:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "12-frozen-snapshot-not-discovered",
+      "test": "E2 production reader selects immutable snapshot and rejects malformed snapshots without live queries",
+      "defect": "Reader ignores persisted E2 cashSnapshot.",
+      "target": "caja-corte-reader.ts",
+      "mutationSha256": "8f17856f72516ebc172dea0828604b4ee66fced82e65532d694c1c2988c72102",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly equal:\n\n'99.00' !== '10.00'\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n'99.00' !== '10.00'\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n'99.00' !== '10.00'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'99.00' !== '10.00'\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-corte-reader.mock.test.ts:53:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "13-outflow-added-as-ticket",
+      "test": "E2 production reader scopes live queries to session and emits only existing document routes",
+      "defect": "Cash outflow is added as ticket instead of subtracted.",
+      "target": "caja-corte-reader.ts",
+      "mutationSha256": "592dc900bdf331f209037d4731049fb82a640f2fd5737205dfa207746d960762",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly equal:\n\n'37.00' !== '35.00'\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n'37.00' !== '35.00'\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n'37.00' !== '35.00'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'37.00' !== '35.00'\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-corte-reader.mock.test.ts:72:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "14-admin-pages-before-filter",
+      "test": "E2 admin resolves canonical differences and totals before pagination, preserving legacy admin",
+      "defect": "Admin pages before resolving difference filter/totals.",
+      "target": "admin-analytics.ts",
+      "mutationSha256": "3ffd1f98f0dab31aa6d21b4e60a154da45d398cd4b440d8246e06574addc896b",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly equal:\n\n1 !== 2\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n\n1 !== 2\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n\n1 !== 2\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 2\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-admin-cash.mock.test.ts:39:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "15-close-lock-not-exclusive",
+      "test": "E2 close locks session, calculates before state update and inserts snapshot in existing close audit before final read",
+      "defect": "Close uses FOR SHARE rather than conflicting exclusive FOR UPDATE.",
+      "target": "pos.ts",
+      "mutationSha256": "150c53d490f71501e4a442ae6b3b840b18f23982ac8c589156bee9ca4aeb2e1e",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'lock:share',\n-   'lock:update',\n    'calculate:ABIERTA',\n    'update',\n    'audit',\n    'read-frozen'\n  ]\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'lock:share',\n-   'lock:update',\n    'calculate:ABIERTA',\n    'update',\n    'audit',\n    'read-frozen'\n  ]\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'lock:share',\n-   'lock:update',\n    'calculate:ABIERTA',\n    'update',\n    'audit',\n    'read-frozen'\n  ]\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n  [\n+   'lock:share',\n-   'lock:update',\n    'calculate:ABIERTA',\n    'update',\n    'audit',\n    'read-frozen'\n  ]\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-close.mock.test.ts:52:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "16-audit-failure-swallowed",
+      "test": "E2 close audit failure propagates to transaction caller, no successful close reply or frozen read",
+      "defect": "Close swallows audit failure and resolves successfully.",
+      "target": "pos.ts",
+      "mutationSha256": "1c55418a6655cf34222123d9cb161772804662065e3598583bc9dd61a913de21",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Missing expected rejection.",
+        "stack": "Error [ERR_TEST_FAILURE]: Missing expected rejection.",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Missing expected rejection.",
+          "stack": "AssertionError [ERR_ASSERTION]: Missing expected rejection.\n    at async TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-close.mock.test.ts:63:3)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    },
+    {
+      "id": "17-real-names-dropped",
+      "test": "E2 production reader scopes live queries to session and emits only existing document routes",
+      "defect": "Real provider name is discarded, leaving numeric identity without printable name.",
+      "target": "caja-corte-reader.ts",
+      "mutationSha256": "8e29b97e2990256f6122db2c19aec8fbe6caad4af0918422af4dc82c5a64e02e",
+      "exit": 1,
+      "witnessed": true,
+      "error": {
+        "name": "Error",
+        "code": "ERR_TEST_FAILURE",
+        "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- 'Proveedor registrado'\n",
+        "stack": "Error [ERR_TEST_FAILURE]: Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- 'Proveedor registrado'\n",
+        "failureType": "testCodeFailure",
+        "cause": {
+          "name": "AssertionError",
+          "code": "ERR_ASSERTION",
+          "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- 'Proveedor registrado'\n",
+          "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ null\n- 'Proveedor registrado'\n\n    at TestContext.<anonymous> (/tmp/e2-cash-mutants-1R1zhF/caja-corte-reader.mock.test.ts:89:10)\n    at async Test.run (node:internal/test_runner/test:1113:7)\n    at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)",
+          "failureType": null,
+          "cause": null,
+          "errors": []
+        },
+        "errors": []
+      }
+    }
+  ],
+  "conversionLimitation": "Positive retained-to-abono conversion is NOT implemented or verified: E1 has no immutable origin FK. Test 05 proves fail-closed for unsupported producer, not positive conversion. Test 01 proves supported E1 ABONO is not multiplied by attached applications; test 03 proves duplicate identity across receipt buckets is rejected."
+}

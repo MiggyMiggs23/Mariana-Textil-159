@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: negative copy restricting today's sessions to receipt site fails cross-store query contract
+not ok 1 - negative copy restricting today's sessions to receipt site fails cross-store query contract
+  ---
+  duration_ms: 74.3608
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts:1:6300'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /not match/. Input:
+    
+    'Error: masked read failure'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Error: masked read failure'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts:145:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1136.604101

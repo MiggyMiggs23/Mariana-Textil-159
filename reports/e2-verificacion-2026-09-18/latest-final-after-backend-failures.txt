@@ -1,0 +1,5 @@
+contrato de notas de crédito deriva los tres estados sin persistirlos
+consultas de detalle usan aplicaciones_credito en ambas direcciones
+contrato de abono exige cuentaDestino y preview comparte fecha efectiva
+Ticket and Note are absolute, independently processed operations
+authorization uses the shared ledger projection and has no override

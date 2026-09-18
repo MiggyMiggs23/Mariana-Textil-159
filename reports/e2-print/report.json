@@ -1,0 +1,38 @@
+{
+  "pass": true,
+  "desktop": {
+    "bodyText": "Excel\nReimprimir / PDF\n\nTURNO\n\nCaja principal\n\nCajero: Ana Caja\n\nCERRADA ($0.00)\n\nFECHAS\n\nApertura: 18 sep 2026 09:00\n\nCierre: 18 sep 2026 13:00\n\nFormas de Pago\nForma\tTickets\tImporte\nCuentas Destino\nCuenta / Forma\tImporte\nFacturación y Medios de Pago\nEstado\tTck\tSubtotal\tIVA\tTotal\tEfectivo\tTransf.\tCrédito\nTipo de Venta\nModalidad\tCantidad\tImporte\nArqueo de Efectivo Final\nFondo Inicializado\n$100.00\nIngresos Efectivo Registrados\n$850.00\nEfectivo Esperado (Sistema)\n$950.00\nEfectivo Contado (Cajero)\n$950.00\nDiferencia de Arqueo\n$0.00\nTrazabilidad del efectivo esperado\nFÓRMULA E2\n\nFondo inicial + tickets en efectivo + abonos físicos + cobros retenidos − salidas físicas.\n\nFondo inicial\n$100.00\nCobros físicos de tickets\n$200.00\nAbonos físicos de crédito\n$300.00\nCobros físicos retenidos\n$400.00\nSalidas físicas\n− $50.00\nEfectivo esperado\n$950.00\nDOCUMENTOS QUE COMPONEN EL CÁLCULO\nOrigen\tDocumento y evidencia\tImporte\nTicket\t\nF-9001\nReferencia: REF-T-41\nFecha: 18 sep 2026, 10:15 a.m.\nRegistró: Ana Caja\n\t$200.00\nAbono de crédito\t\nA-72\nReferencia: TRANSFERENCIA 778\nFecha: 18 sep 2026, 11:30 a.m.\nRegistró: Luis Administración\n\t$300.00\nCobro retenido\t\nCR-99\nReferencia: REF-RET-99\nMotivo: Retenido por crédito\nFecha: 18 sep 2026, 11:45 a.m.\nRegistró: Luis Administración\n\t$400.00\nSalida física\t\nID 8\nReferencia: VALE INTERNO\nMotivo: Compra urgente de material\nFecha: 18 sep 2026, 12:00 p.m.\nRegistró: María Operadora\nProveedor: Insumos del Centro\n\t− $50.00",
+    "sectionVisible": true,
+    "rect": {
+      "x": 0,
+      "y": 842.5,
+      "width": 1265,
+      "height": 641.625
+    },
+    "wrapperStyle": {
+      "visibility": "visible",
+      "position": "static"
+    },
+    "links": [
+      {
+        "text": "F-9001",
+        "href": "/tickets/41"
+      },
+      {
+        "text": "A-72",
+        "href": "/clientes/9?tab=estado&movimientoId=72"
+      }
+    ],
+    "sectionText": "Trazabilidad del efectivo esperado\nFÓRMULA E2\n\nFondo inicial + tickets en efectivo + abonos físicos + cobros retenidos − salidas físicas.\n\nFondo inicial\n$100.00\nCobros físicos de tickets\n$200.00\nAbonos físicos de crédito\n$300.00\nCobros físicos retenidos\n$400.00\nSalidas físicas\n− $50.00\nEfectivo esperado\n$950.00\nDOCUMENTOS QUE COMPONEN EL CÁLCULO\nOrigen\tDocumento y evidencia\tImporte\nTicket\t\nF-9001\nReferencia: REF-T-41\nFecha: 18 sep 2026, 10:15 a.m.\nRegistró: Ana Caja\n\t$200.00\nAbono de crédito\t\nA-72\nReferencia: TRANSFERENCIA 778\nFecha: 18 sep 2026, 11:30 a.m.\nRegistró: Luis Administración\n\t$300.00\nCobro retenido\t\nCR-99\nReferencia: REF-RET-99\nMotivo: Retenido por crédito\nFecha: 18 sep 2026, 11:45 a.m.\nRegistró: Luis Administración\n\t$400.00\nSalida física\t\nID 8\nReferencia: VALE INTERNO\nMotivo: Compra urgente de material\nFecha: 18 sep 2026, 12:00 p.m.\nRegistró: María Operadora\nProveedor: Insumos del Centro\n\t− $50.00"
+  },
+  "mobile": {
+    "rect": {
+      "x": 0,
+      "y": 987,
+      "width": 375,
+      "height": 1022.5
+    },
+    "sectionVisible": true
+  },
+  "scope": "Visual/mock only; no DB/API/auth."
+}

@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import {
-  CREDIT_NATURES, CREDIT_PENDING_RECEIPTS_ENABLED, CREDIT_CASH_CAPTURE_ENABLED,
+  CREDIT_NATURES, CREDIT_PENDING_RECEIPTS_ENABLED,
+  CREDIT_CASH_INCOME_CAPTURE_ENABLED, CREDIT_CASH_RETURN_CAPTURE_ENABLED,
   CreditEvidenceError, readCreditEvidenceInput, canonicalCreditMoney, canonicalCreditContent,
   assertCreditProducerNature, assertCreditPhysicalContext, assertCreditCaptureEnabled,
+  assertCreditCashCapturePolicy,
   assertCreditActorAccess, claimCreditOperationCore,
   type CreditOperationClaim, type CreditOperationRecord, type CreditOperationStore,
 } from "./credit-evidence-contract";
@@ -93,13 +96,89 @@ test("E1 correction never invents cash session; physical bank transfer never acc
   assert.throws(() => assertCreditPhysicalContext(physical, "CHEQUE", "CUENTA_FISCAL"), status(400));
 });
 
-test("E1 new physical cash receipt and refund remain closed, correction is not physical cash", () => {
-  assert.equal(CREDIT_CASH_CAPTURE_ENABLED, false);
+test("E2/E3 income and return cash permissions are separate and both remain closed", () => {
+  assert.equal(CREDIT_CASH_INCOME_CAPTURE_ENABLED, false);
+  assert.equal(CREDIT_CASH_RETURN_CAPTURE_ENABLED, false);
   assert.equal(CREDIT_PENDING_RECEIPTS_ENABLED, false);
-  for (const naturaleza of ["INGRESO_FISICO", "DEVOLUCION_FISICA"] as const) {
-    assert.throws(() => assertCreditCaptureEnabled({ ...evidence(), naturaleza, sesionCajaId: 8 }, "EFECTIVO"), status(403));
+  assert.throws(() => assertCreditCaptureEnabled(
+    { ...evidence(), naturaleza: "INGRESO_FISICO", sesionCajaId: 8 },
+    "EFECTIVO", "ABONO_ORDINARIO", "ABONO",
+  ), status(403));
+  assert.throws(() => assertCreditCaptureEnabled(
+    { ...evidence(), naturaleza: "DEVOLUCION_FISICA", sesionCajaId: 8 },
+    "EFECTIVO", "REVERSO_ABONO", "REVERSO",
+  ), status(403));
+  assert.doesNotThrow(() => assertCreditCaptureEnabled(
+    evidence(), "EFECTIVO", "ABONO_ORDINARIO", "ABONO",
+  ));
+});
+
+test("E3 future income permission only admits exact ABONO cash tuple and never cash returns", () => {
+  const ingreso = { ...evidence(), naturaleza: "INGRESO_FISICO" as const, sesionCajaId: 8 };
+  const devolucion = { ...evidence(), naturaleza: "DEVOLUCION_FISICA" as const, sesionCajaId: 8 };
+  const futureIncomeOnly = { income: true, returns: false };
+  assert.doesNotThrow(() => assertCreditCashCapturePolicy(
+    ingreso, "EFECTIVO", "ABONO_ORDINARIO", "ABONO", futureIncomeOnly,
+  ));
+  assert.doesNotThrow(() => assertCreditCashCapturePolicy(
+    ingreso, "EFECTIVO", "ABONO_DIRIGIDO", "ABONO", futureIncomeOnly,
+  ));
+  for (const [producer, tipo] of [
+    ["COBRO_PENDIENTE", "COBRO_RETENIDO"],
+    ["REVERSO_ABONO", "REVERSO"],
+    ["ABONO_ORDINARIO", "REVERSO"],
+  ] as const) {
+    assert.throws(() => assertCreditCashCapturePolicy(
+      ingreso, "EFECTIVO", producer, tipo, futureIncomeOnly,
+    ), status(400));
   }
-  assert.doesNotThrow(() => assertCreditCaptureEnabled(evidence(), "EFECTIVO"));
+  assert.throws(() => assertCreditCashCapturePolicy(
+    devolucion, "EFECTIVO", "REVERSO_ABONO", "REVERSO", futureIncomeOnly,
+  ), status(403));
+});
+
+test("E3 rollback from income=true to false blocks only new captures", () => {
+  const ingreso = { ...evidence(), naturaleza: "INGRESO_FISICO" as const, sesionCajaId: 8 };
+  const accepted = { id: 71, importe: "-10.00", formaPago: "EFECTIVO" };
+  assert.doesNotThrow(() => assertCreditCashCapturePolicy(
+    ingreso, "EFECTIVO", "ABONO_ORDINARIO", "ABONO", { income: true, returns: false },
+  ));
+  assert.deepEqual(accepted, { id: 71, importe: "-10.00", formaPago: "EFECTIVO" });
+  assert.throws(() => assertCreditCashCapturePolicy(
+    ingreso, "EFECTIVO", "ABONO_ORDINARIO", "ABONO", { income: false, returns: false },
+  ), status(403));
+  // Existing rows are data consumed by readers; rollback invokes no deletion or read gate.
+  assert.deepEqual(accepted, { id: 71, importe: "-10.00", formaPago: "EFECTIVO" });
+});
+
+function splitGateSourceChecks(source: string): void {
+  assert.doesNotMatch(source, /\bCREDIT_CASH_CAPTURE_ENABLED\b/);
+  assert.match(source, /CREDIT_CASH_INCOME_CAPTURE_ENABLED = false/);
+  assert.match(source, /CREDIT_CASH_RETURN_CAPTURE_ENABLED = false/);
+  assert.match(source, /income: CREDIT_CASH_INCOME_CAPTURE_ENABLED/);
+  assert.match(source, /returns: CREDIT_CASH_RETURN_CAPTURE_ENABLED/);
+  assert.match(source, /\["ABONO_ORDINARIO", "ABONO_DIRIGIDO"\]\.includes\(productor\)/);
+  assert.match(source, /productor !== "REVERSO_ABONO" \|\| tipo !== "REVERSO"/);
+}
+
+test("E2/E3 source has split gates; isolated source mutants fail the architecture check", () => {
+  const source = readFileSync(new URL("./credit-evidence-contract.ts", import.meta.url), "utf8");
+  splitGateSourceChecks(source);
+  for (const [before, after] of [
+    ["CREDIT_CASH_INCOME_CAPTURE_ENABLED = false", "CREDIT_CASH_CAPTURE_ENABLED = false"],
+    ["CREDIT_CASH_RETURN_CAPTURE_ENABLED = false", "CREDIT_CASH_RETURN_CAPTURE_ENABLED = true"],
+    ['["ABONO_ORDINARIO", "ABONO_DIRIGIDO"].includes(productor)', "true"],
+    ['productor !== "REVERSO_ABONO" || tipo !== "REVERSO"', "false"],
+  ]) {
+    assert.ok(source.includes(before), `missing isolated mutant anchor: ${before}`);
+    assert.throws(() => splitGateSourceChecks(source.replace(before, after)));
+  }
+});
+
+test("cash rollback gate is absent from historical evidence reader source", () => {
+  const reader = readFileSync(new URL("./credit-evidence-read.ts", import.meta.url), "utf8");
+  assert.doesNotMatch(reader, /CreditCapture|CREDIT_CASH_(?:INCOME|RETURN)_CAPTURE_ENABLED/);
+  assert.match(reader, /export async function loadCreditEvidence/);
 });
 
 test("E1 current actor/site access rejects role, inactive actor and moved site even on replay", () => {

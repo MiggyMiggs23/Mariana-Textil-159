@@ -1740,6 +1740,68 @@ export const AdminCorteRowEstado = {
   CERRADA: 'CERRADA',
 } as const;
 
+export type EfectivoDesgloseVersion = typeof EfectivoDesgloseVersion[keyof typeof EfectivoDesgloseVersion];
+
+
+export const EfectivoDesgloseVersion = {
+  E2: 'E2',
+  LEGACY: 'LEGACY',
+} as const;
+
+export type EfectivoDesgloseDocumentosItemOrigen = typeof EfectivoDesgloseDocumentosItemOrigen[keyof typeof EfectivoDesgloseDocumentosItemOrigen];
+
+
+export const EfectivoDesgloseDocumentosItemOrigen = {
+  FONDO_INICIAL: 'FONDO_INICIAL',
+  TICKET: 'TICKET',
+  ABONO: 'ABONO',
+  COBRO_RETENIDO: 'COBRO_RETENIDO',
+  SALIDA: 'SALIDA',
+} as const;
+
+/**
+ * Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.
+ */
+export type EfectivoDesgloseDocumentosItemEvidencia = {
+  /** @nullable */
+  referencia: string | null;
+  /** @nullable */
+  motivo: string | null;
+  /** @nullable */
+  fecha: string | null;
+  /** @nullable */
+  usuarioId: number | null;
+  /** @nullable */
+  proveedorId: number | null;
+  /** @nullable */
+  usuarioNombre?: string | null;
+  /** @nullable */
+  proveedorNombre?: string | null;
+};
+
+export type EfectivoDesgloseDocumentosItem = {
+  origen: EfectivoDesgloseDocumentosItemOrigen;
+  id: string;
+  /** @nullable */
+  folio: string | null;
+  importe: string;
+  /** @nullable */
+  href: string | null;
+  /** Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio. */
+  evidencia?: EfectivoDesgloseDocumentosItemEvidencia;
+};
+
+export interface EfectivoDesglose {
+  version: EfectivoDesgloseVersion;
+  fondoInicial: string;
+  cobrosTickets: string;
+  abonosFisicos: string;
+  cobrosRetenidos: string;
+  salidasFisicas: string;
+  efectivoEsperado: string;
+  documentos: EfectivoDesgloseDocumentosItem[];
+}
+
 export interface AdminCorteRow {
   id: number;
   ubicacionId: number;
@@ -1754,6 +1816,7 @@ export interface AdminCorteRow {
   vendido: string;
   totalCobrado: string;
   efectivoEsperado: string;
+  efectivoDesglose?: EfectivoDesglose;
   /** @nullable */
   efectivoContado: string | null;
   /** @nullable */
@@ -7035,6 +7098,7 @@ export interface SesionCajaResumen {
   documentosPendientes: number;
   totalCobrado: string;
   efectivoEsperado: string;
+  efectivoDesglose?: EfectivoDesglose;
 }
 
 export interface SesionCajaHistorialItem {
@@ -7054,6 +7118,7 @@ export interface SesionCajaHistorialItem {
   ticketsCancelados: number;
   totalCobrado: string;
   efectivoEsperado: string;
+  efectivoDesglose?: EfectivoDesglose;
   /** @nullable */
   diferencia: string | null;
 }
@@ -7237,6 +7302,131 @@ export interface SalidasDineroCajaResponse {
   salidas: SalidaDineroCaja[];
 }
 
+export type CreditRefundCandidateOrigen = typeof CreditRefundCandidateOrigen[keyof typeof CreditRefundCandidateOrigen];
+
+
+export const CreditRefundCandidateOrigen = {
+  ABONO: 'ABONO',
+  COBRO_RETENIDO: 'COBRO_RETENIDO',
+} as const;
+
+export interface CreditRefundCandidate {
+  origen: CreditRefundCandidateOrigen;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     * @nullable
+     */
+  abonoId: number | null;
+  /**
+     * @nullable
+     * @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+     */
+  cobroClave: string | null;
+  /** @nullable */
+  folio: number | null;
+  /** @nullable */
+  referencia: string | null;
+  /** @pattern ^[0-9]+\.[0-9]{2}$ */
+  importe: string;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  sitioOrigenId: number;
+  sitioNombre: string;
+}
+
+export interface CreditRefundOpenSession {
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  id: number;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  sitioOrigenId: number;
+  sitioNombre: string;
+  abiertaAt: string;
+}
+
+export interface CreditRefundOptions {
+  enabled: false;
+  motivoInactivo: string;
+  advertencia: string;
+  candidatas: CreditRefundCandidate[];
+  sesiones: CreditRefundOpenSession[];
+}
+
+export type CreditRefundRequestOrigen = typeof CreditRefundRequestOrigen[keyof typeof CreditRefundRequestOrigen];
+
+
+export const CreditRefundRequestOrigen = {
+  ABONO: 'ABONO',
+  COBRO_RETENIDO: 'COBRO_RETENIDO',
+} as const;
+
+export interface CreditRefundRequest {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  origen: CreditRefundRequestOrigen;
+  /**
+     * Obligatorio sólo para ABONO; excluye cobroClave
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  abonoId?: number;
+  /**
+     * Obligatorio sólo para COBRO_RETENIDO; excluye abonoId
+     * @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$
+     */
+  cobroClave?: string;
+  /**
+     * Importe completo de la recepción, positivo
+     * @pattern ^[0-9]+\.[0-9]{2}$
+     */
+  importe: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  sitioOrigenId: number;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  sesionCajaId: number;
+}
+
+export interface CreditRefundReply {
+  /** @pattern ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$ */
+  operacionClave: string;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  salidaId: number;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     * @nullable
+     */
+  reversoId: number | null;
+  importe: string;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  sesionCajaId: number;
+}
+
 export type CorteCajaSalidasItemCuentaOrigen = typeof CorteCajaSalidasItemCuentaOrigen[keyof typeof CorteCajaSalidasItemCuentaOrigen];
 
 
@@ -7281,6 +7471,7 @@ export interface CorteCaja {
   /** IVA incluido en los tickets cobrados de la sesión */
   ivaCobrado: string;
   efectivoEsperado: string;
+  efectivoDesglose?: EfectivoDesglose;
   /** @nullable */
   efectivoContado: string | null;
   /** @nullable */

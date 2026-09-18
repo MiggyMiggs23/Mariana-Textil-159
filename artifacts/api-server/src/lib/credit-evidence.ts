@@ -68,7 +68,7 @@ export async function insertCreditMovementE1(
 ): Promise<typeof movimientosCreditoTable.$inferSelect> {
   const evidence = readCreditEvidenceInput(input);
   assertCreditProducerNature(productor, evidence.naturaleza);
-  assertCreditCaptureEnabled(evidence, movement.formaPago);
+  assertCreditCaptureEnabled(evidence, movement.formaPago, productor, movement.tipo);
   assertCreditPhysicalContext(evidence, movement.formaPago, movement.cuentaDestino);
   const importe = canonicalCreditMoney(movement.importe);
   const amount = Number(importe);
@@ -108,7 +108,7 @@ export async function insertPendingCreditReceiptE1(
   if (!CREDIT_PENDING_RECEIPTS_ENABLED) throw new CreditEvidenceError("E1: el modo de cobro retenido permanece deshabilitado.", 403);
   const evidence = readCreditEvidenceInput(receipt);
   assertCreditProducerNature("COBRO_PENDIENTE", evidence.naturaleza);
-  assertCreditCaptureEnabled(evidence, receipt.medio);
+  assertCreditCaptureEnabled(evidence, receipt.medio, "COBRO_PENDIENTE", "COBRO_RETENIDO");
   assertCreditPhysicalContext(evidence, receipt.medio, receipt.cuentaDestino);
   if (receipt.operacionProductor !== "COBRO_PENDIENTE") throw new CreditEvidenceError("E1: productor exclusivo de cobro pendiente requerido.");
   const importe = canonicalCreditMoney(receipt.importe);

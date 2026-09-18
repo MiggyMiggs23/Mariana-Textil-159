@@ -1,0 +1,15 @@
+# SHA-256 fingerprints; two spaces delimit digest and label
+8f0b55bacdfd8d8bc26be11b2c468f44ca472e459815f63727d842a874cfc3e6  preimage:artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx
+8c8987f72748aa0bd738b1531737eccff53f89e7e5825c6cb9273dda469e4d3a  preimage:artifacts/mariana-textil/src/lib/credit-evidence.ts
+18be0d835b2f05ec25b84b3a4e834adf99cb99f5845e9db6c3ebd62ebf4182c2  preimage:artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts
+46adc4e0c9fe11f713ea32629a66cb9f3422f85f1bde931af3df6eb64fe47ced  candidate-closed:artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx
+644adb5fb1fdc0bcd9cd5ae853c9d75e554af7c190572d9ab9fe6690a53a8d8c  candidate-closed:artifacts/mariana-textil/src/lib/credit-evidence.ts
+d10275c11f3efd412b06663e625613d29a1f5199e9ef704281682854328ef18e  candidate-closed:artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts
+46adc4e0c9fe11f713ea32629a66cb9f3422f85f1bde931af3df6eb64fe47ced  candidate-active:artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx
+9318dc3c78d99fd356d37ca0bb8045712afaae66ef4fdae344eb489950c35858  candidate-active:artifacts/mariana-textil/src/lib/credit-evidence.ts
+d10275c11f3efd412b06663e625613d29a1f5199e9ef704281682854328ef18e  candidate-active:artifacts/mariana-textil/src/lib/credit-evidence.contract.test.ts
+d0015f7e82fd779638ba23496daaf19d1038bd4d8c3956a2e17c9364e2091a67  artifact:frontend-candidate-no-aplicado.patch
+d78890ccedf541c40c3bb0fb4ac4eb362ce7ca9a386f9a01b08d802e06e91f4a  artifact:activacion-frontend-income-no-aplicada.patch
+970ea087bf87dd4209663baf05af57bf7a16a3a17021a909752e2585a634cb76  artifact:reversion-frontend-income.patch
+1db3eadc61cec39fccef93c284aa8efc112d8c8eea359896e33de5f138e5d7bc  artifact:frontend-tests/limited-income-active.render.test.tsx
+7e7f0c83b6422164d8fd431ce0cdcc1c66001c0dccf9ba158fc72c85599466d5  artifact:frontend-tests/limited-income-closed.render.test.tsx

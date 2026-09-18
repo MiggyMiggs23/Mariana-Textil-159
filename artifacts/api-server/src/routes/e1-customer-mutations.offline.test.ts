@@ -75,8 +75,13 @@ const mutations: Record<string, { file: string; before: string; after: string }>
   },
   "directed-cash-gate": {
     file: "pagos-dirigidos.ts",
-    before: "assertCreditCaptureEnabled(e1.evidence, data.formaPago);",
+    before: 'assertCreditCaptureEnabled(e1.evidence, data.formaPago, "ABONO_DIRIGIDO", "ABONO");',
     after: "/* defect: activate physical credit cash */",
+  },
+  "ordinary-cash-gate": {
+    file: "clientes.ts",
+    before: 'assertCreditCaptureEnabled(evidence, body.formaPago, "ABONO_ORDINARIO", "ABONO");',
+    after: "/* defect: activate ordinary physical credit cash */",
   },
 };
 
@@ -189,6 +194,16 @@ test("ordinary replay returns saved monetary response before live business state
   assert.equal(result.payload.id, movement.id);
   assert.equal(result.payload.saldoAFavor, "4.00");
   assert.deepEqual(calls, ["access", "claim", "audit-read"]);
+});
+
+test("ordinary physical cash gate rejects before transaction, claims and locks", async () => {
+  const { routes } = loadRoute("clientes.ts");
+  const result = await invoke(routes["post /clientes/:id/pagos"]!, {
+    ...evidence, naturaleza: "INGRESO_FISICO", origenJustificacion: null,
+    sesionCajaId: 8, importe: 100, formaPago: "EFECTIVO", cuentaDestino: "CAJA_FISICA",
+  }, { id: 3 });
+  assert.equal(result.status, 403);
+  assert.match(result.payload.error, /ingreso nuevo.*deshabilitada/i);
 });
 
 test("reversal replay wins over already-reversed state without inheriting nature", async () => {

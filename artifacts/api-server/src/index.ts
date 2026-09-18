@@ -1,4 +1,3 @@
-import app, { requestDrain } from "./app";
 import {
   ensurePendingCostsSchema,
   ensureClientesSchema,
@@ -36,8 +35,20 @@ import {
   ensureSalidasVentaPermissions,
   ensureEquiposSchema,
 } from "@workspace/db";
+import * as databaseSchema from "@workspace/db";
 import { logger } from "./lib/logger";
 import { startupMode } from "./lib/startup-mode";
+import {
+  CREDIT_CASH_INCOME_CAPTURE_ENABLED,
+  CREDIT_CASH_RETURN_CAPTURE_ENABLED,
+  CREDIT_PENDING_RECEIPTS_ENABLED,
+} from "./lib/credit-evidence-contract";
+import { CREDIT_HISTORICAL_ATTRIBUTION_ENABLED } from "./lib/credit-evidence-read";
+import {
+  runLimitedStartupPreflight,
+  buildDrizzleSchemaManifest,
+  type ReadonlyPreflightPool,
+} from "./lib/limited-startup-preflight";
 import { backfillCompras } from "./lib/compras-proveedor";
 import {
   runStockMinimumPoller,
@@ -144,14 +155,42 @@ export async function startServer() {
   // Development-only inspection boot: never run startup DDL, backfills or the
   // writing stock monitor when a read-only delivery explicitly forbids them.
   // This does not change request authorization or the normal production boot.
-  const inspectionBoot = startupMode(process.env) === "inspection";
-  if (inspectionBoot) {
+  const mode = startupMode(process.env, {
+    incomeCapture: CREDIT_CASH_INCOME_CAPTURE_ENABLED,
+    returnCapture: CREDIT_CASH_RETURN_CAPTURE_ENABLED,
+    pendingReceipts: CREDIT_PENDING_RECEIPTS_ENABLED,
+    historicalAttribution: CREDIT_HISTORICAL_ATTRIBUTION_ENABLED,
+  });
+  const nonWritingBoot = mode.kind !== "normal";
+  if (mode.kind === "inspection") {
     // Fail explicitly if the already-provisioned database cannot be read.
     await pool.query("SELECT 1");
     logger.warn("Inspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.");
+  } else if (mode.kind === "limited") {
+    const preflight = await runLimitedStartupPreflight(
+      pool as unknown as ReadonlyPreflightPool,
+      mode.approval,
+      buildDrizzleSchemaManifest(databaseSchema),
+    );
+    logger.warn({
+      startupMode: mode.approval.mode,
+      approved: mode.approval.approved,
+      route: mode.approval.route,
+      revision: mode.approval.revision,
+      guardState: mode.approval.guardState,
+      sqlPlanFingerprints: mode.approval.sqlPlanFingerprints,
+      databaseIdentity: preflight.identity,
+      verifications: mode.approval.verifications,
+      checked: preflight.checked,
+    }, "Explicit limited startup preflight passed; all startup writers remain disabled.");
   } else {
     await ensureStartupSchemas();
   }
+  // Import the HTTP graph only after the limited read-only gateway has
+  // committed. The graph was audited to contain no import-time session-store
+  // pruning/table creation/ensure hooks; request permissions and guards remain
+  // exactly the normal graph.
+  const { default: app, requestDrain } = await import("./app");
   const port = requireServerPort();
   const server = app.listen(port);
   server.on("error", async (err) => {
@@ -162,7 +201,7 @@ export async function startServer() {
   server.on("listening", () => {
     logger.info({ port }, "Server listening");
   });
-  if (inspectionBoot) {
+  if (nonWritingBoot) {
     installGracefulShutdown({
       app,
       server,

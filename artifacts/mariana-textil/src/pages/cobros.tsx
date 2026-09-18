@@ -88,6 +88,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
 import { formatDateOnlyMx } from "@/lib/date-only";
 import { documentoTipoLabel } from "@/lib/document-name";
+import CorteDetailShared from "@/pages/corte-detail-shared";
+import {
+  DevolucionCreditoInactivaDialog,
+} from "@/components/devolucion-credito-inactiva-dialog";
+import { CorteEfectivoDesglose } from "@/components/corte-efectivo-desglose";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
@@ -149,6 +154,7 @@ function CarteraContent() {
   const { data: currentUser } = useGetCurrentUser();
   const canViewFinances = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "ver");
   const canCreatePayment = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "crear");
+  const isAdmin = currentUser?.rol === Role.ADMIN;
 
   const [location, setLocation] = useLocation();
   const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
@@ -229,6 +235,7 @@ function CarteraContent() {
 
   const [paymentOpen, setPaymentOpen] = useState(!!initialImporte);
   const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; nota?: (typeof notas)[number] }>({ open: false });
+  const [refundOpen, setRefundOpen] = useState(false);
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -424,6 +431,27 @@ function CarteraContent() {
                   </div>
                 )}
               </div>
+
+              {isAdmin && (
+                <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
+                  <div className="flex flex-col gap-3 border-b bg-muted/30 p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h4 className="text-lg font-bold text-sidebar">Devolución física en preparación</h4>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Revisa recepciones documentadas y cajas abiertas de hoy. La función permanece inactiva.
+                      </p>
+                    </div>
+                    <Button type="button" variant="outline" onClick={() => setRefundOpen(true)}>
+                      Preparar devolución
+                    </Button>
+                  </div>
+                  <div className="p-4">
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      La lista de opciones no certifica saldo disponible ni elegibilidad. No se enviará ninguna devolución.
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="text-center py-20 rounded-xl bg-muted/20 border-2 border-dashed border-muted">
@@ -469,6 +497,13 @@ function CarteraContent() {
           }}
         />
       )}
+      <DevolucionCreditoInactivaDialog
+        open={refundOpen}
+        onOpenChange={setRefundOpen}
+        clienteId={clienteId || 0}
+        clienteNombre={ticket?.nombreCliente || `Cliente #${clienteId}`}
+        isAdmin={isAdmin}
+      />
     </div>
   );
 }
@@ -531,7 +566,7 @@ function HistorialCortes() {
           <DialogHeader><DialogTitle>Detalle de corte</DialogTitle></DialogHeader>
           {loadingCorte ? <div className="flex h-48 items-center justify-center"><Loader2 className="h-7 w-7 animate-spin" /></div>
             : corteFailed ? <div className="space-y-3 text-destructive"><p>{getApiErrorMessage(corteError, "No se pudo cargar el corte.")}</p><Button variant="outline" onClick={() => retryCorte()}>Intentar de nuevo</Button></div>
-            : corte ? <CorteDetail corte={corte} /> : null}
+            : corte ? <CorteDetailShared corte={corte} /> : null}
           <DialogFooter><Button variant="outline" onClick={() => {
             document.body.classList.add("print-corte");
             window.print();
@@ -1759,9 +1794,10 @@ function CobrosContent() {
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    Incluye fondo inicial + cobros en efectivo.
+                     Consulta abajo la versión del cálculo y sus documentos.
                   </p>
                 </div>
+                 <CorteEfectivoDesglose desglose={corteData.efectivoDesglose} />
                 {closedCorte && (
                   <div className="grid gap-4 rounded-md border border-emerald-200 bg-emerald-50 p-4 sm:grid-cols-2">
                     <div>
@@ -1928,37 +1964,6 @@ export default function CobrosPage() {
         {canUseCartera && view === "cartera" ? <CarteraContent /> : (isAdmin && view === "historial" ? <HistorialCortes /> : <CobrosContent />)}
       </div>
     </AppLayout>
-  );
-}
-
-function CorteDetail({ corte }: { corte: CorteCaja }) {
-  return (
-    <div className="space-y-5 py-4">
-      <div className="grid gap-3 rounded-md border bg-muted/20 p-3 text-sm sm:grid-cols-2">
-        <p><span className="text-muted-foreground">Sitio:</span> {corte.sesion.nombreUbicacion}</p>
-        <p><span className="text-muted-foreground">Operador:</span> {corte.sesion.nombreUsuario}</p>
-        <p><span className="text-muted-foreground">Apertura:</span> {format(new Date(corte.sesion.abiertaAt), "PPP p", { locale: es })}</p>
-        <p><span className="text-muted-foreground">Cierre:</span> {corte.sesion.cerradaAt ? format(new Date(corte.sesion.cerradaAt), "PPP p", { locale: es }) : "Sesión abierta"}</p>
-      </div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        <CorteRow label="Fondo inicial" value={corte.fondoInicial} />
-        <CorteRow label="Total cobrado" value={corte.totalCobrado} />
-        <CorteRow label="IVA cobrado" value={corte.ivaCobrado} />
-        <CorteRow label="Efectivo esperado" value={corte.efectivoEsperado} />
-        <CorteRow label="Efectivo contado" value={corte.efectivoContado ?? "0"} />
-      </div>
-      <p className="text-right text-sm font-semibold">Diferencia: {formatNumber(corte.diferencia, { kind: "money" })}</p>
-      <div className="grid gap-4 md:grid-cols-2">
-      <CorteSection title="Formas de pago">{corte.formasPago.map((row) => <CorteRow key={row.formaPago} label={`${row.formaPago} (${formatNumber(row.ticketsCount, { kind: "count" })} tickets)`} value={row.importe} />)}</CorteSection>
-        <CorteSection title="Cuentas destino">{corte.cuentasDestino.map((row) => <CorteRow key={`${row.formaPago}-${row.cuentaDestino}`} label={formatAccountDestination(row.cuentaDestino)} value={row.importe} />)}</CorteSection>
-      <CorteSection title="Salidas de dinero">{corte.salidas.length ? corte.salidas.map((salida) => <CorteRow key={salida.id} label={`${formatAccountDestination(salida.cuentaOrigen)} · ${salida.motivo}`} value={`-${formatNumber(salida.monto, { kind: "money" })}`} />) : <p className="text-xs text-muted-foreground">Sin salidas registradas.</p>}</CorteSection>
-      <CorteSection title="Neto esperado por cuenta">{Object.entries(corte.salidasPorCuenta).map(([cuenta, salida]) => <CorteRow key={cuenta} label={`${formatAccountDestination(cuenta)} · salidas`} value={`-${formatNumber(salida, { kind: "money" })}`} />)}</CorteSection>
-        <CorteSection title="Facturación">{corte.facturacion.map((row) => <CorteFiscalRow key={String(row.facturado)} row={row} />)}</CorteSection>
-      <CorteSection title="Rollos / Metraje">{corte.metreado.map((row) => <CorteRow key={`${row.tipo}-${row.unidad}`} label={`${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${formatUnit(row.unidad)}`} value={row.importe} />)}</CorteSection>
-      </div>
-      <CorteSection title="Productos vendidos">{corte.productos.length ? corte.productos.map((row) => <CorteRow key={row.productoId} label={`${row.sku} · ${row.tela} ${row.color} · ${formatNumber(row.cantidad, { kind: "quantity" })} ${formatUnit(row.unidad)}`} value={row.importe} />) : <p className="text-xs text-muted-foreground">Sin productos cobrados.</p>}</CorteSection>
-      <CorteSection title={`Tickets pendientes (${formatNumber(corte.pendientes.length, { kind: "count" })})`}>{corte.pendientes.length ? corte.pendientes.map((row) => <CorteRow key={row.ticketId} label={`Folio ${formatNumber(row.folio, { kind: "identifier" })} · ${row.nombreCliente || "Venta a Público"}`} value={row.total} />) : <p className="text-xs text-muted-foreground">Sin tickets pendientes.</p>}</CorteSection>
-    </div>
   );
 }
 

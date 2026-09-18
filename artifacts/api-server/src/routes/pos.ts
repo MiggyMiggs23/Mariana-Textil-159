@@ -949,6 +949,7 @@ router.get(
                 documentosPendientes: corte.documentosPendientes,
                 totalCobrado: corte.totalCobrado,
                 efectivoEsperado: corte.efectivoEsperado,
+                ...("efectivoDesglose" in corte ? { efectivoDesglose: corte.efectivoDesglose } : {}),
               }
             : null,
         }),

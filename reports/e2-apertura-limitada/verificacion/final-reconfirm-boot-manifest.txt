@@ -1,0 +1,4 @@
+# FINAL boot-focused offline reconfirmation; explicit non-empty manifest.
+src/lib/limited-startup-preflight.test.ts
+src/lib/startup-mode.test.ts
+src/lib/server-lifecycle.test.ts

@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: GET returns original ABONO/retained documents and today's cash in a different store, always inactive
+not ok 1 - GET returns original ABONO/retained documents and today's cash in a different store, always inactive
+  ---
+  duration_ms: 80.691239
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts:1:4218'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts:100:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1089.891712

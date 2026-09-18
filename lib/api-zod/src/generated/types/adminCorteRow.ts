@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AdminCorteRowEstado } from './adminCorteRowEstado';
+import type { EfectivoDesglose } from './efectivoDesglose';
 
 export interface AdminCorteRow {
   id: number;
@@ -21,6 +22,7 @@ export interface AdminCorteRow {
   vendido: string;
   totalCobrado: string;
   efectivoEsperado: string;
+  efectivoDesglose?: EfectivoDesglose;
   /** @nullable */
   efectivoContado: string | null;
   /** @nullable */

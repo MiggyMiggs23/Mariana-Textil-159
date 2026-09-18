@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { EfectivoDesglose } from './efectivoDesglose';
 import type { EstadoSesionCaja } from './estadoSesionCaja';
 
 export interface SesionCajaHistorialItem {
@@ -24,6 +25,7 @@ export interface SesionCajaHistorialItem {
   ticketsCancelados: number;
   totalCobrado: string;
   efectivoEsperado: string;
+  efectivoDesglose?: EfectivoDesglose;
   /** @nullable */
   diferencia: string | null;
 }

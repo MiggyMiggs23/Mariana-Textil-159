@@ -2866,6 +2866,44 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /clientes/{id}/devoluciones-credito/opciones:
+    get:
+      operationId: getCreditRefundOptions
+      tags: [clientes]
+      description: "Sólo lectura, ADMIN activo actual y permisos clientes_finanzas ver y autorizar. Lista recepciones físicas documentadas, NO certifica elegibilidad económica. No consulta tablas E2 pendientes de DDL. Devuelve enabled false y todas las sesiones abiertas hoy de tiendas activas autorizadas para ADMIN. El sitio de devolución puede diferir del sitio histórico de la recepción; POST sitioOrigenId y sesionCajaId deben provenir de la sesión seleccionada."
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 } }
+      responses:
+        "200":
+          description: Referencias documentales reales y sesiones actuales; devolución inactiva
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CreditRefundOptions" }
+        "400": { description: Cliente inválido }
+        "401": { description: Sesión requerida }
+        "403": { description: Requiere ADMIN activo y ambos permisos }
+        "404": { description: Cliente no encontrado }
+  /clientes/{id}/devoluciones-credito:
+    post:
+      operationId: devolverCreditoFisico
+      description: "INACTIVO: gate constante false. Requiere sesión autenticada, permiso clientes_finanzas/autorizar y ADMIN activo actual. Sólo devolución completa en EFECTIVO del origen físico identificado, nunca aplicado; sesión abierta de hoy correspondiente al sitio de devolución declarado. El sitio de devolución puede diferir del sitio del ingreso original; el corte original no cambia. No acepta override de activación. Devuelve 200 también en replay exacto cuando eventualmente se active."
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreditRefundRequest" }
+      responses:
+        "200":
+          description: Devolución atómica o respuesta persistida del mismo UUID
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/CreditRefundReply" }
+        "400": { description: Solicitud inválida }
+        "401": { description: Sesión requerida }
+        "403": { description: Flujo inactivo o autorización insuficiente }
+        "409": { description: "UUID con otro contenido, origen utilizado/no elegible, evidencia insuficiente o sesión incompatible" }
   /clientes/resumen:
     get:
       operationId: getClientesResumen
@@ -8329,6 +8367,7 @@ components:
         vendido: { type: string }
         totalCobrado: { type: string }
         efectivoEsperado: { type: string }
+        efectivoDesglose: { $ref: "#/components/schemas/EfectivoDesglose" }
         efectivoContado: { type: ["string", "null"] }
         diferencia: { type: ["string", "null"] }
         ticketsCobrados: { type: number }
@@ -13794,6 +13833,7 @@ components:
         documentosPendientes: { type: number }
         totalCobrado: { type: string }
         efectivoEsperado: { type: string }
+        efectivoDesglose: { $ref: "#/components/schemas/EfectivoDesglose" }
     SesionCajaHistorialItem:
       type: object
       required:
@@ -13830,6 +13870,7 @@ components:
         ticketsCancelados: { type: number }
         totalCobrado: { type: string }
         efectivoEsperado: { type: string }
+        efectivoDesglose: { $ref: "#/components/schemas/EfectivoDesglose" }
         diferencia: { type: ["string", "null"] }
     SesionCaja:
       type: object
@@ -14026,6 +14067,90 @@ components:
       required: [salidas]
       properties:
         salidas: { type: array, items: { $ref: "#/components/schemas/SalidaDineroCaja" } }
+    CreditRefundCandidate:
+      type: object
+      required: [origen, abonoId, cobroClave, folio, referencia, importe, sitioOrigenId, sitioNombre]
+      properties:
+        origen: { type: string, enum: [ABONO, COBRO_RETENIDO] }
+        abonoId: { type: ["number", "null"], minimum: 1, maximum: 2147483647, multipleOf: 1 }
+        cobroClave: { type: ["string", "null"], pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+        folio: { type: ["number", "null"], multipleOf: 1 }
+        referencia: { type: ["string", "null"] }
+        importe: { type: string, pattern: '^[0-9]+\.[0-9]{2}$' }
+        sitioOrigenId: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 }
+        sitioNombre: { type: string }
+    CreditRefundOpenSession:
+      type: object
+      required: [id, sitioOrigenId, sitioNombre, abiertaAt]
+      properties:
+        id: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 }
+        sitioOrigenId: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 }
+        sitioNombre: { type: string }
+        abiertaAt: { type: string, format: date-time }
+    CreditRefundOptions:
+      type: object
+      required: [enabled, motivoInactivo, advertencia, candidatas, sesiones]
+      properties:
+        enabled: { type: boolean, enum: [false] }
+        motivoInactivo: { type: string }
+        advertencia: { type: string }
+        candidatas: { type: array, items: { $ref: "#/components/schemas/CreditRefundCandidate" } }
+        sesiones: { type: array, items: { $ref: "#/components/schemas/CreditRefundOpenSession" } }
+    CreditRefundRequest:
+      type: object
+      required: [operacionClave, origen, importe, motivo, sitioOrigenId, sesionCajaId]
+      properties:
+        operacionClave: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+        origen: { type: string, enum: [ABONO, COBRO_RETENIDO] }
+        abonoId: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1, description: "Obligatorio sólo para ABONO; excluye cobroClave" }
+        cobroClave: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$', description: "Obligatorio sólo para COBRO_RETENIDO; excluye abonoId" }
+        importe: { type: string, pattern: '^[0-9]+\.[0-9]{2}$', description: "Importe completo de la recepción, positivo" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+        sitioOrigenId: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 }
+        sesionCajaId: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 }
+    CreditRefundReply:
+      type: object
+      required: [operacionClave, salidaId, reversoId, importe, sesionCajaId]
+      properties:
+        operacionClave: { type: string, pattern: '^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$' }
+        salidaId: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 }
+        reversoId: { type: ["number", "null"], minimum: 1, maximum: 2147483647, multipleOf: 1 }
+        importe: { type: string }
+        sesionCajaId: { type: number, minimum: 1, maximum: 2147483647, multipleOf: 1 }
+    EfectivoDesglose:
+      type: object
+      required: [version, fondoInicial, cobrosTickets, abonosFisicos, cobrosRetenidos, salidasFisicas, efectivoEsperado, documentos]
+      properties:
+        version: { type: string, enum: [E2, LEGACY] }
+        fondoInicial: { type: string }
+        cobrosTickets: { type: string }
+        abonosFisicos: { type: string }
+        cobrosRetenidos: { type: string }
+        salidasFisicas: { type: string }
+        efectivoEsperado: { type: string }
+        documentos:
+          type: array
+          items:
+            type: object
+            required: [origen, id, folio, importe, href]
+            properties:
+              origen: { type: string, enum: [FONDO_INICIAL, TICKET, ABONO, COBRO_RETENIDO, SALIDA] }
+              id: { type: string }
+              folio: { type: ["string", "null"] }
+              importe: { type: string }
+              href: { type: ["string", "null"] }
+              evidencia:
+                type: object
+                description: Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.
+                required: [referencia, motivo, fecha, usuarioId, proveedorId]
+                properties:
+                  referencia: { type: ["string", "null"] }
+                  motivo: { type: ["string", "null"] }
+                  fecha: { type: ["string", "null"], format: date-time }
+                  usuarioId: { type: ["number", "null"] }
+                  proveedorId: { type: ["number", "null"] }
+                  usuarioNombre: { type: ["string", "null"] }
+                  proveedorNombre: { type: ["string", "null"] }
     CorteCaja:
       type: object
       required:
@@ -14112,6 +14237,7 @@ components:
             description: IVA incluido en los tickets cobrados de la sesión,
           }
         efectivoEsperado: { type: string }
+        efectivoDesglose: { $ref: "#/components/schemas/EfectivoDesglose" }
         efectivoContado: { type: ["string", "null"] }
         diferencia: { type: ["string", "null"] }
         hojaVentasDia: { $ref: "#/components/schemas/HojaVentasDia" }

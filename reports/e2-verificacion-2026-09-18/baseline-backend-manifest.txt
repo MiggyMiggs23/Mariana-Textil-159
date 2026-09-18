@@ -1,0 +1,15 @@
+# E2 baseline 80eaa93d: explicit pure/mock/source-contract backend selection.
+# No integration suites, real database imports, app startup, users, or sessions.
+src/caja-diaria-block4.contract.test.ts
+src/pos-caja-final.contract.test.ts
+src/clientes-pagos.contract.test.ts
+src/clientes-notas-credito.contract.test.ts
+src/lib/credit-evidence-contract.test.ts
+src/lib/credit-evidence.mock.test.ts
+src/lib/credit-evidence-read.test.ts
+src/lib/credit-allocation.test.ts
+src/lib/clientes-cartera-read-model.test.ts
+src/lib/clientes-aging.test.ts
+src/clientes-estado-cuenta.contract.test.ts
+src/credit-movement-detail.contract.test.ts
+src/lib/credit-movement-detail.test.ts

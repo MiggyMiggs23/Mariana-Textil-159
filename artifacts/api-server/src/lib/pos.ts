@@ -1,4 +1,6 @@
 import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
+import { readSessionCash } from "./caja-corte-reader";
+import { cashCents, cashMoney } from "./caja-cash-ledger";
 import type { Request } from "express";
 import {
   assertCreditEvidenceAccess, assertCreditEvidenceScope, claimCreditOperation,
@@ -2192,7 +2194,7 @@ export async function listarSesionesCajaHistorial(database: Reader) {
     )
     .orderBy(desc(sesionesCajaTable.abiertaAt));
 
-  return rows.map((row) => {
+  return Promise.all(rows.map(async (row) => {
     const efectivoEsperadoCents =
       money(row.fondoInicial) + money(row.efectivoCobrado) - money(row.salidasEfectivo);
     const efectivoContadoCents =
@@ -2201,13 +2203,15 @@ export async function listarSesionesCajaHistorial(database: Reader) {
       ...row,
       abiertaAt: row.abiertaAt.toISOString(),
       cerradaAt: row.cerradaAt?.toISOString() ?? null,
-      efectivoEsperado: decimalMoney(efectivoEsperadoCents),
-      diferencia:
+      ...await readSessionCash(database, row, {
+        efectivoEsperado: decimalMoney(efectivoEsperadoCents),
+        diferencia:
         efectivoContadoCents == null
           ? null
           : decimalMoney(efectivoContadoCents - efectivoEsperadoCents),
+      }),
     };
-  });
+  }));
 }
 
 export async function buildCorteCaja(database: Reader, sesionId: number) {
@@ -2506,6 +2510,10 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
   const esperado = money(sesion.fondoInicial) + formas.EFECTIVO - salidasPorCuenta.CAJA_FISICA;
   const contado =
     sesion.efectivoContado == null ? null : money(sesion.efectivoContado);
+  const cash = await readSessionCash(database, sesion, {
+    efectivoEsperado: decimalMoney(esperado),
+    diferencia: contado == null ? null : decimalMoney(contado - esperado),
+  });
   return {
     sesion: {
       ...sesion,
@@ -2597,9 +2605,8 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       canceladoAt: ticket.canceladoAt!.toISOString(),
       autor: ticket.autor ?? "Usuario desconocido",
     })),
-    efectivoEsperado: decimalMoney(esperado),
+    ...cash,
     efectivoContado: contado == null ? null : decimalMoney(contado),
-    diferencia: contado == null ? null : decimalMoney(contado - esperado),
     fondoInicial: sesion.fondoInicial,
     hojaVentasDia: {
       sitio: sesion.nombreUbicacion,
@@ -2643,6 +2650,12 @@ export async function cerrarSesionCaja(
       409,
     );
   }
+  // Under the existing FOR UPDATE lock, before changing the session state.
+  // The E1 FOR SHARE capture lock conflicts with this lock.
+  const cash = await readSessionCash(tx, sesion, { efectivoEsperado: "0.00", diferencia: null });
+  if (!("efectivoDesglose" in cash) || !cash.efectivoDesglose) {
+    throw new PosError("No fue posible congelar el desglose de caja.", "CASH_SNAPSHOT_REQUIRED", 409);
+  }
   await tx
     .update(sesionesCajaTable)
     .set({
@@ -2652,7 +2665,6 @@ export async function cerrarSesionCaja(
       efectivoContado: decimalMoney(contado),
     })
     .where(eq(sesionesCajaTable.id, sesion.id));
-  const corte = await buildCorteCaja(tx, sesion.id);
   await tx.insert(auditoriaTable).values({
     usuarioId: input.usuarioId,
     accion: "CERRAR_CAJA",
@@ -2660,11 +2672,16 @@ export async function cerrarSesionCaja(
     entidadId: String(sesion.id),
     datosDespues: {
       efectivoContado: decimalMoney(contado),
-      diferencia: corte?.diferencia ?? null,
+      diferencia: cashMoney(cashCents(decimalMoney(contado)) - cashCents(cash.efectivoEsperado)),
+      cashSnapshot: {
+        version: "E2", sesionId: sesion.id, efectivoDesglose: cash.efectivoDesglose,
+        efectivoContado: decimalMoney(contado),
+        diferencia: cashMoney(cashCents(decimalMoney(contado)) - cashCents(cash.efectivoEsperado)),
+      },
     },
     ip: input.ip,
   });
-  return corte;
+  return buildCorteCaja(tx, sesion.id);
 }
 
 export async function buscarPos(

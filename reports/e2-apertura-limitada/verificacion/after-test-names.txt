@@ -1,0 +1,132 @@
+Bloque 4 keeps daily cash and Mariana safeguards wired
+Caja feed uses the canonical pending-document predicate
+Caja only retains cut printing
+E1 ON CONFLICT loser reloads immutable winner instead of repeating writes
+E1 canonical JSON recursively sorts keys and preserves intent order and exact instants
+E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values
+E1 committed operation without movement fails explicitly, never stub success
+E1 correction never invents cash session; physical bank transfer never accepts drawer
+E1 current actor/site access rejects role, inactive actor and moved site even on replay
+E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone
+E1 evidence parser whitelists and normalizes without credentials
+E1 exact money normalization rejects rounding and overflow
+E1 four exact natures and seven-producer compatibility cannot default to correction
+E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature
+E1 retained receipt gate rejects before any storage call and never becomes an ABONO
+E1 reused key with changed amount, actor, metadata or nature conflicts
+E1 same content replays original result before repeated domain validation/side effects
+E2/E3 income and return cash permissions are separate and both remain closed
+E2/E3 source has split gates; isolated source mutants fail the architecture check
+E3 future income permission only admits exact ABONO cash tuple and never cash returns
+E3 rollback from income=true to false blocks only new captures
+Note cancellation reverses its authorized ledger charge, never a payment
+POS sale capability receives only minimal credit availability
+REVERSAR_PAGO_CLIENTE requires the new reverse snapshot, not referenced original metadata
+REVERSO links original capture evidence only through the original snapshot
+Ticket and Note are absolute, independently processed operations
+UUID replay conflicts on changed content or actor, without business writes
+a later sale consumes historic remaining abono, not a directed ticket
+a new note with no explicit favor choice leaves prior favor available
+actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO
+actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO
+actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL
+actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE
+actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO
+actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO
+actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO
+actual access/scope adapters check current site and role before replay without requiring open session
+actual claim adapter atomically inserts once and replays immutable movement without another write
+actual claim adapter conflicts on changed actor, nature or whitelisted intent
+actual claim adapter isolates equal UUID across producers in both claim and movement lookup
+actual claim adapter loses composite uniqueness race and reloads the completed winner
+actual claim adapter rejects missing movement and incomplete operation reservation
+actual credit request adapter reports legacy update-app error before required generated-schema validation
+actual insertion adapters reject new physical cash and pending receipt before any query/write
+actual movement helper validates explicit note identity rather than inferring its site
+actual scope adapter requires an open drawer in the exact active store
+aging and payment application report the same balances with a linked reversal
+aging examples remain current until due date and age only afterward
+all financial report read models use the canonical accounted predicate
+allocates 4200+3500+2300 strictly by credit-sale FIFO
+antigüedad toma fecha_vencimiento en calendario America/Mexico_City
+attribution remains closed for ADMIN and SUPERVISOR; roles fail first
+audit identity rejects an entity-id-only collision
+authorization uses the shared ledger projection and has no override
+automatic favor eligibility blocks AJUSTE and consumed ABONO evidence
+backdated preview from the full ledger matches the subsequently inserted ABONO
+calendar-day addition preserves month ends and leap days
+canonical note states distinguish unpaid, partial, paid, and overdue partial
+cash management uses CORTES while ticket collection uses COBROS_PAGOS
+cash rollback gate is absent from historical evidence reader source
+cash ticket does not infer credit from unrelated customer ledger
+consultas de detalle usan aplicaciones_credito en ambas direcciones
+contrato de abono exige cuentaDestino y preview comparte fecha efectiva
+contrato de notas de crédito deriva los tres estados sin persistirlos
+credit due dates support every mandatory term from Mexico City sale date
+credit due-date boundaries use Mexico calendar labels, not sale instants
+credit status boundaries are calculated at query time
+date-only database values retain their label when normalized for JSON and Excel
+detail allocation rows use the canonical projected before/after values
+directed ABONOs reduce only the selected movement when a ticket has multiple charges
+directed ABONOs reduce only their linked ticket before normal FIFO
+directed payment excess remains available favor
+estado de cuenta projects current balances while retaining raw running history
+estado de cuenta proyecta cuentaDestino desde el CTE del ledger
+exact timestamp and all five snapshot fields prevent movement ID reuse
+explicit favor can target a protected new note without changing historical FIFO
+failing tests:
+favor application preserves Cobrado classification and receipt-source conservation
+financial PDF paginates without dropping rows
+financial export is a valid PDF byte stream
+fiscal financial ranges use Caja processing timestamps
+full ledger projection excludes reversed ABONOs and applies ticket reversals before FIFO
+global read preserves legacy active/system and nonzero-debt behavior
+historical preventImplicitFavor remains a frozen exception while new notes auto-apply
+identical UUID replay precedes original/site/chain checks and has no INSERT
+later ordinary favor can settle a protected note
+latest attribution is separate and cross-site latest attribution is not leaked
+legacy authorized Notes receive deterministic authorization timestamps
+legacy ticket-linked ABONOs remain normal FIFO without a directed marker
+linked REVERSO cancels its own later ticket before ABONO FIFO
+linked reduction cancels its target before FIFO allocation
+missing/invalid site and cross-site actor cannot cause an attribution insert
+mixed ticket reports only its credit portion and persisted terms
+negative adjustment cannot be linked to a ticket and bypass FIFO
+new attribution validates snapshot before insertion and rejects nonhistorical original
+only the four explicit credit terms are accepted
+overpayment export distinguishes historical running balance from current outstanding
+pending Notes do not reserve customer credit before authorization
+positive adjustment remains as an aged receivable
+positive and negative AJUSTE stay in the canonical ledger without a payment reparto
+preserves excess payment as available credit
+prospective FIFO applies favor to a new note for all six timing/amount cases
+read evidence never infers original site/nature and excludes unknown from ordinary scope
+read loader applies defensive scope to returned rows and exposes disabled activation
+readonly SQL probe report matches the exact exported query builders
+rectification requires current head, keeps predecessor intact and replays old root
+reimpresión audita antes de responder y no actualiza el ledger
+replayed explicit application evidence is idempotent
+resulting favor includes existing favor separately from the new receipt excess
+reversed ABONO exposes immutable evidence, not a recomputed prefix balance
+reversed ABONO uses stored audit before/after only when it matches immutable evidence
+reversing an ABONO restores the ticket balance
+root append inserts only attribution with exact identity and no monetary/session row
+sales identity excludes operational pending amounts
+sales summary excludes only credit from collected payment methods
+same-day and next-day ABONOs reduce the sale for partial, exact, and excess payments
+scope guards reject conflicts, arrays, blanks, zero, and missing assignment
+scoped JSON and real XLSX/PDF bytes contain no favor leak and mark attribution
+single and multi-site reads use actual resolver and reject outside/unknown sites
+summary and realtime sales require explicit Caja processing date basis
+supervisor attribution is limited to assigned site even with global read scope
+supplier margin and realtime documents respect Caja processing
+the additive response contract covers ABONO, REVERSO, and AJUSTE
+the pure read-fixture builder keeps active canonical reparto and inactive evidence separate
+the readonly route keeps the finance permission and client/type ownership predicates
+the real archived client-7 case keeps recapture 50 separate from reversal 48
+ticket credit balance uses FIFO abonos and linked reversals
+ticket credit derives from its sale movement without a ticket payment
+unknown historical preparation requires privileged role AND existing credit access
+unlinked negative amount applies oldest sale first
+validates payment destination against its payment method
+whitelisted required evidence rejects credentials, missing predecessor and truncated identity

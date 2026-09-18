@@ -1,0 +1,13 @@
+revision=80eaa93d
+revision_type=commit
+is_ancestor_of_preflight_HEAD=yes
+selection=13 backend files; 6 frontend files
+static_test_declarations=120 backend; 23 frontend; 143 total
+scope=cash/corte; refund/payment evidence; historical/read-model controls; client evidence; unchanged credit projection controls
+excluded=all integration/API server tests; real DB pool/schema imports; app startup; user/session setup; implicit discovery
+isolation=git archive in /tmp; baseline-local workspace links; immutable external dependency store shared
+backend_runner=current scripts/src/offline-test-runner.mjs copied byte-for-byte into isolated baseline because its root and manifest are intentionally fixed relative to itself
+frontend_runner=current scripts/src/frontend-test-runner.mjs with explicit isolated --root, --app-root and --manifest
+guard=current scripts/src/offline-test-guard.cjs preloaded in parent and test children
+guard_effect=DB/Postgres environment stripped; backend fixed invalid sentinel; socket/DNS/HTTP/HTTPS/TLS blocked; guard propagated to permitted Node/esbuild/worker children
+write_scope=reports/e2-verificacion-2026-09-18 and /tmp isolated copy only

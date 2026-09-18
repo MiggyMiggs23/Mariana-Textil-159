@@ -1,0 +1,8 @@
+scope=all regular files under artifacts/, lib/, and scripts/ plus root package.json, pnpm-lock.yaml, pnpm-workspace.yaml, tsconfig.base.json, tsconfig.json
+excluded=reports/, docs/, node_modules/, dist/, coverage/, and hidden .observable-* runtime capture directories
+file_count=4380
+production_scope=the recorded final-source scope minus test/spec sources and TypeScript incremental .tsbuildinfo state
+reason=tests are concurrently owned negative-harness work explicitly outside frozen production source; .tsbuildinfo is compiler output changed by canonical typecheck
+production_file_count=4062
+production_manifest_cmp_exit=0
+all_source_and_test_manifest_cmp_exit=1

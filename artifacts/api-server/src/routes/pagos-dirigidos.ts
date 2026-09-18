@@ -326,7 +326,7 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
         }
         assertCreditProducerNature("ABONO_DIRIGIDO", e1.evidence.naturaleza);
         await assertCreditEvidenceScope(req, e1.evidence, tx);
-        assertCreditCaptureEnabled(e1.evidence, data.formaPago);
+        assertCreditCaptureEnabled(e1.evidence, data.formaPago, "ABONO_DIRIGIDO", "ABONO");
         assertCreditPhysicalContext(e1.evidence, data.formaPago, data.cuentaDestino);
       }
       await assertDocumentBalance(tx, data);

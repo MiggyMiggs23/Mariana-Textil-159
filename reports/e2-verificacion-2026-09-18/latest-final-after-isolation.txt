@@ -1,0 +1,11 @@
+snapshot_root=/tmp/e2-final-after-hCJZjI
+7a7dce326e72ee8dabe97944af0d7b632c5df49900dca0d620116502cf814c0c  /home/runner/workspace/scripts/src/offline-test-runner.mjs
+7a7dce326e72ee8dabe97944af0d7b632c5df49900dca0d620116502cf814c0c  /tmp/e2-final-after-hCJZjI/scripts/src/offline-test-runner.mjs
+860a67835711607bdbc269611743c841d25d20fd671c58e938cd32795962e611  /home/runner/workspace/scripts/src/offline-test-guard.cjs
+860a67835711607bdbc269611743c841d25d20fd671c58e938cd32795962e611  /tmp/e2-final-after-hCJZjI/scripts/src/offline-test-guard.cjs
+46bde0c9aca36acdb11e349acd2f316e96a95ee3497d16949d9a48353a021b27  /home/runner/workspace/reports/prompt-f/historical-credit-cases.json
+46bde0c9aca36acdb11e349acd2f316e96a95ee3497d16949d9a48353a021b27  /tmp/e2-final-after-hCJZjI/reports/prompt-f/historical-credit-cases.json
+658c313a4e8fdcb51cff66d7d3924709a54016612790fffed7ed9593f850a2f3  /home/runner/workspace/reports/prompt-f/detail-query-probes.json
+658c313a4e8fdcb51cff66d7d3924709a54016612790fffed7ed9593f850a2f3  /tmp/e2-final-after-hCJZjI/reports/prompt-f/detail-query-probes.json
+workspace_api_zod=/tmp/e2-final-after-hCJZjI/lib/api-zod
+workspace_db=/tmp/e2-final-after-hCJZjI/lib/db

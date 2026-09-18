@@ -1,0 +1,13 @@
+{
+  "unchanged": true,
+  "sourceSha256": {
+    "caja-cash-ledger.test.ts": "7d90417a81325bf6b3161938eeb46fdf5298c632c75849f81ccdca31961eebbe",
+    "caja-corte-reader.mock.test.ts": "e2b6d4ad2ca44d6ee45a46fac1789eb59f5db552ef33be86b75f495ddb51fb09",
+    "caja-admin-cash.mock.test.ts": "99bfba2cf6c43da88e4a0194b4ff88e51cf753dfa03800e3d47b71be898ef696",
+    "caja-close.mock.test.ts": "836721d937059cfce5ab988961cc9a7d45064d23d20a364afb82f74e4163c6f2",
+    "caja-cash-ledger.ts": "d5663a1e88af3e4443f919fc280dd349cbf208893dc5ea4eb841b73690e7b78a",
+    "caja-corte-reader.ts": "827dd2340c99e0a50b497e5902c545d15fe44b2f0c3f31b621d61ea8338338fb",
+    "admin-analytics.ts": "2304f6c4a543086d390a450a8a894169d51c1fbff6a3339c65d30f1ea1ab7d6c",
+    "pos.ts": "ab55e46987913e49ca5e1881ba2666ba7b6a10df24106f1703ea7e011fcd04e1"
+  }
+}

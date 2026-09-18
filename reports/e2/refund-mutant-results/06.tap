@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: production gate prevents even entering transaction
+not ok 1 - production gate prevents even entering transaction
+  ---
+  duration_ms: 7.094785
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:1:8863'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /pendiente/. Input:
+    
+    'CreditEvidenceError: E1: la captura nueva de efectivo de crédito permanece deshabilitada.'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'E1: la captura nueva de efectivo de crédito permanece deshabilitada.'
+  stack: |-
+    assertCreditCaptureEnabled (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-evidence-contract.ts:87:11)
+    evalmachine.<anonymous>:106:58
+    async Object.transaction (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:85:20)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:201:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.mock.test.ts:201:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1157.277295

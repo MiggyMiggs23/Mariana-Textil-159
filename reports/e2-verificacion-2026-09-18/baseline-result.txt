@@ -1,0 +1,44 @@
+E2 READONLY baseline verification
+date=2026-09-18
+revision=80eaa93d4300e86d9be54492e634f88f0c0abc90
+tree=3365350be578e21245228889ba7a46465ce3750a
+guard_selfcheck_exit=0
+
+backend_manifest_files=13
+backend_tests=126
+backend_pass=121
+backend_fail=5
+backend_cancelled=0
+backend_skipped=0
+backend_terminal_exit=1
+backend_known_failures:
+- contrato de notas de crédito deriva los tres estados sin persistirlos
+- consultas de detalle usan aplicaciones_credito en ambas direcciones
+- contrato de abono exige cuentaDestino y preview comparte fecha efectiva
+- Ticket and Note are absolute, independently processed operations
+- authorization uses the shared ledger projection and has no override
+
+frontend_manifest_files=6
+frontend_tests=23
+frontend_pass=23
+frontend_fail=0
+frontend_cancelled=0
+frontend_skipped=0
+frontend_terminal_exit=0
+
+selected_total_tests=149
+selected_total_pass=144
+selected_total_fail=5
+baseline_count_known=yes
+baseline_overall_terminal_status=red (five preserved baseline contract failures)
+
+integrity_tracked_artifacts_and_lib_files_checked=1614
+integrity_mismatches=0
+database_queries=0
+database_writes=0
+network=blocked_by_preloaded_guard
+app_started=no
+users_or_sessions_created=no
+
+note=The first backend launch ended before tests because baseline package-local external dependency links had not yet been copied. It is preserved separately as baseline-backend-preparation-failure.log/.exit and is not included in test counts. The selected suite was then rerun after completing only /tmp dependency links.
+task_done=baseline selected suite complete; await main-worker final-code notification before any AFTER tests

@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: idempotency rejects any changed canonical field
+not ok 1 - idempotency rejects any changed canonical field
+  ---
+  duration_ms: 3.222053
+  type: 'test'
+  location: '/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.safe.test.ts:1:1445'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e2-refund-negative-L7K3C0/artifacts/api-server/src/lib/credit-refund.safe.test.ts:29:50)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 254.559873

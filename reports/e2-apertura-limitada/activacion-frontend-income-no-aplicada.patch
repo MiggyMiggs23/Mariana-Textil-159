@@ -1,0 +1,12 @@
+diff --git a/artifacts/mariana-textil/src/lib/credit-evidence.ts b/artifacts/mariana-textil/src/lib/credit-evidence.ts
+index c941fb1617bbc73ef400325fedfe6dc1c838c3ee..1ee76a2f34f4bcf650657d6e5d6990650d7e2d67 100644
+--- a/artifacts/mariana-textil/src/lib/credit-evidence.ts
++++ b/artifacts/mariana-textil/src/lib/credit-evidence.ts
+@@ -1,6 +1,6 @@
+ import type { CreditEvidenceInput, CreditNature, CreditMovementEvidence, CreditAttributionInput } from "@workspace/api-client-react";
+ 
+-export const CREDIT_CASH_INCOME_CLIENT_ENABLED = false;
++export const CREDIT_CASH_INCOME_CLIENT_ENABLED = true;
+ export const CREDIT_CASH_RETURN_CLIENT_ENABLED = false;
+ export const CREDIT_PENDING_RECEIPTS_ENABLED = false;
+ export const CREDIT_ATTRIBUTION_ENABLED = false;

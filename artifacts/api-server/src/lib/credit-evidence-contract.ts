@@ -21,7 +21,10 @@ export class CreditEvidenceError extends Error {
     this.statusCode = status;
   }
 }
-export const CREDIT_CASH_CAPTURE_ENABLED = false;
+/** Independent, source-controlled release gates. Authorization to receive cash
+ * never authorizes returning it. Neither can be opened by env/request data. */
+export const CREDIT_CASH_INCOME_CAPTURE_ENABLED = false;
+export const CREDIT_CASH_RETURN_CAPTURE_ENABLED = false;
 export const CREDIT_PENDING_RECEIPTS_ENABLED = false;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -81,11 +84,49 @@ export function assertCreditProducerNature(productor: CreditProducer, naturaleza
   if (!allowed[productor]?.includes(naturaleza)) throw new CreditEvidenceError("E1: naturaleza incompatible con el productor.");
 }
 
-export function assertCreditCaptureEnabled(input: CreditEvidenceInput, formaPago: string | null | undefined): void {
-  if (!CREDIT_CASH_CAPTURE_ENABLED && formaPago === "EFECTIVO" &&
-      (input.naturaleza === "INGRESO_FISICO" || input.naturaleza === "DEVOLUCION_FISICA")) {
-    throw new CreditEvidenceError("E1: la captura nueva de efectivo de crédito permanece deshabilitada.", 403);
+export type CreditCashCapturePermissions = Readonly<{ income: boolean; returns: boolean }>;
+export type CreditMovementKind = "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE" | "COBRO_RETENIDO";
+
+const CREDIT_CASH_CAPTURE_PERMISSIONS: CreditCashCapturePermissions = {
+  income: CREDIT_CASH_INCOME_CAPTURE_ENABLED,
+  returns: CREDIT_CASH_RETURN_CAPTURE_ENABLED,
+};
+
+/** Pure policy seam used by offline rollback proofs. Production callers must use
+ * assertCreditCaptureEnabled, whose permissions are the constants above. */
+export function assertCreditCashCapturePolicy(
+  input: CreditEvidenceInput,
+  formaPago: string | null | undefined,
+  productor: CreditProducer,
+  tipo: CreditMovementKind,
+  permissions: CreditCashCapturePermissions,
+): void {
+  if (formaPago !== "EFECTIVO") return;
+  if (input.naturaleza === "INGRESO_FISICO") {
+    if (!["ABONO_ORDINARIO", "ABONO_DIRIGIDO"].includes(productor) || tipo !== "ABONO") {
+      throw new CreditEvidenceError("E3: ingreso físico en efectivo exige productor ABONO y movimiento ABONO.");
+    }
+    if (!permissions.income) {
+      throw new CreditEvidenceError("E3: la captura de ingreso nuevo de efectivo de crédito permanece deshabilitada.", 403);
+    }
   }
+  if (input.naturaleza === "DEVOLUCION_FISICA") {
+    if (productor !== "REVERSO_ABONO" || tipo !== "REVERSO") {
+      throw new CreditEvidenceError("E2: devolución física exige productor REVERSO_ABONO y movimiento REVERSO.");
+    }
+    if (!permissions.returns) {
+      throw new CreditEvidenceError("E2: la captura de devolución nueva de efectivo de crédito permanece deshabilitada.", 403);
+    }
+  }
+}
+
+export function assertCreditCaptureEnabled(
+  input: CreditEvidenceInput,
+  formaPago: string | null | undefined,
+  productor: CreditProducer,
+  tipo: CreditMovementKind,
+): void {
+  assertCreditCashCapturePolicy(input, formaPago, productor, tipo, CREDIT_CASH_CAPTURE_PERMISSIONS);
 }
 
 export function assertCreditPhysicalContext(input: CreditEvidenceInput, medio?: string | null, cuenta?: string | null): void {

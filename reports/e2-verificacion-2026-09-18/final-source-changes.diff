@@ -1,0 +1,53 @@
+--- /home/runner/workspace/reports/e2-verificacion-2026-09-18/final-source-before.sha256	2026-09-18 20:11:15.758966148 +0000
++++ /home/runner/workspace/reports/e2-verificacion-2026-09-18/final-source-after.sha256	2026-09-18 20:15:11.778299574 +0000
+@@ -1,5 +1,5 @@
+ e461708bfe50f6eb964fa755cf0c6ba813c19392be055d5ef96c729aa0173539  artifacts/api-server/.replit-artifact/artifact.toml
+-f88803be003d17f4f3cce314c8c85ea1dae28c594e9d7e52298c48a9ba584082  artifacts/api-server/.tsbuildinfo
++d7849083ed7b3647de796f09bfb051fac26a7b194841efcd68ff72c14ce1ec6d  artifacts/api-server/.tsbuildinfo
+ 63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9  artifacts/api-server/assets/fonts/DEJAVU-LICENSE.txt
+ ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280  artifacts/api-server/assets/fonts/DejaVuSans.ttf
+ 45c45660b2e07faf9e0d45c2165ed1b0127431c810154a7cba33666a427fc588  artifacts/api-server/build.mjs
+@@ -348,7 +348,7 @@
+ 8a39d772ac6d93c8278440bb875c2b45974b1e2737d4718a52b501bd31417bf8  artifacts/mariana-textil/src/components/devolucion-credito-inactiva-dialog.tsx
+ c04f37c2a4e3c17323770754532416d12e7c7b2f160599d7914d396f46b58bb4  artifacts/mariana-textil/src/components/directed-payment-history.tsx
+ 870088cd7673c508b92f86f5d28638441287b65ba3bb38ecf97612ddc4c34ecf  artifacts/mariana-textil/src/components/document-qr-code.tsx
+-ff1fff257aef682cea83d3608a52e9eb2843835ce4d87ae80af8afabdbbc5b87  artifacts/mariana-textil/src/components/e2-cash-ui.render.test.tsx
++ceee7970d56cfb16219cc7c9b6660356fb735c11e18182f7d90bc2611593c581  artifacts/mariana-textil/src/components/e2-cash-ui.render.test.tsx
+ f958c1ce0235ffd48eac07dc7bfc6628ce87a7a120dac44e5c9d68f049974c0a  artifacts/mariana-textil/src/components/entrada-history.contract.test.ts
+ 5662e4538bfea8d0de6cf621047c167be86af512b29be41e04dabcbd4aac31ff  artifacts/mariana-textil/src/components/entrada-history.tsx
+ c1ea4d88be8cd206a46bd87f19edf025b2504a70a2b65cd9c438e4a0e62dafe0  artifacts/mariana-textil/src/components/error-boundary.tsx
+@@ -672,7 +672,7 @@
+ c59ef0fc1e429ca1e9d2b30700075c38a3f058aca6736d55b43a0ee1b1acd11f  artifacts/mariana-textil/test-manifests/safe.txt
+ 7030705d1bd103cf204b44732a530add46d5a87a7525a696704c67b7ff7a5e6c  artifacts/mariana-textil/tsconfig.json
+ 3a0f771331042c1f2c93b11082f02eb58b6933ff13aa3f07bd126e6b70610e20  artifacts/mariana-textil/tsconfig.render-tests.json
+-2a05fa282cb6ce84d7937a2f9e9431d38334341b177ee10b22f89c8a40ac017d  artifacts/mariana-textil/tsconfig.tsbuildinfo
++eab93fa10f58461fd6d0947b7b10f06ffc103a8a9d7f5b6d62a973209dca7a13  artifacts/mariana-textil/tsconfig.tsbuildinfo
+ 30d601ed42c7b2ab2db2a98f16b8e964ec84bea5fb2ed593a76200e7ce4ced79  artifacts/mariana-textil/vite.config.ts
+ 048901b3cc11f62156685a7898db6b3403463770873a82538b87c66d2611972e  artifacts/mockup-sandbox/.tsbuildinfo
+ d95142893c243c6a531d6b1dff6d931c32c6a09b2f13d539a1a3d38f396ebd05  artifacts/mockup-sandbox/components.json
+@@ -697,7 +697,7 @@
+ 4bc2f89011b21bebaec55f7782c8af73f80357da60f443b23e19c7a9e1e57d2a  lib/api-client-react/src/generated/api.ts
+ 7035c4adcdf9d5f2e7d2188652e764daf33caa707adad5fb4608338beef85969  lib/api-client-react/src/index.ts
+ 7e9d09ae244912d5d1add40373fc8dfb98200e903c0994aba4faee4a5afc3489  lib/api-client-react/tsconfig.json
+-44f6d379378d1729a5ddd4dc2bfce4411628f7367d3f7ee08e59045a0ca97724  lib/api-client-react/tsconfig.tsbuildinfo
++3c7a988dc8f3036b6bef5c81deb0f53015d2cac151b0565d5a600aded868fa48  lib/api-client-react/tsconfig.tsbuildinfo
+ cde3039a466b23b951cff97eb2c2391aa5ef241444a9f9fc8aa97e24dcab5783  lib/api-spec/calendar-date.contract.test.ts
+ 45066ea95ab28267ed3ea2faa5434d23318fd4664d611ec72e79d12887141589  lib/api-spec/e1-contract.test.ts
+ 5f9439bbdd30496fa48234b4404bf8ef68557a6019f981d1f075d9b547274959  lib/api-spec/fix-api-zod-barrel.mjs
+@@ -1520,7 +1520,7 @@
+ ff94ff99b8660076379e75e318737bba6a8f89f0f4d08848e570f6809f3811b7  lib/api-zod/src/index.ts
+ 204da4214f3cd773f37752a71db8407dd7e0c2cf99f7f2bc5a1862205d24bba6  lib/api-zod/src/salida-estado-presentation.ts
+ bb52c0e8b13e658570a208d946cb874fdf2b8d990f7c228f96fb24254c9c5a95  lib/api-zod/tsconfig.json
+-34de58fb121b0aabbd1875f6bc6035309e59dfc475732f3b5e3cb4dfbdf6311d  lib/api-zod/tsconfig.tsbuildinfo
++6dfdc17458af181e60d98f7d004e362f391a0dca91f311f03711c94ea21904e1  lib/api-zod/tsconfig.tsbuildinfo
+ 6f539de3e3b92f482843d7c0f957f89f0b5ba55bdc1f4af8d64957c942b019f8  lib/db/drizzle.config.ts
+ e8b40248853647446a207c53afb99a6447a6ac51906137aa8ffc41bea485db56  lib/db/migrations/20260914_supplier_trace.sql
+ afcd88c59e649567a04d287da053f0589950be7a71ec3372dd0a1203ccfa11c0  lib/db/migrations/20260915_equipos_catalog_constraints.sql
+@@ -4375,6 +4375,6 @@
+ 55b4f015fb2492df0bd2f15f86bde8f2575882781581678ba2f9837cbcd7b1ef  scripts/src/verify-portfolio-scope-readonly.baseline.ts
+ 1c2c298cecdcc36aebb112254a998515587da9901a6bb2855879ad9dbe86a162  scripts/src/verify-portfolio-scope-readonly.ts
+ 77bf87a1723d090898bdd2067235e5adb48dbaf7bfd4835818c87ae790e4226d  scripts/tsconfig.json
+-9b30ced9658f603ac0acd8c796967664def6f429309cc28fd1274851e04c3713  scripts/tsconfig.tsbuildinfo
++04fb9425dc091cf71f216dd9a1f041da96bddd2cdb0030ce25a79e2bdf234fe7  scripts/tsconfig.tsbuildinfo
+ 2dfaa6f6168f618e0e6deff048c17e4f5f73d59325bd935d471905ae6773585c  tsconfig.base.json
+ 1698eaee2345b4156ecdb4b02db20ffe6c284f509c017e6b6831b1ba39874a86  tsconfig.json

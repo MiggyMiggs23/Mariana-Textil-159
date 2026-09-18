@@ -1,0 +1,14 @@
+diff --git a/artifacts/api-server/src/lib/credit-evidence-contract.ts b/artifacts/api-server/src/lib/credit-evidence-contract.ts
+--- a/artifacts/api-server/src/lib/credit-evidence-contract.ts
++++ b/artifacts/api-server/src/lib/credit-evidence-contract.ts
+@@ -23,7 +23,7 @@ export class CreditEvidenceError extends Error {
+ }
+ /** Independent, source-controlled release gates. Authorization to receive cash
+  * never authorizes returning it. Neither can be opened by env/request data. */
+-export const CREDIT_CASH_INCOME_CAPTURE_ENABLED = false;
++export const CREDIT_CASH_INCOME_CAPTURE_ENABLED = true;
+ export const CREDIT_CASH_RETURN_CAPTURE_ENABLED = false;
+ export const CREDIT_PENDING_RECEIPTS_ENABLED = false;
+ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+-- 
+2.39.2

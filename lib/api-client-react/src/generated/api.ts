@@ -110,6 +110,9 @@ import type {
   CreditAttributionResult,
   CreditDirectedApprovalInput,
   CreditEvidence,
+  CreditRefundOptions,
+  CreditRefundReply,
+  CreditRefundRequest,
   CuadreFiscalDiferenciaInput,
   CuadreFiscalPeriodoInput,
   CuadreFiscalRegistro,
@@ -9327,6 +9330,149 @@ export const useRecalcularExistencias = <TError = ErrorType<ValidationErrorRespo
         TContext
       > => {
       return useMutation(getRecalcularExistenciasMutationOptions(options));
+    }
+
+export const getGetCreditRefundOptionsUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/devoluciones-credito/opciones`
+}
+
+/**
+ * Sólo lectura, ADMIN activo actual y permisos clientes_finanzas ver y autorizar. Lista recepciones físicas documentadas, NO certifica elegibilidad económica. No consulta tablas E2 pendientes de DDL. Devuelve enabled false y todas las sesiones abiertas hoy de tiendas activas autorizadas para ADMIN. El sitio de devolución puede diferir del sitio histórico de la recepción; POST sitioOrigenId y sesionCajaId deben provenir de la sesión seleccionada.
+ */
+export const getCreditRefundOptions = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<CreditRefundOptions> => {
+
+  return customFetch<CreditRefundOptions>(getGetCreditRefundOptionsUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCreditRefundOptionsQueryKey = (id: number,) => {
+    return [
+    `/api/clientes/${id}/devoluciones-credito/opciones`
+    ] as const;
+    }
+
+
+export const getGetCreditRefundOptionsQueryOptions = <TData = Awaited<ReturnType<typeof getCreditRefundOptions>>, TError = ErrorType<void>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCreditRefundOptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCreditRefundOptionsQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCreditRefundOptions>>> = ({ signal }) => getCreditRefundOptions(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCreditRefundOptions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCreditRefundOptionsQueryResult = NonNullable<Awaited<ReturnType<typeof getCreditRefundOptions>>>
+export type GetCreditRefundOptionsQueryError = ErrorType<void>
+
+
+
+export function useGetCreditRefundOptions<TData = Awaited<ReturnType<typeof getCreditRefundOptions>>, TError = ErrorType<void>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCreditRefundOptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCreditRefundOptionsQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDevolverCreditoFisicoUrl = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/devoluciones-credito`
+}
+
+/**
+ * INACTIVO: gate constante false. Requiere sesión autenticada, permiso clientes_finanzas/autorizar y ADMIN activo actual. Sólo devolución completa en EFECTIVO del origen físico identificado, nunca aplicado; sesión abierta de hoy correspondiente al sitio de devolución declarado. El sitio de devolución puede diferir del sitio del ingreso original; el corte original no cambia. No acepta override de activación. Devuelve 200 también en replay exacto cuando eventualmente se active.
+ */
+export const devolverCreditoFisico = async (id: number,
+    creditRefundRequest: CreditRefundRequest, options?: Parameters<typeof customFetch>[1]): Promise<CreditRefundReply> => {
+
+  return customFetch<CreditRefundReply>(getDevolverCreditoFisicoUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(creditRefundRequest)
+  }
+);}
+
+
+
+
+
+export const getDevolverCreditoFisicoMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof devolverCreditoFisico>>, TError,{id: number;data: BodyType<CreditRefundRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof devolverCreditoFisico>>, TError,{id: number;data: BodyType<CreditRefundRequest>}, TContext> => {
+
+const mutationKey = ['devolverCreditoFisico'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof devolverCreditoFisico>>, {id: number;data: BodyType<CreditRefundRequest>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  devolverCreditoFisico(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DevolverCreditoFisicoMutationResult = NonNullable<Awaited<ReturnType<typeof devolverCreditoFisico>>>
+    export type DevolverCreditoFisicoMutationBody = BodyType<CreditRefundRequest>
+    export type DevolverCreditoFisicoMutationError = ErrorType<void>
+
+    export const useDevolverCreditoFisico = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof devolverCreditoFisico>>, TError,{id: number;data: BodyType<CreditRefundRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof devolverCreditoFisico>>,
+        TError,
+        {id: number;data: BodyType<CreditRefundRequest>},
+        TContext
+      > => {
+      return useMutation(getDevolverCreditoFisicoMutationOptions(options));
     }
 
 export const getGetClientesResumenUrl = (params?: GetClientesResumenParams,) => {

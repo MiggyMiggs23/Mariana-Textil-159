@@ -1,0 +1,9 @@
+baseline_commit=80eaa93d4300e86d9be54492e634f88f0c0abc90
+baseline_tree=3365350be578e21245228889ba7a46465ce3750a
+workspace_api_zod=/tmp/e2-baseline-80eaa93d-oWEeoJ/lib/api-zod
+workspace_db=/tmp/e2-baseline-80eaa93d-oWEeoJ/lib/db
+workspace_frontend_api_zod=/tmp/e2-baseline-80eaa93d-oWEeoJ/lib/api-zod
+external_tsx=/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx
+api_zod_zod=/home/runner/workspace/node_modules/.pnpm/zod@3.25.76/node_modules/zod
+db_drizzle=/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/drizzle-orm
+db_pg=/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg

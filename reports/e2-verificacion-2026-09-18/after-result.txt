@@ -1,0 +1,60 @@
+E2 READONLY AFTER verification
+date=2026-09-18
+selection=same exact 13-file backend and 6-file frontend baseline manifests
+baseline_total_tests=149
+baseline_pass=144
+baseline_fail=5
+
+after_backend_tests=126
+after_backend_pass=121
+after_backend_fail=5
+after_backend_cancelled=0
+after_backend_skipped=0
+after_backend_terminal_exit=1
+after_backend_failure_set_equals_baseline=yes
+after_backend_new_failures=0
+after_backend_preserved_failures:
+- contrato de notas de crédito deriva los tres estados sin persistirlos
+- consultas de detalle usan aplicaciones_credito en ambas direcciones
+- contrato de abono exige cuentaDestino y preview comparte fecha efectiva
+- Ticket and Note are absolute, independently processed operations
+- authorization uses the shared ledger projection and has no override
+
+after_frontend_tests=23
+after_frontend_pass=23
+after_frontend_fail=0
+after_frontend_cancelled=0
+after_frontend_skipped=0
+after_frontend_terminal_exit=0
+
+after_total_tests=149
+after_total_pass=144
+after_total_fail=5
+comparison=no new reds; exact five known failures preserved
+
+canonical_full_typecheck_command=env -i PATH="$PATH" HOME="$HOME" NODE_ENV=test pnpm run typecheck
+canonical_full_typecheck_terminal_exit=0
+typecheck_packages=4 artifacts/scripts plus 7 library results
+typecheck_unique_diagnostics=0
+typecheck_repeated_diagnostics=0
+typecheck_process_or_parser_failures=0
+typecheck_result=PASS; all selected checks completed
+
+final_production_source_manifest_files=4371
+final_production_source_before_sha256=a69ba73a6d683d15792d225084a91edec8dbaa7c34c62c5a5d2b93d4474e9de6
+final_production_source_after_sha256=a69ba73a6d683d15792d225084a91edec8dbaa7c34c62c5a5d2b93d4474e9de6
+final_production_source_unchanged=yes
+production_scope=artifacts, lib, scripts and root package/workspace/TypeScript configuration, excluding reports, docs, tests/specs, node_modules, dist, coverage, observable runtime captures, and incremental .tsbuildinfo outputs
+
+all_source_and_test_manifest_unchanged=no
+all_manifest_difference=the concurrently owned frontend E2 negative test was refined, and canonical typecheck updated incremental .tsbuildinfo compiler outputs; frozen production source/API/spec/codegen entries did not change
+
+database_queries=0
+database_writes=0
+network_during_selected_tests=blocked_by_preloaded_guard
+app_started_or_restarted=no
+users_or_sessions_created=no
+new_cash_or_refund_suites_rerun=no
+
+note=The first isolated AFTER backend attempt omitted two tracked prompt-f JSON fixtures and produced two ENOENT preparation failures. That attempt is preserved separately as after-backend-fixture-preparation-failure.log/.exit and excluded from comparison. The canonical selected run was repeated with byte-identical tracked fixtures in /tmp and produced the exact baseline result.
+task_done=yes

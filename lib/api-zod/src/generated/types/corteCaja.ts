@@ -15,6 +15,7 @@ import type { CorteMetreado } from './corteMetreado';
 import type { CortePendiente } from './cortePendiente';
 import type { CorteProducto } from './corteProducto';
 import type { CorteTicketCobrado } from './corteTicketCobrado';
+import type { EfectivoDesglose } from './efectivoDesglose';
 import type { HojaVentasDia } from './hojaVentasDia';
 import type { SesionCaja } from './sesionCaja';
 
@@ -39,6 +40,7 @@ export interface CorteCaja {
   /** IVA incluido en los tickets cobrados de la sesión */
   ivaCobrado: string;
   efectivoEsperado: string;
+  efectivoDesglose?: EfectivoDesglose;
   /** @nullable */
   efectivoContado: string | null;
   /** @nullable */

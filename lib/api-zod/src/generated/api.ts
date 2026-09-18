@@ -5177,6 +5177,119 @@ export const RecalcularExistenciasResponse = zod.object({
 
 
 /**
+ * Sólo lectura, ADMIN activo actual y permisos clientes_finanzas ver y autorizar. Lista recepciones físicas documentadas, NO certifica elegibilidad económica. No consulta tablas E2 pendientes de DDL. Devuelve enabled false y todas las sesiones abiertas hoy de tiendas activas autorizadas para ADMIN. El sitio de devolución puede diferir del sitio histórico de la recepción; POST sitioOrigenId y sesionCajaId deben provenir de la sesión seleccionada.
+ */
+export const getCreditRefundOptionsPathIdMax = 2147483647;
+export const getCreditRefundOptionsPathIdMultipleOf = 1;
+
+
+
+export const GetCreditRefundOptionsParams = zod.object({
+  "id": zod.coerce.number().min(1).max(getCreditRefundOptionsPathIdMax).multipleOf(getCreditRefundOptionsPathIdMultipleOf)
+})
+
+export const getCreditRefundOptionsResponseCandidatasItemAbonoIdMax = 2147483647;
+export const getCreditRefundOptionsResponseCandidatasItemAbonoIdMultipleOf = 1;
+
+export const getCreditRefundOptionsResponseCandidatasItemCobroClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const getCreditRefundOptionsResponseCandidatasItemFolioMultipleOf = 1;
+
+export const getCreditRefundOptionsResponseCandidatasItemImporteRegExp = new RegExp('^[0-9]+\\.[0-9]{2}$');
+export const getCreditRefundOptionsResponseCandidatasItemSitioOrigenIdMax = 2147483647;
+export const getCreditRefundOptionsResponseCandidatasItemSitioOrigenIdMultipleOf = 1;
+
+export const getCreditRefundOptionsResponseSesionesItemIdMax = 2147483647;
+export const getCreditRefundOptionsResponseSesionesItemIdMultipleOf = 1;
+
+export const getCreditRefundOptionsResponseSesionesItemSitioOrigenIdMax = 2147483647;
+export const getCreditRefundOptionsResponseSesionesItemSitioOrigenIdMultipleOf = 1;
+
+
+
+export const GetCreditRefundOptionsResponse = zod.object({
+  "enabled": zod.literal(false),
+  "motivoInactivo": zod.string(),
+  "advertencia": zod.string(),
+  "candidatas": zod.array(zod.object({
+  "origen": zod.enum(['ABONO', 'COBRO_RETENIDO']),
+  "abonoId": zod.number().min(1).max(getCreditRefundOptionsResponseCandidatasItemAbonoIdMax).multipleOf(getCreditRefundOptionsResponseCandidatasItemAbonoIdMultipleOf).nullable(),
+  "cobroClave": zod.string().regex(getCreditRefundOptionsResponseCandidatasItemCobroClaveRegExp).nullable(),
+  "folio": zod.number().multipleOf(getCreditRefundOptionsResponseCandidatasItemFolioMultipleOf).nullable(),
+  "referencia": zod.string().nullable(),
+  "importe": zod.string().regex(getCreditRefundOptionsResponseCandidatasItemImporteRegExp),
+  "sitioOrigenId": zod.number().min(1).max(getCreditRefundOptionsResponseCandidatasItemSitioOrigenIdMax).multipleOf(getCreditRefundOptionsResponseCandidatasItemSitioOrigenIdMultipleOf),
+  "sitioNombre": zod.string()
+})),
+  "sesiones": zod.array(zod.object({
+  "id": zod.number().min(1).max(getCreditRefundOptionsResponseSesionesItemIdMax).multipleOf(getCreditRefundOptionsResponseSesionesItemIdMultipleOf),
+  "sitioOrigenId": zod.number().min(1).max(getCreditRefundOptionsResponseSesionesItemSitioOrigenIdMax).multipleOf(getCreditRefundOptionsResponseSesionesItemSitioOrigenIdMultipleOf),
+  "sitioNombre": zod.string(),
+  "abiertaAt": zod.coerce.date()
+}))
+})
+
+
+/**
+ * INACTIVO: gate constante false. Requiere sesión autenticada, permiso clientes_finanzas/autorizar y ADMIN activo actual. Sólo devolución completa en EFECTIVO del origen físico identificado, nunca aplicado; sesión abierta de hoy correspondiente al sitio de devolución declarado. El sitio de devolución puede diferir del sitio del ingreso original; el corte original no cambia. No acepta override de activación. Devuelve 200 también en replay exacto cuando eventualmente se active.
+ */
+export const devolverCreditoFisicoPathIdMax = 2147483647;
+export const devolverCreditoFisicoPathIdMultipleOf = 1;
+
+
+
+export const DevolverCreditoFisicoParams = zod.object({
+  "id": zod.coerce.number().min(1).max(devolverCreditoFisicoPathIdMax).multipleOf(devolverCreditoFisicoPathIdMultipleOf)
+})
+
+export const devolverCreditoFisicoBodyOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const devolverCreditoFisicoBodyAbonoIdMax = 2147483647;
+export const devolverCreditoFisicoBodyAbonoIdMultipleOf = 1;
+
+export const devolverCreditoFisicoBodyCobroClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const devolverCreditoFisicoBodyImporteRegExp = new RegExp('^[0-9]+\\.[0-9]{2}$');
+export const devolverCreditoFisicoBodyMotivoMax = 500;
+
+export const devolverCreditoFisicoBodySitioOrigenIdMax = 2147483647;
+export const devolverCreditoFisicoBodySitioOrigenIdMultipleOf = 1;
+
+export const devolverCreditoFisicoBodySesionCajaIdMax = 2147483647;
+export const devolverCreditoFisicoBodySesionCajaIdMultipleOf = 1;
+
+
+
+export const DevolverCreditoFisicoBody = zod.object({
+  "operacionClave": zod.string().regex(devolverCreditoFisicoBodyOperacionClaveRegExp),
+  "origen": zod.enum(['ABONO', 'COBRO_RETENIDO']),
+  "abonoId": zod.number().min(1).max(devolverCreditoFisicoBodyAbonoIdMax).multipleOf(devolverCreditoFisicoBodyAbonoIdMultipleOf).optional().describe('Obligatorio sólo para ABONO; excluye cobroClave'),
+  "cobroClave": zod.string().regex(devolverCreditoFisicoBodyCobroClaveRegExp).optional().describe('Obligatorio sólo para COBRO_RETENIDO; excluye abonoId'),
+  "importe": zod.string().regex(devolverCreditoFisicoBodyImporteRegExp).describe('Importe completo de la recepción, positivo'),
+  "motivo": zod.string().min(1).max(devolverCreditoFisicoBodyMotivoMax),
+  "sitioOrigenId": zod.number().min(1).max(devolverCreditoFisicoBodySitioOrigenIdMax).multipleOf(devolverCreditoFisicoBodySitioOrigenIdMultipleOf),
+  "sesionCajaId": zod.number().min(1).max(devolverCreditoFisicoBodySesionCajaIdMax).multipleOf(devolverCreditoFisicoBodySesionCajaIdMultipleOf)
+})
+
+export const devolverCreditoFisicoResponseOperacionClaveRegExp = new RegExp('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$');
+export const devolverCreditoFisicoResponseSalidaIdMax = 2147483647;
+export const devolverCreditoFisicoResponseSalidaIdMultipleOf = 1;
+
+export const devolverCreditoFisicoResponseReversoIdMax = 2147483647;
+export const devolverCreditoFisicoResponseReversoIdMultipleOf = 1;
+
+export const devolverCreditoFisicoResponseSesionCajaIdMax = 2147483647;
+export const devolverCreditoFisicoResponseSesionCajaIdMultipleOf = 1;
+
+
+
+export const DevolverCreditoFisicoResponse = zod.object({
+  "operacionClave": zod.string().regex(devolverCreditoFisicoResponseOperacionClaveRegExp),
+  "salidaId": zod.number().min(1).max(devolverCreditoFisicoResponseSalidaIdMax).multipleOf(devolverCreditoFisicoResponseSalidaIdMultipleOf),
+  "reversoId": zod.number().min(1).max(devolverCreditoFisicoResponseReversoIdMax).multipleOf(devolverCreditoFisicoResponseReversoIdMultipleOf).nullable(),
+  "importe": zod.string(),
+  "sesionCajaId": zod.number().min(1).max(devolverCreditoFisicoResponseSesionCajaIdMax).multipleOf(devolverCreditoFisicoResponseSesionCajaIdMultipleOf)
+})
+
+
+/**
  * @summary Resumen de cartera (clientes_finanzas requerido)
  */
 
@@ -7706,7 +7819,32 @@ export const ObtenerSesionCajaActualResponse = zod.object({
   "ticketsCobrados": zod.number(),
   "documentosPendientes": zod.number(),
   "totalCobrado": zod.string(),
-  "efectivoEsperado": zod.string()
+  "efectivoEsperado": zod.string(),
+  "efectivoDesglose": zod.object({
+  "version": zod.enum(['E2', 'LEGACY']),
+  "fondoInicial": zod.string(),
+  "cobrosTickets": zod.string(),
+  "abonosFisicos": zod.string(),
+  "cobrosRetenidos": zod.string(),
+  "salidasFisicas": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "documentos": zod.array(zod.object({
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "id": zod.string(),
+  "folio": zod.string().nullable(),
+  "importe": zod.string(),
+  "href": zod.string().nullable(),
+  "evidencia": zod.object({
+  "referencia": zod.string().nullable(),
+  "motivo": zod.string().nullable(),
+  "fecha": zod.coerce.date().nullable(),
+  "usuarioId": zod.number().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullish(),
+  "proveedorNombre": zod.string().nullish()
+}).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
+}))
+}).optional()
 }),zod.null()])
 })
 
@@ -7730,6 +7868,31 @@ export const ListarSesionesCajaResponseItem = zod.object({
   "ticketsCancelados": zod.number(),
   "totalCobrado": zod.string(),
   "efectivoEsperado": zod.string(),
+  "efectivoDesglose": zod.object({
+  "version": zod.enum(['E2', 'LEGACY']),
+  "fondoInicial": zod.string(),
+  "cobrosTickets": zod.string(),
+  "abonosFisicos": zod.string(),
+  "cobrosRetenidos": zod.string(),
+  "salidasFisicas": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "documentos": zod.array(zod.object({
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "id": zod.string(),
+  "folio": zod.string().nullable(),
+  "importe": zod.string(),
+  "href": zod.string().nullable(),
+  "evidencia": zod.object({
+  "referencia": zod.string().nullable(),
+  "motivo": zod.string().nullable(),
+  "fecha": zod.coerce.date().nullable(),
+  "usuarioId": zod.number().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullish(),
+  "proveedorNombre": zod.string().nullish()
+}).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
+}))
+}).optional(),
   "diferencia": zod.string().nullable()
 })
 export const ListarSesionesCajaResponse = zod.array(ListarSesionesCajaResponseItem)
@@ -7858,6 +8021,31 @@ export const ObtenerCorteCajaResponse = zod.object({
   "totalCobrado": zod.string(),
   "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
   "efectivoEsperado": zod.string(),
+  "efectivoDesglose": zod.object({
+  "version": zod.enum(['E2', 'LEGACY']),
+  "fondoInicial": zod.string(),
+  "cobrosTickets": zod.string(),
+  "abonosFisicos": zod.string(),
+  "cobrosRetenidos": zod.string(),
+  "salidasFisicas": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "documentos": zod.array(zod.object({
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "id": zod.string(),
+  "folio": zod.string().nullable(),
+  "importe": zod.string(),
+  "href": zod.string().nullable(),
+  "evidencia": zod.object({
+  "referencia": zod.string().nullable(),
+  "motivo": zod.string().nullable(),
+  "fecha": zod.coerce.date().nullable(),
+  "usuarioId": zod.number().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullish(),
+  "proveedorNombre": zod.string().nullish()
+}).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
+}))
+}).optional(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
   "hojaVentasDia": zod.object({
@@ -8000,6 +8188,31 @@ export const CerrarSesionCajaResponse = zod.object({
   "totalCobrado": zod.string(),
   "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
   "efectivoEsperado": zod.string(),
+  "efectivoDesglose": zod.object({
+  "version": zod.enum(['E2', 'LEGACY']),
+  "fondoInicial": zod.string(),
+  "cobrosTickets": zod.string(),
+  "abonosFisicos": zod.string(),
+  "cobrosRetenidos": zod.string(),
+  "salidasFisicas": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "documentos": zod.array(zod.object({
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "id": zod.string(),
+  "folio": zod.string().nullable(),
+  "importe": zod.string(),
+  "href": zod.string().nullable(),
+  "evidencia": zod.object({
+  "referencia": zod.string().nullable(),
+  "motivo": zod.string().nullable(),
+  "fecha": zod.coerce.date().nullable(),
+  "usuarioId": zod.number().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullish(),
+  "proveedorNombre": zod.string().nullish()
+}).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
+}))
+}).optional(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
   "hojaVentasDia": zod.object({
@@ -10365,6 +10578,31 @@ export const ListAdminCortesResponse = zod.object({
   "vendido": zod.string(),
   "totalCobrado": zod.string(),
   "efectivoEsperado": zod.string(),
+  "efectivoDesglose": zod.object({
+  "version": zod.enum(['E2', 'LEGACY']),
+  "fondoInicial": zod.string(),
+  "cobrosTickets": zod.string(),
+  "abonosFisicos": zod.string(),
+  "cobrosRetenidos": zod.string(),
+  "salidasFisicas": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "documentos": zod.array(zod.object({
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "id": zod.string(),
+  "folio": zod.string().nullable(),
+  "importe": zod.string(),
+  "href": zod.string().nullable(),
+  "evidencia": zod.object({
+  "referencia": zod.string().nullable(),
+  "motivo": zod.string().nullable(),
+  "fecha": zod.coerce.date().nullable(),
+  "usuarioId": zod.number().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullish(),
+  "proveedorNombre": zod.string().nullish()
+}).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
+}))
+}).optional(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
   "ticketsCobrados": zod.number(),
@@ -10481,6 +10719,31 @@ export const GetAdminCorteResponse = zod.object({
   "totalCobrado": zod.string(),
   "ivaCobrado": zod.string().describe('IVA incluido en los tickets cobrados de la sesión'),
   "efectivoEsperado": zod.string(),
+  "efectivoDesglose": zod.object({
+  "version": zod.enum(['E2', 'LEGACY']),
+  "fondoInicial": zod.string(),
+  "cobrosTickets": zod.string(),
+  "abonosFisicos": zod.string(),
+  "cobrosRetenidos": zod.string(),
+  "salidasFisicas": zod.string(),
+  "efectivoEsperado": zod.string(),
+  "documentos": zod.array(zod.object({
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "id": zod.string(),
+  "folio": zod.string().nullable(),
+  "importe": zod.string(),
+  "href": zod.string().nullable(),
+  "evidencia": zod.object({
+  "referencia": zod.string().nullable(),
+  "motivo": zod.string().nullable(),
+  "fecha": zod.coerce.date().nullable(),
+  "usuarioId": zod.number().nullable(),
+  "proveedorId": zod.number().nullable(),
+  "usuarioNombre": zod.string().nullish(),
+  "proveedorNombre": zod.string().nullish()
+}).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
+}))
+}).optional(),
   "efectivoContado": zod.string().nullable(),
   "diferencia": zod.string().nullable(),
   "hojaVentasDia": zod.object({

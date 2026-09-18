@@ -1800,3 +1800,31 @@ mtime_ms = 1789755304176
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f40c6168-d6de-4698-bbea-2113de94abee/cf965434-dfa3-424a-b908-c1d21498a2ad"
 storage_version_token = "1789755351756101"
 content_type = "text/html"
+
+[[outputs]]
+id = "8dpzCWpASIjVE9FbOGsL9"
+uri = "file://reports/captura-rollos-2026-09-18/comparacion-antes-despues.html"
+type = "html"
+title = "Capturas antes y después: 1 y 20 rollos"
+description = "Ocho capturas del componente real: escritorio y móvil de 402 px, con Primer Piso. Incluye descarga individual de los PNG y resumen de verificación."
+logical_id = "4e1f0972-c3cf-44af-ba6f-d8f9d3e24137"
+content_hash = "sha256:764c4015c6e6c9f8b8b2a641880ae1cb8f51a1d1184d46206a81e089eb9bb871"
+size = 703531
+mtime_ms = 1789760086927
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/4e1f0972-c3cf-44af-ba6f-d8f9d3e24137/403c2e14-be27-4b8b-a8b3-2c18ab747493"
+storage_version_token = "1789760129710769"
+content_type = "text/html"
+
+[[outputs]]
+id = "h5I-g6aqWa_oeKegIX3xy"
+uri = "file://reports/e2-apertura-limitada/revision.html"
+type = "html"
+title = "Apertura limitada: guía y revisión"
+description = "Lista de mostrador, alcance, verificaciones, reversión y ubicación de los scripts exactos. Preparado, no ejecutado."
+logical_id = "a186373e-6efe-4705-adfd-9a7feb3edcc5"
+content_hash = "sha256:7697c9e594303ebf0edb7fcd28adf3d47a0911522c1f5bfaecd911b9527f58ff"
+size = 12764
+mtime_ms = 1789766720980
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a186373e-6efe-4705-adfd-9a7feb3edcc5/75251665-059a-4b22-bc74-1bc76ade3f7b"
+storage_version_token = "1789766721536181"
+content_type = "text/html"

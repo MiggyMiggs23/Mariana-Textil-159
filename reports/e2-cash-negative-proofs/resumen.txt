@@ -1,0 +1,50 @@
+E2 cash — fuente congelada y verificación offline focalizada
+
+Alcance
+- Ninguna consulta/escritura DB, inicializador, workflow, build o reinicio.
+- cash reader importa tablas exclusivamente de @workspace/db/schema; db es import type.
+- Nombres reales de autor/proveedor se leen en lotes sólo para IDs presentes en
+  evidencia de sesión abierta. Se congelan en el snapshot; ningún nombre sintético.
+- evidencia.usuarioNombre/proveedorNombre son opcionales nullables en OpenAPI.
+  IDs se conservan para uso interno, no como presentación documental.
+- SALIDA monetaria no tiene folio ni vista documental individual existentes.
+  Se conservan motivo/fecha/autor/proveedor reales, sin ruta/folio inventados.
+
+Resultados finales ejecutados
+1. node scripts/src/e2-cash-mutant-harness.mjs
+   Baseline 16/16 PASS. Dieciséis pruebas distintas tienen fallo propio comprobado.
+   Diecisiete mutantes semánticos producen AssertionError en su prueba objetivo.
+   Cada mutante usa copia temporal privada, con originales restaurados entre casos.
+   No se alteran tests al introducir mutantes. Red bloqueada por offline-test-guard;
+   entorno DB eliminado. Sólo módulo puro o VM con allowlist de dependencias.
+   matrix.json contiene cada prueba, defecto, hash mutado y excepción completa.
+   Cada ejecución conserva JSONL; source-integrity.json verifica fuente sin cambios.
+   Primer intento de mutante de naturaleza fue descartado por fallo de dominio
+   antes de la aserción; se refinó a admitir sólo CORRECCION_CONTABLE y el último
+   recorrido completo obtuvo las diecisiete aserciones fallidas esperadas.
+2. pnpm --filter @workspace/api-server exec tsc -p tsconfig.json --noEmit
+   PASS después de nombres y regeneración final.
+3. pnpm --filter @workspace/api-zod exec tsc --noEmit
+   PASS después de nombres y regeneración final.
+4. Orval + fix-api-zod-barrel regenerados desde OpenAPI, sin cambios manuales.
+   UUID usa patrón compatible Zod 3; enteros usan number/multipleOf:1/min/max.
+   No quedan zod.uuid() ni zod.int() en generado.
+5. Smoke del módulo Zod generado bajo guard offline:
+   DTO válido aceptado; ID fraccionario y UUID inválido rechazados.
+6. git diff --check sobre fuentes propias y OpenAPI: PASS.
+
+Límite explícito de la prueba de aplicaciones
+- El primer mutante multiplica ABONO E1 soportado por aplicaciones adjuntas.
+  La prueba positiva del mismo abono con tres notas demuestra un único ingreso.
+- Otro mutante permite contar la misma identidad en ABONO y COBRO_RETENIDO;
+  su prueba falla en la aserción de rechazo de identidad duplicada.
+- NO existe caso positivo implementado/verificado de conversión retenido→abono.
+  E1 no dispone del vínculo inmutable de origen necesario. El productor futuro
+  no soportado falla cerrado. Esa prueba acredita rechazo, NO conversión operativa.
+- No se afirman concurrencia PostgreSQL ni rollback real. Los mocks de cierre
+  verifican orden de FOR UPDATE/cálculo/update/audit y propagación de fallos.
+- Comparación histórica real, suite amplia y typecheck completo corresponden
+  al agente principal y no se declaran ejecutados aquí.
+
+Revisión exacta: hashes de fuentes/tests en source-integrity.json y matrix.json.
+No se congelan fuentes ajenas ni se atribuyen resultados de otros agentes.

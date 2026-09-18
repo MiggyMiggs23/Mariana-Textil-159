@@ -216,6 +216,20 @@ test("actual access/scope adapters check current site and role before replay wit
   assert.equal(f.effects.insertAttempts, 1);
 });
 
+test("actual scope adapter requires an open drawer in the exact active store", async () => {
+  const f = fixture();
+  const cash = { ...evidence("INGRESO_FISICO"), sesionCajaId: 8 };
+  f.rows.get(names.sessions)!.push({ id: 8, ubicacionId: 3, estado: "ABIERTA", cerradaAt: null });
+  await assert.rejects(() => assertCreditEvidenceScope(req, cash, f.tx), status(400));
+  f.rows.get(names.sessions)![0]!.ubicacionId = 2;
+  f.rows.get(names.sessions)![0]!.estado = "CERRADA";
+  f.rows.get(names.sessions)![0]!.cerradaAt = new Date("2026-09-18T18:00:00Z");
+  await assert.rejects(() => assertCreditEvidenceScope(req, cash, f.tx), status(400));
+  f.rows.get(names.sessions)![0]!.estado = "ABIERTA";
+  f.rows.get(names.sessions)![0]!.cerradaAt = null;
+  await assert.doesNotReject(() => assertCreditEvidenceScope(req, cash, f.tx));
+});
+
 const producers: Array<{
   productor: CreditProducer; tipo: "VENTA_CREDITO" | "ABONO" | "REVERSO" | "AJUSTE";
   importe: string; naturaleza: CreditEvidenceInput["naturaleza"]; extra?: Row;

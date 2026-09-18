@@ -24,7 +24,7 @@ const P = [
   "E1 canonical JSON recursively sorts keys and preserves intent order and exact instants",
   "E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values",
   "E1 correction never invents cash session; physical bank transfer never accepts drawer",
-  "E1 new physical cash receipt and refund remain closed, correction is not physical cash",
+  "E2/E3 income and return cash permissions are separate and both remain closed",
   "E1 current actor/site access rejects role, inactive actor and moved site even on replay",
   "E1 same content replays original result before repeated domain validation/side effects",
   "E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone",
@@ -70,7 +70,7 @@ const mutations = [
     ["credit-evidence-contract.ts", '    if (input.sesionCajaId != null) throw new CreditEvidenceError("E1: una operación sin dinero real no puede imputar sesión de caja.");', "    // MUTANT: permit a cash session on nonphysical operations."],
   ] },
   { id: "cash-open", tests: [P[7], M[14]], defect: "New physical credit cash capture is activated", edits: [
-    ["credit-evidence-contract.ts", "export const CREDIT_CASH_CAPTURE_ENABLED = false;", "export const CREDIT_CASH_CAPTURE_ENABLED = true;"],
+    ["credit-evidence-contract.ts", "export const CREDIT_CASH_INCOME_CAPTURE_ENABLED = false;", "export const CREDIT_CASH_INCOME_CAPTURE_ENABLED = true;"],
   ] },
   { id: "cross-site-access", tests: [P[8], M[6]], defect: "An operational actor can write/replay outside its current site", edits: [
     ["credit-evidence-contract.ts", '  if (actor.rol !== "ADMIN" && actor.ubicacionId !== sitioOrigenId) {', "  if (false) {"],
