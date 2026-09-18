@@ -1,0 +1,58 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "runner": "scripts/src/e10-operational-runner.mjs",
+  "offlineTests": "scripts/src/e10-operational-runner.test.mjs",
+  "reviewCommand": "node scripts/src/e10-operational-runner.mjs --review",
+  "readOnlyPreflightCommand": "node scripts/src/e10-operational-runner.mjs --preflight --ack E10_READONLY_LIVE_RESTORE_COMPARE --identity-sha SHA256 --backup-sha SHA256 --drive-sha SHA256",
+  "executionAcknowledgement": "E10_OPERATIONAL_ONE_SHOT_MAIN_REVIEWED",
+  "immutableSql": {
+    "path": "reports/e10-aislado-2026-09-18/sql/operativo.sql",
+    "sha256": "a7eb52a85b3b3b6072d1b88941b9998bcafe15b253e52b0520b8bfc8cc43cdb4",
+    "exactStatements": 30
+  },
+  "requiredFreshIdentity": "reports/e10-operativo-2026-09-18/api-pool-identity.json",
+  "requiredGateManifest": "reports/e10-operativo-2026-09-18/execution-gates.json",
+  "gateManifestShape": {
+    "status": "APPROVED_FOR_MAIN_REVIEW",
+    "reviewedBy": "non-empty operator identity",
+    "reviewedAtUtc": "ISO-8601",
+    "sql": {
+      "path": "reports/e10-aislado-2026-09-18/sql/operativo.sql",
+      "sha256": "a7eb52a85b3b3b6072d1b88941b9998bcafe15b253e52b0520b8bfc8cc43cdb4"
+    },
+    "apiIdentity": {
+      "path": "reports/e10-operativo-2026-09-18/api-pool-identity.json",
+      "sha256": "fresh file SHA-256"
+    },
+    "backup": {
+      "path": "reports/e10-operativo-2026-09-18/backup-restore-metadata.json",
+      "sha256": "file SHA-256"
+    },
+    "restore": {
+      "path": "reports/e10-operativo-2026-09-18/backup-restore-metadata.json",
+      "sha256": "file SHA-256"
+    },
+    "drive": {
+      "path": "reports/e10-operativo-2026-09-18/drive-verification.json",
+      "sha256": "file SHA-256"
+    },
+    "preflight": {
+      "path": "reports/e10-operativo-2026-09-18/readonly-preflight-RUN.json",
+      "sha256": "fresh read-only preflight file SHA-256"
+    },
+    "dumpSha256": "same archive/source/download SHA-256",
+    "before": {
+      "legacySchemaSha256": "pinned canonical preflight SHA-256",
+      "evidenceSha256": "pinned canonical legacy table evidence SHA-256",
+      "sequenceStateSha256": "pinned last_value/is_called legacy sequence-state SHA-256",
+      "accounts": {
+        "users": "count string",
+        "users_hash": "MD5 aggregate",
+        "sessions": "count string",
+        "sessions_hash": "MD5 aggregate"
+      }
+    }
+  },
+  "oneShotClaim": "reports/e10-operativo-2026-09-18/operational-run-claim.json",
+  "executeNow": false
+}

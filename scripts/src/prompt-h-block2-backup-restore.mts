@@ -28,12 +28,25 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const BACKUPS = `${ROOT}/.local/backups`;
 const baseCatalogScope = process.argv.includes("--catalog-base-approved");
 const e1ApprovedScope = process.argv.includes("--e1-approved");
+const e10OperationalScope = process.argv.includes("--e10-operativo");
 const REPORTS = `${ROOT}/reports/${
-  e1ApprovedScope ? "e1-ensayo-2026-09-17" : baseCatalogScope ? "base-catalog-2026-09-17" : "prompt-h"
+  e10OperationalScope
+    ? "e10-operativo-2026-09-18"
+    : e1ApprovedScope
+      ? "e1-ensayo-2026-09-17"
+      : baseCatalogScope
+        ? "base-catalog-2026-09-17"
+        : "prompt-h"
 }`;
-const APPROVAL = `${REPORTS}/${
-  e1ApprovedScope ? "autorizacion.md" : baseCatalogScope ? "aprobacion.md" : "aprobacion-listas-no-purga.md"
-}`;
+const APPROVAL = e10OperationalScope
+  ? `${ROOT}/reports/e10-autorizacion-operativa-2026-09-18.md`
+  : `${REPORTS}/${
+      e1ApprovedScope
+      ? "autorizacion.md"
+      : baseCatalogScope
+        ? "aprobacion.md"
+        : "aprobacion-listas-no-purga.md"
+    }`;
 const E1_IDENTITY = `${ROOT}/reports/e1-ensayo-2026-09-17/api-pool-identity.json`;
 const PG_BIN = "/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin";
 const TZ = "America/Mexico_City";
@@ -82,13 +95,29 @@ export interface E1Baseline {
 interface Snapshot {
   capturedAtUtc: string;
   capturedAtMexico: string;
-  commit: string;
+  sourceProvenance: {
+    operatorFile: string;
+    operatorSha256: string;
+    operatorDiffFromHeadSha256: string;
+    headCommit: string;
+    headTree: string;
+    headParent: string | null;
+    workingTreeStatusPorcelainV1: string[];
+    workingTreeClean: boolean;
+  };
   source: {
     database: Row;
     roles: string[];
     catalogue: Catalogue;
     sequenceStateBeforeDump: SequenceState[];
     sequenceStateAfterDump?: SequenceState[];
+    sequenceChangedDuringDump?: boolean;
+    apiPoolIdentityEvidence?: {
+      file: string;
+      sha256: string;
+      identity: Record<string, unknown>;
+    };
+    apiPoolIdentityMatched?: boolean;
   };
   archive?: {
     file: string;
@@ -117,8 +146,8 @@ interface RestoreMetadata {
 }
 
 let backupDirectory = "";
-let reportPath = `${REPORTS}/block2-restore.md`;
-let metadataPath = `${REPORTS}/block2-restore-metadata.json`;
+let reportPath = `${REPORTS}/${e10OperationalScope ? "backup-restore.md" : "block2-restore.md"}`;
+let metadataPath = `${REPORTS}/${e10OperationalScope ? "backup-restore-metadata.json" : "block2-restore-metadata.json"}`;
 let statePath = "";
 let stage = "initializing";
 let clusterStarted = false;
@@ -126,6 +155,51 @@ let clusterStarted = false;
 function progress(message: string): void {
   stage = message;
   console.error(`[prompt-h-block2] ${message}`);
+}
+
+function optionValue(name: string): string | null {
+  const prefix = `${name}=`;
+  const argument = process.argv.find((value) => value.startsWith(prefix));
+  return argument ? argument.slice(prefix.length) : null;
+}
+
+async function readPinnedApiIdentity(): Promise<{
+  file: string;
+  sha256: string;
+  identity: Record<string, unknown>;
+}> {
+  const supplied = optionValue("--api-pool-identity");
+  if (!supplied) {
+    throw new Error("E10 requires --api-pool-identity=<current evidence file>.");
+  }
+  const file = resolve(ROOT, supplied);
+  const reportsRoot = `${ROOT}/reports/`;
+  if (!file.startsWith(reportsRoot)) {
+    throw new Error("API pool identity evidence must be a file under reports/.");
+  }
+  const bytes = await fs.readFile(file);
+  const parsed: unknown = JSON.parse(bytes.toString("utf8"));
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("API pool identity evidence is not an object.");
+  }
+  const evidence = parsed as Record<string, unknown>;
+  if (
+    evidence.actualProcessPool !== true ||
+    evidence.readOnly !== true ||
+    typeof evidence.apiPid !== "number" ||
+    typeof evidence.capturedAtUtc !== "string"
+  ) {
+    throw new Error("API pool identity evidence is not a read-only live-process capture.");
+  }
+  const identity = evidence.identity;
+  if (!identity || typeof identity !== "object" || Array.isArray(identity)) {
+    throw new Error("API pool identity evidence has no identity object.");
+  }
+  return {
+    file,
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+    identity: identity as Record<string, unknown>,
+  };
 }
 
 function q(value: string): string {
@@ -273,16 +347,46 @@ function localCommand(socket: string, database: string): string {
   return `PGHOST=${q(socket)} ${q(`${PG_BIN}/psql`)} --no-psqlrc --no-password --dbname=${q(database)}`;
 }
 
-function commit(): string {
+function gitOutput(args: string[]): string {
   try {
-    return execFileSync("git", ["rev-parse", "HEAD"], {
+    return execFileSync("git", args, {
       cwd: ROOT,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
-    }).trim();
+      maxBuffer: 32 * 1024 * 1024,
+    });
   } catch {
-    throw new Error("Could not record the current git commit.");
+    throw new Error("Could not record exact Git source provenance.");
   }
+}
+
+function gitText(args: string[]): string {
+  return gitOutput(args).trim();
+}
+
+async function sourceProvenance(): Promise<Snapshot["sourceProvenance"]> {
+  const operatorFile = fileURLToPath(import.meta.url);
+  const operator = await sha256Size(operatorFile);
+  const headCommit = gitText(["rev-parse", "HEAD"]);
+  const headTree = gitText(["rev-parse", "HEAD^{tree}"]);
+  const parentLine = gitText(["rev-list", "--parents", "-n", "1", "HEAD"]).split(/\s+/);
+  const status = gitOutput(["status", "--porcelain=v1", "--untracked-files=all"]);
+  const operatorDiff = gitOutput([
+    "diff", "--binary", "HEAD", "--", "scripts/src/prompt-h-block2-backup-restore.mts",
+  ]);
+  const workingTreeStatusPorcelainV1 = status
+    ? status.replace(/\n$/, "").split("\n")
+    : [];
+  return {
+    operatorFile,
+    operatorSha256: operator.sha256,
+    operatorDiffFromHeadSha256: createHash("sha256").update(operatorDiff).digest("hex"),
+    headCommit,
+    headTree,
+    headParent: parentLine[1] ?? null,
+    workingTreeStatusPorcelainV1,
+    workingTreeClean: workingTreeStatusPorcelainV1.length === 0,
+  };
 }
 
 function mexico(date: Date): string {
@@ -780,12 +884,14 @@ function markdown(
   const mismatchLines = Object.entries(categories)
     .filter(([, values]) => values.length > 0)
     .flatMap(([category, values]) => [`- ${category}: ${values.join(", ")}`]);
-  const sequenceChanged = Boolean(comparison?.sequenceChangedDuringDump);
+  const sequenceChanged = Boolean(
+    comparison?.sequenceChangedDuringDump ?? snapshot.source.sequenceChangedDuringDump,
+  );
   const reconnect = metadata
     ? `- Administrador: \`${metadata.adminConnectionCommand}\`
 - Base restaurada: \`${metadata.restoredConnectionCommand}\``
     : "- Comandos de reconexión: no disponibles porque la restauración no completó.";
-  return `# Prompt H — Bloque 2: respaldo + restauración desechable local
+  return `# ${e10OperationalScope ? "E10 operativo" : "Prompt H — Bloque 2"}: respaldo + restauración desechable local
 
 ## Veredicto
 
@@ -796,6 +902,26 @@ restauración local. No ejecutó Drive, preflight, purga, seed, identidad de
 aplicación, ni reinicio de API/workflows. No se hicieron escrituras en la base
 fuente. La aprobación de identidad de la aplicación queda separada para el
 agente principal.
+
+${e10OperationalScope ? `Cotejo de identidad de origen contra la evidencia
+actual del pool vivo de la API: \`${snapshot.source.apiPoolIdentityEvidence?.file ?? "no disponible"}\`
+(SHA-256 \`${snapshot.source.apiPoolIdentityEvidence?.sha256 ?? "no disponible"}\`):
+**${snapshot.source.apiPoolIdentityMatched ? "PASS" : "FAIL/no completado"}**. La API podía
+permanecer activa; cualquier cambio de secuencia durante la ventana causa FAIL.` : ""}
+
+## Fuente exacta del operador
+
+- Archivo: \`${snapshot.sourceProvenance.operatorFile}\`
+- SHA-256 del archivo ejecutado: \`${snapshot.sourceProvenance.operatorSha256}\`
+- Commit HEAD: \`${snapshot.sourceProvenance.headCommit}\`
+- Árbol del commit HEAD: \`${snapshot.sourceProvenance.headTree}\`
+- Padre del commit HEAD: \`${snapshot.sourceProvenance.headParent ?? "sin padre"}\`
+- SHA-256 del diff binario del operador contra HEAD:
+  \`${snapshot.sourceProvenance.operatorDiffFromHeadSha256}\`
+- Árbol de trabajo limpio al capturar: **${snapshot.sourceProvenance.workingTreeClean ? "sí" : "no"}**
+- Estado porcelain v1: ${snapshot.sourceProvenance.workingTreeStatusPorcelainV1.length
+    ? snapshot.sourceProvenance.workingTreeStatusPorcelainV1.map((line) => `\`${line}\``).join(", ")
+    : "sin cambios"}
 
 ## Fuente y captura
 
@@ -824,6 +950,10 @@ agente principal.
   no se crearon seeds de usuarios ni identidad de aplicación.
 - El archivo permanece privado bajo \`.local/backups/\`; ningún dump se guardó
   en una carpeta servida públicamente.
+- Todas las tablas y todas sus filas se incluyeron sin exclusiones, incluidas
+  las sesiones existentes. No se ejecutaron fixtures ni se crearon usuarios o
+  sesiones de aplicación. Dump, snapshots y cluster usan permisos privados
+  locales.
 
 ## Comparación
 
@@ -843,6 +973,7 @@ ${mismatchLines.length ? `## Discrepancias (procedimiento detenido)\n\n${mismatc
 
 El estado de secuencias se capturó antes y después del dump fuera de la
 garantía MVCC. Cambio detectado: **${sequenceChanged ? "sí" : "no"}**. Un
+${e10OperationalScope ? "En E10 cualquier cambio detiene el procedimiento con FAIL; nunca se acepta silenciosamente." : ""}
 snapshot prueba el instante del respaldo, no frescura de un preflight
 posterior; no se realizó ese preflight.
 
@@ -855,8 +986,10 @@ ${metadata ? `- Cluster: \`${metadata.clusterDirectory}\`
 ${reconnect}` : "- El cluster no quedó disponible."}
 
 El cluster, sus archivos y la base desechable **no se eliminan** después del
-éxito; deben permanecer disponibles hasta que el procedimiento completo de
-purga cierre. La restauración no sembró usuarios ni identidad de aplicación.
+éxito; ${e10OperationalScope
+    ? "deben conservarse junto con el respaldo hasta el cierre de E10."
+    : "deben permanecer disponibles hasta que el procedimiento completo de purga cierre."}
+La restauración no sembró usuarios ni identidad de aplicación.
 `;
 }
 
@@ -864,7 +997,10 @@ async function main(): Promise<void> {
   if (!existsSync(APPROVAL)) throw new Error("Owner approval file is missing.");
   const approval = await fs.readFile(APPROVAL, "utf8");
   const e1UserQuote = approval.split("\n").filter((line) => /^\s*>/.test(line)).join("\n");
-  const approved = e1ApprovedScope
+  const approved = e10OperationalScope
+    ? approval.includes("Respaldo nuevo antes, verificado por restauración") &&
+      approval.includes("Conserva la copia aislada y el respaldo hasta que E10 cierre")
+    : e1ApprovedScope
     ? /respaldo/i.test(e1UserQuote) && /API pausado/i.test(e1UserQuote) && /ensayo/i.test(e1UserQuote)
     : baseCatalogScope
       ? /Apruebo la desactivación de los 12 candidatos/i.test(approval) && /respaldo nuevo/i.test(approval)
@@ -877,25 +1013,29 @@ async function main(): Promise<void> {
   for (const key of ["TEST_DATABASE_URL", "DATABASE_TEST_URL", "APPLICATION_DATABASE_URL"]) {
     if (process.env[key]) throw new Error(`Refusing test/application override: ${key}.`);
   }
+  // E10's evidence is deliberately loaded and validated before constructing or
+  // connecting the source client. The parent captures this from the live API
+  // process pool and supplies its path explicitly for this invocation.
+  const pinnedApiIdentity = e10OperationalScope ? await readPinnedApiIdentity() : null;
   const parts = parseSource(sourceUrl);
   if (parts.database !== "heliumdb") throw new Error("Effective DATABASE_URL must target heliumdb.");
   const captured = new Date();
   const stampValue = `${stamp(captured)}-${process.pid}`;
-  backupDirectory = `${BACKUPS}/prompt-h-block2-${stampValue}`;
+  backupDirectory = `${BACKUPS}/${e10OperationalScope ? "e10-operativo" : "prompt-h-block2"}-${stampValue}`;
   if (existsSync(backupDirectory) && readdirSync(backupDirectory).length > 0) {
     throw new Error("Backup directory already exists; refusing to reuse stale inventory.");
   }
   mkdirSync(backupDirectory, { recursive: true, mode: 0o700 });
   chmodSync(backupDirectory, 0o700);
   statePath = `${backupDirectory}/state.json`;
-  const dumpPath = `${backupDirectory}/prompt-h-block2-${stampValue}.dump`;
+  const dumpPath = `${backupDirectory}/${e10OperationalScope ? "e10-operativo" : "prompt-h-block2"}-${stampValue}.dump`;
   const sourcePath = `${backupDirectory}/source-snapshot.json`;
   const restoreMetadataPath = `${backupDirectory}/restore-metadata.json`;
   await writePrivate(statePath, { status: "RUNNING", stage, updatedAtUtc: captured.toISOString() });
   let snapshot: Snapshot = {
     capturedAtUtc: captured.toISOString(),
     capturedAtMexico: mexico(captured),
-    commit: commit(),
+    sourceProvenance: await sourceProvenance(),
     source: {
       database: {},
       roles: [],
@@ -904,6 +1044,7 @@ async function main(): Promise<void> {
         functions: [], triggers: [], sequences: [], database: {},
       },
       sequenceStateBeforeDump: [],
+      apiPoolIdentityEvidence: pinnedApiIdentity ?? undefined,
     },
   };
   let metadata: RestoreMetadata | null = null;
@@ -914,7 +1055,8 @@ async function main(): Promise<void> {
   try {
     const sourceClient = new pg.Client({
       connectionString: sourceUrl,
-      application_name: "prompt-h-block2-backup",
+      application_name: e10OperationalScope ? "e10-operativo-readonly-backup" : "prompt-h-block2-backup",
+      options: e10OperationalScope ? "-c default_transaction_read_only=on -c timezone=UTC" : undefined,
     });
     source = sourceClient;
     await source.connect();
@@ -929,16 +1071,26 @@ async function main(): Promise<void> {
     if (!identity.server_version.startsWith("16.10")) {
       throw new Error("Source identity is not PostgreSQL 16.10.");
     }
-    if (e1ApprovedScope) {
-      const identityEvidence = JSON.parse(await fs.readFile(E1_IDENTITY, "utf8")) as {
+    if (e1ApprovedScope || e10OperationalScope) {
+      const identityEvidence = e10OperationalScope
+        ? { identity: pinnedApiIdentity?.identity }
+        : JSON.parse(await fs.readFile(E1_IDENTITY, "utf8")) as {
         identity?: Record<string, unknown>;
       };
       const expected = identityEvidence.identity;
-      if (!expected) throw new Error("E1 API pool identity evidence has no identity object.");
-      const identityFields = [
-        "database_name", "database_oid", "server_version", "database_role",
-        "server_started_at", "server_address", "server_port",
-      ];
+      if (!expected) throw new Error("API pool identity evidence has no identity object.");
+      const identityFields = e10OperationalScope
+        ? [
+            "database_name", "database_oid", "database_role", "schema_name",
+            "server_version", "server_address", "server_port", "server_started_at",
+            "unix_socket_directories", "data_directory", "configured_port",
+            "listen_addresses", "search_schemas", "replication_role",
+            "system_identifier",
+          ]
+        : [
+            "database_name", "database_oid", "server_version", "database_role",
+            "server_started_at", "server_address", "server_port",
+          ];
       if (
         identityFields.some((field) => !(field in expected)) ||
         expected.server_address !== null ||
@@ -950,26 +1102,35 @@ async function main(): Promise<void> {
         source,
         `SELECT current_database()::text AS database_name,
                 (SELECT oid::text FROM pg_database WHERE datname = current_database()) AS database_oid,
-                current_setting('server_version')::text AS server_version,
                 current_user::text AS database_role,
-                pg_postmaster_start_time()::text AS server_started_at,
+                current_schema()::text AS schema_name,
+                current_setting('server_version')::text AS server_version,
                 inet_server_addr()::text AS server_address,
-                inet_server_port()::int AS server_port`,
+                inet_server_port()::int AS server_port,
+                pg_postmaster_start_time()::text AS server_started_at,
+                current_setting('unix_socket_directories')::text AS unix_socket_directories,
+                current_setting('data_directory')::text AS data_directory,
+                current_setting('port')::text AS configured_port,
+                current_setting('listen_addresses')::text AS listen_addresses,
+                current_schemas(false)::text[] AS search_schemas,
+                current_setting('session_replication_role')::text AS replication_role,
+                (SELECT system_identifier::text FROM pg_control_system()) AS system_identifier`,
         [],
         "Matching source to current API pool identity",
       );
-      const expectedIdentity = {
-        database_name: expected.database_name,
-        database_oid: expected.database_oid === undefined ? undefined : String(expected.database_oid),
-        server_version: expected.server_version,
-        database_role: expected.database_role,
-        server_started_at: expected.server_started_at,
-        server_address: expected.server_address,
-        server_port: expected.server_port,
-      };
-      if (stable(sourceIdentity) !== stable(expectedIdentity)) {
+      const expectedIdentity = Object.fromEntries(identityFields.map((field) => [
+        field,
+        field === "database_oid" || field === "system_identifier" || field === "configured_port"
+          ? String(expected[field])
+          : expected[field],
+      ]));
+      const comparableSourceIdentity = Object.fromEntries(
+        identityFields.map((field) => [field, sourceIdentity[field]]),
+      );
+      if (stable(comparableSourceIdentity) !== stable(expectedIdentity)) {
         throw new Error("Source SQL identity does not match the current API pool identity evidence.");
       }
+      if (e10OperationalScope) snapshot.source.apiPoolIdentityMatched = true;
     }
     await source.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
     sourceTransactionOpen = true;
@@ -1008,6 +1169,9 @@ async function main(): Promise<void> {
     );
     await fs.chmod(dumpPath, 0o600);
     snapshot.source.sequenceStateAfterDump = await sequenceState(source);
+    snapshot.source.sequenceChangedDuringDump =
+      stable(snapshot.source.sequenceStateBeforeDump) !==
+      stable(snapshot.source.sequenceStateAfterDump);
     const archive = await sha256Size(dumpPath);
     const toc = await command("pg_restore archive inspection", `${PG_BIN}/pg_restore`, ["--list", dumpPath]);
     const tocLines = toc.stdout.split("\n").filter(Boolean);
@@ -1020,6 +1184,9 @@ async function main(): Promise<void> {
       includesOwnership: true,
     };
     await writePrivate(sourcePath, snapshot);
+    if (e10OperationalScope && snapshot.source.sequenceChangedDuringDump) {
+      throw new Error("Sequence state changed during the source snapshot/backup window.");
+    }
     if (sourceTransactionOpen) {
       await source.query("COMMIT");
       sourceTransactionOpen = false;
@@ -1049,6 +1216,7 @@ async function main(): Promise<void> {
     archive: snapshot.archive ?? null,
     capturedAtUtc: snapshot.capturedAtUtc,
     capturedAtMexico: snapshot.capturedAtMexico,
+    sourceProvenance: snapshot.sourceProvenance,
     sourceDatabase: snapshot.source.database.database_name ?? "unknown",
     sourceServerVersion: snapshot.source.database.server_version ?? "unknown",
     restore: metadata,
@@ -1060,10 +1228,17 @@ async function main(): Promise<void> {
       purgeExecuted: false,
       driveExecuted: false,
       apiRestarted: false,
-    identitySeeded: false,
-    restoreSuperuser: LOCAL_SUPERUSER,
+      apiAllowedToRemainActive: e10OperationalScope,
+      identitySeeded: false,
+      restoreSuperuser: LOCAL_SUPERUSER,
       disposableClusterKeptAlive: clusterStarted,
     },
+    allTablesAndRowsIncluded: true,
+    tableDataExclusions: [],
+    applicationUsersCreated: 0,
+    applicationSessionsCreated: 0,
+    apiPoolIdentityEvidence: snapshot.source.apiPoolIdentityEvidence ?? null,
+    apiPoolIdentityMatched: snapshot.source.apiPoolIdentityMatched ?? false,
     failure,
   };
   await writePrivate(metadataPath, publicMetadata);

@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "verifiedAtUtc": "2026-09-18T18:49:47.337Z",
+  "apiPaused": false,
+  "localPath": ".local/backups/e10-operativo-20260918124823-63437/e10-operativo-20260918124823-63437.dump",
+  "sourceSha256": "4f126fdc916a548bf8bdc3af7310a2acd3a3808fbf5dcd0c4c7afb0d85f51d0e",
+  "sourceBytes": 497065,
+  "downloadedPath": ".local/backups/e10-operativo-20260918124823-63437/e10-operativo-20260918124823-63437.dump.drive-verified",
+  "downloadedSha256": "4f126fdc916a548bf8bdc3af7310a2acd3a3808fbf5dcd0c4c7afb0d85f51d0e",
+  "downloadedBytes": 497065,
+  "hashesMatch": true,
+  "privatePermissionsVerified": true,
+  "folder": {
+    "id": "1tnAVn0P5aW-jfMJEa0Z9P8clH4pz5dSj",
+    "name": "2026-09-08_respaldo_previo_inicializadores_salida_id_codigo_y_development",
+    "trashed": false,
+    "shared": false,
+    "permissions": [
+      {
+        "id": "02938770931288994627",
+        "type": "user",
+        "role": "owner"
+      }
+    ]
+  },
+  "file": {
+    "id": "1VxwiYsAlhsexJ0gB67G7t9CHQvkoPJCo",
+    "name": "Mariana-Textil-E10-previo-DDL-2026-09-18-184823.dump",
+    "trashed": false,
+    "parents": [
+      "1tnAVn0P5aW-jfMJEa0Z9P8clH4pz5dSj"
+    ],
+    "webViewLink": "https://drive.google.com/file/d/1VxwiYsAlhsexJ0gB67G7t9CHQvkoPJCo/view?usp=drivesdk",
+    "shared": false,
+    "permissions": [
+      {
+        "id": "02938770931288994627",
+        "type": "user",
+        "role": "owner"
+      }
+    ],
+    "size": "497065"
+  }
+}

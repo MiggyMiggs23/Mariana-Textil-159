@@ -1437,11 +1437,17 @@ la aplicación, se detiene ese caso y se reporta para decisión del propietario.
 ## E10 — Fondo de Mariana
 
 **Estado de habilitación:** fase aislada PostgreSQL, HTTP y navegador verificada;
-no habilitado en la operativa. La vista privada ya fue detenida. Las banderas
+SQL operativo aplicado el 18/09/2026 con autorización textual separada:
+`COMMITTED_VERIFIED`, 30/30 sentencias, cero movimientos y cero arqueos.
+Evidencia: `reports/e10-operativo-2026-09-18/resultado-operativo.md`.
+El Fondo sigue sin habilitarse. La vista privada ya fue detenida. Las banderas
 `FONDO_E10_ENABLED` y `VITE_FONDO_E10_ENABLED` permanecen apagadas por omisión.
-Migración, arranque y habilitación operativos requieren autorización textual
-separada. Movimientos, historial y arqueo se habilitan juntos, nunca un piloto
-de movimientos sin arqueo.
+No repetir el SQL operativo. La API no se pausó ni reinició para este DDL
+aditivo; se verificó su pool vivo y se acotaron bloqueo y transacción.
+La habilitación y cualquier saldo inicial real siguen pendientes de autorización
+textual separada. Movimientos, historial y arqueo se habilitan juntos, nunca un
+piloto de movimientos sin arqueo. Conservar ambos clusters aislados y el respaldo
+local/Drive hasta el cierre completo de E10; esta instalación no lo declara cerrado.
 
 ### Reglas canónicas de E10
 

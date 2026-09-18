@@ -1,0 +1,43 @@
+{
+  "status": "APPROVED_FOR_MAIN_REVIEW",
+  "reviewedBy": "Replit Agent, revisión principal bajo autorización textual del propietario",
+  "reviewedAtUtc": "2026-09-18T18:55:50.138Z",
+  "sql": {
+    "path": "reports/e10-aislado-2026-09-18/sql/operativo.sql",
+    "sha256": "a7eb52a85b3b3b6072d1b88941b9998bcafe15b253e52b0520b8bfc8cc43cdb4"
+  },
+  "apiIdentity": {
+    "path": "reports/e10-operativo-2026-09-18/api-pool-identity.json",
+    "sha256": "d3e2867922e01a14448ab0f377101338e1775486366a9edf265bdac94b238a42"
+  },
+  "backup": {
+    "path": "reports/e10-operativo-2026-09-18/backup-restore-metadata.json",
+    "sha256": "5f6966da826bf203de06616f62be7d3265af44b073f8545fa8df755f21ea85f8"
+  },
+  "restore": {
+    "path": "reports/e10-operativo-2026-09-18/backup-restore-metadata.json",
+    "sha256": "5f6966da826bf203de06616f62be7d3265af44b073f8545fa8df755f21ea85f8"
+  },
+  "drive": {
+    "path": "reports/e10-operativo-2026-09-18/drive-verification.json",
+    "sha256": "5eb225c639b2cf565b3e8759b50d61223c7626e3936b77db63cb3364db9b3b31"
+  },
+  "preflight": {
+    "path": "reports/e10-operativo-2026-09-18/readonly-preflight-1789757731649-63893.json",
+    "sha256": "11dc78d78fea4ba0854602ccbcc3369a4e368bd3155f6992120f3f39fc96096a"
+  },
+  "dumpSha256": "4f126fdc916a548bf8bdc3af7310a2acd3a3808fbf5dcd0c4c7afb0d85f51d0e",
+  "before": {
+    "legacySchemaSha256": "8f4bfb157434dc3b6e11146b8b301db3a8988ffa2f90bdfad10d124135095364",
+    "evidenceSha256": "86642c1cc576755b2e2442090d44af85aeffc7ee1468834de063f1cfdb71ef9a",
+    "sequenceStateSha256": "282e62ae3daf1b7988f6311668d9afdfc9737348a37bc7dd6c9b68095b5e0648",
+    "accounts": {
+      "users": "31",
+      "users_hash": "7c2617fe80fba0675a08ae217bc0d6d5",
+      "sessions": "9",
+      "sessions_hash": "4bec91b18b1ced7e35b33b5e3da78fa2"
+    },
+    "e1GuardsSha256": "64a28faf13dfa25329d1e6c80d5de5287bf09eab02a0b0039b5c30fe4b8dbba4",
+    "enabledEventTriggers": []
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "run": "1789757757707-63932",
+  "report": "reports/e10-operativo-2026-09-18/operational-run-1789757757707-63932.json",
+  "sqlSha256": "a7eb52a85b3b3b6072d1b88941b9998bcafe15b253e52b0520b8bfc8cc43cdb4",
+  "gateSha256": "56a08eb9ac4dce2ea6a641484ae9d4fced52ad1f02f29fddcf1683cb8650484c",
+  "identitySha256": "d3e2867922e01a14448ab0f377101338e1775486366a9edf265bdac94b238a42",
+  "neverRetry": true
+}

@@ -1,0 +1,28 @@
+{
+  "apiPid": 60771,
+  "capturedAtUtc": "2026-09-18T18:55:30.832Z",
+  "poolConstructor": "BoundPool",
+  "identity": {
+    "database_name": "heliumdb",
+    "database_oid": "16384",
+    "database_role": "postgres",
+    "schema_name": "public",
+    "server_version": "16.10",
+    "server_address": null,
+    "server_port": null,
+    "server_started_at": "2026-09-18 15:21:20.26807+00",
+    "unix_socket_directories": "/run/postgresql",
+    "data_directory": "/var/lib/postgresql/data",
+    "configured_port": "5432",
+    "listen_addresses": "",
+    "search_schemas": [
+      "public"
+    ],
+    "replication_role": "origin",
+    "transaction_read_only": "on",
+    "backend_pid": 690,
+    "system_identifier": "7676894468493955091"
+  },
+  "readOnly": true,
+  "actualProcessPool": true
+}
