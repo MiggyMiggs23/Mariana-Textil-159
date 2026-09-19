@@ -1,0 +1,18 @@
+✔ grouped inventory returns only active products with stock, without stock, search and location scope (59.518748ms)
+✔ cache uses signed kardex quantity and only DISPONIBLE roll counts (1.347466ms)
+✔ full cache rebuild has one transaction and a three-source pair union (2.269295ms)
+✔ grouped inventory and dashboard physical-on-hand SQL are DISPONIBLE only (2.789928ms)
+✔ inventory report separates container KPIs from existence totals (2.770205ms)
+✔ counter exit retires the legacy state repeatably and zeroes roll quantity (0.753124ms)
+✔ metered tickets reject every line that identifies a roll (0.389297ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 995.596026
+
+EXIT_CODE=0
+SEMANTIC_ASSERTION=only active products returned for with-stock, without-stock, search, and location cases

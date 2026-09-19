@@ -1904,10 +1904,11 @@ inventarioRouter.get(
           ON r.producto_id = p.id
          AND r.estado = 'DISPONIBLE'
          AND (${ubicacionId ?? null}::int IS NULL OR r.ubicacion_id = ${ubicacionId ?? null})
-        WHERE (${search}::text IS NULL
-          OR p.tela ILIKE ${search}
-          OR p.color ILIKE ${search}
-          OR p.sku ILIKE ${search})
+        WHERE p.activo = true
+          AND (${search}::text IS NULL
+            OR p.tela ILIKE ${search}
+            OR p.color ILIKE ${search}
+            OR p.sku ILIKE ${search})
         GROUP BY p.id
         HAVING ${q.includeSinExistencia ?? false} OR COUNT(r.id) > 0
         ORDER BY p.tela, p.color, p.sku

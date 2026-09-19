@@ -1,0 +1,35 @@
+✖ grouped inventory returns only active products with stock, without stock, search and location scope (81.216907ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1302.334458
+
+✖ failing tests:
+
+test at src/inventario-existencias-agrupadas.mock.test.ts:1:3584
+✖ grouped inventory returns only active products with stock, without stock, search and location scope (81.216907ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'Lino',
+  +   'Seda oculta'
+    ]
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/inventario-existencias-agrupadas.mock.test.ts:189:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Lino', 'Seda oculta' ],
+    expected: [ 'Lino' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+EXIT_CODE=1
+SEMANTIC_ASSERTION=inactive grouped inventory leaked into includeSinExistencia result
