@@ -1823,3 +1823,17 @@ title = "Permisos verificados y diseño A + C"
 description = "Comparación de solo lectura: cero cambios efectivos. Propuesta transaccional sin modificar FIFO; no implementada."
 logical_id = "a186373e-6efe-4705-adfd-9a7feb3edcc5"
 content_type = "text/html"
+
+[[outputs]]
+id = "z_meXLDIwRYGL_AOBfl-B"
+uri = "file://reports/e2-apertura-limitada/evidencia-a-c/cierre-offline-20260919.md"
+type = "text"
+title = "Cierre offline A+C — pendientes 1–4"
+description = "Resultados, revisión exacta, comparación de typecheck y límites pendientes. Captura y devolución permanecen apagadas."
+logical_id = "a60f8132-5edd-4f38-b489-571d564f7214"
+content_hash = "sha256:295ca4d0a7d38d28af1148dd9395aab3c99f14ce47a71d540b960de1b77ecfc3"
+size = 7675
+mtime_ms = 1789789615986
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a60f8132-5edd-4f38-b489-571d564f7214/8e271990-77d0-4e17-941a-bdaa86824380"
+storage_version_token = "1789789666181135"
+content_type = "text/markdown"
