@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
+import { PRICE_FLOOR_UI_RELEASED } from "@/lib/tarea4-gates";
 import { useParams, Link, useLocation, useSearch } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
@@ -159,6 +160,10 @@ export default function PrecioDetail() {
   }
 
   const handleNextStep = () => {
+    if (PRICE_FLOOR_UI_RELEASED && (!modeData?.costoUnitarioBase || liveMetrics?.advertenciaBajoCosto)) {
+      toast.error("No se puede guardar: precio bajo costo o costo pendiente de decisión.");
+      return;
+    }
     if (Number(precioNuevo) <= 0) {
       toast.error("El precio debe ser mayor a 0");
       return;
@@ -171,6 +176,10 @@ export default function PrecioDetail() {
   };
 
   const handleConfirm = () => {
+    if (PRICE_FLOOR_UI_RELEASED && (!modeData?.costoUnitarioBase || liveMetrics?.advertenciaBajoCosto)) {
+      toast.error("No se puede guardar: precio bajo costo o costo pendiente de decisión.");
+      return;
+    }
     changePrecio.mutate({
       id: producto.id,
       data: {

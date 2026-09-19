@@ -1,0 +1,10 @@
+✔ resolvePermiso honors site inheritance, customized role rows, and user overrides (1.541067ms)
+✔ buildPermissionMatrix preserves true and false SUPERVISOR matrix actions (0.651408ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1066.935019

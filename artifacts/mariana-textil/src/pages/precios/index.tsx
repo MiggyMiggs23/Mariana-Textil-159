@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
+import { PRICE_FLOOR_UI_RELEASED } from "@/lib/tarea4-gates";
 import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
@@ -154,6 +155,11 @@ export default function PreciosList() {
 
   const confirmBulkChange = () => {
     if (!isBulkValid) return;
+    if (PRICE_FLOOR_UI_RELEASED && (belowCostCount > 0 ||
+        selectedProducts.some(product => product.preciosPorModo[activeMode].costoUnitarioBase == null))) {
+      toast.error("No se puede guardar: precio bajo costo o costo pendiente de decisión.");
+      return;
+    }
     changePreciosMasivo.mutate(
       {
         data: {

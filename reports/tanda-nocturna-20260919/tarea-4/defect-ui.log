@@ -1,0 +1,74 @@
+✔ real locked price mutation: three modes, equality, unlimited increase, unknown decision and closed gate (92.007803ms)
+✔ real remate handler: closed gate, all roles, permission override, reason, replay, scope and rollback (101.136515ms)
+✔ actual purge: only price history exempt, movement/stock blocks, credentials, atomic rollback and permanent audit (99.907759ms)
+✖ real remate component: closed gate exposes nothing, permitted form requires reason and reports failure (9.47466ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 319.319542
+
+✖ failing tests:
+
+test at artifacts/api-server/src/tarea4-inactive.mock.test.mjs:162:1
+✖ real remate component: closed gate exposes nothing, permitted form requires reason and reports failure (9.47466ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + {
+  +   props: {
+  +     children: [
+  +       {
+  +         props: {
+  +           children: [
+  +             'Motivo obligatorio para rollo ',
+  +             5,
+  +             {
+  +               props: {
+  +                 children: [],
+  +                 disabled: false,
+  +                 onChange: [Function: onChange],
+  +                 required: true,
+  +                 value: ''
+  +               },
+  +               type: 'textarea'
+  +             }
+  +           ]
+  +         },
+  +         type: 'label'
+  +       },
+  +       '',
+  +       {
+  +         props: {
+  +           children: [
+  +             'Marcar remate'
+  +           ],
+  +           disabled: true,
+  +           type: 'submit'
+  +         },
+  +         type: 'button'
+  +       }
+  +     ],
+  +     onSubmit: [AsyncFunction: onSubmit]
+  +   },
+  +   type: 'form'
+  + }
+  - null
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/tarea4-inactive.mock.test.mjs:189:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

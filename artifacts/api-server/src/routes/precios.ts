@@ -31,6 +31,8 @@ import { requierePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { priceMetrics, validPositiveMoney, weightedCurrentUnitCost } from "../lib/precios";
 import { meteredReferenceCost } from "../lib/metered-reference-cost";
+import { PRICE_FLOOR_RELEASED } from "../lib/tarea4-gates";
+import { assertPriceFloor, PriceFloorError } from "../lib/tarea4-price-floor";
 
 const router: IRouter = Router();
 router.use("/precios", requireSession);
@@ -89,6 +91,7 @@ async function mutateLockedPrecio(
     ? (await meteredReferenceCost(tx, before.id, new Date())).cost
     : await currentCost(tx, before.id);
   const metrics = priceMetrics(input.precioListaNuevo, cost);
+  if (PRICE_FLOOR_RELEASED) assertPriceFloor(input.precioListaNuevo, cost);
   const previousPrice = input.modoPrecio === "ROLLO"
     ? before.precioSugerido
     : input.modoPrecio === "MAYOREO" ? before.precioMayoreo : before.precioMenudeo;
@@ -414,6 +417,13 @@ router.patch("/precios/:id/venta-por-metro", requierePermiso("precios", "editar"
     return;
   }
   res.json(UpdatePrecioVentaPorMetroResponse.parse(await presentProduct(result.product)));
+});
+
+// Express forwards rejected transaction promises here; bulk failures roll back
+// all preceding mutations, histories and audit entries.
+router.use((error: unknown, _req: import("express").Request, res: import("express").Response, next: import("express").NextFunction) => {
+  if (!(error instanceof PriceFloorError)) return next(error);
+  res.status(409).json({ error: error.message, code: error.code });
 });
 
 export default router;

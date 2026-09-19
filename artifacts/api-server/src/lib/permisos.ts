@@ -70,7 +70,9 @@ export function mergePermissionValues(
 }
 
 /** All configurable module identifiers. */
+const REMATE_MATRIX_RELEASED: boolean = false;
 export const MODULOS = [
+  ...(REMATE_MATRIX_RELEASED ? ["marcar_remate"] : []),
   "dashboard",
   "pos",
   "entradas",

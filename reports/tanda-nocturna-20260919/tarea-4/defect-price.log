@@ -1,0 +1,28 @@
+✖ real locked price mutation: three modes, equality, unlimited increase, unknown decision and closed gate (16.453685ms)
+✔ real remate handler: closed gate, all roles, permission override, reason, replay, scope and rollback (137.214283ms)
+✔ actual purge: only price history exempt, movement/stock blocks, credentials, atomic rollback and permanent audit (183.885572ms)
+✔ real remate component: closed gate exposes nothing, permitted form requires reason and reports failure (33.140113ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 388.421494
+
+✖ failing tests:
+
+test at artifacts/api-server/src/tarea4-inactive.mock.test.mjs:24:1
+✖ real locked price mutation: three modes, equality, unlimited increase, unknown decision and closed gate (16.453685ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/tarea4-inactive.mock.test.mjs:50:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: [Object],
+    operator: 'rejects',
+    diff: 'simple'
+  }

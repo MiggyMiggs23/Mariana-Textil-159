@@ -1,0 +1,11 @@
+✔ real locked price mutation: three modes, equality, unlimited increase, unknown decision and closed gate (96.169634ms)
+✔ real remate handler: closed gate, all roles, permission override, reason, replay, scope and rollback (113.092934ms)
+✔ actual purge: only price history exempt, movement/stock blocks, credentials, atomic rollback and permanent audit (114.276465ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 345.35859

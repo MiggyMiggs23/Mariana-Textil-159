@@ -1,0 +1,20 @@
+Reference HEAD (not final task commit):
+173b7cf1373c7fb568209453721dbf510c5b1d38
+v24.13.0
+TypeScript 5.9.3
+node artifacts/api-server/src/tarea4-inactive.mock.test.mjs --defect=price
+exit=1 (expected 1)
+node artifacts/api-server/src/tarea4-inactive.mock.test.mjs --defect=remate
+exit=1 (expected 1)
+node artifacts/api-server/src/tarea4-inactive.mock.test.mjs --defect=purge
+exit=1 (expected 1)
+node artifacts/api-server/src/tarea4-inactive.mock.test.mjs --defect=ui
+exit=1 (expected 1)
+node artifacts/api-server/src/tarea4-inactive.mock.test.mjs
+exit=0 (expected 0)
+artifacts/api-server/node_modules/.bin/tsx --test artifacts/api-server/src/lib/permisos-matrix.no-db.test.ts
+exit=0
+node node_modules/typescript/bin/tsc -p artifacts/api-server/tsconfig.json --noEmit --incremental false
+exit=0
+node node_modules/typescript/bin/tsc -p artifacts/mariana-textil/tsconfig.json --noEmit --incremental false
+exit=0

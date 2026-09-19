@@ -1,6 +1,7 @@
 import { and, eq, sql } from "drizzle-orm";
 import { db, usuariosTable } from "@workspace/db";
 import { normalizeUsername } from "./auth-identifiers";
+import { PRODUCT_HISTORY_DELETE_RELEASED } from "./tarea4-gates";
 
 export const ENTIDADES_PURGABLES = [
   "usuarios",
@@ -252,6 +253,8 @@ async function countReferences(
   }
   for (const fk of fkResult.rows as Array<{ table_name: string; column_name: string }>) {
     const key = `${fk.table_name}.${fk.column_name}`;
+    if (PRODUCT_HISTORY_DELETE_RELEASED && descriptor.table === "productos" &&
+        key === "precio_historial.producto_id") continue;
     // Zero-valued existence rows are a derived cache, not operational history.
     // Non-zero rows were represented above with site and quantity details.
     if (descriptor.table === "productos" && key === "existencias.producto_id") {
@@ -464,6 +467,11 @@ export async function purgeInactiveRecord(input: {
          ${input.ip})
     `);
     if (input.entidad === "productos") {
+      if (PRODUCT_HISTORY_DELETE_RELEASED) {
+        // Same transaction, after authoritative locked recount and ADMIN
+        // credentials. CAMBIAR_PRECIO audit entries are never removed.
+        await tx.execute(sql`DELETE FROM precio_historial WHERE producto_id = ${input.id}`);
+      }
       await tx.execute(sql`
         DELETE FROM existencias
         WHERE producto_id = ${input.id}

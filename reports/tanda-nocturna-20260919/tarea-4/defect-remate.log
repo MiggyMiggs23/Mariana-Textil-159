@@ -1,0 +1,31 @@
+✔ real locked price mutation: three modes, equality, unlimited increase, unknown decision and closed gate (88.260974ms)
+✖ real remate handler: closed gate, all roles, permission override, reason, replay, scope and rollback (32.299095ms)
+✔ actual purge: only price history exempt, movement/stock blocks, credentials, atomic rollback and permanent audit (145.335499ms)
+✔ real remate component: closed gate exposes nothing, permitted form requires reason and reports failure (45.23024ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 326.882036
+
+✖ failing tests:
+
+test at artifacts/api-server/src/tarea4-inactive.mock.test.mjs:67:1
+✖ real remate handler: closed gate, all roles, permission override, reason, replay, scope and rollback (32.299095ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  201 !== 403
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/tarea4-inactive.mock.test.mjs:92:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 403,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

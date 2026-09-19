@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { REMATE_UI_RELEASED } from "@/lib/tarea4-gates";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useListPermisosRoles,
@@ -28,7 +29,7 @@ import { Modules } from "@/lib/permisos";
 import { Shield, RotateCcw, AlertTriangle, Check } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const ALL_MODULES = Object.values(Modules);
+const ALL_MODULES: string[] = [...Object.values(Modules), ...(REMATE_UI_RELEASED ? ["marcar_remate"] : [])];
 
 export default function Permisos() {
   const { data: user } = useGetCurrentUser();

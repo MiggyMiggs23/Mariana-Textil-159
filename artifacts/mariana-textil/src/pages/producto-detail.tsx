@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { PRODUCT_HISTORY_DELETE_UI_RELEASED } from "@/lib/tarea4-gates";
 import { useParams, Link, useLocation } from "wouter";
 import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
@@ -542,6 +543,12 @@ export default function ProductoDetail() {
                 <h3 className="font-semibold text-destructive">
                   Borrar producto permanentemente
                 </h3>
+                {PRODUCT_HISTORY_DELETE_UI_RELEASED && (
+                  <p className="text-sm text-muted-foreground">
+                    Solo sin existencia ni movimientos: se elimina también el historial de precios.
+                    La bitácora y la reserva del SKU se conservan. Requiere credenciales de ADMIN.
+                  </p>
+                )}
                 <p
                   className={`text-sm ${
                     deletePreflight.data?.puedeEliminar
