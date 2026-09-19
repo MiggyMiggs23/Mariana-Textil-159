@@ -629,6 +629,8 @@ El feed de Caja en `artifacts/api-server/src/routes/notificaciones.ts`, handler 
 
 ## Roles SISTEMAS y CONTADOR
 
+**Conflicto documental pendiente (2026-09-18):** P9/P10 del propietario destinan las cuentas CONTADOR a un ContadorF limitado a lo facturado y sin pagos a proveedor. Esto entra en tensión con la amplitud financiera y permisos de proveedor descritos en esta sección. No se resuelve ni se modifica aquí la regla operativa vigente; no se migraron cuentas. Véase «Plan U — respuestas documentales del 2026-09-18» y `reports/prompt-u-respuestas-2026-09-18.md`.
+
 **TERMINAL** abre `/pos` al iniciar sesión, según `artifacts/mariana-textil/src/lib/home-route.ts`. El servidor le omite recursivamente de las respuestas toda clave cuyo nombre contenga costo, precio, margen o utilidad; esa defensa vive en `artifacts/api-server/src/lib/sensitive-data.ts`.
 
 **SISTEMAS** es el rol del técnico responsable de la aplicación. Opera todo y sí ve el dinero, porque diagnostica problemas de cartera y de precios. No vende ni cobra: sin POS, sin cortes, sin cobros. Lee la bitácora y no puede alterarla. No puede crear administradores ni tocar a un usuario que ya es ADMIN: esa llave se queda con el dueño.
@@ -1474,7 +1476,25 @@ No se omiten pruebas para obtener verde ni se cambia el comportamiento de la
 aplicación para satisfacer una expectativa. Si una reescritura requiere cambiar
 la aplicación, se detiene ese caso y se reporta para decisión del propietario.
 
+## Plan U — respuestas documentales del 2026-09-18
+
+Fuente textual: `reports/prompt-u-respuestas-2026-09-18.md`. **Solo documentación:** no autoriza implementación, migración de cuentas, activaciones, SQL ni reinicios. El plan original `reports/prompt-u-plan-de-implementacion.md` se conserva como antecedente sin editar; las sustituciones de decisiones se enumeran aquí. Los conflictos con reglas operativas vigentes quedan pendientes, no resueltos por precedencia automática.
+
+- **P4 / E5 — sustituye la pregunta 4 pendiente:** rechazo de destino por ADMIN deja el dinero esperando otra propuesta. Si el cliente pide devolución, aplica importe completo nunca aplicado, solo ADMIN. No se introduce FIFO por rechazo.
+- **P5 / E5 — sustituye la pregunta 5 pendiente:** se permite autorizar una parte y dejar el resto esperando; una propuesta puede abarcar varias notas del mismo cliente. El propietario acepta que el remanente tras una aplicación parcial deja de ser devolvible. No resuelve por sí sola las demás alternativas de la pregunta 6 ni autoriza favor disponible.
+- **P7 / E5 — sustituye la pregunta 7 pendiente:** el dinero dirigido sin aplicar se destaca y se avisa a ADMIN a partir de 3 días desde la recepción. No se redefine la fecha de recepción ni se inventa una hora de corte.
+- **P9 / E11 — sustituye expresamente el alcance anterior del plan:** quedan sustituidas las frases «Ve todas las ventas y cobranza, facturadas o no» y «No filtrar su análisis exclusivamente por lo fiscal», así como el pendiente de que ContadorF concilie pagos a proveedor. ContadorF solo ve facturas, clientes facturados y ventas facturadas; no ve ventas no facturadas, Fondo ni pagos a proveedor. El manejo fiscal del Fondo se lleva fuera del sistema. Se añade un botón para aceptar que las ventas facturadas cuadran con su registro externo: aceptación diaria opcional, semanas y meses siempre aceptados; si marca «no cuadra», se notifica a ADMIN para abrir investigación. No se inventan vencimientos ni aceptación automática. La aceptación de conciliación no autoriza operaciones monetarias. **ContadorA queda como estaba en el plan.**
+- **P10 / E11 — sustituye la pregunta 10 y el pendiente de asignación del plan:** todas las cuentas CONTADOR existentes pasan a ContadorF; el propietario asigna ContadorA a mano. Es una decisión para la futura migración, no una migración realizada.
+- **P12 / E12 — sustituye la pregunta 12 pendiente del plan:** se registra la respuesta de bloquear pagos/retiros superiores al saldo registrado de caja o Fondo, con desbloqueo ADMIN, motivo obligatorio e historial. **Conflicto no resuelto:** E10 prohíbe que un retiro ordinario exceda saldo; no se reemplaza esa regla ni se habilita el desbloqueo aquí. Esta respuesta no trata ni modifica el límite de crédito del cliente.
+- **P13 / E12 — sustituye la pregunta 13 pendiente:** pago a proveedor completo desde Fondo sin turno abierto; si usa caja, esa parte exige sesión abierta de Mariana. Se conserva proveedor exclusivo de Mariana; no se habilitan pagos mixtos ni conexiones E12.
+
+**Conflicto P9/P10 sin resolver:** la restricción del futuro ContadorF y el traslado de todas las cuentas actuales chocan con «CONTADOR ve todo lo financiero», la conservación de permisos de proveedor y la conservación de Cuentas destino/consultas de caja descritas en las reglas vigentes. Se conservan esas reglas operativas con este señalamiento; no se decide por cuenta propia qué permisos u overrides retirar ni cómo migrarlos.
+
+Las respuestas textuales, referencias al texto sustituido y los dos conflictos se conservan en el informe citado. No se dan por contestadas otras preguntas del plan ni se altera el estado inactivo de los flujos preparados.
+
 ## E10 — Fondo de Mariana
+
+**Conflicto pendiente con P12 (2026-09-18):** el propietario pide desbloqueo ADMIN motivado e histórico ante insuficiencia de caja/Fondo. Esto entra en conflicto con la regla canónica de esta sección «Un retiro ordinario no puede exceder el saldo disponible». No se decide aquí si sustituye esa prohibición o requiere una categoría distinta; se conserva la regla vigente sin habilitar excepciones. Véase `reports/prompt-u-respuestas-2026-09-18.md`.
 
 **Estado de habilitación:** fase aislada PostgreSQL, HTTP y navegador verificada;
 SQL operativo aplicado el 18/09/2026 con autorización textual separada:
