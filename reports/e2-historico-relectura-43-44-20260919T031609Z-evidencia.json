@@ -1,0 +1,173 @@
+{
+  "transaction": {
+    "database": "heliumdb",
+    "captured_at": "2026-09-19 03:17:20.932138+00",
+    "read_only": "on",
+    "isolation": "repeatable read",
+    "end": "ROLLBACK"
+  },
+  "reader_capture": "reports/e2-historico-relectura-43-44-20260919T031609Z-lector.json",
+  "reader_capture_sha256": "b541ec3e8ab412806b5d4d2a10477b9e02150fb51d08848ef2946ea42f2aa02f",
+  "reader_revision": {
+    "revision": "bf22d61c54d64454e45986803ac458cfa328871f",
+    "dirty": false,
+    "scriptSha256": "66e96f883315472ecbf2250a8a5e9aecd7c19bae293588dd1699542824effbf5",
+    "legacySqlSha256": "c16e102a83c2a476594f3c5fb683264b5b23dfb9edbdcff847d1f0433f6aee2d"
+  },
+  "reader_last_change_revision": "6ba45992bcdfa082167064f31d49302997178f32",
+  "bundle": {
+    "pid": 176,
+    "process": [
+      "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+      "--enable-source-maps",
+      "artifacts/api-server/dist/index.mjs"
+    ],
+    "process_start": "Sat Sep 19 02:34:33 2026",
+    "source_revision": "7cb77f8cfc6287fa51325a25122c48af392a7ada",
+    "sha256": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+    "provenance_document": "reports/e2-apertura-limitada/reconstruccion/autorizacion-bundle-7cb.md"
+  },
+  "sessions": [
+    {
+      "id": 43,
+      "sitio": "Cruces",
+      "estado": "CERRADA",
+      "cerrada_at": "2026-09-19 03:13:43.38+00",
+      "fondo_inicial": "1500.00",
+      "efectivo_contado": "0.00"
+    },
+    {
+      "id": 44,
+      "sitio": "Mariana",
+      "estado": "CERRADA",
+      "cerrada_at": "2026-09-19 03:14:04.679+00",
+      "fondo_inicial": "1500.00",
+      "efectivo_contado": "1500.00"
+    }
+  ],
+  "audits": [
+    {
+      "id": "4183",
+      "entidad_id": "43",
+      "datos_despues": {
+        "diferencia": "-1500.00",
+        "efectivoContado": "0.00"
+      },
+      "has_cash_snapshot": false,
+      "has_explicit_expected": false,
+      "expected_implied_by_saved_closure": "1500.00"
+    },
+    {
+      "id": "4184",
+      "entidad_id": "44",
+      "datos_despues": {
+        "diferencia": "0.00",
+        "efectivoContado": "1500.00"
+      },
+      "has_cash_snapshot": false,
+      "has_explicit_expected": false,
+      "expected_implied_by_saved_closure": "1500.00"
+    }
+  ],
+  "tickets": [
+    {
+      "id": 106,
+      "sesion_caja_id": 43,
+      "folio": 1000,
+      "documento_tipo": "NOTA",
+      "cobrado": false,
+      "cobrado_at": null,
+      "total": "16000.00",
+      "payment_rows": 0
+    },
+    {
+      "id": 107,
+      "sesion_caja_id": 44,
+      "folio": 1001,
+      "documento_tipo": "NOTA",
+      "cobrado": false,
+      "cobrado_at": null,
+      "total": "4900.00",
+      "payment_rows": 0
+    }
+  ],
+  "cash": [
+    {
+      "id": 43,
+      "cash_payments": "0.00",
+      "cash_outflows": "0.00"
+    },
+    {
+      "id": 44,
+      "cash_payments": "0.00",
+      "cash_outflows": "0.00"
+    }
+  ],
+  "comparisons": [
+    {
+      "session_id": 43,
+      "closure_type": "LEGACY",
+      "explicit_saved_expected": false,
+      "expected_implied_by_saved_closure": "1500.00",
+      "reader": [
+        {
+          "surface": "admin",
+          "expected": "1500.00",
+          "sessionId": 43,
+          "difference": "-1500.00",
+          "hasDifference": true
+        },
+        {
+          "surface": "detalle",
+          "expected": "1500.00",
+          "sessionId": 43,
+          "difference": "-1500.00",
+          "hasDifference": true
+        },
+        {
+          "surface": "historial",
+          "expected": "1500.00",
+          "sessionId": 43,
+          "difference": "-1500.00",
+          "hasDifference": true
+        }
+      ],
+      "all_surfaces_match_saved_evidence": true
+    },
+    {
+      "session_id": 44,
+      "closure_type": "LEGACY",
+      "explicit_saved_expected": false,
+      "expected_implied_by_saved_closure": "1500.00",
+      "reader": [
+        {
+          "surface": "admin",
+          "expected": "1500.00",
+          "sessionId": 44,
+          "difference": "0.00",
+          "hasDifference": false
+        },
+        {
+          "surface": "detalle",
+          "expected": "1500.00",
+          "sessionId": 44,
+          "difference": "0.00",
+          "hasDifference": false
+        },
+        {
+          "surface": "historial",
+          "expected": "1500.00",
+          "sessionId": 44,
+          "difference": "0.00",
+          "hasDifference": false
+        }
+      ],
+      "all_surfaces_match_saved_evidence": true
+    }
+  ],
+  "limits": [
+    "Esperado no guardado como campo independiente: derivado exclusivamente de efectivoContado y diferencia guardados al cerrar, no de movimientos actuales.",
+    "Lector cerrado sin cashSnapshot retorna cálculo legacy provisto; MATCH no certifica captura E2 ni fórmula nueva.",
+    "Bundle identificado por proceso activo, hash del archivo y procedencia documentada; no se importó ni reinició."
+  ]
+}
