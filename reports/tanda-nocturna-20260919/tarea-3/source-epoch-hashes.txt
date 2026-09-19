@@ -1,0 +1,29 @@
+173b7cf1373c7fb568209453721dbf510c5b1d38
+artifacts/api-server/src/routes/clientes.ts
+80eaa93d 25405414d60c1aa06d01eb7ca06be610cce7bc3c1c11b42d5b88ab699b2a2a08  -
+HEAD 9cddb644d188ae10ad2a561d30ab39bf197424be0d6a8775f4230bdaad7b7750  -
+working 9cddb644d188ae10ad2a561d30ab39bf197424be0d6a8775f4230bdaad7b7750  artifacts/api-server/src/routes/clientes.ts
+artifacts/api-server/src/lib/clientes-aging.ts
+80eaa93d e349e7da08c916d2c4a8472dccba65210e5bb7356df4c3c7d8b29d895fee2b3e  -
+HEAD e349e7da08c916d2c4a8472dccba65210e5bb7356df4c3c7d8b29d895fee2b3e  -
+working e349e7da08c916d2c4a8472dccba65210e5bb7356df4c3c7d8b29d895fee2b3e  artifacts/api-server/src/lib/clientes-aging.ts
+artifacts/api-server/src/lib/credit-allocation.ts
+80eaa93d 3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599  -
+HEAD 3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599  -
+working 3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599  artifacts/api-server/src/lib/credit-allocation.ts
+artifacts/api-server/src/lib/date-only.ts
+80eaa93d 276ab049be90f250780441e82738f9f845b4faf1e22e336625b0027ba3697b68  -
+HEAD 276ab049be90f250780441e82738f9f845b4faf1e22e336625b0027ba3697b68  -
+working 276ab049be90f250780441e82738f9f845b4faf1e22e336625b0027ba3697b68  artifacts/api-server/src/lib/date-only.ts
+artifacts/api-server/src/lib/credit-evidence-contract.ts
+80eaa93d 4b64e56a77d2683cb444d9fac20daa3d26800c6f7dcae82d9f1efdd24cc57bde  -
+HEAD 6ec51cfe18a45386c8cb4ab6428de9ec203b767697b21560e678bcefeb4cdad2  -
+working 6ec51cfe18a45386c8cb4ab6428de9ec203b767697b21560e678bcefeb4cdad2  artifacts/api-server/src/lib/credit-evidence-contract.ts
+lib/api-zod/src/generated/api.ts
+80eaa93d c5ec7ecdb5e2489beaec623ff7064943eadd73e6af98380127ad9f581a4a63ec  -
+HEAD f7db1479f2a92ef347b1ea272f2c63c8857301ffb79a22a9b294711e55a61c42  -
+working f7db1479f2a92ef347b1ea272f2c63c8857301ffb79a22a9b294711e55a61c42  lib/api-zod/src/generated/api.ts
+artifacts/api-server/src/pos-caja-final.contract.test.ts
+80eaa93d fb6280d489706f2e1a5b35c4e5e4f96bf90f96b3bbc5dcadb3c5f9fc5265ce2b  -
+HEAD fb6280d489706f2e1a5b35c4e5e4f96bf90f96b3bbc5dcadb3c5f9fc5265ce2b  -
+working fb6280d489706f2e1a5b35c4e5e4f96bf90f96b3bbc5dcadb3c5f9fc5265ce2b  artifacts/api-server/src/pos-caja-final.contract.test.ts

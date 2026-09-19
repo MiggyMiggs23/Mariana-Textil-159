@@ -1,0 +1,31 @@
+✔ contrato de notas de crédito deriva los tres estados sin persistirlos (433.963466ms)
+✔ consultas de detalle usan aplicaciones_credito en ambas direcciones (96.199194ms)
+✔ antigüedad toma fecha_vencimiento en calendario America/Mexico_City (7.283589ms)
+✔ reimpresión audita antes de responder y no actualiza el ledger (4.286955ms)
+✖ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (554.385501ms)
+✔ estado de cuenta proyecta cuentaDestino desde el CTE del ledger (6.398899ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1064.069281
+
+✖ failing tests:
+
+test at artifacts/api-server/src/clientes-pagos.contract.test.ts:6:1
+✖ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (554.385501ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/clientes-pagos.contract.test.ts:41:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

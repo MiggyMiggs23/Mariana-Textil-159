@@ -1,0 +1,42 @@
+✔ contrato de notas de crédito deriva los tres estados sin persistirlos (572.514632ms)
+✖ consultas de detalle usan aplicaciones_credito en ambas direcciones (79.218916ms)
+✔ antigüedad toma fecha_vencimiento en calendario America/Mexico_City (7.659973ms)
+✔ reimpresión audita antes de responder y no actualiza el ledger (2.520785ms)
+✔ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (687.02775ms)
+✔ estado de cuenta proyecta cuentaDestino desde el CTE del ledger (4.163591ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1162.173549
+
+✖ failing tests:
+
+test at artifacts/api-server/src/clientes-notas-credito.contract.test.ts:33:1
+✖ consultas de detalle usan aplicaciones_credito en ambas direcciones (79.218916ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      {
+  +     clienteId: 81,
+  +     pagoId: 41
+  -     clienteId: 41,
+  -     pagoId: 81
+      },
+      'release'
+    ]
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/clientes-notas-credito.contract.test.ts:43:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { clienteId: 81, pagoId: 41 }, 'release' ],
+    expected: [ { clienteId: 41, pagoId: 81 }, 'release' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

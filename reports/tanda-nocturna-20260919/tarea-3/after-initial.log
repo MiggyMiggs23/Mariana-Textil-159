@@ -1,0 +1,14 @@
+✔ contrato de notas de crédito deriva los tres estados sin persistirlos (464.40573ms)
+✔ consultas de detalle usan aplicaciones_credito en ambas direcciones (89.055702ms)
+✔ antigüedad toma fecha_vencimiento en calendario America/Mexico_City (6.341067ms)
+✔ reimpresión audita antes de responder y no actualiza el ledger (2.789792ms)
+✔ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (489.771368ms)
+✔ estado de cuenta proyecta cuentaDestino desde el CTE del ledger (4.209151ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1243.913868

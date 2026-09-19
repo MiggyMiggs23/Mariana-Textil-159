@@ -1,0 +1,40 @@
+✔ contrato de notas de crédito deriva los tres estados sin persistirlos (449.83414ms)
+✔ consultas de detalle usan aplicaciones_credito en ambas direcciones (124.08525ms)
+✔ antigüedad toma fecha_vencimiento en calendario America/Mexico_City (10.897657ms)
+✔ reimpresión audita antes de responder y no actualiza el ledger (4.0641ms)
+✖ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (558.455137ms)
+✔ estado de cuenta proyecta cuentaDestino desde el CTE del ledger (6.098283ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1105.634223
+
+✖ failing tests:
+
+test at artifacts/api-server/src/clientes-pagos.contract.test.ts:6:1
+✖ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (558.455137ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      'naturaleza',
+      'operacionClave',
+  -   'sitioOrigenId'
+    ]
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/clientes-pagos.contract.test.ts:12:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'naturaleza', 'operacionClave' ],
+    expected: [ 'naturaleza', 'operacionClave', 'sitioOrigenId' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

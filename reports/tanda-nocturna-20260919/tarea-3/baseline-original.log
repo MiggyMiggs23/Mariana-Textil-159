@@ -1,0 +1,1247 @@
+✖ contrato de notas de crédito deriva los tres estados sin persistirlos (8.175275ms)
+✖ consultas de detalle usan aplicaciones_credito en ambas direcciones (5.086521ms)
+✔ antigüedad toma fecha_vencimiento en calendario America/Mexico_City (3.07491ms)
+✔ reimpresión audita antes de responder y no actualiza el ledger (3.231022ms)
+✖ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (1.937423ms)
+✔ estado de cuenta proyecta cuentaDestino desde el CTE del ledger (1.666112ms)
+✖ Ticket and Note are absolute, independently processed operations (1.999466ms)
+✖ authorization uses the shared ledger projection and has no override (1.126239ms)
+✔ Note cancellation reverses its authorized ledger charge, never a payment (0.575568ms)
+✔ sales identity excludes operational pending amounts (0.257712ms)
+✔ all financial report read models use the canonical accounted predicate (2.40788ms)
+✔ Caja feed uses the canonical pending-document predicate (0.557998ms)
+✔ sales summary excludes only credit from collected payment methods (0.738654ms)
+✔ fiscal financial ranges use Caja processing timestamps (0.437715ms)
+✔ summary and realtime sales require explicit Caja processing date basis (1.290815ms)
+✔ supplier margin and realtime documents respect Caja processing (1.558122ms)
+✔ legacy authorized Notes receive deterministic authorization timestamps (0.436955ms)
+✔ pending Notes do not reserve customer credit before authorization (0.805096ms)
+✔ Caja only retains cut printing (0.953397ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 14
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 81.830853
+
+✖ failing tests:
+
+test at ../../../tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/clientes-notas-credito.contract.test.ts:18:25
+✖ contrato de notas de crédito deriva los tres estados sin persistirlos (8.175275ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /function moneyState[\s\S]*?balanceCents === 0\) return "PAGADA"[\s\S]*?balanceCents < originalCents \? "PARCIAL"[\s\S]*?: "PENDIENTE"/. Input:
+  
+  'import { Router, type IRouter, type Response } from "express";\n' +
+    'import ExcelJS from "exceljs";\n' +
+    'import { and, asc, desc, eq, sql } from "drizzle-orm";\n' +
+    'import {\n' +
+    '  CreateClientePagoBody,\n' +
+    '  CreateClientePagoResponse,\n' +
+    '  GetClienteNotaCreditoResponse,\n' +
+    '  GetClientePagoDetalleResponse,\n' +
+    '  PreviewClientePagoBody,\n' +
+    '  ReimprimirClienteNotaResponse,\n' +
+    '  ListarComportamientoPagoClientesResponse,\n' +
+    '  ObtenerComportamientoPagoClienteParams,\n' +
+    '  ObtenerComportamientoPagoClienteResponse,\n' +
+    '} from "@workspace/api-zod";\n' +
+    'import {\n' +
+    '  auditoriaTable,\n' +
+    '  aplicacionesCreditoTable,\n' +
+    '  clientesTable,\n' +
+    '  db,\n' +
+    '  movimientosCreditoTable,\n' +
+    '  pool,\n' +
+    '  productosTable,\n' +
+    '  ticketLineasTable,\n' +
+    '  ticketsTable,\n' +
+    '} from "@workspace/db";\n' +
+    'import {\n' +
+    '  ADVISORY_LOCK_NAMESPACES,\n' +
+    '  transactionAdvisoryLock,\n' +
+    '} from "@workspace/db/advisory-locks";\n' +
+    'import {\n' +
+    '  centsToMoney,\n' +
+    '  isValidPaymentDestination,\n' +
+    '  moneyToCents,\n' +
+    '  projectCreditLedger,\n' +
+    '  type CreditLedgerCharge,\n' +
+    '} from "../lib/credit-allocation";\n' +
+    'import { requireSession } from "../middlewares/auth";\n' +
+    'import { requierePermiso, resolvePermiso } from "../lib/permisos";\n' +
+    'import { getRequestIp } from "../lib/request";\n' +
+    'import { createLatin1TextPdf } from "../lib/pdf";\n' +
+    'import {\n' +
+    '  canLinkAdjustmentToTicket,\n' +
+    '  creditStatus,\n' +
+    '  deriveEstadoNota,\n' +
+    '} from "../lib/clientes-aging";\n' +
+    'import { calendarDate } from "../lib/date-only";\n' +
+    'import {\n' +
+    '  loadCustomerCreditLedger,\n' +
+    '  loadCustomerCreditProjectionInTransaction,\n' +
+    '  loadCustomerCreditProjection,\n' +
+    '  loadCustomerCreditProjections,\n' +
+    '  type CustomerCreditProjection,\n' +
+    '} from "../lib/credit-aging-read-model";\n' +
+    'import {\n' +
+    '  isActiveNonSystemNameConflict,\n' +
+    '  isClientCreditTerm,\n' +
+    '  parseClientCreditTerms,\n' +
+    '} from "../lib/clientes-create";\n' +
+    'import {\n' +
+    '  EXCEL_NUMBER_FORMAT,\n' +
+    '  formatNumber,\n' +
+    '  toExcelNumber,\n' +
+    '} from "@workspace/number-format";\n' +
+    'import { ordenarEspanol } from "../lib/spanish-order";\n' +
+    'import { buildTicketDetail } from "../lib/pos";\n' +
+    'import { breakdownIvaIncluded } from "../lib/iva";\n' +
+    'import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";\n' +
+    'import { loadPaymentBehaviorList } from "../lib/payment-behavior";\n' +
+    'import { buildCreditMovementDetail } from "../lib/credit-movement-detail";\n' +
+    'import {\n' +
+    '  FechaEfectivaValidationError,\n' +
+    '  parseFechaEfectiva,\n' +
+    '} from "../lib/fecha-efectiva";\n' +
+    'import {\n' +
+    '  CarteraScopeError,\n' +
+    '  loadClientesCartera,\n' +
+    '} from "../lib/clientes-cartera-read-model";\n' +
+    'import {\n' +
+    '  GLOBAL_CREDIT_SCOPE_LABEL,\n' +
+    '  SCOPED_DETAIL_LABEL,\n' +
+    '  buildEstadoCuentaExportReadQuery,\n' +
+    '  resolveClienteFinancialReadScope,\n' +
+    '  scopeDescription,\n' +
+    '  ticketScopeClause,\n' +
+    '  type ClienteFinancialReadScope,\n' +
+    '} from "../lib/clientes-financial-read-scope";\n' +
+    'import {\n' +
+    '  renderClientesCarteraPdf,\n' +
+    '  renderClientesCarteraXlsx,\n' +
+    '} from "../lib/clientes-cartera-export";\n' +
+    'import { resolveReadScope } from "./inventario";\n' +
+    'import {\n' +
+    '  readCreditEvidenceInput, canonicalCreditMoney, assertCreditEvidenceAccess,\n' +
+    '  assertCreditEvidenceScope, claimCreditOperation, insertCreditMovementE1,\n' +
+    '  CreditEvidenceError,\n' +
+    '} from "../lib/credit-evidence";\n' +
+    '\n' +
+    'const router: IRouter = Router();\n' +
+    '\n' +
+    'router.use("/clientes", requireSession);\n' +
+    '\n' +
+    '// ── helpers ───────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '/** Operational fields only — no financial data */\n' +
+    'function presentClienteOperativo(row: typeof clientesTable.$inferSelect) {\n' +
+    '  return {\n' +
+    '    id: row.id,\n' +
+    '    nombre: row.nombre,\n' +
+    '    telefono: row.telefono,\n' +
+    '    correo: row.correo,\n' +
+    '    direccionParticular: row.direccionParticular,\n' +
+    '    direccionEntrega: row.direccionEntrega,\n' +
+    '    direccion: row.direccionParticular,\n' +
+    '    rfc: row.rfc,\n' +
+    '    notas: row.notas,\n' +
+    '    activo: row.activo,\n' +
+    '    esSistema: row.esSistema,\n' +
+    '    contactoNombre: row.contactoNombre,\n' +
+    '    recibeNotaSinPrecios: row.recibeNotaSinPrecios,\n' +
+    '    diasCredito: row.diasCredito,\n' +
+    '    createdAt: row.createdAt,\n' +
+    '    updatedAt: row.updatedAt,\n' +
+    '  };\n' +
+    '}\n' +
+    '\n' +
+    'function parseId(value: string | string[]): number | null {\n' +
+    '  const id = Number(Array.isArray(value) ? value[0] : value);\n' +
+    '  return Number.isInteger(id) && id > 0 ? id : null;\n' +
+    '}\n' +
+    '\n' +
+    'function creditDueDays(fechaVencimiento: unknown): number {\n' +
+    '  if (fechaVencimiento == null) return 0;\n' +
+    '  const due = dateOnly(fechaVencimiento);\n' +
+    '  if (!due) return 0;\n' +
+    '  // A paid note also reports the calendar age at query time; it is evidence,\n' +
+    '  // not a persisted delinquency status.\n' +
+    '  const todayParts = new Intl.DateTimeFormat("en-US", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).formatToParts(new Date());\n' +
+    '  const today = Object.fromEntries(\n' +
+    '    todayParts\n' +
+    '      .filter((part) => part.type !== "literal")\n' +
+    '      .map((part) => [part.type, part.value]),\n' +
+    '  );\n' +
+    '  const todayCalendar = `${today.year}-${today.month}-${today.day}`;\n' +
+    '  const difference =\n' +
+    '    Date.parse(`${todayCalendar}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`);\n' +
+    '  return Math.max(0, Math.floor(difference / 86_400_000));\n' +
+    '}\n' +
+    '\n' +
+    'function dateOnly(value: unknown): string | null {\n' +
+    '  if (value == null) return null;\n' +
+    '  return calendarDate(value as string | Date);\n' +
+    '}\n' +
+    '\n' +
+    'function todayMexicoCity(): string {\n' +
+    '  return new Intl.DateTimeFormat("en-CA", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).format(new Date());\n' +
+    '}\n' +
+    '\n' +
+    'type EstadoCuentaExportRow = Record<string, any>;\n' +
+    'export type EstadoCuentaExportProjection = Pick<\n' +
+    '  CustomerCreditProjection,\n' +
+    '  "movementProjections" | "allCharges" | "balanceCents" | "overpaymentCents"\n' +
+    '>;\n' +
+    'export type EstadoCuentaGlobalCreditSummary = {\n' +
+    '  deudaActual: string;\n' +
+    '  saldoAFavor: string;\n' +
+    '  limiteCredito: string;\n' +
+    '  creditoDisponible: string;\n' +
+    '};\n' +
+    '\n' +
+    'function globalCreditSummary(\n' +
+    '  limiteCredito: string,\n' +
+    '  projection: EstadoCuentaExportProjection,\n' +
+    '): EstadoCuentaGlobalCreditSummary {\n' +
+    '  const deudaActual = centsToMoney(projection.balanceCents);\n' +
+    '  const saldoAFavor = centsToMoney(projection.overpaymentCents);\n' +
+    '  return {\n' +
+    '    deudaActual,\n' +
+    '    saldoAFavor,\n' +
+    '    limiteCredito,\n' +
+    '    creditoDisponible: Math.max(0, Number(limiteCredito) - Number(deudaActual)).toFixed(2),\n' +
+    '  };\n' +
+    '}\n' +
+    '\n' +
+    'function addFinancialScopeWorksheet(\n' +
+    '  workbook: ExcelJS.Workbook,\n' +
+    '  scope: ClienteFinancialReadScope,\n' +
+    '  summary?: EstadoCuentaGlobalCreditSummary,\n' +
+    '): void {\n' +
+    '  const includeScopedGlobalSummary = scope.tipo === "SITIOS" && summary != null;\n' +
+    '  const sheet = workbook.addWorksheet("Alcance");\n' +
+    '  sheet.columns = [{ width: 32 }, { width: 88 }];\n' +
+    '  sheet.addRows([\n' +
+    '    ["Alcance aplicado", scope.tipo],\n' +
+    '    ["Sitios autorizados", scopeDescription(scope)],\n' +
+    '    ["Resumen global de crédito", GLOBAL_CREDIT_SCOPE_LABEL],\n' +
+    '    ["Detalle", SCOPED_DETAIL_LABEL],\n' +
+    '    ["Límite de crédito", includeScopedGlobalSummary ? toExcelNumber(summary.limiteCredito) : "No incluido en este archivo"],\n' +
+    '    ["Deuda actual", includeScopedGlobalSummary ? toExcelNumber(summary.deudaActual) : "No incluido en este archivo"],\n' +
+    '    ["Saldo a favor", includeScopedGlobalSummary ? toExcelNumber(summary.saldoAFavor) : "No incluido en este archivo"],\n' +
+    '    ["Crédito disponible", includeScopedGlobalSummary ? toExcelNumber(summary.creditoDisponible) : "No incluido en este archivo"],\n' +
+    '  ]);\n' +
+    '  if (includeScopedGlobalSummary) {\n' +
+    '    for (const row of [5, 6, 7, 8]) {\n' +
+    '      sheet.getCell(`B${row}`).numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '    }\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    '/**\n' +
+    ' * Builds the exact estado-cuenta workbook used by the XLSX route.\n' +
+    ' *\n' +
+    ' * Kept separate from the query/HTTP handler so the production serialization\n' +
+    ' * can be verified with an in-memory statement fixture without a DB write or\n' +
+    ' * live request.\n' +
+    ' */\n' +
+    'export function buildEstadoCuentaWorkbook(\n' +
+    '  rows: EstadoCuentaExportRow[],\n' +
+    '  projection: EstadoCuentaExportProjection,\n' +
+    '  scope: ClienteFinancialReadScope = {\n' +
+    '    tipo: "GLOBAL",\n' +
+    '    ubicaciones: [],\n' +
+    '    generadoEn: "",\n' +
+    '    saldoAFavorDisponible: true,\n' +
+    '  },\n' +
+    '  summary?: EstadoCuentaGlobalCreditSummary,\n' +
+    '): ExcelJS.Workbook {\n' +
+    '  const projectedMovements = new Map(\n' +
+    '    projection.movementProjections.map((movement) => [\n' +
+    '      movement.movementId,\n' +
+    '      movement,\n' +
+    '    ]),\n' +
+    '  );\n' +
+    '  const workbook = new ExcelJS.Workbook();\n' +
+    '  const sheet = workbook.addWorksheet("Estado de cuenta");\n' +
+    '  sheet.columns = [\n' +
+    '    { header: "Fecha", key: "fecha", width: 22 }, { header: "Tipo", key: "tipo", width: 18 },\n' +
+    '    { header: "Fecha de vencimiento", key: "fechaVencimiento", width: 22 },\n' +
+    '    { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },\n' +
+    '    { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },\n' +
+    '    { header: "Saldo a favor", key: "saldoAFavor", width: 18 },\n' +
+    '    { header: "Saldo deudor proyectado", key: "saldoDeudorProyectado", width: 24 },\n' +
+    '    { header: "Saldo a favor proyectado", key: "saldoAFavorProyectado", width: 24 },\n' +
+    '    { header: "Saldo pendiente", key: "saldoPendiente", width: 18 },\n' +
+    '    { header: "Estado de nota", key: "estadoNota", width: 18 },\n' +
+    '    { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },\n' +
+    '    { header: "Subtotal facturado", key: "subtotalFacturado", width: 18 }, { header: "IVA facturado", key: "ivaFacturado", width: 16 },\n' +
+    '    { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },\n' +
+    '  ];\n' +
+    '  sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  sheet.getColumn("subtotalFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  sheet.getColumn("ivaFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  const includeGlobalRowBalances = scope.tipo === "GLOBAL";\n' +
+    '  sheet.addRows(rows.map((row) => {\n' +
+    '    const charge = projection.allCharges.find(\n' +
+    '      (candidate) => candidate.movimientoId === Number(row.id),\n' +
+    '    );\n' +
+    '    const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"\n' +
+    '      ? centsToMoney(charge.pendienteCents)\n' +
+    '      : null;\n' +
+    '    const estadoNota = charge && row.tipo === "VENTA_CREDITO"\n' +
+    '      ? deriveEstadoNota({\n' +
+    '          importeOriginal: centsToMoney(charge.originalCents),\n' +
+    '          saldoPendiente: saldoPendiente!,\n' +
+    '          fechaVencimiento: charge.dueAt,\n' +
+    '          hoy: todayMexico'... 94172 more characters
+  
+      at TestContext.<anonymous> (/tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/clientes-notas-credito.contract.test.ts:21:22)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { Router, type IRouter, type Response } from "express";\nimport ExcelJS from "exceljs";\nimport { and, asc, desc, eq, sql } from "drizzle-orm";\nimport {\n  CreateClientePagoBody,\n  CreateClientePagoResponse,\n  GetClienteNotaCreditoResponse,\n  GetClientePagoDetalleResponse,\n  PreviewClientePagoBody,\n  ReimprimirClienteNotaResponse,\n...',
+    expected: /function moneyState[\s\S]*?balanceCents === 0\) return "PAGADA"[\s\S]*?balanceCents < originalCents \? "PARCIAL"[\s\S]*?: "PENDIENTE"/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at ../../../tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/clientes-notas-credito.contract.test.ts:25:25
+✖ consultas de detalle usan aplicaciones_credito en ambas direcciones (5.086521ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /FROM aplicaciones_credito a[\s\S]*?WHERE a\.abono_movimiento_id=\$1 AND sale\.cliente_id=\$2/. Input:
+  
+  'import { Router, type IRouter, type Response } from "express";\n' +
+    'import ExcelJS from "exceljs";\n' +
+    'import { and, asc, desc, eq, sql } from "drizzle-orm";\n' +
+    'import {\n' +
+    '  CreateClientePagoBody,\n' +
+    '  CreateClientePagoResponse,\n' +
+    '  GetClienteNotaCreditoResponse,\n' +
+    '  GetClientePagoDetalleResponse,\n' +
+    '  PreviewClientePagoBody,\n' +
+    '  ReimprimirClienteNotaResponse,\n' +
+    '  ListarComportamientoPagoClientesResponse,\n' +
+    '  ObtenerComportamientoPagoClienteParams,\n' +
+    '  ObtenerComportamientoPagoClienteResponse,\n' +
+    '} from "@workspace/api-zod";\n' +
+    'import {\n' +
+    '  auditoriaTable,\n' +
+    '  aplicacionesCreditoTable,\n' +
+    '  clientesTable,\n' +
+    '  db,\n' +
+    '  movimientosCreditoTable,\n' +
+    '  pool,\n' +
+    '  productosTable,\n' +
+    '  ticketLineasTable,\n' +
+    '  ticketsTable,\n' +
+    '} from "@workspace/db";\n' +
+    'import {\n' +
+    '  ADVISORY_LOCK_NAMESPACES,\n' +
+    '  transactionAdvisoryLock,\n' +
+    '} from "@workspace/db/advisory-locks";\n' +
+    'import {\n' +
+    '  centsToMoney,\n' +
+    '  isValidPaymentDestination,\n' +
+    '  moneyToCents,\n' +
+    '  projectCreditLedger,\n' +
+    '  type CreditLedgerCharge,\n' +
+    '} from "../lib/credit-allocation";\n' +
+    'import { requireSession } from "../middlewares/auth";\n' +
+    'import { requierePermiso, resolvePermiso } from "../lib/permisos";\n' +
+    'import { getRequestIp } from "../lib/request";\n' +
+    'import { createLatin1TextPdf } from "../lib/pdf";\n' +
+    'import {\n' +
+    '  canLinkAdjustmentToTicket,\n' +
+    '  creditStatus,\n' +
+    '  deriveEstadoNota,\n' +
+    '} from "../lib/clientes-aging";\n' +
+    'import { calendarDate } from "../lib/date-only";\n' +
+    'import {\n' +
+    '  loadCustomerCreditLedger,\n' +
+    '  loadCustomerCreditProjectionInTransaction,\n' +
+    '  loadCustomerCreditProjection,\n' +
+    '  loadCustomerCreditProjections,\n' +
+    '  type CustomerCreditProjection,\n' +
+    '} from "../lib/credit-aging-read-model";\n' +
+    'import {\n' +
+    '  isActiveNonSystemNameConflict,\n' +
+    '  isClientCreditTerm,\n' +
+    '  parseClientCreditTerms,\n' +
+    '} from "../lib/clientes-create";\n' +
+    'import {\n' +
+    '  EXCEL_NUMBER_FORMAT,\n' +
+    '  formatNumber,\n' +
+    '  toExcelNumber,\n' +
+    '} from "@workspace/number-format";\n' +
+    'import { ordenarEspanol } from "../lib/spanish-order";\n' +
+    'import { buildTicketDetail } from "../lib/pos";\n' +
+    'import { breakdownIvaIncluded } from "../lib/iva";\n' +
+    'import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";\n' +
+    'import { loadPaymentBehaviorList } from "../lib/payment-behavior";\n' +
+    'import { buildCreditMovementDetail } from "../lib/credit-movement-detail";\n' +
+    'import {\n' +
+    '  FechaEfectivaValidationError,\n' +
+    '  parseFechaEfectiva,\n' +
+    '} from "../lib/fecha-efectiva";\n' +
+    'import {\n' +
+    '  CarteraScopeError,\n' +
+    '  loadClientesCartera,\n' +
+    '} from "../lib/clientes-cartera-read-model";\n' +
+    'import {\n' +
+    '  GLOBAL_CREDIT_SCOPE_LABEL,\n' +
+    '  SCOPED_DETAIL_LABEL,\n' +
+    '  buildEstadoCuentaExportReadQuery,\n' +
+    '  resolveClienteFinancialReadScope,\n' +
+    '  scopeDescription,\n' +
+    '  ticketScopeClause,\n' +
+    '  type ClienteFinancialReadScope,\n' +
+    '} from "../lib/clientes-financial-read-scope";\n' +
+    'import {\n' +
+    '  renderClientesCarteraPdf,\n' +
+    '  renderClientesCarteraXlsx,\n' +
+    '} from "../lib/clientes-cartera-export";\n' +
+    'import { resolveReadScope } from "./inventario";\n' +
+    'import {\n' +
+    '  readCreditEvidenceInput, canonicalCreditMoney, assertCreditEvidenceAccess,\n' +
+    '  assertCreditEvidenceScope, claimCreditOperation, insertCreditMovementE1,\n' +
+    '  CreditEvidenceError,\n' +
+    '} from "../lib/credit-evidence";\n' +
+    '\n' +
+    'const router: IRouter = Router();\n' +
+    '\n' +
+    'router.use("/clientes", requireSession);\n' +
+    '\n' +
+    '// ── helpers ───────────────────────────────────────────────────────────────────\n' +
+    '\n' +
+    '/** Operational fields only — no financial data */\n' +
+    'function presentClienteOperativo(row: typeof clientesTable.$inferSelect) {\n' +
+    '  return {\n' +
+    '    id: row.id,\n' +
+    '    nombre: row.nombre,\n' +
+    '    telefono: row.telefono,\n' +
+    '    correo: row.correo,\n' +
+    '    direccionParticular: row.direccionParticular,\n' +
+    '    direccionEntrega: row.direccionEntrega,\n' +
+    '    direccion: row.direccionParticular,\n' +
+    '    rfc: row.rfc,\n' +
+    '    notas: row.notas,\n' +
+    '    activo: row.activo,\n' +
+    '    esSistema: row.esSistema,\n' +
+    '    contactoNombre: row.contactoNombre,\n' +
+    '    recibeNotaSinPrecios: row.recibeNotaSinPrecios,\n' +
+    '    diasCredito: row.diasCredito,\n' +
+    '    createdAt: row.createdAt,\n' +
+    '    updatedAt: row.updatedAt,\n' +
+    '  };\n' +
+    '}\n' +
+    '\n' +
+    'function parseId(value: string | string[]): number | null {\n' +
+    '  const id = Number(Array.isArray(value) ? value[0] : value);\n' +
+    '  return Number.isInteger(id) && id > 0 ? id : null;\n' +
+    '}\n' +
+    '\n' +
+    'function creditDueDays(fechaVencimiento: unknown): number {\n' +
+    '  if (fechaVencimiento == null) return 0;\n' +
+    '  const due = dateOnly(fechaVencimiento);\n' +
+    '  if (!due) return 0;\n' +
+    '  // A paid note also reports the calendar age at query time; it is evidence,\n' +
+    '  // not a persisted delinquency status.\n' +
+    '  const todayParts = new Intl.DateTimeFormat("en-US", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).formatToParts(new Date());\n' +
+    '  const today = Object.fromEntries(\n' +
+    '    todayParts\n' +
+    '      .filter((part) => part.type !== "literal")\n' +
+    '      .map((part) => [part.type, part.value]),\n' +
+    '  );\n' +
+    '  const todayCalendar = `${today.year}-${today.month}-${today.day}`;\n' +
+    '  const difference =\n' +
+    '    Date.parse(`${todayCalendar}T00:00:00Z`) - Date.parse(`${due}T00:00:00Z`);\n' +
+    '  return Math.max(0, Math.floor(difference / 86_400_000));\n' +
+    '}\n' +
+    '\n' +
+    'function dateOnly(value: unknown): string | null {\n' +
+    '  if (value == null) return null;\n' +
+    '  return calendarDate(value as string | Date);\n' +
+    '}\n' +
+    '\n' +
+    'function todayMexicoCity(): string {\n' +
+    '  return new Intl.DateTimeFormat("en-CA", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).format(new Date());\n' +
+    '}\n' +
+    '\n' +
+    'type EstadoCuentaExportRow = Record<string, any>;\n' +
+    'export type EstadoCuentaExportProjection = Pick<\n' +
+    '  CustomerCreditProjection,\n' +
+    '  "movementProjections" | "allCharges" | "balanceCents" | "overpaymentCents"\n' +
+    '>;\n' +
+    'export type EstadoCuentaGlobalCreditSummary = {\n' +
+    '  deudaActual: string;\n' +
+    '  saldoAFavor: string;\n' +
+    '  limiteCredito: string;\n' +
+    '  creditoDisponible: string;\n' +
+    '};\n' +
+    '\n' +
+    'function globalCreditSummary(\n' +
+    '  limiteCredito: string,\n' +
+    '  projection: EstadoCuentaExportProjection,\n' +
+    '): EstadoCuentaGlobalCreditSummary {\n' +
+    '  const deudaActual = centsToMoney(projection.balanceCents);\n' +
+    '  const saldoAFavor = centsToMoney(projection.overpaymentCents);\n' +
+    '  return {\n' +
+    '    deudaActual,\n' +
+    '    saldoAFavor,\n' +
+    '    limiteCredito,\n' +
+    '    creditoDisponible: Math.max(0, Number(limiteCredito) - Number(deudaActual)).toFixed(2),\n' +
+    '  };\n' +
+    '}\n' +
+    '\n' +
+    'function addFinancialScopeWorksheet(\n' +
+    '  workbook: ExcelJS.Workbook,\n' +
+    '  scope: ClienteFinancialReadScope,\n' +
+    '  summary?: EstadoCuentaGlobalCreditSummary,\n' +
+    '): void {\n' +
+    '  const includeScopedGlobalSummary = scope.tipo === "SITIOS" && summary != null;\n' +
+    '  const sheet = workbook.addWorksheet("Alcance");\n' +
+    '  sheet.columns = [{ width: 32 }, { width: 88 }];\n' +
+    '  sheet.addRows([\n' +
+    '    ["Alcance aplicado", scope.tipo],\n' +
+    '    ["Sitios autorizados", scopeDescription(scope)],\n' +
+    '    ["Resumen global de crédito", GLOBAL_CREDIT_SCOPE_LABEL],\n' +
+    '    ["Detalle", SCOPED_DETAIL_LABEL],\n' +
+    '    ["Límite de crédito", includeScopedGlobalSummary ? toExcelNumber(summary.limiteCredito) : "No incluido en este archivo"],\n' +
+    '    ["Deuda actual", includeScopedGlobalSummary ? toExcelNumber(summary.deudaActual) : "No incluido en este archivo"],\n' +
+    '    ["Saldo a favor", includeScopedGlobalSummary ? toExcelNumber(summary.saldoAFavor) : "No incluido en este archivo"],\n' +
+    '    ["Crédito disponible", includeScopedGlobalSummary ? toExcelNumber(summary.creditoDisponible) : "No incluido en este archivo"],\n' +
+    '  ]);\n' +
+    '  if (includeScopedGlobalSummary) {\n' +
+    '    for (const row of [5, 6, 7, 8]) {\n' +
+    '      sheet.getCell(`B${row}`).numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '    }\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    '/**\n' +
+    ' * Builds the exact estado-cuenta workbook used by the XLSX route.\n' +
+    ' *\n' +
+    ' * Kept separate from the query/HTTP handler so the production serialization\n' +
+    ' * can be verified with an in-memory statement fixture without a DB write or\n' +
+    ' * live request.\n' +
+    ' */\n' +
+    'export function buildEstadoCuentaWorkbook(\n' +
+    '  rows: EstadoCuentaExportRow[],\n' +
+    '  projection: EstadoCuentaExportProjection,\n' +
+    '  scope: ClienteFinancialReadScope = {\n' +
+    '    tipo: "GLOBAL",\n' +
+    '    ubicaciones: [],\n' +
+    '    generadoEn: "",\n' +
+    '    saldoAFavorDisponible: true,\n' +
+    '  },\n' +
+    '  summary?: EstadoCuentaGlobalCreditSummary,\n' +
+    '): ExcelJS.Workbook {\n' +
+    '  const projectedMovements = new Map(\n' +
+    '    projection.movementProjections.map((movement) => [\n' +
+    '      movement.movementId,\n' +
+    '      movement,\n' +
+    '    ]),\n' +
+    '  );\n' +
+    '  const workbook = new ExcelJS.Workbook();\n' +
+    '  const sheet = workbook.addWorksheet("Estado de cuenta");\n' +
+    '  sheet.columns = [\n' +
+    '    { header: "Fecha", key: "fecha", width: 22 }, { header: "Tipo", key: "tipo", width: 18 },\n' +
+    '    { header: "Fecha de vencimiento", key: "fechaVencimiento", width: 22 },\n' +
+    '    { header: "Importe", key: "importe", width: 14 }, { header: "Saldo corrido histórico", key: "saldoCorridoHistorico", width: 22 },\n' +
+    '    { header: "Saldo actual proyectado", key: "saldoActualProyectado", width: 22 },\n' +
+    '    { header: "Saldo a favor", key: "saldoAFavor", width: 18 },\n' +
+    '    { header: "Saldo deudor proyectado", key: "saldoDeudorProyectado", width: 24 },\n' +
+    '    { header: "Saldo a favor proyectado", key: "saldoAFavorProyectado", width: 24 },\n' +
+    '    { header: "Saldo pendiente", key: "saldoPendiente", width: 18 },\n' +
+    '    { header: "Estado de nota", key: "estadoNota", width: 18 },\n' +
+    '    { header: "Folio", key: "folio", width: 12 }, { header: "Forma de pago", key: "formaPago", width: 18 },\n' +
+    '    { header: "Subtotal facturado", key: "subtotalFacturado", width: 18 }, { header: "IVA facturado", key: "ivaFacturado", width: 16 },\n' +
+    '    { header: "Referencia", key: "referencia", width: 24 }, { header: "Usuario", key: "usuario", width: 24 },\n' +
+    '  ];\n' +
+    '  sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  sheet.getColumn("saldoCorridoHistorico").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  sheet.getColumn("subtotalFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  sheet.getColumn("ivaFacturado").numFmt = EXCEL_NUMBER_FORMAT.money;\n' +
+    '  const includeGlobalRowBalances = scope.tipo === "GLOBAL";\n' +
+    '  sheet.addRows(rows.map((row) => {\n' +
+    '    const charge = projection.allCharges.find(\n' +
+    '      (candidate) => candidate.movimientoId === Number(row.id),\n' +
+    '    );\n' +
+    '    const saldoPendiente = charge && row.tipo === "VENTA_CREDITO"\n' +
+    '      ? centsToMoney(charge.pendienteCents)\n' +
+    '      : null;\n' +
+    '    const estadoNota = charge && row.tipo === "VENTA_CREDITO"\n' +
+    '      ? deriveEstadoNota({\n' +
+    '          importeOriginal: centsToMoney(charge.originalCents),\n' +
+    '          saldoPendiente: saldoPendiente!,\n' +
+    '          fechaVencimiento: charge.dueAt,\n' +
+    '          hoy: todayMexico'... 94172 more characters
+  
+      at TestContext.<anonymous> (/tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/clientes-notas-credito.contract.test.ts:28:22)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { Router, type IRouter, type Response } from "express";\nimport ExcelJS from "exceljs";\nimport { and, asc, desc, eq, sql } from "drizzle-orm";\nimport {\n  CreateClientePagoBody,\n  CreateClientePagoResponse,\n  GetClienteNotaCreditoResponse,\n  GetClientePagoDetalleResponse,\n  PreviewClientePagoBody,\n  ReimprimirClienteNotaResponse,\n...',
+    expected: /FROM aplicaciones_credito a[\s\S]*?WHERE a\.abono_movimiento_id=\$1 AND sale\.cliente_id=\$2/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at ../../../tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/clientes-pagos.contract.test.ts:10:25
+✖ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (1.937423ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (/tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/clientes-pagos.contract.test.ts:11:22)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/pos-caja-final.contract.test.ts:10:25
+✖ Ticket and Note are absolute, independently processed operations (1.999466ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Ticket"} folio/. Input:
+  
+  'import { useState, useEffect, useRef } from "react";\n' +
+    'import { Link, useLocation } from "wouter";\n' +
+    'import { useHistoryEntryState } from "@/lib/internal-navigation";\n' +
+    'import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";\n' +
+    'import {\n' +
+    '  useObtenerSesionCajaActual,\n' +
+    '  useAbrirSesionCaja,\n' +
+    '  useObtenerCorteCaja,\n' +
+    '  useCerrarSesionCaja,\n' +
+    '  useListarTicketsCaja,\n' +
+    '  useObtenerTicket,\n' +
+    '  useCobrarTicket,\n' +
+    '  useAutorizarNota,\n' +
+    '  useObtenerProyeccionAutorizacionNota,\n' +
+    '  getObtenerProyeccionAutorizacionNotaQueryKey,\n' +
+    '  useListarSesionesCaja,\n' +
+    '  useGetCurrentUser,\n' +
+    '  Role,\n' +
+    '  CorteCaja,\n' +
+    '  getObtenerSesionCajaActualQueryKey,\n' +
+    '  getListarTicketsCajaQueryKey,\n' +
+    '  getObtenerTicketQueryKey,\n' +
+    '  getObtenerCorteCajaQueryKey,\n' +
+    '  getListarSesionesCajaQueryKey,\n' +
+    '  FormaPagoTicket,\n' +
+    '  useListarTickets,\n' +
+    '  getListarTicketsQueryKey,\n' +
+    '  useGetClienteEstadoCuenta,\n' +
+    '  getGetClienteEstadoCuentaQueryKey,\n' +
+    '  useCreateClientePago,\n' +
+    '  TicketDetalle,\n' +
+    '  useCrearSalidaDineroCaja,\n' +
+    '  useListarSalidasDineroCaja,\n' +
+    '  useListarProveedoresActivosCaja,\n' +
+    '  getListarSalidasDineroCajaQueryKey,\n' +
+    '} from "@workspace/api-client-react";\n' +
+    'import { AppLayout } from "@/components/layout/app-layout";\n' +
+    'import { useLocationScope } from "@/lib/location-scope";\n' +
+    'import { Button } from "@/components/ui/button";\n' +
+    'import { Input } from "@/components/ui/input";\n' +
+    'import { Label } from "@/components/ui/label";\n' +
+    'import {\n' +
+    '  Card,\n' +
+    '  CardContent,\n' +
+    '  CardHeader,\n' +
+    '  CardTitle,\n' +
+    '  CardFooter,\n' +
+    '  CardDescription,\n' +
+    '} from "@/components/ui/card";\n' +
+    'import { useToast } from "@/hooks/use-toast";\n' +
+    'import { useQueryClient } from "@tanstack/react-query";\n' +
+    'import {\n' +
+    '  Loader2,\n' +
+    '  Banknote,\n' +
+    '  CreditCard,\n' +
+    '  Wallet,\n' +
+    '  RefreshCw,\n' +
+    '  AlertCircle,\n' +
+    '  XCircle,\n' +
+    '  ArrowRightLeft,\n' +
+    '  CheckCircle,\n' +
+    '  Search,\n' +
+    '} from "lucide-react";\n' +
+    'import {\n' +
+    '  Select,\n' +
+    '  SelectContent,\n' +
+    '  SelectItem,\n' +
+    '  SelectTrigger,\n' +
+    '  SelectValue,\n' +
+    '} from "@/components/ui/select";\n' +
+    'import {\n' +
+    '  Dialog,\n' +
+    '  DialogContent,\n' +
+    '  DialogHeader,\n' +
+    '  DialogTitle,\n' +
+    '  DialogFooter,\n' +
+    '  DialogDescription,\n' +
+    '} from "@/components/ui/dialog";\n' +
+    'import { getApiErrorMessage } from "@/lib/api-error";\n' +
+    'import { format } from "date-fns";\n' +
+    'import { es } from "date-fns/locale";\n' +
+    'import { formatAccountDestination, formatNumber, formatUnit } from "@workspace/number-format";\n' +
+    'import { CampoEscaneo } from "@/components/campo-escaneo";\n' +
+    'import { ClientePagoDialog } from "@/components/cliente-pago-dialog";\n' +
+    'import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";\n' +
+    'import { hasPermission, Modules } from "@/lib/permisos";\n' +
+    'import { Textarea } from "@/components/ui/textarea";\n' +
+    'import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";\n' +
+    'import { formatDateOnlyMx } from "@/lib/date-only";\n' +
+    'import { documentoTipoLabel } from "@/lib/document-name";\n' +
+    '\n' +
+    '/** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */\n' +
+    'const MARIANA_LOCATION_ID = 1;\n' +
+    '\n' +
+    'function projectedMoney(value: string | number | null | undefined) {\n' +
+    '  return value === undefined || value === null || value === ""\n' +
+    '    ? "—"\n' +
+    '    : formatNumber(value, { kind: "money" });\n' +
+    '}\n' +
+    '\n' +
+    'export function CarteraTicketFolioLink({\n' +
+    '  ticketId,\n' +
+    '  ticketFolio,\n' +
+    '}: {\n' +
+    '  ticketId: number;\n' +
+    '  ticketFolio: number | null | undefined;\n' +
+    '}) {\n' +
+    '  return (\n' +
+    '    <Link\n' +
+    '      href={`/tickets/${ticketId}`}\n' +
+    '      className="hover:text-primary hover:underline"\n' +
+    '    >\n' +
+    '      {ticketFolio != null ? `#${ticketFolio}` : "—"}\n' +
+    '    </Link>\n' +
+    '  );\n' +
+    '}\n' +
+    '\n' +
+    'export function CarteraMovementLink({\n' +
+    '  clienteId,\n' +
+    '  movimientoId,\n' +
+    '}: {\n' +
+    '  clienteId: number;\n' +
+    '  movimientoId: number;\n' +
+    '}) {\n' +
+    '  return (\n' +
+    '    <Link\n' +
+    '      href={`/clientes/${clienteId}?tab=estado&movimientoId=${movimientoId}`}\n' +
+    '      className="ml-3 inline-flex items-center text-xs font-semibold text-primary hover:underline"\n' +
+    '    >\n' +
+    '      Estado de cuenta\n' +
+    '    </Link>\n' +
+    '  );\n' +
+    '}\n' +
+    '\n' +
+    'function mexicoCityDate(date: Date): string {\n' +
+    '  return new Intl.DateTimeFormat("en-CA", {\n' +
+    '    timeZone: "America/Mexico_City",\n' +
+    '    year: "numeric",\n' +
+    '    month: "2-digit",\n' +
+    '    day: "2-digit",\n' +
+    '  }).format(date);\n' +
+    '}\n' +
+    '\n' +
+    'function CarteraContent() {\n' +
+    '  const [scannedInput, setScannedInput] = useHistoryEntryState("cobros.scanned-input", "");\n' +
+    '  const [resolvedTicketId, setResolvedTicketId] = useState<number | null>(null);\n' +
+    '  const [searchFolio, setSearchFolio] = useHistoryEntryState<number | null>("cobros.search-folio", null);\n' +
+    '\n' +
+    '  const { data: currentUser } = useGetCurrentUser();\n' +
+    '  const canViewFinances = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "ver");\n' +
+    '  const canCreatePayment = hasPermission(currentUser, Modules.CLIENTES_FINANZAS, "crear");\n' +
+    '\n' +
+    '  const [location, setLocation] = useLocation();\n' +
+    '  const searchParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");\n' +
+    '  const initialTicketId = searchParams.get("ticketId");\n' +
+    '  const initialImporte = searchParams.get("importe");\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    '    if (initialTicketId) {\n' +
+    '      setResolvedTicketId(Number(initialTicketId));\n' +
+    '    }\n' +
+    '  }, [initialTicketId]);\n' +
+    '\n' +
+    '  const { data: searchResults, isFetching: isSearchingFolio } = useListarTickets(\n' +
+    '    { folio: searchFolio || 0 },\n' +
+    '    {\n' +
+    '      query: {\n' +
+    '        enabled: !!searchFolio,\n' +
+    '        queryKey: getListarTicketsQueryKey({ folio: searchFolio || 0 }),\n' +
+    '      },\n' +
+    '    }\n' +
+    '  );\n' +
+    '\n' +
+    '  useEffect(() => {\n' +
+    '    if (searchFolio && searchResults) {\n' +
+    '      if (searchResults.length > 0) {\n' +
+    '        setResolvedTicketId(searchResults[0].id);\n' +
+    '      }\n' +
+    '      setSearchFolio(null);\n' +
+    '    }\n' +
+    '  }, [searchResults, searchFolio]);\n' +
+    '\n' +
+    '  const { data: ticket, isLoading: isLoadingTicket } = useObtenerTicket(resolvedTicketId || 0, {\n' +
+    '    query: {\n' +
+    '      enabled: !!resolvedTicketId,\n' +
+    '      queryKey: getObtenerTicketQueryKey(resolvedTicketId || 0),\n' +
+    '    },\n' +
+    '  });\n' +
+    '\n' +
+    '  const clienteId = ticket?.clienteId;\n' +
+    '\n' +
+    '  const { data: cuenta, isLoading: isLoadingCuenta } = useGetClienteEstadoCuenta(\n' +
+    '    clienteId || 0,\n' +
+    '    undefined,\n' +
+    '    {\n' +
+    '      query: {\n' +
+    '        enabled: !!clienteId && canViewFinances,\n' +
+    '        queryKey: getGetClienteEstadoCuentaQueryKey(clienteId || 0),\n' +
+    '        retry: false,\n' +
+    '      },\n' +
+    '    }\n' +
+    '  );\n' +
+    '\n' +
+    '  const handleScan = (value: string) => {\n' +
+    '    setScannedInput(value);\n' +
+    '    let extractedId: number | null = null;\n' +
+    '    try {\n' +
+    '      const url = new URL(value, window.location.origin);\n' +
+    '      if (url.pathname.startsWith("/tickets/")) {\n' +
+    '        extractedId = parseInt(url.pathname.split("/")[2] || "", 10);\n' +
+    '      } else if (url.pathname === "/cobros" && url.searchParams.get("ticketId")) {\n' +
+    '        extractedId = parseInt(url.searchParams.get("ticketId") || "", 10);\n' +
+    '      }\n' +
+    '    } catch {}\n' +
+    '\n' +
+    '    if (extractedId && !isNaN(extractedId)) {\n' +
+    '      setResolvedTicketId(extractedId);\n' +
+    '      setLocation(`/cobros?tab=cartera&ticketId=${extractedId}`, { replace: true });\n' +
+    '    } else if (/^\\d+$/.test(value)) {\n' +
+    '      setSearchFolio(parseInt(value, 10));\n' +
+    '    }\n' +
+    '  };\n' +
+    '\n' +
+    '  const notas = cuenta?.movimientos\n' +
+    '    ?.filter((m) => m.tipo === "VENTA_CREDITO" && m.estadoNota !== "PAGADA")\n' +
+    '    .sort((a, b) => new Date(a.fecha!).getTime() - new Date(b.fecha!).getTime()) || [];\n' +
+    '  const saldoDeudorProyectado = cuenta?.saldoActual;\n' +
+    '  const saldoAFavorProyectado = cuenta?.saldoAFavor;\n' +
+    '\n' +
+    '  const [paymentOpen, setPaymentOpen] = useState(!!initialImporte);\n' +
+    '  const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; nota?: (typeof notas)[number] }>({ open: false });\n' +
+    '\n' +
+    '  const queryClient = useQueryClient();\n' +
+    '  const { toast } = useToast();\n' +
+    '\n' +
+    '  return (\n' +
+    '    <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6">\n' +
+    '      <Card className="shadow-md border-primary/20">\n' +
+    '        <CardHeader className="bg-primary/5 pb-4 border-b border-primary/10">\n' +
+    '          <CardTitle className="text-xl flex items-center gap-2">\n' +
+    '            <Wallet className="h-5 w-5 text-primary" />\n' +
+    '            Estado de Cuenta\n' +
+    '          </CardTitle>\n' +
+    '          <CardDescription>\n' +
+    '            Escanea el QR de la nota de crédito o ingresa el folio para consultar y abonar a la cartera.\n' +
+    '          </CardDescription>\n' +
+    '        </CardHeader>\n' +
+    '        <CardContent className="pt-6">\n' +
+    '          <div className="max-w-md mx-auto mb-6">\n' +
+    '            <Label className="mb-2 block font-semibold text-sidebar">Escáner / Folio de Nota</Label>\n' +
+    '            <CampoEscaneo\n' +
+    '              value={scannedInput}\n' +
+    '              onChange={setScannedInput}\n' +
+    '              onScan={handleScan}\n' +
+    '              interpretRollCode={false}\n' +
+    '              clearOnScan={false}\n' +
+    '              placeholder="Ej. https://... o folio"\n' +
+    '              containerClassName="h-12"\n' +
+    '            />\n' +
+    '          </div>\n' +
+    '\n' +
+    '          {!canViewFinances && resolvedTicketId ? (\n' +
+    '            <div className="text-center py-10 bg-destructive/5 rounded-lg border border-destructive/20">\n' +
+    '              <AlertCircle className="h-10 w-10 text-destructive mx-auto mb-3 opacity-80" />\n' +
+    '              <h3 className="font-bold text-lg text-destructive">Acceso Restringido</h3>\n' +
+    '              <p className="text-destructive/80 text-sm max-w-sm mx-auto mt-2">\n' +
+    '                No tienes permisos suficientes para visualizar o modificar los saldos de clientes.\n' +
+    '              </p>\n' +
+    '            </div>\n' +
+    '          ) : isSearchingFolio || isLoadingTicket || isLoadingCuenta ? (\n' +
+    '            <div className="flex h-40 flex-col items-center justify-center gap-3">\n' +
+    '              <Loader2 className="h-8 w-8 animate-spin text-primary" />\n' +
+    '              <p className="text-sm font-medium text-primary/60">Consultando información...</p>\n' +
+    '            </div>\n' +
+    '          ) : resolvedTicketId && !ticket ? (\n' +
+    '            <div className="text-center py-10 bg-muted/20 rounded-lg border border-dashed text-destructive">\n' +
+    '              <p className="font-medium">Ticket o Nota no encontrada.</p>\n' +
+    '            </div>\n' +
+    '          ) : ticket && !clienteId ? (\n' +
+    '            <div className="text-center py-10 bg-amber-50 rounded-lg border border-amber-200 text-amber-700">\n' +
+    '              <AlertCircle className="h-8 w-8 mx-auto mb-3 opacity-80" />\n' +
+    '              <p className="font-semibold">El ticket #{ticket.folio} no está asociado a un cliente de crédito.</p>\n' +
+    '            </div>\n' +
+    '          ) : ticket && cuenta ? (\n' +
+    '            <div className="space-y-6 animate-in fade-in '... 79342 more characters
+  
+      at TestContext.<anonymous> (/tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/pos-caja-final.contract.test.ts:17:22)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { useState, useEffect, useRef } from "react";\nimport { Link, useLocation } from "wouter";\nimport { useHistoryEntryState } from "@/lib/internal-navigation";\nimport { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";\nimport {\n  useObtenerSesionCajaActual,\n  useAbrirSesionCaja,\n  useObtenerCorteCaja,\n  useCerrarSesionCaja,\n  useListarTicketsCaja,\n...',
+    expected: /Ticket"} folio/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at ../../../tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/pos-caja-final.contract.test.ts:21:25
+✖ authorization uses the shared ledger projection and has no override (1.126239ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /projectCreditLedger\(ledger\)/. Input:
+  
+  'import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";\n' +
+    'import type { Request } from "express";\n' +
+    'import {\n' +
+    '  assertCreditEvidenceAccess, assertCreditEvidenceScope, claimCreditOperation,\n' +
+    '  insertCreditMovementE1, readCreditEvidenceInput, CreditEvidenceError,\n' +
+    '  type CreditEvidenceInput,\n' +
+    '} from "./credit-evidence";\n' +
+    'import {\n' +
+    '  auditoriaTable,\n' +
+    '  autorizacionesNotaTable,\n' +
+    '  aplicacionesCreditoTable,\n' +
+    '  clientesTable,\n' +
+    '  db,\n' +
+    '  movimientosCreditoTable,\n' +
+    '  notificacionesCreditoTable,\n' +
+    '  movimientosTable,\n' +
+    '  productosTable,\n' +
+    '  rollosTable,\n' +
+    '  sesionesCajaTable,\n' +
+    '  sesionesCajaDiasTable,\n' +
+    '  salidasTable,\n' +
+    '  salidasDineroCajaTable,\n' +
+    '  proveedoresTable,\n' +
+    '  ticketFolioTable,\n' +
+    '  ticketLineasTable,\n' +
+    '  ticketPagosTable,\n' +
+    '  ticketsTable,\n' +
+    '  ubicacionesTable,\n' +
+    '  usuariosTable,\n' +
+    '  viajeTicketsTable,\n' +
+    '  viajesTable,\n' +
+    '  type FormaPagoTicket,\n' +
+    '} from "@workspace/db";\n' +
+    'import {\n' +
+    '  centsToMoney,\n' +
+    '  evaluateAutomaticFavorEligibility,\n' +
+    '  moneyToCents,\n' +
+    '  projectCreditLedger,\n' +
+    '  type AutomaticFavorCandidate,\n' +
+    '  type CreditLedgerMovement,\n' +
+    '} from "./credit-allocation";\n' +
+    'import {\n' +
+    '  loadCustomerCreditLedgerInTransaction,\n' +
+    '} from "./credit-aging-read-model";\n' +
+    'import {\n' +
+    '  consumirBolsasFifo,\n' +
+    '  consumirRollosMetreadoSeleccionados,\n' +
+    '  DOCUMENTO_TICKET_BOLSA_METREADO,\n' +
+    '  DOCUMENTO_TICKET_BOLSA_NORMAL,\n' +
+    '  DOCUMENTO_TICKET_PIEZA_NORMAL,\n' +
+    '  InventarioError,\n' +
+    '  lockInventoryPairs,\n' +
+    '  revertirMovimiento,\n' +
+    '  venderRollo,\n' +
+    '  type Tx,\n' +
+    '} from "./inventario";\n' +
+    'import {\n' +
+    '  isValidUnitCost,\n' +
+    '  rollWithoutValidUnitCostMessage,\n' +
+    '} from "./unit-cost";\n' +
+    'import {\n' +
+    '  deriveTicketCreditData,\n' +
+    '  deriveEstadoNota,\n' +
+    '  creditDueDate,\n' +
+    '  isCreditTerm,\n' +
+    '  type CreditTerm,\n' +
+    '} from "./clientes-aging";\n' +
+    'import { interpretarCodigoEscaneado } from "@workspace/scanned-code";\n' +
+    'import {\n' +
+    '  meteredPriceTier,\n' +
+    '  suggestedMeteredPrice,\n' +
+    '} from "@workspace/metered-pricing";\n' +
+    'import { ACCOUNT_DESTINATION_ORDER } from "@workspace/number-format";\n' +
+    'import {\n' +
+    '  ADVISORY_LOCK_NAMESPACES,\n' +
+    '  transactionAdvisoryLock,\n' +
+    '} from "@workspace/db/advisory-locks";\n' +
+    'import { meteredReferenceCost } from "./metered-reference-cost";\n' +
+    'import { IVA_RATE_BASIS_POINTS } from "./iva";\n' +
+    'import { consumirRollosSalidaVenta } from "./salidas";\n' +
+    'import { assertNoActiveVentaClienteReservation } from "./salida-venta-reservation";\n' +
+    'import {\n' +
+    '  recordTicketLineConsumption,\n' +
+    '  reverseTicketLineConsumptions,\n' +
+    '} from "./supplier-trace";\n' +
+    '\n' +
+    'const FOLIO_ROW_ID = 1;\n' +
+    '\n' +
+    '/** Tienda Mariana (MA) is presently the only location allowed to pay providers from cash. */\n' +
+    'export const MARIANA_LOCATION_ID = 1;\n' +
+    '\n' +
+    'export class PosError extends Error {\n' +
+    '  constructor(\n' +
+    '    message: string,\n' +
+    '    public readonly code: string,\n' +
+    '    public readonly status = 400,\n' +
+    '  ) {\n' +
+    '    super(message);\n' +
+    '    this.name = "PosError";\n' +
+    '  }\n' +
+    '}\n' +
+    '\n' +
+    'function automaticFavorCandidates(\n' +
+    '  movementId: number,\n' +
+    '  projection: ReturnType<typeof projectCreditLedger>,\n' +
+    '  ledger: CreditLedgerMovement[],\n' +
+    '): AutomaticFavorCandidate[] {\n' +
+    '  const byId = new Map(ledger.map((movement) => [movement.id, movement]));\n' +
+    '  return projection.allocations\n' +
+    '    .filter((allocation) => allocation.targetId === movementId)\n' +
+    '    .flatMap((allocation) => {\n' +
+    '      const source = byId.get(allocation.sourceId);\n' +
+    '      return source == null\n' +
+    '        ? []\n' +
+    '        : [{ source, appliedCents: allocation.appliedCents }];\n' +
+    '    });\n' +
+    '}\n' +
+    '\n' +
+    'export type CrearTicketLineaInput = {\n' +
+    '  rolloId?: number | null;\n' +
+    '  productoId: number;\n' +
+    '  tipo?: "NORMAL" | "METREADO";\n' +
+    '  cantidad: string;\n' +
+    '  precioUnitario: string;\n' +
+    '  ubicacionId?: number;\n' +
+    '  /** Explicit physical sources required for new METREADO METRO lines. */\n' +
+    '  fuentesRollo?: Array<{ rolloId: number; cantidad: string }>;\n' +
+    '};\n' +
+    '\n' +
+    'export type CrearTicketInput = {\n' +
+    '  ubicacionId: number;\n' +
+    '  usuarioTerminalId: number;\n' +
+    '  clienteId: number;\n' +
+    '  documentoTipo?: "TICKET" | "NOTA";\n' +
+    '  notaSinPrecios?: boolean;\n' +
+    '  nombreDestinatario?: string | null;\n' +
+    '  direccionEntregaSnapshot?: string | null;\n' +
+    '  /** Legacy request default; new callers should send tipo on every line. */\n' +
+    '  tipo?: "NORMAL" | "METREADO";\n' +
+    '  facturado: boolean;\n' +
+    '  credito?: boolean;\n' +
+    '  diasPlazo?: number | null;\n' +
+    '  uuidCliente: string;\n' +
+    '  lineas: CrearTicketLineaInput[];\n' +
+    '  ip: string;\n' +
+    '  /** Used by customer-sale exits: inventory is consumed when the document is paid/authorized. */\n' +
+    '  deferInventory?: boolean;\n' +
+    '  owningSalidaIds?: number[];\n' +
+    '};\n' +
+    '\n' +
+    'export type PagoTicketInput = {\n' +
+    '  formaPago: FormaPagoTicket;\n' +
+    '  importe: string;\n' +
+    '  referencia?: string | null;\n' +
+    '};\n' +
+    '\n' +
+    'type Reader = Pick<typeof db, "select" | "execute">;\n' +
+    '\n' +
+    'function productName(tela: string, color: string): string {\n' +
+    '  return `${tela} ${color}`.trim();\n' +
+    '}\n' +
+    '\n' +
+    'function priceBelowCostMessage(\n' +
+    '  tela: string,\n' +
+    '  color: string,\n' +
+    '  serie: string,\n' +
+    '): string {\n' +
+    '  return `El precio de ${productName(tela, color)} serie ${serie} está por debajo del mínimo permitido.`;\n' +
+    '}\n' +
+    '\n' +
+    'function money(value: string | number): number {\n' +
+    '  const text = String(value).trim();\n' +
+    '  const match = /^([+-]?)(\\d+)(?:\\.(\\d+))?$/.exec(text);\n' +
+    '  if (!match) {\n' +
+    '    throw new PosError("Importe inválido.", "INVALID_AMOUNT");\n' +
+    '  }\n' +
+    '  const fraction = (match[3] ?? "").padEnd(3, "0");\n' +
+    '  const cents = BigInt(match[2]!) * 100n + BigInt(fraction.slice(0, 2));\n' +
+    '  const rounded = cents + (fraction[2]! >= "5" ? 1n : 0n);\n' +
+    '  const signed = match[1] === "-" ? -rounded : rounded;\n' +
+    '  if (\n' +
+    '    signed > BigInt(Number.MAX_SAFE_INTEGER) ||\n' +
+    '    signed < BigInt(Number.MIN_SAFE_INTEGER)\n' +
+    '  ) {\n' +
+    '    throw new PosError("Importe inválido.", "INVALID_AMOUNT");\n' +
+    '  }\n' +
+    '  return Number(signed);\n' +
+    '}\n' +
+    '\n' +
+    'function decimalMoney(cents: number): string {\n' +
+    '  return (cents / 100).toFixed(2);\n' +
+    '}\n' +
+    '\n' +
+    '/** Pure aggregation behind the daily sheet; inputs must already be scoped to one valid paid session. */\n' +
+    'export function aggregateHojaVentasDia(\n' +
+    '  lineas: Array<{ productoId: number; sku: string; tela: string; color: string; tipo: "NORMAL" | "METREADO"; unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA"; cantidad?: string; cantidadFisica?: string; cantidadRollos?: number; importe: string }>,\n' +
+    '  tickets: Array<{ subtotal: string; iva: string; total: string; facturado: boolean }>,\n' +
+    ') {\n' +
+    '  const grouped = new Map<string, { linea: typeof lineas[number]; fisica: number; rollos: number; importe: number }>();\n' +
+    '  for (const linea of lineas) {\n' +
+    '    const key = `${linea.productoId}:${linea.tipo}:${linea.color}:${linea.unidad}`;\n' +
+    '    const previous = grouped.get(key);\n' +
+    '    const fisica = Number(linea.cantidadFisica ?? linea.cantidad ?? "0");\n' +
+    '    const rollos = linea.tipo === "NORMAL" ? (linea.cantidadRollos ?? 1) : 0;\n' +
+    '    if (previous) {\n' +
+    '      previous.fisica += fisica; previous.rollos += rollos; previous.importe += money(linea.importe);\n' +
+    '    } else {\n' +
+    '      grouped.set(key, { linea, fisica, rollos, importe: money(linea.importe) });\n' +
+    '    }\n' +
+    '  }\n' +
+    '  const all = [...grouped.values()];\n' +
+    '  const section = (tipo: "NORMAL" | "METREADO") => {\n' +
+    '    const items = all.filter((item) => item.linea.tipo === tipo);\n' +
+    '    return { lineas: items.map((item) => ({ productoId: item.linea.productoId, sku: item.linea.sku, tela: item.linea.tela, color: item.linea.color, tipo, unidad: tipo === "NORMAL" ? "ROLLOS" as const : item.linea.unidad, cantidad: String(tipo === "NORMAL" ? item.rollos : item.fisica), importe: decimalMoney(item.importe) })), subtotal: decimalMoney(items.reduce((total, item) => total + item.importe, 0)) };\n' +
+    '  };\n' +
+    '  const rollos = section("NORMAL");\n' +
+    '  const metraje = section("METREADO");\n' +
+    '  return {\n' +
+    '    secciones: [\n' +
+    '      { modalidad: "ROLLOS" as const, ...rollos },\n' +
+    '      { modalidad: "METRAJE" as const, ...metraje },\n' +
+    '    ],\n' +
+    '    totalRollos: String(all.reduce((total, item) => total + item.rollos, 0)),\n' +
+    '    totalMetros: String(all.filter((item) => item.linea.unidad === "METRO").reduce((total, item) => total + item.fisica, 0)),\n' +
+    '    totalKilos: String(all.filter((item) => item.linea.unidad === "KILO").reduce((total, item) => total + item.fisica, 0)),\n' +
+    '    totalBolsas: String(all.filter((item) => item.linea.unidad === "BOLSA").reduce((total, item) => total + item.fisica, 0)),\n' +
+    '    totalPiezas: String(all.filter((item) => item.linea.unidad === "PIEZA").reduce((total, item) => total + item.fisica, 0)),\n' +
+    '    subtotal: decimalMoney(tickets.reduce((total, ticket) => total + money(ticket.subtotal), 0)),\n' +
+    '    ivaFacturado: decimalMoney(tickets.filter((ticket) => ticket.facturado).reduce((total, ticket) => total + money(ticket.iva), 0)),\n' +
+    '    totalGeneral: decimalMoney(tickets.reduce((total, ticket) => total + money(ticket.total), 0)),\n' +
+    '  };\n' +
+    '}\n' +
+    '\n' +
+    'function decimalQuantity(value: string): string {\n' +
+    '  const parsed = Number(value);\n' +
+    '  if (!Number.isFinite(parsed) || parsed <= 0) {\n' +
+    '    throw new PosError(\n' +
+    '      "Las cantidades deben ser mayores a cero.",\n' +
+    '      "INVALID_QUANTITY",\n' +
+    '    );\n' +
+    '  }\n' +
+    '  return parsed.toFixed(3);\n' +
+    '}\n' +
+    '\n' +
+    '/**\n' +
+    ' * Multiplies a canonical three-decimal quantity by integer cents and rounds\n' +
+    ' * the resulting fractional cent half-up. BigInt keeps frozen line totals\n' +
+    ' * independent of IEEE-754 binary floating point.\n' +
+    ' */\n' +
+    'export function quantityTimesMoneyCents(quantity: string, cents: number): number {\n' +
+    '  const match = /^(\\d+)\\.(\\d{3})$/.exec(quantity);\n' +
+    '  if (!match || !Number.isSafeInteger(cents) || cents < 0) {\n' +
+    '    throw new PosError("Importe inválido.", "INVALID_AMOUNT");\n' +
+    '  }\n' +
+    '  const thousandths = BigInt(match[1]!) * 1000n + BigInt(match[2]!);\n' +
+    '  const product = thousandths * BigInt(cents);\n' +
+    '  const rounded = product / 1000n + (product % 1000n * 2n >= 1000n ? 1n : 0n);\n' +
+    '  if (\n' +
+    '    rounded > BigInt(Number.MAX_SAFE_INTEGER) ||\n' +
+    '    rounded < BigInt(Number.MIN_SAFE_INTEGER)\n' +
+    '  ) {\n' +
+    '    throw new PosError("Importe inválido.", "INVALID_AMOUNT");\n' +
+    '  }\n' +
+    '  return Number(rounded);\n' +
+    '}\n' +
+    '\n' +
+    'async function reserveTicketFolio(tx: Tx): Promise<number> {\n' +
+    '  const [row] = await tx\n' +
+    '    .select()\n' +
+    '    .from(ticketFolioTable)\n' +
+    '    .where(eq(ticketFolioTable.id, FOLIO_ROW_ID))\n' +
+    '    .for("update");\n' +
+    '  const next = (row?.ultimoFolio ?? 999) + 1;\n' +
+    '  if (row) {\n' +
+    '    await tx\n' +
+    '      .update(ticketFolioTable)\n' +
+    '      .set({ ultimoFolio: next })\n' +
+    '      .where(eq(ticketFolioTable.id, FOLIO_ROW_ID));\n' +
+    '  } else {\n' +
+    '    await tx\n' +
+    '      .insert(ticketFolioTable)\n' +
+    '      .values({ id: FOLIO_ROW_ID, ultimoFolio: next });\n' +
+    '  }\n' +
+    '  return next;\n' +
+    '}\n' +
+    '\n' +
+    'export async function buildTicketDetail(\n' +
+    '  da'... 87243 more characters
+  
+      at TestContext.<anonymous> (/tmp/tarea3-baseline-OUH1P0/artifacts/api-server/src/pos-caja-final.contract.test.ts:25:22)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";\nimport type { Request } from "express";\nimport {\n  assertCreditEvidenceAccess, assertCreditEvidenceScope, claimCreditOperation,\n  insertCreditMovementE1, readCreditEvidenceInput, CreditEvidenceError,\n  type CreditEvidenceInput,\n} from "./credit-evidence";\nimport {\n  auditoriaTable,\n  autorizacionesNotaTable,\n...',
+    expected: /projectCreditLedger\(ledger\)/,
+    operator: 'match',
+    diff: 'simple'
+  }

@@ -1,0 +1,35 @@
+✖ contrato de notas de crédito deriva los tres estados sin persistirlos (480.71988ms)
+✔ consultas de detalle usan aplicaciones_credito en ambas direcciones (77.054098ms)
+✔ antigüedad toma fecha_vencimiento en calendario America/Mexico_City (17.644504ms)
+✔ reimpresión audita antes de responder y no actualiza el ledger (3.219211ms)
+✔ contrato de abono exige cuentaDestino y preview comparte fecha efectiva (569.790646ms)
+✔ estado de cuenta proyecta cuentaDestino desde el CTE del ledger (6.244472ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 5
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1095.671263
+
+✖ failing tests:
+
+test at artifacts/api-server/src/clientes-notas-credito.contract.test.ts:17:1
+✖ contrato de notas de crédito deriva los tres estados sin persistirlos (480.71988ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'PENDIENTE'
+  - 'PAGADA'
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/clientes-notas-credito.contract.test.ts:25:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'PENDIENTE',
+    expected: 'PAGADA',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

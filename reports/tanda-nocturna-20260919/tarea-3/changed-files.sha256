@@ -1,0 +1,4 @@
+40896d4724e234d0def0bdcc20770a0bb24757f1262fd8363fab4e2b447851b4  artifacts/api-server/src/clientes-notas-credito.contract.test.ts
+37a0be8d0907b5b3cb112daab5ec6a79fd8ee196ad66a993a2630125b212b129  artifacts/api-server/src/clientes-pagos.contract.test.ts
+d3c86d87e10d038980a404a3c0ead4a48adae280b82edfbad271a4154d065649  artifacts/api-server/src/tarea3-behavior-harness.mjs
+bd0af11013ce36991b4fe4bafc40762a3a59e8964c80000fc27b6468ad1714e7  artifacts/api-server/src/tarea3-behavior-harness.d.mts
