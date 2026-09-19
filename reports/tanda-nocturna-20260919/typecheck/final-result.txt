@@ -1,0 +1,19 @@
+verdict=PASS; canonical root final is equivalent to baseline with zero TypeScript diagnostics
+baseline_revision=80eaa93d4300e86d9be54492e634f88f0c0abc90
+final_revision=7643992863b4956757d18a32b92a3c0f5fe9f6ad
+root_canonical_command=pnpm run typecheck
+baseline_root_exit=0
+final_root_exit=0
+all_selected_checks_completed=yes
+package_outcomes=PASS 6 libraries, PASS library-stage, PASS 4 artifacts/scripts
+baseline_unique_diagnostics=0
+final_unique_diagnostics=0
+new_unique_diagnostics=0
+baseline_repeated_diagnostic_emissions=0
+final_repeated_diagnostic_emissions=0
+process_parser_failures=0
+comparison=root-comparison.json; equivalent=true
+archive_integrity=3593 tracked blobs checked against fresh same-revision archive after typecheck; zero mismatches
+workspace_resolution=12 internal packages inventoried; 150 links; zero internal workspace links escaped isolated copy
+execution_environment=env -i allowlist; isolated HOME; emissions confined to /tmp archive
+prohibitions_observed=no dependency install, SQL/DB access, API/runtime startup, network, application build, workflow restart, active workspace typecheck/emission, source edit, or commit

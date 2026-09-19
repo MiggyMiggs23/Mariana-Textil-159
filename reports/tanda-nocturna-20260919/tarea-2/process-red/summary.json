@@ -1,0 +1,68 @@
+{
+  "frozen": {
+    "cuentas-destino.tsx": "a35e90a2f30ec85bc80c608549b6912a1611f1e5a2b84bf2407516b4c6995c24",
+    "tiempo-real.tsx": "095c87997021ee4c566c843f6209a3bd950a093ad70cdb96e624c2f1c6c5144d",
+    "cuentas-destino-labels.observable.test.ts": "d02db74dd0057d84bad03d93ce7c31490bbf928cde3e21395de198f08e9422b8"
+  },
+  "results": [
+    {
+      "mutant": "destino-label",
+      "processExit": 1,
+      "intendedAssertion": "both the sales card and collection component",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "destino-title",
+      "processExit": 1,
+      "intendedAssertion": "missing exact Cobranza del periodo label",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "destino-component-cent",
+      "processExit": 1,
+      "intendedAssertion": "$25.18",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "destino-total-cent",
+      "processExit": 1,
+      "intendedAssertion": "$875.10",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "realtime-title",
+      "processExit": 1,
+      "intendedAssertion": "missing collection title",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "realtime-label",
+      "processExit": 1,
+      "intendedAssertion": "both the dashboard card and collection component",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "realtime-aria",
+      "processExit": 1,
+      "intendedAssertion": "missing accessible collection label",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "realtime-component-cent",
+      "processExit": 1,
+      "intendedAssertion": "$25.18",
+      "frozenFilesIntact": true
+    },
+    {
+      "mutant": "realtime-total-cent",
+      "processExit": 1,
+      "intendedAssertion": "$875.10",
+      "frozenFilesIntact": true
+    }
+  ],
+  "restored": {
+    "processExit": 0,
+    "pass": 2,
+    "fail": 0
+  }
+}

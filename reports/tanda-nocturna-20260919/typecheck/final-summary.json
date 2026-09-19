@@ -1,0 +1,78 @@
+{
+  "revision": "7643992863b4956757d18a32b92a3c0f5fe9f6ad",
+  "rootCanonicalCommand": "pnpm run typecheck",
+  "exitCode": 0,
+  "allSelectedChecksCompleted": true,
+  "selectedArtifactsAndScripts": 4,
+  "uniqueDiagnostics": 0,
+  "repeatedDiagnosticEmissions": 0,
+  "processParserFailures": 0,
+  "outcomes": [
+    {
+      "status": "PASS",
+      "package": "@workspace/scanned-code",
+      "kind": "library",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/number-format",
+      "kind": "library",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/metered-pricing",
+      "kind": "library",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/db",
+      "kind": "library",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/api-client-react",
+      "kind": "library",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/api-zod",
+      "kind": "library",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/libraries",
+      "kind": "library-stage",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/api-server",
+      "kind": "package",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/mariana-textil",
+      "kind": "package",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/mockup-sandbox",
+      "kind": "package",
+      "diagnostics": 0
+    },
+    {
+      "status": "PASS",
+      "package": "@workspace/scripts",
+      "kind": "package",
+      "diagnostics": 0
+    }
+  ]
+}

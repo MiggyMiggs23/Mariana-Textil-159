@@ -22,6 +22,28 @@ Se exige igualdad de cada hoja numérica visible, componentes y totales (contado
 
 Nueve mutantes se compilan/montan en VM y DOM independientes, sin modificar archivos servidos: cuatro en destinos (etiqueta contado vieja, título viejo, +$0.01 en abonos y +$0.01 en total) y cinco en Tiempo real (título, componente contado, aria-label, +$0.01 en componente y total). Los nueve producen **AssertionError esperado**; después se vuelve a montar la fuente restaurada y los tres escenarios de cada componente pasan. El aria-label se comprueba en la rama de carga, donde existe. `observable.log` guarda FAIL esperado y PASS restaurado: **2/2 PASS**. Son fallos de aserción capturados por el test negativo, no procesos completos con exit 1.
 
+### Suplemento T2: procesos realmente rojos, fuente congelada
+
+La auditoría de main observó correctamente que los `assert.throws` de la prueba verde anterior no satisfacían por sí solos la exigencia de ver fallar el proceso. **No se acredita retrospectivamente `observable.log` como nueve procesos rojos.** Se añadió únicamente evidencia bajo este directorio, sin modificar código ni tests del commit T2 `9c337df`.
+
+Ejecución: `node reports/tanda-nocturna-20260919/tarea-2/process-red-runner.mjs`, sobre HEAD `7643992863b4956757d18a32b92a3c0f5fe9f6ad`. Resultado: **9/9 procesos hijos con exit 1 por la aserción primaria prevista**, seguidos por proceso normal restaurado **exit 0, 2/2 PASS**. Cada hijo seleccionó uno de los dos tests comprometidos, que se ejecutó sin cambiar sus aserciones. Un preload de evidencia interceptó únicamente la lectura UTF-8 de la fuente del componente correspondiente e inyectó el defecto en memoria; el snapshot anterior y la fuente/test de disco permanecieron intactos. El guard offline canónico estuvo cargado en todos los hijos. Se usó `--test-isolation=none` dentro de cada proceso hijo ya separado para no propagar preloads a procesos adicionales.
+
+| Proceso | Defecto real inyectado | Fallo primario comprobado |
+|---|---|---|
+| destino-label | Contado cobrado → Cobros directos | Número de etiquetas exactas de tarjeta/componente incorrecto |
+| destino-title | Cobranza del periodo → Cobrado | Falta título exacto |
+| destino-component-cent | Abonos 25.17 → 25.18 | Comparación antes/después difiere en $0.01 |
+| destino-total-cent | Total 875.09 → 875.10 | Comparación antes/después difiere en $0.01 |
+| realtime-title | Título anterior | Falta título de cobranza |
+| realtime-label | Etiqueta anterior del componente | Número de etiquetas exactas incorrecto |
+| realtime-aria | Aria-label anterior | Falta nombre accesible en rama de carga |
+| realtime-component-cent | Abonos 25.17 → 25.18 | Comparación antes/después difiere en $0.01 |
+| realtime-total-cent | Total 875.09 → 875.10 | Comparación antes/después difiere en $0.01 |
+
+El runner exige exit 1, `AssertionError`, evidencia específica del defecto y nombre del test correspondiente; rechaza errores de infraestructura/red/sintaxis. No considera las impresiones de los `assert.throws` anteriores como prueba de exit 1. En los mutantes monetarios, el error uncaught procede del `deepEqual` antes/después; en los de etiquetas, de `checkLabels`/`checkAria` primarios.
+
+Evidencia nueva: `process-red-runner.mjs`, `process-red-runner.log`, `process-red/*.cjs`, nueve `process-red/*.red.log`, `process-red/restored.green.log` y `process-red/summary.json`. Los hashes de ambos componentes y del test se verifican antes y después de cada hijo, e íntegros al terminar. No se reejecutaron otras regresiones ni typecheck, no se editaron archivos productivos temporalmente, no hubo API/SQL/DB ni commit. Este suplemento pertenece al commit final de verificación de main, no cambia el commit de código T2.
+
 Regresión acotada: `cuentas-destino.contract.test.ts`, `caja-cobranza.contract.test.ts`, `cuentas-destino-financial.contract.test.ts`: **20/20 PASS**, `regression.log`.
 
 Se conservan dos intentos iniciales de preparación, **no acreditados como mutantes**: `setup-guard-rejection.log` (el guard offline bloqueó ejecutar git desde el test; se cambió a snapshot previamente capturado) y `setup-label-comparison.log` (comparar todo el texto del enlace incluía justamente la etiqueta renombrada; se separó la comparación de href e importes de la aserción de etiqueta). No se alteraron importes esperados para conseguir verde.

@@ -1,0 +1,56 @@
+commit=7643992863b4956757d18a32b92a3c0f5fe9f6ad
+tree=52bae97c4f8c555158b84674119ca6c6a0d701be
+command=/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node --require /home/runner/workspace/reports/tanda-nocturna-20260919/tarea-5/no-io.cjs --test --test-reporter=tap --test-name-pattern=^T5 permisos: artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs
+sourceRoot=/tmp/final-task5-permissions-8TBIGN
+TAP version 13
+# Subtest: T5 permisos: resolution, matrix, overrides and middleware without persisted actors
+not ok 1 - T5 permisos: resolution, matrix, overrides and middleware without persisted actors
+  ---
+  duration_ms: 89.41474
+  type: 'test'
+  location: '/home/runner/workspace/artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        modulo: 'dashboard',
+        puedeAutorizar: true,
+        puedeCrear: true,
+        puedeEditar: true,
+    +   puedeVer: false
+    -   puedeVer: true
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    modulo: 'dashboard'
+    puedeVer: true
+    puedeCrear: true
+    puedeEditar: true
+    puedeAutorizar: true
+  actual:
+    modulo: 'dashboard'
+    puedeVer: false
+    puedeCrear: true
+    puedeEditar: true
+    puedeAutorizar: true
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs:63:12)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 363.481162
+
+EXIT_CODE=1

@@ -1,0 +1,52 @@
+process exit=1
+TIEMPO REAL MUTANT title: FAIL expected AssertionError
+TIEMPO REAL MUTANT component-label: FAIL expected AssertionError
+TIEMPO REAL MUTANT aria-label: FAIL expected AssertionError
+TIEMPO REAL RESTORED PASS accessible loading label
+TIEMPO REAL MUTANT component-cent: FAIL expected AssertionError
+TIEMPO REAL MUTANT total-cent: FAIL expected AssertionError
+✖ E6 Tiempo real mounted presentation retains every component and total; isolated label/cent mutants fail (1083.316721ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3375.999508
+
+✖ failing tests:
+
+test at src/pages/caja/cuentas-destino-labels.observable.test.ts:1:10214
+✖ E6 Tiempo real mounted presentation retains every component and total; isolated label/cent mutants fail (1083.316721ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      '$1,000.00',
+      '10 tickets totales',
+      '$850.00',
+      '8 tickets cobrados',
+  ...
+      '1 salida',
+  +   '$875.10',
+  -   '$875.09',
+      '$850.01',
+      '$25.17',
+      '-$0.09',
+      '12.50 Mts.',
+      '1 pendientes > 30 min',
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:250:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+SOURCE-IN-MEMORY MUTATION realtime-total-cent

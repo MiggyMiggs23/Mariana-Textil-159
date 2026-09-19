@@ -1,0 +1,22 @@
+verification=COMPLETE
+baseline_revision=80eaa93d4300e86d9be54492e634f88f0c0abc90
+final_revision=7643992863b4956757d18a32b92a3c0f5fe9f6ad
+active_head_at_terminal_capture=7643992863b4956757d18a32b92a3c0f5fe9f6ad
+active_head_matches_final=yes
+root_exit=0
+all_selected_checks_completed=yes
+package_outcomes=PASS 6 libraries, PASS library-stage, PASS 4 artifacts/scripts
+unique_diagnostics=0
+repeated_diagnostic_emissions=0
+process_parser_failures=0
+comparison_equivalent=yes
+new_unique_diagnostics=0
+archive_tracked_content_unchanged_after_typecheck=yes
+isolation=git archive under /tmp/night5-root-typecheck-7643992863b4-y7kZcA; internal workspace links remain inside copy; external installed dependencies shared
+active_workspace_emissions=none
+operations_not_performed=dependency install; SQL/DB access; API/runtime startup; network; application build; workflow restart; source edit; commit
+candidate_source_edits_during_verification=none observed; HEAD remained exact final revision
+non_report_status_at_terminal_capture_begin
+ M .agents/agent_assets_metadata.toml
+?? attached_assets/Pasted-Cuando-termines-la-validaci-n-PostgreSQL-de-A-C-y-guard_1789790546219.txt
+non_report_status_at_terminal_capture_end

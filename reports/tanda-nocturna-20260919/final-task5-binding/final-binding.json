@@ -1,0 +1,94 @@
+{
+  "commit": "7643992863b4956757d18a32b92a3c0f5fe9f6ad",
+  "tree": "52bae97c4f8c555158b84674119ca6c6a0d701be",
+  "node": "v24.13.0",
+  "historicalCommit": "173b7cf1373c7fb568209453721dbf510c5b1d38",
+  "historicalTree": "1735437cb9604914685cc0d7dcea821d0e4a993a",
+  "inputs": {
+    "artifacts/api-server/src/lib/permisos.ts": {
+      "frozenSha256": "4ee2c76c5287cab5aa3a4d2ff0647fea04e3cca40aa346b4a8835e3d7a38d99b",
+      "historicalSha256": "1401b3f3ba09b9126598a5d0a9332dc22e7abfdb7f43f73fee816f7521888b27",
+      "unchanged": false
+    },
+    "artifacts/api-server/src/lib/sensitive-data.ts": {
+      "frozenSha256": "19e55f86034d972e3456bb792c8a884ca99d7b69524256df98d5d76a5959367f",
+      "historicalSha256": "19e55f86034d972e3456bb792c8a884ca99d7b69524256df98d5d76a5959367f",
+      "unchanged": true
+    },
+    "artifacts/api-server/src/lib/tarea4-gates.ts": {
+      "frozenSha256": "2ad2a45d69a68da330c622dbb5458a8456a0e562c98e99d92bbe339be6cf235d",
+      "historicalSha256": "2ad2a45d69a68da330c622dbb5458a8456a0e562c98e99d92bbe339be6cf235d",
+      "unchanged": true
+    },
+    "artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs": {
+      "frozenSha256": "6dba068335141d2b40013e67ab69fce95c4e71add86d32a41d247feddf715ef6",
+      "historicalSha256": "6dba068335141d2b40013e67ab69fce95c4e71add86d32a41d247feddf715ef6",
+      "unchanged": true
+    },
+    "pnpm-lock.yaml": {
+      "frozenSha256": "a7a54d756eb12b9f33e6bec8d70872026de72bee9567aa640a021324a0fcbc6d",
+      "historicalSha256": "a7a54d756eb12b9f33e6bec8d70872026de72bee9567aa640a021324a0fcbc6d",
+      "unchanged": true
+    },
+    "reports/tanda-nocturna-20260919/tarea-5/no-io.cjs": {
+      "frozenSha256": "34840ffbf1a887cb1497de13349f5c2882cdd15351ed66f13fec25e363908e0d",
+      "historicalSha256": "34840ffbf1a887cb1497de13349f5c2882cdd15351ed66f13fec25e363908e0d",
+      "unchanged": true
+    },
+    "reports/tanda-nocturna-20260919/tarea-5/run.mjs": {
+      "frozenSha256": "29e995cc08e44b9da29e6065bf4b3e128f25c80512b91ded60c74fa892954835",
+      "historicalSha256": "29e995cc08e44b9da29e6065bf4b3e128f25c80512b91ded60c74fa892954835",
+      "unchanged": true
+    }
+  },
+  "scope": "Only permissions-deny-admin and focused permission-test restoration. All 28 complete integrations remain blocked; three a-partial extractions are not entire green suites.",
+  "historicalUnchangedMutants": [
+    "terminal-leaks-cost",
+    "supervisor-leaks-finance"
+  ],
+  "historicalEvidence": {
+    "reports/tanda-nocturna-20260919/tarea-5/execution-identity.json": "925e461fb70c31ee4b2a27e284b4b579993b5f67d95af26e1e8a8ad2b7e821b4",
+    "reports/tanda-nocturna-20260919/tarea-5/inventory.json": "031a7a050fb2f17a8fc744edf5a9ea90ee74beab5598434633de7122f7f2a668",
+    "reports/tanda-nocturna-20260919/tarea-5/mutation-results.json": "8f713b810e51c0896880efde6fa170bf03d8f1505188c8cfffeba751ab493bd4",
+    "reports/tanda-nocturna-20260919/tarea-5/red-terminal-leaks-cost.log": "147d6496e0122091e4c93d907260145d5fbbfcb33e4bfbf6c039496a27e2ad4b",
+    "reports/tanda-nocturna-20260919/tarea-5/restored-terminal-leaks-cost.log": "203cf1c90baf413308b449aa6ddd8bd18a587bc34af2f015e2555c579475a748",
+    "reports/tanda-nocturna-20260919/tarea-5/red-supervisor-leaks-finance.log": "a0285ab2d18b63750eae4b7dbedb31313bff9cd18acfbcc1dc66008bc2a41d68",
+    "reports/tanda-nocturna-20260919/tarea-5/restored-supervisor-leaks-finance.log": "22caa327f862298a522c5b6515dde3fa09351b0383405f27cdf2c7a75e1f6895"
+  },
+  "mutant": {
+    "name": "permissions-deny-admin",
+    "path": "artifacts/api-server/src/lib/permisos.ts",
+    "from": "puedeVer: true,",
+    "to": "puedeVer: false,",
+    "sha256": "dbe753b66222f57e0329e75cbe54e009b02a53b3f4cecfc376fd0ea0d4d401c2"
+  },
+  "red": {
+    "command": [
+      "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+      "--require",
+      "/home/runner/workspace/reports/tanda-nocturna-20260919/tarea-5/no-io.cjs",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^T5 permisos:",
+      "artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs"
+    ],
+    "exit": 1,
+    "log": "red-permissions-deny-admin.log",
+    "logSha256": "4120afbb598874d1663fb7d74807e74526bcfc33c332df07da6a00f26cdce30f"
+  },
+  "restored": {
+    "command": [
+      "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+      "--require",
+      "/home/runner/workspace/reports/tanda-nocturna-20260919/tarea-5/no-io.cjs",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=^T5 permisos:",
+      "artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs"
+    ],
+    "exit": 0,
+    "log": "restored-permissions.log",
+    "logSha256": "730537d2a321c47082aca51daa57518fe69e51bf9fb4ccfa3f4387795edb0a28"
+  },
+  "result": "PASS: targeted semantic mutant exit 1; focused restore exit 0; active sources and historical evidence unchanged."
+}

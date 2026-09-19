@@ -1,0 +1,36 @@
+process exit=1
+MUTANT label: FAIL expected AssertionError (missing exact Contado cobrado label)
+MUTANT title: FAIL expected AssertionError (missing exact Cobranza del periodo label)
+MUTANT one-cent component: FAIL expected AssertionError (rendered numeric leaves differ)
+MUTANT one-cent total: FAIL expected AssertionError (rendered numeric leaves differ)
+✖ E6 mounted labels preserve every numeric component, total and filter at the cent; isolated mutants fail (1859.292827ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9945.99397
+
+✖ failing tests:
+
+test at src/pages/caja/cuentas-destino-labels.observable.test.ts:1:7500
+✖ E6 mounted labels preserve every numeric component, total and filter at the cent; isolated mutants fail (1859.292827ms)
+  AssertionError [ERR_ASSERTION]: both the sales card and collection component need exact Contado cobrado
+  
+  0 !== 2
+  
+      at checkLabels (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:169:12)
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:194:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+SOURCE-IN-MEMORY MUTATION destino-label

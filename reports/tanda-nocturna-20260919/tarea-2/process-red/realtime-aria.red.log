@@ -1,0 +1,32 @@
+process exit=1
+TIEMPO REAL MUTANT title: FAIL expected AssertionError
+TIEMPO REAL MUTANT component-label: FAIL expected AssertionError
+TIEMPO REAL MUTANT aria-label: FAIL expected AssertionError
+✖ E6 Tiempo real mounted presentation retains every component and total; isolated label/cent mutants fail (1065.628333ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3543.300587
+
+✖ failing tests:
+
+test at src/pages/caja/cuentas-destino-labels.observable.test.ts:1:10214
+✖ E6 Tiempo real mounted presentation retains every component and total; isolated label/cent mutants fail (1065.628333ms)
+  AssertionError [ERR_ASSERTION]: missing accessible collection label
+      at checkAria (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:229:12)
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:235:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+SOURCE-IN-MEMORY MUTATION realtime-aria

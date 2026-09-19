@@ -1,0 +1,10 @@
+destino-label: actual child RED exit=1, intended assertion confirmed
+destino-title: actual child RED exit=1, intended assertion confirmed
+destino-component-cent: actual child RED exit=1, intended assertion confirmed
+destino-total-cent: actual child RED exit=1, intended assertion confirmed
+realtime-title: actual child RED exit=1, intended assertion confirmed
+realtime-label: actual child RED exit=1, intended assertion confirmed
+realtime-aria: actual child RED exit=1, intended assertion confirmed
+realtime-component-cent: actual child RED exit=1, intended assertion confirmed
+realtime-total-cent: actual child RED exit=1, intended assertion confirmed
+RESTORED actual child GREEN exit=0, 2/2; all committed files remain hash-identical

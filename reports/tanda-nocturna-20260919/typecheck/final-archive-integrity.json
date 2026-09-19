@@ -1,0 +1,7 @@
+{
+  "revision": "7643992863b4956757d18a32b92a3c0f5fe9f6ad",
+  "method": "post-typecheck isolated copy compared byte-for-byte with a second fresh git archive of the same exact revision; this accounts for configured archive/LFS filters",
+  "trackedBlobsChecked": 3593,
+  "mismatches": [],
+  "trackedArchiveContentUnchangedAfterTypecheck": true
+}

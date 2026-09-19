@@ -1,0 +1,671 @@
+{
+  "source": "/home/runner/workspace",
+  "target": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9",
+  "packageFiles": [
+    "package.json",
+    "scripts/package.json",
+    "artifacts/api-server/package.json",
+    "artifacts/mariana-textil/package.json",
+    "artifacts/mockup-sandbox/package.json",
+    "lib/api-client-react/package.json",
+    "lib/api-spec/package.json",
+    "lib/api-zod/package.json",
+    "lib/db/package.json",
+    "lib/metered-pricing/package.json",
+    "lib/number-format/package.json",
+    "lib/scanned-code/package.json"
+  ],
+  "internalPackages": [
+    {
+      "name": "workspace",
+      "directory": "."
+    },
+    {
+      "name": "@workspace/scripts",
+      "directory": "scripts"
+    },
+    {
+      "name": "@workspace/api-server",
+      "directory": "artifacts/api-server"
+    },
+    {
+      "name": "@workspace/mariana-textil",
+      "directory": "artifacts/mariana-textil"
+    },
+    {
+      "name": "@workspace/mockup-sandbox",
+      "directory": "artifacts/mockup-sandbox"
+    },
+    {
+      "name": "@workspace/api-client-react",
+      "directory": "lib/api-client-react"
+    },
+    {
+      "name": "@workspace/api-spec",
+      "directory": "lib/api-spec"
+    },
+    {
+      "name": "@workspace/api-zod",
+      "directory": "lib/api-zod"
+    },
+    {
+      "name": "@workspace/db",
+      "directory": "lib/db"
+    },
+    {
+      "name": "@workspace/metered-pricing",
+      "directory": "lib/metered-pricing"
+    },
+    {
+      "name": "@workspace/number-format",
+      "directory": "lib/number-format"
+    },
+    {
+      "name": "@workspace/scanned-code",
+      "directory": "lib/scanned-code"
+    }
+  ],
+  "links": [
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/node_modules/@replit/connectors-sdk",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@replit+connectors-sdk@0.4.1/node_modules/@replit/connectors-sdk"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/node_modules/exceljs",
+      "to": "/home/runner/workspace/node_modules/.pnpm/exceljs@4.4.0/node_modules/exceljs"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/node_modules/prettier",
+      "to": "/home/runner/workspace/node_modules/.pnpm/prettier@3.9.6/node_modules/prettier"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/node_modules/typescript",
+      "to": "/home/runner/workspace/node_modules/.pnpm/typescript@5.9.3/node_modules/typescript"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/scripts/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/scripts/node_modules/@types/pg",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+pg@8.20.0/node_modules/@types/pg"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/scripts/node_modules/pg",
+      "to": "/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/scripts/node_modules/tsx",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@google-cloud/storage",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@google-cloud+storage@8.0.1/node_modules/@google-cloud/storage"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@types/cookie-parser",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+cookie-parser@1.4.10_@types+express@5.0.6/node_modules/@types/cookie-parser"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@types/cors",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+cors@2.8.19/node_modules/@types/cors"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@types/express",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+express@5.0.6/node_modules/@types/express"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@types/pdfkit",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+pdfkit@0.17.6/node_modules/@types/pdfkit"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/api-zod",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/db",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/metered-pricing",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/metered-pricing"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/number-format",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/number-format"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/scanned-code",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/scanned-code"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/cookie-parser",
+      "to": "/home/runner/workspace/node_modules/.pnpm/cookie-parser@1.4.7/node_modules/cookie-parser"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/cors",
+      "to": "/home/runner/workspace/node_modules/.pnpm/cors@2.8.6/node_modules/cors"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/drizzle-orm",
+      "to": "/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/drizzle-orm"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/esbuild",
+      "to": "/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/esbuild-plugin-pino",
+      "to": "/home/runner/workspace/node_modules/.pnpm/esbuild-plugin-pino@2.3.3_esbuild@0.27.3_pino-pretty@13.1.3_pino@9.14.0_thread-stream@3.1.0/node_modules/esbuild-plugin-pino"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/exceljs",
+      "to": "/home/runner/workspace/node_modules/.pnpm/exceljs@4.4.0/node_modules/exceljs"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/express",
+      "to": "/home/runner/workspace/node_modules/.pnpm/express@5.2.1/node_modules/express"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/google-auth-library",
+      "to": "/home/runner/workspace/node_modules/.pnpm/google-auth-library@11.0.2/node_modules/google-auth-library"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/pdfkit",
+      "to": "/home/runner/workspace/node_modules/.pnpm/pdfkit@0.20.2/node_modules/pdfkit"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/pino",
+      "to": "/home/runner/workspace/node_modules/.pnpm/pino@9.14.0/node_modules/pino"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/pino-http",
+      "to": "/home/runner/workspace/node_modules/.pnpm/pino-http@10.5.0/node_modules/pino-http"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/pino-pretty",
+      "to": "/home/runner/workspace/node_modules/.pnpm/pino-pretty@13.1.3/node_modules/pino-pretty"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/thread-stream",
+      "to": "/home/runner/workspace/node_modules/.pnpm/thread-stream@3.1.0/node_modules/thread-stream"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/tsx",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/zod",
+      "to": "/home/runner/workspace/node_modules/.pnpm/zod@3.25.76/node_modules/zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/api-zod",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/db",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/metered-pricing",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/metered-pricing"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/number-format",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/number-format"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/api-server/node_modules/@workspace/scanned-code",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/scanned-code"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@hookform/resolvers",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@hookform+resolvers@3.10.0_react-hook-form@7.83.0_react@19.1.0_/node_modules/@hookform/resolvers"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-accordion",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-accordion@1.2.20_@types+react-dom@19.2.3_@types+react@19.2.17__@types+r_6f43c3344a8f52bc850742fe65537110/node_modules/@radix-ui/react-accordion"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-alert-dialog",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-alert-dialog@1.1.23_@types+react-dom@19.2.3_@types+react@19.2.17__@type_b2a082eab22b913f47799d4fd02fbc5a/node_modules/@radix-ui/react-alert-dialog"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-aspect-ratio",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-aspect-ratio@1.1.15_@types+react-dom@19.2.3_@types+react@19.2.17__@type_037615025815ad12c9278846d8f0bec9/node_modules/@radix-ui/react-aspect-ratio"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-avatar",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-avatar@1.2.6_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react_1ae6a05e19d5983559d36d2d262f521b/node_modules/@radix-ui/react-avatar"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-checkbox",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-checkbox@1.3.11_@types+react-dom@19.2.3_@types+react@19.2.17__@types+re_0ec2b23b581cf4a10ebaaef694db572a/node_modules/@radix-ui/react-checkbox"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-collapsible",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-collapsible@1.1.20_@types+react-dom@19.2.3_@types+react@19.2.17__@types_72edc584deedfa66eccba6841b680d2b/node_modules/@radix-ui/react-collapsible"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-context-menu",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-context-menu@2.3.7_@types+react-dom@19.2.3_@types+react@19.2.17__@types_ed879ad6fd38bfcf08f4d5d37074002c/node_modules/@radix-ui/react-context-menu"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-dialog",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-dialog@1.1.23_@types+react-dom@19.2.3_@types+react@19.2.17__@types+reac_fad726798af65dd226f835ef87516560/node_modules/@radix-ui/react-dialog"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-dropdown-menu",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-dropdown-menu@2.1.24_@types+react-dom@19.2.3_@types+react@19.2.17__@typ_695c47f903bcad1dab2088d64a98506d/node_modules/@radix-ui/react-dropdown-menu"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-hover-card",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-hover-card@1.1.23_@types+react-dom@19.2.3_@types+react@19.2.17__@types+_af47b9690b0fc2f413b1932475436913/node_modules/@radix-ui/react-hover-card"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-label",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-label@2.1.15_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react_5595eb24c23197262e856ea22e75cb27/node_modules/@radix-ui/react-label"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-menubar",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-menubar@1.1.24_@types+react-dom@19.2.3_@types+react@19.2.17__@types+rea_9e1580f42d5686ba64beebefcc5d7929/node_modules/@radix-ui/react-menubar"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-navigation-menu",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-navigation-menu@1.2.22_@types+react-dom@19.2.3_@types+react@19.2.17__@t_6350945a899d049ea6282c8d5ccae011/node_modules/@radix-ui/react-navigation-menu"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-popover",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-popover@1.1.23_@types+react-dom@19.2.3_@types+react@19.2.17__@types+rea_fdd9cdfbc920e6af5d1e06d4c7a5bfbb/node_modules/@radix-ui/react-popover"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-progress",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-progress@1.1.16_@types+react-dom@19.2.3_@types+react@19.2.17__@types+re_7c7b94215f91b405facf9124748ff448/node_modules/@radix-ui/react-progress"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-radio-group",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-radio-group@1.4.7_@types+react-dom@19.2.3_@types+react@19.2.17__@types+_df8ce8fe6120689e60b46004418b39fd/node_modules/@radix-ui/react-radio-group"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-scroll-area",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-scroll-area@1.2.18_@types+react-dom@19.2.3_@types+react@19.2.17__@types_933e170dfdd4955d977f3eb73f1f5a5f/node_modules/@radix-ui/react-scroll-area"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-select",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-select@2.3.7_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react_f5b3091c59bf8f8e4c38e87739cdccd4/node_modules/@radix-ui/react-select"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-separator",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-separator@1.1.15_@types+react-dom@19.2.3_@types+react@19.2.17__@types+r_e919b835fa19365e7fbce9bc3cbd083c/node_modules/@radix-ui/react-separator"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-slider",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-slider@1.4.7_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react_db0708bd8bb7bbf92815bf504a76a575/node_modules/@radix-ui/react-slider"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-slot",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-slot@1.3.3_@types+react@19.2.17_react@19.1.0/node_modules/@radix-ui/react-slot"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-switch",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-switch@1.3.7_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react_1622eaa5af28617697b409ae1fae4e07/node_modules/@radix-ui/react-switch"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-tabs",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-tabs@1.1.21_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react@_675f43dde6af8c4f4afe1bbb07e2062e/node_modules/@radix-ui/react-tabs"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-toast",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-toast@1.2.23_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react_b9a39d7975990edbe4816925bd6823b5/node_modules/@radix-ui/react-toast"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-toggle",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-toggle@1.1.18_@types+react-dom@19.2.3_@types+react@19.2.17__@types+reac_f230e6cd64e76a648ff98ae297d8f01c/node_modules/@radix-ui/react-toggle"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-toggle-group",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-toggle-group@1.1.19_@types+react-dom@19.2.3_@types+react@19.2.17__@type_f412ed98c2bd3059f4ef64050408889b/node_modules/@radix-ui/react-toggle-group"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@radix-ui/react-tooltip",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@radix-ui+react-tooltip@1.2.16_@types+react-dom@19.2.3_@types+react@19.2.17__@types+rea_d47a258fc4932574aabb9344ff1e0ca0/node_modules/@radix-ui/react-tooltip"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@replit/vite-plugin-cartographer",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@replit+vite-plugin-cartographer@0.5.21/node_modules/@replit/vite-plugin-cartographer"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@replit/vite-plugin-dev-banner",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@replit+vite-plugin-dev-banner@0.1.2/node_modules/@replit/vite-plugin-dev-banner"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@replit/vite-plugin-runtime-error-modal",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@replit+vite-plugin-runtime-error-modal@0.0.6/node_modules/@replit/vite-plugin-runtime-error-modal"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@tailwindcss/typography",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@tailwindcss+typography@0.5.20_tailwindcss@4.3.3/node_modules/@tailwindcss/typography"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@tailwindcss/vite",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@tailwindcss+vite@4.3.3_vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0_/node_modules/@tailwindcss/vite"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@tanstack/react-query",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@tanstack+react-query@5.101.4_react@19.1.0/node_modules/@tanstack/react-query"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@testing-library/dom",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@testing-library+dom@10.4.2/node_modules/@testing-library/dom"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@testing-library/react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@testing-library+react@16.3.3_@testing-library+dom@10.4.2_@types+react-dom@19.2.3_@type_7ac5e8c48a42124105eae9754c9efcba/node_modules/@testing-library/react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@types/react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+react@19.2.17/node_modules/@types/react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@types/react-dom",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+react-dom@19.2.3_@types+react@19.2.17/node_modules/@types/react-dom"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@types/react-test-renderer",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+react-test-renderer@19.3.0/node_modules/@types/react-test-renderer"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@vitejs/plugin-react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@vitejs+plugin-react@5.2.0_vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0_/node_modules/@vitejs/plugin-react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/api-client-react",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-client-react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/api-zod",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/metered-pricing",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/metered-pricing"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/number-format",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/number-format"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/scanned-code",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/scanned-code"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@zxing/browser",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@zxing+browser@0.2.1_@zxing+library@0.23.0/node_modules/@zxing/browser"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@zxing/library",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@zxing+library@0.23.0/node_modules/@zxing/library"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/class-variance-authority",
+      "to": "/home/runner/workspace/node_modules/.pnpm/class-variance-authority@0.7.1/node_modules/class-variance-authority"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/clsx",
+      "to": "/home/runner/workspace/node_modules/.pnpm/clsx@2.1.1/node_modules/clsx"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/cmdk",
+      "to": "/home/runner/workspace/node_modules/.pnpm/cmdk@1.1.1_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react@19.2.17_react-dom_7b7b075eeeeb2f74bf6dbd0bfd8c563e/node_modules/cmdk"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/date-fns",
+      "to": "/home/runner/workspace/node_modules/.pnpm/date-fns@3.6.0/node_modules/date-fns"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/embla-carousel-react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/embla-carousel-react@8.6.0_react@19.1.0/node_modules/embla-carousel-react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/framer-motion",
+      "to": "/home/runner/workspace/node_modules/.pnpm/framer-motion@12.42.2_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/framer-motion"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/input-otp",
+      "to": "/home/runner/workspace/node_modules/.pnpm/input-otp@1.4.2_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/input-otp"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/jsdom",
+      "to": "/home/runner/workspace/node_modules/.pnpm/jsdom@30.0.1_@noble+hashes@1.8.0/node_modules/jsdom"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/lucide-react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/lucide-react@0.545.0_react@19.1.0/node_modules/lucide-react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/next-themes",
+      "to": "/home/runner/workspace/node_modules/.pnpm/next-themes@0.4.6_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/next-themes"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/qrcode.react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/qrcode.react@4.2.0_react@19.1.0/node_modules/qrcode.react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react@19.1.0/node_modules/react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/react-day-picker",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react-day-picker@9.14.0_react@19.1.0/node_modules/react-day-picker"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/react-dom",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/react-hook-form",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react-hook-form@7.83.0_react@19.1.0/node_modules/react-hook-form"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/react-icons",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react-icons@5.7.0_react@19.1.0/node_modules/react-icons"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/react-resizable-panels",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react-resizable-panels@2.1.9_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/react-resizable-panels"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/react-test-renderer",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react-test-renderer@19.3.0_react@19.1.0/node_modules/react-test-renderer"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/recharts",
+      "to": "/home/runner/workspace/node_modules/.pnpm/recharts@2.15.4_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/recharts"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/sonner",
+      "to": "/home/runner/workspace/node_modules/.pnpm/sonner@2.0.7_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/sonner"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/tailwind-merge",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tailwind-merge@3.6.0/node_modules/tailwind-merge"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/tailwindcss",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tailwindcss@4.3.3/node_modules/tailwindcss"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/tailwindcss-animate",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tailwindcss-animate@1.0.7_tailwindcss@4.3.3/node_modules/tailwindcss-animate"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/tw-animate-css",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tw-animate-css@1.4.0/node_modules/tw-animate-css"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/vaul",
+      "to": "/home/runner/workspace/node_modules/.pnpm/vaul@1.1.2_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react@19.2.17_react-dom_31485595f935ef5f32d553be8031bb13/node_modules/vaul"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/vite",
+      "to": "/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/vitest",
+      "to": "/home/runner/workspace/node_modules/.pnpm/vitest@5.0.1_@types+node@25.9.5_jsdom@30.0.1_@noble+hashes@1.8.0__vite@7.3.6_@types+nod_b8cae80b36d9a9eda52dc2afb38dc9e3/node_modules/vitest"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/wouter",
+      "to": "/home/runner/workspace/node_modules/.pnpm/wouter@3.10.0_react@19.1.0/node_modules/wouter"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/zod",
+      "to": "/home/runner/workspace/node_modules/.pnpm/zod@3.25.76/node_modules/zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/api-client-react",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-client-react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/api-zod",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/metered-pricing",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/metered-pricing"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/number-format",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/number-format"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mariana-textil/node_modules/@workspace/scanned-code",
+      "to": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/scanned-code"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/@tailwindcss/vite",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@tailwindcss+vite@4.3.3_vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0_/node_modules/@tailwindcss/vite"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/@types/react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+react@19.2.17/node_modules/@types/react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/@types/react-dom",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+react-dom@19.2.3_@types+react@19.2.17/node_modules/@types/react-dom"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/@vitejs/plugin-react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@vitejs+plugin-react@5.2.0_vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0_/node_modules/@vitejs/plugin-react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/class-variance-authority",
+      "to": "/home/runner/workspace/node_modules/.pnpm/class-variance-authority@0.7.1/node_modules/class-variance-authority"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/clsx",
+      "to": "/home/runner/workspace/node_modules/.pnpm/clsx@2.1.1/node_modules/clsx"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/react",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react@19.1.0/node_modules/react"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/react-dom",
+      "to": "/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/tailwind-merge",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tailwind-merge@3.6.0/node_modules/tailwind-merge"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/tailwindcss",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tailwindcss@4.3.3/node_modules/tailwindcss"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/tw-animate-css",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tw-animate-css@1.4.0/node_modules/tw-animate-css"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/artifacts/mockup-sandbox/node_modules/vite",
+      "to": "/home/runner/workspace/node_modules/.pnpm/vite@7.3.6_@types+node@25.9.5_jiti@2.7.0_lightningcss@1.32.0_tsx@4.23.1_yaml@2.9.0/node_modules/vite"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-client-react/node_modules/@tanstack/react-query",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@tanstack+react-query@5.101.4_react@19.1.0/node_modules/@tanstack/react-query"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-spec/node_modules/orval",
+      "to": "/home/runner/workspace/node_modules/.pnpm/orval@8.23.0_prettier@3.9.6_typescript@5.9.3/node_modules/orval"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/api-zod/node_modules/zod",
+      "to": "/home/runner/workspace/node_modules/.pnpm/zod@3.25.76/node_modules/zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db/node_modules/@types/pg",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+pg@8.20.0/node_modules/@types/pg"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db/node_modules/drizzle-kit",
+      "to": "/home/runner/workspace/node_modules/.pnpm/drizzle-kit@0.31.10/node_modules/drizzle-kit"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db/node_modules/drizzle-orm",
+      "to": "/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/drizzle-orm"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db/node_modules/drizzle-zod",
+      "to": "/home/runner/workspace/node_modules/.pnpm/drizzle-zod@0.8.3_drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0__zod@3.25.76/node_modules/drizzle-zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db/node_modules/pg",
+      "to": "/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/db/node_modules/zod",
+      "to": "/home/runner/workspace/node_modules/.pnpm/zod@3.25.76/node_modules/zod"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/metered-pricing/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/metered-pricing/node_modules/tsx",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/number-format/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/number-format/node_modules/tsx",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/scanned-code/node_modules/@types/node",
+      "to": "/home/runner/workspace/node_modules/.pnpm/@types+node@25.9.5/node_modules/@types/node"
+    },
+    {
+      "from": "/tmp/night5-root-typecheck-80eaa93d4300-GBC6X9/lib/scanned-code/node_modules/tsx",
+      "to": "/home/runner/workspace/node_modules/.pnpm/tsx@4.23.1/node_modules/tsx"
+    }
+  ],
+  "invalidInternalLinks": []
+}
