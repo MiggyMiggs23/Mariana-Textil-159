@@ -1,0 +1,32 @@
+{"name":"initdb","args":["-D","/tmp/e2-ac-pg16-mC82Uy/data","-U","e2_owner","--auth-local=trust","--auth-host=reject","--no-locale","--encoding=UTF8"]}
+{"status":0,"signal":null,"stdout":"The files belonging to this database system will be owned by user \"runner\".\nThis user must also own the server process.\n\nThe database cluster will be initialized with locale \"C\".\nThe default text search configuration will be set to \"english\".\n\nData page checksums are disabled.\n\ncreating directory /tmp/e2-ac-pg16-mC82Uy/data ... ok\ncreating subdirectories ... ok\nselecting dynamic shared memory implementation ... posix\nselecting default max_connections ... 100\nselecting default shared_buffers ... 128MB\nselecting default time zone ... UTC\ncreating configuration files ... ok\nrunning bootstrap script ... ok\nperforming post-bootstrap initialization ... ok\nsyncing data to disk ... ok\n\nSuccess. You can now start the database server using:\n\n    /nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin/pg_ctl -D /tmp/e2-ac-pg16-mC82Uy/data -l logfile start\n\n","stderr":""}
+{"name":"pg_ctl","args":["-D","/tmp/e2-ac-pg16-mC82Uy/data","-l","/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/run-1789790527925/postgres.log","-o","-k /tmp/e2-ac-pg16-mC82Uy/socket -p 56439 -c listen_addresses='' -c unix_socket_permissions=0700 -c max_connections=10","-w","-t","15","start"]}
+{"status":0,"signal":null,"stdout":"waiting for server to start.... done\nserver started\n","stderr":""}
+{"name":"psql","args":["-X","-v","ON_ERROR_STOP=1","-h","/tmp/e2-ac-pg16-mC82Uy/socket","-p","56439","-U","e2_owner","-d","postgres","-c","CREATE DATABASE e2_ac_synthetic TEMPLATE template0"]}
+{"status":0,"signal":null,"stdout":"CREATE DATABASE\n","stderr":""}
+{"identity":"before-first-fixture-DDL","db":"e2_ac_synthetic","role":"e2_owner","data":"/tmp/e2-ac-pg16-mC82Uy/data","port":"56439","socket":"/tmp/e2-ac-pg16-mC82Uy/socket","listen":"","address":null}
+{"name":"psql","args":["-X","-v","ON_ERROR_STOP=1","-h","/tmp/e2-ac-pg16-mC82Uy/socket","-p","56439","-U","e2_owner","-d","e2_ac_synthetic","-f","/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/fixture.sql"]}
+{"status":0,"signal":null,"stdout":"CREATE TABLE\nINSERT 0 2\nCREATE TABLE\nCREATE INDEX\nCREATE TABLE\nCREATE TABLE\nINSERT 0 1\n","stderr":""}
+{"name":"psql","args":["-X","-v","ON_ERROR_STOP=1","-h","/tmp/e2-ac-pg16-mC82Uy/socket","-p","56439","-U","e2_owner","-d","e2_ac_synthetic","-f","/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/candidate/reports/e1-guardas-temporales-2026-09-18/sql/01-install-cash.sql"]}
+{"status":0,"signal":null,"stdout":"CREATE FUNCTION\nCREATE TRIGGER\n","stderr":""}
+{"name":"psql","args":["-X","-v","ON_ERROR_STOP=1","-h","/tmp/e2-ac-pg16-mC82Uy/socket","-p","56439","-U","e2_owner","-d","e2_ac_synthetic","-f","/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/candidate/reports/e1-guardas-temporales-2026-09-18/sql/02-install-pending.sql"]}
+{"status":0,"signal":null,"stdout":"CREATE FUNCTION\nCREATE TRIGGER\n","stderr":""}
+{"name":"psql","args":["-X","-v","ON_ERROR_STOP=1","-h","/tmp/e2-ac-pg16-mC82Uy/socket","-p","56439","-U","e2_owner","-d","e2_ac_synthetic","-f","/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/candidate/reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql"]}
+{"status":3,"signal":null,"stdout":"BEGIN\nCREATE TABLE\nCREATE TABLE\nCREATE FUNCTION\nCREATE TRIGGER\nCREATE TRIGGER\n","stderr":"psql:/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/candidate/reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql:150: ERROR:  syntax error at end of input\nLINE 39:         CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'dir...\n                                                           ^\n"}
+AssertionError [ERR_ASSERTION]: psql: psql:/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/candidate/reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql:150: ERROR:  syntax error at end of input
+LINE 39:         CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'dir...
+                                                           ^
+
+
+3 !== 0
+
+    at command (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/run.mjs:59:28)
+    at psql (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/run.mjs:63:45)
+    at file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/run.mjs:100:5
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+{"name":"psql","args":["-X","-v","ON_ERROR_STOP=1","-h","/tmp/e2-ac-pg16-mC82Uy/socket","-p","56439","-U","e2_owner","-d","postgres","-c","DROP DATABASE IF EXISTS e2_ac_synthetic WITH (FORCE)"]}
+{"status":0,"signal":null,"stdout":"DROP DATABASE\n","stderr":""}
+{"name":"pg_ctl","args":["-D","/tmp/e2-ac-pg16-mC82Uy/data","-m","immediate","-w","-t","15","stop"]}
+{"status":0,"signal":null,"stdout":"waiting for server to shut down.... done\nserver stopped\n","stderr":""}
+{"name":"pg_ctl","args":["-D","/tmp/e2-ac-pg16-mC82Uy/data","status"]}
+{"status":3,"signal":null,"stdout":"pg_ctl: no server running\n","stderr":""}

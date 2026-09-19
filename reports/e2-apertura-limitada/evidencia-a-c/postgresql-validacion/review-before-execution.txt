@@ -1,0 +1,86 @@
+STATUS: PREPARED, NOT EXECUTED. No PostgreSQL process or SQL started.
+Exact candidate: f8818255bcb11784c422cc559c3273e1f2e25aa9.
+Authorization was read before writes. Original authorization/state/SQL untouched.
+
+Review commands (do not start PostgreSQL):
+  node --check reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/run.mjs
+  node --check reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/cases.mjs
+  node reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/run.mjs
+Last command verifies all exports byte-for-byte against git show of exact commit,
+prints SHA-256 manifest, and exits without creating a cluster.
+
+AFTER MAIN REVIEW ONLY:
+  node reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/run.mjs --reviewed-isolation-run
+No workflow, API, build, bundle, frontend, flags, activation plan, or real DB used.
+No database URL or secret is read. No installs. Explicit local pg dependency.
+Clean allowlisted child environment; process environment scrubbed before pg import.
+Every SQL command/client sets Unix host, port, role and database explicitly.
+initdb/pg_ctl receive explicit data directory and clean PG connection environment.
+PostgreSQL16 absolute binary paths; private mkdtemp root and socket mode 0700;
+listen_addresses=''; template0 only in this newly initialized private cluster.
+ONE synthetic DB: e2_ac_synthetic.
+Identity is logged/asserted before first fixture DDL and immediately before
+whole public-schema fixture reset: database, current_user, data_directory,
+port, private Unix socket, empty listen_addresses, NULL inet_server_addr.
+Closed empty-revert fixture runs first; entire synthetic public schema is then
+reset inside the same new private database. This is not an API capture
+activation or removal of individual real closure triggers.
+No source DB dump, clone, copy, API connection, or E1/E10 cluster inspection.
+
+MATRIX
+1. Byte-preserved install, exact CLOSED guard, empty revert, reinstall in initial fixture.
+2. Pristine exact03 psql rendering; raw log and pg_get_constraintdef inventory;
+   failure retained and independent SQL cases continue without patching candidate.
+3. CLOSED E1C01/E1P01 boundary probes; missing closure refuses revert.
+4. Ordinary UNUSED/PARTIAL/FULL; directed FULL; same-transaction proof.
+5. Missing finalization/proof fail COMMIT; source/classification negatives.
+6. Induced error after movement/application/FULL finalization and after UNUSED
+   positive proof (assert present before error); total row counts unchanged.
+7. Rolled-back UUID retry succeeds; committed UUID replay rejects;
+   duplicate finalizer not idempotent and expected to reject.
+8. SET CONSTRAINTS ALL IMMEDIATE then late application rejected by BEFORE guard.
+9. UPDATE/DELETE/TRUNCATE evidence/finalization immutable.
+10. Later transaction allocation accepted at A+C boundary.
+11. Retained typed proof, absent source, old source, wrong customer.
+12. Ordinary/retained source before SAVEPOINT control vs source in child transaction;
+    valid-contract acceptance expectation so subtransaction false rejection is FAIL.
+13. Deferred vs IMMEDIATE reversal observational probe; rolled back; strictly
+    A+C-only, not a claim of exploitability through production E1.
+14. Two writer sessions and observer: same UUID held by writer A, writer B
+    confirmed blocked by pg_blocking_pids with 4s barrier deadline, release A
+    via COMMIT/ROLLBACK, assert B terminal outcome and exactly one persisted
+    movement/finalization/proof. 10s server statement / 12s client query timeouts.
+15. Producer-versus-revert ACCESS EXCLUSIVE barrier; producer commit then
+    missing-closure refusal; proof still present. Exact guard installed at end,
+    nonempty revert refuses with no data loss.
+16. Finally: explicitly drop the newly created DB, stop own cluster, verify
+    pg_ctl status, postmaster PID absent, socket absent, remove private root,
+    verify root absent. Cleanup failure is terminal FAIL, never inferred PASS.
+    PID discovery repeated in finally if pg_ctl timed out after partial start.
+    All pg queries bounded; psql statement/lock timeout 10s/8s, command 30s.
+
+LIMITATIONS / CLAIM BOUNDARY
+Fixture is a deliberately partial synthetic dependency schema. It preserves
+A+C-referenced column types and relevant keys/FKs/checks, not full E1. Names,
+types, relationships derive from exported candidate pos/aplicaciones/clientes.
+Omitted: real operation/actor/session/location dependencies, enum domains,
+complete customer schema, permanent E1 application locks/immutability and
+source reversal validators. Reviewed candidate clientes-schema.ts:215-303
+explicitly locks customer/source/target, enforces available amount and reversal
+compatibility. Our matrix does NOT claim these validations or full production
+capture/refund. Positive synthetic tables never install/remove/replace real
+closure guards to admit capture. Closure is independently installed and tested.
+No named real API closure is bypassed. No E1 activation/removal plan executed.
+Concurrency tests prove only A+C plus synthetic unique-key behavior, not FIFO
+serialization or full upstream application integrity.
+TypeScript preflight NOT imported: pure-import dependency closure not yet
+certified, and partial fixture lacks E1 catalog. Exact03 SQL runs unchanged.
+Privilege/role-hardening coverage is NOT claimed (owner SQL contract only).
+No prior-version concurrency baseline or production vulnerability claim.
+
+EVIDENCE
+Each future invocation writes a unique run-* directory here, outside /tmp:
+manifest.json, commands.log, postgres.log, exact03.log, catalog-rendering.json,
+cases-progress.json, terminal.json including exit code and cleanup evidence.
+Unexpected failures retain original messages/codes and exact input hashes.
+Prepared syntax checks and export verification passed; no runtime result claimed.

@@ -1,0 +1,95 @@
+2026-09-19 04:02:11.100 UTC [10580] LOG:  starting PostgreSQL 16.10 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2026-09-19 04:02:11.103 UTC [10580] LOG:  listening on Unix socket "/tmp/e2-ac-pg16-mC82Uy/socket/.s.PGSQL.56439"
+2026-09-19 04:02:11.110 UTC [10583] LOG:  database system was shut down at 2026-09-19 04:02:09 UTC
+2026-09-19 04:02:11.123 UTC [10580] LOG:  database system is ready to accept connections
+2026-09-19 04:02:11.599 UTC [10597] ERROR:  syntax error at end of input at character 1481
+2026-09-19 04:02:11.599 UTC [10597] STATEMENT:  CREATE FUNCTION public.e2_validate_abono_finalization()
+	RETURNS trigger
+	LANGUAGE plpgsql
+	SET search_path TO 'pg_catalog', 'public'
+	AS $function$
+	DECLARE
+	  source_xid text;
+	  source_client integer;
+	  source_amount numeric;
+	  source_producer text;
+	  source_key uuid;
+	  allocation_count integer;
+	  allocation_sum bigint;
+	BEGIN
+	  SELECT m.xmin::text, m.cliente_id, -m.importe,
+	         m.operacion_productor, m.operacion_clave
+	    INTO source_xid, source_client, source_amount, source_producer, source_key
+	    FROM public.movimientos_credito AS m
+	   WHERE m.id = NEW.abono_id
+	     AND m.tipo = 'ABONO'
+	     AND m.naturaleza = 'INGRESO_FISICO'
+	     AND m.forma_pago = 'EFECTIVO'
+	     AND m.cuenta_destino = 'CAJA_FISICA'
+	     AND m.sitio_origen_id IS NOT NULL
+	     AND m.sesion_caja_id IS NOT NULL
+	     AND m.operacion_productor IN ('ABONO_ORDINARIO','ABONO_DIRIGIDO')
+	   FOR SHARE;
+	
+	  IF source_xid IS NULL
+	     OR source_xid::bigint <> (txid_current() % 4294967296)
+	     OR source_client IS DISTINCT FROM NEW.cliente_id
+	     OR source_amount IS DISTINCT FROM NEW.importe
+	     OR source_producer IS DISTINCT FROM NEW.operacion_productor
+	     OR source_key IS DISTINCT FROM NEW.operacion_clave THEN
+	    RAISE EXCEPTION 'E2: finalization requires its new physical ABONO in this transaction';
+	  END IF;
+	  IF NEW.evaluacion->>'contractRevision' IS DISTINCT FROM NEW.contrato_revision
+	     OR NEW.evaluacion->>'projector' IS DISTINCT FROM
+	        CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'directedApplication'
+	          ELSE 'projectCreditLedger' END
+	     OR (source_producer = 'ABONO_DIRIGIDO'
+	         AND (NEW.resultado IS DISTINCT FROM 'FULL'
+	              OR NEW.aplicado IS DISTINCT FROM source_amount))
+	     OR (NEW.evaluacion->>'receiptCents')::bigint IS DISTINCT FROM round(NEW.importe * 100)::bigint
+	     OR (NEW.evaluacion->>'appliedCents')::bigint IS DISTINCT FROM round(NEW.aplicado * 100)::bigint
+	     OR jsonb_typeof(NEW.evaluacion->'allocations') IS DISTINCT FROM 'array' THEN
+	    RAISE EXCEPTION 'E2: finalization evaluation contract mismatch';
+	  END IF;
+	  SELECT count(*), COALESCE(sum((item->>'appliedCents')::bigint), 0)
+	    INTO allocation_count, allocation_sum
+	    FROM jsonb_array_elements(NEW.evaluacion->'allocations') AS item
+	   WHERE jsonb_typeof(item) = 'object'
+	     AND jsonb_typeof(item->'targetId') = 'number'
+	     AND jsonb_typeof(item->'appliedCents') = 'number'
+	     AND (item->>'targetId')::numeric > 0
+	     AND (item->>'targetId')::numeric = trunc((item->>'targetId')::numeric)
+	     AND (item->>'appliedCents')::numeric > 0
+	     AND (item->>'appliedCents')::numeric = trunc((item->>'appliedCents')::numeric);
+	  IF allocation_count <> jsonb_array_length(NEW.evaluacion->'allocations')
+	     OR allocation_sum IS DISTINCT FROM round(NEW.aplicado * 100)::bigint THEN
+	    RAISE EXCEPTION 'E2: finalization allocation summary mismatch';
+	  END IF;
+	  -- Attest persisted destinations/amounts, never recompute FIFO in SQL.
+	  IF EXISTS (
+	    WITH persisted AS (
+	      SELECT venta_movimiento_id AS target, sum(importe * 100) AS cents
+	      FROM public.aplicaciones_credito WHERE abono_movimiento_id = NEW.abono_id
+	      GROUP BY venta_movimiento_id
+	    ), declared AS (
+	      SELECT (item->>'targetId')::integer AS target,
+	             sum((item->>'appliedCents')::numeric) AS cents
+	      FROM jsonb_array_elements(NEW.evaluacion->'allocations') AS item
+	      GROUP BY (item->>'targetId')::integer
+	    )
+	    (SELECT * FROM persisted EXCEPT SELECT * FROM declared)
+	    UNION ALL
+	    (SELECT * FROM declared EXCEPT SELECT * FROM persisted)
+	  ) OR EXISTS (
+	    SELECT 1 FROM public.movimientos_credito
+	    WHERE movimiento_origen_id = NEW.abono_id AND tipo = 'REVERSO'
+	  ) THEN
+	    RAISE EXCEPTION 'E2: finalization does not match persisted applications';
+	  END IF;
+	  RETURN NEW;
+	END;
+	$function$;
+2026-09-19 04:02:11.613 UTC [10581] LOG:  checkpoint starting: immediate force wait
+2026-09-19 04:02:11.637 UTC [10581] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.010 s, total=0.024 s; sync files=5, longest=0.003 s, average=0.002 s; distance=4474 kB, estimate=4474 kB; lsn=0/19508A8, redo lsn=0/1950870
+2026-09-19 04:02:11.650 UTC [10580] LOG:  received immediate shutdown request
+2026-09-19 04:02:11.657 UTC [10580] LOG:  database system is shut down

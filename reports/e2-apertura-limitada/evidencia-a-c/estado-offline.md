@@ -1,5 +1,17 @@
 # Evidencia A+C — cierre de preparación offline
 
+## Resultado PostgreSQL posterior — candidato rechazado
+
+Con la autorización textual guardada en `autorizacion-propietario-validacion-postgresql.txt`, se intentó instalar la revisión exacta `f8818255bcb11784c422cc559c3273e1f2e25aa9` en **una única base nueva, local y desechable**, sin conexiones a la API ni clones E1/E10.
+
+**FAIL de instalación en PostgreSQL 16.10:** `syntax error at end of input` al crear `e2_validate_abono_finalization`, en la expresión `CASE` dentro de `IF`. No se modificó el candidato. Reversión y casos de commit diferido, rollback inducido, reintentos y concurrencia quedaron **BLOQUEADOS**, no aprobados. El resultado offline anterior no acredita compilación PostgreSQL.
+
+La base fue destruida; proceso, socket y directorio temporal ausentes. API/bundle y permisos siguen intactos. Informe: [postgresql-validacion/resultado.md](postgresql-validacion/resultado.md).
+
+El pendiente 5 fue intentado bajo autorización y **no está acreditado**. Corregir el candidato y validar una revisión nueva es trabajo posterior, no ejecutado bajo esta autorización acotada a `f8818255`. La apertura sigue sin autorización.
+
+## Antecedente: preparación offline completada
+
 Estado: **pendientes offline 1–4 completados; candidato inactivo, no aplicado y sin autorización de apertura**.
 
 Revisión exacta de fuentes comprobada: `f8818255bcb11784c422cc559c3273e1f2e25aa9`.
@@ -44,9 +56,9 @@ No hubo acceso a ninguna base, SQL ejecutado, pruebas PostgreSQL, reinicio de AP
 Bundle en ejecución conservado: `3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98`.
 El candidato de fuentes **no es** el bundle servido.
 
-## Pendiente con autorización separada
+## Pendientes tras el intento PostgreSQL fallido
 
-5. PostgreSQL aislado: instalación/reversión, renderizado real del catálogo, restricciones diferidas/inmediatas, subtransacciones, rollback, privilegios, replay, locks/concurrencia y aplicaciones futuras legítimas.
+5. Corregir el defecto de instalación en una revisión posterior y acordar su validación aislada. La autorización de `f8818255` sí se ejerció, pero no acredita instalación/reversión, catálogo, restricciones diferidas/inmediatas, subtransacciones, rollback, privilegios, replay, locks/concurrencia ni aplicaciones futuras legítimas.
 6. Decisión de apertura posterior, independiente incluso si esas pruebas pasan. **Captura y devolución continúan apagadas.**
 
 No hay trabajo auxiliar en ejecución.

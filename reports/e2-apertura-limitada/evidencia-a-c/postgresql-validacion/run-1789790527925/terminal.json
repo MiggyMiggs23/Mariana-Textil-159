@@ -1,0 +1,16 @@
+{
+  "revision": "f8818255bcb11784c422cc559c3273e1f2e25aa9",
+  "status": "FAIL",
+  "exitCode": 1,
+  "started": true,
+  "backendPid": 10580,
+  "cleanupError": null,
+  "rootRemoved": true,
+  "results": [
+    {
+      "case": "harness",
+      "status": "FAIL",
+      "error": "psql: psql:/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/candidate/reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql:150: ERROR:  syntax error at end of input\nLINE 39:         CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'dir...\n                                                           ^\n\n\n3 !== 0\n"
+    }
+  ]
+}

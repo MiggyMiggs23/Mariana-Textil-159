@@ -1,0 +1,69 @@
+TERMINAL RESULT: FAIL — exact candidate cannot install on PostgreSQL 16.10.
+Candidate: f8818255bcb11784c422cc559c3273e1f2e25aa9
+Attempt: run-1789790527925
+
+Executed only after main isolation approval, with saved owner authorization.
+Exactly one new database, e2_ac_synthetic, created from template0 in a newly
+initdb-created private cluster. No existing database connections or clones.
+Identity was asserted/logged before first fixture DDL: private data_directory
+and Unix socket, role e2_owner, port 56439, empty listen_addresses, NULL
+inet_server_addr. Synthetic dependencies and exact E1 CLOSED guard fragments
+installed successfully.
+
+FIRST BLOCKING DEFECT (exact SQL, not fixture mismatch)
+psql executing unchanged 01-install-evidence-prepared.sql exited 3:
+  line 150: ERROR: syntax error at end of input
+  LINE 39: CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'dir...
+This is inside e2_validate_abono_finalization, around the unparenthesized
+CASE expression in its PL/pgSQL IF condition (source lines 101-117).
+PostgreSQL rejected function creation before the installation transaction
+could COMMIT. No candidate bytes were modified or workarounds installed.
+Install SHA-256:
+dd99574f022b4d325a73238bf0d1e348e015003d2dad3ebc9de00ede8b094cbd
+
+FULL MATRIX DISPOSITION
+PASS: exact export/byte checks; private initdb creation; database creation;
+identity boundary; synthetic dependency DDL; exact CLOSED guard DDL.
+FAIL: pristine exact candidate evidence installation (server parser error).
+BLOCKED BY INSTALLATION, NOT PASSED:
+- empty revert/reinstall and duplicate-install atomicity;
+- pristine exact03 catalog rendering (installation did not reach COMMIT;
+  residual catalog objects were not queried after failure);
+- ordinary UNUSED/PARTIAL/FULL, directed FULL and positive source assertions;
+- deferred missing-finalization/proof and immediate-before-source rejection;
+- invalid source/classification; rollback with all orphan counts;
+- rollback after UNUSED proof and retained proof;
+- retry/replay and duplicate-finalizer non-idempotence;
+- immediate late-application guard and immutable evidence;
+- later legitimate applications and typed retained proof cases;
+- SAVEPOINT source-before/source-after and released-child variants;
+- characterized deferred/IMMEDIATE reversal observations;
+- deterministic same-UUID commit/rollback barriers and key retry;
+- producer-versus-revert lock barrier and CLOSED nonempty refusal.
+The prepared independent cases cannot execute honestly without the required
+function/table installation. No substitution or candidate patch was made.
+No conclusions about those blocked behaviors can be drawn from this attempt.
+
+TEARDOWN: VERIFIED
+DROP DATABASE e2_ac_synthetic WITH (FORCE): exit 0.
+pg_ctl stop: exit 0.
+pg_ctl status: exit 3, no server running.
+Harness checked postmaster PID 10580 absent and Unix socket absent.
+Private root /tmp/e2-ac-pg16-mC82Uy removed and absence verified.
+terminal.json: status FAIL, exitCode 1, cleanupError null, rootRemoved true.
+The outer inspection shell ended 0 because it subsequently listed the run
+directory; that is NOT the harness result. terminal.json records failure.
+
+Retained evidence: manifest.json (candidate, authorization and harness hashes),
+commands.log (identity, exact commands, outputs and exit statuses),
+postgres.log and terminal.json in run-1789790527925.
+
+BOUNDARY
+Partial synthetic fixture, not full E1 production capture/refund validation.
+Permanent E1 application locks/immutability and reversal validators omitted,
+as documented in review-before-execution.txt. TS preflight not imported.
+Producer/revert prepared lock test checks missing-closure refusal after a real
+producer lock, not a CLOSED emptiness race. Reversal prepared assertions only
+characterize A+C-only outcomes, not a production vulnerability.
+No activation plan, gate removal, API reload, workflow, build, flags, frontend
+or bundle changes. Capture and refund remain unopened.
