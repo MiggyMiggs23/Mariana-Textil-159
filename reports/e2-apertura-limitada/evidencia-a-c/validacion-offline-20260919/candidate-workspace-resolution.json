@@ -1,0 +1,55 @@
+{
+  "invalidExternalLinks": [],
+  "workspace": [
+    {
+      "package": "@workspace/api-server",
+      "dependency": "@workspace/api-zod",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/api-zod"
+    },
+    {
+      "package": "@workspace/api-server",
+      "dependency": "@workspace/db",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/db"
+    },
+    {
+      "package": "@workspace/api-server",
+      "dependency": "@workspace/metered-pricing",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/metered-pricing"
+    },
+    {
+      "package": "@workspace/api-server",
+      "dependency": "@workspace/number-format",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/number-format"
+    },
+    {
+      "package": "@workspace/api-server",
+      "dependency": "@workspace/scanned-code",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/scanned-code"
+    },
+    {
+      "package": "@workspace/mariana-textil",
+      "dependency": "@workspace/api-client-react",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/api-client-react"
+    },
+    {
+      "package": "@workspace/mariana-textil",
+      "dependency": "@workspace/api-zod",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/api-zod"
+    },
+    {
+      "package": "@workspace/mariana-textil",
+      "dependency": "@workspace/metered-pricing",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/metered-pricing"
+    },
+    {
+      "package": "@workspace/mariana-textil",
+      "dependency": "@workspace/number-format",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/number-format"
+    },
+    {
+      "package": "@workspace/mariana-textil",
+      "dependency": "@workspace/scanned-code",
+      "actual": "/tmp/e2-ac-candidate-f8818255-isPPzC/lib/scanned-code"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+source_revision=f8818255bcb11784c422cc559c3273e1f2e25aa9
+observed_utc=2026-09-19T03:47:37Z
+3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98  artifacts/api-server/dist/index.mjs
+9a87b47b52d3776b10d760bdab6b9f5e71158f75ef71921ec8adbb3e0585de9f  reports/e2-apertura-limitada/reconstruccion/runtime-preflight.mjs
+    PID                  STARTED COMMAND
+    176 Sat Sep 19 02:34:33 2026 /nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node --enable-source-maps artifacts/api-server/dist/index.mjs
+
+Closed source gates:
+artifacts/api-server/src/lib/credit-evidence-contract.ts:export const CREDIT_CASH_INCOME_CAPTURE_ENABLED = false;
+artifacts/api-server/src/lib/credit-evidence-contract.ts:export const CREDIT_CASH_RETURN_CAPTURE_ENABLED = false;
+artifacts/api-server/src/lib/credit-evidence-contract.ts:export const CREDIT_PENDING_RECEIPTS_ENABLED = false;
+artifacts/api-server/src/lib/credit-abono-evidence.ts:export const CREDIT_ABONO_REFUND_EVIDENCE_ENABLED = false;
+artifacts/api-server/src/lib/credit-refund-contract.ts:export const CREDIT_REFUNDS_ENABLED = false;
+
+Source differences since freeze (must be empty):

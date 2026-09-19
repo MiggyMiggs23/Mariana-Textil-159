@@ -1,0 +1,22 @@
+{
+  "revision": "f8818255bcb11784c422cc559c3273e1f2e25aa9",
+  "files": 3458,
+  "mismatches": [],
+  "lfsMaterializations": [
+    {
+      "file": "reports/captura-rollos-2026-09-18/comparacion-antes-despues.html",
+      "pointerBlob": "34917d3455a0539a6e7546cd529f90db7a78f26a",
+      "sha256": "5b28c625167510743f298711efa0c95c0596b926ccf123ab2853244d68da2fa9",
+      "bytes": 90051968,
+      "verified": true
+    },
+    {
+      "file": "reports/e10-aislado-2026-09-18/informe-final.html",
+      "pointerBlob": "5a49c5fe40d77b98226f700e31ed796201926d04",
+      "sha256": "ce43aa85a73517fd77534fd8cce9d1fa7dfd6e0bb70b880e0c4dbb5b936341a1",
+      "bytes": 74211328,
+      "verified": true
+    }
+  ],
+  "note": "All non-LFS archived tracked files match exact git blobs. Two report HTML files are locally materialized LFS objects; content SHA256 and size match committed pointer. No source mismatch."
+}

@@ -1,0 +1,55 @@
+[
+  {
+    "file": "artifacts/api-server/package.json",
+    "name": "@workspace/api-server",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  {
+    "file": "artifacts/mariana-textil/package.json",
+    "name": "@workspace/mariana-textil",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  {
+    "file": "artifacts/mockup-sandbox/package.json",
+    "name": "@workspace/mockup-sandbox",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  {
+    "file": "lib/api-client-react/package.json",
+    "name": "@workspace/api-client-react"
+  },
+  {
+    "file": "lib/api-spec/package.json",
+    "name": "@workspace/api-spec"
+  },
+  {
+    "file": "lib/api-zod/package.json",
+    "name": "@workspace/api-zod"
+  },
+  {
+    "file": "lib/db/package.json",
+    "name": "@workspace/db"
+  },
+  {
+    "file": "lib/metered-pricing/package.json",
+    "name": "@workspace/metered-pricing"
+  },
+  {
+    "file": "lib/number-format/package.json",
+    "name": "@workspace/number-format"
+  },
+  {
+    "file": "lib/scanned-code/package.json",
+    "name": "@workspace/scanned-code"
+  },
+  {
+    "file": "package.json",
+    "name": "workspace",
+    "typecheck": "node ./scripts/src/typecheck-runner.mjs"
+  },
+  {
+    "file": "scripts/package.json",
+    "name": "@workspace/scripts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  }
+]

@@ -1,0 +1,337 @@
+{
+  "baselineRevision": "80eaa93d4300e86d9be54492e634f88f0c0abc90",
+  "candidateRevision": "f8818255bcb11784c422cc559c3273e1f2e25aa9",
+  "equivalent": true,
+  "baseline": {
+    "exitCode": 0,
+    "results": [
+      {
+        "name": "@workspace/scanned-code",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/number-format",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/metered-pricing",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/db",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/api-client-react",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/api-zod",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/libraries",
+        "kind": "library-stage",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/api-server",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/mariana-textil",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/mockup-sandbox",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/scripts",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      }
+    ],
+    "processes": [
+      {
+        "command": "pnpm",
+        "args": [
+          "list",
+          "-r",
+          "--depth",
+          "-1",
+          "--json"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "tsc",
+        "args": [
+          "--build",
+          "--pretty",
+          "false",
+          "--stopBuildOnErrors",
+          "false"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      }
+    ]
+  },
+  "candidate": {
+    "exitCode": 0,
+    "results": [
+      {
+        "name": "@workspace/scanned-code",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/number-format",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/metered-pricing",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/db",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/api-client-react",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/api-zod",
+        "kind": "library",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/libraries",
+        "kind": "library-stage",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/api-server",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/mariana-textil",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/mockup-sandbox",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      },
+      {
+        "name": "@workspace/scripts",
+        "kind": "package",
+        "status": "PASS",
+        "attempted": true,
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": []
+      }
+    ],
+    "processes": [
+      {
+        "command": "pnpm",
+        "args": [
+          "list",
+          "-r",
+          "--depth",
+          "-1",
+          "--json"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "tsc",
+        "args": [
+          "--build",
+          "--pretty",
+          "false",
+          "--stopBuildOnErrors",
+          "false"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      },
+      {
+        "command": "pnpm",
+        "args": [
+          "run",
+          "typecheck"
+        ],
+        "exitCode": 0,
+        "signal": null
+      }
+    ]
+  }
+}

@@ -1,53 +1,52 @@
-# Evidencia A+C — checkpoint offline
+# Evidencia A+C — cierre de preparación offline
 
-Estado: **implementación candidata construida en fuente, inactiva y no aplicada**.
+Estado: **pendientes offline 1–4 completados; candidato inactivo, no aplicado y sin autorización de apertura**.
 
-La recuperación prioritaria de la API se detuvo por el hash distinto del bundle reconstruido. Este trabajo no tocó `dist`, workflows, configuración, frontend servido ni ninguna base; no ejecutó DDL/DML, build, servidor o clon.
+Revisión exacta de fuentes comprobada: `f8818255bcb11784c422cc559c3273e1f2e25aa9`.
+Baseline: `80eaa93d4300e86d9be54492e634f88f0c0abc90`.
+Informe completo: [cierre-offline-20260919.md](cierre-offline-20260919.md).
 
-## Implementado
+## Completado
 
-- Nuevo servicio `credit-abono-evidence.ts`, con permiso independiente `CREDIT_ABONO_REFUND_EVIDENCE_ENABLED=false`.
-- Clasificación `UNUSED | PARTIAL | FULL` a partir de las asignaciones que entrega el proyector canónico; no implementa otro FIFO.
-- Productor ordinario: finaliza después de proyectar y persistir las aplicaciones actuales.
-- Productor dirigido: finaliza después de su aplicación dirigida; no se marca falsamente `UNUSED`.
-- Transferencias y otros medios no cubiertos conservan su flujo y no exigen prueba de efectivo.
-- El hook anterior que podía atestar indiscriminadamente un ABONO ahora rechaza explícitamente ese uso.
-- El consumidor de devolución exige prueba positiva unida a una finalización `UNUSED` y conserva sus comprobaciones históricas.
-- Arranque: ingreso y evidencia deben permanecer ambos cerrados o abrirse juntos; cuando evidencia se habilite, el preflight READ ONLY exige tablas, columnas, cinco triggers y cinco funciones exactas, incluidos cuerpos por SHA-256.
-- SQL preparado:
-  - finalización inmutable para cada nuevo ABONO físico cubierto;
-  - prueba positiva solo para `UNUSED`;
-  - validación de origen E1 y misma transacción;
-  - constraint trigger diferido que impide confirmar un abono sin finalización o un `UNUSED` sin prueba;
-  - ninguna reconstrucción/backfill;
-  - reversión de esquema rechazada si ya existe evidencia. El rollback operativo futuro debe cerrar permisos y conservar las tablas.
+1. **Revisión independiente y correcciones.** Compatibilidad del inventario E1/A+C; reversión bloqueada antes de comprobar vacío; contraste de evidencia contra aplicaciones persistidas; protección de aplicaciones posteriores a finalización en la transacción de captura, incluso después de `SET CONSTRAINTS ... IMMEDIATE`; preflight de constraints, columnas y deferrabilidad; corrección de `pg_catalog.coalesce`; prueba positiva diferenciada por origen. Reconfirmación independiente final cerrada para los casos identificados.
+2. **SQL preparado reconciliado y digests coordinados.** A+C es el único propietario de `evidencia_no_aplicada_e2`. Conserva ABONO y COBRO_RETENIDO como pruebas disjuntas; no elimina la preparación del segundo origen. La devolución mantiene cierre independiente. Contrato de activación V3 coordinado con cuatro artefactos y siete cuerpos de función; ninguna ejecución.
+3. **Negativos ampliados.** Productores ordinario/dirigido montados en aislamiento, orden, clasificación, procedencia, prueba ausente y deriva de cada objeto de preflight. Se conservan códigos terminales, mensajes de aserción, hashes y restauraciones verdes. El mutante SQL del orden transaccional es expresamente léxico, no una prueba PostgreSQL.
+4. **Typecheck raíz y comparación tras congelar fuentes.** Baseline y candidato en copias temporales separadas con enlaces internos propios: ambos exit 0, cero diagnósticos únicos o repetidos y cero fallos de procesos/parsers. Cuatro paquetes de artefactos/scripts y seis bibliotecas referenciadas completados.
 
-El SQL E2 de devolución preparado con anterioridad queda pendiente de reconciliar: no debe aplicarse junto con este candidato porque también intentaba crear `evidencia_no_aplicada_e2`. La devolución continúa apagada.
+## Contrato de evidencia
 
-## Verificación realizada
+- Permisos de ingreso, evidencia y devolución siguen cerrados.
+- Ordinario: clasifica las asignaciones del proyector canónico después de persistirlas.
+- Dirigido: documenta su aplicación explícita íntegra ya escrita, exige `FULL` y usa `directedApplication`; no finge una proyección FIFO posterior ni cambia el FIFO existente.
+- PostgreSQL preparado comprueba origen, importe y asignaciones persistidas; la prueba ABONO positiva exige `UNUSED`. El consumidor conserva aplicaciones, reversos e historia como defensas adicionales.
+- Retenido: conserva prueba tipada del origen físico nuevo, en su misma transacción, con attester no conectado a ningún productor activo.
+- Sin backfill. Evidencia inmutable. Reversión destructiva solo antes de capturar y con tablas vacías; después corresponde cerrar permisos y conservar evidencia.
 
-- Suite enfocada offline: **40/40 PASS**, incluyendo evidencia, devolución existente, modos y preflight.
-- Typecheck del paquete API: **exit 0**, cero diagnósticos.
-- Comprobaciones estructurales SQL offline: **PASS**.
-- `git diff --check`: PASS.
+## Verificación offline
 
-No hubo prueba PostgreSQL. Por ello aún no se acreditan sintaxis/semántica real de triggers diferidos, atomicidad, locks o concurrencia. Tampoco se hizo en este checkpoint el typecheck raíz completo, comparación del manifiesto baseline ni revisión independiente final.
+| Comprobación | Resultado |
+|---|---|
+| Suite ampliada | 428/428 PASS, incluidos 421 casos de deriva de catálogo |
+| Mutantes | 24/24 rechazados con exit 1, aserción y mensaje esperado |
+| Restauraciones | 24/24 verdes, cada una 428/428 |
+| Evidencia/devolución enfocadas | 29/29 PASS |
+| Preflight/modos de arranque | 14/14 PASS |
+| Dos verificadores estructurales SQL | PASS; solo inspección de texto |
+| Typecheck raíz baseline y candidato | Ambos exit 0; sin diagnósticos nuevos ni anteriores |
+| `git diff --check` | PASS |
 
-## Hashes del checkpoint
+Estos conteos corresponden a suites distintas y pueden solaparse; no se suman como cobertura única.
+No se repitieron los antiguos manifiestos completos con navegador/HTTP.
 
-- Servicio: `d5d551050574c5a17fc4dfe224bd346da72c8c5e091e8a7448e406eb850e7948`.
-- SQL instalación: `2a89d1a7a01ea61105fd3f2f9190c562a1bf0ef7523354373eea27553899badf`.
-- SQL reversión previa a captura: `86d23ff75d2d871dad85cd48363d108ef32041801a8d02d89fefbe9158c7bae1`.
-- Tests de servicio: `d4253003a770a034e384032e399a307fb26750acc20ef6c8611c88dc6d32bd34`.
-- Tests estructurales SQL: `9a3422f461010e717d3ea357d218c71df8863552b1fde69ff7b9051ecfec6ebc`.
+## Límites conservados
 
-## Pendiente antes de considerar terminada la preparación
+No hubo acceso a ninguna base, SQL ejecutado, pruebas PostgreSQL, reinicio de API, cambio de workflow, build de aplicación ni sustitución del bundle.
+Bundle en ejecución conservado: `3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98`.
+El candidato de fuentes **no es** el bundle servido.
 
-1. Revisión independiente completa de código/SQL y corrección de hallazgos.
-2. Reconciliar el SQL futuro de devolución y el contrato/digest general de activación.
-3. Mutantes/negativos adicionales: productor omitido, clasificación alterada, orden antes de FIFO, prueba faltante y preflight con cada objeto drifted.
-4. Typecheck raíz y comparación de baseline tras congelar todas las fuentes.
-5. Solo con autorización separada: pruebas PostgreSQL aisladas de instalación/reversión, commit diferido, rollback de fallos, replay y concurrencia.
-6. La apertura continúa bloqueada y requerirá una decisión/autorización posterior aun cuando todo lo anterior pase.
+## Pendiente con autorización separada
 
-No hay tareas hijas activas de este trabajo.
+5. PostgreSQL aislado: instalación/reversión, renderizado real del catálogo, restricciones diferidas/inmediatas, subtransacciones, rollback, privilegios, replay, locks/concurrencia y aplicaciones futuras legítimas.
+6. Decisión de apertura posterior, independiente incluso si esas pruebas pasan. **Captura y devolución continúan apagadas.**
+
+No hay trabajo auxiliar en ejecución.

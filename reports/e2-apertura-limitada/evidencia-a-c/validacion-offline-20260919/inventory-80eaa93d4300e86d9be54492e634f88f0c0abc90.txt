@@ -1,0 +1,12 @@
+artifacts/api-server/package.json
+artifacts/mariana-textil/package.json
+artifacts/mockup-sandbox/package.json
+lib/api-client-react/package.json
+lib/api-spec/package.json
+lib/api-zod/package.json
+lib/db/package.json
+lib/metered-pricing/package.json
+lib/number-format/package.json
+lib/scanned-code/package.json
+package.json
+scripts/package.json
