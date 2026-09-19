@@ -1,0 +1,32 @@
+[
+  {
+    "name": "permissions-deny-admin",
+    "path": "artifacts/api-server/src/lib/permisos.ts",
+    "from": "puedeVer: true,",
+    "to": "puedeVer: false,",
+    "test": "T5 permisos:",
+    "mutantSha256": "865f7ee94c8172ca14d9c022340bbb7fdee8d99f7faa03b851f89030105c8f92",
+    "redExit": 1,
+    "restoredExit": 0
+  },
+  {
+    "name": "terminal-leaks-cost",
+    "path": "artifacts/api-server/src/lib/sensitive-data.ts",
+    "from": "return omit(value) as T;",
+    "to": "return value;",
+    "test": "T5 productos-cache:",
+    "mutantSha256": "9d7ca34c3cd3492cec2ec60fe7a2d1656ea332eb8b05a4d1ff73e98df0e2721b",
+    "redExit": 1,
+    "restoredExit": 0
+  },
+  {
+    "name": "supervisor-leaks-finance",
+    "path": "artifacts/api-server/src/lib/sensitive-data.ts",
+    "from": "return omit(value, true) as T;",
+    "to": "return value;",
+    "test": "T5 role-access-matrix:",
+    "mutantSha256": "9bb1da39c5f3f5c6f36e7ea16f1fcdc6e56976c56b26e70484739e17d15d5337",
+    "redExit": 1,
+    "restoredExit": 0
+  }
+]

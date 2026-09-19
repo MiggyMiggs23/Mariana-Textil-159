@@ -1,0 +1,15 @@
+{
+  "commit": "173b7cf1373c7fb568209453721dbf510c5b1d38",
+  "node": "v24.13.0",
+  "typescript": "5.9.3",
+  "hashes": {
+    "artifacts/api-server/src/lib/permisos.ts": "1401b3f3ba09b9126598a5d0a9332dc22e7abfdb7f43f73fee816f7521888b27",
+    "artifacts/api-server/src/lib/sensitive-data.ts": "19e55f86034d972e3456bb792c8a884ca99d7b69524256df98d5d76a5959367f",
+    "artifacts/api-server/src/lib/tarea4-gates.ts": "2ad2a45d69a68da330c622dbb5458a8456a0e562c98e99d92bbe339be6cf235d",
+    "artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs": "6dba068335141d2b40013e67ab69fce95c4e71add86d32a41d247feddf715ef6",
+    "pnpm-lock.yaml": "a7a54d756eb12b9f33e6bec8d70872026de72bee9567aa640a021324a0fcbc6d",
+    "reports/tanda-nocturna-20260919/tarea-5/no-io.cjs": "34840ffbf1a887cb1497de13349f5c2882cdd15351ed66f13fec25e363908e0d",
+    "reports/tanda-nocturna-20260919/tarea-5/run.mjs": "29e995cc08e44b9da29e6065bf4b3e128f25c80512b91ded60c74fa892954835"
+  },
+  "tree": "1735437cb9604914685cc0d7dcea821d0e4a993a"
+}

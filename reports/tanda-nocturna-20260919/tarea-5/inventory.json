@@ -1,0 +1,217 @@
+{
+  "source": "reports/verificacion-suites-sin-poblacion.md",
+  "sourceSha256": "f923b00f97adbbf9d6c96936017bcf8d0b70f4b28ba1169aadb2715989bc76b1",
+  "reportedCandidateCount": 124,
+  "userCreatingCount": 28,
+  "suites": [
+    {
+      "path": "artifacts/api-server/src/admin-alertas.integration.test.ts",
+      "sha256": "e61c6254353fedc6eb6ae75642012ee232d4548c7ac57e6f00f6a45f2d6c6560",
+      "insertionLines": [
+        67
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/admin-invariants.integration.test.ts",
+      "sha256": "0b4f2633afa1ee1fbcbe0d4a7628d3b96008139b790bbba4801e5039fd31b1bd",
+      "insertionLines": [
+        64
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+      "sha256": "3c5c1f3da6ed18f9f6824f32ee70a11beb714c1b1f35eacc8052f23ad879dd61",
+      "insertionLines": [
+        54
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/auditoria.integration.test.ts",
+      "sha256": "3bb5b9258f318d2af696ea2c988cec7eaf11dc0198b7bb99d2167a2bdd129772",
+      "insertionLines": [
+        52,
+        57,
+        62,
+        67,
+        72
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/clientes-ajustes-api.test.ts",
+      "sha256": "367afe5f7040209ba4bc7a5593fffe0d615d6c149effc3e21409c4a01c08e793",
+      "insertionLines": [
+        105
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/contenedores.integration.test.ts",
+      "sha256": "af296367bffffff46448f66e3c974399776b30ea0e82e55c2560bbea91defb53",
+      "insertionLines": [
+        75
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+      "sha256": "8ee882f4e34a0be5f429085990b0091dbe211c21037a63c00e3c4c5b6acbc0f5",
+      "insertionLines": [
+        52
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/equipos.integration.test.ts",
+      "sha256": "f0aaec9305c2db77a8a7d79b9e00408773af3bde611218ab8e02df3a2877b6ed",
+      "insertionLines": [
+        70
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+      "sha256": "a1f072c7ea87d946248fc352bc6e50f3eb942fc12e6c93d2c8cac136f4e9848d",
+      "insertionLines": [
+        69
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/inventory-six-view.integration.test.ts",
+      "sha256": "0abc6d9ad417526b66ebdc9d5363a9bb57b2cd71cd64adcac1504d4a6398193d",
+      "insertionLines": [
+        167,
+        172
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/kardex-api.test.ts",
+      "sha256": "521720a92f6bf202b17c16c97680c5e7b881472eea22de6b067bb09fa2dcaaed",
+      "insertionLines": [
+        62
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "sha256": "3316bf59f154b55ce0bf80f58dac01b1caad1cb471f61553380c9a3ad94c412e",
+      "insertionLines": [
+        79
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/lib/permisos.test.ts",
+      "sha256": "296cc8d1edb4f9b4d078f20364ced8c7892eadee7b87e54069a2313465d32723",
+      "insertionLines": [
+        81,
+        94,
+        107,
+        120,
+        133
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+      "sha256": "898ba6f8ce21e62b121644475e134b200e811a19ebbbf186501521426325e922",
+      "insertionLines": [
+        45
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+      "sha256": "6a0e715e756f179b355c3b830b992027959044dcdce742ed1fe9144721e05d2d",
+      "insertionLines": [
+        78
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+      "sha256": "62b63e532c963a0b95b46a801d17ce6aac8b4025065a00d0aa29f5eaa89d6c2d",
+      "insertionLines": [
+        106,
+        157
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+      "sha256": "665881fc17d2e6beed95bccac2b95290f84e2165d0f6e12df08cb3e055b1824f",
+      "insertionLines": [
+        160,
+        269
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/precios.integration.test.ts",
+      "sha256": "263a482a3fabe9ed6c1b475596942693635c9cac6e941d2d55fee062c13ecf47",
+      "insertionLines": [
+        57
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/productos-cache.integration.test.ts",
+      "sha256": "460fac29c28167988252ac34573fecf6df7315b71ae554a8a22f15c0b414d0e2",
+      "insertionLines": [
+        192
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/productos-purge.integration.test.ts",
+      "sha256": "45b56a214a4945ba119876c0a2f30ceed383abe66b68b371553f1263088d3c1b",
+      "insertionLines": [
+        77
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+      "sha256": "db1fd954b6be0519e48b28deb30f5c512e98fb9328fa4dd210312dd9e90f6147",
+      "insertionLines": [
+        45
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/reportes.integration.test.ts",
+      "sha256": "a67f25cfbb6e3ebc2e30b4ca7114cc7cf44ba233c0812bca1d6cbca9adae9c83",
+      "insertionLines": [
+        66
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+      "sha256": "ea68f373ac4c598f8af8e62b04a0000d1c05a79701bdf26012fdb7f6954c1b58",
+      "insertionLines": [
+        111
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "sha256": "5b3dc8851f9809bf8cd2cd6e302da4707454c7aa9746ecc28e25b3e806628327",
+      "insertionLines": [
+        291
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/store-sales-global.integration.test.ts",
+      "sha256": "c333c1e145a0b4b64845e50f8326e4176d1bf7113c1019f11b43710d41c904cb",
+      "insertionLines": [
+        99
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/task57.integration.test.ts",
+      "sha256": "af720d9d4d4a860df87b0e1ea0a8ca2c3e289c110c34238437e6c63eb4af3f84",
+      "insertionLines": [
+        76,
+        81,
+        327
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/task58.integration.test.ts",
+      "sha256": "33c08ce143d035aab6fa33811e1257e508925991982992c3af14b195a4d81ba4",
+      "insertionLines": [
+        101
+      ]
+    },
+    {
+      "path": "artifacts/api-server/src/viajes.integration.test.ts",
+      "sha256": "0e126eca7248e253538c4c8494dfdeff5eae323bd8c6434f696e083d56f8d829",
+      "insertionLines": [
+        52
+      ]
+    }
+  ]
+}
