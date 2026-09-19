@@ -1,0 +1,186 @@
+{
+  "result": {
+    "exitCode": 0,
+    "results": [
+      {
+        "name": "@workspace/scanned-code",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/lib/scanned-code",
+        "kind": "library",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/number-format",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/lib/number-format",
+        "kind": "library",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/metered-pricing",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/lib/metered-pricing",
+        "kind": "library",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/db",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/lib/db",
+        "kind": "library",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/api-client-react",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/lib/api-client-react",
+        "kind": "library",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/api-zod",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/lib/api-zod",
+        "kind": "library",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/libraries",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23",
+        "kind": "library-stage",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/api-server",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/api-server",
+        "kind": "package",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/mariana-textil",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/mariana-textil",
+        "kind": "package",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/mockup-sandbox",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/mockup-sandbox",
+        "kind": "package",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      },
+      {
+        "name": "@workspace/scripts",
+        "path": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/scripts",
+        "kind": "package",
+        "diagnostics": [],
+        "parserFailures": [],
+        "failures": [],
+        "status": "PASS",
+        "attempted": true
+      }
+    ],
+    "summary": "\n=== Typecheck summary ===\nPackages selected: 4 artifacts/scripts; library results: 7\nPASS @workspace/scanned-code [library] (0 TypeScript errors)\nPASS @workspace/number-format [library] (0 TypeScript errors)\nPASS @workspace/metered-pricing [library] (0 TypeScript errors)\nPASS @workspace/db [library] (0 TypeScript errors)\nPASS @workspace/api-client-react [library] (0 TypeScript errors)\nPASS @workspace/api-zod [library] (0 TypeScript errors)\nPASS @workspace/libraries [library-stage] (0 TypeScript errors)\nPASS @workspace/api-server [package] (0 TypeScript errors)\nPASS @workspace/mariana-textil [package] (0 TypeScript errors)\nPASS @workspace/mockup-sandbox [package] (0 TypeScript errors)\nPASS @workspace/scripts [package] (0 TypeScript errors)\nUnique TypeScript diagnostics: 0\nRepeated diagnostic emissions: 0\nProcess/parser failures: 0\nRESULT: PASS (all selected checks completed; 0 TypeScript errors)"
+  },
+  "processes": [
+    {
+      "command": "pnpm",
+      "args": [
+        "list",
+        "-r",
+        "--depth",
+        "-1",
+        "--json"
+      ],
+      "cwd": "/tmp/e2-ac-baseline-80eaa93d-CWNC23",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": "tsc",
+      "args": [
+        "--build",
+        "--pretty",
+        "false",
+        "--stopBuildOnErrors",
+        "false"
+      ],
+      "cwd": "/tmp/e2-ac-baseline-80eaa93d-CWNC23",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": "pnpm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/api-server",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": "pnpm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/mariana-textil",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": "pnpm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/mockup-sandbox",
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "command": "pnpm",
+      "args": [
+        "run",
+        "typecheck"
+      ],
+      "cwd": "/tmp/e2-ac-baseline-80eaa93d-CWNC23/scripts",
+      "exitCode": 0,
+      "signal": null
+    }
+  ]
+}

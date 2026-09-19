@@ -37,6 +37,7 @@ test("original E1 cash rejection survives E2", () => {
 // these safety architecture assertions fail if the reviewed barriers disappear.
 const service = readFileSync(new URL("./credit-refund.ts", import.meta.url), "utf8");
 const ddl = readFileSync(new URL("../../../../reports/e2/sql/credit-refunds-prepared.sql", import.meta.url), "utf8");
+const evidenceDdl = readFileSync(new URL("../../../../reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql", import.meta.url), "utf8");
 function safetyChecks(text: string) {
   assert.match(text, /assertCreditRefundEnabled\(\);\s*return db.transaction/);
   assert.match(text, /assertCreditCaptureEnabled\(evidence, "EFECTIVO", "REVERSO_ABONO", "REVERSO"\)/);
@@ -44,17 +45,25 @@ function safetyChecks(text: string) {
   assert.match(text, /SELECT id FROM aplicaciones_credito WHERE abono_movimiento_id/);
   assert.match(text, /FROM evidencia_no_aplicada_e2 p/);
   assert.match(text, /JOIN finalizaciones_abono_e2 f[\s\S]*f\.resultado='UNUSED'/);
+  assert.match(text, /const proof = input\.origen === "ABONO"/);
+  assert.match(text, /p\.abono_id IS NULL AND p\.cobro_productor='COBRO_PENDIENTE'/);
   assert.match(text, /assertRefundReplay/);
 }
 test("source barriers and isolated negative proofs", () => {
   safetyChecks(service);
   for (const token of ["assertCreditRefundEnabled();\n  return db.transaction", 'assertCreditCaptureEnabled(evidence, "EFECTIVO", "REVERSO_ABONO", "REVERSO")',
     "FROM evidencia_no_aplicada_e2 p", "SELECT id FROM aplicaciones_credito WHERE abono_movimiento_id"]) {
-    assert.throws(() => safetyChecks(service.replace(token, "REMOVED")));
+    assert.throws(() => safetyChecks(service.replaceAll(token, "REMOVED")));
   }
 });
-test("DDL reuses exact original guard on proof and refund; no E1 replacement", () => {
-  assert.equal((ddl.match(/EXECUTE FUNCTION public.e1_guard_cash_capture_closed\(\)/g) ?? []).length, 2);
+test("reconciled DDL has one proof owner and independent closed refund gates; no E1 replacement", () => {
+  assert.equal((ddl.match(/EXECUTE FUNCTION public.e2_refund_capture_closed\(\)/g) ?? []).length, 2);
+  assert.match(ddl, /ERRCODE='E2R01'/);
   assert.doesNotMatch(ddl, /CREATE OR REPLACE|DISABLE TRIGGER|DROP TRIGGER/);
-  assert.match(ddl, /source_xid::bigint <> \(txid_current\(\) % 4294967296\)/);
+  assert.doesNotMatch(ddl, /CREATE TABLE public\.evidencia_no_aplicada_e2/);
+  assert.match(ddl, /REFERENCES public\.evidencia_no_aplicada_e2\(fuente\)/);
+  assert.equal((evidenceDdl.match(/CREATE TABLE public\.evidencia_no_aplicada_e2/g) ?? []).length, 1);
+  assert.match(evidenceDdl, /source_xid::bigint <> \(txid_current\(\) % 4294967296\)/);
+  assert.match(evidenceDdl, /retained_xid::bigint <> \(txid_current\(\) % 4294967296\)/);
+  assert.doesNotMatch(evidenceDdl, /CREATE OR REPLACE|DISABLE TRIGGER|DROP TRIGGER/);
 });

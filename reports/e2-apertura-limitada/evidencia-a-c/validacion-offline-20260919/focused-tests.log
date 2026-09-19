@@ -1,0 +1,37 @@
+✔ A+C evidence remains closed by default and blocks a covered receipt (2.395521ms)
+✔ canonical allocations classify whole receipt without changing FIFO (1.212583ms)
+✔ invalid or excessive allocation evidence fails closed (0.140711ms)
+✔ enabled covered receipt persists one finalization; non-cash stays unchanged (0.297779ms)
+✔ directed provenance describes its full explicit application, never UNUSED or PARTIAL (0.588374ms)
+✔ finalization failure propagates so the surrounding transaction can roll back (0.232779ms)
+✔ ordinary and directed producers finalize only after existing applications (2.187885ms)
+✔ refund consumer requires both positive proof and UNUSED finalization (0.281785ms)
+✔ limited startup binds income activation to the A+C catalog preflight (0.481159ms)
+✔ cross-store ADMIN refund uses current cash B without changing receipt A, both origins (8.351909ms)
+✔ wrong return session/site rejected; isolated removal of scope fails negative proof (8.935729ms)
+✔ isolated restoration of original-site restriction fails required cross-store acceptance (6.48754ms)
+✔ actual service locks customer row before proof/source/projection in ABONO order (4.517146ms)
+✔ negative proof: isolated service copy without customer FOR UPDATE fails orchestration assertion (4.517039ms)
+✔ production gate prevents even entering transaction (1.254494ms)
+✔ isolated E2-open simulation still hits ORIGINAL E1 rejection, zero committed effects (1.929201ms)
+✔ isolated future simulation: both origins, exact replay, single outflow, reversal only ABONO (2.341834ms)
+✔ positive proof is typed: ABONO needs UNUSED; retained needs its own proof without ABONO (3.773937ms)
+✔ isolated future simulation: current authorization, positive proof, history, projection, session, rollback (9.810422ms)
+✔ exact replay survives session closure but not loss of current ADMIN role (2.738397ms)
+✔ isolated future simulation rejects partial receipts and a second UUID for one source (7.448768ms)
+✔ negative proof: retained service cannot omit its E1 gate (2.830211ms)
+✔ negative proof: removing gate in isolated compiled copy defeats zero-transaction assertion (3.698119ms)
+✔ gate cannot be opened by environment or body (0.316133ms)
+✔ canonical DTO, origin exclusivity, reason and identifiers (0.348581ms)
+✔ idempotency rejects any changed canonical field (0.325628ms)
+✔ original E1 cash rejection survives E2 (0.09473ms)
+✔ source barriers and isolated negative proofs (3.467411ms)
+✔ reconciled DDL has one proof owner and independent closed refund gates; no E1 replacement (0.311598ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1418.753371

@@ -1,0 +1,1 @@
+exit=1; preparation only; .vite cache rejected as nonhistorical; no tests executed

@@ -24,14 +24,24 @@ CREATE TABLE public.finalizaciones_abono_e2 (
 
 CREATE TABLE public.evidencia_no_aplicada_e2 (
   fuente text PRIMARY KEY,
-  abono_id integer NOT NULL UNIQUE
+  abono_id integer UNIQUE
     REFERENCES public.finalizaciones_abono_e2(abono_id),
+  cobro_productor text,
+  cobro_clave uuid UNIQUE,
   cliente_id integer NOT NULL REFERENCES public.clientes(id),
   importe numeric(12,2) NOT NULL CHECK (importe > 0 AND importe < 'Infinity'::numeric),
   forma_pago text NOT NULL DEFAULT 'EFECTIVO' CHECK (forma_pago = 'EFECTIVO'),
   naturaleza text NOT NULL DEFAULT 'INGRESO_FISICO' CHECK (naturaleza = 'INGRESO_FISICO'),
   created_at timestamptz NOT NULL DEFAULT transaction_timestamp(),
-  CHECK (fuente = 'ABONO:' || abono_id::text)
+  FOREIGN KEY (cobro_productor, cobro_clave)
+    REFERENCES public.cobros_credito_pendientes_e1(operacion_productor, operacion_clave),
+  CHECK (
+    (abono_id IS NOT NULL AND cobro_productor IS NULL AND cobro_clave IS NULL
+      AND fuente = 'ABONO:' || abono_id::text)
+    OR (abono_id IS NULL AND cobro_productor IS NOT NULL AND cobro_clave IS NOT NULL
+      AND cobro_productor = 'COBRO_PENDIENTE'
+      AND fuente = 'COBRO_RETENIDO:' || cobro_clave::text)
+  )
 );
 
 CREATE FUNCTION public.e2_reject_evidence_mutation()
@@ -89,7 +99,12 @@ BEGIN
     RAISE EXCEPTION 'E2: finalization requires its new physical ABONO in this transaction';
   END IF;
   IF NEW.evaluacion->>'contractRevision' IS DISTINCT FROM NEW.contrato_revision
-     OR NEW.evaluacion->>'projector' IS DISTINCT FROM 'projectCreditLedger'
+     OR NEW.evaluacion->>'projector' IS DISTINCT FROM
+        CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'directedApplication'
+          ELSE 'projectCreditLedger' END
+     OR (source_producer = 'ABONO_DIRIGIDO'
+         AND (NEW.resultado IS DISTINCT FROM 'FULL'
+              OR NEW.aplicado IS DISTINCT FROM source_amount))
      OR (NEW.evaluacion->>'receiptCents')::bigint IS DISTINCT FROM round(NEW.importe * 100)::bigint
      OR (NEW.evaluacion->>'appliedCents')::bigint IS DISTINCT FROM round(NEW.aplicado * 100)::bigint
      OR jsonb_typeof(NEW.evaluacion->'allocations') IS DISTINCT FROM 'array' THEN
@@ -109,6 +124,27 @@ BEGIN
      OR allocation_sum IS DISTINCT FROM round(NEW.aplicado * 100)::bigint THEN
     RAISE EXCEPTION 'E2: finalization allocation summary mismatch';
   END IF;
+  -- Attest persisted destinations/amounts, never recompute FIFO in SQL.
+  IF EXISTS (
+    WITH persisted AS (
+      SELECT venta_movimiento_id AS target, sum(importe * 100) AS cents
+      FROM public.aplicaciones_credito WHERE abono_movimiento_id = NEW.abono_id
+      GROUP BY venta_movimiento_id
+    ), declared AS (
+      SELECT (item->>'targetId')::integer AS target,
+             sum((item->>'appliedCents')::numeric) AS cents
+      FROM jsonb_array_elements(NEW.evaluacion->'allocations') AS item
+      GROUP BY (item->>'targetId')::integer
+    )
+    (SELECT * FROM persisted EXCEPT SELECT * FROM declared)
+    UNION ALL
+    (SELECT * FROM declared EXCEPT SELECT * FROM persisted)
+  ) OR EXISTS (
+    SELECT 1 FROM public.movimientos_credito
+    WHERE movimiento_origen_id = NEW.abono_id AND tipo = 'REVERSO'
+  ) THEN
+    RAISE EXCEPTION 'E2: finalization does not match persisted applications';
+  END IF;
   RETURN NEW;
 END;
 $function$;
@@ -124,7 +160,28 @@ SET search_path TO 'pg_catalog', 'public'
 AS $function$
 DECLARE
   final_row public.finalizaciones_abono_e2%ROWTYPE;
+  retained_xid text;
+  retained_customer integer;
+  retained_amount numeric;
 BEGIN
+  IF NEW.abono_id IS NULL THEN
+    SELECT xmin::text, cliente_id, importe
+      INTO retained_xid, retained_customer, retained_amount
+      FROM public.cobros_credito_pendientes_e1
+      WHERE operacion_productor = NEW.cobro_productor
+        AND operacion_productor = 'COBRO_PENDIENTE'
+        AND operacion_clave = NEW.cobro_clave
+        AND naturaleza = 'INGRESO_FISICO' AND medio = 'EFECTIVO'
+        AND cuenta_destino = 'CAJA_FISICA' AND sesion_caja_id IS NOT NULL
+      FOR SHARE;
+    IF retained_xid IS NULL
+       OR retained_xid::bigint <> (txid_current() % 4294967296)
+       OR retained_customer IS DISTINCT FROM NEW.cliente_id
+       OR retained_amount IS DISTINCT FROM NEW.importe THEN
+      RAISE EXCEPTION 'E2: retained proof requires its new physical receipt in this transaction';
+    END IF;
+    RETURN NEW;
+  END IF;
   SELECT * INTO final_row
     FROM public.finalizaciones_abono_e2
    WHERE abono_id = NEW.abono_id
@@ -142,6 +199,24 @@ $function$;
 CREATE TRIGGER e2_validate_unused_proof
 BEFORE INSERT ON public.evidencia_no_aplicada_e2
 FOR EACH ROW EXECUTE FUNCTION public.e2_validate_unused_proof();
+
+-- Unattached future attester; pending receipts remain closed by E1P01.
+CREATE FUNCTION public.e2_attest_new_retained(p_clave uuid)
+RETURNS void
+LANGUAGE plpgsql
+SET search_path TO 'pg_catalog', 'public'
+AS $function$
+BEGIN
+  INSERT INTO public.evidencia_no_aplicada_e2(fuente, cobro_productor, cobro_clave, cliente_id, importe)
+    SELECT 'COBRO_RETENIDO:' || operacion_clave::text,
+           operacion_productor, operacion_clave, cliente_id, importe
+    FROM public.cobros_credito_pendientes_e1
+    WHERE operacion_productor = 'COBRO_PENDIENTE' AND operacion_clave = p_clave;
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'E2: retained receipt not found';
+  END IF;
+END;
+$function$;
 
 CREATE FUNCTION public.e2_finalize_new_abono(
   p_abono_id integer,
@@ -192,6 +267,7 @@ SET search_path TO 'pg_catalog', 'public'
 AS $function$
 DECLARE
   final_result text;
+  final_evaluation jsonb;
   proof_exists boolean;
 BEGIN
   IF NEW.tipo = 'ABONO'
@@ -199,11 +275,32 @@ BEGIN
      AND NEW.forma_pago = 'EFECTIVO'
      AND NEW.cuenta_destino = 'CAJA_FISICA'
      AND NEW.operacion_productor IN ('ABONO_ORDINARIO','ABONO_DIRIGIDO') THEN
-    SELECT resultado INTO final_result
+    SELECT resultado, evaluacion INTO final_result, final_evaluation
       FROM public.finalizaciones_abono_e2
      WHERE abono_id = NEW.id;
     IF final_result IS NULL THEN
       RAISE EXCEPTION 'E2: physical ABONO cannot commit without finalization';
+    END IF;
+    -- Recheck at commit: catches application inserted AFTER finalization.
+    IF EXISTS (
+      WITH persisted AS (
+        SELECT venta_movimiento_id AS target, sum(importe * 100) AS cents
+        FROM public.aplicaciones_credito WHERE abono_movimiento_id = NEW.id
+        GROUP BY venta_movimiento_id
+      ), declared AS (
+        SELECT (item->>'targetId')::integer AS target,
+               sum((item->>'appliedCents')::numeric) AS cents
+        FROM jsonb_array_elements(final_evaluation->'allocations') AS item
+        GROUP BY (item->>'targetId')::integer
+      )
+      (SELECT * FROM persisted EXCEPT SELECT * FROM declared)
+      UNION ALL
+      (SELECT * FROM declared EXCEPT SELECT * FROM persisted)
+    ) OR EXISTS (
+      SELECT 1 FROM public.movimientos_credito
+      WHERE movimiento_origen_id = NEW.id AND tipo = 'REVERSO'
+    ) THEN
+      RAISE EXCEPTION 'E2: committed finalization does not match persisted applications';
     END IF;
     SELECT EXISTS (
       SELECT 1 FROM public.evidencia_no_aplicada_e2
@@ -221,5 +318,30 @@ CREATE CONSTRAINT TRIGGER e2_abono_finalization_complete
 AFTER INSERT ON public.movimientos_credito
 DEFERRABLE INITIALLY DEFERRED
 FOR EACH ROW EXECUTE FUNCTION public.e2_require_abono_finalization();
+
+-- INSERTing an application after SET CONSTRAINTS IMMEDIATE must not invalidate
+-- an already checked capture. Later transactions may legitimately allocate it.
+CREATE FUNCTION public.e2_guard_finalized_capture_application()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path TO 'pg_catalog', 'public'
+AS $function$
+DECLARE
+  source_xid text;
+BEGIN
+  SELECT xmin::text INTO source_xid FROM public.movimientos_credito
+    WHERE id = NEW.abono_movimiento_id FOR SHARE;
+  IF source_xid::bigint = (txid_current() % 4294967296)
+     AND EXISTS (SELECT 1 FROM public.finalizaciones_abono_e2
+                 WHERE abono_id = NEW.abono_movimiento_id) THEN
+    RAISE EXCEPTION 'E2: capture applications must precede finalization';
+  END IF;
+  RETURN NEW;
+END;
+$function$;
+
+CREATE TRIGGER e2_capture_application_order
+BEFORE INSERT ON public.aplicaciones_credito
+FOR EACH ROW EXECUTE FUNCTION public.e2_guard_finalized_capture_application();
 
 COMMIT;

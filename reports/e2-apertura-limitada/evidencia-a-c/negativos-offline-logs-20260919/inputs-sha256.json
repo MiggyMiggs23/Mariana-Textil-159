@@ -1,0 +1,16 @@
+{
+  "artifacts/api-server/src/routes/clientes.ts": "9cddb644d188ae10ad2a561d30ab39bf197424be0d6a8775f4230bdaad7b7750",
+  "artifacts/api-server/src/routes/pagos-dirigidos.ts": "9e15087b5def8a089c556835994f98180f1422bc577b55fc125bbb15b493510b",
+  "artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts": "f825e8085464e184c3085e9870cc925b3b0f2da924506059eb421effd961fcdc",
+  "artifacts/api-server/src/lib/credit-abono-evidence.ts": "7ce0967733c4fd61b09db804cb4231ec080236bb26b7861e145f157fdb93893e",
+  "artifacts/api-server/src/lib/credit-refund.ts": "04f40603037fbd01e56491d320272798599f936a878515e02e0e881c5ee2ae8d",
+  "artifacts/api-server/src/lib/credit-refund.mock.test.ts": "2cac1d3816de5e993541c36b4a3470d71454270c8996c3ea2347168d16145ef5",
+  "artifacts/api-server/src/lib/credit-evidence-contract.ts": "6ec51cfe18a45386c8cb4ab6428de9ec203b767697b21560e678bcefeb4cdad2",
+  "artifacts/api-server/src/lib/credit-refund-contract.ts": "0e3506e9f402a6af1332a88c82b9fcd281b6537709a15edabd9af8f0de34d5f1",
+  "artifacts/api-server/src/lib/credit-allocation.ts": "3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599",
+  "artifacts/api-server/src/lib/date-only.ts": "276ab049be90f250780441e82738f9f845b4faf1e22e336625b0027ba3697b68",
+  "artifacts/api-server/src/lib/startup-mode.ts": "3b33915260210df6dca5ede230e0fe897fec7a727b1d1038f35649b3f86bc0b4",
+  "artifacts/api-server/src/lib/limited-startup-preflight.ts": "76f418bf3778a2e5be2414987e46c5f9e2116922ec5152682b7ca2fa8946a999",
+  "artifacts/api-server/src/lib/limited-startup-preflight.test.ts": "ad07b156d22802b6f30af9532ff36335ce44e0348488a46bfa27456b31fc94f2",
+  "reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql": "dd99574f022b4d325a73238bf0d1e348e015003d2dad3ebc9de00ede8b094cbd"
+}

@@ -75,3 +75,4 @@
 - [Esquema destino del DDL](ddl-target-schema.md) — declarar el esquema de creación; un search_path endurecido para lecturas puede dirigir DDL sin calificar a pg_catalog.
 - [Devolución física inactiva](inactive-physical-refund-scope.md) — preparar el flujo no autoriza abrir ni eludir las guardas; activación y escrituras requieren autorización aparte.
 - [Integridad tras reinicios](restart-artifact-integrity.md) — verificar el archivo al arrancar; ausencia de transacciones abiertas no demuestra ausencia de efectos persistentes.
+- [Evidencia diferida](deferred-evidence-validation.md) — forzar restricciones inmediatas no protege cambios posteriores en tablas relacionadas; revisar todas las escrituras.

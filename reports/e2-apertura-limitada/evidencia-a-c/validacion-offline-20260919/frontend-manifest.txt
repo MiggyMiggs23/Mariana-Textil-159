@@ -1,0 +1,8 @@
+# E2 baseline 80eaa93d: explicit pure/mock/source-contract frontend selection.
+# No implicit discovery and no API/integration suites.
+src/caja-cobranza.contract.test.ts
+src/lib/credit-evidence.contract.test.ts
+src/pages/caja/cortes.contract.test.ts
+src/pages/caja/tiempo-real-credit.contract.test.ts
+src/components/cliente-movimiento-navigation.contract.test.ts
+src/components/cliente-saldo-a-favor.contract.test.ts

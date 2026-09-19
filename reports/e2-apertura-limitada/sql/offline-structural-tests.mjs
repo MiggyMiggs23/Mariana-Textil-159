@@ -10,6 +10,7 @@ import {
   REPORT_DIGESTS,
   SQL_MANIFEST,
   TRIGGER_CONTRACTS,
+  EVIDENCE_ARTIFACTS,
 } from "./contracts.mjs";
 
 const applyPath = new URL("./01-apply-limited-cash-abono.sql", import.meta.url);
@@ -66,6 +67,10 @@ for (const [name, text] of [["apply", apply], ["revert", revert]]) {
   assert.match(text, /p\.prosecdef AS function_security_definer/);
   assert.match(text, /search_path=pg_catalog, public/);
   assert.match(text, new RegExp(PLAN_VERSION));
+  assert.doesNotMatch(text, /pg_catalog\.coalesce/i);
+  assert.match(text, /t\.tgdeferrable AND t\.tginitdeferred/);
+  assert.match(text, /AND \(SELECT ok FROM evidence_function_check\)/);
+  for (const { sha256 } of EVIDENCE_ARTIFACTS) assert.ok(text.includes(sha256));
   assert.match(text, new RegExp(REPORT_DIGESTS.closedFunctionsSha256));
   assert.match(text, new RegExp(REPORT_DIGESTS.triggersSha256));
   assert.match(text, new RegExp(REPORT_DIGESTS.auditAppendOnlyProsrcSha256));

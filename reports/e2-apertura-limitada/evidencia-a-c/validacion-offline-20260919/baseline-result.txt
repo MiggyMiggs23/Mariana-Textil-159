@@ -1,0 +1,54 @@
+scope=BASELINE ONLY; candidate NOT run; no source freeze claimed
+baseline_commit=80eaa93d4300e86d9be54492e634f88f0c0abc90
+baseline_tree=3365350be578e21245228889ba7a46465ce3750a
+copy=/tmp/e2-ac-baseline-80eaa93d-CWNC23
+root_canonical_command=(cd "$COPY" && env -i PATH="$COPY/node_modules/.bin:$PATH" HOME="$COPY" NODE_ENV=test pnpm run typecheck)
+root_canonical_terminal_exit=0
+root_canonical_runner_sha256=4d5f592031f2f8115a42321b34239eceb0d7c5419c9ae5ee70d9be1cf5340fe0
+root_canonical_runner_matches_current=yes
+root_selected_artifacts_and_scripts=4
+root_library_references=6
+root_library_stage=PASS
+root_all_selected_checks_completed=yes
+root_unique_diagnostics=0
+root_repeated_diagnostics=0
+root_process_parser_failures=0
+structured_companion=typecheck-details.mjs imports SAME baseline canonical runTypecheck; records every child terminal exit and every package status
+structured_companion_terminal_exit=0
+structured_details=baseline-typecheck-details.json
+source_integrity=3101 archived tracked files checked after typechecks; zero mismatches against exact commit
+source_sha256=baseline-source.sha256
+dependency_isolation=baseline-isolation.json; package-local node_modules directories; internal workspace links remapped to isolated copy; only external installed dependencies shared
+dependency_install=none
+emissions=TypeScript project-reference emissions only within isolated /tmp copy; no active app/dist writes
+environment=env -i allowlist PATH, isolated HOME, NODE_ENV=test; no inherited secrets/DB URLs
+network_guard_note=established offline-test-guard.cjs preserved and hashed but NOT used for canonical pnpm typecheck: its executable/shell restriction rejects pnpm scripts. Typecheck scripts were reviewed as compiler-only; no app/runtime modules executed. Do not claim typecheck was network-sandboxed.
+db_queries=0
+sql_execution=none
+postgres_tests=none
+runtime_startup=none
+http_or_browser_tests=none
+application_build=none
+workflows_flags_active_environment_changes=none
+
+HISTORICAL MANIFEST (PRESERVED, NOT EXECUTED)
+original_backend_manifest=reports/e2-verificacion-2026-09-18/baseline-backend-manifest.txt (13 files)
+original_frontend_manifest=reports/e2-verificacion-2026-09-18/baseline-frontend-manifest.txt (6 files)
+prior_baseline_reported_counts=149 tests; 144 passed; 5 failed (backend 126/121/5, frontend 23/23/0)
+prior_candidate_reported_counts=154 tests; 149 passed; 5 failed
+count_difference=prior candidate replaced one combined test with six split tests inside same manifest; 154/149 is NOT original baseline count
+known_failures=exact five names preserved in expected-baseline-failures.txt; historical evidence only, not rerun evidence
+preflight_review=baseline-import-review.txt
+blocked_frontend=src/components/cliente-saldo-a-favor.contract.test.ts invokes withBrowserFixture unconditionally; helper bundles a fixture, opens HTTP, starts Chromium/CDP; generated fixture also embeds /home/runner/workspace/lib/api-client-react/src/index.ts
+baseline_frontend_source_sha256=d260f114f6f1e92f904c3039100a4731fc6319123204b80f33a4b2523c371400
+backend_review=credit-evidence.mock.test.ts imports @workspace/db, constructs inert Pool, patches query/connect and network; no backend tests run because broader historical suite is not necessary for requested root comparison
+decision=do NOT run old browser manifest, do NOT narrow it and claim original-suite equivalence, do NOT expand authorization; main confirmed root result fulfills baseline portion
+
+REUSE
+baseline_copy_command=bash reports/e2-apertura-limitada/evidencia-a-c/validacion-offline-20260919/reproduce-baseline.sh
+copy_helper=node prepare-copy.mjs <active-workspace-root> <already-populated-/tmp-copy>
+copy_helper_precondition=clean destination with no node_modules; package inventory from exact baseline; candidate inventory must be rechecked before using for candidate
+candidate_policy=WAIT for main source freeze and negative worker completion; main owns candidate run. Never run canonical root against active workspace because referenced libraries emit.
+canonical_replay_log=baseline-root-typecheck.log
+canonical_replay_exit=baseline-root-typecheck.exit
+first_preparation_attempt=cache .vite rejected before tests; second fresh archive excludes dot-cache node_modules entries; preparation-first-attempt.txt

@@ -8,6 +8,9 @@ import {
   LIMITED_CONSTRAINT_EXPECTATIONS,
   LIMITED_INDEX_EXPECTATIONS,
   LIMITED_SCHEMA_MANIFEST,
+  ABONO_EVIDENCE_COLUMNS,
+  ABONO_EVIDENCE_CONSTRAINTS,
+  ABONO_EVIDENCE_NULLABLE_COLUMNS,
   runLimitedStartupPreflight,
   type ReadonlyPreflightClient,
 } from "./limited-startup-preflight";
@@ -128,16 +131,16 @@ function goodRows(sql: string): Array<Record<string, unknown>> {
 }
 
 function fakePool(
-  alter: (sql: string, rows: Array<Record<string, unknown>>) => Array<Record<string, unknown>> = (_sql, rows) => rows,
+  alter: (sql: string, rows: Array<Record<string, unknown>>, values?: readonly unknown[]) => Array<Record<string, unknown>> = (_sql, rows) => rows,
   throwOn?: string,
 ) {
   const calls: string[] = [];
   let releases = 0;
   const client: ReadonlyPreflightClient = {
-    async query(sql) {
+    async query(sql, values) {
       calls.push(sql.trim());
       if (throwOn && sql.includes(throwOn)) throw new Error("synthetic catalog failure");
-      return { rows: alter(sql, goodRows(sql)) };
+      return { rows: alter(sql, goodRows(sql), values) };
     },
     release() {
       releases += 1;
@@ -190,6 +193,103 @@ test("enabled A+C evidence requires its schema before limited startup can listen
   );
   assert.equal(fake.calls.at(-1), "ROLLBACK");
   assert.equal(fake.releases, 1);
+});
+
+test("A+C combined inventory supports closed-preserved and rejects each schema drift", async () => {
+  const sqlSource = await readFile(new URL("../../../../reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql", import.meta.url), "utf8");
+  const bodies = new Map([...sqlSource.matchAll(/CREATE FUNCTION public\.(\w+)\([\s\S]*?AS \$function\$([\s\S]*?)\$function\$;/g)]
+    .map((match) => [match[1], match[2]]));
+  const metadata = {
+    prokind: "f", provolatile: "v", proparallel: "u", prosecdef: false,
+    proleakproof: false, proisstrict: false, proretset: false, proacl: null,
+    proconfig: ["search_path=pg_catalog, public"], language_name: "plpgsql",
+    owner_name: "postgres", function_schema: "public", result_type: "trigger", identity_arguments: "",
+    args_length: 0, trigger_attr: "", has_parent: false, has_qual: false,
+    tgenabled: "O",
+  };
+  const triggers = [
+    ["finalizaciones_abono_e2", "e2_finalization_immutable", 58, "e2_reject_evidence_mutation"],
+    ["finalizaciones_abono_e2", "e2_validate_abono_finalization", 7, "e2_validate_abono_finalization"],
+    ["evidencia_no_aplicada_e2", "e2_proof_immutable", 58, "e2_reject_evidence_mutation"],
+    ["evidencia_no_aplicada_e2", "e2_validate_unused_proof", 7, "e2_validate_unused_proof"],
+    ["movimientos_credito", "e2_abono_finalization_complete", 5, "e2_require_abono_finalization"],
+    ["aplicaciones_credito", "e2_capture_application_order", 7, "e2_guard_finalized_capture_application"],
+  ].map(([table_name, trigger_name, tgtype, function_name]) => ({
+    ...metadata, table_name, trigger_name, tgtype, function_name,
+    prosrc: bodies.get(String(function_name)),
+    has_constraint: trigger_name === "e2_abono_finalization_complete",
+    tgdeferrable: trigger_name === "e2_abono_finalization_complete",
+    tginitdeferred: trigger_name === "e2_abono_finalization_complete",
+  }));
+  const rowsFor = (sql: string, rows: Array<Record<string, unknown>>, values?: readonly unknown[]): Array<Record<string, unknown>> => {
+    if (sql.includes("information_schema.columns") && sql.includes("'finalizaciones_abono_e2'")) {
+      return ABONO_EVIDENCE_COLUMNS.map(([table_name, column_name, data_type]) => ({
+        table_name, column_name, data_type,
+        is_nullable: table_name === "evidencia_no_aplicada_e2"
+          && (ABONO_EVIDENCE_NULLABLE_COLUMNS as readonly string[]).includes(column_name) ? "YES" : "NO",
+        numeric_precision: data_type === "numeric" ? 12 : null,
+        numeric_scale: data_type === "numeric" ? 2 : null,
+        column_default: column_name === "created_at" ? "transaction_timestamp()"
+          : column_name === "forma_pago" ? "'EFECTIVO'::text"
+          : column_name === "naturaleza" ? "'INGRESO_FISICO'::text" : null,
+      }));
+    }
+    if (sql.includes("pg_constraint") && sql.includes("index_valid")) {
+      return ABONO_EVIDENCE_CONSTRAINTS.map(([table_name, name, definition]) => ({
+        table_name, name, definition, convalidated: true, condeferrable: false,
+        condeferred: false, index_valid: true,
+      }));
+    }
+    if (sql.includes("pg_trigger") && sql.includes("t.tgdeferrable")) return triggers.map((row) => ({ ...row }));
+    if (sql.includes("p.proname=$1")) return [{
+      ...metadata, prosrc: bodies.get(String(values?.[0])), result_type: "void",
+      identity_arguments: values?.[0] === "e2_attest_new_retained" ? "p_clave uuid"
+        : "p_abono_id integer, p_productor text, p_resultado text, p_aplicado_cents bigint, p_evaluacion jsonb, p_contrato_revision text",
+    }];
+    if (sql.includes("pg_trigger")) return [...rows, triggers[4]!];
+    return rows;
+  };
+  for (const requireAbonoEvidence of [false, true]) {
+    const fake = fakePool(rowsFor);
+    await runLimitedStartupPreflight(fake.pool, approval, LIMITED_SCHEMA_MANIFEST, { requireAbonoEvidence });
+    assert.equal(fake.calls.at(-1), "COMMIT");
+  }
+  const limited = fakePool((sql, rows, values) => rowsFor(sql, rows, values).map((row) =>
+    row.trigger_name === "zz_e1_cash_capture_closed" ? {
+      ...row,
+      function_source: String(row.function_source).replace(
+        "AND NEW.naturaleza::text IN ('INGRESO_FISICO', 'DEVOLUCION_FISICA') THEN",
+        "AND NEW.naturaleza::text IN ('INGRESO_FISICO', 'DEVOLUCION_FISICA')\n     AND (\n       NEW.naturaleza::text = 'DEVOLUCION_FISICA'\n       OR NEW.tipo::text IS DISTINCT FROM 'ABONO'\n     ) THEN",
+      ),
+    } : row));
+  await runLimitedStartupPreflight(limited.pool, { ...approval, guardState: "LIMITED" });
+  assert.equal(limited.calls.at(-1), "COMMIT");
+  const mutations: Array<(sql: string, rows: Array<Record<string, unknown>>) => void> = [
+    ...ABONO_EVIDENCE_CONSTRAINTS.map(([, name]) => (sql: string, rows: Array<Record<string, unknown>>) => {
+      if (sql.includes("index_valid")) rows.find((row) => row.name === name)!.definition = "CHECK (true)";
+    }),
+    ...ABONO_EVIDENCE_COLUMNS.map(([table, column]) => (sql: string, rows: Array<Record<string, unknown>>) => {
+      if (sql.includes("is_nullable")) {
+        const row = rows.find((r) => r.table_name === table && r.column_name === column)!;
+        row.is_nullable = row.is_nullable === "YES" ? "NO" : "YES";
+      }
+    }),
+    ...["tgdeferrable", "tginitdeferred"].map((property) => (sql: string, rows: Array<Record<string, unknown>>) => {
+      if (sql.includes("t.tgdeferrable")) rows.find((row) => row.trigger_name === "e2_abono_finalization_complete")![property] = false;
+    }),
+    (sql, rows) => { if (sql.includes("t.tgdeferrable")) rows.push({ ...rows[0], trigger_name: "unexpected_trigger" }); },
+    (sql, rows) => { if (sql.includes("pg_trigger") && !sql.includes("t.tgdeferrable")) rows.push({ ...rows[0], trigger_name: "unexpected_e1_trigger" }); },
+  ];
+  for (const mutate of mutations) {
+    const fake = fakePool((sql, rows, values) => {
+      const result = rowsFor(sql, rows, values);
+      mutate(sql, result);
+      return result;
+    });
+    await assert.rejects(runLimitedStartupPreflight(fake.pool, approval), /mismatch/);
+    assert.equal(fake.calls.at(-1), "ROLLBACK");
+    assert.equal(fake.releases, 1);
+  }
 });
 
 test("read-only preflight commits only after schema and all three old guards match", async () => {

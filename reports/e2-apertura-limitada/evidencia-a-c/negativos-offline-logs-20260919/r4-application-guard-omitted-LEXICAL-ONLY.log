@@ -1,0 +1,44 @@
+✔ mounted ordinary producer: UNUSED/PARTIAL/FULL and FIFO persistence ordering (295.928349ms)
+✔ mounted directed approval finalizes FULL only after its application (31.659811ms)
+✔ actual core rejects directed result/amount mismatches before persistence (0.616386ms)
+✔ positive proof is mandatory in the real refund service (64.730601ms)
+✔ real refund service accepts both origins and rejects absent/used ABONO finalization (65.344538ms)
+✖ R4 application-order guard exists in prepared SQL (LEXICAL ONLY, not SQL semantics) (0.834407ms)
+✖ A+C mock preflight independently rejects each catalog drift (37.686715ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 5
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 503.505057
+
+✖ failing tests:
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:200:1
+✖ R4 application-order guard exists in prepared SQL (LEXICAL ONLY, not SQL semantics) (0.834407ms)
+  AssertionError [ERR_ASSERTION]: R4 lexical: finalized capture application must raise
+      at TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:209:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: '\nDECLARE\n  source_xid text;\nBEGIN\n  SELECT xmin::text INTO source_xid FROM public.movimientos_credito\n    WHERE id = NEW.abono_movimiento_id FOR SHARE;\n  IF source_xid::bigint = (txid_current() % 4294967296)\n     AND EXISTS (SELECT 1 FROM public.finalizaciones_abono_e2\n                 WHERE abono_id = NEW.abono_movimiento_id) THEN\n    NULL;\n...',
+    expected: /RAISE EXCEPTION 'E2: capture applications must precede finalization'/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:213:1
+✖ A+C mock preflight independently rejects each catalog drift (37.686715ms)
+  Error: Limited startup A+C evidence trigger e2_capture_application_order mismatch.
+      at Object.runLimitedStartupPreflight (eval at evaluate (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:29:3), <anonymous>:420:27)
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:300:14)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:303:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)

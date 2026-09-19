@@ -1,0 +1,247 @@
+[
+  {
+    "label": "baseline",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/baseline.log"
+  },
+  {
+    "label": "ordinary-producer-omitted",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/ordinary-producer-omitted.log"
+  },
+  {
+    "label": "ordinary-producer-omitted-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/ordinary-producer-omitted-restored.log"
+  },
+  {
+    "label": "directed-producer-omitted",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-producer-omitted.log"
+  },
+  {
+    "label": "directed-producer-omitted-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-producer-omitted-restored.log"
+  },
+  {
+    "label": "classification-altered",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/classification-altered.log"
+  },
+  {
+    "label": "classification-altered-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/classification-altered-restored.log"
+  },
+  {
+    "label": "directed-classification-altered",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-classification-altered.log"
+  },
+  {
+    "label": "directed-classification-altered-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-classification-altered-restored.log"
+  },
+  {
+    "label": "directed-provenance-false-fifo",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-provenance-false-fifo.log"
+  },
+  {
+    "label": "directed-provenance-false-fifo-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-provenance-false-fifo-restored.log"
+  },
+  {
+    "label": "ordinary-provenance-false-directed",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/ordinary-provenance-false-directed.log"
+  },
+  {
+    "label": "ordinary-provenance-false-directed-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/ordinary-provenance-false-directed-restored.log"
+  },
+  {
+    "label": "directed-core-guard-omitted",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-core-guard-omitted.log"
+  },
+  {
+    "label": "directed-core-guard-omitted-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-core-guard-omitted-restored.log"
+  },
+  {
+    "label": "directed-core-amount-check-omitted",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-core-amount-check-omitted.log"
+  },
+  {
+    "label": "directed-core-amount-check-omitted-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-core-amount-check-omitted-restored.log"
+  },
+  {
+    "label": "directed-core-result-check-omitted",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-core-result-check-omitted.log"
+  },
+  {
+    "label": "directed-core-result-check-omitted-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-core-result-check-omitted-restored.log"
+  },
+  {
+    "label": "partial-classification-altered",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/partial-classification-altered.log"
+  },
+  {
+    "label": "partial-classification-altered-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/partial-classification-altered-restored.log"
+  },
+  {
+    "label": "directed-before-application",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-before-application.log"
+  },
+  {
+    "label": "directed-before-application-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/directed-before-application-restored.log"
+  },
+  {
+    "label": "before-fifo",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/before-fifo.log"
+  },
+  {
+    "label": "before-fifo-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/before-fifo-restored.log"
+  },
+  {
+    "label": "missing-positive-proof",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/missing-positive-proof.log"
+  },
+  {
+    "label": "missing-positive-proof-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/missing-positive-proof-restored.log"
+  },
+  {
+    "label": "retained-unconditional-abono-join",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/retained-unconditional-abono-join.log"
+  },
+  {
+    "label": "retained-unconditional-abono-join-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/retained-unconditional-abono-join-restored.log"
+  },
+  {
+    "label": "abono-finalization-join-omitted",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/abono-finalization-join-omitted.log"
+  },
+  {
+    "label": "abono-finalization-join-omitted-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/abono-finalization-join-omitted-restored.log"
+  },
+  {
+    "label": "r4-application-guard-omitted-LEXICAL-ONLY",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/r4-application-guard-omitted-LEXICAL-ONLY.log"
+  },
+  {
+    "label": "r4-application-guard-omitted-LEXICAL-ONLY-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/r4-application-guard-omitted-LEXICAL-ONLY-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_finalization_immutable",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_finalization_immutable.log"
+  },
+  {
+    "label": "preflight-bypass-e2_finalization_immutable-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_finalization_immutable-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_validate_abono_finalization",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_validate_abono_finalization.log"
+  },
+  {
+    "label": "preflight-bypass-e2_validate_abono_finalization-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_validate_abono_finalization-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_proof_immutable",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_proof_immutable.log"
+  },
+  {
+    "label": "preflight-bypass-e2_proof_immutable-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_proof_immutable-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_validate_unused_proof",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_validate_unused_proof.log"
+  },
+  {
+    "label": "preflight-bypass-e2_validate_unused_proof-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_validate_unused_proof-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_abono_finalization_complete",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_abono_finalization_complete.log"
+  },
+  {
+    "label": "preflight-bypass-e2_abono_finalization_complete-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_abono_finalization_complete-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_capture_application_order",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_capture_application_order.log"
+  },
+  {
+    "label": "preflight-bypass-e2_capture_application_order-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_capture_application_order-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_finalize_new_abono",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_finalize_new_abono.log"
+  },
+  {
+    "label": "preflight-bypass-e2_finalize_new_abono-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_finalize_new_abono-restored.log"
+  },
+  {
+    "label": "preflight-bypass-e2_attest_new_retained",
+    "status": 1,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_attest_new_retained.log"
+  },
+  {
+    "label": "preflight-bypass-e2_attest_new_retained-restored",
+    "status": 0,
+    "log": "/tmp/e2-negative-offline-axTitg/preflight-bypass-e2_attest_new_retained-restored.log"
+  }
+]

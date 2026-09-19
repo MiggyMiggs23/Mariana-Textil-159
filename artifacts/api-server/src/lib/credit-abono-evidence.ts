@@ -48,7 +48,7 @@ export function assertAbonoEvidencePolicy(covered: boolean, enabled: boolean): v
   }
 }
 
-/** Pure classification of the canonical projector's result; never recalculates FIFO. */
+/** Classifies existing allocations (canonical FIFO or explicit directed); never recalculates FIFO. */
 export function evaluateAbonoEvidence(
   receiptCents: number,
   allocations: readonly AbonoEvidenceAllocation[],
@@ -85,6 +85,11 @@ export async function finalizePhysicalAbonoEvidenceCore(
     && input.evidence.naturaleza === "INGRESO_FISICO";
   assertAbonoEvidencePolicy(covered, enabled);
   if (!covered) return;
+  if (input.productor === "ABONO_DIRIGIDO"
+    && (input.evaluation.result !== "FULL"
+      || input.evaluation.appliedCents !== input.evaluation.receiptCents)) {
+    throw new Error("E2: la aplicación dirigida debe finalizar íntegramente como FULL.");
+  }
   await store.finalize({
     movementId: input.movementId,
     productor: input.productor,
@@ -92,7 +97,9 @@ export async function finalizePhysicalAbonoEvidenceCore(
     appliedCents: input.evaluation.appliedCents,
     evaluation: {
       contractRevision: CREDIT_ABONO_EVIDENCE_CONTRACT_REVISION,
-      projector: "projectCreditLedger",
+      // Directed applications are already persisted in full by their producer;
+      // they are not FIFO allocations returned by projectCreditLedger.
+      projector: input.productor === "ABONO_DIRIGIDO" ? "directedApplication" : "projectCreditLedger",
       receiptCents: input.evaluation.receiptCents,
       appliedCents: input.evaluation.appliedCents,
       allocations: input.evaluation.allocations,

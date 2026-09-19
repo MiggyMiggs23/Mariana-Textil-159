@@ -59,10 +59,20 @@ export async function refundCreditReceipt(req: Request, input: CreditRefundInput
       .where(eq(clientesTable.id, input.clienteId)).for("update").limit(1);
     if (!customer) throw new CreditEvidenceError("E2: cliente no encontrado.", 404);
     // Positive producer evidence is mandatory; no inference from absent applications.
-    const proof = await tx.execute<any>(sql`SELECT p.* FROM evidencia_no_aplicada_e2 p
-      JOIN finalizaciones_abono_e2 f ON f.abono_id=p.abono_id AND f.resultado='UNUSED'
-      WHERE p.fuente=${key} AND p.cliente_id=${input.clienteId}
-        AND p.importe=${input.importe}::numeric FOR UPDATE OF p,f`);
+    // A retained receipt never creates an ABONO or an ABONO finalization.
+    // Each origin must use its own positive proof; a nullable/optional join
+    // must not allow an ABONO to bypass its mandatory UNUSED finalization.
+    const proof = input.origen === "ABONO"
+      ? await tx.execute<any>(sql`SELECT p.* FROM evidencia_no_aplicada_e2 p
+          JOIN finalizaciones_abono_e2 f ON f.abono_id=p.abono_id AND f.resultado='UNUSED'
+          WHERE p.fuente=${key} AND p.cliente_id=${input.clienteId}
+            AND p.abono_id=${input.abonoId} AND p.cobro_clave IS NULL
+            AND p.importe=${input.importe}::numeric FOR UPDATE OF p,f`)
+      : await tx.execute<any>(sql`SELECT p.* FROM evidencia_no_aplicada_e2 p
+          WHERE p.fuente=${key} AND p.cliente_id=${input.clienteId}
+            AND p.abono_id IS NULL AND p.cobro_productor='COBRO_PENDIENTE'
+            AND p.cobro_clave=${input.cobroClave}::uuid
+            AND p.importe=${input.importe}::numeric FOR UPDATE OF p`);
     if (!proof.rows[0]) throw new CreditEvidenceError("E2: falta prueba positiva de recepción íntegra nunca aplicada.", 409);
     let original: typeof movimientosCreditoTable.$inferSelect | undefined;
     if (input.origen === "ABONO") {

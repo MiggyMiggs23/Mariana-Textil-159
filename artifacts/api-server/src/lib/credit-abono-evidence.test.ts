@@ -50,10 +50,35 @@ test("enabled covered receipt persists one finalization; non-cash stays unchange
   await finalizePhysicalAbonoEvidenceCore(store, base, true);
   assert.equal(writes.length, 1);
   assert.deepEqual(writes[0]?.result, "UNUSED");
+  assert.equal((writes[0]?.evaluation as Record<string, unknown>).projector, "projectCreditLedger");
   await finalizePhysicalAbonoEvidenceCore(store, {
     ...base, formaPago: "TRANSFERENCIA", cuentaDestino: "CUENTA_FISCAL",
   }, false);
   assert.equal(writes.length, 1);
+});
+test("directed provenance describes its full explicit application, never UNUSED or PARTIAL", async () => {
+  const writes: Array<Record<string, unknown>> = [];
+  const store = { async finalize(input: Record<string, unknown>) { writes.push(input); } };
+  const base = {
+    movementId: 42, productor: "ABONO_DIRIGIDO" as const,
+    formaPago: "EFECTIVO", cuentaDestino: "CAJA_FISICA",
+    evidence: {
+      sitioOrigenId: 2, sesionCajaId: 7, naturaleza: "INGRESO_FISICO" as const,
+      operacionClave: "20000000-0000-4000-8000-000000000002",
+    },
+  };
+  for (const evaluation of [
+    evaluateAbonoEvidence(500, []),
+    evaluateAbonoEvidence(500, [{ targetId: 9, appliedCents: 250 }]),
+    { ...evaluateAbonoEvidence(500, []), result: "FULL" as const },
+  ]) {
+    await assert.rejects(finalizePhysicalAbonoEvidenceCore(store, { ...base, evaluation }, true), /dirigida.*FULL/);
+  }
+  assert.equal(writes.length, 0);
+  await finalizePhysicalAbonoEvidenceCore(store, {
+    ...base, evaluation: evaluateAbonoEvidence(500, [{ targetId: 9, appliedCents: 500 }]),
+  }, true);
+  assert.equal((writes[0]?.evaluation as Record<string, unknown>).projector, "directedApplication");
 });
 
 test("finalization failure propagates so the surrounding transaction can roll back", async () => {

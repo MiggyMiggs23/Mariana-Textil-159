@@ -1,0 +1,679 @@
+✔ mounted ordinary producer: UNUSED/PARTIAL/FULL and FIFO persistence ordering (264.680562ms)
+✔ mounted directed approval finalizes FULL only after its application (26.650285ms)
+✔ actual core rejects directed result/amount mismatches before persistence (0.65521ms)
+✔ positive proof is mandatory in the real refund service (68.865562ms)
+✔ real refund service accepts both origins and rejects absent/used ABONO finalization (58.642815ms)
+✔ R4 application-order guard exists in prepared SQL (LEXICAL ONLY, not SQL semantics) (0.4482ms)
+▶ A+C mock preflight independently rejects each catalog drift
+  ✔ finalizaciones_abono_e2.abono_id: missing (0.660488ms)
+  ✔ finalizaciones_abono_e2.abono_id: data_type (0.488268ms)
+  ✔ finalizaciones_abono_e2.abono_id: is_nullable (0.361956ms)
+  ✔ finalizaciones_abono_e2.abono_id: column_default (0.506016ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: missing (0.249148ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: data_type (0.217862ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: is_nullable (0.263089ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: column_default (0.227573ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: missing (1.276053ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: data_type (0.613846ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: is_nullable (0.24127ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: column_default (0.267151ms)
+  ✔ finalizaciones_abono_e2.cliente_id: missing (0.292372ms)
+  ✔ finalizaciones_abono_e2.cliente_id: data_type (0.309104ms)
+  ✔ finalizaciones_abono_e2.cliente_id: is_nullable (0.302493ms)
+  ✔ finalizaciones_abono_e2.cliente_id: column_default (0.308688ms)
+  ✔ finalizaciones_abono_e2.importe: missing (0.241639ms)
+  ✔ finalizaciones_abono_e2.importe: data_type (0.249384ms)
+  ✔ finalizaciones_abono_e2.importe: is_nullable (0.239563ms)
+  ✔ finalizaciones_abono_e2.importe: column_default (0.203999ms)
+  ✔ finalizaciones_abono_e2.importe: numeric_precision (0.243296ms)
+  ✔ finalizaciones_abono_e2.importe: numeric_scale (0.405986ms)
+  ✔ finalizaciones_abono_e2.resultado: missing (0.271972ms)
+  ✔ finalizaciones_abono_e2.resultado: data_type (0.247811ms)
+  ✔ finalizaciones_abono_e2.resultado: is_nullable (0.401909ms)
+  ✔ finalizaciones_abono_e2.resultado: column_default (0.401448ms)
+  ✔ finalizaciones_abono_e2.aplicado: missing (0.34466ms)
+  ✔ finalizaciones_abono_e2.aplicado: data_type (0.273109ms)
+  ✔ finalizaciones_abono_e2.aplicado: is_nullable (0.334699ms)
+  ✔ finalizaciones_abono_e2.aplicado: column_default (0.283147ms)
+  ✔ finalizaciones_abono_e2.aplicado: numeric_precision (0.233323ms)
+  ✔ finalizaciones_abono_e2.aplicado: numeric_scale (0.189832ms)
+  ✔ finalizaciones_abono_e2.evaluacion: missing (0.386826ms)
+  ✔ finalizaciones_abono_e2.evaluacion: data_type (0.348866ms)
+  ✔ finalizaciones_abono_e2.evaluacion: is_nullable (0.213951ms)
+  ✔ finalizaciones_abono_e2.evaluacion: column_default (0.177482ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: missing (0.190055ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: data_type (6.35344ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: is_nullable (0.216925ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: column_default (0.233131ms)
+  ✔ finalizaciones_abono_e2.created_at: missing (0.153163ms)
+  ✔ finalizaciones_abono_e2.created_at: data_type (0.154011ms)
+  ✔ finalizaciones_abono_e2.created_at: is_nullable (0.142645ms)
+  ✔ finalizaciones_abono_e2.created_at: column_default (0.136469ms)
+  ✔ evidencia_no_aplicada_e2.fuente: missing (0.21198ms)
+  ✔ evidencia_no_aplicada_e2.fuente: data_type (0.158956ms)
+  ✔ evidencia_no_aplicada_e2.fuente: is_nullable (0.141845ms)
+  ✔ evidencia_no_aplicada_e2.fuente: column_default (0.139481ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: missing (0.136919ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: data_type (0.154695ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: is_nullable (0.14165ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: column_default (0.134801ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: missing (0.13532ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: data_type (0.137995ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: is_nullable (0.318207ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: column_default (0.168096ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: missing (0.142888ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: data_type (0.146454ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: is_nullable (0.178818ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: column_default (0.166323ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: missing (0.145667ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: data_type (0.363416ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: is_nullable (0.330368ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: column_default (0.172554ms)
+  ✔ evidencia_no_aplicada_e2.importe: missing (0.146554ms)
+  ✔ evidencia_no_aplicada_e2.importe: data_type (0.143498ms)
+  ✔ evidencia_no_aplicada_e2.importe: is_nullable (0.182779ms)
+  ✔ evidencia_no_aplicada_e2.importe: column_default (0.161691ms)
+  ✔ evidencia_no_aplicada_e2.importe: numeric_precision (0.14415ms)
+  ✔ evidencia_no_aplicada_e2.importe: numeric_scale (0.138528ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: missing (0.195477ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: data_type (0.418519ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: is_nullable (0.180033ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: column_default (0.150528ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: missing (0.140009ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: data_type (0.528587ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: is_nullable (0.224697ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: column_default (0.233619ms)
+  ✔ evidencia_no_aplicada_e2.created_at: missing (0.161298ms)
+  ✔ evidencia_no_aplicada_e2.created_at: data_type (0.232402ms)
+  ✔ evidencia_no_aplicada_e2.created_at: is_nullable (0.317873ms)
+  ✔ evidencia_no_aplicada_e2.created_at: column_default (0.395427ms)
+  ✔ finalizaciones_abono_e2_pkey: missing (0.231008ms)
+  ✔ finalizaciones_abono_e2_pkey: table_name (0.379186ms)
+  ✔ finalizaciones_abono_e2_pkey: definition (0.294921ms)
+  ✔ finalizaciones_abono_e2_pkey: convalidated (0.200309ms)
+  ✔ finalizaciones_abono_e2_pkey: condeferrable (0.194634ms)
+  ✔ finalizaciones_abono_e2_pkey: condeferred (0.158086ms)
+  ✔ finalizaciones_abono_e2_pkey: index_valid (0.150467ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: missing (0.146077ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: table_name (0.270753ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: definition (0.234403ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: convalidated (0.168235ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: condeferrable (0.1487ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: condeferred (0.142468ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: index_valid (0.18455ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: missing (0.201456ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: table_name (0.23275ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: definition (0.163008ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: convalidated (0.24634ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: condeferrable (0.149615ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: condeferred (0.147795ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: index_valid (0.145983ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: missing (0.1369ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: table_name (0.263605ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: definition (0.177413ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: convalidated (0.156493ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: condeferrable (0.149533ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: condeferred (0.176844ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: index_valid (0.157492ms)
+  ✔ finalizaciones_abono_e2_importe_check: missing (0.14012ms)
+  ✔ finalizaciones_abono_e2_importe_check: table_name (0.145232ms)
+  ✔ finalizaciones_abono_e2_importe_check: definition (0.142693ms)
+  ✔ finalizaciones_abono_e2_importe_check: convalidated (0.143659ms)
+  ✔ finalizaciones_abono_e2_importe_check: condeferrable (0.189541ms)
+  ✔ finalizaciones_abono_e2_importe_check: condeferred (0.154373ms)
+  ✔ finalizaciones_abono_e2_importe_check: index_valid (0.146672ms)
+  ✔ finalizaciones_abono_e2_resultado_check: missing (0.140983ms)
+  ✔ finalizaciones_abono_e2_resultado_check: table_name (0.205875ms)
+  ✔ finalizaciones_abono_e2_resultado_check: definition (0.258824ms)
+  ✔ finalizaciones_abono_e2_resultado_check: convalidated (0.15813ms)
+  ✔ finalizaciones_abono_e2_resultado_check: condeferrable (0.151372ms)
+  ✔ finalizaciones_abono_e2_resultado_check: condeferred (0.154855ms)
+  ✔ finalizaciones_abono_e2_resultado_check: index_valid (0.149126ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: missing (0.16035ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: table_name (0.151053ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: definition (0.152116ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: convalidated (0.152828ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: condeferrable (0.147662ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: condeferred (0.192462ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: index_valid (0.162708ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: missing (0.144902ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: table_name (0.156741ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: definition (0.154683ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: convalidated (0.185747ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: condeferrable (0.159544ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: condeferred (0.151532ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: index_valid (0.151936ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: missing (0.142262ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: table_name (0.224993ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: definition (0.171104ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: convalidated (0.222465ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: condeferrable (0.21658ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: condeferred (0.242154ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: index_valid (0.205206ms)
+  ✔ finalizaciones_abono_e2_check: missing (0.164389ms)
+  ✔ finalizaciones_abono_e2_check: table_name (0.166012ms)
+  ✔ finalizaciones_abono_e2_check: definition (0.157206ms)
+  ✔ finalizaciones_abono_e2_check: convalidated (0.197384ms)
+  ✔ finalizaciones_abono_e2_check: condeferrable (0.160821ms)
+  ✔ finalizaciones_abono_e2_check: condeferred (0.158458ms)
+  ✔ finalizaciones_abono_e2_check: index_valid (0.152788ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: missing (0.291839ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: table_name (0.173697ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: definition (0.198471ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: convalidated (0.179293ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: condeferrable (0.155872ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: condeferred (0.229575ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: index_valid (0.167231ms)
+  ✔ evidencia_no_aplicada_e2_pkey: missing (0.195455ms)
+  ✔ evidencia_no_aplicada_e2_pkey: table_name (0.272779ms)
+  ✔ evidencia_no_aplicada_e2_pkey: definition (0.202759ms)
+  ✔ evidencia_no_aplicada_e2_pkey: convalidated (0.235567ms)
+  ✔ evidencia_no_aplicada_e2_pkey: condeferrable (0.321267ms)
+  ✔ evidencia_no_aplicada_e2_pkey: condeferred (0.280008ms)
+  ✔ evidencia_no_aplicada_e2_pkey: index_valid (0.183984ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: missing (0.158913ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: table_name (0.210778ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: definition (0.357514ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: convalidated (0.188547ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: condeferrable (0.162808ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: condeferred (0.15554ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: index_valid (0.164321ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: missing (0.23161ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: table_name (0.68374ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: definition (0.24176ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: convalidated (0.169133ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: condeferrable (0.152083ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: condeferred (0.148627ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: index_valid (0.152501ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: missing (0.156325ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: table_name (0.155728ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: definition (0.1559ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: convalidated (0.172855ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: condeferrable (0.233173ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: condeferred (0.173973ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: index_valid (0.233986ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: missing (0.151577ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: table_name (0.156459ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: definition (0.180628ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: convalidated (0.169852ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: condeferrable (0.156782ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: condeferred (0.15391ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: index_valid (0.188989ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: missing (0.148888ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: table_name (0.165165ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: definition (0.160963ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: convalidated (0.163897ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: condeferrable (0.339504ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: condeferred (0.233668ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: index_valid (0.170296ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: missing (0.151213ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: table_name (0.18629ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: definition (0.166762ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: convalidated (0.158446ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: condeferrable (0.156599ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: condeferred (0.148717ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: index_valid (0.156608ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: missing (0.181941ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: table_name (0.162214ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: definition (0.157242ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: convalidated (0.156631ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: condeferrable (0.194896ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: condeferred (0.16803ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: index_valid (0.154592ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: missing (0.149033ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: table_name (0.158773ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: definition (0.196248ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: convalidated (0.165257ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: condeferrable (0.155478ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: condeferred (0.207453ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: index_valid (0.175162ms)
+  ✔ evidencia_no_aplicada_e2_check: missing (0.1952ms)
+  ✔ evidencia_no_aplicada_e2_check: table_name (0.167547ms)
+  ✔ evidencia_no_aplicada_e2_check: definition (0.167945ms)
+  ✔ evidencia_no_aplicada_e2_check: convalidated (0.165107ms)
+  ✔ evidencia_no_aplicada_e2_check: condeferrable (0.160229ms)
+  ✔ evidencia_no_aplicada_e2_check: condeferred (0.305347ms)
+  ✔ evidencia_no_aplicada_e2_check: index_valid (0.196443ms)
+  ✔ e2_finalization_immutable: missing (0.260631ms)
+  ✔ e2_finalization_immutable: prosrc (0.589725ms)
+  ✔ e2_finalization_immutable: prokind (0.241382ms)
+  ✔ e2_finalization_immutable: provolatile (0.258284ms)
+  ✔ e2_finalization_immutable: proparallel (0.210148ms)
+  ✔ e2_finalization_immutable: prosecdef (0.27528ms)
+  ✔ e2_finalization_immutable: proleakproof (0.306753ms)
+  ✔ e2_finalization_immutable: proisstrict (0.210645ms)
+  ✔ e2_finalization_immutable: proretset (0.277352ms)
+  ✔ e2_finalization_immutable: proacl (0.242509ms)
+  ✔ e2_finalization_immutable: proconfig (0.253317ms)
+  ✔ e2_finalization_immutable: language_name (0.200223ms)
+  ✔ e2_finalization_immutable: owner_name (0.231174ms)
+  ✔ e2_finalization_immutable: result_type (0.24595ms)
+  ✔ e2_finalization_immutable: identity_arguments (0.215888ms)
+  ✔ e2_finalization_immutable: tgenabled (0.244165ms)
+  ✔ e2_finalization_immutable: tgtype (0.196706ms)
+  ✔ e2_finalization_immutable: table_name (0.249343ms)
+  ✔ e2_finalization_immutable: function_name (0.191588ms)
+  ✔ e2_finalization_immutable: function_schema (0.283008ms)
+  ✔ e2_finalization_immutable: args_length (0.458544ms)
+  ✔ e2_finalization_immutable: trigger_attr (0.50322ms)
+  ✔ e2_finalization_immutable: has_parent (0.273805ms)
+  ✔ e2_finalization_immutable: has_qual (0.215298ms)
+  ✔ e2_finalization_immutable: has_constraint (0.197953ms)
+  ✔ e2_finalization_immutable: tgdeferrable (0.268001ms)
+  ✔ e2_finalization_immutable: tginitdeferred (0.20285ms)
+  ✔ e2_validate_abono_finalization: missing (0.172002ms)
+  ✔ e2_validate_abono_finalization: prosrc (0.347935ms)
+  ✔ e2_validate_abono_finalization: prokind (0.270705ms)
+  ✔ e2_validate_abono_finalization: provolatile (0.23196ms)
+  ✔ e2_validate_abono_finalization: proparallel (0.370133ms)
+  ✔ e2_validate_abono_finalization: prosecdef (0.217743ms)
+  ✔ e2_validate_abono_finalization: proleakproof (0.197502ms)
+  ✔ e2_validate_abono_finalization: proisstrict (0.195744ms)
+  ✔ e2_validate_abono_finalization: proretset (0.329869ms)
+  ✔ e2_validate_abono_finalization: proacl (0.214608ms)
+  ✔ e2_validate_abono_finalization: proconfig (0.278498ms)
+  ✔ e2_validate_abono_finalization: language_name (0.251328ms)
+  ✔ e2_validate_abono_finalization: owner_name (0.494505ms)
+  ✔ e2_validate_abono_finalization: result_type (0.213548ms)
+  ✔ e2_validate_abono_finalization: identity_arguments (0.319158ms)
+  ✔ e2_validate_abono_finalization: tgenabled (0.230716ms)
+  ✔ e2_validate_abono_finalization: tgtype (0.199059ms)
+  ✔ e2_validate_abono_finalization: table_name (0.245381ms)
+  ✔ e2_validate_abono_finalization: function_name (0.209047ms)
+  ✔ e2_validate_abono_finalization: function_schema (0.196329ms)
+  ✔ e2_validate_abono_finalization: args_length (0.191242ms)
+  ✔ e2_validate_abono_finalization: trigger_attr (0.30276ms)
+  ✔ e2_validate_abono_finalization: has_parent (0.216959ms)
+  ✔ e2_validate_abono_finalization: has_qual (0.195506ms)
+  ✔ e2_validate_abono_finalization: has_constraint (0.194767ms)
+  ✔ e2_validate_abono_finalization: tgdeferrable (0.2424ms)
+  ✔ e2_validate_abono_finalization: tginitdeferred (0.195049ms)
+  ✔ e2_proof_immutable: missing (0.203184ms)
+  ✔ e2_proof_immutable: prosrc (0.211331ms)
+  ✔ e2_proof_immutable: prokind (0.22142ms)
+  ✔ e2_proof_immutable: provolatile (0.203651ms)
+  ✔ e2_proof_immutable: proparallel (7.775923ms)
+  ✔ e2_proof_immutable: prosecdef (0.323515ms)
+  ✔ e2_proof_immutable: proleakproof (0.315861ms)
+  ✔ e2_proof_immutable: proisstrict (0.267911ms)
+  ✔ e2_proof_immutable: proretset (0.308508ms)
+  ✔ e2_proof_immutable: proacl (0.395454ms)
+  ✔ e2_proof_immutable: proconfig (0.215536ms)
+  ✔ e2_proof_immutable: language_name (0.200057ms)
+  ✔ e2_proof_immutable: owner_name (0.236427ms)
+  ✔ e2_proof_immutable: result_type (0.214152ms)
+  ✔ e2_proof_immutable: identity_arguments (0.190447ms)
+  ✔ e2_proof_immutable: tgenabled (0.191703ms)
+  ✔ e2_proof_immutable: tgtype (0.191906ms)
+  ✔ e2_proof_immutable: table_name (0.204771ms)
+  ✔ e2_proof_immutable: function_name (0.210116ms)
+  ✔ e2_proof_immutable: function_schema (0.190011ms)
+  ✔ e2_proof_immutable: args_length (0.189589ms)
+  ✔ e2_proof_immutable: trigger_attr (0.249956ms)
+  ✔ e2_proof_immutable: has_parent (0.192915ms)
+  ✔ e2_proof_immutable: has_qual (0.188637ms)
+  ✔ e2_proof_immutable: has_constraint (0.182814ms)
+  ✔ e2_proof_immutable: tgdeferrable (0.319842ms)
+  ✔ e2_proof_immutable: tginitdeferred (0.283574ms)
+  ✔ e2_validate_unused_proof: missing (0.21362ms)
+  ✔ e2_validate_unused_proof: prosrc (0.272834ms)
+  ✔ e2_validate_unused_proof: prokind (0.327113ms)
+  ✔ e2_validate_unused_proof: provolatile (0.270123ms)
+  ✔ e2_validate_unused_proof: proparallel (0.243087ms)
+  ✔ e2_validate_unused_proof: prosecdef (0.297924ms)
+  ✔ e2_validate_unused_proof: proleakproof (0.31533ms)
+  ✔ e2_validate_unused_proof: proisstrict (0.244083ms)
+  ✔ e2_validate_unused_proof: proretset (0.277578ms)
+  ✔ e2_validate_unused_proof: proacl (0.33584ms)
+  ✔ e2_validate_unused_proof: proconfig (0.336278ms)
+  ✔ e2_validate_unused_proof: language_name (0.248185ms)
+  ✔ e2_validate_unused_proof: owner_name (0.211284ms)
+  ✔ e2_validate_unused_proof: result_type (0.203725ms)
+  ✔ e2_validate_unused_proof: identity_arguments (0.21424ms)
+  ✔ e2_validate_unused_proof: tgenabled (0.195169ms)
+  ✔ e2_validate_unused_proof: tgtype (0.190945ms)
+  ✔ e2_validate_unused_proof: table_name (0.19239ms)
+  ✔ e2_validate_unused_proof: function_name (0.235672ms)
+  ✔ e2_validate_unused_proof: function_schema (0.200149ms)
+  ✔ e2_validate_unused_proof: args_length (0.201977ms)
+  ✔ e2_validate_unused_proof: trigger_attr (0.366006ms)
+  ✔ e2_validate_unused_proof: has_parent (0.219763ms)
+  ✔ e2_validate_unused_proof: has_qual (0.195806ms)
+  ✔ e2_validate_unused_proof: has_constraint (0.190039ms)
+  ✔ e2_validate_unused_proof: tgdeferrable (0.312417ms)
+  ✔ e2_validate_unused_proof: tginitdeferred (0.255012ms)
+  ✔ e2_abono_finalization_complete: missing (0.173339ms)
+  ✔ e2_abono_finalization_complete: prosrc (0.193617ms)
+  ✔ e2_abono_finalization_complete: prokind (0.245615ms)
+  ✔ e2_abono_finalization_complete: provolatile (0.20576ms)
+  ✔ e2_abono_finalization_complete: proparallel (0.21285ms)
+  ✔ e2_abono_finalization_complete: prosecdef (0.198608ms)
+  ✔ e2_abono_finalization_complete: proleakproof (0.238408ms)
+  ✔ e2_abono_finalization_complete: proisstrict (0.210933ms)
+  ✔ e2_abono_finalization_complete: proretset (0.208436ms)
+  ✔ e2_abono_finalization_complete: proacl (0.19687ms)
+  ✔ e2_abono_finalization_complete: proconfig (0.231639ms)
+  ✔ e2_abono_finalization_complete: language_name (0.207254ms)
+  ✔ e2_abono_finalization_complete: owner_name (0.198087ms)
+  ✔ e2_abono_finalization_complete: result_type (0.196215ms)
+  ✔ e2_abono_finalization_complete: identity_arguments (0.447035ms)
+  ✔ e2_abono_finalization_complete: tgenabled (0.239154ms)
+  ✔ e2_abono_finalization_complete: tgtype (0.205631ms)
+  ✔ e2_abono_finalization_complete: table_name (1.035572ms)
+  ✔ e2_abono_finalization_complete: function_name (0.294308ms)
+  ✔ e2_abono_finalization_complete: function_schema (0.214113ms)
+  ✔ e2_abono_finalization_complete: args_length (0.202619ms)
+  ✔ e2_abono_finalization_complete: trigger_attr (0.196368ms)
+  ✔ e2_abono_finalization_complete: has_parent (0.217404ms)
+  ✔ e2_abono_finalization_complete: has_qual (0.28685ms)
+  ✔ e2_abono_finalization_complete: has_constraint (0.236616ms)
+  ✔ e2_abono_finalization_complete: tgdeferrable (0.343206ms)
+  ✔ e2_abono_finalization_complete: tginitdeferred (0.221924ms)
+  ✔ e2_capture_application_order: missing (0.168142ms)
+  ✔ e2_capture_application_order: prosrc (0.199121ms)
+  ✔ e2_capture_application_order: prokind (0.247045ms)
+  ✔ e2_capture_application_order: provolatile (0.201365ms)
+  ✔ e2_capture_application_order: proparallel (0.196559ms)
+  ✔ e2_capture_application_order: prosecdef (0.193635ms)
+  ✔ e2_capture_application_order: proleakproof (0.244599ms)
+  ✔ e2_capture_application_order: proisstrict (0.208587ms)
+  ✔ e2_capture_application_order: proretset (0.200419ms)
+  ✔ e2_capture_application_order: proacl (0.195028ms)
+  ✔ e2_capture_application_order: proconfig (0.241271ms)
+  ✔ e2_capture_application_order: language_name (0.206244ms)
+  ✔ e2_capture_application_order: owner_name (0.250258ms)
+  ✔ e2_capture_application_order: result_type (0.200837ms)
+  ✔ e2_capture_application_order: identity_arguments (0.274528ms)
+  ✔ e2_capture_application_order: tgenabled (0.214316ms)
+  ✔ e2_capture_application_order: tgtype (0.208105ms)
+  ✔ e2_capture_application_order: table_name (0.295787ms)
+  ✔ e2_capture_application_order: function_name (0.210889ms)
+  ✔ e2_capture_application_order: function_schema (0.200427ms)
+  ✔ e2_capture_application_order: args_length (0.202913ms)
+  ✔ e2_capture_application_order: trigger_attr (0.219579ms)
+  ✔ e2_capture_application_order: has_parent (0.203116ms)
+  ✔ e2_capture_application_order: has_qual (0.197008ms)
+  ✔ e2_capture_application_order: has_constraint (0.27168ms)
+  ✔ e2_capture_application_order: tgdeferrable (0.212987ms)
+  ✔ e2_capture_application_order: tginitdeferred (0.198753ms)
+  ✔ e2_finalize_new_abono: missing (0.320937ms)
+  ✔ e2_finalize_new_abono: prosrc (0.313413ms)
+  ✔ e2_finalize_new_abono: prokind (0.234279ms)
+  ✔ e2_finalize_new_abono: provolatile (0.258415ms)
+  ✔ e2_finalize_new_abono: proparallel (0.231081ms)
+  ✔ e2_finalize_new_abono: prosecdef (0.283255ms)
+  ✔ e2_finalize_new_abono: proleakproof (0.327412ms)
+  ✔ e2_finalize_new_abono: proisstrict (0.292604ms)
+  ✔ e2_finalize_new_abono: proretset (0.227437ms)
+  ✔ e2_finalize_new_abono: proacl (0.228799ms)
+  ✔ e2_finalize_new_abono: proconfig (0.35022ms)
+  ✔ e2_finalize_new_abono: language_name (0.232597ms)
+  ✔ e2_finalize_new_abono: owner_name (0.402531ms)
+  ✔ e2_finalize_new_abono: result_type (0.373307ms)
+  ✔ e2_finalize_new_abono: identity_arguments (0.285813ms)
+  ✖ e2_attest_new_retained: missing (0.816991ms)
+  ✖ e2_attest_new_retained: prosrc (0.430534ms)
+  ✖ e2_attest_new_retained: prokind (0.378664ms)
+  ✖ e2_attest_new_retained: provolatile (0.333963ms)
+  ✖ e2_attest_new_retained: proparallel (0.278249ms)
+  ✖ e2_attest_new_retained: prosecdef (0.343239ms)
+  ✖ e2_attest_new_retained: proleakproof (0.40953ms)
+  ✖ e2_attest_new_retained: proisstrict (0.34308ms)
+  ✖ e2_attest_new_retained: proretset (0.335604ms)
+  ✖ e2_attest_new_retained: proacl (0.296132ms)
+  ✖ e2_attest_new_retained: proconfig (0.247818ms)
+  ✖ e2_attest_new_retained: language_name (0.311559ms)
+  ✖ e2_attest_new_retained: owner_name (0.262202ms)
+  ✖ e2_attest_new_retained: result_type (0.235216ms)
+  ✖ e2_attest_new_retained: identity_arguments (0.342805ms)
+✖ A+C mock preflight independently rejects each catalog drift (166.217761ms)
+ℹ tests 428
+ℹ suites 0
+ℹ pass 412
+ℹ fail 16
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 599.563771
+
+✖ failing tests:
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:333:13
+✖ e2_attest_new_retained: missing (0.816991ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.existence: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:333:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: prosrc (0.430534ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.prosrc: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: prokind (0.378664ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.prokind: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: provolatile (0.333963ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.provolatile: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: proparallel (0.278249ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.proparallel: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: prosecdef (0.343239ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.prosecdef: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: proleakproof (0.40953ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.proleakproof: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: proisstrict (0.34308ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.proisstrict: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: proretset (0.335604ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.proretset: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: proacl (0.296132ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.proacl: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: proconfig (0.247818ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.proconfig: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: language_name (0.311559ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.language_name: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: owner_name (0.262202ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.owner_name: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: result_type (0.235216ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.result_type: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_attest_new_retained: identity_arguments (0.342805ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_attest_new_retained.identity_arguments: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

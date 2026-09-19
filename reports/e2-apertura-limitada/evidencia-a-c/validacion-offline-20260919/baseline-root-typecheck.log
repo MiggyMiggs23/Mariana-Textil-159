@@ -1,0 +1,38 @@
+
+> workspace@0.0.0 typecheck /tmp/e2-ac-baseline-80eaa93d-CWNC23
+> node ./scripts/src/typecheck-runner.mjs
+
+
+> @workspace/api-server@0.0.0 typecheck /tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/api-server
+> tsc -p tsconfig.json --noEmit
+
+
+> @workspace/mariana-textil@0.0.0 typecheck /tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/mariana-textil
+> tsc -p tsconfig.json --noEmit
+
+
+> @workspace/mockup-sandbox@2.0.0 typecheck /tmp/e2-ac-baseline-80eaa93d-CWNC23/artifacts/mockup-sandbox
+> tsc -p tsconfig.json --noEmit
+
+
+> @workspace/scripts@0.0.0 typecheck /tmp/e2-ac-baseline-80eaa93d-CWNC23/scripts
+> tsc -p tsconfig.json --noEmit
+
+
+=== Typecheck summary ===
+Packages selected: 4 artifacts/scripts; library results: 7
+PASS @workspace/scanned-code [library] (0 TypeScript errors)
+PASS @workspace/number-format [library] (0 TypeScript errors)
+PASS @workspace/metered-pricing [library] (0 TypeScript errors)
+PASS @workspace/db [library] (0 TypeScript errors)
+PASS @workspace/api-client-react [library] (0 TypeScript errors)
+PASS @workspace/api-zod [library] (0 TypeScript errors)
+PASS @workspace/libraries [library-stage] (0 TypeScript errors)
+PASS @workspace/api-server [package] (0 TypeScript errors)
+PASS @workspace/mariana-textil [package] (0 TypeScript errors)
+PASS @workspace/mockup-sandbox [package] (0 TypeScript errors)
+PASS @workspace/scripts [package] (0 TypeScript errors)
+Unique TypeScript diagnostics: 0
+Repeated diagnostic emissions: 0
+Process/parser failures: 0
+RESULT: PASS (all selected checks completed; 0 TypeScript errors)

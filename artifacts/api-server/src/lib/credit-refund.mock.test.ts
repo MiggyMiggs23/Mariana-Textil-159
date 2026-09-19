@@ -21,6 +21,7 @@ const input = contract.readCreditRefundInput(1, { operacionClave: key, origen: "
 const req = { auth: { user: { id: 9 } } };
 type Row = Record<string, any>;
 function harness(options: { e2?: boolean; e1?: boolean; role?: string; missingProof?: boolean;
+  finalization?: "UNUSED" | "PARTIAL" | "FULL" | "MISSING"; retainedProof?: boolean;
   applied?: boolean; available?: number; failAudit?: boolean; closed?: boolean; historical?: boolean; mutate?: string;
   sessionSite?: number; replace?: { token: string; replacement: string } } = {}) {
   const tables: Record<string, Row> = {};
@@ -61,6 +62,23 @@ function harness(options: { e2?: boolean; e1?: boolean; role?: string; missingPr
         if (q.includes("SELECT contenido")) return { rows: draft.refund ? [draft.refund] : [] };
         if (q.includes("FROM evidencia_no_aplicada_e2")) {
           events.push("proof");
+          const retained = query.params.some(value => typeof value === "string" && value.startsWith("COBRO_RETENIDO:"));
+          const requiresFinalization = q.includes("JOIN finalizaciones_abono_e2");
+          if (retained) {
+            events.push("proof:retained");
+            // Retained receipts have no ABONO finalization. A shared inner
+            // join is a real rejection, not a mock that fabricates a row.
+            if (requiresFinalization || options.retainedProof === false) return { rows: [] };
+            assert.match(q, /p\.abono_id IS NULL/);
+            assert.match(q, /p\.cobro_productor='COBRO_PENDIENTE'/);
+            assert.match(q, /p\.cobro_clave=\?::uuid/);
+          } else {
+            events.push("proof:abono");
+            // If a mutant drops the join, it incorrectly admits a proof even
+            // when finalization is absent/used; the rejection tests detect it.
+            if (requiresFinalization && (options.finalization ?? "UNUSED") !== "UNUSED") return { rows: [] };
+            if (requiresFinalization) assert.match(q, /f\.resultado='UNUSED'/);
+          }
           return { rows: options.missingProof ? [] : [{ fuente: "proof" }] };
         }
         if (q.includes("SELECT * FROM cobros")) {
@@ -218,6 +236,24 @@ test("isolated future simulation: both origins, exact replay, single outflow, re
     assert.equal(h.state().writes.includes("movimientosCreditoTable"), data.origen === "ABONO");
     await assert.rejects(h.run({ ...data, motivo: "otro motivo" }), /UUID/);
   }
+});
+test("positive proof is typed: ABONO needs UNUSED; retained needs its own proof without ABONO", async () => {
+  for (const finalization of ["MISSING", "PARTIAL", "FULL"] as const) {
+    const h = harness({ e2: true, e1: true, finalization });
+    await assert.rejects(h.run(), /falta prueba positiva/);
+    assert.deepEqual(h.state().writes, []);
+  }
+  const retained = { ...input, origen: "COBRO_RETENIDO" as const, abonoId: null, cobroClave: key };
+  const valid = harness({ e2: true, e1: true, finalization: "MISSING" });
+  const reply = await valid.run(retained);
+  assert.equal(reply.reversoId, null);
+  assert.ok(valid.events.includes("proof:retained"));
+  assert.equal(valid.events.includes("proof:abono"), false);
+  assert.equal(valid.state().outflows.length, 1);
+  assert.equal(valid.state().reversals.length, 0);
+  const missing = harness({ e2: true, e1: true, retainedProof: false });
+  await assert.rejects(missing.run(retained), /falta prueba positiva/);
+  assert.deepEqual(missing.state().writes, []);
 });
 test("isolated future simulation: current authorization, positive proof, history, projection, session, rollback", async () => {
   for (const options of [{ role: "CAJA" }, { missingProof: true }, { applied: true }, { available: 2000 },

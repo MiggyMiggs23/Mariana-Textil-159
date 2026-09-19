@@ -2,7 +2,14 @@
 // Shared offline contract for the SQL, coordinator, boot worker, and structural proof.
 import { pathToFileURL } from "node:url";
 
-export const PLAN_VERSION = "E2_APERTURA_LIMITADA_PLAN_V2";
+export const PLAN_VERSION = "E2_APERTURA_LIMITADA_PLAN_V3";
+// File bytes, not permission to execute. Order is part of the approval digest.
+export const EVIDENCE_ARTIFACTS = Object.freeze([
+  Object.freeze({ file: "../evidencia-a-c/01-install-evidence-prepared.sql", sha256: "dd99574f022b4d325a73238bf0d1e348e015003d2dad3ebc9de00ede8b094cbd" }),
+  Object.freeze({ file: "../evidencia-a-c/02-revert-before-capture-only.sql", sha256: "522f8bac6d8b78e2eee158e47249aac8e8fac264cabd64546b00b6f3bf7ae4bc" }),
+  Object.freeze({ file: "../../e2/sql/credit-refunds-prepared.sql", sha256: "1bb36ac4eddd07d54e28686b83a3ded3d98b115e4190fbce6e97a11c7576587d" }),
+  Object.freeze({ file: "../evidencia-a-c/03-preflight-schema-prepared.sql", sha256: "f5870c20276001bd2c8269e534b2ef696217e13087a27cd350127ce8dfa9b5d2" }),
+]);
 export const REPORT_DIGESTS = Object.freeze({
   sourceReport: "reports/e1-guardas-operativa-2026-09-18/operational-run-1789747937364-3434.json",
   closedFunctionsSha256: "59dd73520c3d11cc65b3f2fac25f46a4560ca45700c5c981c21e17dfe80988fd",
@@ -20,7 +27,7 @@ export const FUNCTION_METADATA = Object.freeze({
   publicGrantable: false,
   config: Object.freeze(["search_path=pg_catalog, public"]),
 });
-const trigger = (table, name, type, fn) => Object.freeze({
+const trigger = (table, name, type, fn, hasConstraint = false) => Object.freeze({
   tableSchema: "public",
   table,
   name,
@@ -33,7 +40,7 @@ const trigger = (table, name, type, fn) => Object.freeze({
   functionSecurityDefiner: false,
   argsLength: 0,
   attr: "",
-  hasConstraint: false,
+  hasConstraint,
   hasParent: false,
   hasQual: false,
 });
@@ -48,6 +55,12 @@ export const TRIGGER_CONTRACTS = Object.freeze([
   trigger("atribuciones_credito_e1", "atribuciones_inmutables_e1", 58, "impedir_mutacion_credito_e1"),
   trigger("atribuciones_credito_e1", "atribuciones_validas_e1", 7, "validar_atribucion_credito_e1"),
   trigger("atribuciones_credito_e1", "zz_e1_historical_attribution_closed", 4, "e1_guard_historical_attribution_closed"),
+  trigger("finalizaciones_abono_e2", "e2_finalization_immutable", 58, "e2_reject_evidence_mutation"),
+  trigger("finalizaciones_abono_e2", "e2_validate_abono_finalization", 7, "e2_validate_abono_finalization"),
+  trigger("evidencia_no_aplicada_e2", "e2_proof_immutable", 58, "e2_reject_evidence_mutation"),
+  trigger("evidencia_no_aplicada_e2", "e2_validate_unused_proof", 7, "e2_validate_unused_proof"),
+  trigger("movimientos_credito", "e2_abono_finalization_complete", 5, "e2_require_abono_finalization", true),
+  trigger("aplicaciones_credito", "e2_capture_application_order", 7, "e2_guard_finalized_capture_application"),
   trigger("auditoria", "auditoria_append_only", 27, "proteger_auditoria_append_only"),
 ]);
 export const AUDIT_CONTRACT = Object.freeze({
@@ -74,5 +87,6 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     triggers: TRIGGER_CONTRACTS,
     audit: AUDIT_CONTRACT,
     sqlManifest: SQL_MANIFEST,
+    evidenceArtifacts: EVIDENCE_ARTIFACTS,
   }, null, 2)}\n`);
 }

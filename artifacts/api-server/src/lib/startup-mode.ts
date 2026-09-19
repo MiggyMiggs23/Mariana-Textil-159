@@ -1,10 +1,14 @@
 // Mirrors PLAN_VERSION/REPORT_DIGESTS in the coordinated offline SQL contract.
-export const LIMITED_STARTUP_REVISION = "e2-limited-readonly-v2";
+export const LIMITED_STARTUP_REVISION = "e2-limited-readonly-v3";
 export const LIMITED_STARTUP_ROUTE = "/api";
 export const LIMITED_STARTUP_SQL_PLAN_FINGERPRINTS = [
   "59dd73520c3d11cc65b3f2fac25f46a4560ca45700c5c981c21e17dfe80988fd",
   "982aa15dcce33633ccf42ae5a79f03858bd2ff0eee26724da8858f1216accb05",
   "9e7e5b8de15d7079105c3d29416142e6f2825c8cd1828f85f8b67a1e4e842099",
+  "dd99574f022b4d325a73238bf0d1e348e015003d2dad3ebc9de00ede8b094cbd",
+  "522f8bac6d8b78e2eee158e47249aac8e8fac264cabd64546b00b6f3bf7ae4bc",
+  "1bb36ac4eddd07d54e28686b83a3ded3d98b115e4190fbce6e97a11c7576587d",
+  "f5870c20276001bd2c8269e534b2ef696217e13087a27cd350127ce8dfa9b5d2",
 ] as const;
 export const LIMITED_STARTUP_VERIFICATIONS = [
   "identity",

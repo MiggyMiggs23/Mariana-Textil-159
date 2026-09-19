@@ -1,0 +1,54 @@
+A+C offline SQL structural checks: PASS
+apply sha256=added872e66f600c0cc70894146d98258bbb43dfdb51e1d03ad1b2bef81580f8 inventory={"begin":1,"commit":1,"lock":1,"select":13,"replaceTarget":1,"forbiddenDml":0,"forbiddenObjectDdl":0}
+revert sha256=fa7449f49bcc5434247e590bff274e7c0e57dbf873c3a88d8bd3783a8b299b5b inventory={"begin":1,"commit":1,"lock":1,"select":14,"replaceTarget":1,"forbiddenDml":0,"forbiddenObjectDdl":0}
+PASS: 10 isolated negative copies detected; PostgreSQL not executed
+✔ limited mode requires the exact approved JSON state; normal remains unchanged (2.335809ms)
+✔ enabled A+C evidence requires its schema before limited startup can listen (1.49984ms)
+✔ A+C combined inventory supports closed-preserved and rejects each schema drift (23.316979ms)
+✔ read-only preflight commits only after schema and all three old guards match (0.673289ms)
+✔ missing schema fails closed, rolls back, and releases (0.303331ms)
+✔ full traffic manifest rejects missing audit, cash-exit, location, provider and session context (0.812765ms)
+✔ dropping the permanent session/site/nature E1 context trigger fails closed (0.477311ms)
+✔ a wrong E1 guard fails closed (0.485044ms)
+✔ catalog exceptions attempt rollback and always release (0.308783ms)
+✔ actual index source keeps limited preflight before listen and suppresses every startup writer (34.086132ms)
+✔ actual application import graph has no automatic session-store maintenance hooks (145.013562ms)
+✔ normal startup stays unchanged unless inspection is explicitly requested (2.509332ms)
+✔ inspection requires explicit development and cannot use an absent/false NODE_ENV as an escape (0.317627ms)
+✔ inspection bypasses schema initialization and returns before writing maintenance (109.321367ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1996.368156
+
+FINAL directed provenance verification (offline only)
+A+C offline SQL structural checks: PASS
+apply sha256=7d49afaf58009f56edb2cb2984f975209e37a1711024cd1bf5f45ba95c47ef58 inventory={"begin":1,"commit":1,"lock":1,"select":13,"replaceTarget":1,"forbiddenDml":0,"forbiddenObjectDdl":0}
+revert sha256=44e14eed6162a2e763013f960bc95520520b8e3f0fe8bc5a42d62abae16a86ce inventory={"begin":1,"commit":1,"lock":1,"select":14,"replaceTarget":1,"forbiddenDml":0,"forbiddenObjectDdl":0}
+PASS: 10 isolated negative copies detected; PostgreSQL not executed
+✔ limited mode requires the exact approved JSON state; normal remains unchanged (2.374494ms)
+✔ enabled A+C evidence requires its schema before limited startup can listen (1.564298ms)
+✔ A+C combined inventory supports closed-preserved and rejects each schema drift (22.084669ms)
+✔ read-only preflight commits only after schema and all three old guards match (0.650521ms)
+✔ missing schema fails closed, rolls back, and releases (0.298912ms)
+✔ full traffic manifest rejects missing audit, cash-exit, location, provider and session context (0.819488ms)
+✔ dropping the permanent session/site/nature E1 context trigger fails closed (0.441006ms)
+✔ a wrong E1 guard fails closed (0.482678ms)
+✔ catalog exceptions attempt rollback and always release (0.305154ms)
+✔ actual index source keeps limited preflight before listen and suppresses every startup writer (23.752394ms)
+✔ actual application import graph has no automatic session-store maintenance hooks (1.359283ms)
+✔ normal startup stays unchanged unless inspection is explicitly requested (1.267206ms)
+✔ inspection requires explicit development and cannot use an absent/false NODE_ENV as an escape (0.273678ms)
+✔ inspection bypasses schema initialization and returns before writing maintenance (0.495356ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 482.462019

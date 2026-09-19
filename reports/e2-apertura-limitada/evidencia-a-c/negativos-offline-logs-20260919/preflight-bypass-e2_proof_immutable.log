@@ -1,0 +1,855 @@
+✔ mounted ordinary producer: UNUSED/PARTIAL/FULL and FIFO persistence ordering (283.712829ms)
+✔ mounted directed approval finalizes FULL only after its application (25.72903ms)
+✔ actual core rejects directed result/amount mismatches before persistence (0.604851ms)
+✔ positive proof is mandatory in the real refund service (65.849313ms)
+✔ real refund service accepts both origins and rejects absent/used ABONO finalization (60.334608ms)
+✔ R4 application-order guard exists in prepared SQL (LEXICAL ONLY, not SQL semantics) (0.445958ms)
+▶ A+C mock preflight independently rejects each catalog drift
+  ✔ finalizaciones_abono_e2.abono_id: missing (0.619503ms)
+  ✔ finalizaciones_abono_e2.abono_id: data_type (0.496694ms)
+  ✔ finalizaciones_abono_e2.abono_id: is_nullable (0.350853ms)
+  ✔ finalizaciones_abono_e2.abono_id: column_default (0.510243ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: missing (0.257389ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: data_type (0.2624ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: is_nullable (0.216944ms)
+  ✔ finalizaciones_abono_e2.operacion_productor: column_default (0.204089ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: missing (0.412514ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: data_type (0.207972ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: is_nullable (0.192989ms)
+  ✔ finalizaciones_abono_e2.operacion_clave: column_default (0.276136ms)
+  ✔ finalizaciones_abono_e2.cliente_id: missing (5.224109ms)
+  ✔ finalizaciones_abono_e2.cliente_id: data_type (0.226109ms)
+  ✔ finalizaciones_abono_e2.cliente_id: is_nullable (0.255023ms)
+  ✔ finalizaciones_abono_e2.cliente_id: column_default (0.23073ms)
+  ✔ finalizaciones_abono_e2.importe: missing (0.167856ms)
+  ✔ finalizaciones_abono_e2.importe: data_type (0.19766ms)
+  ✔ finalizaciones_abono_e2.importe: is_nullable (0.169153ms)
+  ✔ finalizaciones_abono_e2.importe: column_default (0.248888ms)
+  ✔ finalizaciones_abono_e2.importe: numeric_precision (0.163026ms)
+  ✔ finalizaciones_abono_e2.importe: numeric_scale (0.256916ms)
+  ✔ finalizaciones_abono_e2.resultado: missing (0.210004ms)
+  ✔ finalizaciones_abono_e2.resultado: data_type (0.18332ms)
+  ✔ finalizaciones_abono_e2.resultado: is_nullable (0.274336ms)
+  ✔ finalizaciones_abono_e2.resultado: column_default (0.22826ms)
+  ✔ finalizaciones_abono_e2.aplicado: missing (0.247673ms)
+  ✔ finalizaciones_abono_e2.aplicado: data_type (0.177043ms)
+  ✔ finalizaciones_abono_e2.aplicado: is_nullable (0.236555ms)
+  ✔ finalizaciones_abono_e2.aplicado: column_default (0.218571ms)
+  ✔ finalizaciones_abono_e2.aplicado: numeric_precision (0.203917ms)
+  ✔ finalizaciones_abono_e2.aplicado: numeric_scale (0.151117ms)
+  ✔ finalizaciones_abono_e2.evaluacion: missing (0.248379ms)
+  ✔ finalizaciones_abono_e2.evaluacion: data_type (0.237164ms)
+  ✔ finalizaciones_abono_e2.evaluacion: is_nullable (0.195741ms)
+  ✔ finalizaciones_abono_e2.evaluacion: column_default (0.144653ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: missing (0.143794ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: data_type (0.138567ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: is_nullable (0.143088ms)
+  ✔ finalizaciones_abono_e2.contrato_revision: column_default (0.225326ms)
+  ✔ finalizaciones_abono_e2.created_at: missing (0.151654ms)
+  ✔ finalizaciones_abono_e2.created_at: data_type (0.139059ms)
+  ✔ finalizaciones_abono_e2.created_at: is_nullable (0.140779ms)
+  ✔ finalizaciones_abono_e2.created_at: column_default (0.137924ms)
+  ✔ evidencia_no_aplicada_e2.fuente: missing (0.209174ms)
+  ✔ evidencia_no_aplicada_e2.fuente: data_type (0.150208ms)
+  ✔ evidencia_no_aplicada_e2.fuente: is_nullable (0.140205ms)
+  ✔ evidencia_no_aplicada_e2.fuente: column_default (0.141209ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: missing (0.134043ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: data_type (0.133534ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: is_nullable (0.15235ms)
+  ✔ evidencia_no_aplicada_e2.abono_id: column_default (0.140253ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: missing (0.134755ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: data_type (0.137383ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: is_nullable (0.18358ms)
+  ✔ evidencia_no_aplicada_e2.cobro_productor: column_default (0.1743ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: missing (0.149336ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: data_type (0.140573ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: is_nullable (0.137701ms)
+  ✔ evidencia_no_aplicada_e2.cobro_clave: column_default (0.137786ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: missing (0.22484ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: data_type (0.291717ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: is_nullable (0.224735ms)
+  ✔ evidencia_no_aplicada_e2.cliente_id: column_default (0.17958ms)
+  ✔ evidencia_no_aplicada_e2.importe: missing (0.172708ms)
+  ✔ evidencia_no_aplicada_e2.importe: data_type (0.149624ms)
+  ✔ evidencia_no_aplicada_e2.importe: is_nullable (0.189953ms)
+  ✔ evidencia_no_aplicada_e2.importe: column_default (0.141702ms)
+  ✔ evidencia_no_aplicada_e2.importe: numeric_precision (0.135974ms)
+  ✔ evidencia_no_aplicada_e2.importe: numeric_scale (0.185225ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: missing (0.222301ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: data_type (0.154819ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: is_nullable (0.148493ms)
+  ✔ evidencia_no_aplicada_e2.forma_pago: column_default (0.143634ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: missing (0.154796ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: data_type (0.138656ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: is_nullable (0.163645ms)
+  ✔ evidencia_no_aplicada_e2.naturaleza: column_default (0.201551ms)
+  ✔ evidencia_no_aplicada_e2.created_at: missing (0.22178ms)
+  ✔ evidencia_no_aplicada_e2.created_at: data_type (0.199318ms)
+  ✔ evidencia_no_aplicada_e2.created_at: is_nullable (0.1767ms)
+  ✔ evidencia_no_aplicada_e2.created_at: column_default (0.465744ms)
+  ✔ finalizaciones_abono_e2_pkey: missing (0.273387ms)
+  ✔ finalizaciones_abono_e2_pkey: table_name (0.320575ms)
+  ✔ finalizaciones_abono_e2_pkey: definition (0.40577ms)
+  ✔ finalizaciones_abono_e2_pkey: convalidated (0.229083ms)
+  ✔ finalizaciones_abono_e2_pkey: condeferrable (0.19729ms)
+  ✔ finalizaciones_abono_e2_pkey: condeferred (0.217393ms)
+  ✔ finalizaciones_abono_e2_pkey: index_valid (0.198602ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: missing (0.175661ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: table_name (0.176904ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: definition (0.345919ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: convalidated (0.212224ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: condeferrable (0.184786ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: condeferred (0.175405ms)
+  ✔ finalizaciones_abono_e2_abono_id_fkey: index_valid (0.20997ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: missing (0.278673ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: table_name (0.224339ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: definition (0.22416ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: convalidated (0.192364ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: condeferrable (0.180507ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: condeferred (0.176133ms)
+  ✔ finalizaciones_abono_e2_cliente_id_fkey: index_valid (0.174246ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: missing (0.200901ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: table_name (0.261585ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: definition (0.207533ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: convalidated (0.268069ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: condeferrable (0.220099ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: condeferred (0.187967ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_operacion_clave_key: index_valid (0.178315ms)
+  ✔ finalizaciones_abono_e2_importe_check: missing (0.212923ms)
+  ✔ finalizaciones_abono_e2_importe_check: table_name (0.188055ms)
+  ✔ finalizaciones_abono_e2_importe_check: definition (0.176226ms)
+  ✔ finalizaciones_abono_e2_importe_check: convalidated (0.172375ms)
+  ✔ finalizaciones_abono_e2_importe_check: condeferrable (0.175689ms)
+  ✔ finalizaciones_abono_e2_importe_check: condeferred (0.223031ms)
+  ✔ finalizaciones_abono_e2_importe_check: index_valid (0.180905ms)
+  ✔ finalizaciones_abono_e2_resultado_check: missing (0.16928ms)
+  ✔ finalizaciones_abono_e2_resultado_check: table_name (0.236839ms)
+  ✔ finalizaciones_abono_e2_resultado_check: definition (0.225951ms)
+  ✔ finalizaciones_abono_e2_resultado_check: convalidated (0.183346ms)
+  ✔ finalizaciones_abono_e2_resultado_check: condeferrable (0.185152ms)
+  ✔ finalizaciones_abono_e2_resultado_check: condeferred (0.176653ms)
+  ✔ finalizaciones_abono_e2_resultado_check: index_valid (0.257741ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: missing (0.193064ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: table_name (0.18005ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: definition (0.18413ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: convalidated (0.215451ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: condeferrable (0.194666ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: condeferred (0.317678ms)
+  ✔ finalizaciones_abono_e2_aplicado_check: index_valid (0.189231ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: missing (0.219273ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: table_name (0.192553ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: definition (0.183889ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: convalidated (0.1811ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: condeferrable (0.215513ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: condeferred (0.195617ms)
+  ✔ finalizaciones_abono_e2_evaluacion_check: index_valid (0.181567ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: missing (0.176447ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: table_name (0.18106ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: definition (0.273993ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: convalidated (0.255323ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: condeferrable (0.244034ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: condeferred (0.26531ms)
+  ✔ finalizaciones_abono_e2_contrato_revision_check: index_valid (0.254449ms)
+  ✔ finalizaciones_abono_e2_check: missing (0.191536ms)
+  ✔ finalizaciones_abono_e2_check: table_name (0.195795ms)
+  ✔ finalizaciones_abono_e2_check: definition (0.234565ms)
+  ✔ finalizaciones_abono_e2_check: convalidated (0.188264ms)
+  ✔ finalizaciones_abono_e2_check: condeferrable (0.199558ms)
+  ✔ finalizaciones_abono_e2_check: condeferred (0.198322ms)
+  ✔ finalizaciones_abono_e2_check: index_valid (0.278221ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: missing (0.177497ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: table_name (0.192761ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: definition (0.233102ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: convalidated (0.28023ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: condeferrable (0.202697ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: condeferred (0.194024ms)
+  ✔ finalizaciones_abono_e2_operacion_productor_check: index_valid (0.229215ms)
+  ✔ evidencia_no_aplicada_e2_pkey: missing (0.232766ms)
+  ✔ evidencia_no_aplicada_e2_pkey: table_name (0.29121ms)
+  ✔ evidencia_no_aplicada_e2_pkey: definition (0.282489ms)
+  ✔ evidencia_no_aplicada_e2_pkey: convalidated (0.289684ms)
+  ✔ evidencia_no_aplicada_e2_pkey: condeferrable (0.392158ms)
+  ✔ evidencia_no_aplicada_e2_pkey: condeferred (0.352432ms)
+  ✔ evidencia_no_aplicada_e2_pkey: index_valid (0.286602ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: missing (0.24082ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: table_name (0.340559ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: definition (0.315626ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: convalidated (0.227237ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: condeferrable (0.240323ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: condeferred (0.199051ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_key: index_valid (0.19476ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: missing (0.171427ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: table_name (0.863212ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: definition (0.30009ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: convalidated (0.219173ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: condeferrable (0.200127ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: condeferred (0.192101ms)
+  ✔ evidencia_no_aplicada_e2_cobro_clave_key: index_valid (0.299608ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: missing (0.194097ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: table_name (0.19768ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: definition (0.194241ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: convalidated (0.297311ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: condeferrable (0.211585ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: condeferred (0.194837ms)
+  ✔ evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey: index_valid (0.297628ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: missing (0.197761ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: table_name (0.198698ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: definition (0.194356ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: convalidated (0.229825ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: condeferrable (0.218791ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: condeferred (0.208697ms)
+  ✔ evidencia_no_aplicada_e2_abono_id_fkey: index_valid (0.191735ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: missing (0.196492ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: table_name (0.220591ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: definition (0.194804ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: convalidated (0.200429ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: condeferrable (0.393503ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: condeferred (0.2274ms)
+  ✔ evidencia_no_aplicada_e2_cliente_id_fkey: index_valid (0.201322ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: missing (0.173268ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: table_name (0.218727ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: definition (0.196646ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: convalidated (0.195927ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: condeferrable (0.198374ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: condeferred (0.24824ms)
+  ✔ evidencia_no_aplicada_e2_importe_check: index_valid (0.20299ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: missing (0.188645ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: table_name (0.232753ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: definition (0.234881ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: convalidated (0.200248ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: condeferrable (0.197557ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: condeferred (0.233143ms)
+  ✔ evidencia_no_aplicada_e2_forma_pago_check: index_valid (0.218743ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: missing (0.170006ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: table_name (0.196397ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: definition (0.224681ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: convalidated (0.266712ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: condeferrable (0.209646ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: condeferred (0.202567ms)
+  ✔ evidencia_no_aplicada_e2_naturaleza_check: index_valid (0.237029ms)
+  ✔ evidencia_no_aplicada_e2_check: missing (0.192714ms)
+  ✔ evidencia_no_aplicada_e2_check: table_name (0.200758ms)
+  ✔ evidencia_no_aplicada_e2_check: definition (0.201811ms)
+  ✔ evidencia_no_aplicada_e2_check: convalidated (0.291292ms)
+  ✔ evidencia_no_aplicada_e2_check: condeferrable (0.233005ms)
+  ✔ evidencia_no_aplicada_e2_check: condeferred (0.279239ms)
+  ✔ evidencia_no_aplicada_e2_check: index_valid (0.220327ms)
+  ✔ e2_finalization_immutable: missing (0.347481ms)
+  ✔ e2_finalization_immutable: prosrc (0.320425ms)
+  ✔ e2_finalization_immutable: prokind (0.315994ms)
+  ✔ e2_finalization_immutable: provolatile (0.248872ms)
+  ✔ e2_finalization_immutable: proparallel (0.302825ms)
+  ✔ e2_finalization_immutable: prosecdef (0.295314ms)
+  ✔ e2_finalization_immutable: proleakproof (0.34614ms)
+  ✔ e2_finalization_immutable: proisstrict (0.300778ms)
+  ✔ e2_finalization_immutable: proretset (0.273064ms)
+  ✔ e2_finalization_immutable: proacl (0.244177ms)
+  ✔ e2_finalization_immutable: proconfig (0.234786ms)
+  ✔ e2_finalization_immutable: language_name (0.288517ms)
+  ✔ e2_finalization_immutable: owner_name (0.239263ms)
+  ✔ e2_finalization_immutable: result_type (0.232738ms)
+  ✔ e2_finalization_immutable: identity_arguments (0.268877ms)
+  ✔ e2_finalization_immutable: tgenabled (0.284258ms)
+  ✔ e2_finalization_immutable: tgtype (0.230799ms)
+  ✔ e2_finalization_immutable: table_name (0.627888ms)
+  ✔ e2_finalization_immutable: function_name (0.257671ms)
+  ✔ e2_finalization_immutable: function_schema (0.397299ms)
+  ✔ e2_finalization_immutable: args_length (0.352069ms)
+  ✔ e2_finalization_immutable: trigger_attr (0.380278ms)
+  ✔ e2_finalization_immutable: has_parent (6.466804ms)
+  ✔ e2_finalization_immutable: has_qual (0.417997ms)
+  ✔ e2_finalization_immutable: has_constraint (0.247108ms)
+  ✔ e2_finalization_immutable: tgdeferrable (0.264963ms)
+  ✔ e2_finalization_immutable: tginitdeferred (0.263104ms)
+  ✔ e2_validate_abono_finalization: missing (0.188894ms)
+  ✔ e2_validate_abono_finalization: prosrc (0.286268ms)
+  ✔ e2_validate_abono_finalization: prokind (0.254965ms)
+  ✔ e2_validate_abono_finalization: provolatile (0.21392ms)
+  ✔ e2_validate_abono_finalization: proparallel (0.195175ms)
+  ✔ e2_validate_abono_finalization: prosecdef (0.193673ms)
+  ✔ e2_validate_abono_finalization: proleakproof (0.186638ms)
+  ✔ e2_validate_abono_finalization: proisstrict (0.214857ms)
+  ✔ e2_validate_abono_finalization: proretset (0.186007ms)
+  ✔ e2_validate_abono_finalization: proacl (0.182444ms)
+  ✔ e2_validate_abono_finalization: proconfig (0.254679ms)
+  ✔ e2_validate_abono_finalization: language_name (0.22781ms)
+  ✔ e2_validate_abono_finalization: owner_name (0.201991ms)
+  ✔ e2_validate_abono_finalization: result_type (0.206294ms)
+  ✔ e2_validate_abono_finalization: identity_arguments (0.306892ms)
+  ✔ e2_validate_abono_finalization: tgenabled (0.220187ms)
+  ✔ e2_validate_abono_finalization: tgtype (0.196506ms)
+  ✔ e2_validate_abono_finalization: table_name (0.196629ms)
+  ✔ e2_validate_abono_finalization: function_name (0.230538ms)
+  ✔ e2_validate_abono_finalization: function_schema (0.205244ms)
+  ✔ e2_validate_abono_finalization: args_length (0.194025ms)
+  ✔ e2_validate_abono_finalization: trigger_attr (0.188875ms)
+  ✔ e2_validate_abono_finalization: has_parent (0.223788ms)
+  ✔ e2_validate_abono_finalization: has_qual (0.211873ms)
+  ✔ e2_validate_abono_finalization: has_constraint (0.197307ms)
+  ✔ e2_validate_abono_finalization: tgdeferrable (0.188797ms)
+  ✔ e2_validate_abono_finalization: tginitdeferred (0.188659ms)
+  ✔ e2_proof_immutable: missing (0.251564ms)
+  ✖ e2_proof_immutable: prosrc (0.90642ms)
+  ✖ e2_proof_immutable: prokind (0.388921ms)
+  ✖ e2_proof_immutable: provolatile (0.446349ms)
+  ✖ e2_proof_immutable: proparallel (0.451082ms)
+  ✖ e2_proof_immutable: prosecdef (0.349023ms)
+  ✖ e2_proof_immutable: proleakproof (0.355607ms)
+  ✖ e2_proof_immutable: proisstrict (0.279897ms)
+  ✖ e2_proof_immutable: proretset (0.289573ms)
+  ✖ e2_proof_immutable: proacl (0.315109ms)
+  ✖ e2_proof_immutable: proconfig (0.35696ms)
+  ✖ e2_proof_immutable: language_name (0.271561ms)
+  ✖ e2_proof_immutable: owner_name (0.247847ms)
+  ✖ e2_proof_immutable: result_type (0.307664ms)
+  ✖ e2_proof_immutable: identity_arguments (0.264562ms)
+  ✖ e2_proof_immutable: tgenabled (0.390658ms)
+  ✖ e2_proof_immutable: tgtype (0.418333ms)
+  ✖ e2_proof_immutable: table_name (0.39692ms)
+  ✖ e2_proof_immutable: function_name (0.439273ms)
+  ✖ e2_proof_immutable: function_schema (0.265946ms)
+  ✖ e2_proof_immutable: args_length (0.235684ms)
+  ✖ e2_proof_immutable: trigger_attr (0.304325ms)
+  ✖ e2_proof_immutable: has_parent (0.243738ms)
+  ✖ e2_proof_immutable: has_qual (0.229641ms)
+  ✖ e2_proof_immutable: has_constraint (0.273461ms)
+  ✖ e2_proof_immutable: tgdeferrable (0.23377ms)
+  ✖ e2_proof_immutable: tginitdeferred (0.226333ms)
+  ✔ e2_validate_unused_proof: missing (0.196899ms)
+  ✔ e2_validate_unused_proof: prosrc (0.260455ms)
+  ✔ e2_validate_unused_proof: prokind (0.354545ms)
+  ✔ e2_validate_unused_proof: provolatile (0.32291ms)
+  ✔ e2_validate_unused_proof: proparallel (0.228773ms)
+  ✔ e2_validate_unused_proof: prosecdef (0.20994ms)
+  ✔ e2_validate_unused_proof: proleakproof (0.251313ms)
+  ✔ e2_validate_unused_proof: proisstrict (0.297965ms)
+  ✔ e2_validate_unused_proof: proretset (0.277309ms)
+  ✔ e2_validate_unused_proof: proacl (0.236482ms)
+  ✔ e2_validate_unused_proof: proconfig (0.244049ms)
+  ✔ e2_validate_unused_proof: language_name (0.206426ms)
+  ✔ e2_validate_unused_proof: owner_name (0.192919ms)
+  ✔ e2_validate_unused_proof: result_type (0.192171ms)
+  ✔ e2_validate_unused_proof: identity_arguments (0.24332ms)
+  ✔ e2_validate_unused_proof: tgenabled (0.216028ms)
+  ✔ e2_validate_unused_proof: tgtype (0.19791ms)
+  ✔ e2_validate_unused_proof: table_name (0.190835ms)
+  ✔ e2_validate_unused_proof: function_name (0.188063ms)
+  ✔ e2_validate_unused_proof: function_schema (0.229582ms)
+  ✔ e2_validate_unused_proof: args_length (0.206451ms)
+  ✔ e2_validate_unused_proof: trigger_attr (0.298644ms)
+  ✔ e2_validate_unused_proof: has_parent (0.239861ms)
+  ✔ e2_validate_unused_proof: has_qual (0.211482ms)
+  ✔ e2_validate_unused_proof: has_constraint (0.193147ms)
+  ✔ e2_validate_unused_proof: tgdeferrable (0.209771ms)
+  ✔ e2_validate_unused_proof: tginitdeferred (0.240009ms)
+  ✔ e2_abono_finalization_complete: missing (0.173027ms)
+  ✔ e2_abono_finalization_complete: prosrc (0.252401ms)
+  ✔ e2_abono_finalization_complete: prokind (0.236891ms)
+  ✔ e2_abono_finalization_complete: provolatile (0.222526ms)
+  ✔ e2_abono_finalization_complete: proparallel (0.200673ms)
+  ✔ e2_abono_finalization_complete: prosecdef (0.198008ms)
+  ✔ e2_abono_finalization_complete: proleakproof (0.19767ms)
+  ✔ e2_abono_finalization_complete: proisstrict (0.31246ms)
+  ✔ e2_abono_finalization_complete: proretset (0.2102ms)
+  ✔ e2_abono_finalization_complete: proacl (0.203438ms)
+  ✔ e2_abono_finalization_complete: proconfig (0.229998ms)
+  ✔ e2_abono_finalization_complete: language_name (0.218977ms)
+  ✔ e2_abono_finalization_complete: owner_name (0.20254ms)
+  ✔ e2_abono_finalization_complete: result_type (0.196577ms)
+  ✔ e2_abono_finalization_complete: identity_arguments (1.106396ms)
+  ✔ e2_abono_finalization_complete: tgenabled (0.283881ms)
+  ✔ e2_abono_finalization_complete: tgtype (0.217513ms)
+  ✔ e2_abono_finalization_complete: table_name (0.204553ms)
+  ✔ e2_abono_finalization_complete: function_name (0.196325ms)
+  ✔ e2_abono_finalization_complete: function_schema (0.283757ms)
+  ✔ e2_abono_finalization_complete: args_length (0.208936ms)
+  ✔ e2_abono_finalization_complete: trigger_attr (0.207504ms)
+  ✔ e2_abono_finalization_complete: has_parent (0.232997ms)
+  ✔ e2_abono_finalization_complete: has_qual (0.238812ms)
+  ✔ e2_abono_finalization_complete: has_constraint (0.23862ms)
+  ✔ e2_abono_finalization_complete: tgdeferrable (0.205404ms)
+  ✔ e2_abono_finalization_complete: tginitdeferred (0.237426ms)
+  ✔ e2_capture_application_order: missing (0.184169ms)
+  ✔ e2_capture_application_order: prosrc (0.203988ms)
+  ✔ e2_capture_application_order: prokind (0.213446ms)
+  ✔ e2_capture_application_order: provolatile (0.245658ms)
+  ✔ e2_capture_application_order: proparallel (0.218155ms)
+  ✔ e2_capture_application_order: prosecdef (0.209695ms)
+  ✔ e2_capture_application_order: proleakproof (0.200561ms)
+  ✔ e2_capture_application_order: proisstrict (0.27485ms)
+  ✔ e2_capture_application_order: proretset (0.219256ms)
+  ✔ e2_capture_application_order: proacl (0.201623ms)
+  ✔ e2_capture_application_order: proconfig (0.208112ms)
+  ✔ e2_capture_application_order: language_name (0.241319ms)
+  ✔ e2_capture_application_order: owner_name (0.27628ms)
+  ✔ e2_capture_application_order: result_type (0.228696ms)
+  ✔ e2_capture_application_order: identity_arguments (0.239472ms)
+  ✔ e2_capture_application_order: tgenabled (0.227991ms)
+  ✔ e2_capture_application_order: tgtype (0.204241ms)
+  ✔ e2_capture_application_order: table_name (0.256853ms)
+  ✔ e2_capture_application_order: function_name (0.251351ms)
+  ✔ e2_capture_application_order: function_schema (0.212718ms)
+  ✔ e2_capture_application_order: args_length (0.206067ms)
+  ✔ e2_capture_application_order: trigger_attr (0.205543ms)
+  ✔ e2_capture_application_order: has_parent (0.291141ms)
+  ✔ e2_capture_application_order: has_qual (0.225904ms)
+  ✔ e2_capture_application_order: has_constraint (0.253135ms)
+  ✔ e2_capture_application_order: tgdeferrable (0.244996ms)
+  ✔ e2_capture_application_order: tginitdeferred (0.218107ms)
+  ✔ e2_finalize_new_abono: missing (0.326687ms)
+  ✔ e2_finalize_new_abono: prosrc (0.27319ms)
+  ✔ e2_finalize_new_abono: prokind (0.240167ms)
+  ✔ e2_finalize_new_abono: provolatile (0.217351ms)
+  ✔ e2_finalize_new_abono: proparallel (0.214622ms)
+  ✔ e2_finalize_new_abono: prosecdef (0.314536ms)
+  ✔ e2_finalize_new_abono: proleakproof (0.303919ms)
+  ✔ e2_finalize_new_abono: proisstrict (0.291054ms)
+  ✔ e2_finalize_new_abono: proretset (0.303167ms)
+  ✔ e2_finalize_new_abono: proacl (0.22633ms)
+  ✔ e2_finalize_new_abono: proconfig (0.354076ms)
+  ✔ e2_finalize_new_abono: language_name (0.264656ms)
+  ✔ e2_finalize_new_abono: owner_name (0.322309ms)
+  ✔ e2_finalize_new_abono: result_type (0.333221ms)
+  ✔ e2_finalize_new_abono: identity_arguments (0.300022ms)
+  ✔ e2_attest_new_retained: missing (0.242044ms)
+  ✔ e2_attest_new_retained: prosrc (0.234252ms)
+  ✔ e2_attest_new_retained: prokind (0.288221ms)
+  ✔ e2_attest_new_retained: provolatile (0.245997ms)
+  ✔ e2_attest_new_retained: proparallel (0.229397ms)
+  ✔ e2_attest_new_retained: prosecdef (0.338762ms)
+  ✔ e2_attest_new_retained: proleakproof (0.242594ms)
+  ✔ e2_attest_new_retained: proisstrict (0.306018ms)
+  ✔ e2_attest_new_retained: proretset (0.244813ms)
+  ✔ e2_attest_new_retained: proacl (0.224848ms)
+  ✔ e2_attest_new_retained: proconfig (0.219768ms)
+  ✔ e2_attest_new_retained: language_name (0.265471ms)
+  ✔ e2_attest_new_retained: owner_name (0.243362ms)
+  ✔ e2_attest_new_retained: result_type (0.225347ms)
+  ✔ e2_attest_new_retained: identity_arguments (0.552348ms)
+✖ A+C mock preflight independently rejects each catalog drift (165.498502ms)
+ℹ tests 428
+ℹ suites 0
+ℹ pass 401
+ℹ fail 27
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 615.535658
+
+✖ failing tests:
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: prosrc (0.90642ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.prosrc: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: prokind (0.388921ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.prokind: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: provolatile (0.446349ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.provolatile: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: proparallel (0.451082ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.proparallel: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: prosecdef (0.349023ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.prosecdef: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: proleakproof (0.355607ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.proleakproof: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: proisstrict (0.279897ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.proisstrict: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: proretset (0.289573ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.proretset: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: proacl (0.315109ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.proacl: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: proconfig (0.35696ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.proconfig: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: language_name (0.271561ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.language_name: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: owner_name (0.247847ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.owner_name: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: result_type (0.307664ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.result_type: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:15
+✖ e2_proof_immutable: identity_arguments (0.264562ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.identity_arguments: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:335:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: tgenabled (0.390658ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.tgenabled: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: tgtype (0.418333ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.tgtype: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: table_name (0.39692ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.table_name: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: function_name (0.439273ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.function_name: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: function_schema (0.265946ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.function_schema: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: args_length (0.235684ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.args_length: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: trigger_attr (0.304325ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.trigger_attr: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: has_parent (0.243738ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.has_parent: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: has_qual (0.229641ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.has_qual: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: has_constraint (0.273461ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.has_constraint: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: tgdeferrable (0.23377ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.tgdeferrable: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:17
+✖ e2_proof_immutable: tginitdeferred (0.226333ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: e2_proof_immutable.tginitdeferred: drift must fail closed
+      at async run (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:296:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/negative-offline.test.mjs:340:9)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /A\+C evidence (trigger|finalizer|column|constraint).*mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

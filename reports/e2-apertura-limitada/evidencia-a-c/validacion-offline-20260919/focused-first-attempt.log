@@ -1,0 +1,57 @@
+✔ A+C evidence remains closed by default and blocks a covered receipt (1.575219ms)
+✔ canonical allocations classify whole receipt without changing FIFO (0.816326ms)
+✔ invalid or excessive allocation evidence fails closed (0.125428ms)
+✔ enabled covered receipt persists one finalization; non-cash stays unchanged (0.19772ms)
+✔ directed provenance describes its full explicit application, never UNUSED or PARTIAL (0.558685ms)
+✔ finalization failure propagates so the surrounding transaction can roll back (0.18447ms)
+✔ ordinary and directed producers finalize only after existing applications (1.207859ms)
+✔ refund consumer requires both positive proof and UNUSED finalization (0.363858ms)
+✔ limited startup binds income activation to the A+C catalog preflight (0.549511ms)
+✔ cross-store ADMIN refund uses current cash B without changing receipt A, both origins (5.449269ms)
+✔ wrong return session/site rejected; isolated removal of scope fails negative proof (5.638485ms)
+✔ isolated restoration of original-site restriction fails required cross-store acceptance (3.49364ms)
+✔ actual service locks customer row before proof/source/projection in ABONO order (1.925322ms)
+✔ negative proof: isolated service copy without customer FOR UPDATE fails orchestration assertion (2.6072ms)
+✔ production gate prevents even entering transaction (0.800363ms)
+✔ isolated E2-open simulation still hits ORIGINAL E1 rejection, zero committed effects (1.926616ms)
+✔ isolated future simulation: both origins, exact replay, single outflow, reversal only ABONO (2.458319ms)
+✔ positive proof is typed: ABONO needs UNUSED; retained needs its own proof without ABONO (3.960496ms)
+✔ isolated future simulation: current authorization, positive proof, history, projection, session, rollback (5.536909ms)
+✔ exact replay survives session closure but not loss of current ADMIN role (1.105262ms)
+✔ isolated future simulation rejects partial receipts and a second UUID for one source (3.501183ms)
+✔ negative proof: retained service cannot omit its E1 gate (1.761594ms)
+✔ negative proof: removing gate in isolated compiled copy defeats zero-transaction assertion (2.202143ms)
+✔ gate cannot be opened by environment or body (0.293867ms)
+✔ canonical DTO, origin exclusivity, reason and identifiers (0.250815ms)
+✔ idempotency rejects any changed canonical field (0.37141ms)
+✔ original E1 cash rejection survives E2 (0.103387ms)
+✖ source barriers and isolated negative proofs (2.221367ms)
+✔ reconciled DDL has one proof owner and independent closed refund gates; no E1 replacement (0.212525ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 28
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1332.744982
+
+✖ failing tests:
+
+test at artifacts/api-server/src/lib/credit-refund.safe.test.ts:1:3080
+✖ source barriers and isolated negative proofs (2.221367ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/credit-refund.safe.test.ts:56:12)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

@@ -13,7 +13,7 @@ Regla vigente: devolución del **importe íntegro nunca aplicado**. Abonos ya ap
 ## Dos hechos distintos
 
 1. **Origen de todo abono físico:** ya lo conserva el movimiento E1 inmutable, con identidad de operación, cliente, importe, actor, naturaleza, forma/cuenta, sitio y sesión. No propongo duplicar ese origen en otra tabla independiente.
-2. **Constancia de su evaluación al recibirlo:** propongo una finalización inmutable para cada abono físico, vinculada al origen E1. Registra el resultado de la proyección vigente, aunque ese resultado sea que el abono ya fue aplicado.
+2. **Constancia de su evaluación al recibirlo:** una finalización inmutable para cada abono físico, vinculada al origen E1. El ordinario registra la proyección canónica vigente (`projectCreditLedger`); el dirigido registra su aplicación íntegra existente después de persistirla (`directedApplication`, resultado FULL). No se atribuye al dirigido una proyección posterior que no ejecuta.
 
 La prueba positiva `evidencia_no_aplicada_e2` conserva un significado estricto: solo se crea cuando el importe sigue íntegro y nunca se ha aplicado según el modelo canónico y su historia.
 
@@ -24,7 +24,7 @@ Así, un abono aplicado conserva origen y constancia, pero no recibe un certific
 1. Conservar la reclamación/idempotencia de operación E1 y los bloqueos actuales de cliente y documento; no reordenar el flujo de reparto.
 2. Insertar el abono físico mediante el productor E1 existente.
 3. Ejecutar exactamente la proyección y las aplicaciones ordinarias o dirigidas actuales.
-4. **Después del reparto**, evaluar el abono utilizando la proyección canónica y la comprobación histórica existentes. No añadir un FIFO paralelo en SQL ni decidir por la mera ausencia de filas en `aplicaciones_credito`.
+4. **Después del reparto**, el ordinario usa la proyección canónica y la comprobación histórica existentes. El dirigido conserva la validación previa de saldo y la aplicación íntegra actual al destino solicitado; después de escribirla registra FULL y su procedencia `directedApplication`. No añade otra proyección/FIFO ni cambia saldos o reparto. La mera ausencia de filas en `aplicaciones_credito` no basta para declarar UNUSED.
 5. Guardar la constancia final, ligada a la misma operación y transacción. Contendrá referencia al origen, resultado, importes evaluados, versión del contrato/proyector y datos suficientes de la evaluación para auditarla.
 6. Solo para el importe íntegro nunca aplicado, registrar además la prueba positiva vinculada a esa constancia.
 7. Completar la auditoría y confirmar la transacción. Si falta la constancia o falla una prueba positiva obligatoria, abortar toda la operación; no confirmar el abono sin evidencia ni responder éxito.
@@ -55,7 +55,7 @@ Si una prueba positiva fue válida al recibir el abono y posteriormente este se 
 - Una finalización por origen, con referencia exacta al movimiento/operación E1; inmutable y registrada en la transacción original.
 - Prueba positiva única y vinculada a una finalización compatible, con cliente/importe/origen coherentes.
 - Comprobación diferida al confirmar: todo nuevo abono físico cubierto debe tener su finalización; si el resultado declarado es íntegro nunca aplicado, debe tener también su prueba positiva.
-- PostgreSQL verifica esas relaciones, coherencia e inmutabilidad. **No se afirmará que el constraint recalcula FIFO:** la clasificación semántica procede del proyector existente; su integración y exactitud se verifican con pruebas del código real.
+- PostgreSQL verifica relaciones, coherencia, inmutabilidad y correspondencia exacta con aplicaciones persistidas. Vincula la procedencia al productor leído del movimiento: ordinario `projectCreditLedger`, dirigido `directedApplication` y necesariamente FULL/importe íntegro. **El constraint no recalcula FIFO:** la clasificación ordinaria procede del proyector existente; la constancia dirigida describe la aplicación íntegra existente ya escrita. Su integración/exactitud se verifican con pruebas del código real.
 - Triggers específicos para las columnas de cada tabla. No reutilizar a ciegas una guarda que accede a `NEW.tipo` u otros campos ausentes, ni retirar protección para evitar ese error.
 - Preflight de arranque ampliado a los objetos exactos requeridos. Esquema incompleto o incoherente implica rechazo, no creación automática.
 - No backfill ni atestación de recibos anteriores durante replay. El reintento de una operación completa reutiliza su resultado/evidencia; no crea un segundo abono.

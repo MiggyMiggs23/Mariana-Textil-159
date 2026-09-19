@@ -1,0 +1,318 @@
+### src/caja-diaria-block4.contract.test.ts
+1:import test from "node:test";
+2:import assert from "node:assert/strict";
+3:import { readFile } from "node:fs/promises";
+7:    readFile(new URL("../../../lib/db/src/schema/pos.ts", import.meta.url), "utf8"),
+8:    readFile(new URL("../../../lib/db/src/lib/cash-session-schema.ts", import.meta.url), "utf8"),
+9:    readFile(new URL("./lib/pos.ts", import.meta.url), "utf8"),
+10:    readFile(new URL("./routes/pos.ts", import.meta.url), "utf8"),
+11:    readFile(new URL("../../../lib/api-spec/openapi.yaml", import.meta.url), "utf8"),
+29:  const routes = await readFile(new URL("./routes/pos.ts", import.meta.url), "utf8");
+### src/pos-caja-final.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFileSync } from "node:fs";
+3:import test from "node:test";
+5:const read = (path: string) => readFileSync(new URL(path, import.meta.url), "utf8");
+39:  assert.match(cancellation, /importe: decimalMoney\(-creditCents\)/);
+80:  assert.match(notifications, /import \{ pendingTicketPredicate \} from "\.\.\/lib\/accounted-document"/);
+### src/clientes-pagos.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import test from "node:test";
+3:import {
+7:import { readFile } from "node:fs/promises";
+12:      importe: 125,
+19:    CreateClientePagoBody.safeParse({ importe: 125, formaPago: "EFECTIVO" }).success,
+24:      importe: 125,
+32:  const routes = await readFile(new URL("./routes/clientes.ts", import.meta.url), "utf8");
+### src/clientes-notas-credito.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFile } from "node:fs/promises";
+3:import test from "node:test";
+5:const root = new URL("../../../", import.meta.url);
+### src/lib/credit-evidence-contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { test } from "node:test";
+3:import {
+11:// Offline only: imports no @workspace/db, application, server, fixtures or pool.
+13:// none of these tests or mutants has been executed by the implementing agent.
+132:    actorId: 9, contenido: { clienteId: 7, importe: "10.00", evidencia: evidence() },
+171:    { ...fixture.input, contenido: { ...fixture.input.contenido, importe: "10.01" } },
+208:    productor: "COBRO_PENDIENTE", clave: key, naturaleza: "INGRESO_FISICO", actorId: 9, contenido: { importe: "10.00" },
+### src/lib/credit-evidence.mock.test.ts
+1:import assert from "node:assert/strict";
+2:import net from "node:net";
+3:import { mock, test } from "node:test";
+4:import { getTableName, type SQL } from "drizzle-orm";
+5:import { PgDialect } from "drizzle-orm/pg-core";
+6:import type { Tx } from "./inventario";
+7:import type { Request } from "express";
+8:import type { CreditEvidenceInput, CreditOperationClaim, CreditProducer } from "./credit-evidence-contract";
+11:// value BEFORE dynamic import; isolated-database initializers are forbidden.
+17:mock.method(net.Socket.prototype, "connect", () => {
+18:  throw new Error("E1 mocked tests prohibit all network connections");
+20:const schema = await import("@workspace/db");
+22:mock.method(schema.pool, "connect", () => { throw new Error("E1 singleton connections are forbidden"); });
+23:const helpers = await import("./credit-evidence");
+24:const { AutorizarNotaBody, CancelarTicketBody, CancelarSalidaBody } = await import("@workspace/api-zod");
+30:// The actual production Drizzle adapter executes against this in-memory query
+62:  contenido: { clienteId: 7, importe: "10.00", evidencia: evidence() },
+163:    { ...input(), contenido: { ...input().contenido, importe: "10.01" } },
+221:  importe: string; naturaleza: CreditEvidenceInput["naturaleza"]; extra?: Row;
+223:  { productor: "VENTA_CREDITO", tipo: "VENTA_CREDITO", importe: "10.00", naturaleza: "OPERACION_CREDITO_SIN_DINERO" },
+224:  { productor: "CANCELACION_VENTA_CREDITO", tipo: "REVERSO", importe: "-10.00", naturaleza: "OPERACION_CREDITO_SIN_DINERO", extra: { movimientoOrigenId: 61 } },
+225:  { productor: "ABONO_ORDINARIO", tipo: "ABONO", importe: "-10.00", naturaleza: "CORRECCION_CONTABLE" },
+226:  { productor: "ABONO_DIRIGIDO", tipo: "ABONO", importe: "-10.00", naturaleza: "CORRECCION_CONTABLE" },
+227:  { productor: "REVERSO_ABONO", tipo: "REVERSO", importe: "10.00", naturaleza: "CORRECCION_CONTABLE", extra: { movimientoOrigenId: 62 } },
+228:  { productor: "AJUSTE_MANUAL", tipo: "AJUSTE", importe: "10.00", naturaleza: "CORRECCION_CONTABLE" },
+229:  { productor: "BAJA_INCOBRABLE", tipo: "AJUSTE", importe: "-10.00", naturaleza: "CORRECCION_CONTABLE", extra: { esIncobrable: true, motivoIncobrable: "Baja documentada" } },
+236:      clienteId: 7, usuarioId: 9, tipo: producer.tipo, importe: producer.importe,
+242:      contenido: { clienteId: 7, importe: producer.importe, evidencia: e1 },
+255:    assert.equal(row.importe, producer.importe);
+267:    clienteId: 7, usuarioId: 9, tipo: "ABONO", importe: "-10.00", formaPago: "EFECTIVO", cuentaDestino: "CAJA_FISICA",
+271:    clienteId: 7, usuarioId: 9, importe: "10.00", fechaReal: new Date("2026-09-17T18:00:00Z"),
+283:    clienteId: 7, usuarioId: 9, tipo: "AJUSTE", importe: "10.00",
+### src/lib/credit-evidence-read.test.ts
+1:import assert from "node:assert/strict";
+2:import { test } from "node:test";
+3:import {
+22:// Entirely in-memory fixtures. This module imports no application/database code.
+30:    cliente_id: 10, tipo: "ABONO", importe: -25000,
+101:    { identidadSnapshot: { cliente_id: 10, importe: -25000 } },
+103:    { identidadSnapshot: { ...input.identidadSnapshot, importe: "-25000" } },
+117:      { cliente_id: 11 }, { tipo: "AJUSTE" }, { importe: -24999.99 },
+182:    { ...input, identidadSnapshot: { ...input.identidadSnapshot, importe: -1 } },
+### src/lib/credit-allocation.test.ts
+1:import assert from "node:assert/strict";
+2:import test from "node:test";
+3:import {
+64:    { id: 1, ticketId: 10, tipo: "VENTA_CREDITO", importe: "100.00", createdAt: at(1), fechaVencimiento: "2026-02-01" },
+65:    { id: 2, ticketId: 10, tipo: "ABONO", importe: "-25.00", createdAt: at(2) },
+66:    { id: 3, ticketId: 10, tipo: "REVERSO", importe: "25.00", movimientoOrigenId: 2, createdAt: at(3) },
+67:    { id: 4, ticketId: 10, tipo: "REVERSO", importe: "-40.00", createdAt: at(4) },
+68:    { id: 5, ticketId: null, tipo: "AJUSTE", importe: "10.00", createdAt: at(5) },
+69:    { id: 6, ticketId: null, tipo: "AJUSTE", importe: "-5.00", createdAt: at(6) },
+82:      importe: "120.00",
+89:      importe: "90.00",
+97:      importe: "-30.00",
+104:      importe: "-50.00",
+111:      importe: "-60.00",
+118:      importe: "-20.00",
+136:    { id: 1, ticketId: 101, tipo: "VENTA_CREDITO", importe: "100.00", createdAt: at(1) },
+137:    { id: 2, ticketId: 102, tipo: "VENTA_CREDITO", importe: "100.00", createdAt: at(2) },
+138:    { id: 3, ticketId: 102, tipo: "ABONO", importe: "-60.00", createdAt: at(3) },
+153:    { id: 1, ticketId: 101, tipo: "VENTA_CREDITO", importe: "40.00", createdAt: at(1) },
+154:    { id: 2, ticketId: 101, tipo: "VENTA_CREDITO", importe: "60.00", createdAt: at(2) },
+160:      importe: "-30.00",
+179:    { id: 1, ticketId: 10, tipo: "VENTA_CREDITO" as const, importe: "100.00", createdAt: at(1) },
+180:    { id: 2, ticketId: 20, tipo: "VENTA_CREDITO" as const, importe: "100.00", createdAt: at(4) },
+181:    { id: 3, ticketId: null, tipo: "ABONO" as const, importe: "-100.00", createdAt: at(5) },
+186:    { id: previewSourceId, ticketId: null, tipo: "ABONO", importe: "-100.00", createdAt: at(3) },
+190:    { id: 4, ticketId: null, tipo: "ABONO", importe: "-100.00", createdAt: at(3) },
+208:    importe: "100.00",
+249:        importe: scenario.amount,
+274:    importe = "100.00",
+279:    importe,
+282:  const payment = (id: number, createdAt: Date, importe: string) => ({
+286:    importe,
+378:      importe: "-10.00",
+391:      importe: "-10.00",
+405:      importe: "-10.00",
+421:      importe: "100.00",
+429:      importe: "-40.00",
+436:      importe: "20.00",
+### src/lib/clientes-cartera-read-model.test.ts
+1:import assert from "node:assert/strict";
+2:import test from "node:test";
+3:import ExcelJS from "exceljs";
+4:import { projectCreditLedger } from "./credit-allocation";
+5:import {
+10:import {
+14:import { resolveReadScope } from "../routes/inventario";
+34:      importe: "100.00",
+43:      importe: "50.00",
+52:      importe: "-50.00",
+61:      importe: "-999.99",
+70:      importe: "25.00",
+### src/lib/clientes-aging.test.ts
+1:import assert from "node:assert/strict";
+2:import test from "node:test";
+3:import {
+13:import { allocateCreditFifo, projectCreditLedger } from "./credit-allocation";
+14:import { createTextPdf } from "./pdf";
+15:import {
+19:import { calendarDate } from "./date-only";
+22:  const common = { importeOriginal: "100.00", fechaVencimiento: "2025-01-10", hoy: "2025-01-11" };
+56:      importe: "-150.00",
+66:      importe: "100.00",
+73:      importe: "50.00",
+100:      importe: "50.00",
+108:      importe: "-50.00",
+122:      importe: "-50.00",
+129:      importe: "50.00",
+144:      importe: "100.00",
+152:      importe: "-150.00",
+179:      importe: "-150.00",
+189:      importe: "100.00",
+196:      importe: "50.00",
+204:    .reduce((sum, movement) => sum + Math.abs(Number(movement.importe) * 100), 0);
+218:  const cobradoFromDestinationRows = (rows: Array<{ fuente: string; importe: string }>) =>
+224:      .reduce((sum, row) => sum + Number(row.importe), 0);
+226:    { fuente: "ABONO_SALDO_FAVOR", importe: "150.00" },
+229:    { fuente: "ABONO", importe: "50.00" },
+230:    { fuente: "ABONO_SALDO_FAVOR", importe: "100.00" },
+244:      importe: "100.00",
+251:      importe: "-150.00",
+258:      importe: "-100.00",
+275:      importe: "-50.00",
+287:      importe: "50.00",
+369:    [{ formaPago: "CREDITO", importe: "80.00" }],
+371:      { id: 1, ticketId: 10, tipo: "VENTA_CREDITO", importe: "100.00", diasPlazo: 30, fechaVencimiento: "2026-02-01", createdAt: new Date(1) },
+372:      { id: 2, ticketId: 20, tipo: "VENTA_CREDITO", importe: "80.00", diasPlazo: 30, fechaVencimiento: "2026-02-02", createdAt: new Date(2) },
+373:      { id: 3, ticketId: null, tipo: "ABONO", importe: "-110.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(3) },
+374:      { id: 4, ticketId: 20, tipo: "REVERSO", importe: "-20.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(4) },
+384:    [{ formaPago: "CREDITO", importe: "100.00" }],
+386:      { id: 1, ticketId: 10, tipo: "VENTA_CREDITO", importe: "100.00", diasPlazo: 30, fechaVencimiento: "2026-02-01", createdAt: new Date(1) },
+387:      { id: 2, ticketId: null, tipo: "ABONO", importe: "-100.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(2) },
+388:      { id: 3, ticketId: null, movimientoOrigenId: 2, tipo: "REVERSO", importe: "100.00", diasPlazo: null, fechaVencimiento: null, createdAt: new Date(3) },
+480:    [{ formaPago: "EFECTIVO", importe: "150.00" }],
+486:        importe: "300.00",
+495:    importeCredito: "0.00",
+511:        importe: "90.00",
+521:        importe: "-30.00",
+531:    importeCredito: "90.00",
+542:      { formaPago: "EFECTIVO", importe: "75.00" },
+543:      { formaPago: "CREDITO", importe: "125.00" },
+550:        importe: "125.00",
+559:    importeCredito: "125.00",
+569:    [{ formaPago: "CREDITO", importe: "80.00" }],
+575:        importe: "100.00",
+584:        importe: "80.00",
+593:        importe: "-110.00",
+602:        importe: "-20.00",
+609:  assert.equal(credit.importeCredito, "80.00");
+### src/clientes-estado-cuenta.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFile } from "node:fs/promises";
+3:import test from "node:test";
+4:import { projectCreditLedger } from "./lib/credit-allocation";
+6:const root = new URL("../../../", import.meta.url);
+32:    /SUM\(m\.importe\) OVER \(ORDER BY m\.created_at,m\.id\) AS saldo_corrido/,
+50:      importe: "-50.00",
+### src/credit-movement-detail.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import test from "node:test";
+3:import { readFile } from "node:fs/promises";
+4:import { GetClientePagoDetalleResponse } from "@workspace/api-zod";
+26:    importeAplicado: "60.00",
+34:    importe: "-60.00",
+53:    importe: "60.00",
+75:    importe: "-10.00",
+91:    new URL("./routes/clientes.ts", import.meta.url),
+95:    new URL("./lib/credit-movement-detail.ts", import.meta.url),
+### src/lib/credit-movement-detail.test.ts
+1:import assert from "node:assert/strict";
+2:import test from "node:test";
+3:import { readFileSync } from "node:fs";
+4:import {
+12:import { buildCustomerCreditLedgerReadQuery } from "./credit-aging-read-model";
+13:import {
+23:  importe: "100.00",
+32:    importe: "-60.00",
+53:      importeAplicado: "60.00",
+66:    importe: "-60.00",
+74:    importe: "60.00",
+92:      importeOriginal: sale.importe.toString(),
+99:      importeAplicado: "60.00",
+113:    importe: "-60.00",
+140:      importeOriginal: sale.importe.toString(),
+158:          importe: "-60.00",
+160:        importe: "60.00",
+174:    importeAplicado: "60.00",
+192:      importe: "60.00",
+215:      importeOriginal: sale.importe.toString(),
+228:        importe: "60.00",
+234:          importe: "-60.00",
+249:    importeAplicado: "60.00",
+263:    importe: "-60.00",
+276:      importe: payment.importe.toString(),
+298:    importeAplicado: "60.00",
+307:    new URL("../../../../reports/prompt-f/historical-credit-cases.json", import.meta.url),
+347:    importe: row.amount,
+364:      importe: recapture.amount,
+387:        importeOriginal: "22022.00",
+396:    importeAplicado: "15000.00",
+408:      importe: reversal.amount,
+429:      importeOriginal: "22022.00",
+458:    new URL("../../../../reports/prompt-f/detail-query-probes.json", import.meta.url),
+502:    importe: "25.00",
+509:    importe: "-10.00",
+527:    importe: "-60.00",
+540:      importe: "60.00",
+546:        importe: "-60.00",
+557:          importe: "60.00",
+563:            importe: "-60.00",
+584:          importe: "61.00",
+590:            importe: "-61.00",
+602:        datosDespues: { movimientoCreditoId: 102, importe: "60.00" },
+615:    importe: "60.00",
+627:      importe: "-60.00",
+633:        importe: "-60.00",
+638:      importe: "60.00",
+657:            importe: "60.00",
+676:            importe: "-60.00",
+### src/caja-cobranza.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFileSync } from "node:fs";
+3:import test from "node:test";
+4:import ts from "typescript";
+5:import { runInNewContext } from "node:vm";
+7:const tiempoRealPage = readFileSync(new URL("./pages/caja/tiempo-real.tsx", import.meta.url), "utf8");
+8:const cuentasDestinoPage = readFileSync(new URL("./pages/caja/cuentas-destino.tsx", import.meta.url), "utf8");
+9:const sharedHook = readFileSync(new URL("./hooks/use-shared-cuentas-destino.ts", import.meta.url), "utf8");
+66:test("El hook real entrega intactos importe y fuentes, con idénticos filtros y query key", () => {
+78:    require(name: string) {
+### src/lib/credit-evidence.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFileSync } from "node:fs";
+3:import { createRequire } from "node:module";
+4:import { runInNewContext } from "node:vm";
+5:import test from "node:test";
+6:import ts from "typescript";
+7:import type * as CreditHelpers from "./credit-evidence";
+8:import type { CreditMovementEvidence } from "@workspace/api-client-react";
+10:// Only a pure production module is evaluated. No app, server, network or DB imports.
+29:let source = readFileSync(new URL("./credit-evidence.ts", import.meta.url), "utf8");
+37:runInNewContext(output, { exports: exportsObject, require: createRequire(import.meta.url), crypto: { randomUUID: () => "unused" } });
+94:    identidadSnapshot: { cliente_id: 2, tipo: "REVERSO", importe: 125, ticket_id: 6, movimiento_origen_id: 5 },
+98:      identidadSnapshot: { cliente_id: 2, tipo: "REVERSO", importe: 125, ticket_id: 6, movimiento_origen_id: 5 },
+### src/pages/caja/cortes.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFile } from "node:fs/promises";
+3:import test from "node:test";
+5:const root = new URL("../../../../../", import.meta.url);
+### src/pages/caja/tiempo-real-credit.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFile } from "node:fs/promises";
+3:import test from "node:test";
+6:  const source = await readFile(new URL("./tiempo-real.tsx", import.meta.url), "utf8");
+13:  assert.match(card, /dashboard\.ventasCredito\.importe/);
+### src/components/cliente-movimiento-navigation.contract.test.ts
+1:import assert from "node:assert/strict";
+2:import { readFile } from "node:fs/promises";
+3:import test from "node:test";
+5:const root = new URL("../../../../", import.meta.url);
+73:  assert.match(roll, /import \{ MovimientoDocumento, type MovimientoDocumentoReference \}/);
+### src/components/cliente-saldo-a-favor.contract.test.ts
+1:import test from "node:test";
+2:import assert from "node:assert/strict";
+3:import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+4:import { tmpdir } from "node:os";
+5:import { join } from "node:path";
+6:import {
+11:import { withBrowserFixture } from "../observable-test/browser";
+14:  const source = await readFile(new URL("./cliente-pago-dialog.tsx", import.meta.url), "utf8");
+38:    saldoAFavorRemanente: "0.00", saldoDeudorProyectado: "300.00", importe: "500.00",
+54:        const result = (data) => ({ data, isLoading: false, isError: false, isFetching: false, error: null, refetch() {} });
+93:        import React from "react";
+94:        import CobrosPage from ${JSON.stringify(new URL("../pages/cobros.tsx", import.meta.url).pathname)};
+130:            /favor|(?:importe|monto|saldo).*aplic|aplic.*(?:importe|monto|saldo)/i.test(controlName(control)));
