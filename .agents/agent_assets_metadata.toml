@@ -1837,3 +1837,31 @@ mtime_ms = 1789789615986
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/a60f8132-5edd-4f38-b489-571d564f7214/8e271990-77d0-4e17-941a-bdaa86824380"
 storage_version_token = "1789789666181135"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "VA3MKscv0ic4Evk2IBnfd"
+uri = "file://reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/resultado.md"
+type = "text"
+title = "Validación PostgreSQL A+C — resultado y limpieza"
+description = "Fallo de instalación de la revisión exacta f8818255; pruebas posteriores bloqueadas. Base desechable destruida y API intacta."
+logical_id = "0dec1ee5-b13a-4f42-9e6f-ae3983ab70eb"
+content_hash = "sha256:84ef95d79287078b3876af406d88bc9fc6f7614c0f708c675fad26e56c186365"
+size = 4567
+mtime_ms = 1789790658297
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0dec1ee5-b13a-4f42-9e6f-ae3983ab70eb/1aba0be0-22d9-4b1d-b97a-3b709f87faf2"
+storage_version_token = "1789790702070964"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "_Q-OCFSmOv3QtHjXWBmaU"
+uri = "file://reports/tanda-nocturna-20260919.md"
+type = "text"
+title = "Informe único de la tanda nocturna"
+description = "Resultados por tarea, commits exactos, pruebas con defectos inducidos, bloqueos y typecheck raíz contra 80eaa93d."
+logical_id = "f583e223-77d9-4f27-a125-bbce0bc24a02"
+content_hash = "sha256:5629618018ece5442e4ec7551e744418930b01fb84c00c37c0d97cb2a7db624e"
+size = 11767
+mtime_ms = 1789791687097
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f583e223-77d9-4f27-a125-bbce0bc24a02/c7a930d3-59c8-4bc3-b0cd-456f892ca85f"
+storage_version_token = "1789791729469485"
+content_type = "text/markdown"
