@@ -1,0 +1,31 @@
+[frontend-test-runner] 3 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+✔ Ambas pantallas consumen el mismo hook para cobranza (identidad de fuente) (0.897355ms)
+✔ El tablero llama a la función para leer el dinero del periodo sin cálculo manual (0.533441ms)
+✔ La guarda rechaza una consulta paralela o el reemplazo de la fuente común (150.519851ms)
+✔ El hook real entrega intactos importe y fuentes, con idénticos filtros y query key (68.49098ms)
+✔ Un error de cobranza no oculta las cuatro tarjetas existentes (1.080044ms)
+✔ Los grupos POS/ABONO/saldos a favor tienen accesores espejo (1.905878ms)
+✔ parses exact real-cent precision without binary floating point (0.905471ms)
+✔ preserves a negative sign and one-place decimals (0.140616ms)
+✔ supports large seven-digit money values exactly (0.135452ms)
+✔ rejects values with more precision than cents (0.480813ms)
+✔ rejects an intentionally wrong-cent invariant (0.185788ms)
+▶ Cuentas Destino Contract
+  ✔ generates correct query key for cuentas destino list with location scope (1.323815ms)
+  ✔ generates correct query key for cuenta destino detalle including matrix cell filters (0.221648ms)
+  ✔ renders server-owned reconciled values without financial formulas (1.070504ms)
+  ✔ passes matrix and inconsistency filters to the real detail page (0.651179ms)
+  ✔ uses wouter search and location hooks for url state with default today and off (0.384141ms)
+  ✔ handles nullable previous display without +100% logic (0.487849ms)
+  ✔ includes fuente filter in the links to the detail page (0.580752ms)
+  ✔ uses the literal collection labels and links credit movements to the exact account row (0.620411ms)
+  ✔ keeps destination comparison links scoped to the previous period (1.174402ms)
+✔ Cuentas Destino Contract (7.767659ms)
+ℹ tests 20
+ℹ suites 1
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1151.119886

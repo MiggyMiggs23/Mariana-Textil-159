@@ -1,0 +1,40 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+MUTANT label: FAIL expected AssertionError (missing exact Contado cobrado label)
+MUTANT title: FAIL expected AssertionError (missing exact Cobranza del periodo label)
+MUTANT one-cent component: FAIL expected AssertionError (rendered numeric leaves differ)
+MUTANT one-cent total: FAIL expected AssertionError (rendered numeric leaves differ)
+RESTORED PASS cents {"vendido":{"contado":"850.01","credito":"150.08","total":"1000.09","totalAnterior":"900.03","variacionPorcentaje":"11.12"},"cobrado":{"contado":"850.01","abonos":"25.17","saldosFavor":"-0.09","total":"875.09","totalAnterior":"775.04","variacionPorcentaje":"12.89"},"porCobrar":{"periodo":"150.08","periodoAnterior":"120.07","variacionPorcentaje":"24.99"},"previousDesde":"2026-06-14","previousHasta":"2026-06-14"} ["Últimos 6 meses","$875.09","$850.01","$25.17","-$0.09","14 jun–14 jun","$775.04","$150.08","14 jun–14 jun","$120.07","$0.00","$0.00","$0.00","$1,000.09","14 jun–14 jun","$900.03","$850.01","$150.08","$0.00","$0.00","$875.09","$150.08","$1,000.09"]
+RESTORED PASS cents {"vendido":{"contado":"850.01","credito":"150.08","total":"1000.09","totalAnterior":"900.03","variacionPorcentaje":"11.12"},"cobrado":{"contado":"850.01","abonos":"-25.17","saldosFavor":"0.09","total":"824.93","totalAnterior":"775.04","variacionPorcentaje":"12.89"},"porCobrar":{"periodo":"150.08","periodoAnterior":"120.07","variacionPorcentaje":"24.99"},"previousDesde":"2026-06-14","previousHasta":"2026-06-14"} ["Últimos 6 meses","$824.93","$850.01","-$25.17","$0.09","14 jun–14 jun","$775.04","$150.08","14 jun–14 jun","$120.07","$0.00","$0.00","$0.00","$1,000.09","14 jun–14 jun","$900.03","$850.01","$150.08","$0.00","$0.00","$824.93","$150.08","$1,000.09"]
+RESTORED PASS cents {"vendido":{"contado":"0.00","credito":"150.08","total":"150.08","totalAnterior":"900.03","variacionPorcentaje":"11.12"},"cobrado":{"contado":"0.00","abonos":"25000.01","saldosFavor":"-25000.01","total":"0.00","totalAnterior":"775.04","variacionPorcentaje":"12.89"},"porCobrar":{"periodo":"150.08","periodoAnterior":"120.07","variacionPorcentaje":"24.99"},"previousDesde":"2026-06-14","previousHasta":"2026-06-14"} ["Últimos 6 meses","$0.00","$0.00","$25,000.01","-$25,000.01","14 jun–14 jun","$775.04","$150.08","14 jun–14 jun","$120.07","$0.00","$0.00","$0.00","$150.08","14 jun–14 jun","$900.03","$0.00","$150.08","$0.00","$0.00","$0.00","$150.08","$150.08"]
+✔ E6 mounted labels preserve every numeric component, total and filter at the cent; isolated mutants fail (1470.531506ms)
+TIEMPO REAL MUTANT title: FAIL expected AssertionError
+TIEMPO REAL MUTANT component-label: FAIL expected AssertionError
+TIEMPO REAL MUTANT aria-label: FAIL expected AssertionError
+TIEMPO REAL MUTANT component-cent: FAIL expected AssertionError
+TIEMPO REAL MUTANT total-cent: FAIL expected AssertionError
+✖ E6 Tiempo real mounted presentation retains every component and total; isolated label/cent mutants fail (438.181532ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4685.348854
+
+✖ failing tests:
+
+test at src/pages/caja/cuentas-destino-labels.observable.test.ts:1:10131
+✖ E6 Tiempo real mounted presentation retains every component and total; isolated label/cent mutants fail (438.181532ms)
+  AssertionError [ERR_ASSERTION]: missing accessible collection label
+      at checkLabels (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:214:12)
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:239:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

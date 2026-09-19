@@ -1,0 +1,55 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+MUTANT label: FAIL expected AssertionError (missing exact Contado cobrado label)
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+MUTANT one-cent component: FAIL expected AssertionError (rendered numeric leaves differ)
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `null`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+✖ E6 mounted labels preserve every numeric component, total and filter at the cent; isolated mutants fail (1423.141352ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4023.813507
+
+✖ failing tests:
+
+test at src/pages/caja/cuentas-destino-labels.observable.test.ts:1:5350
+✖ E6 mounted labels preserve every numeric component, total and filter at the cent; isolated mutants fail (1423.141352ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      {
+        href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR',
+        text: '$875.09'
+      },
+      {
+        href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS',
+  +     text: 'Contado cobrado$850.01'
+  -     text: 'Cobros directos$850.01'
+      },
+      {
+        href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=ABONO',
+        text: 'Abonos a notas (neto de reversos)$25.17'
+      },
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:148:12)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR', text: '$875.09' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS', text: 'Contado cobrado$850.01' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=ABONO', text: 'Abonos a notas (neto de reversos)$25.17' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=ABONO_SALDO_FAVOR', text: 'Saldo a favor (neto de reversos)-$0.09' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-14&hasta=2026-06-14&preset=custom&ubicacionId=7&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR', text: '$775.04' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR', text: '12.89%' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=CREDITO', text: '$150.08' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-14&hasta=2026-06-14&preset=custom&ubicacionId=7&fuente=CREDITO', text: '$120.07' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=CREDITO', text: '24.99%' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$0.00' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$0.00' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$0.00' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$1,000.09' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-14&hasta=2026-06-14&preset=custom&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$900.03' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '11.12%' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS', text: '$850.01' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=CREDITO', text: '$150.08' } ],
+    expected: [ { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR', text: '$875.09' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS', text: 'Cobros directos$850.01' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=ABONO', text: 'Abonos a notas (neto de reversos)$25.17' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=ABONO_SALDO_FAVOR', text: 'Saldo a favor (neto de reversos)-$0.09' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-14&hasta=2026-06-14&preset=custom&ubicacionId=7&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR', text: '$775.04' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=ABONO&fuente=ABONO_SALDO_FAVOR', text: '12.89%' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=CREDITO', text: '$150.08' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-14&hasta=2026-06-14&preset=custom&ubicacionId=7&fuente=CREDITO', text: '$120.07' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=CREDITO', text: '24.99%' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$0.00' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$0.00' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$0.00' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$1,000.09' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-14&hasta=2026-06-14&preset=custom&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '$900.03' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS&fuente=CREDITO', text: '11.12%' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=POS', text: '$850.01' }, { href: '/caja/cuentas-destino/TODAS?desde=2026-06-15&hasta=2026-06-15&preset=custom&compare=true&ubicacionId=7&fuente=CREDITO', text: '$150.08' } ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

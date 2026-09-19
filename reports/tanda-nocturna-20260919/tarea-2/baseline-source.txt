@@ -345,7 +345,7 @@ export default function CajaCuentasDestino() {
           variation: header.vendido.variacionPorcentaje,
           fuentes: ["POS", "CREDITO"] as ListAdminCuentaDestinoMovimientosFuenteItem[],
           breakdown: [
-            { label: "Contado cobrado", amount: header.vendido.contado, fuentes: ["POS"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
+            { label: "Contado", amount: header.vendido.contado, fuentes: ["POS"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
             { label: "Crédito", amount: header.vendido.credito, fuentes: ["CREDITO"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
           ],
           className: "border-l-4 border-l-sidebar",
@@ -361,14 +361,14 @@ export default function CajaCuentasDestino() {
             "border-l-4 border-l-amber-500/50 bg-amber-50/30 dark:bg-amber-950/10 border-dashed",
         },
         {
-          title: "Cobranza del periodo",
+          title: "Cobrado",
           amount: header.cobrado.total,
           prev: header.cobrado.totalAnterior,
           variation: header.cobrado.variacionPorcentaje,
           fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"] as ListAdminCuentaDestinoMovimientosFuenteItem[],
           breakdown: [
              // Historical wording is intentionally not rendered: "De ventas del periodo" and "A cuenta, sin aplicar".
-             { label: "Contado cobrado", amount: header.cobrado.contado, fuentes: ["POS"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
+             { label: "Cobros directos", amount: header.cobrado.contado, fuentes: ["POS"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
              { label: "Abonos a notas (neto de reversos)", amount: header.cobrado.abonos, fuentes: ["ABONO"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
              { label: "Saldo a favor (neto de reversos)", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] as ListAdminCuentaDestinoMovimientosFuenteItem[] },
           ],
@@ -514,10 +514,10 @@ export default function CajaCuentasDestino() {
 
               {/* SECTION: COBRANZA (FIRST) */}
               <section className="space-y-6">
-                <h2 className="text-2xl font-bold tracking-tight text-sidebar border-b pb-2 mb-4">Cobranza del periodo</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-sidebar border-b pb-2 mb-4">Cobranza</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
-                  {topStats.filter((stat) => stat.title === "Cobranza del periodo").map((stat) => {
+                  {topStats.filter((stat) => stat.title === "Cobrado").map((stat) => {
                     const currentHref = detailHref("TODAS", stat.fuentes);
                     const previousHref = data.encabezado.previousDesde && data.encabezado.previousHasta
                       ? detailHref("TODAS", stat.fuentes, {
@@ -536,7 +536,7 @@ export default function CajaCuentasDestino() {
                           <Link
                             href={currentHref}
                             className="mt-2 inline-block text-3xl font-black text-sidebar hover:text-primary hover:underline"
-                            data-testid="text-monto-cobrado"
+                            data-testid={`text-monto-${stat.title.toLowerCase().replace(" ", "-")}`}
                           >
                             {formatNumber(stat.amount, { kind: "money" })}
                           </Link>
@@ -1024,7 +1024,7 @@ export default function CajaCuentasDestino() {
                           <Banknote className="h-6 w-6" />
                         </div>
                         <div className="recon-top-card-content">
-                          <span className="recon-top-card-label">Contado cobrado</span>
+                          <span className="recon-top-card-label">Contado</span>
                           <Link
                             href={detailHref("TODAS", ["POS"])}
                             className="recon-top-card-value text-green-700 dark:text-green-400 hover:text-primary hover:underline"
@@ -1381,7 +1381,7 @@ export default function CajaCuentasDestino() {
                     <TableHeader>
                       <TableRow className="bg-muted/40">
                         <TableHead>Tienda</TableHead>
-                        <TableHead className="text-right">Cobranza del periodo</TableHead>
+                        <TableHead className="text-right">Cobrado</TableHead>
                         <TableHead className="text-right border-l">
                           Por Cobrar
                         </TableHead>

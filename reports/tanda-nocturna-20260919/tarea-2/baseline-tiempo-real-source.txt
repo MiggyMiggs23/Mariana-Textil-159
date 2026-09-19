@@ -197,11 +197,11 @@ export default function CajaTiempoReal() {
 
   const header = cuentasData?.encabezado;
   const cobranzaStat = header ? {
-    title: "Cobranza del periodo",
+    title: "Cobrado en el periodo",
     amount: header.cobrado.total,
     fuentes: ["POS", "ABONO", "ABONO_SALDO_FAVOR"],
     breakdown: [
-       { label: "Contado cobrado", amount: header.cobrado.contado, fuentes: ["POS"] },
+       { label: "Cobros directos", amount: header.cobrado.contado, fuentes: ["POS"] },
        { label: "Abonos a notas (neto de reversos)", amount: header.cobrado.abonos, fuentes: ["ABONO"] },
        { label: "Saldo a favor (neto de reversos)", amount: header.cobrado.saldosFavor, fuentes: ["ABONO_SALDO_FAVOR"] },
     ],
@@ -429,7 +429,7 @@ export default function CajaTiempoReal() {
             </div>
 
              {(cuentasLoading || cuentasError) && (
-               <div aria-label="Cobranza del periodo" aria-live="polite">
+               <div aria-label="Cobrado en el periodo" aria-live="polite">
                  {cuentasError ? (
                    <Alert variant="destructive">
                      <AlertCircle className="h-4 w-4" />

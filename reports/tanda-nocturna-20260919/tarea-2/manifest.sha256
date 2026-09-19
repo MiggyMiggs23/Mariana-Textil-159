@@ -1,0 +1,14 @@
+a35e90a2f30ec85bc80c608549b6912a1611f1e5a2b84bf2407516b4c6995c24  artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx
+095c87997021ee4c566c843f6209a3bd950a093ad70cdb96e624c2f1c6c5144d  artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx
+d02db74dd0057d84bad03d93ce7c31490bbf928cde3e21395de198f08e9422b8  artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts
+d47f22f2a1e406c943f98adf8231f2cf8bcbf952159b5e7751efe35a8c35327a  reports/tanda-nocturna-20260919/tarea-2/baseline-source.txt
+bf194277cc072572d40273b6bc27cbbc6f1e594fcdf641194fd0b02cec899596  reports/tanda-nocturna-20260919/tarea-2/baseline-tiempo-real-source.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  reports/tanda-nocturna-20260919/tarea-2/diff-check.log
+a2a5756142907c9ae1b92dd029f5a2fdc93089a39f3d45a4356e0682a205d415  reports/tanda-nocturna-20260919/tarea-2/observable.log
+4693d3d3dd10e8f6ebe4e06bf3157f7829359c636480da6844836350c602f261  reports/tanda-nocturna-20260919/tarea-2/r6-search.log
+ef8f421699c3214644cfcef895ead879202d9c372b33abd087727e6c8b322bec  reports/tanda-nocturna-20260919/tarea-2/regression.log
+5ca4ba860f29a34f3a51ebae6509af742da40c0489300ee3361d7caeae20e209  reports/tanda-nocturna-20260919/tarea-2/resultado.md
+2f6808d456ecd91d62d20313a360beacb176367aab5dc93ba3d92526e7f86edb  reports/tanda-nocturna-20260919/tarea-2/setup-guard-rejection.log
+39955f20b4e46941a860aaeeee62e352c780f896e46ead8ad57b173323c44b7c  reports/tanda-nocturna-20260919/tarea-2/setup-label-comparison.log
+aaf281adf534678f528db468690595ccc1c55deb78ea1aa93574c09ee569f36f  reports/tanda-nocturna-20260919/tarea-2/setup-realtime-loading.log
+ee44a8c11473747587e6addc5a43c979bd11f00ada870499d77b751dc37c8845  reports/tanda-nocturna-20260919/tarea-2/setup-realtime-transport.log

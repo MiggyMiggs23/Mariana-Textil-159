@@ -1,0 +1,31 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+/home/runner/workspace/scripts/src/offline-test-guard.cjs:27
+  const error = new Error(`${ERROR_CODE}: ${kind}`);
+                ^
+
+Error: E1_OFFLINE_NETWORK_DISABLED: child_process.execFileSync git
+    at disabled (/home/runner/workspace/scripts/src/offline-test-guard.cjs:27:17)
+    at guardedExecFileSync (/home/runner/workspace/scripts/src/offline-test-guard.cjs:383:23)
+    at <anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts:17:18)
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  code: 'E1_OFFLINE_NETWORK_DISABLED'
+}
+
+Node.js v24.13.0
+✖ /home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts (4900.256504ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4914.308992
+
+✖ failing tests:
+
+test at src/pages/caja/cuentas-destino-labels.observable.test.ts:1:1
+✖ /home/runner/workspace/artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts (4900.256504ms)
+  'test failed'
