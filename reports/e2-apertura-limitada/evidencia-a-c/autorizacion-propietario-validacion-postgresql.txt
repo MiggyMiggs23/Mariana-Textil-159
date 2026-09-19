@@ -1,0 +1,7 @@
+miguelestza: Autorización del propietario. Guarda este texto tal cual en reports/e2-apertura-limitada/evidencia-a-c/ antes de la primera escritura.
+
+Autorizo ejecutar la validación PostgreSQL del candidato A+C (revisión f8818255) únicamente en una base PostgreSQL aislada y desechable, creada para esta prueba. No uses la base de la API ni los clones conservados de E1 y E10.
+
+Alcance: instalación y reversión del SQL de evidencia, commit diferido, rollback ante fallos inducidos, reintentos y concurrencia, según el pendiente 5 de estado-offline.md.
+
+No reinicies la API, no cambies el bundle en ejecución y no abras captura ni devolución. Esta autorización no autoriza la apertura. Al terminar, reporta en reports/ con la revisión exacta y destruye la base desechable.
