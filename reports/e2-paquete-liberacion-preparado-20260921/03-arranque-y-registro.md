@@ -1,8 +1,10 @@
 # 3. Arranque y registro en el mismo reinicio
 
-**Solo procedimiento futuro. No se modificó el wrapper, el registrador, el
-workflow, sus variables, el preflight retenido ni el bundle. No se creó un
-`reports/arranques-api.log` ficticio.**
+**Procedimiento de liberación futuro.** Se prepararon nuevas copias de wrapper,
+registrador y preflight en este paquete; ver documento 08 y manifest-final.json.
+Sus pruebas aisladas pasaron. No se modificó el workflow, sus variables,
+los scripts antiguos, el preflight retenido ni el bundle activo. La ejecución
+real del candidato queda para el agente principal según su alcance.
 
 ## Punto de partida
 
@@ -15,7 +17,7 @@ Sus hashes están fijados a los artefactos anteriores. Ejecutarlo sin adaptarlo
 no es un mecanismo de liberación del bundle nuevo. Cambiar solo un hash tampoco
 resuelve el nuevo contrato de catálogo/identidad.
 
-## Preparación pendiente antes de pedir GO
+## Requisitos de preparación antes de pedir GO
 
 1. Compilación aislada autorizada y selección del bundle por su hash.
 2. Preflight nuevo versionado, completo para el estado CLOSED post-DDL.
@@ -27,9 +29,10 @@ resuelve el nuevo contrato de catálogo/identidad.
 5. Manifiesto y texto de autorización completos, incluidos modo y destino de
    workflow. No ampliar automáticamente al comando de producción ni publicar.
 
-## Modo: decisión explícita pendiente
+## Modo elegido: INSPECTION con preflight externo completo
 
-Ambos modos no-normales del candidato pausan inicializadores, DDL automático,
+El propietario eligió INSPECTION; no se cambia a EXPLICIT_LIMITED. Como
+referencia técnica, ambos modos no-normales pausan inicializadores, DDL automático,
 backfills y monitor. **No significan API de negocio completamente READ ONLY**:
 sus rutas, incluido el cierre, siguen requiriendo control operativo.
 

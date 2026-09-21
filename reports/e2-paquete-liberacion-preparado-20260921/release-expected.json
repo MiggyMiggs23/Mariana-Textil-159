@@ -1,0 +1,16 @@
+{
+  "source": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "basis": "Archived exact B0 schema plus exact approved A+C SQL, reconstructed empty in fresh PostgreSQL; NOT observed live state.",
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "baseSchemaSha256": "37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8",
+  "baseAttributesSha256": "381cd3566d475a48e08ea2be82927718d69bd3332b83d38ead3b4a266594aff6",
+  "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+  "attributesSha256": "e435ffc658ddc41c67449c839245efed80323b836425feea34764a31e4a44e88",
+  "installSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c"
+}

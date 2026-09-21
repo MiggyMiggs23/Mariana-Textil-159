@@ -8,7 +8,7 @@ if (!root?.startsWith("/tmp/e2-release-preparation-")) throw new Error("Isolated
 const archive = JSON.parse(fs.readFileSync(path.join(root,
   "reports/e10-operativo-2026-09-18/operational-run-1789757757707-63932.json"), "utf8"));
 const schema = archive.after.schema;
-const enums = await import(pathToFileURL(path.join(root, "lib/db/src/schema/enums.ts")));
+const enums = await import(pathToFileURL(path.join(root, "lib/db/src/schema/index.ts")));
 const quote = value => `"${value.replaceAll('"', '""')}"`;
 const out = ["-- EMPTY TEST FIXTURE ONLY. No domain rows or credentials.", "BEGIN;"];
 for (const value of Object.values(enums)) {
@@ -20,6 +20,10 @@ for (const row of schema.filter(x => x.kind === "sequence")) {
   const [type, start, min, max, increment, cycle, cache] = row.definition.split(":");
   out.push(`CREATE SEQUENCE public.${quote(row.object_name)} AS ${type} INCREMENT ${increment} MINVALUE ${min} MAXVALUE ${max} START ${start} CACHE ${cache} ${cycle === "t" ? "CYCLE" : "NO CYCLE"};`);
 }
+// C-backed pgcrypto functions are referenced by table defaults.
+for (const row of schema.filter(x => x.kind === "function" && x.definition.includes(" LANGUAGE c\n"))) {
+  out.push(`${row.definition};`);
+}
 for (const table of schema.filter(x => x.kind === "table")) {
   const columns = schema.filter(x => x.kind === "column" && x.object_name === table.object_name).map(row => {
     const [, type, nullable, expression] = row.definition.match(/^(.+?):([tf]):(.*)$/s);
@@ -27,7 +31,7 @@ for (const table of schema.filter(x => x.kind === "table")) {
   });
   out.push(`CREATE TABLE public.${quote(table.object_name)} (${columns.join(",")});`);
 }
-for (const row of schema.filter(x => x.kind === "function")) out.push(`${row.definition};`);
+for (const row of schema.filter(x => x.kind === "function" && !x.definition.includes(" LANGUAGE c\n"))) out.push(`${row.definition};`);
 // Unique keys must exist before referencing FKs.
 const constraints = schema.filter(x => x.kind === "constraint");
 for (const row of [...constraints.filter(x => !x.definition.startsWith("FOREIGN KEY")),

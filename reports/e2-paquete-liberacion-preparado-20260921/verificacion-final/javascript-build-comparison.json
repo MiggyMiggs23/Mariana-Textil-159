@@ -1,0 +1,22 @@
+[
+  {
+    "name": "index.mjs",
+    "onlyOutputDirectoryDiff": true
+  },
+  {
+    "name": "pino-file.mjs",
+    "onlyOutputDirectoryDiff": true
+  },
+  {
+    "name": "pino-pretty.mjs",
+    "onlyOutputDirectoryDiff": true
+  },
+  {
+    "name": "pino-worker.mjs",
+    "onlyOutputDirectoryDiff": true
+  },
+  {
+    "name": "thread-stream-worker.mjs",
+    "onlyOutputDirectoryDiff": true
+  }
+]

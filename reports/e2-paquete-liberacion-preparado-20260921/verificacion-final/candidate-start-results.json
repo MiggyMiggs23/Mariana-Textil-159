@@ -1,0 +1,12 @@
+{
+  "databasePath": "/tmp/e2-candidate-start-9W5ksE",
+  "apiPort": 18092,
+  "pgPort": 55439,
+  "started": false,
+  "executedAgainst": "new local empty synthetic catalog only",
+  "tracerPid": 3522,
+  "error": "Candidate health deadline exceeded.\n\nundefined !== 200\n",
+  "candidateStopped": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true
+}

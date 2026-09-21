@@ -1,0 +1,7 @@
+Autorización del propietario. Guarda este texto tal cual en reports/e2-paquete-liberacion-preparado-20260921/ antes de la primera escritura.
+
+Autorizo compilar el candidato E2 desde la revisión autorizada, con el commit de pruebas 07cc804a, directamente en su ubicación final: un directorio nuevo dentro del workspace, junto a artifacts/api-server/dist, no el dist activo. Así las rutas de los workers de Pino apuntan a donde el bundle va a correr. No sobrescribas ni muevas el dist activo. Si para compilar ahí hace falta tocar build.mjs, hazlo en un commit aparte que solo cambie el directorio de salida.
+
+Autorizo también arrancar el bundle candidato contra una base PostgreSQL nueva y desechable, en modo inspección, en otro puerto y sin credenciales de la base de la API, para comprobar que arranca, que los workers de Pino cargan y que /api/healthz responde 200. Detenlo y destruye esa base al terminar.
+
+Después continúa con lo ya autorizado: wrapper y preflight finales apuntando al directorio nuevo, validación en PostgreSQL desechable, manifiesto completo con hashes y texto de fase B. Sigue sin tocar la API activa, su base, el workflow ni los clones E1/E10.

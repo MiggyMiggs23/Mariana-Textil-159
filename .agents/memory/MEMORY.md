@@ -78,3 +78,4 @@
 - [Evidencia diferida](deferred-evidence-validation.md) — forzar restricciones inmediatas no protege cambios posteriores en tablas relacionadas; revisar todas las escrituras.
 - [Procedencia de INSERT](insert-provenance-vs-xmin.md) — xmin identifica versiones y subtransacciones; visibilidad más estado de un XID reconstruido no demuestra inserción propia.
 - [Identidad y portabilidad del build](build-path-identity.md) — una ruta de compilación puede cambiar hashes sin cambios de fuente; reproducibilidad no demuestra portabilidad.
+- [Entrada CLI bajo symlinks](cli-symlink-preflight.md) — exit 0 puede significar que main nunca corrió; exigir evidencia positiva del preflight.

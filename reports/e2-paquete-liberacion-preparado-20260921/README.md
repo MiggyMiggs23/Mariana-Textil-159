@@ -1,6 +1,6 @@
-# Preparación aislada de liberación E2 — CLOSED, detenida por portabilidad de workers
+# Preparación aislada de liberación E2 — CLOSED, candidato en directorio definitivo
 
-**Fecha:** 2026-09-21. **Estado: CANDIDATO COMPILADO; VERIFICACIÓN INCOMPLETA; NO LIBERAR.**
+**Fecha:** 2026-09-21. **Estado: NO AUTORIZABLE — ARRANQUE REAL FALLIDO; STOP; NO LIBERAR.**
 
 La autorización íntegra está en `autorizacion-propietario.txt`; la aceptación
 posterior de Entradas está en `aclaracion-entradas.txt`. Se permite preparación
@@ -11,12 +11,20 @@ sin base. El typecheck inicial pasó; las pruebas iniciales terminaron con
 **114 PASS / 5 FAIL**. El propietario autorizó corregir únicamente esas cinco
 pruebas en commit separado: los cinco casos demostraron verde/rojo/verde y ambos
 archivos aprobaron 17/17. La recompilación en la ruta original reprodujo
-exactamente el hash exigido; typecheck raíz pasó con 0 errores. El bloqueo
-restante es que Pino incrusta rutas absolutas temporales para sus workers,
-que no se relocalizan al copiar el bundle. Se comprobó solo estáticamente,
-sin ejecutar la aplicación ni corregir el plugin.
-Véase `07-cinco-pruebas-y-recompilacion.md`.
-No se declara terminado el preflight, wrapper, manifiesto final o fase B.
+exactamente el hash inicial. La nueva autorización permitió compilar directamente
+en `artifacts/api-server/dist-e2-20260927`, con un commit separado solo para
+seleccionar salida. Preflight completo PostgreSQL: 19 comprobaciones PASS;
+wrapper: 8/8 PASS; selección sin base: 119/119 PASS; typecheck: cero errores.
+Esos resultados independientes siguen siendo válidos, pero **la prueba real
+ejecutada por el agente principal falló: no obtuvo healthz 200 en 30 segundos**.
+La traza demuestra carga real de thread-stream-worker y pino-pretty y se emitió
+el aviso INSPECTION. El bundle presenta un ciclo de inicializadores async que
+bloquea la importación de app antes de listen. Además, el enlace simbólico del
+runner hizo omitir el CLI del preflight: esa ejecución no prueba el preflight
+del recorrido completo. Candidato detenido; PostgreSQL detenido y destruido.
+Manifiesto y fase B quedan **bloqueados, no simplemente pendientes de una prueba**.
+No se corrigió runtime ni preflight bajo STOP. Véase
+`10-fallo-arranque-real.md`; no basta completar la hora para autorizar fase B.
 
 ## Revisiones exactas
 
@@ -28,10 +36,13 @@ No se declara terminado el preflight, wrapper, manifiesto final o fase B.
 - No compilar desde un `HEAD` móvil ni incorporar cambios locales. El archivo
   previamente modificado `reports/e2-correccion-sql-y-registro-arranques-20260921.md`
   no se modificó ni se considera una nueva autorización.
-- Bundle aislado: `candidato/dist/index.mjs`, SHA-256
+- Bundle inicial histórico: `candidato/dist/index.mjs`, SHA-256
   `f22be73ed8c17ed96d6f22cd62a126bf965a59c55781446fcd1a03c8c16e002c`.
-  No se sustituyó el bundle activo. No existe aún wrapper/preflight final
-  verificado ni autorización de fase B ejecutable.
+  No se sustituyó el bundle activo.
+- Bundle final preparado: `artifacts/api-server/dist-e2-20260927/index.mjs`,
+  SHA-256 `1102baeec9de7d7c7773f142a835f39234ec1ba2f278373cdedcd4814ff2feb3`.
+  Overlays: tests `07cc804a35b6bba7f3ed640129231ba7434a8767` y salida de build
+  `e0f1c227e013c59987c06604e21a8036e73c82a5`. No se instala desde HEAD arbitrario.
 
 ## Alcance propuesto
 
@@ -58,6 +69,11 @@ cierres antiguos, pruebas financieras ficticias ni inicializadores escritores.
 | [04-verificacion-y-primer-cierre.md](04-verificacion-y-primer-cierre.md) | Aceptación posterior y evidencia del snapshot |
 | [05-autorizacion-propietario.md](05-autorizacion-propietario.md) | Decisiones de preparación otorgadas; fase B aún no emitida |
 | [06-resultado-preparacion.md](06-resultado-preparacion.md) | Resultados terminales y detención |
+| [07-cinco-pruebas-y-recompilacion.md](07-cinco-pruebas-y-recompilacion.md) | Pruebas autorizadas y antecedente de rutas Pino |
+| [08-directorio-final-preflight-y-recuperacion.md](08-directorio-final-preflight-y-recuperacion.md) | Estado actual, verificaciones, respaldo y recuperación |
+| [09-fase-b-texto.md](09-fase-b-texto.md) | Borrador bloqueado, NO AUTORIZABLE |
+| [10-fallo-arranque-real.md](10-fallo-arranque-real.md) | Fallo observado, diagnóstico, evidencia y limpieza |
+| [manifest-final.json](manifest-final.json) | Procedencia y hashes; fallo real y bloqueos explícitos |
 | [sql/](sql/) | Copias exactas de instalación, reversión y preflight A+C |
 | [anexos/inventario-diferencias-fuentes.txt](anexos/inventario-diferencias-fuentes.txt) | Diferencias entre fuente del bundle retenido y candidato |
 

@@ -1,8 +1,10 @@
 # 2. SQL exacto, secuencia y preflight
 
-**No se ejecutó ninguno de estos archivos.** Las copias en `sql/` son las
-sentencias exactas candidatas, no instrucciones autorizadas para la base actual.
-La identidad/conformidad actual de esa base se desconoce en esta preparación.
+**No se ejecutaron en la base de la API.** El instalador y postflight exactos
+se verificaron en PostgreSQL nuevo y desechable, detenido y destruido después.
+Las copias en `sql/` no autorizan por sí solas operación en la base actual.
+Su identidad/conformidad actual sigue sin consultarse. Ver documento 08:
+preflight externo completo B0/B1 preparado y probado, no operativo.
 
 ## Orden futuro, únicamente tras autorización
 
