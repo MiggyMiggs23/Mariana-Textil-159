@@ -1,0 +1,17 @@
+Autorización del propietario. Guarda este texto tal cual en reports/e2-paquete-liberacion-preparado-20260921/ antes de la primera escritura.
+
+Autorizo únicamente preparar y verificar, fuera de la API activa, el candidato de liberación E2 con captura y devolución apagadas.
+
+Decisiones del propietario:
+- Fuente: la revisión completa 31804125a1e752bde128d72e9fd44d23972ffff1, con arrastre. Enumera cada cambio que no sea E2 ni A+C y confirma que es una decisión ya registrada del propietario (E8, E6) o que está apagado (remate, precio mínimo, borrado de producto). Si encuentras un cambio que no cumple ninguna de las dos, detente y repórtamelo.
+- Modo de arranque: INSPECTION, con preflight externo que cubra la liberación completa.
+- Si falla la escritura del registro de arranques, la API arranca igual. Las compuertas de hash y preflight siguen bloqueando.
+- Respaldo: siempre en Google Drive, antes de aplicar el SQL, igual que el 13 de septiembre, y se conserva el bundle actual para recuperación. Prepara el procedimiento; no lo ejecutes hoy.
+- Ventana de liberación: domingo 27 de septiembre de 2026.
+- Primer cierre después de liberar: lo hace el propietario en Mariana, con tickets de prueba en efectivo y transferencia. Todo se borrará en la purga final.
+
+Autorizo compilar en una exportación aislada, sin conexión ni credenciales de la base de la API, y adecuar el preflight y scripts/api-start-audit.sh al bundle nuevo. Verificaciones permitidas: typecheck raíz, pruebas sin base, pruebas del registrador y validación del preflight nuevo contra una base PostgreSQL nueva y desechable con el SQL A+C instalado. Nunca la base de la API ni los clones E1/E10.
+
+No autorizo sustituir el bundle activo, cambiar el workflow, reiniciar la API, aplicar SQL en la base de la API ni abrir captura o devolución.
+
+Entrega el manifiesto final con revisión, hashes completos de bundle, preflight, wrapper y SQL, resultados y plan de recuperación, y el texto de autorización final (fase B) con todos los campos llenos excepto la hora de la ventana. Si aparece algo fuera de este alcance, detente y repórtamelo.
