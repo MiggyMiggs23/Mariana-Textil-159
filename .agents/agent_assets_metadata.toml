@@ -1865,3 +1865,17 @@ mtime_ms = 1789791687097
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f583e223-77d9-4f27-a125-bbce0bc24a02/c7a930d3-59c8-4bc3-b0cd-456f892ca85f"
 storage_version_token = "1789791729469485"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "QFLG4FlCfIUSwWZiVOhyq"
+uri = "file://reports/e2-correccion-sql-y-registro-arranques-20260921.md"
+type = "text"
+title = "Cierre: corrección A+C y registro de arranques"
+description = "Hash completo confirmado, validación PostgreSQL 47/51, destrucción verificada y comando de registro preparado sin reiniciar."
+logical_id = "d5874729-5f64-4b02-8628-ac7273c6c71f"
+content_hash = "sha256:296c0447df4b63008f40baac955b083b5745246f9e3d7ded31c9f61ecab5dc68"
+size = 5888
+mtime_ms = 1790012701520
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d5874729-5f64-4b02-8628-ac7273c6c71f/b85d2208-d30a-4190-8357-13531053516c"
+storage_version_token = "1790012736102972"
+content_type = "text/markdown"
