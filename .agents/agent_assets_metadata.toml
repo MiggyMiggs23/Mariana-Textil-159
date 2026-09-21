@@ -1893,3 +1893,17 @@ mtime_ms = 1790014588340
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/827c2cd0-e49a-4fb9-9a6e-d5aa2d3226eb/b2102faf-999a-41c6-9965-3d9d53fcafa2"
 storage_version_token = "1790014608592865"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "DqhOsGywvth13zrFnXZbF"
+uri = "file://reports/e2-paquete-liberacion-preparado-20260921/README.md"
+type = "text"
+title = "Paquete de liberación E2 — solo preparación"
+description = "Índice del paquete: fuentes y revisión exacta, tres SQL con hashes, preflight, registro de arranques, primer cierre y borradores de autorización. No autoriza ejecución."
+logical_id = "0f050770-7b14-4eae-9441-3b8dd9403af1"
+content_hash = "sha256:6f38e0ca9b378f4db27fa38b59fd40a78f55f8da62b116219b8717912ed0e54f"
+size = 3656
+mtime_ms = 1790015051372
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0f050770-7b14-4eae-9441-3b8dd9403af1/fe75363b-947d-45a6-9506-fc4f3be1a4fe"
+storage_version_token = "1790015343958048"
+content_type = "text/markdown"
