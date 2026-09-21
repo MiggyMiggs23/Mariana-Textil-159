@@ -1,0 +1,22 @@
+{
+  "status": "IMPLEMENTED_AWAITING_INDEPENDENT_REVIEW_NOT_EXECUTED",
+  "baseRevision": "ff152eb93fc704183fcaf27aa79bd212b0644eca",
+  "checks": {
+    "gitDiffCheck": "PASS",
+    "sqlFunctionHashesMatchTypescript": "PASS",
+    "typescriptTranspileSyntax": "PASS",
+    "fullTypecheck": "NOT_RUN",
+    "postgresql": "NOT_RUN",
+    "cases51": "NOT_RUN"
+  },
+  "sha256": {
+    "01-install-evidence-prepared.sql": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+    "02-revert-before-capture-only.sql": "0f5952b874bb9fead4f782b9b169636564d302f00f20d5e4bf135896c9b32b3c",
+    "03-preflight-schema-prepared.sql": "b368c7239f83b088d1fa5c30d1c1d0dd08538842d18a694315bd88b7f1e5980c",
+    "limited-startup-preflight.ts": "d197df962f4c1292b3affdf071e59c8c9ed05712885da5c5e6600055abb140a0",
+    "unchanged-cases.mjs": "d6d21cb26c86243057bd5a45a79daf2f7669c9d24f35e98b57fe3ae67bf3fcbf",
+    "unchanged-fixture.sql": "6427d242f30d1dd3a509d99051bcecfe43f30ed7cea56d979708a6bbcd19522e"
+  },
+  "databaseCreated": false,
+  "cleanupRequired": false
+}

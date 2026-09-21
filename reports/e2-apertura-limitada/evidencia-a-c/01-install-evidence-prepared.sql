@@ -44,6 +44,35 @@ CREATE TABLE public.evidencia_no_aplicada_e2 (
   )
 );
 
+-- Durable INSERT provenance, not the 32-bit MVCC tuple-version xmin.
+-- No DEFAULT/backfill: pre-existing rows remain NULL and cannot be attested.
+ALTER TABLE public.movimientos_credito ADD COLUMN e2_insert_xid xid8;
+ALTER TABLE public.cobros_credito_pendientes_e1 ADD COLUMN e2_insert_xid xid8;
+
+CREATE FUNCTION public.e2_stamp_insert_transaction()
+RETURNS trigger
+LANGUAGE plpgsql
+SET search_path TO 'pg_catalog', 'public'
+AS $function$
+BEGIN
+  IF TG_OP = 'INSERT' THEN
+    NEW.e2_insert_xid := pg_current_xact_id();
+  ELSE
+    -- UPDATE creates a tuple version, not a new receipt. Ignore supplied stamps.
+    NEW.e2_insert_xid := OLD.e2_insert_xid;
+  END IF;
+  RETURN NEW;
+END;
+$function$;
+
+CREATE TRIGGER e2_source_insert_transaction
+BEFORE INSERT OR UPDATE ON public.movimientos_credito
+FOR EACH ROW EXECUTE FUNCTION public.e2_stamp_insert_transaction();
+
+CREATE TRIGGER e2_retained_insert_transaction
+BEFORE INSERT OR UPDATE ON public.cobros_credito_pendientes_e1
+FOR EACH ROW EXECUTE FUNCTION public.e2_stamp_insert_transaction();
+
 CREATE FUNCTION public.e2_reject_evidence_mutation()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -68,7 +97,7 @@ LANGUAGE plpgsql
 SET search_path TO 'pg_catalog', 'public'
 AS $function$
 DECLARE
-  source_xid text;
+  source_xid xid8;
   source_client integer;
   source_amount numeric;
   source_producer text;
@@ -76,7 +105,7 @@ DECLARE
   allocation_count integer;
   allocation_sum bigint;
 BEGIN
-  SELECT m.xmin::text, m.cliente_id, -m.importe,
+  SELECT m.e2_insert_xid, m.cliente_id, -m.importe,
          m.operacion_productor, m.operacion_clave
     INTO source_xid, source_client, source_amount, source_producer, source_key
     FROM public.movimientos_credito AS m
@@ -91,7 +120,7 @@ BEGIN
    FOR SHARE;
 
   IF source_xid IS NULL
-     OR source_xid::bigint <> (txid_current() % 4294967296)
+     OR source_xid IS DISTINCT FROM pg_current_xact_id()
      OR source_client IS DISTINCT FROM NEW.cliente_id
      OR source_amount IS DISTINCT FROM NEW.importe
      OR source_producer IS DISTINCT FROM NEW.operacion_productor
@@ -160,12 +189,12 @@ SET search_path TO 'pg_catalog', 'public'
 AS $function$
 DECLARE
   final_row public.finalizaciones_abono_e2%ROWTYPE;
-  retained_xid text;
+  retained_xid xid8;
   retained_customer integer;
   retained_amount numeric;
 BEGIN
   IF NEW.abono_id IS NULL THEN
-    SELECT xmin::text, cliente_id, importe
+    SELECT e2_insert_xid, cliente_id, importe
       INTO retained_xid, retained_customer, retained_amount
       FROM public.cobros_credito_pendientes_e1
       WHERE operacion_productor = NEW.cobro_productor
@@ -175,7 +204,7 @@ BEGIN
         AND cuenta_destino = 'CAJA_FISICA' AND sesion_caja_id IS NOT NULL
       FOR SHARE;
     IF retained_xid IS NULL
-       OR retained_xid::bigint <> (txid_current() % 4294967296)
+       OR retained_xid IS DISTINCT FROM pg_current_xact_id()
        OR retained_customer IS DISTINCT FROM NEW.cliente_id
        OR retained_amount IS DISTINCT FROM NEW.importe THEN
       RAISE EXCEPTION 'E2: retained proof requires its new physical receipt in this transaction';
@@ -327,11 +356,11 @@ LANGUAGE plpgsql
 SET search_path TO 'pg_catalog', 'public'
 AS $function$
 DECLARE
-  source_xid text;
+  source_xid xid8;
 BEGIN
-  SELECT xmin::text INTO source_xid FROM public.movimientos_credito
+  SELECT e2_insert_xid INTO source_xid FROM public.movimientos_credito
     WHERE id = NEW.abono_movimiento_id FOR SHARE;
-  IF source_xid::bigint = (txid_current() % 4294967296)
+  IF source_xid = pg_current_xact_id()
      AND EXISTS (SELECT 1 FROM public.finalizaciones_abono_e2
                  WHERE abono_id = NEW.abono_movimiento_id) THEN
     RAISE EXCEPTION 'E2: capture applications must precede finalization';

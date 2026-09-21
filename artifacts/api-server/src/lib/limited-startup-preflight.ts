@@ -207,6 +207,8 @@ export interface LimitedPreflightResult {
 }
 
 export const ABONO_EVIDENCE_COLUMNS = [
+  ["movimientos_credito", "e2_insert_xid", "xid8"],
+  ["cobros_credito_pendientes_e1", "e2_insert_xid", "xid8"],
   ["finalizaciones_abono_e2", "abono_id", "integer"],
   ["finalizaciones_abono_e2", "operacion_productor", "text"],
   ["finalizaciones_abono_e2", "operacion_clave", "uuid"],
@@ -257,6 +259,8 @@ export const ABONO_EVIDENCE_CONSTRAINTS = [
 ] as const;
 
 const ABONO_EVIDENCE_TRIGGER_EXPECTATIONS = [
+  ["movimientos_credito", "e2_source_insert_transaction", 23, "e2_stamp_insert_transaction", false],
+  ["cobros_credito_pendientes_e1", "e2_retained_insert_transaction", 23, "e2_stamp_insert_transaction", false],
   ["finalizaciones_abono_e2", "e2_finalization_immutable", 58, "e2_reject_evidence_mutation", false],
   ["finalizaciones_abono_e2", "e2_validate_abono_finalization", 7, "e2_validate_abono_finalization", false],
   ["evidencia_no_aplicada_e2", "e2_proof_immutable", 58, "e2_reject_evidence_mutation", false],
@@ -266,11 +270,12 @@ const ABONO_EVIDENCE_TRIGGER_EXPECTATIONS = [
 ] as const;
 
 const ABONO_EVIDENCE_FUNCTION_HASHES: Record<string, string> = {
+  e2_stamp_insert_transaction: "5746c222b6f13659a6d37447152f3735864491f6c1430a925d5010fda517c05a",
   e2_reject_evidence_mutation: "4e4d98bf9efa299671f666d86e8285a76438cdf492ef529bd8f7f0cf359da25a",
-  e2_validate_abono_finalization: "73a3e2b84fb480448080addfd4af98fed85cbff459caddebce5c64d9ad1bb2cc",
-  e2_validate_unused_proof: "09e2b1ebaf7ef4cf20ccdfea376d90a6e161a6bc67d4d4f4c50960a70e1bee67",
+  e2_validate_abono_finalization: "e32be7709fafef94efa649c8182fa2d8c31e66ac2810332dc4b1ceea7c3fe354",
+  e2_validate_unused_proof: "f9f709434dccf7083861658acbde7e84af2040e9add05633c3f0142599cd4d60",
   e2_attest_new_retained: "3498c293a24f45a9782c7cc550d8194eaefbbdfe83e5c7d9451506195a9fb69c",
-  e2_guard_finalized_capture_application: "904d1e0c0735f95e930ea7a6654561986f475ca9f0b0d1a00b9bf22ab501bb51",
+  e2_guard_finalized_capture_application: "47c13486b9f4c0933746e64d1e3b89e906244f2f090e60d2365cf0d3e27ef603",
   e2_finalize_new_abono: "a8ff080835bd6873e6ae2ec0c88a92ba4bf74b1d9e131a886fb20df7368bf32f",
   e2_require_abono_finalization: "b706f7a06badbe932d6f08f276ff7ebe3c780b47416e4b58c012f084d7151ad7",
 };
@@ -371,14 +376,16 @@ export async function runLimitedStartupPreflight(
     }
 
     const evidenceColumns = await client.query(`
-        SELECT table_name, column_name, data_type, is_nullable,
+        SELECT table_name, column_name,
+               CASE WHEN column_name = 'e2_insert_xid' THEN udt_name ELSE data_type END AS data_type, is_nullable,
                numeric_precision, numeric_scale, column_default
         FROM information_schema.columns
         WHERE table_schema = 'public'
-          AND table_name IN ('finalizaciones_abono_e2','evidencia_no_aplicada_e2')
+          AND (table_name IN ('finalizaciones_abono_e2','evidencia_no_aplicada_e2')
+            OR (table_name IN ('movimientos_credito','cobros_credito_pendientes_e1')
+                AND column_name = 'e2_insert_xid'))
       `);
-    const evidencePresent = evidenceColumns.rows.some((row) =>
-      row.table_name === "finalizaciones_abono_e2" || row.table_name === "evidencia_no_aplicada_e2");
+    const evidencePresent = evidenceColumns.rows.length > 0;
     const checkEvidence = options.requireAbonoEvidence || approval.guardState === "LIMITED" || evidencePresent;
     if (checkEvidence) {
       const actualEvidenceColumns = new Set(evidenceColumns.rows.map(
@@ -395,8 +402,9 @@ export async function runLimitedStartupPreflight(
           const expectedDefault = row.column_name === "created_at" ? "transaction_timestamp()"
             : row.column_name === "forma_pago" ? "'EFECTIVO'::text"
             : row.column_name === "naturaleza" ? "'INGRESO_FISICO'::text" : null;
-          const nullable = row.table_name === "evidencia_no_aplicada_e2"
-            && (ABONO_EVIDENCE_NULLABLE_COLUMNS as readonly unknown[]).includes(row.column_name);
+          const nullable = row.column_name === "e2_insert_xid"
+            || (row.table_name === "evidencia_no_aplicada_e2"
+              && (ABONO_EVIDENCE_NULLABLE_COLUMNS as readonly unknown[]).includes(row.column_name));
           return row.is_nullable !== (nullable ? "YES" : "NO") || row.column_default !== expectedDefault
             || (row.data_type === "numeric"
               && (Number(row.numeric_precision) !== 12 || Number(row.numeric_scale) !== 2));

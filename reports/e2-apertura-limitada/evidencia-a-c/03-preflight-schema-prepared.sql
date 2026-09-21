@@ -1,5 +1,39 @@
 -- PREPARED OFFLINE ONLY. Included inside the locked activation transaction.
 -- This is a catalog contract, never an initializer or repair/backfill.
+DO $provenance$
+BEGIN
+  IF (
+    SELECT count(*) FROM pg_catalog.pg_attribute a
+    WHERE a.attrelid IN ('public.movimientos_credito'::regclass,
+                        'public.cobros_credito_pendientes_e1'::regclass)
+      AND a.attname = 'e2_insert_xid' AND NOT a.attisdropped
+      AND a.atttypid = 'pg_catalog.xid8'::regtype
+      AND NOT a.attnotnull AND NOT a.atthasdef
+      AND a.attgenerated = '' AND a.attidentity = ''
+  ) <> 2 OR (
+    SELECT count(*) FROM pg_catalog.pg_trigger t
+    JOIN pg_catalog.pg_proc p ON p.oid = t.tgfoid
+    JOIN pg_catalog.pg_language l ON l.oid = p.prolang
+    WHERE (t.tgrelid, t.tgname) IN (
+      ('public.movimientos_credito'::regclass, 'e2_source_insert_transaction'),
+      ('public.cobros_credito_pendientes_e1'::regclass, 'e2_retained_insert_transaction'))
+      AND t.tgtype = 23 AND t.tgenabled = 'O' AND NOT t.tgisinternal
+      AND t.tgconstraint = 0 AND NOT t.tgdeferrable AND NOT t.tginitdeferred
+      AND t.tgqual IS NULL AND t.tgattr::text = '' AND octet_length(t.tgargs) = 0
+      AND p.oid = 'public.e2_stamp_insert_transaction()'::regprocedure
+      AND p.prorettype = 'pg_catalog.trigger'::regtype
+      AND p.prokind = 'f' AND p.provolatile = 'v' AND p.proparallel = 'u'
+      AND NOT p.prosecdef AND NOT p.proisstrict AND NOT p.proretset
+      AND p.proconfig = ARRAY['search_path=pg_catalog, public']
+      AND l.lanname = 'plpgsql'
+      AND encode(sha256(convert_to(p.prosrc, 'UTF8')), 'hex')
+        = '5746c222b6f13659a6d37447152f3735864491f6c1430a925d5010fda517c05a'
+  ) <> 2 THEN
+    RAISE EXCEPTION 'REFUSED: A+C INSERT provenance catalog mismatch';
+  END IF;
+END;
+$provenance$;
+
 WITH expected_constraints(table_name, name, definition) AS (
   VALUES
     ('finalizaciones_abono_e2','finalizaciones_abono_e2_pkey','PRIMARY KEY (abono_id)'),
