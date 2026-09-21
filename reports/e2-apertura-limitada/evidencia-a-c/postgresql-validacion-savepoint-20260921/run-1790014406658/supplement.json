@@ -1,0 +1,22 @@
+[
+  {
+    "case": "historical NULL cannot be forged by UPDATE or attested",
+    "status": "PASS"
+  },
+  {
+    "case": "supplied INSERT stamp overwritten with full top xid",
+    "status": "PASS"
+  },
+  {
+    "case": "committed source UPDATE preserves OLD stamp and cannot be attested",
+    "status": "PASS"
+  },
+  {
+    "case": "SAVEPOINT rollback removes source stamp; reinsert same key succeeds",
+    "status": "PASS"
+  },
+  {
+    "case": "late application after released SAVEPOINT and IMMEDIATE rejected",
+    "status": "PASS"
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "revision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "previousRevision": "f8818255bcb11784c422cc559c3273e1f2e25aa9",
+  "authorizationSha256": "19605bdb13537d124101a3b7150d817dabbdead8a981870fe1dfd6c8c53adbc6",
+  "previousAuthorizationSha256": "7da1ca31d9243fd79df1c1c359ae30f0bc0b6ca8a1b12d75066f08792d3796de",
+  "previousInstallSha256": "dd99574f022b4d325a73238bf0d1e348e015003d2dad3ebc9de00ede8b094cbd",
+  "runnerSha256": "5c48551374ce5b0897c67e03038803ec3c0c9b7a70814a73ac6c121467404070",
+  "inheritedRunnerSha256": "437843c5e0420d068040eb4c7dab954755f2762d5c6c740afd3de10085197bad",
+  "root": "/tmp/e2-ac-savepoint-firstcases-pg16-9lHpDS",
+  "socket": "/tmp/e2-ac-savepoint-firstcases-pg16-9lHpDS/socket",
+  "port": 56439,
+  "db": "e2_ac_synthetic",
+  "files": [
+    {
+      "path": "artifacts/api-server/src/lib/limited-startup-preflight.ts",
+      "sha256": "d197df962f4c1292b3affdf071e59c8c9ed05712885da5c5e6600055abb140a0"
+    },
+    {
+      "path": "lib/db/src/schema/aplicaciones-credito.ts",
+      "sha256": "05331cbbd69ba58290a7efc5a21769bccefebe7a7508aa3c7ba946dcd6de629b"
+    },
+    {
+      "path": "lib/db/src/schema/clientes.ts",
+      "sha256": "eeb73bfbba1165c6aceffc4b89b0d31ec74c46a3ac0270d882c4be0c5736b94a"
+    },
+    {
+      "path": "lib/db/src/schema/pos.ts",
+      "sha256": "31ec5edfefcc74ba94509444b0ac8fba775924d07be7a816c477371fb5e4923f"
+    },
+    {
+      "path": "reports/e1-guardas-temporales-2026-09-18/sql/01-install-cash.sql",
+      "sha256": "9e14649f95dbc889823a7c349a8e009ea1916699140914f03a453751f2d4c9b4"
+    },
+    {
+      "path": "reports/e1-guardas-temporales-2026-09-18/sql/02-install-pending.sql",
+      "sha256": "d3e61d6f1be32615653506bf52d1c98182d80dd1368fa4764c27da8fe5edd03c"
+    },
+    {
+      "path": "reports/e1-sql/01-propuesta.sql",
+      "sha256": "15148edc4555b90a0007dba4536c0a60ecb9904f5885b457ade99b2fe72d931a"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql",
+      "sha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/02-revert-before-capture-only.sql",
+      "sha256": "0f5952b874bb9fead4f782b9b169636564d302f00f20d5e4bf135896c9b32b3c"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/03-preflight-schema-prepared.sql",
+      "sha256": "b368c7239f83b088d1fa5c30d1c1d0dd08538842d18a694315bd88b7f1e5980c"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/cases.mjs",
+      "sha256": "d6d21cb26c86243057bd5a45a79daf2f7669c9d24f35e98b57fe3ae67bf3fcbf"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/fixture.sql",
+      "sha256": "6427d242f30d1dd3a509d99051bcecfe43f30ed7cea56d979708a6bbcd19522e"
+    }
+  ]
+}

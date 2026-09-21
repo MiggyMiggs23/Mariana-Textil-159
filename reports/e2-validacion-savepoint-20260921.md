@@ -1,6 +1,6 @@
 # A+C: procedencia INSERT segura ante SAVEPOINT
 
-**Intento único terminal FAIL del runner antes del primer caso. Los 51 casos quedaron bloqueados, no fallidos ni aprobados individualmente. Base aislada destruida y destrucción verificada. No habilita apertura.**
+**Primera corrida efectiva: 51/51 PASS, más 5 suplementos separados PASS, exit 0. Hubo una preparación anterior abortada por error del loader antes de ejecutar cualquier caso; se conserva íntegra. Ambos clústeres aislados fueron destruidos con verificación independiente. No habilita apertura.**
 
 ## Autorización y fuentes
 
@@ -40,7 +40,7 @@ Se descartó `pg_xact_status` sobre xmin reconstruido: una tupla congelada puede
 
 La creación de las dos tablas de evidencia se mantiene antes del nuevo DDL para conservar el rechazo atómico `42P07` esperado al instalar dos veces. La fixture sintética borra/recrea el esquema completo. Los contadores de los casos siguen refiriéndose a las cinco tablas existentes; no hay una tabla extra. La consulta de catálogo del caso preflight observa las dos tablas de evidencia sin excluir la comprobación adicional de procedencia que ahora realiza el SQL exacto. No se editaron expectativas ni casos.
 
-La coordinación aprobó el diseño y la corrida única después de revisión independiente. La matriz de 51 casos sigue sin resultado, por el fallo del runner descrito abajo. No se afirma PASS de instalación, preflight SQL/TypeScript o semántica PostgreSQL. No hubo simulación práctica de wraparound.
+La coordinación aprobó el diseño y la corrida después de revisión independiente. La preparación abortada y la primera corrida efectiva se distinguen abajo. La corrida efectiva validó instalación y preflight SQL exacto; no se ejecutó preflight TypeScript runtime. No hubo simulación práctica de wraparound.
 
 Checks estáticos: `git diff --check`, correspondencia de todos los hashes de cuerpos SQL contra el preflight TypeScript y transpile de sintaxis TypeScript: PASS. No es typecheck completo ni ejecución de la aplicación. Hashes y estado en `e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/static-review.json`. El INSERT posicional de retenidos del harness conserva sus expresiones originales; PostgreSQL permite omitir columnas finales sin lista explícita, dejando la columna añadida con NULL antes del trigger.
 
@@ -50,9 +50,9 @@ La coordinación resolvió la duda del INSERT posicional con documentación ofic
 
 Se exportaron por `git archive` desde el commit funcional los mismos SQL, dependencias, fixture y `cases.mjs` anteriores, más el TypeScript modificado. Antes de initdb, el runner comparó cada archivo con `git show` de esa revisión. Los casos y fixture conservan sus hashes. La [revisión previa](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/review-before-execution.txt), [exportación verificada](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/export-review.json) y [manifiesto](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/run-1790014245585/manifest.json) registran identidad y hashes.
 
-## Resultado terminal: fallo de infraestructura del runner
+## Historia: preparación abortada por infraestructura del runner
 
-Ejecución única: `run-1790014245585`, proceso **exit 1**. El runner nuevo reutilizó el cuerpo anterior mediante un módulo `data:` con sustituciones explícitas de identidad. **Fue un error de implementación del runner nuevo:** aunque sustituyó `import.meta.url` por la URL del archivo, el import dinámico de `pg` usa una ruta absoluta de filesystem que el resolvedor del módulo `data:` no puede resolver.
+Preparación abortada: `run-1790014245585`, proceso **exit 1**. El runner nuevo reutilizó el cuerpo anterior mediante un módulo `data:` con sustituciones explícitas de identidad. **Fue un error de implementación del runner nuevo:** aunque sustituyó `import.meta.url` por la URL del archivo, el import dinámico de `pg` usa una ruta absoluta de filesystem que el resolvedor del módulo `data:` no puede resolver.
 
 Error conservado íntegro en [terminal.json](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/run-1790014245585/terminal.json): `Failed to resolve module specifier "/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/index.js" ... Invalid relative URL or base scheme is not hierarchical.` No es un error de SQL ni evidencia contra la corrección.
 
@@ -62,13 +62,13 @@ El fallo ocurrió después de crear el clúster/base nuevos, **antes de conectar
 - Una entrada de resumen `harness: FAIL`.
 - Suplementos preparados: **no ejecutados**; estaban condicionados a 51 PASS.
 - No hubo instalación del SQL candidato, preflight SQL ni control negativo.
-- No se corrigió el runner ni se reintentó, respetando la orden de no depurar/repetir contra el fallo.
+- Se informó y se detuvo sin reparar. Posteriormente coordinación autorizó explícitamente reparar solo el loader, porque ningún caso ni SQL candidato se había ejecutado.
 
 Los logs originales permanecen completos, incluidos el mensaje extenso con la URL data y los comandos de cleanup. No se cambiaron expectativas, fixture ni casos.
 
 El typecheck solicitado **PASS, exit 0**: `tsc -p artifacts/api-server/tsconfig.json --noEmit --incremental false`, sin build/import de DB y sin salida de errores. Evidencia: `typecheck-exit.txt` y `typecheck.log` en el directorio nuevo. Los checks de sintaxis de runner/suplemento y el modo de verificación de exportación pasaron, pero no detectaron el fallo posterior de resolución del módulo data.
 
-## Aislamiento y destrucción verificada
+## Aislamiento y destrucción de la preparación abortada
 
 PostgreSQL **16.10**, directorio recién creado `/tmp/e2-ac-savepoint-pg16-wgU5Ef`, socket privado bajo ese directorio, puerto de socket `56439`, `listen_addresses=''`, permisos de socket 0700, rol `e2_owner`, base `e2_ac_synthetic` desde template0, entorno saneado y parámetros explícitos. La comprobación SQL `inet_server_addr() IS NULL` no llegó a ejecutarse; no se afirma ese resultado. El comando de arranque sí fijó ausencia de TCP.
 
@@ -82,4 +82,48 @@ El `finally` funcionó pese al fallo:
 
 La [verificación independiente posterior](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/cleanup-independent-check.json) volvió a comprobar ausencia de PID, socket y directorio y los estados de destrucción. No hay clúster pendiente de cleanup.
 
-No se usó DB API, HTTP, clones E1/E10, paquetes, runtime preflight, workflows ni bundle. No se abrió captura/devolución. La autorización nueva y el cambio ajeno en `reports/e2-correccion-sql-y-registro-arranques-20260921.md` no se incluyen en el commit. Cualquier nueva ejecución requiere decisión de coordinación; esta tarea termina sin validación PostgreSQL del candidato.
+## Reparación autorizada del loader y primera corrida efectiva
+
+La coordinación precisó que reparar infraestructura antes del primer caso no constituye corregir un caso fallido ni iterar el SQL. Se conservó `run.mjs` fallido y se creó `run-first-cases.mjs`: únicamente transforma los imports absolutos de `pg` y `cases.mjs` a URL `file:`. No modifica SQL, TypeScript funcional, casos ni fixture.
+
+Antes de iniciar PostgreSQL, se verificaron los tres imports dinámicos (`pg`, casos y suplemento) desde un módulo data bajo el mismo resolvedor, sin instanciar clientes ni invocar casos. [Verificación offline: PASS](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/loader-repair-offline-check.json). Se repitió la comprobación byte por byte de la exportación contra el commit funcional fijo. No se repitió typecheck ni se ejecutó build.
+
+Primera corrida efectiva: **`run-1790014406658`, exit 0**. [Terminal completo](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/run-1790014406658/terminal.json): exactamente **51 casos PASS**, sin FAIL, bloqueados ni omitidos. El conjunto intacto consta de los 49 casos previos y los dos controles iniciales anteriores.
+
+| Casos | Cobertura | Resultado |
+|---|---|---|
+| 1–6 | Control SQL antiguo negativo, instalación/reversión/reinstalación, duplicado atómico, preflight exacto, guardas CLOSED | PASS |
+| 7–10 | Ordinario UNUSED/PARTIAL/FULL y dirigido FULL | PASS |
+| 11–20 | Rechazos de finalización/prueba ausente, fuente o clasificación inválida | PASS |
+| 21–27 | Fallos inducidos sin huérfanos, reintento UUID, replay/duplicado y aplicación tardía | PASS |
+| 28–39 | Inmutabilidad, aplicación futura legítima, prueba retenida y negativos | PASS |
+| 40–45 | Fuente antes/después de SAVEPOINT, ordinaria/retenida, hijo activo/liberado | PASS |
+| 46–47 | Caracterización de reverso DEFERRED/IMMEDIATE | PASS observacional |
+| 48–51 | Concurrencia UUID COMMIT/ROLLBACK, productor contra reversión y preservación de evidencia | PASS |
+
+En particular, los cuatro casos que fallaban anteriormente (41,43,44,45) pasan ahora sin cambiar expectativas. El caso 47 sigue siendo una caracterización de aceptación de reverso en frontera A+C tras IMMEDIATE, **no garantía de integridad global ni autorización de devolución**.
+
+Solo después de 51 PASS, en el mismo clúster privado con esquema sintético recreado desde la misma fixture e instalador, se ejecutaron [cinco suplementos separados](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/run-1790014406658/supplement.json), todos PASS:
+
+1. Fuente histórica NULL: intento UPDATE de falsificar marcador no lo modifica; atestación rechazada.
+2. INSERT con marcador suministrado: sobrescrito con xid8 superior real.
+3. Fuente confirmada: UPDATE conserva OLD y atestación en nueva transacción se rechaza.
+4. ROLLBACK TO elimina fuente/marcador y permite reinsertar misma clave; RELEASE permite atestación.
+5. Abono en hijo liberado: marcador conserva identidad aun con UPDATE malicioso; aplicación después de finalización e IMMEDIATE rechazada.
+
+No se suman a los 51. No se alteró código como respuesta a casos/suplementos. La garantía de wrap XID32 proviene del dato persistente xid8; no se simuló una vuelta de cuatro mil millones de transacciones.
+
+## Destrucción de la primera corrida efectiva
+
+Clúster PostgreSQL16 nuevo, directorio `/tmp/e2-ac-savepoint-firstcases-pg16-9lHpDS`; rol `e2_owner`, base `e2_ac_synthetic`, socket privado, puerto `56439`, sin TCP. Antes de fixture, antes de recrear esquema para los 49 casos y antes del suplemento se comprobaron base/rol/data_directory/socket/puerto/listen_addresses e `inet_server_addr() IS NULL`. Los comandos/respuestas completos se conservan en el nuevo `commands.log`.
+
+- DROP DATABASE WITH (FORCE): **exit 0**; parada propia **exit 0**.
+- `pg_ctl status`: **exit 3**; PID **4377** ausente.
+- Socket y raíz eliminados; `cleanupError: null`.
+- [Comprobación independiente posterior](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/first-cases-cleanup-independent-check.json): ausencia de PID/socket/raíz confirmada.
+
+No se usó DB API, HTTP, clones E1/E10, paquetes, runtime preflight, workflows ni bundle. No se abrió captura/devolución. La autorización nueva, memorias de coordinación y cambios ajenos no se incluyen en los commits de evidencia de este worker.
+
+## Límites finales
+
+PASS acredita únicamente esta fixture sintética parcial y frontera A+C en PostgreSQL16.10: no catálogo operativo E1 completo, HTTP/backend, permisos endurecidos, FIFO completo, frontend ni apertura/captura/devolución reales. No se ejecutó el preflight TypeScript contra una base. Sus cambios pasan typecheck y verificación estática de hashes, no una validación runtime. Ninguno de los dos clústeres queda pendiente de cleanup.

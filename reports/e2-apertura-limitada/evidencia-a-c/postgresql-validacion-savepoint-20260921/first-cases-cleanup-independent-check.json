@@ -1,0 +1,13 @@
+{
+  "run": "run-1790014406658",
+  "revision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "root": "/tmp/e2-ac-savepoint-firstcases-pg16-9lHpDS",
+  "pid": 4377,
+  "pidAbsent": true,
+  "socketAbsent": true,
+  "rootAbsent": true,
+  "dropStatus": 0,
+  "stopStatus": 0,
+  "clusterStatus": 3,
+  "cleanupError": null
+}

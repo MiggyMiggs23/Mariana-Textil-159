@@ -1,0 +1,36 @@
+{
+  "sourceRevision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "abortedPreparation": {
+    "run": "run-1790014245585",
+    "exitCode": 1,
+    "casesExecuted": 0,
+    "cause": "new runner data-module loader did not accept filesystem import",
+    "cleanupIndependentlyVerified": true
+  },
+  "loaderRepair": {
+    "authorization": "main explicitly authorized infrastructure-only repair before any candidate SQL or case had executed",
+    "sqlTypescriptCasesFixtureChanged": false,
+    "offlineImportResolution": "PASS",
+    "runner": "run-first-cases.mjs",
+    "runnerSha256": "5c48551374ce5b0897c67e03038803ec3c0c9b7a70814a73ac6c121467404070",
+    "supplementSha256": "659fc1cd8d4a1d8f56ff38cc2896b5329a268cd70cbcabbce01cea72bb738210"
+  },
+  "firstEffectiveCasesRun": {
+    "run": "run-1790014406658",
+    "exitCode": 0,
+    "cases": 51,
+    "pass": 51,
+    "fail": 0,
+    "blocked": 0,
+    "separateSupplements": 5,
+    "separateSupplementsPass": 5,
+    "cleanupIndependentlyVerified": true
+  },
+  "apiTypecheck": {
+    "exitCode": 0,
+    "command": "tsc -p artifacts/api-server/tsconfig.json --noEmit --incremental false",
+    "repeatedAfterLoaderRepair": false
+  },
+  "opensCaptureOrRefunds": false,
+  "practicalXid32WrapSimulation": false
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_abono_id_fkey",
+    "definition": "FOREIGN KEY (abono_id) REFERENCES finalizaciones_abono_e2(abono_id)"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_abono_id_key",
+    "definition": "UNIQUE (abono_id)"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_check",
+    "definition": "CHECK ((((abono_id IS NOT NULL) AND (cobro_productor IS NULL) AND (cobro_clave IS NULL) AND (fuente = ('ABONO:'::text || (abono_id)::text))) OR ((abono_id IS NULL) AND (cobro_productor IS NOT NULL) AND (cobro_clave IS NOT NULL) AND (cobro_productor = 'COBRO_PENDIENTE'::text) AND (fuente = ('COBRO_RETENIDO:'::text || (cobro_clave)::text)))))"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_cliente_id_fkey",
+    "definition": "FOREIGN KEY (cliente_id) REFERENCES clientes(id)"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_cobro_clave_key",
+    "definition": "UNIQUE (cobro_clave)"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_cobro_productor_cobro_clave_fkey",
+    "definition": "FOREIGN KEY (cobro_productor, cobro_clave) REFERENCES cobros_credito_pendientes_e1(operacion_productor, operacion_clave)"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_forma_pago_check",
+    "definition": "CHECK ((forma_pago = 'EFECTIVO'::text))"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_importe_check",
+    "definition": "CHECK (((importe > (0)::numeric) AND (importe < 'Infinity'::numeric)))"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_naturaleza_check",
+    "definition": "CHECK ((naturaleza = 'INGRESO_FISICO'::text))"
+  },
+  {
+    "relname": "evidencia_no_aplicada_e2",
+    "conname": "evidencia_no_aplicada_e2_pkey",
+    "definition": "PRIMARY KEY (fuente)"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_abono_id_fkey",
+    "definition": "FOREIGN KEY (abono_id) REFERENCES movimientos_credito(id)"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_check",
+    "definition": "CHECK (((aplicado >= (0)::numeric) AND (aplicado <= importe)))"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_check1",
+    "definition": "CHECK ((((resultado = 'UNUSED'::text) AND (aplicado = (0)::numeric)) OR ((resultado = 'PARTIAL'::text) AND (aplicado > (0)::numeric) AND (aplicado < importe)) OR ((resultado = 'FULL'::text) AND (aplicado = importe))))"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_cliente_id_fkey",
+    "definition": "FOREIGN KEY (cliente_id) REFERENCES clientes(id)"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_contrato_revision_check",
+    "definition": "CHECK ((contrato_revision = 'e2-abono-evidence-v1'::text))"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_evaluacion_check",
+    "definition": "CHECK ((jsonb_typeof(evaluacion) = 'object'::text))"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_importe_check",
+    "definition": "CHECK (((importe > (0)::numeric) AND (importe < 'Infinity'::numeric)))"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_operacion_productor_check",
+    "definition": "CHECK ((operacion_productor = ANY (ARRAY['ABONO_ORDINARIO'::text, 'ABONO_DIRIGIDO'::text])))"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_operacion_productor_operacion_clave_key",
+    "definition": "UNIQUE (operacion_productor, operacion_clave)"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_pkey",
+    "definition": "PRIMARY KEY (abono_id)"
+  },
+  {
+    "relname": "finalizaciones_abono_e2",
+    "conname": "finalizaciones_abono_e2_resultado_check",
+    "definition": "CHECK ((resultado = ANY (ARRAY['UNUSED'::text, 'PARTIAL'::text, 'FULL'::text])))"
+  }
+]
