@@ -1,5 +1,5 @@
 {
-  "status": "BUILT_NOT_STARTED_BY_SUBAGENT",
+  "status": "REAL_STARTUP_PASS_BY_OWNING_AGENT_NOT_RELEASED",
   "revision": "7cb77f8cfc6287fa51325a25122c48af392a7ada",
   "source": "/tmp/e2-release-preparation-ycjqZ0/source",
   "buildOutputOverlay": "e0f1c227e013c59987c06604e21a8036e73c82a5; baseline build identical except output directory",
@@ -23,5 +23,5 @@
     "artifacts/api-server/dist-e2-control-7cb77f8-20260927/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
   },
   "activeBundleUnchangedSha256": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
-  "runtimeDecision": "Await actual baseline control. If control fails, fix harness only; if it starts, compare candidate and identify delta before minimal separately committed runtime change."
+  "runtimeDecision": "Control passed real startup; unchanged candidate failed same corrected harness. Conditional minimal eager-import fix 226509cae4d6e850782763a0f4d15139ddedd568 applied; corrected candidate also passed. Actual evidence is in verificacion-control/candidate-start-results.json and final manifest. No operational release authorized."
 }

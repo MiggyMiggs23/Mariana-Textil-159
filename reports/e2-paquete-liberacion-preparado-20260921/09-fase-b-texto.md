@@ -1,32 +1,39 @@
-# Fase B — NO AUTORIZABLE / BLOQUEADA / STOP
+# Fase B — texto final preparado para autorización futura
 
-**El texto siguiente se conserva solo como borrador histórico, no apto para
-firma ni ejecución. NO basta llenar la hora.** El arranque real falló: no
-healthz 200, ciclo de inicialización async antes de listen y preflight del
-runner omitido por el guard CLI ante symlink. Los workers sí cargaron; candidato
-y PostgreSQL quedaron detenidos y la base desechable destruida. Las pruebas
-independientes 19+8+119 no convierten este recorrido en aprobado.
-
-Ver `10-fallo-arranque-real.md` y su rectificación: la causa de la espera sigue
-pendiente de control porque el ciclo de fuentes preexistía. La nueva autorización
-permite control 7cb77f8 y corrección independiente de preflight, ya aplicada.
-El control real pasó y el candidato anterior falló; se aplicó el fix mínimo
-condicional `226509cae4d6e850782763a0f4d15139ddedd568`. No se habilita fase B
-antes del arranque real del candidato corregido; cualquier cambio exige actualizar
-el manifiesto y los hashes de este borrador antes de reconsiderar fase B.
+**Paquete validado, no liberado. Esta autorización NO ha sido otorgada ni
+ejecutada.** Control y candidato corregido pasaron el ensayo real. El único
+campo por completar es la hora; el propietario debe emitir expresamente el
+texto con esa hora. Los fallos previos permanecen como evidencia histórica.
 
 > Autorizo la liberación E2 CLOSED el domingo 27 de septiembre de 2026,
 > a las ______, hora local de Mariana, en una ventana sin escritores.
+> La ventana dura hasta concluir todas las verificaciones o declarar aborto;
+> no reanudar escritores con una verificación fallida o incierta. Fijo
+> lock_timeout 2 s y statement_timeout 60 s para las sesiones DDL, con
+> ON_ERROR_STOP y sin reintentos automáticos; el preflight conserva 15 s/2 s.
 > El operador es el agente bajo supervisión del propietario; el primer cierre
 > lo realiza exclusivamente el propietario en Mariana con tickets de prueba
 > en efectivo y transferencia. Los datos de prueba se tratarán en la purga
 > final autorizada por separado, nunca mediante borrados en esta ventana.
+> Conservo bundle retenido, respaldos, logs y evidencias bajo custodia del
+> propietario hasta una instrucción expresa posterior; no borrar ni rotar
+> evidencias durante esta liberación.
+>
+> Apruebo el manifiesto final
+> reports/e2-paquete-liberacion-preparado-20260921/manifest-final.json,
+> SHA-256 607ea898de8cadcf86a5811e61ccef27c2829f83018f50bd296f174c4b25e14d.
+> Sus hashes fijan fuentes, outputs, SQL, preflight, logger y evidencia;
+> package-integrity.sha256 permite cotejar además el paquete completo y este
+> texto sin una dependencia circular entre sus hashes.
 >
 > La fuente es 31804125a1e752bde128d72e9fd44d23972ffff1, con únicamente
 > la superposición de tests 07cc804a35b6bba7f3ed640129231ba7434a8767 y el cambio
 > de directorio del build e0f1c227e013c59987c06604e21a8036e73c82a5.
 > Se añade únicamente la corrección de importación eager y su regresión,
 > commit 226509cae4d6e850782763a0f4d15139ddedd568.
+> El árbol base es 6337df3ae1dc67b8de91fabda3cbf73dd255cf59.
+> La corrección independiente de preflight/wrapper es
+> af48ed59696d34ab1f6d8c65df61c53a0f614f1f, con los hashes finales de abajo.
 > Se acepta el arrastre enumerado: E8, E6 y el atajo de cantidades por rollo
 > en Entradas. Remate, precio mínimo y borrado de producto permanecen apagados.
 > No se instala frontend ni se copia el workflow de la revisión fuente.
@@ -77,6 +84,9 @@ el manifiesto y los hashes de este borrador antes de reconsiderar fase B.
 > El arranque se hará desde la raíz del workspace mediante
 > bash reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh,
 > en el workflow de API existente y su puerto operativo, no el puerto de prueba.
+> El servicio es artifacts/api-server: API Server; no se crea API paralela,
+> no se toca otro workflow ni se publica. Se autoriza un único arranque de
+> liberación después del postflight; no build ni migración dentro del arranque.
 > El modo es INSPECTION con API_INSPECTION_BOOT=1 y NODE_ENV=development.
 > No cambiar a modo normal, correr inicializadores/backfills ni abrir captura,
 > devolución, retenidos, atribución o Fondo. Un fallo de append de auditoría

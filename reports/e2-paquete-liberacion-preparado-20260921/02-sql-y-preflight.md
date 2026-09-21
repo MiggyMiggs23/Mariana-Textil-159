@@ -37,9 +37,9 @@ No ejecutar instalación/reversión/reinstalación de ensayo en la base operativ
 - `01` ya habrá confirmado cuando se ejecute `03`. Si el postflight falla,
   **no arrancar la API ni corregir el catálogo automáticamente**. La decisión
   será conservar cerrado o usar la reversión autorizada si sigue siendo segura.
-- Establecer previamente límites de espera/bloqueos y política de abortar;
-  sus valores y la pausa de escritores son decisiones operativas pendientes.
-  No cortar escritores ni reiniciar servicios durante esta preparación.
+- El preflight fija statement_timeout 15 s y lock_timeout 2 s; la fase B
+  exige sesión DDL con límites explícitos y aborto, y escritores pausados hasta
+  validación final. No se pausó ni reinició la API durante esta preparación.
 
 ## Delta exacto permitido
 
@@ -83,7 +83,10 @@ schema push ni un “arreglo de prerrequisitos” bajo esta autorización.
 
 ## Qué debe comprobar el preflight previo
 
-No basta un `SELECT 1`. La implementación final versionada aún está pendiente:
+No basta un `SELECT 1`. `release-preflight.mjs`, `release-catalog.sql` y
+`release-expected.json` están preparados y probados en PostgreSQL desechable,
+incluido el preflight real antes del candidato corregido. La ventana futura
+debe cumplir además los controles operativos siguientes:
 
 1. Identidad inequívoca de destino: conexión efectiva, base/OID, esquema,
    rol, versión PostgreSQL y configuración relevante, sin revelar credenciales.

@@ -1,0 +1,25 @@
+✔ gate cannot be opened by environment or body (1.300535ms)
+✔ canonical DTO, origin exclusivity, reason and identifiers (0.40883ms)
+✔ idempotency rejects any changed canonical field (0.358845ms)
+✔ original E1 cash rejection survives E2 (0.2466ms)
+✔ source barriers and isolated negative proofs (11.299815ms)
+✔ reconciled DDL has one proof owner and independent closed refund gates; no E1 replacement (0.60172ms)
+✔ limited mode requires the exact approved JSON state; normal remains unchanged (2.5386ms)
+✔ enabled A+C evidence requires its schema before limited startup can listen (1.468298ms)
+✔ A+C combined inventory supports closed-preserved and rejects each schema drift (25.019522ms)
+✔ read-only preflight commits only after schema and all three old guards match (5.50024ms)
+✔ missing schema fails closed, rolls back, and releases (0.466188ms)
+✔ full traffic manifest rejects missing audit, cash-exit, location, provider and session context (0.7935ms)
+✔ dropping the permanent session/site/nature E1 context trigger fails closed (1.934043ms)
+✔ a wrong E1 guard fails closed (6.619827ms)
+✔ catalog exceptions attempt rollback and always release (0.438991ms)
+✔ actual index source keeps limited preflight before listen and suppresses every startup writer (17.206746ms)
+✔ actual application import graph has no automatic session-store maintenance hooks (1.313578ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 929.26805

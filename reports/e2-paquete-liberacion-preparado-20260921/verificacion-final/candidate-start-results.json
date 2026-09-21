@@ -1,11 +1,26 @@
 {
-  "databasePath": "/tmp/e2-candidate-start-9W5ksE",
+  "databasePath": "/tmp/e2-candidate-start-G0sxmM",
   "apiPort": 18092,
   "pgPort": 55439,
-  "started": false,
+  "started": true,
   "executedAgainst": "new local empty synthetic catalog only",
-  "tracerPid": 3522,
-  "error": "Candidate health deadline exceeded.\n\nundefined !== 200\n",
+  "revision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "bundleDirectory": "dist-e2-20260927",
+  "runtimeFixCommit": "226509cae4d6e850782763a0f4d15139ddedd568",
+  "tracerPid": 7162,
+  "preflightProofObserved": true,
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "workersLoaded": [
+    "thread-stream-worker.mjs",
+    "pino-pretty.mjs"
+  ],
+  "inspectionMessageObserved": true,
+  "catalogRowsSequencesUnchanged": true,
   "candidateStopped": true,
   "postgresStopExit": 0,
   "disposableDestroyed": true

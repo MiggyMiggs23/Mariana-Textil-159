@@ -1,0 +1,452 @@
+✔ grouped inventory returns only active products with stock, without stock, search and location scope (79.968851ms)
+✔ E2 admin resolves canonical differences and totals before pagination, preserving legacy admin (7.030282ms)
+✔ E2 sums five disjoint buckets with exact cents, including large values (5.642925ms)
+✔ E2 rejects duplicate physical identity across retained and abono, never amount-dedupes (0.94178ms)
+✔ E2 excludes transfers, accounting corrections, other sessions and reversal evidence (0.732569ms)
+✔ E2 reads a receipt once regardless of attached notes/applications (0.392924ms)
+✔ E2 fails closed for unsupported pending conversion or missing immutable identity (0.521405ms)
+✔ E2 rejects fractional, nonfinite and malformed physical amounts (0.971012ms)
+✔ E2 closed legacy keeps exact per-surface values and never reads current receipts (0.353346ms)
+✔ E2 closed valid snapshot is immutable even if live session values differ (0.822744ms)
+✔ E2 corrupt snapshots fail explicitly and never fall back to legacy or live (2.269881ms)
+✔ E2 open sessions use canonical cash, not legacy or stale snapshot (0.524358ms)
+✔ A+C evidence remains closed by default and blocks a covered receipt (4.123038ms)
+✔ canonical allocations classify whole receipt without changing FIFO (2.355808ms)
+✔ invalid or excessive allocation evidence fails closed (0.182473ms)
+✔ enabled covered receipt persists one finalization; non-cash stays unchanged (0.245547ms)
+✔ directed provenance describes its full explicit application, never UNUSED or PARTIAL (2.122995ms)
+✔ finalization failure propagates so the surrounding transaction can roll back (0.28503ms)
+✔ ordinary and directed producers finalize only after existing applications (2.48958ms)
+✔ refund consumer requires both positive proof and UNUSED finalization (0.717139ms)
+✔ limited startup binds income activation to the A+C catalog preflight (0.675929ms)
+✔ allocates 4200+3500+2300 strictly by credit-sale FIFO (1.797093ms)
+✔ preserves excess payment as available credit (0.173522ms)
+✔ a later sale consumes historic remaining abono, not a directed ticket (0.17666ms)
+✔ linked reduction cancels its target before FIFO allocation (0.198424ms)
+✔ full ledger projection excludes reversed ABONOs and applies ticket reversals before FIFO (0.946605ms)
+✔ directed ABONOs reduce only their linked ticket before normal FIFO (0.36875ms)
+✔ legacy ticket-linked ABONOs remain normal FIFO without a directed marker (0.23749ms)
+✔ directed ABONOs reduce only the selected movement when a ticket has multiple charges (0.238373ms)
+✔ backdated preview from the full ledger matches the subsequently inserted ABONO (0.520018ms)
+✔ same-day and next-day ABONOs reduce the sale for partial, exact, and excess payments (0.437373ms)
+✔ prospective FIFO applies favor to a new note for all six timing/amount cases (0.829573ms)
+✔ automatic favor eligibility blocks AJUSTE and consumed ABONO evidence (0.457942ms)
+✔ historical preventImplicitFavor remains a frozen exception while new notes auto-apply (0.291608ms)
+✔ validates payment destination against its payment method (0.087502ms)
+✔ E1 required metadata rejects legacy, malformed ids, UUIDs and unknown nature (1.629334ms)
+✔ E1 evidence parser whitelists and normalizes without credentials (1.406345ms)
+✔ E1 four exact natures and seven-producer compatibility cannot default to correction (0.470935ms)
+✔ E1 exact money normalization rejects rounding and overflow (0.463242ms)
+✔ E1 canonical JSON recursively sorts keys and preserves intent order and exact instants (1.523314ms)
+✔ E1 canonical JSON rejects secrets, undefined, cycles and nonfinite values (0.310481ms)
+✔ E1 correction never invents cash session; physical bank transfer never accepts drawer (0.538183ms)
+✔ E2/E3 income and return cash permissions are separate and both remain closed (0.239113ms)
+✔ E3 future income permission only admits exact ABONO cash tuple and never cash returns (0.234297ms)
+✔ E3 rollback from income=true to false blocks only new captures (0.261848ms)
+✔ E2/E3 source has split gates; isolated source mutants fail the architecture check (6.345527ms)
+✔ cash rollback gate is absent from historical evidence reader source (0.769765ms)
+✔ E1 current actor/site access rejects role, inactive actor and moved site even on replay (0.278327ms)
+✔ E1 same content replays original result before repeated domain validation/side effects (0.789281ms)
+✔ E1 equal UUID across producers is isolated, not deduplicated by nature or UUID alone (0.308185ms)
+✔ E1 reused key with changed amount, actor, metadata or nature conflicts (0.642452ms)
+✔ E1 ON CONFLICT loser reloads immutable winner instead of repeating writes (0.279491ms)
+✔ E1 committed operation without movement fails explicitly, never stub success (0.265379ms)
+✔ E1 retained receipt gate rejects before any storage call and never becomes an ABONO (0.348737ms)
+✔ attribution remains closed for ADMIN and SUPERVISOR; roles fail first (1.345842ms)
+✔ unknown historical preparation requires privileged role AND existing credit access (0.326882ms)
+✔ supervisor attribution is limited to assigned site even with global read scope (0.472742ms)
+✔ whitelisted required evidence rejects credentials, missing predecessor and truncated identity (1.657767ms)
+✔ exact timestamp and all five snapshot fields prevent movement ID reuse (0.760076ms)
+✔ read evidence never infers original site/nature and excludes unknown from ordinary scope (0.296145ms)
+✔ latest attribution is separate and cross-site latest attribution is not leaked (0.320414ms)
+✔ read loader applies defensive scope to returned rows and exposes disabled activation (0.609781ms)
+✔ identical UUID replay precedes original/site/chain checks and has no INSERT (0.368429ms)
+✔ UUID replay conflicts on changed content or actor, without business writes (1.053296ms)
+✔ new attribution validates snapshot before insertion and rejects nonhistorical original (0.475648ms)
+✔ root append inserts only attribution with exact identity and no monetary/session row (0.41088ms)
+✔ rectification requires current head, keeps predecessor intact and replays old root (0.480707ms)
+✔ missing/invalid site and cross-site actor cannot cause an attribution insert (0.197858ms)
+✔ actual claim adapter atomically inserts once and replays immutable movement without another write (5.859857ms)
+✔ actual credit request adapter reports legacy update-app error before required generated-schema validation (2.131443ms)
+✔ actual claim adapter conflicts on changed actor, nature or whitelisted intent (1.68363ms)
+✔ actual claim adapter isolates equal UUID across producers in both claim and movement lookup (1.837067ms)
+✔ actual claim adapter loses composite uniqueness race and reloads the completed winner (1.506166ms)
+✔ actual claim adapter rejects missing movement and incomplete operation reservation (1.378579ms)
+✔ actual access/scope adapters check current site and role before replay without requiring open session (1.140551ms)
+✔ actual scope adapter requires an open drawer in the exact active store (0.586519ms)
+✔ actual E1 insertion adapter stores explicit scope/nature/key for VENTA_CREDITO (1.334812ms)
+✔ actual E1 insertion adapter stores explicit scope/nature/key for CANCELACION_VENTA_CREDITO (1.971635ms)
+✔ actual E1 insertion adapter stores explicit scope/nature/key for ABONO_ORDINARIO (0.525797ms)
+✔ actual E1 insertion adapter stores explicit scope/nature/key for ABONO_DIRIGIDO (0.360308ms)
+✔ actual E1 insertion adapter stores explicit scope/nature/key for REVERSO_ABONO (0.524257ms)
+✔ actual E1 insertion adapter stores explicit scope/nature/key for AJUSTE_MANUAL (0.470096ms)
+✔ actual E1 insertion adapter stores explicit scope/nature/key for BAJA_INCOBRABLE (0.236144ms)
+✔ actual insertion adapters reject new physical cash and pending receipt before any query/write (0.555105ms)
+✔ actual movement helper validates explicit note identity rather than inferring its site (0.367914ms)
+✔ cross-store ADMIN refund uses current cash B without changing receipt A, both origins (6.409563ms)
+✔ wrong return session/site rejected; isolated removal of scope fails negative proof (7.155413ms)
+✔ isolated restoration of original-site restriction fails required cross-store acceptance (10.009858ms)
+✔ actual service locks customer row before proof/source/projection in ABONO order (4.298929ms)
+✔ negative proof: isolated service copy without customer FOR UPDATE fails orchestration assertion (5.461637ms)
+✔ production gate prevents even entering transaction (1.168249ms)
+✔ isolated E2-open simulation still hits ORIGINAL E1 rejection, zero committed effects (4.776572ms)
+✔ isolated future simulation: both origins, exact replay, single outflow, reversal only ABONO (3.108878ms)
+✔ positive proof is typed: ABONO needs UNUSED; retained needs its own proof without ABONO (4.109067ms)
+✔ isolated future simulation: current authorization, positive proof, history, projection, session, rollback (8.195185ms)
+✔ exact replay survives session closure but not loss of current ADMIN role (1.261329ms)
+✔ isolated future simulation rejects partial receipts and a second UUID for one source (5.80011ms)
+✔ negative proof: retained service cannot omit its E1 gate (1.864043ms)
+✔ negative proof: removing gate in isolated compiled copy defeats zero-transaction assertion (2.480319ms)
+✔ gate cannot be opened by environment or body (1.627589ms)
+✔ canonical DTO, origin exclusivity, reason and identifiers (0.410569ms)
+✔ idempotency rejects any changed canonical field (0.383895ms)
+✔ original E1 cash rejection survives E2 (0.198894ms)
+✔ source barriers and isolated negative proofs (6.285598ms)
+✖ reconciled DDL has one proof owner and independent closed refund gates; no E1 replacement (0.726869ms)
+✔ limited mode requires the exact approved JSON state; normal remains unchanged (2.506525ms)
+✔ enabled A+C evidence requires its schema before limited startup can listen (1.531382ms)
+✖ A+C combined inventory supports closed-preserved and rejects each schema drift (8.04625ms)
+✖ read-only preflight commits only after schema and all three old guards match (4.604487ms)
+✔ missing schema fails closed, rolls back, and releases (0.383289ms)
+✔ full traffic manifest rejects missing audit, cash-exit, location, provider and session context (1.39864ms)
+✖ dropping the permanent session/site/nature E1 context trigger fails closed (1.011415ms)
+✖ a wrong E1 guard fails closed (0.583701ms)
+✔ catalog exceptions attempt rollback and always release (0.669891ms)
+✔ actual index source keeps limited preflight before listen and suppresses every startup writer (136.735618ms)
+✔ actual application import graph has no automatic session-store maintenance hooks (2.453769ms)
+✔ normal startup stays unchanged unless inspection is explicitly requested (1.505592ms)
+✔ inspection requires explicit development and cannot use an absent/false NODE_ENV as an escape (0.282768ms)
+✔ inspection bypasses schema initialization and returns before writing maintenance (0.558094ms)
+ℹ tests 119
+ℹ suites 0
+ℹ pass 114
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13251.4253
+
+✖ failing tests:
+
+test at src/lib/credit-refund.safe.test.ts:1:3485
+✖ reconciled DDL has one proof owner and independent closed refund gates; no E1 replacement (0.726869ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /source_xid::bigint <> \(txid_current\(\) % 4294967296\)/. Input:
+  
+  '-- PREPARED OFFLINE ONLY. DO NOT EXECUTE WITHOUT SEPARATE DB AUTHORIZATION.\n' +
+    '-- No backfill, no capture/refund activation, no initializer registration.\n' +
+    'BEGIN;\n' +
+    '\n' +
+    'CREATE TABLE public.finalizaciones_abono_e2 (\n' +
+    '  abono_id integer PRIMARY KEY REFERENCES public.movimientos_credito(id),\n' +
+    '  operacion_productor text NOT NULL,\n' +
+    '  operacion_clave uuid NOT NULL,\n' +
+    '  cliente_id integer NOT NULL REFERENCES public.clientes(id),\n' +
+    "  importe numeric(12,2) NOT NULL CHECK (importe > 0 AND importe < 'Infinity'::numeric),\n" +
+    "  resultado text NOT NULL CHECK (resultado IN ('UNUSED','PARTIAL','FULL')),\n" +
+    '  aplicado numeric(12,2) NOT NULL CHECK (aplicado >= 0 AND aplicado <= importe),\n' +
+    "  evaluacion jsonb NOT NULL CHECK (jsonb_typeof(evaluacion) = 'object'),\n" +
+    "  contrato_revision text NOT NULL CHECK (contrato_revision = 'e2-abono-evidence-v1'),\n" +
+    '  created_at timestamptz NOT NULL DEFAULT transaction_timestamp(),\n' +
+    '  UNIQUE (operacion_productor, operacion_clave),\n' +
+    '  CHECK (\n' +
+    "    (resultado = 'UNUSED' AND aplicado = 0)\n" +
+    "    OR (resultado = 'PARTIAL' AND aplicado > 0 AND aplicado < importe)\n" +
+    "    OR (resultado = 'FULL' AND aplicado = importe)\n" +
+    '  ),\n' +
+    "  CHECK (operacion_productor IN ('ABONO_ORDINARIO','ABONO_DIRIGIDO'))\n" +
+    ');\n' +
+    '\n' +
+    'CREATE TABLE public.evidencia_no_aplicada_e2 (\n' +
+    '  fuente text PRIMARY KEY,\n' +
+    '  abono_id integer UNIQUE\n' +
+    '    REFERENCES public.finalizaciones_abono_e2(abono_id),\n' +
+    '  cobro_productor text,\n' +
+    '  cobro_clave uuid UNIQUE,\n' +
+    '  cliente_id integer NOT NULL REFERENCES public.clientes(id),\n' +
+    "  importe numeric(12,2) NOT NULL CHECK (importe > 0 AND importe < 'Infinity'::numeric),\n" +
+    "  forma_pago text NOT NULL DEFAULT 'EFECTIVO' CHECK (forma_pago = 'EFECTIVO'),\n" +
+    "  naturaleza text NOT NULL DEFAULT 'INGRESO_FISICO' CHECK (naturaleza = 'INGRESO_FISICO'),\n" +
+    '  created_at timestamptz NOT NULL DEFAULT transaction_timestamp(),\n' +
+    '  FOREIGN KEY (cobro_productor, cobro_clave)\n' +
+    '    REFERENCES public.cobros_credito_pendientes_e1(operacion_productor, operacion_clave),\n' +
+    '  CHECK (\n' +
+    '    (abono_id IS NOT NULL AND cobro_productor IS NULL AND cobro_clave IS NULL\n' +
+    "      AND fuente = 'ABONO:' || abono_id::text)\n" +
+    '    OR (abono_id IS NULL AND cobro_productor IS NOT NULL AND cobro_clave IS NOT NULL\n' +
+    "      AND cobro_productor = 'COBRO_PENDIENTE'\n" +
+    "      AND fuente = 'COBRO_RETENIDO:' || cobro_clave::text)\n" +
+    '  )\n' +
+    ');\n' +
+    '\n' +
+    '-- Durable INSERT provenance, not the 32-bit MVCC tuple-version xmin.\n' +
+    '-- No DEFAULT/backfill: pre-existing rows remain NULL and cannot be attested.\n' +
+    'ALTER TABLE public.movimientos_credito ADD COLUMN e2_insert_xid xid8;\n' +
+    'ALTER TABLE public.cobros_credito_pendientes_e1 ADD COLUMN e2_insert_xid xid8;\n' +
+    '\n' +
+    'CREATE FUNCTION public.e2_stamp_insert_transaction()\n' +
+    'RETURNS trigger\n' +
+    'LANGUAGE plpgsql\n' +
+    "SET search_path TO 'pg_catalog', 'public'\n" +
+    'AS $function$\n' +
+    'BEGIN\n' +
+    "  IF TG_OP = 'INSERT' THEN\n" +
+    '    NEW.e2_insert_xid := pg_current_xact_id();\n' +
+    '  ELSE\n' +
+    '    -- UPDATE creates a tuple version, not a new receipt. Ignore supplied stamps.\n' +
+    '    NEW.e2_insert_xid := OLD.e2_insert_xid;\n' +
+    '  END IF;\n' +
+    '  RETURN NEW;\n' +
+    'END;\n' +
+    '$function$;\n' +
+    '\n' +
+    'CREATE TRIGGER e2_source_insert_transaction\n' +
+    'BEFORE INSERT OR UPDATE ON public.movimientos_credito\n' +
+    'FOR EACH ROW EXECUTE FUNCTION public.e2_stamp_insert_transaction();\n' +
+    '\n' +
+    'CREATE TRIGGER e2_retained_insert_transaction\n' +
+    'BEFORE INSERT OR UPDATE ON public.cobros_credito_pendientes_e1\n' +
+    'FOR EACH ROW EXECUTE FUNCTION public.e2_stamp_insert_transaction();\n' +
+    '\n' +
+    'CREATE FUNCTION public.e2_reject_evidence_mutation()\n' +
+    'RETURNS trigger\n' +
+    'LANGUAGE plpgsql\n' +
+    "SET search_path TO 'pg_catalog', 'public'\n" +
+    'AS $function$\n' +
+    'BEGIN\n' +
+    "  RAISE EXCEPTION 'E2: evidence/finalization is immutable';\n" +
+    'END;\n' +
+    '$function$;\n' +
+    '\n' +
+    'CREATE TRIGGER e2_finalization_immutable\n' +
+    'BEFORE UPDATE OR DELETE OR TRUNCATE ON public.finalizaciones_abono_e2\n' +
+    'FOR EACH STATEMENT EXECUTE FUNCTION public.e2_reject_evidence_mutation();\n' +
+    '\n' +
+    'CREATE TRIGGER e2_proof_immutable\n' +
+    'BEFORE UPDATE OR DELETE OR TRUNCATE ON public.evidencia_no_aplicada_e2\n' +
+    'FOR EACH STATEMENT EXECUTE FUNCTION public.e2_reject_evidence_mutation();\n' +
+    '\n' +
+    'CREATE FUNCTION public.e2_validate_abono_finalization()\n' +
+    'RETURNS trigger\n' +
+    'LANGUAGE plpgsql\n' +
+    "SET search_path TO 'pg_catalog', 'public'\n" +
+    'AS $function$\n' +
+    'DECLARE\n' +
+    '  source_xid xid8;\n' +
+    '  source_client integer;\n' +
+    '  source_amount numeric;\n' +
+    '  source_producer text;\n' +
+    '  source_key uuid;\n' +
+    '  allocation_count integer;\n' +
+    '  allocation_sum bigint;\n' +
+    'BEGIN\n' +
+    '  SELECT m.e2_insert_xid, m.cliente_id, -m.importe,\n' +
+    '         m.operacion_productor, m.operacion_clave\n' +
+    '    INTO source_xid, source_client, source_amount, source_producer, source_key\n' +
+    '    FROM public.movimientos_credito AS m\n' +
+    '   WHERE m.id = NEW.abono_id\n' +
+    "     AND m.tipo = 'ABONO'\n" +
+    "     AND m.naturaleza = 'INGRESO_FISICO'\n" +
+    "     AND m.forma_pago = 'EFECTIVO'\n" +
+    "     AND m.cuenta_destino = 'CAJA_FISICA'\n" +
+    '     AND m.sitio_origen_id IS NOT NULL\n' +
+    '     AND m.sesion_caja_id IS NOT NULL\n' +
+    "     AND m.operacion_productor IN ('ABONO_ORDINARIO','ABONO_DIRIGIDO')\n" +
+    '   FOR SHARE;\n' +
+    '\n' +
+    '  IF source_xid IS NULL\n' +
+    '     OR source_xid IS DISTINCT FROM pg_current_xact_id()\n' +
+    '     OR source_client IS DISTINCT FROM NEW.cliente_id\n' +
+    '     OR source_amount IS DISTINCT FROM NEW.importe\n' +
+    '     OR source_producer IS DISTINCT FROM NEW.operacion_productor\n' +
+    '     OR source_key IS DISTINCT FROM NEW.operacion_clave THEN\n' +
+    "    RAISE EXCEPTION 'E2: finalization requires its new physical ABONO in this transaction';\n" +
+    '  END IF;\n' +
+    "  IF NEW.evaluacion->>'contractRevision' IS DISTINCT FROM NEW.contrato_revision\n" +
+    "     OR NEW.evaluacion->>'projector' IS DISTINCT FROM\n" +
+    "        (CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'directedApplication'\n" +
+    "          ELSE 'projectCreditLedger' END)\n" +
+    "     OR (source_producer = 'ABONO_DIRIGIDO'\n" +
+    "         AND (NEW.resultado IS DISTINCT FROM 'FULL'\n" +
+    '              OR NEW.aplicado IS DISTINCT FROM source_amount))\n' +
+    "     OR (NEW.evaluacion->>'receiptCents')::bigint IS DISTINCT FROM round(NEW.importe * 100)::bigint\n" +
+    "     OR (NEW.evaluacion->>'appliedCents')::bigint IS DISTINCT FROM round(NEW.aplicado * 100)::bigint\n" +
+    "     OR jsonb_typeof(NEW.evaluacion->'allocations') IS DISTINCT FROM 'array' THEN\n" +
+    "    RAISE EXCEPTION 'E2: finalization evaluation contract mismatch';\n" +
+    '  END IF;\n' +
+    "  SELECT count(*), COALESCE(sum((item->>'appliedCents')::bigint), 0)\n" +
+    '    INTO allocation_count, allocation_sum\n' +
+    "    FROM jsonb_array_elements(NEW.evaluacion->'allocations') AS item\n" +
+    "   WHERE jsonb_typeof(item) = 'object'\n" +
+    "     AND jsonb_typeof(item->'targetId') = 'number'\n" +
+    "     AND jsonb_typeof(item->'appliedCents') = 'number'\n" +
+    "     AND (item->>'targetId')::numeric > 0\n" +
+    "     AND (item->>'targetId')::numeric = trunc((item->>'targetId')::numeric)\n" +
+    "     AND (item->>'appliedCents')::numeric > 0\n" +
+    "     AND (item->>'appliedCents')::numeric = trunc((item->>'appliedCents')::numeric);\n" +
+    "  IF allocation_count <> jsonb_array_length(NEW.evaluacion->'allocations')\n" +
+    '     OR allocation_sum IS DISTINCT FROM round(NEW.aplicado * 100)::bigint THEN\n' +
+    "    RAISE EXCEPTION 'E2: finalization allocation summary mismatch';\n" +
+    '  END IF;\n' +
+    '  -- Attest persisted destinations/amounts, never recompute FIFO in SQL.\n' +
+    '  IF EXISTS (\n' +
+    '    WITH persisted AS (\n' +
+    '      SELECT venta_movimiento_id AS target, sum(importe * 100) AS cents\n' +
+    '      FROM public.aplicaciones_credito WHERE abono_movimiento_id = NEW.abono_id\n' +
+    '      GROUP BY venta_movimiento_id\n' +
+    '    ), declared AS (\n' +
+    "      SELECT (item->>'targetId')::integer AS target,\n" +
+    "             sum((item->>'appliedCents')::numeric) AS cents\n" +
+    "      FROM jsonb_array_elements(NEW.evaluacion->'allocations') AS item\n" +
+    "      GROUP BY (item->>'targetId')::integer\n" +
+    '    )\n' +
+    '    (SELECT * FROM persisted EXCEPT SELECT * FROM declared)\n' +
+    '    UNION ALL\n' +
+    '    (SELECT * FROM declared EXCEPT SELECT * FROM persisted)\n' +
+    '  ) OR EXISTS (\n' +
+    '    SELECT 1 FROM public.movimientos_credito\n' +
+    "    WHERE movimiento_origen_id = NEW.abono_id AND tipo = 'REVERSO'\n" +
+    '  ) THEN\n' +
+    "    RAISE EXCEPTION 'E2: finalization does not match persisted applications';\n" +
+    '  END IF;\n' +
+    '  RETURN NEW;\n' +
+    'END;\n' +
+    '$function$;\n' +
+    '\n' +
+    'CREATE TRIGGER e2_validate_abono_finalization\n' +
+    'BEFORE INSERT ON public.finalizaciones_abono_e2\n' +
+    'FOR EACH ROW EXECUTE FUNCTION public.e2_validate_abono_finalization();\n' +
+    '\n' +
+    'CREATE FUNCTION public.e2_validate_unused_proof()\n' +
+    'RETURNS trigger\n' +
+    'LANGUAGE plpgsql\n' +
+    "SET search_path TO 'pg_catalog', 'public'\n" +
+    'AS $function$\n' +
+    'DECLARE\n' +
+    '  final_row public.finalizaciones_abono_e2%ROWTYPE;\n' +
+    '  retained_xid xid8;\n' +
+    '  retained_customer integer;\n' +
+    '  retained_amount numeric;\n' +
+    'BEGIN\n' +
+    '  IF NEW.abono_id IS NULL THEN\n' +
+    '    SELECT e2_insert_xid, cliente_id, importe\n' +
+    '      INTO retained_xid, retained_customer, retained_amount\n' +
+    '      FROM public.cobros_credito_pendientes_e1\n' +
+    '      WHERE operacion_productor = NEW.cobro_productor\n' +
+    "        AND operacion_productor = 'COBRO_PENDIENTE'\n" +
+    '        AND operacion_clave = NEW.cobro_clave\n' +
+    "        AND naturaleza = 'INGRESO_FISICO' AND medio = 'EFECTIVO'\n" +
+    "        AND cuenta_destino = 'CAJA_FISICA' AND sesion_caja_id IS NOT NULL\n" +
+    '      FOR SHARE;\n' +
+    '    IF retained_xid IS NULL\n' +
+    '       OR retained_xid IS DISTINCT FROM pg_current_xact_id()\n' +
+    '       OR retained_customer IS DISTINCT FROM NEW.cliente_id\n' +
+    '       OR retained_amount IS DISTINCT FROM NEW.importe THEN\n' +
+    "      RAISE EXCEPTION 'E2: retained proof requires its new physical receipt in this transaction';\n" +
+    '    END IF;\n' +
+    '    RETURN NEW;\n' +
+    '  END IF;\n' +
+    '  SELECT * INTO final_row\n' +
+    '    FROM public.finalizaciones_abono_e2\n' +
+    '   WHERE abono_id = NEW.abono_id\n' +
+    '   FOR SHARE;\n' +
+    '  IF final_row.abono_id IS NULL\n' +
+    "     OR final_row.resultado <> 'UNUSED'\n" +
+    '     OR final_row.cliente_id IS DISTINCT FROM NEW.cliente_id\n' +
+    '     OR final_row.importe IS DISTINCT FROM NEW.importe THEN\n' +
+    "    RAISE EXCEPTION 'E2: positive proof requires a matching UNUSED finalization';\n" +
+    '  END IF;\n' +
+    '  RETURN NEW;\n' +
+    'END;\n' +
+    '$function$;\n' +
+    '\n' +
+    'CREATE TRIGGER e2_validate_unused_proof\n' +
+    'BEFORE INSERT ON public.evidencia_no_aplicada_e2\n' +
+    'FOR EACH ROW EXECUTE FUNCTION public.e2_validate_unused_proof();\n' +
+    '\n' +
+    '-- Unattached future attester; pending receipts remain closed by E1P01.\n' +
+    'CREATE FUNCTION public.e2_attest_new_retained(p_clave uuid)\n' +
+    'RETURNS void\n' +
+    'LANGUAGE plpgsql\n' +
+    "SET search_path TO 'pg_catalog', 'public'\n" +
+    'AS $function$\n' +
+    'BEGIN\n' +
+    '  INSERT INTO public.evidencia_no_aplicada_e2(fuente, cobro_productor, cobro_clave, cliente_id, importe)\n' +
+    "    SELECT 'COBRO_RETENIDO:' || operacion_clave::text,\n" +
+    '           operacion_productor, operacion_c'... 4741 more characters
+  
+      at TestContext.<anonymous> (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/credit-refund.safe.test.ts:66:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "-- PREPARED OFFLINE ONLY. DO NOT EXECUTE WITHOUT SEPARATE DB AUTHORIZATION.\n-- No backfill, no capture/refund activation, no initializer registration.\nBEGIN;\n\nCREATE TABLE public.finalizaciones_abono_e2 (\n  abono_id integer PRIMARY KEY REFERENCES public.movimientos_credito(id),\n  operacion_productor text NOT NULL,\n  operacion_clave uuid NOT NULL,\n  cliente_id integer NOT NULL REFERENCES public.clientes(id),\n  importe numeric(12,2) NOT NULL CHECK (importe > 0 AND importe < 'Infinity'::numeric),\n  resultado text NOT NULL CHECK (resultado IN ('UNUSED','PARTIAL','FULL')),\n  aplicado numeric(12,2) NOT NULL CHECK (aplicado >= 0 AND aplicado <= importe),\n  evaluacion jsonb NOT NULL CHECK (jsonb_typeof(evaluacion) = 'object'),\n  contrato_revision text NOT NULL CHECK (contrato_revision = 'e2-abono-evidence-v1'),\n  created_at timestamptz NOT NULL DEFAULT transaction_timestamp(),\n  UNIQUE (operacion_productor, operacion_clave),\n  CHECK (\n    (resultado = 'UNUSED' AND aplicado = 0)\n    OR (resultado = 'PARTIAL' AND aplicado > 0 AND aplicado < importe)\n    OR (resultado = 'FULL' AND aplicado = importe)\n  ),\n  CHECK (operacion_productor IN ('ABONO_ORDINARIO','ABONO_DIRIGIDO'))\n);\n\nCREATE TABLE public.evidencia_no_aplicada_e2 (\n  fuente text PRIMARY KEY,\n  abono_id integer UNIQUE\n    REFERENCES public.finalizaciones_abono_e2(abono_id),\n  cobro_productor text,\n  cobro_clave uuid UNIQUE,\n  cliente_id integer NOT NULL REFERENCES public.clientes(id),\n  importe numeric(12,2) NOT NULL CHECK (importe > 0 AND importe < 'Infinity'::numeric),\n  forma_pago text NOT NULL DEFAULT 'EFECTIVO' CHECK (forma_pago = 'EFECTIVO'),\n  naturaleza text NOT NULL DEFAULT 'INGRESO_FISICO' CHECK (naturaleza = 'INGRESO_FISICO'),\n  created_at timestamptz NOT NULL DEFAULT transaction_timestamp(),\n  FOREIGN KEY (cobro_productor, cobro_clave)\n    REFERENCES public.cobros_credito_pendientes_e1(operacion_productor, operacion_clave),\n  CHECK (\n    (abono_id IS NOT NULL AND cobro_productor IS NULL AND cobro_clave IS NULL\n      AND fuente = 'ABONO:' || abono_id::text)\n    OR (abono_id IS NULL AND cobro_productor IS NOT NULL AND cobro_clave IS NOT NULL\n      AND cobro_productor = 'COBRO_PENDIENTE'\n      AND fuente = 'COBRO_RETENIDO:' || cobro_clave::text)\n  )\n);\n\n-- Durable INSERT provenance, not the 32-bit MVCC tuple-version xmin.\n-- No DEFAULT/backfill: pre-existing rows remain NULL and cannot be attested.\nALTER TABLE public.movimientos_credito ADD COLUMN e2_insert_xid xid8;\nALTER TABLE public.cobros_credito_pendientes_e1 ADD COLUMN e2_insert_xid xid8;\n\nCREATE FUNCTION public.e2_stamp_insert_transaction()\nRETURNS trigger\nLANGUAGE plpgsql\nSET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n  IF TG_OP = 'INSERT' THEN\n    NEW.e2_insert_xid := pg_current_xact_id();\n  ELSE\n    -- UPDATE creates a tuple version, not a new receipt. Ignore supplied stamps.\n    NEW.e2_insert_xid := OLD.e2_insert_xid;\n  END IF;\n  RETURN NEW;\nEND;\n$function$;\n\nCREATE TRIGGER e2_source_insert_transaction\nBEFORE INSERT OR UPDATE ON public.movimientos_credito\nFOR EACH ROW EXECUTE FUNCTION public.e2_stamp_insert_transaction();\n\nCREATE TRIGGER e2_retained_insert_transaction\nBEFORE INSERT OR UPDATE ON public.cobros_credito_pendientes_e1\nFOR EACH ROW EXECUTE FUNCTION public.e2_stamp_insert_transaction();\n\nCREATE FUNCTION public.e2_reject_evidence_mutation()\nRETURNS trigger\nLANGUAGE plpgsql\nSET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n  RAISE EXCEPTION 'E2: evidence/finalization is immutable';\nEND;\n$function$;\n\nCREATE TRIGGER e2_finalization_immutable\nBEFORE UPDATE OR DELETE OR TRUNCATE ON public.finalizaciones_abono_e2\nFOR EACH STATEMENT EXECUTE FUNCTION public.e2_reject_evidence_mutation();\n\nCREATE TRIGGER e2_proof_immutable\nBEFORE UPDATE OR DELETE OR TRUNCATE ON public.evidencia_no_aplicada_e2\nFOR EACH STATEMENT EXECUTE FUNCTION public.e2_reject_evidence_mutation();\n\nCREATE FUNCTION public.e2_validate_abono_finalization()\nRETURNS trigger\nLANGUAGE plpgsql\nSET search_path TO 'pg_catalog', 'public'\nAS $function$\nDECLARE\n  source_xid xid8;\n  source_client integer;\n  source_amount numeric;\n  source_producer text;\n  source_key uuid;\n  allocation_count integer;\n  allocation_sum bigint;\nBEGIN\n  SELECT m.e2_insert_xid, m.cliente_id, -m.importe,\n         m.operacion_productor, m.operacion_clave\n    INTO source_xid, source_client, source_amount, source_producer, source_key\n    FROM public.movimientos_credito AS m\n   WHERE m.id = NEW.abono_id\n     AND m.tipo = 'ABONO'\n     AND m.naturaleza = 'INGRESO_FISICO'\n     AND m.forma_pago = 'EFECTIVO'\n     AND m.cuenta_destino = 'CAJA_FISICA'\n     AND m.sitio_origen_id IS NOT NULL\n     AND m.sesion_caja_id IS NOT NULL\n     AND m.operacion_productor IN ('ABONO_ORDINARIO','ABONO_DIRIGIDO')\n   FOR SHARE;\n\n  IF source_xid IS NULL\n     OR source_xid IS DISTINCT FROM pg_current_xact_id()\n     OR source_client IS DISTINCT FROM NEW.cliente_id\n     OR source_amount IS DISTINCT FROM NEW.importe\n     OR source_producer IS DISTINCT FROM NEW.operacion_productor\n     OR source_key IS DISTINCT FROM NEW.operacion_clave THEN\n    RAISE EXCEPTION 'E2: finalization requires its new physical ABONO in this transaction';\n  END IF;\n  IF NEW.evaluacion->>'contractRevision' IS DISTINCT FROM NEW.contrato_revision\n     OR NEW.evaluacion->>'projector' IS DISTINCT FROM\n        (CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'directedApplication'\n          ELSE 'projectCreditLedger' END)\n     OR (source_producer = 'ABONO_DIRIGIDO'\n         AND (NEW.resultado IS DISTINCT FROM 'FULL'\n              OR NEW.aplicado IS DISTINCT FROM source_amount))\n     OR (NEW.evaluacion->>'receiptCents')::bigint IS DISTINCT FROM round(NEW.importe * 100)::bigint\n     OR (NEW.evaluacion->>'appliedCents')::bigint IS DISTINCT FROM round(NEW.aplicado * 100)::bigint\n     OR jsonb_typeof(NEW.evaluacion->'allocations') IS DISTINCT FROM 'array' THEN\n    RAISE EXCEPTION 'E2: finalization evaluation contract mismatch';\n  END IF;\n  SELECT count(*), COALESCE(sum((item->>'appliedCents')::bigint), 0)\n    INTO allocation_count, allocation_sum\n    FROM jsonb_array_elements(NEW.evaluacion->'allocations') AS item\n   WHERE jsonb_typeof(item) = 'object'\n     AND jsonb_typeof(item->'targetId') = 'number'\n     AND jsonb_typeof(item->'appliedCents') = 'number'\n     AND (item->>'targetId')::numeric > 0\n     AND (item->>'targetId')::numeric = trunc((item->>'targetId')::numeric)\n     AND (item->>'appliedCents')::numeric > 0\n     AND (item->>'appliedCents')::numeric = trunc((item->>'appliedCents')::numeric);\n  IF allocation_count <> jsonb_array_length(NEW.evaluacion->'allocations')\n     OR allocation_sum IS DISTINCT FROM round(NEW.aplicado * 100)::bigint THEN\n    RAISE EXCEPTION 'E2: finalization allocation summary mismatch';\n  END IF;\n  -- Attest persisted destinations/amounts, never recompute FIFO in SQL.\n  IF EXISTS (\n    WITH persisted AS (\n      SELECT venta_movimiento_id AS target, sum(importe * 100) AS cents\n      FROM public.aplicaciones_credito WHERE abono_movimiento_id = NEW.abono_id\n      GROUP BY venta_movimiento_id\n    ), declared AS (\n      SELECT (item->>'targetId')::integer AS target,\n             sum((item->>'appliedCents')::numeric) AS cents\n      FROM jsonb_array_elements(NEW.evaluacion->'allocations') AS item\n      GROUP BY (item->>'targetId')::integer\n    )\n    (SELECT * FROM persisted EXCEPT SELECT * FROM declared)\n    UNION ALL\n    (SELECT * FROM declared EXCEPT SELECT * FROM persisted)\n  ) OR EXISTS (\n    SELECT 1 FROM public.movimientos_credito\n    WHERE movimiento_origen_id = NEW.abono_id AND tipo = 'REVERSO'\n  ) THEN\n    RAISE EXCEPTION 'E2: finalization does not match persisted applications';\n  END IF;\n  RETURN NEW;\nEND;\n$function$;\n\nCREATE TRIGGER e2_validate_abono_finalization\nBEFORE INSERT ON public.finalizaciones_abono_e2\nFOR EACH ROW EXECUTE FUNCTION public.e2_validate_abono_finalization();\n\nCREATE FUNCTION public.e2_validate_unused_proof()\nRETURNS trigger\nLANGUAGE plpgsql\nSET search_path TO 'pg_catalog', 'public'\nAS $function$\nDECLARE\n  final_row public.finalizaciones_abono_e2%ROWTYPE;\n  retained_xid xid8;\n  retained_customer integer;\n  retained_amount numeric;\nBEGIN\n  IF NEW.abono_id IS NULL THEN\n    SELECT e2_insert_xid, cliente_id, importe\n      INTO retained_xid, retained_customer, retained_amount\n      FROM public.cobros_credito_pendientes_e1\n      WHERE operacion_productor = NEW.cobro_productor\n        AND operacion_productor = 'COBRO_PENDIENTE'\n        AND operacion_clave = NEW.cobro_clave\n        AND naturaleza = 'INGRESO_FISICO' AND medio = 'EFECTIVO'\n        AND cuenta_destino = 'CAJA_FISICA' AND sesion_caja_id IS NOT NULL\n      FOR SHARE;\n    IF retained_xid IS NULL\n       OR retained_xid IS DISTINCT FROM pg_current_xact_id()\n       OR retained_customer IS DISTINCT FROM NEW.cliente_id\n       OR retained_amount IS DISTINCT FROM NEW.importe THEN\n      RAISE EXCEPTION 'E2: retained proof requires its new physical receipt in this transaction';\n    END IF;\n    RETURN NEW;\n  END IF;\n  SELECT * INTO final_row\n    FROM public.finalizaciones_abono_e2\n   WHERE abono_id = NEW.abono_id\n   FOR SHARE;\n  IF final_row.abono_id IS NULL\n     OR final_row.resultado <> 'UNUSED'\n     OR final_row.cliente_id IS DISTINCT FROM NEW.cliente_id\n     OR final_row.importe IS DISTINCT FROM NEW.importe THEN\n    RAISE EXCEPTION 'E2: positive proof requires a matching UNUSED finalization';\n  END IF;\n  RETURN NEW;\nEND;\n$function$;\n\nCREATE TRIGGER e2_validate_unused_proof\nBEFORE INSERT ON public.evidencia_no_aplicada_e2\nFOR EACH ROW EXECUTE FUNCTION public.e2_validate_unused_proof();\n\n-- Unattached future attester; pending receipts remain closed by E1P01.\nCREATE FUNCTION public.e2_attest_new_retained(p_clave uuid)\nRETURNS void\nLANGUAGE plpgsql\nSET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n  INSERT INTO public.evidencia_no_aplicada_e2(fuente, cobro_productor, cobro_clave, cliente_id, importe)\n    SELECT 'COBRO_RETENIDO:' || operacion_clave::text,\n           operacion_productor, operacion_c"... 4741 more characters,
+    expected: /source_xid::bigint <> \(txid_current\(\) % 4294967296\)/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at src/lib/limited-startup-preflight.test.ts:1:6804
+✖ A+C combined inventory supports closed-preserved and rejects each schema drift (8.04625ms)
+  Error: Limited startup A+C evidence column metadata mismatch.
+      at runLimitedStartupPreflight (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.ts:412:15)
+      at async TestContext.<anonymous> (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:254:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at src/lib/limited-startup-preflight.test.ts:1:11766
+✖ read-only preflight commits only after schema and all three old guards match (4.604487ms)
+  Error: Limited startup A+C evidence column mismatch: movimientos_credito.e2_insert_xid:xid8, cobros_credito_pendientes_e1.e2_insert_xid:xid8, finalizaciones_abono_e2.abono_id:integer, finalizaciones_abono_e2.operacion_productor:text, finalizaciones_abono_e2.operacion_clave:uuid, finalizaciones_abono_e2.cliente_id:integer, finalizaciones_abono_e2.importe:numeric, finalizaciones_abono_e2.resultado:text, finalizaciones_abono_e2.aplicado:numeric, finalizaciones_abono_e2.evaluacion:jsonb, finalizaciones_abono_e2.contrato_revision:text, finalizaciones_abono_e2.created_at:timestamp with time zone, evidencia_no_aplicada_e2.fuente:text, evidencia_no_aplicada_e2.abono_id:integer, evidencia_no_aplicada_e2.cobro_productor:text, evidencia_no_aplicada_e2.cobro_clave:uuid, evidencia_no_aplicada_e2.cliente_id:integer, evidencia_no_aplicada_e2.importe:numeric, evidencia_no_aplicada_e2.forma_pago:text, evidencia_no_aplicada_e2.naturaleza:text, evidencia_no_aplicada_e2.created_at:timestamp with time zone
+      at runLimitedStartupPreflight (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.ts:398:15)
+      at async TestContext.<anonymous> (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:297:18)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+
+test at src/lib/limited-startup-preflight.test.ts:1:13328
+✖ dropping the permanent session/site/nature E1 context trigger fails closed (1.011415ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /permanent E1 trigger inventory mismatch/. Input:
+  
+  'Error: Limited startup A+C evidence column mismatch: movimientos_credito.e2_insert_xid:xid8, cobros_credito_pendientes_e1.e2_insert_xid:xid8, finalizaciones_abono_e2.abono_id:integer, finalizaciones_abono_e2.operacion_productor:text, finalizaciones_abono_e2.operacion_clave:uuid, finalizaciones_abono_e2.cliente_id:integer, finalizaciones_abono_e2.importe:numeric, finalizaciones_abono_e2.resultado:text, finalizaciones_abono_e2.aplicado:numeric, finalizaciones_abono_e2.evaluacion:jsonb, finalizaciones_abono_e2.contrato_revision:text, finalizaciones_abono_e2.created_at:timestamp with time zone, evidencia_no_aplicada_e2.fuente:text, evidencia_no_aplicada_e2.abono_id:integer, evidencia_no_aplicada_e2.cobro_productor:text, evidencia_no_aplicada_e2.cobro_clave:uuid, evidencia_no_aplicada_e2.cliente_id:integer, evidencia_no_aplicada_e2.importe:numeric, evidencia_no_aplicada_e2.forma_pago:text, evidencia_no_aplicada_e2.naturaleza:text, evidencia_no_aplicada_e2.created_at:timestamp with time zone'
+  
+      at async TestContext.<anonymous> (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:343:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Limited startup A+C evidence column mismatch: movimientos_credito.e2_insert_xid:xid8, cobros_credito_pendientes_e1.e2_insert_xid:xid8, finalizaciones_abono_e2.abono_id:integer, finalizaciones_abono_e2.operacion_productor:text, finalizaciones_abono_e2.operacion_clave:uuid, finalizaciones_abono_e2.cliente_id:integer, finalizaciones_abono_e2.importe:numeric, finalizaciones_abono_e2.resultado:text, finalizaciones_abono_e2.aplicado:numeric, finalizaciones_abono_e2.evaluacion:jsonb, finalizaciones_abono_e2.contrato_revision:text, finalizaciones_abono_e2.created_at:timestamp with time zone, evidencia_no_aplicada_e2.fuente:text, evidencia_no_aplicada_e2.abono_id:integer, evidencia_no_aplicada_e2.cobro_productor:text, evidencia_no_aplicada_e2.cobro_clave:uuid, evidencia_no_aplicada_e2.cliente_id:integer, evidencia_no_aplicada_e2.importe:numeric, evidencia_no_aplicada_e2.forma_pago:text, evidencia_no_aplicada_e2.naturaleza:text, evidencia_no_aplicada_e2.created_at:timestamp with time zone
+        at runLimitedStartupPreflight (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.ts:398:15)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:343:3)
+        at async Test.run (node:internal/test_runner/test:1113:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:788:7),
+    expected: /permanent E1 trigger inventory mismatch/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at src/lib/limited-startup-preflight.test.ts:1:13710
+✖ a wrong E1 guard fails closed (0.583701ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /guard E1P01/. Input:
+  
+  'Error: Limited startup A+C evidence column mismatch: movimientos_credito.e2_insert_xid:xid8, cobros_credito_pendientes_e1.e2_insert_xid:xid8, finalizaciones_abono_e2.abono_id:integer, finalizaciones_abono_e2.operacion_productor:text, finalizaciones_abono_e2.operacion_clave:uuid, finalizaciones_abono_e2.cliente_id:integer, finalizaciones_abono_e2.importe:numeric, finalizaciones_abono_e2.resultado:text, finalizaciones_abono_e2.aplicado:numeric, finalizaciones_abono_e2.evaluacion:jsonb, finalizaciones_abono_e2.contrato_revision:text, finalizaciones_abono_e2.created_at:timestamp with time zone, evidencia_no_aplicada_e2.fuente:text, evidencia_no_aplicada_e2.abono_id:integer, evidencia_no_aplicada_e2.cobro_productor:text, evidencia_no_aplicada_e2.cobro_clave:uuid, evidencia_no_aplicada_e2.cliente_id:integer, evidencia_no_aplicada_e2.importe:numeric, evidencia_no_aplicada_e2.forma_pago:text, evidencia_no_aplicada_e2.naturaleza:text, evidencia_no_aplicada_e2.created_at:timestamp with time zone'
+  
+      at async TestContext.<anonymous> (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:356:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Limited startup A+C evidence column mismatch: movimientos_credito.e2_insert_xid:xid8, cobros_credito_pendientes_e1.e2_insert_xid:xid8, finalizaciones_abono_e2.abono_id:integer, finalizaciones_abono_e2.operacion_productor:text, finalizaciones_abono_e2.operacion_clave:uuid, finalizaciones_abono_e2.cliente_id:integer, finalizaciones_abono_e2.importe:numeric, finalizaciones_abono_e2.resultado:text, finalizaciones_abono_e2.aplicado:numeric, finalizaciones_abono_e2.evaluacion:jsonb, finalizaciones_abono_e2.contrato_revision:text, finalizaciones_abono_e2.created_at:timestamp with time zone, evidencia_no_aplicada_e2.fuente:text, evidencia_no_aplicada_e2.abono_id:integer, evidencia_no_aplicada_e2.cobro_productor:text, evidencia_no_aplicada_e2.cobro_clave:uuid, evidencia_no_aplicada_e2.cliente_id:integer, evidencia_no_aplicada_e2.importe:numeric, evidencia_no_aplicada_e2.forma_pago:text, evidencia_no_aplicada_e2.naturaleza:text, evidencia_no_aplicada_e2.created_at:timestamp with time zone
+        at runLimitedStartupPreflight (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.ts:398:15)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:356:3)
+        at async Test.run (node:internal/test_runner/test:1113:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:788:7),
+    expected: /guard E1P01/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

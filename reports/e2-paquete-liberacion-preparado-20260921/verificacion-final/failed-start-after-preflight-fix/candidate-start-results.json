@@ -1,0 +1,14 @@
+{
+  "databasePath": "/tmp/e2-candidate-start-z6WW5k",
+  "apiPort": 18092,
+  "pgPort": 55439,
+  "started": false,
+  "executedAgainst": "new local empty synthetic catalog only",
+  "revision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "bundleDirectory": "dist-e2-20260927",
+  "tracerPid": 5939,
+  "error": "Candidate health deadline exceeded.\n\nundefined !== 200\n",
+  "candidateStopped": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true
+}

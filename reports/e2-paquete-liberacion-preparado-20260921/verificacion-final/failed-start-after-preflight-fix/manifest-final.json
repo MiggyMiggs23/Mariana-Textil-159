@@ -1,0 +1,94 @@
+{
+  "status": "NO_AUTORIZABLE_PENDING_AUTHORIZED_BASELINE_CONTROL",
+  "blockers": [
+    "Candidate startup failed health deadline. Static circular-initialization hypothesis is NOT a proven runtime defect before retained-baseline control; source cycle predates candidate.",
+    "Original actual-run preflight was skipped through symlink. CLI and wrapper proof are now fixed independently, but actual control/candidate journey has not been rerun."
+  ],
+  "actualStartup": {
+    "executedBy": "owning agent, clean environment, new disposable PostgreSQL only",
+    "health200Observed": false,
+    "healthDeadlineSeconds": 30,
+    "inspectionWarningObserved": true,
+    "realWorkerLoadsObserved": [
+      "thread-stream-worker.mjs",
+      "pino-pretty.mjs"
+    ],
+    "actualRunExternalPreflightProven": false,
+    "postHealthCatalogRowsSequencesComparisonReached": false,
+    "candidateStopped": true,
+    "postgresStopExit": 0,
+    "disposableDirectoryDestroyed": true,
+    "finalCandidateProcessCheck": "No candidate command line found in final read-only process listing.",
+    "finalActiveBundleSha256": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+    "preservedEvidenceDirectory": "verificacion-final/failed-start-20260921-212811",
+    "preservedEvidenceSha256": {
+      "candidate-start.log": "f3fdb13abde945f09d75af45236eb26c0a23d49276c684d08152e3f99116753e",
+      "candidate-start-results.json": "a34b55cf9f0caa31dc085b47d768827f7f5c7d053d2c1e6df4e315d297706c10",
+      "candidate-worker-open.trace": "1b704b2a2da5dd67058ba50f2175384f8e1310fa548190abed26c8075c5e50c1"
+    }
+  },
+  "baseRevision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "baseTree": "6337df3ae1dc67b8de91fabda3cbf73dd255cf59",
+  "testCommit": "07cc804a35b6bba7f3ed640129231ba7434a8767",
+  "buildOutputOnlyCommit": "e0f1c227e013c59987c06604e21a8036e73c82a5",
+  "sourceExport": "/tmp/e2-release-preparation-adkcNR/source",
+  "sourceIntegrity": {
+    "checked": 1261,
+    "differences": [],
+    "overlays": {
+      "artifacts/api-server/src/lib/credit-refund.safe.test.ts": "07cc804a35b6bba7f3ed640129231ba7434a8767",
+      "artifacts/api-server/src/lib/limited-startup-preflight.test.ts": "07cc804a35b6bba7f3ed640129231ba7434a8767",
+      "artifacts/api-server/build.mjs": "e0f1c227e013c59987c06604e21a8036e73c82a5"
+    }
+  },
+  "node": "v24.13.0",
+  "pnpm": "10.26.1",
+  "lockfileSha256": "a7a54d756eb12b9f33e6bec8d70872026de72bee9567aa640a021324a0fcbc6d",
+  "outputDirectory": "/home/runner/workspace/artifacts/api-server/dist-e2-20260927",
+  "environmentAllowlist": [
+    "PATH",
+    "HOME",
+    "LANG",
+    "API_BUILD_OUTPUT_DIR"
+  ],
+  "activeBundleUntouchedSha256": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+  "files": {
+    "artifacts/api-server/dist-e2-20260927/assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+    "artifacts/api-server/dist-e2-20260927/assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "artifacts/api-server/dist-e2-20260927/index.mjs": "1102baeec9de7d7c7773f142a835f39234ec1ba2f278373cdedcd4814ff2feb3",
+    "artifacts/api-server/dist-e2-20260927/index.mjs.map": "87342f8d077eb45421c49342b7efe27216ff956b4c30f413ada2a441c703092d",
+    "artifacts/api-server/dist-e2-20260927/pino-file.mjs": "8b944b39384d37db164ec0dee3cbb03b0592d7e934583c46e70a7ffe89f75433",
+    "artifacts/api-server/dist-e2-20260927/pino-file.mjs.map": "a6315abbfc41c25906cbafa9e741e4671ef58028de50278764aa8c49f8f1815d",
+    "artifacts/api-server/dist-e2-20260927/pino-pretty.mjs": "b8ba9a0bfa7fcc5ef704469b5b4b215980c26d1efb60d5b764115b65afeea2a6",
+    "artifacts/api-server/dist-e2-20260927/pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "artifacts/api-server/dist-e2-20260927/pino-worker.mjs": "ef4950c3be90cb1f7146f2f00692a15b0292d8fce1e6f25c5b5dcf497c2e714a",
+    "artifacts/api-server/dist-e2-20260927/pino-worker.mjs.map": "eb85ecec9468722c122087e54c9f5eaf2a1577e16e89de20103b51fd87a3bbb6",
+    "artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs": "1edcdc6d1a36ab3172aeee9e4096da9077b23e57425a0438c6c7e8d217dd810c",
+    "artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a",
+    "reports/e2-paquete-liberacion-preparado-20260921/release-preflight.mjs": "463287fb115c59c0cec4654a264f13a75e0ddd6c9d3adcd7db42047435df9139",
+    "reports/e2-paquete-liberacion-preparado-20260921/release-catalog.sql": "a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea",
+    "reports/e2-paquete-liberacion-preparado-20260921/release-expected.json": "990c85fdd6251d6d0f55b62bb0f9a2b4afb3c3fe35468dc12ea6ec8708077ca6",
+    "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit-record.mjs": "167f1c342f91e79e16686937844b44856bec7dec3606cba09bb5e19fdb228f98",
+    "reports/e2-paquete-liberacion-preparado-20260921/sql/01-install-evidence-prepared.sql": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+    "reports/e2-paquete-liberacion-preparado-20260921/sql/02-revert-before-capture-only.sql": "0f5952b874bb9fead4f782b9b169636564d302f00f20d5e4bf135896c9b32b3c",
+    "reports/e2-paquete-liberacion-preparado-20260921/sql/03-preflight-schema-prepared.sql": "b368c7239f83b088d1fa5c30d1c1d0dd08538842d18a694315bd88b7f1e5980c",
+    "reports/e2-paquete-liberacion-preparado-20260921/release-assets.sha256": "9f64ec9fd2f9ab61a6b888a93dc6987535f8653030ac0fbe007b39e1e337a3b2",
+    "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh": "10cc38de205318d0094df2a2b9642512f5f48bc98952a45b26899cbb8bd33e8f"
+  },
+  "checks": {
+    "rootTypecheck": "PASS all selected, 0 errors",
+    "offline": "119/119 PASS",
+    "wrapper": "8/8 PASS",
+    "preflight": "19 independent fresh PostgreSQL B0/B1 checks PASS, including direct-path CLI; cluster stopped/destroyed. Does not prove symlinked actual-start preflight.",
+    "candidateHealthAndWorkers": "FAIL: real workers loaded and inspection warning emitted, but healthz 200 not obtained within 30 seconds.",
+    "wholeReleaseJourney": "FAILED / NOT AUTHORIZABLE; independent 19+8+119 results are not an end-to-end pass"
+  },
+  "preflightFix": {
+    "commit": "af48ed59696d34ab1f6d8c65df61c53a0f614f1f",
+    "regressionBefore": 1,
+    "regressionAfter": 0,
+    "independentPgPass": 20,
+    "independentWrapperPass": 9,
+    "actualRuntimeRetest": "awaiting owning-agent baseline control"
+  }
+}

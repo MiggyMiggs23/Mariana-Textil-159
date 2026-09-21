@@ -1,5 +1,9 @@
 # Preparación aislada — resultados y detención
 
+**HISTÓRICO SUPERADO.** Conserva la primera preparación y sus fallos; no expresa
+el estado actual. README y manifest-final.json acreditan candidato corregido
+PASS real y paquete preparado/validado, todavía no liberado.
+
 ## Alcance y estado
 
 Fuente exacta: `31804125a1e752bde128d72e9fd44d23972ffff1`.

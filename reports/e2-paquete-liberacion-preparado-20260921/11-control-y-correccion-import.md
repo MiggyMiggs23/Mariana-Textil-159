@@ -1,7 +1,7 @@
 # 11. Control real y corrección mínima de importación
 
-**Estado: control PASS, candidato anterior FAIL, candidato corregido compilado;
-falta su prueba real por el agente principal. NO liberar todavía.**
+**Estado final: control PASS, candidato anterior FAIL, candidato corregido
+PASS real. Paquete preparado y validado, NO liberado; fase B no otorgada.**
 
 ## Control causal exigido por el propietario
 
@@ -42,7 +42,8 @@ después del gateway. Eso cambió cómo esbuild empaqueta el grafo HTTP:
 
 Hashes y comparación estática del control/antes/después en
 `verificacion-final/import-initializer-comparison.json`. La confirmación
-dinámica de este cambio mínimo depende todavía del próximo arranque real.
+dinámica de este cambio mínimo quedó confirmada por el arranque real corregido:
+healthz 200 con la misma base vacía, configuración y controles del ensayo.
 
 ## Corrección separada, no eliminación arbitraria del ciclo
 
@@ -88,13 +89,14 @@ Hashes del paquete y wrapper se fijaron nuevamente al candidato corregido.
 El preflight exige prueba positiva real; su corrección independiente sigue
 siendo af48ed59696d34ab1f6d8c65df61c53a0f614f1f.
 
-## Próximo paso reservado al agente principal
+## Resultado final obtenido por el agente principal
 
-Ejecutar el runner habitual, **sin --control**, con entorno limpio y el mismo
-fixture aislado. Ahora exige también en el log real la prueba positiva del
-preflight. Debe obtener healthz 200, workers, INSPECTION, ausencia de cambios
-de catálogo/filas/secuencias y limpieza completa. El subagente no arrancó la API.
-
-Hasta ese resultado no se marca manifiesto/fase B como finalizados.
+El runner habitual, sin --control, pasó con el candidato corregido y el mismo
+fixture aislado: preflightProofObserved true, health 200/status ok, workers
+thread-stream/pino-pretty, INSPECTION y catalogRowsSequencesUnchanged true.
+candidateStopped true, postgresStopExit 0 y disposableDestroyed true acreditan
+la limpieza. Resultado, traza, log y auditoría están en verificacion-final.
+El subagente no ejecutó la aplicación. El manifiesto y texto de fase B están
+finalizados para revisión/autorización futura, no para ejecución automática.
 El dist activo permanece intacto, con SHA-256
 `3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98`.

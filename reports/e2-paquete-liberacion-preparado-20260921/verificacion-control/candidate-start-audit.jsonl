@@ -1,0 +1,1 @@
+{"utc":"2026-09-21T21:41:57.380Z","pid":5849,"pid_role":"exec_target","api_exec_attempted":true,"bundle_sha256":"c18d56d626bfe5f22824e6321583ff7c0ccb76d597f4f9e3032d2fba4f1e050e","bundle_hash_error":null,"mode":{"NODE_ENV":"development","API_INSPECTION_BOOT":"1"},"preflight":{"result":"passed","exit_code":0},"stage":"exec_attempt","startup_exit_before_exec":null}

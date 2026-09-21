@@ -1,0 +1,619 @@
+{
+  "base": "7cb77f8cfc6287fa51325a25122c48af392a7ada",
+  "candidate": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "inventoryScope": "Exact full diff in API/lib/frontend and retained logger paths; per-file classification, no omissions",
+  "files": 87,
+  "bundleSourceMapSha256": "fcf297df6fcd40a924b9c3a57f6b77c46764d96d33758a3ef98f55652dc6b3cf",
+  "note": "Source-map membership shows included source, not permission to execute gated branches. E8 is active; T4 stays closed; E6/Entradas frontend not deployed. Source overlays are separately pinned in manifest-final.json.",
+  "entries": [
+    {
+      "file": "artifacts/api-server/.replit-artifact/artifact.toml",
+      "family": "WORKFLOW",
+      "classification": "Configuración de referencia excluida de instalación",
+      "inCandidateSourceMap": false,
+      "operation": "No copiada ni modificada en workflow activo"
+    },
+    {
+      "file": "artifacts/api-server/src/clientes-notas-credito.contract.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/clientes-pagos.contract.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/index.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/inventario-existencias-agrupadas.mock.test.ts",
+      "family": "E8",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/admin-analytics.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/caja-admin-cash.mock.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/caja-cash-ledger.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/caja-cash-ledger.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/caja-close.mock.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/caja-corte-reader.mock.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/caja-corte-reader.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-abono-evidence.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-abono-evidence.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-evidence-contract.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-evidence-contract.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-evidence.mock.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-evidence.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-refund-contract.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-refund.mock.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/credit-refund.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/limited-startup-preflight.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/limited-startup-preflight.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/permisos.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": true,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/pos.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/purga-catalogos.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": true,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/startup-mode.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/startup-mode.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/tarea4-gates.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": true,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/tarea4-price-floor.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": true,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/tarea4-remate-store.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/tarea4-remate.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/tarea5-permissions-redaction.no-db.test.mjs",
+      "family": "T5",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/clientes.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/credit-refunds.options.safe.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/credit-refunds.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/e1-customer-mutations.offline.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/index.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/inventario.ts",
+      "family": "E8",
+      "classification": "Existencias agrupadas/tipos de unidades y cajas; consulta activa aceptada",
+      "inCandidateSourceMap": true,
+      "operation": "Arrastre API activo, no se excluye por flags de T4"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/pagos-dirigidos.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/pos.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "artifacts/api-server/src/routes/precios.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": true,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL"
+    },
+    {
+      "file": "artifacts/api-server/src/tarea3-behavior-harness.d.mts",
+      "family": "T3",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/tarea3-behavior-harness.mjs",
+      "family": "T3",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/api-server/src/tarea4-inactive.mock.test.mjs",
+      "family": "T4",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/corte-efectivo-desglose.tsx",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/devolucion-credito-inactiva-dialog.tsx",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/e2-cash-ui.render.test.tsx",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/components/tarea4-remate.tsx",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/lib/tarea4-gates.ts",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/observable-test/browser.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/caja/cuentas-destino-labels.observable.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx",
+      "family": "E6",
+      "classification": "Etiquetas de cuentas destino; frontend, sin operación monetaria nueva",
+      "inCandidateSourceMap": false,
+      "operation": "No incluido en bundle API ni instalación frontend; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/cobros.tsx",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/corte-detail-shared.tsx",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/entradas-roll-capture.visual.test.ts",
+      "family": "PRUEBAS",
+      "classification": "Prueba o soporte de prueba; no cambio operativo",
+      "inCandidateSourceMap": false,
+      "operation": "No entra como ejecutable de API"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/entradas.tsx",
+      "family": "ENTRADAS",
+      "classification": "Atajo UI de cantidades por rollo aceptado por propietario; sin API/payload nuevos",
+      "inCandidateSourceMap": false,
+      "operation": "Frontend no instalado por este paquete; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/permisos.tsx",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/precios/detail.tsx",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/precios/index.tsx",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "artifacts/mariana-textil/src/pages/producto-detail.tsx",
+      "family": "T4",
+      "classification": "Remate, piso de precio o borrado histórico preparados pero cerrados",
+      "inCandidateSourceMap": false,
+      "operation": "REMATE_RELEASED=false, PRICE_FLOOR_RELEASED=false, PRODUCT_HISTORY_DELETE_RELEASED=false; matriz remate false. Sin apertura ni DDL; fuente UI no se instala en esta liberación"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.schemas.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-client-react/src/generated/api.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-spec/openapi.yaml",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/api.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": true,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/adminCorteRow.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/corteCaja.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/creditRefundCandidate.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/creditRefundCandidateOrigen.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/creditRefundOpenSession.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/creditRefundOptions.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/creditRefundReply.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/creditRefundRequest.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/creditRefundRequestOrigen.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/efectivoDesglose.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/efectivoDesgloseDocumentosItem.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/efectivoDesgloseDocumentosItemEvidencia.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/efectivoDesgloseDocumentosItemOrigen.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/efectivoDesgloseVersion.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/index.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/sesionCajaHistorialItem.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/generated/types/sesionCajaResumen.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "lib/api-zod/src/index.ts",
+      "family": "E2",
+      "classification": "Contrato/corte/evidencia/arranque E2",
+      "inCandidateSourceMap": false,
+      "operation": "Código/contrato E2 según flags CLOSED; snapshot activo en cierre nuevo"
+    },
+    {
+      "file": "scripts/api-start-audit-record.mjs",
+      "family": "REGISTRO",
+      "classification": "Script histórico separado; no se incrusta en bundle",
+      "inCandidateSourceMap": false,
+      "operation": "Retenido intacto; la liberación propone copias nuevas fijadas en este paquete"
+    },
+    {
+      "file": "scripts/api-start-audit.sh",
+      "family": "REGISTRO",
+      "classification": "Script histórico separado; no se incrusta en bundle",
+      "inCandidateSourceMap": false,
+      "operation": "Retenido intacto; la liberación propone copias nuevas fijadas en este paquete"
+    }
+  ]
+}

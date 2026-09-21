@@ -1,0 +1,16 @@
+E2_COMPLETE_RELEASE_PREFLIGHT=PASS {"database":"heliumdb","databaseOid":"16384","rows":1585,"schemaSha256":"89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358","attributesSha256":"e435ffc658ddc41c67449c839245efed80323b836425feea34764a31e4a44e88","phase":"after","mode":"INSPECTION","capture":false,"refund":false}
+[21:42:01.209] [33mWARN[39m (5849): [36mInspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.[39m
+[21:42:01.214] [32mINFO[39m (5849): [36mServer listening[39m
+    [35mport[39m: 18092
+[21:42:01.379] [32mINFO[39m (5849): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[21:42:02.034] [32mINFO[39m (5849): [36mServer shutdown complete[39m
+    [35msignal[39m: "SIGTERM"

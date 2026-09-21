@@ -1,6 +1,6 @@
 # Preparación aislada de liberación E2 — CLOSED, candidato en directorio definitivo
 
-**Fecha:** 2026-09-21. **Estado: CONTROL REAL PASS; CORRECCIÓN MÍNIMA COMPILADA, ARRANQUE CORREGIDO PENDIENTE; NO LIBERAR.**
+**Fecha:** 2026-09-21. **Estado: PAQUETE PREPARADO Y VALIDADO; NO LIBERADO; FASE B NO AUTORIZADA NI EJECUTADA.**
 
 La autorización íntegra está en `autorizacion-propietario.txt`; la aceptación
 posterior de Entradas está en `aclaracion-entradas.txt`. Se permite preparación
@@ -15,27 +15,18 @@ exactamente el hash inicial. La nueva autorización permitió compilar directame
 en `artifacts/api-server/dist-e2-20260927`, con un commit separado solo para
 seleccionar salida. Preflight completo PostgreSQL: 19 comprobaciones PASS;
 wrapper: 8/8 PASS; selección sin base: 119/119 PASS; typecheck: cero errores.
-Esos resultados independientes siguen siendo válidos, pero **la prueba real
-ejecutada por el agente principal falló: no obtuvo healthz 200 en 30 segundos**.
-La traza demuestra carga real de thread-stream-worker y pino-pretty y se emitió
-el aviso INSPECTION. El ciclo async observado es una hipótesis de diagnóstico,
-no causa demostrada sin control: el ciclo de fuentes ya existía en 7cb77f8.
-Además, el enlace simbólico del
-runner hizo omitir el CLI del preflight: esa ejecución no prueba el preflight
-del recorrido completo. Candidato detenido; PostgreSQL detenido y destruido.
-Manifiesto y fase B quedan **bloqueados, no simplemente pendientes de una prueba**.
-La nueva autorización `autorizacion-control-y-preflight.txt` permite probar
-7cb77f8 y corregir independientemente el preflight. Este último ya ejecuta
-su CLI por symlink y el wrapper exige prueba positiva; regresión 1→0,
-20 comprobaciones PostgreSQL y 9 tests de wrapper PASS. No se modificó runtime.
-El agente principal obtuvo control PASS y candidato anterior FAIL con el mismo
-ensayo y preflight positivo. Aplicó por tanto la autorización condicional de
-corrección mínima: commit `226509cae4d6e850782763a0f4d15139ddedd568` restaura
-la importación eager de app; no modifica el ciclo antiguo ni los awaits de DB.
-El candidato corregido ya pasó build, typecheck raíz y 119 tests offline;
-su arranque real queda para el agente principal. Ver documento 11.
-Véase
-`10-fallo-arranque-real.md`; no basta completar la hora para autorizar fase B.
+El control retenido arrancó; el candidato anterior falló. Los fallos y su
+diagnóstico histórico permanecen preservados, no se borraron. Bajo la
+autorización condicional se restauró únicamente la importación eager de app
+en commit `226509cae4d6e850782763a0f4d15139ddedd568`.
+**El agente principal confirmó el candidato corregido: preflight positivo
+real, healthz 200, ambos workers, INSPECTION y catálogo/filas/secuencias sin
+cambios.** Detuvo candidato y PostgreSQL y destruyó la base desechable.
+El preflight por symlink y la exigencia de prueba positiva del wrapper están
+corregidos: regresión 1→0, 20 comprobaciones PostgreSQL y 9 tests de wrapper PASS.
+La fase B del documento 09 identifica los bytes finales y solo deja la hora
+en blanco. Aún requiere autorización expresa: no se tocó la API/base/workflow
+activos, no se hizo respaldo Drive ni SQL operativo ni primer cierre.
 
 ## Revisiones exactas
 
@@ -63,7 +54,7 @@ Véase
    un cierre nuevo dentro de la auditoría existente.
 2. Esquema y código A+C preparados, con productores de captura y devolución
    apagados. Instalar evidencia **no significa abrir captura**.
-3. Registro de intentos de arranque mediante `scripts/api-start-audit.sh`,
+3. Registro de intentos mediante `api-start-audit.sh` de este paquete,
    conectado al mismo arranque autorizado del nuevo bundle.
 4. Comprobaciones de solo lectura posteriores y **un primer cierre real nuevo,
    separado y expresamente autorizado**, para acreditar el snapshot.
@@ -81,13 +72,14 @@ cierres antiguos, pruebas financieras ficticias ni inicializadores escritores.
 | [03-arranque-y-registro.md](03-arranque-y-registro.md) | Activación del logger en el mismo reinicio |
 | [04-verificacion-y-primer-cierre.md](04-verificacion-y-primer-cierre.md) | Aceptación posterior y evidencia del snapshot |
 | [05-autorizacion-propietario.md](05-autorizacion-propietario.md) | Decisiones de preparación otorgadas; fase B aún no emitida |
-| [06-resultado-preparacion.md](06-resultado-preparacion.md) | Resultados terminales y detención |
+| [06-resultado-preparacion.md](06-resultado-preparacion.md) | Antecedente histórico de la primera detención |
 | [07-cinco-pruebas-y-recompilacion.md](07-cinco-pruebas-y-recompilacion.md) | Pruebas autorizadas y antecedente de rutas Pino |
 | [08-directorio-final-preflight-y-recuperacion.md](08-directorio-final-preflight-y-recuperacion.md) | Estado actual, verificaciones, respaldo y recuperación |
-| [09-fase-b-texto.md](09-fase-b-texto.md) | Borrador bloqueado, NO AUTORIZABLE |
-| [10-fallo-arranque-real.md](10-fallo-arranque-real.md) | Fallo observado, diagnóstico, evidencia y limpieza |
-| [11-control-y-correccion-import.md](11-control-y-correccion-import.md) | Control PASS, delta causal y corrección mínima pendiente de arranque real |
-| [manifest-final.json](manifest-final.json) | Procedencia y hashes; fallo real y bloqueos explícitos |
+| [09-fase-b-texto.md](09-fase-b-texto.md) | Texto final para autorización futura; solo hora en blanco |
+| [10-fallo-arranque-real.md](10-fallo-arranque-real.md) | Fallos históricos preservados, superados por la validación final |
+| [11-control-y-correccion-import.md](11-control-y-correccion-import.md) | Control, delta causal y candidato corregido PASS |
+| [manifest-final.json](manifest-final.json) | Procedencia, hashes y validación final real |
+| [anexos/clasificacion-arrastre.json](anexos/clasificacion-arrastre.json) | Clasificación por archivo del diff completo, incluido arrastre no E2 |
 | [sql/](sql/) | Copias exactas de instalación, reversión y preflight A+C |
 | [anexos/inventario-diferencias-fuentes.txt](anexos/inventario-diferencias-fuentes.txt) | Diferencias entre fuente del bundle retenido y candidato |
 

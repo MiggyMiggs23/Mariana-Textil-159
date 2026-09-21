@@ -1,5 +1,9 @@
 # Cinco pruebas actualizadas y mismo hash — portabilidad pendiente
 
+**HISTÓRICO SUPERADO.** La portabilidad y el arranque se verificaron después
+en el directorio definitivo. El estado vigente es PASS en manifest-final.json;
+se conserva este informe como evidencia de la secuencia de preparación.
+
 Autorización literal: `autorizacion-cinco-pruebas.txt`.
 Commit separado exclusivamente de los dos archivos de pruebas:
 `07cc804a35b6bba7f3ed640129231ba7434a8767`.

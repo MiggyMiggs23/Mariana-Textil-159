@@ -1,0 +1,16 @@
+✔ exec same PID, inspection mode, exact bundle hash and append log (336.016085ms)
+✔ preflight failure stays fatal with original exit (110.268014ms)
+✔ bundle hash failure prevents exec (77.897075ms)
+✔ preflight hash failure prevents exec (66.379617ms)
+✔ manifest hash failure prevents exec (55.308822ms)
+✔ missing hash failure prevents exec (58.036151ms)
+✔ post-preflight bundle change blocks exec (109.568074ms)
+✔ append failure never blocks stub exec or masks fatal preflight (256.161773ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1165.313823

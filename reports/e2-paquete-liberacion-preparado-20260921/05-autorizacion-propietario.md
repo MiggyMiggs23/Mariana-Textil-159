@@ -1,4 +1,25 @@
-# 5. Decisiones de preparación otorgadas; fase B pendiente
+# 5. Preparación autorizada y validada; liberación todavía no autorizada
+
+El estado actual es **paquete preparado y validado, no liberado**. La fuente
+31804125 con overlays 07cc804a, e0f1c227 y 226509ca está fijada por hashes en
+manifest-final.json; el preflight corregido es af48ed59. El arranque real del
+candidato corregido pasó healthz, workers, preflight positivo, INSPECTION y
+conservación de catálogo/filas/secuencias; candidato y PostgreSQL se detuvieron
+y la base de prueba se destruyó.
+
+Las autorizaciones literales están en los archivos autorizacion-*.txt y
+aclaracion-entradas.txt. La **única plantilla vigente de fase B es el documento
+09**, completamente identificada salvo la hora del domingo 27 de septiembre
+de 2026. No está otorgada ni se ejecutó. Google Drive con respaldo/restauración
+verificados antes de SQL es obligatorio; primer cierre por el propietario en
+Mariana con tickets efectivo/transferencia; sin purga ahora. Se conserva toda
+evidencia hasta instrucción expresa del propietario.
+
+## Archivo histórico de formulación — sustituido íntegramente por 09
+
+**Todo lo que sigue es el borrador inicial preservado, no estado vigente ni
+formulario que deba rellenarse. Sus pendientes fueron resueltos durante la
+preparación; ninguna frase histórica concede autorización operativa.**
 
 **Esto es un borrador; no es autorización otorgada.** No sirve responder
 “adelante” dejando pendientes técnicos o campos sin completar. Hay dos fases

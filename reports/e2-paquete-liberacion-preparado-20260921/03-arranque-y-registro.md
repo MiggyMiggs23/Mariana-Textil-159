@@ -3,8 +3,10 @@
 **Procedimiento de liberación futuro.** Se prepararon nuevas copias de wrapper,
 registrador y preflight en este paquete; ver documento 08 y manifest-final.json.
 Sus pruebas aisladas pasaron. No se modificó el workflow, sus variables,
-los scripts antiguos, el preflight retenido ni el bundle activo. La ejecución
-real del candidato queda para el agente principal según su alcance.
+los scripts antiguos, el preflight retenido ni el bundle activo. El agente
+principal ejecutó el candidato corregido: PASS con prueba positiva de preflight,
+healthz 200, workers reales y ausencia de cambios en catálogo/filas/secuencias;
+detuvo candidato y PostgreSQL y destruyó el clúster. No ejecutó fase B.
 
 ## Punto de partida
 
@@ -17,7 +19,7 @@ Sus hashes están fijados a los artefactos anteriores. Ejecutarlo sin adaptarlo
 no es un mecanismo de liberación del bundle nuevo. Cambiar solo un hash tampoco
 resuelve el nuevo contrato de catálogo/identidad.
 
-## Requisitos de preparación antes de pedir GO
+## Requisitos de preparación completados, sin conceder GO operativo
 
 1. Compilación aislada autorizada y selección del bundle por su hash.
 2. Preflight nuevo versionado, completo para el estado CLOSED post-DDL.
@@ -47,10 +49,9 @@ sus rutas, incluido el cierre, siguen requiriendo control operativo.
   ejecutar la apertura LIMITED. El preflight de este modo no reemplaza
   automáticamente las comprobaciones externas completas de este paquete.
 
-No se elige modo hoy. Si se usa EXPLICIT_LIMITED, el wrapper y el registrador
-actuales también requieren adecuación: hoy el registro solo guarda
-`NODE_ENV` y `API_INSPECTION_BOOT`, no acredita ese selector ni su approval.
-No volcar el JSON ni secretos; registrar una identidad no sensible del contrato.
+INSPECTION es el modo elegido y probado. EXPLICIT_LIMITED no forma parte de
+esta liberación y requeriría una aprobación distinta. No volcar JSON de
+aprobación ni secretos. El registro conserva los selectores del modo elegido.
 Modo `normal`, defaults ambiguos o combinaciones inválidas: **STOP**.
 
 ## Conexión al workflow y único arranque de liberación
@@ -64,11 +65,11 @@ Después de DDL/postflight aprobados y con la ventana autorizada:
 3. El comando deberá fijar raíz de trabajo y entrar al wrapper, conceptualmente:
 
    ```text
-   cd /home/runner/workspace && exec bash scripts/api-start-audit.sh
+   cd /home/runner/workspace && exec bash reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh
    ```
 
-   Esto es una forma documental del comando, **no lista para usar con el wrapper
-   actual**. Las rutas, hashes, exports y preflight deberán ser los ya aprobados.
+   Es el comando final preparado, no autorización para ejecutarlo ahora.
+   Las rutas y hashes están fijados en manifest-final.json y fase B.
 
 4. Reiniciar una sola vez para liberar: el primer intento de arranque del bundle
    nuevo ya pasa por el logger. No arrancar primero y conectar el registro después.
@@ -81,13 +82,13 @@ publicación o modificación de otros servicios.
 
 ## Lo que el logger acredita y lo que no
 
-`scripts/api-start-audit-record.mjs` hace append de una línea JSON en
+`api-start-audit-record.mjs` de este paquete hace append de una línea JSON en
 `reports/arranques-api.log`, modo de creación 0600; no trunca/rota ni reintenta
 un append parcial. Registra UTC, PID y rol, hash calculado del bundle, modo
 limitado a los campos actuales, fase, estado/código del preflight y salida
 antes de exec. Evita volcar entorno, argumentos, salida SQL y excepciones.
 
-- `preflight_hash`, `bundle_hash_before`, `preflight`, `bundle_hash_after`
+- `release_hash_before`, `preflight`, `release_hash_after`
   distinguen fallos previos.
 - `exec_attempt`, `api_exec_attempted=true`, `pid_role=exec_target` acredita
   **intento**, no que Node llegó a escuchar ni que la aplicación quedó saludable.
@@ -95,14 +96,14 @@ antes de exec. Evita volcar entorno, argumentos, salida SQL y excepciones.
   conservarlos en el manifiesto y en evidencia externa; no afirmar que la línea
   ya los guarda.
 - Si falla el append, el wrapper actual advierte y continúa (fail-open del
-  logging; las compuertas de hash/preflight siguen vigentes). El propietario
-  debe decidir si acepta esa política o exige impedir el arranque sin registro.
-  Cambiarla requiere código, pruebas y revisión adicional, no una decisión
-  implícita de este documento.
+  logging; las compuertas de hash/preflight siguen vigentes). Esa es la política
+  elegida por el propietario y probada. Cambiarla requiere nueva autorización,
+  código, pruebas y revisión adicional.
 
 El log local no acredita por sí solo custodia duradera, protección contra un
-propietario del filesystem ni historial de reinicios anteriores. Aprobar
-ubicación/custodia/retención y acceso; no subir logs automáticamente.
+propietario del filesystem ni historial de reinicios anteriores. El texto de
+fase B fija custodia del propietario y conservación hasta instrucción expresa;
+no subir logs automáticamente.
 
 Después del intento, cotejar PID real, hash del archivo ejecutado, modo
 inequívoco en salida runtime, escucha/salud y ausencia de inicializadores

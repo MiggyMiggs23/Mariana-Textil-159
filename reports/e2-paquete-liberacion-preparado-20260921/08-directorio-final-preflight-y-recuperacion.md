@@ -1,18 +1,11 @@
 # Directorio definitivo, verificaciones y recuperación
 
-**Actualización posterior:** control 7cb77f8 PASS y candidato anterior FAIL,
-ambos ejecutados por el agente principal con preflight real. Se cumple la
-condición para el fix mínimo `226509cae4d6e850782763a0f4d15139ddedd568`.
-El nuevo candidato está compilado y validado sin base; su arranque real está
-pendiente. El documento 11 y manifest-final.json sustituyen las referencias
-históricas de control pendiente y hashes anteriores que siguen abajo.
-
-**NO AUTORIZABLE — fallo de arranque candidato; control 7cb77f8 autorizado
-pendiente.** El documento 10 rectifica la atribución causal inicial: el ciclo
-de fuentes preexistía y debe contrastarse antes de decidir sobre runtime.
-La nueva autorización permite el control y la corrección independiente de
-preflight, no habilita fase B. El CLI symlink y la exigencia de prueba positiva
-del wrapper ya están corregidos y probados, sin cambiar runtime.
+**PAQUETE PREPARADO Y VALIDADO — NO LIBERADO.** Control retenido y candidato
+corregido pasaron el ensayo real ejecutado por el agente principal.
+La corrección mínima autorizada es `226509cae4d6e850782763a0f4d15139ddedd568`;
+preflight CLI symlink y wrapper con prueba positiva están corregidos y probados.
+Los fallos anteriores del documento 10 son históricos, preservados y superados.
+Nada de esto concede ni ejecuta fase B.
 
 ## Procedencia y límites
 
@@ -23,6 +16,8 @@ Composición exacta, no HEAD arbitrario:
 - Superposición de los dos tests: `07cc804a35b6bba7f3ed640129231ba7434a8767`.
 - Único cambio del build: `e0f1c227e013c59987c06604e21a8036e73c82a5`.
   Ese commit contiene solo la selección de directorio de salida en `build.mjs`.
+- Fix causal de importación eager y su test:
+  `226509cae4d6e850782763a0f4d15139ddedd568`, sin otro cambio de negocio.
 - 1,261 archivos API/lib contrastados con esos blobs: cero diferencias no
   autorizadas. Detalle en `manifest-final.json`.
 
@@ -34,8 +29,8 @@ directamente en el directorio nuevo:
 
 No se movió ni sobrescribió `artifacts/api-server/dist`. Su `index.mjs` conserva
 `3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98`.
-El nuevo hash autorizado por el cambio de directorio es
-`1102baeec9de7d7c7773f142a835f39234ec1ba2f278373cdedcd4814ff2feb3`.
+El hash final corregido y probado es
+`008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5`.
 Los workers de Pino apuntan ahora al directorio definitivo, no a `/tmp`.
 No se parchearon bytes del bundle ni se cambió el plugin.
 
@@ -46,30 +41,23 @@ No se parchearon bytes del bundle ni se cambió el plugin.
 | Typecheck raíz, exportación y tests actualizados | PASS, todos los paquetes, cero diagnósticos |
 | Compilación en directorio final | exit 0 |
 | Selección explícita sin base/red | 119/119 PASS |
-| Wrapper/registrador, usando ejecutable centinela, no API | 8/8 PASS |
+| Wrapper/registrador, usando ejecutable centinela, no API | 9/9 PASS finales; 8/8 históricos |
 | Preflight completo, PostgreSQL 16.10 nuevo vacío | 19 PASS originales; 20 PASS tras añadir CLI real por symlink |
 | Detención y destrucción del PostgreSQL de preflight | verificadas |
-| API candidata real | FAIL: no healthz 200 en 30 s; importación bloqueada antes de listen |
+| API candidata corregida real | PASS: healthz 200, respuesta status ok |
 | Workers reales | thread-stream-worker.mjs y pino-pretty.mjs abiertos correctamente según strace |
-| Preflight del arranque real | no demostrado: guard CLI omitió main por diferencia de ruta symlink/real |
+| Preflight del arranque real final | PASS explícito en log y preflightProofObserved true |
 | Limpieza del intento real | candidato detenido; PostgreSQL stop exit 0 y directorio destruido |
 
 El agente principal ejecutó `validate-candidate-start.mjs` con entorno limpio,
-PostgreSQL nuevo en socket privado/55439 y HTTP 18092. La consulta inicial
-SELECT 1 pasó y se emitió INSPECTION; el aviso no equivale a servidor escuchando.
-El ciclo async inventario → salida-venta-reservation → inventario es la hipótesis
-de espera en `await import("./app")` anterior a `app.listen`, pendiente de
-contrastar con 7cb77f8 bajo la nueva autorización. No se obtuvo healthz 200.
-
-El preflight directo probado independientemente sí pasó; en este intento,
-la comparación argv/import.meta.url del guard CLI no coincide por el symlink
-y omite main. Su exit 0 no prueba validación de base. El runner tampoco llegó
-a la comparación posterior de catálogo/filas/secuencias: no se afirma ese PASS.
-Los resultados y traza se preservan en
-`verificacion-final/failed-start-20260921-212811/`. Las pruebas 19+8+119 siguen
-válidas en sus alcances independientes, no como validación del recorrido real.
-La corrección posterior autorizada del preflight no valida este intento fallido;
-fase B queda bloqueada y el control debe ejecutarse antes de decidir sobre fuentes.
+PostgreSQL nuevo en socket privado/55439 y HTTP 18092. El resultado final
+`verificacion-final/candidate-start-results.json` acredita preflight positivo,
+healthz 200, ambos workers, INSPECTION y catálogo/filas/secuencias conservados.
+También acredita detención del candidato, PostgreSQL stop 0 y destrucción del
+directorio desechable. No se usan estos puertos de ensayo para la API operativa.
+Los fallos previos permanecen en las dos carpetas failed-start-*; el control
+PASS está en verificacion-control. No se presentan los fallos como aprobados
+ni se confunden las matrices unitarias con este resultado final real.
 
 ## Preflight externo y controles de arranque
 
@@ -111,7 +99,8 @@ El wrapper preparado `api-start-audit.sh`:
 5. Hace exec del bundle del directorio nuevo; no compila ni aplica SQL.
 
 Fallo de append de auditoría: advertencia no fatal. Fallo de hash/preflight:
-fatal, sin exec. La matriz de ocho pruebas lo demuestra sin ejecutar la API.
+fatal, sin exec. La matriz final de nueve pruebas lo demuestra con centinelas,
+además del arranque real final separado.
 No se reemplazaron los scripts antiguos ni se conectó nada al workflow.
 
 ## Respaldo Google Drive y ventana — procedimiento futuro, no ejecutado

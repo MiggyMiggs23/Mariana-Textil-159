@@ -1,18 +1,23 @@
 # 1. Fuentes, contenido y manifiesto
 
-## Fuente de compilación propuesta
+## Fuente de compilación final validada
 
 El candidato funcional es **`31804125a1e752bde128d72e9fd44d23972ffff1`**,
 árbol **`6337df3ae1dc67b8de91fabda3cbf73dd255cf59`**.
 Los commits posteriores consultados documentan evidencia/cierre; no sustituyen
 la identificación del candidato validado.
 
-La compilación futura se haría en una exportación limpia de esa revisión,
-fuera de `artifacts/api-server/dist` activo, sin credenciales/conexiones a la
-base operativa y sin arrancar/importar el backend para inspeccionarlo.
-El script de build declarado es `node ./build.mjs`; desde el workspace exportado,
-el comando previsto es `pnpm --filter @workspace/api-server run build`.
-**No se ejecutó.** No usar `dev`: encadena build y start.
+Se compiló en la exportación limpia de esa revisión, con overlays de tests
+`07cc804a35b6bba7f3ed640129231ba7434a8767`, salida de build
+`e0f1c227e013c59987c06604e21a8036e73c82a5` e importación eager/test
+`226509cae4d6e850782763a0f4d15139ddedd568`. No se usó HEAD arbitrario.
+Comando real: `node artifacts/api-server/build.mjs`, con entorno limpio y
+API_BUILD_OUTPUT_DIR apuntando al directorio permanente
+`/home/runner/workspace/artifacts/api-server/dist-e2-20260927`.
+Índice final: `008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5`.
+Se verificaron 1,261 archivos API/lib contra los blobs/overlays: cero diferencias.
+El agente principal probó el bundle real únicamente contra PostgreSQL nuevo
+desechable: PASS y limpieza completa. No se tocó el dist activo.
 
 Registrar antes/después: commit/árbol, ausencia de modificaciones locales,
 lockfile y entradas del build, versiones de herramientas/dependencias, comando,
@@ -32,8 +37,11 @@ El propietario eligió la revisión completa exacta, con E8/E6 registrados y
 remate, precio mínimo y borrado de producto apagados. Aceptó después Entradas
 como atajo de cantidades por rollo, no captura por lote. La autorización y su
 aclaración se conservan en este directorio. La preparación aislada produjo el
-bundle registrado en `06-resultado-preparacion.md`, pero quedó detenida por
-cinco fallos de pruebas; no se autoriza liberación ni corrección de fuentes.
+bundle histórico registrado en `06-resultado-preparacion.md`. Aquella detención
+fue superada con las autorizaciones posteriores; el estado final es PASS en
+`manifest-final.json`. La clasificación completa por archivo está en
+`anexos/clasificacion-arrastre.json`, con presencia en mapa del bundle, alcance,
+gates y exclusiones. No se autoriza liberación por haber preparado el paquete.
 
 ## Contenido funcional E2 previsto
 
@@ -99,11 +107,12 @@ Fuente documentada del bundle actual:
 - Última comprobación citada: 2026-09-21T18:15:50.491Z, PID 132.
   **No se volvió a comprobar el proceso hoy.**
 
-El manifiesto final aún debe añadir:
+El manifiesto final ya registra:
 
 1. Selección final de fuentes y hash de cada salida de la compilación autorizada.
 2. Revisión/hash/ruta del preflight nuevo y sus expectativas de catálogo/datos.
 3. Revisión y hashes del wrapper y del registrador para esa combinación.
 4. Modo aprobado, identidad de base sin credenciales, guardas y flags esperados.
-5. Evidencia de compatibilidad operativa, respaldo/restauración y rollback
-   compatible con snapshots. Ninguno se presume aprobado por el 51/51 sintético.
+5. Evidencia del arranque aislado y plan de respaldo/restauración/recuperación.
+   No presenta como ejecutados el respaldo Drive, SQL operativo ni primer
+   cierre: son controles obligatorios de la futura ventana.
