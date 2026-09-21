@@ -100,8 +100,8 @@ BEGIN
   END IF;
   IF NEW.evaluacion->>'contractRevision' IS DISTINCT FROM NEW.contrato_revision
      OR NEW.evaluacion->>'projector' IS DISTINCT FROM
-        CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'directedApplication'
-          ELSE 'projectCreditLedger' END
+        (CASE source_producer WHEN 'ABONO_DIRIGIDO' THEN 'directedApplication'
+          ELSE 'projectCreditLedger' END)
      OR (source_producer = 'ABONO_DIRIGIDO'
          AND (NEW.resultado IS DISTINCT FROM 'FULL'
               OR NEW.aplicado IS DISTINCT FROM source_amount))
