@@ -1,0 +1,96 @@
+REGISTRO DE ARRANQUES — CÓDIGO INSTALADO, NO ENGANCHADO
+
+Autorización: autorizacion-propietario-correccion-sql-y-registro-arranques.txt,
+guardada previamente por el agente principal. Confirmación del PID 132 recibida
+del principal; este trabajo no vuelve a iniciar ni a consultar la API.
+
+Revisión exacta de scripts y pruebas ejecutada:
+9c2fd42dc1f87c5dd919ad4908aaaf63a9122520
+No se atribuye esta validación a cambios de otros trabajadores ni a la API real.
+
+Decisión de seguridad:
+Se leyeron replit.md y las instrucciones workflows/artifacts. API Server es un
+servicio gestionado por artifacts/api-server/.replit-artifact/artifact.toml.
+Las instrucciones no garantizan que cambiar su comando no reinicie el servicio;
+los workflows pueden reiniciarse automáticamente tras instalaciones. Por riesgo
+de reinicio y prohibición expresa NO se modificó artifact.toml, ni se configuró,
+reinició o ejecutó ningún workflow. No hubo instalaciones, build, DB, llamadas
+API, preflight real, cambios de bundle ni aperturas de captura/devolución.
+La configuración actual continúa intacta: el registro NO está activo todavía.
+No se creó ni se escribió reports/arranques-api.log durante estas pruebas.
+
+Comando exacto propuesto PARA EL PRÓXIMO ARRANQUE AUTORIZADO, desde el mismo
+servicio gestionado (sustituye únicamente services.development.run):
+
+cd /home/runner/workspace && exec bash scripts/api-start-audit.sh
+
+No ejecutar ese comando ahora. No crear otro workflow. Mantener los bloques env,
+puertos y rutas actuales. Producción no se modificó y no queda instrumentada por
+esta propuesta para el comando de desarrollo vigente.
+
+Implementación:
+scripts/api-start-audit.sh comienza antes de los controles y del preflight.
+Conserva en orden los dos controles de SHA iniciales, export explícito
+API_INSPECTION_BOOT=1 NODE_ENV=development, ejecución del preflight existente,
+control de SHA del bundle posterior y exec node --enable-source-maps del bundle.
+No captura/redirige la salida de preflight ni los diagnósticos de sha256sum.
+Conserva sus códigos de salida. No modifica runtime-preflight.mjs.
+No modifica variables de modo adicionales. El logger hereda las variables
+efectivas y registra exclusivamente NODE_ENV y API_INSPECTION_BOOT; antes del
+export (fallo de guardas iniciales), registra los valores heredados, incluso null
+si están ausentes. No vuelca el entorno, argumentos, secretos o salida preflight.
+
+Cada salida controlada previa al exec intenta una sola línea JSON con UTC,
+PID del shell, SHA-256 completo del bundle (o null y código de error de lectura),
+modo efectivo, etapa, resultado preflight y código de salida. No se inventa un
+hash si el archivo no existe. preflight=not_run no significa éxito; failed lleva
+el código real; passed solo aparece tras salida cero del preflight.
+Ante fallo previo al exec se usa startup_shell_no_api y api_exec_attempted=false.
+En la ruta aprobada se escribe antes de exec, con el PID que hereda realmente
+Node; exec_target y api_exec_attempted=true identifican INTENTO de exec, no una
+afirmación de salud, escucha o éxito de inicio de la API. Si exec falla después,
+la línea sigue siendo un intento, no una confirmación de proceso API iniciado.
+No se puede conocer anticipadamente ese resultado con una línea anterior al exec.
+
+El logger abre únicamente con O_APPEND, hace un solo write de la línea completa,
+no reintenta escrituras parciales y nunca trunca, borra ni rota el archivo.
+Si falla la escritura, emite advertencia sin detalles sensibles y el arranque
+o rechazo continúa con el mismo código. En este filesystem local la concurrencia
+de doce procesos preservó doce líneas JSON independientes. No se promete
+atomicidad en filesystems remotos ni ante un write parcial/disco lleno; una
+escritura fallida puede no dejar una línea completa. SIGKILL, caída de máquina
+o preflight que no termina tampoco permiten garantizar una línea final.
+Estas limitaciones no se ocultan como registros exitosos.
+
+Verificación aislada, revisión 9c2fd42dc1f87c5dd919ad4908aaaf63a9122520:
+Herramientas: Node v24.13.0, bash; módulos nativos exclusivamente, sin paquetes.
+Comandos y códigos:
+  bash -n scripts/api-start-audit.sh                         -> 0
+  node --check scripts/api-start-audit-record.mjs            -> 0
+  node --check scripts/api-start-audit.test.mjs              -> 0
+  node --test scripts/api-start-audit.test.mjs               -> 0
+Resultado: 8 pruebas, 8 aprobadas, 0 fallidas, 0 omitidas.
+Todos los bundles, preflights y archivos log de prueba se crearon bajo /tmp.
+El arnés copia el wrapper y reemplaza SOLO los hashes fijados por los hashes
+de los stubs; nunca ejecuta el preflight ni el bundle del workspace.
+Cobertura: PID spawn=PID heredado por exec=PID escrito; UTC ISO; hash completo;
+modos heredados y exportados; preservación literal del prefijo previo por append;
+canario de secreto ausente; API stub con exit 23; preflight con exit 37 y salida
+stdout/stderr exacta; rechazo por hash preflight/bundle; bundle ausente; mutación
+del bundle por preflight detectada por guarda posterior; denegación real de
+permisos (usuario no root) conserva tanto exit API 29 como exit preflight 19;
+doce ejecuciones concurrentes con doce PIDs y líneas completas.
+
+SHA-256 de archivos verificados:
+scripts/api-start-audit.sh
+7489c82699f64204f1e653412b2036b4573c55f99f9ba05e77855415dc609889
+scripts/api-start-audit-record.mjs
+f7a86e6192af7b03e9fcc967d346ca8825c0992f96d2871b15630c3c2a5294cd
+scripts/api-start-audit.test.mjs
+187e4a8ed3cae72397c5b3508b6a299d976057ebabd42cf3ab550a396a19597a
+
+Hashes protegidos comprobados solo por lectura al finalizar las pruebas:
+reports/e2-apertura-limitada/reconstruccion/runtime-preflight.mjs
+9a87b47b52d3776b10d760bdab6b9f5e71158f75ef71921ec8adbb3e0585de9f
+artifacts/api-server/dist/index.mjs
+3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98
