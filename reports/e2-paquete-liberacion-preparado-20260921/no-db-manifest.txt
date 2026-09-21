@@ -1,0 +1,12 @@
+src/lib/caja-cash-ledger.test.ts
+src/lib/caja-admin-cash.mock.test.ts
+src/lib/credit-abono-evidence.test.ts
+src/lib/credit-refund.safe.test.ts
+src/lib/credit-refund.mock.test.ts
+src/lib/limited-startup-preflight.test.ts
+src/lib/startup-mode.test.ts
+src/lib/credit-evidence-contract.test.ts
+src/lib/credit-evidence.mock.test.ts
+src/lib/credit-evidence-read.test.ts
+src/lib/credit-allocation.test.ts
+src/inventario-existencias-agrupadas.mock.test.ts

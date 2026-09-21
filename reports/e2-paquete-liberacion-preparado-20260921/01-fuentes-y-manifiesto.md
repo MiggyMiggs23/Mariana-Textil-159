@@ -19,7 +19,7 @@ lockfile y entradas del build, versiones de herramientas/dependencias, comando,
 salidas completas, código de salida, SHA-256 de bundle/mapas y demás salidas.
 No sustituir el bundle activo como forma de ensayar una compilación.
 
-### Selección aún pendiente
+### Selección aprobada para preparación aislada
 
 Un build completo de esta revisión no es un cherry-pick de E2. Comparado con
 la fuente del bundle retenido, también existen cambios en rutas de clientes,
@@ -28,15 +28,12 @@ enumera las diferencias; no afirma que todas entren en el bundle ni que estén
 autorizadas. En particular, no declarar excluido código alcanzable solo porque
 una funcionalidad relacionada tenga su flag apagado.
 
-El propietario debe decidir:
-
-- aprobar la revisión completa tras revisar ese arrastre, **o**
-- solicitar un candidato acotado a E2, que requiere nueva revisión exacta y
-  verificación antes de asignarle un hash de liberación.
-
-Hoy no se elige ninguna de las dos opciones ni se modifica código para resolverlo.
-No es necesario resolver las decisiones comerciales de remate/precios para
-describir E2; sí hay que evitar liberarlas por arrastre sin autorización.
+El propietario eligió la revisión completa exacta, con E8/E6 registrados y
+remate, precio mínimo y borrado de producto apagados. Aceptó después Entradas
+como atajo de cantidades por rollo, no captura por lote. La autorización y su
+aclaración se conservan en este directorio. La preparación aislada produjo el
+bundle registrado en `06-resultado-preparacion.md`, pero quedó detenida por
+cinco fallos de pruebas; no se autoriza liberación ni corrección de fuentes.
 
 ## Contenido funcional E2 previsto
 

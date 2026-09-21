@@ -1,30 +1,33 @@
-# 5. Decisiones del propietario y textos pendientes
+# 5. Decisiones de preparación otorgadas; fase B pendiente
 
 **Esto es un borrador; no es autorización otorgada.** No sirve responder
 “adelante” dejando pendientes técnicos o campos sin completar. Hay dos fases
 para no autorizar un bundle cuyo hash todavía no existe.
 
-## Decisiones no resueltas
+## Estado actualizado de decisiones
 
 | Decisión | Estado |
 |---|---|
-| Fuente completa `31804125…` con arrastre revisado o candidato selectivo E2 | Pendiente del propietario |
-| INSPECTION con preflight externo completo o EXPLICIT_LIMITED CLOSED | Pendiente del propietario |
-| Fallo de append del logger: aceptar advertencia actual o exigir bloqueo | Pendiente del propietario |
+| Fuente completa `31804125…` con arrastre | Aprobada para preparación; Entradas aceptada posteriormente |
+| Modo de arranque | INSPECTION con preflight externo completo |
+| Fallo de append del logger | No bloquea arranque; hash/preflight sí bloquean |
 | Custodia/retención del registro y evidencias | Pendiente del propietario |
-| Ventana, pausa de escritores, límites de espera y actor operador | Pendiente del propietario |
-| Compatibilidad frontend: mantenerlo o autorizar un cambio separado si hace falta | Pendiente de comprobar; alcance adicional no autorizado |
-| Respaldo/restauración, manifiesto B0/B1 y bundle E2 CLOSED de recuperación | Pendientes de preparación y aceptación |
-| Primer cierre real: actor, sitio, sesión abierta, conteo y aceptación de diferencias | Pendiente del propietario; no ejecutar hoy |
-| Hashes/revisión de bundle, preflight y wrapper finales | No existen aún; requieren preparación autorizada |
+| Ventana | Domingo 27 de septiembre de 2026; hora pendiente |
+| Compatibilidad frontend Entradas | Sin cambio de API/payload en la revisión; frontend no se instala ahora |
+| Respaldo/restauración | Google Drive antes de SQL, procedimiento del 13 de septiembre; no ejecutar hoy |
+| Primer cierre real | Propietario en Mariana, tickets de prueba en efectivo y transferencia; no ejecutar hoy |
+| Hashes/revisión de bundle, preflight y wrapper finales | Bundle compilado y medido; verificación detenida con 5 fallos; preflight/wrapper finales pendientes |
 
 La última fila no es una elección libre de un hash: debe obtenerse de los bytes
 realmente construidos y revisados. Las expectativas de catálogo tampoco se
 inventan para llenar el formulario.
 
-## A. Autorización de preparación técnica adicional, sin liberar
+## A. Autorización de preparación recibida
 
-Texto a completar y emitir solo si el propietario desea avanzar:
+La autorización efectiva y literal es `autorizacion-propietario.txt`, con
+`aclaracion-entradas.txt`. El siguiente formulario se conserva únicamente como
+antecedente del borrador inicial: **no se vuelve a solicitar ni se usa como
+autorización operativa**. El estado medido está en `06-resultado-preparacion.md`.
 
 > Autorizo únicamente preparar y verificar fuera de la API activa el candidato
 > de liberación E2 CLOSED, con fuente [REVISIÓN COMPLETA ELEGIDA] y alcance

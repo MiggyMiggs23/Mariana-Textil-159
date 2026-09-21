@@ -1,0 +1,5 @@
+El cambio de artifacts/mariana-textil/src/pages/entradas.tsx se acepta como arrastre. El propietario confirma que no existe captura por lote: es solo un atajo de captura que llena la misma cantidad en varios rollos, y cada rollo se sigue dando de alta con su propia cantidad y su número de serie. Ese archivo es de la pantalla, no del bundle de la API.
+
+Comprueba si depende de algún cambio de la API incluido en la revisión 31804125 que no esté en el bundle actual. Si depende, enuméralo y confirma que es solo de esa misma captura. Si encuentras cualquier otro cambio fuera del alcance, detente y repórtamelo.
+
+Con eso resuelto, continúa con la preparación autorizada: compilación aislada, manifiesto final y texto de fase B.
