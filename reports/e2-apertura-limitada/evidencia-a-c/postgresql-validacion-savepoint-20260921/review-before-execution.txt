@@ -1,0 +1,31 @@
+APPROVED BY MAIN: one intact 51-case run of source commit
+31804125a1e752bde128d72e9fd44d23972ffff1. No source changes or fixes
+against failures; no test/fixture changes or retries. Supplements are separate
+and run only after all original 51 PASS, in the same disposable cluster.
+
+Independent review accepted persistent top-level xid8 INSERT provenance.
+The positional INSERT concern was resolved by main consulting PostgreSQL 16:
+https://www.postgresql.org/docs/16/sql-insert.html
+"or the first N column names, if there are only N columns supplied by VALUES"
+Remaining columns receive their default or NULL; the new BEFORE trigger stamps.
+This quotation/source was supplied by main; this worker made no HTTP request.
+
+Runner reuses the prior reviewed runner body through explicit asserted
+identity replacements. Same previous negative SQL control, initial
+install/revert/reinstall, and original exported 49 cases. Source input files
+are exported by git archive from the fixed revision, then every exported byte
+is checked against git show before initdb. No changes to cases.mjs/fixture.sql.
+
+The wrapper substitutes its own filesystem URL so paths remain in this NEW
+evidence directory. Original runner evidence remains unchanged. It records
+both wrapper and inherited runner hashes; supplement is a separate new file.
+Private newly-created PostgreSQL16 cluster, sanitized env, explicit socket,
+listen_addresses='', no API DB or existing clone. The inherited finally
+closes clients, drops DB, stops own cluster, checks PID/socket/status and
+removes root, also on failure. Independent cleanup verification follows.
+
+Extra tests: historical NULL stamp UPDATE forgery rejected; INSERT supplied
+stamp overwritten; committed source UPDATE preserves old stamp; rollback
+child then reinsert same key; late application after released SAVEPOINT.
+No practical 2^32-wrap simulation; persisted xid8 prevents 32-bit alias by
+construction. No production privilege/role-hardening claim.

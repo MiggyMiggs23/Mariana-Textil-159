@@ -1,0 +1,8 @@
+2026-09-21 18:10:49.967 UTC [4157] LOG:  starting PostgreSQL 16.10 on x86_64-pc-linux-gnu, compiled by clang version 19.1.7, 64-bit
+2026-09-21 18:10:49.971 UTC [4157] LOG:  listening on Unix socket "/tmp/e2-ac-savepoint-pg16-wgU5Ef/socket/.s.PGSQL.56439"
+2026-09-21 18:10:49.982 UTC [4160] LOG:  database system was shut down at 2026-09-21 18:10:47 UTC
+2026-09-21 18:10:50.001 UTC [4157] LOG:  database system is ready to accept connections
+2026-09-21 18:10:50.340 UTC [4158] LOG:  checkpoint starting: immediate force wait
+2026-09-21 18:10:50.369 UTC [4158] LOG:  checkpoint complete: wrote 6 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.015 s, total=0.029 s; sync files=5, longest=0.004 s, average=0.003 s; distance=4273 kB, estimate=4273 kB; lsn=0/191E6F0, redo lsn=0/191E6B8
+2026-09-21 18:10:50.387 UTC [4157] LOG:  received immediate shutdown request
+2026-09-21 18:10:50.393 UTC [4157] LOG:  database system is shut down
