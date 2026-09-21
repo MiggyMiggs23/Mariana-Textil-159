@@ -91,6 +91,14 @@ try {
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /E2_COMPLETE_RELEASE_PREFLIGHT=PASS/);
   });
+  record("symlink CLI executes real fresh B1 checks", () => {
+    const link = path.join(base, "preflight-through-symlink.mjs");
+    fs.symlinkSync(path.join(directory, "release-preflight.mjs"), link);
+    const result = spawnSync(process.execPath, [link], { env, encoding: "utf8", timeout: 30000 });
+    fs.writeFileSync(path.join(output, "preflight-cli-symlink.log"), result.stdout + result.stderr);
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(result.stdout, /E2_COMPLETE_RELEASE_PREFLIGHT=PASS/);
+  });
   fs.writeFileSync(path.join(output, "catalog-B0.json"), JSON.stringify(before, null, 2));
   fs.writeFileSync(path.join(output, "catalog-B1.json"), JSON.stringify(after, null, 2));
   fs.writeFileSync(path.join(output, "fresh-database-identity.json"), JSON.stringify({

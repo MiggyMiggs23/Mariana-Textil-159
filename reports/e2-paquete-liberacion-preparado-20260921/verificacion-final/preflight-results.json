@@ -76,6 +76,10 @@
     "result": "PASS"
   },
   {
+    "name": "symlink CLI executes real fresh B1 checks",
+    "result": "PASS"
+  },
+  {
     "name": "disposable PostgreSQL stopped",
     "exit": 0
   },

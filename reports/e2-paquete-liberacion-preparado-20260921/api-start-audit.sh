@@ -11,17 +11,24 @@ record_attempt() {
 }
 trap 'rc=$?; record_attempt "$rc"' EXIT
 verify_hashes() {
-  test "$(sha256sum "$package/release-assets.sha256" | cut -d' ' -f1)" = 14e994f880f6e03b71e0566a40bfba38d8d445c5ff6d0f997d735c0b5d5219de || return 1
+  test "$(sha256sum "$package/release-assets.sha256" | cut -d' ' -f1)" = 9f64ec9fd2f9ab61a6b888a93dc6987535f8653030ac0fbe007b39e1e337a3b2 || return 1
   sha256sum --check --status "$package/release-assets.sha256"
 }
 verify_hashes || exit 1
 export API_INSPECTION_BOOT=1 NODE_ENV=development
 stage=preflight
-node "$package/release-preflight.mjs"
+preflight_output=$(node "$package/release-preflight.mjs")
 preflight_exit=$?
+printf '%s\n' "$preflight_output"
 if [ "$preflight_exit" -ne 0 ]; then
   preflight_status=failed
   exit "$preflight_exit"
+fi
+if ! printf '%s\n' "$preflight_output" | grep -q '^E2_COMPLETE_RELEASE_PREFLIGHT=PASS {'; then
+  printf '%s\n' 'FATAL: preflight returned without positive verification proof.' >&2
+  preflight_status=failed
+  preflight_exit=1
+  exit 1
 fi
 preflight_status=passed
 stage=release_hash_after

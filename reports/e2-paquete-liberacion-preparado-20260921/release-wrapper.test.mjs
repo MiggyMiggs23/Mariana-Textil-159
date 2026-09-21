@@ -11,7 +11,7 @@ const relative = "reports/e2-paquete-liberacion-preparado-20260921";
 const hash = value => createHash("sha256").update(value).digest("hex");
 const wrapper = fs.readFileSync(path.join(dir, "api-start-audit.sh"), "utf8");
 const stub = 'console.log(JSON.stringify({pid:process.pid,mode:process.env.NODE_ENV,inspection:process.env.API_INSPECTION_BOOT}));process.exit(Number(process.env.STUB_EXIT||0));';
-function fixture(t, preflight = 'console.log("preflight positive");') {
+function fixture(t, preflight = 'console.log(\'E2_COMPLETE_RELEASE_PREFLIGHT=PASS {"fixture":true}\');') {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "e2-wrapper-unit-"));
   const pkg = path.join(root, relative);
   fs.mkdirSync(pkg, { recursive: true });
@@ -25,7 +25,8 @@ function fixture(t, preflight = 'console.log("preflight positive");') {
     `${hash(fs.readFileSync(path.join(pkg, "api-start-audit-record.mjs")))}  ${relative}/api-start-audit-record.mjs`,
   ].join("\n") + "\n";
   fs.writeFileSync(path.join(pkg, "release-assets.sha256"), manifest);
-  fs.writeFileSync(path.join(pkg, "api-start-audit.sh"), wrapper.replace("14e994f880f6e03b71e0566a40bfba38d8d445c5ff6d0f997d735c0b5d5219de", hash(manifest)));
+  const pinnedManifestHash = wrapper.match(/= ([a-f0-9]{64}) \|\| return 1/)[1];
+  fs.writeFileSync(path.join(pkg, "api-start-audit.sh"), wrapper.replace(pinnedManifestHash, hash(manifest)));
   t.after(() => { fs.chmodSync(path.join(root, "reports"), 0o700); fs.rmSync(root, { recursive: true, force: true }); });
   return { root, pkg };
 }
@@ -52,7 +53,7 @@ test("preflight failure stays fatal with original exit", t => {
   const f = fixture(t, 'console.error("preflight rejected");process.exit(37);');
   const result = run(f);
   assert.equal(result.status, 37);
-  assert.equal(result.stdout, "");
+  assert.equal(result.stdout.trim(), "");
   assert.equal(entries(f)[0].api_exec_attempted, false);
   assert.deepEqual(entries(f)[0].preflight, { result: "failed", exit_code: 37 });
 });
@@ -68,7 +69,7 @@ for (const target of ["bundle", "preflight", "manifest", "missing"]) test(`${tar
   assert.equal(entries(f)[0].api_exec_attempted, false);
 });
 test("post-preflight bundle change blocks exec", t => {
-  const f = fixture(t, 'import fs from "node:fs";fs.appendFileSync("artifacts/api-server/dist-e2-20260927/index.mjs","\\n//changed");');
+  const f = fixture(t, 'import fs from "node:fs";fs.appendFileSync("artifacts/api-server/dist-e2-20260927/index.mjs","\\n//changed");console.log(\'E2_COMPLETE_RELEASE_PREFLIGHT=PASS {}\');');
   assert.equal(run(f).status, 1);
   assert.equal(entries(f)[0].stage, "release_hash_after");
   assert.equal(entries(f)[0].api_exec_attempted, false);
@@ -76,11 +77,19 @@ test("post-preflight bundle change blocks exec", t => {
 test("append failure never blocks stub exec or masks fatal preflight", t => {
   assert.notEqual(process.getuid(), 0);
   for (const fail of [false, true]) {
-    const f = fixture(t, fail ? "process.exit(19);" : "");
+    const f = fixture(t, fail ? "process.exit(19);" : 'console.log(\'E2_COMPLETE_RELEASE_PREFLIGHT=PASS {}\');');
     fs.chmodSync(path.join(f.root, "reports"), 0o500);
     const result = run(f, { STUB_EXIT: "29" });
     assert.equal(result.status, fail ? 19 : 29);
     assert.match(result.stderr, /WARNING/);
     assert.ok(!result.stderr.includes("SECRET_SENTINEL"));
   }
+});
+test("zero exit without positive preflight proof is fatal", t => {
+  const f = fixture(t, "process.exit(0);");
+  const result = run(f);
+  assert.equal(result.status, 1);
+  assert.equal(entries(f)[0].api_exec_attempted, false);
+  assert.equal(entries(f)[0].preflight.result, "failed");
+  assert.match(result.stderr, /without positive verification proof/);
 });

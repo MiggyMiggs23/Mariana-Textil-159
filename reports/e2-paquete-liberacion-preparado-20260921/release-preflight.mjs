@@ -1,6 +1,6 @@
 // External fail-closed release preflight. Never imports the application.
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { readFileSync, realpathSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
@@ -67,6 +67,6 @@ export function main() {
   const result = verifyCatalog(readCatalog(process.env), expected, process.argv.includes("--before") ? "before" : "after");
   console.log(`E2_COMPLETE_RELEASE_PREFLIGHT=PASS ${JSON.stringify(result)}`);
 }
-if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+if (process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === import.meta.url) {
   try { main(); } catch (error) { console.error(`E2_RELEASE_PREFLIGHT=FAIL ${error.message}`); process.exitCode = 1; }
 }
