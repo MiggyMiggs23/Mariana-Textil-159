@@ -11,7 +11,7 @@ globalThis.require = createRequire(import.meta.url);
 const artifactDir = path.dirname(fileURLToPath(import.meta.url));
 
 async function buildAll() {
-  const distDir = path.resolve(artifactDir, "dist");
+  const distDir = path.resolve(process.env.API_BUILD_OUTPUT_DIR ?? path.resolve(artifactDir, "dist"));
   await rm(distDir, { recursive: true, force: true });
   // PDF report exports embed this licensed Unicode font. Copy it beside the
   // production bundle so the runtime does not depend on host-installed fonts.
