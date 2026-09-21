@@ -1,0 +1,1 @@
+{"runDir":"/home/runner/workspace/reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion-corregida-20260921/run-1790012446485","status":"FAIL"}

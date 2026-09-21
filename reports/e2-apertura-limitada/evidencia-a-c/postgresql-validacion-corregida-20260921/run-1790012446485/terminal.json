@@ -1,0 +1,508 @@
+{
+  "revision": "d3b3154753563adc1a64ee1427518a6e6a0a22d6",
+  "status": "FAIL",
+  "exitCode": 1,
+  "started": true,
+  "backendPid": 2478,
+  "cleanupError": null,
+  "dropStatus": 0,
+  "stopStatus": 0,
+  "clusterStatus": 3,
+  "pidAbsent": true,
+  "socketAbsent": true,
+  "rootRemoved": true,
+  "results": [
+    {
+      "case": "previous exact syntax rejects and installation rolls back without A+C objects",
+      "status": "PASS",
+      "residual": {
+        "tables": 0,
+        "functions": 0,
+        "triggers": 0
+      }
+    },
+    {
+      "case": "CLOSED fixture exact install/empty revert/reinstall",
+      "status": "PASS"
+    },
+    {
+      "case": "duplicate install rejects atomically, original objects preserved",
+      "status": "PASS",
+      "ms": 3
+    },
+    {
+      "case": "pristine exact03 catalog preflight (no normalization or candidate patch)",
+      "status": "PASS",
+      "ms": 23
+    },
+    {
+      "case": "revert refuses absent CLOSED guard",
+      "status": "PASS",
+      "ms": 3,
+      "detail": {
+        "code": "P0001",
+        "message": "REFUSED: close cash capture before removing empty evidence"
+      }
+    },
+    {
+      "case": "separate empty CLOSED fixture: guards, revert, reinstall",
+      "status": "PASS",
+      "ms": 5,
+      "detail": "CLOSED guards checked separately; exact empty revert handled before whole synthetic schema reset by runner"
+    },
+    {
+      "case": "positive ABONO_ORDINARIO 0",
+      "status": "PASS",
+      "ms": 9,
+      "detail": {
+        "resultado": "UNUSED",
+        "aplicado": "0.00",
+        "importe": "100.00",
+        "operacion_productor": "ABONO_ORDINARIO",
+        "operacion_clave": "6d3c3107-db9e-4150-b734-4bc2610426d3",
+        "evaluacion": {
+          "projector": "projectCreditLedger",
+          "allocations": [],
+          "appliedCents": 0,
+          "receiptCents": 10000,
+          "contractRevision": "e2-abono-evidence-v1"
+        },
+        "proofs": 1
+      }
+    },
+    {
+      "case": "positive ABONO_ORDINARIO 40",
+      "status": "PASS",
+      "ms": 8,
+      "detail": {
+        "resultado": "PARTIAL",
+        "aplicado": "40.00",
+        "importe": "100.00",
+        "operacion_productor": "ABONO_ORDINARIO",
+        "operacion_clave": "4f2cfc08-9f39-4bfb-a64c-66470b155e03",
+        "evaluacion": {
+          "projector": "projectCreditLedger",
+          "allocations": [
+            {
+              "targetId": 1,
+              "appliedCents": 4000
+            }
+          ],
+          "appliedCents": 4000,
+          "receiptCents": 10000,
+          "contractRevision": "e2-abono-evidence-v1"
+        },
+        "proofs": 0
+      }
+    },
+    {
+      "case": "positive ABONO_ORDINARIO 100",
+      "status": "PASS",
+      "ms": 5,
+      "detail": {
+        "resultado": "FULL",
+        "aplicado": "100.00",
+        "importe": "100.00",
+        "operacion_productor": "ABONO_ORDINARIO",
+        "operacion_clave": "e8b1a28f-dc18-4981-9503-66ddc5031d3e",
+        "evaluacion": {
+          "projector": "projectCreditLedger",
+          "allocations": [
+            {
+              "targetId": 1,
+              "appliedCents": 10000
+            }
+          ],
+          "appliedCents": 10000,
+          "receiptCents": 10000,
+          "contractRevision": "e2-abono-evidence-v1"
+        },
+        "proofs": 0
+      }
+    },
+    {
+      "case": "positive ABONO_DIRIGIDO 100",
+      "status": "PASS",
+      "ms": 6,
+      "detail": {
+        "resultado": "FULL",
+        "aplicado": "100.00",
+        "importe": "100.00",
+        "operacion_productor": "ABONO_DIRIGIDO",
+        "operacion_clave": "6caedfd7-7054-4c71-8ece-cc86e0f41268",
+        "evaluacion": {
+          "projector": "directedApplication",
+          "allocations": [
+            {
+              "targetId": 1,
+              "appliedCents": 10000
+            }
+          ],
+          "appliedCents": 10000,
+          "receiptCents": 10000,
+          "contractRevision": "e2-abono-evidence-v1"
+        },
+        "proofs": 0
+      }
+    },
+    {
+      "case": "deferred missing finalization rejected at COMMIT",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: physical ABONO cannot commit without finalization"
+      }
+    },
+    {
+      "case": "IMMEDIATE before source INSERT rejects at statement",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: physical ABONO cannot commit without finalization"
+      }
+    },
+    {
+      "case": "deferred missing proof rejected at COMMIT",
+      "status": "PASS",
+      "ms": 3,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: UNUSED proof completeness mismatch"
+      }
+    },
+    {
+      "case": "invalid source {\"nature\":\"CORRECCION_CONTABLE\"}",
+      "status": "PASS",
+      "ms": 3,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: physical ABONO not found for finalization"
+      }
+    },
+    {
+      "case": "invalid source {\"form\":\"TRANSFERENCIA\"}",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: physical ABONO not found for finalization"
+      }
+    },
+    {
+      "case": "invalid source {\"destination\":\"CUENTA_FISCAL\"}",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: physical ABONO not found for finalization"
+      }
+    },
+    {
+      "case": "invalid source {\"site\":null}",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: finalization requires its new physical ABONO in this transaction"
+      }
+    },
+    {
+      "case": "invalid source {\"session\":null}",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: finalization requires its new physical ABONO in this transaction"
+      }
+    },
+    {
+      "case": "invalid classification / projector",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: finalization evaluation contract mismatch"
+      }
+    },
+    {
+      "case": "directed UNUSED rejected",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: finalization evaluation contract mismatch"
+      }
+    },
+    {
+      "case": "induced failure after movement, no orphans",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "22012",
+        "message": "division by zero"
+      }
+    },
+    {
+      "case": "induced failure after application, no orphans",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "22012",
+        "message": "division by zero"
+      }
+    },
+    {
+      "case": "induced failure after finalization, no orphans",
+      "status": "PASS",
+      "ms": 3,
+      "detail": {
+        "code": "22012",
+        "message": "division by zero"
+      }
+    },
+    {
+      "case": "induced error after UNUSED positive proof: no persisted orphans",
+      "status": "PASS",
+      "ms": 3,
+      "detail": {
+        "code": "22012",
+        "message": "division by zero"
+      }
+    },
+    {
+      "case": "retry after rollback same UUID succeeds; replay is not idempotent",
+      "status": "PASS",
+      "ms": 9
+    },
+    {
+      "case": "duplicate finalizer same transaction rejects (not idempotent)",
+      "status": "PASS",
+      "ms": 13,
+      "detail": {
+        "code": "23505",
+        "message": "duplicate key value violates unique constraint \"finalizaciones_abono_e2_pkey\""
+      }
+    },
+    {
+      "case": "IMMEDIATE then late application BEFORE guard",
+      "status": "PASS",
+      "ms": 5,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: capture applications must precede finalization"
+      }
+    },
+    {
+      "case": "immutable UPDATE finalizaciones_abono_e2 SET cliente_id=cliente_id",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: evidence/finalization is immutable"
+      }
+    },
+    {
+      "case": "immutable DELETE FROM finalizaciones_abono_e2",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: evidence/finalization is immutable"
+      }
+    },
+    {
+      "case": "immutable TRUNCATE finalizaciones_abono_e2",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "0A000",
+        "message": "cannot truncate a table referenced in a foreign key constraint"
+      }
+    },
+    {
+      "case": "immutable UPDATE evidencia_no_aplicada_e2 SET cliente_id=cliente_id",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: evidence/finalization is immutable"
+      }
+    },
+    {
+      "case": "immutable DELETE FROM evidencia_no_aplicada_e2",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: evidence/finalization is immutable"
+      }
+    },
+    {
+      "case": "immutable TRUNCATE evidencia_no_aplicada_e2",
+      "status": "PASS",
+      "ms": 1,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: evidence/finalization is immutable"
+      }
+    },
+    {
+      "case": "later transaction application remains legitimate (A+C-only)",
+      "status": "PASS",
+      "ms": 4
+    },
+    {
+      "case": "retained same-tx typed proof",
+      "status": "PASS",
+      "ms": 5
+    },
+    {
+      "case": "induced error after retained positive proof has no orphans",
+      "status": "PASS",
+      "ms": 3,
+      "detail": {
+        "code": "22012",
+        "message": "division by zero"
+      }
+    },
+    {
+      "case": "retained old source cannot be attested",
+      "status": "PASS",
+      "ms": 6
+    },
+    {
+      "case": "retained absent source",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: retained receipt not found"
+      }
+    },
+    {
+      "case": "retained wrong customer typed proof",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "code": "P0001",
+        "message": "E2: retained proof requires its new physical receipt in this transaction"
+      }
+    },
+    {
+      "case": "savepoint ordinary: source before SAVEPOINT (valid-contract expectation)",
+      "status": "PASS",
+      "ms": 3
+    },
+    {
+      "case": "savepoint ordinary: source after SAVEPOINT (valid-contract expectation)",
+      "status": "FAIL",
+      "ms": 3,
+      "error": "E2: finalization requires its new physical ABONO in this transaction",
+      "code": "P0001"
+    },
+    {
+      "case": "savepoint retained: source before SAVEPOINT (valid-contract expectation)",
+      "status": "PASS",
+      "ms": 7
+    },
+    {
+      "case": "savepoint retained: source after SAVEPOINT (valid-contract expectation)",
+      "status": "FAIL",
+      "ms": 2,
+      "error": "E2: retained proof requires its new physical receipt in this transaction",
+      "code": "P0001"
+    },
+    {
+      "case": "released child SAVEPOINT ordinary: valid same-transaction source expectation",
+      "status": "FAIL",
+      "ms": 1,
+      "error": "E2: finalization requires its new physical ABONO in this transaction",
+      "code": "P0001"
+    },
+    {
+      "case": "released child SAVEPOINT retained: valid same-transaction source expectation",
+      "status": "FAIL",
+      "ms": 2,
+      "error": "E2: retained proof requires its new physical receipt in this transaction",
+      "code": "P0001"
+    },
+    {
+      "case": "A+C-only reversal characterized constraints DEFERRED (not production vulnerability)",
+      "status": "PASS",
+      "ms": 3,
+      "detail": {
+        "outcome": {
+          "code": "P0001",
+          "message": "E2: committed finalization does not match persisted applications"
+        },
+        "limitation": "Permanent E1 reversal validators and application immutability omitted. Not a full-system claim."
+      }
+    },
+    {
+      "case": "A+C-only reversal characterized constraints IMMEDIATE (not production vulnerability)",
+      "status": "PASS",
+      "ms": 2,
+      "detail": {
+        "outcome": "ACCEPTED",
+        "limitation": "Permanent E1 reversal validators and application immutability omitted. Not a full-system claim."
+      }
+    },
+    {
+      "case": "deterministic same-UUID concurrency first COMMIT",
+      "status": "PASS",
+      "ms": 24,
+      "detail": {
+        "blocked": true,
+        "terminal": {
+          "ok": false,
+          "code": "23505",
+          "message": "duplicate key value violates unique constraint \"movimientos_operacion_uq_e1\""
+        },
+        "state": {
+          "n": 1
+        }
+      }
+    },
+    {
+      "case": "deterministic same-UUID concurrency first ROLLBACK",
+      "status": "PASS",
+      "ms": 52,
+      "detail": {
+        "blocked": true,
+        "terminal": {
+          "ok": true,
+          "id": 36
+        },
+        "state": {
+          "n": 1
+        }
+      }
+    },
+    {
+      "case": "producer versus exact revert: real ACCESS EXCLUSIVE barrier",
+      "status": "PASS",
+      "ms": 20,
+      "detail": {
+        "blocked": true,
+        "terminal": {
+          "ok": false,
+          "code": "P0001",
+          "message": "REFUSED: close cash capture before removing empty evidence"
+        },
+        "scope": "Exact revert waits for producer, then refuses absent closure; no activation/removal. Nonempty CLOSED refusal checked separately."
+      }
+    },
+    {
+      "case": "revert with evidence and exact CLOSED guard refuses",
+      "status": "PASS",
+      "ms": 2
+    },
+    {
+      "case": "harness",
+      "status": "FAIL",
+      "error": "One or more independent cases failed; preserved exact candidate and continued matrix"
+    }
+  ]
+}

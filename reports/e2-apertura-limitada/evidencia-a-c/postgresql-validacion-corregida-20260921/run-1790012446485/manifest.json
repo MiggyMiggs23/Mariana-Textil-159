@@ -1,0 +1,58 @@
+{
+  "revision": "d3b3154753563adc1a64ee1427518a6e6a0a22d6",
+  "previousRevision": "f8818255bcb11784c422cc559c3273e1f2e25aa9",
+  "authorizationSha256": "c31fa1ab7ad596fc7f1d249328f605a7a58cf7232493236aa1a61192c73d1e78",
+  "previousAuthorizationSha256": "7da1ca31d9243fd79df1c1c359ae30f0bc0b6ca8a1b12d75066f08792d3796de",
+  "previousInstallSha256": "dd99574f022b4d325a73238bf0d1e348e015003d2dad3ebc9de00ede8b094cbd",
+  "runnerSha256": "437843c5e0420d068040eb4c7dab954755f2762d5c6c740afd3de10085197bad",
+  "root": "/tmp/e2-ac-corrected-pg16-1CQSkm",
+  "socket": "/tmp/e2-ac-corrected-pg16-1CQSkm/socket",
+  "port": 56439,
+  "db": "e2_ac_synthetic",
+  "files": [
+    {
+      "path": "lib/db/src/schema/aplicaciones-credito.ts",
+      "sha256": "05331cbbd69ba58290a7efc5a21769bccefebe7a7508aa3c7ba946dcd6de629b"
+    },
+    {
+      "path": "lib/db/src/schema/clientes.ts",
+      "sha256": "eeb73bfbba1165c6aceffc4b89b0d31ec74c46a3ac0270d882c4be0c5736b94a"
+    },
+    {
+      "path": "lib/db/src/schema/pos.ts",
+      "sha256": "31ec5edfefcc74ba94509444b0ac8fba775924d07be7a816c477371fb5e4923f"
+    },
+    {
+      "path": "reports/e1-guardas-temporales-2026-09-18/sql/01-install-cash.sql",
+      "sha256": "9e14649f95dbc889823a7c349a8e009ea1916699140914f03a453751f2d4c9b4"
+    },
+    {
+      "path": "reports/e1-guardas-temporales-2026-09-18/sql/02-install-pending.sql",
+      "sha256": "d3e61d6f1be32615653506bf52d1c98182d80dd1368fa4764c27da8fe5edd03c"
+    },
+    {
+      "path": "reports/e1-sql/01-propuesta.sql",
+      "sha256": "15148edc4555b90a0007dba4536c0a60ecb9904f5885b457ade99b2fe72d931a"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql",
+      "sha256": "d32471cdf0ee50aa4066fe439034aaa2b43150e441b936674f5bb983870c17a5"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/02-revert-before-capture-only.sql",
+      "sha256": "522f8bac6d8b78e2eee158e47249aac8e8fac264cabd64546b00b6f3bf7ae4bc"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/03-preflight-schema-prepared.sql",
+      "sha256": "f5870c20276001bd2c8269e534b2ef696217e13087a27cd350127ce8dfa9b5d2"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/cases.mjs",
+      "sha256": "d6d21cb26c86243057bd5a45a79daf2f7669c9d24f35e98b57fe3ae67bf3fcbf"
+    },
+    {
+      "path": "reports/e2-apertura-limitada/evidencia-a-c/postgresql-validacion/fixture.sql",
+      "sha256": "6427d242f30d1dd3a509d99051bcecfe43f30ed7cea56d979708a6bbcd19522e"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "run": "run-1790012446485",
+  "revision": "d3b3154753563adc1a64ee1427518a6e6a0a22d6",
+  "method": "Independent filesystem checks after the runner returned terminal exit 1",
+  "root": "/tmp/e2-ac-corrected-pg16-1CQSkm",
+  "rootAbsent": true,
+  "socketDirectoryAbsent": true,
+  "postmasterPid": 2478,
+  "procPidAbsent": true
+}
