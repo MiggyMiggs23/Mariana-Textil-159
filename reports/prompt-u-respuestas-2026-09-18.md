@@ -49,7 +49,7 @@ Referencia: `reports/prompt-u-plan-de-implementacion.md`. Se conserva ese archiv
 | P7 | Pregunta 7: umbral y destinatario del aviso sin decidir. | Desde 3 días de la recepción, destacado y aviso a ADMIN. |
 | P9 | E11: «Ve **todas** las ventas y cobranza, facturadas o no» y «No filtrar su análisis exclusivamente por lo fiscal»; «solo consulta; no registra operaciones» no contemplaba la aceptación de conciliación. Pregunta 9 y referencias a la necesidad de que ContadorF cuadre pagos a proveedor. | ContadorF limitado a lo facturado, con aceptación de conciliación y aviso de discrepancias según la respuesta textual; sin Fondo ni pagos a proveedor. La aceptación no se interpreta como facultad de crear operaciones monetarias. ContadorA no cambia. |
 | P10 | Pregunta 10 y pendiente de E11: asignación de perfiles a cuentas CONTADOR por decidir. | Todas se destinan a ContadorF; ContadorA lo asigna manualmente el propietario. No se ejecutó migración. |
-| P12 | Pregunta 12: bloqueo por insuficiencia y procedimiento de excepción ADMIN sin decidir. | Resuelto para pagos/retiros: el desbloqueo ADMIN motivado e histórico aplica solo a caja; no al Fondo. Permanece un conflicto nuevo sobre inversos contables de E10, detallado al final. |
+| P12 | Pregunta 12: bloqueo por insuficiencia y procedimiento de excepción ADMIN sin decidir. | Resuelto: el desbloqueo ADMIN motivado e histórico aplica solo a caja; no al Fondo. Un retiro nunca deja el Fondo en negativo; una corrección contable de un error de captura sí puede dejar saldo negativo, mostrado expresamente. El conflicto de inversos E10 queda resuelto por decisión del 2026-09-21. |
 | P13 | Pregunta 13: pago exclusivamente del Fondo sin turno por decidir. | No requiere turno si sale completo del Fondo; la parte de caja requiere sesión abierta de Mariana. |
 | P6 | Pregunta 6: procedimiento ante nota pagada durante la espera o excedente; nota de este informe que aún dejaba ese procedimiento pendiente. | Sin ADMIN solo se recibe el importe exacto del saldo pendiente de las notas indicadas, sin exceso. Si se pagan por otro medio durante la espera, aplica P4. No se autoriza conversión automática en favor ni devolución de remanentes ya aplicados. |
 | P8 | Pregunta 8: corte completo o remesas parciales, responsable de documentar envío y tratamiento de diferencias por decidir. | Cada tienda entrega efectivo completo al cierre; envío documentado por ADMIN/SUPERVISOR; diferencia al recibir en Mariana abre investigación. No se inventa ajuste automático ni se modifica un corte cerrado. |
@@ -77,7 +77,7 @@ La nueva resolución sustituye esa conservación de facultades al construir E11:
 
 En «Reglas canónicas de E10» se establece: «Un retiro ordinario no puede exceder el saldo disponible». La primera respuesta P12 incluía caja y Fondo en el desbloqueo; esa amplitud queda sustituida.
 
-El desbloqueo ADMIN por insuficiencia, con motivo obligatorio e historial, aplica solo a caja. El retiro del Fondo no puede exceder saldo. Esta resolución no implementa el desbloqueo. La frase nueva «El Fondo nunca queda en negativo» abre un conflicto adicional con los inversos contables, no con esta prohibición de retiros; se reporta al final.
+El desbloqueo ADMIN por insuficiencia, con motivo obligatorio e historial, aplica solo a caja. El retiro del Fondo no puede exceder saldo. Esta resolución no implementa el desbloqueo. La decisión del 2026-09-21 acota la prohibición de saldo negativo a los retiros y conserva los inversos contables de E10 para corregir errores de captura, aun si dejan saldo negativo mostrado expresamente; el conflicto adicional queda resuelto.
 
 ### Producto con historial de precios — impedimento histórico RESUELTO para construcción futura
 
@@ -117,7 +117,7 @@ Fuente: nuevo mensaje del propietario en esta conversación. Solo documentación
 ### Alcance documental y diferencias con lo anterior
 
 - Remate se registra como entrega nueva futura, sin asignarle un identificador del plan ni iniciar construcción. La formulación inicial «solo ADMIN» queda precisada por la resolución posterior: «Marcar remate» es un permiso configurable de matriz que por defecto solo tiene ADMIN. No hay veto fijo por rol. Se conserva el motivo, la marca por rollo, la señalización de la venta y su pérdida en utilidad; no se permite al cajero eludir la marca requerida.
-- Precios se construirá junto con remate. La decisión exige bloqueo bajo costo, no advertencia ni confirmación que permita guardarlo. No se presenta ese bloqueo como ya implementado. El registro histórico del 7 de septiembre en `replit.md` describe «confirmación bajo costo»; se conserva como antecedente, no como aceptación del comportamiento futuro. No se redefine el cálculo del costo ni se inventa tratamiento para costo desconocido.
+- Precios se construirá junto con remate. La decisión exige bloqueo bajo costo cuando el producto tenga costo, no advertencia ni confirmación que permita guardarlo. No se presenta ese bloqueo como ya implementado. El registro histórico del 7 de septiembre en `replit.md` describe «confirmación bajo costo»; se conserva como antecedente, no como aceptación del comportamiento futuro. No se redefine el cálculo del costo. La decisión del 2026-09-21 permite asignar precio de lista al producto sin costo registrado: el piso aplica cuando tenga costo y la venta conserva el bloqueo por costo del rollo.
 - La purga es una decisión futura condicionada al cierre de entregas y a que el propietario la decida y autorice. No se elaboró procedimiento operativo, inventario, respaldo, copia desechable, script ni comando de ejecución. La referencia al procedimiento del 13 de septiembre no reutiliza automáticamente su autorización ni sus listas históricas.
 - Los movimientos #51, #52 y #53 siguen hoy «Sin sitio determinado», sin atribución ni borrado. La decisión los incluye expresamente en la futura purga; no equivale a haberla realizado. La resolución posterior del borrado individual con historial de precios es independiente de esa purga.
 
@@ -137,10 +137,35 @@ Fuente: nuevo mensaje del propietario en esta conversación. Solo documentación
 
 4. Borrar un producto con historial de precios. Si el producto nunca tuvo movimientos, se borra junto con sus renglones de precio_historial. La bitácora ya conserva cada cambio de precio (CAMBIAR_PRECIO en routes/precios.ts), así que no se pierde el registro. Si el producto tuvo cualquier movimiento, no se borra, como hoy. Se construye junto con remate y precios.
 
-### Nuevo conflicto detectado — Fondo e inversos contables, SIN RESOLVER
+### Fondo e inversos contables — conflicto RESUELTO por el propietario (2026-09-21)
 
-La resolución 2 dice «El Fondo nunca queda en negativo». Otra regla vigente de E10, distinta de los retiros ordinarios, dice que un inverso contable «puede dejar un saldo contable negativo que se muestra expresamente».
+La resolución 2 anterior decía «El Fondo nunca queda en negativo». El propietario acota expresamente esa frase: un retiro nunca deja el Fondo en negativo; una corrección contable de un error de captura sí puede dejarlo en negativo y ese saldo se muestra expresamente, como establece E10.
 
-Estas dos reglas chocan para los inversos. Se reporta sin decidir si se prohíbe ese inverso, si la frase nueva solo trata egresos físicos o si debe cambiar el procedimiento. No se sustituye la regla de inversos por cuenta propia. El conflicto original de desbloqueo de retiros queda resuelto: solo caja; el caso adicional de inversos queda pendiente.
+El conflicto de inversos queda resuelto por esa decisión, no por interpretación del agente. Se conserva el inverso exacto, enlazado y único, sin borrar el original ni presentarlo como nueva entrada/salida física. El desbloqueo de retiros sigue limitado a caja; no habilita retiros del Fondo sobre saldo.
 
-No se detectaron otros conflictos nuevos en las reglas revisadas. La tensión de la purga completa con conservación operativa sigue pendiente y no se amplía su autorización. No se modificaron código, datos, permisos, configuración ni servicios.
+La tensión de la purga completa con conservación operativa sigue pendiente y no se amplía su autorización. La revisión de la ampliación del 2026-09-21 se detalla abajo. No se modificaron código, datos, permisos, configuración ni servicios.
+
+## Decisiones textuales del propietario — ampliación del 2026-09-21
+
+Fuente: mensaje del propietario en esta conversación. **Solo documentación:** no tocar código, escribir en la base ni reiniciar la API. Las decisiones siguientes no acreditan implementación ni activación.
+
+1. Producto sin costo registrado: se le puede poner precio de lista. El piso de precio aplica cuando tenga costo. En venta sigue protegido por el bloqueo del costo del rollo.
+
+2. Marca de remate: ADMIN puede quitarla con motivo obligatorio. Queda en el historial y no se borra la marca original.
+
+3. Cambio de precios: solo ADMIN, configurado como permiso de la matriz, no como restricción fija en código. Corrige en replit.md el texto que describe un guard directo de ADMIN en Precios.
+
+4. Se acota la frase "El Fondo nunca queda en negativo": un retiro nunca deja el Fondo en negativo. Una corrección contable de un error de captura sí puede dejarlo en negativo, y se muestra expresamente, como ya dice la regla de E10. Queda resuelto el conflicto reportado.
+
+### Sustituciones documentales y límites
+
+- **Costo no registrado:** queda resuelta la decisión de negocio sobre asignar precio de lista. No equivale a costo cero, no cambia el cálculo del costo ni habilita la venta de un rollo bloqueado por costo. La implementación y cobertura de otras rutas de edición/importación siguen sin acreditarse.
+- **Retiro de remate:** queda contestado el retiro por ADMIN con motivo e historial, conservando la marca original. No se autoriza borrarla ni reescribirla. La edición de una marca, distinta de retirarla con trazabilidad, no queda contestada; tampoco se cambian aquí los permisos de otros roles ni el permiso configurable de «Marcar remate».
+- **Cambio de precios:** se sustituye la regla documental de guard directo ADMIN por permiso configurable de matriz, configurado para que solo ADMIN cambie precios. No se añade un techo fijo por rol ni se ejecuta cambio alguno de la matriz. No se redefine quién puede consultar precios.
+- **Fondo:** se actualizan todas las notas que dejaban pendiente el conflicto de inversos. La corrección contable no es un retiro ni evidencia de movimiento físico. El Fondo continúa sin habilitarse.
+
+### Otras reglas revisadas — tensión reportada, sin resolver
+
+En «Roles SISTEMAS y CONTADOR», `replit.md` conserva para SISTEMAS la frase **«Opera todo»** y menciona el diagnóstico de precios, pero no distingue allí consulta de cambio de precios. Esa amplitud documental está en tensión con la configuración ahora confirmada de que solo ADMIN cambie precios. Se reporta sin convertir el diagnóstico en permiso de edición, sin retirar facultades de SISTEMAS por cuenta propia y sin modificar esa regla. No se consultaron permisos efectivos en la base.
+
+La regla general de matriz configurable es compatible con la decisión 3; no se interpreta «solo ADMIN» como veto fijo en código. Retirar la marca conservando original e historial es compatible con no borrar evidencia. La tensión anterior de la purga completa y los 69 vetos de rol siguen pendientes, fuera de estas cuatro decisiones.
