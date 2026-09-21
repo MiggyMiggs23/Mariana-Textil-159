@@ -1,0 +1,8 @@
+Pregunta: ¿Autorizas iniciar hoy, lunes 21 de septiembre, o mantienes la liberación para el domingo 27?
+
+Respuesta del propietario:
+Corregir la fecha: autorizo iniciar hoy, 21 de septiembre de 2026
+
+Sin comentarios adicionales.
+
+Esta respuesta corrige únicamente la fecha de la autorización conservada en autorizacion-fase-b-recibida.txt. Se mantienen sus hashes, condiciones, alcance, restricciones y obligación de detenerse ante una discrepancia.
