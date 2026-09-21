@@ -1,0 +1,15 @@
+miguelestza: Paso 1, solo lectura: confirma que el PID 132 ejecuta artifacts/api-server/dist/index.mjs con SHA-256 3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98, completo. Si no coincide, detente y repórtamelo sin hacer nada más.
+
+Paso 2, solo si el paso 1 coincide. Autorización del propietario: guarda este texto tal cual en reports/e2-apertura-limitada/evidencia-a-c/ antes de la primera escritura.
+
+Corrige el error de sintaxis de 01-install-evidence-prepared.sql (CASE dentro de la condición IF, líneas 101-104) y revisa todo el SQL preparado de A+C por el mismo patrón y por cualquier otro error que impida instalarlo.
+
+Autorizo repetir la validación PostgreSQL con la revisión corregida, con las mismas condiciones de la autorización anterior: base aislada y desechable, sin la base de la API ni los clones de E1 y E10, sin reiniciar la API, sin cambiar el bundle y sin abrir captura ni devolución. Registra la revisión exacta, reporta en reports/ y destruye la base al terminar.
+
+Agrega un registro de arranques de la API. Sin tocar la base, sin reiniciar la API y sin cambiar el bundle.
+
+Cada vez que el comando de arranque de la API se ejecute, que agregue una línea a reports/arranques-api.log con: fecha y hora UTC, PID, SHA-256 de artifacts/api-server/dist/index.mjs, modo de arranque efectivo (variables de modo) y resultado del preflight. Solo agrega líneas; nunca reescribe ni borra las anteriores.
+
+Hazlo con un paso propio antes del preflight existente, sin modificar runtime-preflight.mjs, porque su hash está registrado como evidencia. Si no se puede escribir la línea, el arranque sigue igual que hoy: el registro no es una barrera nueva.
+
+Si aplicar el cambio al comando del workflow provocaría un reinicio, no lo apliques: detente y dime cómo quedaría para aplicarlo en el próximo arranque. Reporta en reports/ con la revisión exacta.

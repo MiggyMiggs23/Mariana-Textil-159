@@ -1,0 +1,17 @@
+{
+  "purpose": "Comprobación de solo lectura exigida antes de guardar la autorización y de cualquier cambio",
+  "pid": 132,
+  "cwd": "/home/runner/workspace",
+  "argv": [
+    "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+    "--enable-source-maps",
+    "artifacts/api-server/dist/index.mjs"
+  ],
+  "file": "/home/runner/workspace/artifacts/api-server/dist/index.mjs",
+  "sha256Expected": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+  "sha256Observed": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+  "match": true,
+  "method": "Lectura de /proc/132/cwd y /proc/132/cmdline; SHA-256 de los bytes del archivo resuelto, sin importarlo ni ejecutarlo",
+  "limit": "Comprueba el archivo referenciado por el proceso, no extrae ni compara código ya cargado en memoria",
+  "firstWrite": "autorizacion-propietario-correccion-sql-y-registro-arranques.txt"
+}

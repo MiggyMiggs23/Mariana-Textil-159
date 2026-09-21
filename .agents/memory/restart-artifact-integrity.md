@@ -30,3 +30,16 @@ negativo con un centinela que demuestre que, sin variables, ni siquiera se
 invoca el cliente de base. Conservar además un mensaje runtime inequívoco del
 modo elegido; un preflight externo aprobado no prueba por sí solo qué rama
 elegirá después el bundle.
+
+## Variables del bundle retenido frente a las fuentes nuevas
+
+Identificar los selectores de modo en el bundle autorizado, no únicamente en
+las fuentes actuales, cuando el runtime está congelado.
+
+**Why:** Las fuentes preparadas ya incorporaban modos adicionales que no
+existían en el bundle retenido. Atribuirle esos selectores al proceso habría
+confundido implementación futura con comportamiento efectivo.
+
+**How to apply:** Comprobar primero el hash y examinar el archivo sin ejecutarlo.
+Vincular el registro de variables a esa versión; revisar esa lista cuando se
+autorice otro bundle. No importar el backend para averiguar sus selectores.

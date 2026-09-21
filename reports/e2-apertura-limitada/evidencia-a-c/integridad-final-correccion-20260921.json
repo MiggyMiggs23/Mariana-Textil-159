@@ -1,0 +1,15 @@
+{
+  "observedUtc": "2026-09-21T17:44:22.740Z",
+  "pid": 132,
+  "process": "    PID    PPID                  STARTED COMMAND\n    132      34 Mon Sep 21 17:26:03 2026 /nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node --enable-source-maps artifacts/api-server/dist/index.mjs\n",
+  "args": [
+    "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+    "--enable-source-maps",
+    "artifacts/api-server/dist/index.mjs"
+  ],
+  "bundleSha256": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+  "preflightSha256": "9a87b47b52d3776b10d760bdab6b9f5e71158f75ef71921ec8adbb3e0585de9f",
+  "realStartupLogExists": false,
+  "disposableDirectoryAbsent": true,
+  "disposablePidAbsent": true
+}
