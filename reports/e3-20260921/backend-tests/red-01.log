@@ -1,0 +1,28 @@
+✖ E3-01 FIFO three notes, excess and advance preserve receipt allocation (6.181784ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 347.540412
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:2770
+✖ E3-01 FIFO three notes, excess and advance preserve receipt allocation (6.181784ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  -30000 !== 5000
+  
+      at TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:64:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: -30000,
+    expected: 5000,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

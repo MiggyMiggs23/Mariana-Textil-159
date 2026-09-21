@@ -1,0 +1,27 @@
+✖ E3-06 P6 nonADMIN exact only and no paid target (3.980498ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 363.847299
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:5635
+✖ E3-06 P6 nonADMIN exact only and no paid target (3.980498ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:110:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'throws',
+    diff: 'simple'
+  }

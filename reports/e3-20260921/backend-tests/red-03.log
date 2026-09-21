@@ -1,0 +1,33 @@
+✖ E3-03 simultaneous retry one movement, immutable snapshot, conflicting UUID rejected (9.668144ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 372.725971
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:3890
+✖ E3-03 simultaneous retry one movement, immutable snapshot, conflicting UUID rejected (9.668144ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+      false,
+  +   false
+  -   true
+    ]
+  
+      at TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:86:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ false, false ],
+    expected: [ false, true ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

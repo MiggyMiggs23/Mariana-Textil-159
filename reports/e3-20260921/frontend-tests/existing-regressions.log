@@ -1,0 +1,20 @@
+[frontend-test-runner] 2 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+✔ customer payment receipt exposes excess and resulting favor (95.924325ms)
+✔ cash authorization previews the server-calculated automatic favor application (4129.158446ms)
+ℹ Authorization dialog controls: [{"tag":"BUTTON","role":"combobox","name":"Sitio operativo de origen"}]
+✔ cartera scope serializes global, single-site, and multi-site requests (1.554194ms)
+✔ cartera exports carry the resolved request scope (0.247114ms)
+✔ auth partition prevents an expired session from reusing the previous identity cache (0.320947ms)
+✔ same user id still partitions cartera when role or assigned scope changes (0.100897ms)
+✔ cached global response is rejected for a newly restricted assigned-site user (0.227404ms)
+✔ current assigned-site response is accepted only when metadata proves that scope (0.197717ms)
+✔ CAJA remains restricted even when legacy alcanceConsulta is TODAS (0.150254ms)
+✔ CAJA without an assigned site fails closed, while ADMIN and SUPERVISOR stay unrestricted (0.101397ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7406.555493

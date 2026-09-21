@@ -1,0 +1,34 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+✖ E3 UI caja: real form uses scoped session and flat contract; retry preserves intent (1926.797786ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2233.622806
+
+✖ failing tests:
+
+test at src/components/e3-ui.observable.test.ts:45:2707
+✖ E3 UI caja: real form uses scoped session and flat contract; retry preserves intent (1926.797786ms)
+  AssertionError [ERR_ASSERTION]: E3_CAJA: flat generated request, no double data
+  + actual - expected
+  
+  + undefined
+  - 10000
+  
+      at <anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/components/e3-ui.observable.test.ts:181:12)
+      at async withBrowserFixture (/home/runner/workspace/artifacts/mariana-textil/src/observable-test/browser.ts:490:12)
+      at async fixture (/home/runner/workspace/artifacts/mariana-textil/src/components/e3-ui.observable.test.ts:93:5)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/components/e3-ui.observable.test.ts:159:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 10000,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

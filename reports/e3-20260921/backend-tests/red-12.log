@@ -1,0 +1,30 @@
+✖ E3-12 receipt freezes human identity names and contact across later renames (7.483227ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 367.075675
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:8583
+✖ E3-12 receipt freezes human identity names and contact across later renames (7.483227ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + '7'
+  - 'Cajera de prueba'
+  
+      at TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:170:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '7',
+    expected: 'Cajera de prueba',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,25 @@
+✖ E3-02 stale preview rejects note paid during wait without writes (7.137138ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 376.552489
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:3472
+✖ E3-02 stale preview rejects note paid during wait without writes (7.137138ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:78:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /nueva vista previa/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

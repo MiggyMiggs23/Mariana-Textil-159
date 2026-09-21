@@ -1,0 +1,31 @@
+✖ E3-13 per-site receipt counter increments only on new collection not replay (6.704395ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 363.548166
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:9113
+✖ E3-13 per-site receipt counter increments only on new collection not replay (6.704395ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'E3-00000000-0000-4000-8000-000000000001'
+  - 'E3-2-00000001'
+        ^
+  
+      at TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:181:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'E3-00000000-0000-4000-8000-000000000001',
+    expected: 'E3-2-00000001',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

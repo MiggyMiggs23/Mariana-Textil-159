@@ -1,0 +1,22 @@
+✔ E3-01 FIFO three notes, excess and advance preserve receipt allocation (5.303496ms)
+✔ E3-02 stale preview rejects note paid during wait without writes (1.372643ms)
+✔ E3-03 simultaneous retry one movement, immutable snapshot, conflicting UUID rejected (3.366196ms)
+✔ E3-04 recapture mandatory reason and historical instant, no nature injection, no Caja (1.881714ms)
+✔ E3-05 bank transfer keeps operational session but never E1 cash attribution (0.282164ms)
+✔ E3-06 P6 nonADMIN exact only and no paid target (0.400178ms)
+✔ E3-07 incomplete historic receipt explains fields, no inferred balance (2.464903ms)
+✔ E3-08 mounted router gate blocks every new path before auth or repository (4.112806ms)
+✔ E3-10 preview UUID cannot invalidate another actor or changed intention (1.071396ms)
+✔ E3-11 lookup scope denies cross-site and unassigned cashier while ADMIN can select (0.424122ms)
+✔ E3-12 receipt freezes human identity names and contact across later renames (0.725448ms)
+✔ E3-13 per-site receipt counter increments only on new collection not replay (1.138529ms)
+✔ E3-14 legacy preview and confirmation cannot bypass recapture permission when E3 opens (0.892698ms)
+✔ E3-09 mandatory server-issued preview rejects forged token and expired issuance (1.43529ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 311.902861

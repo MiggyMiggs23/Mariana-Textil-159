@@ -1,0 +1,32 @@
+✖ E3-04 recapture mandatory reason and historical instant, no nature injection, no Caja (5.813727ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 351.179747
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:4486
+✖ E3-04 recapture mandatory reason and historical instant, no nature injection, no Caja (5.813727ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'INGRESO_FISICO'
+  - 'CORRECCION_CONTABLE'
+  
+      at TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:94:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'INGRESO_FISICO',
+    expected: 'CORRECCION_CONTABLE',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

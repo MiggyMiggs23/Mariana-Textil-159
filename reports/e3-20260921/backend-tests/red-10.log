@@ -1,0 +1,25 @@
+✖ E3-10 preview UUID cannot invalidate another actor or changed intention (6.044592ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 354.022077
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:7698
+✖ E3-10 preview UUID cannot invalidate another actor or changed intention (6.044592ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:154:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /otro actor o intención/,
+    operator: 'rejects',
+    diff: 'simple'
+  }

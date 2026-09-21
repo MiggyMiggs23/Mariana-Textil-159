@@ -1,0 +1,16 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+{"measurement":"E3_A5","rows":50,"copies":2,"pages":10,"points":[0,0,594.95996,420]}
+✔ E3 UI geometry: measured long-note pagination preserves two A5 copies and signatures (1814.42132ms)
+✔ E3 UI advance: immutable human names and actual favor, never pending directed (1242.021063ms)
+✔ E3 UI audit: failed request never prints; retry audits before print (1491.500791ms)
+✔ E3 UI off: direct receipt URL remains closed and query disabled (1132.342372ms)
+✔ E3 UI caja: real form uses scoped session and flat contract; retry preserves intent (1741.9247ms)
+✔ E3 UI recapture: real form requires reason and records no Caja session (1704.333559ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9440.887005

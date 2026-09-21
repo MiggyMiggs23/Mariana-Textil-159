@@ -1,0 +1,30 @@
+✖ E3-05 bank transfer keeps operational session but never E1 cash attribution (5.137329ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 384.400549
+
+✖ failing tests:
+
+test at src/lib/e3-collection.test.ts:1:5194
+✖ E3-05 bank transfer keeps operational session but never E1 cash attribution (5.137329ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  5 !== null
+  
+      at TestContext.<anonymous> (/tmp/e3-offline-kmaJjR/src/lib/e3-collection.test.ts:104:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 5,
+    expected: null,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

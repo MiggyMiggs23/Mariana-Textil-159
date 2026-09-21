@@ -1,0 +1,78 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+✖ E3 UI off: direct receipt URL remains closed and query disabled (1980.530509ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2405.525411
+
+✖ failing tests:
+
+test at src/components/e3-ui.observable.test.ts:48:2234
+✖ E3 UI off: direct receipt URL remains closed and query disabled (1980.530509ms)
+  AssertionError [ERR_ASSERTION]: E3_CATALOG: OFF preserves exact existing 32-module catalog and order
+  + actual - expected
+  ... Skipped lines
+  
+    [
+      'dashboard',
+      'pos',
+      'entradas',
+      'salidas',
+  ...
+      'equipos',
+  +   'caja_abonos',
+  +   'clientes_recapturas'
+    ]
+  
+      at fixture.enabled (/home/runner/workspace/artifacts/mariana-textil/src/components/e3-ui.observable.test.ts:160:12)
+      at async withBrowserFixture (/home/runner/workspace/artifacts/mariana-textil/src/observable-test/browser.ts:490:12)
+      at async fixture (/home/runner/workspace/artifacts/mariana-textil/src/components/e3-ui.observable.test.ts:95:5)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/mariana-textil/src/components/e3-ui.observable.test.ts:156:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [
+      'dashboard',        'pos',
+      'entradas',         'salidas',
+      'movimientos',      'etiquetas',
+      'inventario',       'auditoria_inventario',
+      'productos',        'ajustes',
+      'clientes',         'clientes_credito',
+      'clientes_precios', 'clientes_finanzas',
+      'proveedores',      'proveedores_finanzas',
+      'contenedores',     'ubicaciones',
+      'usuarios',         'permisos',
+      'resumen_caja',     'cortes',
+      'cobros_pagos',     'reportes',
+      'conciliacion',     'auditoria',
+      'precios',          'camionetas',
+      'choferes',         'viajes',
+      'salidas_venta',    'equipos',
+      'caja_abonos',      'clientes_recapturas'
+    ],
+    expected: [
+      'dashboard',        'pos',
+      'entradas',         'salidas',
+      'movimientos',      'etiquetas',
+      'inventario',       'auditoria_inventario',
+      'productos',        'ajustes',
+      'clientes',         'clientes_credito',
+      'clientes_precios', 'clientes_finanzas',
+      'proveedores',      'proveedores_finanzas',
+      'contenedores',     'ubicaciones',
+      'usuarios',         'permisos',
+      'resumen_caja',     'cortes',
+      'cobros_pagos',     'reportes',
+      'conciliacion',     'auditoria',
+      'precios',          'camionetas',
+      'choferes',         'viajes',
+      'salidas_venta',    'equipos'
+    ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
