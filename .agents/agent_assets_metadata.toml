@@ -1879,3 +1879,17 @@ mtime_ms = 1790012701520
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/d5874729-5f64-4b02-8628-ac7273c6c71f/b85d2208-d30a-4190-8357-13531053516c"
 storage_version_token = "1790012736102972"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "ycG1Dpe6x_Lrxd5stOIWv"
+uri = "file://reports/e2-validacion-savepoint-20260921.md"
+type = "text"
+title = "Validación A+C con SAVEPOINT: 51/51 PASS"
+description = "Revisión exacta, comprobaciones complementarias, preparación abortada conservada, destrucción de bases e integridad de la API."
+logical_id = "827c2cd0-e49a-4fb9-9a6e-d5aa2d3226eb"
+content_hash = "sha256:5fb760c0a104b97ed23aca550cc20d041f9913c7e63cd73a6dc3f2c0b132fabd"
+size = 16963
+mtime_ms = 1790014588340
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/827c2cd0-e49a-4fb9-9a6e-d5aa2d3226eb/b2102faf-999a-41c6-9965-3d9d53fcafa2"
+storage_version_token = "1790014608592865"
+content_type = "text/markdown"
