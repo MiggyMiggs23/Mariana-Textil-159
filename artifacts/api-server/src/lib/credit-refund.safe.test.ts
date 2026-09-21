@@ -63,7 +63,14 @@ test("reconciled DDL has one proof owner and independent closed refund gates; no
   assert.doesNotMatch(ddl, /CREATE TABLE public\.evidencia_no_aplicada_e2/);
   assert.match(ddl, /REFERENCES public\.evidencia_no_aplicada_e2\(fuente\)/);
   assert.equal((evidenceDdl.match(/CREATE TABLE public\.evidencia_no_aplicada_e2/g) ?? []).length, 1);
-  assert.match(evidenceDdl, /source_xid::bigint <> \(txid_current\(\) % 4294967296\)/);
-  assert.match(evidenceDdl, /retained_xid::bigint <> \(txid_current\(\) % 4294967296\)/);
+  assert.match(evidenceDdl, /source_xid xid8;/);
+  assert.match(evidenceDdl, /retained_xid xid8;/);
+  assert.match(evidenceDdl, /SELECT m\.e2_insert_xid,/);
+  assert.match(evidenceDdl, /SELECT e2_insert_xid, cliente_id, importe/);
+  assert.match(evidenceDdl, /source_xid IS NULL\s+OR source_xid IS DISTINCT FROM pg_current_xact_id\(\)/);
+  assert.match(evidenceDdl, /retained_xid IS NULL\s+OR retained_xid IS DISTINCT FROM pg_current_xact_id\(\)/);
+  assert.match(evidenceDdl, /NEW\.e2_insert_xid := pg_current_xact_id\(\)/);
+  assert.match(evidenceDdl, /NEW\.e2_insert_xid := OLD\.e2_insert_xid/);
+  assert.doesNotMatch(evidenceDdl, /txid_current\(\)|SELECT\s+(?:m\.)?xmin\b/);
   assert.doesNotMatch(evidenceDdl, /CREATE OR REPLACE|DISABLE TRIGGER|DROP TRIGGER/);
 });

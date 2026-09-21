@@ -195,7 +195,9 @@ test("enabled A+C evidence requires its schema before limited startup can listen
   assert.equal(fake.releases, 1);
 });
 
-test("A+C combined inventory supports closed-preserved and rejects each schema drift", async () => {
+// A+C catalog fixture shared only by the four xid8 regression cases.
+// Function bodies come from the SQL under test, never from expected hashes.
+async function evidenceRows() {
   const sqlSource = await readFile(new URL("../../../../reports/e2-apertura-limitada/evidencia-a-c/01-install-evidence-prepared.sql", import.meta.url), "utf8");
   const bodies = new Map([...sqlSource.matchAll(/CREATE FUNCTION public\.(\w+)\([\s\S]*?AS \$function\$([\s\S]*?)\$function\$;/g)]
     .map((match) => [match[1], match[2]]));
@@ -208,6 +210,8 @@ test("A+C combined inventory supports closed-preserved and rejects each schema d
     tgenabled: "O",
   };
   const triggers = [
+    ["movimientos_credito", "e2_source_insert_transaction", 23, "e2_stamp_insert_transaction"],
+    ["cobros_credito_pendientes_e1", "e2_retained_insert_transaction", 23, "e2_stamp_insert_transaction"],
     ["finalizaciones_abono_e2", "e2_finalization_immutable", 58, "e2_reject_evidence_mutation"],
     ["finalizaciones_abono_e2", "e2_validate_abono_finalization", 7, "e2_validate_abono_finalization"],
     ["evidencia_no_aplicada_e2", "e2_proof_immutable", 58, "e2_reject_evidence_mutation"],
@@ -225,8 +229,8 @@ test("A+C combined inventory supports closed-preserved and rejects each schema d
     if (sql.includes("information_schema.columns") && sql.includes("'finalizaciones_abono_e2'")) {
       return ABONO_EVIDENCE_COLUMNS.map(([table_name, column_name, data_type]) => ({
         table_name, column_name, data_type,
-        is_nullable: table_name === "evidencia_no_aplicada_e2"
-          && (ABONO_EVIDENCE_NULLABLE_COLUMNS as readonly string[]).includes(column_name) ? "YES" : "NO",
+        is_nullable: column_name === "e2_insert_xid" || (table_name === "evidencia_no_aplicada_e2"
+          && (ABONO_EVIDENCE_NULLABLE_COLUMNS as readonly string[]).includes(column_name)) ? "YES" : "NO",
         numeric_precision: data_type === "numeric" ? 12 : null,
         numeric_scale: data_type === "numeric" ? 2 : null,
         column_default: column_name === "created_at" ? "transaction_timestamp()"
@@ -246,9 +250,17 @@ test("A+C combined inventory supports closed-preserved and rejects each schema d
       identity_arguments: values?.[0] === "e2_attest_new_retained" ? "p_clave uuid"
         : "p_abono_id integer, p_productor text, p_resultado text, p_aplicado_cents bigint, p_evaluacion jsonb, p_contrato_revision text",
     }];
-    if (sql.includes("pg_trigger")) return [...rows, triggers[4]!];
+    if (sql.includes("pg_trigger")) return [
+      ...rows,
+      triggers.find(row => row.trigger_name === "e2_abono_finalization_complete")!,
+    ];
     return rows;
   };
+  return rowsFor;
+}
+
+test("A+C combined inventory supports closed-preserved and rejects each schema drift", async () => {
+  const rowsFor = await evidenceRows();
   for (const requireAbonoEvidence of [false, true]) {
     const fake = fakePool(rowsFor);
     await runLimitedStartupPreflight(fake.pool, approval, LIMITED_SCHEMA_MANIFEST, { requireAbonoEvidence });
@@ -293,7 +305,7 @@ test("A+C combined inventory supports closed-preserved and rejects each schema d
 });
 
 test("read-only preflight commits only after schema and all three old guards match", async () => {
-  const fake = fakePool();
+  const fake = fakePool(await evidenceRows());
   const result = await runLimitedStartupPreflight(fake.pool, approval);
   assert.equal(result.checked.guards, 11);
   assert.match(fake.calls[0], /^BEGIN TRANSACTION READ ONLY$/);
@@ -337,9 +349,13 @@ test("full traffic manifest rejects missing audit, cash-exit, location, provider
 });
 
 test("dropping the permanent session/site/nature E1 context trigger fails closed", async () => {
-  const fake = fakePool((sql, rows) => sql.includes("pg_trigger")
-    ? rows.filter((row) => row.trigger_name !== "movimientos_validos_e1")
-    : rows);
+  const rowsFor = await evidenceRows();
+  const fake = fakePool((sql, rows, values) => {
+    const catalog = rowsFor(sql, rows, values);
+    return sql.includes("pg_trigger")
+      ? catalog.filter((row) => row.trigger_name !== "movimientos_validos_e1")
+      : catalog;
+  });
   await assert.rejects(
     runLimitedStartupPreflight(fake.pool, approval),
     /permanent E1 trigger inventory mismatch/,
@@ -348,11 +364,14 @@ test("dropping the permanent session/site/nature E1 context trigger fails closed
 });
 
 test("a wrong E1 guard fails closed", async () => {
-  const fake = fakePool((sql, rows) => sql.includes("pg_trigger")
-    ? rows.map((row) => row.trigger_name === "zz_e1_pending_receipts_closed"
-      ? { ...row, function_source: "RETURN NEW" }
-      : row)
-    : rows);
+  const rowsFor = await evidenceRows();
+  const fake = fakePool((sql, rows, values) => {
+    const catalog = rowsFor(sql, rows, values);
+    return sql.includes("pg_trigger")
+      ? catalog.map((row) => row.trigger_name === "zz_e1_pending_receipts_closed"
+        ? { ...row, function_source: "RETURN NEW" } : row)
+      : catalog;
+  });
   await assert.rejects(runLimitedStartupPreflight(fake.pool, approval), /guard E1P01/);
   assert.equal(fake.calls.includes("COMMIT"), false);
 });
