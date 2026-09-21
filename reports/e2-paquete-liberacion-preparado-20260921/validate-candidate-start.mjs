@@ -68,6 +68,7 @@ const sql = input => command("psql", ["-X", "-q", "-A", "-t", "-v", "ON_ERROR_ST
 const results = { databasePath: base, apiPort: 18092, pgPort: 55439, started: false, executedAgainst: "new local empty synthetic catalog only" };
 results.revision = control ? "7cb77f8cfc6287fa51325a25122c48af392a7ada" : "31804125a1e752bde128d72e9fd44d23972ffff1";
 results.bundleDirectory = bundleDirectory;
+results.runtimeFixCommit = control ? null : "226509cae4d6e850782763a0f4d15139ddedd568";
 let pgStarted = false;
 let child;
 let fd;
@@ -107,6 +108,8 @@ try {
     } catch {}
     await new Promise(resolve => setTimeout(resolve, 200));
   }
+  results.preflightProofObserved = /^E2_COMPLETE_RELEASE_PREFLIGHT=PASS \{/m.test(fs.readFileSync(log, "utf8"));
+  assert.equal(results.preflightProofObserved, true, "Actual startup log lacks positive preflight proof.");
   assert.equal(health?.status, 200, "Candidate health deadline exceeded.");
   results.started = true;
   results.health = health;

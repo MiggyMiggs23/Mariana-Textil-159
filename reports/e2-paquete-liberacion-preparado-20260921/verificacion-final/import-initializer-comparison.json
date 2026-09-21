@@ -1,0 +1,23 @@
+{
+  "control": {
+    "file": "artifacts/api-server/dist-e2-control-7cb77f8-20260927/index.mjs",
+    "sha256": "c18d56d626bfe5f22824e6321583ff7c0ccb76d597f4f9e3032d2fba4f1e050e",
+    "lazyAppInitializer": false,
+    "asyncInventoryInitializer": false,
+    "asyncReservationInitializer": false
+  },
+  "before": {
+    "file": "reports/e2-paquete-liberacion-preparado-20260921/candidato-antes-fix-import/index.mjs",
+    "sha256": "1102baeec9de7d7c7773f142a835f39234ec1ba2f278373cdedcd4814ff2feb3",
+    "lazyAppInitializer": true,
+    "asyncInventoryInitializer": true,
+    "asyncReservationInitializer": true
+  },
+  "after": {
+    "file": "artifacts/api-server/dist-e2-20260927/index.mjs",
+    "sha256": "008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5",
+    "lazyAppInitializer": false,
+    "asyncInventoryInitializer": false,
+    "asyncReservationInitializer": false
+  }
+}

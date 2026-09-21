@@ -1,0 +1,18 @@
+✔ symlink CLI must execute checks and reject missing inspection environment (84.812253ms)
+✔ exec same PID, inspection mode, exact bundle hash and append log (489.105466ms)
+✔ preflight failure stays fatal with original exit (102.560438ms)
+✔ bundle hash failure prevents exec (54.865263ms)
+✔ preflight hash failure prevents exec (65.76152ms)
+✔ manifest hash failure prevents exec (58.053228ms)
+✔ missing hash failure prevents exec (56.388989ms)
+✔ post-preflight bundle change blocks exec (106.229945ms)
+✔ append failure never blocks stub exec or masks fatal preflight (379.706079ms)
+✔ zero exit without positive preflight proof is fatal (88.374049ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1571.727738

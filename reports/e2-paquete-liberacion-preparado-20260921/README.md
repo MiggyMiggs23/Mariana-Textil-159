@@ -1,6 +1,6 @@
 # Preparación aislada de liberación E2 — CLOSED, candidato en directorio definitivo
 
-**Fecha:** 2026-09-21. **Estado: NO AUTORIZABLE — ARRANQUE CANDIDATO FALLIDO; CONTROL AUTORIZADO PENDIENTE; NO LIBERAR.**
+**Fecha:** 2026-09-21. **Estado: CONTROL REAL PASS; CORRECCIÓN MÍNIMA COMPILADA, ARRANQUE CORREGIDO PENDIENTE; NO LIBERAR.**
 
 La autorización íntegra está en `autorizacion-propietario.txt`; la aceptación
 posterior de Entradas está en `aclaracion-entradas.txt`. Se permite preparación
@@ -28,7 +28,12 @@ La nueva autorización `autorizacion-control-y-preflight.txt` permite probar
 7cb77f8 y corregir independientemente el preflight. Este último ya ejecuta
 su CLI por symlink y el wrapper exige prueba positiva; regresión 1→0,
 20 comprobaciones PostgreSQL y 9 tests de wrapper PASS. No se modificó runtime.
-El control fue compilado, pero su ejecución corresponde al agente principal.
+El agente principal obtuvo control PASS y candidato anterior FAIL con el mismo
+ensayo y preflight positivo. Aplicó por tanto la autorización condicional de
+corrección mínima: commit `226509cae4d6e850782763a0f4d15139ddedd568` restaura
+la importación eager de app; no modifica el ciclo antiguo ni los awaits de DB.
+El candidato corregido ya pasó build, typecheck raíz y 119 tests offline;
+su arranque real queda para el agente principal. Ver documento 11.
 Véase
 `10-fallo-arranque-real.md`; no basta completar la hora para autorizar fase B.
 
@@ -45,10 +50,12 @@ Véase
 - Bundle inicial histórico: `candidato/dist/index.mjs`, SHA-256
   `f22be73ed8c17ed96d6f22cd62a126bf965a59c55781446fcd1a03c8c16e002c`.
   No se sustituyó el bundle activo.
-- Bundle final preparado: `artifacts/api-server/dist-e2-20260927/index.mjs`,
-  SHA-256 `1102baeec9de7d7c7773f142a835f39234ec1ba2f278373cdedcd4814ff2feb3`.
+- Bundle final corregido: `artifacts/api-server/dist-e2-20260927/index.mjs`,
+  SHA-256 `008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5`.
+  Versión anterior completa preservada en `candidato-antes-fix-import/`.
   Overlays: tests `07cc804a35b6bba7f3ed640129231ba7434a8767` y salida de build
   `e0f1c227e013c59987c06604e21a8036e73c82a5`. No se instala desde HEAD arbitrario.
+  Se añade el overlay de importación/test `226509cae4d6e850782763a0f4d15139ddedd568`.
 
 ## Alcance propuesto
 
@@ -79,6 +86,7 @@ cierres antiguos, pruebas financieras ficticias ni inicializadores escritores.
 | [08-directorio-final-preflight-y-recuperacion.md](08-directorio-final-preflight-y-recuperacion.md) | Estado actual, verificaciones, respaldo y recuperación |
 | [09-fase-b-texto.md](09-fase-b-texto.md) | Borrador bloqueado, NO AUTORIZABLE |
 | [10-fallo-arranque-real.md](10-fallo-arranque-real.md) | Fallo observado, diagnóstico, evidencia y limpieza |
+| [11-control-y-correccion-import.md](11-control-y-correccion-import.md) | Control PASS, delta causal y corrección mínima pendiente de arranque real |
 | [manifest-final.json](manifest-final.json) | Procedencia y hashes; fallo real y bloqueos explícitos |
 | [sql/](sql/) | Copias exactas de instalación, reversión y preflight A+C |
 | [anexos/inventario-diferencias-fuentes.txt](anexos/inventario-diferencias-fuentes.txt) | Diferencias entre fuente del bundle retenido y candidato |

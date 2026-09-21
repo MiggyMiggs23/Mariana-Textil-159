@@ -1,0 +1,29 @@
+✖ actual index source keeps limited preflight before listen and suppresses every startup writer (19.100215ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1682.251679
+
+✖ failing tests:
+
+test at artifacts/api-server/src/lib/limited-startup-preflight.test.ts:1:14959
+✖ actual index source keeps limited preflight before listen and suppresses every startup writer (19.100215ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(appImport >= 0 && appImport < preflight)
+  
+      at assertions (/home/runner/workspace/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:397:12)
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:404:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -1,5 +1,11 @@
 # 10. Arranque real fallido — NO AUTORIZABLE / STOP
 
+**Continuación resuelta del control:** ver documento 11. El agente principal
+confirmó control PASS y candidato anterior FAIL con el mismo ensayo. La
+corrección condicional autorizada se limita al nuevo límite de importación
+lazy en index.ts, no al ciclo preexistente. El candidato corregido está
+compilado; falta su verificación real. Lo siguiente conserva el historial.
+
 ## Rectificación y autorización posterior de control
 
 La atribución causal inicial fue prematura. El ciclo de fuentes inventario ↔

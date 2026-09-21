@@ -1,5 +1,12 @@
 # Directorio definitivo, verificaciones y recuperación
 
+**Actualización posterior:** control 7cb77f8 PASS y candidato anterior FAIL,
+ambos ejecutados por el agente principal con preflight real. Se cumple la
+condición para el fix mínimo `226509cae4d6e850782763a0f4d15139ddedd568`.
+El nuevo candidato está compilado y validado sin base; su arranque real está
+pendiente. El documento 11 y manifest-final.json sustituyen las referencias
+históricas de control pendiente y hashes anteriores que siguen abajo.
+
 **NO AUTORIZABLE — fallo de arranque candidato; control 7cb77f8 autorizado
 pendiente.** El documento 10 rectifica la atribución causal inicial: el ciclo
 de fuentes preexistía y debe contrastarse antes de decidir sobre runtime.

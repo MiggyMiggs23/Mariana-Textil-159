@@ -1,0 +1,13 @@
+
+  ...nner/workspace/artifacts/api-server/dist-e2-20260927/index.mjs    8.4mb ⚠️
+  ...orkspace/artifacts/api-server/dist-e2-20260927/pino-worker.mjs  155.1kb
+  .../workspace/artifacts/api-server/dist-e2-20260927/pino-file.mjs  143.5kb
+  ...orkspace/artifacts/api-server/dist-e2-20260927/pino-pretty.mjs  116.4kb
+  ...artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs    7.5kb
+  .../workspace/artifacts/api-server/dist-e2-20260927/index.mjs.map   14.6mb
+  ...pace/artifacts/api-server/dist-e2-20260927/pino-worker.mjs.map  256.9kb
+  ...kspace/artifacts/api-server/dist-e2-20260927/pino-file.mjs.map  229.1kb
+  ...pace/artifacts/api-server/dist-e2-20260927/pino-pretty.mjs.map  203.6kb
+  ...facts/api-server/dist-e2-20260927/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 2633ms
