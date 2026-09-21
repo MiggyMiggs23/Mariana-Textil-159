@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: dropping the permanent session/site/nature E1 context trigger fails closed
+not ok 1 - dropping the permanent session/site/nature E1 context trigger fails closed
+  ---
+  duration_ms: 14.688324
+  type: 'test'
+  location: '/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:1:13742'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /permanent E1 trigger inventory mismatch/. Input:
+    
+    'Error: Limited startup A+C evidence trigger e2_validate_abono_finalization mismatch.'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+  error: 'Limited startup A+C evidence trigger e2_validate_abono_finalization mismatch.'
+  stack: |-
+    runLimitedStartupPreflight (/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.ts:482:17)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:359:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:359:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 534.529939

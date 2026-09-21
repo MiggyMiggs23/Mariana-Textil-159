@@ -1,0 +1,13 @@
+{
+  "revision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "tree": "6337df3ae1dc67b8de91fabda3cbf73dd255cf59",
+  "source": "/tmp/e2-release-preparation-A9XYf6/source",
+  "environment": [
+    "HOME",
+    "LANG",
+    "PATH",
+    "PWD",
+    "SHLVL"
+  ],
+  "dependencies": "Installed external packages reused read-only; workspace packages remapped to exact export."
+}

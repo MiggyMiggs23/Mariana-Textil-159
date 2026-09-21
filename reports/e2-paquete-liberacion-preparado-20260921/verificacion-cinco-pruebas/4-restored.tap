@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: dropping the permanent session/site/nature E1 context trigger fails closed
+ok 1 - dropping the permanent session/site/nature E1 context trigger fails closed
+  ---
+  duration_ms: 9.564626
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 571.067279

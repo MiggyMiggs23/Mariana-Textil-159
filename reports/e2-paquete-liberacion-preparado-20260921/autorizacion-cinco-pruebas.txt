@@ -1,0 +1,7 @@
+Autorización del propietario. Guarda este texto tal cual en reports/e2-paquete-liberacion-preparado-20260921/ antes de la primera escritura.
+
+Autorizo actualizar únicamente las 5 pruebas reportadas en 06-resultado-preparacion.md: la que exige la comparación antigua de transacciones y las cuatro con fixtures del preflight anteriores a xid8. Debe ser un commit aparte, sin tocar ningún archivo fuente que entre al bundle; el bundle compilado debe salir con el mismo hash.
+
+Cada prueba actualizada debe fallar si se reintroduce la comparación con xmin/txid_current() y pasar con la procedencia xid8. Demuéstralo con el defecto introducido y restaurado. Si alguna revela un defecto real del código, no lo corrijas: detente y repórtamelo.
+
+Después continúa con la preparación ya autorizada: wrapper y preflight finales, su validación en PostgreSQL desechable, manifiesto completo y texto de fase B.

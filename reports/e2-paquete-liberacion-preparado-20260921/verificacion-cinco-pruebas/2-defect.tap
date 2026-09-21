@@ -1,0 +1,25 @@
+TAP version 13
+# Subtest: A+C combined inventory supports closed-preserved and rejects each schema drift
+not ok 1 - A+C combined inventory supports closed-preserved and rejects each schema drift
+  ---
+  duration_ms: 27.978583
+  type: 'test'
+  location: '/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:1:10112'
+  failureType: 'testCodeFailure'
+  error: 'Limited startup A+C evidence trigger e2_validate_abono_finalization mismatch.'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    runLimitedStartupPreflight (/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.ts:482:17)
+    async TestContext.<anonymous> (/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:266:5)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 642.249931

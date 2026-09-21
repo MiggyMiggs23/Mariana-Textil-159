@@ -1,4 +1,4 @@
-# Preparación aislada de liberación E2 — CLOSED, detenida por pruebas
+# Preparación aislada de liberación E2 — CLOSED, detenida por portabilidad de workers
 
 **Fecha:** 2026-09-21. **Estado: CANDIDATO COMPILADO; VERIFICACIÓN INCOMPLETA; NO LIBERAR.**
 
@@ -7,9 +7,16 @@ posterior de Entradas está en `aclaracion-entradas.txt`. Se permite preparació
 aislada y las pruebas expresamente enumeradas, no liberación ni conexión a la
 base de la API. Se compiló la revisión exacta en una exportación aislada,
 sin credenciales ni archivos `.env`, y se ejecutaron typecheck raíz y selección
-sin base. El typecheck pasó; las pruebas terminaron con **114 PASS / 5 FAIL**.
-Véase `06-resultado-preparacion.md`. No se corrigieron fuentes para ocultar esos
-fallos ni se declara terminado el preflight, wrapper, manifiesto final o fase B.
+sin base. El typecheck inicial pasó; las pruebas iniciales terminaron con
+**114 PASS / 5 FAIL**. El propietario autorizó corregir únicamente esas cinco
+pruebas en commit separado: los cinco casos demostraron verde/rojo/verde y ambos
+archivos aprobaron 17/17. La recompilación en la ruta original reprodujo
+exactamente el hash exigido; typecheck raíz pasó con 0 errores. El bloqueo
+restante es que Pino incrusta rutas absolutas temporales para sus workers,
+que no se relocalizan al copiar el bundle. Se comprobó solo estáticamente,
+sin ejecutar la aplicación ni corregir el plugin.
+Véase `07-cinco-pruebas-y-recompilacion.md`.
+No se declara terminado el preflight, wrapper, manifiesto final o fase B.
 
 ## Revisiones exactas
 

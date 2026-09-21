@@ -1,0 +1,25 @@
+TAP version 13
+# Subtest: read-only preflight commits only after schema and all three old guards match
+not ok 1 - read-only preflight commits only after schema and all three old guards match
+  ---
+  duration_ms: 12.556322
+  type: 'test'
+  location: '/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:1:12160'
+  failureType: 'testCodeFailure'
+  error: 'Limited startup A+C evidence trigger e2_validate_abono_finalization mismatch.'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    runLimitedStartupPreflight (/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.ts:482:17)
+    async TestContext.<anonymous> (/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/src/lib/limited-startup-preflight.test.ts:309:18)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 496.840951

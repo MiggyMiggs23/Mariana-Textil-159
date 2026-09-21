@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: read-only preflight commits only after schema and all three old guards match
+ok 1 - read-only preflight commits only after schema and all three old guards match
+  ---
+  duration_ms: 10.55752
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 455.136686

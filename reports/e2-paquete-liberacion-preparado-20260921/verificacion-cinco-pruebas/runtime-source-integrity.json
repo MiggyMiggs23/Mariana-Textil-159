@@ -1,0 +1,10 @@
+{
+  "revision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "testOverlayCommit": "07cc804a35b6bba7f3ed640129231ba7434a8767",
+  "checked": 1259,
+  "excluded": [
+    "artifacts/api-server/src/lib/credit-refund.safe.test.ts",
+    "artifacts/api-server/src/lib/limited-startup-preflight.test.ts"
+  ],
+  "differences": []
+}

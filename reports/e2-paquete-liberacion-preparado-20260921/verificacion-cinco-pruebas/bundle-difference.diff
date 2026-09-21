@@ -1,0 +1,11 @@
+--- reports/e2-paquete-liberacion-preparado-20260921/candidato/dist/index.mjs	2026-09-21 19:53:10.301995500 +0000
++++ /tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/dist/index.mjs	2026-09-21 20:53:08.500970298 +0000
+@@ -35957,7 +35957,7 @@
+     function pinoBundlerAbsolutePath(p) {
+       try {
+         const path = __require("path");
+-        const outputDir = "/tmp/e2-release-preparation-adkcNR/source/artifacts/api-server/dist";
++        const outputDir = "/tmp/e2-release-preparation-A9XYf6/source/artifacts/api-server/dist";
+         return path.resolve(outputDir, p.replace(/^\.\//, ""));
+       } catch (e) {
+         const f = new Function("p", "return new URL(p, import.meta.url).pathname");

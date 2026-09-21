@@ -1,0 +1,127 @@
+{
+  "originalSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+  "mutantSha256": "9fd4345e2c78a57747146648760164b886efe037e9676b5c15782e849b2067bd",
+  "restoredSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+  "results": [
+    {
+      "file": "src/lib/credit-refund.safe.test.ts",
+      "name": "reconciled DDL has one proof owner and independent closed refund gates; no E1 replacement",
+      "states": [
+        {
+          "state": "positive",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        },
+        {
+          "state": "defect",
+          "exit": 1,
+          "sqlSha256": "9fd4345e2c78a57747146648760164b886efe037e9676b5c15782e849b2067bd",
+          "semanticFailure": true
+        },
+        {
+          "state": "restored",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        }
+      ]
+    },
+    {
+      "file": "src/lib/limited-startup-preflight.test.ts",
+      "name": "A+C combined inventory supports closed-preserved and rejects each schema drift",
+      "states": [
+        {
+          "state": "positive",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        },
+        {
+          "state": "defect",
+          "exit": 1,
+          "sqlSha256": "9fd4345e2c78a57747146648760164b886efe037e9676b5c15782e849b2067bd",
+          "semanticFailure": true
+        },
+        {
+          "state": "restored",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        }
+      ]
+    },
+    {
+      "file": "src/lib/limited-startup-preflight.test.ts",
+      "name": "read-only preflight commits only after schema and all three old guards match",
+      "states": [
+        {
+          "state": "positive",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        },
+        {
+          "state": "defect",
+          "exit": 1,
+          "sqlSha256": "9fd4345e2c78a57747146648760164b886efe037e9676b5c15782e849b2067bd",
+          "semanticFailure": true
+        },
+        {
+          "state": "restored",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        }
+      ]
+    },
+    {
+      "file": "src/lib/limited-startup-preflight.test.ts",
+      "name": "dropping the permanent session/site/nature E1 context trigger fails closed",
+      "states": [
+        {
+          "state": "positive",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        },
+        {
+          "state": "defect",
+          "exit": 1,
+          "sqlSha256": "9fd4345e2c78a57747146648760164b886efe037e9676b5c15782e849b2067bd",
+          "semanticFailure": true
+        },
+        {
+          "state": "restored",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        }
+      ]
+    },
+    {
+      "file": "src/lib/limited-startup-preflight.test.ts",
+      "name": "a wrong E1 guard fails closed",
+      "states": [
+        {
+          "state": "positive",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        },
+        {
+          "state": "defect",
+          "exit": 1,
+          "sqlSha256": "9fd4345e2c78a57747146648760164b886efe037e9676b5c15782e849b2067bd",
+          "semanticFailure": true
+        },
+        {
+          "state": "restored",
+          "exit": 0,
+          "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+          "semanticFailure": true
+        }
+      ]
+    }
+  ]
+}
