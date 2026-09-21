@@ -1,11 +1,13 @@
 import { useRoute, Link } from "wouter";
-import { useGetClientePagoDetalle, getGetClientePagoDetalleQueryKey, type ClientePagoDetalle } from "@workspace/api-client-react";
+import { useGetClientePagoDetalle, getGetClientePagoDetalleQueryKey, useGetCurrentUser, type ClientePagoDetalle } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatNumber } from "@workspace/number-format";
-import { ArrowLeft, PlusCircle, Undo2, SlidersHorizontal, User, Calendar, FileText, Activity, Clock, ShieldAlert, FileQuestion } from "lucide-react";
+import { ArrowLeft, PlusCircle, Undo2, SlidersHorizontal, User, Calendar, FileText, Activity, Clock, ShieldAlert, FileQuestion, Printer } from "lucide-react";
+import { useE3ListRecibosCliente } from "@/hooks/use-e3";
+import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Color semantics:
@@ -34,6 +36,10 @@ export default function ClienteMovimientoDetail() {
   const [, params] = useRoute("/clientes/:id/movimientos/:movimientoId");
   const clienteId = Number(params?.id);
   const movimientoId = Number(params?.movimientoId);
+
+  const { data: user } = useGetCurrentUser();
+  const { data: recibosE3 } = useE3ListRecibosCliente(clienteId, E3_ENABLED && user?.rol === "ADMIN");
+  const reciboVinculado = recibosE3?.find(r => r.movimientoId === movimientoId);
 
   const query = useGetClientePagoDetalle(clienteId, movimientoId, {
     query: {
@@ -122,7 +128,7 @@ export default function ClienteMovimientoDetail() {
   return (
     <AppLayout>
       <div className="mx-auto max-w-5xl space-y-6 pt-4 pb-12">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center justify-between gap-3">
           <Link
             href={`/clientes/${clienteId}?tab=estado&movimientoId=${movimientoId}`}
             className="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
@@ -130,6 +136,17 @@ export default function ClienteMovimientoDetail() {
             <ArrowLeft className="mr-2 h-4 w-4" />
             Regresar al cliente
           </Link>
+
+          {E3_ENABLED && user?.rol === "ADMIN" && reciboVinculado && (
+            <Link
+              href={`/recibos-e3/${reciboVinculado.folio}`}
+              className="inline-flex h-9 items-center justify-center whitespace-nowrap rounded-md px-4 text-sm font-bold bg-sidebar text-white shadow-sm transition-colors hover:bg-sidebar/90"
+              data-testid="link-e3-receipt"
+            >
+              <Printer className="mr-2 h-4 w-4" />
+              Ver Recibo
+            </Link>
+          )}
         </div>
 
         <Card className={`border-2 shadow-sm ${typeStyles[detalle.tipo!]}`}>

@@ -5,6 +5,165 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export interface E3ContextSession {
+  id: number;
+  ubicacionId: number;
+  fechaOperativa: string;
+}
+
+export interface E3ContextSite {
+  id: number;
+  nombre: string;
+  sesiones: E3ContextSession[];
+}
+
+export interface E3ContextClient {
+  id: number;
+  nombre: string;
+  /** @nullable */
+  telefono: string | null;
+}
+
+export interface E3CollectionContext {
+  sitios: E3ContextSite[];
+  clientes: E3ContextClient[];
+}
+
+export type E3CollectionInputFormaPago = typeof E3CollectionInputFormaPago[keyof typeof E3CollectionInputFormaPago];
+
+
+export const E3CollectionInputFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+export type E3CollectionInputCuentaDestino = typeof E3CollectionInputCuentaDestino[keyof typeof E3CollectionInputCuentaDestino];
+
+
+export const E3CollectionInputCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export interface E3CollectionInput {
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  clienteId: number;
+  /**
+     * @minimum 1
+     * @maximum 999999999999
+     */
+  importeCentavos: number;
+  formaPago: E3CollectionInputFormaPago;
+  cuentaDestino: E3CollectionInputCuentaDestino;
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  sitioId: number;
+  /**
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId: number | null;
+  operacionClave: string;
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  motivo?: string;
+  fechaRecepcion?: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  previewToken?: string;
+}
+
+export interface E3CollectionAllocation {
+  movimientoVentaId: number;
+  /** @nullable */
+  ticketId: number | null;
+  /** @nullable */
+  folio: number | null;
+  aplicadoCentavos: number;
+  saldoAntesCentavos: number;
+  saldoDespuesCentavos: number;
+}
+
+export type E3CollectionSummaryOrigen = typeof E3CollectionSummaryOrigen[keyof typeof E3CollectionSummaryOrigen];
+
+
+export const E3CollectionSummaryOrigen = {
+  CAJA: 'CAJA',
+  RECAPTURA: 'RECAPTURA',
+} as const;
+
+export interface E3CollectionSummary {
+  clienteId: number;
+  importeCentavos: number;
+  asignaciones: E3CollectionAllocation[];
+  remanenteCentavos: number;
+  saldoAFavorCentavos: number;
+  deudaCentavos: number;
+  origen: E3CollectionSummaryOrigen;
+}
+
+export type E3CollectionPreview = E3CollectionSummary & {
+  previewToken: string;
+};
+
+export type E3ReceiptVersion = typeof E3ReceiptVersion[keyof typeof E3ReceiptVersion];
+
+
+export const E3ReceiptVersion = {
+  NUMBER_1: 1,
+} as const;
+
+export type E3ReceiptFormaPago = typeof E3ReceiptFormaPago[keyof typeof E3ReceiptFormaPago];
+
+
+export const E3ReceiptFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+export type E3Receipt = E3CollectionSummary & ({
+  version: E3ReceiptVersion;
+  folio: string;
+  movimientoId: number;
+  clienteNombre: string;
+  /** @nullable */
+  clienteTelefono: string | null;
+  /** @nullable */
+  clienteRfc: string | null;
+  sitioNombre: string;
+  actorNombre: string;
+  formaPago: E3ReceiptFormaPago;
+  cuentaDestino: string;
+  sitioId: number;
+  /** @nullable */
+  sesionCajaId: number | null;
+  recibidoEn: string;
+  registradoEn: string;
+  actorId: number;
+  /** @nullable */
+  motivo: string | null;
+});
+
+export interface E3CollectionResult {
+  recibo: E3Receipt;
+  replay: boolean;
+}
+
+export interface E3PrintInput {
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  motivo: string;
+}
+
 /**
  * @maxLength 20
  * @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$
@@ -7954,6 +8113,30 @@ export type AnalyticsDesdeParameter = string;
 export type AnalyticsHastaParameter = string;
 
 export type AnalyticsUbicacionIdParameter = number;
+
+export type GetCajaAbonoE3ContextParams = {
+/**
+ * @maxLength 100
+ */
+buscar?: string;
+/**
+ * @minimum 1
+ */
+sitioId?: number;
+};
+
+export type ListClienteRecibosE3Params = {
+movimientoId?: number;
+sesionCajaId?: number;
+};
+
+export type ListCajaRecibosE3Params = {
+sesionCajaId: number;
+};
+
+export type RecordReciboE3Print200 = {
+  registrado: boolean;
+};
 
 export type ListSolicitudesPagoDirigidoParams = {
 tipo?: ListSolicitudesPagoDirigidoTipo;

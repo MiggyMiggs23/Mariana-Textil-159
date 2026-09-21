@@ -1,0 +1,79 @@
+{
+  "sourceBaseRevision": "55ac9c70181a01e6b42c56a8beb334417f6512f0",
+  "isolation": "/tmp/e3-offline-kmaJjR",
+  "database": "no connections; inherited credentials removed; offline socket/process guard",
+  "greenBefore": 14,
+  "greenRestored": 14,
+  "mutations": [
+    {
+      "test": "E3-01",
+      "defect": "lost collection remainder",
+      "redExit": 1
+    },
+    {
+      "test": "E3-02",
+      "defect": "stale preview accepted",
+      "redExit": 1
+    },
+    {
+      "test": "E3-03",
+      "defect": "retry misclassified as new",
+      "redExit": 1
+    },
+    {
+      "test": "E3-04",
+      "defect": "recapture classified as physical money",
+      "redExit": 1
+    },
+    {
+      "test": "E3-05",
+      "defect": "bank transfer assigned physical cash session",
+      "redExit": 1
+    },
+    {
+      "test": "E3-06",
+      "defect": "P6 short payment accepted",
+      "redExit": 1
+    },
+    {
+      "test": "E3-07",
+      "defect": "historic missing balance reconstructed as zero",
+      "redExit": 1
+    },
+    {
+      "test": "E3-08",
+      "defect": "source release gate bypassed",
+      "redExit": 1
+    },
+    {
+      "test": "E3-09",
+      "defect": "forged or expired preview accepted without issuance",
+      "redExit": 1
+    },
+    {
+      "test": "E3-10",
+      "defect": "another actor overwrites pending preview intent",
+      "redExit": 1
+    },
+    {
+      "test": "E3-11",
+      "defect": "cashier reads another site",
+      "redExit": 1
+    },
+    {
+      "test": "E3-12",
+      "defect": "internal actor id printed instead of frozen name",
+      "redExit": 1
+    },
+    {
+      "test": "E3-13",
+      "defect": "UUID substituted for per-site folio counter",
+      "redExit": 1
+    },
+    {
+      "test": "E3-14",
+      "defect": "legacy capture bypasses dedicated recapture permission",
+      "redExit": 1
+    }
+  ]
+}

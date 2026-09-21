@@ -318,6 +318,7 @@ export async function withBrowserFixture<T>(
     press(selector: string, key: string): Promise<void>;
     viewport(width: number, height: number): Promise<void>;
     screenshot(path: string): Promise<void>;
+    printPdf(): Promise<Buffer>;
   }) => Promise<T>,
 ): Promise<T> {
   // Keeping the entry below the package lets esbuild resolve the production
@@ -468,6 +469,14 @@ export async function withBrowserFixture<T>(
       async viewport(width: number, height: number) {
         await sessionCall("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: false });
         await evaluate("window.dispatchEvent(new Event('resize'))");
+      },
+      async printPdf() {
+        await sessionCall("Emulation.setEmulatedMedia", { media: "print" });
+        const result = await sessionCall("Page.printToPDF", {
+          preferCSSPageSize: true, printBackground: true,
+          marginTop: 0, marginRight: 0, marginBottom: 0, marginLeft: 0,
+        });
+        return Buffer.from(result.data as string, "base64");
       },
       async screenshot(path: string) {
         const capture = await sessionCall("Page.captureScreenshot", {

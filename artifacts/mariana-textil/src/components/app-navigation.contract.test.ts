@@ -6,7 +6,7 @@ import {
   getVisibleNavGroups,
   NAV_GROUPS,
 } from "@/components/layout/app-navigation";
-import { Modules, type Module } from "@/lib/permisos";
+import { ACTIVE_MODULES, Modules, type Module } from "@/lib/permisos";
 
 const root = new URL("../../../../", import.meta.url);
 
@@ -34,7 +34,7 @@ const SISTEMAS_DENIED_MODULES: Module[] = [
   Modules.CORTES,
   Modules.COBROS_PAGOS,
 ];
-const SISTEMAS_MODULES = Object.values(Modules).filter(
+const SISTEMAS_MODULES = ACTIVE_MODULES.filter(
   (module) => !SISTEMAS_DENIED_MODULES.includes(module),
 );
 

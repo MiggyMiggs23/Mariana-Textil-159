@@ -1,4 +1,5 @@
 import { Router, type IRouter } from "express";
+import { assertE3DirectedExact } from "../lib/e3-collection";
 import { sql } from "drizzle-orm";
 import { CreateSolicitudPagoDirigidoBody, CreateSolicitudPagoDirigidoResponse, AprobarSolicitudPagoDirigidoParams, AprobarSolicitudPagoDirigidoResponse, RechazarSolicitudPagoDirigidoParams, RechazarSolicitudPagoDirigidoBody, RechazarSolicitudPagoDirigidoResponse, ListSolicitudesPagoDirigidoResponse } from "@workspace/api-zod";
 import {
@@ -125,7 +126,7 @@ function parsePayment(body: unknown): Payment | null {
   };
 }
 
-async function assertDocumentBalance(tx: Tx, request: Pick<DirectedPaymentInput, "tipo" | "entidadId" | "documentoMovimientoId" | "importe">) {
+async function assertDocumentBalance(tx: Tx, request: Pick<DirectedPaymentInput, "tipo" | "entidadId" | "documentoMovimientoId" | "importe">, exactCustomerBalance = false) {
   const supplier = request.tipo === "PROVEEDOR";
   await transactionAdvisoryLock(
     tx,
@@ -167,6 +168,10 @@ async function assertDocumentBalance(tx: Tx, request: Pick<DirectedPaymentInput,
       )?.pendienteCents ?? 0;
   }
   const requestedCents = moneyToCents(request.importe);
+  if (exactCustomerBalance && request.tipo === "CLIENTE") {
+    try { assertE3DirectedExact(false, requestedCents, [availableCents]); }
+    catch { throw new CreditEvidenceError("P6: sin ADMIN el pago dirigido exige el saldo pendiente exacto.", 409); }
+  }
   if (requestedCents > availableCents) throw new Error("DIRECTED_AMOUNT_EXCEEDS_DOCUMENT");
   return doc;
 }
@@ -346,7 +351,7 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
         assertCreditCaptureEnabled(e1.evidence, data.formaPago, "ABONO_DIRIGIDO", "ABONO");
         assertCreditPhysicalContext(e1.evidence, data.formaPago, data.cuentaDestino);
       }
-      await assertDocumentBalance(tx, data);
+      await assertDocumentBalance(tx, data, !isAdmin);
       const snapshot = await snapshots(tx, data, req.auth!.user.id);
       const [request] = await tx.insert(solicitudesPagoDirigidoTable).values({
         ...data, importe: data.importe.toFixed(2), solicitanteId: req.auth!.user.id,

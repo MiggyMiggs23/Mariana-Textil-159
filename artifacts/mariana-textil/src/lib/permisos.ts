@@ -1,4 +1,5 @@
 import { CurrentUser } from "@workspace/api-client-react";
+import { E3_ENABLED } from "@/lib/e3-feature-flags";
 
 export const Modules = {
   DASHBOARD: "dashboard",
@@ -33,9 +34,21 @@ export const Modules = {
   VIAJES: "viajes",
   SALIDAS_VENTA: "salidas_venta",
   EQUIPOS: "equipos",
+  CAJA_ABONOS: "caja_abonos",
+  CLIENTES_RECAPTURAS: "clientes_recapturas",
 } as const;
 
 export type Module = (typeof Modules)[keyof typeof Modules];
+
+// Modules retains typed identifiers even for unreleased capabilities. Every
+// operational catalog/editor must enumerate ACTIVE_MODULES, not identifiers.
+const E3_PERMISSION_MODULES: readonly Module[] = [
+  Modules.CAJA_ABONOS,
+  Modules.CLIENTES_RECAPTURAS,
+];
+export const ACTIVE_MODULES: readonly Module[] = Object.freeze(
+  Object.values(Modules).filter(module => E3_ENABLED || !E3_PERMISSION_MODULES.includes(module)),
+);
 
 export function hasPermission(
   user: CurrentUser | null | undefined,

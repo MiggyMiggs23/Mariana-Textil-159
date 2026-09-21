@@ -35,9 +35,17 @@ import stockMinimosRouter from "./stock-minimos";
 import { pool } from "@workspace/db";
 import { requireRole, requireSession } from "../middlewares/auth";
 import { createFondoRouter } from "./fondo";
+import { createE3Router } from "./e3-collections";
+import { e3Repository, readE3Receipts, recordE3Print, readE3Context } from "../lib/e3-repository";
+import { requierePermiso } from "../lib/permisos";
 
 const router: IRouter = Router();
 
+// Must precede broad /clientes authentication middlewares: CLOSED E3 never queries auth/DB.
+router.use(createE3Router({
+  authenticate: requireSession, permission: requierePermiso, admin: requireRole("ADMIN"),
+  repository: e3Repository, receipts: readE3Receipts, print: recordE3Print, context: readE3Context,
+}));
 router.use(healthRouter);
 router.use(authRouter);
 router.use(dashboardRouter);

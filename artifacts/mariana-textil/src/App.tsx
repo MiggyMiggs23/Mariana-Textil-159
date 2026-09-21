@@ -49,6 +49,8 @@ import TiendaVentas from "@/pages/caja/tienda-ventas";
 import CajaCortes from "@/pages/caja/cortes";
 import CajaCuentasDestino from "@/pages/caja/cuentas-destino";
 import CuentaDestinoDetalle from "@/pages/caja/cuenta-destino-detalle";
+import ReciboE3 from "@/pages/caja/recibo-e3";
+import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import Notificaciones from "@/pages/notificaciones";
 import Reportes from "@/pages/reportes";
 import Contenedores from "@/pages/contenedores/index";
@@ -550,6 +552,16 @@ function Router() {
             />
           )}
         />
+        {E3_ENABLED && <Route
+          path="/recibos-e3/:folio"
+          component={() => (
+            <ProtectedRoute
+              component={ReciboE3}
+              allowedModule={Modules.CLIENTES}
+              requiredRoles={["ADMIN"]}
+            />
+          )}
+        />}
         <Route
           path="/caja/comparativo"
           component={() => (

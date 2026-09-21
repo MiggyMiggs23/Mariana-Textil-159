@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from "@/components/ui/table";
 import { RefreshCw, Activity, AlertCircle, Ban, Clock, Banknote, ShoppingBag, Loader2, CreditCard, LineChart, Users, Store } from "lucide-react";
 import { formatNumber, formatUnit } from "@workspace/number-format";
+import { CajaAbonoE3Dialog } from "@/components/caja-abono-e3-dialog";
 import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 import { Link } from "wouter";
@@ -228,6 +229,7 @@ export default function CajaTiempoReal() {
                 Actualizado: {format(new Date(lastUpdated), "HH:mm:ss", { locale: es })}
               </span>
             )}
+            <CajaAbonoE3Dialog />
             <Button variant="outline" onClick={handleRefresh} disabled={dashLoading || pendingLoading}>
               <RefreshCw className={`mr-2 h-4 w-4 ${(dashLoading || pendingLoading) ? "animate-spin" : ""}`} />
               Actualizar

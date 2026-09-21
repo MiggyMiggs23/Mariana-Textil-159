@@ -25,11 +25,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Modules } from "@/lib/permisos";
+import { ACTIVE_MODULES } from "@/lib/permisos";
 import { Shield, RotateCcw, AlertTriangle, Check } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const ALL_MODULES: string[] = [...Object.values(Modules), ...(REMATE_UI_RELEASED ? ["marcar_remate"] : [])];
+const ALL_MODULES: string[] = [...ACTIVE_MODULES, ...(REMATE_UI_RELEASED ? ["marcar_remate"] : [])];
 
 export default function Permisos() {
   const { data: user } = useGetCurrentUser();

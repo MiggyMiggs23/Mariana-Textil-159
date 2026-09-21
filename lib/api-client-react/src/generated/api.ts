@@ -119,6 +119,12 @@ import type {
   CuadreFiscalResolucionInput,
   CurrentUser,
   Dashboard,
+  E3CollectionContext,
+  E3CollectionInput,
+  E3CollectionPreview,
+  E3CollectionResult,
+  E3PrintInput,
+  E3Receipt,
   EntradaDetail,
   EntradaInput,
   EntradaListResult,
@@ -170,6 +176,7 @@ import type {
   GetAdminRealtimeDashboardParams,
   GetAdminRealtimePendingParams,
   GetBorradorSalidaParams,
+  GetCajaAbonoE3ContextParams,
   GetCajaTiendaVentasGlobalParams,
   GetClienteAnaliticaParams,
   GetClienteComprasParams,
@@ -205,9 +212,11 @@ import type {
   ListAdminRealtimeBreakdownParams,
   ListAuditoriaParams,
   ListAuditoriasInventarioParams,
+  ListCajaRecibosE3Params,
   ListCajaTiendaVentasParams,
   ListCamionetasParams,
   ListChoferesParams,
+  ListClienteRecibosE3Params,
   ListComprasProveedorParams,
   ListContenedoresDisponiblesEntradaParams,
   ListContenedoresParams,
@@ -301,6 +310,7 @@ import type {
   ReactivacionFaltanteInput,
   RecalcularInput,
   RecepcionSalidaInput,
+  RecordReciboE3Print200,
   ReimpresionClienteNota,
   ReporteQueComprarEvidencia,
   ReporteSeccion,
@@ -396,6 +406,644 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetCajaAbonoE3ContextUrl = (params?: GetCajaAbonoE3ContextParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/caja/abonos-e3/contexto?${stringifiedParams}` : `/api/caja/abonos-e3/contexto`
+}
+
+export const getCajaAbonoE3Context = async (params?: GetCajaAbonoE3ContextParams, options?: Parameters<typeof customFetch>[1]): Promise<E3CollectionContext> => {
+
+  return customFetch<E3CollectionContext>(getGetCajaAbonoE3ContextUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetCajaAbonoE3ContextQueryKey = (params?: GetCajaAbonoE3ContextParams,) => {
+    return [
+    `/api/caja/abonos-e3/contexto`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetCajaAbonoE3ContextQueryOptions = <TData = Awaited<ReturnType<typeof getCajaAbonoE3Context>>, TError = ErrorType<void>>(params?: GetCajaAbonoE3ContextParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCajaAbonoE3Context>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCajaAbonoE3ContextQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCajaAbonoE3Context>>> = ({ signal }) => getCajaAbonoE3Context(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCajaAbonoE3Context>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCajaAbonoE3ContextQueryResult = NonNullable<Awaited<ReturnType<typeof getCajaAbonoE3Context>>>
+export type GetCajaAbonoE3ContextQueryError = ErrorType<void>
+
+
+
+export function useGetCajaAbonoE3Context<TData = Awaited<ReturnType<typeof getCajaAbonoE3Context>>, TError = ErrorType<void>>(
+ params?: GetCajaAbonoE3ContextParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getCajaAbonoE3Context>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetCajaAbonoE3ContextQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getPreviewCajaAbonoE3Url = () => {
+
+
+
+
+  return `/api/caja/abonos-e3/vista-previa`
+}
+
+export const previewCajaAbonoE3 = async (e3CollectionInput: E3CollectionInput, options?: Parameters<typeof customFetch>[1]): Promise<E3CollectionPreview> => {
+
+  return customFetch<E3CollectionPreview>(getPreviewCajaAbonoE3Url(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e3CollectionInput)
+  }
+);}
+
+
+
+
+
+export const getPreviewCajaAbonoE3MutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewCajaAbonoE3>>, TError,{data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof previewCajaAbonoE3>>, TError,{data: BodyType<E3CollectionInput>}, TContext> => {
+
+const mutationKey = ['previewCajaAbonoE3'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof previewCajaAbonoE3>>, {data: BodyType<E3CollectionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  previewCajaAbonoE3(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PreviewCajaAbonoE3MutationResult = NonNullable<Awaited<ReturnType<typeof previewCajaAbonoE3>>>
+    export type PreviewCajaAbonoE3MutationBody = BodyType<E3CollectionInput>
+    export type PreviewCajaAbonoE3MutationError = ErrorType<void>
+
+    export const usePreviewCajaAbonoE3 = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewCajaAbonoE3>>, TError,{data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof previewCajaAbonoE3>>,
+        TError,
+        {data: BodyType<E3CollectionInput>},
+        TContext
+      > => {
+      return useMutation(getPreviewCajaAbonoE3MutationOptions(options));
+    }
+
+export const getConfirmCajaAbonoE3Url = () => {
+
+
+
+
+  return `/api/caja/abonos-e3`
+}
+
+export const confirmCajaAbonoE3 = async (e3CollectionInput: E3CollectionInput, options?: Parameters<typeof customFetch>[1]): Promise<E3CollectionResult> => {
+
+  return customFetch<E3CollectionResult>(getConfirmCajaAbonoE3Url(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e3CollectionInput)
+  }
+);}
+
+
+
+
+
+export const getConfirmCajaAbonoE3MutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmCajaAbonoE3>>, TError,{data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmCajaAbonoE3>>, TError,{data: BodyType<E3CollectionInput>}, TContext> => {
+
+const mutationKey = ['confirmCajaAbonoE3'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmCajaAbonoE3>>, {data: BodyType<E3CollectionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  confirmCajaAbonoE3(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmCajaAbonoE3MutationResult = NonNullable<Awaited<ReturnType<typeof confirmCajaAbonoE3>>>
+    export type ConfirmCajaAbonoE3MutationBody = BodyType<E3CollectionInput>
+    export type ConfirmCajaAbonoE3MutationError = ErrorType<void>
+
+    export const useConfirmCajaAbonoE3 = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmCajaAbonoE3>>, TError,{data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof confirmCajaAbonoE3>>,
+        TError,
+        {data: BodyType<E3CollectionInput>},
+        TContext
+      > => {
+      return useMutation(getConfirmCajaAbonoE3MutationOptions(options));
+    }
+
+export const getPreviewClienteRecapturaE3Url = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/recapturas-e3/vista-previa`
+}
+
+export const previewClienteRecapturaE3 = async (id: number,
+    e3CollectionInput: E3CollectionInput, options?: Parameters<typeof customFetch>[1]): Promise<E3CollectionPreview> => {
+
+  return customFetch<E3CollectionPreview>(getPreviewClienteRecapturaE3Url(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e3CollectionInput)
+  }
+);}
+
+
+
+
+
+export const getPreviewClienteRecapturaE3MutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewClienteRecapturaE3>>, TError,{id: number;data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof previewClienteRecapturaE3>>, TError,{id: number;data: BodyType<E3CollectionInput>}, TContext> => {
+
+const mutationKey = ['previewClienteRecapturaE3'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof previewClienteRecapturaE3>>, {id: number;data: BodyType<E3CollectionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  previewClienteRecapturaE3(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PreviewClienteRecapturaE3MutationResult = NonNullable<Awaited<ReturnType<typeof previewClienteRecapturaE3>>>
+    export type PreviewClienteRecapturaE3MutationBody = BodyType<E3CollectionInput>
+    export type PreviewClienteRecapturaE3MutationError = ErrorType<void>
+
+    export const usePreviewClienteRecapturaE3 = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewClienteRecapturaE3>>, TError,{id: number;data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof previewClienteRecapturaE3>>,
+        TError,
+        {id: number;data: BodyType<E3CollectionInput>},
+        TContext
+      > => {
+      return useMutation(getPreviewClienteRecapturaE3MutationOptions(options));
+    }
+
+export const getConfirmClienteRecapturaE3Url = (id: number,) => {
+
+
+
+
+  return `/api/clientes/${id}/recapturas-e3`
+}
+
+export const confirmClienteRecapturaE3 = async (id: number,
+    e3CollectionInput: E3CollectionInput, options?: Parameters<typeof customFetch>[1]): Promise<E3CollectionResult> => {
+
+  return customFetch<E3CollectionResult>(getConfirmClienteRecapturaE3Url(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e3CollectionInput)
+  }
+);}
+
+
+
+
+
+export const getConfirmClienteRecapturaE3MutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmClienteRecapturaE3>>, TError,{id: number;data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof confirmClienteRecapturaE3>>, TError,{id: number;data: BodyType<E3CollectionInput>}, TContext> => {
+
+const mutationKey = ['confirmClienteRecapturaE3'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof confirmClienteRecapturaE3>>, {id: number;data: BodyType<E3CollectionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  confirmClienteRecapturaE3(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ConfirmClienteRecapturaE3MutationResult = NonNullable<Awaited<ReturnType<typeof confirmClienteRecapturaE3>>>
+    export type ConfirmClienteRecapturaE3MutationBody = BodyType<E3CollectionInput>
+    export type ConfirmClienteRecapturaE3MutationError = ErrorType<void>
+
+    export const useConfirmClienteRecapturaE3 = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof confirmClienteRecapturaE3>>, TError,{id: number;data: BodyType<E3CollectionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof confirmClienteRecapturaE3>>,
+        TError,
+        {id: number;data: BodyType<E3CollectionInput>},
+        TContext
+      > => {
+      return useMutation(getConfirmClienteRecapturaE3MutationOptions(options));
+    }
+
+export const getGetReciboAbonoE3Url = (folio: string,) => {
+
+
+
+
+  return `/api/recibos-e3/${folio}`
+}
+
+export const getReciboAbonoE3 = async (folio: string, options?: Parameters<typeof customFetch>[1]): Promise<E3Receipt> => {
+
+  return customFetch<E3Receipt>(getGetReciboAbonoE3Url(folio),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetReciboAbonoE3QueryKey = (folio: string,) => {
+    return [
+    `/api/recibos-e3/${folio}`
+    ] as const;
+    }
+
+
+export const getGetReciboAbonoE3QueryOptions = <TData = Awaited<ReturnType<typeof getReciboAbonoE3>>, TError = ErrorType<void>>(folio: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReciboAbonoE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReciboAbonoE3QueryKey(folio);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReciboAbonoE3>>> = ({ signal }) => getReciboAbonoE3(folio, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: folio !== null && folio !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReciboAbonoE3>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetReciboAbonoE3QueryResult = NonNullable<Awaited<ReturnType<typeof getReciboAbonoE3>>>
+export type GetReciboAbonoE3QueryError = ErrorType<void>
+
+
+
+export function useGetReciboAbonoE3<TData = Awaited<ReturnType<typeof getReciboAbonoE3>>, TError = ErrorType<void>>(
+ folio: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getReciboAbonoE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetReciboAbonoE3QueryOptions(folio,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListClienteRecibosE3Url = (id: number,
+    params?: ListClienteRecibosE3Params,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/clientes/${id}/recibos-e3?${stringifiedParams}` : `/api/clientes/${id}/recibos-e3`
+}
+
+export const listClienteRecibosE3 = async (id: number,
+    params?: ListClienteRecibosE3Params, options?: Parameters<typeof customFetch>[1]): Promise<E3Receipt[]> => {
+
+  return customFetch<E3Receipt[]>(getListClienteRecibosE3Url(id,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListClienteRecibosE3QueryKey = (id: number,
+    params?: ListClienteRecibosE3Params,) => {
+    return [
+    `/api/clientes/${id}/recibos-e3`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListClienteRecibosE3QueryOptions = <TData = Awaited<ReturnType<typeof listClienteRecibosE3>>, TError = ErrorType<void>>(id: number,
+    params?: ListClienteRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClienteRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListClienteRecibosE3QueryKey(id,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listClienteRecibosE3>>> = ({ signal }) => listClienteRecibosE3(id,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listClienteRecibosE3>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListClienteRecibosE3QueryResult = NonNullable<Awaited<ReturnType<typeof listClienteRecibosE3>>>
+export type ListClienteRecibosE3QueryError = ErrorType<void>
+
+
+
+export function useListClienteRecibosE3<TData = Awaited<ReturnType<typeof listClienteRecibosE3>>, TError = ErrorType<void>>(
+ id: number,
+    params?: ListClienteRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listClienteRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListClienteRecibosE3QueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListCajaRecibosE3Url = (params: ListCajaRecibosE3Params,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/caja/recibos-e3?${stringifiedParams}` : `/api/caja/recibos-e3`
+}
+
+export const listCajaRecibosE3 = async (params: ListCajaRecibosE3Params, options?: Parameters<typeof customFetch>[1]): Promise<E3Receipt[]> => {
+
+  return customFetch<E3Receipt[]>(getListCajaRecibosE3Url(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListCajaRecibosE3QueryKey = (params?: ListCajaRecibosE3Params,) => {
+    return [
+    `/api/caja/recibos-e3`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListCajaRecibosE3QueryOptions = <TData = Awaited<ReturnType<typeof listCajaRecibosE3>>, TError = ErrorType<void>>(params: ListCajaRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListCajaRecibosE3QueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listCajaRecibosE3>>> = ({ signal }) => listCajaRecibosE3(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listCajaRecibosE3>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListCajaRecibosE3QueryResult = NonNullable<Awaited<ReturnType<typeof listCajaRecibosE3>>>
+export type ListCajaRecibosE3QueryError = ErrorType<void>
+
+
+
+export function useListCajaRecibosE3<TData = Awaited<ReturnType<typeof listCajaRecibosE3>>, TError = ErrorType<void>>(
+ params: ListCajaRecibosE3Params, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listCajaRecibosE3>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListCajaRecibosE3QueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRecordReciboE3PrintUrl = (folio: string,) => {
+
+
+
+
+  return `/api/recibos-e3/${folio}/impresiones`
+}
+
+export const recordReciboE3Print = async (folio: string,
+    e3PrintInput: E3PrintInput, options?: Parameters<typeof customFetch>[1]): Promise<RecordReciboE3Print200> => {
+
+  return customFetch<RecordReciboE3Print200>(getRecordReciboE3PrintUrl(folio),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e3PrintInput)
+  }
+);}
+
+
+
+
+
+export const getRecordReciboE3PrintMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordReciboE3Print>>, TError,{folio: string;data: BodyType<E3PrintInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recordReciboE3Print>>, TError,{folio: string;data: BodyType<E3PrintInput>}, TContext> => {
+
+const mutationKey = ['recordReciboE3Print'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recordReciboE3Print>>, {folio: string;data: BodyType<E3PrintInput>}> = (props) => {
+          const {folio,data} = props ?? {};
+
+          return  recordReciboE3Print(folio,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecordReciboE3PrintMutationResult = NonNullable<Awaited<ReturnType<typeof recordReciboE3Print>>>
+    export type RecordReciboE3PrintMutationBody = BodyType<E3PrintInput>
+    export type RecordReciboE3PrintMutationError = ErrorType<void>
+
+    export const useRecordReciboE3Print = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordReciboE3Print>>, TError,{folio: string;data: BodyType<E3PrintInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recordReciboE3Print>>,
+        TError,
+        {folio: string;data: BodyType<E3PrintInput>},
+        TContext
+      > => {
+      return useMutation(getRecordReciboE3PrintMutationOptions(options));
+    }
 
 export const getListSolicitudesPagoDirigidoUrl = (params?: ListSolicitudesPagoDirigidoParams,) => {
   const normalizedParams = new URLSearchParams();

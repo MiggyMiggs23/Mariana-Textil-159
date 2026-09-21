@@ -8,6 +8,399 @@
 import * as zod from 'zod';
 
 
+export const getCajaAbonoE3ContextQueryBuscarMax = 100;
+
+
+
+
+export const GetCajaAbonoE3ContextQueryParams = zod.object({
+  "buscar": zod.coerce.string().max(getCajaAbonoE3ContextQueryBuscarMax).optional(),
+  "sitioId": zod.coerce.number().int().min(1).optional()
+})
+
+export const GetCajaAbonoE3ContextResponse = zod.object({
+  "sitios": zod.array(zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string(),
+  "sesiones": zod.array(zod.object({
+  "id": zod.number().int(),
+  "ubicacionId": zod.number().int(),
+  "fechaOperativa": zod.string()
+}))
+})),
+  "clientes": zod.array(zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string(),
+  "telefono": zod.string().nullable()
+}))
+})
+
+
+export const previewCajaAbonoE3BodyClienteIdMax = 2147483647;
+
+export const previewCajaAbonoE3BodyImporteCentavosMax = 999999999999;
+
+export const previewCajaAbonoE3BodySitioIdMax = 2147483647;
+
+
+export const previewCajaAbonoE3BodyMotivoMax = 2000;
+
+export const previewCajaAbonoE3BodyPreviewTokenRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const PreviewCajaAbonoE3Body = zod.object({
+  "clienteId": zod.number().int().min(1).max(previewCajaAbonoE3BodyClienteIdMax),
+  "importeCentavos": zod.number().int().min(1).max(previewCajaAbonoE3BodyImporteCentavosMax),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sitioId": zod.number().int().min(1).max(previewCajaAbonoE3BodySitioIdMax),
+  "sesionCajaId": zod.number().int().min(1).nullable(),
+  "operacionClave": zod.string().uuid(),
+  "motivo": zod.string().min(1).max(previewCajaAbonoE3BodyMotivoMax).optional(),
+  "fechaRecepcion": zod.coerce.date().optional(),
+  "previewToken": zod.string().regex(previewCajaAbonoE3BodyPreviewTokenRegExp).optional()
+})
+
+export const PreviewCajaAbonoE3Response = zod.object({
+  "clienteId": zod.number().int(),
+  "importeCentavos": zod.number().int(),
+  "asignaciones": zod.array(zod.object({
+  "movimientoVentaId": zod.number().int(),
+  "ticketId": zod.number().int().nullable(),
+  "folio": zod.number().int().nullable(),
+  "aplicadoCentavos": zod.number().int(),
+  "saldoAntesCentavos": zod.number().int(),
+  "saldoDespuesCentavos": zod.number().int()
+})),
+  "remanenteCentavos": zod.number().int(),
+  "saldoAFavorCentavos": zod.number().int(),
+  "deudaCentavos": zod.number().int(),
+  "origen": zod.enum(['CAJA', 'RECAPTURA'])
+}).and(zod.object({
+  "previewToken": zod.string()
+}))
+
+
+export const confirmCajaAbonoE3BodyClienteIdMax = 2147483647;
+
+export const confirmCajaAbonoE3BodyImporteCentavosMax = 999999999999;
+
+export const confirmCajaAbonoE3BodySitioIdMax = 2147483647;
+
+
+export const confirmCajaAbonoE3BodyMotivoMax = 2000;
+
+export const confirmCajaAbonoE3BodyPreviewTokenRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const ConfirmCajaAbonoE3Body = zod.object({
+  "clienteId": zod.number().int().min(1).max(confirmCajaAbonoE3BodyClienteIdMax),
+  "importeCentavos": zod.number().int().min(1).max(confirmCajaAbonoE3BodyImporteCentavosMax),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sitioId": zod.number().int().min(1).max(confirmCajaAbonoE3BodySitioIdMax),
+  "sesionCajaId": zod.number().int().min(1).nullable(),
+  "operacionClave": zod.string().uuid(),
+  "motivo": zod.string().min(1).max(confirmCajaAbonoE3BodyMotivoMax).optional(),
+  "fechaRecepcion": zod.coerce.date().optional(),
+  "previewToken": zod.string().regex(confirmCajaAbonoE3BodyPreviewTokenRegExp).optional()
+})
+
+export const ConfirmCajaAbonoE3Response = zod.object({
+  "recibo": zod.object({
+  "clienteId": zod.number().int(),
+  "importeCentavos": zod.number().int(),
+  "asignaciones": zod.array(zod.object({
+  "movimientoVentaId": zod.number().int(),
+  "ticketId": zod.number().int().nullable(),
+  "folio": zod.number().int().nullable(),
+  "aplicadoCentavos": zod.number().int(),
+  "saldoAntesCentavos": zod.number().int(),
+  "saldoDespuesCentavos": zod.number().int()
+})),
+  "remanenteCentavos": zod.number().int(),
+  "saldoAFavorCentavos": zod.number().int(),
+  "deudaCentavos": zod.number().int(),
+  "origen": zod.enum(['CAJA', 'RECAPTURA'])
+}).and(zod.object({
+  "version": zod.literal(1),
+  "folio": zod.string(),
+  "movimientoId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "clienteTelefono": zod.string().nullable(),
+  "clienteRfc": zod.string().nullable(),
+  "sitioNombre": zod.string(),
+  "actorNombre": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.string(),
+  "sitioId": zod.number().int(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "recibidoEn": zod.coerce.date(),
+  "registradoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "motivo": zod.string().nullable()
+})),
+  "replay": zod.boolean()
+})
+
+
+export const PreviewClienteRecapturaE3Params = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const previewClienteRecapturaE3BodyClienteIdMax = 2147483647;
+
+export const previewClienteRecapturaE3BodyImporteCentavosMax = 999999999999;
+
+export const previewClienteRecapturaE3BodySitioIdMax = 2147483647;
+
+
+export const previewClienteRecapturaE3BodyMotivoMax = 2000;
+
+export const previewClienteRecapturaE3BodyPreviewTokenRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const PreviewClienteRecapturaE3Body = zod.object({
+  "clienteId": zod.number().int().min(1).max(previewClienteRecapturaE3BodyClienteIdMax),
+  "importeCentavos": zod.number().int().min(1).max(previewClienteRecapturaE3BodyImporteCentavosMax),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sitioId": zod.number().int().min(1).max(previewClienteRecapturaE3BodySitioIdMax),
+  "sesionCajaId": zod.number().int().min(1).nullable(),
+  "operacionClave": zod.string().uuid(),
+  "motivo": zod.string().min(1).max(previewClienteRecapturaE3BodyMotivoMax).optional(),
+  "fechaRecepcion": zod.coerce.date().optional(),
+  "previewToken": zod.string().regex(previewClienteRecapturaE3BodyPreviewTokenRegExp).optional()
+})
+
+export const PreviewClienteRecapturaE3Response = zod.object({
+  "clienteId": zod.number().int(),
+  "importeCentavos": zod.number().int(),
+  "asignaciones": zod.array(zod.object({
+  "movimientoVentaId": zod.number().int(),
+  "ticketId": zod.number().int().nullable(),
+  "folio": zod.number().int().nullable(),
+  "aplicadoCentavos": zod.number().int(),
+  "saldoAntesCentavos": zod.number().int(),
+  "saldoDespuesCentavos": zod.number().int()
+})),
+  "remanenteCentavos": zod.number().int(),
+  "saldoAFavorCentavos": zod.number().int(),
+  "deudaCentavos": zod.number().int(),
+  "origen": zod.enum(['CAJA', 'RECAPTURA'])
+}).and(zod.object({
+  "previewToken": zod.string()
+}))
+
+
+export const ConfirmClienteRecapturaE3Params = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const confirmClienteRecapturaE3BodyClienteIdMax = 2147483647;
+
+export const confirmClienteRecapturaE3BodyImporteCentavosMax = 999999999999;
+
+export const confirmClienteRecapturaE3BodySitioIdMax = 2147483647;
+
+
+export const confirmClienteRecapturaE3BodyMotivoMax = 2000;
+
+export const confirmClienteRecapturaE3BodyPreviewTokenRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const ConfirmClienteRecapturaE3Body = zod.object({
+  "clienteId": zod.number().int().min(1).max(confirmClienteRecapturaE3BodyClienteIdMax),
+  "importeCentavos": zod.number().int().min(1).max(confirmClienteRecapturaE3BodyImporteCentavosMax),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sitioId": zod.number().int().min(1).max(confirmClienteRecapturaE3BodySitioIdMax),
+  "sesionCajaId": zod.number().int().min(1).nullable(),
+  "operacionClave": zod.string().uuid(),
+  "motivo": zod.string().min(1).max(confirmClienteRecapturaE3BodyMotivoMax).optional(),
+  "fechaRecepcion": zod.coerce.date().optional(),
+  "previewToken": zod.string().regex(confirmClienteRecapturaE3BodyPreviewTokenRegExp).optional()
+})
+
+export const ConfirmClienteRecapturaE3Response = zod.object({
+  "recibo": zod.object({
+  "clienteId": zod.number().int(),
+  "importeCentavos": zod.number().int(),
+  "asignaciones": zod.array(zod.object({
+  "movimientoVentaId": zod.number().int(),
+  "ticketId": zod.number().int().nullable(),
+  "folio": zod.number().int().nullable(),
+  "aplicadoCentavos": zod.number().int(),
+  "saldoAntesCentavos": zod.number().int(),
+  "saldoDespuesCentavos": zod.number().int()
+})),
+  "remanenteCentavos": zod.number().int(),
+  "saldoAFavorCentavos": zod.number().int(),
+  "deudaCentavos": zod.number().int(),
+  "origen": zod.enum(['CAJA', 'RECAPTURA'])
+}).and(zod.object({
+  "version": zod.literal(1),
+  "folio": zod.string(),
+  "movimientoId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "clienteTelefono": zod.string().nullable(),
+  "clienteRfc": zod.string().nullable(),
+  "sitioNombre": zod.string(),
+  "actorNombre": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.string(),
+  "sitioId": zod.number().int(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "recibidoEn": zod.coerce.date(),
+  "registradoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "motivo": zod.string().nullable()
+})),
+  "replay": zod.boolean()
+})
+
+
+export const GetReciboAbonoE3Params = zod.object({
+  "folio": zod.coerce.string()
+})
+
+export const GetReciboAbonoE3Response = zod.object({
+  "clienteId": zod.number().int(),
+  "importeCentavos": zod.number().int(),
+  "asignaciones": zod.array(zod.object({
+  "movimientoVentaId": zod.number().int(),
+  "ticketId": zod.number().int().nullable(),
+  "folio": zod.number().int().nullable(),
+  "aplicadoCentavos": zod.number().int(),
+  "saldoAntesCentavos": zod.number().int(),
+  "saldoDespuesCentavos": zod.number().int()
+})),
+  "remanenteCentavos": zod.number().int(),
+  "saldoAFavorCentavos": zod.number().int(),
+  "deudaCentavos": zod.number().int(),
+  "origen": zod.enum(['CAJA', 'RECAPTURA'])
+}).and(zod.object({
+  "version": zod.literal(1),
+  "folio": zod.string(),
+  "movimientoId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "clienteTelefono": zod.string().nullable(),
+  "clienteRfc": zod.string().nullable(),
+  "sitioNombre": zod.string(),
+  "actorNombre": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.string(),
+  "sitioId": zod.number().int(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "recibidoEn": zod.coerce.date(),
+  "registradoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "motivo": zod.string().nullable()
+}))
+
+
+export const ListClienteRecibosE3Params = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const ListClienteRecibosE3QueryParams = zod.object({
+  "movimientoId": zod.coerce.number().int().optional(),
+  "sesionCajaId": zod.coerce.number().int().optional()
+})
+
+export const ListClienteRecibosE3ResponseItem = zod.object({
+  "clienteId": zod.number().int(),
+  "importeCentavos": zod.number().int(),
+  "asignaciones": zod.array(zod.object({
+  "movimientoVentaId": zod.number().int(),
+  "ticketId": zod.number().int().nullable(),
+  "folio": zod.number().int().nullable(),
+  "aplicadoCentavos": zod.number().int(),
+  "saldoAntesCentavos": zod.number().int(),
+  "saldoDespuesCentavos": zod.number().int()
+})),
+  "remanenteCentavos": zod.number().int(),
+  "saldoAFavorCentavos": zod.number().int(),
+  "deudaCentavos": zod.number().int(),
+  "origen": zod.enum(['CAJA', 'RECAPTURA'])
+}).and(zod.object({
+  "version": zod.literal(1),
+  "folio": zod.string(),
+  "movimientoId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "clienteTelefono": zod.string().nullable(),
+  "clienteRfc": zod.string().nullable(),
+  "sitioNombre": zod.string(),
+  "actorNombre": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.string(),
+  "sitioId": zod.number().int(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "recibidoEn": zod.coerce.date(),
+  "registradoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "motivo": zod.string().nullable()
+}))
+export const ListClienteRecibosE3Response = zod.array(ListClienteRecibosE3ResponseItem)
+
+
+export const ListCajaRecibosE3QueryParams = zod.object({
+  "sesionCajaId": zod.coerce.number().int()
+})
+
+export const ListCajaRecibosE3ResponseItem = zod.object({
+  "clienteId": zod.number().int(),
+  "importeCentavos": zod.number().int(),
+  "asignaciones": zod.array(zod.object({
+  "movimientoVentaId": zod.number().int(),
+  "ticketId": zod.number().int().nullable(),
+  "folio": zod.number().int().nullable(),
+  "aplicadoCentavos": zod.number().int(),
+  "saldoAntesCentavos": zod.number().int(),
+  "saldoDespuesCentavos": zod.number().int()
+})),
+  "remanenteCentavos": zod.number().int(),
+  "saldoAFavorCentavos": zod.number().int(),
+  "deudaCentavos": zod.number().int(),
+  "origen": zod.enum(['CAJA', 'RECAPTURA'])
+}).and(zod.object({
+  "version": zod.literal(1),
+  "folio": zod.string(),
+  "movimientoId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "clienteTelefono": zod.string().nullable(),
+  "clienteRfc": zod.string().nullable(),
+  "sitioNombre": zod.string(),
+  "actorNombre": zod.string(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.string(),
+  "sitioId": zod.number().int(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "recibidoEn": zod.coerce.date(),
+  "registradoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "motivo": zod.string().nullable()
+}))
+export const ListCajaRecibosE3Response = zod.array(ListCajaRecibosE3ResponseItem)
+
+
+export const RecordReciboE3PrintParams = zod.object({
+  "folio": zod.coerce.string()
+})
+
+export const recordReciboE3PrintBodyMotivoMax = 2000;
+
+
+
+export const RecordReciboE3PrintBody = zod.object({
+  "motivo": zod.string().min(1).max(recordReciboE3PrintBodyMotivoMax)
+})
+
+export const RecordReciboE3PrintResponse = zod.object({
+  "registrado": zod.boolean()
+})
+
+
 /**
  * @summary Lista la cola de pagos dirigidos según el alcance del usuario
  */

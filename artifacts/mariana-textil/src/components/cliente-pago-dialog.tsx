@@ -13,6 +13,13 @@ import {
   usePreviewClientePago,
   type ClientePago,
   type ClientePagoPreview,
+  type E3CollectionPreview,
+  type E3Receipt,
+  type E3CollectionInput,
+  useGetCajaAbonoE3Context,
+  getGetCajaAbonoE3ContextQueryKey,
+  useGetCurrentUser,
+  getGetCurrentUserQueryKey,
 } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
@@ -24,6 +31,10 @@ import {
 import { format } from "date-fns";
 import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
 import { useQueryClient } from "@tanstack/react-query";
+import { E3_ENABLED } from "@/lib/e3-feature-flags";
+import { useE3AbonosPreview, useE3AbonosConfirm } from "@/hooks/use-e3";
+import { useLocationScope } from "@/lib/location-scope";
+import { useObtenerSesionCajaActual, getObtenerSesionCajaActualQueryKey } from "@workspace/api-client-react";
 
 type Step = "form" | "preview" | "success";
 
@@ -38,6 +49,7 @@ export interface ClientePagoDialogProps {
   saldoActual?: string;
   defaultAmount?: string;
   onSuccess?: () => void;
+  origen?: "CAJA" | "CLIENTE";
 }
 
 export function ClientePagoDialog({
@@ -46,7 +58,8 @@ export function ClientePagoDialog({
   clienteId,
   saldoActual,
   defaultAmount,
-  onSuccess
+  onSuccess,
+  origen = "CLIENTE"
 }: ClientePagoDialogProps) {
   const evidence = useCreditEvidenceDraft();
   const queryClient = useQueryClient();
@@ -61,6 +74,8 @@ export function ClientePagoDialog({
   const [selectedMovementId, setSelectedMovementId] = useState<number | null>(null);
   const [motivo, setMotivo] = useState("");
 
+  const [e3OperacionClave, setE3OperacionClave] = useState<string>(() => crypto.randomUUID());
+
   const [previewData, setPreviewData] = useState<ClientePagoPreview | null>(null);
   const [realResult, setRealResult] = useState<ClientePago | null>(null);
   const previewExceso = previewData?.saldoAFavor ?? "0.00";
@@ -74,6 +89,26 @@ export function ClientePagoDialog({
   const previewPayment = usePreviewClientePago();
   const createPayment = useCreateClientePago();
   const createDirectedPayment = useCreateSolicitudPagoDirigido();
+
+  const e3PreviewMutation = useE3AbonosPreview();
+  const e3ConfirmMutation = useE3AbonosConfirm();
+  const [e3PreviewToken, setE3PreviewToken] = useState<string | null>(null);
+  const [e3PreviewResult, setE3PreviewResult] = useState<E3CollectionPreview | null>(null);
+  const [e3Receipt, setE3Receipt] = useState<E3Receipt | null>(null);
+  const [e3Uncertain, setE3Uncertain] = useState(false);
+  const [e3Intent, setE3Intent] = useState<E3CollectionInput | null>(null);
+
+  const { selectedLocationId } = useLocationScope();
+  const { data: e3Context, error: e3ContextError } = useGetCajaAbonoE3Context(
+    { sitioId: selectedLocationId ?? undefined },
+    { query: { queryKey: getGetCajaAbonoE3ContextQueryKey({ sitioId: selectedLocationId ?? undefined }), enabled: E3_ENABLED && origen === "CAJA" && open, staleTime: 0, refetchOnMount: "always", refetchInterval: 15000 } }
+  );
+  const e3Site = e3Context?.sitios.find(site => site.id === selectedLocationId) ?? (e3Context?.sitios.length === 1 ? e3Context.sitios[0] : undefined);
+  const e3Session = e3Site?.sesiones.length === 1 ? e3Site.sesiones[0] : undefined;
+
+  const isE3Flow = E3_ENABLED && origen === "CAJA";
+  const { data: e3User } = useGetCurrentUser({ query: { queryKey: getGetCurrentUserQueryKey(), enabled: isE3Flow } });
+  const recoveryKey = `e3-pending-caja:${e3User?.id ?? "unknown"}:${clienteId}`;
 
   // Reset form when modal opens/closes
   useEffect(() => {
@@ -92,8 +127,34 @@ export function ClientePagoDialog({
       setRealResult(null);
 
       setEffectiveDate(todayInMexicoCity());
+      setE3PreviewToken(null);
+      setE3PreviewResult(null);
+      setE3Receipt(null);
+      setE3Uncertain(false);
+      setE3Intent(null);
+      setE3OperacionClave(crypto.randomUUID());
+      if (isE3Flow && e3User?.id) {
+        try {
+          const saved = sessionStorage.getItem(recoveryKey);
+          if (saved) {
+            const pending = JSON.parse(saved) as { input: E3CollectionInput; preview: E3CollectionPreview };
+            if (pending.input.clienteId !== clienteId || !pending.preview.previewToken || !pending.input.operacionClave) throw new Error("Registro de recuperación inválido");
+            setE3Intent(pending.input);
+            setE3PreviewResult(pending.preview);
+            setE3PreviewToken(pending.preview.previewToken);
+            setE3OperacionClave(pending.input.operacionClave);
+            setAmount(String(pending.input.importeCentavos / 100));
+            setPaymentMethod(pending.input.formaPago);
+            setDestinationAccount(pending.input.cuentaDestino);
+            setStep("preview");
+            setE3Uncertain(true);
+          }
+        } catch (error) {
+          toast({ title: "No se pudo recuperar la operación", description: getApiErrorMessage(error), variant: "destructive" });
+        }
+      }
     }
-  }, [open, defaultAmount]);
+  }, [open, defaultAmount, clienteId, e3User?.id]);
 
   // Effect to reset destination account when payment method changes
   useEffect(() => {
@@ -110,14 +171,22 @@ export function ClientePagoDialog({
   }, [paymentMethod]);
 
   const handleInputChange = () => {
+    if (isE3Flow) {
+      setE3PreviewResult(null);
+      setE3PreviewToken(null);
+      setE3OperacionClave(crypto.randomUUID());
+    }
     if (step === "preview") {
       setStep("form");
       setPreviewData(null);
+      setE3PreviewResult(null);
+      setE3PreviewToken(null);
+      setE3OperacionClave(crypto.randomUUID());
     }
   };
 
   const handlePreview = () => {
-    if (evidence.problem(paymentMethod)) {
+    if (!isE3Flow && evidence.problem(paymentMethod)) {
       toast({ title: "Origen requerido", description: evidence.problem(paymentMethod)!, variant: "destructive" });
       return;
     }
@@ -127,6 +196,46 @@ export function ClientePagoDialog({
     }
     if (!destinationAccount) {
       toast({ title: "Cuenta destino requerida", description: "Selecciona una cuenta destino.", variant: "destructive" });
+      return;
+    }
+
+    if (isE3Flow) {
+      if (mode === "DIRIGIDO") {
+        toast({ title: "No disponible", description: "Pago dirigido está deshabilitado en E3.", variant: "destructive" });
+        return;
+      }
+      if (!e3Site || !e3Session || e3ContextError) {
+        toast({ title: "Caja abierta requerida", description: "Selecciona un sitio con una única sesión abierta; actualiza si no aparece.", variant: "destructive" });
+        return;
+      }
+      const isTransfer = paymentMethod === "TRANSFERENCIA";
+
+      e3PreviewMutation.mutate({
+        data: {
+          clienteId,
+          importeCentavos: Math.round(Number(amount) * 100),
+          formaPago: isTransfer ? "TRANSFERENCIA" : "EFECTIVO",
+           cuentaDestino: isTransfer && destinationAccount !== "CAJA_FISICA" ? destinationAccount : "CAJA_FISICA",
+           sitioId: e3Site.id,
+           sesionCajaId: e3Session.id,
+          operacionClave: e3OperacionClave,
+           motivo: [reference.trim(), paymentNotes.trim()].filter(Boolean).join(" · ") || undefined,
+        }
+      }, {
+        onSuccess: (data, variables) => {
+          setE3Intent(variables.data);
+          setE3PreviewResult(data);
+          setE3PreviewToken(data.previewToken);
+          setStep("preview");
+        },
+        onError: (error) => {
+          toast({
+            title: "Error al previsualizar",
+            description: getApiErrorMessage(error, "Verifica el importe e intenta de nuevo."),
+            variant: "destructive"
+          });
+        }
+      });
       return;
     }
 
@@ -150,6 +259,45 @@ export function ClientePagoDialog({
   };
 
   const submitPayment = () => {
+    if (isE3Flow) {
+       if (!e3PreviewToken || !e3Intent || e3ConfirmMutation.isPending) return;
+       if (!e3User?.id) return;
+       try {
+         sessionStorage.setItem(recoveryKey, JSON.stringify({ input: e3Intent, preview: e3PreviewResult }));
+       } catch {
+         toast({ title: "No se puede conservar la operación", description: "Habilita el almacenamiento de sesión antes de cobrar; no se ha enviado la confirmación.", variant: "destructive" });
+         return;
+       }
+       setE3Uncertain(true);
+      const isTransfer = paymentMethod === "TRANSFERENCIA";
+      e3ConfirmMutation.mutate({
+        data: {
+          ...e3Intent,
+          previewToken: e3PreviewToken,
+        }
+      }, {
+        onSuccess: (data) => {
+          sessionStorage.removeItem(recoveryKey);
+           setE3Uncertain(false);
+          setE3Receipt(data.recibo);
+          setStep("success");
+          queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && query.queryKey[0].startsWith("/api/clientes") });
+          onSuccess?.();
+        },
+        onError: (error) => {
+           if ((error as { status?: number; response?: { status?: number } })?.status === 409 || (error as { response?: { status?: number } })?.response?.status === 409) {
+              setE3Uncertain(false);
+              sessionStorage.removeItem(recoveryKey);
+              setE3PreviewToken(null);
+              setE3PreviewResult(null);
+              setStep("form");
+          }
+          toast({ title: "Error al confirmar", description: getApiErrorMessage(error, "Intenta de nuevo"), variant: "destructive" });
+        }
+      });
+      return;
+    }
+
     if (!destinationAccount || evidence.problem(paymentMethod)) return;
     const fechaEfectiva = buildMexicoCityEffectiveDate(effectiveDate);
     const metadata = evidence.build(mode === "DIRIGIDO" ? "ABONO_DIRIGIDO" : "ABONO_ORDINARIO",
@@ -207,11 +355,20 @@ export function ClientePagoDialog({
     );
   };
 
-  const isFormValid = Number(amount) > 0 && destinationAccount !== "" && !evidence.problem(paymentMethod);
-  const isSubmitting = createPayment.isPending || createDirectedPayment.isPending;
+  const isFormValid = isE3Flow
+    ? Number(amount) > 0 && !!e3Session && destinationAccount !== ""
+    : Number(amount) > 0 && destinationAccount !== "" && !evidence.problem(paymentMethod);
+  const isSubmitting = createPayment.isPending || createDirectedPayment.isPending || e3ConfirmMutation.isPending;
+
+  if (E3_ENABLED && origen === "CLIENTE") return <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogContent><DialogHeader><DialogTitle>Captura de abonos</DialogTitle><DialogDescription>
+      El dinero recibido ahora se registra desde Caja con una sesión abierta. Para pagos recibidos antes, usa Recaptura Histórica en este cliente con el permiso correspondiente.
+    </DialogDescription></DialogHeader><Button onClick={() => onOpenChange(false)}>Entendido</Button></DialogContent>
+  </Dialog>;
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
+      if (isSubmitting || e3Uncertain) return;
       if (step === "success" || !val) {
         onOpenChange(val);
       }
@@ -220,28 +377,30 @@ export function ClientePagoDialog({
         <DialogHeader className={`p-6 text-white pb-6 ${step === "success" ? "bg-emerald-600" : "bg-sidebar"}`}>
           <DialogTitle className="text-xl flex items-center gap-2">
             {step === "success" ? <CheckCircle2 className="h-5 w-5" /> : <Wallet className="h-5 w-5" />}
-            {step === "form" ? "Registrar Abono Global" : step === "preview" ? "Vista Previa de Aplicación (FIFO)" : "Abono Registrado"}
+            {step === "form" ? "Registrar Abono" : step === "preview" ? "Vista Previa de Aplicación" : "Abono Registrado"}
           </DialogTitle>
           <DialogDescription className="text-white/70 mt-2">
             {step === "form"
               ? (saldoActual ? `El abono se descontará del saldo total de ${formatNumber(saldoActual, { kind: "money" })} aplicando primero a las notas más antiguas.` : "El abono se aplicará a las notas más antiguas de manera automática (FIFO).")
               : step === "preview"
               ? "Revisa cómo se repartirá el importe antes de confirmar."
-              : "El abono se aplicó exitosamente."
+              : "El abono se registró exitosamente."
             }
           </DialogDescription>
         </DialogHeader>
 
         {step === "form" && (
           <div className="space-y-5 p-6 bg-secondary/10">
-            <CreditEvidenceFields draft={evidence} kind="payment" medium={paymentMethod} />
-            <div className="space-y-2">
-              <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Aplicación</Label>
-              <Select value={mode} onValueChange={(value: "FIFO" | "DIRIGIDO") => { setMode(value); setSelectedMovementId(null); }}>
-                <SelectTrigger className="h-12 bg-white border-2" data-testid="select-cliente-payment-mode"><SelectValue /></SelectTrigger>
-                <SelectContent><SelectItem value="FIFO">Normal (FIFO)</SelectItem><SelectItem value="DIRIGIDO">Pago dirigido</SelectItem></SelectContent>
-              </Select>
-            </div>
+            {!isE3Flow && <CreditEvidenceFields draft={evidence} kind="payment" medium={paymentMethod} />}
+            {!isE3Flow && (
+              <div className="space-y-2">
+                <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Aplicación</Label>
+                <Select value={mode} onValueChange={(value: "FIFO" | "DIRIGIDO") => { setMode(value); setSelectedMovementId(null); }}>
+                  <SelectTrigger className="h-12 bg-white border-2" data-testid="select-cliente-payment-mode"><SelectValue /></SelectTrigger>
+                  <SelectContent><SelectItem value="FIFO">Normal (FIFO)</SelectItem><SelectItem value="DIRIGIDO">Pago dirigido</SelectItem></SelectContent>
+                </Select>
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2 col-span-2">
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Importe a abonar</Label>
@@ -268,13 +427,14 @@ export function ClientePagoDialog({
                     }
                   }}
                 >
-                  <SelectTrigger className="h-12 bg-white border-2">
+                  <SelectTrigger className="h-12 bg-white border-2" data-testid="e3-payment-method">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="EFECTIVO" disabled={evidence.nature !== "CORRECCION_CONTABLE"} className="font-medium py-3">Efectivo (captura física deshabilitada)</SelectItem>
+                    {!isE3Flow && <SelectItem value="EFECTIVO" disabled={evidence.nature !== "CORRECCION_CONTABLE"} className="font-medium py-3">Efectivo (captura física deshabilitada)</SelectItem>}
+                    {isE3Flow && <SelectItem value="EFECTIVO" className="font-medium py-3">Efectivo</SelectItem>}
                     <SelectItem value="TRANSFERENCIA" className="font-medium py-3">Transferencia</SelectItem>
-                    <SelectItem value="FACTURADO" className="font-medium py-3">Facturado</SelectItem>
+                    {!isE3Flow && <SelectItem value="FACTURADO" className="font-medium py-3">Facturado</SelectItem>}
                   </SelectContent>
                 </Select>
               </div>
@@ -295,7 +455,7 @@ export function ClientePagoDialog({
                       }
                     }}
                   >
-                    <SelectTrigger className="h-12 bg-white border-2">
+                    <SelectTrigger className="h-12 bg-white border-2" data-testid="e3-payment-account">
                       <SelectValue placeholder="Selecciona..." />
                     </SelectTrigger>
                     <SelectContent>
@@ -344,81 +504,136 @@ export function ClientePagoDialog({
           </div>
         )}
 
-        {step === "preview" && previewData && (
+        {step === "preview" && ((!isE3Flow && previewData) || (isE3Flow && e3PreviewResult)) && (
           <div className="p-6 bg-secondary/10 space-y-6 animate-in fade-in slide-in-from-right-2 max-h-[60vh] overflow-y-auto">
             <div className="bg-white border rounded-xl shadow-sm p-4 text-center">
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">Importe a Aplicar</p>
-              <p className="text-3xl font-black text-sidebar tabular-nums">{formatNumber(previewData.monto, { kind: "money" })}</p>
+              <p className="text-3xl font-black text-sidebar tabular-nums">
+                {isE3Flow && e3PreviewResult ? formatNumber(e3PreviewResult.importeCentavos / 100, { kind: "money" }) : formatNumber(previewData!.monto, { kind: "money" })}
+              </p>
             </div>
 
-            {previewData.asignaciones.length > 0 ? (
-              <div className="space-y-3">
-                <h4 className="font-bold text-sidebar border-b pb-2">{mode === "FIFO" ? "Reparto de abono (FIFO)" : "Selecciona exactamente una nota"}</h4>
-                <div className="space-y-2">
-                  {previewData.asignaciones.map((asig) => (
-                    <button type="button" key={asig.movimientoVentaId} disabled={mode === "FIFO"} onClick={() => setSelectedMovementId(asig.movimientoVentaId)} className={`w-full text-left bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between ${mode === "DIRIGIDO" && selectedMovementId === asig.movimientoVentaId ? "ring-2 ring-primary" : ""}`}>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>
-                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${asig.resultado === "SALDADA" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
-                            {asig.resultado}
-                          </span>
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Saldo original: <span className="font-medium line-through decoration-muted-foreground/50">{formatNumber(asig.saldoAntes, { kind: "money" })}</span> → <span className="font-bold text-sidebar">{formatNumber(asig.saldoDespues, { kind: "money" })}</span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Aplicado</span>
-                        <span className="font-black text-primary tabular-nums">+{formatNumber(asig.aplicado, { kind: "money" })}</span>
-                      </div>
-                    </button>
-                  ))}
+            {isE3Flow && e3PreviewResult ? (
+              <div className="space-y-4">
+                <div className="bg-amber-50 p-4 border border-amber-200 rounded-lg text-center">
+                  <h4 className="font-bold text-amber-800">Vista previa de abono ordinario</h4>
+                  <p className="text-xs text-amber-700 font-medium">Aún no se ha registrado dinero. Al confirmar se aplicará FIFO y el remanente quedará a favor.</p>
                 </div>
+                {e3PreviewResult.asignaciones.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="font-bold text-sidebar border-b pb-2">Reparto de abono (FIFO) proyectado</h4>
+                    <div className="space-y-2">
+                      {e3PreviewResult.asignaciones.map((asig) => (
+                        <div key={asig.movimientoVentaId} className="w-full text-left bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between">
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Saldo original: <span className="font-medium line-through decoration-muted-foreground/50">{formatNumber(asig.saldoAntesCentavos / 100, { kind: "money" })}</span> → <span className="font-bold text-sidebar">{formatNumber(asig.saldoDespuesCentavos / 100, { kind: "money" })}</span>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Proyectado</span>
+                            <span className="font-black text-primary tabular-nums">+{formatNumber(asig.aplicadoCentavos / 100, { kind: "money" })}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {e3PreviewResult.remanenteCentavos > 0 && (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <h4 className="font-bold text-emerald-800">A favor proyectado</h4>
+                        <p className="text-xs text-emerald-600 font-medium">Quedará disponible al confirmar este abono ordinario.</p>
+                      </div>
+                      <div className="font-black text-emerald-700 tabular-nums text-xl">
+                        {formatNumber(e3PreviewResult.remanenteCentavos / 100, { kind: "money" })}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
-              <div className="text-center py-6 bg-amber-50 rounded-lg border border-amber-200">
-                <p className="font-medium text-amber-700">No hay notas pendientes para aplicar saldo.</p>
-              </div>
-            )}
-            {mode === "DIRIGIDO" && (
-              <div className="space-y-2">
-                <Label>Motivo del pago dirigido (mínimo 10 caracteres)</Label>
-                <Textarea value={motivo} onChange={(event) => setMotivo(event.target.value)} data-testid="input-cliente-directed-reason" />
-              </div>
-            )}
+              // Original non-E3 preview code
+              <>
+                {previewData!.asignaciones.length > 0 ? (
+                  <div className="space-y-3">
+                    <h4 className="font-bold text-sidebar border-b pb-2">{mode === "FIFO" ? "Reparto de abono (FIFO)" : "Selecciona exactamente una nota"}</h4>
+                    <div className="space-y-2">
+                      {previewData!.asignaciones.map((asig) => (
+                        <button type="button" key={asig.movimientoVentaId} disabled={mode === "FIFO"} onClick={() => setSelectedMovementId(asig.movimientoVentaId)} className={`w-full text-left bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between ${mode === "DIRIGIDO" && selectedMovementId === asig.movimientoVentaId ? "ring-2 ring-primary" : ""}`}>
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${asig.resultado === "SALDADA" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
+                                {asig.resultado}
+                              </span>
+                            </div>
+                            <div className="text-xs text-muted-foreground">
+                              Saldo original: <span className="font-medium line-through decoration-muted-foreground/50">{formatNumber(asig.saldoAntes, { kind: "money" })}</span> → <span className="font-bold text-sidebar">{formatNumber(asig.saldoDespues, { kind: "money" })}</span>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Aplicado</span>
+                            <span className="font-black text-primary tabular-nums">+{formatNumber(asig.aplicado, { kind: "money" })}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-6 bg-amber-50 rounded-lg border border-amber-200">
+                    <p className="font-medium text-amber-700">No hay notas pendientes para aplicar saldo.</p>
+                  </div>
+                )}
+                {mode === "DIRIGIDO" && (
+                  <div className="space-y-2">
+                    <Label>Motivo del pago dirigido (mínimo 10 caracteres)</Label>
+                    <Textarea value={motivo} onChange={(event) => setMotivo(event.target.value)} data-testid="input-cliente-directed-reason" />
+                  </div>
+                )}
 
-            {Number(previewExceso) > 0 && (
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-3" data-testid="receipt-preview-excess">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <h4 className="font-bold text-emerald-800">Excedente recibido</h4>
-                    <p className="text-xs text-emerald-600 font-medium">La parte que no se aplicó a una nota no se pierde.</p>
+                {Number(previewExceso) > 0 && (
+                  <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-3" data-testid="receipt-preview-excess">
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <h4 className="font-bold text-emerald-800">Excedente recibido</h4>
+                        <p className="text-xs text-emerald-600 font-medium">La parte que no se aplicó a una nota no se pierde.</p>
+                      </div>
+                      <div className="font-black text-emerald-700 tabular-nums text-xl" data-testid="text-preview-excess">
+                        {formatNumber(previewExceso, { kind: "money" })}
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-emerald-200 pt-3 text-sm">
+                      <span className="font-semibold text-emerald-800">Saldo a favor resultante</span>
+                      <span className="font-black text-emerald-700 tabular-nums" data-testid="text-preview-resulting-favor">
+                        {formatNumber(previewExceso, { kind: "money" })}
+                      </span>
+                    </div>
                   </div>
-                  <div className="font-black text-emerald-700 tabular-nums text-xl" data-testid="text-preview-excess">
-                    {formatNumber(previewExceso, { kind: "money" })}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between border-t border-emerald-200 pt-3 text-sm">
-                  <span className="font-semibold text-emerald-800">Saldo a favor resultante</span>
-                  <span className="font-black text-emerald-700 tabular-nums" data-testid="text-preview-resulting-favor">
-                    {formatNumber(previewExceso, { kind: "money" })}
-                  </span>
-                </div>
-              </div>
+                )}
+              </>
             )}
           </div>
         )}
 
-        {step === "success" && realResult && (
+        {step === "success" && ((!isE3Flow && realResult) || (isE3Flow && e3Receipt)) && (
           <div className="p-6 bg-secondary/10 space-y-6 animate-in zoom-in-95 max-h-[60vh] overflow-y-auto">
              <div className="bg-white border-2 border-emerald-500/20 rounded-xl shadow-sm p-6 text-center space-y-2">
                 <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
-                  <h3 className="font-black text-xl text-sidebar">{mode === "DIRIGIDO" ? "Solicitud de pago dirigido registrada" : "Abono registrado exitosamente"}</h3>
-                 <p className="text-muted-foreground text-sm font-medium">Se registró {formatNumber(amount, { kind: "money" })} en la cuenta del cliente.</p>
+                  <h3 className="font-black text-xl text-sidebar">
+                    {isE3Flow ? "Abono registrado exitosamente" : (mode === "DIRIGIDO" ? "Solicitud de pago dirigido registrada" : "Abono registrado exitosamente")}
+                  </h3>
+                  {isE3Flow && e3Receipt && <p className="text-emerald-700 text-sm font-bold mb-2">Folio Recibo: {e3Receipt.folio}</p>}
+                 <p className="text-muted-foreground text-sm font-medium">Se registró {isE3Flow && e3Receipt ? formatNumber(e3Receipt.importeCentavos / 100, { kind: "money" }) : formatNumber(amount, { kind: "money" })} en la cuenta del cliente.</p>
+                 {isE3Flow && <p className="text-xs text-muted-foreground mt-2">El recibo debe imprimirse desde la computadora conectada a la impresora de recibos.</p>}
              </div>
 
-             {realResult.asignaciones && realResult.asignaciones.length > 0 && (
+             {/* Non-E3 Success Resumen */}
+             {!isE3Flow && realResult && realResult.asignaciones && realResult.asignaciones.length > 0 && (
                <div className="space-y-3">
                  <h4 className="font-bold text-sidebar text-sm uppercase tracking-wider">Resumen de aplicación</h4>
                  <div className="bg-white rounded-lg border shadow-sm divide-y">
@@ -435,7 +650,7 @@ export function ClientePagoDialog({
                </div>
              )}
 
-              {Number(excedenteGenerado) > 0 && (
+              {!isE3Flow && realResult && Number(excedenteGenerado) > 0 && (
                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-2 text-sm" data-testid="receipt-payment-excess">
                  <div className="flex justify-between items-center gap-3">
                    <span className="font-bold text-emerald-800">Excedente recibido</span>
@@ -456,10 +671,11 @@ export function ClientePagoDialog({
               <Button variant="ghost" onClick={() => onOpenChange(false)} className="font-bold text-muted-foreground">Cancelar</Button>
               <Button
                 onClick={handlePreview}
-                disabled={!isFormValid || previewPayment.isPending}
+                disabled={!isFormValid || previewPayment.isPending || e3PreviewMutation.isPending}
+                data-testid="e3-preview"
                 className="font-bold h-10 px-6"
               >
-                {previewPayment.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                {(previewPayment.isPending || e3PreviewMutation.isPending) ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
                 Vista Previa <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </>
@@ -467,11 +683,13 @@ export function ClientePagoDialog({
 
           {step === "preview" && (
             <>
-              <Button variant="ghost" onClick={() => setStep("form")} className="font-bold text-muted-foreground">
+              {e3Uncertain && <p role="status">Confirmación sin respuesta definitiva: reintenta con esta misma operación antes de salir. No captures otro abono.</p>}
+              <Button variant="ghost" disabled={isSubmitting || e3Uncertain} onClick={() => setStep("form")} className="font-bold text-muted-foreground">
                 <ChevronLeft className="h-4 w-4 mr-2" /> Atrás
               </Button>
               <Button
                 onClick={submitPayment}
+                data-testid="e3-confirm"
                  disabled={isSubmitting || !isFormValid || (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10))}
                 className="font-bold h-10 px-8"
               >

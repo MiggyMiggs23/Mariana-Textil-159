@@ -14,6 +14,7 @@ export * from "./etiquetas";
 export * from "./equipos";
 export * from "./enums";
 export * from "./fondo";
+export * from "./e3-receipts";
 export * from "./locations";
 export * from "./pagos-proveedor";
 export * from "./precio-historial";

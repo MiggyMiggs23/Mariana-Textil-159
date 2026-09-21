@@ -169,3 +169,23 @@ Fuente: mensaje del propietario en esta conversación. **Solo documentación:** 
 En «Roles SISTEMAS y CONTADOR», `replit.md` conserva para SISTEMAS la frase **«Opera todo»** y menciona el diagnóstico de precios, pero no distingue allí consulta de cambio de precios. Esa amplitud documental está en tensión con la configuración ahora confirmada de que solo ADMIN cambie precios. Se reporta sin convertir el diagnóstico en permiso de edición, sin retirar facultades de SISTEMAS por cuenta propia y sin modificar esa regla. No se consultaron permisos efectivos en la base.
 
 La regla general de matriz configurable es compatible con la decisión 3; no se interpreta «solo ADMIN» como veto fijo en código. Retirar la marca conservando original e historial es compatible con no borrar evidencia. La tensión anterior de la purga completa y los 69 vetos de rol siguen pendientes, fuera de estas cuatro decisiones.
+
+## E3 — decisión textual del propietario sobre captura y recibo (2026-09-21)
+
+> Decisión nueva del propietario sobre la naturaleza del dinero: el cajero nunca ve una pregunta de naturaleza. Todo abono capturado desde Caja es dinero real recibido en ese momento y entra a la caja abierta. Las recapturas (pagos recibidos antes que solo se registran, sin dinero nuevo) solo se capturan desde la pantalla del cliente, con motivo obligatorio, y nunca entran a caja. Es un permiso de la matriz que por defecto solo tiene ADMIN. Regístralo en prompt-u-respuestas y en replit.md.
+>
+> Recuerda además: sin ADMIN, un pago dirigido solo se acepta por el importe exacto del saldo pendiente (P6). El recibo A5, en dos copias, se genera al cobrar pero se imprime desde otro equipo, porque no hay impresora en caja. ADMIN llega al recibo desde el abono, el estado de cuenta y el corte.
+
+### Sustitución y límites
+
+- Sustituye el requisito de E3 del plan que pedía una pregunta de naturaleza comprensible para el cajero. No se presenta esa pregunta: el flujo de Caja declara en servidor ingreso físico real y el flujo de recaptura desde cliente declara corrección contable. No se eliminan las cuatro naturalezas E1 ni sus validaciones por productor.
+- La recaptura conserva el efecto contable de crédito que corresponda; no es un nuevo ingreso, no entra al corte y requiere motivo y permiso configurable de matriz. No se añade un veto fijo por rol ni se cambian permisos efectivos ahora.
+- La sesión abierta de la operación de Caja y la sesión de efectivo en E1 son conceptos separados: las transferencias conservan su cuenta bancaria y no se suman al efectivo del cajón. La asociación operativa del recibo no altera esa evidencia permanente. Si esa separación resultase insuficiente, se debe reportar el conflicto, no relajar la regla E1.
+- P6 exige exactitud para el dirigido sin ADMIN. Continúa la dependencia de E5/E7 para liberar dinero retenido y su aplicación; no se presenta como deuda pagada ni como favor disponible.
+- La generación del recibo al confirmar la recepción es independiente de su posterior impresión por ADMIN desde otro equipo. No se recobra por fallo de impresión y no se reconstruye evidencia faltante.
+- Se autoriza **construcción apagada**, no liberación. No acceder a la base de la API, no ejecutar SQL contra ella, no reiniciar la API ni modificar el bundle en ejecución. SQL y reversión, si hacen falta, quedan preparados sin ejecución.
+- Permanecen protegidos `reports/e2-paquete-liberacion-preparado-20260921/`, `artifacts/api-server/dist-e2-20260927/` y el dist retenido. Toda prueba nueva debe demostrar fallo con su defecto introducido. Resultados, revisión exacta y asuntos detenidos se documentan por separado en `reports/e3-20260921/`.
+
+### Conflicto detectado durante E3 — sin resolver
+
+La regla E1 de actores de crédito permite ADMIN/SUPERVISOR/CAJA/TERMINAL y excluye CONTADOR/SISTEMAS/BODEGA. La capacidad de recaptura configurable por matriz no puede concederles autorización efectiva mientras subsista ese veto. No se cambia la regla ni se sortea la validación: hace falta decisión del propietario para ese conflicto. Los otros componentes E3 continúan su preparación apagada. Esto no se confunde con la separación compatible entre sesión operativa y evidencia de efectivo de una transferencia.

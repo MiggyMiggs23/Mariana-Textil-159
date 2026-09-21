@@ -71,6 +71,7 @@ export function mergePermissionValues(
 
 /** All configurable module identifiers. */
 const REMATE_MATRIX_RELEASED: boolean = false;
+const E3_MATRIX_RELEASED: boolean = false;
 export const MODULOS = [
   ...(REMATE_MATRIX_RELEASED ? ["marcar_remate"] : []),
   "dashboard",
@@ -88,6 +89,7 @@ export const MODULOS = [
   "clientes_credito",
   "clientes_precios",
   "clientes_finanzas",
+  ...(E3_MATRIX_RELEASED ? ["caja_abonos", "clientes_recapturas"] : []),
   "proveedores",
   "proveedores_finanzas",
   "contenedores",

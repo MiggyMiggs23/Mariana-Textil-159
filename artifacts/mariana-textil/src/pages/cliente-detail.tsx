@@ -2,6 +2,9 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useRoute, useSearch } from "wouter";
 import { ArrowLeft, Download, Eye, EyeOff, Loader2, LockKeyhole, Printer, FileText } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { E3_ENABLED } from "@/lib/e3-feature-flags";
+import { useE3ListRecibosCliente } from "@/hooks/use-e3";
+import { ClienteE3RecapturaDialog } from "@/components/cliente-e3-recaptura-dialog";
 import {
   getGetClienteComprasQueryKey,
   getGetClienteCreditoQueryKey,
@@ -32,6 +35,7 @@ import {
   getObtenerComportamientoPagoClienteQueryKey,
 } from "@workspace/api-client-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useListLocations, getListLocationsQueryKey } from "@workspace/api-client-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -177,6 +181,10 @@ function StatementResponsiveTable({
   movementTo: string;
   clienteId: number;
 }) {
+  const { data: user } = useGetCurrentUser();
+  const isAdmin = user?.rol === "ADMIN" || user?.rol === "SISTEMAS";
+  const { data: recibosE3 } = useE3ListRecibosCliente(clienteId, E3_ENABLED && user?.rol === "ADMIN");
+
   const search = useSearch();
   const filteredRows = rows.filter((item): item is StatementRow =>
     typeof item.movimientoId === "number" &&
@@ -234,6 +242,11 @@ function StatementResponsiveTable({
           empty={empty}
         />
       </div>
+      {E3_ENABLED && user?.rol === "ADMIN" && !!recibosE3?.length && <nav aria-label="Recibos del estado de cuenta">
+        {recibosE3.filter(receipt => filteredRows.some(row => row.movimientoId === receipt.movimientoId)).map(receipt =>
+          <Link key={receipt.folio} href={`/recibos-e3/${encodeURIComponent(receipt.folio)}`} className="block py-2 underline">Recibo {receipt.folio}</Link>
+        )}
+      </nav>}
       <div className="space-y-3 sm:hidden" data-testid="statement-mobile-cards">
         {filteredRows.map((item) => {
           const highlighted =
@@ -450,6 +463,13 @@ export default function ClienteDetail() {
     });
   };
 
+  const { data: e3Locations } = useListLocations(undefined, {
+    query: { queryKey: getListLocationsQueryKey(), enabled: E3_ENABLED && user?.rol === "ADMIN" }
+  });
+  const ubicaciones = user?.rol === "ADMIN"
+    ? e3Locations?.filter(site => site.activa && site.tipo === "TIENDA")
+    : user?.ubicacion ? [user.ubicacion] : [];
+
   if (clientQuery.isLoading) return <AppLayout><div className="mx-auto max-w-7xl space-y-4"><Skeleton className="h-12 w-72" /><Skeleton className="h-96 w-full" /></div></AppLayout>;
   if (clientQuery.isError || !clientQuery.data) return <AppLayout><Card className="mx-auto max-w-xl border-destructive/30"><CardContent className="space-y-4 p-8 text-center"><p className="text-destructive" role="alert" data-testid="error-client-detail">{getApiErrorMessage(clientQuery.error, "No se pudo cargar el cliente.")}</p><Button asChild><AppBackLink fallbackHref="/clientes">Volver a clientes</AppBackLink></Button></CardContent></Card></AppLayout>;
   const client = clientQuery.data;
@@ -508,6 +528,9 @@ export default function ClienteDetail() {
               </Button>
             )}
             {canFinances && <><Button variant="outline" onClick={() => downloadClientFile(`/clientes/${id}/estado-cuenta.pdf`, `estado-cuenta-${id}.pdf`)} data-testid="button-export-account"><Download className="mr-2 h-4 w-4" />Descargar PDF</Button><Button variant="outline" onClick={() => window.print()} data-testid="button-print-account"><Printer className="mr-2 h-4 w-4" />Imprimir</Button></>}
+            {E3_ENABLED && hasPermission(user, "clientes_recapturas", "crear") && ubicaciones && (
+              <ClienteE3RecapturaDialog clienteId={id} sitios={ubicaciones} />
+            )}
           </div>
         </div>
         {canFinances && (

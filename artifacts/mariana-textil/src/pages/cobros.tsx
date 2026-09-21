@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
+import { CajaAbonoE3Dialog } from "@/components/caja-abono-e3-dialog";
 import {
   useObtenerSesionCajaActual,
   useAbrirSesionCaja,
@@ -244,13 +245,18 @@ function CarteraContent() {
     <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6">
       <Card className="shadow-md border-primary/20">
         <CardHeader className="bg-primary/5 pb-4 border-b border-primary/10">
-          <CardTitle className="text-xl flex items-center gap-2">
-            <Wallet className="h-5 w-5 text-primary" />
-            Estado de Cuenta
-          </CardTitle>
-          <CardDescription>
-            Escanea el QR de la nota de crédito o ingresa el folio para consultar y abonar a la cartera.
-          </CardDescription>
+          <div className="flex justify-between items-center w-full">
+            <div className="space-y-1">
+              <CardTitle className="text-xl flex items-center gap-2">
+                <Wallet className="h-5 w-5 text-primary" />
+                Estado de Cuenta
+              </CardTitle>
+              <CardDescription>
+                Escanea el QR de la nota de crédito o ingresa el folio para consultar y abonar a la cartera.
+              </CardDescription>
+            </div>
+            <CajaAbonoE3Dialog />
+          </div>
         </CardHeader>
         <CardContent className="pt-6">
           <div className="max-w-md mx-auto mb-6">

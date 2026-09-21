@@ -58,6 +58,157 @@ tags:
   - name: equipos
     description: Registro de equipo del sistema y su configuración por sitio
 paths:
+  /caja/abonos-e3/contexto:
+    get:
+      operationId: getCajaAbonoE3Context
+      tags: [caja]
+      parameters:
+        - { name: buscar, in: query, schema: { type: string, maxLength: 100 } }
+        - { name: sitioId, in: query, schema: { type: integer, minimum: 1 } }
+      responses:
+        "200":
+          description: Catálogo mínimo y sesiones abiertas del sitio autorizado, sin datos financieros.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E3CollectionContext" }
+        "403": { description: Falta permiso caja_abonos.crear o sitio ajeno. }
+        "423": { description: E3 cerrado antes de consultar base. }
+  /caja/abonos-e3/vista-previa:
+    post:
+      operationId: previewCajaAbonoE3
+      tags: [caja]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/E3CollectionInput" }
+      responses:
+        "200":
+          description: Vista previa FIFO; no registra dinero.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E3CollectionPreview" }
+        "423": { description: E3 cerrado por código fuente. }
+  /caja/abonos-e3:
+    post:
+      operationId: confirmCajaAbonoE3
+      tags: [caja]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/E3CollectionInput" }
+      responses:
+        "201":
+          description: Recibo inmutable; reintento conserva el mismo folio.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E3CollectionResult" }
+        "423": { description: E3 cerrado por código fuente. }
+  /clientes/{id}/recapturas-e3/vista-previa:
+    post:
+      operationId: previewClienteRecapturaE3
+      tags: [clientes]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/E3CollectionInput" }
+      responses:
+        "200":
+          description: Corrección sin dinero nuevo; permiso configurable clientes_recapturas.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E3CollectionPreview" }
+        "423": { description: E3 cerrado. }
+  /clientes/{id}/recapturas-e3:
+    post:
+      operationId: confirmClienteRecapturaE3
+      tags: [clientes]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/E3CollectionInput" }
+      responses:
+        "201":
+          description: Constancia de recaptura; ningún ingreso a Caja.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E3CollectionResult" }
+        "423": { description: E3 cerrado. }
+  /recibos-e3/{folio}:
+    get:
+      operationId: getReciboAbonoE3
+      tags: [clientes]
+      parameters:
+        - { name: folio, in: path, required: true, schema: { type: string } }
+      responses:
+        "200":
+          description: Snapshot ADMIN sin reconstrucción histórica.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E3Receipt" }
+        "409": { description: Evidencia incompleta; campos faltantes explícitos. }
+        "423": { description: E3 cerrado. }
+  /clientes/{id}/recibos-e3:
+    get:
+      operationId: listClienteRecibosE3
+      tags: [clientes]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+        - { name: movimientoId, in: query, schema: { type: integer } }
+        - { name: sesionCajaId, in: query, schema: { type: integer } }
+      responses:
+        "200":
+          description: ADMIN desde abono o estado de cuenta.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/E3Receipt" }
+        "423": { description: E3 cerrado. }
+  /caja/recibos-e3:
+    get:
+      operationId: listCajaRecibosE3
+      tags: [caja]
+      parameters:
+        - { name: sesionCajaId, in: query, required: true, schema: { type: integer } }
+      responses:
+        "200":
+          description: ADMIN desde corte; incluye transferencia sin sumarla a efectivo.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/E3Receipt" }
+        "423": { description: E3 cerrado. }
+  /recibos-e3/{folio}/impresiones:
+    post:
+      operationId: recordReciboE3Print
+      tags: [clientes]
+      parameters:
+        - { name: folio, in: path, required: true, schema: { type: string } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/E3PrintInput" }
+      responses:
+        "200":
+          description: Solicitud auditada, no confirma impresión física ni registra otro cobro.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [registrado]
+                properties:
+                  registrado: { type: boolean }
+        "423": { description: E3 cerrado. }
   /pagos-dirigidos:
     get:
       operationId: listSolicitudesPagoDirigido
@@ -6587,6 +6738,118 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    E3CollectionContext:
+      type: object
+      required: [sitios, clientes]
+      properties:
+        sitios:
+          type: array
+          items: { $ref: "#/components/schemas/E3ContextSite" }
+        clientes:
+          type: array
+          items: { $ref: "#/components/schemas/E3ContextClient" }
+    E3ContextSite:
+      type: object
+      required: [id, nombre, sesiones]
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        sesiones:
+          type: array
+          items: { $ref: "#/components/schemas/E3ContextSession" }
+    E3ContextSession:
+      type: object
+      required: [id, ubicacionId, fechaOperativa]
+      properties:
+        id: { type: integer }
+        ubicacionId: { type: integer }
+        fechaOperativa: { type: string }
+    E3ContextClient:
+      type: object
+      required: [id, nombre, telefono]
+      properties:
+        id: { type: integer }
+        nombre: { type: string }
+        telefono: { type: [string, "null"] }
+    E3CollectionInput:
+      type: object
+      additionalProperties: false
+      required: [clienteId, importeCentavos, formaPago, cuentaDestino, sitioId, sesionCajaId, operacionClave]
+      properties:
+        clienteId: { type: integer, minimum: 1, maximum: 2147483647 }
+        importeCentavos: { type: integer, minimum: 1, maximum: 999999999999 }
+        formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA] }
+        cuentaDestino: { type: string, enum: [CAJA_FISICA, CUENTA_FISCAL, CUENTA_NO_FISCAL] }
+        sitioId: { type: integer, minimum: 1, maximum: 2147483647 }
+        sesionCajaId: { type: [integer, "null"], minimum: 1 }
+        operacionClave: { type: string, format: uuid }
+        motivo: { type: string, minLength: 1, maxLength: 2000 }
+        fechaRecepcion: { type: string, format: date-time }
+        previewToken: { type: string, pattern: "^[a-f0-9]{64}$" }
+    E3CollectionAllocation:
+      type: object
+      required: [movimientoVentaId, ticketId, folio, aplicadoCentavos, saldoAntesCentavos, saldoDespuesCentavos]
+      properties:
+        movimientoVentaId: { type: integer }
+        ticketId: { type: [integer, "null"] }
+        folio: { type: [integer, "null"] }
+        aplicadoCentavos: { type: integer }
+        saldoAntesCentavos: { type: integer }
+        saldoDespuesCentavos: { type: integer }
+    E3CollectionSummary:
+      type: object
+      required: [clienteId, importeCentavos, asignaciones, remanenteCentavos, saldoAFavorCentavos, deudaCentavos, origen]
+      properties:
+        clienteId: { type: integer }
+        importeCentavos: { type: integer }
+        asignaciones:
+          type: array
+          items: { $ref: "#/components/schemas/E3CollectionAllocation" }
+        remanenteCentavos: { type: integer }
+        saldoAFavorCentavos: { type: integer }
+        deudaCentavos: { type: integer }
+        origen: { type: string, enum: [CAJA, RECAPTURA] }
+    E3CollectionPreview:
+      allOf:
+        - $ref: "#/components/schemas/E3CollectionSummary"
+        - type: object
+          required: [previewToken]
+          properties:
+            previewToken: { type: string }
+    E3Receipt:
+      allOf:
+        - $ref: "#/components/schemas/E3CollectionSummary"
+        - type: object
+          required: [version, folio, movimientoId, clienteNombre, clienteTelefono, clienteRfc, sitioNombre, actorNombre, formaPago, cuentaDestino, sitioId, sesionCajaId, recibidoEn, registradoEn, actorId, motivo]
+          properties:
+            version: { type: integer, enum: [1] }
+            folio: { type: string }
+            movimientoId: { type: integer }
+            clienteNombre: { type: string }
+            clienteTelefono: { type: [string, "null"] }
+            clienteRfc: { type: [string, "null"] }
+            sitioNombre: { type: string }
+            actorNombre: { type: string }
+            formaPago: { type: string, enum: [EFECTIVO, TRANSFERENCIA] }
+            cuentaDestino: { type: string }
+            sitioId: { type: integer }
+            sesionCajaId: { type: [integer, "null"] }
+            recibidoEn: { type: string, format: date-time }
+            registradoEn: { type: string, format: date-time }
+            actorId: { type: integer }
+            motivo: { type: [string, "null"] }
+    E3CollectionResult:
+      type: object
+      required: [recibo, replay]
+      properties:
+        recibo: { $ref: "#/components/schemas/E3Receipt" }
+        replay: { type: boolean }
+    E3PrintInput:
+      type: object
+      additionalProperties: false
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 1, maxLength: 2000 }
     FondoMoney:
       type: string
       maxLength: 20

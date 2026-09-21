@@ -1,5 +1,6 @@
 import { Router, type IRouter, type Response } from "express";
 import ExcelJS from "exceljs";
+import { legacyPaymentCaptureGuard } from "../lib/e3-legacy-capture";
 import { and, asc, desc, eq, sql } from "drizzle-orm";
 import {
   CreateClientePagoBody,
@@ -2076,6 +2077,7 @@ router.post(
 
 router.post(
   "/clientes/:id/pagos/vista-previa",
+  legacyPaymentCaptureGuard(),
   requierePermiso("clientes_finanzas", "crear"),
   async (req, res, next): Promise<void> => {
     try {
@@ -2132,6 +2134,7 @@ router.post(
 
 router.post(
   "/clientes/:id/pagos",
+  legacyPaymentCaptureGuard(),
   requierePermiso("clientes_finanzas", "crear"),
   async (req, res, next): Promise<void> => {
     try {

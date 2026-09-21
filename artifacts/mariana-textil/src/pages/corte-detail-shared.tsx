@@ -3,11 +3,13 @@ import { formatAccountDestination, formatNumber, formatUnit } from "@workspace/n
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
-import { Download, FileText, Printer } from "lucide-react";
+import { Download, FileText, Printer, FileCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link } from "wouter";
+import { E3_ENABLED } from "@/lib/e3-feature-flags";
+import { useListCajaRecibosE3, getListCajaRecibosE3QueryKey, useGetCurrentUser } from "@workspace/api-client-react";
 import { CorteEfectivoDesglose } from "@/components/corte-efectivo-desglose";
 
 export function CorteTicketFolioLink({
@@ -26,6 +28,12 @@ export function CorteTicketFolioLink({
 
 export default function CorteDetail({ corte }: { corte: CorteCaja }) {
   const { toast } = useToast();
+  const { data: user } = useGetCurrentUser();
+
+  const { data: e3Receipts } = useListCajaRecibosE3(
+    { sesionCajaId: corte.sesion.id },
+    { query: { queryKey: getListCajaRecibosE3QueryKey({ sesionCajaId: corte.sesion.id }), enabled: E3_ENABLED && user?.rol === "ADMIN" && !!corte.sesion.id, staleTime: 0, refetchOnMount: "always", refetchInterval: 30000 } }
+  );
   const isDescuadre = Number(corte.diferencia) !== 0 && corte.sesion.estado === "CERRADA";
   const dif = Number(corte.diferencia);
   const ticketsCobrados = corte.facturacion.reduce((acc, f) => acc + f.ticketsCount, 0);
@@ -88,6 +96,29 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
           </p>
         </div>
       </div>
+
+      {E3_ENABLED && user?.rol === "ADMIN" && e3Receipts && e3Receipts.length > 0 && (
+        <div className="bg-slate-50 border rounded-lg p-4 mb-6">
+          <h3 className="font-bold flex items-center gap-2 mb-3">
+            <FileCheck className="h-5 w-5 text-sidebar" />
+            Recibos de Abono (E3) de esta sesión
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {e3Receipts.map((r) => (
+              <Link key={r.folio} href={`/recibos-e3/${r.folio}`} className="flex items-center justify-between p-3 bg-white border shadow-sm rounded-md hover:bg-slate-50 transition-colors">
+                <div>
+                  <p className="text-xs font-bold text-muted-foreground uppercase">{r.folio}</p>
+                  <p className="font-medium">{r.clienteNombre}</p>
+                </div>
+                <div className="text-right">
+                  <p className="font-black text-sidebar tabular-nums">{formatNumber(r.importeCentavos / 100, { kind: "money" })}</p>
+                  <p className="text-[10px] uppercase font-bold text-muted-foreground">{r.origen}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       {corte.lineasExcluidasMargen !== undefined && (
         <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
