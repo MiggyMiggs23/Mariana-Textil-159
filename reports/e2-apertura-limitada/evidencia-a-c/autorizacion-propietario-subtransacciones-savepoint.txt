@@ -1,0 +1,5 @@
+miguelestza: Autorización del propietario. Guarda este texto tal cual en reports/e2-apertura-limitada/evidencia-a-c/ antes de la primera escritura.
+
+Corrige en el SQL de A+C la identificación de "creado en esta transacción" para que acepte renglones creados después de un SAVEPOINT dentro de la misma transacción de nivel superior, y siga rechazando los creados en otra transacción. Hoy compara xmin contra txid_current() (líneas 94, 178 y 334 de la revisión anterior). Revisa si el mismo supuesto aparece en otra parte del SQL o del TypeScript de A+C.
+
+Autorizo repetir la validación PostgreSQL con la revisión corregida, con las mismas condiciones de las autorizaciones anteriores: base aislada y desechable, sin la base de la API ni los clones de E1 y E10, sin reiniciar la API, sin cambiar el bundle y sin abrir captura ni devolución. Los 51 casos deben pasar; si alguno sigue fallando, no lo corrijas: repórtamelo. Registra la revisión exacta y destruye la base al terminar.

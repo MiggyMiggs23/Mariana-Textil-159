@@ -127,3 +127,28 @@ No se usó DB API, HTTP, clones E1/E10, paquetes, runtime preflight, workflows n
 ## Límites finales
 
 PASS acredita únicamente esta fixture sintética parcial y frontera A+C en PostgreSQL16.10: no catálogo operativo E1 completo, HTTP/backend, permisos endurecidos, FIFO completo, frontend ni apertura/captura/devolución reales. No se ejecutó el preflight TypeScript contra una base. Sus cambios pasan typecheck y verificación estática de hashes, no una validación runtime. Ninguno de los dos clústeres queda pendiente de cleanup.
+
+## Cierre de coordinación
+
+La autorización literal fue la primera escritura de esta solicitud:
+[autorizacion-propietario-subtransacciones-savepoint.txt](e2-apertura-limitada/evidencia-a-c/autorizacion-propietario-subtransacciones-savepoint.txt).
+
+- Revisión funcional exacta validada: `31804125a1e752bde128d72e9fd44d23972ffff1`.
+- Evidencia de la preparación abortada, sin casos ejecutados: `5a991cf75a3ca16f5baf580747d5a6a0aea97261`.
+- Evidencia de la primera corrida efectiva, **51/51 PASS** y **5/5 suplementos PASS**: `7e10e4694fcb8a704cfb34af13f73578bedd0f40`.
+- No se cambiaron SQL, TypeScript funcional, casos ni fixture después de fijar la revisión; comparación contra ese commit sin diferencias.
+
+Comprobación independiente de cierre a **2026-09-21T18:15:50.491Z**:
+PID API **132**, mismo inicio **2026-09-21 17:26:03 UTC**, ejecutando
+`artifacts/api-server/dist/index.mjs`. Hashes completos:
+
+```text
+bundle:
+3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98
+runtime-preflight.mjs:
+9a87b47b52d3776b10d760bdab6b9f5e71158f75ef71921ec8adbb3e0585de9f
+```
+
+Los dos directorios y PIDs de PostgreSQL desechables siguen ausentes.
+Evidencia: [main-final-integrity.json](e2-apertura-limitada/evidencia-a-c/postgresql-validacion-savepoint-20260921/main-final-integrity.json).
+No se reinició la API ni se cambió su bundle, configuración o guardas de apertura.
