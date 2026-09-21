@@ -1,5 +1,26 @@
 # 10. Arranque real fallido — NO AUTORIZABLE / STOP
 
+## Rectificación y autorización posterior de control
+
+La atribución causal inicial fue prematura. El ciclo de fuentes inventario ↔
+salida-venta-reservation ya existía en la revisión retenida 7cb77f8 y no demuestra
+por sí solo un defecto nuevo del candidato. Las esperas async descritas abajo
+son observaciones estáticas e hipótesis; el fallo de health del candidato sí
+es observado. No se decide cambiar runtime antes del control autorizado.
+
+`autorizacion-control-y-preflight.txt` exige compilar 7cb77f8 por el mismo método
+y ejecutar el mismo ensayo. Si también falla, se corrige el ensayo, no fuentes.
+Si el control arranca y el candidato no, se identifica el delta causal y solo
+entonces se considera la corrección mínima separada autorizada. El agente
+principal ejecutará el control; el subagente no ejecutó ninguna aplicación.
+
+Independientemente, el preflight CLI fue corregido bajo esa nueva autorización
+para resolver realpath; el wrapper ahora exige evidencia positiva, no exit 0
+solamente. La regresión symlink falló antes (exit 1 del test, CLI omitido con
+exit 0) y pasó después. La matriz ampliada tiene 20 PASS PostgreSQL incluyendo
+CLI real por symlink, y 9 PASS de wrapper incluyendo falta de prueba positiva.
+Esto no reescribe ni valida retroactivamente el arranque fallido conservado.
+
 ## Resultado observado
 
 El agente principal ejecutó el candidato autorizado con entorno limpio,
@@ -13,7 +34,7 @@ y del transporte pino-pretty.mjs desde el directorio definitivo, por el hilo
 3555 (traza líneas 2456/2458). El aviso Pino real fue emitido por PID 3525.
 La portabilidad de esos workers no es el bloqueo de este intento.
 
-## Defecto real: ciclo de inicialización async
+## Hipótesis de espera circular: falta contrastar control
 
 En la fuente exacta exportada de 31804125:
 
@@ -38,7 +59,8 @@ inventario, y estas esperas recíprocas:
 
 El helper esbuild `__esm` (líneas 21–23) conserva las promesas pendientes.
 Después del primer await, ambos inicializadores terminan esperando la promesa
-inconclusa del otro. La aplicación no llega a listen. La ruta HTTP `/api` +
+inconclusa del otro según el análisis estático; el control debe discriminar
+esa hipótesis de un problema del ensayo. La ruta HTTP `/api` +
 `/healthz` y PORT 18092 del runner son correctos; cambiar puerto o aumentar
 timeout no elimina este ciclo.
 
@@ -77,9 +99,10 @@ Hash activo final, sin cambios:
 Hash candidato preservado:
 `1102baeec9de7d7c7773f142a835f39234ec1ba2f278373cdedcd4814ff2feb3`.
 
-No se corrigió runtime, plugin, preflight ni runner después del diagnóstico.
+No se corrigió runtime ni plugin después del diagnóstico. El preflight y la
+preparación de control sí se modificaron con la nueva autorización explícita.
 No se tocó la API activa, su base, workflow o clones E1/E10. No se realizó
 backup Drive ni liberación. Fase B queda **NO AUTORIZABLE**; cualquier corrección
 fuera del directorio de salida requiere autorización separada, revisión de
-hashes y nueva verificación real. No se sugiere reintentar bajo la autorización
-limitada actual.
+hashes y nueva verificación real. Ahora procede únicamente el control autorizado
+y las acciones condicionales indicadas arriba; fase B continúa bloqueada.

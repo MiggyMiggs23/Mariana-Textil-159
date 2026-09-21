@@ -6,11 +6,15 @@ import net from "node:net";
 import { fileURLToPath } from "node:url";
 import { spawn, spawnSync } from "node:child_process";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readCatalog, hash } from "./release-preflight.mjs";
 
 const directory = path.dirname(fileURLToPath(import.meta.url));
 const workspace = path.resolve(directory, "../..");
 const fixture = process.argv[2];
+const control = process.argv[3] === "--control";
+if (process.argv[3] && !control) throw new Error("Unknown startup trial selector.");
+const bundleDirectory = control ? "dist-e2-control-7cb77f8-20260927" : "dist-e2-20260927";
 if (!fixture?.startsWith("/tmp/e2-release-preparation-")) throw new Error("Isolated empty fixture required.");
 if (process.env.DATABASE_URL || process.env.PGHOST || process.env.PGPASSWORD) throw new Error("Inherited DB settings forbidden.");
 const base = fs.mkdtempSync("/tmp/e2-candidate-start-");
@@ -20,10 +24,36 @@ const runRoot = path.join(base, "run");
 fs.mkdirSync(socket);
 fs.mkdirSync(path.join(runRoot, "reports"), { recursive: true });
 fs.mkdirSync(path.join(runRoot, "artifacts/api-server"), { recursive: true });
-fs.symlinkSync(directory, path.join(runRoot, "reports/e2-paquete-liberacion-preparado-20260921"));
-fs.symlinkSync(path.join(workspace, "artifacts/api-server/dist-e2-20260927"),
-  path.join(runRoot, "artifacts/api-server/dist-e2-20260927"));
-const output = path.join(directory, "verificacion-final");
+if (!control) fs.symlinkSync(directory, path.join(runRoot, "reports/e2-paquete-liberacion-preparado-20260921"));
+fs.symlinkSync(path.join(workspace, "artifacts/api-server", bundleDirectory),
+  path.join(runRoot, "artifacts/api-server", bundleDirectory));
+// Control uses the same wrapper/gates and B1 fixture. Only its bundle paths and
+// immutable hashes differ; source revision and trial evidence remain separate.
+if (control) {
+  const packagePath = "reports/e2-paquete-liberacion-preparado-20260921";
+  const originalManifest = fs.readFileSync(path.join(directory, "release-assets.sha256"), "utf8");
+  const files = originalManifest.trim().split("\n").map(line => line.slice(66));
+  const rows = [];
+  for (const original of files) {
+    const relative = original.replaceAll("dist-e2-20260927", bundleDirectory);
+    const destination = path.join(runRoot, relative);
+    if (!original.startsWith("artifacts/")) {
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.copyFileSync(path.join(workspace, original), destination);
+      if (original.endsWith("/api-start-audit-record.mjs")) {
+        fs.writeFileSync(destination, fs.readFileSync(destination, "utf8").replaceAll("dist-e2-20260927", bundleDirectory));
+      }
+    }
+    rows.push(`${createHash("sha256").update(fs.readFileSync(destination)).digest("hex")}  ${relative}`);
+  }
+  const manifest = rows.join("\n") + "\n";
+  fs.writeFileSync(path.join(runRoot, packagePath, "release-assets.sha256"), manifest);
+  const wrapper = fs.readFileSync(path.join(directory, "api-start-audit.sh"), "utf8")
+    .replaceAll("dist-e2-20260927", bundleDirectory)
+    .replace(hash(originalManifest), hash(manifest));
+  fs.writeFileSync(path.join(runRoot, packagePath, "api-start-audit.sh"), wrapper);
+}
+const output = path.join(directory, control ? "verificacion-control" : "verificacion-final");
 fs.mkdirSync(output, { recursive: true });
 const clean = { PATH: process.env.PATH, HOME: base, LANG: "C.UTF-8" };
 const pg = { ...clean, PGHOST: socket, PGPORT: "55439", PGUSER: "postgres", PGDATABASE: "heliumdb" };
@@ -36,6 +66,8 @@ const command = (cmd, args, options = {}) => {
 };
 const sql = input => command("psql", ["-X", "-q", "-A", "-t", "-v", "ON_ERROR_STOP=1"], { env: pg, input });
 const results = { databasePath: base, apiPort: 18092, pgPort: 55439, started: false, executedAgainst: "new local empty synthetic catalog only" };
+results.revision = control ? "7cb77f8cfc6287fa51325a25122c48af392a7ada" : "31804125a1e752bde128d72e9fd44d23972ffff1";
+results.bundleDirectory = bundleDirectory;
 let pgStarted = false;
 let child;
 let fd;
@@ -80,7 +112,7 @@ try {
   results.health = health;
   await new Promise(resolve => setTimeout(resolve, 500));
   const opened = fs.readFileSync(trace, "utf8");
-  const candidate = path.join(workspace, "artifacts/api-server/dist-e2-20260927");
+  const candidate = path.join(workspace, "artifacts/api-server", bundleDirectory);
   for (const worker of ["thread-stream-worker.mjs", "pino-pretty.mjs"]) {
     assert.ok(opened.split("\n").some(line => line.includes(`${candidate}/${worker}`) && /= \d+/.test(line)), `Worker load not observed: ${worker}`);
   }

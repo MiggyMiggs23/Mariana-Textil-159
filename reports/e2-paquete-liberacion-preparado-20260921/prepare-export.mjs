@@ -4,7 +4,10 @@ import path from "node:path";
 import { execFileSync } from "node:child_process";
 
 const workspace = process.cwd();
-const revision = "31804125a1e752bde128d72e9fd44d23972ffff1";
+const revision = process.argv[2] ?? "31804125a1e752bde128d72e9fd44d23972ffff1";
+if (!["31804125a1e752bde128d72e9fd44d23972ffff1", "7cb77f8cfc6287fa51325a25122c48af392a7ada"].includes(revision)) {
+  throw new Error("Only explicitly authorized candidate/control revisions may be exported.");
+}
 const target = fs.mkdtempSync("/tmp/e2-release-preparation-");
 const source = path.join(target, "source");
 fs.mkdirSync(source);

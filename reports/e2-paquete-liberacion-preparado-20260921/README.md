@@ -1,6 +1,6 @@
 # Preparación aislada de liberación E2 — CLOSED, candidato en directorio definitivo
 
-**Fecha:** 2026-09-21. **Estado: NO AUTORIZABLE — ARRANQUE REAL FALLIDO; STOP; NO LIBERAR.**
+**Fecha:** 2026-09-21. **Estado: NO AUTORIZABLE — ARRANQUE CANDIDATO FALLIDO; CONTROL AUTORIZADO PENDIENTE; NO LIBERAR.**
 
 La autorización íntegra está en `autorizacion-propietario.txt`; la aceptación
 posterior de Entradas está en `aclaracion-entradas.txt`. Se permite preparación
@@ -18,12 +18,18 @@ wrapper: 8/8 PASS; selección sin base: 119/119 PASS; typecheck: cero errores.
 Esos resultados independientes siguen siendo válidos, pero **la prueba real
 ejecutada por el agente principal falló: no obtuvo healthz 200 en 30 segundos**.
 La traza demuestra carga real de thread-stream-worker y pino-pretty y se emitió
-el aviso INSPECTION. El bundle presenta un ciclo de inicializadores async que
-bloquea la importación de app antes de listen. Además, el enlace simbólico del
+el aviso INSPECTION. El ciclo async observado es una hipótesis de diagnóstico,
+no causa demostrada sin control: el ciclo de fuentes ya existía en 7cb77f8.
+Además, el enlace simbólico del
 runner hizo omitir el CLI del preflight: esa ejecución no prueba el preflight
 del recorrido completo. Candidato detenido; PostgreSQL detenido y destruido.
 Manifiesto y fase B quedan **bloqueados, no simplemente pendientes de una prueba**.
-No se corrigió runtime ni preflight bajo STOP. Véase
+La nueva autorización `autorizacion-control-y-preflight.txt` permite probar
+7cb77f8 y corregir independientemente el preflight. Este último ya ejecuta
+su CLI por symlink y el wrapper exige prueba positiva; regresión 1→0,
+20 comprobaciones PostgreSQL y 9 tests de wrapper PASS. No se modificó runtime.
+El control fue compilado, pero su ejecución corresponde al agente principal.
+Véase
 `10-fallo-arranque-real.md`; no basta completar la hora para autorizar fase B.
 
 ## Revisiones exactas

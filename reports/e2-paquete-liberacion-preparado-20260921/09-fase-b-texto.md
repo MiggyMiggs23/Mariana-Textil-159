@@ -7,9 +7,11 @@ runner omitido por el guard CLI ante symlink. Los workers sí cargaron; candidat
 y PostgreSQL quedaron detenidos y la base desechable destruida. Las pruebas
 independientes 19+8+119 no convierten este recorrido en aprobado.
 
-Ver `10-fallo-arranque-real.md`. No se corrigió runtime/preflight bajo STOP.
-Resolver el defecto requiere autorización separada fuera del cambio de salida
-del build y luego nuevas verificaciones; cualquier cambio exige actualizar
+Ver `10-fallo-arranque-real.md` y su rectificación: la causa de la espera sigue
+pendiente de control porque el ciclo de fuentes preexistía. La nueva autorización
+permite control 7cb77f8 y corrección independiente de preflight, ya aplicada.
+No se modificó runtime y no se habilita fase B antes de las pruebas reales
+condicionales autorizadas; cualquier cambio exige actualizar
 el manifiesto y los hashes de este borrador antes de reconsiderar fase B.
 
 > Autorizo la liberación E2 CLOSED el domingo 27 de septiembre de 2026,

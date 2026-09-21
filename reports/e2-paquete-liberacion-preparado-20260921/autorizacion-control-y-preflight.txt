@@ -1,0 +1,9 @@
+Autorización del propietario. Guarda este texto tal cual en reports/e2-paquete-liberacion-preparado-20260921/ antes de la primera escritura.
+
+1. Prueba de control: compila la revisión 7cb77f8 (la del bundle activo) en otro directorio nuevo, con el mismo método, y arráncala en el mismo ensayo: base desechable, otro puerto, modo inspección. El ciclo inventario ↔ salida-venta-reservation ya existía en esa revisión, y la API activa arranca con él.
+   - Si 7cb77f8 arranca y el candidato no, identifica qué cambio entre las dos revisiones provoca la espera circular y corrígelo con el cambio mínimo, en un commit aparte.
+   - Si 7cb77f8 tampoco arranca, el defecto está en el ensayo: corrige el ensayo, no las fuentes.
+
+2. Preflight: que falle con código distinto de 0 si no llega a ejecutar sus comprobaciones, incluido cuando se invoca por un enlace simbólico. Commit aparte. Demuestra que la prueba falla antes de la corrección y pasa después.
+
+Después repite el arranque real del candidato hasta que /api/healthz responda 200 con el preflight ejecutado de verdad, y continúa con lo ya autorizado: validación, manifiesto y fase B. Sigue sin tocar la API activa, su base, el workflow ni los clones E1/E10. Destruye las bases desechables y detén los procesos de prueba al terminar.

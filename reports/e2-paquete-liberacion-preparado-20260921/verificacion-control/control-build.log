@@ -1,0 +1,13 @@
+
+  ...rtifacts/api-server/dist-e2-control-7cb77f8-20260927/index.mjs    8.3mb ⚠️
+  ...ts/api-server/dist-e2-control-7cb77f8-20260927/pino-worker.mjs  155.1kb
+  ...acts/api-server/dist-e2-control-7cb77f8-20260927/pino-file.mjs  143.5kb
+  ...ts/api-server/dist-e2-control-7cb77f8-20260927/pino-pretty.mjs  116.4kb
+  ...rver/dist-e2-control-7cb77f8-20260927/thread-stream-worker.mjs    7.5kb
+  ...acts/api-server/dist-e2-control-7cb77f8-20260927/index.mjs.map   14.5mb
+  ...pi-server/dist-e2-control-7cb77f8-20260927/pino-worker.mjs.map  256.9kb
+  .../api-server/dist-e2-control-7cb77f8-20260927/pino-file.mjs.map  229.1kb
+  ...pi-server/dist-e2-control-7cb77f8-20260927/pino-pretty.mjs.map  203.6kb
+  .../dist-e2-control-7cb77f8-20260927/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 2752ms

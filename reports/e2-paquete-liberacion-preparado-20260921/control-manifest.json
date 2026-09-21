@@ -1,0 +1,27 @@
+{
+  "status": "BUILT_NOT_STARTED_BY_SUBAGENT",
+  "revision": "7cb77f8cfc6287fa51325a25122c48af392a7ada",
+  "source": "/tmp/e2-release-preparation-ycjqZ0/source",
+  "buildOutputOverlay": "e0f1c227e013c59987c06604e21a8036e73c82a5; baseline build identical except output directory",
+  "sourceIntegrity": {
+    "checked": 1224,
+    "differences": []
+  },
+  "bundleDirectory": "/home/runner/workspace/artifacts/api-server/dist-e2-control-7cb77f8-20260927",
+  "files": {
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/index.mjs": "c18d56d626bfe5f22824e6321583ff7c0ccb76d597f4f9e3032d2fba4f1e050e",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/index.mjs.map": "b0bd97971184c7a3113d74f7b3dcf11fa882050f0b4f5f1e2f7b4c70fbb01eac",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/pino-file.mjs": "8a25128cc66976e74443bedb5ccb411a9034ceeb8b5bd3838f4a971835c7d600",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/pino-file.mjs.map": "e23fbce0d0499c70bb8cd392786f869218b35d406d0831162c4673c207eefab6",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/pino-pretty.mjs": "b8ba9a0bfa7fcc5ef704469b5b4b215980c26d1efb60d5b764115b65afeea2a6",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/pino-worker.mjs": "61b829d76e4ebd7087f0c1962e49369098a11bb66d01ecc3c2e2c690eaac039d",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/pino-worker.mjs.map": "d26cac9d37fddf483d3c8605de75c4531006b114c70c3dda3b4f92be3cd63735",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/thread-stream-worker.mjs": "1edcdc6d1a36ab3172aeee9e4096da9077b23e57425a0438c6c7e8d217dd810c",
+    "artifacts/api-server/dist-e2-control-7cb77f8-20260927/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a"
+  },
+  "activeBundleUnchangedSha256": "3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98",
+  "runtimeDecision": "Await actual baseline control. If control fails, fix harness only; if it starts, compare candidate and identify delta before minimal separately committed runtime change."
+}

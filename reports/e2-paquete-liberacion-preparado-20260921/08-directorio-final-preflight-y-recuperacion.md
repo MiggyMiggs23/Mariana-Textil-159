@@ -1,9 +1,11 @@
 # Directorio definitivo, verificaciones y recuperación
 
-**NO AUTORIZABLE — STOP por fallo real de arranque y preflight omitido en el
-runner con enlace simbólico.** El documento 10 registra el diagnóstico.
-Los procedimientos futuros de este documento quedan bloqueados; no corregir
-runtime/preflight ni reintentar como si solo faltara completar una prueba.
+**NO AUTORIZABLE — fallo de arranque candidato; control 7cb77f8 autorizado
+pendiente.** El documento 10 rectifica la atribución causal inicial: el ciclo
+de fuentes preexistía y debe contrastarse antes de decidir sobre runtime.
+La nueva autorización permite el control y la corrección independiente de
+preflight, no habilita fase B. El CLI symlink y la exigencia de prueba positiva
+del wrapper ya están corregidos y probados, sin cambiar runtime.
 
 ## Procedencia y límites
 
@@ -38,7 +40,7 @@ No se parchearon bytes del bundle ni se cambió el plugin.
 | Compilación en directorio final | exit 0 |
 | Selección explícita sin base/red | 119/119 PASS |
 | Wrapper/registrador, usando ejecutable centinela, no API | 8/8 PASS |
-| Preflight completo, PostgreSQL 16.10 nuevo vacío | 19 comprobaciones PASS |
+| Preflight completo, PostgreSQL 16.10 nuevo vacío | 19 PASS originales; 20 PASS tras añadir CLI real por symlink |
 | Detención y destrucción del PostgreSQL de preflight | verificadas |
 | API candidata real | FAIL: no healthz 200 en 30 s; importación bloqueada antes de listen |
 | Workers reales | thread-stream-worker.mjs y pino-pretty.mjs abiertos correctamente según strace |
@@ -48,8 +50,9 @@ No se parchearon bytes del bundle ni se cambió el plugin.
 El agente principal ejecutó `validate-candidate-start.mjs` con entorno limpio,
 PostgreSQL nuevo en socket privado/55439 y HTTP 18092. La consulta inicial
 SELECT 1 pasó y se emitió INSPECTION; el aviso no equivale a servidor escuchando.
-El ciclo async inventario → salida-venta-reservation → inventario bloquea
-`await import("./app")` antes de `app.listen`. No se obtuvo healthz 200.
+El ciclo async inventario → salida-venta-reservation → inventario es la hipótesis
+de espera en `await import("./app")` anterior a `app.listen`, pendiente de
+contrastar con 7cb77f8 bajo la nueva autorización. No se obtuvo healthz 200.
 
 El preflight directo probado independientemente sí pasó; en este intento,
 la comparación argv/import.meta.url del guard CLI no coincide por el symlink
@@ -58,7 +61,8 @@ a la comparación posterior de catálogo/filas/secuencias: no se afirma ese PASS
 Los resultados y traza se preservan en
 `verificacion-final/failed-start-20260921-212811/`. Las pruebas 19+8+119 siguen
 válidas en sus alcances independientes, no como validación del recorrido real.
-No se aplicaron correcciones después del diagnóstico; fase B queda bloqueada.
+La corrección posterior autorizada del preflight no valida este intento fallido;
+fase B queda bloqueada y el control debe ejecutarse antes de decidir sobre fuentes.
 
 ## Preflight externo y controles de arranque
 

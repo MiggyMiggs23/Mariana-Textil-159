@@ -1,15 +1,18 @@
 {
-  "status": "NO_AUTORIZABLE_BLOCKED_REAL_STARTUP_FAILURE_STOP",
+  "status": "NO_AUTORIZABLE_PENDING_AUTHORIZED_BASELINE_CONTROL",
   "blockers": [
-    "Bundled async initialization deadlock: init_inventario awaits init_salida_venta_reservation which awaits init_inventario; app never reaches listen.",
-    "Symlinked runner path skips release-preflight.mjs CLI main guard; exit 0 in actual startup is not proof of preflight execution."
+    "Candidate startup failed health deadline. Static circular-initialization hypothesis is NOT a proven runtime defect before retained-baseline control; source cycle predates candidate.",
+    "Original actual-run preflight was skipped through symlink. CLI and wrapper proof are now fixed independently, but actual control/candidate journey has not been rerun."
   ],
   "actualStartup": {
     "executedBy": "owning agent, clean environment, new disposable PostgreSQL only",
     "health200Observed": false,
     "healthDeadlineSeconds": 30,
     "inspectionWarningObserved": true,
-    "realWorkerLoadsObserved": ["thread-stream-worker.mjs", "pino-pretty.mjs"],
+    "realWorkerLoadsObserved": [
+      "thread-stream-worker.mjs",
+      "pino-pretty.mjs"
+    ],
     "actualRunExternalPreflightProven": false,
     "postHealthCatalogRowsSequencesComparisonReached": false,
     "candidateStopped": true,
@@ -62,15 +65,15 @@
     "artifacts/api-server/dist-e2-20260927/pino-worker.mjs.map": "eb85ecec9468722c122087e54c9f5eaf2a1577e16e89de20103b51fd87a3bbb6",
     "artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs": "1edcdc6d1a36ab3172aeee9e4096da9077b23e57425a0438c6c7e8d217dd810c",
     "artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a",
-    "reports/e2-paquete-liberacion-preparado-20260921/release-preflight.mjs": "3930c9adc4d9a9df2b79e92e07e2145af4d88ea6488e63bf198a5d732a92e986",
+    "reports/e2-paquete-liberacion-preparado-20260921/release-preflight.mjs": "463287fb115c59c0cec4654a264f13a75e0ddd6c9d3adcd7db42047435df9139",
     "reports/e2-paquete-liberacion-preparado-20260921/release-catalog.sql": "a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea",
     "reports/e2-paquete-liberacion-preparado-20260921/release-expected.json": "990c85fdd6251d6d0f55b62bb0f9a2b4afb3c3fe35468dc12ea6ec8708077ca6",
     "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit-record.mjs": "167f1c342f91e79e16686937844b44856bec7dec3606cba09bb5e19fdb228f98",
     "reports/e2-paquete-liberacion-preparado-20260921/sql/01-install-evidence-prepared.sql": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
     "reports/e2-paquete-liberacion-preparado-20260921/sql/02-revert-before-capture-only.sql": "0f5952b874bb9fead4f782b9b169636564d302f00f20d5e4bf135896c9b32b3c",
     "reports/e2-paquete-liberacion-preparado-20260921/sql/03-preflight-schema-prepared.sql": "b368c7239f83b088d1fa5c30d1c1d0dd08538842d18a694315bd88b7f1e5980c",
-    "reports/e2-paquete-liberacion-preparado-20260921/release-assets.sha256": "14e994f880f6e03b71e0566a40bfba38d8d445c5ff6d0f997d735c0b5d5219de",
-    "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh": "4ab9339cf95641af71e2eb024d7eec899ca86f5926faf65a6222685e04c0fadc"
+    "reports/e2-paquete-liberacion-preparado-20260921/release-assets.sha256": "9f64ec9fd2f9ab61a6b888a93dc6987535f8653030ac0fbe007b39e1e337a3b2",
+    "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh": "10cc38de205318d0094df2a2b9642512f5f48bc98952a45b26899cbb8bd33e8f"
   },
   "checks": {
     "rootTypecheck": "PASS all selected, 0 errors",
@@ -79,5 +82,13 @@
     "preflight": "19 independent fresh PostgreSQL B0/B1 checks PASS, including direct-path CLI; cluster stopped/destroyed. Does not prove symlinked actual-start preflight.",
     "candidateHealthAndWorkers": "FAIL: real workers loaded and inspection warning emitted, but healthz 200 not obtained within 30 seconds.",
     "wholeReleaseJourney": "FAILED / NOT AUTHORIZABLE; independent 19+8+119 results are not an end-to-end pass"
+  },
+  "preflightFix": {
+    "commit": "af48ed59696d34ab1f6d8c65df61c53a0f614f1f",
+    "regressionBefore": 1,
+    "regressionAfter": 0,
+    "independentPgPass": 20,
+    "independentWrapperPass": 9,
+    "actualRuntimeRetest": "awaiting owning-agent baseline control"
   }
 }
