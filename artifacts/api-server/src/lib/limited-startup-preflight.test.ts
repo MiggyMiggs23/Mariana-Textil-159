@@ -390,9 +390,12 @@ test("actual index source keeps limited preflight before listen and suppresses e
     const limitedStart = candidate.indexOf('mode.kind === "limited"');
     const preflight = candidate.indexOf("await runLimitedStartupPreflight", limitedStart);
     const listen = candidate.indexOf("app.listen");
-    const appImport = candidate.indexOf('await import("./app")');
+    const appImport = candidate.indexOf('import app, { requestDrain } from "./app"');
     assert.ok(limitedStart >= 0 && preflight > limitedStart && listen > preflight);
-    assert.ok(appImport > preflight && listen > appImport);
+    // Keep the HTTP graph in the eager ESM graph, as in the retained build.
+    // Lazy app loading makes esbuild wrap existing cycles in awaiting initializers.
+    assert.ok(appImport >= 0 && appImport < preflight);
+    assert.doesNotMatch(candidate, /await import\(["']\.\/app["']\)/);
     assert.match(candidate, /const nonWritingBoot = mode\.kind !== "normal"/);
     assert.match(candidate, /if \(nonWritingBoot\)[\s\S]*?return;[\s\S]*?backfillCompras/);
     assert.match(candidate, /if \(nonWritingBoot\)[\s\S]*?return;[\s\S]*?runStockMinimumPoller/);
@@ -403,6 +406,13 @@ test("actual index source keeps limited preflight before listen and suppresses e
   const directory = await mkdtemp(join(tmpdir(), "limited-startup-mutants-"));
   try {
     const mutations: Array<[string, string]> = [
+      ["lazy-http-graph", source.replace(
+        'import app, { requestDrain } from "./app";',
+        "",
+      ).replace(
+        "const port = requireServerPort();",
+        'const { default: app, requestDrain } = await import("./app");\n  const port = requireServerPort();',
+      )],
       ["listen-before-preflight", source.replace(
         "const preflight = await runLimitedStartupPreflight(",
         "app.listen(requireServerPort());\n    const preflight = await runLimitedStartupPreflight(",

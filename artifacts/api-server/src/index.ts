@@ -1,3 +1,6 @@
+// Keep the existing cyclic HTTP graph eager; lazy loading deadlocks esbuild's
+// async module initializers. Startup checks still finish before listening.
+import app, { requestDrain } from "./app";
 import {
   ensurePendingCostsSchema,
   ensureClientesSchema,
@@ -189,11 +192,6 @@ export async function startServer() {
   } else {
     await ensureStartupSchemas();
   }
-  // Import the HTTP graph only after the limited read-only gateway has
-  // committed. The graph was audited to contain no import-time session-store
-  // pruning/table creation/ensure hooks; request permissions and guards remain
-  // exactly the normal graph.
-  const { default: app, requestDrain } = await import("./app");
   const port = requireServerPort();
   const server = app.listen(port);
   server.on("error", async (err) => {
