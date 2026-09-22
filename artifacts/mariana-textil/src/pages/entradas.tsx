@@ -1401,10 +1401,10 @@ export default function Entradas() {
                 <div className="rounded-lg border border-primary/20 bg-primary/5 p-4" data-testid="group-bulk-capture">
                   <div className="mb-4">
                     <div className="font-bold text-sm">
-                      Captura en Lote
+                      Llenar cantidades
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      Llena los {declaredCount || "—"} rollos de una vez y después corrige únicamente las excepciones.
+                      Completa las cantidades de los {declaredCount || "—"} rollos y después ajusta las que sean diferentes.
                     </div>
                   </div>
 
