@@ -6,6 +6,7 @@ import { e12Repository } from "./e12-supplier-cash-repository";
 import { e12NumberAmount, e12OverrideSchema } from "./e12-http";
 import { e12E4Hooks } from "./e12-e4";
 import { readSessionCash } from "./caja-corte-reader";
+import { readE9FrozenCut } from "./e9-cut";
 import { cashCents, cashMoney } from "./caja-cash-ledger";
 import type { Request } from "express";
 import {
@@ -2678,6 +2679,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
     efectivoEsperado: decimalMoney(esperado),
     diferencia: contado == null ? null : decimalMoney(contado - esperado),
   });
+  const e9Cut = await readE9FrozenCut(database, sesion);
   return {
     sesion: {
       ...sesion,
@@ -2776,6 +2778,7 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
       autor: ticket.autor ?? "Usuario desconocido",
     })),
     ...cash,
+    ...(e9Cut ? { versionCorte: e9Cut.versionCorte } : {}),
     efectivoContado: contado == null ? null : decimalMoney(contado),
     fondoInicial: sesion.fondoInicial,
     hojaVentasDia: {

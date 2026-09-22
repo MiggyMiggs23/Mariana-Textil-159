@@ -1,0 +1,37 @@
+{
+  "status": "READY_FOR_MAIN_GUARDED_BACKGROUND_EXECUTION_NOT_RUN",
+  "execution_owner": "MAIN_BACKGROUND_RUN_ONLY",
+  "tests_executed": false,
+  "typecheck_executed": false,
+  "static_preflight": "59 unique productive anchors and matching explicit native IDs; original/support/mutant AST syntax inspected; 13 visible fixture object shapes checked for required generated-schema fields. No fixture/schema evaluation or test execution.",
+  "productive_edits": false,
+  "final_mutation_anchors": "59 source-derived productive semantic mutations finalized after MAIN stability notice; exact one-to-one native ID manifest",
+  "native_suite": "artifacts/mariana-textil/src/components/e9-node.dom.test.tsx",
+  "manifest": "reports/e9/frontend-mutants-cases.mjs",
+  "runner": "reports/e9/run-frontend-node-mutants.mjs",
+  "command_main_only": "node reports/e9/run-frontend-node-mutants.mjs",
+  "explicit_partial_command_main_only": "node reports/e9/run-frontend-node-mutants.mjs --ids E9-OFF-SEND,E9-OFF-LIST",
+  "fixtures": "artifacts/mariana-textil/src/components/e9-node-test-fixtures.ts",
+  "harness": "artifacts/mariana-textil/src/components/e9-node-test-harness.tsx",
+  "immutable_infrastructure_to_reuse": {
+    "directory": "reports/tanda-b-20260922/e12",
+    "files": ["frontend-offline-guard.cjs", "frontend-node-dom.cjs", "frontend-node-reporter.mjs", "frontend-node-build.mjs"],
+    "protocol": "Keep existing guard isolation, Wouter/JSDOM globals, public BASE_URL define; copy/hash read-only baseline into E9 physical snapshots. Never write E12 evidence."
+  },
+  "fixture_contract": "Endpoint Zod schemas + HTTP JSON serialization; current-user role/location/permissions are generated-schema validated. Productive permission helpers remain real. Success/error settlement includes the corrected post-callback React subscriber notification.",
+  "obligation_groups_for_final_mounted_cases": [
+    "Parent entry reachable with existing authorized cut and scope; OFF mounts no new requests, producers or navigation",
+    "Complete immutable physical count from closed cut, not expected/sales/minus opening fund; positive only, server opaque version, no editable amount/actor/audit time",
+    "ADMIN/SUPERVISOR send within capabilities and existing scope; reader cannot mutate; negative own-store lookup leaks no foreign IDs/status",
+    "ADMIN count including zero, exact cents, appended historical evidence and separate dates",
+    "ADMIN authorization only for positive current count; explicit discrepancy reason; one invocation/one received amount, no Caja-session prerequisite",
+    "Both discrepancy signs open investigation; zero cannot create Fondo entry; stale count/version and authorized replay states remain blocked",
+    "Documentary closure preserves discrepancy/money/count history and requires evidence/conclusion; no financial adjustment",
+    "Non-ADMIN never renders cached Fondo metadata, movement IDs or links; actor/role/site transition refreshes identity-keyed evidence",
+    "Each distinct producer: UUID stable on retry, synchronous duplicate guard, content/identity change creates new intention, explicit recovery from domain errors",
+    "Real parent/detail/response evidence and actual-key invalidation; no cosmetic fan-out or unaffected legacy repetition"
+  ],
+  "integration_observation": "Generated ObtenerCorteCajaResponse exposes optional canonical versionCorte. Mounted creation obligations cover missing token, exact closed-cut ID, server refresh version changes, full counted cash, and mismatching response version; no local timestamp token.",
+  "normative_owner": "P8 resolved by final contract: ADMIN receives/authorizes; no legacy ownership blocker",
+  "acceptance_when_ready": "Every final obligation gets its own productive semantic mutant, native exact-ID ERR_ASSERTION RED, GREEN/restored GREEN. Setup failures never count. ByRoleOptions uses name string without exact:true. Primitive Boolean absence assertions."
+}

@@ -20,6 +20,8 @@ import type { HojaVentasDia } from './hojaVentasDia';
 import type { SesionCaja } from './sesionCaja';
 
 export interface CorteCaja {
+  /** Solo E9 ON y corte CERRADO con snapshot E2 canónico; hash opaco emitido por servidor. Omitido OFF o sin evidencia congelada. corteId es sesion.id. */
+  versionCorte?: string;
   sesion: SesionCaja;
   formasPago: CorteFormaPago[];
   cuentasDestino: CorteCuentaDestino[];

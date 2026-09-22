@@ -1963,3 +1963,45 @@ mtime_ms = 1790094153338
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/52e0e49c-82e7-4c43-90fb-6612f1086786/446d5a49-69ff-4704-9875-97dd058b80e8"
 storage_version_token = "1790094505252940"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "29drCD8gtuYU1LH_IXP45"
+uri = "file://reports/e3-apertura-preparada-20260922/fase-b-FINAL-PARA-AUTORIZAR.txt"
+type = "text"
+title = "E3 — fase B final para autorizar"
+description = "Paquete entregado y congelado. No se ejecuta hasta recibir la autorización del propietario."
+logical_id = "3ec274f8-69af-4586-a032-2c168e6c75c6"
+content_hash = "sha256:8eebf2fdae6bdce1393a9b359c3dfcbba06d9c20d3a0bcdbab523d4d80e3a742"
+size = 9355
+mtime_ms = 1790097481457
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/3ec274f8-69af-4586-a032-2c168e6c75c6/61d8717a-01f4-46a9-a301-3ae5c21b32ae"
+storage_version_token = "1790097668005303"
+content_type = "text/plain"
+
+[[outputs]]
+id = "oFPgG4g6UFf6TB1FvufzJ"
+uri = "file://reports/e3-apertura-preparada-20260922/README.md"
+type = "text"
+title = "E3 — paquete preparado y verificado"
+description = "Candidato de efectivo ordinario y recaptura por matriz: manifiestos, hashes, evidencias y límites. No liberado."
+logical_id = "60f91dbf-9041-4857-9294-cec780a904c8"
+content_hash = "sha256:c90c28ac11afded11a2b88cadeaed3860f64262ab33e7d53125ca7095d3d56de"
+size = 4935
+mtime_ms = 1790097309250
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/60f91dbf-9041-4857-9294-cec780a904c8/b9ea0130-2adf-42a0-9102-276fa97947da"
+storage_version_token = "1790097668628780"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "4ff_GMCGwy-8n-rX93Wf-"
+uri = "file://reports/tres-partes-20260922.md"
+type = "text"
+title = "Informe de las tres partes — estado y pausa"
+description = "E4 y E12 completadas OFF; E9 preparada sin validar; trabajo restante e integridad del paquete E3."
+logical_id = "e7055533-ef3e-4ee5-999b-d6d0bf05544d"
+content_hash = "sha256:6761e1a577239ebb838e5ad4d829f2c168bb01f602d618e36f08325ffe41cdae"
+size = 13795
+mtime_ms = 1790110555253
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e7055533-ef3e-4ee5-999b-d6d0bf05544d/35f68bc3-6a56-4e6a-bc00-27b5bb0d9261"
+storage_version_token = "1790110571201538"
+content_type = "text/markdown"

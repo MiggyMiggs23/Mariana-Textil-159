@@ -12,6 +12,7 @@ import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import { useListCajaRecibosE3, getListCajaRecibosE3QueryKey, useGetCurrentUser } from "@workspace/api-client-react";
 import { CorteEfectivoDesglose } from "@/components/corte-efectivo-desglose";
 import { SalidaDineroE4Item } from "@/components/salidas-dinero-e4-item";
+import { E9EnvioPanel } from "@/components/e9-envio-panel";
 
 export function CorteTicketFolioLink({
   ticketId,
@@ -69,6 +70,7 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
 
   return (
     <div className="space-y-6 text-sm pb-8">
+      {corte.sesion.estado === "CERRADA" && <E9EnvioPanel corteId={corte.sesion.id} ubicacionId={corte.sesion.ubicacionId} />}
       <div className="flex justify-end gap-2">
         <Button variant="outline" size="sm" onClick={handleExportXlsx}>
           <Download className="w-4 h-4 mr-2" /> Excel

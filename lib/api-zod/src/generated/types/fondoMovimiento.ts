@@ -11,10 +11,13 @@ import type { FondoConciliacionInicial } from './fondoConciliacionInicial';
 import type { FondoId } from './fondoId';
 import type { FondoMoney } from './fondoMoney';
 import type { FondoMovimientoAdvertencia } from './fondoMovimientoAdvertencia';
+import type { FondoMovimientoOrigenE9 } from './fondoMovimientoOrigenE9';
 import type { FondoNaturaleza } from './fondoNaturaleza';
 import type { FondoSignedMoney } from './fondoSignedMoney';
 
 export interface FondoMovimiento {
+  /** Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional */
+  origenE9?: FondoMovimientoOrigenE9;
   id: FondoId;
   /** @pattern ^[1-9][0-9]*$ */
   ordinal: string;

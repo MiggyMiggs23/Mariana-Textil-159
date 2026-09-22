@@ -194,6 +194,56 @@ se ejecutaron las ocho regresiones restantes y se compararon posteriormente
 todos sus hashes de fuente. El manifiesto original sigue sin estado final;
 la comparación posterior no acredita ausencia de escrituras transitorias.
 
-### Entregas siguientes
+Commit E12: `4c5a9d263949f79709c28a2cc9102db368d07b32`.
 
-E9, E5, E11, E7 y adaptación de suites: pendientes, en ese orden.
+### E9 — preparada OFF, sin commit ni validación funcional
+
+P8 sí resuelve las preguntas de modalidad, envío y diferencias. El plan exige
+recepción ADMIN única; no se consideró el antiguo pendiente de socios como
+bloqueo de construcción. Contrato y evidencia de preparación en `reports/e9/`.
+
+Se prepararon servidor, UI, contratos generados, SQL y reversión. Incluyen
+envío completo desde efectivo contado del corte cerrado y token canónico
+servidor, conteo, autorización de un ingreso al Fondo, investigación documental
+y privacidad por tienda. Un conteo cero no autoriza un asiento cero. La lista
+se integra en Cortes; el envío, en el detalle del corte cerrado.
+
+Las comprobaciones estáticas informadas por los agentes pasaron. Están
+preparados **58 casos backend y 59 de interfaz**, cada uno con su mutante.
+**No se ejecutó ninguno por MAIN y no se aceptan como pruebas pasadas.**
+Tampoco se ejecutó SQL. Fuentes E9 preservadas sin commit, con gates OFF.
+
+### Pausa por cambio de entorno
+
+Al preparar la validación E9, el entorno informó ambos workflows
+`not started`. La comprobación de `/proc/3800/status` confirmó
+`API_PID_3800_NOT_PRESENT`. No se conoce la causa de la detención.
+MAIN y el agente backend no ejecutaron órdenes para detener, iniciar o
+reiniciar la API durante esta tanda; no se intentó recuperarla sin autorización.
+El agente backend recibió la pausa y confirmó que dejó de modificar fuentes.
+
+Después de detectar el cambio se ejecutó:
+
+`sha256sum --check --quiet reports/tanda-b-20260922/protegidos-inicial.sha256`
+
+Resultado: **PROTECTED_INVENTORY_PASS**. El paquete E3 entregado y los archivos
+protegidos conservan sus hashes. Esto acredita integridad de archivos, no
+disponibilidad de procesos ni ausencia de efectos históricos de otros actores.
+El resultado operativo correcto de Parte 1 era válido cuando se comprobó;
+no se presenta como estado operativo actual.
+
+La revisión completa validada más reciente es el commit E12 indicado arriba.
+La copia de trabajo actual contiene E9 sin validar; no está lista para liberar.
+La fase B de E3 sigue sin ejecutarse.
+
+### Trabajo restante
+
+- Cerrar/verificar E9 y darle su commit propio.
+- Construir OFF E5, E11 y E7, en ese orden y cada una en su commit.
+- Adaptar las suites creadoras de usuarios a PostgreSQL desechable.
+  El inventario por puntos reales de creación encontró **28**, no 25.
+  No se descartaron arbitrariamente tres ni se adaptó todavía ninguna.
+- Completar este mismo informe y la verificación final después de reanudar.
+
+Este informe es una **entrega de estado con trabajo pendiente**, no una
+declaración de cierre de las tres partes.

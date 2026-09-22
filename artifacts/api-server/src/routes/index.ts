@@ -38,8 +38,10 @@ import { createFondoRouter } from "./fondo";
 import { createE3Router } from "./e3-collections";
 import { e3Repository, readE3Receipts, recordE3Print, readE3Context } from "../lib/e3-repository";
 import { requierePermiso } from "../lib/permisos";
+import e9Router from "./e9";
 
 const router: IRouter = Router();
+router.use(e9Router);
 
 // Must precede broad /clientes authentication middlewares: CLOSED E3 never queries auth/DB.
 router.use(createE3Router({

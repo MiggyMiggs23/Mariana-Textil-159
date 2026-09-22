@@ -8,6 +8,849 @@
 import * as zod from 'zod';
 
 
+/**
+ * @summary Contrato E9 OFF; disponibilidad por alcance sin saldo Fondo
+ */
+
+
+
+export const GetE9DisponibilidadQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().int().min(1)
+})
+
+
+
+
+export const GetE9DisponibilidadResponse = zod.object({
+  "enabled": zod.boolean(),
+  "motivoInactivo": zod.string().optional(),
+  "ubicacionId": zod.number().int().min(1).optional(),
+  "capacidades": zod.object({
+  "puedeEnviar": zod.boolean(),
+  "puedeContar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeCerrarInvestigacion": zod.boolean()
+}).optional()
+})
+
+
+/**
+ * @summary Entregas exclusivamente dentro del alcance autorizado
+ */
+
+export const listE9EntregasQueryLimitDefault = 25;
+export const listE9EntregasQueryLimitMax = 100;
+
+
+
+export const ListE9EntregasQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().int().min(1),
+  "estado": zod.enum(['ENVIADA', 'CONTADA', 'AUTORIZADA']).optional(),
+  "cursor": zod.coerce.string().optional(),
+  "limit": zod.coerce.number().int().min(1).max(listE9EntregasQueryLimitMax).default(listE9EntregasQueryLimitDefault)
+})
+
+
+
+export const listE9EntregasResponseItemsItemFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listE9EntregasResponseItemsItemImporteEnviadoMax = 13;
+
+
+export const listE9EntregasResponseItemsItemImporteEnviadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const listE9EntregasResponseItemsItemEvidenciaEnvioDescripcionMax = 2000;
+
+export const listE9EntregasResponseItemsItemEvidenciaEnvioReferenciasItemMax = 500;
+
+export const listE9EntregasResponseItemsItemEvidenciaEnvioReferenciasMax = 20;
+
+export const listE9EntregasResponseItemsItemConteosItemImporteRecibidoMax = 13;
+
+
+export const listE9EntregasResponseItemsItemConteosItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE9EntregasResponseItemsItemConteosItemDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE9EntregasResponseItemsItemConteosItemEvidenciaDescripcionMax = 2000;
+
+export const listE9EntregasResponseItemsItemConteosItemEvidenciaReferenciasItemMax = 500;
+
+export const listE9EntregasResponseItemsItemConteosItemEvidenciaReferenciasMax = 20;
+
+
+export const listE9EntregasResponseItemsItemAutorizacionImporteRecibidoMax = 13;
+
+
+export const listE9EntregasResponseItemsItemAutorizacionImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const listE9EntregasResponseItemsItemInvestigacionCierreEvidenciaDescripcionMax = 2000;
+
+export const listE9EntregasResponseItemsItemInvestigacionCierreEvidenciaReferenciasItemMax = 500;
+
+export const listE9EntregasResponseItemsItemInvestigacionCierreEvidenciaReferenciasMax = 20;
+
+
+
+
+export const ListE9EntregasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "ubicacionId": zod.number().int().min(1),
+  "ubicacionNombre": zod.string(),
+  "corteId": zod.number().int().min(1),
+  "versionCorte": zod.string(),
+  "corteHref": zod.string().describe('Navegación al corte exacto bajo autorización existente'),
+  "fechaCorte": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(listE9EntregasResponseItemsItemFechaOperativaRegExp).optional().describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "importeEnviado": zod.string().max(listE9EntregasResponseItemsItemImporteEnviadoMax).regex(listE9EntregasResponseItemsItemImporteEnviadoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "estado": zod.enum(['ENVIADA', 'CONTADA', 'AUTORIZADA']),
+  "enviadoPor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "enviadoAt": zod.coerce.date(),
+  "evidenciaEnvio": zod.object({
+  "descripcion": zod.string().min(1).max(listE9EntregasResponseItemsItemEvidenciaEnvioDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE9EntregasResponseItemsItemEvidenciaEnvioReferenciasItemMax)).max(listE9EntregasResponseItemsItemEvidenciaEnvioReferenciasMax)
+}),
+  "conteos": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "importeRecibido": zod.string().max(listE9EntregasResponseItemsItemConteosItemImporteRecibidoMax).regex(listE9EntregasResponseItemsItemConteosItemImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "diferencia": zod.string().regex(listE9EntregasResponseItemsItemConteosItemDiferenciaRegExp).describe('Recibido menos enviado; no se borra al cerrar investigación'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE9EntregasResponseItemsItemConteosItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE9EntregasResponseItemsItemConteosItemEvidenciaReferenciasItemMax)).max(listE9EntregasResponseItemsItemConteosItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "conteoVigenteId": zod.string().uuid().optional(),
+  "autorizacion": zod.object({
+  "conteoId": zod.string().uuid(),
+  "importeRecibido": zod.string().max(listE9EntregasResponseItemsItemAutorizacionImporteRecibidoMax).regex(listE9EntregasResponseItemsItemAutorizacionImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "motivo": zod.string().optional(),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional(),
+  "investigacion": zod.object({
+  "id": zod.string().uuid(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA_DOCUMENTAL']),
+  "abiertaAt": zod.coerce.date(),
+  "conteoOrigenId": zod.string().uuid(),
+  "cierre": zod.object({
+  "conclusion": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE9EntregasResponseItemsItemInvestigacionCierreEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE9EntregasResponseItemsItemInvestigacionCierreEvidenciaReferenciasItemMax)).max(listE9EntregasResponseItemsItemInvestigacionCierreEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional()
+}).optional(),
+  "capacidades": zod.object({
+  "puedeEnviar": zod.boolean(),
+  "puedeContar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeCerrarInvestigacion": zod.boolean()
+}),
+  "fondo": zod.object({
+  "movimientoId": zod.string().uuid(),
+  "href": zod.string()
+}).optional().describe('ADMIN solamente; omitir por completo para cualquier otro actor')
+})),
+  "nextCursor": zod.string().optional()
+})
+
+
+/**
+ * @summary ADMIN/SUPERVISOR documenta envío completo de corte cerrado; no ingreso
+ */
+
+export const createE9EntregaBodyVersionCorteMax = 200;
+
+export const createE9EntregaBodyEvidenciaDescripcionMax = 2000;
+
+export const createE9EntregaBodyEvidenciaReferenciasItemMax = 500;
+
+export const createE9EntregaBodyEvidenciaReferenciasMax = 20;
+
+
+
+export const CreateE9EntregaBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "corteId": zod.number().int().min(1),
+  "versionCorte": zod.string().min(1).max(createE9EntregaBodyVersionCorteMax),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE9EntregaBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9EntregaBodyEvidenciaReferenciasItemMax)).max(createE9EntregaBodyEvidenciaReferenciasMax)
+})
+})
+
+
+
+export const createE9EntregaResponseFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const createE9EntregaResponseImporteEnviadoMax = 13;
+
+
+export const createE9EntregaResponseImporteEnviadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const createE9EntregaResponseEvidenciaEnvioDescripcionMax = 2000;
+
+export const createE9EntregaResponseEvidenciaEnvioReferenciasItemMax = 500;
+
+export const createE9EntregaResponseEvidenciaEnvioReferenciasMax = 20;
+
+export const createE9EntregaResponseConteosItemImporteRecibidoMax = 13;
+
+
+export const createE9EntregaResponseConteosItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE9EntregaResponseConteosItemDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE9EntregaResponseConteosItemEvidenciaDescripcionMax = 2000;
+
+export const createE9EntregaResponseConteosItemEvidenciaReferenciasItemMax = 500;
+
+export const createE9EntregaResponseConteosItemEvidenciaReferenciasMax = 20;
+
+
+export const createE9EntregaResponseAutorizacionImporteRecibidoMax = 13;
+
+
+export const createE9EntregaResponseAutorizacionImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const createE9EntregaResponseInvestigacionCierreEvidenciaDescripcionMax = 2000;
+
+export const createE9EntregaResponseInvestigacionCierreEvidenciaReferenciasItemMax = 500;
+
+export const createE9EntregaResponseInvestigacionCierreEvidenciaReferenciasMax = 20;
+
+
+
+
+export const CreateE9EntregaResponse = zod.object({
+  "id": zod.string().uuid(),
+  "ubicacionId": zod.number().int().min(1),
+  "ubicacionNombre": zod.string(),
+  "corteId": zod.number().int().min(1),
+  "versionCorte": zod.string(),
+  "corteHref": zod.string().describe('Navegación al corte exacto bajo autorización existente'),
+  "fechaCorte": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(createE9EntregaResponseFechaOperativaRegExp).optional().describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "importeEnviado": zod.string().max(createE9EntregaResponseImporteEnviadoMax).regex(createE9EntregaResponseImporteEnviadoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "estado": zod.enum(['ENVIADA', 'CONTADA', 'AUTORIZADA']),
+  "enviadoPor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "enviadoAt": zod.coerce.date(),
+  "evidenciaEnvio": zod.object({
+  "descripcion": zod.string().min(1).max(createE9EntregaResponseEvidenciaEnvioDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9EntregaResponseEvidenciaEnvioReferenciasItemMax)).max(createE9EntregaResponseEvidenciaEnvioReferenciasMax)
+}),
+  "conteos": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "importeRecibido": zod.string().max(createE9EntregaResponseConteosItemImporteRecibidoMax).regex(createE9EntregaResponseConteosItemImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "diferencia": zod.string().regex(createE9EntregaResponseConteosItemDiferenciaRegExp).describe('Recibido menos enviado; no se borra al cerrar investigación'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE9EntregaResponseConteosItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9EntregaResponseConteosItemEvidenciaReferenciasItemMax)).max(createE9EntregaResponseConteosItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "conteoVigenteId": zod.string().uuid().optional(),
+  "autorizacion": zod.object({
+  "conteoId": zod.string().uuid(),
+  "importeRecibido": zod.string().max(createE9EntregaResponseAutorizacionImporteRecibidoMax).regex(createE9EntregaResponseAutorizacionImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "motivo": zod.string().optional(),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional(),
+  "investigacion": zod.object({
+  "id": zod.string().uuid(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA_DOCUMENTAL']),
+  "abiertaAt": zod.coerce.date(),
+  "conteoOrigenId": zod.string().uuid(),
+  "cierre": zod.object({
+  "conclusion": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE9EntregaResponseInvestigacionCierreEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9EntregaResponseInvestigacionCierreEvidenciaReferenciasItemMax)).max(createE9EntregaResponseInvestigacionCierreEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional()
+}).optional(),
+  "capacidades": zod.object({
+  "puedeEnviar": zod.boolean(),
+  "puedeContar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeCerrarInvestigacion": zod.boolean()
+}),
+  "fondo": zod.object({
+  "movimientoId": zod.string().uuid(),
+  "href": zod.string()
+}).optional().describe('ADMIN solamente; omitir por completo para cualquier otro actor')
+})
+
+
+/**
+ * @summary Evidencia propia; campo fondo exclusivamente ADMIN
+ */
+export const GetE9EntregaParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+
+
+export const getE9EntregaResponseFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getE9EntregaResponseImporteEnviadoMax = 13;
+
+
+export const getE9EntregaResponseImporteEnviadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const getE9EntregaResponseEvidenciaEnvioDescripcionMax = 2000;
+
+export const getE9EntregaResponseEvidenciaEnvioReferenciasItemMax = 500;
+
+export const getE9EntregaResponseEvidenciaEnvioReferenciasMax = 20;
+
+export const getE9EntregaResponseConteosItemImporteRecibidoMax = 13;
+
+
+export const getE9EntregaResponseConteosItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE9EntregaResponseConteosItemDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE9EntregaResponseConteosItemEvidenciaDescripcionMax = 2000;
+
+export const getE9EntregaResponseConteosItemEvidenciaReferenciasItemMax = 500;
+
+export const getE9EntregaResponseConteosItemEvidenciaReferenciasMax = 20;
+
+
+export const getE9EntregaResponseAutorizacionImporteRecibidoMax = 13;
+
+
+export const getE9EntregaResponseAutorizacionImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const getE9EntregaResponseInvestigacionCierreEvidenciaDescripcionMax = 2000;
+
+export const getE9EntregaResponseInvestigacionCierreEvidenciaReferenciasItemMax = 500;
+
+export const getE9EntregaResponseInvestigacionCierreEvidenciaReferenciasMax = 20;
+
+
+
+
+export const GetE9EntregaResponse = zod.object({
+  "id": zod.string().uuid(),
+  "ubicacionId": zod.number().int().min(1),
+  "ubicacionNombre": zod.string(),
+  "corteId": zod.number().int().min(1),
+  "versionCorte": zod.string(),
+  "corteHref": zod.string().describe('Navegación al corte exacto bajo autorización existente'),
+  "fechaCorte": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(getE9EntregaResponseFechaOperativaRegExp).optional().describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "importeEnviado": zod.string().max(getE9EntregaResponseImporteEnviadoMax).regex(getE9EntregaResponseImporteEnviadoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "estado": zod.enum(['ENVIADA', 'CONTADA', 'AUTORIZADA']),
+  "enviadoPor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "enviadoAt": zod.coerce.date(),
+  "evidenciaEnvio": zod.object({
+  "descripcion": zod.string().min(1).max(getE9EntregaResponseEvidenciaEnvioDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE9EntregaResponseEvidenciaEnvioReferenciasItemMax)).max(getE9EntregaResponseEvidenciaEnvioReferenciasMax)
+}),
+  "conteos": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "importeRecibido": zod.string().max(getE9EntregaResponseConteosItemImporteRecibidoMax).regex(getE9EntregaResponseConteosItemImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "diferencia": zod.string().regex(getE9EntregaResponseConteosItemDiferenciaRegExp).describe('Recibido menos enviado; no se borra al cerrar investigación'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(getE9EntregaResponseConteosItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE9EntregaResponseConteosItemEvidenciaReferenciasItemMax)).max(getE9EntregaResponseConteosItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "conteoVigenteId": zod.string().uuid().optional(),
+  "autorizacion": zod.object({
+  "conteoId": zod.string().uuid(),
+  "importeRecibido": zod.string().max(getE9EntregaResponseAutorizacionImporteRecibidoMax).regex(getE9EntregaResponseAutorizacionImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "motivo": zod.string().optional(),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional(),
+  "investigacion": zod.object({
+  "id": zod.string().uuid(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA_DOCUMENTAL']),
+  "abiertaAt": zod.coerce.date(),
+  "conteoOrigenId": zod.string().uuid(),
+  "cierre": zod.object({
+  "conclusion": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(getE9EntregaResponseInvestigacionCierreEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE9EntregaResponseInvestigacionCierreEvidenciaReferenciasItemMax)).max(getE9EntregaResponseInvestigacionCierreEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional()
+}).optional(),
+  "capacidades": zod.object({
+  "puedeEnviar": zod.boolean(),
+  "puedeContar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeCerrarInvestigacion": zod.boolean()
+}),
+  "fondo": zod.object({
+  "movimientoId": zod.string().uuid(),
+  "href": zod.string()
+}).optional().describe('ADMIN solamente; omitir por completo para cualquier otro actor')
+})
+
+
+/**
+ * @summary ADMIN documenta conteo; diferencia abre investigación sin ajuste
+ */
+export const CreateE9ConteoParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const createE9ConteoBodyImporteRecibidoMax = 13;
+
+
+export const createE9ConteoBodyImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE9ConteoBodyEvidenciaDescripcionMax = 2000;
+
+export const createE9ConteoBodyEvidenciaReferenciasItemMax = 500;
+
+export const createE9ConteoBodyEvidenciaReferenciasMax = 20;
+
+
+
+export const CreateE9ConteoBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "importeRecibido": zod.string().max(createE9ConteoBodyImporteRecibidoMax).regex(createE9ConteoBodyImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE9ConteoBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9ConteoBodyEvidenciaReferenciasItemMax)).max(createE9ConteoBodyEvidenciaReferenciasMax)
+})
+})
+
+
+
+export const createE9ConteoResponseFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const createE9ConteoResponseImporteEnviadoMax = 13;
+
+
+export const createE9ConteoResponseImporteEnviadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const createE9ConteoResponseEvidenciaEnvioDescripcionMax = 2000;
+
+export const createE9ConteoResponseEvidenciaEnvioReferenciasItemMax = 500;
+
+export const createE9ConteoResponseEvidenciaEnvioReferenciasMax = 20;
+
+export const createE9ConteoResponseConteosItemImporteRecibidoMax = 13;
+
+
+export const createE9ConteoResponseConteosItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE9ConteoResponseConteosItemDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE9ConteoResponseConteosItemEvidenciaDescripcionMax = 2000;
+
+export const createE9ConteoResponseConteosItemEvidenciaReferenciasItemMax = 500;
+
+export const createE9ConteoResponseConteosItemEvidenciaReferenciasMax = 20;
+
+
+export const createE9ConteoResponseAutorizacionImporteRecibidoMax = 13;
+
+
+export const createE9ConteoResponseAutorizacionImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const createE9ConteoResponseInvestigacionCierreEvidenciaDescripcionMax = 2000;
+
+export const createE9ConteoResponseInvestigacionCierreEvidenciaReferenciasItemMax = 500;
+
+export const createE9ConteoResponseInvestigacionCierreEvidenciaReferenciasMax = 20;
+
+
+
+
+export const CreateE9ConteoResponse = zod.object({
+  "id": zod.string().uuid(),
+  "ubicacionId": zod.number().int().min(1),
+  "ubicacionNombre": zod.string(),
+  "corteId": zod.number().int().min(1),
+  "versionCorte": zod.string(),
+  "corteHref": zod.string().describe('Navegación al corte exacto bajo autorización existente'),
+  "fechaCorte": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(createE9ConteoResponseFechaOperativaRegExp).optional().describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "importeEnviado": zod.string().max(createE9ConteoResponseImporteEnviadoMax).regex(createE9ConteoResponseImporteEnviadoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "estado": zod.enum(['ENVIADA', 'CONTADA', 'AUTORIZADA']),
+  "enviadoPor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "enviadoAt": zod.coerce.date(),
+  "evidenciaEnvio": zod.object({
+  "descripcion": zod.string().min(1).max(createE9ConteoResponseEvidenciaEnvioDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9ConteoResponseEvidenciaEnvioReferenciasItemMax)).max(createE9ConteoResponseEvidenciaEnvioReferenciasMax)
+}),
+  "conteos": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "importeRecibido": zod.string().max(createE9ConteoResponseConteosItemImporteRecibidoMax).regex(createE9ConteoResponseConteosItemImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "diferencia": zod.string().regex(createE9ConteoResponseConteosItemDiferenciaRegExp).describe('Recibido menos enviado; no se borra al cerrar investigación'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE9ConteoResponseConteosItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9ConteoResponseConteosItemEvidenciaReferenciasItemMax)).max(createE9ConteoResponseConteosItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "conteoVigenteId": zod.string().uuid().optional(),
+  "autorizacion": zod.object({
+  "conteoId": zod.string().uuid(),
+  "importeRecibido": zod.string().max(createE9ConteoResponseAutorizacionImporteRecibidoMax).regex(createE9ConteoResponseAutorizacionImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "motivo": zod.string().optional(),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional(),
+  "investigacion": zod.object({
+  "id": zod.string().uuid(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA_DOCUMENTAL']),
+  "abiertaAt": zod.coerce.date(),
+  "conteoOrigenId": zod.string().uuid(),
+  "cierre": zod.object({
+  "conclusion": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE9ConteoResponseInvestigacionCierreEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE9ConteoResponseInvestigacionCierreEvidenciaReferenciasItemMax)).max(createE9ConteoResponseInvestigacionCierreEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional()
+}).optional(),
+  "capacidades": zod.object({
+  "puedeEnviar": zod.boolean(),
+  "puedeContar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeCerrarInvestigacion": zod.boolean()
+}),
+  "fondo": zod.object({
+  "movimientoId": zod.string().uuid(),
+  "href": zod.string()
+}).optional().describe('ADMIN solamente; omitir por completo para cualquier otro actor')
+})
+
+
+/**
+ * @summary ADMIN autoriza recepción e ingreso Fondo único y atómico
+ */
+export const AuthorizeE9RecepcionParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const authorizeE9RecepcionBodyMotivoMax = 2000;
+
+
+
+export const AuthorizeE9RecepcionBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "conteoId": zod.string().uuid(),
+  "motivo": zod.string().min(1).max(authorizeE9RecepcionBodyMotivoMax).optional().describe('Obligatorio si existe diferencia; no la ajusta ni cierra investigación')
+})
+
+
+
+export const authorizeE9RecepcionResponseFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const authorizeE9RecepcionResponseImporteEnviadoMax = 13;
+
+
+export const authorizeE9RecepcionResponseImporteEnviadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const authorizeE9RecepcionResponseEvidenciaEnvioDescripcionMax = 2000;
+
+export const authorizeE9RecepcionResponseEvidenciaEnvioReferenciasItemMax = 500;
+
+export const authorizeE9RecepcionResponseEvidenciaEnvioReferenciasMax = 20;
+
+export const authorizeE9RecepcionResponseConteosItemImporteRecibidoMax = 13;
+
+
+export const authorizeE9RecepcionResponseConteosItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE9RecepcionResponseConteosItemDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE9RecepcionResponseConteosItemEvidenciaDescripcionMax = 2000;
+
+export const authorizeE9RecepcionResponseConteosItemEvidenciaReferenciasItemMax = 500;
+
+export const authorizeE9RecepcionResponseConteosItemEvidenciaReferenciasMax = 20;
+
+
+export const authorizeE9RecepcionResponseAutorizacionImporteRecibidoMax = 13;
+
+
+export const authorizeE9RecepcionResponseAutorizacionImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const authorizeE9RecepcionResponseInvestigacionCierreEvidenciaDescripcionMax = 2000;
+
+export const authorizeE9RecepcionResponseInvestigacionCierreEvidenciaReferenciasItemMax = 500;
+
+export const authorizeE9RecepcionResponseInvestigacionCierreEvidenciaReferenciasMax = 20;
+
+
+
+
+export const AuthorizeE9RecepcionResponse = zod.object({
+  "id": zod.string().uuid(),
+  "ubicacionId": zod.number().int().min(1),
+  "ubicacionNombre": zod.string(),
+  "corteId": zod.number().int().min(1),
+  "versionCorte": zod.string(),
+  "corteHref": zod.string().describe('Navegación al corte exacto bajo autorización existente'),
+  "fechaCorte": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(authorizeE9RecepcionResponseFechaOperativaRegExp).optional().describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "importeEnviado": zod.string().max(authorizeE9RecepcionResponseImporteEnviadoMax).regex(authorizeE9RecepcionResponseImporteEnviadoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "estado": zod.enum(['ENVIADA', 'CONTADA', 'AUTORIZADA']),
+  "enviadoPor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "enviadoAt": zod.coerce.date(),
+  "evidenciaEnvio": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE9RecepcionResponseEvidenciaEnvioDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE9RecepcionResponseEvidenciaEnvioReferenciasItemMax)).max(authorizeE9RecepcionResponseEvidenciaEnvioReferenciasMax)
+}),
+  "conteos": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "importeRecibido": zod.string().max(authorizeE9RecepcionResponseConteosItemImporteRecibidoMax).regex(authorizeE9RecepcionResponseConteosItemImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "diferencia": zod.string().regex(authorizeE9RecepcionResponseConteosItemDiferenciaRegExp).describe('Recibido menos enviado; no se borra al cerrar investigación'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE9RecepcionResponseConteosItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE9RecepcionResponseConteosItemEvidenciaReferenciasItemMax)).max(authorizeE9RecepcionResponseConteosItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "conteoVigenteId": zod.string().uuid().optional(),
+  "autorizacion": zod.object({
+  "conteoId": zod.string().uuid(),
+  "importeRecibido": zod.string().max(authorizeE9RecepcionResponseAutorizacionImporteRecibidoMax).regex(authorizeE9RecepcionResponseAutorizacionImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "motivo": zod.string().optional(),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional(),
+  "investigacion": zod.object({
+  "id": zod.string().uuid(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA_DOCUMENTAL']),
+  "abiertaAt": zod.coerce.date(),
+  "conteoOrigenId": zod.string().uuid(),
+  "cierre": zod.object({
+  "conclusion": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE9RecepcionResponseInvestigacionCierreEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE9RecepcionResponseInvestigacionCierreEvidenciaReferenciasItemMax)).max(authorizeE9RecepcionResponseInvestigacionCierreEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional()
+}).optional(),
+  "capacidades": zod.object({
+  "puedeEnviar": zod.boolean(),
+  "puedeContar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeCerrarInvestigacion": zod.boolean()
+}),
+  "fondo": zod.object({
+  "movimientoId": zod.string().uuid(),
+  "href": zod.string()
+}).optional().describe('ADMIN solamente; omitir por completo para cualquier otro actor')
+})
+
+
+/**
+ * @summary ADMIN cierra documentalmente; no ajusta ni elimina diferencia
+ */
+export const CloseE9InvestigacionParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const closeE9InvestigacionBodyConclusionMax = 2000;
+
+export const closeE9InvestigacionBodyEvidenciaDescripcionMax = 2000;
+
+export const closeE9InvestigacionBodyEvidenciaReferenciasItemMax = 500;
+
+export const closeE9InvestigacionBodyEvidenciaReferenciasMax = 20;
+
+
+
+export const CloseE9InvestigacionBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "conclusion": zod.string().min(1).max(closeE9InvestigacionBodyConclusionMax),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(closeE9InvestigacionBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(closeE9InvestigacionBodyEvidenciaReferenciasItemMax)).max(closeE9InvestigacionBodyEvidenciaReferenciasMax)
+})
+})
+
+
+
+export const closeE9InvestigacionResponseFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const closeE9InvestigacionResponseImporteEnviadoMax = 13;
+
+
+export const closeE9InvestigacionResponseImporteEnviadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const closeE9InvestigacionResponseEvidenciaEnvioDescripcionMax = 2000;
+
+export const closeE9InvestigacionResponseEvidenciaEnvioReferenciasItemMax = 500;
+
+export const closeE9InvestigacionResponseEvidenciaEnvioReferenciasMax = 20;
+
+export const closeE9InvestigacionResponseConteosItemImporteRecibidoMax = 13;
+
+
+export const closeE9InvestigacionResponseConteosItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const closeE9InvestigacionResponseConteosItemDiferenciaRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const closeE9InvestigacionResponseConteosItemEvidenciaDescripcionMax = 2000;
+
+export const closeE9InvestigacionResponseConteosItemEvidenciaReferenciasItemMax = 500;
+
+export const closeE9InvestigacionResponseConteosItemEvidenciaReferenciasMax = 20;
+
+
+export const closeE9InvestigacionResponseAutorizacionImporteRecibidoMax = 13;
+
+
+export const closeE9InvestigacionResponseAutorizacionImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const closeE9InvestigacionResponseInvestigacionCierreEvidenciaDescripcionMax = 2000;
+
+export const closeE9InvestigacionResponseInvestigacionCierreEvidenciaReferenciasItemMax = 500;
+
+export const closeE9InvestigacionResponseInvestigacionCierreEvidenciaReferenciasMax = 20;
+
+
+
+
+export const CloseE9InvestigacionResponse = zod.object({
+  "id": zod.string().uuid(),
+  "ubicacionId": zod.number().int().min(1),
+  "ubicacionNombre": zod.string(),
+  "corteId": zod.number().int().min(1),
+  "versionCorte": zod.string(),
+  "corteHref": zod.string().describe('Navegación al corte exacto bajo autorización existente'),
+  "fechaCorte": zod.coerce.date(),
+  "fechaOperativa": zod.string().regex(closeE9InvestigacionResponseFechaOperativaRegExp).optional().describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "importeEnviado": zod.string().max(closeE9InvestigacionResponseImporteEnviadoMax).regex(closeE9InvestigacionResponseImporteEnviadoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "estado": zod.enum(['ENVIADA', 'CONTADA', 'AUTORIZADA']),
+  "enviadoPor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "enviadoAt": zod.coerce.date(),
+  "evidenciaEnvio": zod.object({
+  "descripcion": zod.string().min(1).max(closeE9InvestigacionResponseEvidenciaEnvioDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(closeE9InvestigacionResponseEvidenciaEnvioReferenciasItemMax)).max(closeE9InvestigacionResponseEvidenciaEnvioReferenciasMax)
+}),
+  "conteos": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "importeRecibido": zod.string().max(closeE9InvestigacionResponseConteosItemImporteRecibidoMax).regex(closeE9InvestigacionResponseConteosItemImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "diferencia": zod.string().regex(closeE9InvestigacionResponseConteosItemDiferenciaRegExp).describe('Recibido menos enviado; no se borra al cerrar investigación'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(closeE9InvestigacionResponseConteosItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(closeE9InvestigacionResponseConteosItemEvidenciaReferenciasItemMax)).max(closeE9InvestigacionResponseConteosItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "conteoVigenteId": zod.string().uuid().optional(),
+  "autorizacion": zod.object({
+  "conteoId": zod.string().uuid(),
+  "importeRecibido": zod.string().max(closeE9InvestigacionResponseAutorizacionImporteRecibidoMax).regex(closeE9InvestigacionResponseAutorizacionImporteRecibidoRegExp).describe('Importe no negativo exacto a centavos; nunca float'),
+  "motivo": zod.string().optional(),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional(),
+  "investigacion": zod.object({
+  "id": zod.string().uuid(),
+  "estado": zod.enum(['ABIERTA', 'CERRADA_DOCUMENTAL']),
+  "abiertaAt": zod.coerce.date(),
+  "conteoOrigenId": zod.string().uuid(),
+  "cierre": zod.object({
+  "conclusion": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(closeE9InvestigacionResponseInvestigacionCierreEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(closeE9InvestigacionResponseInvestigacionCierreEvidenciaReferenciasItemMax)).max(closeE9InvestigacionResponseInvestigacionCierreEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int().min(1),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+}).optional()
+}).optional(),
+  "capacidades": zod.object({
+  "puedeEnviar": zod.boolean(),
+  "puedeContar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeCerrarInvestigacion": zod.boolean()
+}),
+  "fondo": zod.object({
+  "movimientoId": zod.string().uuid(),
+  "href": zod.string()
+}).optional().describe('ADMIN solamente; omitir por completo para cualquier otro actor')
+})
+
+
 export const getCajaAbonoE3ContextQueryBuscarMax = 100;
 
 
@@ -8693,6 +9536,7 @@ export const obtenerCorteCajaResponseHojaVentasDiaFechaOperativaRegExp = new Reg
 
 
 export const ObtenerCorteCajaResponse = zod.object({
+  "versionCorte": zod.string().optional().describe('Solo E9 ON y corte CERRADO con snapshot E2 canónico; hash opaco emitido por servidor. Omitido OFF o sin evidencia congelada. corteId es sesion.id.'),
   "sesion": zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
@@ -8887,6 +9731,7 @@ export const cerrarSesionCajaResponseHojaVentasDiaFechaOperativaRegExp = new Reg
 
 
 export const CerrarSesionCajaResponse = zod.object({
+  "versionCorte": zod.string().optional().describe('Solo E9 ON y corte CERRADO con snapshot E2 canónico; hash opaco emitido por servidor. Omitido OFF o sin evidencia congelada. corteId es sesion.id.'),
   "sesion": zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
@@ -11566,6 +12411,7 @@ export const getAdminCorteResponseHojaVentasDiaFechaOperativaRegExp = new RegExp
 
 
 export const GetAdminCorteResponse = zod.object({
+  "versionCorte": zod.string().optional().describe('Solo E9 ON y corte CERRADO con snapshot E2 canónico; hash opaco emitido por servidor. Omitido OFF o sin evidencia congelada. corteId es sesion.id.'),
   "sesion": zod.object({
   "id": zod.number(),
   "ubicacionId": zod.number(),
@@ -13359,6 +14205,7 @@ export const ListFondoMovimientosQueryParams = zod.object({
   "categoria": zod.enum(['SALDO_INICIAL', 'CAPITAL', 'OTRO_INGRESO', 'RETIRO']).optional()
 })
 
+
 export const listFondoMovimientosResponseItemsItemIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
 export const listFondoMovimientosResponseItemsItemOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
 export const listFondoMovimientosResponseItemsItemFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
@@ -13385,6 +14232,11 @@ export const listFondoMovimientosResponseTotalMin = 0;
 
 export const ListFondoMovimientosResponse = zod.object({
   "items": zod.array(zod.object({
+  "origenE9": zod.object({
+  "entregaId": zod.string().uuid(),
+  "corteId": zod.number().int().min(1),
+  "corteHref": zod.string()
+}).optional().describe('Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional'),
   "id": zod.string().regex(listFondoMovimientosResponseItemsItemIdRegExp),
   "ordinal": zod.string().regex(listFondoMovimientosResponseItemsItemOrdinalRegExp),
   "fondoId": zod.string().regex(listFondoMovimientosResponseItemsItemFondoIdRegExp),
@@ -13441,6 +14293,7 @@ export const CreateFondoMovimientoBody = zod.object({
 }).optional()
 })
 
+
 export const createFondoMovimientoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
 export const createFondoMovimientoResponseOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
 export const createFondoMovimientoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
@@ -13462,6 +14315,11 @@ export const createFondoMovimientoResponseInversoIdOneRegExp = new RegExp('^[0-9
 
 
 export const CreateFondoMovimientoResponse = zod.object({
+  "origenE9": zod.object({
+  "entregaId": zod.string().uuid(),
+  "corteId": zod.number().int().min(1),
+  "corteHref": zod.string()
+}).optional().describe('Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional'),
   "id": zod.string().regex(createFondoMovimientoResponseIdRegExp),
   "ordinal": zod.string().regex(createFondoMovimientoResponseOrdinalRegExp),
   "fondoId": zod.string().regex(createFondoMovimientoResponseFondoIdRegExp),
@@ -13494,6 +14352,7 @@ export const GetFondoMovimientoParams = zod.object({
   "id": zod.coerce.string().regex(getFondoMovimientoPathIdRegExp)
 })
 
+
 export const getFondoMovimientoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
 export const getFondoMovimientoResponseOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
 export const getFondoMovimientoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
@@ -13515,6 +14374,11 @@ export const getFondoMovimientoResponseInversoIdOneRegExp = new RegExp('^[0-9a-f
 
 
 export const GetFondoMovimientoResponse = zod.object({
+  "origenE9": zod.object({
+  "entregaId": zod.string().uuid(),
+  "corteId": zod.number().int().min(1),
+  "corteHref": zod.string()
+}).optional().describe('Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional'),
   "id": zod.string().regex(getFondoMovimientoResponseIdRegExp),
   "ordinal": zod.string().regex(getFondoMovimientoResponseOrdinalRegExp),
   "fondoId": zod.string().regex(getFondoMovimientoResponseFondoIdRegExp),
@@ -13557,6 +14421,7 @@ export const ReverseFondoMovimientoBody = zod.object({
   "motivo": zod.string().min(1).max(reverseFondoMovimientoBodyMotivoMax)
 })
 
+
 export const reverseFondoMovimientoResponseIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
 export const reverseFondoMovimientoResponseOrdinalRegExp = new RegExp('^[1-9][0-9]*$');
 export const reverseFondoMovimientoResponseFondoIdRegExp = new RegExp('^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$');
@@ -13578,6 +14443,11 @@ export const reverseFondoMovimientoResponseInversoIdOneRegExp = new RegExp('^[0-
 
 
 export const ReverseFondoMovimientoResponse = zod.object({
+  "origenE9": zod.object({
+  "entregaId": zod.string().uuid(),
+  "corteId": zod.number().int().min(1),
+  "corteHref": zod.string()
+}).optional().describe('Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional'),
   "id": zod.string().regex(reverseFondoMovimientoResponseIdRegExp),
   "ordinal": zod.string().regex(reverseFondoMovimientoResponseOrdinalRegExp),
   "fondoId": zod.string().regex(reverseFondoMovimientoResponseFondoIdRegExp),

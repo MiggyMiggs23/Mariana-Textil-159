@@ -34,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import CorteDetail from "@/pages/corte-detail-shared";
 import { parseDateOnlyQuery, parsePositiveQueryId } from "@/lib/origin-drilldown";
+import { E9EntregasPanel } from "@/components/e9-entregas-panel";
 
 type SortKey = "fecha" | "tienda" | "cajero" | "vendido" | "cobrado" | "tickets" | "esperado" | "contado" | "diferencia";
 
@@ -214,6 +215,7 @@ export default function CajaCortes() {
   return (
     <AppLayout>
       <div className="max-w-[1600px] mx-auto space-y-6">
+        <E9EntregasPanel ubicacionId={effectiveLocationId} />
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-sidebar">Historial de Cortes</h1>

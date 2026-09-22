@@ -1,5 +1,6 @@
 import { Router, type IRouter, type RequestHandler } from "express";
 import { z } from "zod";
+import { assertE9NoIndependentInverse, readE9FundOrigin } from "../lib/e9-fondo";
 import {
   FondoError,
   type FondoActor,
@@ -108,7 +109,9 @@ export function createFondoRouter(options: { db: FondoPool; authorizeAdmin: Requ
     strictEmpty.parse(req.body ?? {});
     strictEmpty.parse(req.query);
     const { id } = idParams.parse(req.params);
-    res.json(await obtenerMovimientoFondo(options.db, id));
+    const movement = await obtenerMovimientoFondo(options.db, id);
+    const origenE9 = await readE9FundOrigin(options.db, id);
+    res.json({ ...movement, ...(origenE9 ? { origenE9 } : {}) });
   }));
   router.post("/fondo/movimientos", handle(async (req, res) => {
     strictEmpty.parse(req.query);
@@ -119,7 +122,8 @@ export function createFondoRouter(options: { db: FondoPool; authorizeAdmin: Requ
   router.post("/fondo/movimientos/:id/inverso", handle(async (req, res) => {
     strictEmpty.parse(req.query);
     const { id } = idParams.parse(req.params);
-    const result = await invertirMovimientoFondo(options.db, actor(req), id, inverseInput.parse(req.body));
+    const result = await invertirMovimientoFondo(options.db, actor(req), id, inverseInput.parse(req.body),
+      tx => assertE9NoIndependentInverse(tx, id));
     if (result.replay) res.setHeader("Idempotent-Replay", "true");
     res.status(result.replay ? 200 : 201).json(result.value);
   }));

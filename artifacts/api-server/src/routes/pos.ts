@@ -63,6 +63,7 @@ import {
   proveedoresTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
+import { E9CutError } from "../lib/e9-cut";
 import { E4_CASH_OUT_ENABLED, E4CashOutError, e4CashOutPermission, requireE4, reviewE4CashOut } from "../lib/e4-cash-out";
 import { e4CashOutRepository } from "../lib/e4-cash-out-repository";
 import {
@@ -111,7 +112,7 @@ function handlePosError(
   res: Response,
   next: NextFunction,
 ): void {
-  if (error instanceof E4CashOutError) {
+  if (error instanceof E4CashOutError || error instanceof E9CutError) {
     res.status(error.status).json({ error: error.message, code: error.code });
     return;
   }

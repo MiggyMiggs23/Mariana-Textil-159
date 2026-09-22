@@ -5,6 +5,211 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+/**
+ * Importe no negativo exacto a centavos; nunca float
+ * @maxLength 13
+ * @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$
+ */
+export type E9Money = string;
+
+export type E9Estado = typeof E9Estado[keyof typeof E9Estado];
+
+
+export const E9Estado = {
+  ENVIADA: 'ENVIADA',
+  CONTADA: 'CONTADA',
+  AUTORIZADA: 'AUTORIZADA',
+} as const;
+
+export type E9ErrorErrorCode = typeof E9ErrorErrorCode[keyof typeof E9ErrorErrorCode];
+
+
+export const E9ErrorErrorCode = {
+  E9_DISABLED: 'E9_DISABLED',
+  E9_FORBIDDEN: 'E9_FORBIDDEN',
+  E9_NOT_FOUND: 'E9_NOT_FOUND',
+  E9_VALIDATION: 'E9_VALIDATION',
+  E9_RECEIVED_ZERO: 'E9_RECEIVED_ZERO',
+  E9_IDEMPOTENCY_CONFLICT: 'E9_IDEMPOTENCY_CONFLICT',
+  E9_CORTE_STALE: 'E9_CORTE_STALE',
+  E9_CORTE_ALREADY_SENT: 'E9_CORTE_ALREADY_SENT',
+  E9_CONTEO_STALE: 'E9_CONTEO_STALE',
+  E9_ALREADY_AUTHORIZED: 'E9_ALREADY_AUTHORIZED',
+  E9_STATE_CONFLICT: 'E9_STATE_CONFLICT',
+} as const;
+
+export type E9ErrorError = {
+  code: E9ErrorErrorCode;
+  message: string;
+};
+
+export interface E9Error {
+  error: E9ErrorError;
+}
+
+export interface E9Evidencia {
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  descripcion: string;
+  /**
+     * @maxItems 20
+     * @items.minLength 1
+     * @items.maxLength 500
+     */
+  referencias: string[];
+}
+
+export interface E9Actor {
+  /** @minimum 1 */
+  id: number;
+  nombre: string;
+}
+
+export interface E9Capacidades {
+  puedeEnviar: boolean;
+  puedeContar: boolean;
+  puedeAutorizar: boolean;
+  puedeCerrarInvestigacion: boolean;
+}
+
+export interface E9Disponibilidad {
+  enabled: boolean;
+  motivoInactivo?: string;
+  /** @minimum 1 */
+  ubicacionId?: number;
+  capacidades?: E9Capacidades;
+}
+
+export interface E9EnvioInput {
+  claveOperacion: string;
+  /** @minimum 1 */
+  corteId: number;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  versionCorte: string;
+  evidencia: E9Evidencia;
+}
+
+export interface E9ConteoInput {
+  claveOperacion: string;
+  importeRecibido: E9Money;
+  evidencia: E9Evidencia;
+}
+
+export interface E9AutorizacionInput {
+  claveOperacion: string;
+  conteoId: string;
+  /**
+     * Obligatorio si existe diferencia; no la ajusta ni cierra investigación
+     * @minLength 1
+     * @maxLength 2000
+     */
+  motivo?: string;
+}
+
+export interface E9CierreInput {
+  claveOperacion: string;
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  conclusion: string;
+  evidencia: E9Evidencia;
+}
+
+export interface E9Conteo {
+  id: string;
+  importeRecibido: E9Money;
+  /**
+     * Recibido menos enviado; no se borra al cerrar investigación
+     * @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$
+     */
+  diferencia: string;
+  evidencia: E9Evidencia;
+  actor: E9Actor;
+  createdAt: string;
+}
+
+export type E9InvestigacionEstado = typeof E9InvestigacionEstado[keyof typeof E9InvestigacionEstado];
+
+
+export const E9InvestigacionEstado = {
+  ABIERTA: 'ABIERTA',
+  CERRADA_DOCUMENTAL: 'CERRADA_DOCUMENTAL',
+} as const;
+
+export type E9InvestigacionCierre = {
+  conclusion: string;
+  evidencia: E9Evidencia;
+  actor: E9Actor;
+  createdAt: string;
+};
+
+export interface E9Investigacion {
+  id: string;
+  estado: E9InvestigacionEstado;
+  abiertaAt: string;
+  conteoOrigenId: string;
+  cierre?: E9InvestigacionCierre;
+}
+
+export type E9EntregaAutorizacion = {
+  conteoId: string;
+  importeRecibido: E9Money;
+  motivo?: string;
+  actor: E9Actor;
+  createdAt: string;
+};
+
+/**
+ * ADMIN solamente; omitir por completo para cualquier otro actor
+ */
+export type E9EntregaFondo = {
+  movimientoId: string;
+  href: string;
+};
+
+/**
+ * Calendar day in YYYY-MM-DD; never coerced to an instant.
+ * @pattern ^(?:(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8])))|(?:(?:\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$
+ */
+export type CalendarDate = string;
+
+export interface E9Entrega {
+  id: string;
+  /** @minimum 1 */
+  ubicacionId: number;
+  ubicacionNombre: string;
+  /** @minimum 1 */
+  corteId: number;
+  versionCorte: string;
+  /** Navegación al corte exacto bajo autorización existente */
+  corteHref: string;
+  fechaCorte: string;
+  fechaOperativa?: CalendarDate;
+  importeEnviado: E9Money;
+  estado: E9Estado;
+  enviadoPor: E9Actor;
+  enviadoAt: string;
+  evidenciaEnvio: E9Evidencia;
+  conteos: E9Conteo[];
+  conteoVigenteId?: string;
+  autorizacion?: E9EntregaAutorizacion;
+  investigacion?: E9Investigacion;
+  capacidades: E9Capacidades;
+  /** ADMIN solamente; omitir por completo para cualquier otro actor */
+  fondo?: E9EntregaFondo;
+}
+
+export interface E9EntregaPagina {
+  items: E9Entrega[];
+  nextCursor?: string;
+}
+
 export interface E3ContextSession {
   id: number;
   ubicacionId: number;
@@ -204,6 +409,16 @@ export interface FondoAutor {
 }
 
 /**
+ * Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional
+ */
+export type FondoMovimientoOrigenE9 = {
+  entregaId: string;
+  /** @minimum 1 */
+  corteId: number;
+  corteHref: string;
+};
+
+/**
  * @nullable
  */
 export type FondoMovimientoAdvertencia = typeof FondoMovimientoAdvertencia[keyof typeof FondoMovimientoAdvertencia] | null;
@@ -224,6 +439,8 @@ export interface FondoConciliacionInicial {
 }
 
 export interface FondoMovimiento {
+  /** Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional */
+  origenE9?: FondoMovimientoOrigenE9;
   id: FondoId;
   /** @pattern ^[1-9][0-9]*$ */
   ordinal: string;
@@ -923,12 +1140,6 @@ export interface AuditoriaListResult {
   page: number;
   pageSize: number;
 }
-
-/**
- * Calendar day in YYYY-MM-DD; never coerced to an instant.
- * @pattern ^(?:(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8])))|(?:(?:\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$
- */
-export type CalendarDate = string;
 
 export type EstadoContenedor = typeof EstadoContenedor[keyof typeof EstadoContenedor];
 
@@ -7860,6 +8071,8 @@ export type CorteCajaSalidasItem = {
 export type CorteCajaSalidasPorCuenta = {[key: string]: string};
 
 export interface CorteCaja {
+  /** Solo E9 ON y corte CERRADO con snapshot E2 canónico; hash opaco emitido por servidor. Omitido OFF o sin evidencia congelada. corteId es sesion.id. */
+  versionCorte?: string;
   sesion: SesionCaja;
   formasPago: CorteFormaPago[];
   cuentasDestino: CorteCuentaDestino[];
@@ -8266,6 +8479,11 @@ export interface AuditoriaInventarioEscaneoResult {
 }
 
 /**
+ * Error E9 explícito; sin efecto financiero parcial
+ */
+export type E9ErrorResponseResponse = E9Error;
+
+/**
  * Estado actualizado de la salida
  */
 export type SalidaDetailResponseResponse = SalidaDetail;
@@ -8363,6 +8581,27 @@ export type AnalyticsDesdeParameter = string;
 export type AnalyticsHastaParameter = string;
 
 export type AnalyticsUbicacionIdParameter = number;
+
+export type GetE9DisponibilidadParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+};
+
+export type ListE9EntregasParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+estado?: E9Estado;
+cursor?: string;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+};
 
 export type GetCajaAbonoE3ContextParams = {
 /**

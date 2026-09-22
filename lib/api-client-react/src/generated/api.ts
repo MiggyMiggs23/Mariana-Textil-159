@@ -127,6 +127,14 @@ import type {
   E3CollectionResult,
   E3PrintInput,
   E3Receipt,
+  E9AutorizacionInput,
+  E9CierreInput,
+  E9ConteoInput,
+  E9Disponibilidad,
+  E9Entrega,
+  E9EntregaPagina,
+  E9EnvioInput,
+  E9ErrorResponseResponse,
   EntradaDetail,
   EntradaInput,
   EntradaListResult,
@@ -189,6 +197,7 @@ import type {
   GetClientesResumenParams,
   GetConciliacionParams,
   GetDashboardParams,
+  GetE9DisponibilidadParams,
   GetExistenciasAgrupadasParams,
   GetExistenciasParams,
   GetKardexGroupedParams,
@@ -224,6 +233,7 @@ import type {
   ListContenedoresParams,
   ListCuentasIncobrables200,
   ListCuentasIncobrablesParams,
+  ListE9EntregasParams,
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
   ListEquiposParams,
@@ -409,6 +419,538 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetE9DisponibilidadUrl = (params: GetE9DisponibilidadParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e9/disponibilidad?${stringifiedParams}` : `/api/e9/disponibilidad`
+}
+
+/**
+ * @summary Contrato E9 OFF; disponibilidad por alcance sin saldo Fondo
+ */
+export const getE9Disponibilidad = async (params: GetE9DisponibilidadParams, options?: Parameters<typeof customFetch>[1]): Promise<E9Disponibilidad> => {
+
+  return customFetch<E9Disponibilidad>(getGetE9DisponibilidadUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE9DisponibilidadQueryKey = (params?: GetE9DisponibilidadParams,) => {
+    return [
+    `/api/e9/disponibilidad`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetE9DisponibilidadQueryOptions = <TData = Awaited<ReturnType<typeof getE9Disponibilidad>>, TError = ErrorType<E9ErrorResponseResponse>>(params: GetE9DisponibilidadParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE9Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE9DisponibilidadQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE9Disponibilidad>>> = ({ signal }) => getE9Disponibilidad(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE9Disponibilidad>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE9DisponibilidadQueryResult = NonNullable<Awaited<ReturnType<typeof getE9Disponibilidad>>>
+export type GetE9DisponibilidadQueryError = ErrorType<E9ErrorResponseResponse>
+
+
+/**
+ * @summary Contrato E9 OFF; disponibilidad por alcance sin saldo Fondo
+ */
+
+export function useGetE9Disponibilidad<TData = Awaited<ReturnType<typeof getE9Disponibilidad>>, TError = ErrorType<E9ErrorResponseResponse>>(
+ params: GetE9DisponibilidadParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE9Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE9DisponibilidadQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE9EntregasUrl = (params: ListE9EntregasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e9/entregas?${stringifiedParams}` : `/api/e9/entregas`
+}
+
+/**
+ * @summary Entregas exclusivamente dentro del alcance autorizado
+ */
+export const listE9Entregas = async (params: ListE9EntregasParams, options?: Parameters<typeof customFetch>[1]): Promise<E9EntregaPagina> => {
+
+  return customFetch<E9EntregaPagina>(getListE9EntregasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE9EntregasQueryKey = (params?: ListE9EntregasParams,) => {
+    return [
+    `/api/e9/entregas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE9EntregasQueryOptions = <TData = Awaited<ReturnType<typeof listE9Entregas>>, TError = ErrorType<E9ErrorResponseResponse>>(params: ListE9EntregasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE9Entregas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE9EntregasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE9Entregas>>> = ({ signal }) => listE9Entregas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE9Entregas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE9EntregasQueryResult = NonNullable<Awaited<ReturnType<typeof listE9Entregas>>>
+export type ListE9EntregasQueryError = ErrorType<E9ErrorResponseResponse>
+
+
+/**
+ * @summary Entregas exclusivamente dentro del alcance autorizado
+ */
+
+export function useListE9Entregas<TData = Awaited<ReturnType<typeof listE9Entregas>>, TError = ErrorType<E9ErrorResponseResponse>>(
+ params: ListE9EntregasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE9Entregas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE9EntregasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateE9EntregaUrl = () => {
+
+
+
+
+  return `/api/e9/entregas`
+}
+
+/**
+ * @summary ADMIN/SUPERVISOR documenta envío completo de corte cerrado; no ingreso
+ */
+export const createE9Entrega = async (e9EnvioInput: E9EnvioInput, options?: Parameters<typeof customFetch>[1]): Promise<E9Entrega> => {
+
+  return customFetch<E9Entrega>(getCreateE9EntregaUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e9EnvioInput)
+  }
+);}
+
+
+
+
+
+export const getCreateE9EntregaMutationOptions = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE9Entrega>>, TError,{data: BodyType<E9EnvioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createE9Entrega>>, TError,{data: BodyType<E9EnvioInput>}, TContext> => {
+
+const mutationKey = ['createE9Entrega'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createE9Entrega>>, {data: BodyType<E9EnvioInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createE9Entrega(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateE9EntregaMutationResult = NonNullable<Awaited<ReturnType<typeof createE9Entrega>>>
+    export type CreateE9EntregaMutationBody = BodyType<E9EnvioInput>
+    export type CreateE9EntregaMutationError = ErrorType<E9ErrorResponseResponse>
+
+    /**
+ * @summary ADMIN/SUPERVISOR documenta envío completo de corte cerrado; no ingreso
+ */
+export const useCreateE9Entrega = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE9Entrega>>, TError,{data: BodyType<E9EnvioInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createE9Entrega>>,
+        TError,
+        {data: BodyType<E9EnvioInput>},
+        TContext
+      > => {
+      return useMutation(getCreateE9EntregaMutationOptions(options));
+    }
+
+export const getGetE9EntregaUrl = (id: string,) => {
+
+
+
+
+  return `/api/e9/entregas/${id}`
+}
+
+/**
+ * @summary Evidencia propia; campo fondo exclusivamente ADMIN
+ */
+export const getE9Entrega = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<E9Entrega> => {
+
+  return customFetch<E9Entrega>(getGetE9EntregaUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE9EntregaQueryKey = (id: string,) => {
+    return [
+    `/api/e9/entregas/${id}`
+    ] as const;
+    }
+
+
+export const getGetE9EntregaQueryOptions = <TData = Awaited<ReturnType<typeof getE9Entrega>>, TError = ErrorType<E9ErrorResponseResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE9Entrega>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE9EntregaQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE9Entrega>>> = ({ signal }) => getE9Entrega(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE9Entrega>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE9EntregaQueryResult = NonNullable<Awaited<ReturnType<typeof getE9Entrega>>>
+export type GetE9EntregaQueryError = ErrorType<E9ErrorResponseResponse>
+
+
+/**
+ * @summary Evidencia propia; campo fondo exclusivamente ADMIN
+ */
+
+export function useGetE9Entrega<TData = Awaited<ReturnType<typeof getE9Entrega>>, TError = ErrorType<E9ErrorResponseResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE9Entrega>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE9EntregaQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateE9ConteoUrl = (id: string,) => {
+
+
+
+
+  return `/api/e9/entregas/${id}/conteos`
+}
+
+/**
+ * @summary ADMIN documenta conteo; diferencia abre investigación sin ajuste
+ */
+export const createE9Conteo = async (id: string,
+    e9ConteoInput: E9ConteoInput, options?: Parameters<typeof customFetch>[1]): Promise<E9Entrega> => {
+
+  return customFetch<E9Entrega>(getCreateE9ConteoUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e9ConteoInput)
+  }
+);}
+
+
+
+
+
+export const getCreateE9ConteoMutationOptions = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE9Conteo>>, TError,{id: string;data: BodyType<E9ConteoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createE9Conteo>>, TError,{id: string;data: BodyType<E9ConteoInput>}, TContext> => {
+
+const mutationKey = ['createE9Conteo'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createE9Conteo>>, {id: string;data: BodyType<E9ConteoInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createE9Conteo(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateE9ConteoMutationResult = NonNullable<Awaited<ReturnType<typeof createE9Conteo>>>
+    export type CreateE9ConteoMutationBody = BodyType<E9ConteoInput>
+    export type CreateE9ConteoMutationError = ErrorType<E9ErrorResponseResponse>
+
+    /**
+ * @summary ADMIN documenta conteo; diferencia abre investigación sin ajuste
+ */
+export const useCreateE9Conteo = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE9Conteo>>, TError,{id: string;data: BodyType<E9ConteoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createE9Conteo>>,
+        TError,
+        {id: string;data: BodyType<E9ConteoInput>},
+        TContext
+      > => {
+      return useMutation(getCreateE9ConteoMutationOptions(options));
+    }
+
+export const getAuthorizeE9RecepcionUrl = (id: string,) => {
+
+
+
+
+  return `/api/e9/entregas/${id}/autorizar`
+}
+
+/**
+ * @summary ADMIN autoriza recepción e ingreso Fondo único y atómico
+ */
+export const authorizeE9Recepcion = async (id: string,
+    e9AutorizacionInput: E9AutorizacionInput, options?: Parameters<typeof customFetch>[1]): Promise<E9Entrega> => {
+
+  return customFetch<E9Entrega>(getAuthorizeE9RecepcionUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e9AutorizacionInput)
+  }
+);}
+
+
+
+
+
+export const getAuthorizeE9RecepcionMutationOptions = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authorizeE9Recepcion>>, TError,{id: string;data: BodyType<E9AutorizacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof authorizeE9Recepcion>>, TError,{id: string;data: BodyType<E9AutorizacionInput>}, TContext> => {
+
+const mutationKey = ['authorizeE9Recepcion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authorizeE9Recepcion>>, {id: string;data: BodyType<E9AutorizacionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  authorizeE9Recepcion(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AuthorizeE9RecepcionMutationResult = NonNullable<Awaited<ReturnType<typeof authorizeE9Recepcion>>>
+    export type AuthorizeE9RecepcionMutationBody = BodyType<E9AutorizacionInput>
+    export type AuthorizeE9RecepcionMutationError = ErrorType<E9ErrorResponseResponse>
+
+    /**
+ * @summary ADMIN autoriza recepción e ingreso Fondo único y atómico
+ */
+export const useAuthorizeE9Recepcion = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authorizeE9Recepcion>>, TError,{id: string;data: BodyType<E9AutorizacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof authorizeE9Recepcion>>,
+        TError,
+        {id: string;data: BodyType<E9AutorizacionInput>},
+        TContext
+      > => {
+      return useMutation(getAuthorizeE9RecepcionMutationOptions(options));
+    }
+
+export const getCloseE9InvestigacionUrl = (id: string,) => {
+
+
+
+
+  return `/api/e9/entregas/${id}/investigacion/cierre`
+}
+
+/**
+ * @summary ADMIN cierra documentalmente; no ajusta ni elimina diferencia
+ */
+export const closeE9Investigacion = async (id: string,
+    e9CierreInput: E9CierreInput, options?: Parameters<typeof customFetch>[1]): Promise<E9Entrega> => {
+
+  return customFetch<E9Entrega>(getCloseE9InvestigacionUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e9CierreInput)
+  }
+);}
+
+
+
+
+
+export const getCloseE9InvestigacionMutationOptions = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof closeE9Investigacion>>, TError,{id: string;data: BodyType<E9CierreInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof closeE9Investigacion>>, TError,{id: string;data: BodyType<E9CierreInput>}, TContext> => {
+
+const mutationKey = ['closeE9Investigacion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof closeE9Investigacion>>, {id: string;data: BodyType<E9CierreInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  closeE9Investigacion(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CloseE9InvestigacionMutationResult = NonNullable<Awaited<ReturnType<typeof closeE9Investigacion>>>
+    export type CloseE9InvestigacionMutationBody = BodyType<E9CierreInput>
+    export type CloseE9InvestigacionMutationError = ErrorType<E9ErrorResponseResponse>
+
+    /**
+ * @summary ADMIN cierra documentalmente; no ajusta ni elimina diferencia
+ */
+export const useCloseE9Investigacion = <TError = ErrorType<E9ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof closeE9Investigacion>>, TError,{id: string;data: BodyType<E9CierreInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof closeE9Investigacion>>,
+        TError,
+        {id: string;data: BodyType<E9CierreInput>},
+        TContext
+      > => {
+      return useMutation(getCloseE9InvestigacionMutationOptions(options));
+    }
 
 export const getGetCajaAbonoE3ContextUrl = (params?: GetCajaAbonoE3ContextParams,) => {
   const normalizedParams = new URLSearchParams();

@@ -7,6 +7,8 @@ servers:
   - url: /api
     description: Base API path
 tags:
+  - name: e9
+    description: Contrato preparado OFF de entregas completas y recepción ADMIN
   - name: health
     description: Health operations
   - name: auth
@@ -58,6 +60,109 @@ tags:
   - name: equipos
     description: Registro de equipo del sistema y su configuración por sitio
 paths:
+  /e9/disponibilidad:
+    get:
+      operationId: getE9Disponibilidad
+      tags: [e9]
+      summary: Contrato E9 OFF; disponibilidad por alcance sin saldo Fondo
+      parameters:
+        - { name: ubicacionId, in: query, required: true, schema: { type: integer, minimum: 1 } }
+      responses:
+        "200":
+          description: Disponibilidad; OFF no consulta esquema E9/Fondo
+          content: { application/json: { schema: { $ref: "#/components/schemas/E9Disponibilidad" } } }
+        default:
+          $ref: "#/components/responses/E9ErrorResponse"
+  /e9/entregas:
+    get:
+      operationId: listE9Entregas
+      tags: [e9]
+      summary: Entregas exclusivamente dentro del alcance autorizado
+      parameters:
+        - { name: ubicacionId, in: query, required: true, schema: { type: integer, minimum: 1 } }
+        - { name: estado, in: query, schema: { $ref: "#/components/schemas/E9Estado" } }
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 25 } }
+      responses:
+        "200":
+          description: Página filtrada por actor
+          content: { application/json: { schema: { $ref: "#/components/schemas/E9EntregaPagina" } } }
+        default:
+          $ref: "#/components/responses/E9ErrorResponse"
+    post:
+      operationId: createE9Entrega
+      tags: [e9]
+      summary: ADMIN/SUPERVISOR documenta envío completo de corte cerrado; no ingreso
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E9EnvioInput" } } }
+      responses:
+        "201":
+          description: Envío único o mismo resultado por reintento
+          content: { application/json: { schema: { $ref: "#/components/schemas/E9Entrega" } } }
+        default:
+          $ref: "#/components/responses/E9ErrorResponse"
+  /e9/entregas/{id}:
+    get:
+      operationId: getE9Entrega
+      tags: [e9]
+      summary: Evidencia propia; campo fondo exclusivamente ADMIN
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: Detalle filtrado por actor
+          content: { application/json: { schema: { $ref: "#/components/schemas/E9Entrega" } } }
+        default:
+          $ref: "#/components/responses/E9ErrorResponse"
+  /e9/entregas/{id}/conteos:
+    post:
+      operationId: createE9Conteo
+      tags: [e9]
+      summary: ADMIN documenta conteo; diferencia abre investigación sin ajuste
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E9ConteoInput" } } }
+      responses:
+        "201":
+          description: Conteo registrado; todavía sin ingreso Fondo
+          content: { application/json: { schema: { $ref: "#/components/schemas/E9Entrega" } } }
+        default:
+          $ref: "#/components/responses/E9ErrorResponse"
+  /e9/entregas/{id}/autorizar:
+    post:
+      operationId: authorizeE9Recepcion
+      tags: [e9]
+      summary: ADMIN autoriza recepción e ingreso Fondo único y atómico
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E9AutorizacionInput" } } }
+      responses:
+        "200":
+          description: Recepción autorizada o replay idéntico
+          content: { application/json: { schema: { $ref: "#/components/schemas/E9Entrega" } } }
+        default:
+          $ref: "#/components/responses/E9ErrorResponse"
+  /e9/entregas/{id}/investigacion/cierre:
+    post:
+      operationId: closeE9Investigacion
+      tags: [e9]
+      summary: ADMIN cierra documentalmente; no ajusta ni elimina diferencia
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E9CierreInput" } } }
+      responses:
+        "200":
+          description: Conclusión preservada sin efecto financiero
+          content: { application/json: { schema: { $ref: "#/components/schemas/E9Entrega" } } }
+        default:
+          $ref: "#/components/responses/E9ErrorResponse"
   /caja/abonos-e3/contexto:
     get:
       operationId: getCajaAbonoE3Context
@@ -6733,6 +6838,12 @@ components:
       schema:
         type: number
   responses:
+    E9ErrorResponse:
+      description: Error E9 explícito; sin efecto financiero parcial
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/E9Error"
     SalidaDetailResponse:
       description: Estado actualizado de la salida
       content:
@@ -6776,6 +6887,174 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    E9Money:
+      type: string
+      maxLength: 13
+      pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$'
+      description: Importe no negativo exacto a centavos; nunca float
+    E9Estado:
+      type: string
+      enum: [ENVIADA, CONTADA, AUTORIZADA]
+    E9Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+              enum: [E9_DISABLED, E9_FORBIDDEN, E9_NOT_FOUND, E9_VALIDATION, E9_RECEIVED_ZERO, E9_IDEMPOTENCY_CONFLICT, E9_CORTE_STALE, E9_CORTE_ALREADY_SENT, E9_CONTEO_STALE, E9_ALREADY_AUTHORIZED, E9_STATE_CONFLICT]
+            message: { type: string }
+    E9Evidencia:
+      type: object
+      additionalProperties: false
+      required: [descripcion, referencias]
+      properties:
+        descripcion: { type: string, minLength: 1, maxLength: 2000 }
+        referencias:
+          type: array
+          maxItems: 20
+          items: { type: string, minLength: 1, maxLength: 500 }
+    E9Actor:
+      type: object
+      required: [id, nombre]
+      properties:
+        id: { type: integer, minimum: 1 }
+        nombre: { type: string }
+    E9Capacidades:
+      type: object
+      required: [puedeEnviar, puedeContar, puedeAutorizar, puedeCerrarInvestigacion]
+      properties:
+        puedeEnviar: { type: boolean }
+        puedeContar: { type: boolean }
+        puedeAutorizar: { type: boolean }
+        puedeCerrarInvestigacion: { type: boolean }
+    E9Disponibilidad:
+      type: object
+      required: [enabled]
+      properties:
+        enabled: { type: boolean }
+        motivoInactivo: { type: string }
+        ubicacionId: { type: integer, minimum: 1 }
+        capacidades: { $ref: "#/components/schemas/E9Capacidades" }
+    E9EnvioInput:
+      type: object
+      additionalProperties: false
+      required: [claveOperacion, corteId, versionCorte, evidencia]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        corteId: { type: integer, minimum: 1 }
+        versionCorte: { type: string, minLength: 1, maxLength: 200 }
+        evidencia: { $ref: "#/components/schemas/E9Evidencia" }
+    E9ConteoInput:
+      type: object
+      additionalProperties: false
+      required: [claveOperacion, importeRecibido, evidencia]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        importeRecibido: { $ref: "#/components/schemas/E9Money" }
+        evidencia: { $ref: "#/components/schemas/E9Evidencia" }
+    E9AutorizacionInput:
+      type: object
+      additionalProperties: false
+      required: [claveOperacion, conteoId]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        conteoId: { type: string, format: uuid }
+        motivo:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Obligatorio si existe diferencia; no la ajusta ni cierra investigación
+    E9CierreInput:
+      type: object
+      additionalProperties: false
+      required: [claveOperacion, conclusion, evidencia]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        conclusion: { type: string, minLength: 1, maxLength: 2000 }
+        evidencia: { $ref: "#/components/schemas/E9Evidencia" }
+    E9Conteo:
+      type: object
+      required: [id, importeRecibido, diferencia, evidencia, actor, createdAt]
+      properties:
+        id: { type: string, format: uuid }
+        importeRecibido: { $ref: "#/components/schemas/E9Money" }
+        diferencia:
+          type: string
+          pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$'
+          description: Recibido menos enviado; no se borra al cerrar investigación
+        evidencia: { $ref: "#/components/schemas/E9Evidencia" }
+        actor: { $ref: "#/components/schemas/E9Actor" }
+        createdAt: { type: string, format: date-time }
+    E9Investigacion:
+      type: object
+      required: [id, estado, abiertaAt, conteoOrigenId]
+      properties:
+        id: { type: string, format: uuid }
+        estado: { type: string, enum: [ABIERTA, CERRADA_DOCUMENTAL] }
+        abiertaAt: { type: string, format: date-time }
+        conteoOrigenId: { type: string, format: uuid }
+        cierre:
+          type: object
+          required: [conclusion, evidencia, actor, createdAt]
+          properties:
+            conclusion: { type: string }
+            evidencia: { $ref: "#/components/schemas/E9Evidencia" }
+            actor: { $ref: "#/components/schemas/E9Actor" }
+            createdAt: { type: string, format: date-time }
+    E9Entrega:
+      type: object
+      required: [id, ubicacionId, ubicacionNombre, corteId, versionCorte, corteHref, fechaCorte, importeEnviado, estado, enviadoPor, enviadoAt, evidenciaEnvio, conteos, capacidades]
+      properties:
+        id: { type: string, format: uuid }
+        ubicacionId: { type: integer, minimum: 1 }
+        ubicacionNombre: { type: string }
+        corteId: { type: integer, minimum: 1 }
+        versionCorte: { type: string }
+        corteHref: { type: string, description: Navegación al corte exacto bajo autorización existente }
+        fechaCorte: { type: string, format: date-time }
+        fechaOperativa:
+          type: string
+          format: date
+          description: Periodo original del corte; nunca derivado del día de envío o recepción
+        importeEnviado: { $ref: "#/components/schemas/E9Money" }
+        estado: { $ref: "#/components/schemas/E9Estado" }
+        enviadoPor: { $ref: "#/components/schemas/E9Actor" }
+        enviadoAt: { type: string, format: date-time }
+        evidenciaEnvio: { $ref: "#/components/schemas/E9Evidencia" }
+        conteos:
+          type: array
+          items: { $ref: "#/components/schemas/E9Conteo" }
+        conteoVigenteId: { type: string, format: uuid }
+        autorizacion:
+          type: object
+          required: [conteoId, importeRecibido, actor, createdAt]
+          properties:
+            conteoId: { type: string, format: uuid }
+            importeRecibido: { $ref: "#/components/schemas/E9Money" }
+            motivo: { type: string }
+            actor: { $ref: "#/components/schemas/E9Actor" }
+            createdAt: { type: string, format: date-time }
+        investigacion: { $ref: "#/components/schemas/E9Investigacion" }
+        capacidades: { $ref: "#/components/schemas/E9Capacidades" }
+        fondo:
+          type: object
+          description: ADMIN solamente; omitir por completo para cualquier otro actor
+          required: [movimientoId, href]
+          properties:
+            movimientoId: { type: string, format: uuid }
+            href: { type: string }
+    E9EntregaPagina:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/E9Entrega" }
+        nextCursor: { type: string }
     E3CollectionContext:
       type: object
       required: [sitios, clientes]
@@ -6916,6 +7195,14 @@ components:
       additionalProperties: false
       required: [id, ordinal, fondoId, naturaleza, categoria, importe, importeFirmado, motivo, fecha, autor, esInverso, advertencia, conciliacionInicial, originalId, inversoId]
       properties:
+        origenE9:
+          type: object
+          description: Solo detalle ADMIN y E9 ON; evidencia exacta de recepción y corte, no saldo adicional
+          required: [entregaId, corteId, corteHref]
+          properties:
+            entregaId: { type: string, format: uuid }
+            corteId: { type: integer, minimum: 1 }
+            corteHref: { type: string }
         id: { $ref: "#/components/schemas/FondoId" }
         ordinal: { type: string, pattern: '^[1-9][0-9]*$' }
         fondoId: { $ref: "#/components/schemas/FondoId" }
@@ -14651,6 +14938,9 @@ components:
           hojaVentasDia,
         ]
       properties:
+        versionCorte:
+          type: string
+          description: Solo E9 ON y corte CERRADO con snapshot E2 canónico; hash opaco emitido por servidor. Omitido OFF o sin evidencia congelada. corteId es sesion.id.
         sesion:
           $ref: "#/components/schemas/SesionCaja"
         formasPago:

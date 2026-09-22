@@ -261,12 +261,13 @@ export async function crearMovimientoFondoEnTransaccion(tx: FondoExecutor, actor
     return { value: await getMovement(tx, inserted.rows[0].id), replay: false };
 }
 
-export async function invertirMovimientoFondo(pool: FondoPool, actor: FondoActor, originalId: string, input: { idempotencyKey: string; motivo: string }) {
-  return transaction(pool, "READ COMMITTED", tx => invertirMovimientoFondoEnTransaccion(tx, actor, originalId, input));
+export async function invertirMovimientoFondo(pool: FondoPool, actor: FondoActor, originalId: string, input: { idempotencyKey: string; motivo: string }, integrationGuard?: (tx: FondoExecutor) => Promise<void>) {
+  return transaction(pool, "READ COMMITTED", tx => invertirMovimientoFondoEnTransaccion(tx, actor, originalId, input, false, integrationGuard));
 }
-export async function invertirMovimientoFondoEnTransaccion(tx: FondoExecutor, actor: FondoActor, originalId: string, input: { idempotencyKey: string; motivo: string }, supplierIntegration = false) {
+export async function invertirMovimientoFondoEnTransaccion(tx: FondoExecutor, actor: FondoActor, originalId: string, input: { idempotencyKey: string; motivo: string }, supplierIntegration = false, integrationGuard?: (tx: FondoExecutor) => Promise<void>) {
   const hash = payloadHash({ originalId, ...input });
     const fondo = await identity(tx); await lock(tx);
+    await integrationGuard?.(tx);
     if (E12_SUPPLIER_CASH_ENABLED && !supplierIntegration) {
       const linked = await tx.query(`SELECT 1 FROM proveedor_efectivo_e12
         WHERE movimiento_fondo_id=$1::uuid OR retorno->>'movimientoFondoId'=$1::text LIMIT 1`, [originalId]);
