@@ -1,0 +1,25 @@
+{
+  "status": "PREPARED_PARTIAL_SELECTION_NOT_EXECUTED",
+  "previous_evidence": "frontend-node-mutants-2026-09-22T19-51-29.604Z",
+  "previous_completed_cycles_preserved": [
+    "E12-MIXED-ONE-PAYMENT", "E12-FUND-NO-SESSION", "E12-CAJA-SESSION",
+    "E12-EXACT-CENTS", "E12-FUND-PRIVACY", "E12-CAJA-OVERRIDE", "E12-FUND-NO-OVERDRAFT"
+  ],
+  "diagnosis": "Fixture omitted MutationObserver subscriber notification after per-call onSettled. The productive ref was cleared, but disabled DOM stayed stale because useToast delegates to Sonner without subscribing this component. This is not a fresh-options rejection: the disabled button prevented the second submission.",
+  "fixture_fix": "Notify the mounted hook subscriber via React reducer after global/per-call success/error and onSettled callbacks, before resolving/rejecting mutateAsync. Pending stays deliberately false so synchronous double-click tests still require the productive ref lock.",
+  "real_contract_reference": "@tanstack/query-core 5.101.4 mutation.ts and mutationObserver.ts: default callbacks precede dispatch; per-call callbacks precede observer listeners.",
+  "source_change": "artifacts/mariana-textil/src/components/e12-node-test-harness.tsx only",
+  "next_run": {
+    "executable": "node",
+    "arguments": [
+      "reports/tanda-b-20260922/e12/run-frontend-node-mutants.mjs",
+      "--ids",
+      "E12-PAY-RETRY,E12-PAY-DOUBLE,E12-PAY-CONTENT,E12-IDENTITY-CONTEXT,E12-FRESH-CONFIRM,E12-OFF,E12-NONCASH,E12-DIRECTED-FIFO-ENTRY,E12-DIRECTED-DOCUMENT-ENTRY,E12-APPROVE-PERSISTED,E12-APPROVE-SESSION,E12-APPROVE-RETRY,E12-RETURN-DERIVED,E12-RETURN-EXPLICIT,E12-RETURN-SERVER-REQUIRED,E12-RETURN-RETRY,E12-EVIDENCE-PRIVACY,E12-PARENT-PAYMENT,E12-PARENT-LEDGER,E12-REFRESH-KEYS,E12-P12-ADMIN,E12-P12-NONADMIN,E12-P12-CONTENT,E12-P12-OFF,E12-P12-ITEM-PRIVACY,E12-CORTE-RETURN,E4-ADMIN,E4-SUPERVISOR,E4-OTHER-STORE,E4-CLAIM-REASON,E4-CAPTURE-RETRY,E4-PROVIDER-REQUIRED,E4-GATE-OFF,E4-CAPTURE-DOUBLE,E4-CAPTURE-CONTENT,E4-CAPTURE-PERMISSION,E4-PROVIDER-LOCATION,E4-REVIEW-DOUBLE,E4-REVIEW-RETRY,E4-REVIEW-CONTENT,E4-CAJA-NO-REVIEW"
+    ],
+    "remaining_e12_cycles": 26,
+    "existing_e4_green_regressions": 15,
+    "expected_selected_native_executions": 93
+  },
+  "acceptance": "Runner already emits PASS_SELECTED_CASES and EXPLICIT_PARTIAL_SELECTION_NOT_FULL_E12 for this selection. Previous evidence is immutable and uses the previous harness hash; do not relabel either run as a homogeneous total PASS.",
+  "verification": "Changed harness parsed statically with zero TS syntax diagnostics. No tests, typecheck, app or workflow executed by preparer."
+}

@@ -1091,6 +1091,7 @@ router.post(
         sesionCajaId: sesionId, monto: body.monto, motivo: body.motivo, proveedorId: body.proveedorId,
         cuentaOrigen: body.cuentaOrigen, creadoPorId: req.auth!.user.id, ip: getRequestIp(req),
         tipo: body.tipo, claveOperacion: body.claveOperacion, actor: req.auth!.user,
+        desbloqueoCajaE12: body.desbloqueoCajaE12,
       }));
       res.status(201).json(CrearSalidaDineroCajaResponse.parse({
         ...salida, createdAt: salida.createdAt,

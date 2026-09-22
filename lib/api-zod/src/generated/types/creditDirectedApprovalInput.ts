@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CreditNature } from './creditNature';
+import type { E12AprobacionProveedorInput } from './e12AprobacionProveedorInput';
 
 /**
  * Para CLIENTE exige los metadatos y UUID de la solicitud original; PROVEEDOR no escribe crédito E1.
@@ -28,4 +29,5 @@ export interface CreditDirectedApprovalInput {
   notaOrigenId?: number | null;
   /** @nullable */
   origenJustificacion?: string | null;
+  aprobacionE12?: E12AprobacionProveedorInput;
 }

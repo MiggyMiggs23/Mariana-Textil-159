@@ -2,8 +2,10 @@ import { and, eq, inArray } from "drizzle-orm";
 import { auditoriaTable, cobrosCreditoPendientesE1Table, movimientosCreditoTable, ticketPagosTable, ticketsTable, salidasDineroCajaTable, usuariosTable, proveedoresTable } from "@workspace/db/schema";
 import type { db } from "@workspace/db";
 import { calculateCash, resolveSessionCash, creditCashDocuments, type CashDocument, type CashBreakdown } from "./caja-cash-ledger";
+import { readE12Returns, type E12Executor } from "./e12-cash-ledger";
+import { E12_SUPPLIER_CASH_ENABLED } from "./e12-supplier-cash";
 
-type Reader = Pick<typeof db, "select">;
+type Reader = Pick<typeof db, "select"> & Partial<E12Executor>;
 type Session = { id: number; estado: string; fondoInicial: string; efectivoContado: string | null; abiertaAt?: Date; usuarioId?: number };
 
 /** Legacy values are supplied by the original surface, intentionally including
@@ -38,6 +40,10 @@ async function readOpenCash(database: Reader, session: Session): Promise<CashBre
     evidencia: { referencia: null, motivo: outflow.motivo, fecha: outflow.createdAt.toISOString(),
       usuarioId: outflow.creadoPorId, proveedorId: outflow.proveedorId } });
   // Resolve actual names only for referenced records, while the session is open.
+  if (E12_SUPPLIER_CASH_ENABLED) {
+    if (!database.execute) throw new Error("E12: falta ejecutor de retornos de caja");
+    documents.push(...await readE12Returns(database as Reader & E12Executor, session.id));
+  }
   // Names are frozen with the cash documents; closed cuts never join live names.
   const userIds = [...new Set(documents.flatMap(d => d.evidencia?.usuarioId == null ? [] : [d.evidencia.usuarioId]))];
   const providerIds = [...new Set(documents.flatMap(d => d.evidencia?.proveedorId == null ? [] : [d.evidencia.proveedorId]))];

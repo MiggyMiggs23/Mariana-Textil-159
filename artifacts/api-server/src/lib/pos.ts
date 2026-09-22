@@ -1,6 +1,10 @@
 import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import { E4_CASH_OUT_ENABLED, E4CashOutError, createE4CashOut, type E4Actor, type E4Kind } from "./e4-cash-out";
 import { e4CashOutRepository, readE4CashOutRevisions } from "./e4-cash-out-repository";
+import { E12_SUPPLIER_CASH_ENABLED, E12Error, requireE12, payE12 } from "./e12-supplier-cash";
+import { e12Repository } from "./e12-supplier-cash-repository";
+import { e12NumberAmount, e12OverrideSchema } from "./e12-http";
+import { e12E4Hooks } from "./e12-e4";
 import { readSessionCash } from "./caja-corte-reader";
 import { cashCents, cashMoney } from "./caja-cash-ledger";
 import type { Request } from "express";
@@ -1759,12 +1763,37 @@ export async function abrirSesionCaja(
 
 export async function crearSalidaDineroCaja(
   tx: Tx,
-  input: { sesionCajaId: number; monto: string; motivo: string; proveedorId?: number | null; cuentaOrigen: "CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL"; creadoPorId: number; ip: string; tipo?: E4Kind; claveOperacion?: string; actor?: E4Actor },
+  input: { sesionCajaId: number; monto: string; motivo: string; proveedorId?: number | null; cuentaOrigen: "CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL"; creadoPorId: number; ip: string; tipo?: E4Kind; claveOperacion?: string; actor?: E4Actor & { nombre?: string }; desbloqueoCajaE12?: { motivo: string } },
 ) {
+  if (input.desbloqueoCajaE12 !== undefined) { requireE12(); e12OverrideSchema.parse(input.desbloqueoCajaE12); }
+  if (E12_SUPPLIER_CASH_ENABLED && input.cuentaOrigen === "CAJA_FISICA") {
+    if (!E4_CASH_OUT_ENABLED) throw new E12Error("E12_E4_REQUIRED", "La captura de salidas requiere el flujo E4 preparado.", 403);
+    if (input.tipo === "PROVEEDOR") {
+      if (!input.actor || input.actor.id !== input.creadoPorId || typeof input.actor.nombre !== "string" ||
+          !["ADMIN", "SUPERVISOR", "CAJA"].includes(input.actor.rol))
+        throw new E12Error("E12_FORBIDDEN", "Actor autenticado de caja requerido.", 403);
+      if (!input.proveedorId || !input.claveOperacion) throw new E12Error("E12_SPLIT_REQUIRED", "Proveedor y UUID son obligatorios.");
+      if (!input.motivo.trim() || input.motivo.trim().length > 500) throw new E12Error("E12_REASON", "Motivo de salida obligatorio, máximo 500 caracteres.");
+      // Dispatch before E4 locks the session: canonical supplier -> session -> Fondo lock order.
+      const result = await payE12(e12Repository(tx), { ...input.actor, nombre: input.actor.nombre, ip: input.ip }, {
+        proveedorId: input.proveedorId, importe: e12NumberAmount(Number(input.monto)), notas: input.motivo,
+        split: { claveOperacion: input.claveOperacion, caja: e12NumberAmount(Number(input.monto)),
+          sesionCajaId: input.sesionCajaId, desbloqueoCaja: input.desbloqueoCajaE12 },
+      });
+      const rows = await tx.execute(sql`SELECT s.id,s.sesion_caja_id AS "sesionCajaId",s.monto,s.motivo,
+        s.proveedor_id AS "proveedorId",s.cuenta_origen AS "cuentaOrigen",s.creado_por_id AS "creadoPorId",
+        s.created_at AS "createdAt",e.revision AS e4 FROM salidas_dinero_caja s
+        JOIN caja_salidas_e4 e ON e.salida_id=s.id WHERE s.id=${result.efectivoE12.salidaCajaId}`);
+      const salida = rows.rows[0];
+      if (!salida) throw new E12Error("E12_NOT_FOUND", "Falta la salida del pago.", 409);
+      return { ...salida, createdAt: new Date(salida.createdAt as string).toISOString(),
+        ...(input.actor.rol === "ADMIN" ? { pagoProveedorIdE12: result.pago.id } : {}) };
+    }
+  }
   if (E4_CASH_OUT_ENABLED) {
     if (!input.actor || input.actor.id !== input.creadoPorId)
       throw new E4CashOutError("Se requiere el actor autenticado.", "E4_ACTOR_REQUIRED", 403);
-    return createE4CashOut(e4CashOutRepository(tx), input.actor, input);
+    return createE4CashOut(e4CashOutRepository(tx, e12E4Hooks(tx)), input.actor, input);
   }
   if (input.tipo !== undefined || input.claveOperacion !== undefined)
     throw new E4CashOutError("Las salidas extraordinarias E4 aún no están liberadas.", "E4_DISABLED", 403);

@@ -420,6 +420,11 @@ export const listSolicitudesPagoDirigidoResponseSolicitudesItemSesionCajaIdMulti
 
 export const listSolicitudesPagoDirigidoResponseSolicitudesItemNotaOrigenIdMultipleOf = 1;
 
+export const listSolicitudesPagoDirigidoResponseSolicitudesItemEfectivoE12OneCajaRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listSolicitudesPagoDirigidoResponseSolicitudesItemEfectivoE12OneFondoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const listSolicitudesPagoDirigidoResponseSolicitudesItemEfectivoE12OneDesbloqueoCajaMotivoMax = 1000;
+
 
 
 export const ListSolicitudesPagoDirigidoResponse = zod.object({
@@ -452,7 +457,16 @@ export const ListSolicitudesPagoDirigidoResponse = zod.object({
   "ubicacionNombre": zod.string().nullable(),
   "movimientoId": zod.number().nullish(),
   "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "caja": zod.string().regex(listSolicitudesPagoDirigidoResponseSolicitudesItemEfectivoE12OneCajaRegExp),
+  "fondo": zod.string().regex(listSolicitudesPagoDirigidoResponseSolicitudesItemEfectivoE12OneFondoRegExp).optional().describe('Omitido equivale a cero. Mayor que cero exclusivo ADMIN.'),
+  "sesionCajaId": zod.number().int().min(1).nullish().describe('Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.'),
+  "desbloqueoCaja": zod.object({
+  "motivo": zod.string().min(1).max(listSolicitudesPagoDirigidoResponseSolicitudesItemEfectivoE12OneDesbloqueoCajaMotivoMax)
+}).optional()
+}).optional().describe('Propuesta de fuentes persistida; solo ADMIN. Ausente para clientes, históricos y OFF.')
 }))
 })
 
@@ -474,6 +488,11 @@ export const createSolicitudPagoDirigidoBodyImporteExclusiveMin = 0;
 
 export const createSolicitudPagoDirigidoBodyMotivoMin = 10;
 
+export const createSolicitudPagoDirigidoBodyEfectivoE12CajaRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createSolicitudPagoDirigidoBodyEfectivoE12FondoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const createSolicitudPagoDirigidoBodyEfectivoE12DesbloqueoCajaMotivoMax = 1000;
+
 
 
 export const CreateSolicitudPagoDirigidoBody = zod.object({
@@ -492,7 +511,16 @@ export const CreateSolicitudPagoDirigidoBody = zod.object({
   "fechaEfectiva": zod.coerce.date().optional(),
   "referencia": zod.string().optional(),
   "notas": zod.string().optional(),
-  "motivo": zod.string().min(createSolicitudPagoDirigidoBodyMotivoMin)
+  "motivo": zod.string().min(createSolicitudPagoDirigidoBodyMotivoMin),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "caja": zod.string().regex(createSolicitudPagoDirigidoBodyEfectivoE12CajaRegExp),
+  "fondo": zod.string().regex(createSolicitudPagoDirigidoBodyEfectivoE12FondoRegExp).optional().describe('Omitido equivale a cero. Mayor que cero exclusivo ADMIN.'),
+  "sesionCajaId": zod.number().int().min(1).nullish().describe('Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.'),
+  "desbloqueoCaja": zod.object({
+  "motivo": zod.string().min(1).max(createSolicitudPagoDirigidoBodyEfectivoE12DesbloqueoCajaMotivoMax)
+}).optional()
+}).optional()
 })
 
 export const createSolicitudPagoDirigidoResponseSitioOrigenIdMultipleOf = 1;
@@ -501,6 +529,11 @@ export const createSolicitudPagoDirigidoResponseOperacionClaveRegExp = new RegEx
 export const createSolicitudPagoDirigidoResponseSesionCajaIdMultipleOf = 1;
 
 export const createSolicitudPagoDirigidoResponseNotaOrigenIdMultipleOf = 1;
+
+export const createSolicitudPagoDirigidoResponseEfectivoE12OneCajaRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createSolicitudPagoDirigidoResponseEfectivoE12OneFondoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const createSolicitudPagoDirigidoResponseEfectivoE12OneDesbloqueoCajaMotivoMax = 1000;
 
 
 
@@ -533,7 +566,16 @@ export const CreateSolicitudPagoDirigidoResponse = zod.object({
   "ubicacionNombre": zod.string().nullable(),
   "movimientoId": zod.number().nullish(),
   "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "caja": zod.string().regex(createSolicitudPagoDirigidoResponseEfectivoE12OneCajaRegExp),
+  "fondo": zod.string().regex(createSolicitudPagoDirigidoResponseEfectivoE12OneFondoRegExp).optional().describe('Omitido equivale a cero. Mayor que cero exclusivo ADMIN.'),
+  "sesionCajaId": zod.number().int().min(1).nullish().describe('Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.'),
+  "desbloqueoCaja": zod.object({
+  "motivo": zod.string().min(1).max(createSolicitudPagoDirigidoResponseEfectivoE12OneDesbloqueoCajaMotivoMax)
+}).optional()
+}).optional().describe('Propuesta de fuentes persistida; solo ADMIN. Ausente para clientes, históricos y OFF.')
 })
 
 
@@ -554,6 +596,8 @@ export const aprobarSolicitudPagoDirigidoBodySesionCajaIdMultipleOf = 1;
 
 export const aprobarSolicitudPagoDirigidoBodyNotaOrigenIdMultipleOf = 1;
 
+export const aprobarSolicitudPagoDirigidoBodyAprobacionE12DesbloqueoCajaMotivoMax = 1000;
+
 
 
 export const AprobarSolicitudPagoDirigidoBody = zod.object({
@@ -562,13 +606,49 @@ export const AprobarSolicitudPagoDirigidoBody = zod.object({
   "operacionClave": zod.string().regex(aprobarSolicitudPagoDirigidoBodyOperacionClaveRegExp).optional(),
   "sesionCajaId": zod.number().min(1).multipleOf(aprobarSolicitudPagoDirigidoBodySesionCajaIdMultipleOf).nullish(),
   "notaOrigenId": zod.number().min(1).multipleOf(aprobarSolicitudPagoDirigidoBodyNotaOrigenIdMultipleOf).nullish(),
-  "origenJustificacion": zod.string().nullish()
+  "origenJustificacion": zod.string().nullish(),
+  "aprobacionE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "desbloqueoCaja": zod.object({
+  "motivo": zod.string().min(1).max(aprobarSolicitudPagoDirigidoBodyAprobacionE12DesbloqueoCajaMotivoMax)
+}).optional()
+}).optional()
 }).describe('Para CLIENTE exige los metadatos y UUID de la solicitud original; PROVEEDOR no escribe crédito E1.')
 
 export const AprobarSolicitudPagoDirigidoResponse = zod.object({
   "solicitudId": zod.number(),
   "movimientoId": zod.number(),
-  "estado": zod.enum(['APROBADA'])
+  "estado": zod.enum(['APROBADA']),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date()
+}),zod.null()])
+}).optional().describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.')
 })
 
 
@@ -596,6 +676,11 @@ export const rechazarSolicitudPagoDirigidoResponseOperacionClaveRegExp = new Reg
 export const rechazarSolicitudPagoDirigidoResponseSesionCajaIdMultipleOf = 1;
 
 export const rechazarSolicitudPagoDirigidoResponseNotaOrigenIdMultipleOf = 1;
+
+export const rechazarSolicitudPagoDirigidoResponseEfectivoE12OneCajaRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rechazarSolicitudPagoDirigidoResponseEfectivoE12OneFondoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const rechazarSolicitudPagoDirigidoResponseEfectivoE12OneDesbloqueoCajaMotivoMax = 1000;
 
 
 
@@ -628,7 +713,16 @@ export const RechazarSolicitudPagoDirigidoResponse = zod.object({
   "ubicacionNombre": zod.string().nullable(),
   "movimientoId": zod.number().nullish(),
   "estado": zod.enum(['PENDIENTE', 'APROBADA', 'RECHAZADA']),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "caja": zod.string().regex(rechazarSolicitudPagoDirigidoResponseEfectivoE12OneCajaRegExp),
+  "fondo": zod.string().regex(rechazarSolicitudPagoDirigidoResponseEfectivoE12OneFondoRegExp).optional().describe('Omitido equivale a cero. Mayor que cero exclusivo ADMIN.'),
+  "sesionCajaId": zod.number().int().min(1).nullish().describe('Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.'),
+  "desbloqueoCaja": zod.object({
+  "motivo": zod.string().min(1).max(rechazarSolicitudPagoDirigidoResponseEfectivoE12OneDesbloqueoCajaMotivoMax)
+}).optional()
+}).optional().describe('Propuesta de fuentes persistida; solo ADMIN. Ausente para clientes, históricos y OFF.')
 })
 
 
@@ -2445,7 +2539,37 @@ export const EstadoCuentaProveedorResponse = zod.object({
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
   "createdAt": zod.coerce.date()
+}),zod.null()])
+}).optional().describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.')
 })),
   "saldoActual": zod.string()
 })
@@ -2485,7 +2609,37 @@ export const ListProveedorPagosResponse = zod.object({
   "referencia": zod.string().nullish(),
   "notas": zod.string().nullish(),
   "usuarioId": zod.number(),
+  "createdAt": zod.coerce.date(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
   "createdAt": zod.coerce.date()
+}),zod.null()])
+}).optional().describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.')
 }))
 })
 
@@ -2499,6 +2653,11 @@ export const RegistrarPagoProveedorParams = zod.object({
 
 export const registrarPagoProveedorBodyImporteMin = 0.01;
 
+export const registrarPagoProveedorBodyEfectivoE12OneCajaRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const registrarPagoProveedorBodyEfectivoE12OneFondoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const registrarPagoProveedorBodyEfectivoE12OneDesbloqueoCajaMotivoMax = 1000;
+
 
 
 export const RegistrarPagoProveedorBody = zod.object({
@@ -2506,7 +2665,16 @@ export const RegistrarPagoProveedorBody = zod.object({
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),
   "fecha": zod.coerce.date().optional().describe('Fecha del pago; por defecto ahora si se omite'),
   "referencia": zod.string().nullish(),
-  "notas": zod.string().nullish()
+  "notas": zod.string().nullish(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "caja": zod.string().regex(registrarPagoProveedorBodyEfectivoE12OneCajaRegExp),
+  "fondo": zod.string().regex(registrarPagoProveedorBodyEfectivoE12OneFondoRegExp).optional().describe('Omitido equivale a cero. Mayor que cero exclusivo ADMIN.'),
+  "sesionCajaId": zod.number().int().min(1).nullish().describe('Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.'),
+  "desbloqueoCaja": zod.object({
+  "motivo": zod.string().min(1).max(registrarPagoProveedorBodyEfectivoE12OneDesbloqueoCajaMotivoMax)
+}).optional()
+}).optional().describe('Obligatorio para EFECTIVO al liberar E12; prohibido para otras formas.')
 })
 
 export const RegistrarPagoProveedorResponse = zod.object({
@@ -2537,7 +2705,58 @@ export const RegistrarPagoProveedorResponse = zod.object({
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
   "reversoMovimientoId": zod.number().nullish(),
-  "motivoReverso": zod.string().nullish()
+  "motivoReverso": zod.string().nullish(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date()
+}),zod.null()])
+}).describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.').optional().describe('Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF.')
+})
+
+
+/**
+ * @summary E12 preparado; disponibilidad de caja Mariana y Fondo exclusivo ADMIN
+ */
+export const GetOpcionesPagoEfectivoProveedorParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetOpcionesPagoEfectivoProveedorResponse = zod.object({
+  "enabled": zod.boolean(),
+  "motivoInactivo": zod.string().optional(),
+  "ubicacionId": zod.number().int().optional(),
+  "sesionCajaId": zod.number().int().nullish(),
+  "saldoCaja": zod.string().nullish(),
+  "puedeDesbloquearCaja": zod.boolean().optional(),
+  "fondo": zod.object({
+  "saldo": zod.string(),
+  "versionSaldo": zod.string().uuid().nullable()
+}).optional().describe('Campo ausente para no ADMIN, incluso cuando no hay saldo. OFF no consulta E10.')
 })
 
 
@@ -2550,6 +2769,11 @@ export const PreviewPagoProveedorParams = zod.object({
 
 export const previewPagoProveedorBodyImporteMin = 0.01;
 
+export const previewPagoProveedorBodyEfectivoE12OneCajaRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const previewPagoProveedorBodyEfectivoE12OneFondoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+export const previewPagoProveedorBodyEfectivoE12OneDesbloqueoCajaMotivoMax = 1000;
+
 
 
 export const PreviewPagoProveedorBody = zod.object({
@@ -2557,7 +2781,16 @@ export const PreviewPagoProveedorBody = zod.object({
   "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA', 'FACTURADO', 'CHEQUE', 'OTRO']),
   "fecha": zod.coerce.date().optional().describe('Fecha del pago; por defecto ahora si se omite'),
   "referencia": zod.string().nullish(),
-  "notas": zod.string().nullish()
+  "notas": zod.string().nullish(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "caja": zod.string().regex(previewPagoProveedorBodyEfectivoE12OneCajaRegExp),
+  "fondo": zod.string().regex(previewPagoProveedorBodyEfectivoE12OneFondoRegExp).optional().describe('Omitido equivale a cero. Mayor que cero exclusivo ADMIN.'),
+  "sesionCajaId": zod.number().int().min(1).nullish().describe('Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.'),
+  "desbloqueoCaja": zod.object({
+  "motivo": zod.string().min(1).max(previewPagoProveedorBodyEfectivoE12OneDesbloqueoCajaMotivoMax)
+}).optional()
+}).optional().describe('Obligatorio para EFECTIVO al liberar E12; prohibido para otras formas.')
 })
 
 export const PreviewPagoProveedorResponse = zod.object({
@@ -2612,7 +2845,37 @@ export const GetProveedorCompraDetalleResponse = zod.object({
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
   "reversoMovimientoId": zod.number().nullish(),
-  "motivoReverso": zod.string().nullish()
+  "motivoReverso": zod.string().nullish(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date()
+}),zod.null()])
+}).describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.').optional().describe('Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF.')
 }),
   "aplicaciones": zod.array(zod.object({
   "pagoProveedorId": zod.number(),
@@ -2664,7 +2927,37 @@ export const GetProveedorPagoDetalleResponse = zod.object({
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
   "reversoMovimientoId": zod.number().nullish(),
-  "motivoReverso": zod.string().nullish()
+  "motivoReverso": zod.string().nullish(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date()
+}),zod.null()])
+}).describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.').optional().describe('Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF.')
 }),
   "aplicaciones": zod.array(zod.object({
   "pagoProveedorId": zod.number(),
@@ -2691,11 +2984,16 @@ export const ReversarPagoProveedorParams = zod.object({
   "pagoId": zod.coerce.number()
 })
 
+export const reversarPagoProveedorBodyMotivoMax = 1000;
 
 
 
 export const ReversarPagoProveedorBody = zod.object({
-  "motivo": zod.string().min(1).describe('Motivo obligatorio del movimiento inverso')
+  "motivo": zod.string().min(1).max(reversarPagoProveedorBodyMotivoMax),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO'])
+}).optional()
 })
 
 export const ReversarPagoProveedorResponse = zod.object({
@@ -2726,7 +3024,37 @@ export const ReversarPagoProveedorResponse = zod.object({
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
   "reversoMovimientoId": zod.number().nullish(),
-  "motivoReverso": zod.string().nullish()
+  "motivoReverso": zod.string().nullish(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date()
+}),zod.null()])
+}).describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.').optional().describe('Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF.')
 })
 
 
@@ -2774,7 +3102,37 @@ export const RegistrarAjusteProveedorResponse = zod.object({
   "saldoDisponible": zod.string().optional(),
   "revertido": zod.boolean().optional(),
   "reversoMovimientoId": zod.number().nullish(),
-  "motivoReverso": zod.string().nullish()
+  "motivoReverso": zod.string().nullish(),
+  "efectivoE12": zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "pagoProveedorId": zod.number().int(),
+  "total": zod.string(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "salidaCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date(),
+  "desbloqueoCaja": zod.union([zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
+}),zod.null()]),
+  "retorno": zod.union([zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "naturaleza": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']),
+  "motivo": zod.string(),
+  "reversoProveedorId": zod.number().int(),
+  "caja": zod.string(),
+  "fondo": zod.string(),
+  "sesionCajaId": zod.number().int().nullable(),
+  "ingresoCajaId": zod.number().int().nullable(),
+  "movimientoFondoId": zod.string().uuid().nullable(),
+  "createdAt": zod.coerce.date()
+}),zod.null()])
+}).describe('Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.').optional().describe('Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF.')
 })
 
 
@@ -8220,9 +8578,10 @@ export const ObtenerSesionCajaActualResponse = zod.object({
   "abonosFisicos": zod.string(),
   "cobrosRetenidos": zod.string(),
   "salidasFisicas": zod.string(),
+  "retornosProveedor": zod.string().optional().describe('Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos\/OFF.'),
   "efectivoEsperado": zod.string(),
   "documentos": zod.array(zod.object({
-  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA', 'RETORNO_PROVEEDOR']),
   "id": zod.string(),
   "folio": zod.string().nullable(),
   "importe": zod.string(),
@@ -8234,7 +8593,8 @@ export const ObtenerSesionCajaActualResponse = zod.object({
   "usuarioId": zod.number().nullable(),
   "proveedorId": zod.number().nullable(),
   "usuarioNombre": zod.string().nullish(),
-  "proveedorNombre": zod.string().nullish()
+  "proveedorNombre": zod.string().nullish(),
+  "naturalezaRetornoE12": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']).optional()
 }).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
 }))
 }).optional()
@@ -8268,9 +8628,10 @@ export const ListarSesionesCajaResponseItem = zod.object({
   "abonosFisicos": zod.string(),
   "cobrosRetenidos": zod.string(),
   "salidasFisicas": zod.string(),
+  "retornosProveedor": zod.string().optional().describe('Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos\/OFF.'),
   "efectivoEsperado": zod.string(),
   "documentos": zod.array(zod.object({
-  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA', 'RETORNO_PROVEEDOR']),
   "id": zod.string(),
   "folio": zod.string().nullable(),
   "importe": zod.string(),
@@ -8282,7 +8643,8 @@ export const ListarSesionesCajaResponseItem = zod.object({
   "usuarioId": zod.number().nullable(),
   "proveedorId": zod.number().nullable(),
   "usuarioNombre": zod.string().nullish(),
-  "proveedorNombre": zod.string().nullish()
+  "proveedorNombre": zod.string().nullish(),
+  "naturalezaRetornoE12": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']).optional()
 }).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
 }))
 }).optional(),
@@ -8375,6 +8737,14 @@ export const ObtenerCorteCajaResponse = zod.object({
   "explicacion": zod.string().nullable(),
   "comprobanteUrl": zod.string().nullable()
 }))
+}).optional(),
+  "pagoProveedorIdE12": zod.number().int().optional().describe('Vínculo E12 solo ADMIN; ausente OFF.'),
+  "e12DesbloqueoCaja": zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
 }).optional()
 })),
   "salidasPorCuenta": zod.record(zod.string(), zod.string()),
@@ -8438,9 +8808,10 @@ export const ObtenerCorteCajaResponse = zod.object({
   "abonosFisicos": zod.string(),
   "cobrosRetenidos": zod.string(),
   "salidasFisicas": zod.string(),
+  "retornosProveedor": zod.string().optional().describe('Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos\/OFF.'),
   "efectivoEsperado": zod.string(),
   "documentos": zod.array(zod.object({
-  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA', 'RETORNO_PROVEEDOR']),
   "id": zod.string(),
   "folio": zod.string().nullable(),
   "importe": zod.string(),
@@ -8452,7 +8823,8 @@ export const ObtenerCorteCajaResponse = zod.object({
   "usuarioId": zod.number().nullable(),
   "proveedorId": zod.number().nullable(),
   "usuarioNombre": zod.string().nullish(),
-  "proveedorNombre": zod.string().nullish()
+  "proveedorNombre": zod.string().nullish(),
+  "naturalezaRetornoE12": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']).optional()
 }).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
 }))
 }).optional(),
@@ -8559,6 +8931,14 @@ export const CerrarSesionCajaResponse = zod.object({
   "explicacion": zod.string().nullable(),
   "comprobanteUrl": zod.string().nullable()
 }))
+}).optional(),
+  "pagoProveedorIdE12": zod.number().int().optional().describe('Vínculo E12 solo ADMIN; ausente OFF.'),
+  "e12DesbloqueoCaja": zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
 }).optional()
 })),
   "salidasPorCuenta": zod.record(zod.string(), zod.string()),
@@ -8622,9 +9002,10 @@ export const CerrarSesionCajaResponse = zod.object({
   "abonosFisicos": zod.string(),
   "cobrosRetenidos": zod.string(),
   "salidasFisicas": zod.string(),
+  "retornosProveedor": zod.string().optional().describe('Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos\/OFF.'),
   "efectivoEsperado": zod.string(),
   "documentos": zod.array(zod.object({
-  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA', 'RETORNO_PROVEEDOR']),
   "id": zod.string(),
   "folio": zod.string().nullable(),
   "importe": zod.string(),
@@ -8636,7 +9017,8 @@ export const CerrarSesionCajaResponse = zod.object({
   "usuarioId": zod.number().nullable(),
   "proveedorId": zod.number().nullable(),
   "usuarioNombre": zod.string().nullish(),
-  "proveedorNombre": zod.string().nullish()
+  "proveedorNombre": zod.string().nullish(),
+  "naturalezaRetornoE12": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']).optional()
 }).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
 }))
 }).optional(),
@@ -8687,6 +9069,8 @@ export const ListarSalidasDineroCajaParams = zod.object({
 export const listarSalidasDineroCajaResponseSalidasItemOneMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
 export const listarSalidasDineroCajaResponseSalidasItemOneMotivoMax = 500;
 
+export const listarSalidasDineroCajaResponseSalidasItemOneDesbloqueoCajaE12MotivoMax = 1000;
+
 export const listarSalidasDineroCajaResponseSalidasItemTwoE4VersionMin = 0;
 
 
@@ -8699,7 +9083,10 @@ export const ListarSalidasDineroCajaResponse = zod.object({
   "proveedorId": zod.number().nullish(),
   "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
   "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']).optional().describe('Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.'),
-  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.')
+  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.'),
+  "desbloqueoCajaE12": zod.object({
+  "motivo": zod.string().min(1).max(listarSalidasDineroCajaResponseSalidasItemOneDesbloqueoCajaE12MotivoMax)
+}).optional()
 }).and(zod.object({
   "id": zod.number(),
   "sesionCajaId": zod.number(),
@@ -8718,6 +9105,14 @@ export const ListarSalidasDineroCajaResponse = zod.object({
   "explicacion": zod.string().nullable(),
   "comprobanteUrl": zod.string().nullable()
 }))
+}).optional(),
+  "pagoProveedorIdE12": zod.number().int().optional().describe('Vínculo E12 solo ADMIN; ausente OFF.'),
+  "e12DesbloqueoCaja": zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
 }).optional()
 })))
 })
@@ -8733,6 +9128,8 @@ export const CrearSalidaDineroCajaParams = zod.object({
 export const crearSalidaDineroCajaBodyMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
 export const crearSalidaDineroCajaBodyMotivoMax = 500;
 
+export const crearSalidaDineroCajaBodyDesbloqueoCajaE12MotivoMax = 1000;
+
 
 
 export const CrearSalidaDineroCajaBody = zod.object({
@@ -8741,11 +9138,16 @@ export const CrearSalidaDineroCajaBody = zod.object({
   "proveedorId": zod.number().nullish(),
   "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
   "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']).optional().describe('Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.'),
-  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.')
+  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.'),
+  "desbloqueoCajaE12": zod.object({
+  "motivo": zod.string().min(1).max(crearSalidaDineroCajaBodyDesbloqueoCajaE12MotivoMax)
+}).optional()
 })
 
 export const crearSalidaDineroCajaResponseOneMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
 export const crearSalidaDineroCajaResponseOneMotivoMax = 500;
+
+export const crearSalidaDineroCajaResponseOneDesbloqueoCajaE12MotivoMax = 1000;
 
 export const crearSalidaDineroCajaResponseTwoE4VersionMin = 0;
 
@@ -8758,7 +9160,10 @@ export const CrearSalidaDineroCajaResponse = zod.object({
   "proveedorId": zod.number().nullish(),
   "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
   "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']).optional().describe('Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.'),
-  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.')
+  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.'),
+  "desbloqueoCajaE12": zod.object({
+  "motivo": zod.string().min(1).max(crearSalidaDineroCajaResponseOneDesbloqueoCajaE12MotivoMax)
+}).optional()
 }).and(zod.object({
   "id": zod.number(),
   "sesionCajaId": zod.number(),
@@ -8777,6 +9182,14 @@ export const CrearSalidaDineroCajaResponse = zod.object({
   "explicacion": zod.string().nullable(),
   "comprobanteUrl": zod.string().nullable()
 }))
+}).optional(),
+  "pagoProveedorIdE12": zod.number().int().optional().describe('Vínculo E12 solo ADMIN; ausente OFF.'),
+  "e12DesbloqueoCaja": zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
 }).optional()
 }))
 
@@ -11100,9 +11513,10 @@ export const ListAdminCortesResponse = zod.object({
   "abonosFisicos": zod.string(),
   "cobrosRetenidos": zod.string(),
   "salidasFisicas": zod.string(),
+  "retornosProveedor": zod.string().optional().describe('Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos\/OFF.'),
   "efectivoEsperado": zod.string(),
   "documentos": zod.array(zod.object({
-  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA', 'RETORNO_PROVEEDOR']),
   "id": zod.string(),
   "folio": zod.string().nullable(),
   "importe": zod.string(),
@@ -11114,7 +11528,8 @@ export const ListAdminCortesResponse = zod.object({
   "usuarioId": zod.number().nullable(),
   "proveedorId": zod.number().nullable(),
   "usuarioNombre": zod.string().nullish(),
-  "proveedorNombre": zod.string().nullish()
+  "proveedorNombre": zod.string().nullish(),
+  "naturalezaRetornoE12": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']).optional()
 }).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
 }))
 }).optional(),
@@ -11195,6 +11610,14 @@ export const GetAdminCorteResponse = zod.object({
   "explicacion": zod.string().nullable(),
   "comprobanteUrl": zod.string().nullable()
 }))
+}).optional(),
+  "pagoProveedorIdE12": zod.number().int().optional().describe('Vínculo E12 solo ADMIN; ausente OFF.'),
+  "e12DesbloqueoCaja": zod.object({
+  "motivo": zod.string(),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "saldoAntes": zod.string(),
+  "egreso": zod.string()
 }).optional()
 })),
   "salidasPorCuenta": zod.record(zod.string(), zod.string()),
@@ -11258,9 +11681,10 @@ export const GetAdminCorteResponse = zod.object({
   "abonosFisicos": zod.string(),
   "cobrosRetenidos": zod.string(),
   "salidasFisicas": zod.string(),
+  "retornosProveedor": zod.string().optional().describe('Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos\/OFF.'),
   "efectivoEsperado": zod.string(),
   "documentos": zod.array(zod.object({
-  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA']),
+  "origen": zod.enum(['FONDO_INICIAL', 'TICKET', 'ABONO', 'COBRO_RETENIDO', 'SALIDA', 'RETORNO_PROVEEDOR']),
   "id": zod.string(),
   "folio": zod.string().nullable(),
   "importe": zod.string(),
@@ -11272,7 +11696,8 @@ export const GetAdminCorteResponse = zod.object({
   "usuarioId": zod.number().nullable(),
   "proveedorId": zod.number().nullable(),
   "usuarioNombre": zod.string().nullish(),
-  "proveedorNombre": zod.string().nullish()
+  "proveedorNombre": zod.string().nullish(),
+  "naturalezaRetornoE12": zod.enum(['CORRECCION_CAPTURA', 'RECUPERACION_EFECTIVO']).optional()
 }).optional().describe('Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.')
 }))
 }).optional(),

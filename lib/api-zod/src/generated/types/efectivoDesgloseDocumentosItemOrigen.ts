@@ -15,4 +15,5 @@ export const EfectivoDesgloseDocumentosItemOrigen = {
   ABONO: 'ABONO',
   COBRO_RETENIDO: 'COBRO_RETENIDO',
   SALIDA: 'SALIDA',
+  RETORNO_PROVEEDOR: 'RETORNO_PROVEEDOR',
 } as const;

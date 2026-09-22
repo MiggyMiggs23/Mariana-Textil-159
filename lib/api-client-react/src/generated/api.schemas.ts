@@ -422,6 +422,32 @@ export const SolicitudPagoDirigidoEstado = {
   RECHAZADA: 'RECHAZADA',
 } as const;
 
+export interface E12DesbloqueoCajaInput {
+  /**
+     * @minLength 1
+     * @maxLength 1000
+     */
+  motivo: string;
+}
+
+export interface E12PagoEfectivoInput {
+  claveOperacion: string;
+  /** @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$ */
+  caja: string;
+  /**
+     * Omitido equivale a cero. Mayor que cero exclusivo ADMIN.
+     * @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$
+     */
+  fondo?: string;
+  /**
+     * Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.
+     * @minimum 1
+     * @nullable
+     */
+  sesionCajaId?: number | null;
+  desbloqueoCaja?: E12DesbloqueoCajaInput;
+}
+
 export interface SolicitudPagoDirigido {
   /** @minimum 1 */
   sitioOrigenId?: number;
@@ -473,6 +499,8 @@ export interface SolicitudPagoDirigido {
   movimientoId?: number | null;
   estado: SolicitudPagoDirigidoEstado;
   createdAt: string;
+  /** Propuesta de fuentes persistida; solo ADMIN. Ausente para clientes, históricos y OFF. */
+  efectivoE12?: E12PagoEfectivoInput;
 }
 
 export interface SolicitudesPagoDirigidoResult {
@@ -499,6 +527,11 @@ export interface CreditEvidenceInput {
   origenJustificacion?: string | null;
 }
 
+export interface E12AprobacionProveedorInput {
+  claveOperacion: string;
+  desbloqueoCaja?: E12DesbloqueoCajaInput;
+}
+
 /**
  * Para CLIENTE exige los metadatos y UUID de la solicitud original; PROVEEDOR no escribe crédito E1.
  */
@@ -520,6 +553,7 @@ export interface CreditDirectedApprovalInput {
   notaOrigenId?: number | null;
   /** @nullable */
   origenJustificacion?: string | null;
+  aprobacionE12?: E12AprobacionProveedorInput;
 }
 
 /**
@@ -770,6 +804,7 @@ export interface SolicitudPagoDirigidoInput {
   notas?: string;
   /** @minLength 10 */
   motivo: string;
+  efectivoE12?: E12PagoEfectivoInput;
 }
 
 export type SolicitudPagoDirigidoAplicadaEstado = typeof SolicitudPagoDirigidoAplicadaEstado[keyof typeof SolicitudPagoDirigidoAplicadaEstado];
@@ -779,10 +814,63 @@ export const SolicitudPagoDirigidoAplicadaEstado = {
   APROBADA: 'APROBADA',
 } as const;
 
+export interface E12DesbloqueoCaja {
+  motivo: string;
+  usuarioId: number;
+  createdAt: string;
+  saldoAntes: string;
+  egreso: string;
+}
+
+export type E12RetornoEfectivoNaturaleza = typeof E12RetornoEfectivoNaturaleza[keyof typeof E12RetornoEfectivoNaturaleza];
+
+
+export const E12RetornoEfectivoNaturaleza = {
+  CORRECCION_CAPTURA: 'CORRECCION_CAPTURA',
+  RECUPERACION_EFECTIVO: 'RECUPERACION_EFECTIVO',
+} as const;
+
+export interface E12RetornoEfectivo {
+  claveOperacion: string;
+  naturaleza: E12RetornoEfectivoNaturaleza;
+  motivo: string;
+  reversoProveedorId: number;
+  caja: string;
+  fondo: string;
+  /** @nullable */
+  sesionCajaId: number | null;
+  /** @nullable */
+  ingresoCajaId: number | null;
+  /** @nullable */
+  movimientoFondoId: string | null;
+  createdAt: string;
+}
+
+/**
+ * Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.
+ */
+export interface E12PagoEfectivoDetalle {
+  claveOperacion: string;
+  pagoProveedorId: number;
+  total: string;
+  caja: string;
+  fondo: string;
+  /** @nullable */
+  sesionCajaId: number | null;
+  /** @nullable */
+  salidaCajaId: number | null;
+  /** @nullable */
+  movimientoFondoId: string | null;
+  createdAt: string;
+  desbloqueoCaja: E12DesbloqueoCaja | null;
+  retorno: E12RetornoEfectivo | null;
+}
+
 export interface SolicitudPagoDirigidoAplicada {
   solicitudId: number;
   movimientoId: number;
   estado: SolicitudPagoDirigidoAplicadaEstado;
+  efectivoE12?: E12PagoEfectivoDetalle;
 }
 
 export interface AuditoriaEntry {
@@ -1916,6 +2004,15 @@ export const EfectivoDesgloseDocumentosItemOrigen = {
   ABONO: 'ABONO',
   COBRO_RETENIDO: 'COBRO_RETENIDO',
   SALIDA: 'SALIDA',
+  RETORNO_PROVEEDOR: 'RETORNO_PROVEEDOR',
+} as const;
+
+export type EfectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12 = typeof EfectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12[keyof typeof EfectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12];
+
+
+export const EfectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12 = {
+  CORRECCION_CAPTURA: 'CORRECCION_CAPTURA',
+  RECUPERACION_EFECTIVO: 'RECUPERACION_EFECTIVO',
 } as const;
 
 /**
@@ -1936,6 +2033,7 @@ export type EfectivoDesgloseDocumentosItemEvidencia = {
   usuarioNombre?: string | null;
   /** @nullable */
   proveedorNombre?: string | null;
+  naturalezaRetornoE12?: EfectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12;
 };
 
 export type EfectivoDesgloseDocumentosItem = {
@@ -1957,6 +2055,8 @@ export interface EfectivoDesglose {
   abonosFisicos: string;
   cobrosRetenidos: string;
   salidasFisicas: string;
+  /** Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos/OFF. */
+  retornosProveedor?: string;
   efectivoEsperado: string;
   documentos: EfectivoDesgloseDocumentosItem[];
 }
@@ -4567,6 +4667,7 @@ export interface MovimientoLedger {
   notas?: string | null;
   usuarioId: number;
   createdAt: string;
+  efectivoE12?: E12PagoEfectivoDetalle;
 }
 
 export interface ProveedorPagosResult {
@@ -6367,6 +6468,8 @@ export interface PagoProveedorRow {
   reversoMovimientoId?: number | null;
   /** @nullable */
   motivoReverso?: string | null;
+  /** Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF. */
+  efectivoE12?: E12PagoEfectivoDetalle;
 }
 
 export interface PagoProveedorInput {
@@ -6382,6 +6485,52 @@ export interface PagoProveedorInput {
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
+  /** Obligatorio para EFECTIVO al liberar E12; prohibido para otras formas. */
+  efectivoE12?: E12PagoEfectivoInput;
+}
+
+export type E12RetornoEfectivoInputNaturaleza = typeof E12RetornoEfectivoInputNaturaleza[keyof typeof E12RetornoEfectivoInputNaturaleza];
+
+
+export const E12RetornoEfectivoInputNaturaleza = {
+  CORRECCION_CAPTURA: 'CORRECCION_CAPTURA',
+  RECUPERACION_EFECTIVO: 'RECUPERACION_EFECTIVO',
+} as const;
+
+export interface E12RetornoEfectivoInput {
+  claveOperacion: string;
+  naturaleza: E12RetornoEfectivoInputNaturaleza;
+}
+
+export interface E12ProveedorReversoInput {
+  /**
+     * @minLength 1
+     * @maxLength 1000
+     */
+  motivo: string;
+  efectivoE12?: E12RetornoEfectivoInput;
+}
+
+/**
+ * Campo ausente para no ADMIN, incluso cuando no hay saldo. OFF no consulta E10.
+ */
+export type E12OpcionesPagoEfectivoFondo = {
+  saldo: string;
+  /** @nullable */
+  versionSaldo: string | null;
+};
+
+export interface E12OpcionesPagoEfectivo {
+  enabled: boolean;
+  motivoInactivo?: string;
+  ubicacionId?: number;
+  /** @nullable */
+  sesionCajaId?: number | null;
+  /** @nullable */
+  saldoCaja?: string | null;
+  puedeDesbloquearCaja?: boolean;
+  /** Campo ausente para no ADMIN, incluso cuando no hay saldo. OFF no consulta E10. */
+  fondo?: E12OpcionesPagoEfectivoFondo;
 }
 
 export interface PreviewPagoProveedor {
@@ -7463,6 +7612,7 @@ export interface SalidaDineroCajaInput {
   tipo?: SalidaDineroCajaInputTipo;
   /** Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar. */
   claveOperacion?: string;
+  desbloqueoCajaE12?: E12DesbloqueoCajaInput;
 }
 
 export type SalidaDineroRevisionInputAccion = typeof SalidaDineroRevisionInputAccion[keyof typeof SalidaDineroRevisionInputAccion];
@@ -7548,6 +7698,9 @@ export type SalidaDineroCaja = SalidaDineroCajaInput & {
   creadoPorId: number;
   createdAt: string;
   e4?: SalidaDineroRevision;
+  /** Vínculo E12 solo ADMIN; ausente OFF. */
+  pagoProveedorIdE12?: number;
+  e12DesbloqueoCaja?: E12DesbloqueoCaja;
 };
 
 export interface SalidasDineroCajaResponse {
@@ -7699,6 +7852,9 @@ export type CorteCajaSalidasItem = {
   /** @nullable */
   proveedor: string | null;
   e4?: SalidaDineroRevision;
+  /** Vínculo E12 solo ADMIN; ausente OFF. */
+  pagoProveedorIdE12?: number;
+  e12DesbloqueoCaja?: E12DesbloqueoCaja;
 };
 
 export type CorteCajaSalidasPorCuenta = {[key: string]: string};

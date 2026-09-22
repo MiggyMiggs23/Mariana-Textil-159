@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E12-P12-NONADMIN",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E12-P12-NONADMIN\n\ntrue !== false\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E12-P12-NONADMIN\n\ntrue !== false\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2290.61612"
+  ]
+}

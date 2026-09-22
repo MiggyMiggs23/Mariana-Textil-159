@@ -5,10 +5,12 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { E12PagoEfectivoDetalle } from './e12PagoEfectivoDetalle';
 import type { SolicitudPagoDirigidoAplicadaEstado } from './solicitudPagoDirigidoAplicadaEstado';
 
 export interface SolicitudPagoDirigidoAplicada {
   solicitudId: number;
   movimientoId: number;
   estado: SolicitudPagoDirigidoAplicadaEstado;
+  efectivoE12?: E12PagoEfectivoDetalle;
 }

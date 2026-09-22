@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { EfectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12 } from './efectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12';
 
 /**
  * Evidencia original congelada para consulta e impresión; no sustituye ni inventa un folio.
@@ -24,4 +25,5 @@ export type EfectivoDesgloseDocumentosItemEvidencia = {
   usuarioNombre?: string | null;
   /** @nullable */
   proveedorNombre?: string | null;
+  naturalezaRetornoE12?: EfectivoDesgloseDocumentosItemEvidenciaNaturalezaRetornoE12;
 };

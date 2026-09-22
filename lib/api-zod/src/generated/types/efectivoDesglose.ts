@@ -15,6 +15,8 @@ export interface EfectivoDesglose {
   abonosFisicos: string;
   cobrosRetenidos: string;
   salidasFisicas: string;
+  /** Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos/OFF. */
+  retornosProveedor?: string;
   efectivoEsperado: string;
   documentos: EfectivoDesgloseDocumentosItem[];
 }

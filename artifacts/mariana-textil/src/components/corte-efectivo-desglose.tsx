@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { E12_ENABLED } from "@/lib/e12-feature-flags";
 import type {
   EfectivoDesglose,
   EfectivoDesgloseDocumentosItem,
@@ -12,12 +13,13 @@ const originLabels: Record<EfectivoDesgloseDocumentosItem["origen"], string> = {
   ABONO: "Abono de crédito",
   COBRO_RETENIDO: "Cobro retenido",
   SALIDA: "Salida física",
+  RETORNO_PROVEEDOR: "Retorno de Proveedor",
 };
 
 function isKnownInternalDocumentHref(href: string | null): href is string {
   if (!href || !href.startsWith("/") || href.startsWith("//")) return false;
   const pathname = href.split(/[?#]/, 1)[0];
-  return /^\/tickets\/\d+$/.test(pathname) || /^\/clientes\/\d+$/.test(pathname);
+  return /^\/tickets\/\d+$/.test(pathname) || /^\/clientes\/\d+$/.test(pathname) || (E12_ENABLED && /^\/proveedores\/\d+$/.test(pathname));
 }
 
 function formatEvidenceDate(value: string | null): string | null {
@@ -76,7 +78,7 @@ export function CorteEfectivoDesglose({ desglose }: { desglose?: EfectivoDesglos
         <p className="mt-2 text-xs text-muted-foreground">
           {isLegacy
             ? "Lectura LEGACY: se conserva la fórmula anterior del corte cerrado, sin incorporarle los nuevos sumandos de E2."
-            : "Fondo inicial + tickets en efectivo + abonos físicos + cobros retenidos − salidas físicas."}
+            : `Fondo inicial + tickets en efectivo + abonos físicos + cobros retenidos${E12_ENABLED && desglose.retornosProveedor !== undefined ? " + retornos de proveedor" : ""} − salidas físicas.`}
         </p>
       </div>
 
@@ -94,6 +96,9 @@ export function CorteEfectivoDesglose({ desglose }: { desglose?: EfectivoDesglos
             <>
               <MoneyRow label="Fondo inicial" value={desglose.fondoInicial} />
               <MoneyRow label="Cobros físicos de tickets" value={desglose.cobrosTickets} />
+              {E12_ENABLED && desglose.retornosProveedor !== undefined && (
+                <MoneyRow label="Retornos de proveedor" value={desglose.retornosProveedor} />
+              )}
               <MoneyRow label="Abonos físicos de crédito" value={desglose.abonosFisicos} />
               <MoneyRow label="Cobros físicos retenidos" value={desglose.cobrosRetenidos} />
               <MoneyRow label="Salidas físicas" value={desglose.salidasFisicas} subtract />
@@ -147,6 +152,9 @@ export function CorteEfectivoDesglose({ desglose }: { desglose?: EfectivoDesglos
                               )}
                                {documento.evidencia.usuarioNombre && (
                                  <div><dt className="inline font-semibold">Registró: </dt><dd className="inline">{documento.evidencia.usuarioNombre}</dd></div>
+                               )}
+                               {E12_ENABLED && documento.evidencia.naturalezaRetornoE12 && (
+                                 <div><dt className="inline font-semibold">Naturaleza: </dt><dd className="inline">{documento.evidencia.naturalezaRetornoE12 === "CORRECCION_CAPTURA" ? "Corrección de captura (no declara devolución física)" : "Recuperación física de efectivo"}</dd></div>
                                )}
                                {documento.evidencia.proveedorNombre && (
                                  <div><dt className="inline font-semibold">Proveedor: </dt><dd className="inline">{documento.evidencia.proveedorNombre}</dd></div>

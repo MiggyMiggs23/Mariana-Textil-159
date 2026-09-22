@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { E12_ENABLED } from "@/lib/e12-feature-flags";
+import { E12Evidence, invalidateE12 } from "@/components/proveedor-efectivo-e12";
+import { getApiErrorMessage } from "@/lib/api-error";
+import type { E12RetornoEfectivoInputNaturaleza, E12ProveedorReversoInput } from "@workspace/api-client-react";
 import { formatNumber } from "@workspace/number-format";
 import { format } from "date-fns";
 import {
@@ -9,6 +13,7 @@ import {
 } from "@workspace/api-client-react";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, ArrowRightLeft, Ban, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,13 +27,14 @@ interface ProveedorCompraDetalleProps {
   onOpenChange: (open: boolean) => void;
   proveedorId: number;
   compraId: number;
+  pagoId?: number;
 }
 
 function parseDate(dString: string) {
   return new Date(dString.includes('T') ? dString : `${dString}T12:00:00`);
 }
 
-export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compraId }: ProveedorCompraDetalleProps) {
+export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compraId, pagoId }: ProveedorCompraDetalleProps) {
   const { data: compraDetalle, isLoading } = useGetProveedorCompraDetalle(
     proveedorId,
     compraId,
@@ -41,13 +47,27 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
   );
 
   const [selectedPagoId, setSelectedPagoId] = useState<number | null>(null);
+  useEffect(() => {
+    if (pagoId) setSelectedPagoId(open ? pagoId : null);
+  }, [open, pagoId]);
   const [reversoPagoId, setReversoPagoId] = useState<number | null>(null);
   const [reversoMotivo, setReversoMotivo] = useState("");
+  const [naturalezaRetorno, setNaturalezaRetorno] = useState<E12RetornoEfectivoInputNaturaleza | "">("");
+  const [serverRequiresReturn, setServerRequiresReturn] = useState(false);
+  const submitting = useRef(false);
+  const intention = useRef({ snapshot: "", uuid: "" });
   const [reversoConfirm, setReversoConfirm] = useState("");
   const { data: user } = useGetCurrentUser();
   const reversarPago = useReversarPagoProveedor();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const retornoQuery = useGetProveedorPagoDetalle(proveedorId, reversoPagoId || 0, { query: {
+    enabled: E12_ENABLED && !!reversoPagoId && !!user,
+    queryKey: [...getGetProveedorPagoDetalleQueryKey(proveedorId, reversoPagoId || 0), JSON.stringify(user)],
+    staleTime: 0, refetchOnMount: "always", refetchOnWindowFocus: true,
+  } });
+  const originalE12 = E12_ENABLED && user?.rol === "ADMIN" ? retornoQuery.data?.pago.efectivoE12 : undefined;
+  const requiresReturn = !!originalE12 || (E12_ENABLED && serverRequiresReturn);
 
   const { data: pagoDetalle, isLoading: isLoadingPago } = useGetProveedorPagoDetalle(
     proveedorId,
@@ -55,14 +75,16 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
     {
       query: {
         enabled: !!selectedPagoId,
-        queryKey: getGetProveedorPagoDetalleQueryKey(proveedorId, selectedPagoId || 0),
+        queryKey: E12_ENABLED ? [...getGetProveedorPagoDetalleQueryKey(proveedorId, selectedPagoId || 0), JSON.stringify(user)] : getGetProveedorPagoDetalleQueryKey(proveedorId, selectedPagoId || 0),
+        refetchOnMount: "always",
+        refetchOnWindowFocus: true,
       }
     }
   );
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open && !!compraId} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-2xl p-0 overflow-hidden">
           <DialogHeader className="bg-sidebar p-6 text-white pb-6">
             <DialogTitle className="text-xl">Detalle de Compra y Pagos</DialogTitle>
@@ -124,7 +146,7 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                                   variant="destructive"
                                   size="sm"
                                   className="h-6 text-[10px] font-bold px-2 py-0"
-                                  onClick={() => setReversoPagoId(asig.pagoProveedorId)}
+                                  onClick={() => { setServerRequiresReturn(false); setNaturalezaRetorno(""); setReversoPagoId(asig.pagoProveedorId); }}
                                 >
                                   Reversar
                                 </Button>
@@ -142,7 +164,7 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
         </DialogContent>
       </Dialog>
 
-      <Dialog open={!!selectedPagoId} onOpenChange={(val) => !val && setSelectedPagoId(null)}>
+      <Dialog open={!!selectedPagoId} onOpenChange={(val) => { if (!val && !submitting.current) { setSelectedPagoId(null); if (pagoId) onOpenChange(false); } }}>
         <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
           <DialogHeader className="bg-sidebar p-6 text-white pb-6">
             <DialogTitle className="text-xl">Detalle de Reparto de Pago</DialogTitle>
@@ -166,6 +188,8 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                 </div>
 
                 <div className="space-y-3">
+                  <E12Evidence detail={pagoDetalle.pago.efectivoE12} admin={user?.rol === "ADMIN"} />
+                  {E12_ENABLED && !pagoDetalle.pago.revertido && !pagoDetalle.pago.efectivoE12?.retorno && hasPermission(user, Modules.PROVEEDORES_FINANZAS, "autorizar") && <Button variant="destructive" data-testid="button-retorno-proveedor" onClick={() => { setServerRequiresReturn(false); setNaturalezaRetorno(""); setReversoPagoId(pagoDetalle.pago.id); }}>Reversar pago completo</Button>}
                   <h4 className="font-bold text-sidebar border-b pb-2">Aplicaciones de este pago</h4>
                   <div className="space-y-2 max-h-[40vh] overflow-y-auto pr-2">
                     {pagoDetalle.aplicaciones.map((asig, idx) => (
@@ -199,6 +223,7 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
       </Dialog>
 
       <Dialog open={!!reversoPagoId} onOpenChange={(val) => {
+        if (submitting.current) return;
         if (!val) {
           setReversoPagoId(null);
           setReversoMotivo("");
@@ -215,10 +240,22 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
             <p className="text-sm text-muted-foreground">
               Esta acción anulará el pago y restaurará la deuda pendiente de todas las compras afectadas por el mismo.
             </p>
+            {E12_ENABLED && retornoQuery.isLoading && <p>Consultando origen del pago…</p>}
+            {E12_ENABLED && retornoQuery.error && <p role="alert" className="text-destructive">{getApiErrorMessage(retornoQuery.error)}</p>}
+            {requiresReturn && <>
+              <E12Evidence detail={originalE12} admin={user?.rol === "ADMIN"} />
+              <Select disabled={reversarPago.isPending} value={naturalezaRetorno} onValueChange={value => setNaturalezaRetorno(value as E12RetornoEfectivoInputNaturaleza)}>
+                <SelectTrigger><SelectValue placeholder="Selecciona la naturaleza del retorno" /></SelectTrigger>
+                <SelectContent><SelectItem value="CORRECCION_CAPTURA">Corrección de captura</SelectItem><SelectItem value="RECUPERACION_EFECTIVO">Recuperación física de efectivo</SelectItem></SelectContent>
+              </Select>
+              <p className="text-sm text-muted-foreground">Retorno completo a los orígenes registrados, sin editar importes. Caja retorna a la sesión actual abierta de Mariana; no modifica cortes cerrados. Fondo puro no requiere turno. La corrección no declara devolución física.</p>
+            </>}
             <div className="space-y-2">
               <label className="text-xs font-bold text-sidebar uppercase tracking-wider">Motivo del reverso</label>
               <Input
                 value={reversoMotivo}
+                disabled={reversarPago.isPending}
+                maxLength={1000}
                 onChange={(e) => setReversoMotivo(e.target.value)}
                 placeholder="Explica por qué se anula este pago..."
               />
@@ -229,21 +266,29 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
               </label>
               <Input
                 value={reversoConfirm}
+                disabled={reversarPago.isPending}
                 onChange={(e) => setReversoConfirm(e.target.value)}
               />
             </div>
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="ghost" onClick={() => setReversoPagoId(null)}>Cancelar</Button>
+            <Button disabled={reversarPago.isPending} variant="ghost" onClick={() => setReversoPagoId(null)}>Cancelar</Button>
             <Button
               variant="destructive"
-              disabled={reversoConfirm !== "REVERSAR" || reversoMotivo.trim().length < 5 || reversarPago.isPending}
+              disabled={reversoConfirm !== "REVERSAR" || reversoMotivo.trim().length < (requiresReturn ? 1 : 5) || reversoMotivo.trim().length > 1000 || reversarPago.isPending || (E12_ENABLED && (retornoQuery.isLoading || !!retornoQuery.error)) || (requiresReturn && (!naturalezaRetorno || !!originalE12?.retorno))}
               onClick={() => {
+                if (submitting.current || (requiresReturn && (!naturalezaRetorno || originalE12?.retorno))) return;
                 if (reversoPagoId) {
+                  const snapshot = JSON.stringify({ proveedorId, reversoPagoId, motivo: reversoMotivo.trim(), naturalezaRetorno });
+                  if (intention.current.snapshot !== snapshot) intention.current = { snapshot, uuid: crypto.randomUUID() };
+                  const data: E12ProveedorReversoInput = { motivo: reversoMotivo.trim(), ...(requiresReturn && naturalezaRetorno ? { efectivoE12: { claveOperacion: intention.current.uuid, naturaleza: naturalezaRetorno } } : {}) };
+                  submitting.current = true;
                   reversarPago.mutate(
-                    { id: proveedorId, pagoId: reversoPagoId, data: { motivo: reversoMotivo } },
+                    { id: proveedorId, pagoId: reversoPagoId, data },
                     {
                       onSuccess: () => {
+                        intention.current = { snapshot: "", uuid: "" };
+                        if (E12_ENABLED) void invalidateE12(queryClient, user?.rol === "ADMIN");
                         toast({ title: "Pago reversado exitosamente" });
                         setReversoPagoId(null);
                         setReversoMotivo("");
@@ -251,9 +296,20 @@ export function ProveedorCompraDetalle({ open, onOpenChange, proveedorId, compra
                         queryClient.invalidateQueries({ queryKey: getGetProveedorCompraDetalleQueryKey(proveedorId, compraId) });
                         queryClient.invalidateQueries({ queryKey: ["listComprasProveedor", proveedorId] });
                         queryClient.invalidateQueries({ queryKey: ["estadoCuentaProveedor", proveedorId] });
+
+                        queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "pagos"] });
+                        queryClient.invalidateQueries({ queryKey: ["/api/caja"] });
+                        queryClient.invalidateQueries({ queryKey: ["/api/salidas-dinero-caja"] });
+
                       },
+                      onSettled: () => { submitting.current = false; },
                       onError: (err) => {
-                        toast({ title: "Error al reversar", description: "Ocurrió un problema.", variant: "destructive" });
+                        // The server, never the absence of privileged metadata, identifies an E12 payment.
+                        if (E12_ENABLED && err && typeof err === "object" && "data" in err) {
+                          const data = err.data as { code?: string } | undefined;
+                          if (data?.code === "E12_RETURN_REQUIRED") setServerRequiresReturn(true);
+                        }
+                        toast({ title: "Error al reversar", description: getApiErrorMessage(err), variant: "destructive" });
                       }
                     }
                   );

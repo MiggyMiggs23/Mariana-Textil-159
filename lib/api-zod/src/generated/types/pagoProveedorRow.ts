@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { AplicacionPagoProveedor } from './aplicacionPagoProveedor';
+import type { E12PagoEfectivoDetalle } from './e12PagoEfectivoDetalle';
 import type { FormaPagoProveedor } from './formaPagoProveedor';
 import type { TipoPagoProveedor } from './tipoPagoProveedor';
 
@@ -31,4 +32,6 @@ export interface PagoProveedorRow {
   reversoMovimientoId?: number | null;
   /** @nullable */
   motivoReverso?: string | null;
+  /** Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF. */
+  efectivoE12?: E12PagoEfectivoDetalle;
 }

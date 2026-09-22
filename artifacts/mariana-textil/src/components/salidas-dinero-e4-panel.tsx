@@ -6,6 +6,7 @@ import {
   useListarSalidasDineroCaja,
   useListarProveedoresActivosCaja,
   useGetCurrentUser,
+  useObtenerCorteCaja,
   getListarSalidasDineroCajaQueryKey,
   getObtenerCorteCajaQueryKey,
   getObtenerSesionCajaActualQueryKey,
@@ -21,6 +22,9 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { formatAccountDestination } from "@workspace/number-format";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { E12_ENABLED } from "@/lib/e12-feature-flags";
+import { E4_CASH_OUT_ENABLED } from "@/lib/e4-feature-flags";
+import { cajaOverrideProblem, cents, invalidateE12 } from "@/components/proveedor-efectivo-e12";
 import { SalidaDineroE4Item } from "./salidas-dinero-e4-item";
 
 export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesionId: number; canCreate: boolean; tiendaId?: number }) {
@@ -31,7 +35,9 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
   const [proveedorId, setProveedorId] = useState<string>("none");
   const [cuentaOrigen, setCuentaOrigen] = useState<"CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL">("CAJA_FISICA");
   const [tipo, setTipo] = useState<"EXTRAORDINARIA" | "PROVEEDOR">("EXTRAORDINARIA");
+  const [desbloqueoMotivo, setDesbloqueoMotivo] = useState("");
   const isSubmitting = useRef(false);
+  const [checking, setChecking] = useState(false);
   const lastIntention = useRef({ snapshot: "", uuid: crypto.randomUUID() });
 
   const { data: user } = useGetCurrentUser();
@@ -39,9 +45,15 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
   // If MARIANA_LOCATION_ID = 1, it's defined in cobros.tsx but we can check if it's 1
   const isMariana = tiendaId === 1;
 
-  const { data, isLoading, isError, error } = useListarSalidasDineroCaja(sesionId, { query: { queryKey: getListarSalidasDineroCajaQueryKey(sesionId) } });
+  const { data, isLoading, isError, error } = useListarSalidasDineroCaja(sesionId, { query: { queryKey: E12_ENABLED ? [...getListarSalidasDineroCajaQueryKey(sesionId), JSON.stringify(user)] : getListarSalidasDineroCajaQueryKey(sesionId), ...(E12_ENABLED ? { refetchOnMount: "always" as const, refetchOnWindowFocus: true, refetchInterval: 15000 } : {}) } });
   const { data: proveedores = [] } = useListarProveedoresActivosCaja({ query: { enabled: isMariana, queryKey: getListarProveedoresActivosCajaQueryKey() } });
   const crear = useCrearSalidaDineroCaja();
+  const p12Enabled = E4_CASH_OUT_ENABLED && E12_ENABLED && cuentaOrigen === "CAJA_FISICA";
+  const disponibilidad = useObtenerCorteCaja(sesionId, { query: {
+    enabled: p12Enabled && canCreate && !!user,
+    queryKey: [...getObtenerCorteCajaQueryKey(sesionId), JSON.stringify(user)],
+    staleTime: 0, refetchOnMount: "always", refetchOnWindowFocus: true, refetchInterval: p12Enabled && canCreate ? 15000 : false,
+  } });
 
   useEffect(() => {
     if (tipo === "EXTRAORDINARIA") {
@@ -50,7 +62,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
     }
   }, [tipo]);
 
-  const submit = (event: React.FormEvent) => {
+  const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (isSubmitting.current) return;
 
@@ -64,8 +76,29 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
       toast({ title: "Debes seleccionar un proveedor activo.", variant: "destructive" });
       return;
     }
+    isSubmitting.current = true;
+    if (p12Enabled) {
+      setChecking(true);
+      try {
+        const importe = cents(monto);
+        if (importe === null || importe <= 0) throw new Error("Captura un importe positivo con máximo dos decimales.");
+        const fresh = await disponibilidad.refetch();
+        if (fresh.error) throw fresh.error;
+        if (fresh.data?.sesion.estado !== "ABIERTA") throw new Error("La sesión de Caja ya no está abierta.");
+        const problem = cajaOverrideProblem(p12Enabled, importe, fresh.data.efectivoEsperado, isAdmin, desbloqueoMotivo);
+        if (problem) throw new Error(problem);
+      } catch (err) {
+        toast({ title: "No se pudo registrar la salida", description: getApiErrorMessage(err), variant: "destructive" });
+        isSubmitting.current = false;
+        setChecking(false);
+        return;
+      }
+      setChecking(false);
+    }
 
     const currentSnapshot = JSON.stringify({
+      sesionId, tiendaId, usuarioId: user?.id,
+      desbloqueoMotivo,
       monto: valor.toFixed(2),
       motivo: motivo.trim(),
       cuentaOrigen,
@@ -88,14 +121,17 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
           proveedorId: proveedorId !== "none" ? Number(proveedorId) : null,
           tipo,
           claveOperacion: lastIntention.current.uuid,
+          ...(isAdmin && p12Enabled && desbloqueoMotivo.trim() ? { desbloqueoCajaE12: { motivo: desbloqueoMotivo.trim() } } : {}),
         },
       },
       {
         onSuccess: () => {
+          if (p12Enabled) void invalidateE12(queryClient, isAdmin);
           setMonto("");
           setMotivo("");
           setProveedorId("none");
           setTipo("EXTRAORDINARIA");
+          setDesbloqueoMotivo("");
           lastIntention.current = { snapshot: "", uuid: crypto.randomUUID() };
           queryClient.invalidateQueries({ queryKey: getListarSalidasDineroCajaQueryKey(sesionId) });
           queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
@@ -130,10 +166,11 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
       </CardHeader>
       <CardContent className="space-y-6">
         {canCreate && (
-          <form onSubmit={submit} className="grid gap-4 md:grid-cols-2 bg-muted/20 p-4 rounded-lg border" aria-label="Registrar salida de dinero">
+          <form onSubmit={submit} aria-label="Registrar salida de dinero">
+            <fieldset disabled={checking || crear.isPending} className="grid gap-4 md:grid-cols-2 bg-muted/20 p-4 rounded-lg border">
             <div>
               <Label htmlFor="salida-tipo">Tipo de Salida</Label>
-              <Select value={tipo} onValueChange={(v) => setTipo(v as any)} disabled={crear.isPending}>
+              <Select value={tipo} onValueChange={(v) => setTipo(v as "EXTRAORDINARIA" | "PROVEEDOR")} disabled={crear.isPending || checking}>
                 <SelectTrigger id="salida-tipo"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="EXTRAORDINARIA">Extraordinaria</SelectItem>
@@ -149,7 +186,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
 
             <div>
               <Label htmlFor="salida-cuenta">Cuenta de origen</Label>
-              <Select value={cuentaOrigen} onValueChange={(v) => setCuentaOrigen(v as any)} disabled={tipo === "EXTRAORDINARIA" || crear.isPending}>
+              <Select value={cuentaOrigen} onValueChange={(v) => setCuentaOrigen(v as typeof cuentaOrigen)} disabled={tipo === "EXTRAORDINARIA" || crear.isPending || checking}>
                 <SelectTrigger id="salida-cuenta"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="CAJA_FISICA">{formatAccountDestination("CAJA_FISICA")}</SelectItem>
@@ -166,7 +203,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
 
             <div>
               <Label htmlFor="salida-proveedor">Proveedor</Label>
-              <Select value={proveedorId} onValueChange={setProveedorId} disabled={tipo === "EXTRAORDINARIA" || crear.isPending}>
+              <Select value={proveedorId} onValueChange={setProveedorId} disabled={tipo === "EXTRAORDINARIA" || crear.isPending || checking}>
                 <SelectTrigger id="salida-proveedor">
                   <SelectValue placeholder={tipo === "EXTRAORDINARIA" ? "No aplica" : "Selecciona proveedor"} />
                 </SelectTrigger>
@@ -186,10 +223,21 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
               <Input id="salida-motivo" required maxLength={500} value={motivo} onChange={(e) => setMotivo(e.target.value)} disabled={crear.isPending} />
             </div>
 
-            <Button type="submit" disabled={crear.isPending} className="md:col-span-2">
+
+            {p12Enabled && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {disponibilidad.data?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar.</p>}
+            {p12Enabled && disponibilidad.error && <p role="alert" className="text-destructive">{getApiErrorMessage(disponibilidad.error)}</p>}
+            {(isAdmin && p12Enabled) && (
+              <div className="md:col-span-2 space-y-1 mt-2 bg-amber-50 border border-amber-200 p-3 rounded-lg">
+                <Label htmlFor="salida-desbloqueo" className="text-xs font-bold text-amber-900">Motivo Desbloqueo Caja E12 (Solo si hay insuficiencia)</Label>
+                <Input id="salida-desbloqueo" maxLength={1000} value={desbloqueoMotivo} onChange={(e) => setDesbloqueoMotivo(e.target.value)} disabled={crear.isPending || checking} placeholder="Justificación obligatoria cuando Caja es insuficiente" className="bg-white" />
+              </div>
+            )}
+
+            <Button type="submit" disabled={crear.isPending || checking} className="md:col-span-2">
               {crear.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Registrar salida {tipo.toLowerCase()}
             </Button>
+            </fieldset>
           </form>
         )}
 

@@ -1,4 +1,8 @@
 import { Router, type IRouter } from "express";
+import { E12_SUPPLIER_CASH_ENABLED, E12Error, requireE12, payE12, e12Scope, type E12Actor, type E12Split } from "../lib/e12-supplier-cash";
+import { e12Actor, e12CaptureInput, e12NumberAmount, e12ApprovedSplit } from "../lib/e12-http";
+import { e12Repository, readE12Detail } from "../lib/e12-supplier-cash-repository";
+import { beginE12Directed, saveE12Directed, readE12Directed } from "../lib/e12-directed";
 import { assertE3DirectedExact } from "../lib/e3-collection";
 import { sql } from "drizzle-orm";
 import { CreateSolicitudPagoDirigidoBody, CreateSolicitudPagoDirigidoResponse, AprobarSolicitudPagoDirigidoParams, AprobarSolicitudPagoDirigidoResponse, RechazarSolicitudPagoDirigidoParams, RechazarSolicitudPagoDirigidoBody, RechazarSolicitudPagoDirigidoResponse, ListSolicitudesPagoDirigidoResponse } from "@workspace/api-zod";
@@ -176,8 +180,17 @@ async function assertDocumentBalance(tx: Tx, request: Pick<DirectedPaymentInput,
   return doc;
 }
 
-async function apply(tx: Tx, request: DirectedPaymentRequest, userId: number, evidence?: CreditEvidenceInput) {
+async function apply(tx: Tx, request: DirectedPaymentRequest, userId: number, evidence?: CreditEvidenceInput, e12?: { actor: E12Actor; split: E12Split }) {
   const supplier = request.tipo === "PROVEEDOR";
+  if (supplier && request.formaPago === "EFECTIVO" && E12_SUPPLIER_CASH_ENABLED) {
+    if (!e12) throw new E12Error("E12_REQUEST_ORIGIN_REQUIRED", "La solicitud requiere origen E12 persistido.");
+    return (await payE12(e12Repository(tx), e12.actor, {
+      proveedorId: request.entidadId, importe: e12NumberAmount(Number(request.importe)), split: e12.split,
+      documentoDirigidoId: request.documentoMovimientoId,
+      fecha: request.fechaEfectiva ? new Date(request.fechaEfectiva).toISOString() : null,
+      referencia: request.referencia, notas: request.notas,
+    })).pago;
+  }
   const doc = await assertDocumentBalance(tx, request);
   const requestedCents = moneyToCents(request.importe);
   const amount = centsToMoney(requestedCents);
@@ -273,7 +286,10 @@ router.get("/pagos-dirigidos", async (req, res, next): Promise<void> => {
       ORDER BY created_at DESC, id DESC`);
     const response = ListSolicitudesPagoDirigidoResponse.parse({ solicitudes: rows.rows.map(present) });
     const requests = await Promise.all(response.solicitudes.map(async (request) => {
-      if (request.tipo !== "CLIENTE") return request;
+      if (request.tipo !== "CLIENTE") {
+        const split = await readE12Directed(db, request.id, req.auth!.user.rol);
+        return split ? { ...request, efectivoE12: split } : request;
+      }
       const audit = await db.execute<{ evidence: CreditEvidenceInput }>(sql`
         SELECT datos_despues->'e1'->'evidence' evidence FROM auditoria
         WHERE entidad='solicitudes_pago_dirigido' AND entidad_id=${String(request.id)}
@@ -291,6 +307,11 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
     const rawEvidence = req.body?.tipo === "CLIENTE" ? readCreditEvidenceInput(req.body) : undefined;
     const data = parsePayment(req.body);
     if (!data) { res.status(400).json({ error: "Datos inválidos; motivo de al menos 10 caracteres es obligatorio." }); return; }
+    if (data.tipo === "CLIENTE" && (req.body.efectivoE12 !== undefined || req.body.aprobacionE12 !== undefined))
+      throw new E12Error("E12_PAYMENT_METHOD", "E12 no corresponde a pagos de cliente.");
+    const splitE12 = data.tipo === "PROVEEDOR" ? e12CaptureInput(data.formaPago, req.body.efectivoE12) : undefined;
+    const actorE12 = e12Actor(req.auth!.user, getRequestIp(req));
+    if (E12_SUPPLIER_CASH_ENABLED && data.tipo === "PROVEEDOR") e12Scope(actorE12);
     if (req.auth!.user.rol !== "ADMIN") {
       const permission = await resolvePermiso(req.auth!.user.id, req.auth!.user.rol, data.tipo === "CLIENTE" ? "clientes_finanzas" : "proveedores_finanzas");
       if (!permission?.puedeCrear) { res.status(403).json({ error: "No tienes permiso para solicitar este pago dirigido." }); return; }
@@ -305,6 +326,12 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
     if (!valid || (data.tipo === "CLIENTE" && data.formaPago === "TRANSFERENCIA" && !data.referencia)) { res.status(400).json({ error: "Forma de pago, cuenta destino o referencia inválida." }); return; }
     const result = await db.transaction(async (tx) => {
       const isAdmin = req.auth!.user.rol === "ADMIN";
+      const claimE12 = splitE12 ? await beginE12Directed(tx, actorE12, data.entidadId, e12NumberAmount(data.importe), splitE12, data) : undefined;
+      if (claimE12?.previousId) {
+        const [previous] = await tx.select().from(solicitudesPagoDirigidoTable).where(sql`${solicitudesPagoDirigidoTable.id}=${claimE12.previousId}`);
+        if (!previous) throw new E12Error("E12_NOT_FOUND", "La solicitud original no está disponible.", 409);
+        return { request: previous, movement: null };
+      }
       if (!isAdmin && req.auth!.user.alcanceConsulta !== "TODAS") {
         const site = await tx.execute(data.tipo === "CLIENTE" ? sql`
           SELECT t.ubicacion_id FROM movimientos_credito m
@@ -357,7 +384,8 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
         ...data, importe: data.importe.toFixed(2), solicitanteId: req.auth!.user.id,
         ...snapshot, estado: "PENDIENTE",
       }).returning();
-      const movement = isAdmin ? await apply(tx, request!, req.auth!.user.id, evidence) : null;
+      if (claimE12 && splitE12) await saveE12Directed(tx, request!.id, actorE12, splitE12, claimE12);
+      const movement = isAdmin ? await apply(tx, request!, req.auth!.user.id, evidence, splitE12 ? { actor: actorE12, split: splitE12 } : undefined) : null;
       let saved = request!;
       if (movement) {
         const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
@@ -371,7 +399,8 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: isAdmin ? "APROBAR_APLICAR_PAGO_DIRIGIDO" : "SOLICITAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(request!.id), datosDespues: { ...data, ...(e1 ? { e1 } : {}), movimientoId: movement?.id ?? null }, ip: getRequestIp(req) });
       return { request: saved, movement };
     });
-    res.status(201).json({ ...CreateSolicitudPagoDirigidoResponse.parse(present(result.request)), ...(evidence ?? {}) });
+    const sourceE12 = await readE12Directed(db, result.request!.id, req.auth!.user.rol);
+    res.status(201).json({ ...CreateSolicitudPagoDirigidoResponse.parse(present(result.request)), ...(evidence ?? {}), ...(sourceE12 ? { efectivoE12: sourceE12 } : {}) });
   } catch (error) {
     if (error instanceof CreditEvidenceError) { res.status(error.statusCode).json({ error: error.message }); return; }
     if (error instanceof Error && error.message === "DIRECTED_DOCUMENT_NOT_FOUND") { res.status(404).json({ error: "Documento no encontrado." }); return; }
@@ -383,10 +412,26 @@ router.post("/pagos-dirigidos", async (req, res, next): Promise<void> => {
 
 router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, res, next): Promise<void> => {
   try {
+    if (req.body?.aprobacionE12 !== undefined) requireE12();
     const params = AprobarSolicitudPagoDirigidoParams.safeParse(req.params); if (!params.success) { res.status(400).json({ error: params.error.message }); return; } const id = params.data.id;
     const result = await db.transaction(async (tx) => {
       const found = await tx.execute<DirectedRequestRawRow>(sql`SELECT * FROM solicitudes_pago_dirigido WHERE id=${id} FOR UPDATE`);
       const request = found.rows[0]; if (!request) throw new Error("REQUEST_NOT_FOUND");
+      let e12: { actor: E12Actor; split: E12Split } | undefined;
+      if (req.body?.aprobacionE12 !== undefined && (request.tipo !== "PROVEEDOR" || request.forma_pago !== "EFECTIVO"))
+        throw new E12Error("E12_PAYMENT_METHOD", "E12 solo corresponde a proveedor en efectivo.");
+      if (E12_SUPPLIER_CASH_ENABLED && request.tipo === "PROVEEDOR" && request.forma_pago === "EFECTIVO") {
+        const source = await readE12Directed(tx, id, "ADMIN");
+        if (!source) throw new E12Error("E12_REQUEST_ORIGIN_REQUIRED", "No se puede reconstruir origen de una solicitud histórica.", 409);
+        const approvedSplit = e12ApprovedSplit(source, req.body?.aprobacionE12);
+        e12 = { actor: e12Actor(req.auth!.user, getRequestIp(req)), split: approvedSplit };
+        if (request.estado === "APROBADA") {
+          const previous = await e12Repository(tx).replay(approvedSplit.claveOperacion);
+          if (!previous || previous.result.pago.id !== request.movimiento_id) throw new Error("REQUEST_ALREADY_RESOLVED");
+          return apply(tx, { ...request, entidadId: request.entidad_id, documentoMovimientoId: request.documento_movimiento_id,
+            formaPago: request.forma_pago, fechaEfectiva: request.fecha_efectiva, cuentaDestino: request.cuenta_destino }, req.auth!.user.id, undefined, e12);
+        }
+      }
       let evidence: CreditEvidenceInput | undefined;
       if (request.tipo === "CLIENTE") {
         evidence = readCreditEvidenceInput(req.body);
@@ -422,7 +467,7 @@ router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, re
         formaPago: request.forma_pago,
         cuentaDestino: request.cuenta_destino,
         fechaEfectiva: request.fecha_efectiva,
-      }, req.auth!.user.id, evidence);
+      }, req.auth!.user.id, evidence, e12);
       const authorizer = await tx.execute(sql`SELECT nombre FROM usuarios WHERE id=${req.auth!.user.id}`);
       await tx.update(solicitudesPagoDirigidoTable).set({ estado: "APROBADA", autorizadorId: req.auth!.user.id, autorizadorNombre: String(authorizer.rows[0]?.nombre ?? ""), movimientoId: movement.id, resueltaAt: new Date() }).where(sql`${solicitudesPagoDirigidoTable.id}=${id}`);
       await notifyRequesterResolved(tx, {
@@ -433,7 +478,8 @@ router.post("/pagos-dirigidos/:id/aprobar", requireRole("ADMIN"), async (req, re
       await tx.insert(auditoriaTable).values({ usuarioId: req.auth!.user.id, accion: "APROBAR_APLICAR_PAGO_DIRIGIDO", entidad: "solicitudes_pago_dirigido", entidadId: String(id), datosDespues: { movimientoId: movement.id }, ip: getRequestIp(req) });
       return movement;
     });
-    res.status(201).json(AprobarSolicitudPagoDirigidoResponse.parse({ solicitudId: id, movimientoId: result.id, estado: "APROBADA" }));
+    const detailE12 = await readE12Detail(db, result.id, req.auth!.user.rol);
+    res.status(201).json(AprobarSolicitudPagoDirigidoResponse.parse({ solicitudId: id, movimientoId: result.id, estado: "APROBADA", ...(detailE12 ? { efectivoE12: detailE12 } : {}) }));
   } catch (error) {
     if (error instanceof CreditEvidenceError) { res.status(error.statusCode).json({ error: error.message }); return; }
     if (error instanceof Error && error.message === "REQUEST_NOT_FOUND") { res.status(404).json({ error: "Solicitud no encontrada." }); return; }

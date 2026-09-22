@@ -1,6 +1,9 @@
 import { Router, type IRouter } from "express";
 import { eq, sql } from "drizzle-orm";
 import ExcelJS from "exceljs";
+import { payE12, returnE12, requireE12, e12Scope, E12_SUPPLIER_CASH_ENABLED } from "../lib/e12-supplier-cash";
+import { e12CaptureInput, e12Actor, e12NumberAmount, e12ReturnSchema } from "../lib/e12-http";
+import { e12Repository, e12Options, readE12Detail, enrichE12Rows } from "../lib/e12-supplier-cash-repository";
 import {
   CreateProveedorBody,
   CreateProveedorResponse,
@@ -114,6 +117,7 @@ function presentPagoProveedor(row: any) {
       ? null
       : Number(row.reversoMovimientoId),
     motivoReverso: row.motivoReverso ?? null,
+    ...(row.efectivoE12 ? { efectivoE12: row.efectivoE12 } : {}),
   };
 }
 
@@ -557,12 +561,12 @@ router.get(
            revertido: app.revertido,
         }]);
       }
-      res.json({ proveedorId: id, pagos: pagos.map((p) => {
+      res.json({ proveedorId: id, pagos: await enrichE12Rows(db, pagos.map((p) => {
         const apps = byPago.get(p.id) ?? [];
         const revertido = apps.some((app) => app.revertido);
         const applied = revertido ? 0 : apps.reduce((sum, app) => sum + Number(app.importe), 0);
         return { ...p, aplicaciones: apps, saldoDisponible: p.tipo === "PAGO" && !revertido ? (-Number(p.importe) - applied).toFixed(2) : "0.00" };
-      }) });
+      }), req.auth!.user.rol) });
     } catch (e) {
       next(e);
     }
@@ -608,7 +612,7 @@ router.get(
         hasta,
       });
 
-      res.json(result);
+      res.json({ ...result, movimientos: await enrichE12Rows(db, result.movimientos, req.auth!.user.rol) });
     } catch (e) {
       next(e);
     }
@@ -617,6 +621,12 @@ router.get(
 
 // ── POST /proveedores/:id/pagos ───────────────────────────────────────────
 // proveedores_finanzas module + crear
+router.get("/proveedores/:id/pagos/efectivo-opciones", requierePermiso("proveedores_finanzas", "crear"), async (req, res, next): Promise<void> => {
+  try {
+    const id = RegistrarPagoProveedorParams.parse(req.params).id;
+    res.json(await db.transaction(tx => e12Options(tx, e12Actor(req.auth!.user, getRequestIp(req)), id)));
+  } catch (error) { next(error); }
+});
 
 router.post(
   "/proveedores/:id/pagos",
@@ -681,6 +691,19 @@ router.post(
 
       if ("entradaId" in (req.body as Record<string, unknown>)) {
         res.status(400).json({ error: "entradaId no se admite; el pago se reparte FIFO." });
+        return;
+      }
+      const splitE12 = e12CaptureInput(formaPago, req.body.efectivoE12);
+      if (E12_SUPPLIER_CASH_ENABLED) e12Scope(e12Actor(req.auth!.user, getRequestIp(req)));
+      if (splitE12) {
+        const result = await db.transaction(tx => payE12(e12Repository(tx), e12Actor(req.auth!.user, getRequestIp(req)), {
+          proveedorId: params.data.id, importe: e12NumberAmount(importe), split: splitE12,
+          fecha: fecha?.toISOString() ?? null, referencia: typeof referencia === "string" ? referencia : null,
+          notas: typeof notas === "string" ? notas : null,
+        }));
+        res.status(201).json({ ...presentPagoProveedor(result.pago),
+          saldoDisponible: result.pago.saldoDisponible, aplicaciones: result.pago.aplicaciones,
+          ...(req.auth!.user.rol === "ADMIN" ? { efectivoE12: result.efectivoE12 } : {}) });
         return;
       }
 
@@ -803,6 +826,16 @@ router.post(
       if (!Number.isInteger(proveedorId) || !Number.isInteger(pagoId) || !motivo) {
         res.status(400).json({ error: "ID y motivo son obligatorios." }); return;
       }
+      if (req.body.efectivoE12 !== undefined) {
+        requireE12();
+        const data = e12ReturnSchema.parse(req.body.efectivoE12);
+        const result = await db.transaction(tx => returnE12(e12Repository(tx), e12Actor(req.auth!.user, getRequestIp(req)), {
+          proveedorId, pagoId, motivo, ...data,
+        }));
+        res.status(201).json(ReversarPagoProveedorResponse.parse({ ...presentPagoProveedor(result.pago),
+          ...(req.auth!.user.rol === "ADMIN" ? { efectivoE12: result.efectivoE12 } : {}) }));
+        return;
+      }
       const reverso = await db.transaction((tx) => reversarPago(tx, {
         proveedorId, pagoId, motivo, usuarioId: req.auth!.user.id, ip: getRequestIp(req),
       }));
@@ -895,7 +928,8 @@ router.get(
           SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO'
             AND r.movimiento_origen_id=a.pago_proveedor_id)),0) END)::text saldo
         FROM pagos_proveedor WHERE id=${params.data.pagoId}`);
-      res.json(GetProveedorPagoDetalleResponse.parse({ pago: presentPagoProveedor(pago.rows[0]), saldoDisponible: saldo.rows[0]?.saldo ?? "0.00",
+      const detailE12 = await readE12Detail(db, params.data.pagoId, req.auth!.user.rol);
+      res.json(GetProveedorPagoDetalleResponse.parse({ pago: { ...presentPagoProveedor(pago.rows[0]), ...(detailE12 ? { efectivoE12: detailE12 } : {}) }, saldoDisponible: saldo.rows[0]?.saldo ?? "0.00",
         aplicaciones: apps.rows.map((a: any) => ({ pagoProveedorId: Number(a.pago_proveedor_id), compraProveedorId: Number(a.compra_proveedor_id), importe: a.importe,
           saldoAntes: a.saldo, saldoDespues: a.saldo, entradaId: a.entrada_id, folio: a.folio, fecha: new Date(a.fecha_recepcion).toISOString(),
           resultado: Number(a.saldo) === 0 ? "SALDADA" : "PARCIAL" })) }));
@@ -1151,6 +1185,19 @@ router.get(
       sheet.getColumn(7).numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getColumn(8).numFmt = EXCEL_NUMBER_FORMAT.money;
       sheet.getRow(sheet.rowCount).getCell(2).numFmt = EXCEL_NUMBER_FORMAT.money;
+      const sourcesE12 = (await enrichE12Rows(db, movimientos, req.auth!.user.rol)).filter(row => row.efectivoE12);
+      if (sourcesE12.length) {
+        const sources = workbook.addWorksheet("Orígenes E12");
+        sources.addRow(["Movimiento", "Pago original", "Tipo", "Total ledger", "Caja ledger", "Fondo ledger", "Naturaleza retorno", "Motivo desbloqueo"]);
+        for (const row of sourcesE12) {
+          const detail = row.efectivoE12!;
+          const sign = row.tipo === "PAGO" ? -1 : 1;
+          sources.addRow([row.id, detail.pagoProveedorId, row.tipo, toExcelNumber(row.importe),
+            sign * toExcelNumber(detail.caja), sign * toExcelNumber(detail.fondo),
+            row.tipo === "REVERSO" ? detail.retorno?.naturaleza ?? "" : "", detail.desbloqueoCaja?.motivo ?? ""]);
+        }
+        for (const index of [4, 5, 6]) sources.getColumn(index).numFmt = EXCEL_NUMBER_FORMAT.money;
+      }
 
       const filename = `estado-cuenta-${prov.nombre.replace(/\s+/g, "-").toLowerCase()}.xlsx`;
       res.setHeader(

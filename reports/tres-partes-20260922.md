@@ -149,6 +149,51 @@ prueba HTTP montada. La interfaz usa componentes reales con infraestructura
 aislada, sin acceder a la API en marcha. PID 3800, gates OFF e inventario de
 archivos protegidos fueron comprobados tras el incidente.
 
+Commit E4: `95aa2bcc89fd5f7d6a5ea142ba6c9d403ac18000`.
+
+### E12 — pago único caja/Fondo, construido OFF
+
+Se conectaron los pagos FIFO y dirigidos a proveedor con reparto persistido,
+aprobación sin cambiar los orígenes y retorno completo a cada origen.
+La parte de caja requiere sesión abierta Mariana; Fondo puro no requiere turno.
+Insuficiencia de caja admite desbloqueo ADMIN motivado e histórico; un retiro
+del Fondo nunca admite sobregiro. P12 queda conectado también a E4.
+Las correcciones contables y recuperaciones físicas son distintas; no se
+modifica un corte cerrado. El desglose y los eventos con datos del Fondo
+conservan acceso restringido. Los gates permanecen OFF.
+
+La interfaz incluye controles editables, importes exactos en centavos,
+confirmación contra disponibilidad fresca, ambas entradas de pago dirigido,
+aprobación de propuesta persistida, detalle/estado de cuenta y retornos.
+Conserva UUID en reintentos, bloquea doble envío y renueva la intención cuando
+cambia su contenido. El retorno requerido por servidor a un usuario sin
+metadatos conserva el formulario y pide un nuevo envío explícito.
+
+SQL y reversión con preservación de evidencia quedan preparados, sin ejecutar,
+en `reports/tanda-b-20260922/e12/`.
+
+**Verificación aceptada:** 40 pruebas backend y 40 mutantes aislados PASS
+(`e12/logs/backend-2026-09-22T19-31-54.810Z`); 33 ciclos de interfaz
+GREEN/RED semántico/GREEN restaurado y 15 regresiones E4 GREEN.
+Typecheck API y frontend PASS. El backend usa transacciones/repositorios
+sintéticos: no es prueba de concurrencia PostgreSQL ni ejecución del DDL.
+
+La consolidación de interfaz y su auditoría están en
+`e12/frontend-consolidation-supplement.md` y
+`e12/audit-frontend-consolidation.mjs`. Se verificaron resultados individuales,
+marcadores de aserción y hashes; no se convirtió un fallo de infraestructura
+en un rojo ni se relabeló un manifiesto interrumpido como PASS.
+
+**Incidentes:** se corrigieron omisiones de la primera entrega UI antes de
+probarla; seis opciones inválidas de Testing Library se detectaron en typecheck.
+El mock de mutaciones omitía notificar a React después de finalizar: se
+reparó según el contrato instalado, sin cambiar la obligación de retry.
+Una ejecución superó el límite externo de cinco minutos después de completar
+26 ciclos E12 y siete regresiones E4. Se verificaron sus resultados terminales,
+se ejecutaron las ocho regresiones restantes y se compararon posteriormente
+todos sus hashes de fuente. El manifiesto original sigue sin estado final;
+la comparación posterior no acredita ausencia de escrituras transitorias.
+
 ### Entregas siguientes
 
-E12, E9, E5, E11, E7 y adaptación de suites: pendientes, en ese orden.
+E9, E5, E11, E7 y adaptación de suites: pendientes, en ese orden.

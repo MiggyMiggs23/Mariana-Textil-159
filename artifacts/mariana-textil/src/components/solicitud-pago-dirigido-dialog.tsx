@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useProveedorEfectivoE12, ProveedorEfectivoE12Fields, invalidateE12 } from "@/components/proveedor-efectivo-e12";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import {
   SolicitudPagoDirigidoInputTipo,
   useCreateSolicitudPagoDirigido,
   useGetCurrentUser,
+  type SolicitudPagoDirigido,
 } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
@@ -51,6 +53,10 @@ export function SolicitudPagoDirigidoDialog({
   const [paymentNotes, setPaymentNotes] = useState("");
   const [motivo, setMotivo] = useState("");
   const [resultState, setResultState] = useState("");
+  const [savedSolicitud, setSavedSolicitud] = useState<SolicitudPagoDirigido | null>(null);
+  const cash = useProveedorEfectivoE12(entidadId, tipo === "PROVEEDOR" && paymentMethod === "EFECTIVO", open, amount);
+  const submitting = useRef(false);
+  const [checking, setChecking] = useState(false);
 
   const { toast } = useToast();
   const { data: currentUser } = useGetCurrentUser();
@@ -67,6 +73,7 @@ export function SolicitudPagoDirigidoDialog({
       setPaymentNotes("");
       setMotivo("");
       setResultState("");
+      setSavedSolicitud(null);
       const today = new Date();
       setEffectiveDate(`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`);
     }
@@ -77,7 +84,8 @@ export function SolicitudPagoDirigidoDialog({
     setDestinationAccount(paymentMethod === "EFECTIVO" ? "CAJA_FISICA" : "CUENTA_FISCAL");
   }, [paymentMethod, tipo]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (submitting.current) return;
     if (tipo === "CLIENTE" && evidence.problem(paymentMethod)) return;
     if (motivo.trim().length < 10) {
       toast({ title: "Motivo insuficiente", description: "El motivo debe tener al menos 10 caracteres.", variant: "destructive" });
@@ -92,9 +100,22 @@ export function SolicitudPagoDirigidoDialog({
       return;
     }
 
+    submitting.current = true;
+    setChecking(true);
+    let efectivoE12;
+    try {
+      efectivoE12 = await cash.prepare({ tipo, entidadId, documentoMovimientoId, amount, paymentMethod, destinationAccount, effectiveDate, reference, paymentNotes, motivo });
+    } catch (err) {
+      submitting.current = false;
+      setChecking(false);
+      toast({ title: "No se pudo confirmar", description: getApiErrorMessage(err), variant: "destructive" });
+      return;
+    }
+    setChecking(false);
     createSolicitud.mutate(
       {
         data: {
+          ...(efectivoE12 ? { efectivoE12 } : {}),
           ...(tipo === "CLIENTE" ? evidence.build("ABONO_DIRIGIDO", { entidadId, documentoMovimientoId, amount, paymentMethod, destinationAccount, effectiveDate, reference, paymentNotes, motivo }, paymentMethod) : {}),
           tipo,
           entidadId,
@@ -110,12 +131,16 @@ export function SolicitudPagoDirigidoDialog({
       },
       {
         onSuccess: (data) => {
+          cash.accepted();
+          if (cash.enabled) void invalidateE12(queryClient, cash.admin);
           evidence.accepted();
           queryClient.invalidateQueries({ predicate: query => typeof query.queryKey[0] === "string" && (query.queryKey[0].startsWith("/api/clientes") || query.queryKey[0].startsWith("/api/pagos-dirigidos")) });
           setResultState(data.estado);
+          setSavedSolicitud(data);
           setStep("success");
           if (onSuccess) onSuccess();
         },
+        onSettled: () => { submitting.current = false; },
         onError: (err) => {
           toast({
             title: "Error al registrar solicitud",
@@ -128,6 +153,7 @@ export function SolicitudPagoDirigidoDialog({
   };
 
   const isFormValid =
+    !cash.problem && !checking &&
     (tipo !== "CLIENTE" || !evidence.problem(paymentMethod)) &&
     Number(amount) > 0 &&
     Number(amount) <= Number(saldoPendiente) &&
@@ -137,6 +163,7 @@ export function SolicitudPagoDirigidoDialog({
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
+      if (submitting.current) return;
       if (step === "success" || !val) {
         onOpenChange(val);
       }
@@ -155,7 +182,8 @@ export function SolicitudPagoDirigidoDialog({
         </DialogHeader>
 
         {step === "form" && (
-          <div className="space-y-5 p-6 bg-secondary/10 max-h-[60vh] overflow-y-auto">
+          <fieldset disabled={checking || createSolicitud.isPending} className="space-y-5 p-6 bg-secondary/10 max-h-[60vh] overflow-y-auto">
+            <ProveedorEfectivoE12Fields draft={cash} disabled={checking || createSolicitud.isPending} />
             {tipo === "CLIENTE" && <CreditEvidenceFields draft={evidence} kind="payment" medium={paymentMethod} />}
             <div className="bg-amber-50 border border-amber-200 text-amber-800 text-sm p-4 rounded-lg flex gap-3 items-start shadow-sm">
               <Info className="w-5 h-5 shrink-0 mt-0.5 text-amber-600" />
@@ -189,7 +217,7 @@ export function SolicitudPagoDirigidoDialog({
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Forma de Pago <span className="text-destructive">*</span>
                 </Label>
-                <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                <Select disabled={checking || createSolicitud.isPending} value={paymentMethod} onValueChange={setPaymentMethod}>
                   <SelectTrigger className="h-12 bg-white border-2">
                     <SelectValue />
                   </SelectTrigger>
@@ -204,7 +232,7 @@ export function SolicitudPagoDirigidoDialog({
               {tipo === SolicitudPagoDirigidoInputTipo.CLIENTE && paymentMethod === "TRANSFERENCIA" ? (
                 <div className="space-y-2">
                   <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Cuenta Destino</Label>
-                  <Select value={destinationAccount} onValueChange={setDestinationAccount}>
+                  <Select disabled={checking || createSolicitud.isPending} value={destinationAccount} onValueChange={setDestinationAccount}>
                     <SelectTrigger className="h-12 bg-white border-2">
                       <SelectValue placeholder="Selecciona..." />
                     </SelectTrigger>
@@ -287,11 +315,12 @@ export function SolicitudPagoDirigidoDialog({
                 <p className="text-[10px] text-destructive font-bold">El motivo debe tener al menos 10 caracteres.</p>
               )}
             </div>
-          </div>
+          </fieldset>
         )}
 
         {step === "success" && (
           <div className="p-6 bg-secondary/10 space-y-6 text-center animate-in zoom-in-95">
+            {cash.enabled && cash.admin && savedSolicitud?.efectivoE12 && <div className="border rounded p-3 text-sm">Fuentes registradas: Caja {savedSolicitud.efectivoE12.caja} · Fondo {savedSolicitud.efectivoE12.fondo ?? "0.00"} · Sesión {savedSolicitud.efectivoE12.sesionCajaId ?? "No requerida"}</div>}
             <div className="bg-white border rounded-xl shadow-sm p-8 text-center space-y-4">
               <div className={`mx-auto w-16 h-16 rounded-full flex items-center justify-center ${resultState === 'APROBADA' ? 'bg-emerald-100 text-emerald-600' : 'bg-blue-100 text-blue-600'}`}>
                 {resultState === 'APROBADA' ? <CheckCircle2 className="h-8 w-8" /> : <AlertCircle className="h-8 w-8" />}

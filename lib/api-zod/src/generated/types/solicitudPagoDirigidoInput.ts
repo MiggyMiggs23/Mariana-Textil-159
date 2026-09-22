@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CreditNature } from './creditNature';
+import type { E12PagoEfectivoInput } from './e12PagoEfectivoInput';
 import type { SolicitudPagoDirigidoInputTipo } from './solicitudPagoDirigidoInputTipo';
 
 export interface SolicitudPagoDirigidoInput {
@@ -41,4 +42,5 @@ export interface SolicitudPagoDirigidoInput {
   notas?: string;
   /** @minLength 10 */
   motivo: string;
+  efectivoE12?: E12PagoEfectivoInput;
 }

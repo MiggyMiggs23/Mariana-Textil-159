@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { E12PagoEfectivoDetalle } from './e12PagoEfectivoDetalle';
 import type { MovimientoLedgerDesgloseIva } from './movimientoLedgerDesgloseIva';
 import type { TipoPagoProveedor } from './tipoPagoProveedor';
 
@@ -28,4 +29,5 @@ export interface MovimientoLedger {
   notas?: string | null;
   usuarioId: number;
   createdAt: Date;
+  efectivoE12?: E12PagoEfectivoDetalle;
 }

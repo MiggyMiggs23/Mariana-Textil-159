@@ -6,6 +6,7 @@ import {
   useRevisarSalidaDineroCaja,
   SalidaDineroRevision,
   Role,
+  type E12DesbloqueoCaja,
   getListarSalidasDineroCajaQueryKey,
   getObtenerCorteCajaQueryKey,
   getObtenerSesionCajaActualQueryKey,
@@ -21,6 +22,7 @@ import { Loader2, MessageSquare, Check, X, Eye } from "lucide-react";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { E12_ENABLED } from "@/lib/e12-feature-flags";
 
 type SalidaBase = {
   id: number;
@@ -30,6 +32,8 @@ type SalidaBase = {
   cuentaOrigen: string;
   createdAt: string;
   e4?: SalidaDineroRevision;
+  pagoProveedorIdE12?: number;
+  e12DesbloqueoCaja?: E12DesbloqueoCaja;
 };
 
 export function SalidaDineroE4Item({
@@ -190,6 +194,16 @@ export function SalidaDineroE4Item({
           {isE4 && e4 && getEstadoBadge(e4.estado)}
         </div>
       </div>
+
+
+      {E12_ENABLED && isAdmin && salida.pagoProveedorIdE12 && (
+        <div className="mt-1 text-[10px] text-muted-foreground bg-muted/40 p-1.5 rounded">
+          <span className="font-semibold text-primary">E12 Pago: #{salida.pagoProveedorIdE12}</span>
+          {salida.e12DesbloqueoCaja && (
+             <span className="ml-2 text-amber-700">· Desbloqueo Caja: {salida.e12DesbloqueoCaja.motivo}</span>
+          )}
+        </div>
+      )}
 
       {isE4 && e4 && e4.historial && e4.historial.length > 0 && (
         <div className="bg-muted/30 p-2 rounded text-xs">

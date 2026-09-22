@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E12-RETURN-RETRY",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E12-RETURN-RETRY\n+ actual - expected\n\n+ 'b88d08f6-72fc-42eb-855a-bf0a39cb6756'\n- '56de21fd-6161-4a36-92b6-bb5ccff8098e'\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E12-RETURN-RETRY\n+ actual - expected\n\n+ 'b88d08f6-72fc-42eb-855a-bf0a39cb6756'\n- '56de21fd-6161-4a36-92b6-bb5ccff8098e'\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2557.225333"
+  ]
+}

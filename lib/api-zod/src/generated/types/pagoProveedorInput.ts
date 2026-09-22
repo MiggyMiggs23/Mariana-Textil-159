@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { E12PagoEfectivoInput } from './e12PagoEfectivoInput';
 import type { FormaPagoProveedor } from './formaPagoProveedor';
 
 export interface PagoProveedorInput {
@@ -20,4 +21,6 @@ export interface PagoProveedorInput {
   referencia?: string | null;
   /** @nullable */
   notas?: string | null;
+  /** Obligatorio para EFECTIVO al liberar E12; prohibido para otras formas. */
+  efectivoE12?: E12PagoEfectivoInput;
 }

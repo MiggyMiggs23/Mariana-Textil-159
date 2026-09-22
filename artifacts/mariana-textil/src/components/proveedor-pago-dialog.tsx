@@ -9,8 +9,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Wallet, ArrowRight, CheckCircle2, ChevronLeft } from "lucide-react";
 import { usePreviewPagoProveedor, useRegistrarPagoProveedor, useCreateSolicitudPagoDirigido, PreviewPagoProveedor, FormaPagoProveedor } from "@workspace/api-client-react";
 import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { formatNumber } from "@workspace/number-format";
+import { useRef } from "react";
+import { useProveedorEfectivoE12, ProveedorEfectivoE12Fields, E12Evidence, invalidateE12 } from "@/components/proveedor-efectivo-e12";
+import type { PagoProveedorRow, SolicitudPagoDirigido } from "@workspace/api-client-react";
 
 type Step = "form" | "preview" | "success";
 
@@ -40,10 +44,15 @@ export function ProveedorPagoDialog({
   const [mode, setMode] = useState<"FIFO" | "DIRIGIDO">("FIFO");
   const [selectedMovementId, setSelectedMovementId] = useState<number | null>(null);
   const [motivo, setMotivo] = useState("");
+  const isSubmitting = useRef(false);
+  const cash = useProveedorEfectivoE12(proveedorId, paymentMethod === FormaPagoProveedor.EFECTIVO, open, amount);
+  const [checking, setChecking] = useState(false);
+
 
   const [previewData, setPreviewData] = useState<PreviewPagoProveedor | null>(null);
-  const [realResult, setRealResult] = useState<any>(null);
+  const [realResult, setRealResult] = useState<PagoProveedorRow | SolicitudPagoDirigido | null>(null);
 
+  const queryClient = useQueryClient();
   const { toast } = useToast();
   const previewPayment = usePreviewPagoProveedor();
   const createPayment = useRegistrarPagoProveedor();
@@ -94,29 +103,58 @@ export function ProveedorPagoDialog({
             description: getApiErrorMessage(error, "Verifica el importe e intenta de nuevo."),
             variant: "destructive"
           });
-        }
+        },
+        onSettled: () => { isSubmitting.current = false; }
       }
     );
   };
 
-  const submitPayment = () => {
+  const submitPayment = async () => {
+    if (isSubmitting.current) return;
+    if (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10)) return;
+    isSubmitting.current = true;
+    setChecking(true);
+    let efectivoE12;
+    try {
+      efectivoE12 = await cash.prepare({ amount, paymentMethod, reference, paymentNotes, effectiveDate, mode, selectedMovementId, motivo });
+    } catch (error) {
+      toast({ title: "No se pudo confirmar", description: getApiErrorMessage(error), variant: "destructive" });
+      isSubmitting.current = false;
+      setChecking(false);
+      return;
+    }
+    setChecking(false);
+
     if (mode === "DIRIGIDO") {
-      if (!selectedMovementId || motivo.trim().length < 10) return;
+      isSubmitting.current = true;
       createDirectedPayment.mutate({ data: {
-        tipo: "PROVEEDOR", entidadId: proveedorId, documentoMovimientoId: selectedMovementId,
+        ...(efectivoE12 ? { efectivoE12 } : {}),
+        tipo: "PROVEEDOR", entidadId: proveedorId, documentoMovimientoId: selectedMovementId!,
         importe: Number(amount), formaPago: paymentMethod, referencia: reference || undefined,
         notas: paymentNotes || undefined, fechaEfectiva: effectiveDate ? `${effectiveDate}T12:00:00` : undefined,
         motivo: motivo.trim(),
       } }, {
-        onSuccess: (data) => { setRealResult(data); setStep("success"); onSuccess?.(); },
+        onSuccess: (data) => { cash.accepted(); setRealResult(data); setStep("success"); onSuccess?.();
+          if (cash.enabled) void invalidateE12(queryClient, cash.admin);
+
+          queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "pagos"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "compras"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/solicitudes-pago-dirigido"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "pagos", "efectivo-opciones"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/caja"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/salidas-dinero-caja"] });
+ },
+        onSettled: () => { isSubmitting.current = false; },
         onError: (error) => toast({ title: "Error al solicitar pago dirigido", description: getApiErrorMessage(error, "Intenta de nuevo"), variant: "destructive" }),
       });
       return;
     }
+    isSubmitting.current = true;
     createPayment.mutate(
       {
         id: proveedorId,
         data: {
+          ...(efectivoE12 ? { efectivoE12 } : {}),
           importe: Number(amount),
           formaPago: paymentMethod,
           referencia: reference || null,
@@ -126,10 +164,21 @@ export function ProveedorPagoDialog({
       },
       {
         onSuccess: (data) => {
+          cash.accepted();
+          if (cash.enabled) void invalidateE12(queryClient, cash.admin);
           setRealResult(data);
           setStep("success");
+
+          queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "pagos"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "compras"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/solicitudes-pago-dirigido"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/proveedores", proveedorId, "pagos", "efectivo-opciones"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/caja"] });
+          queryClient.invalidateQueries({ queryKey: ["/api/salidas-dinero-caja"] });
+
           if (onSuccess) onSuccess();
         },
+        onSettled: () => { isSubmitting.current = false; },
         onError: (error) => {
           toast({
             title: "Error al registrar pago",
@@ -141,11 +190,13 @@ export function ProveedorPagoDialog({
     );
   };
 
-  const isFormValid = Number(amount) > 0;
-  const isSubmitting = createPayment.isPending || createDirectedPayment.isPending;
+  const isFormValid = Number(amount) > 0 && !cash.problem;
+
+  const isPending = checking || createPayment.isPending || createDirectedPayment.isPending;
 
   return (
     <Dialog open={open} onOpenChange={(val) => {
+      if (isSubmitting.current) return;
       if (step === "success" || !val) {
         onOpenChange(val);
       }
@@ -167,10 +218,11 @@ export function ProveedorPagoDialog({
         </DialogHeader>
 
         {step === "form" && (
-          <div className="space-y-5 p-6 bg-secondary/10">
+          <fieldset disabled={isPending || previewPayment.isPending} className="space-y-5 p-6 bg-secondary/10">
+            <ProveedorEfectivoE12Fields draft={cash} disabled={isPending} />
             <div className="space-y-2">
               <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Aplicación</Label>
-              <Select value={mode} onValueChange={(value: "FIFO" | "DIRIGIDO") => { setMode(value); setSelectedMovementId(null); }}>
+              <Select disabled={isPending || previewPayment.isPending} value={mode} onValueChange={(value: "FIFO" | "DIRIGIDO") => { setMode(value); setSelectedMovementId(null); }}>
                 <SelectTrigger className="h-12 bg-white border-2" data-testid="select-proveedor-payment-mode"><SelectValue /></SelectTrigger>
                 <SelectContent><SelectItem value="FIFO">Normal (FIFO)</SelectItem><SelectItem value="DIRIGIDO">Pago dirigido</SelectItem></SelectContent>
               </Select>
@@ -192,7 +244,7 @@ export function ProveedorPagoDialog({
 
               <div className="space-y-2">
                 <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Forma de Pago</Label>
-                <Select value={paymentMethod} onValueChange={(val: FormaPagoProveedor) => { setPaymentMethod(val); handleInputChange(); }}>
+                <Select disabled={isPending || previewPayment.isPending} value={paymentMethod} onValueChange={(val: FormaPagoProveedor) => { setPaymentMethod(val); handleInputChange(); }}>
                   <SelectTrigger className="h-12 bg-white border-2">
                     <SelectValue />
                   </SelectTrigger>
@@ -237,11 +289,12 @@ export function ProveedorPagoDialog({
                 className="bg-white border-2 resize-none"
               />
             </div>
-          </div>
+          </fieldset>
         )}
 
         {step === "preview" && previewData && (
-          <div className="p-6 bg-secondary/10 space-y-6 animate-in fade-in slide-in-from-right-2 max-h-[60vh] overflow-y-auto">
+          <fieldset disabled={isPending} className="p-6 bg-secondary/10 space-y-6 animate-in fade-in slide-in-from-right-2 max-h-[60vh] overflow-y-auto">
+            <ProveedorEfectivoE12Fields draft={cash} disabled={isPending} />
             <div className="bg-white border rounded-xl shadow-sm p-4 text-center">
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider mb-1">Importe a Pagar</p>
               <p className="text-3xl font-black text-sidebar tabular-nums">{formatNumber(amount, { kind: "money" })}</p>
@@ -295,7 +348,7 @@ export function ProveedorPagoDialog({
                 </div>
               </div>
             )}
-          </div>
+          </fieldset>
         )}
 
         {step === "success" && realResult && (
@@ -303,14 +356,16 @@ export function ProveedorPagoDialog({
              <div className="bg-white border-2 border-emerald-500/20 rounded-xl shadow-sm p-6 text-center space-y-2">
                 <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
                  <h3 className="font-black text-xl text-sidebar">{mode === "DIRIGIDO" ? "Solicitud de pago dirigido registrada" : "¡Pago registrado exitosamente!"}</h3>
-                <p className="text-muted-foreground text-sm font-medium">Se aplicó {formatNumber(amount, { kind: "money" })} a la cuenta del proveedor.</p>
+                <p className="text-muted-foreground text-sm font-medium">{"estado" in realResult && realResult.estado !== "APROBADA" ? `Solicitud ${realResult.estado}: pendiente de aplicación, sin movimiento de dinero.` : `Se aplicó ${formatNumber(amount, { kind: "money" })} a la cuenta del proveedor.`}</p>
              </div>
 
-             {realResult.aplicaciones && realResult.aplicaciones.length > 0 && (
+             {"id" in realResult && "total" in (realResult.efectivoE12 ?? {}) && <E12Evidence detail={(realResult as PagoProveedorRow).efectivoE12} admin={cash.admin} />}
+             {cash.enabled && cash.admin && "estado" in realResult && realResult.efectivoE12 && <div className="border rounded p-3 text-sm">Fuentes registradas: Caja {realResult.efectivoE12.caja} · Fondo {realResult.efectivoE12.fondo ?? "0.00"} · Sesión {realResult.efectivoE12.sesionCajaId ?? "No requerida"}</div>}
+             {"aplicaciones" in realResult && realResult.aplicaciones && realResult.aplicaciones.length > 0 && (
                <div className="space-y-3">
                  <h4 className="font-bold text-sidebar text-sm uppercase tracking-wider">Resumen de aplicación</h4>
                  <div className="bg-white rounded-lg border shadow-sm divide-y">
-                   {realResult.aplicaciones.map((asig: any, idx: number) => (
+                   {realResult.aplicaciones.map((asig, idx) => (
                       <div key={idx} className="p-3 flex justify-between items-center text-sm">
                         <span className="font-bold text-sidebar">Compra #{asig.folio || asig.entradaId || ""}</span>
                         <div className="text-right">
@@ -323,7 +378,7 @@ export function ProveedorPagoDialog({
                </div>
              )}
 
-            {Number(realResult.saldoDisponible) > 0 && (
+            {"saldoDisponible" in realResult && Number(realResult.saldoDisponible) > 0 && (
               <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3 flex justify-between items-center text-sm">
                 <span className="font-bold text-emerald-800">Saldo a Favor Generado</span>
                 <span className="font-black text-emerald-700">{formatNumber(realResult.saldoDisponible, { kind: "money" })}</span>
@@ -349,15 +404,15 @@ export function ProveedorPagoDialog({
 
           {step === "preview" && (
             <>
-              <Button variant="ghost" onClick={() => setStep("form")} className="font-bold text-muted-foreground">
+              <Button disabled={isPending} variant="ghost" onClick={() => setStep("form")} className="font-bold text-muted-foreground">
                 <ChevronLeft className="h-4 w-4 mr-2" /> Atrás
               </Button>
               <Button
                 onClick={submitPayment}
-                 disabled={isSubmitting || (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10))}
+                 disabled={isSubmitting.current || isPending || (mode === "DIRIGIDO" && (!selectedMovementId || motivo.trim().length < 10))}
                 className="font-bold h-10 px-8"
               >
-                 {isSubmitting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                 {(isSubmitting.current || isPending) && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                  {mode === "DIRIGIDO" ? "Enviar solicitud" : "Confirmar Pago"}
               </Button>
             </>

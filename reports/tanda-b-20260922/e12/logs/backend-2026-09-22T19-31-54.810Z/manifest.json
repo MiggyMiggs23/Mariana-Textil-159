@@ -1,0 +1,379 @@
+{
+  "mode": "OFFLINE_SYNTHETIC_NO_SQL_NO_APP",
+  "startedAt": "2026-09-22T19-31-54.810Z",
+  "sourceHashes": {
+    "artifacts/api-server/src/lib/e12-supplier-cash.ts": "e1f647d4c6405e710911157a0f00f012f2f4db4409504fd9943abbac2d36d487",
+    "artifacts/api-server/src/lib/caja-cash-ledger.ts": "e046f773af2a8231c82a32912d4d6e9d59105aa3b5a3e644a0c34ba09684f89b",
+    "artifacts/api-server/src/lib/e12-http.ts": "efd28696ea89d374779ff24f50b9168f6a2b77a25cf423694f3c3f93ca2ecdb3",
+    "artifacts/api-server/src/lib/e12-fondo-executor.ts": "84adb1335a0ba23c233165340c012aa37a0ecabaac4756ad736b2485491cf59a",
+    "artifacts/api-server/src/lib/e12-cash-ledger.ts": "dd635e7b03bfb545f7783acf14d1250e48485e1c2889dcc9467ec5b3cb997bb8",
+    "artifacts/api-server/src/lib/e4-cash-out-repository.ts": "cc256f9cbf2224264a1a4afe2a2e2cf2bca6c88e63c465e9f9dc279191520995",
+    "artifacts/api-server/src/lib/fondo.ts": "0b129e21311b9f6dd590c5841b127157ad0a6bbc648b35e9943b24c4fc6ee0ed",
+    "artifacts/api-server/src/lib/e4-cash-out.ts": "8b49eaf0fec8c0d688fb7fc2d5bd0f593be07aa8a395eabee8bf2c0474eeaa2a",
+    "artifacts/api-server/src/lib/e12-supplier-cash.test.ts": "d5ae091147462c66d5800db2b89467ce75cf68834fdf0a3d6c9644dfa857c711",
+    "reports/tanda-b-20260922/e12/offline-guard.cjs": "ece3a45e89fc7564b93888a388326e10b1bc1fd2c7dce72cda48aaf4d13cf34e"
+  },
+  "cases": [
+    {
+      "name": "E12-OFF-PAY",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (!enabled) throw new E12Error(\"E12_DISABLED\"",
+      "after": "if (false) throw new E12Error(\"E12_DISABLED\"",
+      "mutantHash": "3be87840d708c89f0e00ad32982bf7f0ed8e7fc944437b95364f48ac02bdf056"
+    },
+    {
+      "name": "E12-OFF-RETURN",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (!enabled) throw new E12Error(\"E12_DISABLED\"",
+      "after": "if (false) throw new E12Error(\"E12_DISABLED\"",
+      "mutantHash": "3be87840d708c89f0e00ad32982bf7f0ed8e7fc944437b95364f48ac02bdf056"
+    },
+    {
+      "name": "E12-OFF-READ",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-cash-ledger.ts",
+      "before": "if (!enabled) return [];",
+      "after": "if (false) return [];",
+      "mutantHash": "ccd40293dc4640a11f5d5cf022c70c26b96181b6da9c73972995cbb6188878a2"
+    },
+    {
+      "name": "E12-OFF-HTTP",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-http.ts",
+      "before": "    requireE12();",
+      "after": "    // defect: ignore new fields while OFF",
+      "mutantHash": "a4d684dcab5c2d9572683ffa620e098504f59b9cf8024bf4fba51f9302e3326f"
+    },
+    {
+      "name": "E12-DECIMAL",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "const payment = await repo.payment(normalized, actor);",
+      "after": "const payment = await repo.payment({ ...normalized, importe: \"0.04\" }, actor);",
+      "mutantHash": "fedcb65fc8de6f5c8c807dfa4164c84fba558b60c2221969cbba9918990b4d91"
+    },
+    {
+      "name": "E12-PRECISION",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-http.ts",
+      "before": "Math.abs(value * 100 - Math.round(value * 100)) > 0.000001",
+      "after": "false",
+      "mutantHash": "eaf31c9961fb56a5cecb537854a83ae85cf8d52a50dd8e765f762ed16691349c"
+    },
+    {
+      "name": "E12-NEGATIVE",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (!/^(0|[1-9]\\d*)\\.\\d{2}$/.test(raw))",
+      "after": "if (false)",
+      "mutantHash": "b63b60fb88099e7b1860c53d2ee63445c97d09e1778a87550dbc84605999751b"
+    },
+    {
+      "name": "E12-SUM",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "total === 0n || cash + fund !== total",
+      "after": "total === 0n",
+      "mutantHash": "27a41e79e414b32d5891a3e4817a080a3eb82eb5a6ec49671f42cda2a6402ff7"
+    },
+    {
+      "name": "E12-MIXED-EXAMPLE",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "await repo.outflow(session!.id, input.split.caja, input.proveedorId",
+      "after": "await repo.outflow(session!.id, input.importe, input.proveedorId",
+      "mutantHash": "0fd5fbbb7013f7dcfdff96adc55c09fbc07bc3af8be8256cb537bd43fa791048"
+    },
+    {
+      "name": "E12-CASH-ONLY",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "const fundMovement = fund > 0n ?",
+      "after": "const fundMovement = fund >= 0n ?",
+      "mutantHash": "f8ec541a649b391bebe0c6910a44e2424f6da6104effe9edd53dedd46b3b0712"
+    },
+    {
+      "name": "E12-FUND-NO-SESSION",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (cash > 0n) {\n    session =",
+      "after": "if (cash >= 0n) {\n    session =",
+      "mutantHash": "85033d200a731e0f0173f4afabccdb7d04c4a57f00b45db35678ad90d9d37399"
+    },
+    {
+      "name": "E12-SESSION",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (!session || session.ubicacionId !== 1 || session.estado !== \"ABIERTA\")\n      throw new E12Error(\"E12_SESSION_CLOSED\", \"Se requiere sesión abierta de Mariana.\"",
+      "after": "if (false)\n      throw new E12Error(\"E12_SESSION_CLOSED\", \"Se requiere sesión abierta de Mariana.\"",
+      "mutantHash": "37f35c826ce17f43c8d0163a99089148c0fb53f363fc9f50e9ad4028edcd7444"
+    },
+    {
+      "name": "E12-SCOPE",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "(actor.rol !== \"ADMIN\" && actor.ubicacionId !== 1)",
+      "after": "(false)",
+      "mutantHash": "97ebcd0ce5154eb4610842bd82cd993809700cb5ef484684a4e9024fca1c3543"
+    },
+    {
+      "name": "E12-PRIVACY",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "(usesFund && actor.rol !== \"ADMIN\")",
+      "after": "(false)",
+      "mutantHash": "6019e401e84e8d65e6b4ce7e0793d1108ed6a0421b5c45f19c98982b433ebe5c"
+    },
+    {
+      "name": "E12-JSON-PRIVACY",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (role === \"ADMIN\") return value;",
+      "after": "if (role === \"ADMIN\" || role === \"CAJA\") return value;",
+      "mutantHash": "8f7ba7d10135c74c7274c2351fe3b278774696f8b3821cd1fa16eb632940d49e"
+    },
+    {
+      "name": "E12-PROVIDER",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (!await repo.provider(input.proveedorId))",
+      "after": "if (false)",
+      "mutantHash": "95c4c4e205a42f30602a12cfabf55cd8aba3e2b36fc9c8a2e6d94df205f87303"
+    },
+    {
+      "name": "E12-CASH-INSUFFICIENT",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (!override) throw new E12Error(\"E12_CAJA_INSUFICIENTE\", \"Saldo de caja insuficiente; requiere desbloqueo ADMIN motivado.\", 409);",
+      "after": "if (!override) return null;",
+      "mutantHash": "fb16058b3d87562dabb8bff3601ccd837197a57f6cfb0a169b8e0caa798304ad"
+    },
+    {
+      "name": "E12-OVERRIDE-ADMIN",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "usuarioId: actor.id, createdAt: new Date().toISOString(), saldoAntes:",
+      "after": "usuarioId: 0, createdAt: new Date().toISOString(), saldoAntes:",
+      "mutantHash": "c8dc602545f5984e129523a850ad542ef515528aeedef1c36eb2858a62157ecd"
+    },
+    {
+      "name": "E12-OVERRIDE-ROLE",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (override && actor.rol !== \"ADMIN\")",
+      "after": "if (false)",
+      "mutantHash": "b91d17cdf136937ee9228a724210b95c758b5eebab8477c634b19604735f19e9"
+    },
+    {
+      "name": "E12-OVERRIDE-REASON",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "!override.motivo.trim() || override.motivo.trim().length > 1000",
+      "after": "false || override.motivo.trim().length > 1000",
+      "mutantHash": "f14ef4fea7909b720639886d3a9e34562db54c947d341039f47c6458a92558d0"
+    },
+    {
+      "name": "E12-FUND-INSUFFICIENT",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (balance.saldo.startsWith(\"-\") || e12Money(balance.saldo) < fund)",
+      "after": "if (false)",
+      "mutantHash": "24c1ab738cb8d19ad4a5f54a2150d8a9cb16fedd3379ed79ab5bdaaa0066e8a8"
+    },
+    {
+      "name": "E12-REPLAY",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (previous) return replayResult(previous, actor, content);\n  if (!await repo.provider",
+      "after": "if (false) return replayResult(previous!, actor, content);\n  if (!await repo.provider",
+      "mutantHash": "c962c98d6cfa23879b70f8a861681b4a24466336eb6988ba268485f810dff4e3"
+    },
+    {
+      "name": "E12-REPLAY-CONTENT",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "previous.actorId !== actor.id || previous.content !== content",
+      "after": "previous.actorId !== actor.id",
+      "mutantHash": "605821626e02b658b78533fe72820492aa03b9ff02da57c2927722ab19420676"
+    },
+    {
+      "name": "E12-FAILURE-ROLLBACK",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "const fundMovement = fund > 0n ? await repo.fund(e12Format(fund), key, actor, reason) : null;",
+      "after": "const fundMovement = null;",
+      "mutantHash": "4fc954e41bc18ef9a385d9c9bc171335e30ecffce18ee991bd4d99530568852c"
+    },
+    {
+      "name": "E12-CONCURRENT-MODEL",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (balance.saldo.startsWith(\"-\") || e12Money(balance.saldo) < fund)",
+      "after": "if (false)",
+      "mutantHash": "24c1ab738cb8d19ad4a5f54a2150d8a9cb16fedd3379ed79ab5bdaaa0066e8a8"
+    },
+    {
+      "name": "E12-RETURN-EXACT",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "repo.income(session.id, original.caja, input.pagoId",
+      "after": "repo.income(session.id, original.total, input.pagoId",
+      "mutantHash": "363fcd0776a43c596e0d486af941505ec9840f3cf7f45a8715837d3297b43c46"
+    },
+    {
+      "name": "E12-RETURN-KIND",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "input.motivo.trim(), original.movimientoFondoId, input.naturaleza)",
+      "after": "input.motivo.trim(), original.movimientoFondoId, \"RECUPERACION_EFECTIVO\")",
+      "mutantHash": "65065630eaae838165774223662d59a09b88990ad2c241ee109cdd1e8cfc6cd0"
+    },
+    {
+      "name": "E12-RETURN-ONCE",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (original.retorno) throw",
+      "after": "if (false) throw",
+      "mutantHash": "50069f606a01eda849f2bed6b6d32554b1066db1048ee17566d1ce80517b514b"
+    },
+    {
+      "name": "E12-RETURN-FUND-ONLY",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "if (e12Money(original.caja) > 0n)",
+      "after": "if (e12Money(original.caja) >= 0n)",
+      "mutantHash": "c85ce562083f722369d98aa64e34eefa8226ad0303148b485a9c9ee0ec876b48"
+    },
+    {
+      "name": "E12-RETURN-PRIVACY",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+      "before": "e12Scope(actor, e12Money(original.fondo) > 0n);",
+      "after": "e12Scope(actor);",
+      "mutantHash": "99ce558d8652eb20b6b2838ee5c84caccdaee65a02a6e8c0a6f55075ed677ff7"
+    },
+    {
+      "name": "E12-CASH-RETURNS",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/caja-cash-ledger.ts",
+      "before": "- sums.SALIDA + sums.RETORNO_PROVEEDOR)",
+      "after": "- sums.SALIDA)",
+      "mutantHash": "3d8557fa66d2ecd805bf5d5b856273fa3f599b97d50918d34bafb32d02c78bc5"
+    },
+    {
+      "name": "E12-CLOSED-FROZEN",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/caja-cash-ledger.ts",
+      "before": "if (snapshots.length === 0) return legacy;",
+      "after": "if (snapshots.length === 0) { await liveReader(); return legacy; }",
+      "mutantHash": "0ea73a538cd819c20efd486ac5733b6eb30888c770989cb5d83c410810404004"
+    },
+    {
+      "name": "E12-PARAMETER-ADAPTER",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-fondo-executor.ts",
+      "before": "sql`${values[Number(part.slice(1)) - 1]}`",
+      "after": "sql.raw(String(values[Number(part.slice(1)) - 1]))",
+      "mutantHash": "98256a9fdfe4c640e466a6c99068a1cb1ddb9369d0c189058cc3dfdd6ddf550b"
+    },
+    {
+      "name": "E12-E4-GUARD-BEFORE-WRITE",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "await integration?.beforeInsert(input, actor);",
+      "after": "// defect: bypass shared P12 guard",
+      "mutantHash": "334344caa598f5b83b2cdb1896f6337ff26b63f3e3ffdb7553f121327e5b7a88"
+    },
+    {
+      "name": "E12-DIRECTED-SOURCE",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-http.ts",
+      "before": "return { ...source, claveOperacion: parsed.claveOperacion,",
+      "after": "return { ...source, caja: \"0.00\", claveOperacion: parsed.claveOperacion,",
+      "mutantHash": "712b68abaeaecef6b370e821a114f2322608a65e9256111dd9b88306a7955f1f"
+    },
+    {
+      "name": "E12-DIRECTED-NO-REPARTITION",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/e12-http.ts",
+      "before": "export const e12ApprovalSchema = z.object({ claveOperacion: z.string().uuid(), desbloqueoCaja: e12OverrideSchema.optional() }).strict();",
+      "after": "export const e12ApprovalSchema = z.object({ claveOperacion: z.string().uuid(), desbloqueoCaja: e12OverrideSchema.optional() }).passthrough();",
+      "mutantHash": "faf0fec65b4926c4506bdcc351a04dbb153257925446bde32b351bf493a50fc3"
+    },
+    {
+      "name": "E12-FONDO-SAME-TRANSACTION",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/fondo.ts",
+      "before": "const request = { idempotencyKey: input.clave, motivo: input.motivo.slice(0, 500) };",
+      "after": "const request = { idempotencyKey: input.clave, motivo: input.motivo.slice(0, 500) }; await tx.query(\"COMMIT\");",
+      "mutantHash": "18ebe4fc7d660d57699fb752e12844e72c55275b37b10b78390ac10dc18d4ddf"
+    },
+    {
+      "name": "E12-FONDO-RECOVERY-PHYSICAL",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/fondo.ts",
+      "before": "input.original && input.naturalezaRetorno === \"CORRECCION_CAPTURA\"",
+      "after": "input.original && input.naturalezaRetorno === \"RECUPERACION_EFECTIVO\"",
+      "mutantHash": "dc8c83cc42c0e2cd080fa706929ca06dec20dd3cbd2639abcbb1f80f66379a6a"
+    },
+    {
+      "name": "E12-FONDO-CORRECTION-NOT-PHYSICAL",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/fondo.ts",
+      "before": "input.original && input.naturalezaRetorno === \"CORRECCION_CAPTURA\"",
+      "after": "input.original && false",
+      "mutantHash": "6d6ed72500a36aa1ca4dd66407ce60fe1ca558f38f408ffe650b14754dbf2863"
+    },
+    {
+      "name": "E12-FONDO-REAL-WITHDRAWAL-GUARD",
+      "green": 0,
+      "red": 1,
+      "file": "artifacts/api-server/src/lib/fondo.ts",
+      "before": "if (naturaleza === \"RETIRO\" && state.saldo < amount)",
+      "after": "if (false)",
+      "mutantHash": "330bd1b073930d8138e3746f104a4635ad58fb598b4dd5ee4a69c71bb82a3a6e"
+    }
+  ],
+  "status": "PASS"
+}

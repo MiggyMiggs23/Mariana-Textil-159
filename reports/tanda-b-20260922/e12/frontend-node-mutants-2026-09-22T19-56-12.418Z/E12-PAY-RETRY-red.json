@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E12-PAY-RETRY",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E12-PAY-RETRY\n+ actual - expected\n\n+ 'e264c4a3-6fad-461e-85ec-e90786d0302f'\n- 'e252bc07-5189-4ac1-a413-5f99306af4eb'\n     ^\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E12-PAY-RETRY\n+ actual - expected\n\n+ 'e264c4a3-6fad-461e-85ec-e90786d0302f'\n- 'e252bc07-5189-4ac1-a413-5f99306af4eb'\n     ^\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2491.48979"
+  ]
+}

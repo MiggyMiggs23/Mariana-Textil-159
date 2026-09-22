@@ -39,6 +39,7 @@ import {
 import { allocateCreditFifo, centsToMoney, moneyToCents } from "./credit-allocation";
 import { breakdownIvaIncluded } from "./iva";
 import { accountedDocumentAt, accountedDocumentPredicate } from "./accounted-document";
+import { E12_SUPPLIER_CASH_ENABLED, E12Error } from "./e12-supplier-cash";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -460,10 +461,15 @@ export async function registrarPago(
     notas?: string | null;
     /** Deprecated compatibility input; deliberately ignored (FIFO is mandatory). */
     entradaId?: number | null;
+    /** Existing directed supplier approval, not customer E5. */
+    documentoDirigidoId?: number;
+    e12Integration?: boolean;
     usuarioId: number;
     ip?: string | null;
   },
 ): Promise<{ pago: typeof pagosProveedorTable.$inferSelect; asignaciones: AsignacionProveedor[]; saldoAFavor: string }> {
+  if (E12_SUPPLIER_CASH_ENABLED && opts.formaPago === "EFECTIVO" && !opts.e12Integration)
+    throw new E12Error("E12_SPLIT_REQUIRED", "Usa el productor transaccional E12 para efectivo.");
   await transactionAdvisoryLock(
     tx,
     ADVISORY_LOCK_NAMESPACES.SUPPLIER_LEDGER,
@@ -485,7 +491,21 @@ export async function registrarPago(
     })
     .returning();
 
-  const asignaciones = await aplicarCreditosProveedor(tx, opts.proveedorId);
+  let asignaciones: AsignacionProveedor[];
+  if (opts.documentoDirigidoId !== undefined) {
+    const target = await tx.execute<{ saldo: string }>(sql`SELECT (p.importe-COALESCE((
+      SELECT SUM(a.importe) FROM aplicaciones_pago_proveedor a WHERE a.compra_proveedor_id=p.id
+      AND NOT EXISTS (SELECT 1 FROM pagos_proveedor r WHERE r.tipo='REVERSO' AND r.movimiento_origen_id=a.pago_proveedor_id)
+    ),0))::text saldo FROM pagos_proveedor p
+      WHERE p.id=${opts.documentoDirigidoId} AND p.proveedor_id=${opts.proveedorId} AND p.tipo='COMPRA' FOR UPDATE`);
+    const saldo = target.rows[0]?.saldo;
+    if (saldo === undefined || moneyToCents(saldo) < moneyToCents(opts.importe))
+      throw new Error("DIRECTED_AMOUNT_EXCEEDS_DOCUMENT");
+    await tx.insert(aplicacionesPagoProveedorTable).values({ pagoProveedorId: row!.id, compraProveedorId: opts.documentoDirigidoId, importe: opts.importe.toFixed(2) });
+    asignaciones = [{ pagoProveedorId: row!.id, compraProveedorId: opts.documentoDirigidoId, importe: opts.importe.toFixed(2), saldoAntes: saldo, saldoDespues: centsToMoney(moneyToCents(saldo) - moneyToCents(opts.importe)) }];
+  } else {
+    asignaciones = await aplicarCreditosProveedor(tx, opts.proveedorId);
+  }
   await tx.insert(auditoriaTable).values({
     usuarioId: opts.usuarioId,
     accion: "CREAR",
@@ -545,7 +565,7 @@ export async function registrarAjuste(
 /** Insert the exact positive inverse of a supplier PAGO; applications stay immutable. */
 export async function reversarPago(
   tx: Tx,
-  opts: { proveedorId: number; pagoId: number; motivo: string; usuarioId: number; ip?: string | null },
+  opts: { proveedorId: number; pagoId: number; motivo: string; usuarioId: number; ip?: string | null; e12Integration?: boolean },
 ): Promise<typeof pagosProveedorTable.$inferSelect> {
   await transactionAdvisoryLock(
     tx,
@@ -558,6 +578,10 @@ export async function reversarPago(
     FOR UPDATE`);
   const pago = original.rows[0];
   if (!pago) throw new Error("PAYMENT_NOT_FOUND");
+  if (E12_SUPPLIER_CASH_ENABLED && !opts.e12Integration) {
+    const linked = await tx.execute(sql`SELECT 1 FROM proveedor_efectivo_e12 WHERE pago_proveedor_id=${opts.pagoId}`);
+    if (linked.rows.length) throw new E12Error("E12_RETURN_REQUIRED", "El pago E12 exige retorno completo a sus fuentes.");
+  }
   const existing = await tx.execute(sql`
     SELECT id FROM pagos_proveedor WHERE movimiento_origen_id=${opts.pagoId} AND tipo='REVERSO'`);
   if (existing.rows[0]) throw new Error("PAYMENT_ALREADY_REVERSED");

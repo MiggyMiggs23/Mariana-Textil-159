@@ -30,6 +30,7 @@ export type E4CreateInput = {
   sesionCajaId: number; monto: string; motivo: string;
   proveedorId?: number | null; cuentaOrigen: "CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL";
   tipo?: E4Kind; claveOperacion?: string; ip: string;
+  desbloqueoCajaE12?: { motivo: string };
 };
 export type E4ReviewInput = {
   sesionCajaId: number; salidaId: number; accion: E4Action; version: number;
@@ -108,6 +109,7 @@ export async function createE4CashOut(
   const request = JSON.stringify({
     kind: "CREAR", sesionCajaId: input.sesionCajaId, monto, motivo, proveedorId,
     cuentaOrigen: input.cuentaOrigen, tipo: input.tipo,
+    ...(input.desbloqueoCajaE12 ? { desbloqueoCajaE12: input.desbloqueoCajaE12 } : {}),
   });
   await repo.lockOperation(claveOperacion);
   const session = await repo.session(input.sesionCajaId);

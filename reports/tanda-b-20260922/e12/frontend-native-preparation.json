@@ -1,0 +1,44 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "owner_of_execution": "MAIN",
+  "required_condition": "Productive UI and generated contracts stable before the single MAIN pass",
+  "commands": [
+    "bash reports/tanda-b-20260922/e12/run-frontend-types.sh",
+    "node reports/tanda-b-20260922/e12/run-frontend-node-mutants.mjs"
+  ],
+  "mounted_native_suite": "artifacts/mariana-textil/src/components/e12-node.dom.test.tsx",
+  "paired_obligations_manifest": "reports/tanda-b-20260922/e12/frontend-mutants-cases.mjs",
+  "existing_e4_regression_manifest": "reports/tanda-b-20260922/e12/frontend-e4-regressions.mjs",
+  "prepared_counts": {
+    "e12_mounted_obligations_and_unique_negative_controls": 33,
+    "existing_e4_green_only_regressions": 15,
+    "expected_native_selected_executions": 114
+  },
+  "e4_scope": "Existing capture/review/permission/privacy/FIFO-target/location/OFF contracts of changed panel and item. Do not repeat six unchanged historical parent mutation cycles or modify E4 evidence. New P12 behavior has its own paired E12 controls.",
+  "coverage_routes": [
+    "/proveedores/:id: real parent, FIFO, directed request, ledger payment detail without purchase applications, return",
+    "/pagos-dirigidos: real approval page with persisted sources, session refresh, response/error handling",
+    "SalidasDineroE4Panel and SalidaDineroE4Item: mounted P12 and E12 privacy",
+    "CorteEfectivoDesglose: real common reader mounted by existing cut detail; server total and positive return category"
+  ],
+  "infrastructure_only_aliases": [
+    "generated API hooks with schema-validated JSON transport fixtures",
+    "feature gates",
+    "AppLayout",
+    "location scope"
+  ],
+  "not_aliased": [
+    "payment/reversal/directed/approval producers",
+    "shared productive proveedor-efectivo-e12 helper",
+    "permission logic, UI primitives, money input, parent pages and cut reader"
+  ],
+  "acceptance": "Per E12 obligation: selected native GREEN, isolated productive mutant ERR_ASSERTION containing exact ID, restored GREEN. Setup/build/network/timeout failures never count as RED. Explicit --ids is marked partial and never full E12.",
+  "static_review": "Unique anchors, TypeScript syntax of every productive mutant and test/support source, exact case/test ID pairing, JS/shell syntax; schema required fields inspected statically. No runner, tests, frontend typecheck, app, browser, network or SQL executed by preparer.",
+  "limits": [
+    "Hook enabled/refetch observations are not real HTTP counts.",
+    "No frontend suite proves transactional posting, DB permissions, concurrency, backend idempotency or closed-cut immutability.",
+    "Backend under construction remains outside this frontend evidence.",
+    "The no-ADMIN E12_RETURN_REQUIRED path waits for an explicit second submission; it neither infers sources nor auto-retries.",
+    "Prepared does not mean PASS; MAIN must inspect generated evidence and failures."
+  ]
+}

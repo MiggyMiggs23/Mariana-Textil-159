@@ -1,17 +1,19 @@
 /** Pure cash arithmetic. Never joins applications or infers a receipt identity. */
-export type CashOrigin = "FONDO_INICIAL" | "TICKET" | "ABONO" | "COBRO_RETENIDO" | "SALIDA";
+export type CashOrigin = "FONDO_INICIAL" | "TICKET" | "ABONO" | "COBRO_RETENIDO" | "SALIDA" | "RETORNO_PROVEEDOR";
 export type CashDocument = {
   origen: CashOrigin; id: string; folio: string | null; importe: string; href: string | null;
   evidencia?: {
     referencia: string | null; motivo: string | null; fecha: string | null;
     usuarioId: number | null; proveedorId: number | null;
     usuarioNombre?: string | null; proveedorNombre?: string | null;
+    naturalezaRetornoE12?: "CORRECCION_CAPTURA" | "RECUPERACION_EFECTIVO";
   };
 };
 export type CashBreakdown = {
   version: "E2" | "LEGACY"; fondoInicial: string; cobrosTickets: string;
   abonosFisicos: string; cobrosRetenidos: string; salidasFisicas: string;
   efectivoEsperado: string; documentos: CashDocument[];
+  retornosProveedor?: string;
 };
 export function cashCents(value: string): bigint {
   if (!/^-?\d+(?:\.\d{1,2})?$/.test(value)) throw new Error("E2: importe monetario inválido");
@@ -62,7 +64,7 @@ export function creditCashDocuments(sessionId: number, movements: CreditCashMove
   return documents;
 }
 export function calculateCash(documents: CashDocument[], version: CashBreakdown["version"] = "E2"): CashBreakdown {
-  const sums: Record<CashOrigin, bigint> = { FONDO_INICIAL: 0n, TICKET: 0n, ABONO: 0n, COBRO_RETENIDO: 0n, SALIDA: 0n };
+  const sums: Record<CashOrigin, bigint> = { FONDO_INICIAL: 0n, TICKET: 0n, ABONO: 0n, COBRO_RETENIDO: 0n, SALIDA: 0n, RETORNO_PROVEEDOR: 0n };
   const seen = new Set<string>();
   for (const document of documents) {
     // ABONO and retained use the same immutable operation namespace.
@@ -77,7 +79,8 @@ export function calculateCash(documents: CashDocument[], version: CashBreakdown[
     version, fondoInicial: cashMoney(sums.FONDO_INICIAL), cobrosTickets: cashMoney(sums.TICKET),
     abonosFisicos: cashMoney(sums.ABONO), cobrosRetenidos: cashMoney(sums.COBRO_RETENIDO),
     salidasFisicas: cashMoney(sums.SALIDA),
-    efectivoEsperado: cashMoney(sums.FONDO_INICIAL + sums.TICKET + sums.ABONO + sums.COBRO_RETENIDO - sums.SALIDA),
+    efectivoEsperado: cashMoney(sums.FONDO_INICIAL + sums.TICKET + sums.ABONO + sums.COBRO_RETENIDO - sums.SALIDA + sums.RETORNO_PROVEEDOR),
+    ...(sums.RETORNO_PROVEEDOR > 0n ? { retornosProveedor: cashMoney(sums.RETORNO_PROVEEDOR) } : {}),
     documentos: documents,
   };
 }
@@ -89,6 +92,8 @@ export function validateCashSnapshot(value: unknown, sessionId: number): CashSna
   const data = snapshot.efectivoDesglose;
   if (snapshot.version !== "E2" || snapshot.sesionId !== sessionId || data?.version !== "E2" || !Array.isArray(data.documentos)) return invalid();
   for (const d of data.documentos) {
+    if (d.origen === "RETORNO_PROVEEDOR" && (!d.evidencia ||
+      !["CORRECCION_CAPTURA", "RECUPERACION_EFECTIVO"].includes(d.evidencia.naturalezaRetornoE12 ?? ""))) return invalid();
     if (!d || typeof d.id !== "string" || typeof d.importe !== "string" ||
       !(d.folio === null || typeof d.folio === "string") ||
       !(d.href === null || (typeof d.href === "string" && /^\/(?:tickets\/\d+|clientes\/\d+\/movimientos\/\d+)$/.test(d.href)))) return invalid();
@@ -105,6 +110,7 @@ export function validateCashSnapshot(value: unknown, sessionId: number): CashSna
   if (data.documentos.filter(d => d.origen === "FONDO_INICIAL" && d.id === String(sessionId)).length !== 1 ||
       data.documentos.filter(d => d.origen === "FONDO_INICIAL").length !== 1) return invalid();
   const computed = calculateCash(data.documentos);
+  if (computed.retornosProveedor !== data.retornosProveedor) return invalid();
   for (const key of ["fondoInicial", "cobrosTickets", "abonosFisicos", "cobrosRetenidos", "salidasFisicas", "efectivoEsperado"] as const) {
     if (computed[key] !== data[key]) return invalid();
   }

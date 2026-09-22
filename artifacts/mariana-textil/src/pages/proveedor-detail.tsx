@@ -49,6 +49,8 @@ import {
   REPORT_NEGATIVE_COLOR,
 } from "@/lib/report-chart-colors";
 import { ProveedorPagoDialog } from "@/components/proveedor-pago-dialog";
+import { E12Evidence } from "@/components/proveedor-efectivo-e12";
+import { E12_ENABLED } from "@/lib/e12-feature-flags";
 import { SolicitudPagoDirigidoDialog } from "@/components/solicitud-pago-dirigido-dialog";
 import { ProveedorCompraDetalle } from "@/components/proveedor-compra-detalle";
 import { DirectedPaymentHistory } from "@/components/directed-payment-history";
@@ -198,7 +200,7 @@ export default function ProveedorDetail() {
   const initialImporte = searchParams.get("importe");
 
   const { data: estadoCuenta, isLoading: isEstadoCuentaLoading } = useEstadoCuentaProveedor(provId, {}, {
-    query: { enabled: !!provId && canViewFinanzas, queryKey: getEstadoCuentaProveedorQueryKey(provId, {}) }
+    query: { enabled: !!provId && canViewFinanzas, queryKey: E12_ENABLED ? [...getEstadoCuentaProveedorQueryKey(provId, {}), JSON.stringify(user)] : getEstadoCuentaProveedorQueryKey(provId, {}), ...(E12_ENABLED ? { staleTime: 0, refetchOnMount: "always" as const, refetchOnWindowFocus: true, refetchInterval: 15000 } : {}) }
   });
   const estadoCuentaConSaldos = estadoCuenta as (typeof estadoCuenta & {
     saldoDeudor?: string;
@@ -216,6 +218,7 @@ export default function ProveedorDetail() {
 
   const [isPagoOpen, setIsPagoOpen] = useState(!!initialImporte);
   const [detalleCompraId, setDetalleCompraId] = useState<number | null>(null);
+  const [detallePagoId, setDetallePagoId] = useState<number | null>(null);
 
   const [dirigidoDialog, setDirigidoDialog] = useState<{ open: boolean; compra?: NonNullable<typeof comprasData>["items"][number] }>({ open: false });
 
@@ -695,6 +698,8 @@ export default function ProveedorDetail() {
                             <TableCell className="max-w-[200px]">
                               {mov.folio ? <span className="block font-mono text-xs">Entrada #{formatNumber(mov.folio, { kind: "identifier" })}</span> : null}
                               {mov.formaPago ? <span className="block text-xs text-muted-foreground">{mov.formaPago}</span> : null}
+                              <E12Evidence detail={mov.efectivoE12} admin={user?.rol === "ADMIN"} />
+                              {E12_ENABLED && mov.tipo === TipoPagoProveedor.PAGO && <Button variant="link" size="sm" data-testid={`button-detalle-pago-${mov.id}`} onClick={() => setDetallePagoId(mov.id)}>Detalle del pago</Button>}
                               {mov.desgloseIva ? <span className="block text-xs text-muted-foreground">Subtotal {formatNumber(mov.desgloseIva.subtotal, { kind: "money" })} · IVA {formatNumber(mov.desgloseIva.iva, { kind: "money" })}</span> : null}
                               {mov.referencia ? <span className="block text-xs truncate">Ref: {mov.referencia}</span> : null}
                               {mov.notas ? <span className="block text-xs text-muted-foreground truncate">{mov.notas}</span> : null}
@@ -1113,6 +1118,7 @@ export default function ProveedorDetail() {
           proveedorId={provId}
           compraId={detalleCompraId || 0}
         />
+        {E12_ENABLED && <ProveedorCompraDetalle open={!!detallePagoId} onOpenChange={value => !value && setDetallePagoId(null)} proveedorId={provId} compraId={0} pagoId={detallePagoId ?? undefined} />}
         </>
       )}
 

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CreditNature } from './creditNature';
+import type { E12PagoEfectivoInput } from './e12PagoEfectivoInput';
 import type { SolicitudPagoDirigidoEstado } from './solicitudPagoDirigidoEstado';
 import type { SolicitudPagoDirigidoTipo } from './solicitudPagoDirigidoTipo';
 
@@ -60,4 +61,6 @@ export interface SolicitudPagoDirigido {
   movimientoId?: number | null;
   estado: SolicitudPagoDirigidoEstado;
   createdAt: Date;
+  /** Propuesta de fuentes persistida; solo ADMIN. Ausente para clientes, históricos y OFF. */
+  efectivoE12?: E12PagoEfectivoInput;
 }

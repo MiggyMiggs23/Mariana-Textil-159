@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E12-RETURN-EXPLICIT",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E12-RETURN-EXPLICIT\n\nfalse !== true\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E12-RETURN-EXPLICIT\n\nfalse !== true\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2276.653603"
+  ]
+}

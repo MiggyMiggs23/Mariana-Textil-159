@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CorteCajaSalidasItemCuentaOrigen } from './corteCajaSalidasItemCuentaOrigen';
+import type { E12DesbloqueoCaja } from './e12DesbloqueoCaja';
 import type { SalidaDineroRevision } from './salidaDineroRevision';
 
 export type CorteCajaSalidasItem = {
@@ -19,4 +20,7 @@ export type CorteCajaSalidasItem = {
   /** @nullable */
   proveedor: string | null;
   e4?: SalidaDineroRevision;
+  /** Vínculo E12 solo ADMIN; ausente OFF. */
+  pagoProveedorIdE12?: number;
+  e12DesbloqueoCaja?: E12DesbloqueoCaja;
 };

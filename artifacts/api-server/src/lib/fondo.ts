@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { E12_SUPPLIER_CASH_ENABLED } from "./e12-supplier-cash";
 
 export type FondoQueryResult<T = Record<string, unknown>> = { rows: T[]; rowCount?: number | null };
 export interface FondoExecutor {
@@ -132,8 +133,15 @@ async function transaction<T>(pool: FondoPool, isolation: "READ COMMITTED" | "RE
   }
 }
 
-async function lock(tx: FondoExecutor): Promise<void> {
+export async function lockFondoTransaction(tx: FondoExecutor): Promise<void> {
   await tx.query("SELECT pg_advisory_xact_lock($1)", [LOCK_KEY]);
+}
+const lock = lockFondoTransaction;
+export async function saldoFondoEnTransaccion(tx: FondoExecutor) {
+  await lock(tx);
+  const fondo = await identity(tx);
+  const state = await ledgerState(tx, fondo.id);
+  return { saldo: formatMoney(state.saldo), versionSaldo: state.version };
 }
 async function ledgerState(tx: FondoExecutor, fondoId: string) {
   const state = await tx.query<{ saldo: string; version: string | null; total: string; ultima_fecha: Date | null }>(`
@@ -208,12 +216,26 @@ export async function listarArqueosFondo(pool: FondoPool, filters: { desde?: str
 export async function obtenerMovimientoFondo(pool: FondoPool, id: string) { await identity(pool); return getMovement(pool, id); }
 export async function obtenerArqueoFondo(pool: FondoPool, id: string) { await identity(pool); return getArqueo(pool, id); }
 
-export async function crearMovimientoFondo(pool: FondoPool, actor: FondoActor, input: {
+type FondoMovementInput = {
   idempotencyKey: string; categoria: string; importe: string; motivo: string;
   conciliacionInicial?: { efectivoFisicoContado: string; declaracionSinDuplicacion: true; evidencia: string };
+};
+export async function crearMovimientoFondo(pool: FondoPool, actor: FondoActor, input: FondoMovementInput) {
+  return transaction(pool, "READ COMMITTED", tx => crearMovimientoFondoEnTransaccion(tx, actor, input));
+}
+/** E12 only composes this in its existing payment transaction. */
+export async function movimientoProveedorFondoEnTransaccion(tx: FondoExecutor, actor: FondoActor, input: {
+  importe: string; clave: string; motivo: string; original?: string;
+  naturalezaRetorno?: "CORRECCION_CAPTURA" | "RECUPERACION_EFECTIVO";
 }) {
+  const request = { idempotencyKey: input.clave, motivo: input.motivo.slice(0, 500) };
+  return input.original && input.naturalezaRetorno === "CORRECCION_CAPTURA"
+    ? invertirMovimientoFondoEnTransaccion(tx, actor, input.original, request, true)
+    : crearMovimientoFondoEnTransaccion(tx, actor, { ...request, categoria: input.original ? "OTRO_INGRESO" : "RETIRO", importe: input.importe });
+}
+/** Integration receives the caller transaction; never connects/commits independently. */
+export async function crearMovimientoFondoEnTransaccion(tx: FondoExecutor, actor: FondoActor, input: FondoMovementInput) {
   const hash = payloadHash(input);
-  return transaction(pool, "READ COMMITTED", async (tx) => {
     const fondo = await identity(tx); await lock(tx);
     const replay = await existingReplay(tx, PRODUCER_MOVIMIENTO, input.idempotencyKey, hash, "fondo_movimientos");
     if (replay) return { value: await getMovement(tx, replay), replay: true };
@@ -237,13 +259,19 @@ export async function crearMovimientoFondo(pool: FondoPool, actor: FondoActor, i
     [fondo.id, naturaleza, input.categoria, amount.toString(), input.motivo, actor.id, input.idempotencyKey, PRODUCER_MOVIMIENTO, hash, input.conciliacionInicial ? JSON.stringify(input.conciliacionInicial) : null]);
     await audit(tx, actor, fondo.ubicacion_id, "CREAR", "FONDO_MOVIMIENTO", inserted.rows[0].id, { categoria: input.categoria, importe: input.importe, motivo: input.motivo });
     return { value: await getMovement(tx, inserted.rows[0].id), replay: false };
-  });
 }
 
 export async function invertirMovimientoFondo(pool: FondoPool, actor: FondoActor, originalId: string, input: { idempotencyKey: string; motivo: string }) {
+  return transaction(pool, "READ COMMITTED", tx => invertirMovimientoFondoEnTransaccion(tx, actor, originalId, input));
+}
+export async function invertirMovimientoFondoEnTransaccion(tx: FondoExecutor, actor: FondoActor, originalId: string, input: { idempotencyKey: string; motivo: string }, supplierIntegration = false) {
   const hash = payloadHash({ originalId, ...input });
-  return transaction(pool, "READ COMMITTED", async (tx) => {
     const fondo = await identity(tx); await lock(tx);
+    if (E12_SUPPLIER_CASH_ENABLED && !supplierIntegration) {
+      const linked = await tx.query(`SELECT 1 FROM proveedor_efectivo_e12
+        WHERE movimiento_fondo_id=$1::uuid OR retorno->>'movimientoFondoId'=$1::text LIMIT 1`, [originalId]);
+      if (linked.rows.length) throw new FondoError(409, "E12_USE_SUPPLIER_REVERSAL", "Usa el retorno completo del pago a proveedor.");
+    }
     const replay = await existingReplay(tx, PRODUCER_INVERSO, input.idempotencyKey, hash, "fondo_movimientos");
     if (replay) return { value: await getMovement(tx, replay), replay: true };
     const found = await tx.query<MovementRow>(`${MOVEMENT_SELECT} WHERE m.id=$1 AND m.fondo_id=$2 FOR UPDATE OF m`, [originalId, fondo.id]);
@@ -260,7 +288,6 @@ export async function invertirMovimientoFondo(pool: FondoPool, actor: FondoActor
     [fondo.id, opposite, original.categoria, amount.toString(), input.motivo, actor.id, original.id, input.idempotencyKey, PRODUCER_INVERSO, hash]);
     await audit(tx, actor, fondo.ubicacion_id, "INVERTIR", "FONDO_MOVIMIENTO", inserted.rows[0].id, { originalId, motivo: input.motivo });
     return { value: await getMovement(tx, inserted.rows[0].id), replay: false };
-  });
 }
 
 export async function crearArqueoFondo(pool: FondoPool, actor: FondoActor, input: { idempotencyKey: string; efectivoContado: string; expectedVersionSaldo: string | null; motivo: string }) {

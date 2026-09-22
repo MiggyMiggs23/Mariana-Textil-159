@@ -1,0 +1,14 @@
+artifacts/mariana-textil/src/components/corte-efectivo-desglose.tsx
+artifacts/mariana-textil/src/components/proveedor-compra-detalle.tsx
+artifacts/mariana-textil/src/components/proveedor-pago-dialog.tsx
+artifacts/mariana-textil/src/components/proveedor-efectivo-e12.tsx
+artifacts/mariana-textil/src/components/salidas-dinero-e4-item.tsx
+artifacts/mariana-textil/src/components/salidas-dinero-e4-panel.tsx
+artifacts/mariana-textil/src/components/solicitud-pago-dirigido-dialog.tsx
+artifacts/mariana-textil/src/pages/pagos-dirigidos.tsx
+artifacts/mariana-textil/src/pages/proveedor-detail.tsx
+artifacts/mariana-textil/src/lib/e12-feature-flags.ts
+artifacts/mariana-textil/src/components/e12-node-test-fixtures.ts
+artifacts/mariana-textil/src/components/e12-node-test-harness.tsx
+artifacts/mariana-textil/src/components/e12-node.dom.test.tsx
+reports/tanda-b-20260922/e12

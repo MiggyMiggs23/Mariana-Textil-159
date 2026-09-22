@@ -61,3 +61,14 @@ Para probar filtros de confidencialidad, usar las formas que emiten los producto
 **Why:** Un fixture atribuyó a Caja un módulo que el productor real utilizaba para el Fondo. Ajustar el filtro a ese fixture permitió que los eventos reales del Fondo pasaran, aunque las pruebas simuladas quedaran verdes.
 
 **How to apply:** Derivar módulo, acción y entidad del productor canónico, incluyendo variantes de ingreso, inverso y arqueo. Los controles negativos de otros dominios también deben usar eventos reales. Ejecutar los generadores SQL usados por producción sobre datos controlados, no reconstrucciones aproximadas de sus consultas.
+
+En pruebas DOM con Node, comparar la presencia o ausencia mediante booleanos,
+no adjuntar el HTMLElement completo a una aserción fallida.
+
+**Why:** Un control negativo terminó en timeout sin reporte terminal cuando
+el error retenía el objeto DOM/React. Con la misma obligación expresada como
+booleano produjo el rojo esperado; no se confirmó el punto interno del bloqueo.
+
+**How to apply:** Usar `Boolean(query(...))` para presencia/ausencia y exigir
+un error de aserción terminal con el marcador del caso. Un timeout, error de
+importación o fallo de infraestructura nunca demuestra sensibilidad al defecto.

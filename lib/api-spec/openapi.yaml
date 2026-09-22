@@ -1452,6 +1452,21 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
+  /proveedores/{id}/pagos/efectivo-opciones:
+    get:
+      operationId: getOpcionesPagoEfectivoProveedor
+      tags: [proveedores]
+      summary: E12 preparado; disponibilidad de caja Mariana y Fondo exclusivo ADMIN
+      parameters:
+        - $ref: "#/components/parameters/ProveedorId"
+      responses:
+        "200":
+          description: OFF solo indica inactividad; ON devuelve disponibilidad autorizada, no reserva saldo
+          content: { application/json: { schema: { $ref: "#/components/schemas/E12OpcionesPagoEfectivo" } } }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
   /proveedores/{id}/pagos/preview:
     post:
       operationId: previewPagoProveedor
@@ -1533,7 +1548,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: { $ref: "#/components/schemas/MotivoReversoInput" }
+            schema: { $ref: "#/components/schemas/E12ProveedorReversoInput" }
       responses:
         "201":
           description: Reverso registrado
@@ -7113,6 +7128,8 @@ components:
       description: Para CLIENTE exige los metadatos y UUID de la solicitud original; PROVEEDOR no escribe crédito E1.
       properties:
         <<: *creditEvidenceProperties
+        aprobacionE12:
+          $ref: "#/components/schemas/E12AprobacionProveedorInput"
     ClienteBajaInput:
       type: object
       required: [motivo]
@@ -7233,6 +7250,8 @@ components:
         referencia: { type: string }
         notas: { type: string }
         motivo: { type: string, minLength: 10 }
+        efectivoE12:
+          $ref: "#/components/schemas/E12PagoEfectivoInput"
     SolicitudPagoDirigido:
       type: object
       required:
@@ -7278,6 +7297,9 @@ components:
         movimientoId: { type: ["number", "null"] }
         estado: { type: string, enum: [PENDIENTE, APROBADA, RECHAZADA] }
         createdAt: { type: string, format: date-time }
+        efectivoE12:
+          allOf: [{ $ref: "#/components/schemas/E12PagoEfectivoInput" }]
+          description: Propuesta de fuentes persistida; solo ADMIN. Ausente para clientes, históricos y OFF.
     SolicitudPagoDirigidoAplicada:
       type: object
       required: [solicitudId, movimientoId, estado]
@@ -7285,6 +7307,8 @@ components:
         solicitudId: { type: number }
         movimientoId: { type: number }
         estado: { type: string, enum: [APROBADA] }
+        efectivoE12:
+          $ref: "#/components/schemas/E12PagoEfectivoDetalle"
     AuditoriaEntry:
       type: object
       required:
@@ -12726,6 +12750,9 @@ components:
         revertido: { type: boolean }
         reversoMovimientoId: { type: ["number", "null"] }
         motivoReverso: { type: ["string", "null"] }
+        efectivoE12:
+          allOf: [{ $ref: "#/components/schemas/E12PagoEfectivoDetalle" }]
+          description: Evidencia de orígenes exclusiva ADMIN; se omite completamente para otros roles y OFF.
     PagoProveedorInput:
       type: object
       required: [importe, formaPago]
@@ -12746,6 +12773,112 @@ components:
           }
         referencia: { type: ["string", "null"] }
         notas: { type: ["string", "null"] }
+        efectivoE12:
+          allOf: [{ $ref: "#/components/schemas/E12PagoEfectivoInput" }]
+          description: Obligatorio para EFECTIVO al liberar E12; prohibido para otras formas.
+    E12DesbloqueoCajaInput:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 1, maxLength: 1000 }
+    E12PagoEfectivoInput:
+      type: object
+      required: [claveOperacion, caja]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        caja: { type: string, pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$' }
+        fondo:
+          type: string
+          pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$'
+          description: Omitido equivale a cero. Mayor que cero exclusivo ADMIN.
+        sesionCajaId:
+          type: ["integer", "null"]
+          minimum: 1
+          description: Obligatoria si caja es positiva; sesión abierta Mariana. Fondo puro no exige sesión.
+        desbloqueoCaja:
+          $ref: "#/components/schemas/E12DesbloqueoCajaInput"
+    E12AprobacionProveedorInput:
+      type: object
+      required: [claveOperacion]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        desbloqueoCaja:
+          $ref: "#/components/schemas/E12DesbloqueoCajaInput"
+    E12ProveedorReversoInput:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 1, maxLength: 1000 }
+        efectivoE12:
+          $ref: "#/components/schemas/E12RetornoEfectivoInput"
+    E12RetornoEfectivoInput:
+      type: object
+      required: [claveOperacion, naturaleza]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        naturaleza: { type: string, enum: [CORRECCION_CAPTURA, RECUPERACION_EFECTIVO] }
+    E12DesbloqueoCaja:
+      type: object
+      required: [motivo, usuarioId, createdAt, saldoAntes, egreso]
+      properties:
+        motivo: { type: string }
+        usuarioId: { type: integer }
+        createdAt: { type: string, format: date-time }
+        saldoAntes: { type: string }
+        egreso: { type: string }
+    E12RetornoEfectivo:
+      type: object
+      required: [claveOperacion, naturaleza, motivo, reversoProveedorId, caja, fondo, sesionCajaId, ingresoCajaId, movimientoFondoId, createdAt]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        naturaleza: { type: string, enum: [CORRECCION_CAPTURA, RECUPERACION_EFECTIVO] }
+        motivo: { type: string }
+        reversoProveedorId: { type: integer }
+        caja: { type: string }
+        fondo: { type: string }
+        sesionCajaId: { type: ["integer", "null"] }
+        ingresoCajaId: { type: ["integer", "null"] }
+        movimientoFondoId: { type: ["string", "null"], format: uuid }
+        createdAt: { type: string, format: date-time }
+    E12PagoEfectivoDetalle:
+      type: object
+      description: Solo ADMIN; nunca inferir ni reconstruir el Fondo en clientes no administrativos.
+      required: [claveOperacion, pagoProveedorId, total, caja, fondo, sesionCajaId, salidaCajaId, movimientoFondoId, createdAt, desbloqueoCaja, retorno]
+      properties:
+        claveOperacion: { type: string, format: uuid }
+        pagoProveedorId: { type: integer }
+        total: { type: string }
+        caja: { type: string }
+        fondo: { type: string }
+        sesionCajaId: { type: ["integer", "null"] }
+        salidaCajaId: { type: ["integer", "null"] }
+        movimientoFondoId: { type: ["string", "null"], format: uuid }
+        createdAt: { type: string, format: date-time }
+        desbloqueoCaja:
+          oneOf:
+            - $ref: "#/components/schemas/E12DesbloqueoCaja"
+            - type: "null"
+        retorno:
+          oneOf:
+            - $ref: "#/components/schemas/E12RetornoEfectivo"
+            - type: "null"
+    E12OpcionesPagoEfectivo:
+      type: object
+      required: [enabled]
+      properties:
+        enabled: { type: boolean }
+        motivoInactivo: { type: string }
+        ubicacionId: { type: integer }
+        sesionCajaId: { type: ["integer", "null"] }
+        saldoCaja: { type: ["string", "null"] }
+        puedeDesbloquearCaja: { type: boolean }
+        fondo:
+          type: object
+          description: Campo ausente para no ADMIN, incluso cuando no hay saldo. OFF no consulta E10.
+          required: [saldo, versionSaldo]
+          properties:
+            saldo: { type: string }
+            versionSaldo: { type: ["string", "null"], format: uuid }
     AplicacionPagoProveedor:
       type: object
       required:
@@ -13052,6 +13185,8 @@ components:
         notas: { type: ["string", "null"] }
         usuarioId: { type: number }
         createdAt: { type: string, format: date-time }
+        efectivoE12:
+          $ref: "#/components/schemas/E12PagoEfectivoDetalle"
     ProveedorEstadoCuenta:
       type: object
       required: [movimientos, saldoActual]
@@ -14346,6 +14481,8 @@ components:
           type: string
           format: uuid
           description: Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.
+        desbloqueoCajaE12:
+          $ref: "#/components/schemas/E12DesbloqueoCajaInput"
     SalidaDineroRevisionInput:
       type: object
       required: [accion, version, claveOperacion]
@@ -14394,6 +14531,8 @@ components:
             creadoPorId: { type: number }
             createdAt: { type: string, format: date-time }
             e4: { $ref: "#/components/schemas/SalidaDineroRevision" }
+            pagoProveedorIdE12: { type: integer, description: "Vínculo E12 solo ADMIN; ausente OFF." }
+            e12DesbloqueoCaja: { $ref: "#/components/schemas/E12DesbloqueoCaja" }
     SalidasDineroCajaResponse:
       type: object
       required: [salidas]
@@ -14459,6 +14598,9 @@ components:
         abonosFisicos: { type: string }
         cobrosRetenidos: { type: string }
         salidasFisicas: { type: string }
+        retornosProveedor:
+          type: string
+          description: Restituciones E12 al saldo registrado de caja; documento distingue corrección de captura y recuperación física. Ausente en históricos/OFF.
         efectivoEsperado: { type: string }
         documentos:
           type: array
@@ -14466,7 +14608,7 @@ components:
             type: object
             required: [origen, id, folio, importe, href]
             properties:
-              origen: { type: string, enum: [FONDO_INICIAL, TICKET, ABONO, COBRO_RETENIDO, SALIDA] }
+              origen: { type: string, enum: [FONDO_INICIAL, TICKET, ABONO, COBRO_RETENIDO, SALIDA, RETORNO_PROVEEDOR] }
               id: { type: string }
               folio: { type: ["string", "null"] }
               importe: { type: string }
@@ -14483,6 +14625,7 @@ components:
                   proveedorId: { type: ["number", "null"] }
                   usuarioNombre: { type: ["string", "null"] }
                   proveedorNombre: { type: ["string", "null"] }
+                  naturalezaRetornoE12: { type: string, enum: [CORRECCION_CAPTURA, RECUPERACION_EFECTIVO] }
     CorteCaja:
       type: object
       required:
@@ -14532,6 +14675,8 @@ components:
               createdAt: { type: string, format: date-time }
               proveedor: { type: ["string", "null"] }
               e4: { $ref: "#/components/schemas/SalidaDineroRevision" }
+              pagoProveedorIdE12: { type: integer, description: "Vínculo E12 solo ADMIN; ausente OFF." }
+              e12DesbloqueoCaja: { $ref: "#/components/schemas/E12DesbloqueoCaja" }
         salidasPorCuenta:
           type: object
           additionalProperties: { type: string }

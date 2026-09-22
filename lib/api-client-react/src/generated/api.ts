@@ -119,6 +119,8 @@ import type {
   CuadreFiscalResolucionInput,
   CurrentUser,
   Dashboard,
+  E12OpcionesPagoEfectivo,
+  E12ProveedorReversoInput,
   E3CollectionContext,
   E3CollectionInput,
   E3CollectionPreview,
@@ -250,7 +252,6 @@ import type {
   LocationUpdate,
   LoginInput,
   MotivoRechazoPagoDirigidoInput,
-  MotivoReversoInput,
   MotivoSalidaInput,
   MovimientoDetalle,
   MovimientoRow,
@@ -5158,6 +5159,83 @@ export const useRegistrarPagoProveedor = <TError = ErrorType<ValidationErrorResp
       return useMutation(getRegistrarPagoProveedorMutationOptions(options));
     }
 
+export const getGetOpcionesPagoEfectivoProveedorUrl = (id: number,) => {
+
+
+
+
+  return `/api/proveedores/${id}/pagos/efectivo-opciones`
+}
+
+/**
+ * @summary E12 preparado; disponibilidad de caja Mariana y Fondo exclusivo ADMIN
+ */
+export const getOpcionesPagoEfectivoProveedor = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<E12OpcionesPagoEfectivo> => {
+
+  return customFetch<E12OpcionesPagoEfectivo>(getGetOpcionesPagoEfectivoProveedorUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetOpcionesPagoEfectivoProveedorQueryKey = (id: number,) => {
+    return [
+    `/api/proveedores/${id}/pagos/efectivo-opciones`
+    ] as const;
+    }
+
+
+export const getGetOpcionesPagoEfectivoProveedorQueryOptions = <TData = Awaited<ReturnType<typeof getOpcionesPagoEfectivoProveedor>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpcionesPagoEfectivoProveedor>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetOpcionesPagoEfectivoProveedorQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getOpcionesPagoEfectivoProveedor>>> = ({ signal }) => getOpcionesPagoEfectivoProveedor(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getOpcionesPagoEfectivoProveedor>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetOpcionesPagoEfectivoProveedorQueryResult = NonNullable<Awaited<ReturnType<typeof getOpcionesPagoEfectivoProveedor>>>
+export type GetOpcionesPagoEfectivoProveedorQueryError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+
+/**
+ * @summary E12 preparado; disponibilidad de caja Mariana y Fondo exclusivo ADMIN
+ */
+
+export function useGetOpcionesPagoEfectivoProveedor<TData = Awaited<ReturnType<typeof getOpcionesPagoEfectivoProveedor>>, TError = ErrorType<UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getOpcionesPagoEfectivoProveedor>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetOpcionesPagoEfectivoProveedorQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
 export const getPreviewPagoProveedorUrl = (id: number,) => {
 
 
@@ -5396,14 +5474,14 @@ export const getReversarPagoProveedorUrl = (id: number,
  */
 export const reversarPagoProveedor = async (id: number,
     pagoId: number,
-    motivoReversoInput: MotivoReversoInput, options?: Parameters<typeof customFetch>[1]): Promise<PagoProveedorRow> => {
+    e12ProveedorReversoInput: E12ProveedorReversoInput, options?: Parameters<typeof customFetch>[1]): Promise<PagoProveedorRow> => {
 
   return customFetch<PagoProveedorRow>(getReversarPagoProveedorUrl(id,pagoId),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(motivoReversoInput)
+    body: JSON.stringify(e12ProveedorReversoInput)
   }
 );}
 
@@ -5412,8 +5490,8 @@ export const reversarPagoProveedor = async (id: number,
 
 
 export const getReversarPagoProveedorMutationOptions = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
-): UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<E12ProveedorReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<E12ProveedorReversoInput>}, TContext> => {
 
 const mutationKey = ['reversarPagoProveedor'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -5425,7 +5503,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reversarPagoProveedor>>, {id: number;pagoId: number;data: BodyType<MotivoReversoInput>}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reversarPagoProveedor>>, {id: number;pagoId: number;data: BodyType<E12ProveedorReversoInput>}> = (props) => {
           const {id,pagoId,data} = props ?? {};
 
           return  reversarPagoProveedor(id,pagoId,data,requestOptions)
@@ -5439,18 +5517,18 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type ReversarPagoProveedorMutationResult = NonNullable<Awaited<ReturnType<typeof reversarPagoProveedor>>>
-    export type ReversarPagoProveedorMutationBody = BodyType<MotivoReversoInput>
+    export type ReversarPagoProveedorMutationBody = BodyType<E12ProveedorReversoInput>
     export type ReversarPagoProveedorMutationError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>
 
     /**
  * @summary Revierte un pago mediante un movimiento inverso inmutable
  */
 export const useReversarPagoProveedor = <TError = ErrorType<ValidationErrorResponse | NotFoundResponse | ConflictResponse>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<MotivoReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reversarPagoProveedor>>, TError,{id: number;pagoId: number;data: BodyType<E12ProveedorReversoInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
  ): UseMutationResult<
         Awaited<ReturnType<typeof reversarPagoProveedor>>,
         TError,
-        {id: number;pagoId: number;data: BodyType<MotivoReversoInput>},
+        {id: number;pagoId: number;data: BodyType<E12ProveedorReversoInput>},
         TContext
       > => {
       return useMutation(getReversarPagoProveedorMutationOptions(options));

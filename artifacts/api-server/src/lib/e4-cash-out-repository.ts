@@ -11,7 +11,10 @@ const baseColumns = sql`s.id, s.sesion_caja_id AS "sesionCajaId", s.monto, s.mot
   s.creado_por_id AS "creadoPorId", s.created_at AS "createdAt"`;
 
 /** Only instantiate inside db.transaction. No connection or schema work at import time. */
-export function e4CashOutRepository(tx: Tx): E4Repository {
+export function e4CashOutRepository(tx: Tx, integration?: {
+  beforeInsert(input: Parameters<E4Repository["insert"]>[0], actor: Parameters<E4Repository["insert"]>[1]): Promise<void>;
+  afterInsert(id: number): Promise<void>;
+}): E4Repository {
   return {
     async lockOperation(key) {
       // All E4 intents share a namespace, so reuse across creation/review cannot collide silently.
@@ -34,6 +37,7 @@ export function e4CashOutRepository(tx: Tx): E4Repository {
       return result.rows.length === 1;
     },
     async insert(input, actor) {
+      await integration?.beforeInsert(input, actor);
       // The original financial producer remains the sole source of the egreso.
       const result = await tx.execute<Omit<E4Salida, "e4">>(sql`INSERT INTO salidas_dinero_caja
         (sesion_caja_id, monto, motivo, proveedor_id, cuenta_origen, creado_por_id)
@@ -42,6 +46,7 @@ export function e4CashOutRepository(tx: Tx): E4Repository {
         RETURNING id, sesion_caja_id AS "sesionCajaId", monto, motivo, proveedor_id AS "proveedorId",
           cuenta_origen AS "cuentaOrigen", creado_por_id AS "creadoPorId", created_at AS "createdAt"`);
       const created = result.rows[0]!;
+      await integration?.afterInsert(created.id);
       const revision: E4Revision = {
         tipo: input.tipo, estado: input.tipo === "EXTRAORDINARIA" ? "PENDIENTE" : "NO_APLICA",
         version: 0, claveOperacion: input.claveOperacion, historial: [],

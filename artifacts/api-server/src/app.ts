@@ -7,6 +7,8 @@ import router from "./routes";
 import { logger } from "./lib/logger";
 import { omitSupervisorSensitiveFields } from "./lib/sensitive-data";
 import { createRequestDrain } from "./lib/server-lifecycle";
+import { E12Error, omitE12PrivateFields } from "./lib/e12-supplier-cash";
+import { FondoError } from "./lib/fondo";
 
 const app: Express = express();
 export const requestDrain = createRequestDrain();
@@ -45,7 +47,7 @@ app.use((req, res, next) => {
   res.json = ((body: unknown) =>
     json(
       omitSupervisorSensitiveFields(
-        body,
+        omitE12PrivateFields(body, req.auth?.user.rol),
         req.auth?.user.rol === "SUPERVISOR",
       ),
     )) as typeof res.json;
@@ -79,6 +81,10 @@ export const apiErrorHandler: ErrorRequestHandler = (
       error: "Revisa los datos enviados e intenta de nuevo.",
       code: "VALIDATION_ERROR",
     });
+    return;
+  }
+  if (error instanceof E12Error || error instanceof FondoError) {
+    res.status(error.status).json({ error: error.message, code: error.code });
     return;
   }
 
