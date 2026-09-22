@@ -1,0 +1,35 @@
+TAP version 13
+# Subtest: E9-COUNT-RETRY
+not ok 1 - E9-COUNT-RETRY
+  ---
+  duration_ms: 232.776773
+  type: 'test'
+  location: '/tmp/e9-node-XRWsOx/E9-COUNT-RETRY-red/artifacts/mariana-textil/case.test.cjs:15220:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E9-COUNT-RETRY
+    + actual - expected
+    
+    + '79dc024a-d706-4240-8acd-405ba702cd64'
+    - '12467936-ed94-4baf-8082-d1b9a6cc2520'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '12467936-ed94-4baf-8082-d1b9a6cc2520'
+  actual: '79dc024a-d706-4240-8acd-405ba702cd64'
+  operator: 'strictEqual'
+  stack: |-
+    retryAction (/tmp/e9-node-XRWsOx/E9-COUNT-RETRY-red/artifacts/mariana-textil/case.test.cjs:14971:25)
+    async TestContext.<anonymous> (/tmp/e9-node-XRWsOx/E9-COUNT-RETRY-red/artifacts/mariana-textil/case.test.cjs:15221:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1757.350892

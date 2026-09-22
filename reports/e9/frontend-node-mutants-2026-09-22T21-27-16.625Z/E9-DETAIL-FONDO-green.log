@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: E9-DETAIL-FONDO
+ok 1 - E9-DETAIL-FONDO
+  ---
+  duration_ms: 193.7687
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1750.913154

@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E9-DETAIL-ZERO",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E9-DETAIL-ZERO\n\nfalse !== true\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E9-DETAIL-ZERO\n\nfalse !== true\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 1834.898842"
+  ]
+}

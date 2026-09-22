@@ -196,7 +196,7 @@ la comparación posterior no acredita ausencia de escrituras transitorias.
 
 Commit E12: `4c5a9d263949f79709c28a2cc9102db368d07b32`.
 
-### E9 — preparada OFF, sin commit ni validación funcional
+### E9 — construida y verificada OFF
 
 P8 sí resuelve las preguntas de modalidad, envío y diferencias. El plan exige
 recepción ADMIN única; no se consideró el antiguo pendiente de socios como
@@ -208,10 +208,16 @@ servidor, conteo, autorización de un ingreso al Fondo, investigación documenta
 y privacidad por tienda. Un conteo cero no autoriza un asiento cero. La lista
 se integra en Cortes; el envío, en el detalle del corte cerrado.
 
-Las comprobaciones estáticas informadas por los agentes pasaron. Están
-preparados **58 casos backend y 59 de interfaz**, cada uno con su mutante.
-**No se ejecutó ninguno por MAIN y no se aceptan como pruebas pasadas.**
-Tampoco se ejecutó SQL. Fuentes E9 preservadas sin commit, con gates OFF.
+Tras la reanudación autorizada, MAIN ejecutó **58 casos backend y 59 de
+interfaz**, todos con ciclo GREEN → RED semántico → GREEN restaurado.
+Ambas ejecuciones terminaron con exit 0; API y frontend typecheck PASS.
+No se ejecutó SQL. Los gates continúan OFF.
+
+Evidencia: `e9/logs/backend-2026-09-22T21-27-12.909Z/manifest.json` y
+`e9/frontend-node-mutants-2026-09-22T21-27-16.625Z/manifest.json`.
+El backend es sintético: no acredita concurrencia PostgreSQL ni ejecución
+del DDL. La interfaz monta componentes reales con infraestructura aislada.
+El detalle y los límites están en `e9/verificacion-main.md`.
 
 ### Pausa por cambio de entorno
 
@@ -232,13 +238,12 @@ disponibilidad de procesos ni ausencia de efectos históricos de otros actores.
 El resultado operativo correcto de Parte 1 era válido cuando se comprobó;
 no se presenta como estado operativo actual.
 
-La revisión completa validada más reciente es el commit E12 indicado arriba.
-La copia de trabajo actual contiene E9 sin validar; no está lista para liberar.
-La fase B de E3 sigue sin ejecutarse.
+Al producirse esa pausa, la revisión completa validada más reciente era E12
+y E9 estaba sin validar. La comprobación posterior de E9 figura arriba.
+La fase B de E3 sigue sin ejecutarse; no se autoriza ninguna liberación.
 
 ### Trabajo restante
 
-- Cerrar/verificar E9 y darle su commit propio.
 - Construir OFF E5, E11 y E7, en ese orden y cada una en su commit.
 - Adaptar las suites creadoras de usuarios a PostgreSQL desechable.
   El inventario por puntos reales de creación encontró **28**, no 25.
@@ -247,3 +252,26 @@ La fase B de E3 sigue sin ejecutarse.
 
 Este informe es una **entrega de estado con trabajo pendiente**, no una
 declaración de cierre de las tres partes.
+
+### Reanudación autorizada y comprobación posterior
+
+El propietario autorizó continuar OFF y reanudar exclusivamente el workflow
+API sin cambiar comando, bundle ni modo. Su texto literal quedó guardado
+como primera escritura en
+`e2-liberacion-20260922/autorizacion-reanudacion-workflow-api.txt`.
+
+La API ya estaba ejecutándose al verificar; MAIN no ordenó un segundo arranque.
+Se comprobaron PID **110**, `TracerPid=0`, hash E2 completo coincidente,
+modo INSPECTION efectivo, healthz **200** y registro de arranque.
+La revisión directa del bundle confirma el camino de arranque no escritor;
+no existe una comparación de datos antes/después de esa reanudación.
+Evidencia y límites en
+`e2-liberacion-20260922/verificacion-reanudacion-workflow-api.md`.
+
+La pausa anterior queda resuelta para continuar la construcción OFF.
+No se ejecutó fase B, SQL ni apertura de puertas.
+
+El inventario protegido se volvió a comparar: no hubo diferencias inesperadas.
+La única diferencia fue la línea autorizada del arranque PID 110 en
+`arranques-api.log`; al excluir exclusivamente esa última línea, el hash del
+prefijo coincide exactamente con el inventario original.

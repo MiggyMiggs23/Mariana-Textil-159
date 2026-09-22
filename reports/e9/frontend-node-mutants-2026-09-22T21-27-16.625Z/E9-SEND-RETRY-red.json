@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E9-SEND-RETRY",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E9-SEND-RETRY\n+ actual - expected\n\n+ '0d4e6951-36aa-4b73-be83-dec871e821f3'\n- 'ab58cbbe-4c72-404a-b899-a09f803e5146'\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E9-SEND-RETRY\n+ actual - expected\n\n+ '0d4e6951-36aa-4b73-be83-dec871e821f3'\n- 'ab58cbbe-4c72-404a-b899-a09f803e5146'\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 1866.98818"
+  ]
+}

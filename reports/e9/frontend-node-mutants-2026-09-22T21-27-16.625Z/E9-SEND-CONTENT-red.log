@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: E9-SEND-CONTENT
+not ok 1 - E9-SEND-CONTENT
+  ---
+  duration_ms: 228.986464
+  type: 'test'
+  location: '/tmp/e9-node-XRWsOx/E9-SEND-CONTENT-red/artifacts/mariana-textil/case.test.cjs:15089:27'
+  failureType: 'testCodeFailure'
+  error: 'E9-SEND-CONTENT'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '54e81295-3fcf-4f87-95a0-b62cd200edf1'
+  actual: '54e81295-3fcf-4f87-95a0-b62cd200edf1'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e9-node-XRWsOx/E9-SEND-CONTENT-red/artifacts/mariana-textil/case.test.cjs:15096:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1858.574802

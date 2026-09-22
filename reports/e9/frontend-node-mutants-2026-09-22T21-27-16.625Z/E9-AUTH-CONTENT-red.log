@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: E9-AUTH-CONTENT
+not ok 1 - E9-AUTH-CONTENT
+  ---
+  duration_ms: 266.547429
+  type: 'test'
+  location: '/tmp/e9-node-XRWsOx/E9-AUTH-CONTENT-red/artifacts/mariana-textil/case.test.cjs:15232:27'
+  failureType: 'testCodeFailure'
+  error: 'E9-AUTH-CONTENT'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '297587ac-454f-4b7e-88d5-1c151725351c'
+  actual: '297587ac-454f-4b7e-88d5-1c151725351c'
+  operator: 'notStrictEqual'
+  stack: |-
+    changedAction (/tmp/e9-node-XRWsOx/E9-AUTH-CONTENT-red/artifacts/mariana-textil/case.test.cjs:14981:25)
+    async TestContext.<anonymous> (/tmp/e9-node-XRWsOx/E9-AUTH-CONTENT-red/artifacts/mariana-textil/case.test.cjs:15233:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1795.628122

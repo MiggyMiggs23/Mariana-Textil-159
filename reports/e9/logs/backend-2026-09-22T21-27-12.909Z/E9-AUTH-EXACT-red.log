@@ -1,0 +1,39 @@
+TAP version 13
+# Subtest: E9-AUTH-EXACT
+not ok 1 - E9-AUTH-EXACT
+  ---
+  duration_ms: 8.408214
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-AUTH-EXACT/test.mjs:7895:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   '10.00'
+    -   '8.00'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: '8.00'
+  actual:
+    0: '10.00'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-AUTH-EXACT/test.mjs:7897:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 54.618941
+

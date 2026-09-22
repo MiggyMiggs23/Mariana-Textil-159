@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: E9-OFF-CUT
+not ok 1 - E9-OFF-CUT
+  ---
+  duration_ms: 3.958376
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-OFF-CUT/test.mjs:7732:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + {
+    +   corteId: 7,
+    +   fechaCorte: '2026-09-20T18:00:00.000Z',
+    +   fechaOperativa: '2026-09-19',
+    +   importeEnviado: '10.00',
+    +   versionCorte: 'e9:v1:480315c60da2bdcf6ac5856f650d1edbfb163d9098a6baa81afff8ff1ed78e80'
+    + }
+    - undefined
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    corteId: 7
+    versionCorte: 'e9:v1:480315c60da2bdcf6ac5856f650d1edbfb163d9098a6baa81afff8ff1ed78e80'
+    fechaCorte: '2026-09-20T18:00:00.000Z'
+    fechaOperativa: '2026-09-19'
+    importeEnviado: '10.00'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-OFF-CUT/test.mjs:7734:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 51.230083
+

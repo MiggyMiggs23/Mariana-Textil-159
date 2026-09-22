@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: E9-CLOSE-CONTENT
+not ok 1 - E9-CLOSE-CONTENT
+  ---
+  duration_ms: 263.15228
+  type: 'test'
+  location: '/tmp/e9-node-XRWsOx/E9-CLOSE-CONTENT-red/artifacts/mariana-textil/case.test.cjs:15235:27'
+  failureType: 'testCodeFailure'
+  error: 'E9-CLOSE-CONTENT'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '1e640c6a-57e3-4e04-af4c-433cfe82619c'
+  actual: '1e640c6a-57e3-4e04-af4c-433cfe82619c'
+  operator: 'notStrictEqual'
+  stack: |-
+    changedAction (/tmp/e9-node-XRWsOx/E9-CLOSE-CONTENT-red/artifacts/mariana-textil/case.test.cjs:14981:25)
+    async TestContext.<anonymous> (/tmp/e9-node-XRWsOx/E9-CLOSE-CONTENT-red/artifacts/mariana-textil/case.test.cjs:15236:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1940.956563

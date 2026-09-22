@@ -1,0 +1,44 @@
+TAP version 13
+# Subtest: E9-CUT-LOCK-REQUEST
+not ok 1 - E9-CUT-LOCK-REQUEST
+  ---
+  duration_ms: 3.896551
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-CUT-LOCK-REQUEST/test.mjs:7979:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /FOR UPDATE OF s/. Input:
+    
+    'SELECT s.id,s.ubicacion_id AS "ubicacionId",s.estado,\n' +
+      '        s.fecha_operativa AS "fechaOperativa",\n' +
+      '        s.cerrada_at AS "cerradaAt",s.efectivo_contado AS "efectivoContado",u.nombre AS "ubicacionNombre"\n' +
+      '        FROM sesiones_caja s JOIN ubicaciones u ON u.id=s.ubicacion_id\n' +
+      "        WHERE s.id=$1 AND u.tipo='TIENDA' AND u.activa=true\n" +
+      '        AND ($2 OR s.ubicacion_id=$3) FOR SHARE OF s'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    SELECT s.id,s.ubicacion_id AS "ubicacionId",s.estado,
+            s.fecha_operativa AS "fechaOperativa",
+            s.cerrada_at AS "cerradaAt",s.efectivo_contado AS "efectivoContado",u.nombre AS "ubicacionNombre"
+            FROM sesiones_caja s JOIN ubicaciones u ON u.id=s.ubicacion_id
+            WHERE s.id=$1 AND u.tipo='TIENDA' AND u.activa=true
+            AND ($2 OR s.ubicacion_id=$3) FOR SHARE OF s
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-CUT-LOCK-REQUEST/test.mjs:7987:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 62.946336
+

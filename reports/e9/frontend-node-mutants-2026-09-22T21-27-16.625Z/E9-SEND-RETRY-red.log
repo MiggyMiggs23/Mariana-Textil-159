@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: E9-SEND-RETRY
+not ok 1 - E9-SEND-RETRY
+  ---
+  duration_ms: 248.569216
+  type: 'test'
+  location: '/tmp/e9-node-XRWsOx/E9-SEND-RETRY-red/artifacts/mariana-textil/case.test.cjs:15080:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E9-SEND-RETRY
+    + actual - expected
+    
+    + '0d4e6951-36aa-4b73-be83-dec871e821f3'
+    - 'ab58cbbe-4c72-404a-b899-a09f803e5146'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'ab58cbbe-4c72-404a-b899-a09f803e5146'
+  actual: '0d4e6951-36aa-4b73-be83-dec871e821f3'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e9-node-XRWsOx/E9-SEND-RETRY-red/artifacts/mariana-textil/case.test.cjs:15087:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1866.98818

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E9-KEY-LOCK
+not ok 1 - E9-KEY-LOCK
+  ---
+  duration_ms: 2.700911
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-KEY-LOCK/test.mjs:7967:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /pg_advisory_xact_lock/. Input:
+    
+    'SELECT pg_try_advisory_xact_lock(hashtextextended($1,0))'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'SELECT pg_try_advisory_xact_lock(hashtextextended($1,0))'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-KEY-LOCK/test.mjs:7971:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 49.44038
+

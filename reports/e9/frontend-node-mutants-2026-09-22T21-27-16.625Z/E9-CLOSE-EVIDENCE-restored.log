@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: E9-CLOSE-EVIDENCE
+ok 1 - E9-CLOSE-EVIDENCE
+  ---
+  duration_ms: 258.183038
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1902.484702

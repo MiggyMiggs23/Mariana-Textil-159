@@ -1,0 +1,601 @@
+{
+  "mode": "OFFLINE_SYNTHETIC_NO_SQL_NO_APP_NO_POSTGRES_PROOF",
+  "startedAt": "2026-09-22T21-27-12.909Z",
+  "sourceHashes": {
+    "artifacts/api-server/src/lib/e9.ts": "252e2a2d84d8810dcd20197917a62dad61fe9960e6a25696ecb28c922843ef8b",
+    "artifacts/api-server/src/lib/e9-feature.ts": "f722ef84e6ec829ca3bcdbeffedf159b8882edfca559e63915d8caaff370c588",
+    "artifacts/api-server/src/lib/e9-cut.ts": "88255d12fc56d2f8e7632ccb1a639f46655294e659f0ff2c62e36281de0909c6",
+    "artifacts/api-server/src/lib/e9-repository.ts": "7a81f67ac254a97506d5ac7d0f8b4fca2625c259b09a5d811cb8c85f3084e14d",
+    "artifacts/api-server/src/lib/e9-fondo.ts": "290b93bec5585b801b54c9d371da081c9847a26d85a861d7bb834e42e8a47cc8",
+    "artifacts/api-server/src/lib/e9-http.ts": "ef3bacd515d456b2370e4013065da853156b468920c904173b196c3e5f49fdee",
+    "artifacts/api-server/src/lib/fondo.ts": "e26f7dd79aa14bbfdfcd2af64b5a2d5bcb753a53625961d0be461da083850add",
+    "artifacts/api-server/src/lib/e12-fondo-executor.ts": "84adb1335a0ba23c233165340c012aa37a0ecabaac4756ad736b2485491cf59a",
+    "artifacts/api-server/src/lib/e12-supplier-cash.ts": "e1f647d4c6405e710911157a0f00f012f2f4db4409504fd9943abbac2d36d487",
+    "artifacts/api-server/src/lib/caja-cash-ledger.ts": "e046f773af2a8231c82a32912d4d6e9d59105aa3b5a3e644a0c34ba09684f89b",
+    "artifacts/api-server/src/lib/e9.test.ts": "34bc706503719e31ea97e2ea00da0aa4b8d1010c38cc69325c33dce54322337b",
+    "reports/tanda-b-20260922/e12/offline-guard.cjs": "ece3a45e89fc7564b93888a388326e10b1bc1fd2c7dce72cda48aaf4d13cf34e"
+  },
+  "cases": [
+    {
+      "name": "E9-OFF-WRITE",
+      "file": "artifacts/api-server/src/lib/e9-feature.ts",
+      "before": "export const E9_ENABLED = false;",
+      "after": "export const E9_ENABLED = true;",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "60e10eda43afaf2544bb3a9cb5220280db5994a2394595a45fdc22fcea95d345"
+    },
+    {
+      "name": "E9-OFF-CUT",
+      "file": "artifacts/api-server/src/lib/e9-feature.ts",
+      "before": "export const E9_ENABLED = false;",
+      "after": "export const E9_ENABLED = true;",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "60e10eda43afaf2544bb3a9cb5220280db5994a2394595a45fdc22fcea95d345"
+    },
+    {
+      "name": "E9-OFF-DETAIL",
+      "file": "artifacts/api-server/src/lib/e9-feature.ts",
+      "before": "export const E9_ENABLED = false;",
+      "after": "export const E9_ENABLED = true;",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "60e10eda43afaf2544bb3a9cb5220280db5994a2394595a45fdc22fcea95d345"
+    },
+    {
+      "name": "E9-OFF-LIST",
+      "file": "artifacts/api-server/src/lib/e9-feature.ts",
+      "before": "export const E9_ENABLED = false;",
+      "after": "export const E9_ENABLED = true;",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "60e10eda43afaf2544bb3a9cb5220280db5994a2394595a45fdc22fcea95d345"
+    },
+    {
+      "name": "E9-OFF-FUND-ORIGIN",
+      "file": "artifacts/api-server/src/lib/e9-feature.ts",
+      "before": "export const E9_ENABLED = false;",
+      "after": "export const E9_ENABLED = true;",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "60e10eda43afaf2544bb3a9cb5220280db5994a2394595a45fdc22fcea95d345"
+    },
+    {
+      "name": "E9-OFF-INVERSE-READ",
+      "file": "artifacts/api-server/src/lib/e9-feature.ts",
+      "before": "export const E9_ENABLED = false;",
+      "after": "export const E9_ENABLED = true;",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "60e10eda43afaf2544bb3a9cb5220280db5994a2394595a45fdc22fcea95d345"
+    },
+    {
+      "name": "E9-OFF-HTTP-OPTIONS",
+      "file": "artifacts/api-server/src/lib/e9-http.ts",
+      "before": "if (E9_ENABLED) { next(); return; }",
+      "after": "if (true) { next(); return; }",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "cf921db6f2f2aad6fee2d2557208ddc2a8a12ebee468e78fec4450cd735a547e"
+    },
+    {
+      "name": "E9-OFF-HTTP-MUTATION",
+      "file": "artifacts/api-server/src/lib/e9-http.ts",
+      "before": "if (E9_ENABLED) { next(); return; }",
+      "after": "if (true) { next(); return; }",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "cf921db6f2f2aad6fee2d2557208ddc2a8a12ebee468e78fec4450cd735a547e"
+    },
+    {
+      "name": "E9-CUT-CLOSED",
+      "file": "artifacts/api-server/src/lib/e9-cut.ts",
+      "before": "session.estado !== \"CERRADA\" || !session.cerradaAt",
+      "after": "!session.cerradaAt",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "7323ec3f92e6c1e525088abd23f5f6b7fd229dc996cb131cfe197e244d82c715"
+    },
+    {
+      "name": "E9-CUT-NO-INFERENCE",
+      "file": "artifacts/api-server/src/lib/e9-cut.ts",
+      "before": "if (session.estado !== \"CERRADA\" || !session.cerradaAt || snapshots.length === 0) return undefined;",
+      "after": "if (snapshots.length === 0) return { corteId: session.id, versionCorte: \"inventada\", fechaCorte: String(session.cerradaAt), fechaOperativa: session.fechaOperativa, importeEnviado: session.efectivoContado! }; if (session.estado !== \"CERRADA\" || !session.cerradaAt) return undefined;",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "b0c8a96df6dd1665d4704f907fb0b4e791a0c5a4654fbd44f19e6af56f919068"
+    },
+    {
+      "name": "E9-CUT-DUPLICATE",
+      "file": "artifacts/api-server/src/lib/e9-cut.ts",
+      "before": "if (snapshots.length !== 1) throw",
+      "after": "if (false) throw",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "8195ea4a0c5027769f0b60979c4bfd650232bc29aa09059a46e24e00fecb2b3c"
+    },
+    {
+      "name": "E9-CUT-MISMATCH",
+      "file": "artifacts/api-server/src/lib/e9-cut.ts",
+      "before": "if (snapshot.efectivoContado !== session.efectivoContado) throw",
+      "after": "if (false) throw",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "60f7256564a5a95dd0983884039b2a76886af143608e15a0b003901a862256a5"
+    },
+    {
+      "name": "E9-CUT-FULL-HASH",
+      "file": "artifacts/api-server/src/lib/e9-cut.ts",
+      "before": "fechaCorte, snapshot,",
+      "after": "fechaCorte, snapshot: null,",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "1f351731d41443ce4995901776217ae839651c26d2358fedc0ad9b9b76f27c45"
+    },
+    {
+      "name": "E9-CUT-PHYSICAL-NOT-SALES",
+      "file": "artifacts/api-server/src/lib/e9-cut.ts",
+      "before": "importeEnviado: snapshot.efectivoContado",
+      "after": "importeEnviado: snapshot.efectivoDesglose.cobrosTickets",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "69a5e0f76e76052dfff1d23ead25fef6597465b9f87c1a7120410477e54d57b7"
+    },
+    {
+      "name": "E9-CUT-ORIGINAL-PERIOD",
+      "file": "artifacts/api-server/src/lib/e9-cut.ts",
+      "before": "fechaOperativa: session.fechaOperativa, fechaCorte, snapshot,",
+      "after": "fechaOperativa: null, fechaCorte, snapshot,",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "fb57716a83343686b45620bba7234f74165fa01579ee637938b4760b39891cf8"
+    },
+    {
+      "name": "E9-DECIMAL",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "BigInt(whole!) * 100n + BigInt(part!)",
+      "after": "BigInt(whole!) * 100n + BigInt(part!) * 10n",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "6ef73230cb139999fd8d961c85188618bfd3eaa02c9a6218ed352b67a26d3d30"
+    },
+    {
+      "name": "E9-NO-PARTIAL-INPUT",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "versionCorte: z.string().min(1).max(200), evidencia: e9Evidence }).strict();",
+      "after": "versionCorte: z.string().min(1).max(200), evidencia: e9Evidence }).passthrough();",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "d6ec2406c08cfdb12aa4c6e938cf315eb1d890592e8ad9daa8e1888aedba64a5"
+    },
+    {
+      "name": "E9-SEND-COMPLETE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "detail = { ...cut, id: randomUUID(),",
+      "after": "detail = { ...cut, importeEnviado: \"5.00\", id: randomUUID(),",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "6d7d01867f370df15e2da9d69cd14cab25d1939d4b865d7179ea22cc7e407a83"
+    },
+    {
+      "name": "E9-SEND-SCOPE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "actor.rol !== \"ADMIN\" && actor.ubicacionId !== site",
+      "after": "false",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "995515079c4fdde549c23a94addd0c46e5e194d455cce44d129a1c060e4c1efd"
+    },
+    {
+      "name": "E9-SEND-ROLE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "![\"ADMIN\", \"SUPERVISOR\"].includes(actor.rol)",
+      "after": "![\"ADMIN\", \"SUPERVISOR\", \"CAJA\"].includes(actor.rol)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "d875543ee71ba8b7e42a9ffc7dc86c58a147982d2b8d0bf4da0b8c9902fcd4b4"
+    },
+    {
+      "name": "E9-SEND-PERMISSION",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "action === \"ENVIAR\" && actor.puedeEnviar !== true",
+      "after": "false",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "8680d452d766a4fd8be72dbfd50b3a7c3817f983d115bd67aea41a4e51f6f5e9"
+    },
+    {
+      "name": "E9-CUT-VERSION",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (cut.versionCorte !== value.versionCorte)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "e6b4b2765ba5c8a6a5daea60602eaeefd27ca152d969a64dfecc233778b1df8b"
+    },
+    {
+      "name": "E9-CUT-ZERO",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (e9Cents(cut.importeEnviado) <= 0n)",
+      "after": "if (e9Cents(cut.importeEnviado) < 0n)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "79c6bc38007769b600908b5c47956d6e3b5f643653e147d665f3ff0e8a610065"
+    },
+    {
+      "name": "E9-CUT-ONCE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (await repo.sent(cut.corteId))",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "6645016bc04fce58815ae860436fd47cc374062f9d62a20a93a331024014b9cc"
+    },
+    {
+      "name": "E9-REPLAY",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (previous) {",
+      "after": "if (false) {",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "51c73a67c04b88e7669032a780463605a16aa3956f9cb6dc7408a850b2738ba0"
+    },
+    {
+      "name": "E9-REPLAY-CONTENT",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "previous.actorId !== actor.id || previous.content !== content",
+      "after": "previous.actorId !== actor.id",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "6b0f99c70acab7a6777542766365a1a3b7b7bf33202d5e36f951049198bd8b6a"
+    },
+    {
+      "name": "E9-CONCURRENT-SEND-MODEL",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (await repo.sent(cut.corteId))",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "6645016bc04fce58815ae860436fd47cc374062f9d62a20a93a331024014b9cc"
+    },
+    {
+      "name": "E9-COUNT-ADMIN",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": ": actor.rol !== \"ADMIN\")\n    throw",
+      "after": ": false)\n    throw",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "0367f758f90fdf3a4896fd00a2d22bd565994ac72c61c4469e51e302def81cd1"
+    },
+    {
+      "name": "E9-COUNT-DEFICIT",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (count.diferencia !== \"0.00\" && !detail.investigacion)",
+      "after": "if (!count.diferencia.startsWith(\"-\") && count.diferencia !== \"0.00\" && !detail.investigacion)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "5d8c6e414c643c0ad012fd528720ebd49842aed2be088a9e02e46176e9b5b181"
+    },
+    {
+      "name": "E9-COUNT-SURPLUS",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (count.diferencia !== \"0.00\" && !detail.investigacion)",
+      "after": "if (count.diferencia.startsWith(\"-\") && !detail.investigacion)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "4b8078f29e2f69f5a67aaa152ba5246b04eb7695f9416c1a12d0a2c19e30f3fa"
+    },
+    {
+      "name": "E9-COUNT-ZERO",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (count.diferencia !== \"0.00\" && !detail.investigacion)",
+      "after": "if (count.importeRecibido !== \"0.00\" && count.diferencia !== \"0.00\" && !detail.investigacion)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "00d9e0f26ac2bbdb35f6f797ce4aa7344551e9e01aaee24214680590ecf82c23"
+    },
+    {
+      "name": "E9-COUNT-HISTORY",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "detail.conteos.push(count);",
+      "after": "detail.conteos = [count];",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "73841742b65b3225ef835f6dec0c8d77d93105e3ec800a85b663980be9cb3cb9"
+    },
+    {
+      "name": "E9-STALE-COUNT",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "detail.estado !== \"CONTADA\" || !count || count.id !== value.conteoId || detail.conteoVigenteId !== count.id",
+      "after": "detail.estado !== \"CONTADA\" || !count",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "c711e5e08131fdeb7c96d48b75909aebb368d023c3f3a43f450fe1a2a67fc687"
+    },
+    {
+      "name": "E9-ZERO-NO-SEAT",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (e9Cents(count.importeRecibido) <= 0n)",
+      "after": "if (e9Cents(count.importeRecibido) < 0n)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "b9982209fab217783fa9778b184b598bdc5ceb43140213acaf245e0ecc6fed49"
+    },
+    {
+      "name": "E9-AUTH-ROLE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": ": actor.rol !== \"ADMIN\")\n    throw",
+      "after": ": false)\n    throw",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "0367f758f90fdf3a4896fd00a2d22bd565994ac72c61c4469e51e302def81cd1"
+    },
+    {
+      "name": "E9-AUTH-EXACT",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "repo.income(detail, count.importeRecibido, input.claveOperacion, actor)",
+      "after": "repo.income(detail, detail.importeEnviado, input.claveOperacion, actor)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "c58ae55014986b2687fab41ad82a046278ae996912d7c45dd4552a801f3f25e9"
+    },
+    {
+      "name": "E9-AUTH-REASON",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (count.diferencia !== \"0.00\" && !value.motivo)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "10af83bbbd2e96515ad5db5d7d9be522c803e9bd4fc0b162dc3fd3748b675276"
+    },
+    {
+      "name": "E9-AUTH-ONCE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (detail.estado === \"AUTORIZADA\") throw new E9Error(\"E9_ALREADY_AUTHORIZED\", \"Ya existe recepción autorizada.\");\n      const count = detail.conteos.at(-1);\n      if (detail.estado !== \"CONTADA\" || !count",
+      "after": "const count = detail.conteos.at(-1);\n      if (!count",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "3c6b3f718059ea048c49f57f9b18620fd07fe9476b3a597217c2b6b5d231616e"
+    },
+    {
+      "name": "E9-CONCURRENT-AUTH-MODEL",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (detail.estado === \"AUTORIZADA\") throw new E9Error(\"E9_ALREADY_AUTHORIZED\", \"Ya existe recepción autorizada.\");\n      const count = detail.conteos.at(-1);\n      if (detail.estado !== \"CONTADA\" || !count",
+      "after": "const count = detail.conteos.at(-1);\n      if (!count",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "3c6b3f718059ea048c49f57f9b18620fd07fe9476b3a597217c2b6b5d231616e"
+    },
+    {
+      "name": "E9-AUTH-ROLLBACK-MODEL",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "await repo.operation(input.claveOperacion, action, content, detail, actor);",
+      "after": "if (action !== \"AUTORIZAR\") await repo.operation(input.claveOperacion, action, content, detail, actor);",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "507fc0aeea989e03daf71b87b522be5aafa17f3046a980b8a1360a53334f03b5"
+    },
+    {
+      "name": "E9-RECOUNT-AUTHORIZED",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (detail.estado === \"AUTORIZADA\") throw new E9Error(\"E9_ALREADY_AUTHORIZED\", \"La recepción ya está autorizada.\");",
+      "after": "// defect: permit recount after income",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "4dc23428b43ea17775a4241ed9a5d26eb99291527996cfb3f1add598e4c6d943"
+    },
+    {
+      "name": "E9-CLOSE-ROLE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": ": actor.rol !== \"ADMIN\")\n    throw",
+      "after": ": false)\n    throw",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "0367f758f90fdf3a4896fd00a2d22bd565994ac72c61c4469e51e302def81cd1"
+    },
+    {
+      "name": "E9-CLOSE-NONFINANCIAL",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "detail.investigacion.estado = \"CERRADA_DOCUMENTAL\";",
+      "after": "detail.importeEnviado = detail.autorizacion!.importeRecibido; detail.investigacion.estado = \"CERRADA_DOCUMENTAL\";",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "82ae85381ae446553d6c11944329db1e2252d6925dcdd8c565bdf0c8bae676c2"
+    },
+    {
+      "name": "E9-CLOSE-EVIDENCE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "const text = z.string().trim().min(1).max(2000);",
+      "after": "const text = z.string().trim().min(0).max(2000);",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "e0654dafd23983485efb3811406f5646ec224bc24eae38b6cba0d504bcc7d17a"
+    },
+    {
+      "name": "E9-CLOSE-STATE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (detail.estado !== \"AUTORIZADA\" || detail.investigacion?.estado !== \"ABIERTA\")",
+      "after": "if (detail.investigacion?.estado !== \"ABIERTA\")",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "3250b4555d99643b1cdea959c3c7709502e716560ff7d51e63870a793886e1c4"
+    },
+    {
+      "name": "E9-CLOSE-ONCE",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (detail.estado !== \"AUTORIZADA\" || detail.investigacion?.estado !== \"ABIERTA\")",
+      "after": "if (detail.estado !== \"AUTORIZADA\")",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "41e2a182154c18a1dbaafe366d5f71d22a75c64e911adeceb22d774b1992a673"
+    },
+    {
+      "name": "E9-PRIVACY",
+      "file": "artifacts/api-server/src/lib/e9.ts",
+      "before": "if (actor.rol !== \"ADMIN\") delete result.fondo;",
+      "after": "// defect: disclose Fondo to store",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "968c061933e84c7a331a5d4fd6730655a4eed6821068e23d4b85fc6fad87e584"
+    },
+    {
+      "name": "E9-CAS",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "if (result.rows.length !== 1) throw",
+      "after": "if (false) throw",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "6646444df5c8b4b28febc0512d11358455a7b7dece98990c195d2b9b6134b62b"
+    },
+    {
+      "name": "E9-KEY-LOCK",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "pg_advisory_xact_lock(hashtextextended",
+      "after": "pg_try_advisory_xact_lock(hashtextextended",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "1749ecda5fcf9a20f3c268d79f74d1f94f57182a961fa08f77a683938eaa4ee2"
+    },
+    {
+      "name": "E9-RECEIPT-LOCK-REQUEST",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "SELECT revision,detail FROM e9_entregas WHERE id=${id}::uuid FOR UPDATE",
+      "after": "SELECT revision,detail FROM e9_entregas WHERE id=${id}::uuid",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "65099cf6848efc5a30ddbdb380e2842b9e3e2d72403398732631b53a6955c048"
+    },
+    {
+      "name": "E9-CUT-LOCK-REQUEST",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "FOR UPDATE OF s",
+      "after": "FOR SHARE OF s",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "3db2b9db947b7701624c5d456afa3934c25e3c4e5ce86eacfd9c7af1f5a6dd87"
+    },
+    {
+      "name": "E9-LIST-SCOPE",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "e9Scope(actor, query.ubicacionId);",
+      "after": "// defect: allow other store query",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "fdffdba330a52957515915cd135e85e3e3254f6f732903df8f9a5565f083ab68"
+    },
+    {
+      "name": "E9-INVERSE-GUARD",
+      "file": "artifacts/api-server/src/lib/e9-fondo.ts",
+      "before": "if (result.rows.length) throw",
+      "after": "if (false) throw",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "19e58e7be0d9185c48f66130ce892622cc1ff4e1e7efbc0f46f596d66b2f9c2f"
+    },
+    {
+      "name": "E9-FUND-ORIGIN",
+      "file": "artifacts/api-server/src/lib/e9-fondo.ts",
+      "before": "corteHref: `/caja/cortes?sesionId=${row.corte_id}`",
+      "after": "corteHref: `/caja/cortes?sesionId=${row.corte_id + 1}`",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "e55b40823000b20c8017db5109e4417e7913617d6e31b46643162208ebb13a25"
+    },
+    {
+      "name": "E9-AUDIT-PRIVACY",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "'FONDO',${'E9_' + action}",
+      "after": "'CAJA',${'E9_' + action}",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "b448a89b34bb348c2e1245f3e3ee04c6065ed32265dd1439a56f6dd3dbf4c432"
+    },
+    {
+      "name": "E9-FUND-ACTUAL-CALLER-TX",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "async income(detail, amount, key, actor) {\n      const result",
+      "after": "async income(detail, amount, key, actor) {\n      await tx.execute(sql`COMMIT`);\n      const result",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "d7c35e1295902a68d49a9a7e9460a16ca31930365a81340b3fa1df5d90547666"
+    },
+    {
+      "name": "E9-FUND-ACTUAL-AMOUNT",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "categoria: \"OTRO_INGRESO\", importe: amount,",
+      "after": "categoria: \"OTRO_INGRESO\", importe: \"9.00\",",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "c2ad2ffd00ada06d2022a2e684248a7c13f1d73103bc87f556596dfaee600623"
+    },
+    {
+      "name": "E9-NO-SECOND-CASH-WITHDRAWAL",
+      "file": "artifacts/api-server/src/lib/e9-repository.ts",
+      "before": "async save(detail, revision) {",
+      "after": "async save(detail, revision) {\n      await tx.execute(sql`UPDATE sesiones_caja SET efectivo_contado=0 WHERE id=${detail.corteId}`);",
+      "green": 0,
+      "red": 1,
+      "restored": 0,
+      "mutantHash": "0eb319a4c6a0a3f39e8271c3cc66f20f479bd7488cd7bc2760832519aa2f25a2"
+    }
+  ],
+  "status": "PASS"
+}

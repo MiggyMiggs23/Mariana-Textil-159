@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: E9-REPLAY
+not ok 1 - E9-REPLAY
+  ---
+  duration_ms: 6.796074
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-REPLAY/test.mjs:7830:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Got unwanted rejection.
+    Actual message: "El corte ya tiene una entrega completa."
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    status: 409
+  error: 'El corte ya tiene una entrega completa.'
+  code: 'E9_CORTE_ALREADY_SENT'
+  stack: |-
+    e9Command (file:///tmp/e9-native-NNIztF/E9-REPLAY/test.mjs:7283:45)
+    async Memory.tx (file:///tmp/e9-native-NNIztF/E9-REPLAY/test.mjs:7642:14)
+    async file:///tmp/e9-native-NNIztF/E9-REPLAY/test.mjs:7835:14
+    async waitForActual (node:assert:646:5)
+    async strict.doesNotReject (node:assert:789:33)
+    async TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-REPLAY/test.mjs:7834:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'doesNotReject'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-REPLAY/test.mjs:7834:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 69.314921
+

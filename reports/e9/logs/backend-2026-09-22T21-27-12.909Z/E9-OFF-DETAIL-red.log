@@ -1,0 +1,44 @@
+TAP version 13
+# Subtest: E9-OFF-DETAIL
+not ok 1 - E9-OFF-DETAIL
+  ---
+  duration_ms: 3.141987
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-OFF-DETAIL/test.mjs:7737:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The validation function is expected to return "true". Received false
+    
+    Caught error:
+    
+    Error: Entrega no encontrada.
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function (anonymous)]
+  actual:
+    status: 404
+  error: 'Entrega no encontrada.'
+  code: 'E9_NOT_FOUND'
+  stack: |-
+    readE9Detail (file:///tmp/e9-native-NNIztF/E9-OFF-DETAIL/test.mjs:7559:30)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-OFF-DETAIL/test.mjs:7739:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-OFF-DETAIL/test.mjs:7739:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 49.240609
+

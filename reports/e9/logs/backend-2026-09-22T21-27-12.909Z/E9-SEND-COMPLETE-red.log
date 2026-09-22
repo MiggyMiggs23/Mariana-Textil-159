@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E9-SEND-COMPLETE
+not ok 1 - E9-SEND-COMPLETE
+  ---
+  duration_ms: 4.679659
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-SEND-COMPLETE/test.mjs:7801:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    '5.00' !== '10.00'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '10.00'
+  actual: '5.00'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-SEND-COMPLETE/test.mjs:7804:10)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 58.131793
+

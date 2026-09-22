@@ -1,0 +1,47 @@
+TAP version 13
+# Subtest: E9-CUT-NO-INFERENCE
+not ok 1 - E9-CUT-NO-INFERENCE
+  ---
+  duration_ms: 6.799934
+  type: 'test'
+  location: '/tmp/e9-native-NNIztF/E9-CUT-NO-INFERENCE/test.mjs:7767:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + {
+    +   corteId: 7,
+    +   fechaCorte: '2026-09-20T18:00:00.000Z',
+    +   fechaOperativa: '2026-09-19',
+    +   importeEnviado: '10.00',
+    +   versionCorte: 'inventada'
+    + }
+    - undefined
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    corteId: 7
+    versionCorte: 'inventada'
+    fechaCorte: '2026-09-20T18:00:00.000Z'
+    fechaOperativa: '2026-09-19'
+    importeEnviado: '10.00'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e9-native-NNIztF/E9-CUT-NO-INFERENCE/test.mjs:7768:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 58.504605
+
