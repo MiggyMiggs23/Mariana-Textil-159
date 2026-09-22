@@ -10,7 +10,7 @@
 ## Terminado en fuente
 
 1. Captura ordinaria desde Caja, sin pregunta de naturaleza: ingreso real actual, sesión abierta, selección operativa limitada, vista previa FIFO y confirmación con nueva validación. Anticipo sin deuda y exceso quedan como favor, no como dinero dirigido retenido.
-2. Recaptura desde cliente: motivo obligatorio, fecha histórica explícita, corrección contable y ninguna asociación a Caja. Permiso propio de matriz, ADMIN por defecto; la restricción heredada E1 señalada abajo no se eludió.
+2. Recaptura desde cliente: motivo obligatorio, fecha histórica explícita, corrección contable y ninguna asociación a Caja. Solo ADMIN puede capturarla. Se conserva la guarda E1 que impide a CONTADOR, SISTEMAS y BODEGA capturar recapturas; ningún permiso de matriz supera esa exclusión.
 3. Reutilización del motor de crédito existente, bloqueo por cliente/operación, vista previa emitida y vinculada a actor/intención, vencimiento y rechazo de reparto obsoleto. Reintento con la misma clave y recuperación de confirmación incierta en la interfaz.
 4. Recibo generado dentro de la confirmación, snapshot conservado y folio propio mediante contador por sitio (`E3-<sitio>-<consecutivo>`). UUID identifica la intención, no el folio del recibo. La transferencia conserva cuenta bancaria y sesión E1 nula; la sesión operativa del recibo no se suma al efectivo.
 5. ADMIN consulta el recibo desde abono, estado de cuenta y corte. Dos copias A5 horizontales, paginación medida, datos humanos congelados, firmas y marca/fecha de reimpresión. Caja no imprime automáticamente ni ofrece impresión al cajero. La auditoría acredita solicitud, no impresión física.
@@ -28,11 +28,14 @@
 - Las pruebas de interfaz montan componentes y handlers reales con transporte sustituido, sin consultar la API operativa. Las pruebas de dominio usan repositorio aislado, no PostgreSQL.
 - Detalle y límites: [backend.md](backend.md), [frontend.md](frontend.md), [contrato-ui.md](contrato-ui.md), manifiestos SHA-256 y directorios `backend-tests/` y `frontend-tests/`.
 
+## Resuelto por decisión del propietario
+
+El conflicto de actores de recaptura quedó resuelto: la recaptura es exclusiva de ADMIN y se conserva la guarda E1. CONTADOR, SISTEMAS y BODEGA no pueden capturarla, aunque tengan otro permiso de matriz. SUPERVISOR, CAJA y TERMINAL tampoco quedan autorizados para recapturar por su autorización general como actores de crédito. No se cambió ni eludió la guarda.
+
 ## Detenido o pendiente
 
 | Punto | Motivo y límite |
 |---|---|
-| Recaptura efectiva para CONTADOR, SISTEMAS y BODEGA | E1 solo permite ADMIN/SUPERVISOR/CAJA/TERMINAL. Conceder el permiso de matriz no supera ese veto heredado. Requiere decisión del propietario; no se cambió ni eludió la guarda. |
 | Esquema y guardas SQL | Se prepararon instalación, reversión antes del primer recibo, retiro acotado del cierre de efectivo ordinario y restauración. **Ningún SQL fue ejecutado.** No retirar cierres permanentes, de devoluciones, atribuciones o retenidos. |
 | Integración real PostgreSQL y concurrencia con cierre de Caja | No verificada: no se accedió a la base de la API ni se ejecutó el esquema. Los tests aislados no acreditan FK, triggers, privilegios ni la atomicidad real del adaptador. |
 | Apertura E3 | Requiere autorización separada, resolver los impedimentos de E2 y validar el conjunto efectivo E1/E2/E3. El paquete E2 abortado no se reanudó ni modificó. |

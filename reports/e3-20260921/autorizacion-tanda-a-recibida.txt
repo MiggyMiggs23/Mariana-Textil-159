@@ -1,0 +1,13 @@
+miguelestza: Tanda A. Tareas en orden, cada una en su propio commit. No reinicies la API, no cambies el workflow ni el bundle en ejecución y no escribas en la base de la API. Si una tarea choca con replit.md o necesita decisión del propietario, anótala y sigue con la siguiente.
+
+1. Documentación: registra en reports/prompt-u-respuestas-2026-09-18.md y en replit.md que se conserva la guarda E1 que impide a CONTADOR, SISTEMAS y BODEGA capturar recapturas; la recaptura queda solo para ADMIN. Marca resuelto el pendiente en reports/e3-20260921/cierre.md.
+
+2. Entradas: renombra "Captura en Lote" a "Llenar cantidades" y ajusta su ayuda para que no diga "lote". Solo textos visibles.
+
+3. Con E2 liberado, completa lo que se detuvo por archivos protegidos: las exportaciones XLSX y PDF de E6, la conexión del remate con la venta (apagada) y las 2 pruebas de pos-caja-final.
+
+4. Prepara la liberación de E3 con el mismo método que E2: expectativas del preflight leídas de la base real en READ ONLY, bundle compilado en su directorio final, arranque real contra una base desechable y prueba de control si algo falla. Incluye en el mismo bundle lo de las tareas 2 y 3.
+
+Autorización del propietario, que debes guardar tal cual en reports/e3-20260921/ antes de la primera escritura: autorizo pruebas e integración únicamente en bases PostgreSQL nuevas y desechables, destruidas al terminar, y la lectura READ ONLY de la base de la API para fijar expectativas. No autorizo aplicar SQL a la base de la API, retirar guardas E1 en ella ni liberar.
+
+Si liberar E3 implica abrir la captura de efectivo, anótalo como decisión del propietario. Entrega el paquete con manifiesto, hashes y texto de fase B, y un informe único en reports/ con resultado por tarea y revisión exacta.
