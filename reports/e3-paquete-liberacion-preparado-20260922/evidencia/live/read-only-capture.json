@@ -1,0 +1,22 @@
+{
+  "status": "PASS_READ_ONLY",
+  "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "retainedRuntimePid": 3800,
+  "sameDatabaseUrlAsRetainedRuntime": true,
+  "transaction": "REPEATABLE READ READ ONLY; ROLLBACK",
+  "pgOptions": "default_transaction_read_only=on",
+  "schemaDump": "schema-only; owners and ACL retained; no table data or users copied",
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "catalogRows": 1585,
+  "attributesRows": 902,
+  "catalogSha256": "cbabf7597604d788ac2a6670988e39081ae08b0a31fdd327776a7c1b1f1e9a86",
+  "schemaDumpSha256": "403a25d390c35f1ffa01c1c91cb2ca51207bcb0558d7f6bd76419cda31fbb3b4",
+  "stderrEmpty": true,
+  "credentialsRecorded": false
+}

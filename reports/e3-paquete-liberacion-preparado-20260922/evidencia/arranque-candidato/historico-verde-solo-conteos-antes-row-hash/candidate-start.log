@@ -1,0 +1,16 @@
+E3_CLOSED_RELEASE_PREFLIGHT=PASS {"database":"heliumdb","databaseOid":"16384","rows":1631,"schemaSha256":"1f184dc7f5775f1ca48faa618c7daae2ffc33f09ab1f12ecb70cf153787e341e","attributesSha256":"e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24","phase":"after","mode":"INSPECTION","e3":false,"e3Directed":false,"remate":false,"cashGateRetirement":false}
+[16:16:51.522] [33mWARN[39m (8183): [36mInspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.[39m
+[16:16:51.527] [32mINFO[39m (8183): [36mServer listening[39m
+    [35mport[39m: 18093
+[16:16:51.685] [32mINFO[39m (8183): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[16:16:52.490] [32mINFO[39m (8183): [36mServer shutdown complete[39m
+    [35msignal[39m: "SIGTERM"

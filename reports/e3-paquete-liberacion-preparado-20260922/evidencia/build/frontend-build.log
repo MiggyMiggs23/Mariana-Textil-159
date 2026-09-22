@@ -1,0 +1,22 @@
+vite v7.3.6 building client environment for production...
+transforming...
+src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/calendar.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/toggle-group.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/sheet.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/command.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+✓ 5479 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-e3-20260922/index.html                                              1.33 kB │ gzip:   0.53 kB
+dist-e3-20260922/assets/mariana-textil-logo-monochrome-_7AVoW2A.png    166.39 kB
+dist-e3-20260922/assets/mariana-textil-logo-FFOiXRd3.png               818.20 kB
+dist-e3-20260922/assets/index-NA0ZC8zw.css                             221.60 kB │ gzip:  33.41 kB
+dist-e3-20260922/assets/index-CJ5sQYvB.js                              458.30 kB │ gzip: 117.57 kB
+dist-e3-20260922/assets/index-LMNaREMN.js                            2,818.63 kB │ gzip: 688.34 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 20.47s

@@ -32,3 +32,16 @@ al código de referencia.
 **How to apply:** Se pueden compartir dependencias externas inmutables, pero
 los enlaces a paquetes internos deben apuntar a los paquetes de la misma copia
 aislada. Comprobar las rutas de resolución antes de atribuir un rojo al commit.
+
+Los controles negativos que alteran bytes necesitan copias físicas de los
+archivos modificables, no un árbol temporal con symlinks hacia el candidato.
+
+**Why:** Un control de integridad siguió un symlink y alteró el bundle
+candidato fuera del sandbox. El runtime activo quedó intacto, pero hubo que
+recompilar el candidato y repetir su verificación; la primera evidencia no
+acreditaba un control aislado.
+
+**How to apply:** Resolver `realpath` del destino antes de escribir el defecto
+y exigir que permanezca dentro del directorio desechable. Compartir solo
+dependencias inmutables; copiar físicamente el bundle o manifiesto que se va
+a alterar y cotejar después el hash original.

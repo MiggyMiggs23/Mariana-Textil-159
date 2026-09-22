@@ -1,0 +1,519 @@
+{
+  "sql": "01-install-prepared.sql only",
+  "addedSchema": [
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibo_folio_e3",
+      "parent_name": "sitio_id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibo_folio_e3",
+      "parent_name": "ultimo_folio",
+      "definition": "integer:t:0"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "cliente_id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "folio",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "intent_hash",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "movimiento_id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "operacion_clave",
+      "definition": "uuid:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "origen",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "sesion_operativa_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "snapshot",
+      "definition": "jsonb:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3",
+      "parent_name": "actor_id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3",
+      "parent_name": "emitida_at",
+      "definition": "timestamp with time zone:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3",
+      "parent_name": "intent_hash",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3",
+      "parent_name": "operacion_clave",
+      "definition": "uuid:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3",
+      "parent_name": "token",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibo_folio_e3_pkey",
+      "parent_name": "recibo_folio_e3",
+      "definition": "PRIMARY KEY (sitio_id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibo_folio_e3_sitio_id_fkey",
+      "parent_name": "recibo_folio_e3",
+      "definition": "FOREIGN KEY (sitio_id) REFERENCES ubicaciones(id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibo_folio_e3_ultimo_folio_check",
+      "parent_name": "recibo_folio_e3",
+      "definition": "CHECK (ultimo_folio >= 0)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_check",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CHECK (origen = 'CAJA'::text AND sesion_operativa_id IS NOT NULL OR origen = 'RECAPTURA'::text AND sesion_operativa_id IS NULL)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_check1",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CHECK ((snapshot ->> 'folio'::text) = folio AND ((snapshot ->> 'movimientoId'::text)::integer) = movimiento_id AND ((snapshot ->> 'clienteId'::text)::integer) = cliente_id AND (snapshot ->> 'origen'::text) = origen)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_cliente_id_fkey",
+      "parent_name": "recibos_abono_e3",
+      "definition": "FOREIGN KEY (cliente_id) REFERENCES clientes(id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_folio_key",
+      "parent_name": "recibos_abono_e3",
+      "definition": "UNIQUE (folio)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_intent_hash_check",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CHECK (intent_hash ~ '^[a-f0-9]{64}$'::text)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_movimiento_id_fkey",
+      "parent_name": "recibos_abono_e3",
+      "definition": "FOREIGN KEY (movimiento_id) REFERENCES movimientos_credito(id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_movimiento_id_key",
+      "parent_name": "recibos_abono_e3",
+      "definition": "UNIQUE (movimiento_id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_origen_check",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CHECK (origen = ANY (ARRAY['CAJA'::text, 'RECAPTURA'::text]))"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_pkey",
+      "parent_name": "recibos_abono_e3",
+      "definition": "PRIMARY KEY (operacion_clave)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_sesion_operativa_id_fkey",
+      "parent_name": "recibos_abono_e3",
+      "definition": "FOREIGN KEY (sesion_operativa_id) REFERENCES sesiones_caja(id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_snapshot_check",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CHECK (jsonb_typeof(snapshot) = 'object'::text AND (snapshot ->> 'version'::text) = '1'::text AND snapshot ?& ARRAY['folio'::text, 'movimientoId'::text, 'clienteId'::text, 'clienteNombre'::text, 'importeCentavos'::text, 'formaPago'::text, 'cuentaDestino'::text, 'sitioId'::text, 'sesionCajaId'::text, 'recibidoEn'::text, 'registradoEn'::text, 'actorId'::text, 'origen'::text, 'motivo'::text, 'asignaciones'::text, 'remanenteCentavos'::text, 'saldoAFavorCentavos'::text, 'deudaCentavos'::text, 'clienteTelefono'::text, 'clienteRfc'::text, 'sitioNombre'::text, 'actorNombre'::text])"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3_actor_id_fkey",
+      "parent_name": "vistas_abono_e3",
+      "definition": "FOREIGN KEY (actor_id) REFERENCES usuarios(id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3_intent_hash_check",
+      "parent_name": "vistas_abono_e3",
+      "definition": "CHECK (intent_hash ~ '^[a-f0-9]{64}$'::text)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3_pkey",
+      "parent_name": "vistas_abono_e3",
+      "definition": "PRIMARY KEY (operacion_clave)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3_token_check",
+      "parent_name": "vistas_abono_e3",
+      "definition": "CHECK (token ~ '^[a-f0-9]{64}$'::text)"
+    },
+    {
+      "kind": "function",
+      "schema_name": "public",
+      "object_name": "e3_receipt_immutable",
+      "parent_name": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.e3_receipt_immutable()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$\nBEGIN RAISE EXCEPTION 'E3: evidencia inmutable; no editar, borrar ni truncar'; END $function$\n"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "recibo_folio_e3_pkey",
+      "parent_name": "recibo_folio_e3",
+      "definition": "CREATE UNIQUE INDEX recibo_folio_e3_pkey ON public.recibo_folio_e3 USING btree (sitio_id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_cliente_idx",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CREATE INDEX recibos_abono_e3_cliente_idx ON public.recibos_abono_e3 USING btree (cliente_id, movimiento_id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_folio_key",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CREATE UNIQUE INDEX recibos_abono_e3_folio_key ON public.recibos_abono_e3 USING btree (folio)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_movimiento_id_key",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CREATE UNIQUE INDEX recibos_abono_e3_movimiento_id_key ON public.recibos_abono_e3 USING btree (movimiento_id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_pkey",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CREATE UNIQUE INDEX recibos_abono_e3_pkey ON public.recibos_abono_e3 USING btree (operacion_clave)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3_sesion_idx",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CREATE INDEX recibos_abono_e3_sesion_idx ON public.recibos_abono_e3 USING btree (sesion_operativa_id, movimiento_id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3_pkey",
+      "parent_name": "vistas_abono_e3",
+      "definition": "CREATE UNIQUE INDEX vistas_abono_e3_pkey ON public.vistas_abono_e3 USING btree (operacion_clave)"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "recibo_folio_e3",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "recibos_abono_e3",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "vistas_abono_e3",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "trigger",
+      "schema_name": "public",
+      "object_name": "e3_receipt_immutable",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CREATE TRIGGER e3_receipt_immutable BEFORE DELETE OR UPDATE ON recibos_abono_e3 FOR EACH ROW EXECUTE FUNCTION e3_receipt_immutable()"
+    },
+    {
+      "kind": "trigger",
+      "schema_name": "public",
+      "object_name": "e3_receipt_no_truncate",
+      "parent_name": "recibos_abono_e3",
+      "definition": "CREATE TRIGGER e3_receipt_no_truncate BEFORE TRUNCATE ON recibos_abono_e3 FOR EACH STATEMENT EXECUTE FUNCTION e3_receipt_immutable()"
+    }
+  ],
+  "addedAttributes": [
+    {
+      "kind": "constraint",
+      "parent": "recibo_folio_e3",
+      "name": "recibo_folio_e3_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibo_folio_e3",
+      "name": "recibo_folio_e3_sitio_id_fkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibo_folio_e3",
+      "name": "recibo_folio_e3_ultimo_folio_check",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_check",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_check1",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_cliente_id_fkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_folio_key",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_intent_hash_check",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_movimiento_id_fkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_movimiento_id_key",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_origen_check",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_sesion_operativa_id_fkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_snapshot_check",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "vistas_abono_e3",
+      "name": "vistas_abono_e3_actor_id_fkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "vistas_abono_e3",
+      "name": "vistas_abono_e3_intent_hash_check",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "vistas_abono_e3",
+      "name": "vistas_abono_e3_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "vistas_abono_e3",
+      "name": "vistas_abono_e3_token_check",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "function",
+      "parent": "",
+      "name": "e3_receipt_immutable",
+      "definition": "postgres:f:v:u:f:f:f:f::"
+    },
+    {
+      "kind": "index",
+      "parent": "recibo_folio_e3",
+      "name": "recibo_folio_e3_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_cliente_idx",
+      "definition": "t:t:f"
+    },
+    {
+      "kind": "index",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_folio_key",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_movimiento_id_key",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "recibos_abono_e3",
+      "name": "recibos_abono_e3_sesion_idx",
+      "definition": "t:t:f"
+    },
+    {
+      "kind": "index",
+      "parent": "vistas_abono_e3",
+      "name": "vistas_abono_e3_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "table",
+      "parent": "recibo_folio_e3",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "recibos_abono_e3",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "vistas_abono_e3",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "trigger",
+      "parent": "recibos_abono_e3",
+      "name": "e3_receipt_immutable",
+      "definition": "O:27:f:f:f"
+    },
+    {
+      "kind": "trigger",
+      "parent": "recibos_abono_e3",
+      "name": "e3_receipt_no_truncate",
+      "definition": "O:34:f:f:f"
+    }
+  ],
+  "preservedAllPreexistingSchemaRows": true,
+  "preservedAllPreexistingAttributes": true,
+  "sql03Applied": false,
+  "sql04Applied": false
+}

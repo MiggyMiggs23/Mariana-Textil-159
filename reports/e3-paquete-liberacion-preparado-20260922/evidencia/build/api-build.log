@@ -1,0 +1,17 @@
+
+> @workspace/api-server@0.0.0 build /home/runner/workspace/artifacts/api-server
+> node ./build.mjs
+
+
+  dist-e3-20260922/index.mjs                       8.4mb ⚠️
+  dist-e3-20260922/pino-worker.mjs               153.4kb
+  dist-e3-20260922/pino-file.mjs                 142.1kb
+  dist-e3-20260922/pino-pretty.mjs               114.4kb
+  dist-e3-20260922/thread-stream-worker.mjs        7.3kb
+  dist-e3-20260922/index.mjs.map                  14.7mb
+  dist-e3-20260922/pino-worker.mjs.map           256.9kb
+  dist-e3-20260922/pino-file.mjs.map             229.1kb
+  dist-e3-20260922/pino-pretty.mjs.map           203.6kb
+  dist-e3-20260922/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 2511ms

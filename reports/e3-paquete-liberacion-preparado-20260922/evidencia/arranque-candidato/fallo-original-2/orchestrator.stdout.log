@@ -1,0 +1,35 @@
+{
+  "status": "FAIL",
+  "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "cluster": "/tmp/e3-candidate-20260922-dJNbXw",
+  "apiPort": 18093,
+  "pgPort": 55444,
+  "postgresStarted": true,
+  "candidateStopped": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "databaseSource": "schema-only live catalogue; no operational rows/users",
+  "preflight": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "rows": 1631,
+    "schemaSha256": "1f184dc7f5775f1ca48faa618c7daae2ffc33f09ab1f12ecb70cf153787e341e",
+    "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24",
+    "phase": "after",
+    "mode": "INSPECTION",
+    "e3": false,
+    "e3Directed": false,
+    "remate": false,
+    "cashGateRetirement": false
+  },
+  "negativeControls": {
+    "gate": "PASS_REJECTED",
+    "identity": "PASS_REJECTED",
+    "catalogDrift": "PASS_REJECTED_AND_RESTORED",
+    "hashAlteredIsolatedCopy": "PASS_REJECTED_BEFORE_PREFLIGHT_EXEC"
+  },
+  "tracerPid": 8022,
+  "error": "Candidate exited before health verification.",
+  "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+  "postgresStopStderr": ""
+}

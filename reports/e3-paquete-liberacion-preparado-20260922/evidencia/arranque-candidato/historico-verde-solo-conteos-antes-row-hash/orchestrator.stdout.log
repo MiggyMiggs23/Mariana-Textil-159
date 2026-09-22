@@ -1,0 +1,48 @@
+{
+  "status": "PASS_CLOSED_PREPARED_NOT_RELEASED",
+  "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "cluster": "/tmp/e3-candidate-20260922-Ns2Kox",
+  "apiPort": 18093,
+  "pgPort": 55444,
+  "postgresStarted": true,
+  "candidateStopped": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "databaseSource": "schema-only live catalogue; no operational rows/users",
+  "preflight": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "rows": 1631,
+    "schemaSha256": "1f184dc7f5775f1ca48faa618c7daae2ffc33f09ab1f12ecb70cf153787e341e",
+    "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24",
+    "phase": "after",
+    "mode": "INSPECTION",
+    "e3": false,
+    "e3Directed": false,
+    "remate": false,
+    "cashGateRetirement": false
+  },
+  "negativeControls": {
+    "gate": "PASS_REJECTED",
+    "identity": "PASS_REJECTED",
+    "catalogDrift": "PASS_REJECTED_AND_RESTORED",
+    "hashAlteredIsolatedCopy": "PASS_REJECTED_BEFORE_PREFLIGHT_EXEC"
+  },
+  "tracerPid": 8180,
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "mode": "INSPECTION",
+  "workersLoadedAbsolute": [
+    "/home/runner/workspace/artifacts/api-server/dist-e3-20260922/thread-stream-worker.mjs",
+    "/home/runner/workspace/artifacts/api-server/dist-e3-20260922/pino-pretty.mjs"
+  ],
+  "semanticCatalogTableRowsAndSequenceIsCalledUnchanged": true,
+  "execTargetPid": 8183,
+  "bundleSha256": "753a9996b7249ff6227787318f5e6d0b929fd712dd4cd4e068ee8275f636d942",
+  "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+  "postgresStopStderr": ""
+}

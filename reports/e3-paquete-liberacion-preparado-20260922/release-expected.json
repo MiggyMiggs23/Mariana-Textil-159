@@ -1,0 +1,16 @@
+{
+  "source": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "basis": "Real E2 B1 catalog captured READ ONLY; faithful schema-only reconstruction plus exact E3 01-install-prepared.sql projects B1. SQL 03/04 not applied.",
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "baseSchemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+  "baseAttributesSha256": "597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665",
+  "schemaSha256": "1f184dc7f5775f1ca48faa618c7daae2ffc33f09ab1f12ecb70cf153787e341e",
+  "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24",
+  "installSha256": "15754c178aa05204cfaabd0dc17c9907e76db6d7553e9ddbadb0b4197d291c87"
+}

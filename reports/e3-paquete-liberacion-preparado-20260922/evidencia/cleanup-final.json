@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "newDisposableClustersRemaining": 0,
+  "candidateProcessesRemaining": 0,
+  "projectionFinal": { "postgresStopExit": 0, "directoryDestroyed": true },
+  "candidateFinal": { "candidateStopped": true, "postgresStopExit": 0, "directoryDestroyed": true },
+  "failedAttempts": "retained as files; every recorded cluster reports stop/destroy in its original result",
+  "e2RetainedBackupsDeleted": false
+}

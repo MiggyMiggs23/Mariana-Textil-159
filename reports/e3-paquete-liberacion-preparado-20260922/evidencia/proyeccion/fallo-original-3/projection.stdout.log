@@ -1,0 +1,12 @@
+{
+  "status": "FAIL",
+  "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "localIdentityPurpose": "reproduce operational identity for final preflight validation; no bypass",
+  "cluster": "/tmp/e3-project-20260922-HP6jV9",
+  "postgresStarted": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "error": "psql exit 3: ERROR:  duplicate key value violates unique constraint \"pg_enum_typid_sortorder_index\"\nDETAIL:  Key (enumtypid, enumsortorder)=(16542, 4) already exists.\n",
+  "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+  "postgresStopStderr": ""
+}

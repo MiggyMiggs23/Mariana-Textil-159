@@ -1,0 +1,80 @@
+{
+  "liveOnlySchema": [],
+  "localOnlySchema": [],
+  "liveOnlyAttributes": [
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "BODEGA",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CAJA",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CONTADOR",
+      "definition": "6"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SISTEMAS",
+      "definition": "5"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SUPERVISOR",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "TERMINAL",
+      "definition": "1.5"
+    }
+  ],
+  "localOnlyAttributes": [
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "BODEGA",
+      "definition": "5"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CAJA",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CONTADOR",
+      "definition": "7"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SISTEMAS",
+      "definition": "6"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SUPERVISOR",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "TERMINAL",
+      "definition": "2"
+    }
+  ]
+}

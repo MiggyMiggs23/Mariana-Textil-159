@@ -1,0 +1,355 @@
+{
+  "status": "PREPARED_CLOSED_NOT_RELEASED",
+  "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "authorization": {
+    "path": "reports/e3-20260921/autorizacion-tanda-a-recibida.txt",
+    "sha256": "5248bcda405727efa08c5f9975f451142075cbec1d238ca802a40d1cbd77e48b",
+    "permits": "disposable PostgreSQL writes and live READ ONLY only",
+    "releaseAuthorized": false
+  },
+  "activeE2": {
+    "pid": 3800,
+    "bundleSha256": "008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5",
+    "untouched": true
+  },
+  "outputs": {
+    "apiDirectory": "/home/runner/workspace/artifacts/api-server/dist-e3-20260922",
+    "frontendDirectory": "/home/runner/workspace/artifacts/mariana-textil/dist-e3-20260922",
+    "apiBundleSha256": "753a9996b7249ff6227787318f5e6d0b929fd712dd4cd4e068ee8275f636d942",
+    "files": {
+      "artifacts/api-server/dist-e3-20260922/assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+      "artifacts/api-server/dist-e3-20260922/assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+      "artifacts/api-server/dist-e3-20260922/index.mjs": "753a9996b7249ff6227787318f5e6d0b929fd712dd4cd4e068ee8275f636d942",
+      "artifacts/api-server/dist-e3-20260922/index.mjs.map": "2006da189e37c1397c41ceef24537dce20d777c96793a00bd17585fefad1a39d",
+      "artifacts/api-server/dist-e3-20260922/pino-file.mjs": "a0c5b7dd6cf802f9ad684783de84c86755db13e8ea9e00229258bae032834217",
+      "artifacts/api-server/dist-e3-20260922/pino-file.mjs.map": "2b07937dfa56106c1a3d81ba94cc52e140ba185312a0d2b595c0d5cc212f7d64",
+      "artifacts/api-server/dist-e3-20260922/pino-pretty.mjs": "cfb34bd6bf4580424d866595c4f6e774eee3126cd5383c7ba0f87bc10b747e9e",
+      "artifacts/api-server/dist-e3-20260922/pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+      "artifacts/api-server/dist-e3-20260922/pino-worker.mjs": "2cb3b631bfb7d9722d02ffccc92890cbc2718f17fadca38899c088763a31c52a",
+      "artifacts/api-server/dist-e3-20260922/pino-worker.mjs.map": "28b8fbd69c99dfde0bdc89d92f95708271223fbbec1386c814cbb7b34e742d42",
+      "artifacts/api-server/dist-e3-20260922/thread-stream-worker.mjs": "44286ceae07d2e89f8a5820fda394a5f2bca0bad037b25c1c393ae45eb20ca4b",
+      "artifacts/api-server/dist-e3-20260922/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a",
+      "artifacts/mariana-textil/dist-e3-20260922/assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+      "artifacts/mariana-textil/dist-e3-20260922/assets/index-LMNaREMN.js": "910602b644bcc5945888c4d30393af52d5b1aa9a4e1473ac298d62ef16eae596",
+      "artifacts/mariana-textil/dist-e3-20260922/assets/index-NA0ZC8zw.css": "02ef2892ee873bd5feb318426b82dbf22cce99b18870d96dd1b294099ec4b5b8",
+      "artifacts/mariana-textil/dist-e3-20260922/assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+      "artifacts/mariana-textil/dist-e3-20260922/assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+      "artifacts/mariana-textil/dist-e3-20260922/favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+      "artifacts/mariana-textil/dist-e3-20260922/index.html": "68aec37a4a087f8f93b02f963bf3ae451e4e2eec6d733c2155022aabffafd50a",
+      "artifacts/mariana-textil/dist-e3-20260922/robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+      "artifacts/mariana-textil/dist-e3-20260922/sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+      "artifacts/mariana-textil/dist-e3-20260922/sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+      "artifacts/mariana-textil/dist-e3-20260922/sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+    }
+  },
+  "releaseAssets": {
+    "path": "reports/e3-paquete-liberacion-preparado-20260922/release-assets.sha256",
+    "sha256": "d724585b2ac42658c32de38bd95e96dfc95a881a95c1377566d06d3fe64133fe"
+  },
+  "expectations": {
+    "source": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+    "basis": "Real E2 B1 catalog captured READ ONLY; faithful schema-only reconstruction plus exact E3 01-install-prepared.sql projects B1. SQL 03/04 not applied.",
+    "identity": {
+      "database": "heliumdb",
+      "databaseOid": "16384",
+      "schema": "public",
+      "role": "postgres",
+      "serverVersionNum": "160010"
+    },
+    "baseSchemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+    "baseAttributesSha256": "597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665",
+    "schemaSha256": "1f184dc7f5775f1ca48faa618c7daae2ffc33f09ab1f12ecb70cf153787e341e",
+    "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24",
+    "installSha256": "15754c178aa05204cfaabd0dc17c9907e76db6d7553e9ddbadb0b4197d291c87"
+  },
+  "startup": {
+    "status": "PASS_CLOSED_PREPARED_NOT_RELEASED",
+    "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+    "cluster": "/tmp/e3-candidate-20260922-B3kgUZ",
+    "apiPort": 18093,
+    "pgPort": 55444,
+    "postgresStarted": true,
+    "candidateStopped": true,
+    "postgresStopExit": 0,
+    "disposableDestroyed": true,
+    "databaseSource": "schema-only live catalogue; no operational rows/users",
+    "preflight": {
+      "database": "heliumdb",
+      "databaseOid": "16384",
+      "rows": 1631,
+      "schemaSha256": "1f184dc7f5775f1ca48faa618c7daae2ffc33f09ab1f12ecb70cf153787e341e",
+      "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24",
+      "phase": "after",
+      "mode": "INSPECTION",
+      "e3": false,
+      "e3Directed": false,
+      "remate": false,
+      "cashGateRetirement": false
+    },
+    "negativeControls": {
+      "gate": "PASS_REJECTED",
+      "identity": "PASS_REJECTED",
+      "catalogDrift": "PASS_REJECTED_AND_RESTORED",
+      "hashAlteredIsolatedCopy": "PASS_REJECTED_BEFORE_PREFLIGHT_EXEC"
+    },
+    "tracerPid": 8712,
+    "health": {
+      "status": 200,
+      "body": {
+        "status": "ok"
+      }
+    },
+    "mode": "INSPECTION",
+    "workersLoadedAbsolute": [
+      "/home/runner/workspace/artifacts/api-server/dist-e3-20260922/thread-stream-worker.mjs",
+      "/home/runner/workspace/artifacts/api-server/dist-e3-20260922/pino-pretty.mjs"
+    ],
+    "semanticCatalogTableRowsAndSequenceIsCalledUnchanged": true,
+    "execTargetPid": 8715,
+    "bundleSha256": "753a9996b7249ff6227787318f5e6d0b929fd712dd4cd4e068ee8275f636d942",
+    "auditRecordRequiredByHarness": {
+      "pidMatchesRunningBundle": true,
+      "bundleHashMatches": true,
+      "preflightPassed": true,
+      "appendFailurePolicy": "wrapper warning remains non-blocking; rehearsal cannot pass without the resulting valid exec record"
+    },
+    "rowValueSensitivityControl": {
+      "table": "permisos_rol",
+      "sameCount": true,
+      "rowHashChanged": true,
+      "afterSuccessfulStartupPreservationComparison": true,
+      "database": "disposable only",
+      "restored": false,
+      "disposition": "cluster destroyed in finally"
+    },
+    "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+    "postgresStopStderr": ""
+  },
+  "buildInvocations": [
+    "API_BUILD_OUTPUT_DIR=/home/runner/workspace/artifacts/api-server/dist-e3-20260922 pnpm --filter @workspace/api-server run build",
+    "VITE_E3_ENABLED=false VITE_REMATE_UI_RELEASED=false VITE_FONDO_E10_ENABLED=false pnpm --filter @workspace/mariana-textil exec vite build --config vite.config.ts --outDir /home/runner/workspace/artifacts/mariana-textil/dist-e3-20260922"
+  ],
+  "sourceFiles": {
+    "artifacts/mariana-textil/src/pages/entradas.tsx": "333113e7af60deed7d67f27e2e64f5478ece773a6cf2fc1bfeb9d129dcebb9a4",
+    "artifacts/api-server/src/routes/reportes.ts": "114d64d785be8b271ffc31643a146db609c7ab02674c5f65eb335c74b3b13cd4",
+    "artifacts/api-server/src/lib/tarea4-remate.ts": "06ef2bf9279a43b91536d385d03c0b99a89f6b30dd5e92ad2b1710187d111944",
+    "artifacts/api-server/src/lib/tarea4-gates.ts": "2ad2a45d69a68da330c622dbb5458a8456a0e562c98e99d92bbe339be6cf235d",
+    "artifacts/mariana-textil/src/lib/tarea4-gates.ts": "6690418896d7efa26e59afe8e29f16af605967042a36e95621e0e3144e350ceb",
+    "artifacts/api-server/src/lib/e3-collection.ts": "dbadb30c3200c5e07b4a0f0eecf1551ed4bc0f96440cc274c1658d8502ddfd90",
+    "artifacts/mariana-textil/src/lib/e3-feature-flags.ts": "bbd19433529ce78e4cf7fad691f5ea7ff24f634922730c061833dc68f2ca2f3a",
+    "artifacts/api-server/src/routes/e3-collections.ts": "db6c2e433f58de0ae496c216b4fc38160ed53a3d9a74cc2dd777fecca7ab0c62"
+  },
+  "sourceAssertions": {
+    "llenarCantidadesIncluded": true,
+    "oldCapturaEnLoteAbsentFromFrontendOutput": true,
+    "e6ExportsIncluded": true,
+    "remateConnectionIncludedButOff": true,
+    "e3AndDirectedOff": true
+  },
+  "sql": {
+    "install01": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/sql/01-install-prepared.sql",
+      "sha256": "15754c178aa05204cfaabd0dc17c9907e76db6d7553e9ddbadb0b4197d291c87",
+      "projectedOnly": true
+    },
+    "revert02": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/sql/02-revert-before-first-receipt-only.sql",
+      "sha256": "f637cb5306d90a64839b271ec75d4ecb8cd31fe663c1a2ea9f772ac519ebf657",
+      "notApplied": true
+    },
+    "cash03": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/sql/03-prepare-ordinary-cash-gate-retirement.BLOCKED-NO-APLICAR.sql",
+      "sha256": "52e9b857e1431b68ecb43cb0b0f6a171d3b5a1103713da14b57b3d7ac9c78a61",
+      "blocked": true
+    },
+    "restore04": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/sql/04-restore-cash-gate.BLOCKED-NO-APLICAR.sql",
+      "sha256": "3b03d49d606eddb6f5be34e495c82df4c8ff4ecbe9e2a0212629238e975c4f46",
+      "blocked": true
+    }
+  },
+  "blockers": [
+    "TECHNICAL: enforce and test ADMIN-only recapture even if another role is granted clientes_recapturas/crear before E3 activation.",
+    "OWNER DECISION: whether to open ordinary cash capture / authorize SQL 03; not implied by schema preparation or CLOSED serve."
+  ],
+  "closed": {
+    "e3": false,
+    "e3Directed": false,
+    "remate": false,
+    "cashGateRetirementApplied": false
+  },
+  "phaseB": {
+    "path": "reports/e3-paquete-liberacion-preparado-20260922/fase-b-BORRADOR-NO-AUTORIZACION.md",
+    "status": "DRAFT_NOT_AUTHORIZATION"
+  },
+  "evidenceFiles": {
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/after-startup.json": "9a4449cf82828432681a54962c697078f7df742de0c620314af1e25e317aba37",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/before-startup.json": "9a4449cf82828432681a54962c697078f7df742de0c620314af1e25e317aba37",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/candidate-start-audit.jsonl": "d33ce54665a686e06695ae6432aea556a22c2fd834680692e002815f9d7ddc4b",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/candidate-start-results.json": "12be9acbc824760f52f1d7b424d810a232cda8905d72dde7ee5a15408b313948",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/candidate-start.log": "ca3bdf5e3f617a879eb80c5ddabec9292e5ffc25460425c9b1b44b3b685437de",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/candidate-worker-open.trace": "00a8d48d5507d67eb83b56d590aa71c8350a541063c2789369789a2b069f2e08",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-1/candidate-start-results.json": "b0f9654deef9f73200b1af5efce5340456b901323336a4e020765e07a8d29b7f",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-1/orchestrator.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-1/orchestrator.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-1/orchestrator.stdout.log": "b0f9654deef9f73200b1af5efce5340456b901323336a4e020765e07a8d29b7f",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-2/attribution.txt": "5043f970dfe754efa380e3ea8d9a052a2af454e04089db6c21d7777f22eeb81b",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-2/candidate-start-results.json": "734a8d11ba7f8c3d26be97085bdafe3f351a90c04b233dd9be5c7aaa4f70a757",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-2/candidate-start.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-2/candidate-worker-open.trace": "7dc849e213fec1595403bfb0b2ec06cdbfa63a16068efe052b91a9fe601d60ad",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-2/orchestrator.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-2/orchestrator.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/fallo-original-2/orchestrator.stdout.log": "734a8d11ba7f8c3d26be97085bdafe3f351a90c04b233dd9be5c7aaa4f70a757",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/after-startup.json": "ef5f071696e1a3ad6fd8bbae612ccc7f6f24969d7ef0bd9f49b7563e5bfa5c4f",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/before-startup.json": "ef5f071696e1a3ad6fd8bbae612ccc7f6f24969d7ef0bd9f49b7563e5bfa5c4f",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/candidate-start-audit.jsonl": "d0d5e97406dc1d9bcbd195146155838c3015a934e2cb4e4f2e13cc892c982fe1",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/candidate-start-results.json": "75d61189eaa9c581ff065f396d701b0a8c4a2b5269ecb476fcd58114259da263",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/candidate-start.log": "7a58aa115c31ea5719c6e444f9ec1697836be5acf3954835381b73f033a88081",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/candidate-worker-open.trace": "1d839102b52de23491959179c211f839f28a646b974780a717633f2c168f0989",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/negative-catalog-drift.log": "940c3dda3fb707fbb2c0ffef7c515679d423f223732603da27f2710f95b39b94",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/negative-gate.log": "b4ab618863348bd61a4054b98de546642dac70b36c94129b76c9fd5f2f7660c3",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/negative-hash-altered-copy.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/negative-identity.log": "931ac947fdcfd1a539c43fdba5eb70099a180448c24bdc2ef76a8fad69f877d8",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/orchestrator.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/orchestrator.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/historico-verde-solo-conteos-antes-row-hash/orchestrator.stdout.log": "75d61189eaa9c581ff065f396d701b0a8c4a2b5269ecb476fcd58114259da263",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/negative-catalog-drift.log": "940c3dda3fb707fbb2c0ffef7c515679d423f223732603da27f2710f95b39b94",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/negative-gate.log": "b4ab618863348bd61a4054b98de546642dac70b36c94129b76c9fd5f2f7660c3",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/negative-hash-altered-copy.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/negative-identity.log": "931ac947fdcfd1a539c43fdba5eb70099a180448c24bdc2ef76a8fad69f877d8",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/orchestrator.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/orchestrator.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/orchestrator.stdout.log": "12be9acbc824760f52f1d7b424d810a232cda8905d72dde7ee5a15408b313948",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/arranque-candidato/row-value-sensitivity-control.json": "040bf2e3fd4f67416df56f3f92593eb5abe108bdd43c3ba797ed1744e726b05e",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/build/api-build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/build/api-build.log": "e2211ce9bced2c49dc37ce13b739de6d9ce7dd6c1a82c3e7cc91990aa25784dd",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/build/api-rebuild-after-isolated-control.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/build/api-rebuild-after-isolated-control.log": "60c944df4273f9a46f69d64bb768516181b030dc619a091f4acc738b5394bc6e",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/build/assets-after-rebuild.log": "62253435f0755d98116188da952404e500bd6e8b64b91e9ca6232854276a6bec",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/build/frontend-build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/build/frontend-build.log": "98688012d936b1ba50d786f729acd454a9ab16907d95ac9355d7549cb5bfe401",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/cleanup-final.json": "66248f249aca81ad319976a6d24761a6e149a0fa80ec6ec5778df2f8903b7a99",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/live/capture.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/live/capture.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/live/capture.stdout.log": "bb5d44790a4862cead5443c758db6b3285202a35f4489e6a226cbacbc96d0d1f",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/live/catalog-B0-real.json": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/live/read-only-capture.json": "bb5d44790a4862cead5443c758db6b3285202a35f4489e6a226cbacbc96d0d1f",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/live/schema-B0-real.sql": "403a25d390c35f1ffa01c1c91cb2ca51207bcb0558d7f6bd76419cda31fbb3b4",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/accepted-additions.json": "1f72c91424d3d26c85650d255be4fe10838da90cf874bb6481d2b2af71cf33ab",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/catalog-B0-local-diagnostic.json": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/catalog-B0-local.json": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/catalog-B1-projected.json": "66a876d851529ee9b546a10b6ebde26c13c27b00cb0df45ca1ceec6e7a3498fc",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-1/projection.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-1/projection.stdout.log": "97cd70fbfd5cdd44ef933ffd55c5c728cbee90943b8c8af2dfa9f5070b9a8e5f",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-2/projection.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-2/projection.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-2/projection.stdout.log": "b63b7756044af3d203250debd4d8c18f75d81434986cf9f411798fc495662414",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-2/reconstruction-differences.json": "fc7464ba3ab2a8be0e167c925c4063726e2dc0b56ff522cdad83896a615e671e",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-3/projection.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-3/projection.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/fallo-original-3/projection.stdout.log": "200c8431bade1e0e9995554ce09b459d9b38947fdf38bad4d5ba4a8ba511fce8",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/projection-result.json": "bf51a824279eebee60b9404bb28186ebe7a47d67a74c54d0b10e3d99dfe7e2c4",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/projection.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/projection.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/projection.stdout.log": "bf51a824279eebee60b9404bb28186ebe7a47d67a74c54d0b10e3d99dfe7e2c4",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/proyeccion/reconstruction-differences.json": "fc7464ba3ab2a8be0e167c925c4063726e2dc0b56ff522cdad83896a615e671e",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/verificacion-final/release-assets-check.log": "62253435f0755d98116188da952404e500bd6e8b64b91e9ca6232854276a6bec",
+    "reports/e3-paquete-liberacion-preparado-20260922/evidencia/verificacion-final/syntax-and-assets.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "disposableCleanup": {
+    "projection": true,
+    "candidate": true,
+    "allNewClustersDestroyed": true
+  },
+  "operationalDatabase": {
+    "writes": false,
+    "initializers": false,
+    "backfills": false,
+    "apiRequests": false,
+    "restart": false
+  },
+  "controls": {
+    "wrapper": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/api-start-audit.sh",
+      "sha256": "ba57001850b718cb455aa1a4df342130a47ee0740a3d93417dcdf4b014f933d5",
+      "workflowWired": false
+    },
+    "preflight": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/release-preflight.mjs",
+      "sha256": "65c0295b64d240309facae21efb9d4693e373e2606b6ff1dcdf199324dcae96c"
+    },
+    "catalogQuery": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/release-catalog.sql",
+      "sha256": "a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea"
+    },
+    "auditRecorder": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/api-start-audit-record.mjs",
+      "sha256": "f5fe00f1bcdc93a9239ae4b3db74031d5535a46d3c7b516abc7936c8abb63eb8"
+    },
+    "expectations": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/release-expected.json",
+      "sha256": "96fac43cce39d3186f60f8b09f7b514f8888123a8a035b579c3b4a726de062ed"
+    }
+  },
+  "bootstrapInvocations": {
+    "liveRead": "node scripts/src/e3-capture-readonly-20260922.mjs",
+    "projection": "env -u DATABASE_URL -u PGHOST -u PGPASSWORD node scripts/src/e3-project-schema-20260922.mjs",
+    "candidate": "env -u DATABASE_URL -u PGHOST -u PGPASSWORD node scripts/src/e3-candidate-start-20260922.mjs"
+  },
+  "shutdownTerminal": {
+    "candidateStopped": true,
+    "postgresStopExit": 0,
+    "disposableDestroyed": true,
+    "evidence": "reports/e3-paquete-liberacion-preparado-20260922/evidencia/cleanup-final.json"
+  },
+  "rowPreservation": {
+    "tables": 74,
+    "algorithm": "per table: sorted to_jsonb(row)::text encoded hex; length-delimited ordered rows; SHA-256; duplicates retained",
+    "beforeAfterAllValuesEqual": true,
+    "countsEqual": true,
+    "sequencesLastValueAndIsCalledEqual": true,
+    "sensitivityControl": {
+      "table": "permisos_rol",
+      "sameCount": 12,
+      "beforeSha256": "fac966b0b1d9ad833a7bd6d02c834c23604b83a4ef6489abee98fab240018e68",
+      "afterSha256": "cab95debfb66584f04af88039c9509a6aee151965365b0054a4e782b6c1695da",
+      "timing": "after successful preservation comparison and candidate shutdown",
+      "disposableDestroyed": true
+    }
+  },
+  "auditPolicy": {
+    "wrapperAppendFailure": "WARNING_NON_BLOCKING_AS_APPROVED_E2",
+    "harnessRequiresValidRecord": true,
+    "requiredFields": [
+      "running exec PID",
+      "bundle SHA-256",
+      "INSPECTION mode",
+      "preflight passed exit 0"
+    ],
+    "failClosedChangeMade": false
+  },
+  "scripts": {
+    "capture": {
+      "path": "scripts/src/e3-capture-readonly-20260922.mjs",
+      "sha256": "233b3fabe295ea35b52550165d80f75f8bf2d7e52d28dda9fe48303e20a8c703"
+    },
+    "projection": {
+      "path": "scripts/src/e3-project-schema-20260922.mjs",
+      "sha256": "92359c2b87cee7632d25832cb3bfc1e995355e5217496d656de578b32cf0e019"
+    },
+    "candidate": {
+      "path": "scripts/src/e3-candidate-start-20260922.mjs",
+      "sha256": "c7ca35cf8378902545ee94fcab72e4ccae55b21089f121ba8b5f6da913b0bed4"
+    }
+  },
+  "documentation": {
+    "readme": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/README.md",
+      "sha256": "96b74e6088e14e632173d825a9a6e969a4f0f38434b3cdc0b8f6ed80c5bbeb49"
+    },
+    "phaseBDraft": {
+      "path": "reports/e3-paquete-liberacion-preparado-20260922/fase-b-BORRADOR-NO-AUTORIZACION.md",
+      "sha256": "c041c3e31770a602b9360347137a9f93cf38929ecd9b8f70f7f6db772408b290"
+    }
+  }
+}

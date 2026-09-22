@@ -1,0 +1,1 @@
+The first isolated hash-control implementation followed a nested symlink and appended only to the final candidate index. The final output was immediately rebuilt from the unchanged source before any successful startup; original failure evidence is retained. No active/runtime E2 bundle was touched.

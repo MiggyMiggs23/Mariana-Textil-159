@@ -1,0 +1,12 @@
+{
+  "status": "FAIL",
+  "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "localIdentityPurpose": "reproduce operational identity for final preflight validation; no bypass",
+  "cluster": "/tmp/e3-project-20260922-ZPkjci",
+  "postgresStarted": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "error": "Schema-only reconstruction differs from live semantic catalogue.",
+  "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+  "postgresStopStderr": ""
+}

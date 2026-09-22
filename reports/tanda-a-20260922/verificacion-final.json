@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "at": "2026-09-22T16:26:47.628Z",
+  "sourceRevision": "95128fc8f2773907c6a34ef2cfeb1f631e84f301",
+  "apiPid": 3800,
+  "apiCmdlineMatches": true,
+  "retainedHashes": {
+    "artifacts/api-server/.replit-artifact/artifact.toml": "ff4dbee36697bfedd58b27da531beb8a19946fed37f046ba9c819cc2ac764c45",
+    "artifacts/api-server/dist-e2-20260927/index.mjs": "008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5",
+    "reports/arranques-api.log": "746000d0d61cf7b769c1c904a8f080df12eebbce584a33e31ac13339a61e21d5",
+    "reports/e2-liberacion-20260922/candidate-worker-open.trace": "a367379f2de3eab58bffe328cf91ec5d3f5c7bb6178dd55b28547e6993ff52ea"
+  },
+  "startupSnapshotsDeepEqual": true,
+  "newDisposableClustersRemaining": 0,
+  "candidateProcessesRemaining": 0,
+  "packageInventoryVerified": true,
+  "releaseAssetsVerified": true,
+  "apiRequestsMade": false
+}
