@@ -1,0 +1,19 @@
+{
+  "status": "FAIL",
+  "cases": [],
+  "mutations": [
+    {
+      "defect": "ordinary SQL cash guard restored CLOSED",
+      "expectedSuccessAssertionFailed": true,
+      "response": {
+        "status": 500,
+        "data": {
+          "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+          "code": "INTERNAL_ERROR"
+        }
+      },
+      "atomicRollback": true
+    }
+  ],
+  "error": "{\"status\":500,\"data\":{\"error\":\"No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.\",\"code\":\"INTERNAL_ERROR\"}}\n\n500 !== 201\n"
+}

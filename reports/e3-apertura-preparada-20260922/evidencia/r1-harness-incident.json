@@ -1,0 +1,15 @@
+{
+  "status": "HARNESS_FAILURE_PRESERVED_NOT_FUNCTIONAL_RESULT",
+  "source": "MAIN supplied r1 failure summary",
+  "originalEvidence": "evidencia/arranque-candidato-r1/",
+  "observation": "INSPECTION log assertion saw only positive preflight line; functional integration was not reached.",
+  "causality": "Asynchronous Pino log delivery is a hypothesis, not proven by this observation alone. No later log fragment was supplied.",
+  "correction": "Bounded wait for positive preflight, mandatory INSPECTION line and health200 while candidate remains alive; all assertions retained.",
+  "nextAttempt": "r1b, fresh disposable cluster and non-overwriting evidence directory",
+  "bundleChanged": false,
+  "cleanupReportedByMAIN": {
+    "candidateStopped": true,
+    "postgresStopExit": 0,
+    "disposableDestroyed": true
+  }
+}

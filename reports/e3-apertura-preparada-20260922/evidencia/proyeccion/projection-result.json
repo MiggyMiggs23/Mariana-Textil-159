@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "sourceRevision": "eb07aa3947f16d8964d46f3b0b56d40f7f157d19",
+  "localIdentityPurpose": "reproduce operational identity for final preflight validation; no bypass",
+  "cluster": "/tmp/e3-project-20260922-l6nN5N",
+  "postgresStarted": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "liveB0ReproducedExactly": true,
+  "pgDumpEnumSortOrderRestoredFromReadOnlyCatalog": 87,
+  "b0": {
+    "rows": 1585,
+    "attributes": 902,
+    "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+    "attributesSha256": "597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665"
+  },
+  "projectedB1": {
+    "rows": 1631,
+    "attributes": 933,
+    "schemaSha256": "2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16",
+    "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24"
+  },
+  "installSha256": "15754c178aa05204cfaabd0dc17c9907e76db6d7553e9ddbadb0b4197d291c87",
+  "addedSchemaRows": 47,
+  "addedAttributeRows": 31,
+  "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+  "postgresStopStderr": ""
+}

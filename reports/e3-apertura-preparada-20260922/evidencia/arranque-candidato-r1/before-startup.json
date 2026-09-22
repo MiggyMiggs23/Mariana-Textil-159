@@ -1,0 +1,303 @@
+{
+  "tableRows": {
+    "aplicaciones_credito": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "aplicaciones_pago_proveedor": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "atribuciones_credito_e1": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_faltante_reactivaciones": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_inventario_escaneos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_inventario_folio": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_inventario_participantes": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_inventario_snapshot": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_sobrante_contextos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditoria_sobrante_decisiones": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "auditorias_inventario": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "autorizaciones_nota": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "camionetas": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "choferes": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cliente_documentos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "clientes": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cobros_credito_pendientes_e1": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "contenedor_lineas": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "contenedores": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "cuadre_fiscal_registros": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "entrada_folio": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "entradas": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equipos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "equipos_checklist": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "evidencia_no_aplicada_e2": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "existencias": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "finalizaciones_abono_e2": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fondo_arqueos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fondo_mariana": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fondo_movimientos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "movimientos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "movimientos_credito": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "notificaciones_credito": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "notificaciones_sistema": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "operaciones_credito_e1": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pagos_proveedor": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "permisos_rol": {
+      "count": 12,
+      "rowsSha256": "d66061631a2fa54b6dc77141faf5442d294d547f89ec902b42d0ce43736a0611"
+    },
+    "permisos_ubicacion": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "permisos_usuario": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "pisos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "precio_historial": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "productos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "proveedores": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "recibo_folio_e3": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "recibos_abono_e3": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reimpresiones_etiqueta": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "revisiones_etiqueta": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rollos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salida_folio": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salida_lineas": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salida_rollos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salidas": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "salidas_dinero_caja": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "series_consecutivo": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sesiones": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sesiones_caja": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "sesiones_caja_dias": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "solicitudes_pago_dirigido": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stock_minimo_episodios": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stock_minimo_sitios": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stock_minimos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ticket_folio": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ticket_linea_consumos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ticket_lineas": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ticket_pagos": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tickets": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ubicaciones": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "usuarios": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "viaje_folio": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "viaje_salidas": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "viaje_tickets": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "viajes": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "vistas_abono_e3": {
+      "count": 0,
+      "rowsSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "sequenceStates": "aplicaciones_credito_id_seq|1|false\naplicaciones_pago_proveedor_id_seq|1|false\nauditoria_faltante_reactivaciones_id_seq|1|false\nauditoria_id_seq|1|false\nauditoria_sobrante_decisiones_id_seq|1|false\nauditorias_inventario_id_seq|1|false\nautorizaciones_nota_id_seq|1|false\ncamionetas_id_seq|1|false\nchoferes_id_seq|1|false\ncliente_documentos_id_seq|1|false\nclientes_id_seq|1|false\ncontenedor_lineas_id_seq|1|false\ncontenedores_folio_seq|1|false\ncontenedores_id_seq|1|false\ncuadre_fiscal_registros_id_seq|1|false\nentradas_id_seq|1|false\nequipos_id_seq|1|false\nfondo_movimientos_ordinal_seq|1|false\nmovimientos_credito_id_seq|1|false\nmovimientos_id_seq|1|false\nnotificaciones_credito_id_seq|1|false\nnotificaciones_sistema_id_seq|1|false\npagos_proveedor_id_seq|1|false\npermisos_rol_id_seq|12|true\npermisos_ubicacion_id_seq|1|false\npermisos_usuario_id_seq|1|false\npisos_id_seq|1|false\nprecio_historial_id_seq|1|false\nproductos_id_seq|1|false\nproveedores_id_seq|1|false\nreimpresiones_etiqueta_id_seq|1|false\nrevisiones_etiqueta_id_seq|1|false\nrollos_id_seq|1|false\nsalida_lineas_id_seq|1|false\nsalida_rollos_id_seq|1|false\nsalidas_dinero_caja_id_seq|1|false\nsalidas_id_seq|1|false\nsesiones_caja_id_seq|1|false\nsolicitudes_pago_dirigido_id_seq|1|false\nstock_minimo_episodios_id_seq|1|false\nstock_minimos_id_seq|1|false\nticket_linea_consumos_id_seq|1|false\nticket_lineas_id_seq|1|false\nticket_pagos_id_seq|1|false\ntickets_id_seq|1|false\nubicaciones_id_seq|1|false\nusuarios_id_seq|1|false\nviajes_id_seq|1|false\n",
+  "schemaSha256": "2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16",
+  "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24"
+}

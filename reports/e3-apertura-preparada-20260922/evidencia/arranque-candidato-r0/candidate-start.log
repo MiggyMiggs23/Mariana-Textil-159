@@ -1,0 +1,81 @@
+E3_OPEN_RELEASE_PREFLIGHT=PASS {"database":"heliumdb","databaseOid":"16384","rows":1631,"schemaSha256":"2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16","attributesSha256":"e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24","phase":"after","mode":"INSPECTION","e3":true,"e3Directed":false,"remate":false,"cashGateRetirement":true}
+[17:05:18.857] [33mWARN[39m (10997): [36mInspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.[39m
+[17:05:18.864] [32mINFO[39m (10997): [36mServer listening[39m
+    [35mport[39m: 18093
+[17:05:19.118] [32mINFO[39m (10997): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[17:05:21.054] [32mINFO[39m (10997): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 71
+[17:05:21.112] [31mERROR[39m (10997): [36mUnhandled API error[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    err: {
+      "type": "CreditEvidenceError",
+      "message": "E3: la captura de ingreso nuevo de efectivo de crédito permanece deshabilitada.",
+      "stack":
+          CreditEvidenceError: E3: la captura de ingreso nuevo de efectivo de crédito permanece deshabilitada.
+              at assertCreditCashCapturePolicy (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/credit-evidence-contract.ts:110:13)
+              at assertCreditCaptureEnabled (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/credit-evidence-contract.ts:129:3)
+              at insertCreditMovementE1 (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/credit-evidence.ts:71:3)
+              at Object.insertMovement (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-repository.ts:85:34)
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-collection.ts:142:26)
+              at async _NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/routes/e3-collections.ts:40:22)
+      "statusCode": 403,
+      "status": 403,
+      "name": "CreditEvidenceError"
+    }
+[17:05:21.114] [32mINFO[39m (10997): [36mrequest errored[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 500
+    }
+    [35mresponseTime[39m: 31
+    err: {
+      "type": "Error",
+      "message": "failed with status code 500",
+      "stack":
+          Error: failed with status code 500
+              at onResFinished (/home/runner/workspace/node_modules/.pnpm/pino-http@10.5.0/node_modules/pino-http/logger.js:115:39)
+              at ServerResponse.onResponseComplete (/home/runner/workspace/node_modules/.pnpm/pino-http@10.5.0/node_modules/pino-http/logger.js:178:14)
+              at ServerResponse.emit (node:events:520:35)
+              at onFinish (node:_http_outgoing:1026:10)
+              at callback (node:internal/streams/writable:764:21)
+              at afterWrite (node:internal/streams/writable:708:5)
+              at afterWriteTick (node:internal/streams/writable:694:10)
+              at process.processTicksAndRejections (node:internal/process/task_queues:88:21)
+    }
+[17:05:21.186] [32mINFO[39m (10997): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 35

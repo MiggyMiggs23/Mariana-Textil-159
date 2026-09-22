@@ -1,0 +1,20 @@
+--- a/artifacts/api-server/src/lib/e3-collection.ts
++++ b/artifacts/api-server/src/lib/e3-collection.ts
+@@
+-export const E3_ENABLED = false;
++export const E3_ENABLED = true;
+--- a/artifacts/api-server/src/lib/permisos.ts
++++ b/artifacts/api-server/src/lib/permisos.ts
+@@
+-const E3_MATRIX_RELEASED: boolean = false;
++const E3_MATRIX_RELEASED: boolean = true;
+--- a/artifacts/mariana-textil/src/lib/e3-feature-flags.ts
++++ b/artifacts/mariana-textil/src/lib/e3-feature-flags.ts
+@@
+-export const E3_ENABLED = false;
++export const E3_ENABLED = true;
+--- a/artifacts/api-server/src/lib/e3-ordinary-cash-release.ts
++++ b/artifacts/api-server/src/lib/e3-ordinary-cash-release.ts
+@@
+-export const E3_ORDINARY_CASH_ENABLED = false;
++export const E3_ORDINARY_CASH_ENABLED = true;

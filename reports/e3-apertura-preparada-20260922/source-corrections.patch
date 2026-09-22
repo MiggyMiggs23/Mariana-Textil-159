@@ -1,0 +1,71 @@
+diff --git a/artifacts/api-server/src/lib/credit-abono-evidence.ts b/artifacts/api-server/src/lib/credit-abono-evidence.ts
+index 7f0c091..46a0dcc 100644
+--- a/artifacts/api-server/src/lib/credit-abono-evidence.ts
++++ b/artifacts/api-server/src/lib/credit-abono-evidence.ts
+@@ -1,6 +1,7 @@
+ import { sql } from "drizzle-orm";
+ import type { Tx } from "./inventario";
+ import type { CreditEvidenceInput } from "./credit-evidence";
++import { E3_ORDINARY_CASH_ENABLED } from "./e3-ordinary-cash-release";
+ 
+ /**
+  * Independent from the refund execution gate. It remains closed until the
+@@ -130,5 +131,6 @@ export async function finalizePhysicalAbonoEvidence(
+         )
+       `);
+     },
+-  }, input, CREDIT_ABONO_REFUND_EVIDENCE_ENABLED);
++  }, input, CREDIT_ABONO_REFUND_EVIDENCE_ENABLED
++    || (E3_ORDINARY_CASH_ENABLED && input.productor === "ABONO_ORDINARIO"));
+ }
+\ No newline at end of file
+diff --git a/artifacts/api-server/src/lib/credit-evidence-contract.ts b/artifacts/api-server/src/lib/credit-evidence-contract.ts
+index 8c2ea27..ebb787b 100644
+--- a/artifacts/api-server/src/lib/credit-evidence-contract.ts
++++ b/artifacts/api-server/src/lib/credit-evidence-contract.ts
+@@ -1,4 +1,6 @@
+ /** Database-free E1 validation. No permissive legacy defaults and no activation. */
++import { E3_ORDINARY_CASH_ENABLED } from "./e3-ordinary-cash-release";
++
+ export const CREDIT_NATURES = [
+   "INGRESO_FISICO", "DEVOLUCION_FISICA", "CORRECCION_CONTABLE", "OPERACION_CREDITO_SIN_DINERO",
+ ] as const;
+@@ -126,7 +128,10 @@ export function assertCreditCaptureEnabled(
+   productor: CreditProducer,
+   tipo: CreditMovementKind,
+ ): void {
+-  assertCreditCashCapturePolicy(input, formaPago, productor, tipo, CREDIT_CASH_CAPTURE_PERMISSIONS);
++  const ordinaryE3 = E3_ORDINARY_CASH_ENABLED && productor === "ABONO_ORDINARIO"
++    && tipo === "ABONO" && input.naturaleza === "INGRESO_FISICO";
++  assertCreditCashCapturePolicy(input, formaPago, productor, tipo,
++    ordinaryE3 ? { ...CREDIT_CASH_CAPTURE_PERMISSIONS, income: true } : CREDIT_CASH_CAPTURE_PERMISSIONS);
+ }
+ 
+ export function assertCreditPhysicalContext(input: CreditEvidenceInput, medio?: string | null, cuenta?: string | null): void {
+diff --git a/artifacts/api-server/src/routes/e3-collections.ts b/artifacts/api-server/src/routes/e3-collections.ts
+index d2b9109..468c16e 100644
+--- a/artifacts/api-server/src/routes/e3-collections.ts
++++ b/artifacts/api-server/src/routes/e3-collections.ts
+@@ -3,6 +3,7 @@ import { z } from "zod";
+ import { getRequestIp } from "../lib/request";
+ import type { E3Context } from "../lib/e3-context";
+ import { confirmE3, E3_ENABLED, E3Error, parseE3Input, previewE3, type E3Origin, type E3Receipt, type E3Repository } from "../lib/e3-collection";
++import { CreditEvidenceError } from "../lib/credit-evidence-contract";
+ 
+ export interface E3RouterDependencies {
+   authenticate: RequestHandler;
+@@ -77,6 +78,7 @@ export function createE3Router(deps: E3RouterDependencies) {
+   });
+   router.use((error: unknown, _req: Request, res: import("express").Response, next: import("express").NextFunction) => {
+     if (error instanceof E3Error) { res.status(error.status).json({ code: error.code, error: error.message }); return; }
++    if (error instanceof CreditEvidenceError) { res.status(error.status).json({ code: "E1_EVIDENCE_REJECTED", error: error.message }); return; }
+     if (error instanceof z.ZodError) { res.status(400).json({ code: "E3_INVALID_INPUT", error: error.issues.map(i => `${i.path.join(".")}: ${i.message}`).join("; ") }); return; }
+     next(error);
+   });
+diff --git a/artifacts/api-server/src/lib/e3-ordinary-cash-release.ts b/artifacts/api-server/src/lib/e3-ordinary-cash-release.ts
+new file mode 100644
+--- /dev/null
++++ b/artifacts/api-server/src/lib/e3-ordinary-cash-release.ts
+@@ -0,0 +1,2 @@
++/** Release only ordinary E3 cash; independent of directed, refunds and retained cash. */
++export const E3_ORDINARY_CASH_ENABLED = false;

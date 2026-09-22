@@ -1,0 +1,35 @@
+{
+  "status": "FAIL",
+  "sourceRevision": "eb07aa3947f16d8964d46f3b0b56d40f7f157d19",
+  "cluster": "/tmp/e3-candidate-20260922-kwEAEm",
+  "apiPort": 18093,
+  "pgPort": 55444,
+  "postgresStarted": true,
+  "candidateStopped": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "databaseSource": "schema-only live catalogue; no operational rows/users",
+  "preflight": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "rows": 1631,
+    "schemaSha256": "2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16",
+    "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24",
+    "phase": "after",
+    "mode": "INSPECTION",
+    "e3": true,
+    "e3Directed": false,
+    "remate": false,
+    "cashGateRetirement": true
+  },
+  "negativeControls": {
+    "gate": "PASS_REJECTED",
+    "identity": "PASS_REJECTED",
+    "catalogDrift": "PASS_REJECTED_AND_RESTORED",
+    "hashAlteredIsolatedCopy": "PASS_REJECTED_BEFORE_PREFLIGHT_EXEC"
+  },
+  "tracerPid": 11550,
+  "error": "The input did not match the regular expression /Inspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused/. Input:\n\n'E3_OPEN_RELEASE_PREFLIGHT=PASS {\"database\":\"heliumdb\",\"databaseOid\":\"16384\",\"rows\":1631,\"schemaSha256\":\"2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16\",\"attributesSha256\":\"e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24\",\"phase\":\"after\",\"mode\":\"INSPECTION\",\"e3\":true,\"e3Directed\":false,\"remate\":false,\"cashGateRetirement\":true}\\n'\n",
+  "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+  "postgresStopStderr": ""
+}

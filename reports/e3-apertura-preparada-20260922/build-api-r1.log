@@ -1,0 +1,13 @@
+
+  ...../../artifacts/api-server/dist-e3-apertura-20260922/index.mjs    8.5mb ⚠️
+  ...artifacts/api-server/dist-e3-apertura-20260922/pino-worker.mjs  154.0kb
+  ..../artifacts/api-server/dist-e3-apertura-20260922/pino-file.mjs  142.6kb
+  ...artifacts/api-server/dist-e3-apertura-20260922/pino-pretty.mjs  115.1kb
+  .../api-server/dist-e3-apertura-20260922/thread-stream-worker.mjs    7.4kb
+  ..../artifacts/api-server/dist-e3-apertura-20260922/index.mjs.map   14.7mb
+  ...facts/api-server/dist-e3-apertura-20260922/pino-worker.mjs.map  256.9kb
+  ...tifacts/api-server/dist-e3-apertura-20260922/pino-file.mjs.map  229.1kb
+  ...facts/api-server/dist-e3-apertura-20260922/pino-pretty.mjs.map  203.6kb
+  ...-server/dist-e3-apertura-20260922/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 2960ms

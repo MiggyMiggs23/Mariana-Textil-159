@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "ordinary cash HTTP preview/confirm + persisted FK chain + idempotent replay",
+      "passed": true,
+      "joined": {
+        "naturaleza": "INGRESO_FISICO",
+        "operacion_productor": "ABONO_ORDINARIO",
+        "sesion_caja_id": 810001,
+        "importe": "-12.50",
+        "clave": "39633c9d-4160-4a34-ad19-91ce1f3aaf12",
+        "folio": "E3-810001-00000001",
+        "id": 2
+      }
+    },
+    {
+      "case": "recapture defaults ADMIN only; deny assertion sensitive to custom grant",
+      "passed": true
+    },
+    {
+      "case": "ADMIN permitted recapture produces no cash association",
+      "passed": true
+    },
+    {
+      "case": "SUPERVISOR permitted recapture produces no cash association",
+      "passed": true
+    },
+    {
+      "case": "CAJA permitted recapture produces no cash association",
+      "passed": true
+    },
+    {
+      "case": "TERMINAL permitted recapture produces no cash association",
+      "passed": true
+    },
+    {
+      "case": "CONTADOR excluded by E1 despite custom permission",
+      "passed": true
+    },
+    {
+      "case": "SISTEMAS excluded by E1 despite custom permission",
+      "passed": true
+    },
+    {
+      "case": "BODEGA excluded by E1 despite custom permission",
+      "passed": true
+    },
+    {
+      "case": "atomic movement/operation/allocation/receipt/folio rollback; same intent succeeds after defect removed",
+      "passed": true
+    },
+    {
+      "case": "real actor FK and receipt immutability trigger reject invalid writes",
+      "passed": true
+    }
+  ],
+  "mutations": [
+    {
+      "defect": "ordinary SQL cash guard restored CLOSED",
+      "expectedSuccessAssertionFailed": true,
+      "response": {
+        "status": 500,
+        "data": {
+          "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+          "code": "INTERNAL_ERROR"
+        }
+      },
+      "atomicRollback": true
+    },
+    {
+      "defect": "non-ADMIN recapture granted before customization",
+      "defaultDenyAssertionFailed": true
+    },
+    {
+      "defect": "last audit INSERT fails",
+      "successAssertionFailed": true,
+      "fullFinancialRollback": true
+    }
+  ]
+}

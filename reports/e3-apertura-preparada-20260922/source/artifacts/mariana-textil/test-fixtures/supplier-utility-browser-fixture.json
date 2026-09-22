@@ -1,0 +1,486 @@
+{
+  "purpose": "Single read-only browser-pass fixture for supplier utility and the POS METRO source picker, including the ancillary arrays required by AppLayout, dashboard, and notification views.",
+  "matching": "Match GET routes by pathname and ignore query strings unless a route-specific assertion needs them. No POST/PUT/DELETE calls are needed for the read-only pass.",
+  "responses": {
+    "GET /api/auth/me": {
+      "id": 7,
+      "nombre": "Contador de prueba",
+      "usuario": "contador-prueba",
+      "rol": "CONTADOR",
+      "ubicacion": {
+        "id": 1,
+        "nombre": "Tienda Centro",
+        "iniciales": "TC",
+        "tipo": "TIENDA",
+        "activa": true,
+        "esSistema": false
+      },
+      "alcanceConsulta": "TODAS",
+      "permisos": [
+        { "modulo": "dashboard", "puedeVer": true, "puedeCrear": false, "puedeEditar": false, "puedeAutorizar": false },
+        { "modulo": "pos", "puedeVer": true, "puedeCrear": true, "puedeEditar": false, "puedeAutorizar": false },
+        { "modulo": "proveedores", "puedeVer": true, "puedeCrear": false, "puedeEditar": false, "puedeAutorizar": false },
+        { "modulo": "proveedores_finanzas", "puedeVer": true, "puedeCrear": true, "puedeEditar": false, "puedeAutorizar": true },
+        { "modulo": "entradas", "puedeVer": true, "puedeCrear": false, "puedeEditar": false, "puedeAutorizar": false },
+        { "modulo": "cobros_pagos", "puedeVer": true, "puedeCrear": false, "puedeEditar": false, "puedeAutorizar": false },
+        { "modulo": "clientes_finanzas", "puedeVer": true, "puedeCrear": false, "puedeEditar": false, "puedeAutorizar": false }
+      ]
+    },
+    "GET /api/dashboard": {
+      "tiendasActivas": 1,
+      "bodegasActivas": 1,
+      "usuariosActivos": 3,
+      "inventarioPorUbicacion": [
+        {
+          "ubicacionId": 1,
+          "nombre": "Tienda Centro",
+          "metros": "125.500",
+          "kilos": "0.000",
+          "bolsas": "12.000",
+          "piezas": "0.000",
+          "rollos": "4"
+        },
+        {
+          "ubicacionId": 2,
+          "nombre": "Bodega Norte",
+          "metros": "80.000",
+          "kilos": "20.000",
+          "bolsas": "0.000",
+          "piezas": "0.000",
+          "rollos": "3"
+        }
+      ]
+    },
+    "GET /api/ubicaciones/inventario": [
+      { "id": 1, "nombre": "Tienda Centro", "tipo": "TIENDA", "activa": true },
+      { "id": 2, "nombre": "Bodega Norte", "tipo": "BODEGA", "activa": true }
+    ],
+    "GET /api/pos/buscar": {
+      "rollos": [
+        {
+          "id": 18,
+          "serie": "1000018",
+          "productoId": 2,
+          "sku": "TEL-02",
+          "tela": "Lino",
+          "color": "Azul",
+          "unidad": "METRO",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Tienda Centro",
+          "cantidadActual": "10.000",
+          "precioSugerido": "100.00"
+        },
+        {
+          "id": 19,
+          "serie": "1000019",
+          "productoId": 2,
+          "sku": "TEL-02",
+          "tela": "Lino",
+          "color": "Azul",
+          "unidad": "METRO",
+          "ubicacionId": 1,
+          "nombreUbicacion": "Tienda Centro",
+          "cantidadActual": "8.500",
+          "precioSugerido": "100.00"
+        }
+      ],
+      "productos": [
+        {
+          "id": 2,
+          "sku": "TEL-02",
+          "tela": "Lino",
+          "color": "Azul",
+          "unidad": "METRO",
+          "precioSugerido": "100.00",
+          "precioMayoreo": "90.00",
+          "precioMenudeo": "100.00",
+          "costoReferenciaMetreado": {
+            "costoUnitario": "35.00",
+            "estado": "AVERAGE_12_MONTHS",
+            "esMayorA12Meses": false,
+            "rollosIncluidos": 2,
+            "fechaUltimaRecepcion": "2025-01-10T12:00:00.000Z"
+          },
+          "seVendePorMetro": true,
+          "activo": true
+        }
+      ]
+    },
+    "GET /api/notificaciones": {
+      "sistema": [
+        {
+          "id": 901,
+          "tipo": "AVISO",
+          "titulo": "Entrada recibida",
+          "mensaje": "La entrada 7 está disponible para consulta.",
+          "entidad": "entrada",
+          "entidadId": "3",
+          "leidaAt": null,
+          "createdAt": "2025-01-15T18:05:00.000Z"
+        }
+      ],
+      "notificaciones": [
+        {
+          "id": 902,
+          "ticketId": 55,
+          "clienteId": 4,
+          "clienteNombre": "Cliente de prueba",
+          "folio": 1055,
+          "importe": "250.00",
+          "diasPlazo": 30,
+          "fechaVencimiento": "2025-02-14",
+          "cajeroId": 7,
+          "cajeroNombre": "Contador de prueba",
+          "tiendaId": 1,
+          "tiendaNombre": "Tienda Centro",
+          "urgente": false,
+          "estadoNota": "PENDIENTE",
+          "leidaAt": null,
+          "createdAt": "2025-01-15T18:06:00.000Z"
+        }
+      ],
+      "porVencer": [],
+      "vencidas": [],
+      "clientesConMultiplesVencidas": []
+    },
+    "GET /api/notificaciones/feed": {
+      "events": [
+        {
+          "id": "system:901",
+          "kind": "SYSTEM",
+          "family": "AVISO",
+          "title": "Entrada recibida",
+          "message": "La entrada 7 está disponible para consulta.",
+          "href": "/entradas/3/documento",
+          "updatedAt": "2025-01-15T18:05:00.000Z",
+          "siteId": 1,
+          "estadoNota": null,
+          "action": null
+        }
+      ],
+      "generatedAt": "2025-01-15T18:10:00.000Z",
+      "sessionKey": "supplier-utility-browser-pass"
+    },
+    "GET /api/proveedores/12": {
+      "id": 12,
+      "nombre": "Proveedor A",
+      "tipo": "NACIONAL",
+      "monedaDefault": "MXN",
+      "contactoNombre": "Contacto de prueba",
+      "telefono": "5555555555",
+      "correo": "proveedor@example.test",
+      "pais": "México",
+      "notas": null,
+      "activo": true,
+      "createdAt": "2024-12-01T12:00:00.000Z"
+    },
+    "GET /api/proveedores/12/estado-cuenta": {
+      "movimientos": [],
+      "saldoActual": "-50.00"
+    },
+    "GET /api/proveedores/12/compras": {
+      "items": [
+        {
+          "movimientoId": 31,
+          "entradaId": 3,
+          "folio": 7,
+          "fecha": "2025-01-10T12:00:00.000Z",
+          "totalCosto": "700.00",
+          "abonado": "750.00",
+          "saldoPendiente": "0.00",
+          "estado": "PAGADA",
+          "nombreUbicacion": "Bodega Norte",
+          "totalRollos": 2,
+          "cantidadTotal": "20.000",
+          "cantidadMetros": "20.000",
+          "cantidadKilos": "0.000",
+          "costoMetros": "700.00",
+          "costoKilos": "0.00",
+          "costoPorMetro": "35.00",
+          "costoPorKilo": null
+        }
+      ],
+      "total": 1,
+      "totalCostoPeriodo": "700.00",
+      "page": 1,
+      "pageSize": 1000
+    },
+    "GET /api/proveedores/12/utilidad": {
+      "proveedorId": 12,
+      "desde": "2025-01-01T06:00:00.000Z",
+      "hasta": "2025-02-01T05:59:59.999Z",
+      "ubicacionId": null,
+      "summary": {
+        "ventas": "100.00",
+        "costo": "70.00",
+        "utilidad": "30.00",
+        "margenPct": "30.00",
+        "lineasIncluidas": 2,
+        "lineasExcluidasSinRollo": 1,
+        "lineasExcluidasSinCosto": 1,
+        "rollosExcluidosSinCosto": 1
+      },
+      "items": [
+        {
+          "lineaId": 9,
+          "ticketId": 55,
+          "ticketFolio": 1055,
+          "fecha": "2025-01-15T18:00:00.000Z",
+          "proveedorId": 12,
+          "proveedor": "Proveedor A",
+          "entradaId": 3,
+          "entradaFolio": 7,
+          "rolloId": 18,
+          "serie": "1000018",
+          "productoId": 2,
+          "sku": "TEL-02",
+          "tela": "Lino",
+          "color": "Azul",
+          "unidad": "METRO",
+          "tipo": "METREADO",
+          "cantidad": "1.000",
+          "ventas": "50.00",
+          "costo": "35.00",
+          "utilidad": "15.00",
+          "margenPct": "30.00",
+          "costoStatus": "COMPLETO"
+        },
+        {
+          "lineaId": 9,
+          "ticketId": 55,
+          "ticketFolio": 1055,
+          "fecha": "2025-01-15T18:00:00.000Z",
+          "proveedorId": 12,
+          "proveedor": "Proveedor A",
+          "entradaId": 3,
+          "entradaFolio": 7,
+          "rolloId": 19,
+          "serie": "1000019",
+          "productoId": 2,
+          "sku": "TEL-02",
+          "tela": "Lino",
+          "color": "Azul",
+          "unidad": "METRO",
+          "tipo": "METREADO",
+          "cantidad": "1.000",
+          "ventas": "50.00",
+          "costo": "35.00",
+          "utilidad": "15.00",
+          "margenPct": "30.00",
+          "costoStatus": "COMPLETO"
+        }
+      ],
+      "total": 2,
+      "page": 1,
+      "pageSize": 20
+    },
+    "GET /api/proveedores/12/estadisticas": {
+      "desde": "2025-01-01",
+      "hasta": "2025-02-01",
+      "totalCompras": "700.00",
+      "comprasCount": 1,
+      "totalRollos": 2,
+      "costoPorMetro": "35.00",
+      "costoPorKilo": null,
+      "ticketPromedio": "700.00",
+      "diasDesdeUltimaCompra": 5,
+      "ultimaCompra": "2025-01-10T12:00:00.000Z",
+      "frecuencia": {
+        "promedioDiasEntreCompras": null,
+        "ultimaCompra": "2025-01-10T12:00:00.000Z"
+      },
+      "estacionalidad": {
+        "mesMayor": { "mes": "Enero", "total": "700.00" },
+        "mesMenor": { "mes": "Enero", "total": "700.00" }
+      },
+      "concentracion": {
+        "productoPrincipalPct": "100.00",
+        "tresPrincipalesPct": "100.00"
+      },
+      "productosExclusivos": [
+        { "productoId": 2, "sku": "TEL-02", "tela": "Lino", "color": "Azul" }
+      ],
+      "diasPromedioPago": "0.00",
+      "antiguedadDeuda": {
+        "hasta30": "0.00",
+        "de31a60": "0.00",
+        "de61a90": "0.00",
+        "mas90": "0.00"
+      },
+      "margenGenerado": {
+        "ventas": "100.00",
+        "costo": "70.00",
+        "margen": "30.00",
+        "margenPct": "30.00",
+        "lineasIncluidas": 2,
+        "lineasExcluidasSinRollo": 1,
+        "lineasExcluidasSinCosto": 1,
+        "nota": "La utilidad se calcula con costo congelado."
+      },
+      "porMes": [
+        { "mes": "2025-01", "total": "700.00", "count": 1 }
+      ],
+      "porProducto": [
+        {
+          "productoId": 2,
+          "sku": "TEL-02",
+          "tela": "Lino",
+          "color": "Azul",
+          "unidad": "METRO",
+          "totalCosto": "700.00",
+          "totalRollos": 2,
+          "cantidadTotal": "20.000",
+          "costoPorUnidad": "35.00",
+          "historialCostos": [
+            { "entradaId": 3, "fecha": "2025-01-10T12:00:00.000Z", "cantidad": "20.000", "costoUnitario": "35.00" }
+          ],
+          "comparacionProveedores": [
+            { "proveedorId": 12, "proveedor": "Proveedor A", "costoUnitario": "35.00" }
+          ],
+          "proveedorMasBarato": "Proveedor A",
+          "ahorroPotencial": "0.00"
+        }
+      ],
+      "porTela": [
+        { "tela": "Lino", "totalCosto": "700.00", "rollosCount": 2 }
+      ],
+      "porColor": [
+        { "color": "Azul", "totalCosto": "700.00", "rollosCount": 2 }
+      ]
+    },
+    "GET /api/inventario/entradas/3": {
+      "id": 3,
+      "folio": 7,
+      "inicialesSitio": "BN",
+      "folioFormateado": "BN-ENT-0007",
+      "ubicacionId": 2,
+      "nombreUbicacion": "Bodega Norte",
+      "proveedorId": 12,
+      "nombreProveedor": "Proveedor A",
+      "usuarioId": 7,
+      "nombreUsuario": "Contador de prueba",
+      "fecha": "2025-01-10",
+      "observaciones": null,
+      "totalRollos": 2,
+      "totalCosto": "700.00",
+      "uuidCliente": "supplier-utility-entry-3",
+      "createdAt": "2025-01-10T12:00:00.000Z",
+      "lineas": [
+        {
+          "productoId": 2,
+          "skuProducto": "TEL-02",
+          "telaProducto": "Lino",
+          "colorProducto": "Azul",
+          "unidadProducto": "METRO",
+          "costoUnitario": "35.00",
+          "rollosCount": 2,
+          "cantidadTotal": "20.000",
+          "costoTotal": "700.00"
+        }
+      ],
+      "rollos": [
+        {
+          "id": 18,
+          "serie": "1000018",
+          "productoId": 2,
+          "cantidadInicial": "10.000",
+          "pisoId": null,
+          "nombrePiso": null,
+          "costoUnitario": "35.00",
+          "costoTotal": "350.00"
+        },
+        {
+          "id": 19,
+          "serie": "1000019",
+          "productoId": 2,
+          "cantidadInicial": "10.000",
+          "pisoId": null,
+          "nombrePiso": null,
+          "costoUnitario": "35.00",
+          "costoTotal": "350.00"
+        }
+      ]
+    },
+    "GET /api/tickets/55": {
+      "id": 55,
+      "folio": 1055,
+      "ubicacionId": 1,
+      "nombreUbicacion": "Tienda Centro",
+      "usuarioTerminalId": 7,
+      "nombreUsuarioTerminal": "Contador de prueba",
+      "clienteId": 4,
+      "nombreCliente": "Cliente de prueba",
+      "documentoTipo": "TICKET",
+      "notaSinPrecios": false,
+      "direccionEntregaEfectiva": null,
+      "subtotal": "100.00",
+      "iva": "0.00",
+      "tasaIva": "0.16",
+      "total": "100.00",
+      "estado": "VENDIDO",
+      "lineasCount": 1,
+      "cobrado": true,
+      "cobradoAt": "2025-01-15T18:00:00.000Z",
+      "usuarioCajaId": 7,
+      "nombreUsuarioCaja": "Contador de prueba",
+      "facturado": false,
+      "sesionCajaId": 11,
+      "uuidCliente": "supplier-utility-ticket-55",
+      "createdAt": "2025-01-15T18:00:00.000Z",
+      "canceladoAt": null,
+      "canceladoPor": null,
+      "nombreUsuarioCancelacion": null,
+      "motivoCancelacion": null,
+      "autorizadoPor": null,
+      "nombreUsuarioAutorizacion": null,
+      "esCredito": false,
+      "importeCredito": "0.00",
+      "diasPlazo": null,
+      "fechaVencimiento": null,
+      "saldoPendiente": "0.00",
+      "estadoNota": null,
+      "telefonoCliente": null,
+      "correoCliente": null,
+      "direccionCliente": null,
+      "convertidoANotaPorCobro": false,
+      "diasCreditoCliente": null,
+      "viaje": null,
+      "salidas": [],
+      "lineas": [
+        {
+          "id": 9,
+          "ticketId": 55,
+          "rolloId": 18,
+          "productoId": 2,
+          "tipo": "METREADO",
+          "cantidad": "1.000",
+          "precioUnitario": "100.00",
+          "precioSugerido": "100.00",
+          "importe": "100.00",
+          "skuProducto": "TEL-02",
+          "telaProducto": "Lino",
+          "colorProducto": "Azul",
+          "unidadProducto": "METRO",
+          "serieRollo": "1000018",
+          "nombreUbicacion": "Tienda Centro",
+          "costoUnitarioCongelado": "35.00",
+          "costoTotalCongelado": "35.00",
+          "costoFuente": "EXACT_ROLL",
+          "margen": "65.00"
+        }
+      ],
+      "pagos": [
+        {
+          "id": 88,
+          "ticketId": 55,
+          "formaPago": "EFECTIVO",
+          "importe": "100.00",
+          "referencia": null,
+          "createdAt": "2025-01-15T18:00:00.000Z",
+          "usuarioId": 7,
+          "nombreUsuario": "Contador de prueba"
+        }
+      ]
+    }
+  }
+}

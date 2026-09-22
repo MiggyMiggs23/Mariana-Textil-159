@@ -1,0 +1,23 @@
+{
+  "sql03Sha256": "52e9b857e1431b68ecb43cb0b0f6a171d3b5a1103713da14b57b3d7ac9c78a61",
+  "removedSchema": [
+    {
+      "kind": "function",
+      "schema_name": "public",
+      "object_name": "e1_guard_cash_capture_closed",
+      "parent_name": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.e1_guard_cash_capture_closed()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n  IF NEW.forma_pago::text = 'EFECTIVO'\n     AND NEW.naturaleza::text IN ('INGRESO_FISICO', 'DEVOLUCION_FISICA') THEN\n    RAISE EXCEPTION USING\n      ERRCODE = 'E1C01',\n      MESSAGE = 'E1: la captura física de efectivo de crédito está deshabilitada.';\n  END IF;\n  RETURN NEW;\nEND;\n$function$\n"
+    }
+  ],
+  "addedSchema": [
+    {
+      "kind": "function",
+      "schema_name": "public",
+      "object_name": "e1_guard_cash_capture_closed",
+      "parent_name": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.e1_guard_cash_capture_closed()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n  IF NEW.forma_pago::text='EFECTIVO'\n    AND NEW.naturaleza::text IN ('INGRESO_FISICO','DEVOLUCION_FISICA')\n    AND NOT COALESCE((NEW.naturaleza::text='INGRESO_FISICO' AND NEW.tipo::text='ABONO'\n      AND NEW.operacion_productor='ABONO_ORDINARIO'),false) THEN\n    RAISE EXCEPTION USING ERRCODE='E1C01',\n      MESSAGE='E1: captura física fuera del abono ordinario E3 permanece cerrada.';\n  END IF;\n  RETURN NEW;\nEND;\n$function$\n"
+    }
+  ],
+  "removedAttributes": [],
+  "addedAttributes": []
+}

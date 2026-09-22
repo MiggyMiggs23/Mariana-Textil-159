@@ -1,0 +1,557 @@
+import { useState, useMemo } from "react";
+import { AppLayout } from "@/components/layout/app-layout";
+import {
+  useGetAdminDiferencias,
+  GetAdminDiferenciasAgrupacion,
+  AdminDiferenciaGroup
+} from "@workspace/api-client-react";
+import { useLocationScope } from "@/lib/location-scope";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Line, XAxis, YAxis, CartesianGrid, ReferenceLine, ComposedChart, Bar, Cell } from "recharts";
+import { AlertCircle, RefreshCw, Loader2, ArrowUpDown } from "lucide-react";
+import { formatNumber } from "@workspace/number-format";
+import { format, subDays, startOfWeek, startOfMonth, startOfQuarter, startOfYear } from "date-fns";
+import { es } from "date-fns/locale";
+import { getApiErrorMessage } from "@/lib/api-error";
+import { buildCorteListingHref as buildCorteHref } from "@/lib/origin-drilldown";
+import {
+  REPORT_NEGATIVE_COLOR,
+  REPORT_POSITIVE_COLOR,
+} from "@/lib/report-chart-colors";
+import {
+  DEFAULT_CASH_CONTROLS,
+} from "@/components/reportes/cash-controls";
+import type { CashControls } from "@/components/reportes/cash-controls";
+
+type SortKey = "nombre" | "cortes" | "exactos" | "porcentajeExactos" | "diferencia";
+
+export default function CajaDiferencias({ 
+  embedded = false,
+  filters,
+  controls,
+  onControlsChange,
+}: { 
+  embedded?: boolean;
+  filters?: { desde: string, hasta: string; ubicacionId?: number | null };
+  controls?: CashControls;
+  onControlsChange?: (controls: CashControls) => void;
+}) {
+  const { selectedLocationId: headerLocationId } = useLocationScope();
+
+  const [internalPreset, setInternalPreset] = useState("mes"); // hoy, semana, mes, trimestre, semestre, año, custom
+  const [internalDesde, setInternalDesde] = useState(format(startOfMonth(new Date()), "yyyy-MM-dd"));
+  const [internalHasta, setInternalHasta] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [internalAgrupacion, setInternalAgrupacion] = useState<GetAdminDiferenciasAgrupacion>(DEFAULT_CASH_CONTROLS.agrupacion);
+  const [internalUmbralCorte, setInternalUmbralCorte] = useState(DEFAULT_CASH_CONTROLS.umbralCorte);
+  const [internalUmbralTienda, setInternalUmbralTienda] = useState(DEFAULT_CASH_CONTROLS.umbralTienda);
+
+  const desde = filters?.desde || internalDesde;
+  const hasta = filters?.hasta || internalHasta;
+  const preset = filters ? "custom" : internalPreset;
+  const selectedLocationId =
+    filters?.ubicacionId === undefined ? headerLocationId : filters.ubicacionId;
+  const activeControls = controls ?? {
+    agrupacion: internalAgrupacion,
+    umbralCorte: internalUmbralCorte,
+    umbralTienda: internalUmbralTienda,
+  };
+
+  const updateControls = (next: Partial<CashControls>) => {
+    const updated = { ...activeControls, ...next };
+    if (controls) {
+      onControlsChange?.(updated);
+      return;
+    }
+    if (next.agrupacion !== undefined) setInternalAgrupacion(next.agrupacion);
+    if (next.umbralCorte !== undefined) setInternalUmbralCorte(next.umbralCorte);
+    if (next.umbralTienda !== undefined) setInternalUmbralTienda(next.umbralTienda);
+  };
+
+  const buildCorteListingHref = (siteId?: number, cajeroId?: number) => {
+    const effectiveSiteId = selectedLocationId ?? siteId;
+    return buildCorteHref({
+      desde,
+      hasta,
+      ubicacionId: effectiveSiteId,
+      cajeroId,
+    });
+  };
+
+
+  const [sortKeyCajero, setSortKeyCajero] = useState<SortKey>("diferencia");
+  const [sortAscCajero, setSortAscCajero] = useState(true);
+
+  const [sortKeyTienda, setSortKeyTienda] = useState<SortKey>("diferencia");
+  const [sortAscTienda, setSortAscTienda] = useState(true);
+
+  const { data, isLoading, isError, error, refetch } = useGetAdminDiferencias({
+    desde,
+    hasta,
+    ubicacionId: selectedLocationId ?? undefined,
+    umbralCorte: activeControls.umbralCorte ? Number(activeControls.umbralCorte) : undefined,
+    umbralTienda: activeControls.umbralTienda ? Number(activeControls.umbralTienda) : undefined,
+    agrupacion: activeControls.agrupacion
+  });
+
+  const applyPreset = (val: string) => {
+    setInternalPreset(val);
+    const today = new Date();
+    setInternalHasta(format(today, "yyyy-MM-dd"));
+    switch (val) {
+      case "hoy": setInternalDesde(format(today, "yyyy-MM-dd")); break;
+      case "semana": setInternalDesde(format(startOfWeek(today, { weekStartsOn: 1 }), "yyyy-MM-dd")); break;
+      case "mes": setInternalDesde(format(startOfMonth(today), "yyyy-MM-dd")); break;
+      case "trimestre": setInternalDesde(format(startOfQuarter(today), "yyyy-MM-dd")); break;
+      case "semestre": setInternalDesde(format(subDays(today, 180), "yyyy-MM-dd")); break;
+      case "ano": setInternalDesde(format(startOfYear(today), "yyyy-MM-dd")); break;
+    }
+  };
+
+  const sortData = (items: AdminDiferenciaGroup[], key: SortKey, asc: boolean) => {
+    return [...items].sort((a, b) => {
+      let valA: string | number = a[key as keyof AdminDiferenciaGroup] as string | number;
+      let valB: string | number = b[key as keyof AdminDiferenciaGroup] as string | number;
+      if (key === "porcentajeExactos" || key === "diferencia") {
+        valA = Number(valA);
+        valB = Number(valB);
+      }
+      if (valA < valB) return asc ? -1 : 1;
+      if (valA > valB) return asc ? 1 : -1;
+      return 0;
+    });
+  };
+
+  const sortedCajeros = useMemo(() => sortData(data?.porCajero || [], sortKeyCajero, sortAscCajero), [data, sortKeyCajero, sortAscCajero]);
+  const sortedTiendas = useMemo(() => sortData(data?.porTienda || [], sortKeyTienda, sortAscTienda), [data, sortKeyTienda, sortAscTienda]);
+
+  const handleSort = (type: "cajero" | "tienda", key: SortKey) => {
+    if (type === "cajero") {
+      if (sortKeyCajero === key) setSortAscCajero(!sortAscCajero);
+      else { setSortKeyCajero(key); setSortAscCajero(true); }
+    } else {
+      if (sortKeyTienda === key) setSortAscTienda(!sortAscTienda);
+      else { setSortKeyTienda(key); setSortAscTienda(true); }
+    }
+  };
+
+  const SortableHead = ({ type, label, sortName, align = "left" }: { type: "cajero"| "tienda", label: string, sortName: SortKey, align?: "left" | "right" }) => (
+    <TableHead className={`${align === "right" ? "text-right" : ""} cursor-pointer hover:bg-muted/60 select-none`} onClick={() => handleSort(type, sortName)}>
+      <div className={`flex items-center gap-1 ${align === "right" ? "justify-end" : ""}`}>
+        {label} <ArrowUpDown className="w-3 h-3 opacity-50" />
+      </div>
+    </TableHead>
+  );
+
+  const content = (
+      <div className="max-w-[1600px] mx-auto space-y-6">
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-sidebar flex items-center gap-2">
+              <AlertCircle className="w-6 h-6 text-primary" />
+              Control de Diferencias
+            </h1>
+            <p className="text-sm text-muted-foreground">Análisis de sobrantes y faltantes de caja, exactitud y alertas operativas.</p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {!filters && (
+              <>
+                <Select value={preset} onValueChange={applyPreset}>
+                  <SelectTrigger className="w-[140px] h-9 bg-background">
+                    <SelectValue placeholder="Periodo" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hoy">Hoy</SelectItem>
+                    <SelectItem value="semana">Esta semana</SelectItem>
+                    <SelectItem value="mes">Este mes</SelectItem>
+                    <SelectItem value="trimestre">Este trimestre</SelectItem>
+                    <SelectItem value="semestre">Últimos 6 meses</SelectItem>
+                    <SelectItem value="ano">Este año</SelectItem>
+                    <SelectItem value="custom">Personalizado</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {preset === "custom" && (
+                  <div className="flex items-center gap-2 bg-muted/30 p-1 rounded-md border">
+                    <Input type="date" value={internalDesde} onChange={e => setInternalDesde(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
+                    <span className="text-muted-foreground text-sm">-</span>
+                    <Input type="date" value={internalHasta} onChange={e => setInternalHasta(e.target.value)} className="h-8 text-sm bg-background border-none w-[130px]" />
+                  </div>
+                )}
+              </>
+            )}
+
+            <Select value={activeControls.agrupacion} onValueChange={(v: GetAdminDiferenciasAgrupacion) => updateControls({ agrupacion: v })}>
+              <SelectTrigger className="w-[120px] h-9 bg-background">
+                <SelectValue placeholder="Agrupar por" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="semana">Semana</SelectItem>
+                <SelectItem value="mes">Mes</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground font-medium">Umbral Corte:</span>
+              <Input type="number" min="0" value={activeControls.umbralCorte} onChange={e => updateControls({ umbralCorte: e.target.value })} className="h-9 w-20 text-right" />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground font-medium">Umbral Tienda:</span>
+              <Input type="number" min="0" value={activeControls.umbralTienda} onChange={e => updateControls({ umbralTienda: e.target.value })} className="h-9 w-20 text-right" />
+            </div>
+
+            <Button variant="outline" size="icon" onClick={() => refetch()} title="Actualizar">
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        {isLoading ? (
+          <div className="h-[400px] flex items-center justify-center">
+            <Loader2 className="h-12 w-12 animate-spin text-primary opacity-50" />
+          </div>
+        ) : isError || !data ? (
+          <div className="p-10 text-center text-destructive bg-destructive/5 rounded-xl border border-destructive/20">
+            <AlertCircle className="h-10 w-10 mx-auto mb-2 opacity-80" />
+            <p className="font-semibold">{getApiErrorMessage(error, "No se pudo cargar la información de diferencias")}</p>
+            <Button variant="outline" className="mt-4" onClick={() => refetch()}>Intentar de nuevo</Button>
+          </div>
+        ) : (
+          <div className="space-y-6 animate-in fade-in">
+            {/* Alertas Severas */}
+            {data.alertas.length > 0 && (
+              <div className="bg-destructive/10 border-l-4 border-destructive p-4 rounded-r-lg space-y-2">
+                <div className="flex items-center gap-2 text-destructive font-bold">
+                  <AlertCircle className="h-5 w-5" />
+                  Alertas de Descuadre Significativo
+                </div>
+                <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                  {data.alertas.map((alerta, i) => (
+                    <div key={i} className="bg-white dark:bg-black/20 p-3 rounded-md shadow-sm border border-destructive/10 text-sm">
+                      <p className="font-semibold">{alerta.mensaje}</p>
+                      <div className="flex justify-between items-center mt-2">
+                        {alerta.sesionId > 0 ? (
+                          <a
+                            href={`/caja/cortes?sesionId=${alerta.sesionId}`}
+                            className="text-muted-foreground text-xs font-mono underline-offset-2 hover:underline"
+                          >
+                            Corte #{alerta.sesionId}
+                          </a>
+                        ) : (
+                          <a
+                            href={buildCorteListingHref()}
+                            className="text-muted-foreground text-xs underline-offset-2 hover:underline"
+                          >
+                            Ver cortes del periodo
+                          </a>
+                        )}
+                        <span className="font-bold font-mono text-destructive">{formatNumber(alerta.importe, { kind: "money" })}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* KPIs Resumen */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-sm font-medium text-muted-foreground">Cortes Exactos</p>
+                  <div className="flex items-end gap-2 mt-2">
+                    <h2 className="text-3xl font-black text-sidebar">
+                      {formatNumber(data.resumen.porcentajeExactos, { kind: "percentage", percentageInput: "percent" })}
+                    </h2>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {data.resumen.exactos} de {data.resumen.cortes} cortes sin diferencia
+                  </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-sm font-medium text-muted-foreground">Impacto Faltantes</p>
+                  <div className="flex items-end gap-2 mt-2">
+                    <h2 className="text-3xl font-black text-destructive">{formatNumber(data.resumen.importeFaltantes, { kind: "money" })}</h2>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 text-destructive/80 font-medium">
+                    En {data.resumen.faltantes} cortes con faltante
+                  </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <p className="text-sm font-medium text-muted-foreground">Impacto Sobrantes</p>
+                  <div className="flex items-end gap-2 mt-2">
+                    <h2 className="text-3xl font-black text-amber-600">{formatNumber(data.resumen.importeSobrantes, { kind: "money" })}</h2>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 text-amber-600/80 font-medium">
+                    En {data.resumen.sobrantes} cortes con sobrante
+                  </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-primary underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-sidebar text-sidebar-foreground border-none shadow-md">
+                <CardContent className="pt-6">
+                  <p className="text-sm font-medium text-sidebar-foreground/70">Diferencia Neta (Periodo)</p>
+                  <div className="flex items-end gap-2 mt-2">
+                    <h2 className={`text-3xl font-black ${Number(data.resumen.diferenciaNeta) < 0 ? "text-red-400" : "text-white"}`}>
+                      {Number(data.resumen.diferenciaNeta) > 0 ? "+" : ""}{formatNumber(data.resumen.diferenciaNeta, { kind: "money" })}
+                    </h2>
+                  </div>
+                  <p className="text-xs text-sidebar-foreground/70 mt-1">
+                    Absoluta (descuadre total): {formatNumber(data.resumen.diferenciaAbsoluta, { kind: "money" })}
+                  </p>
+                   <a
+                     href={buildCorteListingHref()}
+                     className="mt-3 inline-block text-xs font-medium text-sidebar-foreground underline-offset-2 hover:underline"
+                   >
+                     Ver cortes
+                   </a>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Tendencia */}
+            {data.tendencia.length > 0 && (
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Tendencia de Diferencia Neta</CardTitle>
+                    <CardDescription>Diferencias operativas por {activeControls.agrupacion}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                      <ChartContainer
+                      config={{ importe: { label: "Diferencia neta", color: REPORT_POSITIVE_COLOR } }}
+                      className="h-[300px] w-full"
+                    >
+                      <ComposedChart data={data.tendencia.map(d => ({
+                        fecha: d.fecha,
+                        importe: Number(d.importe),
+                      }))}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                        <XAxis dataKey="fecha" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={10} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }} />
+                        <YAxis tickFormatter={(v) => `$${v}`} tickLine={false} axisLine={false} width={60} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }} />
+                        <ChartTooltip content={<ChartTooltipContent valueKind="money" />} cursor={{ fill: 'hsl(var(--report-stripe))', opacity: 0.6 }} />
+                        <ReferenceLine y={0} stroke="hsl(var(--report-header))" strokeWidth={1} opacity={0.3} />
+                        <Bar
+                          dataKey="importe"
+                          fill={REPORT_POSITIVE_COLOR}
+                          radius={[4, 4, 0, 0]}
+                          barSize={20}
+                        >
+                          {data.tendencia.map((item) => (
+                            <Cell
+                              key={item.fecha}
+                              fill={Number(item.importe) < 0 ? REPORT_NEGATIVE_COLOR : REPORT_POSITIVE_COLOR}
+                            />
+                          ))}
+                        </Bar>
+                      </ComposedChart>
+                    </ChartContainer>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Porcentaje de Exactitud</CardTitle>
+                    <CardDescription>Cortes sin diferencias por {activeControls.agrupacion}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ChartContainer
+                      config={{
+                        porcentajeExactos: { label: "Exactitud", color: REPORT_POSITIVE_COLOR },
+                      }}
+                      className="h-[300px] w-full"
+                    >
+                      <ComposedChart data={data.tendencia.map(d => ({
+                        fecha: d.fecha,
+                        porcentajeExactos: Number(d.porcentajeExactos),
+                      }))}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--report-stripe))" strokeWidth={2} opacity={0.5} />
+                        <XAxis dataKey="fecha" tickLine={false} axisLine={{ stroke: 'hsl(var(--report-text-muted)/0.3)' }} tickMargin={10} tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }} />
+                        <YAxis
+                          domain={[0, 100]}
+                          tickFormatter={(value) => formatNumber(value, { kind: "percentage", percentageInput: "percent" })}
+                          tickLine={false}
+                          axisLine={false}
+                          width={48}
+                          tick={{ fontSize: 11, fill: 'hsl(var(--report-text-muted))' }}
+                        />
+                        <ChartTooltip content={
+                          <ChartTooltipContent
+                            valueKind="percentage"
+                            formatter={(value) => formatNumber(
+                              Number(Array.isArray(value) ? value[0] : value),
+                              { kind: "percentage", percentageInput: "percent" },
+                            )}
+                          />
+                        } />
+                        <Line
+                          type="monotone"
+                          dataKey="porcentajeExactos"
+                          name="Exactitud"
+                          stroke={REPORT_POSITIVE_COLOR}
+                          strokeWidth={3}
+                          dot={{ r: 4, strokeWidth: 2, fill: 'var(--background)' }}
+                          activeDot={{ r: 6, strokeWidth: 0 }}
+                        />
+                      </ComposedChart>
+                    </ChartContainer>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Agrupaciones */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Diferencias por Cajero</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto w-full custom-scrollbar">
+                    <Table className="text-xs">
+                      <TableHeader>
+                        <TableRow className="bg-muted/40">
+                          <SortableHead type="cajero" label="Cajero" sortName="nombre" />
+                          <SortableHead type="cajero" label="Cortes" sortName="cortes" align="right" />
+                          <SortableHead type="cajero" label="Exactos" sortName="exactos" align="right" />
+                          <SortableHead type="cajero" label="% Exactitud" sortName="porcentajeExactos" align="right" />
+                          <SortableHead type="cajero" label="Diferencia Neta" sortName="diferencia" align="right" />
+                          <TableHead className="text-right">Origen</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {sortedCajeros.map(row => (
+                          <TableRow key={row.id}>
+                            <TableCell className="font-medium">{row.nombre}</TableCell>
+                            <TableCell className="text-right">{row.cortes}</TableCell>
+                            <TableCell className="text-right text-muted-foreground">{row.exactos}</TableCell>
+                            <TableCell className="text-right">
+                              {Number(row.porcentajeExactos) >= 90 ? (
+                                <span className="text-green-600 font-bold">{formatNumber(row.porcentajeExactos, { kind: "percentage", percentageInput: "percent" })}</span>
+                              ) : Number(row.porcentajeExactos) <= 50 ? (
+                                <span className="text-destructive font-bold">{formatNumber(row.porcentajeExactos, { kind: "percentage", percentageInput: "percent" })}</span>
+                              ) : (
+                                <span className="font-medium">{formatNumber(row.porcentajeExactos, { kind: "percentage", percentageInput: "percent" })}</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right font-mono font-bold">
+                              <span className={Number(row.diferencia) < 0 ? "text-destructive" : Number(row.diferencia) > 0 ? "text-amber-600" : ""}>
+                                {Number(row.diferencia) > 0 ? "+" : ""}{formatNumber(row.diferencia, { kind: "money" })}
+                              </span>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <a
+                                href={buildCorteListingHref(undefined, row.id)}
+                                className="text-primary underline-offset-2 hover:underline"
+                              >
+                                Ver cortes
+                              </a>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {sortedCajeros.length === 0 && (
+                          <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-6">Sin datos</TableCell></TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Diferencias por Tienda</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="overflow-x-auto w-full custom-scrollbar">
+                    <Table className="text-xs">
+                      <TableHeader>
+                        <TableRow className="bg-muted/40">
+                          <SortableHead type="tienda" label="Tienda" sortName="nombre" />
+                          <SortableHead type="tienda" label="Cortes" sortName="cortes" align="right" />
+                          <SortableHead type="tienda" label="Exactos" sortName="exactos" align="right" />
+                          <SortableHead type="tienda" label="% Exactitud" sortName="porcentajeExactos" align="right" />
+                          <SortableHead type="tienda" label="Diferencia Neta" sortName="diferencia" align="right" />
+                          <TableHead className="text-right">Origen</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {sortedTiendas.map(row => (
+                          <TableRow key={row.id}>
+                            <TableCell className="font-medium">{row.nombre}</TableCell>
+                            <TableCell className="text-right">{row.cortes}</TableCell>
+                            <TableCell className="text-right text-muted-foreground">{row.exactos}</TableCell>
+                            <TableCell className="text-right">
+                              {Number(row.porcentajeExactos) >= 90 ? (
+                                <span className="text-green-600 font-bold">{formatNumber(row.porcentajeExactos, { kind: "percentage", percentageInput: "percent" })}</span>
+                              ) : Number(row.porcentajeExactos) <= 50 ? (
+                                <span className="text-destructive font-bold">{formatNumber(row.porcentajeExactos, { kind: "percentage", percentageInput: "percent" })}</span>
+                              ) : (
+                                <span className="font-medium">{formatNumber(row.porcentajeExactos, { kind: "percentage", percentageInput: "percent" })}</span>
+                              )}
+                            </TableCell>
+                            <TableCell className="text-right font-mono font-bold">
+                              <span className={Number(row.diferencia) < 0 ? "text-destructive" : Number(row.diferencia) > 0 ? "text-amber-600" : ""}>
+                                {Number(row.diferencia) > 0 ? "+" : ""}{formatNumber(row.diferencia, { kind: "money" })}
+                              </span>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <a
+                                href={buildCorteListingHref(row.id)}
+                                className="text-primary underline-offset-2 hover:underline"
+                              >
+                                Ver cortes
+                              </a>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {sortedTiendas.length === 0 && (
+                          <TableRow><TableCell colSpan={6} className="text-center text-muted-foreground py-6">Sin datos</TableCell></TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        )}
+      </div>
+  );
+  return embedded ? content : <AppLayout>{content}</AppLayout>;
+}

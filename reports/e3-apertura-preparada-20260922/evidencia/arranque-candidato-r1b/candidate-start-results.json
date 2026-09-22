@@ -1,0 +1,144 @@
+{
+  "status": "PASS_ORDINARY_CASH_PREPARED_NOT_RELEASED",
+  "sourceRevision": "eb07aa3947f16d8964d46f3b0b56d40f7f157d19",
+  "cluster": "/tmp/e3-candidate-20260922-Fq412Z",
+  "apiPort": 18093,
+  "pgPort": 55444,
+  "postgresStarted": true,
+  "candidateStopped": true,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "databaseSource": "schema-only live catalogue; no operational rows/users",
+  "preflight": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "rows": 1631,
+    "schemaSha256": "2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16",
+    "attributesSha256": "e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24",
+    "phase": "after",
+    "mode": "INSPECTION",
+    "e3": true,
+    "e3Directed": false,
+    "remate": false,
+    "cashGateRetirement": true
+  },
+  "negativeControls": {
+    "gate": "PASS_REJECTED",
+    "identity": "PASS_REJECTED",
+    "catalogDrift": "PASS_REJECTED_AND_RESTORED",
+    "hashAlteredIsolatedCopy": "PASS_REJECTED_BEFORE_PREFLIGHT_EXEC"
+  },
+  "tracerPid": 11844,
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "mode": "INSPECTION",
+  "workersLoadedAbsolute": [
+    "/home/runner/workspace/artifacts/api-server/dist-e3-apertura-20260922/thread-stream-worker.mjs",
+    "/home/runner/workspace/artifacts/api-server/dist-e3-apertura-20260922/pino-pretty.mjs"
+  ],
+  "semanticCatalogTableRowsAndSequenceIsCalledUnchanged": true,
+  "execTargetPid": 11847,
+  "bundleSha256": "44e27767ca02ee21b8ba0cdcea56331adcb949229df942a8b2387dc306dfcbd6",
+  "auditRecordRequiredByHarness": {
+    "pidMatchesRunningBundle": true,
+    "bundleHashMatches": true,
+    "preflightPassed": true,
+    "appendFailurePolicy": "wrapper warning remains non-blocking; rehearsal cannot pass without the resulting valid exec record"
+  },
+  "functional": {
+    "status": "PASS",
+    "cases": [
+      {
+        "case": "ordinary cash HTTP preview/confirm + persisted FK chain + idempotent replay",
+        "passed": true,
+        "joined": {
+          "naturaleza": "INGRESO_FISICO",
+          "operacion_productor": "ABONO_ORDINARIO",
+          "sesion_caja_id": 810001,
+          "importe": "-12.50",
+          "clave": "39633c9d-4160-4a34-ad19-91ce1f3aaf12",
+          "folio": "E3-810001-00000001",
+          "id": 2
+        }
+      },
+      {
+        "case": "recapture defaults ADMIN only; deny assertion sensitive to custom grant",
+        "passed": true
+      },
+      {
+        "case": "ADMIN permitted recapture produces no cash association",
+        "passed": true
+      },
+      {
+        "case": "SUPERVISOR permitted recapture produces no cash association",
+        "passed": true
+      },
+      {
+        "case": "CAJA permitted recapture produces no cash association",
+        "passed": true
+      },
+      {
+        "case": "TERMINAL permitted recapture produces no cash association",
+        "passed": true
+      },
+      {
+        "case": "CONTADOR excluded by E1 despite custom permission",
+        "passed": true
+      },
+      {
+        "case": "SISTEMAS excluded by E1 despite custom permission",
+        "passed": true
+      },
+      {
+        "case": "BODEGA excluded by E1 despite custom permission",
+        "passed": true
+      },
+      {
+        "case": "atomic movement/operation/allocation/receipt/folio rollback; same intent succeeds after defect removed",
+        "passed": true
+      },
+      {
+        "case": "real actor FK and receipt immutability trigger reject invalid writes",
+        "passed": true
+      }
+    ],
+    "mutations": [
+      {
+        "defect": "ordinary SQL cash guard restored CLOSED",
+        "expectedSuccessAssertionFailed": true,
+        "response": {
+          "status": 500,
+          "data": {
+            "error": "No se pudo completar la operación. No se guardaron cambios; intenta nuevamente. Si el problema continúa, reporta la pantalla y la hora del intento.",
+            "code": "INTERNAL_ERROR"
+          }
+        },
+        "atomicRollback": true
+      },
+      {
+        "defect": "non-ADMIN recapture granted before customization",
+        "defaultDenyAssertionFailed": true
+      },
+      {
+        "defect": "last audit INSERT fails",
+        "successAssertionFailed": true,
+        "fullFinancialRollback": true
+      }
+    ]
+  },
+  "rowValueSensitivityControl": {
+    "table": "permisos_rol",
+    "sameCount": true,
+    "rowHashChanged": true,
+    "afterSuccessfulStartupPreservationComparison": true,
+    "database": "disposable only",
+    "restored": false,
+    "disposition": "cluster destroyed in finally"
+  },
+  "postgresStopStdout": "waiting for server to shut down.... done\nserver stopped",
+  "postgresStopStderr": ""
+}

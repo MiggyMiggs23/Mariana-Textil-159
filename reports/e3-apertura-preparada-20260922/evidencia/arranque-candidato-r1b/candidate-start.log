@@ -1,0 +1,403 @@
+E3_OPEN_RELEASE_PREFLIGHT=PASS {"database":"heliumdb","databaseOid":"16384","rows":1631,"schemaSha256":"2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16","attributesSha256":"e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24","phase":"after","mode":"INSPECTION","e3":true,"e3Directed":false,"remate":false,"cashGateRetirement":true}
+[17:12:04.602] [33mWARN[39m (11847): [36mInspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.[39m
+[17:12:04.607] [32mINFO[39m (11847): [36mServer listening[39m
+    [35mport[39m: 18093
+[17:12:04.813] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[17:12:06.656] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 60
+[17:12:06.770] [31mERROR[39m (11847): [36mUnhandled API error[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    err: {
+      "type": "_DrizzleQueryError",
+      "message": "Failed query: insert into \"movimientos_credito\" (\"id\", \"cliente_id\", \"ticket_id\", \"movimiento_origen_id\", \"tipo\", \"importe\", \"usuario_id\", \"notas\", \"forma_pago\", \"cuenta_destino\", \"referencia\", \"metadata\", \"dias_plazo\", \"fecha_vencimiento\", \"es_incobrable\", \"motivo_incobrable\", \"sitio_origen_id\", \"sesion_caja_id\", \"naturaleza\", \"operacion_productor\", \"operacion_clave\", \"nota_origen_id\", \"origen_justificacion\", \"autorizado_por\", \"created_at\") values (default, $1, $2, default, $3, $4, $5, $6, $7, $8, default, $9, default, default, default, default, $10, $11, $12, $13, $14, $15, $16, default, $17) returning \"id\", \"cliente_id\", \"ticket_id\", \"movimiento_origen_id\", \"tipo\", \"importe\", \"usuario_id\", \"notas\", \"forma_pago\", \"cuenta_destino\", \"referencia\", \"metadata\", \"dias_plazo\", \"fecha_vencimiento\", \"es_incobrable\", \"motivo_incobrable\", \"sitio_origen_id\", \"sesion_caja_id\", \"naturaleza\", \"operacion_productor\", \"operacion_clave\", \"nota_origen_id\", \"origen_justificacion\", \"autorizado_por\", \"created_at\"\nparams: 810001,,ABONO,-12.50,810001,Abono real recibido desde Caja,EFECTIVO,CAJA_FISICA,{\"origen\":\"CAJA\",\"operacionE3\":\"5e7fc712-ab6d-4123-a099-974687fd2fd6\"},810001,810001,INGRESO_FISICO,ABONO_ORDINARIO,5e7fc712-ab6d-4123-a099-974687fd2fd6,,,2026-09-22T17:12:06.736Z: E1: la captura física de efectivo de crédito está deshabilitada.",
+      "stack":
+          Error: Failed query: insert into "movimientos_credito" ("id", "cliente_id", "ticket_id", "movimiento_origen_id", "tipo", "importe", "usuario_id", "notas", "forma_pago", "cuenta_destino", "referencia", "metadata", "dias_plazo", "fecha_vencimiento", "es_incobrable", "motivo_incobrable", "sitio_origen_id", "sesion_caja_id", "naturaleza", "operacion_productor", "operacion_clave", "nota_origen_id", "origen_justificacion", "autorizado_por", "created_at") values (default, $1, $2, default, $3, $4, $5, $6, $7, $8, default, $9, default, default, default, default, $10, $11, $12, $13, $14, $15, $16, default, $17) returning "id", "cliente_id", "ticket_id", "movimiento_origen_id", "tipo", "importe", "usuario_id", "notas", "forma_pago", "cuenta_destino", "referencia", "metadata", "dias_plazo", "fecha_vencimiento", "es_incobrable", "motivo_incobrable", "sitio_origen_id", "sesion_caja_id", "naturaleza", "operacion_productor", "operacion_clave", "nota_origen_id", "origen_justificacion", "autorizado_por", "created_at"
+          params: 810001,,ABONO,-12.50,810001,Abono real recibido desde Caja,EFECTIVO,CAJA_FISICA,{"origen":"CAJA","operacionE3":"5e7fc712-ab6d-4123-a099-974687fd2fd6"},810001,810001,INGRESO_FISICO,ABONO_ORDINARIO,5e7fc712-ab6d-4123-a099-974687fd2fd6,,,2026-09-22T17:12:06.736Z
+              at NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:73:11)
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:154:19)
+              at async insertCreditMovementE1 (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/credit-evidence.ts:96:17)
+              at async Object.insertMovement (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-repository.ts:85:28)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-collection.ts:142:26)
+              at async _NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/routes/e3-collections.ts:41:22)
+          caused by: error: E1: la captura física de efectivo de crédito está deshabilitada.
+              at <anonymous> (/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652:17)
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:161:13)
+              at async NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:71:12)
+              at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:154:19)
+              at async insertCreditMovementE1 (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/credit-evidence.ts:96:17)
+              at async Object.insertMovement (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-repository.ts:85:28)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-collection.ts:142:26)
+              at async _NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/routes/e3-collections.ts:41:22)
+      "query": "insert into \"movimientos_credito\" (\"id\", \"cliente_id\", \"ticket_id\", \"movimiento_origen_id\", \"tipo\", \"importe\", \"usuario_id\", \"notas\", \"forma_pago\", \"cuenta_destino\", \"referencia\", \"metadata\", \"dias_plazo\", \"fecha_vencimiento\", \"es_incobrable\", \"motivo_incobrable\", \"sitio_origen_id\", \"sesion_caja_id\", \"naturaleza\", \"operacion_productor\", \"operacion_clave\", \"nota_origen_id\", \"origen_justificacion\", \"autorizado_por\", \"created_at\") values (default, $1, $2, default, $3, $4, $5, $6, $7, $8, default, $9, default, default, default, default, $10, $11, $12, $13, $14, $15, $16, default, $17) returning \"id\", \"cliente_id\", \"ticket_id\", \"movimiento_origen_id\", \"tipo\", \"importe\", \"usuario_id\", \"notas\", \"forma_pago\", \"cuenta_destino\", \"referencia\", \"metadata\", \"dias_plazo\", \"fecha_vencimiento\", \"es_incobrable\", \"motivo_incobrable\", \"sitio_origen_id\", \"sesion_caja_id\", \"naturaleza\", \"operacion_productor\", \"operacion_clave\", \"nota_origen_id\", \"origen_justificacion\", \"autorizado_por\", \"created_at\"",
+      "params": [
+        810001,
+        null,
+        "ABONO",
+        "-12.50",
+        810001,
+        "Abono real recibido desde Caja",
+        "EFECTIVO",
+        "CAJA_FISICA",
+        "{\"origen\":\"CAJA\",\"operacionE3\":\"5e7fc712-ab6d-4123-a099-974687fd2fd6\"}",
+        810001,
+        810001,
+        "INGRESO_FISICO",
+        "ABONO_ORDINARIO",
+        "5e7fc712-ab6d-4123-a099-974687fd2fd6",
+        null,
+        null,
+        "2026-09-22T17:12:06.736Z"
+      ]
+    }
+[17:12:06.774] [32mINFO[39m (11847): [36mrequest errored[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 500
+    }
+    [35mresponseTime[39m: 59
+    err: {
+      "type": "Error",
+      "message": "failed with status code 500",
+      "stack":
+          Error: failed with status code 500
+              at onResFinished (/home/runner/workspace/node_modules/.pnpm/pino-http@10.5.0/node_modules/pino-http/logger.js:115:39)
+              at ServerResponse.onResponseComplete (/home/runner/workspace/node_modules/.pnpm/pino-http@10.5.0/node_modules/pino-http/logger.js:178:14)
+              at ServerResponse.emit (node:events:520:35)
+              at onFinish (node:_http_outgoing:1026:10)
+              at callback (node:internal/streams/writable:764:21)
+              at afterWrite (node:internal/streams/writable:708:5)
+              at afterWriteTick (node:internal/streams/writable:694:10)
+              at process.processTicksAndRejections (node:internal/process/task_queues:88:21)
+    }
+[17:12:06.856] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 35
+[17:12:06.907] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 49
+[17:12:06.969] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 33
+[17:12:07.005] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 19
+[17:12:07.022] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 16
+[17:12:07.042] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 18
+[17:12:07.058] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 14
+[17:12:07.073] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 13
+[17:12:07.087] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 13
+[17:12:07.149] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 40
+[17:12:07.189] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 14
+[17:12:07.222] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 32
+[17:12:07.256] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 33
+[17:12:07.320] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[17:12:07.357] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 35
+[17:12:07.417] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 29
+[17:12:07.453] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 35
+[17:12:07.517] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 33
+[17:12:07.558] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 38
+[17:12:07.606] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 17
+[17:12:07.641] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 15
+[17:12:07.675] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 25,
+      "method": "POST",
+      "url": "/api/clientes/810001/recapturas-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 14
+[17:12:07.708] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 26,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3/vista-previa"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 31
+[17:12:07.797] [31mERROR[39m (11847): [36mUnhandled API error[39m
+    [35mreq[39m: {
+      "id": 27,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    err: {
+      "type": "_DrizzleQueryError",
+      "message": "Failed query: insert into \"auditoria\" (\"id\", \"usuario_id\", \"usuario_snapshot\", \"rol_snapshot\", \"sitio_id\", \"sitio_snapshot\", \"modulo\", \"accion\", \"entidad\", \"entidad_id\", \"datos_antes\", \"datos_despues\", \"ip\", \"created_at\") values (default, $1, default, default, default, default, default, $2, $3, $4, default, $5, $6, default)\nparams: 810001,E3_ABONO_REGISTRADO,movimientos_credito,7,{\"clienteId\":810001,\"importeCentavos\":1250,\"asignaciones\":[],\"remanenteCentavos\":1250,\"saldoAFavorCentavos\":7500,\"deudaCentavos\":0,\"origen\":\"CAJA\",\"version\":1,\"folio\":\"E3-810001-00000006\",\"movimientoId\":7,\"clienteNombre\":\"Cliente sintético E3\",\"formaPago\":\"EFECTIVO\",\"cuentaDestino\":\"CAJA_FISICA\",\"clienteTelefono\":null,\"clienteRfc\":null,\"sitioNombre\":\"Sitio sintético E3\",\"actorNombre\":\"Actor sintético ADMIN\",\"sitioId\":810001,\"sesionCajaId\":810001,\"recibidoEn\":\"2026-09-22T17:12:07.774Z\",\"registradoEn\":\"2026-09-22T17:12:07.774Z\",\"actorId\":810001,\"motivo\":null},127.0.0.1: E3_ATOMIC_DEFECT",
+      "stack":
+          Error: Failed query: insert into "auditoria" ("id", "usuario_id", "usuario_snapshot", "rol_snapshot", "sitio_id", "sitio_snapshot", "modulo", "accion", "entidad", "entidad_id", "datos_antes", "datos_despues", "ip", "created_at") values (default, $1, default, default, default, default, default, $2, $3, $4, default, $5, $6, default)
+          params: 810001,E3_ABONO_REGISTRADO,movimientos_credito,7,{"clienteId":810001,"importeCentavos":1250,"asignaciones":[],"remanenteCentavos":1250,"saldoAFavorCentavos":7500,"deudaCentavos":0,"origen":"CAJA","version":1,"folio":"E3-810001-00000006","movimientoId":7,"clienteNombre":"Cliente sintético E3","formaPago":"EFECTIVO","cuentaDestino":"CAJA_FISICA","clienteTelefono":null,"clienteRfc":null,"sitioNombre":"Sitio sintético E3","actorNombre":"Actor sintético ADMIN","sitioId":810001,"sesionCajaId":810001,"recibidoEn":"2026-09-22T17:12:07.774Z","registradoEn":"2026-09-22T17:12:07.774Z","actorId":810001,"motivo":null},127.0.0.1
+              at NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:73:11)
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async Object.saveReceipt (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-repository.ts:109:11)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-collection.ts:155:5)
+              at async _NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/routes/e3-collections.ts:41:22)
+          caused by: error: E3_ATOMIC_DEFECT
+              at <anonymous> (/home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652:17)
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:149:14)
+              at async NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:71:12)
+              at async Object.saveReceipt (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-repository.ts:109:11)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/lib/e3-collection.ts:155:5)
+              at async _NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+              at async <anonymous> (/home/runner/workspace/reports/e3-apertura-preparada-20260922/source/artifacts/api-server/src/routes/e3-collections.ts:41:22)
+      "query": "insert into \"auditoria\" (\"id\", \"usuario_id\", \"usuario_snapshot\", \"rol_snapshot\", \"sitio_id\", \"sitio_snapshot\", \"modulo\", \"accion\", \"entidad\", \"entidad_id\", \"datos_antes\", \"datos_despues\", \"ip\", \"created_at\") values (default, $1, default, default, default, default, default, $2, $3, $4, default, $5, $6, default)",
+      "params": [
+        810001,
+        "E3_ABONO_REGISTRADO",
+        "movimientos_credito",
+        "7",
+        "{\"clienteId\":810001,\"importeCentavos\":1250,\"asignaciones\":[],\"remanenteCentavos\":1250,\"saldoAFavorCentavos\":7500,\"deudaCentavos\":0,\"origen\":\"CAJA\",\"version\":1,\"folio\":\"E3-810001-00000006\",\"movimientoId\":7,\"clienteNombre\":\"Cliente sintético E3\",\"formaPago\":\"EFECTIVO\",\"cuentaDestino\":\"CAJA_FISICA\",\"clienteTelefono\":null,\"clienteRfc\":null,\"sitioNombre\":\"Sitio sintético E3\",\"actorNombre\":\"Actor sintético ADMIN\",\"sitioId\":810001,\"sesionCajaId\":810001,\"recibidoEn\":\"2026-09-22T17:12:07.774Z\",\"registradoEn\":\"2026-09-22T17:12:07.774Z\",\"actorId\":810001,\"motivo\":null}",
+        "127.0.0.1"
+      ]
+    }
+[17:12:07.798] [32mINFO[39m (11847): [36mrequest errored[39m
+    [35mreq[39m: {
+      "id": 27,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 500
+    }
+    [35mresponseTime[39m: 36
+    err: {
+      "type": "Error",
+      "message": "failed with status code 500",
+      "stack":
+          Error: failed with status code 500
+              at onResFinished (/home/runner/workspace/node_modules/.pnpm/pino-http@10.5.0/node_modules/pino-http/logger.js:115:39)
+              at ServerResponse.onResponseComplete (/home/runner/workspace/node_modules/.pnpm/pino-http@10.5.0/node_modules/pino-http/logger.js:178:14)
+              at ServerResponse.emit (node:events:520:35)
+              at onFinish (node:_http_outgoing:1026:10)
+              at callback (node:internal/streams/writable:764:21)
+              at afterWrite (node:internal/streams/writable:708:5)
+              at afterWriteTick (node:internal/streams/writable:694:10)
+              at process.processTicksAndRejections (node:internal/process/task_queues:88:21)
+    }
+[17:12:07.899] [32mINFO[39m (11847): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 28,
+      "method": "POST",
+      "url": "/api/caja/abonos-e3"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 52
+[17:12:07.926] [32mINFO[39m (11847): [36mServer shutdown complete[39m
+    [35msignal[39m: "SIGTERM"

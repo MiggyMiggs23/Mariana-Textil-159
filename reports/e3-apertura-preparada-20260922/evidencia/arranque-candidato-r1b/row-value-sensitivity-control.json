@@ -1,0 +1,17 @@
+{
+  "table": "permisos_rol",
+  "sameCount": true,
+  "rowHashChanged": true,
+  "afterSuccessfulStartupPreservationComparison": true,
+  "database": "disposable only",
+  "restored": false,
+  "disposition": "cluster destroyed in finally",
+  "before": {
+    "count": 12,
+    "rowsSha256": "a5d07f2c151c69d6b604731d3e9f74c32aa3c4a7ef2d098502c9b034d20dbbd7"
+  },
+  "after": {
+    "count": 12,
+    "rowsSha256": "9cfcd9aa7566fa00af78a211a95717cba6c8bed16af98c9f6c3b702f9bc59048"
+  }
+}

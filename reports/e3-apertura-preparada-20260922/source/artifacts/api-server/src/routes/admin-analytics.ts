@@ -1,0 +1,595 @@
+import { Router, type IRouter } from "express";
+import ExcelJS from "exceljs";
+import {
+  ExportAdminCortesPdfQueryParams,
+  ExportAdminCortePdfParams,
+  ExportAdminCorteXlsxParams,
+  ExportAdminCortesXlsxQueryParams,
+  ExportAdminCuentasDestinoPdfQueryParams,
+  ExportAdminCuentasDestinoXlsxQueryParams,
+  ExportAdminCuentaDestinoMovimientosXlsxParams,
+  ExportAdminCuentaDestinoMovimientosXlsxQueryParams,
+  GetAdminComparacionTiendasQueryParams,
+  GetAdminComparacionTiendasResponse,
+  GetAdminCorteParams,
+  GetAdminCorteResponse,
+  GetAdminCuentasDestinoQueryParams,
+  ListAdminCuentaDestinoMovimientosParams,
+  ListAdminCuentaDestinoMovimientosQueryParams,
+  GetAdminDiferenciasQueryParams,
+  GetAdminDiferenciasResponse,
+  GetAdminRealtimeDashboardQueryParams,
+  GetAdminRealtimeDashboardResponse,
+  GetAdminRealtimePendingQueryParams,
+  GetAdminRealtimePendingResponse,
+  ListAdminRealtimeBreakdownQueryParams,
+  ListAdminRealtimeBreakdownResponse,
+  ListAdminCortesQueryParams,
+  ListAdminCortesResponse,
+  GetAdminCuadreFiscalQueryParams,
+  GetAdminCuadreFiscalResponse,
+  CreateAdminCuadreFiscalConfirmacionBody,
+  CreateAdminCuadreFiscalConfirmacionResponse,
+  CreateAdminCuadreFiscalDiferenciaBody,
+  CreateAdminCuadreFiscalDiferenciaResponse,
+  ResolveAdminCuadreFiscalDiferenciaParams,
+  ResolveAdminCuadreFiscalDiferenciaBody,
+  ResolveAdminCuadreFiscalDiferenciaResponse,
+} from "@workspace/api-zod";
+import { EXCEL_NUMBER_FORMAT, formatAccountDestination, formatNumber, toExcelNumber } from "@workspace/number-format";
+import { requireRole, requireSession } from "../middlewares/auth";
+import { getRequestIp } from "../lib/request";
+import { buildCorteCaja } from "../lib/pos";
+import { db, pool } from "@workspace/db";
+import { createTextPdf } from "../lib/pdf";
+import {
+  createDestinationAccountsPdf,
+  createDestinationAccountsWorkbook,
+} from "../lib/cuentas-destino-export";
+import {
+  AnalyticsInputError,
+  compareStores,
+  comparisonRange,
+  getDestinationAccounts,
+  getDestinationCollectedAmount,
+  isAccountDestination,
+  listDestinationAccountMovements,
+  getDifferences,
+  getPending,
+  getQuantities,
+  getRealtimeStores,
+  getRealtimeSalidaSummaries,
+  getRealtimeTickets,
+  getSalesSummary,
+  getSessionMargin,
+  measureKpi,
+  listRealtimeBreakdown,
+  listCuts,
+  parseAnalyticsFilters,
+  summarizeRealtimeCancellations,
+  summarizeRealtimeCredit,
+} from "../lib/admin-analytics";
+import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
+import { resolveReadScope } from "./inventario";
+
+const router: IRouter = Router();
+router.use("/admin", requireSession);
+router.use("/admin", (req, res, next) => {
+  if (req.path.startsWith("/cuadre-fiscal")) {
+    next();
+    return;
+  }
+  if (req.method === "GET" && req.path.startsWith("/cuentas-destino")) {
+    requireRole("ADMIN", "CONTADOR", "SISTEMAS")(req, res, next);
+    return;
+  }
+  requireRole("ADMIN")(req, res, next);
+});
+
+function badInput(error: unknown, res: Parameters<Parameters<IRouter["get"]>[1]>[1]): boolean {
+  if (!(error instanceof AnalyticsInputError)) return false;
+  res.status(400).json({ error: error.message, code: "VALIDATION_ERROR" });
+  return true;
+}
+
+function scopedAnalyticsFilters(
+  req: Parameters<Parameters<IRouter["get"]>[1]>[0],
+  query: { desde?: string; hasta?: string; ubicacionId?: number },
+  res: Parameters<Parameters<IRouter["get"]>[1]>[1],
+) {
+  const scope = resolveReadScope(req.auth!, query.ubicacionId);
+  if (scope.scopeError) {
+    res.status(403).json({ error: scope.scopeError, code: "FORBIDDEN" });
+    return null;
+  }
+  if (
+    query.ubicacionId !== undefined
+    && scope.ubicacionId !== undefined
+    && query.ubicacionId !== scope.ubicacionId
+  ) {
+    res.status(403).json({
+      error: "La ubicación solicitada está fuera de tu alcance de consulta.",
+      code: "FORBIDDEN",
+    });
+    return null;
+  }
+  return parseAnalyticsFilters({
+    ...query,
+    ubicacionId: scope.ubicacionId ?? undefined,
+  });
+}
+
+function optionalBoolean(value: unknown, name: string): boolean | undefined {
+  if (value === undefined) return undefined;
+  if (value === "true" || value === true) return true;
+  if (value === "false" || value === false) return false;
+  throw new AnalyticsInputError(`${name} debe ser true o false.`);
+}
+
+router.get("/admin/dashboard/realtime", async (req, res, next): Promise<void> => {
+  try {
+    const query = GetAdminRealtimeDashboardQueryParams.parse(req.query);
+    const filters = parseAnalyticsFilters(query);
+    const timed = await measureKpi("admin-realtime", async () => Promise.all([
+      getSalesSummary(filters), getQuantities(filters), getPending(filters),
+      getRealtimeStores(filters), getRealtimeTickets(filters), getRealtimeSalidaSummaries(filters),
+    ]));
+    const [totales, cantidades, pendientes, tiendas, ultimosTickets, salidas] = timed.value;
+    res.setHeader("Cache-Control", "private, no-store");
+    res.setHeader("Server-Timing", `${timed.name};dur=${timed.durationMs.toFixed(1)}`);
+    res.json(GetAdminRealtimeDashboardResponse.parse({
+      generatedAt: new Date().toISOString(),
+      fullRefreshSeconds: 300,
+      pendingRefreshSeconds: 30,
+      totales, cantidades,
+      ventasCredito: summarizeRealtimeCredit(tiendas),
+      cancelaciones: summarizeRealtimeCancellations(totales),
+      ...salidas,
+      pendientes: {
+        ...pendientes,
+        tiendas: tiendas.map((store) => ({
+          ubicacionId: store.ubicacionId,
+          pendiente: store.pendiente,
+          pendientes30Min: store.pendientes30Min,
+          alertas: store.alertas,
+        })),
+      },
+      tiendas,
+      comparativo: tiendas,
+      ultimosTickets,
+    }));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/dashboard/realtime/pendientes", async (req, res, next): Promise<void> => {
+  try {
+    const query = GetAdminRealtimePendingQueryParams.parse(req.query);
+    res.setHeader("Cache-Control", "private, no-store");
+    const filters = parseAnalyticsFilters(query);
+    const [pending, stores] = await Promise.all([getPending(filters), getRealtimeStores(filters)]);
+    res.json(GetAdminRealtimePendingResponse.parse({
+      ...pending,
+      tiendas: stores.map((store) => ({
+        ubicacionId: store.ubicacionId,
+        pendiente: store.pendiente,
+        pendientes30Min: store.pendientes30Min,
+        alertas: store.alertas,
+      })),
+    }));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/dashboard/realtime/desglose", async (req, res, next): Promise<void> => {
+  try {
+    const query = ListAdminRealtimeBreakdownQueryParams.parse(req.query);
+    const scope = resolveReadScope(req.auth!, query.ubicacionId);
+    if (scope.scopeError) {
+      res.status(403).json({ error: scope.scopeError, code: "FORBIDDEN" });
+      return;
+    }
+    if (
+      query.ubicacionId !== undefined
+      && scope.ubicacionId !== undefined
+      && query.ubicacionId !== scope.ubicacionId
+    ) {
+      res.status(403).json({
+        error: "La ubicación solicitada está fuera de tu alcance de consulta.",
+        code: "FORBIDDEN",
+      });
+      return;
+    }
+    res.setHeader("Cache-Control", "private, no-store");
+    res.json(ListAdminRealtimeBreakdownResponse.parse(await listRealtimeBreakdown(
+      parseAnalyticsFilters({ ...query, ubicacionId: scope.ubicacionId ?? undefined }),
+      query.concepto,
+      query.page,
+      query.pageSize,
+    )));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/cortes", async (req, res, next): Promise<void> => {
+  try {
+    const query = ListAdminCortesQueryParams.parse(req.query);
+    res.json(ListAdminCortesResponse.parse(
+      await listCuts(parseAnalyticsFilters(query), query.page, query.pageSize, {
+        cajeroId: query.cajeroId,
+        numeroCorte: query.numeroCorte,
+        soloConDiferencia: query.soloConDiferencia,
+      }),
+    ));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/diferencias", async (req, res, next): Promise<void> => {
+  try {
+    const query = GetAdminDiferenciasQueryParams.parse(req.query);
+    res.json(GetAdminDiferenciasResponse.parse(await getDifferences(
+      parseAnalyticsFilters(query),
+      {
+        umbralCorte: query.umbralCorte,
+        umbralTienda: query.umbralTienda,
+        agrupacion: query.agrupacion,
+      },
+    )));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/cuentas-destino", async (req, res, next): Promise<void> => {
+  try {
+    const query = GetAdminCuentasDestinoQueryParams.parse(req.query);
+    const filters = scopedAnalyticsFilters(req, query, res);
+    if (!filters) return;
+    filters.preset = query.preset;
+    res.json(await getDestinationAccounts(filters, query.compare ?? false));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/cuentas-destino/:cuentaDestino/movimientos", async (req, res, next): Promise<void> => {
+  try {
+    const { cuentaDestino } = ListAdminCuentaDestinoMovimientosParams.parse(req.params);
+    const query = ListAdminCuentaDestinoMovimientosQueryParams.parse(req.query);
+    if (cuentaDestino !== "TODAS" && !isAccountDestination(cuentaDestino)) {
+      res.status(400).json({ error: "Cuenta destino inválida.", code: "VALIDATION_ERROR" });
+      return;
+    }
+    const filters = scopedAnalyticsFilters(req, query, res);
+    if (!filters) return;
+    filters.preset = query.preset;
+    const formaPago = req.query.formaPago;
+    if (
+      formaPago !== undefined
+      && (typeof formaPago !== "string"
+        || !["EFECTIVO", "TRANSFERENCIA", "POR_COBRAR", "OTRAS"].includes(formaPago))
+    ) {
+      throw new AnalyticsInputError("formaPago no es una categoría válida de la matriz.");
+    }
+    const facturado = optionalBoolean(req.query.facturado, "facturado");
+    const incongruente = optionalBoolean(req.query.incongruente, "incongruente");
+    res.json(await listDestinationAccountMovements(
+        filters,
+        cuentaDestino,
+        query.page,
+        query.pageSize,
+        {
+          ...(facturado === undefined ? {} : { facturado }),
+          ...(formaPago === undefined ? {} : {
+            formaPago: formaPago as "EFECTIVO" | "TRANSFERENCIA" | "POR_COBRAR" | "OTRAS",
+          }),
+          ...(incongruente === undefined ? {} : { incongruente }),
+          ...(query.fuente === undefined ? {} : { fuentes: query.fuente }),
+        },
+      ));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+async function fiscalFigures(filters: ReturnType<typeof parseAnalyticsFilters>) {
+  const values = [filters.desde?.toISOString() ?? null, filters.hasta?.toISOString() ?? null, filters.ubicacionId ?? null];
+  const [invoiced, collected, receivable] = await Promise.all([
+    pool.query(`SELECT COALESCE(SUM(t.total),0)::text amount FROM tickets t WHERE ${accountedDocumentPredicate("t")} AND t.facturado
+      AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1) AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
+    getDestinationCollectedAmount(filters, "CUENTA_FISCAL"),
+    pool.query(`SELECT COALESCE(SUM(m.importe-COALESCE(a.aplicado,0)),0)::text amount
+      FROM movimientos_credito m JOIN tickets t ON t.id=m.ticket_id
+      LEFT JOIN LATERAL (
+        SELECT SUM(ap.importe) aplicado
+        FROM aplicaciones_credito ap
+        WHERE ap.venta_movimiento_id=m.id
+          AND NOT EXISTS (
+            SELECT 1
+            FROM movimientos_credito reverso
+            WHERE reverso.tipo='REVERSO'
+              AND reverso.movimiento_origen_id=ap.abono_movimiento_id
+          )
+      ) a ON true
+      WHERE m.tipo='VENTA_CREDITO' AND t.facturado AND ${accountedDocumentPredicate("t")}
+      AND ($1::timestamptz IS NULL OR ${accountedDocumentAt("t")} >= $1) AND ($2::timestamptz IS NULL OR ${accountedDocumentAt("t")} <= $2)
+      AND ($3::int IS NULL OR t.ubicacion_id=$3)`, values),
+  ]);
+  return { facturado: Number(invoiced.rows[0]!.amount).toFixed(2), cobradoCuentaFiscal: collected, porCobrarFiscal: Number(receivable.rows[0]!.amount).toFixed(2) };
+}
+
+function presentFiscalRecord(row: any) {
+  return { id: Number(row.id), tipo: row.tipo, desde: String(row.desde).slice(0, 10), hasta: String(row.hasta).slice(0, 10),
+    facturadoCongelado: Number(row.facturado_congelado).toFixed(2), actor: row.actor, creadoAt: new Date(row.created_at).toISOString(),
+    estado: row.estado, direccion: row.direccion, monto: row.monto == null ? null : Number(row.monto).toFixed(2),
+    descripcion: row.descripcion, notaResolucion: row.nota_resolucion, resueltoPor: row.resuelto_por,
+    resueltoAt: row.resuelto_at ? new Date(row.resuelto_at).toISOString() : null };
+}
+
+router.get("/admin/cuadre-fiscal", requireRole("ADMIN", "CONTADOR", "SISTEMAS"), async (req, res, next): Promise<void> => {
+  try {
+    const query = GetAdminCuadreFiscalQueryParams.parse(req.query);
+    const filters = parseAnalyticsFilters(query);
+    const [figures, history] = await Promise.all([fiscalFigures(filters), pool.query(
+      `SELECT r.*,u.nombre actor,ru.nombre resuelto_por FROM cuadre_fiscal_registros r JOIN usuarios u ON u.id=r.actor_id
+       LEFT JOIN usuarios ru ON ru.id=r.resuelto_por_id ORDER BY r.created_at DESC,r.id DESC`)]);
+    res.json(GetAdminCuadreFiscalResponse.parse({ ...figures, historial: history.rows.map(presentFiscalRecord) }));
+  } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+async function createFiscalRecord(req: any, res: any, input: { desde: string; hasta: string; ubicacionId?: number; direccion?: "MAS" | "MENOS"; monto?: number; descripcion?: string }, type: "CONFIRMACION" | "DIFERENCIA") {
+  const filters = parseAnalyticsFilters(input);
+  const figures = await fiscalFigures(filters);
+  const user = req.auth!.user;
+  const client = await pool.connect();
+  await client.query("BEGIN");
+  try {
+    const row = await client.query(`INSERT INTO cuadre_fiscal_registros(tipo,desde,hasta,ubicacion_id,facturado_congelado,actor_id,direccion,monto,descripcion,estado)
+      VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`, [type, input.desde, input.hasta, input.ubicacionId ?? null, figures.facturado, user.id, input.direccion ?? null, input.monto ?? null, input.descripcion ?? null, type === "CONFIRMACION" ? "CONFIRMADA" : "PENDIENTE"]);
+    const record = row.rows[0]!;
+    await client.query(`INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,datos_despues,ip) VALUES($1,$2,'cuadre_fiscal_registros',$3,$4,$5)`,
+      [user.id, type === "CONFIRMACION" ? "CONFIRMAR_CUADRE_FISCAL" : "REPORTAR_DIFERENCIA_FISCAL", String(record.id), JSON.stringify({ ...input, facturadoCongelado: figures.facturado }), getRequestIp(req)]);
+    if (type === "DIFERENCIA") await client.query(`INSERT INTO notificaciones_sistema(tipo,titulo,mensaje,entidad,entidad_id) VALUES('SOLICITUD_CUADRE_FISCAL','Solicitud: diferencia fiscal',$1,'cuadre_fiscal_registros',$2)`, [`${user.nombre} reportó ${input.direccion} $${input.monto}: ${input.descripcion}`, String(record.id)]);
+    await client.query("COMMIT");
+    const full = { ...record, actor: user.nombre, resuelto_por: null };
+    res.status(201).json((type === "CONFIRMACION" ? CreateAdminCuadreFiscalConfirmacionResponse : CreateAdminCuadreFiscalDiferenciaResponse).parse(presentFiscalRecord(full)));
+  } catch (error) { await client.query("ROLLBACK"); throw error; } finally { client.release(); }
+}
+router.post("/admin/cuadre-fiscal/confirmaciones", requireRole("ADMIN", "CONTADOR"), async (req, res, next): Promise<void> => { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalConfirmacionBody.parse(req.body),"CONFIRMACION"); } catch(error) { if(!badInput(error,res)) next(error); } });
+router.post("/admin/cuadre-fiscal/diferencias", requireRole("ADMIN", "CONTADOR"), async (req, res, next): Promise<void> => { try { await createFiscalRecord(req,res,CreateAdminCuadreFiscalDiferenciaBody.parse(req.body),"DIFERENCIA"); } catch(error) { if(!badInput(error,res)) next(error); } });
+router.post("/admin/cuadre-fiscal/diferencias/:id/resolver", requireRole("ADMIN"), async (req, res, next): Promise<void> => {
+  try {
+    const { id } = ResolveAdminCuadreFiscalDiferenciaParams.parse(req.params);
+    const { nota } = ResolveAdminCuadreFiscalDiferenciaBody.parse(req.body);
+    const user = req.auth!.user;
+    const client = await pool.connect();
+    await client.query("BEGIN");
+    try {
+      const updated = await client.query(`UPDATE cuadre_fiscal_registros SET estado='RESUELTA',nota_resolucion=$1,resuelto_por_id=$2,resuelto_at=now()
+        WHERE id=$3 AND tipo='DIFERENCIA' AND estado='PENDIENTE' RETURNING *`, [nota, user.id, id]);
+      if (!updated.rows[0]) { await client.query("ROLLBACK"); res.status(404).json({ error: "Diferencia pendiente no encontrada." }); return; }
+      await client.query(`INSERT INTO auditoria(usuario_id,accion,entidad,entidad_id,datos_despues,ip) VALUES($1,'RESOLVER_DIFERENCIA_FISCAL','cuadre_fiscal_registros',$2,$3,$4)`,
+        [user.id, String(id), JSON.stringify({ nota }), getRequestIp(req)]);
+      await client.query("COMMIT");
+      res.json(ResolveAdminCuadreFiscalDiferenciaResponse.parse(presentFiscalRecord({ ...updated.rows[0], actor: "", resuelto_por: user.nombre })));
+    } catch (error) { await client.query("ROLLBACK"); throw error; } finally { client.release(); }
+  } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+router.get("/admin/comparacion-tiendas", async (req, res, next): Promise<void> => {
+  try {
+    const query = GetAdminComparacionTiendasQueryParams.parse(req.query);
+    const range = comparisonRange(query.periodo, query.desde, query.hasta);
+    const filters = parseAnalyticsFilters(range);
+    const comparison = await compareStores(filters);
+    res.json(GetAdminComparacionTiendasResponse.parse({
+      periodo: query.periodo,
+      ...range,
+      ...comparison,
+    }));
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+async function cutsXlsx(req: Parameters<IRouter["get"]>[1] extends (...args: infer P) => unknown ? P[0] : never, res: any) {
+  const query = ExportAdminCortesXlsxQueryParams.parse(req.query);
+  const data = await listCuts(parseAnalyticsFilters(query), 1, 10_000, {
+    cajeroId: query.cajeroId, numeroCorte: query.numeroCorte,
+    soloConDiferencia: query.soloConDiferencia,
+  });
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Cortes");
+  sheet.columns = [
+    { header: "Corte", key: "id", width: 10 }, { header: "Tienda", key: "nombreUbicacion", width: 25 },
+    { header: "Cajero", key: "nombreUsuario", width: 25 }, { header: "Apertura", key: "abiertaAt", width: 22 },
+    { header: "Total cobrado", key: "totalCobrado", width: 16 }, { header: "Esperado", key: "efectivoEsperado", width: 16 },
+    { header: "Contado", key: "efectivoContado", width: 16 }, { header: "Diferencia", key: "diferencia", width: 16 },
+    { header: "Cancelaciones", key: "ticketsCancelados", width: 16 },
+  ];
+  for (const key of ["totalCobrado", "efectivoEsperado", "efectivoContado", "diferencia"]) sheet.getColumn(key).numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.getColumn("ticketsCancelados").numFmt = EXCEL_NUMBER_FORMAT.count;
+  sheet.addRows(data.items.map((row) => ({
+    ...row,
+    id: toExcelNumber(row.id), abiertaAt: new Date(row.abiertaAt),
+    totalCobrado: toExcelNumber(row.totalCobrado), efectivoEsperado: toExcelNumber(row.efectivoEsperado),
+    efectivoContado: row.efectivoContado == null ? null : toExcelNumber(row.efectivoContado),
+    diferencia: row.diferencia == null ? null : toExcelNumber(row.diferencia),
+    ticketsCancelados: toExcelNumber(row.ticketsCancelados),
+  })));
+  res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+  res.attachment("cortes.xlsx");
+  await workbook.xlsx.write(res);
+  res.end();
+}
+
+router.get("/admin/cortes/export.xlsx", async (req, res, next): Promise<void> => {
+  try { await cutsXlsx(req, res); } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+router.get("/admin/cortes/export.pdf", async (req, res, next): Promise<void> => {
+  try {
+    const query = ExportAdminCortesPdfQueryParams.parse(req.query);
+    const data = await listCuts(parseAnalyticsFilters(query), 1, 10_000, {
+      cajeroId: query.cajeroId, numeroCorte: query.numeroCorte,
+      soloConDiferencia: query.soloConDiferencia,
+    });
+    const pdf = createTextPdf("Cortes de caja", data.items.map((row) =>
+      `#${row.id} | ${row.nombreUbicacion} | ${row.nombreUsuario} | ${formatNumber(row.totalCobrado, { kind: "money" })} | Dif. ${formatNumber(row.diferencia, { kind: "money" })}`,
+    ));
+    res.type("application/pdf"); res.attachment("cortes.pdf"); res.send(pdf);
+  } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+async function destinationsXlsx(req: any, res: any) {
+  const query = ExportAdminCuentasDestinoXlsxQueryParams.parse(req.query);
+  const filters = scopedAnalyticsFilters(req, query, res);
+  if (!filters) return;
+  const data = await getDestinationAccounts(filters);
+  const workbook = createDestinationAccountsWorkbook(data);
+  res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+  res.attachment("cuentas-destino.xlsx");
+  await workbook.xlsx.write(res); res.end();
+}
+
+router.get("/admin/cuentas-destino/export.xlsx", async (req, res, next): Promise<void> => {
+  try { await destinationsXlsx(req, res); } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+router.get("/admin/cuentas-destino/:cuentaDestino/movimientos/export.xlsx", async (req, res, next): Promise<void> => {
+  try {
+    const { cuentaDestino } = ExportAdminCuentaDestinoMovimientosXlsxParams.parse(req.params);
+    const query = ExportAdminCuentaDestinoMovimientosXlsxQueryParams.parse(req.query);
+    if (!isAccountDestination(cuentaDestino)) {
+      res.status(400).json({ error: "Cuenta destino inválida.", code: "VALIDATION_ERROR" });
+      return;
+    }
+    const filters = scopedAnalyticsFilters(req, query, res);
+    if (!filters) return;
+    const data = await listDestinationAccountMovements(
+      filters,
+      cuentaDestino,
+      1,
+      1_000_000,
+    );
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Movimientos");
+    sheet.columns = [
+      { header: "Fecha", key: "fecha", width: 22 },
+      { header: "Tipo", key: "tipo", width: 24 },
+      { header: "Documento", key: "documento", width: 20 },
+      { header: "Cliente", key: "cliente", width: 28 },
+      { header: "Sitio", key: "sitio", width: 24 },
+      { header: "Monto", key: "monto", width: 16 },
+      { header: "Registró", key: "registro", width: 24 },
+    ];
+    sheet.getColumn("monto").numFmt = EXCEL_NUMBER_FORMAT.money;
+    sheet.addRows(data.items.map((row) => ({
+      ...row,
+      fecha: new Date(row.fecha),
+      cliente: row.cliente ?? "Público general",
+      monto: toExcelNumber(row.monto),
+    })));
+    sheet.addRow({ sitio: "Total", monto: toExcelNumber(data.montoTotal) });
+    res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.attachment(`movimientos-${cuentaDestino.toLowerCase()}.xlsx`);
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    if (!badInput(error, res)) next(error);
+  }
+});
+
+router.get("/admin/cuentas-destino/export.pdf", async (req, res, next): Promise<void> => {
+  try {
+    const query = ExportAdminCuentasDestinoPdfQueryParams.parse(req.query);
+    const filters = scopedAnalyticsFilters(req, query, res);
+    if (!filters) return;
+    const data = await getDestinationAccounts(filters);
+    const pdf = createDestinationAccountsPdf(data);
+    res.type("application/pdf"); res.attachment("cuentas-destino.pdf"); res.send(pdf);
+  } catch (error) { if (!badInput(error, res)) next(error); }
+});
+
+router.get("/admin/cortes/:id", async (req, res, next): Promise<void> => {
+  try {
+    const { id } = GetAdminCorteParams.parse(req.params);
+    const result = await buildCorteCaja(db, id);
+    if (!result) {
+      res.status(404).json({ error: "Corte no encontrado." });
+      return;
+    }
+    res.json(GetAdminCorteResponse.parse({
+      ...result,
+      ...(await getSessionMargin(id)),
+    }));
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/admin/cortes/:id/export.xlsx", async (req, res, next): Promise<void> => {
+  try {
+    const { id } = ExportAdminCorteXlsxParams.parse(req.params);
+    const corte = await buildCorteCaja(db, id);
+    if (!corte) { res.status(404).json({ error: "Corte no encontrado." }); return; }
+    const margin = await getSessionMargin(id);
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Corte");
+    sheet.columns = [{ header: "Concepto", key: "concepto", width: 32 }, { header: "Importe", key: "importe", width: 18 }];
+    sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
+    sheet.addRows([
+      { concepto: "Total cobrado", importe: toExcelNumber(corte.totalCobrado) },
+      { concepto: "Efectivo esperado", importe: toExcelNumber(corte.efectivoEsperado) },
+      { concepto: "Diferencia", importe: corte.diferencia == null ? null : toExcelNumber(corte.diferencia) },
+      { concepto: "Utilidad", importe: margin.margen == null ? "Pendiente" : toExcelNumber(margin.margen) },
+      ...corte.formasPago.map((row) => ({ concepto: `Pago ${row.formaPago}`, importe: toExcelNumber(row.importe) })),
+      ...corte.cuentasDestino.map((row) => ({ concepto: formatAccountDestination(row.cuentaDestino), importe: toExcelNumber(row.importe) })),
+      ...corte.facturacion.flatMap((row) => [
+        { concepto: `${row.facturado ? "Facturado" : "No facturado"} total`, importe: toExcelNumber(row.importe) },
+        { concepto: `${row.facturado ? "Facturado" : "No facturado"} efectivo`, importe: toExcelNumber(row.efectivo) },
+        { concepto: `${row.facturado ? "Facturado" : "No facturado"} transferencia`, importe: toExcelNumber(row.transferencia) },
+        { concepto: `${row.facturado ? "Facturado" : "No facturado"} crédito`, importe: toExcelNumber(row.credito) },
+      ]),
+      ...corte.ticketsCobradosDetalle.map((row) => ({ concepto: `Ticket cobrado #${row.folio} ${row.cobradoAt}`, importe: toExcelNumber(row.importe) })),
+      ...corte.cancelaciones.map((row) => ({ concepto: `Cancelado #${row.folio} — ${row.motivo} — ${row.autor} — ${row.canceladoAt}`, importe: toExcelNumber(row.importe) })),
+      ...corte.metreado.map((row) => ({ concepto: `${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"} (${row.cantidad} ${row.unidad})`, importe: toExcelNumber(row.importe) })),
+      ...corte.productos.map((row) => ({ concepto: `${row.tipo === "METREADO" ? "METRAJE" : "ROLLO"} ${row.sku} ${row.tela} ${row.color} (${row.cantidad} ${row.unidad})`, importe: toExcelNumber(row.importe) })),
+      ...corte.pendientes.map((row) => ({ concepto: `Pendiente #${row.folio}`, importe: toExcelNumber(row.total) })),
+    ]);
+    res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    res.attachment(`corte-${id}.xlsx`); await workbook.xlsx.write(res); res.end();
+  } catch (error) { next(error); }
+});
+
+router.get("/admin/cortes/:id/export.pdf", async (req, res, next): Promise<void> => {
+  try {
+    const { id } = ExportAdminCortePdfParams.parse(req.params);
+    const corte = await buildCorteCaja(db, id);
+    if (!corte) { res.status(404).json({ error: "Corte no encontrado." }); return; }
+    const margin = await getSessionMargin(id);
+    res.type("application/pdf"); res.attachment(`corte-${id}.pdf`);
+    res.send(createTextPdf(`Corte ${id}`, [
+      `Tienda: ${corte.sesion.nombreUbicacion}`,
+      `Cobrado: ${formatNumber(corte.totalCobrado, { kind: "money" })}`,
+      `Diferencia: ${formatNumber(corte.diferencia, { kind: "money" })}`,
+      `Utilidad: ${margin.margen == null ? "Pendiente" : formatNumber(margin.margen, { kind: "money" })}`,
+      ...corte.formasPago.map((row) => `Pago ${row.formaPago}: ${formatNumber(row.importe, { kind: "money" })}`),
+      ...corte.cuentasDestino.map((row) => `${formatAccountDestination(row.cuentaDestino)}: ${formatNumber(row.importe, { kind: "money" })}`),
+      ...corte.facturacion.map((row) => `${row.facturado ? "Facturado" : "No facturado"}: ${formatNumber(row.importe, { kind: "money" })}; E ${row.efectivo}; T ${row.transferencia}; C ${row.credito}`),
+      ...corte.ticketsCobradosDetalle.map((row) => `Cobrado #${row.folio}: ${formatNumber(row.importe, { kind: "money" })} ${row.cobradoAt}`),
+      ...corte.cancelaciones.map((row) => `Cancelado #${row.folio}: ${formatNumber(row.importe, { kind: "money" })}; ${row.motivo}; ${row.autor}; ${row.canceladoAt}`),
+      ...corte.metreado.map((row) => `${row.tipo === "METREADO" ? "METRAJE" : "ROLLOS"}: ${row.cantidad} ${row.unidad}; ${row.importe}`),
+      ...corte.productos.map((row) => `${row.tipo === "METREADO" ? "METRAJE" : "ROLLO"} ${row.sku} ${row.tela} ${row.color}: ${row.cantidad} ${row.unidad}; ${row.importe}`),
+      ...corte.pendientes.map((row) => `Pendiente #${row.folio}: ${row.total}`),
+    ]));
+  } catch (error) { next(error); }
+});
+
+export default router;

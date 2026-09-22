@@ -1,0 +1,31 @@
+{
+  "status": "RED_SOURCE_CASH_GATE_OBSERVED_NOT_SQL04_PROOF",
+  "source": "MAIN supplied local candidate console attribution in delegated message; subagent did not read console logs",
+  "immutableOriginalEvidence": "evidencia/arranque-candidato-r0/",
+  "observation": {
+    "time": "17:05:21.112",
+    "requestId": 3,
+    "method": "POST",
+    "path": "/api/caja/abonos-e3",
+    "errorType": "CreditEvidenceError",
+    "message": "E3: la captura de ingreso nuevo de efectivo de crédito permanece deshabilitada.",
+    "internalStatus": 403,
+    "httpStatus": 500,
+    "stack": [
+      "assertCreditCashCapturePolicy credit-evidence-contract.ts:110",
+      "assertCreditCaptureEnabled credit-evidence-contract.ts:129",
+      "insertCreditMovementE1 credit-evidence.ts:71",
+      "e3-repository.ts:85",
+      "e3-collection.ts:142",
+      "routes/e3-collections.ts:40"
+    ]
+  },
+  "limits": [
+    "Only first confirmation has a durable log attribution supplied by MAIN.",
+    "Second confirmation is HTTP500 in JSON but its cause was not durably observed.",
+    "Source guard rejected before SQL cash trigger; R0 is not proof of SQL04 mutation sensitivity.",
+    "No original R0 artifact edited or normalized.",
+    "Repeat SQL04 mutant on R1 with source ordinary cash enabled, then remove defect and require success.",
+    "E3-specific CreditEvidenceError mapping is corrected in live source under OFF gates and candidate snapshot; global error handler and active API unchanged."
+  ]
+}

@@ -1,0 +1,126 @@
+a partir del momento en que el propietario pegue el texto
+
+Autorizo la FASE B de E3 ordinario con efectivo para el paquete identificado abajo,
+únicamente después de verificar todas sus huellas y condiciones. Este es el texto
+final propuesto para que lo pegue el propietario: antes de ese acto NO constituye
+autorización ejecutada. Registrar fecha/hora efectiva UTC y local al recibirlo,
+operador y texto íntegro; no inferir autorización de una fecha de preparación.
+
+IDENTIDAD Y PINES
+Base git: eb07aa3947f16d8964d46f3b0b56d40f7f157d19 + correcciones y activación congeladas.
+Paquete: /home/runner/workspace/reports/e3-apertura-preparada-20260922
+manifest.json SHA256: c61e63cb4da2ac3227b2fd1450779b140498f3fae1d9722a243cf5097af21201
+source-manifest.json SHA256: dae1e2a9f513c55e78e277d1aff82b857f66524fceb4174a4fa8165931ad0da8
+source-corrections.patch SHA256: 8f30991bec6b92af067bf9b4466653a855dd1feaab50cfe0f2c45e76511fc28d
+activation.patch SHA256: abed9ed4608c4c000e9405322f2956c3fb553b5642b0970b5e2a0a285150ae0e
+API: /home/runner/workspace/artifacts/api-server/dist-e3-apertura-20260922/index.mjs
+API SHA256: 44e27767ca02ee21b8ba0cdcea56331adcb949229df942a8b2387dc306dfcbd6
+Frontend: /home/runner/workspace/artifacts/mariana-textil/dist-e3-apertura-20260922
+release-assets.sha256 SHA256: 769372ea19bfb79009f26393ccf9192c3b8bd6cebcbc08aa85d9dedfef81cfc0
+release-expected.json SHA256: 78288ca84c9dbe2c20280ebd98073303f216fbbb3f7bbeccc023eae10a35c3be
+Identidad: {"database":"heliumdb","databaseOid":"16384","schema":"public","role":"postgres","serverVersionNum":"160010"}
+B0 catálogo: 89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358
+B0 atributos: 597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665
+B1 catálogo: 2cffb4df1f91f827e1a48e6049dfb0f65ebf386bafec17060acdc0f91b99dd16
+B1 atributos: e360831b5e3d0ea63408d8c592d4bc88ea33eb0340d3e25896e2b6feb50cfe24
+SQL 01-install-prepared.sql SHA256: 15754c178aa05204cfaabd0dc17c9907e76db6d7553e9ddbadb0b4197d291c87
+SQL 02-revert-before-first-receipt-only.sql SHA256: f637cb5306d90a64839b271ec75d4ecb8cd31fe663c1a2ea9f772ac519ebf657
+SQL 03-prepare-ordinary-cash-gate-retirement.REHEARSAL-ONLY.sql SHA256: 52e9b857e1431b68ecb43cb0b0f6a171d3b5a1103713da14b57b3d7ac9c78a61
+SQL 04-restore-cash-gate.REHEARSAL-ONLY.sql SHA256: 3b03d49d606eddb6f5be34e495c82df4c8ff4ecbe9e2a0212629238e975c4f46
+
+La fuente candidata es la base indicada más source-corrections.patch y
+activation.patch, congelada físicamente; no es HEAD limpio. Servir exclusivamente
+los outputs finales fijados. No reconstruir desde fuentes vivas ni incorporar
+Tanda B, que permanece OFF. No cambiar ningún archivo de este paquete sellado.
+
+VENTANA Y RESPALDO (ANTES DE ESCRIBIR)
+1. Comprobar package-integrity.sha256 con su checksum externo y
+release-assets.sha256 desde /home/runner/workspace. Comprobar PID/bundle activo,
+conexión efectiva sin registrar credenciales y modo INSPECTION. Si existe drift,
+otro proceso, cambio de identidad o hash, detener SIN reparar ni rebaselinar.
+2. Cerrar tráfico mutador y tareas/usuarios escritores, esperar a cero
+transacciones activas escritoras y conservar una ventana exclusiva. Si no puede
+garantizarse, abortar sin SQL. La autorización incluye el cambio de runtime
+descrito, NO autoriza escritores concurrentes durante migración.
+3. Crear backup PostgreSQL completo (esquema y datos) y respaldo de configuración
+de workflows/servicio/UI actuales en ubicación privada, permisos0600, registrar
+SHA256 sin contraseñas. Restaurarlo en PostgreSQL NUEVO desechable y verificar
+identidad lógica, esquema/ACL/enums/triggers, hashes deterministas de todas las
+filas por tabla y secuencias last_value/is_called; parar y destruir el ensayo.
+Un dump sin restauración verificada NO basta. Si falla cualquier control,
+no proceder. No borrar backups previos E2.
+4. Capturar B0 actual, hashes de filas por tabla y secuencias en READ ONLY.
+Ejecutar release-preflight.mjs --before con API_INSPECTION_BOOT=1 y
+NODE_ENV=development contra la conexión efectiva verificada. Exigir prueba
+E3_OPEN_RELEASE_PREFLIGHT=PASS y B0 exacto indicado; no basta exit0.
+
+SQL EXACTO, SOLO DESPUÉS DE LOS PASOS ANTERIORES
+5. Aplicar una sola vez, en orden, los archivos completos fijados por SHA:
+sql/01-install-prepared.sql y
+sql/03-prepare-ordinary-cash-gate-retirement.REHEARSAL-ONLY.sql.
+El sufijo conserva la condición de preparación original; este texto, solo al
+ser pegado por el propietario, autoriza esas DOS ejecuciones operativas exactas.
+Usar psql -X -v ON_ERROR_STOP=1 -f con conexión efectiva verificada. No usar
+db:push, migradores, seed, initializers ni otros SQL. Cada archivo tiene BEGIN/
+COMMIT, lock_timeout2s y statement_timeout60s; ante error no reintentar a ciegas.
+SQL01 crea tablas/índices/trigger E3 y permisos DENY para noADMIN sin pisar
+personalizaciones. SQL03 reemplaza exclusivamente
+public.e1_guard_cash_capture_closed(): admite INGRESO_FISICO/ABONO/
+ABONO_ORDINARIO; todos los otros casos siguen cerrados. Mantener guardas E1
+permanentes y finalización diferida E2.
+6. Si01 termina y03 falla, mantener tráfico cerrado y runtime anterior; conservar
+el estado parcial identificado, no declararlo B1 ni abrir. Verificar/restaurar
+mediante backup o plan de reversión que corresponda, nunca forzar hashes.
+Tras ambas, ejecutar release-preflight.mjs (sin --before); exigir B1 exacto.
+Comparar filas/secuencias anteriores: solo están autorizadas las inserciones
+de permisos de SQL01 y los efectos correspondientes sobre su secuencia.
+No deben aparecer actores, sesiones, recibos o movimientos por migración.
+
+ARRANQUE Y APERTURA ACOTADA
+7. Con la ventana todavía cerrada, cambiar SOLO el workflow API para invocar:
+cd /home/runner/workspace && exec bash reports/e3-apertura-preparada-20260922/api-start-audit.sh
+Detener runtime anterior de forma controlada e iniciar ese candidato una vez.
+El wrapper verifica inventario antes/después del preflight, fija INSPECTION y
+ejecuta la ruta absoluta del bundle. Gates compilados: E3 ordinario/matriz/UI
+y E3_ORDINARY_CASH_ENABLED ON; dirigido/devolución/retenido/atribución/Fondo/
+remate OFF. Fuente de desarrollo no se activa ni se usa para servir candidato.
+8. Servir la UI exclusivamente desde el directorio frontend final fijado,
+no desde vite dev ni desde su fuente posterior. Comando del servicio UI:
+cd /home/runner/workspace && exec pnpm --dir artifacts/mariana-textil exec vite preview --config /home/runner/workspace/reports/e3-apertura-preparada-20260922/ui-preview.config.mjs --outDir /home/runner/workspace/artifacts/mariana-textil/dist-e3-apertura-20260922 --host 0.0.0.0 --port "$PORT" --strictPort
+Conservar rutas/proxy /api del entorno y BASE_PATH raíz; no modificar API/proxy
+para sortear cookies o autenticación. Este comando de servicio UI debe validarse
+en ventana antes de abrir tráfico: el ensayo del paquete compiló UI, pero no
+acredita un despliegue de ese workflow. Si no sirve los assets exactos, abortar.
+9. Exigir /api/healthz200, preflight positivo, línea INSPECTION y PID vivo del
+bundle exacto, workers/fonts accesibles en rutas finales y registro real de
+arranque con PID/hash/modo/preflight correctos. Conservar política WARNING de
+append E2: no cambiarla a fail-closed; sin registro efectivo no declarar
+verificación aprobada. No añadir strace al workflow permanente.
+Comparar catálogo, hashes deterministas de todas las filas por tabla y
+secuencias last_value/is_called antes/después del arranque sin escritores.
+Verificar UI/API y acceso autorizado, default ADMIN para recaptura,
+personalizable para SUPERVISOR/CAJA/TERMINAL, pero E1 sigue excluyendo
+CONTADOR/SISTEMAS/BODEGA. No crear actores sintéticos ni recibos de prueba en
+la base operativa. Los ensayos de escritura ya constan en PostgreSQL desechable.
+10. Solo después de todos los PASS, abrir tráfico de E3 ordinario/efectivo y
+recaptura según permiso. La primera recepción operativa debe ser una recepción
+real autorizada por su actor, no un dato fabricado para un smoke test.
+Retiro dirigido/retenido, devolución, atribución, Fondo y remate quedan FUERA.
+También quedan fuera Tanda B, cambios de política de roles E1, alteraciones de
+históricos, purgas, nuevas migraciones y cualquier SQL no listado.
+
+ABORTO/REVERSIÓN
+Ante fallo, mantener/cerrar escritores y no abrir nuevos cobros. Si SQL03 se
+aplicó, ejecutar únicamente sql/04-restore-cash-gate.REHEARSAL-ONLY.sql con su
+SHA indicado para volver a cerrar nuevas capturas; verificar definición exacta.
+Esto NO borra ni invierte movimientos existentes.
+Antes del primer recibo, SQL02 puede retirar las tablas E3 pero retiene permisos:
+NO es B0 exacto, por lo que no debe forzarse el preflight E2. Para volver al E2
+retenido con su catálogo exacto se necesita restauración verificada del backup
+preventana, sin transacciones posteriores que perder, y su preflight.
+Si ya hay recibos o movimientos nuevos, PROHIBIDO ejecutar SQL02 o sobrescribir
+con backup antiguo. Conservar evidencia y lector compatible, mantener tráfico
+cerrado y solicitar un plan de recuperación que no pierda operaciones.
+No usar la reversión para habilitar E2 con un catálogo distinto de su esperado.
+Registrar tiempos, comandos, salidas, hashes y decisión final fuera de este
+paquete inmutable. Esta autorización no permite omitir controles ante un fallo.
