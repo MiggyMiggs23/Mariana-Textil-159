@@ -1,0 +1,7 @@
+Continúa la construcción OFF con los workflows detenidos. No necesitas la API arriba para eso.
+
+Aparte, autorización del propietario; guárdala tal cual en reports/e2-liberacion-20260922/ antes de la primera escritura: el entorno detuvo los workflows por su cuenta. Autorizo volver a arrancar el workflow de API tal como está configurado, con el wrapper aprobado, sin cambiar comando, bundle ni modo. Es un arranque de reanudación, no una liberación: no apliques SQL, no abras captura ni ninguna otra puerta, no corras inicializadores ni backfills.
+
+Después verifica y repórtame: PID, hash completo del bundle, modo inspección, /api/healthz 200, que reports/arranques-api.log registró el arranque y que no hubo escrituras de arranque en la base. Si algo no coincide, detente y repórtamelo.
+
+Si el arranque falla, no lo repares por tu cuenta: repórtame el motivo exacto y sigue con la construcción OFF.
