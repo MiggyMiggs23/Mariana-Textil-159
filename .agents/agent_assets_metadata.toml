@@ -1935,3 +1935,31 @@ mtime_ms = 1790090263743
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ad059090-4588-4d6b-9914-0a5210fd84a4/9abff100-97f2-4643-8bfa-fc884229ca05"
 storage_version_token = "1790090326222907"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "vC7f-Cj0jJWuo-h40uZMU"
+uri = "file://reports/tanda-a-20260922.md"
+type = "text"
+title = "Tanda A — informe único"
+description = "Resultado por tarea, revisiones exactas, verificaciones, hashes y límites de la preparación E3 CLOSED."
+logical_id = "bc15752e-5c53-41af-a205-06e1416db319"
+content_hash = "sha256:a4c0b2c38bf1548e6b6fecf55a9882d3ae864f37873272a0eaf5b9c3a56c2d7e"
+size = 10594
+mtime_ms = 1790094370306
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/bc15752e-5c53-41af-a205-06e1416db319/7df973ef-8655-4a86-874e-8b072056983d"
+storage_version_token = "1790094504598827"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "NZ47u8HT0Dx_Jr6Dt-YAs"
+uri = "file://reports/e3-paquete-liberacion-preparado-20260922/fase-b-BORRADOR-NO-AUTORIZACION.md"
+type = "text"
+title = "E3 — borrador de fase B"
+description = "Texto preparado; no constituye autorización ni habilita la captura de efectivo o E3 operativo."
+logical_id = "52e0e49c-82e7-4c43-90fb-6612f1086786"
+content_hash = "sha256:c041c3e31770a602b9360347137a9f93cf38929ecd9b8f70f7f6db772408b290"
+size = 2869
+mtime_ms = 1790094153338
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/52e0e49c-82e7-4c43-90fb-6612f1086786/446d5a49-69ff-4704-9875-97dd058b80e8"
+storage_version_token = "1790094505252940"
+content_type = "text/markdown"
