@@ -1,0 +1,11 @@
+Autorización del propietario. Guarda este texto tal cual en reports/e2-paquete-liberacion-preparado-20260921/ antes de la primera escritura.
+
+Acepto como correctas las 10 diferencias del diagnóstico reports/e2-diagnostico-b0-20260922/resultado.md: la base real es el estado válido y la reconstrucción era imprecisa. No se modifica la base real.
+
+Autorizo regenerar las expectativas del preflight así:
+- B0: los atributos leídos de la base real en transacción READ ONLY.
+- B1: B0 real más exactamente los objetos que agrega el SQL de A+C, sin cambiar enums ni el modo ALWAYS del trigger.
+
+Autorizo actualizar release-expected.json, el manifiesto y package-integrity.sha256 con los hashes nuevos, sin cambiar el bundle, el SQL, el wrapper ni la lógica del preflight. Valida el preflight nuevo en PostgreSQL desechable y entrega un texto de fase B nuevo con los hashes actualizados, fecha de hoy y hora "a partir del momento en que el propietario pegue el texto".
+
+No reinicies la API, no toques el workflow ni apliques SQL a la base real. Si aparece cualquier otra diferencia, detente y repórtamela.
