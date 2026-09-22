@@ -28,5 +28,10 @@ export interface AdminCuentaDestinoMovimiento {
   formaPago: string;
   facturado: boolean;
   fuente: AdminCuentaDestinoMovimientoFuente;
+  /**
+     * Identidad documental E5; no confundir con el ID numérico del cliente.
+     * @nullable
+     */
+  e5CobroId?: string | null;
   incongruente: boolean;
 }

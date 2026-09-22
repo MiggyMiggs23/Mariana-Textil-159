@@ -58,6 +58,7 @@ import { useToast } from "@/hooks/use-toast";
 import { formatNumber, formatUnit } from "@workspace/number-format";
 import { ConfirmacionTextoExacto } from "@/components/confirmacion-texto-exacto";
 import { DirectedPaymentHistory } from "@/components/directed-payment-history";
+import { E5Entry } from "@/components/e5-pendientes";
 import { ResponsiveTable } from "@/components/client-responsive-table";
 import { ClienteNotaEstadoBadge } from "@/components/cliente-nota-estado-badge";
 import { CREDIT_TERMS, type ClientCreditTerm } from "@/lib/credit-terms";
@@ -630,6 +631,7 @@ export default function ClienteDetail() {
           </Link>
         )}
 
+        {canFinances && <E5Entry entrada="CLIENTE" clienteId={id} />}
         {canFinances && <DirectedPaymentHistory tipo="CLIENTE" entidadId={id} />}
         <ClientePagoDialog
           open={paymentOpen}

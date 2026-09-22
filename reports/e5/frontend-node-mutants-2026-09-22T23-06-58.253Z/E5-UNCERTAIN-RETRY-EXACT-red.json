@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E5-UNCERTAIN-RETRY-EXACT",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E5-UNCERTAIN-RETRY-EXACT\n+ actual - expected\n\n  {\n    data: {\n+     claveOperacion: 'c38a2ae6-2eaf-4626-b23a-309c72c3fc8a',\n-     claveOperacion: '131f58e2-125f-4004-b6f5-29f366774517',\n      clienteId: 7,\n      cuentaDestino: 'CAJA_FISICA',\n      entrada: 'CAJA',\n      evidencia: {\n        descripcion: 'Evidencia de recepción',\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E5-UNCERTAIN-RETRY-EXACT\n+ actual - expected\n\n  {\n    data: {\n+     claveOperacion: 'c38a2ae6-2eaf-4626-b23a-309c72c3fc8a',\n-     claveOperacion: '131f58e2-125f-4004-b6f5-29f366774517',\n      clienteId: 7,\n      cuentaDestino: 'CAJA_FISICA',\n      entrada: 'CAJA',\n      evidencia: {\n        descripcion: 'Evidencia de recepción',\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 3009.896126"
+  ]
+}

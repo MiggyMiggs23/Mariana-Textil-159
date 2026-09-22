@@ -1,4 +1,5 @@
 import { pool, db } from "@workspace/db";
+import { e5DestinationRows } from "./e5-destination-reader";
 import { readSessionCash } from "./caja-corte-reader";
 import { cashCents, cashMoney } from "./caja-cash-ledger";
 import {
@@ -131,7 +132,7 @@ export function isAccountDestination(value: string): value is AccountDestination
  * POS payments deliberately exclude CREDITO to avoid counting that sale twice.
  */
 function destinationReadModel() {
-  return `WITH destination_movements AS (
+  return `WITH legacy_destination_movements AS (
     SELECT p.id, ${accountedDocumentAt("t")} fecha, p.importe importe, p.forma_pago::text "formaPago",
       CASE WHEN p.forma_pago='EFECTIVO' THEN 'CAJA_FISICA'
         WHEN t.facturado THEN 'CUENTA_FISCAL' ELSE 'CUENTA_NO_FISCAL' END::text "cuentaDestino",
@@ -221,6 +222,9 @@ function destinationReadModel() {
       AND $3::int IS NULL
       AND r.tipo='REVERSO' AND original.tipo='ABONO' AND original.cuenta_destino IS NOT NULL
       AND -original.importe > COALESCE(aplicado.importe,0)
+  ), destination_movements AS (
+    SELECT legacy_destination_movements.*, NULL::text "e5CobroId" FROM legacy_destination_movements
+    ${e5DestinationRows()}
   )`;
 }
 
@@ -239,7 +243,7 @@ export async function getDestinationCollectedAmount(
      SELECT COALESCE(SUM(importe),0)::text amount
      FROM destination_movements
      WHERE "cuentaDestino"=$4
-       AND fuente IN ('POS','ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')`,
+       AND fuente IN ('POS','ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR','E5_RECEPCION','E5_DEVOLUCION')`,
     [...values, destination],
   );
   return decimal(result.rows[0]!.amount);
@@ -1327,6 +1331,8 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
   const rows = result.rows;
   const saleSources = new Set(["POS", "CREDITO"]);
   const collectionSources = new Set([
+    "E5_RECEPCION",
+    "E5_DEVOLUCION",
     "POS",
     "ABONO",
     "REVERSO_ABONO",
@@ -1380,7 +1386,9 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
     "ABONO_SALDO_FAVOR",
     "REVERSO_ABONO_SALDO_FAVOR",
   ]);
-  const collected = pos + abonos + abonosSaldoFavor;
+  const e5Receipts = sumSources(collectionRows, ["E5_RECEPCION"]);
+  const e5Returns = -sumSources(collectionRows, ["E5_DEVOLUCION"]);
+  const collected = pos + abonos + abonosSaldoFavor + e5Receipts - e5Returns;
   // Cobrado + Por cobrar is not an identity for Vendido: Cobrado includes ABONOs
   // settling credit sales from earlier periods, while Por cobrar means only the
   // credit notes created in this reporting period (not their outstanding balance).
@@ -1393,7 +1401,8 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
     "ABONO_SALDO_FAVOR",
     "REVERSO_ABONO_SALDO_FAVOR",
   ]);
-  const priorCollected = priorPos + priorAbonos + priorAbonosSaldoFavor;
+  const priorCollected = priorPos + priorAbonos + priorAbonosSaldoFavor
+    + sumSources(priorCollectionRows, ["E5_RECEPCION", "E5_DEVOLUCION"]);
   const matrix = reconcileDestinationMatrix(saleRows);
   const incongruenceCount = rows.reduce(
     (sum, row) => sum + Number(row.incongruencias ?? 0),
@@ -1450,6 +1459,9 @@ export async function getDestinationAccounts(filters: AnalyticsFilters, compare 
         contado: decimal(pos),
         abonos: decimal(abonos),
         saldosFavor: decimal(abonosSaldoFavor),
+        ...(collectionRows.some(row => row.fuente.startsWith("E5_")) ? {
+          recepcionesRetenidas: decimal(e5Receipts), devolucionesRetenidas: decimal(e5Returns),
+        } : {}),
         total: decimal(collected),
         totalAnterior: compare ? decimal(priorCollected) : null,
         variacionPorcentaje: compare ? percentageChange(collected, priorCollected) : null,
@@ -1650,11 +1662,14 @@ export async function listDestinationAccountMovements(
          CASE d."cuentaDestino" WHEN 'CAJA_FISICA' THEN 'Cobro en efectivo'
            WHEN 'CUENTAS_POR_COBRAR' THEN 'Venta a crédito'
            WHEN 'CUENTA_FISCAL' THEN 'Transferencia fiscal' ELSE 'Transferencia no fiscal' END tipo,
-         CASE WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')
+          CASE WHEN d.fuente IN ('E5_RECEPCION','E5_DEVOLUCION') THEN 'CLIENTE'
+            WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')
            THEN 'MOVIMIENTO_CREDITO' ELSE 'TICKET' END "documentoTipo",
          CASE WHEN d.fuente IN ('ABONO','REVERSO_ABONO','ABONO_SALDO_FAVOR','REVERSO_ABONO_SALDO_FAVOR')
            THEN d."movimientoCreditoId" ELSE d."documentoId" END "documentoId",
          CASE
+            WHEN d.fuente='E5_RECEPCION' THEN ('Recepción retenida E5 ' || d."e5CobroId")
+            WHEN d.fuente='E5_DEVOLUCION' THEN ('Devolución íntegra E5 ' || d."e5CobroId")
            WHEN d.fuente IN ('REVERSO_ABONO','REVERSO_ABONO_SALDO_FAVOR')
              THEN ('Reverso de abono #' || d."movimientoCreditoId"::text)
            WHEN d.fuente IN ('ABONO','ABONO_SALDO_FAVOR')
@@ -1663,7 +1678,7 @@ export async function listDestinationAccountMovements(
          END documento,d."clienteId",c.nombre cliente,
           d."ubicacionId",COALESCE(u.nombre,'Estado de cuenta') sitio,
           d."cuentaDestino" "cuentaDestino",d.importe::text monto,
-           d."formaPago",d.facturado,d.fuente,
+            d."formaPago",d.facturado,d.fuente,d."e5CobroId",
           (d.fuente='ABONO' AND ((d.facturado AND d."cuentaDestino"='CUENTA_NO_FISCAL') OR
             (NOT d.facturado AND d."cuentaDestino"='CUENTA_FISCAL'))) incongruente,
          registrador.id "registroId",registrador.nombre registro

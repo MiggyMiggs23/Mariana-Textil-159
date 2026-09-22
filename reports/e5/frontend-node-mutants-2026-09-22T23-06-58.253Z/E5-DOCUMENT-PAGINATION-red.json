@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E5-DOCUMENT-PAGINATION",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E5-DOCUMENT-PAGINATION\n\n2 !== 6\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E5-DOCUMENT-PAGINATION\n\n2 !== 6\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2936.641506"
+  ]
+}

@@ -8,6 +8,2286 @@
 import * as zod from 'zod';
 
 
+
+
+
+export const GetE5DisponibilidadQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().int().min(1)
+})
+
+export const GetE5DisponibilidadResponse = zod.object({
+  "enabled": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+
+
+
+
+export const GetE5ContextoQueryParams = zod.object({
+  "clienteId": zod.coerce.number().int().min(1),
+  "ubicacionId": zod.coerce.number().int().min(1)
+})
+
+export const getE5ContextoResponseNotasItemSaldoPendienteMax = 13;
+
+
+export const getE5ContextoResponseNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5ContextoResponseSesionesItemFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
+export const GetE5ContextoResponse = zod.object({
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "versionContexto": zod.string().describe('Token opaco servidor del contexto canónico de saldos autorizado; nunca derivar en UI'),
+  "consultadoAt": zod.coerce.date(),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(getE5ContextoResponseNotasItemSaldoPendienteMax).regex(getE5ContextoResponseNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "sesiones": zod.array(zod.object({
+  "id": zod.number().int(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "fechaOperativa": zod.string().regex(getE5ContextoResponseSesionesItemFechaOperativaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.')
+})),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+
+
+export const listE5CobrosQueryLimitDefault = 25;
+export const listE5CobrosQueryLimitMax = 100;
+
+
+
+export const ListE5CobrosQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().int().min(1),
+  "clienteId": zod.coerce.number().int().min(1).optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']).optional(),
+  "cursor": zod.coerce.string().uuid().optional(),
+  "limit": zod.coerce.number().int().min(1).max(listE5CobrosQueryLimitMax).default(listE5CobrosQueryLimitDefault)
+})
+
+export const listE5CobrosResponseItemsItemImporteRecibidoMax = 13;
+
+
+export const listE5CobrosResponseItemsItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemImporteAplicadoMax = 13;
+
+
+export const listE5CobrosResponseItemsItemImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemImportePendienteMax = 13;
+
+
+export const listE5CobrosResponseItemsItemImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemImporteDevueltoMax = 13;
+
+
+export const listE5CobrosResponseItemsItemImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemEvidenciaRecepcionDescripcionMax = 2000;
+
+export const listE5CobrosResponseItemsItemEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const listE5CobrosResponseItemsItemEvidenciaRecepcionReferenciasMax = 20;
+
+export const listE5CobrosResponseItemsItemNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const listE5CobrosResponseItemsItemNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemPropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const listE5CobrosResponseItemsItemPropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const listE5CobrosResponseItemsItemPropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const listE5CobrosResponseItemsItemPropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemPropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const listE5CobrosResponseItemsItemPropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemPropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const listE5CobrosResponseItemsItemPropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const listE5CobrosResponseItemsItemPropuestasItemEvidenciaReferenciasMax = 20;
+
+export const listE5CobrosResponseItemsItemAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const listE5CobrosResponseItemsItemAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemAplicacionesItemImporteMax = 13;
+
+
+export const listE5CobrosResponseItemsItemAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const listE5CobrosResponseItemsItemAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const listE5CobrosResponseItemsItemAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const listE5CobrosResponseItemsItemAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const listE5CobrosResponseItemsItemAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const listE5CobrosResponseItemsItemDevolucionImporteMax = 13;
+
+
+export const listE5CobrosResponseItemsItemDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5CobrosResponseItemsItemDevolucionEvidenciaDescripcionMax = 2000;
+
+export const listE5CobrosResponseItemsItemDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const listE5CobrosResponseItemsItemDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const listE5CobrosResponseItemsItemAntiguedadDiasMin = 0;
+
+
+
+export const ListE5CobrosResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(listE5CobrosResponseItemsItemImporteRecibidoMax).regex(listE5CobrosResponseItemsItemImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(listE5CobrosResponseItemsItemImporteAplicadoMax).regex(listE5CobrosResponseItemsItemImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(listE5CobrosResponseItemsItemImportePendienteMax).regex(listE5CobrosResponseItemsItemImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(listE5CobrosResponseItemsItemImporteDevueltoMax).regex(listE5CobrosResponseItemsItemImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(listE5CobrosResponseItemsItemEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5CobrosResponseItemsItemEvidenciaRecepcionReferenciasItemMax)).max(listE5CobrosResponseItemsItemEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(listE5CobrosResponseItemsItemNotasIndicadasItemSaldoPendienteMax).regex(listE5CobrosResponseItemsItemNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(listE5CobrosResponseItemsItemPropuestasItemImporteFavorPropuestoMax).regex(listE5CobrosResponseItemsItemPropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(listE5CobrosResponseItemsItemPropuestasItemAsignacionesItemImporteMax).regex(listE5CobrosResponseItemsItemPropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(listE5CobrosResponseItemsItemPropuestasItemNotasItemSaldoPendienteMax).regex(listE5CobrosResponseItemsItemPropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE5CobrosResponseItemsItemPropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5CobrosResponseItemsItemPropuestasItemEvidenciaReferenciasItemMax)).max(listE5CobrosResponseItemsItemPropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(listE5CobrosResponseItemsItemAplicacionesItemImporteFavorGeneradoMax).regex(listE5CobrosResponseItemsItemAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(listE5CobrosResponseItemsItemAplicacionesItemImporteMax).regex(listE5CobrosResponseItemsItemAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(listE5CobrosResponseItemsItemAplicacionesItemAsignacionesItemImporteMax).regex(listE5CobrosResponseItemsItemAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE5CobrosResponseItemsItemAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5CobrosResponseItemsItemAplicacionesItemEvidenciaReferenciasItemMax)).max(listE5CobrosResponseItemsItemAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(listE5CobrosResponseItemsItemDevolucionImporteMax).regex(listE5CobrosResponseItemsItemDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE5CobrosResponseItemsItemDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5CobrosResponseItemsItemDevolucionEvidenciaReferenciasItemMax)).max(listE5CobrosResponseItemsItemDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(listE5CobrosResponseItemsItemAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})),
+  "nextCursor": zod.string().uuid().optional()
+})
+
+
+/**
+ * @summary Recepción real retenida y recibo; ADMIN puede aplicar al momento atómicamente
+ */
+
+
+export const createE5CobroBodyVersionContextoMax = 200;
+
+export const createE5CobroBodyImporteMax = 13;
+
+
+export const createE5CobroBodyImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+
+export const createE5CobroBodyNotasIndicadasMax = 100;
+
+export const createE5CobroBodyEvidenciaDescripcionMax = 2000;
+
+export const createE5CobroBodyEvidenciaReferenciasItemMax = 500;
+
+export const createE5CobroBodyEvidenciaReferenciasMax = 20;
+
+
+
+export const createE5CobroBodyAplicarAhoraItemImporteMax = 13;
+
+
+export const createE5CobroBodyAplicarAhoraItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroBodyAplicarAhoraMax = 100;
+
+
+
+export const CreateE5CobroBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "clienteId": zod.number().int().min(1),
+  "ubicacionId": zod.number().int().min(1),
+  "versionContexto": zod.string().min(1).max(createE5CobroBodyVersionContextoMax),
+  "entrada": zod.enum(['CAJA', 'CLIENTE']),
+  "importe": zod.string().max(createE5CobroBodyImporteMax).regex(createE5CobroBodyImporteRegExp),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Obligatoria desde Caja incluso transferencia; separada de la imputación física'),
+  "sesionCajaId": zod.number().int().min(1).optional().describe('Obligatoria únicamente para efectivo; prohibida en transferencia'),
+  "notasIndicadas": zod.array(zod.number().int().min(1)).min(1).max(createE5CobroBodyNotasIndicadasMax),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5CobroBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5CobroBodyEvidenciaReferenciasItemMax)).max(createE5CobroBodyEvidenciaReferenciasMax)
+}),
+  "aplicarAhora": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(createE5CobroBodyAplicarAhoraItemImporteMax).regex(createE5CobroBodyAplicarAhoraItemImporteRegExp)
+})).min(1).max(createE5CobroBodyAplicarAhoraMax).optional().describe('Solo ADMIN; asignaciones explícitas dentro de notas indicadas; todo atómico')
+})
+
+export const createE5CobroResponseImporteRecibidoMax = 13;
+
+
+export const createE5CobroResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponseImporteAplicadoMax = 13;
+
+
+export const createE5CobroResponseImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponseImportePendienteMax = 13;
+
+
+export const createE5CobroResponseImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponseImporteDevueltoMax = 13;
+
+
+export const createE5CobroResponseImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponseEvidenciaRecepcionDescripcionMax = 2000;
+
+export const createE5CobroResponseEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const createE5CobroResponseEvidenciaRecepcionReferenciasMax = 20;
+
+export const createE5CobroResponseNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const createE5CobroResponseNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponsePropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const createE5CobroResponsePropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const createE5CobroResponsePropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const createE5CobroResponsePropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponsePropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const createE5CobroResponsePropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponsePropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const createE5CobroResponsePropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const createE5CobroResponsePropuestasItemEvidenciaReferenciasMax = 20;
+
+export const createE5CobroResponseAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const createE5CobroResponseAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponseAplicacionesItemImporteMax = 13;
+
+
+export const createE5CobroResponseAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const createE5CobroResponseAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const createE5CobroResponseAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponseAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const createE5CobroResponseAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const createE5CobroResponseAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const createE5CobroResponseDevolucionImporteMax = 13;
+
+
+export const createE5CobroResponseDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5CobroResponseDevolucionEvidenciaDescripcionMax = 2000;
+
+export const createE5CobroResponseDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const createE5CobroResponseDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const createE5CobroResponseAntiguedadDiasMin = 0;
+
+
+
+export const CreateE5CobroResponse = zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(createE5CobroResponseImporteRecibidoMax).regex(createE5CobroResponseImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(createE5CobroResponseImporteAplicadoMax).regex(createE5CobroResponseImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(createE5CobroResponseImportePendienteMax).regex(createE5CobroResponseImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(createE5CobroResponseImporteDevueltoMax).regex(createE5CobroResponseImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(createE5CobroResponseEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5CobroResponseEvidenciaRecepcionReferenciasItemMax)).max(createE5CobroResponseEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(createE5CobroResponseNotasIndicadasItemSaldoPendienteMax).regex(createE5CobroResponseNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(createE5CobroResponsePropuestasItemImporteFavorPropuestoMax).regex(createE5CobroResponsePropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(createE5CobroResponsePropuestasItemAsignacionesItemImporteMax).regex(createE5CobroResponsePropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(createE5CobroResponsePropuestasItemNotasItemSaldoPendienteMax).regex(createE5CobroResponsePropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5CobroResponsePropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5CobroResponsePropuestasItemEvidenciaReferenciasItemMax)).max(createE5CobroResponsePropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(createE5CobroResponseAplicacionesItemImporteFavorGeneradoMax).regex(createE5CobroResponseAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(createE5CobroResponseAplicacionesItemImporteMax).regex(createE5CobroResponseAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(createE5CobroResponseAplicacionesItemAsignacionesItemImporteMax).regex(createE5CobroResponseAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5CobroResponseAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5CobroResponseAplicacionesItemEvidenciaReferenciasItemMax)).max(createE5CobroResponseAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(createE5CobroResponseDevolucionImporteMax).regex(createE5CobroResponseDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5CobroResponseDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5CobroResponseDevolucionEvidenciaReferenciasItemMax)).max(createE5CobroResponseDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(createE5CobroResponseAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+
+
+export const previewE5CobroBodyVersionContextoMax = 200;
+
+export const previewE5CobroBodyImporteMax = 13;
+
+
+export const previewE5CobroBodyImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+
+export const previewE5CobroBodyNotasIndicadasMax = 100;
+
+export const previewE5CobroBodyEvidenciaDescripcionMax = 2000;
+
+export const previewE5CobroBodyEvidenciaReferenciasItemMax = 500;
+
+export const previewE5CobroBodyEvidenciaReferenciasMax = 20;
+
+
+
+export const previewE5CobroBodyAplicarAhoraItemImporteMax = 13;
+
+
+export const previewE5CobroBodyAplicarAhoraItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const previewE5CobroBodyAplicarAhoraMax = 100;
+
+
+
+export const PreviewE5CobroBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "clienteId": zod.number().int().min(1),
+  "ubicacionId": zod.number().int().min(1),
+  "versionContexto": zod.string().min(1).max(previewE5CobroBodyVersionContextoMax),
+  "entrada": zod.enum(['CAJA', 'CLIENTE']),
+  "importe": zod.string().max(previewE5CobroBodyImporteMax).regex(previewE5CobroBodyImporteRegExp),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Obligatoria desde Caja incluso transferencia; separada de la imputación física'),
+  "sesionCajaId": zod.number().int().min(1).optional().describe('Obligatoria únicamente para efectivo; prohibida en transferencia'),
+  "notasIndicadas": zod.array(zod.number().int().min(1)).min(1).max(previewE5CobroBodyNotasIndicadasMax),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(previewE5CobroBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(previewE5CobroBodyEvidenciaReferenciasItemMax)).max(previewE5CobroBodyEvidenciaReferenciasMax)
+}),
+  "aplicarAhora": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(previewE5CobroBodyAplicarAhoraItemImporteMax).regex(previewE5CobroBodyAplicarAhoraItemImporteRegExp)
+})).min(1).max(previewE5CobroBodyAplicarAhoraMax).optional().describe('Solo ADMIN; asignaciones explícitas dentro de notas indicadas; todo atómico')
+})
+
+export const previewE5CobroResponseImporteRecibidoMax = 13;
+
+
+export const previewE5CobroResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const previewE5CobroResponseImporteAplicarMax = 13;
+
+
+export const previewE5CobroResponseImporteAplicarRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const previewE5CobroResponsePendienteResultanteMax = 13;
+
+
+export const previewE5CobroResponsePendienteResultanteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const previewE5CobroResponseNotasItemSaldoPendienteMax = 13;
+
+
+export const previewE5CobroResponseNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const PreviewE5CobroResponse = zod.object({
+  "versionContexto": zod.string(),
+  "importeRecibido": zod.string().max(previewE5CobroResponseImporteRecibidoMax).regex(previewE5CobroResponseImporteRecibidoRegExp),
+  "importeAplicar": zod.string().max(previewE5CobroResponseImporteAplicarMax).regex(previewE5CobroResponseImporteAplicarRegExp),
+  "pendienteResultante": zod.string().max(previewE5CobroResponsePendienteResultanteMax).regex(previewE5CobroResponsePendienteResultanteRegExp),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(previewE5CobroResponseNotasItemSaldoPendienteMax).regex(previewE5CobroResponseNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "mensaje": zod.string(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+export const GetE5CobroParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const getE5CobroResponseImporteRecibidoMax = 13;
+
+
+export const getE5CobroResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponseImporteAplicadoMax = 13;
+
+
+export const getE5CobroResponseImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponseImportePendienteMax = 13;
+
+
+export const getE5CobroResponseImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponseImporteDevueltoMax = 13;
+
+
+export const getE5CobroResponseImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponseEvidenciaRecepcionDescripcionMax = 2000;
+
+export const getE5CobroResponseEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const getE5CobroResponseEvidenciaRecepcionReferenciasMax = 20;
+
+export const getE5CobroResponseNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const getE5CobroResponseNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponsePropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const getE5CobroResponsePropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const getE5CobroResponsePropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const getE5CobroResponsePropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponsePropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const getE5CobroResponsePropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponsePropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const getE5CobroResponsePropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const getE5CobroResponsePropuestasItemEvidenciaReferenciasMax = 20;
+
+export const getE5CobroResponseAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const getE5CobroResponseAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponseAplicacionesItemImporteMax = 13;
+
+
+export const getE5CobroResponseAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const getE5CobroResponseAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const getE5CobroResponseAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponseAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const getE5CobroResponseAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const getE5CobroResponseAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const getE5CobroResponseDevolucionImporteMax = 13;
+
+
+export const getE5CobroResponseDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5CobroResponseDevolucionEvidenciaDescripcionMax = 2000;
+
+export const getE5CobroResponseDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const getE5CobroResponseDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const getE5CobroResponseAntiguedadDiasMin = 0;
+
+
+
+export const GetE5CobroResponse = zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(getE5CobroResponseImporteRecibidoMax).regex(getE5CobroResponseImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(getE5CobroResponseImporteAplicadoMax).regex(getE5CobroResponseImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(getE5CobroResponseImportePendienteMax).regex(getE5CobroResponseImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(getE5CobroResponseImporteDevueltoMax).regex(getE5CobroResponseImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(getE5CobroResponseEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE5CobroResponseEvidenciaRecepcionReferenciasItemMax)).max(getE5CobroResponseEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(getE5CobroResponseNotasIndicadasItemSaldoPendienteMax).regex(getE5CobroResponseNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(getE5CobroResponsePropuestasItemImporteFavorPropuestoMax).regex(getE5CobroResponsePropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(getE5CobroResponsePropuestasItemAsignacionesItemImporteMax).regex(getE5CobroResponsePropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(getE5CobroResponsePropuestasItemNotasItemSaldoPendienteMax).regex(getE5CobroResponsePropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(getE5CobroResponsePropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE5CobroResponsePropuestasItemEvidenciaReferenciasItemMax)).max(getE5CobroResponsePropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(getE5CobroResponseAplicacionesItemImporteFavorGeneradoMax).regex(getE5CobroResponseAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(getE5CobroResponseAplicacionesItemImporteMax).regex(getE5CobroResponseAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(getE5CobroResponseAplicacionesItemAsignacionesItemImporteMax).regex(getE5CobroResponseAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(getE5CobroResponseAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE5CobroResponseAplicacionesItemEvidenciaReferenciasItemMax)).max(getE5CobroResponseAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(getE5CobroResponseDevolucionImporteMax).regex(getE5CobroResponseDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(getE5CobroResponseDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE5CobroResponseDevolucionEvidenciaReferenciasItemMax)).max(getE5CobroResponseDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(getE5CobroResponseAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+/**
+ * @summary Nueva versión inmutable; ADMIN o capacidad ContadorA futura explícita
+ */
+export const CreateE5PropuestaParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+
+export const createE5PropuestaBodyVersionContextoMax = 200;
+
+
+
+export const createE5PropuestaBodyAsignacionesItemImporteMax = 13;
+
+
+export const createE5PropuestaBodyAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaBodyAsignacionesMax = 100;
+
+export const createE5PropuestaBodyImporteFavorPropuestoMax = 13;
+
+
+export const createE5PropuestaBodyImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaBodyEvidenciaDescripcionMax = 2000;
+
+export const createE5PropuestaBodyEvidenciaReferenciasItemMax = 500;
+
+export const createE5PropuestaBodyEvidenciaReferenciasMax = 20;
+
+
+
+export const CreateE5PropuestaBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "revisionEsperada": zod.number().int().min(1),
+  "versionContexto": zod.string().min(1).max(createE5PropuestaBodyVersionContextoMax),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(createE5PropuestaBodyAsignacionesItemImporteMax).regex(createE5PropuestaBodyAsignacionesItemImporteRegExp)
+})).max(createE5PropuestaBodyAsignacionesMax),
+  "importeFavorPropuesto": zod.string().max(createE5PropuestaBodyImporteFavorPropuestoMax).regex(createE5PropuestaBodyImporteFavorPropuestoRegExp).optional().describe('Solo propuesta ADMIN explícita; no conversión automática del residual'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5PropuestaBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5PropuestaBodyEvidenciaReferenciasItemMax)).max(createE5PropuestaBodyEvidenciaReferenciasMax)
+})
+})
+
+export const createE5PropuestaResponseImporteRecibidoMax = 13;
+
+
+export const createE5PropuestaResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponseImporteAplicadoMax = 13;
+
+
+export const createE5PropuestaResponseImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponseImportePendienteMax = 13;
+
+
+export const createE5PropuestaResponseImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponseImporteDevueltoMax = 13;
+
+
+export const createE5PropuestaResponseImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponseEvidenciaRecepcionDescripcionMax = 2000;
+
+export const createE5PropuestaResponseEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const createE5PropuestaResponseEvidenciaRecepcionReferenciasMax = 20;
+
+export const createE5PropuestaResponseNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const createE5PropuestaResponseNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponsePropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const createE5PropuestaResponsePropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const createE5PropuestaResponsePropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const createE5PropuestaResponsePropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const createE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponsePropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const createE5PropuestaResponsePropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const createE5PropuestaResponsePropuestasItemEvidenciaReferenciasMax = 20;
+
+export const createE5PropuestaResponseAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const createE5PropuestaResponseAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponseAplicacionesItemImporteMax = 13;
+
+
+export const createE5PropuestaResponseAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const createE5PropuestaResponseAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const createE5PropuestaResponseAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponseAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const createE5PropuestaResponseAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const createE5PropuestaResponseAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const createE5PropuestaResponseDevolucionImporteMax = 13;
+
+
+export const createE5PropuestaResponseDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE5PropuestaResponseDevolucionEvidenciaDescripcionMax = 2000;
+
+export const createE5PropuestaResponseDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const createE5PropuestaResponseDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const createE5PropuestaResponseAntiguedadDiasMin = 0;
+
+
+
+export const CreateE5PropuestaResponse = zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(createE5PropuestaResponseImporteRecibidoMax).regex(createE5PropuestaResponseImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(createE5PropuestaResponseImporteAplicadoMax).regex(createE5PropuestaResponseImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(createE5PropuestaResponseImportePendienteMax).regex(createE5PropuestaResponseImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(createE5PropuestaResponseImporteDevueltoMax).regex(createE5PropuestaResponseImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(createE5PropuestaResponseEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5PropuestaResponseEvidenciaRecepcionReferenciasItemMax)).max(createE5PropuestaResponseEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(createE5PropuestaResponseNotasIndicadasItemSaldoPendienteMax).regex(createE5PropuestaResponseNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(createE5PropuestaResponsePropuestasItemImporteFavorPropuestoMax).regex(createE5PropuestaResponsePropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(createE5PropuestaResponsePropuestasItemAsignacionesItemImporteMax).regex(createE5PropuestaResponsePropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(createE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteMax).regex(createE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5PropuestaResponsePropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5PropuestaResponsePropuestasItemEvidenciaReferenciasItemMax)).max(createE5PropuestaResponsePropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(createE5PropuestaResponseAplicacionesItemImporteFavorGeneradoMax).regex(createE5PropuestaResponseAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(createE5PropuestaResponseAplicacionesItemImporteMax).regex(createE5PropuestaResponseAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(createE5PropuestaResponseAplicacionesItemAsignacionesItemImporteMax).regex(createE5PropuestaResponseAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5PropuestaResponseAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5PropuestaResponseAplicacionesItemEvidenciaReferenciasItemMax)).max(createE5PropuestaResponseAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(createE5PropuestaResponseDevolucionImporteMax).regex(createE5PropuestaResponseDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(createE5PropuestaResponseDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(createE5PropuestaResponseDevolucionEvidenciaReferenciasItemMax)).max(createE5PropuestaResponseDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(createE5PropuestaResponseAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+/**
+ * @summary Solo ADMIN; reparto explícito total o parcial de propuesta vigente
+ */
+export const AuthorizeE5AplicacionParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+
+export const authorizeE5AplicacionBodyVersionContextoMax = 200;
+
+
+
+export const authorizeE5AplicacionBodyAsignacionesItemImporteMax = 13;
+
+
+export const authorizeE5AplicacionBodyAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionBodyAsignacionesMax = 100;
+
+export const authorizeE5AplicacionBodyImporteFavorAutorizadoMax = 13;
+
+
+export const authorizeE5AplicacionBodyImporteFavorAutorizadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionBodyEvidenciaDescripcionMax = 2000;
+
+export const authorizeE5AplicacionBodyEvidenciaReferenciasItemMax = 500;
+
+export const authorizeE5AplicacionBodyEvidenciaReferenciasMax = 20;
+
+
+
+export const AuthorizeE5AplicacionBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "revisionEsperada": zod.number().int().min(1),
+  "versionContexto": zod.string().min(1).max(authorizeE5AplicacionBodyVersionContextoMax),
+  "propuestaId": zod.string().uuid(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(authorizeE5AplicacionBodyAsignacionesItemImporteMax).regex(authorizeE5AplicacionBodyAsignacionesItemImporteRegExp)
+})).max(authorizeE5AplicacionBodyAsignacionesMax),
+  "importeFavorAutorizado": zod.string().max(authorizeE5AplicacionBodyImporteFavorAutorizadoMax).regex(authorizeE5AplicacionBodyImporteFavorAutorizadoRegExp).optional().describe('Solo ADMIN dentro del favor propuesto; requiere deuda global cero después de las asignaciones explícitas'),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE5AplicacionBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE5AplicacionBodyEvidenciaReferenciasItemMax)).max(authorizeE5AplicacionBodyEvidenciaReferenciasMax)
+})
+})
+
+export const authorizeE5AplicacionResponseImporteRecibidoMax = 13;
+
+
+export const authorizeE5AplicacionResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponseImporteAplicadoMax = 13;
+
+
+export const authorizeE5AplicacionResponseImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponseImportePendienteMax = 13;
+
+
+export const authorizeE5AplicacionResponseImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponseImporteDevueltoMax = 13;
+
+
+export const authorizeE5AplicacionResponseImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponseEvidenciaRecepcionDescripcionMax = 2000;
+
+export const authorizeE5AplicacionResponseEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const authorizeE5AplicacionResponseEvidenciaRecepcionReferenciasMax = 20;
+
+export const authorizeE5AplicacionResponseNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const authorizeE5AplicacionResponseNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponsePropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const authorizeE5AplicacionResponsePropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const authorizeE5AplicacionResponsePropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const authorizeE5AplicacionResponsePropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponsePropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const authorizeE5AplicacionResponsePropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponsePropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const authorizeE5AplicacionResponsePropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const authorizeE5AplicacionResponsePropuestasItemEvidenciaReferenciasMax = 20;
+
+export const authorizeE5AplicacionResponseAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const authorizeE5AplicacionResponseAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponseAplicacionesItemImporteMax = 13;
+
+
+export const authorizeE5AplicacionResponseAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const authorizeE5AplicacionResponseAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const authorizeE5AplicacionResponseAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponseAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const authorizeE5AplicacionResponseAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const authorizeE5AplicacionResponseAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const authorizeE5AplicacionResponseDevolucionImporteMax = 13;
+
+
+export const authorizeE5AplicacionResponseDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const authorizeE5AplicacionResponseDevolucionEvidenciaDescripcionMax = 2000;
+
+export const authorizeE5AplicacionResponseDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const authorizeE5AplicacionResponseDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const authorizeE5AplicacionResponseAntiguedadDiasMin = 0;
+
+
+
+export const AuthorizeE5AplicacionResponse = zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(authorizeE5AplicacionResponseImporteRecibidoMax).regex(authorizeE5AplicacionResponseImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(authorizeE5AplicacionResponseImporteAplicadoMax).regex(authorizeE5AplicacionResponseImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(authorizeE5AplicacionResponseImportePendienteMax).regex(authorizeE5AplicacionResponseImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(authorizeE5AplicacionResponseImporteDevueltoMax).regex(authorizeE5AplicacionResponseImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE5AplicacionResponseEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE5AplicacionResponseEvidenciaRecepcionReferenciasItemMax)).max(authorizeE5AplicacionResponseEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(authorizeE5AplicacionResponseNotasIndicadasItemSaldoPendienteMax).regex(authorizeE5AplicacionResponseNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(authorizeE5AplicacionResponsePropuestasItemImporteFavorPropuestoMax).regex(authorizeE5AplicacionResponsePropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(authorizeE5AplicacionResponsePropuestasItemAsignacionesItemImporteMax).regex(authorizeE5AplicacionResponsePropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(authorizeE5AplicacionResponsePropuestasItemNotasItemSaldoPendienteMax).regex(authorizeE5AplicacionResponsePropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE5AplicacionResponsePropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE5AplicacionResponsePropuestasItemEvidenciaReferenciasItemMax)).max(authorizeE5AplicacionResponsePropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(authorizeE5AplicacionResponseAplicacionesItemImporteFavorGeneradoMax).regex(authorizeE5AplicacionResponseAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(authorizeE5AplicacionResponseAplicacionesItemImporteMax).regex(authorizeE5AplicacionResponseAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(authorizeE5AplicacionResponseAplicacionesItemAsignacionesItemImporteMax).regex(authorizeE5AplicacionResponseAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE5AplicacionResponseAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE5AplicacionResponseAplicacionesItemEvidenciaReferenciasItemMax)).max(authorizeE5AplicacionResponseAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(authorizeE5AplicacionResponseDevolucionImporteMax).regex(authorizeE5AplicacionResponseDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(authorizeE5AplicacionResponseDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(authorizeE5AplicacionResponseDevolucionEvidenciaReferenciasItemMax)).max(authorizeE5AplicacionResponseDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(authorizeE5AplicacionResponseAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+export const RejectE5PropuestaParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+
+export const rejectE5PropuestaBodyMotivoMax = 2000;
+
+
+
+export const RejectE5PropuestaBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "revisionEsperada": zod.number().int().min(1),
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string().min(1).max(rejectE5PropuestaBodyMotivoMax)
+})
+
+export const rejectE5PropuestaResponseImporteRecibidoMax = 13;
+
+
+export const rejectE5PropuestaResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponseImporteAplicadoMax = 13;
+
+
+export const rejectE5PropuestaResponseImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponseImportePendienteMax = 13;
+
+
+export const rejectE5PropuestaResponseImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponseImporteDevueltoMax = 13;
+
+
+export const rejectE5PropuestaResponseImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponseEvidenciaRecepcionDescripcionMax = 2000;
+
+export const rejectE5PropuestaResponseEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const rejectE5PropuestaResponseEvidenciaRecepcionReferenciasMax = 20;
+
+export const rejectE5PropuestaResponseNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const rejectE5PropuestaResponseNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponsePropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const rejectE5PropuestaResponsePropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const rejectE5PropuestaResponsePropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const rejectE5PropuestaResponsePropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const rejectE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponsePropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const rejectE5PropuestaResponsePropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const rejectE5PropuestaResponsePropuestasItemEvidenciaReferenciasMax = 20;
+
+export const rejectE5PropuestaResponseAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const rejectE5PropuestaResponseAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponseAplicacionesItemImporteMax = 13;
+
+
+export const rejectE5PropuestaResponseAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const rejectE5PropuestaResponseAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const rejectE5PropuestaResponseAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponseAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const rejectE5PropuestaResponseAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const rejectE5PropuestaResponseAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const rejectE5PropuestaResponseDevolucionImporteMax = 13;
+
+
+export const rejectE5PropuestaResponseDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const rejectE5PropuestaResponseDevolucionEvidenciaDescripcionMax = 2000;
+
+export const rejectE5PropuestaResponseDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const rejectE5PropuestaResponseDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const rejectE5PropuestaResponseAntiguedadDiasMin = 0;
+
+
+
+export const RejectE5PropuestaResponse = zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(rejectE5PropuestaResponseImporteRecibidoMax).regex(rejectE5PropuestaResponseImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(rejectE5PropuestaResponseImporteAplicadoMax).regex(rejectE5PropuestaResponseImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(rejectE5PropuestaResponseImportePendienteMax).regex(rejectE5PropuestaResponseImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(rejectE5PropuestaResponseImporteDevueltoMax).regex(rejectE5PropuestaResponseImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(rejectE5PropuestaResponseEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(rejectE5PropuestaResponseEvidenciaRecepcionReferenciasItemMax)).max(rejectE5PropuestaResponseEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(rejectE5PropuestaResponseNotasIndicadasItemSaldoPendienteMax).regex(rejectE5PropuestaResponseNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(rejectE5PropuestaResponsePropuestasItemImporteFavorPropuestoMax).regex(rejectE5PropuestaResponsePropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(rejectE5PropuestaResponsePropuestasItemAsignacionesItemImporteMax).regex(rejectE5PropuestaResponsePropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(rejectE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteMax).regex(rejectE5PropuestaResponsePropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(rejectE5PropuestaResponsePropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(rejectE5PropuestaResponsePropuestasItemEvidenciaReferenciasItemMax)).max(rejectE5PropuestaResponsePropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(rejectE5PropuestaResponseAplicacionesItemImporteFavorGeneradoMax).regex(rejectE5PropuestaResponseAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(rejectE5PropuestaResponseAplicacionesItemImporteMax).regex(rejectE5PropuestaResponseAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(rejectE5PropuestaResponseAplicacionesItemAsignacionesItemImporteMax).regex(rejectE5PropuestaResponseAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(rejectE5PropuestaResponseAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(rejectE5PropuestaResponseAplicacionesItemEvidenciaReferenciasItemMax)).max(rejectE5PropuestaResponseAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(rejectE5PropuestaResponseDevolucionImporteMax).regex(rejectE5PropuestaResponseDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(rejectE5PropuestaResponseDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(rejectE5PropuestaResponseDevolucionEvidenciaReferenciasItemMax)).max(rejectE5PropuestaResponseDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(rejectE5PropuestaResponseAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+/**
+ * @summary Solo ADMIN; fuentes actuales comprobables, no saldo histórico supuesto
+ */
+export const GetE5DevolucionOpcionesParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const getE5DevolucionOpcionesResponseImporteMax = 13;
+
+
+export const getE5DevolucionOpcionesResponseImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+
+
+
+export const GetE5DevolucionOpcionesResponse = zod.object({
+  "elegible": zod.boolean(),
+  "motivo": zod.string().optional(),
+  "importe": zod.string().max(getE5DevolucionOpcionesResponseImporteMax).regex(getE5DevolucionOpcionesResponseImporteRegExp),
+  "fuentes": zod.array(zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}))
+})
+
+
+/**
+ * @summary ADMIN devuelve exclusivamente total nunca aplicado, con petición y salida real
+ */
+export const ReturnE5CobroParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+
+export const returnE5CobroBodyPeticionClienteMax = 2000;
+
+export const returnE5CobroBodyEvidenciaDescripcionMax = 2000;
+
+export const returnE5CobroBodyEvidenciaReferenciasItemMax = 500;
+
+export const returnE5CobroBodyEvidenciaReferenciasMax = 20;
+
+
+
+
+
+
+export const ReturnE5CobroBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "revisionEsperada": zod.number().int().min(1),
+  "peticionCliente": zod.string().min(1).max(returnE5CobroBodyPeticionClienteMax),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(returnE5CobroBodyEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(returnE5CobroBodyEvidenciaReferenciasItemMax)).max(returnE5CobroBodyEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+})
+})
+
+export const returnE5CobroResponseImporteRecibidoMax = 13;
+
+
+export const returnE5CobroResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponseImporteAplicadoMax = 13;
+
+
+export const returnE5CobroResponseImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponseImportePendienteMax = 13;
+
+
+export const returnE5CobroResponseImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponseImporteDevueltoMax = 13;
+
+
+export const returnE5CobroResponseImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponseEvidenciaRecepcionDescripcionMax = 2000;
+
+export const returnE5CobroResponseEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const returnE5CobroResponseEvidenciaRecepcionReferenciasMax = 20;
+
+export const returnE5CobroResponseNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const returnE5CobroResponseNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponsePropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const returnE5CobroResponsePropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const returnE5CobroResponsePropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const returnE5CobroResponsePropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponsePropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const returnE5CobroResponsePropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponsePropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const returnE5CobroResponsePropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const returnE5CobroResponsePropuestasItemEvidenciaReferenciasMax = 20;
+
+export const returnE5CobroResponseAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const returnE5CobroResponseAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponseAplicacionesItemImporteMax = 13;
+
+
+export const returnE5CobroResponseAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const returnE5CobroResponseAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const returnE5CobroResponseAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponseAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const returnE5CobroResponseAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const returnE5CobroResponseAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const returnE5CobroResponseDevolucionImporteMax = 13;
+
+
+export const returnE5CobroResponseDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const returnE5CobroResponseDevolucionEvidenciaDescripcionMax = 2000;
+
+export const returnE5CobroResponseDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const returnE5CobroResponseDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const returnE5CobroResponseAntiguedadDiasMin = 0;
+
+
+
+export const ReturnE5CobroResponse = zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(returnE5CobroResponseImporteRecibidoMax).regex(returnE5CobroResponseImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(returnE5CobroResponseImporteAplicadoMax).regex(returnE5CobroResponseImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(returnE5CobroResponseImportePendienteMax).regex(returnE5CobroResponseImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(returnE5CobroResponseImporteDevueltoMax).regex(returnE5CobroResponseImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(returnE5CobroResponseEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(returnE5CobroResponseEvidenciaRecepcionReferenciasItemMax)).max(returnE5CobroResponseEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(returnE5CobroResponseNotasIndicadasItemSaldoPendienteMax).regex(returnE5CobroResponseNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(returnE5CobroResponsePropuestasItemImporteFavorPropuestoMax).regex(returnE5CobroResponsePropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(returnE5CobroResponsePropuestasItemAsignacionesItemImporteMax).regex(returnE5CobroResponsePropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(returnE5CobroResponsePropuestasItemNotasItemSaldoPendienteMax).regex(returnE5CobroResponsePropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(returnE5CobroResponsePropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(returnE5CobroResponsePropuestasItemEvidenciaReferenciasItemMax)).max(returnE5CobroResponsePropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(returnE5CobroResponseAplicacionesItemImporteFavorGeneradoMax).regex(returnE5CobroResponseAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(returnE5CobroResponseAplicacionesItemImporteMax).regex(returnE5CobroResponseAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(returnE5CobroResponseAplicacionesItemAsignacionesItemImporteMax).regex(returnE5CobroResponseAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(returnE5CobroResponseAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(returnE5CobroResponseAplicacionesItemEvidenciaReferenciasItemMax)).max(returnE5CobroResponseAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(returnE5CobroResponseDevolucionImporteMax).regex(returnE5CobroResponseDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(returnE5CobroResponseDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(returnE5CobroResponseDevolucionEvidenciaReferenciasItemMax)).max(returnE5CobroResponseDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(returnE5CobroResponseAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})
+
+
+/**
+ * @summary Solo ADMIN; pendientes desde tres días de recepción
+ */
+
+export const listE5AvisosQueryLimitDefault = 25;
+export const listE5AvisosQueryLimitMax = 100;
+
+
+
+export const ListE5AvisosQueryParams = zod.object({
+  "ubicacionId": zod.coerce.number().int().min(1),
+  "cursor": zod.coerce.string().uuid().optional(),
+  "limit": zod.coerce.number().int().min(1).max(listE5AvisosQueryLimitMax).default(listE5AvisosQueryLimitDefault)
+})
+
+export const listE5AvisosResponseItemsItemImporteRecibidoMax = 13;
+
+
+export const listE5AvisosResponseItemsItemImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemImporteAplicadoMax = 13;
+
+
+export const listE5AvisosResponseItemsItemImporteAplicadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemImportePendienteMax = 13;
+
+
+export const listE5AvisosResponseItemsItemImportePendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemImporteDevueltoMax = 13;
+
+
+export const listE5AvisosResponseItemsItemImporteDevueltoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemEvidenciaRecepcionDescripcionMax = 2000;
+
+export const listE5AvisosResponseItemsItemEvidenciaRecepcionReferenciasItemMax = 500;
+
+export const listE5AvisosResponseItemsItemEvidenciaRecepcionReferenciasMax = 20;
+
+export const listE5AvisosResponseItemsItemNotasIndicadasItemSaldoPendienteMax = 13;
+
+
+export const listE5AvisosResponseItemsItemNotasIndicadasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemPropuestasItemImporteFavorPropuestoMax = 13;
+
+
+export const listE5AvisosResponseItemsItemPropuestasItemImporteFavorPropuestoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const listE5AvisosResponseItemsItemPropuestasItemAsignacionesItemImporteMax = 13;
+
+
+export const listE5AvisosResponseItemsItemPropuestasItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemPropuestasItemNotasItemSaldoPendienteMax = 13;
+
+
+export const listE5AvisosResponseItemsItemPropuestasItemNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemPropuestasItemEvidenciaDescripcionMax = 2000;
+
+export const listE5AvisosResponseItemsItemPropuestasItemEvidenciaReferenciasItemMax = 500;
+
+export const listE5AvisosResponseItemsItemPropuestasItemEvidenciaReferenciasMax = 20;
+
+export const listE5AvisosResponseItemsItemAplicacionesItemImporteFavorGeneradoMax = 13;
+
+
+export const listE5AvisosResponseItemsItemAplicacionesItemImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemAplicacionesItemImporteMax = 13;
+
+
+export const listE5AvisosResponseItemsItemAplicacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const listE5AvisosResponseItemsItemAplicacionesItemAsignacionesItemImporteMax = 13;
+
+
+export const listE5AvisosResponseItemsItemAplicacionesItemAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemAplicacionesItemEvidenciaDescripcionMax = 2000;
+
+export const listE5AvisosResponseItemsItemAplicacionesItemEvidenciaReferenciasItemMax = 500;
+
+export const listE5AvisosResponseItemsItemAplicacionesItemEvidenciaReferenciasMax = 20;
+
+export const listE5AvisosResponseItemsItemDevolucionImporteMax = 13;
+
+
+export const listE5AvisosResponseItemsItemDevolucionImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE5AvisosResponseItemsItemDevolucionEvidenciaDescripcionMax = 2000;
+
+export const listE5AvisosResponseItemsItemDevolucionEvidenciaReferenciasItemMax = 500;
+
+export const listE5AvisosResponseItemsItemDevolucionEvidenciaReferenciasMax = 20;
+
+
+
+
+export const listE5AvisosResponseItemsItemAntiguedadDiasMin = 0;
+
+
+
+export const ListE5AvisosResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "revision": zod.number().int(),
+  "clienteId": zod.number().int(),
+  "clienteNombre": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "ubicacionNombre": zod.string(),
+  "importeRecibido": zod.string().max(listE5AvisosResponseItemsItemImporteRecibidoMax).regex(listE5AvisosResponseItemsItemImporteRecibidoRegExp),
+  "importeAplicado": zod.string().max(listE5AvisosResponseItemsItemImporteAplicadoMax).regex(listE5AvisosResponseItemsItemImporteAplicadoRegExp),
+  "importePendiente": zod.string().max(listE5AvisosResponseItemsItemImportePendienteMax).regex(listE5AvisosResponseItemsItemImportePendienteRegExp),
+  "importeDevuelto": zod.string().max(listE5AvisosResponseItemsItemImporteDevueltoMax).regex(listE5AvisosResponseItemsItemImporteDevueltoRegExp),
+  "fechaRecepcion": zod.coerce.date(),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "sesionCajaId": zod.number().int().optional(),
+  "sesionOperativaId": zod.number().int().optional(),
+  "estado": zod.enum(['PENDIENTE', 'PARCIAL', 'APLICADO', 'DEVUELTO']),
+  "algunaVezAplicado": zod.boolean(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidenciaRecepcion": zod.object({
+  "descripcion": zod.string().min(1).max(listE5AvisosResponseItemsItemEvidenciaRecepcionDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5AvisosResponseItemsItemEvidenciaRecepcionReferenciasItemMax)).max(listE5AvisosResponseItemsItemEvidenciaRecepcionReferenciasMax)
+}),
+  "notasIndicadas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(listE5AvisosResponseItemsItemNotasIndicadasItemSaldoPendienteMax).regex(listE5AvisosResponseItemsItemNotasIndicadasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "propuestas": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "version": zod.number().int(),
+  "importeFavorPropuesto": zod.string().max(listE5AvisosResponseItemsItemPropuestasItemImporteFavorPropuestoMax).regex(listE5AvisosResponseItemsItemPropuestasItemImporteFavorPropuestoRegExp).optional(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(listE5AvisosResponseItemsItemPropuestasItemAsignacionesItemImporteMax).regex(listE5AvisosResponseItemsItemPropuestasItemAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(listE5AvisosResponseItemsItemPropuestasItemNotasItemSaldoPendienteMax).regex(listE5AvisosResponseItemsItemPropuestasItemNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE5AvisosResponseItemsItemPropuestasItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5AvisosResponseItemsItemPropuestasItemEvidenciaReferenciasItemMax)).max(listE5AvisosResponseItemsItemPropuestasItemEvidenciaReferenciasMax)
+}),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "propuestaVigenteId": zod.string().uuid().optional(),
+  "aplicaciones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "propuestaId": zod.string().uuid(),
+  "importeFavorGenerado": zod.string().max(listE5AvisosResponseItemsItemAplicacionesItemImporteFavorGeneradoMax).regex(listE5AvisosResponseItemsItemAplicacionesItemImporteFavorGeneradoRegExp).optional(),
+  "importe": zod.string().max(listE5AvisosResponseItemsItemAplicacionesItemImporteMax).regex(listE5AvisosResponseItemsItemAplicacionesItemImporteRegExp),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(listE5AvisosResponseItemsItemAplicacionesItemAsignacionesItemImporteMax).regex(listE5AvisosResponseItemsItemAplicacionesItemAsignacionesItemImporteRegExp)
+})),
+  "fechaAplicacion": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE5AvisosResponseItemsItemAplicacionesItemEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5AvisosResponseItemsItemAplicacionesItemEvidenciaReferenciasItemMax)).max(listE5AvisosResponseItemsItemAplicacionesItemEvidenciaReferenciasMax)
+}),
+  "constanciaId": zod.string().uuid()
+})),
+  "rechazos": zod.array(zod.object({
+  "propuestaId": zod.string().uuid(),
+  "motivo": zod.string(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "createdAt": zod.coerce.date()
+})),
+  "devolucion": zod.object({
+  "id": zod.string().uuid(),
+  "importe": zod.string().max(listE5AvisosResponseItemsItemDevolucionImporteMax).regex(listE5AvisosResponseItemsItemDevolucionImporteRegExp),
+  "fecha": zod.coerce.date(),
+  "actor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "peticionCliente": zod.string(),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(listE5AvisosResponseItemsItemDevolucionEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(listE5AvisosResponseItemsItemDevolucionEvidenciaReferenciasItemMax)).max(listE5AvisosResponseItemsItemDevolucionEvidenciaReferenciasMax)
+}),
+  "fuente": zod.object({
+  "tipo": zod.enum(['CAJA', 'CUENTA', 'FONDO']),
+  "ubicacionId": zod.number().int().min(1),
+  "sesionCajaId": zod.number().int().min(1).optional(),
+  "sesionOperativaId": zod.number().int().min(1).optional().describe('Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo'),
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']).optional()
+}).optional().describe('Solo ADMIN; no revelar Fondo a tienda\/contadores'),
+  "salidaId": zod.number().int().optional().describe('Solo ADMIN'),
+  "movimientoFondoId": zod.string().uuid().optional().describe('Solo ADMIN')
+}).optional(),
+  "reciboId": zod.string().uuid(),
+  "antiguedadDias": zod.number().int().min(listE5AvisosResponseItemsItemAntiguedadDiasMin),
+  "avisoAdmin": zod.boolean(),
+  "capacidades": zod.object({
+  "puedeRecibir": zod.boolean(),
+  "puedePreparar": zod.boolean(),
+  "puedeAutorizar": zod.boolean(),
+  "puedeRechazar": zod.boolean(),
+  "puedeDevolver": zod.boolean(),
+  "puedeVerAvisos": zod.boolean(),
+  "puedeImprimir": zod.boolean(),
+  "preparacionADisponible": zod.boolean().describe('False hasta integración explícita E11; CONTADOR legacy no concede preparación')
+})
+})),
+  "nextCursor": zod.string().uuid().optional()
+})
+
+
+/**
+ * @summary ADMIN consulta recibo o constancia inmutable desde otro equipo
+ */
+export const GetE5DocumentoParams = zod.object({
+  "id": zod.coerce.string().uuid(),
+  "documentoId": zod.coerce.string().uuid()
+})
+
+export const getE5DocumentoResponseImporteRecibidoMax = 13;
+
+
+export const getE5DocumentoResponseImporteRecibidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5DocumentoResponseImporteDocumentoMax = 13;
+
+
+export const getE5DocumentoResponseImporteDocumentoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5DocumentoResponseImporteFavorGeneradoMax = 13;
+
+
+export const getE5DocumentoResponseImporteFavorGeneradoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5DocumentoResponsePendienteEnEmisionMax = 13;
+
+
+export const getE5DocumentoResponsePendienteEnEmisionRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const getE5DocumentoResponseAsignacionesItemImporteMax = 13;
+
+
+export const getE5DocumentoResponseAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5DocumentoResponseNotasItemSaldoPendienteMax = 13;
+
+
+export const getE5DocumentoResponseNotasItemSaldoPendienteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE5DocumentoResponseEvidenciaDescripcionMax = 2000;
+
+export const getE5DocumentoResponseEvidenciaReferenciasItemMax = 500;
+
+export const getE5DocumentoResponseEvidenciaReferenciasMax = 20;
+
+
+
+export const GetE5DocumentoResponse = zod.object({
+  "id": zod.string().uuid(),
+  "tipo": zod.enum(['RECIBO', 'CONSTANCIA']),
+  "folio": zod.string(),
+  "cobroId": zod.string().uuid(),
+  "reciboId": zod.string().uuid(),
+  "reciboFolio": zod.string(),
+  "clienteNombre": zod.string(),
+  "ubicacionNombre": zod.string(),
+  "receptor": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "formaPago": zod.enum(['EFECTIVO', 'TRANSFERENCIA']),
+  "cuentaDestino": zod.enum(['CAJA_FISICA', 'CUENTA_FISCAL', 'CUENTA_NO_FISCAL']),
+  "autorizador": zod.object({
+  "id": zod.number().int(),
+  "nombre": zod.string()
+}).optional(),
+  "fechaRecepcion": zod.coerce.date(),
+  "fechaEmision": zod.coerce.date(),
+  "fechaAplicacion": zod.coerce.date().optional(),
+  "importeRecibido": zod.string().max(getE5DocumentoResponseImporteRecibidoMax).regex(getE5DocumentoResponseImporteRecibidoRegExp),
+  "importeDocumento": zod.string().max(getE5DocumentoResponseImporteDocumentoMax).regex(getE5DocumentoResponseImporteDocumentoRegExp),
+  "importeFavorGenerado": zod.string().max(getE5DocumentoResponseImporteFavorGeneradoMax).regex(getE5DocumentoResponseImporteFavorGeneradoRegExp).optional(),
+  "pendienteEnEmision": zod.string().max(getE5DocumentoResponsePendienteEnEmisionMax).regex(getE5DocumentoResponsePendienteEnEmisionRegExp),
+  "mensaje": zod.string(),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(getE5DocumentoResponseAsignacionesItemImporteMax).regex(getE5DocumentoResponseAsignacionesItemImporteRegExp)
+})),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int(),
+  "folio": zod.string(),
+  "ubicacionId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "saldoPendiente": zod.string().max(getE5DocumentoResponseNotasItemSaldoPendienteMax).regex(getE5DocumentoResponseNotasItemSaldoPendienteRegExp),
+  "facturada": zod.boolean()
+})),
+  "evidencia": zod.object({
+  "descripcion": zod.string().min(1).max(getE5DocumentoResponseEvidenciaDescripcionMax),
+  "referencias": zod.array(zod.string().min(1).max(getE5DocumentoResponseEvidenciaReferenciasItemMax)).max(getE5DocumentoResponseEvidenciaReferenciasMax)
+}),
+  "copias": zod.literal(2)
+})
+
+
+export const RecordE5ImpresionParams = zod.object({
+  "id": zod.coerce.string().uuid(),
+  "documentoId": zod.coerce.string().uuid()
+})
+
+export const recordE5ImpresionBodyMotivoMax = 500;
+
+
+
+export const RecordE5ImpresionBody = zod.object({
+  "claveOperacion": zod.string().uuid(),
+  "motivo": zod.string().min(1).max(recordE5ImpresionBodyMotivoMax)
+})
+
+export const RecordE5ImpresionResponse = zod.object({
+  "registrado": zod.boolean()
+})
+
+
 /**
  * @summary Contrato E9 OFF; disponibilidad por alcance sin saldo Fondo
  */
@@ -12754,6 +15034,8 @@ export const GetAdminCuentasDestinoResponse = zod.object({
   "contado": zod.string().describe('Cobranza POS; también forma parte de Vendido.'),
   "abonos": zod.string(),
   "saldosFavor": zod.string(),
+  "recepcionesRetenidas": zod.string().optional().describe('Recepciones E5 reales del periodo; no aplicaciones.'),
+  "devolucionesRetenidas": zod.string().optional().describe('Salidas E5 de caja o cuenta del periodo'),
   "total": zod.string(),
   "totalAnterior": zod.string().nullable(),
   "variacionPorcentaje": zod.string().nullable()
@@ -12863,7 +15145,8 @@ export const ListAdminCuentaDestinoMovimientosResponse = zod.object({
   "registro": zod.string(),
   "formaPago": zod.string(),
   "facturado": zod.boolean(),
-  "fuente": zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR', 'REVERSO_ABONO', 'REVERSO_ABONO_SALDO_FAVOR']),
+  "fuente": zod.enum(['POS', 'CREDITO', 'ABONO', 'ABONO_SALDO_FAVOR', 'REVERSO_ABONO', 'REVERSO_ABONO_SALDO_FAVOR', 'E5_RECEPCION', 'E5_DEVOLUCION']),
+  "e5CobroId": zod.string().uuid().nullish().describe('Identidad documental E5; no confundir con el ID numérico del cliente.'),
   "incongruente": zod.boolean()
 })),
   "total": zod.number(),

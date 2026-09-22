@@ -1,0 +1,23 @@
+{
+  "tests": [
+    {
+      "name": "E5-OFF-ROUTE-LIST",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "window.matchMedia is not a function",
+      "failureType": "testCodeFailure",
+      "causeMessage": "window.matchMedia is not a function"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2780.663762"
+  ]
+}

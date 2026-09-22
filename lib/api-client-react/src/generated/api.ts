@@ -127,6 +127,20 @@ import type {
   E3CollectionResult,
   E3PrintInput,
   E3Receipt,
+  E5AutorizarInput,
+  E5Cobro,
+  E5Contexto,
+  E5DevolucionOpciones,
+  E5DevolverInput,
+  E5Disponibilidad,
+  E5Documento,
+  E5ErrorResponseResponse,
+  E5ImpresionInput,
+  E5Pagina,
+  E5PropuestaInput,
+  E5RecepcionInput,
+  E5RechazarInput,
+  E5VistaPrevia,
   E9AutorizacionInput,
   E9CierreInput,
   E9ConteoInput,
@@ -197,6 +211,8 @@ import type {
   GetClientesResumenParams,
   GetConciliacionParams,
   GetDashboardParams,
+  GetE5ContextoParams,
+  GetE5DisponibilidadParams,
   GetE9DisponibilidadParams,
   GetExistenciasAgrupadasParams,
   GetExistenciasParams,
@@ -233,6 +249,8 @@ import type {
   ListContenedoresParams,
   ListCuentasIncobrables200,
   ListCuentasIncobrablesParams,
+  ListE5AvisosParams,
+  ListE5CobrosParams,
   ListE9EntregasParams,
   ListEntradasParams,
   ListEntradasPendientesCostoParams,
@@ -321,6 +339,7 @@ import type {
   ReactivacionFaltanteInput,
   RecalcularInput,
   RecepcionSalidaInput,
+  RecordE5Impresion200,
   RecordReciboE3Print200,
   ReimpresionClienteNota,
   ReporteQueComprarEvidencia,
@@ -419,6 +438,1040 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetE5DisponibilidadUrl = (params: GetE5DisponibilidadParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e5/disponibilidad?${stringifiedParams}` : `/api/e5/disponibilidad`
+}
+
+export const getE5Disponibilidad = async (params: GetE5DisponibilidadParams, options?: Parameters<typeof customFetch>[1]): Promise<E5Disponibilidad> => {
+
+  return customFetch<E5Disponibilidad>(getGetE5DisponibilidadUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE5DisponibilidadQueryKey = (params?: GetE5DisponibilidadParams,) => {
+    return [
+    `/api/e5/disponibilidad`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetE5DisponibilidadQueryOptions = <TData = Awaited<ReturnType<typeof getE5Disponibilidad>>, TError = ErrorType<E5ErrorResponseResponse>>(params: GetE5DisponibilidadParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE5DisponibilidadQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE5Disponibilidad>>> = ({ signal }) => getE5Disponibilidad(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE5Disponibilidad>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE5DisponibilidadQueryResult = NonNullable<Awaited<ReturnType<typeof getE5Disponibilidad>>>
+export type GetE5DisponibilidadQueryError = ErrorType<E5ErrorResponseResponse>
+
+
+
+export function useGetE5Disponibilidad<TData = Awaited<ReturnType<typeof getE5Disponibilidad>>, TError = ErrorType<E5ErrorResponseResponse>>(
+ params: GetE5DisponibilidadParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE5DisponibilidadQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE5ContextoUrl = (params: GetE5ContextoParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e5/contexto?${stringifiedParams}` : `/api/e5/contexto`
+}
+
+export const getE5Contexto = async (params: GetE5ContextoParams, options?: Parameters<typeof customFetch>[1]): Promise<E5Contexto> => {
+
+  return customFetch<E5Contexto>(getGetE5ContextoUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE5ContextoQueryKey = (params?: GetE5ContextoParams,) => {
+    return [
+    `/api/e5/contexto`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetE5ContextoQueryOptions = <TData = Awaited<ReturnType<typeof getE5Contexto>>, TError = ErrorType<E5ErrorResponseResponse>>(params: GetE5ContextoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Contexto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE5ContextoQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE5Contexto>>> = ({ signal }) => getE5Contexto(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE5Contexto>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE5ContextoQueryResult = NonNullable<Awaited<ReturnType<typeof getE5Contexto>>>
+export type GetE5ContextoQueryError = ErrorType<E5ErrorResponseResponse>
+
+
+
+export function useGetE5Contexto<TData = Awaited<ReturnType<typeof getE5Contexto>>, TError = ErrorType<E5ErrorResponseResponse>>(
+ params: GetE5ContextoParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Contexto>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE5ContextoQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE5CobrosUrl = (params: ListE5CobrosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e5/cobros?${stringifiedParams}` : `/api/e5/cobros`
+}
+
+export const listE5Cobros = async (params: ListE5CobrosParams, options?: Parameters<typeof customFetch>[1]): Promise<E5Pagina> => {
+
+  return customFetch<E5Pagina>(getListE5CobrosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE5CobrosQueryKey = (params?: ListE5CobrosParams,) => {
+    return [
+    `/api/e5/cobros`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE5CobrosQueryOptions = <TData = Awaited<ReturnType<typeof listE5Cobros>>, TError = ErrorType<E5ErrorResponseResponse>>(params: ListE5CobrosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE5Cobros>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE5CobrosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE5Cobros>>> = ({ signal }) => listE5Cobros(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE5Cobros>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE5CobrosQueryResult = NonNullable<Awaited<ReturnType<typeof listE5Cobros>>>
+export type ListE5CobrosQueryError = ErrorType<E5ErrorResponseResponse>
+
+
+
+export function useListE5Cobros<TData = Awaited<ReturnType<typeof listE5Cobros>>, TError = ErrorType<E5ErrorResponseResponse>>(
+ params: ListE5CobrosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE5Cobros>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE5CobrosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateE5CobroUrl = () => {
+
+
+
+
+  return `/api/e5/cobros`
+}
+
+/**
+ * @summary Recepción real retenida y recibo; ADMIN puede aplicar al momento atómicamente
+ */
+export const createE5Cobro = async (e5RecepcionInput: E5RecepcionInput, options?: Parameters<typeof customFetch>[1]): Promise<E5Cobro> => {
+
+  return customFetch<E5Cobro>(getCreateE5CobroUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e5RecepcionInput)
+  }
+);}
+
+
+
+
+
+export const getCreateE5CobroMutationOptions = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE5Cobro>>, TError,{data: BodyType<E5RecepcionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createE5Cobro>>, TError,{data: BodyType<E5RecepcionInput>}, TContext> => {
+
+const mutationKey = ['createE5Cobro'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createE5Cobro>>, {data: BodyType<E5RecepcionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createE5Cobro(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateE5CobroMutationResult = NonNullable<Awaited<ReturnType<typeof createE5Cobro>>>
+    export type CreateE5CobroMutationBody = BodyType<E5RecepcionInput>
+    export type CreateE5CobroMutationError = ErrorType<E5ErrorResponseResponse>
+
+    /**
+ * @summary Recepción real retenida y recibo; ADMIN puede aplicar al momento atómicamente
+ */
+export const useCreateE5Cobro = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE5Cobro>>, TError,{data: BodyType<E5RecepcionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createE5Cobro>>,
+        TError,
+        {data: BodyType<E5RecepcionInput>},
+        TContext
+      > => {
+      return useMutation(getCreateE5CobroMutationOptions(options));
+    }
+
+export const getPreviewE5CobroUrl = () => {
+
+
+
+
+  return `/api/e5/cobros/vista-previa`
+}
+
+export const previewE5Cobro = async (e5RecepcionInput: E5RecepcionInput, options?: Parameters<typeof customFetch>[1]): Promise<E5VistaPrevia> => {
+
+  return customFetch<E5VistaPrevia>(getPreviewE5CobroUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e5RecepcionInput)
+  }
+);}
+
+
+
+
+
+export const getPreviewE5CobroMutationOptions = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewE5Cobro>>, TError,{data: BodyType<E5RecepcionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof previewE5Cobro>>, TError,{data: BodyType<E5RecepcionInput>}, TContext> => {
+
+const mutationKey = ['previewE5Cobro'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof previewE5Cobro>>, {data: BodyType<E5RecepcionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  previewE5Cobro(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PreviewE5CobroMutationResult = NonNullable<Awaited<ReturnType<typeof previewE5Cobro>>>
+    export type PreviewE5CobroMutationBody = BodyType<E5RecepcionInput>
+    export type PreviewE5CobroMutationError = ErrorType<E5ErrorResponseResponse>
+
+    export const usePreviewE5Cobro = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof previewE5Cobro>>, TError,{data: BodyType<E5RecepcionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof previewE5Cobro>>,
+        TError,
+        {data: BodyType<E5RecepcionInput>},
+        TContext
+      > => {
+      return useMutation(getPreviewE5CobroMutationOptions(options));
+    }
+
+export const getGetE5CobroUrl = (id: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}`
+}
+
+export const getE5Cobro = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<E5Cobro> => {
+
+  return customFetch<E5Cobro>(getGetE5CobroUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE5CobroQueryKey = (id: string,) => {
+    return [
+    `/api/e5/cobros/${id}`
+    ] as const;
+    }
+
+
+export const getGetE5CobroQueryOptions = <TData = Awaited<ReturnType<typeof getE5Cobro>>, TError = ErrorType<E5ErrorResponseResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Cobro>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE5CobroQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE5Cobro>>> = ({ signal }) => getE5Cobro(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE5Cobro>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE5CobroQueryResult = NonNullable<Awaited<ReturnType<typeof getE5Cobro>>>
+export type GetE5CobroQueryError = ErrorType<E5ErrorResponseResponse>
+
+
+
+export function useGetE5Cobro<TData = Awaited<ReturnType<typeof getE5Cobro>>, TError = ErrorType<E5ErrorResponseResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Cobro>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE5CobroQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateE5PropuestaUrl = (id: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}/propuestas`
+}
+
+/**
+ * @summary Nueva versión inmutable; ADMIN o capacidad ContadorA futura explícita
+ */
+export const createE5Propuesta = async (id: string,
+    e5PropuestaInput: E5PropuestaInput, options?: Parameters<typeof customFetch>[1]): Promise<E5Cobro> => {
+
+  return customFetch<E5Cobro>(getCreateE5PropuestaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e5PropuestaInput)
+  }
+);}
+
+
+
+
+
+export const getCreateE5PropuestaMutationOptions = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE5Propuesta>>, TError,{id: string;data: BodyType<E5PropuestaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createE5Propuesta>>, TError,{id: string;data: BodyType<E5PropuestaInput>}, TContext> => {
+
+const mutationKey = ['createE5Propuesta'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createE5Propuesta>>, {id: string;data: BodyType<E5PropuestaInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  createE5Propuesta(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateE5PropuestaMutationResult = NonNullable<Awaited<ReturnType<typeof createE5Propuesta>>>
+    export type CreateE5PropuestaMutationBody = BodyType<E5PropuestaInput>
+    export type CreateE5PropuestaMutationError = ErrorType<E5ErrorResponseResponse>
+
+    /**
+ * @summary Nueva versión inmutable; ADMIN o capacidad ContadorA futura explícita
+ */
+export const useCreateE5Propuesta = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE5Propuesta>>, TError,{id: string;data: BodyType<E5PropuestaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createE5Propuesta>>,
+        TError,
+        {id: string;data: BodyType<E5PropuestaInput>},
+        TContext
+      > => {
+      return useMutation(getCreateE5PropuestaMutationOptions(options));
+    }
+
+export const getAuthorizeE5AplicacionUrl = (id: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}/autorizar`
+}
+
+/**
+ * @summary Solo ADMIN; reparto explícito total o parcial de propuesta vigente
+ */
+export const authorizeE5Aplicacion = async (id: string,
+    e5AutorizarInput: E5AutorizarInput, options?: Parameters<typeof customFetch>[1]): Promise<E5Cobro> => {
+
+  return customFetch<E5Cobro>(getAuthorizeE5AplicacionUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e5AutorizarInput)
+  }
+);}
+
+
+
+
+
+export const getAuthorizeE5AplicacionMutationOptions = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authorizeE5Aplicacion>>, TError,{id: string;data: BodyType<E5AutorizarInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof authorizeE5Aplicacion>>, TError,{id: string;data: BodyType<E5AutorizarInput>}, TContext> => {
+
+const mutationKey = ['authorizeE5Aplicacion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof authorizeE5Aplicacion>>, {id: string;data: BodyType<E5AutorizarInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  authorizeE5Aplicacion(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AuthorizeE5AplicacionMutationResult = NonNullable<Awaited<ReturnType<typeof authorizeE5Aplicacion>>>
+    export type AuthorizeE5AplicacionMutationBody = BodyType<E5AutorizarInput>
+    export type AuthorizeE5AplicacionMutationError = ErrorType<E5ErrorResponseResponse>
+
+    /**
+ * @summary Solo ADMIN; reparto explícito total o parcial de propuesta vigente
+ */
+export const useAuthorizeE5Aplicacion = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authorizeE5Aplicacion>>, TError,{id: string;data: BodyType<E5AutorizarInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof authorizeE5Aplicacion>>,
+        TError,
+        {id: string;data: BodyType<E5AutorizarInput>},
+        TContext
+      > => {
+      return useMutation(getAuthorizeE5AplicacionMutationOptions(options));
+    }
+
+export const getRejectE5PropuestaUrl = (id: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}/rechazar`
+}
+
+export const rejectE5Propuesta = async (id: string,
+    e5RechazarInput: E5RechazarInput, options?: Parameters<typeof customFetch>[1]): Promise<E5Cobro> => {
+
+  return customFetch<E5Cobro>(getRejectE5PropuestaUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e5RechazarInput)
+  }
+);}
+
+
+
+
+
+export const getRejectE5PropuestaMutationOptions = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectE5Propuesta>>, TError,{id: string;data: BodyType<E5RechazarInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof rejectE5Propuesta>>, TError,{id: string;data: BodyType<E5RechazarInput>}, TContext> => {
+
+const mutationKey = ['rejectE5Propuesta'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof rejectE5Propuesta>>, {id: string;data: BodyType<E5RechazarInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  rejectE5Propuesta(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RejectE5PropuestaMutationResult = NonNullable<Awaited<ReturnType<typeof rejectE5Propuesta>>>
+    export type RejectE5PropuestaMutationBody = BodyType<E5RechazarInput>
+    export type RejectE5PropuestaMutationError = ErrorType<E5ErrorResponseResponse>
+
+    export const useRejectE5Propuesta = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof rejectE5Propuesta>>, TError,{id: string;data: BodyType<E5RechazarInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof rejectE5Propuesta>>,
+        TError,
+        {id: string;data: BodyType<E5RechazarInput>},
+        TContext
+      > => {
+      return useMutation(getRejectE5PropuestaMutationOptions(options));
+    }
+
+export const getGetE5DevolucionOpcionesUrl = (id: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}/devolucion/opciones`
+}
+
+/**
+ * @summary Solo ADMIN; fuentes actuales comprobables, no saldo histórico supuesto
+ */
+export const getE5DevolucionOpciones = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<E5DevolucionOpciones> => {
+
+  return customFetch<E5DevolucionOpciones>(getGetE5DevolucionOpcionesUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE5DevolucionOpcionesQueryKey = (id: string,) => {
+    return [
+    `/api/e5/cobros/${id}/devolucion/opciones`
+    ] as const;
+    }
+
+
+export const getGetE5DevolucionOpcionesQueryOptions = <TData = Awaited<ReturnType<typeof getE5DevolucionOpciones>>, TError = ErrorType<E5ErrorResponseResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5DevolucionOpciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE5DevolucionOpcionesQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE5DevolucionOpciones>>> = ({ signal }) => getE5DevolucionOpciones(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE5DevolucionOpciones>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE5DevolucionOpcionesQueryResult = NonNullable<Awaited<ReturnType<typeof getE5DevolucionOpciones>>>
+export type GetE5DevolucionOpcionesQueryError = ErrorType<E5ErrorResponseResponse>
+
+
+/**
+ * @summary Solo ADMIN; fuentes actuales comprobables, no saldo histórico supuesto
+ */
+
+export function useGetE5DevolucionOpciones<TData = Awaited<ReturnType<typeof getE5DevolucionOpciones>>, TError = ErrorType<E5ErrorResponseResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5DevolucionOpciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE5DevolucionOpcionesQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getReturnE5CobroUrl = (id: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}/devolver`
+}
+
+/**
+ * @summary ADMIN devuelve exclusivamente total nunca aplicado, con petición y salida real
+ */
+export const returnE5Cobro = async (id: string,
+    e5DevolverInput: E5DevolverInput, options?: Parameters<typeof customFetch>[1]): Promise<E5Cobro> => {
+
+  return customFetch<E5Cobro>(getReturnE5CobroUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e5DevolverInput)
+  }
+);}
+
+
+
+
+
+export const getReturnE5CobroMutationOptions = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof returnE5Cobro>>, TError,{id: string;data: BodyType<E5DevolverInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof returnE5Cobro>>, TError,{id: string;data: BodyType<E5DevolverInput>}, TContext> => {
+
+const mutationKey = ['returnE5Cobro'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof returnE5Cobro>>, {id: string;data: BodyType<E5DevolverInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  returnE5Cobro(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReturnE5CobroMutationResult = NonNullable<Awaited<ReturnType<typeof returnE5Cobro>>>
+    export type ReturnE5CobroMutationBody = BodyType<E5DevolverInput>
+    export type ReturnE5CobroMutationError = ErrorType<E5ErrorResponseResponse>
+
+    /**
+ * @summary ADMIN devuelve exclusivamente total nunca aplicado, con petición y salida real
+ */
+export const useReturnE5Cobro = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof returnE5Cobro>>, TError,{id: string;data: BodyType<E5DevolverInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof returnE5Cobro>>,
+        TError,
+        {id: string;data: BodyType<E5DevolverInput>},
+        TContext
+      > => {
+      return useMutation(getReturnE5CobroMutationOptions(options));
+    }
+
+export const getListE5AvisosUrl = (params: ListE5AvisosParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e5/avisos?${stringifiedParams}` : `/api/e5/avisos`
+}
+
+/**
+ * @summary Solo ADMIN; pendientes desde tres días de recepción
+ */
+export const listE5Avisos = async (params: ListE5AvisosParams, options?: Parameters<typeof customFetch>[1]): Promise<E5Pagina> => {
+
+  return customFetch<E5Pagina>(getListE5AvisosUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE5AvisosQueryKey = (params?: ListE5AvisosParams,) => {
+    return [
+    `/api/e5/avisos`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE5AvisosQueryOptions = <TData = Awaited<ReturnType<typeof listE5Avisos>>, TError = ErrorType<E5ErrorResponseResponse>>(params: ListE5AvisosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE5Avisos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE5AvisosQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE5Avisos>>> = ({ signal }) => listE5Avisos(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE5Avisos>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE5AvisosQueryResult = NonNullable<Awaited<ReturnType<typeof listE5Avisos>>>
+export type ListE5AvisosQueryError = ErrorType<E5ErrorResponseResponse>
+
+
+/**
+ * @summary Solo ADMIN; pendientes desde tres días de recepción
+ */
+
+export function useListE5Avisos<TData = Awaited<ReturnType<typeof listE5Avisos>>, TError = ErrorType<E5ErrorResponseResponse>>(
+ params: ListE5AvisosParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE5Avisos>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE5AvisosQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE5DocumentoUrl = (id: string,
+    documentoId: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}/documentos/${documentoId}`
+}
+
+/**
+ * @summary ADMIN consulta recibo o constancia inmutable desde otro equipo
+ */
+export const getE5Documento = async (id: string,
+    documentoId: string, options?: Parameters<typeof customFetch>[1]): Promise<E5Documento> => {
+
+  return customFetch<E5Documento>(getGetE5DocumentoUrl(id,documentoId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE5DocumentoQueryKey = (id: string,
+    documentoId: string,) => {
+    return [
+    `/api/e5/cobros/${id}/documentos/${documentoId}`
+    ] as const;
+    }
+
+
+export const getGetE5DocumentoQueryOptions = <TData = Awaited<ReturnType<typeof getE5Documento>>, TError = ErrorType<E5ErrorResponseResponse>>(id: string,
+    documentoId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Documento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE5DocumentoQueryKey(id,documentoId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE5Documento>>> = ({ signal }) => getE5Documento(id,documentoId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined && documentoId !== null && documentoId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE5Documento>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE5DocumentoQueryResult = NonNullable<Awaited<ReturnType<typeof getE5Documento>>>
+export type GetE5DocumentoQueryError = ErrorType<E5ErrorResponseResponse>
+
+
+/**
+ * @summary ADMIN consulta recibo o constancia inmutable desde otro equipo
+ */
+
+export function useGetE5Documento<TData = Awaited<ReturnType<typeof getE5Documento>>, TError = ErrorType<E5ErrorResponseResponse>>(
+ id: string,
+    documentoId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE5Documento>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE5DocumentoQueryOptions(id,documentoId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getRecordE5ImpresionUrl = (id: string,
+    documentoId: string,) => {
+
+
+
+
+  return `/api/e5/cobros/${id}/documentos/${documentoId}/impresiones`
+}
+
+export const recordE5Impresion = async (id: string,
+    documentoId: string,
+    e5ImpresionInput: E5ImpresionInput, options?: Parameters<typeof customFetch>[1]): Promise<RecordE5Impresion200> => {
+
+  return customFetch<RecordE5Impresion200>(getRecordE5ImpresionUrl(id,documentoId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e5ImpresionInput)
+  }
+);}
+
+
+
+
+
+export const getRecordE5ImpresionMutationOptions = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordE5Impresion>>, TError,{id: string;documentoId: string;data: BodyType<E5ImpresionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof recordE5Impresion>>, TError,{id: string;documentoId: string;data: BodyType<E5ImpresionInput>}, TContext> => {
+
+const mutationKey = ['recordE5Impresion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof recordE5Impresion>>, {id: string;documentoId: string;data: BodyType<E5ImpresionInput>}> = (props) => {
+          const {id,documentoId,data} = props ?? {};
+
+          return  recordE5Impresion(id,documentoId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RecordE5ImpresionMutationResult = NonNullable<Awaited<ReturnType<typeof recordE5Impresion>>>
+    export type RecordE5ImpresionMutationBody = BodyType<E5ImpresionInput>
+    export type RecordE5ImpresionMutationError = ErrorType<E5ErrorResponseResponse>
+
+    export const useRecordE5Impresion = <TError = ErrorType<E5ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof recordE5Impresion>>, TError,{id: string;documentoId: string;data: BodyType<E5ImpresionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof recordE5Impresion>>,
+        TError,
+        {id: string;documentoId: string;data: BodyType<E5ImpresionInput>},
+        TContext
+      > => {
+      return useMutation(getRecordE5ImpresionMutationOptions(options));
+    }
 
 export const getGetE9DisponibilidadUrl = (params: GetE9DisponibilidadParams,) => {
   const normalizedParams = new URLSearchParams();

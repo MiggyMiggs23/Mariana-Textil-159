@@ -1,0 +1,98 @@
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/App.tsx:518:9:
+      518 │         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Ro...
+          ╵          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/App.tsx:519:9:
+      519 │         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Ro...
+          ╵          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/App.tsx:520:9:
+      520 │         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Ro...
+          ╵          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/App.tsx:521:9:
+      521 │         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Ro...
+          ╵          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/App.tsx:522:9:
+      522 │         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Ro...
+          ╵          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/components/error-boundary.tsx:50:9:
+      50 │         {import.meta.env.DEV ? (
+         ╵          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+✘ [ERROR] No loader is configured for ".png" files: src/assets/mariana-textil-logo-monochrome.png
+
+    src/components/monochrome-brand-logo.tsx:1:27:
+      1 │ ... monochromeLogo from "@/assets/mariana-textil-logo-monochrome.png";
+        ╵                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/hooks/fondo.ts:35:25:
+      35 │   const isFondoEnabled = import.meta.env?.VITE_FONDO_E10_ENABLED =...
+         ╵                          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+▲ [WARNING] "import.meta" is not available with the "cjs" output format and will be empty [empty-import-meta]
+
+    src/hooks/fondo.ts:155:25:
+      155 │   const isFondoEnabled = import.meta.env?.VITE_FONDO_E10_ENABLED ...
+          ╵                          ~~~~~~~~~~~
+
+  You need to set the output format to "esm" for "import.meta" to work correctly.
+
+✘ [ERROR] No loader is configured for ".png" files: src/assets/mariana-textil-logo.png
+
+    src/components/brand-logo.tsx:1:21:
+      1 │ import fullLogo from "@/assets/mariana-textil-logo.png";
+        ╵                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:1467
+  let error = new Error(text);
+              ^
+
+Error: Build failed with 2 errors:
+src/components/brand-logo.tsx:1:21: ERROR: No loader is configured for ".png" files: src/assets/mariana-textil-logo.png
+src/components/monochrome-brand-logo.tsx:1:27: ERROR: No loader is configured for ".png" files: src/assets/mariana-textil-logo-monochrome.png
+    at failureErrorWithLog (/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:1467:15)
+    at /home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:926:25
+    at runOnEndCallbacks (/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:1307:45)
+    at buildResponseToResult (/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:924:7)
+    at /home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:951:16
+    at responseCallbacks.<computed> (/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:603:9)
+    at handleIncomingPacket (/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:658:12)
+    at Socket.readFromStdout (/home/runner/workspace/node_modules/.pnpm/esbuild@0.27.3/node_modules/esbuild/lib/main.js:581:7)
+    at Socket.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:559:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+
+Node.js v24.13.0

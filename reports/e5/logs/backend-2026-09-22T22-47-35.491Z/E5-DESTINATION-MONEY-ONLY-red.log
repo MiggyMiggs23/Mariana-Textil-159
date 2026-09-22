@@ -1,0 +1,92 @@
+TAP version 13
+# Subtest: E5-DESTINATION-MONEY-ONLY
+not ok 1 - E5-DESTINATION-MONEY-ONLY
+  ---
+  duration_ms: 2.372947
+  type: 'test'
+  location: '/tmp/e5-native-C8aNRU/E5-DESTINATION-MONEY-ONLY/test.mjs:22326:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input was expected to not match the regular expression /e5_aplicaciones|FONDO/. Input:
+    
+    '\n' +
+      '    UNION ALL\n' +
+      '    SELECT r.cliente_id, r.fecha_recepcion, r.importe, r.medio::text, r.cuenta_destino::text,\n' +
+      '      r.cliente_id, NULL::bigint, r.cliente_id, NULL::bigint, r.ubicacion_id,\n' +
+      "      r.actor_id, false, 'E5_RECEPCION'::text, r.id::text\n" +
+      '    FROM e5_aplicaciones r\n' +
+      '    WHERE ($1::timestamptz IS NULL OR r.fecha_recepcion >= $1)\n' +
+      '      AND ($2::timestamptz IS NULL OR r.fecha_recepcion <= $2)\n' +
+      '      AND ($3::int IS NULL OR r.ubicacion_id=$3)\n' +
+      '    UNION ALL\n' +
+      "    SELECT r.cliente_id, s.created_at, -d.importe, 'EFECTIVO'::text, 'CAJA_FISICA'::text,\n" +
+      '      r.cliente_id, NULL::bigint, r.cliente_id, NULL::bigint,\n' +
+      "      (d.fuente->>'ubicacionId')::int, d.actor_id, false, 'E5_DEVOLUCION'::text, r.id::text\n" +
+      '    FROM e5_devoluciones d JOIN e5_recepciones r ON r.id=d.cobro_id\n' +
+      '    JOIN salidas_dinero_caja s ON s.id=d.salida_id\n' +
+      "    WHERE d.fuente->>'tipo'='CAJA'\n" +
+      '      AND ($1::timestamptz IS NULL OR s.created_at >= $1)\n' +
+      '      AND ($2::timestamptz IS NULL OR s.created_at <= $2)\n' +
+      "      AND ($3::int IS NULL OR (d.fuente->>'ubicacionId')::int=$3)\n" +
+      '    UNION ALL\n' +
+      "    SELECT r.cliente_id, b.created_at, -b.importe, 'TRANSFERENCIA'::text, b.cuenta_origen::text,\n" +
+      '      r.cliente_id, NULL::bigint, r.cliente_id, NULL::bigint, b.ubicacion_id,\n' +
+      "      b.actor_id, false, 'E5_DEVOLUCION'::text, r.id::text\n" +
+      '    FROM e5_salidas_bancarias b JOIN e5_recepciones r ON r.id=b.cobro_id\n' +
+      '    JOIN e5_devoluciones d ON d.clave=b.clave AND d.cobro_id=b.cobro_id\n' +
+      "    WHERE d.fuente->>'tipo'='CUENTA'\n" +
+      '      AND ($1::timestamptz IS NULL OR b.created_at >= $1)\n' +
+      '      AND ($2::timestamptz IS NULL OR b.created_at <= $2)\n' +
+      '      AND ($3::int IS NULL OR b.ubicacion_id=$3)'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    
+        UNION ALL
+        SELECT r.cliente_id, r.fecha_recepcion, r.importe, r.medio::text, r.cuenta_destino::text,
+          r.cliente_id, NULL::bigint, r.cliente_id, NULL::bigint, r.ubicacion_id,
+          r.actor_id, false, 'E5_RECEPCION'::text, r.id::text
+        FROM e5_aplicaciones r
+        WHERE ($1::timestamptz IS NULL OR r.fecha_recepcion >= $1)
+          AND ($2::timestamptz IS NULL OR r.fecha_recepcion <= $2)
+          AND ($3::int IS NULL OR r.ubicacion_id=$3)
+        UNION ALL
+        SELECT r.cliente_id, s.created_at, -d.importe, 'EFECTIVO'::text, 'CAJA_FISICA'::text,
+          r.cliente_id, NULL::bigint, r.cliente_id, NULL::bigint,
+          (d.fuente->>'ubicacionId')::int, d.actor_id, false, 'E5_DEVOLUCION'::text, r.id::text
+        FROM e5_devoluciones d JOIN e5_recepciones r ON r.id=d.cobro_id
+        JOIN salidas_dinero_caja s ON s.id=d.salida_id
+        WHERE d.fuente->>'tipo'='CAJA'
+          AND ($1::timestamptz IS NULL OR s.created_at >= $1)
+          AND ($2::timestamptz IS NULL OR s.created_at <= $2)
+          AND ($3::int IS NULL OR (d.fuente->>'ubicacionId')::int=$3)
+        UNION ALL
+        SELECT r.cliente_id, b.created_at, -b.importe, 'TRANSFERENCIA'::text, b.cuenta_origen::text,
+          r.cliente_id, NULL::bigint, r.cliente_id, NULL::bigint, b.ubicacion_id,
+          b.actor_id, false, 'E5_DEVOLUCION'::text, r.id::text
+        FROM e5_salidas_bancarias b JOIN e5_recepciones r ON r.id=b.cobro_id
+        JOIN e5_devoluciones d ON d.clave=b.clave AND d.cobro_id=b.cobro_id
+        WHERE d.fuente->>'tipo'='CUENTA'
+          AND ($1::timestamptz IS NULL OR b.created_at >= $1)
+          AND ($2::timestamptz IS NULL OR b.created_at <= $2)
+          AND ($3::int IS NULL OR b.ubicacion_id=$3)
+  operator: 'doesNotMatch'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e5-native-C8aNRU/E5-DESTINATION-MONEY-ONLY/test.mjs:22330:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 90.261946
+

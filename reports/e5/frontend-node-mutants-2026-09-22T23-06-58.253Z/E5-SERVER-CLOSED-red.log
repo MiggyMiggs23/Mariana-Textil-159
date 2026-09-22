@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E5-SERVER-CLOSED
+not ok 1 - E5-SERVER-CLOSED
+  ---
+  duration_ms: 126.735248
+  type: 'test'
+  location: '/tmp/e5-node-nYROpa/E5-SERVER-CLOSED-red/artifacts/mariana-textil/case.test.cjs:69137:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E5-SERVER-CLOSED
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e5-node-nYROpa/E5-SERVER-CLOSED-red/artifacts/mariana-textil/case.test.cjs:69140:25)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2460.036665

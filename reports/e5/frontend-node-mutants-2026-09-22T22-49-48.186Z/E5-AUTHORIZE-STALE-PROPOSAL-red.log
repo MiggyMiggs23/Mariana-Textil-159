@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E5-AUTHORIZE-STALE-PROPOSAL
+not ok 1 - E5-AUTHORIZE-STALE-PROPOSAL
+  ---
+  duration_ms: 164.253044
+  type: 'test'
+  location: '/tmp/e5-node-1fHLJx/E5-AUTHORIZE-STALE-PROPOSAL-red/artifacts/mariana-textil/case.test.cjs:61611:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E5-AUTHORIZE-STALE-PROPOSAL
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e5-node-1fHLJx/E5-AUTHORIZE-STALE-PROPOSAL-red/artifacts/mariana-textil/case.test.cjs:61615:25)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2361.271906

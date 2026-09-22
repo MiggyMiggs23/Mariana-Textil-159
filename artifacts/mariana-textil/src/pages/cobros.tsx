@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useHistoryEntryState } from "@/lib/internal-navigation";
 import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credit-evidence-fields";
 import { CajaAbonoE3Dialog } from "@/components/caja-abono-e3-dialog";
+import { E5Entry } from "@/components/e5-pendientes";
 import {
   useObtenerSesionCajaActual,
   useAbrirSesionCaja,
@@ -245,6 +246,7 @@ function CarteraContent() {
 
   return (
     <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-6">
+      <E5Entry entrada="CAJA" clienteId={clienteId ?? undefined} />
       <Card className="shadow-md border-primary/20">
         <CardHeader className="bg-primary/5 pb-4 border-b border-primary/10">
           <div className="flex justify-between items-center w-full">

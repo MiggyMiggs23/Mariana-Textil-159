@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E5-UUID-NORMALIZED-CONTENT",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E5-UUID-NORMALIZED-CONTENT\n+ actual - expected\n\n+ '7b5e4e69-67af-48f3-8598-0c139305a1a1'\n- 'fd1027a5-ad54-43c8-8821-0f9b7c983ce8'\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E5-UUID-NORMALIZED-CONTENT\n+ actual - expected\n\n+ '7b5e4e69-67af-48f3-8598-0c139305a1a1'\n- 'fd1027a5-ad54-43c8-8821-0f9b7c983ce8'\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2666.787061"
+  ]
+}

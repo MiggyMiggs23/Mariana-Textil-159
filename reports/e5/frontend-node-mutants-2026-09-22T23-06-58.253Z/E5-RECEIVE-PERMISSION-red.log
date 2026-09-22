@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E5-RECEIVE-PERMISSION
+not ok 1 - E5-RECEIVE-PERMISSION
+  ---
+  duration_ms: 121.441595
+  type: 'test'
+  location: '/tmp/e5-node-nYROpa/E5-RECEIVE-PERMISSION-red/artifacts/mariana-textil/case.test.cjs:69111:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E5-RECEIVE-PERMISSION
+    
+    true !== false
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: false
+  actual: true
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e5-node-nYROpa/E5-RECEIVE-PERMISSION-red/artifacts/mariana-textil/case.test.cjs:69115:25)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2595.773135

@@ -1,0 +1,75 @@
+TAP version 13
+# Subtest: E5-UNCERTAIN-RETRY-EXACT
+not ok 1 - E5-UNCERTAIN-RETRY-EXACT
+  ---
+  duration_ms: 328.152677
+  type: 'test'
+  location: '/tmp/e5-node-nYROpa/E5-UNCERTAIN-RETRY-EXACT-red/artifacts/mariana-textil/case.test.cjs:69168:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E5-UNCERTAIN-RETRY-EXACT
+    + actual - expected
+    
+      {
+        data: {
+    +     claveOperacion: 'c38a2ae6-2eaf-4626-b23a-309c72c3fc8a',
+    -     claveOperacion: '131f58e2-125f-4004-b6f5-29f366774517',
+          clienteId: 7,
+          cuentaDestino: 'CAJA_FISICA',
+          entrada: 'CAJA',
+          evidencia: {
+            descripcion: 'Evidencia de recepción',
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    data:
+      clienteId: 7
+      ubicacionId: 2
+      entrada: 'CAJA'
+      versionContexto: 'server-context-e5-opaque-v7'
+      importe: '150.30'
+      formaPago: 'EFECTIVO'
+      cuentaDestino: 'CAJA_FISICA'
+      sesionOperativaId: 456
+      sesionCajaId: 456
+      notasIndicadas:
+        0: 101
+        1: 102
+      evidencia:
+        descripcion: 'Evidencia de recepción'
+        referencias:
+      claveOperacion: '131f58e2-125f-4004-b6f5-29f366774517'
+  actual:
+    data:
+      clienteId: 7
+      ubicacionId: 2
+      entrada: 'CAJA'
+      versionContexto: 'server-context-e5-opaque-v7'
+      importe: '150.30'
+      formaPago: 'EFECTIVO'
+      cuentaDestino: 'CAJA_FISICA'
+      sesionOperativaId: 456
+      sesionCajaId: 456
+      notasIndicadas:
+        0: 101
+        1: 102
+      evidencia:
+        descripcion: 'Evidencia de recepción'
+        referencias:
+      claveOperacion: 'c38a2ae6-2eaf-4626-b23a-309c72c3fc8a'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e5-node-nYROpa/E5-UNCERTAIN-RETRY-EXACT-red/artifacts/mariana-textil/case.test.cjs:69173:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3009.896126

@@ -2388,6 +2388,9 @@ router.post(
           WHERE id=${pagoId} AND cliente_id=${clienteId} AND tipo='ABONO' FOR UPDATE`);
         const abono = original.rows[0];
         if (!abono) throw new Error("PAYMENT_NOT_FOUND");
+        if (abono.operacion_productor === "E5_APLICACION_RETENIDA") {
+          throw new CreditEvidenceError("Una aplicación retenida E5 no admite reverso independiente.", 409);
+        }
         if (canonicalCreditMoney(Math.abs(Number(abono.importe))) !== importe) {
           throw new CreditEvidenceError("El importe declarado no coincide con el abono original.", 409);
         }

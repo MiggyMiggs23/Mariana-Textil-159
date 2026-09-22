@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E5-PROPOSAL-EXPLICIT-FUTURE
+not ok 1 - E5-PROPOSAL-EXPLICIT-FUTURE
+  ---
+  duration_ms: 17.533207
+  type: 'test'
+  location: '/tmp/e5-native-C8aNRU/E5-PROPOSAL-EXPLICIT-FUTURE/test.mjs:22080:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e5-native-C8aNRU/E5-PROPOSAL-EXPLICIT-FUTURE/test.mjs:22082:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 113.901883
+

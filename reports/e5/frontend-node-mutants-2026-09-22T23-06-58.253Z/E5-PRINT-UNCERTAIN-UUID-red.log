@@ -1,0 +1,51 @@
+TAP version 13
+# Subtest: E5-PRINT-UNCERTAIN-UUID
+not ok 1 - E5-PRINT-UNCERTAIN-UUID
+  ---
+  duration_ms: 383.703992
+  type: 'test'
+  location: '/tmp/e5-node-nYROpa/E5-PRINT-UNCERTAIN-UUID-red/artifacts/mariana-textil/case.test.cjs:69364:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E5-PRINT-UNCERTAIN-UUID
+    + actual - expected
+    
+      {
+        data: {
+    +     claveOperacion: '490105a2-935f-4f76-8d0c-617d3eeb40ac',
+    -     claveOperacion: '91108dfc-1613-44bb-b340-fffbbeed32c5',
+          motivo: 'Copia solicitada'
+        },
+        documentoId: '22222222-2222-4222-8222-222222222222',
+        id: '11111111-1111-4111-8111-111111111111'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    id: '11111111-1111-4111-8111-111111111111'
+    documentoId: '22222222-2222-4222-8222-222222222222'
+    data:
+      claveOperacion: '91108dfc-1613-44bb-b340-fffbbeed32c5'
+      motivo: 'Copia solicitada'
+  actual:
+    id: '11111111-1111-4111-8111-111111111111'
+    documentoId: '22222222-2222-4222-8222-222222222222'
+    data:
+      claveOperacion: '490105a2-935f-4f76-8d0c-617d3eeb40ac'
+      motivo: 'Copia solicitada'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e5-node-nYROpa/E5-PRINT-UNCERTAIN-UUID-red/artifacts/mariana-textil/case.test.cjs:69374:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5534.911154

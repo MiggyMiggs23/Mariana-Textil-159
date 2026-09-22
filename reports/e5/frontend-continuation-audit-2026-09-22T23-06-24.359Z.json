@@ -1,0 +1,695 @@
+{
+  "status": "STATIC_RECONCILIATION_NOT_SUITE_PASS",
+  "casesExecutedByAudit": 0,
+  "originalManifests": [
+    {
+      "file": "reports/e5/frontend-node-mutants-2026-09-22T22-43-03.645Z/manifest.json",
+      "sha256": "f6a01951801c16bf4e832ef15cd4bd3915fc69b40c2afb7eee8f0aa201825104",
+      "status": "FAIL_NOT_ACCEPTED",
+      "error": "Error: E5_PROCESS_FAILURE E5-RECEPTION-PREVIEW-VERSION-red: Error: spawnSync /nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node ETIMEDOUT"
+    },
+    {
+      "file": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "sha256": "e1d0b80416624c7b8dc2f8436e7f6beab63786ee1d9764e307e8f3770c6e37c8",
+      "status": "FAIL_NOT_ACCEPTED",
+      "error": "Error: E5_GREEN_FAILED E5-OFF-ROUTE-LIST-green"
+    },
+    {
+      "file": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "sha256": "820dcbfa8e71edc8c59d44754cd87d8ad08e85dac488a35e72cea73d2735170d",
+      "status": "FAIL_NOT_ACCEPTED",
+      "error": "Error: E5_INFRASTRUCTURE_FAILURE_NOT_RED E5-PARENT-CLIENT-green"
+    }
+  ],
+  "currentTestFileSha256": "ad45ccacb75a03660ea140cb5bdcdad7f818fd166a2de96a40f4cb13a1bf9a38",
+  "verifiedAnchors": 111,
+  "declarationHashes": {
+    "E5-RECEPTION-DOCUMENT-UNIQUE": "fee0e740d9b09db26f75756f9f4c9268ee8b20eba9ef566dd48297537220b297",
+    "E5-RECEPTION-CASH-SESSION": "ea68c4c98d646eda986cb8ab99c8c963e9d151c5801f55861adea308d47a24b7",
+    "E5-RECEPTION-TRANSFER-NO-PHYSICAL": "8407670d929163aa9890822f2b6161535ca4e93ef914f52950bf2f40da93c18e",
+    "E5-RECEPTION-TRANSFER-OPERATIVE": "54d2e780d5946caec720d16dc5bd510d751949bb08c3f40830147173c197f54a",
+    "E5-RECEPTION-EVIDENCE-REQUIRED": "7d911a2be7d32ffe8e7e49a8d2b53f8c6995787c698a37f0567edc7a870450b4",
+    "E5-RECEPTION-PREVIEW-VERSION": "18dfad340ba71c345d2a70993cb54910b5a870fa407a944093f0a3a95a6d1774",
+    "E5-RECEPTION-PREVIEW-LOCK": "29fa0453f467d7d09418a1fb84fe679aedd48040c7a6799b8c3880fc18f6c188",
+    "E5-RECEPTION-ATOMIC-EXACT-MOVEMENT": "b6d53b9ccf6d5c69fbfa962388ad8f4c41293c188968c3e02ae64a1567f20f47",
+    "E5-PROPOSAL-FAVOR-EXPLICIT": "19d140d39d94386e97d720cc187f1780db1d8532ca9ded208bf7d34ade744dc6",
+    "E5-AUTHORIZE-FAVOR-CEILING": "d664a2aae118ba8624111dbcb1966596878bac91f3025a525626567c92c0a58f",
+    "E5-AUTHORIZE-MOVEMENT-CEILING": "cc96b057a10f25433d3f91e814ead026819cae44da3cded79dfbde2ee27d4ce8",
+    "E5-AUTHORIZE-STALE-PROPOSAL": "42d6190071a14a685961284eb8fd7281fb16598f539042271a4f52b2f4dbac64",
+    "E5-REFUND-APPLIED-RESIDUAL": "40f204cdab7a2b91be447f5bdbc9eb8b7ff19a32a168455322a25d300543c2de",
+    "E5-REFUND-EXPLICIT-REQUEST": "fd41cd854bd88ee0de0a3ecc3d5fe53935813414c3bb261e67eb8bd5bad65570",
+    "E5-REFUND-ORIGINAL-TOTAL": "23fb2607da8dd27a09dc3df81c7601db8c977185ecb8bead6e0b12c263d2b13d",
+    "E5-REJECT-NO-REFUND": "f7c02b6b505e2af28c2a1c17e45a91d431e1670b5363ee33b48912e5c0d470b7",
+    "E5-RECEPTION-CONTEXT-OPAQUE": "7a84686bd0633522800dd33c2fca2e24c6df2f224120d9596c0b5afe333befe5",
+    "E5-RECEPTION-PREVIEW-NONMONETARY": "a7e1e8b94f5c11bfe6f631285501f9616ea5114b77c41041fde9dbb798cc9279",
+    "E5-OFF-ENTRY": "12f542172497143fcd1a303739fb55ae4fb1dfaed75f11d3712a7fe361a666d8",
+    "E5-OFF-ROUTE-LIST": "ba018da0811e8a16a9fc1ee8d2914e95403051dd40b10d833f35c9a239229e29",
+    "E5-OFF-ROUTE-DETAIL": "a174bf126a24c8622760c847ab97903affeab01e22be9116eb914c279c755ea1",
+    "E5-OFF-ROUTE-DOCUMENT": "ac69bee5a53965d8a3d38b2d16f2c0d45afc38560b83cf43bf72aeda3f4044c4",
+    "E5-ROUTE-LIST": "703de62ca5c99cc500988c97371eaec458bf52e9c810787b0e49bc85ba694496",
+    "E5-ROUTE-DETAIL": "c858e0d436412b343da4009aeef1029f0958c141fb4a33a819b893319c451e76",
+    "E5-ROUTE-DOCUMENT": "aad67848ca3eefc2427b98f920b36453829c8695977c71f95a03e633843ab4f6",
+    "E5-ROUTE-PERMISSION": "4c53778be6230feb90ab05e01f2d5e8b272dc57c010007ada9e4891a97d96e17",
+    "E5-PARENT-CAJA": "1643a811201c48c6a082ba99746ec3433c2d53ae3e281de464884ea1efd463b5",
+    "E5-PARENT-CLIENT": "3f0cf38b6e313eb51bcee240d0395e9a29398cfb0ff52c4cfea0b602883a0f9d",
+    "E5-SELECTOR-DEPENDENCY": "9150c03648caf489d9ddf9e11a6bd3d71211edbc8ffa8b0e4dcaf68c2f775de1",
+    "E5-READ-PERMISSION": "e426c3c2ac6710d593a0adfd25be5d42206a55e86c39475304dc30ed6c6e4833",
+    "E5-RECEIVE-PERMISSION": "839d722d6ade1fbd60c2e8dbb0214681475bee3bb4fbf4c2659621d0c3e9236d",
+    "E5-RECEIVE-ROLE": "803db337967be9d96650af32b2081d31b84d0df1d3ebbc394f33de0e0b88684d",
+    "E5-FUTURE-A-PREPARE-WITHOUT-RECEIVE-PERMISSION": "35a77f10cb68d834587e68176698eaa09b81d2fd2b71ef28b9579b75c63e5d54",
+    "E5-LEGACY-CONTADOR-NOT-A": "7754b2acb0800d0187cdd17c967627baf9c60553b11d71db92a649d4c529c541",
+    "E5-SERVER-CLOSED": "bb60adfcd4bf8b4f5bb7175cacc1e52677935360f759dc9b51a3cdf9f3acc8c1",
+    "E5-CONTEXT-IDENTITY": "7e925b0e969b04773a6de43b3c591787367438bf34390f6545656651281bd4df",
+    "E5-DETAIL-IDENTITY": "4400b248740413bc6195b74cb39278fa83f52e3ee218e1b42b15eab534ebd331",
+    "E5-SEND-LOCK": "82b878cd406f9a26409dd30d5b9a7f556bb3f13f48ad14ea99f214379945bf76",
+    "E5-PERSIST-BEFORE-SEND": "fe0db12c4b77066f3dcaf960ce73c9ab7975d0ca0c59f5b261672c7f7e3a6a01",
+    "E5-UNCERTAIN-RETRY-EXACT": "4392617c60826882af3890f44c82ce9edd7779db4e324ae8c7f3bed25dec5b23",
+    "E5-RECOVERY-REMOUNT": "e44f07a0015eaff629b7de9b5d909d2c28986cd2be0ce2bb1c94dc2a5788c608",
+    "E5-RECOVERY-COMMAND-SCOPE": "6afe5ce75add87a4c02d4d01c1e564ec45eb3dad639a683dd411700f037147ac",
+    "E5-RETRY-EXACT-ROLE": "3514cccc10014976f7a0f8bad9275bd72b8ff37a5679b4f7bdb9cfb1843ee7ce",
+    "E5-RETRY-AVAILABILITY": "6b023505fc315bae44a795a00411a954ff6656e044fde29564cfd5583893b332",
+    "E5-RETRY-CONTEXT": "7916572bd9181cedab93e44c6e30f0e7c9a5699b60fa1614c026f7d00f776856",
+    "E5-RETRY-PERMISSION-CONTEXT": "59e890508e4dfb41746809aeebba501e143e98d304ab79c5f62246eeda3f289e",
+    "E5-RETRY-CAPABILITY": "dc885602b319061377686957b89637bc5e66f312064ab32450ecd5b5a03ea4e9",
+    "E5-RESPONSE-IDENTITY": "1e55fd9306f7a20cecae06cb22f0250ddbde784731825353ee2115c15ec9d16d",
+    "E5-RESPONSE-AMOUNT-METHOD-SESSION": "64d7dc623108e350c311f15574651dabdf1567e42ff4fc10c14e15514b21674c",
+    "E5-RESPONSE-DOCUMENTS": "69ced173b88d8097964f8ee9eb952dfd9ee502dddc102cfd798b4c1695f41a99",
+    "E5-RESPONSE-EXACT-APPLICATION": "396327b791dc72bb7395e34f462d183765a91a820e83fa287555905cb06ac1be",
+    "E5-DEFINITIVE-ERROR": "6ac930906e96ac255b3d99383d688d80d6bde19e1e945a1d96fe75c9b0252758",
+    "E5-IDEMPOTENCY-CONFLICT-UNCERTAIN": "1571f900312ade1577aca1557f3e331c1ae02d7bf56bdb34566a436f8094f7a0",
+    "E5-INVALIDATIONS": "6d21d0b235b98bd363e1a17b68fffb1e01a9d25038a8d321d25bdf1e7c68853c",
+    "E5-REFRESH-FAILURE-NO-SECOND-SEND": "ff0c5859a5eb0587f9854031bcf2747d3ed65e786cc8503d89a11403e58d6413",
+    "E5-LIST-FILTER-CURSOR": "b478f25b22ec2a6abec9376c08b1a306d069231f47aa9e34aea5be7828734001",
+    "E5-ADMIN-ALERT-SERVER-AGE": "a358caa4951d29061e43b0bb7503e29e137500b73af4fe7864988f60bfbabd18",
+    "E5-DOCUMENT-ADMIN": "d45495adcba90f0668132b989c2d2e1f12d8c1437c199ebd3feee911b93f0667",
+    "E5-DOCUMENT-MEMBERSHIP": "5acde5097796323dc26c089be32707ec806b89f4fc521271040b3d989f70aac3",
+    "E5-DOCUMENT-SNAPSHOT": "a48f1c50f3ae0f00eb3827ec311faa64fe7f700396fff52493cb6a66734f0d63",
+    "E5-DOCUMENT-FONTS-READY": "6c3dfe93db2098dca189fb58d46779e10c1458972e097a58a2c60ef65f6d0f67",
+    "E5-DOCUMENT-INCOMPLETE-BLOCKED": "233705750cd317be8517e7af2a6fae59b914f122cac2a47618a121b1ea943629",
+    "E5-DOCUMENT-OVERFLOW-BLOCKED": "2543c791f870cdf82e9e634bc34d877e6f2c403804094ed87267739cc91e7fc1",
+    "E5-PRINT-AUDIT-BEFORE-PRINT": "e84ee6f8c8d7ea5d1fe813cd619099ab6e2ec42c3cde8261588eebcede5440ee",
+    "E5-PRINT-UNCERTAIN-UUID": "c2193f5f40b8e200762ac6e1fec4ea7c54943624cc90648c84910aa37f4b3ba4",
+    "E5-AUTHORIZE-SUBSET-SEND": "9c41c038b8809029756eaf4cb39cf7c7995b64c7e57c4de1ba1aeb6905012d39",
+    "E5-REFUND-VERIFIED-SOURCE-SEND": "74275f7306957032000b4a151cf22062d7ab5a0c794119bc0ec3732b5ee7d06b",
+    "E5-RETRY-REFUND-SOURCE": "a46c686e4f03756589538dc5742387ecd3293a14e3bb6732bd2b130d382b7438",
+    "E5-RETRY-DETAIL-REVISION": "ccc24ee131b613f7a225954cea01f610a693f11cffc5a547f81f2df03cfec8cd",
+    "E5-NONADMIN-EXACT-MULTICHARGE": "79d2eb2d67238ae0a245ba5629e94424bedfd00d365d348fbd40700e97fb6832",
+    "E5-RECEPTION-CLIENT-TRANSFER": "58cd1a54283ce113f254aae4e62ff4d7ef590d6ab4549c70c0f54b7959feeacf",
+    "E5-UUID-CHANGED-CONTENT": "346bb1b927aba86d716a8626dc4d6530a42a7bb6a8e67e0c8d8b5c35937000e9",
+    "E5-UUID-NORMALIZED-CONTENT": "ae215eda864975cb2645954975fc01da7311fa9ad2ea960e4b8c8d17e442b268",
+    "E5-MONEY-NO-ROUNDING": "842bbc00edd72bc02a30582cabcc0fb0bb4fde403644686792fb67034ad487b7",
+    "E5-EVIDENCE-TEXT-NOT-URL": "8adac3a26f84c6f376ce3f1d91510467729e7d9ab0104f5ab8e10cd43296a4d2",
+    "E5-DOCUMENT-TWO-COPIES": "bbc6db73e307d1ad9e929ccba0a2f1d0027acc6c7f79104a433f438b2f167a76",
+    "E5-QUERY-ERROR-NOT-EMPTY": "3f08afe9bd1a29413b374dc15abd741a75dd9151c8c237d3c5b2da777b02d2a1",
+    "E5-RECEIVE-CAPABILITY": "a37c56d013d2eecd7198b2590b4a5adb5be677ab75a6ed60c05cc21f3acd807a",
+    "E5-NONOPERATIVE-READ-ROLE": "a39487f155b9dbf95a6c71ce244630dc3528599241befbdd4f793e75a9d2ea3d",
+    "E5-SCOPE-CACHE-ROLE": "119d4e3344af282e2a905a27230adef0548e976f3d7b9241448cf0dab8c94c4f",
+    "E5-SCOPE-CACHE-SITE": "10a747be20de186a09b829b54cf894e43a61ca6386afba50a1eb7a19c946b5fd",
+    "E5-INITIAL-GET-CONTEXT-IDENTITY": "4270faa36dc633edbbfab6fa5bb9e03127b0735066f2257a2de02e2e1894ce0c",
+    "E5-INITIAL-GET-DETAIL-IDENTITY": "4e2c113d7e1d6b8e67edcf58c093f66f95a3eb11e1fb99668c61a51376b2713d",
+    "E5-INITIAL-LAST-ACTOR-RECHECK": "a944d3bc1af5f7b41f739e4408548ea9ca9309cf4b1bf59b734c2f2bc823e3bd",
+    "E5-RECOVERY-STORAGE-FAILURE": "d9725f7c7c366d96f0b60247d248db341b2f20c56d6ba6960aabccc12b5be85a",
+    "E5-PENDING-NO-NEW-INTENT": "e958d8000b72fcba1c23a32fcb2486def3f8b28bc6ddf33a1ec84f5b555aac1e",
+    "E5-RECEIPT-IMMEDIATE-NO-PRINT": "df41a6ee8e93ee00e11fc77d5a9819958da774b1d6b6e4e99ddffda47a6e8466",
+    "E5-APPLICATION-DISTINCT-CONSTANCIA": "f69feee2e836af4984e87edf5956c2529ff47c3bdf74ea773e94bac49d95b0c2",
+    "E5-FAVOR-AUTHORIZE-ONLY": "214b4ba187987fef768b69cff45482824a703bf28c284bda93b20a6c7282a282",
+    "E5-FAVOR-OMISSION-ZERO": "aae3da0769712d69b44e8425255ee4ebf4cab399177004301de4cb856cbad451",
+    "E5-FAVOR-RETAINED-LIMIT": "f0b70942df5c978c42728b6deeefc4bd0f33a3723e49df0a084c9e8f28043059",
+    "E5-DOCUMENT-FAVOR-SNAPSHOT": "5b627e513a393665ef87ae858d33547ba6c539c32c746d8d5562cff69ce4a155",
+    "E5-DOCUMENT-PAGINATION": "53066f0317cda0af3d71eb0a95458d27895247e07166addc629e1fffa51149d3",
+    "E5-PRINT-MOTIVE-REQUIRED": "4fbc7c6e084d67c330a3352331765d78666a25023babe59fcc236f7043fbbcb9",
+    "E5-PRINT-RECOVERY-REMOUNT": "c1289d707a125181fffc4762eac16f978f7c1806b7568869a7c0161ed0dbf157",
+    "E5-PRINT-FRESH-ADMIN": "953bd97c2fb7d554000c96ab4fb1d9961235e97bdb145a4168f6bef534349635",
+    "E5-PRINT-FAILURE-NO-MONEY": "c036a1d6e1e9f4427aabc9e498d51c43abbbed6160049cbaf6ed6ad7a269aa13",
+    "E5-NONADMIN-DOCUMENT-LINKS": "7cf03f2b0edf90546dd14a489f3677a9e717862d3958d315753426d2b906863c",
+    "E5-DETAIL-HISTORY": "d2f986c74d3a007752c9ccd02d05bcb920aa5887da045add9195feb4b6306141",
+    "E5-RETRY-PROPOSAL-VERSION": "614e15ea70a4eedb0fcc025fc7c83f7accc2f86143e9f5f3c0be754c0866dfc3",
+    "E5-PRINT-SYNC-LOCK": "2ee1401f97f0be4d77dabeb337c6be90b788fb118bfd88cf8512c82ceb2cd318",
+    "E5-DOCUMENT-RESPONSE-IDENTITY": "077a24f7faec6e052948e969210e8505adf5cb48d6bca9a15b5868e95d308b6e",
+    "E5-QUERY-AVAILABILITY-ERROR": "884f169835efdc8c77f83eb1a9875ab8358e0c8a54b14a4ab09a739cd74a9b1d",
+    "E5-RESPONSE-DETAIL-UUID": "980b05f4021001d62a780f96a747c25daed497c16cc1f0b2b5ed2c16d675d20e",
+    "E5-RESPONSE-IDENTITY-MATRIX": "7acac86a1046f92dcd9254fb6893b73fc7de5be0aa5319c44449a1f0c61fe27b",
+    "E5-REFUND-NO-SOURCE": "8be75e3f8ef005c280b84b26837cff8cb41a450c8e7d18258e114a34e9fcd970",
+    "E5-ROUTE-FUTURE-A": "a25d4c6a568556c95b39c739a7808503aab6d1894daca2d539aad41a1ecfa20e",
+    "E5-ROUTE-DETAIL-PERMISSION": "254e58ae14c3151377d6e0a67cda6952a28853de03bff00383179833f9ec0b81",
+    "E5-ROUTE-DOCUMENT-ADMIN": "9234e57afbeddf0283e1eba312a700cf4b95f80917c38a41e2a260f9a83eb599",
+    "E5-FUTURE-A-CONTEXT-CAPABILITY": "fde436d08fc9719bad9e779011905db6dd3024a01d7132c5c48e75f57087479d",
+    "E5-NONADMIN-FUND-PRIVACY": "aca5738877047bb07189c5da1f44496a1af26b358d334eae397b687d18dc7992"
+  },
+  "terminal": [
+    {
+      "id": "E5-RECEPTION-DOCUMENT-UNIQUE",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-43-03.645Z/manifest.json",
+      "declarationSha256": "fee0e740d9b09db26f75756f9f4c9268ee8b20eba9ef566dd48297537220b297",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-CASH-SESSION",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-43-03.645Z/manifest.json",
+      "declarationSha256": "ea68c4c98d646eda986cb8ab99c8c963e9d151c5801f55861adea308d47a24b7",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-TRANSFER-NO-PHYSICAL",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-43-03.645Z/manifest.json",
+      "declarationSha256": "8407670d929163aa9890822f2b6161535ca4e93ef914f52950bf2f40da93c18e",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-TRANSFER-OPERATIVE",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-43-03.645Z/manifest.json",
+      "declarationSha256": "54d2e780d5946caec720d16dc5bd510d751949bb08c3f40830147173c197f54a",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-EVIDENCE-REQUIRED",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-43-03.645Z/manifest.json",
+      "declarationSha256": "7d911a2be7d32ffe8e7e49a8d2b53f8c6995787c698a37f0567edc7a870450b4",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-PREVIEW-VERSION",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "18dfad340ba71c345d2a70993cb54910b5a870fa407a944093f0a3a95a6d1774",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-PREVIEW-LOCK",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "29fa0453f467d7d09418a1fb84fe679aedd48040c7a6799b8c3880fc18f6c188",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-ATOMIC-EXACT-MOVEMENT",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "b6d53b9ccf6d5c69fbfa962388ad8f4c41293c188968c3e02ae64a1567f20f47",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-PROPOSAL-FAVOR-EXPLICIT",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "19d140d39d94386e97d720cc187f1780db1d8532ca9ded208bf7d34ade744dc6",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-AUTHORIZE-FAVOR-CEILING",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "d664a2aae118ba8624111dbcb1966596878bac91f3025a525626567c92c0a58f",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-AUTHORIZE-MOVEMENT-CEILING",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "cc96b057a10f25433d3f91e814ead026819cae44da3cded79dfbde2ee27d4ce8",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-AUTHORIZE-STALE-PROPOSAL",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "42d6190071a14a685961284eb8fd7281fb16598f539042271a4f52b2f4dbac64",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-REFUND-APPLIED-RESIDUAL",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "40f204cdab7a2b91be447f5bdbc9eb8b7ff19a32a168455322a25d300543c2de",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-REFUND-EXPLICIT-REQUEST",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "fd41cd854bd88ee0de0a3ecc3d5fe53935813414c3bb261e67eb8bd5bad65570",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-REFUND-ORIGINAL-TOTAL",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "23fb2607da8dd27a09dc3df81c7601db8c977185ecb8bead6e0b12c263d2b13d",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-REJECT-NO-REFUND",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "f7c02b6b505e2af28c2a1c17e45a91d431e1670b5363ee33b48912e5c0d470b7",
+      "originalProductiveSha256": "958a64dde595cb8faf8f751256bcc7ae12337dffce278e088023e0d34c9ee131",
+      "restoredProductiveSha256": "958a64dde595cb8faf8f751256bcc7ae12337dffce278e088023e0d34c9ee131",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-CONTEXT-OPAQUE",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "7a84686bd0633522800dd33c2fca2e24c6df2f224120d9596c0b5afe333befe5",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-RECEPTION-PREVIEW-NONMONETARY",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "a7e1e8b94f5c11bfe6f631285501f9616ea5114b77c41041fde9dbb798cc9279",
+      "originalProductiveSha256": "958a64dde595cb8faf8f751256bcc7ae12337dffce278e088023e0d34c9ee131",
+      "restoredProductiveSha256": "958a64dde595cb8faf8f751256bcc7ae12337dffce278e088023e0d34c9ee131",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-OFF-ENTRY",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z/manifest.json",
+      "declarationSha256": "12f542172497143fcd1a303739fb55ae4fb1dfaed75f11d3712a7fe361a666d8",
+      "originalProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "restoredProductiveSha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [
+        "appAt"
+      ],
+      "compatibilityEvidence": "Pruned snapshot: prior static audit declaration/helper hashes and original manifest hash reverified"
+    },
+    {
+      "id": "E5-OFF-ROUTE-LIST",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "ba018da0811e8a16a9fc1ee8d2914e95403051dd40b10d833f35c9a239229e29",
+      "originalProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "restoredProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    },
+    {
+      "id": "E5-OFF-ROUTE-DETAIL",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "a174bf126a24c8622760c847ab97903affeab01e22be9116eb914c279c755ea1",
+      "originalProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "restoredProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    },
+    {
+      "id": "E5-OFF-ROUTE-DOCUMENT",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "ac69bee5a53965d8a3d38b2d16f2c0d45afc38560b83cf43bf72aeda3f4044c4",
+      "originalProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "restoredProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    },
+    {
+      "id": "E5-ROUTE-LIST",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "703de62ca5c99cc500988c97371eaec458bf52e9c810787b0e49bc85ba694496",
+      "originalProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "restoredProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    },
+    {
+      "id": "E5-ROUTE-DETAIL",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "c858e0d436412b343da4009aeef1029f0958c141fb4a33a819b893319c451e76",
+      "originalProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "restoredProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    },
+    {
+      "id": "E5-ROUTE-DOCUMENT",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "aad67848ca3eefc2427b98f920b36453829c8695977c71f95a03e633843ab4f6",
+      "originalProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "restoredProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    },
+    {
+      "id": "E5-ROUTE-PERMISSION",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "4c53778be6230feb90ab05e01f2d5e8b272dc57c010007ada9e4891a97d96e17",
+      "originalProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "restoredProductiveSha256": "264fa017d3dc901a28313e46916af4c3ff3388854a8cfbf02a5a9b00a5f091f2",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    },
+    {
+      "id": "E5-PARENT-CAJA",
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z/manifest.json",
+      "declarationSha256": "1643a811201c48c6a082ba99746ec3433c2d53ae3e281de464884ea1efd463b5",
+      "originalProductiveSha256": "230c7ac0ae4204f9b064cc278ddcaa679490707581d1c2ef4ac6de8cbb66c1a9",
+      "restoredProductiveSha256": "230c7ac0ae4204f9b064cc278ddcaa679490707581d1c2ef4ac6de8cbb66c1a9",
+      "phases": [
+        "GREEN",
+        "RED_ERR_ASSERTION_ID",
+        "RESTORED_GREEN"
+      ],
+      "changedHelpers": [],
+      "compatibilityEvidence": "Pruned snapshot: exact pre-repair test bytes reconstructed, SHA256 equals original MAIN manifest"
+    }
+  ],
+  "remainingIds": [
+    "E5-PARENT-CLIENT",
+    "E5-SELECTOR-DEPENDENCY",
+    "E5-READ-PERMISSION",
+    "E5-RECEIVE-PERMISSION",
+    "E5-RECEIVE-ROLE",
+    "E5-FUTURE-A-PREPARE-WITHOUT-RECEIVE-PERMISSION",
+    "E5-LEGACY-CONTADOR-NOT-A",
+    "E5-SERVER-CLOSED",
+    "E5-CONTEXT-IDENTITY",
+    "E5-DETAIL-IDENTITY",
+    "E5-SEND-LOCK",
+    "E5-PERSIST-BEFORE-SEND",
+    "E5-UNCERTAIN-RETRY-EXACT",
+    "E5-RECOVERY-REMOUNT",
+    "E5-RECOVERY-COMMAND-SCOPE",
+    "E5-RETRY-EXACT-ROLE",
+    "E5-RETRY-AVAILABILITY",
+    "E5-RETRY-CONTEXT",
+    "E5-RETRY-PERMISSION-CONTEXT",
+    "E5-RETRY-CAPABILITY",
+    "E5-RESPONSE-IDENTITY",
+    "E5-RESPONSE-AMOUNT-METHOD-SESSION",
+    "E5-RESPONSE-DOCUMENTS",
+    "E5-RESPONSE-EXACT-APPLICATION",
+    "E5-DEFINITIVE-ERROR",
+    "E5-IDEMPOTENCY-CONFLICT-UNCERTAIN",
+    "E5-INVALIDATIONS",
+    "E5-REFRESH-FAILURE-NO-SECOND-SEND",
+    "E5-LIST-FILTER-CURSOR",
+    "E5-ADMIN-ALERT-SERVER-AGE",
+    "E5-DOCUMENT-ADMIN",
+    "E5-DOCUMENT-MEMBERSHIP",
+    "E5-DOCUMENT-SNAPSHOT",
+    "E5-DOCUMENT-FONTS-READY",
+    "E5-DOCUMENT-INCOMPLETE-BLOCKED",
+    "E5-DOCUMENT-OVERFLOW-BLOCKED",
+    "E5-PRINT-AUDIT-BEFORE-PRINT",
+    "E5-PRINT-UNCERTAIN-UUID",
+    "E5-AUTHORIZE-SUBSET-SEND",
+    "E5-REFUND-VERIFIED-SOURCE-SEND",
+    "E5-RETRY-REFUND-SOURCE",
+    "E5-RETRY-DETAIL-REVISION",
+    "E5-NONADMIN-EXACT-MULTICHARGE",
+    "E5-RECEPTION-CLIENT-TRANSFER",
+    "E5-UUID-CHANGED-CONTENT",
+    "E5-UUID-NORMALIZED-CONTENT",
+    "E5-MONEY-NO-ROUNDING",
+    "E5-EVIDENCE-TEXT-NOT-URL",
+    "E5-DOCUMENT-TWO-COPIES",
+    "E5-QUERY-ERROR-NOT-EMPTY",
+    "E5-RECEIVE-CAPABILITY",
+    "E5-NONOPERATIVE-READ-ROLE",
+    "E5-SCOPE-CACHE-ROLE",
+    "E5-SCOPE-CACHE-SITE",
+    "E5-INITIAL-GET-CONTEXT-IDENTITY",
+    "E5-INITIAL-GET-DETAIL-IDENTITY",
+    "E5-INITIAL-LAST-ACTOR-RECHECK",
+    "E5-RECOVERY-STORAGE-FAILURE",
+    "E5-PENDING-NO-NEW-INTENT",
+    "E5-RECEIPT-IMMEDIATE-NO-PRINT",
+    "E5-APPLICATION-DISTINCT-CONSTANCIA",
+    "E5-FAVOR-AUTHORIZE-ONLY",
+    "E5-FAVOR-OMISSION-ZERO",
+    "E5-FAVOR-RETAINED-LIMIT",
+    "E5-DOCUMENT-FAVOR-SNAPSHOT",
+    "E5-DOCUMENT-PAGINATION",
+    "E5-PRINT-MOTIVE-REQUIRED",
+    "E5-PRINT-RECOVERY-REMOUNT",
+    "E5-PRINT-FRESH-ADMIN",
+    "E5-PRINT-FAILURE-NO-MONEY",
+    "E5-NONADMIN-DOCUMENT-LINKS",
+    "E5-DETAIL-HISTORY",
+    "E5-RETRY-PROPOSAL-VERSION",
+    "E5-PRINT-SYNC-LOCK",
+    "E5-DOCUMENT-RESPONSE-IDENTITY",
+    "E5-QUERY-AVAILABILITY-ERROR",
+    "E5-RESPONSE-DETAIL-UUID",
+    "E5-RESPONSE-IDENTITY-MATRIX",
+    "E5-REFUND-NO-SOURCE",
+    "E5-ROUTE-FUTURE-A",
+    "E5-ROUTE-DETAIL-PERMISSION",
+    "E5-ROUTE-DOCUMENT-ADMIN",
+    "E5-FUTURE-A-CONTEXT-CAPABILITY",
+    "E5-NONADMIN-FUND-PRIVACY"
+  ],
+  "helperHashes": {
+    "test-top-level-0": "57f1709746dd7dd60c275d2834f4d96fb0d5da730b4974371e98141d980b3849",
+    "test-top-level-1": "4ecf7df66b67e775fef57b0dcf26593013eef9c17972d349e78b94e91371ddd4",
+    "test-top-level-2": "9abf3e6700d98954fe8bbe11cbda048f525400b21632402972b47c423c1be127",
+    "test-top-level-3": "a4b5a6a9ec68ec7bfbae36218ea4733bdb749d8f71745f728cd08662b15fd14e",
+    "test-top-level-4": "f4865145d9f0beea574eda9ca87036b6b9f170af680a0f1b0e7f579052f97231",
+    "test-top-level-5": "a8c1b205ceca4c1ffb7442a68d8af46e54ed02155311174d6fd64699f7539285",
+    "test-top-level-6": "f2dfc0ee91e3b4eee62ac8a2690bbe9fd6a4bb6f2138eb5964a132eb402435cc",
+    "test-top-level-7": "d362941792395fb10bcbd96a95091a1dc666b9c96b6eb8bc662435883dde22c6",
+    "test-top-level-8": "ba23d14c9503279c038b0d0ac3f90c5c939dc78f839897f5eeae28d17727aa98",
+    "test-top-level-9": "dcdfd8b571978398d2a1b05eb3afd834f043694c0c77dda7d37d7f3c1f4cec1a",
+    "test-top-level-10": "cb6a9fea1db3436f29ce0cb954bcd8496d72dc64455d28a2a6257f0bd6f97f79",
+    "test-top-level-11": "4b92b213973b9c1b8543537ca3dd8450a44abc26fbc80bf97785ecb420b35c47",
+    "test-top-level-12": "ae6553f167a8ff073a4d27f054a46887428198898abddd9d833da1dc4076628d",
+    "test-top-level-13": "fc24036877a9eae5606daf9c85f98b348adcd91c33536fdeaab74cfe8f2b4a24",
+    "test-top-level-14": "2828f23b8c38f8ba23a756ec5b97c143d047164790d3faacb2407fa09dc7a2f2",
+    "test-top-level-15": "f083880374ffaa569ae02efcd0263a89c45b4a70fe803aa61f4f4adf5c1e2c1d",
+    "test-top-level-16": "9ed6f70c42c1790a5297455db51cc680428d8bd62a23d2c4ba65e96e895edef9",
+    "test-top-level-17": "217ca38000185d929e22774d2223c63d5909d2289f2d6d1c8f5720e179395082",
+    "test-top-level-18": "f8be35bbf1a0ed485027cf382eb20759f3edf2cdd0464cf577ae217d335958ca",
+    "test-top-level-19": "a72b26838dab11aef372a19f263ebee21fc2885cc65f6239265f6235da65951d",
+    "test-top-level-20": "bc2c150d9d4d9bd331e69c473b3da16b6184b32b83d1ca98279014984b09bf65",
+    "test-top-level-21": "a578cc1bccf7db037ecb3830b36560a20e8a33940d2dd2643ad7cdca50be22c8",
+    "test-top-level-22": "92f96ddee1406f02f300280286dd7caab94b06cfe5477b6485e56bf20d88586e",
+    "test-top-level-23": "8b7d4d9aca94e7f23bad6ebd9c1a9495c39b67c4ab8f9fe10d119784cac06db3",
+    "test-top-level-24": "db7b07a1eabe289f704e41d80b3a20d7dd16369abf6032fdef4067ad7346efc4",
+    "test-top-level-25": "23e751e7beed06be6600966de7477413a38050a857a83b0cca921bfa395b8b9f",
+    "test-top-level-26": "bad4220bc84a48b5bdc6363844bb4b7c6d128ca3ef22ec63bd4d917c41b3214b",
+    "test-top-level-27": "34c69859b4123d7527e0c28dd141aa544ddc6d8ab16366744431996cb5130580",
+    "test-top-level-28": "9686be09a9e0fdfeae354eac79c591b1fc0ae41638aa1a57060341d81e5e32e0",
+    "test-top-level-29": "9dc2366854cf60e392acf2ea9655d95dc14fff99c01d3879e09392c0f7c2c9f3",
+    "test-top-level-30": "9818ec4047047ee4c0ece989c8ea09babab2073d96a41a0e6ac526ccc46e6f5b",
+    "test-top-level-31": "5b860f81a29751adc3a370c90efa6da02f615d251daa0242f1ba8b6e81a6e816",
+    "test-top-level-32": "8f93b9b2d0c75197035f9e0ebb7d50fac3e990e17e0b8aaeb067e0592b28df8a",
+    "test-top-level-33": "ad5ff6a877230144a453088497363a72ec185ee5046e0aa5f4d05bbaa67a6540",
+    "test-top-level-34": "d3b8b158e62be32b007e95f5b3090767f9082870aad0f6aae52e6ef2eafd2752",
+    "test-top-level-35": "ca71fc81742a6fcd12095ed366e0fcd320ba68473c3770d7df7c726c7db2ce53",
+    "test-top-level-36": "cc06c3feb476b21c3dd8c3358bcc722a65136fbf1e2f583e53a86a9449f846ea",
+    "test-top-level-37": "5b0f781fe750b495643e7a740c574af99037a2a0f79ae586b874f5621b6f55ca",
+    "artifacts/mariana-textil/src/components/e5-node-test-harness.tsx": "d2da9ff794ea0d887ed046b35a6effeffd015c894611f8327829ef6238d3504a",
+    "artifacts/mariana-textil/src/components/e5-node-test-fixtures.ts": "4432abb5e06b990ab60a3df5cec9d73bbfaef2fed604c6382ab126bb90e4a4db",
+    "reports/e5/frontend-node-build.mjs": "da6f284f0cc346e15c35f09be129fd961df7ec4ce183c1efebbb150dc8d67827",
+    "reports/e5/run-frontend-node-mutants.mjs": "40de0f9d811b116df1f1d6b17ba68be58f44e26f294c7d93073fc3a39c3b2c66",
+    "reports/tanda-b-20260922/e12/frontend-offline-guard.cjs": "b33cbd5cdd2826ad85c8241fd112522dc5b5cb5705e04906607b99c38f848e7b",
+    "reports/tanda-b-20260922/e12/frontend-node-dom.cjs": "d2f5b192b4882762cfaa83d0b6bc32c8876190455ee4ed7cab1a96aa9ee66589",
+    "reports/tanda-b-20260922/e12/frontend-node-reporter.mjs": "c7dce929346d408fc2b8bf98ad77b401b754e4642d30bbb0bf2fcea5defbbb24"
+  },
+  "checkpoint": {
+    "file": "reports/e5/frontend-continuation-audit-2026-09-22T22-56-42.946Z.json",
+    "sha256": "b402069f3f6a19f65739290c77a50269b847315b1a2bcdc150c4022054844136"
+  },
+  "compatibility": "App helper change preceded all completed App cases; current parent-only fixture additions affect no completed declaration"
+}

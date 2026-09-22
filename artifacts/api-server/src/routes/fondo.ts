@@ -1,6 +1,7 @@
 import { Router, type IRouter, type RequestHandler } from "express";
 import { z } from "zod";
 import { assertE9NoIndependentInverse, readE9FundOrigin } from "../lib/e9-fondo";
+import { assertE5NoIndependentInverse } from "../lib/e5-fondo";
 import {
   FondoError,
   type FondoActor,
@@ -123,7 +124,10 @@ export function createFondoRouter(options: { db: FondoPool; authorizeAdmin: Requ
     strictEmpty.parse(req.query);
     const { id } = idParams.parse(req.params);
     const result = await invertirMovimientoFondo(options.db, actor(req), id, inverseInput.parse(req.body),
-      tx => assertE9NoIndependentInverse(tx, id));
+      async tx => {
+        await assertE9NoIndependentInverse(tx, id);
+        await assertE5NoIndependentInverse(tx, id);
+      });
     if (result.replay) res.setHeader("Idempotent-Replay", "true");
     res.status(result.replay ? 200 : 201).json(result.value);
   }));

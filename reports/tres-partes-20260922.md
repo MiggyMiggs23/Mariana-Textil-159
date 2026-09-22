@@ -219,6 +219,62 @@ El backend es sintético: no acredita concurrencia PostgreSQL ni ejecución
 del DDL. La interfaz monta componentes reales con infraestructura aislada.
 El detalle y los límites están en `e9/verificacion-main.md`.
 
+Commit de cierre E9:
+`100bdca51c09fea70475de0f5f8f798a550c2960`.
+Las fuentes preparadas estaban en el checkpoint automático previo `4f9de12`;
+no se reescribió ese historial. El commit de cierre conserva la evidencia
+de verificación correspondiente.
+
+### E5 — construida y verificada OFF
+
+Se prepararon las 14 rutas, contratos regenerados, recepción separada del
+crédito, propuestas, autorización parcial, favor explícito, rechazo,
+devolución íntegra nunca aplicada y documentos inmutables. La interfaz se
+integra en Caja, ficha de cliente y las tres rutas de pendientes. Durante la
+revisión se corrigieron permisos, recuperación de intenciones y correspondencia
+de respuestas antes de mostrar éxito. Las puertas permanecen `false`.
+
+SQL y reversión están en `e5/01-preparado.sql` y
+`e5/02-reversion-preparada.sql`; **no ejecutados**. Incluyen extensiones E1
+acotadas, procedencia de inserción sin `xmin`, guardas de conservación e
+inmutabilidad y cierre DML E5. La revisión corrigió el rechazo de lotes de
+múltiples recepciones y la incompatibilidad con consumo FIFO futuro del favor.
+Esto es revisión de fuentes, no prueba PostgreSQL.
+
+**Backend:** MAIN ejecutó 49 ciclos distintos GREEN → RED de aserción
+específica → GREEN restaurado. `e5/backend-consolidation.json` y
+`e5/backend-consolidation.md` conservan la procedencia por snapshot y sus
+comparaciones; los manifiestos interrumpidos/fallidos no se renombraron PASS.
+La auditoría estática consolidada no ejecuta pruebas nuevas. Son pruebas
+sintéticas y capturas SQL: no acreditan PostgreSQL ni routing HTTP integrado.
+
+**Interfaz:** 111 ciclos terminales GREEN → RED de aserción específica →
+GREEN restaurado, consolidados entre ejecuciones. Los últimos 84 terminaron
+con exit 0. Auditoría final:
+`e5/frontend-consolidation-2026-09-22T23-24-10.888Z.json`;
+111 IDs aceptados, cero pendientes, cero manifiestos en ejecución.
+La auditoría conserva hashes, declaraciones, helpers y la procedencia
+documentada cuando el entorno eliminó snapshots temporales.
+
+Los fallos conservados incluyen anclas ambiguas, dependencias de snapshot,
+loaders de imágenes y APIs JSDOM faltantes, un timeout de reporte al adjuntar
+DOM/React a una aserción y fixtures desactualizados respecto del adaptador.
+Se corrigieron sin contar errores de infraestructura como controles negativos.
+Typecheck completo source-only de API y frontend: cero diagnósticos.
+La primera invocación API conservaba un rootDir limitado al artefacto y produjo
+nueve TS6059 por imports relativos entre proyectos; se corrigió sólo la
+invocación noEmit, usando raíz workspace, sin editar tsconfig ni generar dist.
+Ambos logs permanecen en `e5/typecheck-*-main.log`.
+
+No se acredita PDF físico ni validación visual de la aplicación activa:
+la captura de preview falló al estar los workflows detenidos. No se reiniciaron
+para obtenerla; las pruebas montadas se ejecutaron sin utilizar la API.
+
+Durante esta continuación el entorno volvió a informar ambos workflows
+detenidos y retiró snapshots temporales. Se continúa OFF conforme a la
+autorización; MAIN no emitió otro reinicio. El inventario de archivos protegidos
+volvió a coincidir, excluyendo únicamente el log de arranque ya documentado.
+
 ### Pausa por cambio de entorno
 
 Al preparar la validación E9, el entorno informó ambos workflows
@@ -244,7 +300,7 @@ La fase B de E3 sigue sin ejecutarse; no se autoriza ninguna liberación.
 
 ### Trabajo restante
 
-- Construir OFF E5, E11 y E7, en ese orden y cada una en su commit.
+- Construir OFF E11 y E7, en ese orden y cada una en su commit.
 - Adaptar las suites creadoras de usuarios a PostgreSQL desechable.
   El inventario por puntos reales de creación encontró **28**, no 25.
   No se descartaron arbitrariamente tres ni se adaptó todavía ninguna.

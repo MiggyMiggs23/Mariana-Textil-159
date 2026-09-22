@@ -38,6 +38,10 @@ import RolloDetail from "@/pages/rollo-detail";
 import RolloEtiqueta from "@/pages/rollo-etiqueta";
 import Pos from "@/pages/pos";
 import Cobros from "@/pages/cobros";
+import { E5_ENABLED } from "@/lib/e5-feature-flags";
+import { E5_READ_MODULES } from "@/lib/e5-authorization";
+import { E5PendientesPage, E5DetallePage } from "@/components/e5-pendientes";
+import E5DocumentoPage from "@/pages/e5-documento";
 import TicketDetail from "@/pages/ticket-detail";
 import Ajustes from "@/pages/ajustes";
 import Conciliacion from "@/pages/conciliacion";
@@ -517,6 +521,9 @@ function Router() {
         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos" component={() => <ProtectedRoute component={FondoArqueos} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
         {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos/:id" component={() => <ProtectedRoute component={FondoArqueoDetail} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
 
+        {E5_ENABLED && <Route path="/cobros/pendientes/:id/documentos/:documentoId" component={() => <ProtectedRoute component={E5DocumentoPage} requiredRoles={["ADMIN"]} allowedAnyModules={E5_READ_MODULES} />} />}
+        {E5_ENABLED && <Route path="/cobros/pendientes/:id" component={() => <ProtectedRoute component={E5DetallePage} allowedAnyModules={E5_READ_MODULES} allowedRoles={["CONTADOR"]} />} />}
+        {E5_ENABLED && <Route path="/cobros/pendientes" component={() => <ProtectedRoute component={E5PendientesPage} allowedAnyModules={E5_READ_MODULES} allowedRoles={["CONTADOR"]} />} />}
         <Route
           path="/pagos-dirigidos"
           component={() => <ProtectedRoute component={RedirectPagosDirigidos} allowedModule={Modules.REPORTES} />}

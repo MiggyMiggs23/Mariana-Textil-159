@@ -1,0 +1,32 @@
+TAP version 13
+# Subtest: E5-OFF-ROUTE-LIST
+not ok 1 - E5-OFF-ROUTE-LIST
+  ---
+  duration_ms: 96.862972
+  type: 'test'
+  location: '/tmp/e5-node-1fHLJx/E5-OFF-ROUTE-LIST-green/artifacts/mariana-textil/case.test.cjs:61664:27'
+  failureType: 'testCodeFailure'
+  error: 'window.matchMedia is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    /home/runner/workspace/node_modules/.pnpm/sonner@2.0.7_react-dom@19.1.0_react@19.1.0__react@19.1.0/node_modules/sonner/dist/index.js:1018:39
+    react-stack-bottom-frame (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:23949:20)
+    runWithFiberInDEV (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:1519:30)
+    commitHookEffectListMount (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:11905:29)
+    commitHookPassiveMountEffects (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:12028:11)
+    commitPassiveMountOnFiber (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:13841:13)
+    recursivelyTraversePassiveMountEffects (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+    commitPassiveMountOnFiber (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:13834:11)
+    recursivelyTraversePassiveMountEffects (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:13815:11)
+    commitPassiveMountOnFiber (/home/runner/workspace/node_modules/.pnpm/react-dom@19.1.0_react@19.1.0/node_modules/react-dom/cjs/react-dom-client.development.js:13957:11)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2780.663762

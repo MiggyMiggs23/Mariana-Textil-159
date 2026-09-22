@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E5-RECEPTION-ATOMIC-EXACT-MOVEMENT",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E5-RECEPTION-ATOMIC-EXACT-MOVEMENT\n+ actual - expected\n\n  [\n    {\n      importe: '25.00',\n+     movimientoVentaId: 101,\n-     movimientoVentaId: 903,\n      notaId: 101\n    }\n  ]\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E5-RECEPTION-ATOMIC-EXACT-MOVEMENT\n+ actual - expected\n\n  [\n    {\n      importe: '25.00',\n+     movimientoVentaId: 101,\n-     movimientoVentaId: 903,\n      notaId: 101\n    }\n  ]\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 3464.880864"
+  ]
+}

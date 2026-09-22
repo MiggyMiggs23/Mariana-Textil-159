@@ -6,6 +6,473 @@
  * OpenAPI spec version: 0.1.0
  */
 /**
+ * @maxLength 13
+ * @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$
+ */
+export type E5Money = string;
+
+export type E5Estado = typeof E5Estado[keyof typeof E5Estado];
+
+
+export const E5Estado = {
+  PENDIENTE: 'PENDIENTE',
+  PARCIAL: 'PARCIAL',
+  APLICADO: 'APLICADO',
+  DEVUELTO: 'DEVUELTO',
+} as const;
+
+export interface E5Actor {
+  id: number;
+  nombre: string;
+}
+
+export interface E5Evidencia {
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  descripcion: string;
+  /**
+     * @maxItems 20
+     * @items.minLength 1
+     * @items.maxLength 500
+     */
+  referencias: string[];
+}
+
+export interface E5Asignacion {
+  /** @minimum 1 */
+  notaId: number;
+  /**
+     * Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket
+     * @minimum 1
+     */
+  movimientoVentaId: number;
+  importe: E5Money;
+}
+
+export interface E5Nota {
+  notaId: number;
+  movimientoVentaId: number;
+  folio: string;
+  ubicacionId: number;
+  fecha: string;
+  saldoPendiente: E5Money;
+  facturada: boolean;
+}
+
+export interface E5Capacidades {
+  puedeRecibir: boolean;
+  puedePreparar: boolean;
+  puedeAutorizar: boolean;
+  puedeRechazar: boolean;
+  puedeDevolver: boolean;
+  puedeVerAvisos: boolean;
+  puedeImprimir: boolean;
+  /** False hasta integración explícita E11; CONTADOR legacy no concede preparación */
+  preparacionADisponible: boolean;
+}
+
+export interface E5Disponibilidad {
+  enabled: boolean;
+  capacidades: E5Capacidades;
+}
+
+/**
+ * Calendar day in YYYY-MM-DD; never coerced to an instant.
+ * @pattern ^(?:(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8])))|(?:(?:\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$
+ */
+export type CalendarDate = string;
+
+export interface E5Sesion {
+  id: number;
+  ubicacionId: number;
+  ubicacionNombre: string;
+  fechaOperativa: CalendarDate;
+}
+
+export interface E5Contexto {
+  clienteId: number;
+  clienteNombre: string;
+  ubicacionId: number;
+  /** Token opaco servidor del contexto canónico de saldos autorizado; nunca derivar en UI */
+  versionContexto: string;
+  consultadoAt: string;
+  notas: E5Nota[];
+  sesiones: E5Sesion[];
+  capacidades: E5Capacidades;
+}
+
+export type E5RecepcionInputEntrada = typeof E5RecepcionInputEntrada[keyof typeof E5RecepcionInputEntrada];
+
+
+export const E5RecepcionInputEntrada = {
+  CAJA: 'CAJA',
+  CLIENTE: 'CLIENTE',
+} as const;
+
+export type E5RecepcionInputFormaPago = typeof E5RecepcionInputFormaPago[keyof typeof E5RecepcionInputFormaPago];
+
+
+export const E5RecepcionInputFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+export type E5RecepcionInputCuentaDestino = typeof E5RecepcionInputCuentaDestino[keyof typeof E5RecepcionInputCuentaDestino];
+
+
+export const E5RecepcionInputCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export interface E5RecepcionInput {
+  claveOperacion: string;
+  /** @minimum 1 */
+  clienteId: number;
+  /** @minimum 1 */
+  ubicacionId: number;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  versionContexto: string;
+  entrada: E5RecepcionInputEntrada;
+  importe: E5Money;
+  formaPago: E5RecepcionInputFormaPago;
+  cuentaDestino: E5RecepcionInputCuentaDestino;
+  /**
+     * Obligatoria desde Caja incluso transferencia; separada de la imputación física
+     * @minimum 1
+     */
+  sesionOperativaId?: number;
+  /**
+     * Obligatoria únicamente para efectivo; prohibida en transferencia
+     * @minimum 1
+     */
+  sesionCajaId?: number;
+  /**
+     * @minItems 1
+     * @maxItems 100
+     * @items.minimum 1
+     */
+  notasIndicadas: number[];
+  evidencia: E5Evidencia;
+  /**
+     * Solo ADMIN; asignaciones explícitas dentro de notas indicadas; todo atómico
+     * @minItems 1
+     * @maxItems 100
+     */
+  aplicarAhora?: E5Asignacion[];
+}
+
+export interface E5VistaPrevia {
+  versionContexto: string;
+  importeRecibido: E5Money;
+  importeAplicar: E5Money;
+  pendienteResultante: E5Money;
+  notas: E5Nota[];
+  mensaje: string;
+  capacidades: E5Capacidades;
+}
+
+export interface E5PropuestaInput {
+  claveOperacion: string;
+  /** @minimum 1 */
+  revisionEsperada: number;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  versionContexto: string;
+  /** @maxItems 100 */
+  asignaciones: E5Asignacion[];
+  /** Solo propuesta ADMIN explícita; no conversión automática del residual */
+  importeFavorPropuesto?: E5Money;
+  evidencia: E5Evidencia;
+}
+
+export interface E5AutorizarInput {
+  claveOperacion: string;
+  /** @minimum 1 */
+  revisionEsperada: number;
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  versionContexto: string;
+  propuestaId: string;
+  /** @maxItems 100 */
+  asignaciones: E5Asignacion[];
+  /** Solo ADMIN dentro del favor propuesto; requiere deuda global cero después de las asignaciones explícitas */
+  importeFavorAutorizado?: E5Money;
+  evidencia: E5Evidencia;
+}
+
+export interface E5RechazarInput {
+  claveOperacion: string;
+  /** @minimum 1 */
+  revisionEsperada: number;
+  propuestaId: string;
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  motivo: string;
+}
+
+export type E5FuenteDevolucionTipo = typeof E5FuenteDevolucionTipo[keyof typeof E5FuenteDevolucionTipo];
+
+
+export const E5FuenteDevolucionTipo = {
+  CAJA: 'CAJA',
+  CUENTA: 'CUENTA',
+  FONDO: 'FONDO',
+} as const;
+
+export type E5FuenteDevolucionCuentaOrigen = typeof E5FuenteDevolucionCuentaOrigen[keyof typeof E5FuenteDevolucionCuentaOrigen];
+
+
+export const E5FuenteDevolucionCuentaOrigen = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export interface E5FuenteDevolucion {
+  tipo: E5FuenteDevolucionTipo;
+  /** @minimum 1 */
+  ubicacionId: number;
+  /** @minimum 1 */
+  sesionCajaId?: number;
+  /**
+     * Asociación operativa de salida bancaria cuando el productor la requiere; no efectivo
+     * @minimum 1
+     */
+  sesionOperativaId?: number;
+  cuentaOrigen?: E5FuenteDevolucionCuentaOrigen;
+}
+
+export interface E5DevolucionOpciones {
+  elegible: boolean;
+  motivo?: string;
+  importe: E5Money;
+  fuentes: E5FuenteDevolucion[];
+}
+
+export interface E5DevolverInput {
+  claveOperacion: string;
+  /** @minimum 1 */
+  revisionEsperada: number;
+  /**
+     * @minLength 1
+     * @maxLength 2000
+     */
+  peticionCliente: string;
+  evidencia: E5Evidencia;
+  fuente: E5FuenteDevolucion;
+}
+
+export interface E5Propuesta {
+  id: string;
+  version: number;
+  importeFavorPropuesto?: E5Money;
+  asignaciones: E5Asignacion[];
+  notas: E5Nota[];
+  evidencia: E5Evidencia;
+  actor: E5Actor;
+  createdAt: string;
+}
+
+export interface E5Aplicacion {
+  id: string;
+  propuestaId: string;
+  importeFavorGenerado?: E5Money;
+  importe: E5Money;
+  asignaciones: E5Asignacion[];
+  fechaAplicacion: string;
+  actor: E5Actor;
+  evidencia: E5Evidencia;
+  constanciaId: string;
+}
+
+export interface E5Rechazo {
+  propuestaId: string;
+  motivo: string;
+  actor: E5Actor;
+  createdAt: string;
+}
+
+export interface E5Devolucion {
+  id: string;
+  importe: E5Money;
+  fecha: string;
+  actor: E5Actor;
+  peticionCliente: string;
+  evidencia: E5Evidencia;
+  /** Solo ADMIN; no revelar Fondo a tienda/contadores */
+  fuente?: E5FuenteDevolucion;
+  /** Solo ADMIN */
+  salidaId?: number;
+  /** Solo ADMIN */
+  movimientoFondoId?: string;
+}
+
+export type E5CobroFormaPago = typeof E5CobroFormaPago[keyof typeof E5CobroFormaPago];
+
+
+export const E5CobroFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+export type E5CobroCuentaDestino = typeof E5CobroCuentaDestino[keyof typeof E5CobroCuentaDestino];
+
+
+export const E5CobroCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export interface E5Cobro {
+  id: string;
+  revision: number;
+  clienteId: number;
+  clienteNombre: string;
+  ubicacionId: number;
+  ubicacionNombre: string;
+  importeRecibido: E5Money;
+  importeAplicado: E5Money;
+  importePendiente: E5Money;
+  importeDevuelto: E5Money;
+  fechaRecepcion: string;
+  formaPago: E5CobroFormaPago;
+  cuentaDestino: E5CobroCuentaDestino;
+  sesionCajaId?: number;
+  sesionOperativaId?: number;
+  estado: E5Estado;
+  algunaVezAplicado: boolean;
+  receptor: E5Actor;
+  evidenciaRecepcion: E5Evidencia;
+  notasIndicadas: E5Nota[];
+  propuestas: E5Propuesta[];
+  propuestaVigenteId?: string;
+  aplicaciones: E5Aplicacion[];
+  rechazos: E5Rechazo[];
+  devolucion?: E5Devolucion;
+  reciboId: string;
+  /** @minimum 0 */
+  antiguedadDias: number;
+  avisoAdmin: boolean;
+  capacidades: E5Capacidades;
+}
+
+export interface E5Pagina {
+  items: E5Cobro[];
+  nextCursor?: string;
+}
+
+export type E5DocumentoTipo = typeof E5DocumentoTipo[keyof typeof E5DocumentoTipo];
+
+
+export const E5DocumentoTipo = {
+  RECIBO: 'RECIBO',
+  CONSTANCIA: 'CONSTANCIA',
+} as const;
+
+export type E5DocumentoFormaPago = typeof E5DocumentoFormaPago[keyof typeof E5DocumentoFormaPago];
+
+
+export const E5DocumentoFormaPago = {
+  EFECTIVO: 'EFECTIVO',
+  TRANSFERENCIA: 'TRANSFERENCIA',
+} as const;
+
+export type E5DocumentoCuentaDestino = typeof E5DocumentoCuentaDestino[keyof typeof E5DocumentoCuentaDestino];
+
+
+export const E5DocumentoCuentaDestino = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+} as const;
+
+export type E5DocumentoCopias = typeof E5DocumentoCopias[keyof typeof E5DocumentoCopias];
+
+
+export const E5DocumentoCopias = {
+  NUMBER_2: 2,
+} as const;
+
+export interface E5Documento {
+  id: string;
+  tipo: E5DocumentoTipo;
+  folio: string;
+  cobroId: string;
+  reciboId: string;
+  reciboFolio: string;
+  clienteNombre: string;
+  ubicacionNombre: string;
+  receptor: E5Actor;
+  formaPago: E5DocumentoFormaPago;
+  cuentaDestino: E5DocumentoCuentaDestino;
+  autorizador?: E5Actor;
+  fechaRecepcion: string;
+  fechaEmision: string;
+  fechaAplicacion?: string;
+  importeRecibido: E5Money;
+  importeDocumento: E5Money;
+  importeFavorGenerado?: E5Money;
+  pendienteEnEmision: E5Money;
+  mensaje: string;
+  asignaciones: E5Asignacion[];
+  notas: E5Nota[];
+  evidencia: E5Evidencia;
+  copias: E5DocumentoCopias;
+}
+
+export interface E5ImpresionInput {
+  claveOperacion: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+}
+
+export type E5ErrorErrorCode = typeof E5ErrorErrorCode[keyof typeof E5ErrorErrorCode];
+
+
+export const E5ErrorErrorCode = {
+  E5_DISABLED: 'E5_DISABLED',
+  E5_DEPENDENCY_DISABLED: 'E5_DEPENDENCY_DISABLED',
+  E5_FORBIDDEN: 'E5_FORBIDDEN',
+  E5_NOT_FOUND: 'E5_NOT_FOUND',
+  E5_VALIDATION: 'E5_VALIDATION',
+  E5_EXACT_REQUIRED: 'E5_EXACT_REQUIRED',
+  E5_NOTA_STALE: 'E5_NOTA_STALE',
+  E5_VERSION_STALE: 'E5_VERSION_STALE',
+  E5_IDEMPOTENCY_CONFLICT: 'E5_IDEMPOTENCY_CONFLICT',
+  E5_STATE_CONFLICT: 'E5_STATE_CONFLICT',
+  E5_ALREADY_APPLIED: 'E5_ALREADY_APPLIED',
+  E5_REFUND_INELIGIBLE: 'E5_REFUND_INELIGIBLE',
+  E5_SOURCE_UNAVAILABLE: 'E5_SOURCE_UNAVAILABLE',
+  E5_INSUFFICIENT_FUNDS: 'E5_INSUFFICIENT_FUNDS',
+} as const;
+
+export type E5ErrorError = {
+  code: E5ErrorErrorCode;
+  message: string;
+};
+
+export interface E5Error {
+  error: E5ErrorError;
+}
+
+/**
  * Importe no negativo exacto a centavos; nunca float
  * @maxLength 13
  * @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$
@@ -172,12 +639,6 @@ export type E9EntregaFondo = {
   movimientoId: string;
   href: string;
 };
-
-/**
- * Calendar day in YYYY-MM-DD; never coerced to an instant.
- * @pattern ^(?:(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8])))|(?:(?:\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$
- */
-export type CalendarDate = string;
 
 export interface E9Entrega {
   id: string;
@@ -2709,6 +3170,8 @@ export const AdminCuentaDestinoMovimientoFuente = {
   ABONO_SALDO_FAVOR: 'ABONO_SALDO_FAVOR',
   REVERSO_ABONO: 'REVERSO_ABONO',
   REVERSO_ABONO_SALDO_FAVOR: 'REVERSO_ABONO_SALDO_FAVOR',
+  E5_RECEPCION: 'E5_RECEPCION',
+  E5_DEVOLUCION: 'E5_DEVOLUCION',
 } as const;
 
 export interface AdminCuentaDestinoMovimiento {
@@ -2731,6 +3194,11 @@ export interface AdminCuentaDestinoMovimiento {
   formaPago: string;
   facturado: boolean;
   fuente: AdminCuentaDestinoMovimientoFuente;
+  /**
+     * Identidad documental E5; no confundir con el ID numérico del cliente.
+     * @nullable
+     */
+  e5CobroId?: string | null;
   incongruente: boolean;
 }
 
@@ -2802,6 +3270,10 @@ export type AdminCuentasDestinoEncabezadoCobrado = {
   contado: string;
   abonos: string;
   saldosFavor: string;
+  /** Recepciones E5 reales del periodo; no aplicaciones. */
+  recepcionesRetenidas?: string;
+  /** Salidas E5 de caja o cuenta del periodo */
+  devolucionesRetenidas?: string;
   total: string;
   /** @nullable */
   totalAnterior: string | null;
@@ -8479,6 +8951,11 @@ export interface AuditoriaInventarioEscaneoResult {
 }
 
 /**
+ * Error E5 explícito; no inferir éxito ni dinero cero
+ */
+export type E5ErrorResponseResponse = E5Error;
+
+/**
  * Error E9 explícito; sin efecto financiero parcial
  */
 export type E9ErrorResponseResponse = E9Error;
@@ -8581,6 +9058,59 @@ export type AnalyticsDesdeParameter = string;
 export type AnalyticsHastaParameter = string;
 
 export type AnalyticsUbicacionIdParameter = number;
+
+export type GetE5DisponibilidadParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+};
+
+export type GetE5ContextoParams = {
+/**
+ * @minimum 1
+ */
+clienteId: number;
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+};
+
+export type ListE5CobrosParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+/**
+ * @minimum 1
+ */
+clienteId?: number;
+estado?: E5Estado;
+cursor?: string;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+};
+
+export type ListE5AvisosParams = {
+/**
+ * @minimum 1
+ */
+ubicacionId: number;
+cursor?: string;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+};
+
+export type RecordE5Impresion200 = {
+  registrado: boolean;
+};
 
 export type GetE9DisponibilidadParams = {
 /**

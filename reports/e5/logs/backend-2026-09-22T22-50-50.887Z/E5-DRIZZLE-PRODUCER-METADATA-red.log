@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: E5-DRIZZLE-PRODUCER-METADATA
+not ok 1 - E5-DRIZZLE-PRODUCER-METADATA
+  ---
+  duration_ms: 3.27723
+  type: 'test'
+  location: '/tmp/e5-native-Wrtwpd/E5-DRIZZLE-PRODUCER-METADATA/test.mjs:22362:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /E5_APLICACION_RETENIDA/. Input:
+    
+    '\n' +
+      `    ("operaciones_credito_e1"."productor" IN ('VENTA_CREDITO', 'CANCELACION_VENTA_CREDITO', 'E5_APLICACION_LEGACY') AND "operaciones_credito_e1"."naturaleza" = 'OPERACION_CREDITO_SIN_DINERO')\n` +
+      `    OR ("operaciones_credito_e1"."productor" IN ('AJUSTE_MANUAL', 'BAJA_INCOBRABLE') AND "operaciones_credito_e1"."naturaleza" = 'CORRECCION_CONTABLE')\n` +
+      `    OR ("operaciones_credito_e1"."productor" IN ('ABONO_ORDINARIO', 'ABONO_DIRIGIDO') AND "operaciones_credito_e1"."naturaleza" IN ('INGRESO_FISICO', 'CORRECCION_CONTABLE'))\n` +
+      `    OR ("operaciones_credito_e1"."productor" = 'REVERSO_ABONO' AND "operaciones_credito_e1"."naturaleza" IN ('DEVOLUCION_FISICA', 'CORRECCION_CONTABLE'))\n` +
+      `    OR ("operaciones_credito_e1"."productor" = 'COBRO_PENDIENTE' AND "operaciones_credito_e1"."naturaleza" = 'INGRESO_FISICO')`
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    
+        ("operaciones_credito_e1"."productor" IN ('VENTA_CREDITO', 'CANCELACION_VENTA_CREDITO', 'E5_APLICACION_LEGACY') AND "operaciones_credito_e1"."naturaleza" = 'OPERACION_CREDITO_SIN_DINERO')
+        OR ("operaciones_credito_e1"."productor" IN ('AJUSTE_MANUAL', 'BAJA_INCOBRABLE') AND "operaciones_credito_e1"."naturaleza" = 'CORRECCION_CONTABLE')
+        OR ("operaciones_credito_e1"."productor" IN ('ABONO_ORDINARIO', 'ABONO_DIRIGIDO') AND "operaciones_credito_e1"."naturaleza" IN ('INGRESO_FISICO', 'CORRECCION_CONTABLE'))
+        OR ("operaciones_credito_e1"."productor" = 'REVERSO_ABONO' AND "operaciones_credito_e1"."naturaleza" IN ('DEVOLUCION_FISICA', 'CORRECCION_CONTABLE'))
+        OR ("operaciones_credito_e1"."productor" = 'COBRO_PENDIENTE' AND "operaciones_credito_e1"."naturaleza" = 'INGRESO_FISICO')
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e5-native-Wrtwpd/E5-DRIZZLE-PRODUCER-METADATA/test.mjs:22367:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 103.366024
+

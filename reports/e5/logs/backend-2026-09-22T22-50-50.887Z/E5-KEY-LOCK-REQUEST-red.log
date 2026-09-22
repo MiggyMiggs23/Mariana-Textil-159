@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E5-KEY-LOCK-REQUEST
+not ok 1 - E5-KEY-LOCK-REQUEST
+  ---
+  duration_ms: 2.687807
+  type: 'test'
+  location: '/tmp/e5-native-Wrtwpd/E5-KEY-LOCK-REQUEST/test.mjs:22381:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /pg_advisory_xact_lock/. Input:
+    
+    'SELECT pg_try_advisory_xact_lock(hashtextextended($1,0))'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'SELECT pg_try_advisory_xact_lock(hashtextextended($1,0))'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e5-native-Wrtwpd/E5-KEY-LOCK-REQUEST/test.mjs:22384:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 89.356196
+

@@ -72,3 +72,15 @@ booleano produjo el rojo esperado; no se confirmó el punto interno del bloqueo.
 **How to apply:** Usar `Boolean(query(...))` para presencia/ausencia y exigir
 un error de aserción terminal con el marcador del caso. Un timeout, error de
 importación o fallo de infraestructura nunca demuestra sensibilidad al defecto.
+
+Antes de ejecutar una matriz aislada, verificar también el enlace completo del
+bundle físico; el parseo AST y TypeScript no sustituyen ese preflight.
+
+**Why:** Una preparación estática correcta omitió dependencias transitivas,
+loaders de imágenes y definiciones de `import.meta.env` al incorporar App real.
+Los primeros intentos fallaron antes de ejecutar casos.
+
+**How to apply:** Preparar un build-only sin ejecutar el bundle, comprobar el
+metafile contra imports productivos vivos y configurar únicamente variables
+públicas explícitas. Conservar los assets reales y no sustituir componentes
+productivos para resolver fallos del arnés.

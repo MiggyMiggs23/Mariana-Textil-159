@@ -1,0 +1,105 @@
+artifacts/api-server FULL_SOURCE_DIAGNOSTICS 9
+lib/api-zod/src/index.ts(6,15): error TS6059: File '/home/runner/workspace/lib/api-zod/src/generated/api.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./generated/api" from file '/home/runner/workspace/lib/api-zod/src/index.ts'
+    Imported via "../../../lib/api-zod/src/generated/api" from file '/home/runner/workspace/artifacts/api-server/src/proveedor-utilidad.contract.test.ts'
+lib/db/src/schema/audit.ts(15,31): error TS6059: File '/home/runner/workspace/lib/db/src/schema/users.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/audit.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/rollos.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/auditorias-inventario.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/auditoria-resoluciones.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/pos.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/salidas.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/entradas.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/pagos-proveedor.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/cliente-documentos.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/contenedores.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/etiquetas.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/equipos.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/fondo.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/e3-receipts.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/precio-historial.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/permisos.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/sessions.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/stock-minimos.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/solicitudes-pago-dirigido.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+    Imported via "./users" from file '/home/runner/workspace/lib/db/src/schema/viajes.ts'
+lib/db/src/schema/auditorias-inventario.ts(15,29): error TS6059: File '/home/runner/workspace/lib/db/src/schema/rollos.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/auditorias-inventario.ts'
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/auditoria-resoluciones.ts'
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/pos.ts'
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/salidas.ts'
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/etiquetas.ts'
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/ticket-linea-consumos.ts'
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+    Imported via "./rollos" from file '/home/runner/workspace/lib/db/src/schema/stock-minimos.ts'
+lib/db/src/schema/rollos.ts(21,32): error TS6059: File '/home/runner/workspace/lib/db/src/schema/productos.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./productos" from file '/home/runner/workspace/lib/db/src/schema/rollos.ts'
+    Imported via "./productos" from file '/home/runner/workspace/lib/db/src/schema/pos.ts'
+    Imported via "./productos" from file '/home/runner/workspace/lib/db/src/schema/salidas.ts'
+    Imported via "./productos" from file '/home/runner/workspace/lib/db/src/schema/contenedor-lineas.ts'
+    Imported via "./productos" from file '/home/runner/workspace/lib/db/src/schema/precio-historial.ts'
+    Imported via "./productos" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+    Imported via "./productos" from file '/home/runner/workspace/lib/db/src/schema/stock-minimos.ts'
+lib/db/src/schema/rollos.ts(23,34): error TS6059: File '/home/runner/workspace/lib/db/src/schema/proveedores.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./proveedores" from file '/home/runner/workspace/lib/db/src/schema/rollos.ts'
+    Imported via "./proveedores" from file '/home/runner/workspace/lib/db/src/schema/pos.ts'
+    Imported via "./proveedores" from file '/home/runner/workspace/lib/db/src/schema/entradas.ts'
+    Imported via "./proveedores" from file '/home/runner/workspace/lib/db/src/schema/pagos-proveedor.ts'
+    Imported via "./proveedores" from file '/home/runner/workspace/lib/db/src/schema/contenedores.ts'
+    Imported via "./proveedores" from file '/home/runner/workspace/lib/db/src/schema/ticket-linea-consumos.ts'
+    Imported via "./proveedores" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+lib/db/src/schema/salidas.ts(15,31): error TS6059: File '/home/runner/workspace/lib/db/src/schema/clientes.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./clientes" from file '/home/runner/workspace/lib/db/src/schema/salidas.ts'
+    Imported via "./clientes" from file '/home/runner/workspace/lib/db/src/schema/pos.ts'
+    Imported via "./clientes" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+    Imported via "./clientes" from file '/home/runner/workspace/lib/db/src/schema/cliente-documentos.ts'
+    Imported via "./clientes" from file '/home/runner/workspace/lib/db/src/schema/e3-receipts.ts'
+lib/db/src/schema/salidas.ts(17,30): error TS6059: File '/home/runner/workspace/lib/db/src/schema/pos.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./pos" from file '/home/runner/workspace/lib/db/src/schema/salidas.ts'
+    Imported via "./pos" from file '/home/runner/workspace/lib/db/src/schema/aplicaciones-credito.ts'
+    Imported via "./pos" from file '/home/runner/workspace/lib/db/src/schema/e3-receipts.ts'
+    Imported via "./pos" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+    Imported via "./pos" from file '/home/runner/workspace/lib/db/src/schema/ticket-linea-consumos.ts'
+    Imported via "./pos" from file '/home/runner/workspace/lib/db/src/schema/viajes.ts'
+    Imported via "../../../../lib/db/src/schema/pos" from file '/home/runner/workspace/artifacts/api-server/src/lib/e5.test.ts'
+lib/db/src/schema/users.ts(11,53): error TS6059: File '/home/runner/workspace/lib/db/src/schema/enums.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/users.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/locations.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/rollos.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/productos.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/proveedores.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/salidas.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/pos.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/precio-historial.ts'
+    Imported via "./enums" from file '/home/runner/workspace/lib/db/src/schema/permisos.ts'
+lib/db/src/schema/users.ts(12,34): error TS6059: File '/home/runner/workspace/lib/db/src/schema/locations.ts' is not under 'rootDir' '/home/runner/workspace/artifacts/api-server/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/users.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/audit.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/rollos.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/auditorias-inventario.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/auditoria-resoluciones.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/salidas.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/pos.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/entradas.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/contenedores.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/etiquetas.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/equipos.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/fondo.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/e3-receipts.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/index.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/permisos.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/stock-minimos.ts'
+    Imported via "./locations" from file '/home/runner/workspace/lib/db/src/schema/viajes.ts'
+
+artifacts/mariana-textil FULL_SOURCE_DIAGNOSTICS 0

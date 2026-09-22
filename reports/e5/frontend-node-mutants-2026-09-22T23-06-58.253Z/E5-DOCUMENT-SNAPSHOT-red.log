@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: E5-DOCUMENT-SNAPSHOT
+not ok 1 - E5-DOCUMENT-SNAPSHOT
+  ---
+  duration_ms: 97.035868
+  type: 'test'
+  location: '/tmp/e5-node-nYROpa/E5-DOCUMENT-SNAPSHOT-red/artifacts/mariana-textil/case.test.cjs:69321:27'
+  failureType: 'testCodeFailure'
+  error: 'E5-DOCUMENT-SNAPSHOT'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'Mariana Textil · Recibo de recepciónCopia Cliente · Página 1 / 1RC-E5-001$150.30Recibo vinculado: RC-E5-001Cliente: Cliente E5 fixture · Sitio: Tienda E5 fixtureRecibió: Operador E5 fixtureRecepción: 22/9/2026, 6:00:00 a.m. · Emisión: 22/9/2026, 6:00:00 a.m.Medio: EFECTIVO · Cuenta: CAJA_FISICARecibido, pendiente de aplicaciónEvidencia: Petición y recepción documentadas fixtureReferencia: ACTA-E5-101Nota (snapshot)Saldo en evidenciaImporte asignadoN-101 · cargo 901$100.10Sin aplicación en este documentoN-102 · cargo 902$50.20Sin aplicación en este documentoTotal recibido original: $150.30 · Pendiente al emitir: $1.00Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.Firma de quien entrega / clienteFirma de quien recibe / autorizaMariana Textil · Recibo de recepciónCopia Tienda · Página 1 / 1RC-E5-001$150.30Recibo vinculado: RC-E5-001Cliente: Cliente E5 fixture · Sitio: Tienda E5 fixtureRecibió: Operador E5 fixtureRecepción: 22/9/2026, 6:00:00 a.m. · Emisión: 22/9/2026, 6:00:00 a.m.Medio: EFECTIVO · Cuenta: CAJA_FISICARecibido, pendiente de aplicaciónEvidencia: Petición y recepción documentadas fixtureReferencia: ACTA-E5-101Nota (snapshot)Saldo en evidenciaImporte asignadoN-101 · cargo 901$100.10Sin aplicación en este documentoN-102 · cargo 902$50.20Sin aplicación en este documentoTotal recibido original: $150.30 · Pendiente al emitir: $1.00Documento inmutable. No recalculado con saldos actuales. Reimprimir no recibe ni aplica dinero.Firma de quien entrega / clienteFirma de quien recibe / autoriza'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e5-node-nYROpa/E5-DOCUMENT-SNAPSHOT-red/artifacts/mariana-textil/case.test.cjs:69325:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3298.507291

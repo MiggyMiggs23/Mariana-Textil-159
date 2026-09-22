@@ -1,0 +1,242 @@
+{
+  "status": "SOURCE_DERIVED_NATIVE_SUITE_PREPARED_NOT_EXECUTED",
+  "contract": "reports/e5/frontend-contract.md",
+  "baseline": "E9 closed at 100bdca51c09fea70475de0f5f8f798a550c2960; 59 UI obligations and E12/E4 evidence immutable",
+  "fixture": "artifacts/mariana-textil/src/components/e5-node-test-fixtures.ts",
+  "harness": "artifacts/mariana-textil/src/components/e5-node-test-harness.tsx",
+  "execution_owner": "MAIN guarded background only after stable source-derived native suite exists",
+  "tests_executed": false,
+  "schemas_executed": true,
+  "typecheck_executed": true,
+  "productive_changes": false,
+  "final_suite_or_anchors_created": true,
+  "main_client_parent_followup": {
+    "failed_evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-58-14.949Z",
+    "original_status_unchanged": "FAIL_NOT_ACCEPTED",
+    "blocked_id": "E5-PARENT-CLIENT",
+    "exact_failure": "E5_UNCONFIGURED_INFRASTRUCTURE_HOOK useGetClienteEvidenciaCredito in real ClienteCreditEvidence sibling",
+    "classification": "MISSING_EXPLICIT_PARENT_TRANSPORT_FIXTURE_NOT_PRODUCTIVE_BUG",
+    "repair_scope": "Only E5-PARENT-CLIENT declaration dynamically obtains existing harness installers. No common helper/harness/fixture/productive modifications.",
+    "specific_parent_transports": {
+      "useGetClienteEvidenciaCredito": "Enabled expected ADMIN read; typed CreditEvidence with matching clienteId, empty historical movimientos, attribution closed",
+      "useListSolicitudesPagoDirigido": "Enabled expected real DirectedPaymentHistory read; typed empty SolicitudesPagoDirigidoResult",
+      "useAtribuirClienteCredito": "Hook may mount; any mutation execution throws E5_UNEXPECTED_MUTATION",
+      "useListClienteDocumentos": "Inactive Datos/INE tab; requireDisabled guard forbids enabled query/refetch"
+    },
+    "context_review": [
+      "Actual ClienteCreditEvidence and DirectedPaymentHistory always mount under canFinances, independently of selected tab",
+      "Original CREDIT_ATTRIBUTION_ENABLED=false preserved; no product permission or capability alias",
+      "ClientePagoDialog closed: E3 context disabled and existing legacy/E3 mutations forbidden",
+      "Direct GET purchases/stats/analytics/portfolio retain explicit existing fixtures; analytics actividad arrays inspected",
+      "Adjustment/update-credit/baja/identity-document actions remain untriggered real callbacks guarded against external network",
+      "Parent assertion additionally verifies enabled evidence/history reads belong to CLIENTE 7 and disabled E3/refund/identity queries"
+    ],
+    "terminal_count": 27,
+    "remaining_count": 84,
+    "reconciled_inventory": "reports/e5/frontend-continuation-audit-2026-09-22T23-06-24.359Z.json",
+    "inventory_contains": "Exact terminal/remaining IDs, declaration and helper hashes, matching productive original/restored hashes; no failure manifest relabeled",
+    "snapshot_pruning": "Environment removed /tmp snapshots. Prior 19 declarations/helpers reverified against existing static audit and unchanged original manifest hashes. Latest eight compared against exact pre-parent-repair test file reconstruction whose SHA256 matches MAIN sourceHashes.",
+    "verified_anchors": 111,
+    "frontend_no_emit_diagnostics": 0,
+    "tests_builds_apps_sql_executed_by_repair_agent": 0,
+    "workflows_or_commands_changed": false
+  },
+  "main_app_browser_followup": {
+    "failed_evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-49-48.186Z",
+    "original_status_unchanged": "FAIL_NOT_ACCEPTED",
+    "blocked_id": "E5-OFF-ROUTE-LIST",
+    "exact_failure": "GREEN TypeError: window.matchMedia is not a function, sonner/dist/index.js:1018",
+    "classification": "MISSING_JSDOM_BROWSER_API_NOT_PRODUCTIVE_E5_BUG",
+    "repair": "Only appAt provides deterministic light-theme MediaQueryList backed by JSDOM EventTarget. Actual App, Sonner, routes, parents and permission checks retained. Unsupported media queries throw.",
+    "additional_static_coupling_fix": "E5-DOCUMENT-TWO-COPIES locates the exact productive A5 @page rule among styles rather than assuming first style: real Sonner module inserts a head stylesheet.",
+    "static_review": [
+      "App uses inline NotFound with exact 404 text; OFF selectors remain correct",
+      "ProtectedRoute module/role denial text and future-A role allowance match mounted cases",
+      "App Toaster uses next-themes default system and Sonner dark-media subscription",
+      "Cartera selected via querystring mounts real identified-client E5Entry; account/ticket and nested disabled E3/refund hooks inspected",
+      "ClienteDetail estado tab, generated hooks and four legacy direct GET fixtures inspected",
+      "E12 DOM already supplies ResizeObserver, RAF, scrollIntoView, pointer capture and Event realm needed by actual nested controls"
+    ],
+    "reconciled_inventory": "reports/e5/frontend-continuation-audit-2026-09-22T22-56-42.946Z.json",
+    "terminal_count": 19,
+    "remaining_count": 92,
+    "inventory_contains": "All terminal IDs with original/restored/declaration SHA256, original manifest status/hash, every remaining ID, and current helper SHA256",
+    "unchanged_dependencies": "All productive source, fixture, harness, builder, guard, reporter and mutant-manifest hashes match both MAIN attempts",
+    "changed_test_helpers": "Only appAt; no completed terminal case calls it. All 19 completed test declarations byte-unchanged.",
+    "verified_anchors": 111,
+    "frontend_no_emit_diagnostics": 0,
+    "tests_executed_by_repair_agent": 0
+  },
+  "main_runtime_timeout_followup": {
+    "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-43-03.645Z",
+    "original_manifest_status_unchanged": "FAIL_NOT_ACCEPTED",
+    "blocked_id": "E5-RECEPTION-PREVIEW-VERSION",
+    "observed": "GREEN reporter passed; RED log only TAP version 13, sandbox JSON reporter zero bytes, process ETIMEDOUT; no terminal semantic RED or restored phase",
+    "diagnosis": "Failure path compares live React DOM element to null; assertion formatting/inspection can traverse the React DOM graph before reporters receive the failure. Preview promise is explicitly settled and productive finally releases the lock; no evidence of an unresolved preview await. Runtime confirmation remains MAIN-owned.",
+    "repair": "27 DOM absence assertions now compare Boolean(query result) to false. Same queries, same absence requirement, same test-name assertion messages. No timeout, reporter, harness or productive edits.",
+    "terminal_ids": [
+      "E5-RECEPTION-DOCUMENT-UNIQUE",
+      "E5-RECEPTION-CASH-SESSION",
+      "E5-RECEPTION-TRANSFER-NO-PHYSICAL",
+      "E5-RECEPTION-TRANSFER-OPERATIVE",
+      "E5-RECEPTION-EVIDENCE-REQUIRED"
+    ],
+    "terminal_phases": "All five have GREEN passed, RED causeCode ERR_ASSERTION naming their ID, restored passed",
+    "terminal_productive_original_and_restored_sha256": "acc6e21c5815b619ef7b1a4a8eded466f353f3d1f3f35b3d7f96b351d05a26df",
+    "terminal_test_declarations_byte_unchanged": true,
+    "productive_fixture_harness_builder_guard_manifest_hashes_unchanged": true,
+    "test_file_sha256_after_absence_fix": "8ad5d494cf1ef66c17fa54abeebf27f0af695d47f40e6d8206e3a460148daa29",
+    "remaining_count": 106,
+    "remaining_ids_exact_selection": "All cases from frontend-mutants-cases.mjs except terminal_ids above; includes E5-RECEPTION-PREVIEW-VERSION",
+    "static_anchor_checks": 111,
+    "static_parse_diagnostics": 0,
+    "tests_executed_by_repair_agent": 0
+  },
+  "build_infrastructure_followup": {
+    "main_initial_failure": {
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-39-53.377Z",
+      "classification": "BUILD_INFRASTRUCTURE_FAILURE_BEFORE_CASES",
+      "executed_cases": 0,
+      "semantic_red_count": 0,
+      "cause": "Real App graph required PNG loaders and public Vite Fondo/DEV definitions in CJS"
+    },
+    "authorized_build_only": {
+      "evidence": "reports/e5/frontend-node-mutants-2026-09-22T22-41-51.918Z",
+      "status": "PASS_BUILD_ONLY_ZERO_CASES_NOT_UI_GREEN",
+      "validated_anchors": 111,
+      "physical_metafile_inputs": 1131,
+      "actual_assets": ["src/assets/mariana-textil-logo.png", "src/assets/mariana-textil-logo-monochrome.png"],
+      "executed_cases": 0,
+      "semantic_red_count": 0,
+      "guard_dom_reporter_snapshot_bytes_equal_original": true
+    },
+    "builder": {
+      "original": "reports/tanda-b-20260922/e12/frontend-node-build.mjs",
+      "original_sha256": "488d18f94a70a6864c7bd3e6bddfd9b7e3085eee429b2d22b957ac2780317ca5",
+      "derived": "reports/e5/frontend-node-build.mjs",
+      "derived_sha256": "da6f284f0cc346e15c35f09be129fd961df7ec4ce183c1efebbb150dc8d67827",
+      "byte_identical": false,
+      "public_defines_only": {"BASE_URL": "/", "VITE_FONDO_E10_ENABLED": "false", "DEV": false},
+      "operational_environment_inherited": false
+    }
+  },
+  "native_preparation": {
+    "test_file": "artifacts/mariana-textil/src/components/e5-node.dom.test.tsx",
+    "mutants_file": "reports/e5/frontend-mutants-cases.mjs",
+    "runner": "reports/e5/run-frontend-node-mutants.mjs",
+    "declared_test_count": 111,
+    "productive_mutant_count": 111,
+    "complete_obligation_and_test_list": "reports/e5/frontend-mutants-cases.mjs exports cases: every entry contains exact native id, title, productive file, unique before/after anchor and assertion id",
+    "status": "PREPARED_AFTER_MAIN_CORRECTED_UI_NOTICE_NOT_EXECUTED_NOT_ACCEPTED",
+    "static_validation": {
+      "unique_current_anchors": 111,
+      "one_to_one_test_ids": 111,
+      "mutant_parse_diagnostics": 0,
+      "frontend_no_emit_typecheck_diagnostics": 0,
+      "runner_and_manifest_node_check": "PASS",
+      "runtime_case_executions": 0
+    },
+    "execution_remaining": [
+      "MAIN waits for backend and shared library stability",
+      "MAIN alone runs isolated GREEN-specific assertion RED-restored GREEN cases in background",
+      "No dynamic acceptance, physical print or PDF claim from this preparation"
+    ],
+    "transport_coverage": {
+      "useGetE5Disponibilidad": "E5-QUERY-AVAILABILITY-ERROR",
+      "useGetE5Contexto": "E5-CONTEXT-IDENTITY",
+      "useListE5Cobros": "E5-LIST-FILTER-CURSOR",
+      "useGetE5Cobro": "E5-DETAIL-IDENTITY",
+      "useGetE5DevolucionOpciones": "E5-REFUND-VERIFIED-SOURCE-SEND",
+      "useListE5Avisos": "E5-ADMIN-ALERT-SERVER-AGE",
+      "useGetE5Documento": "E5-DOCUMENT-SNAPSHOT",
+      "usePreviewE5Cobro": "E5-RECEPTION-PREVIEW-VERSION",
+      "useCreateE5Cobro": "E5-RECEPTION-PREVIEW-NONMONETARY",
+      "useCreateE5Propuesta": "E5-PROPOSAL-FAVOR-EXPLICIT",
+      "useAuthorizeE5Aplicacion": "E5-AUTHORIZE-SUBSET-SEND",
+      "useRejectE5Propuesta": "E5-REJECT-NO-REFUND",
+      "useReturnE5Cobro": "E5-REFUND-VERIFIED-SOURCE-SEND",
+      "useRecordE5Impresion": "E5-PRINT-AUDIT-BEFORE-PRINT",
+      "getE5Disponibilidad": "E5-RETRY-AVAILABILITY",
+      "getE5Contexto": "E5-INITIAL-GET-CONTEXT-IDENTITY",
+      "getE5Cobro": "E5-INITIAL-GET-DETAIL-IDENTITY",
+      "getE5DevolucionOpciones": "E5-RETRY-REFUND-SOURCE"
+    }
+  },
+  "static_inspection": "After corrected UI notice: 111 mounted test declarations matched to 111 unique productive anchors, AST parse of all mutants, node --check runner/manifest, complete frontend noEmit TypeScript API check with zero diagnostics. No mounted/backend tests. Earlier schema-only result below is historical support validation; subsequent fixture edits include current reception sessions and explicit parent transport fixtures.",
+  "infrastructure_plan": {
+    "runner_reference_readonly": "reports/e9/run-frontend-node-mutants.mjs",
+    "byte_preserved_helper_directory": "reports/tanda-b-20260922/e12",
+    "helpers": ["frontend-offline-guard.cjs", "frontend-node-dom.cjs", "frontend-node-reporter.mjs"],
+    "derived_builder": "reports/e5/frontend-node-build.mjs",
+    "requirements": [
+      "Physical source snapshots, byte hashes, immutable live source and prior evidence",
+      "Clean child environment, offline network/DB/listener guard, no apps or Vite execution",
+      "Full accepted JSDOM/Wouter globals and public BASE_URL define",
+      "Native exact test IDs and one productive semantic mutant per final obligation",
+      "GREEN-specific ERR_ASSERTION RED-restored GREEN; never accept syntax/setup/guard failure",
+      "Actual UI primitives and permissions; alias only transport, feature gate, layout and location infrastructure",
+      "Mutation subscriber notification after settlement callbacks; isPending deliberately false",
+      "Real QueryClient cache writes/invalidation remain inspectable; enabled hooks/refetch observations are not HTTP counts"
+    ]
+  },
+  "hook_inventory": {
+    "queries": ["useGetE5Disponibilidad", "useGetE5Contexto", "useListE5Cobros", "useGetE5Cobro", "useGetE5DevolucionOpciones", "useListE5Avisos", "useGetE5Documento"],
+    "mutations": ["usePreviewE5Cobro", "useCreateE5Cobro", "useCreateE5Propuesta", "useAuthorizeE5Aplicacion", "useRejectE5Propuesta", "useReturnE5Cobro", "useRecordE5Impresion"]
+  },
+  "obligation_matrix_not_final_test_manifest": [
+    {
+      "area": "OFF and reachable parents",
+      "obligations": ["OFF mounts no E5 hooks, navigation, controls or printing", "Real cobros and cliente-detail contextual entries", "Actual mounted pending list/detail/document routes", "Never use unmounted pagos-dirigidos", "Nota links use notaId and existing tickets route, never ledger movimientoVentaId"]
+    },
+    {
+      "area": "Reception and context",
+      "obligations": ["Existing role, permission, authorized client/site and server capability conjunction", "No receipt for legacy CONTADOR/SISTEMAS/BODEGA", "Opaque server versionContexto copied exactly; consultadoAt not a token", "Distinct unique notes for one client, including multiple notes", "Non-ADMIN exact sum of current balances; ADMIN partial and explicit aplicarAhora only", "EFECTIVO requires current physical session and CAJA_FISICA", "TRANSFERENCIA requires bank account and no sesionCajaId", "CAJA entry needs operational session even for transfer", "CLIENTE is real receipt, never recapture", "No FACTURADO payment medium", "Preview is not reservation; refreshed stale note/version requires confirmation again", "No automatic redirection when note was paid", "No second ordinary abono/E3 confirmation/legacy directed receipt"]
+    },
+    {
+      "area": "Proposal, authorization and retention",
+      "obligations": ["ADMIN preparation; future A requires explicit server preparacionADisponible and capability, never legacy CONTADOR permission or personal allowlist", "Only ADMIN authorizes/rejects with server capabilities", "Revision CAS and immutable proposal ID", "Approval declares positive unique subset/amounts of current proposal, no enlargement or destination replacement", "Partial approval resolves proposal, retains residual and requires new proposal", "Previous proposals/rejections/applications remain history", "Rejection preserves waiting money and original receipt date", "Received equals applied plus pending plus returned", "No usable favor/debt change during waiting or preparation", "algunaVezAplicado irreversible; partial residual never refundable"]
+    },
+    {
+      "area": "Refund",
+      "obligations": ["ADMIN with capability and explicit customer request/evidence", "Full original never-applied amount only; no client editable partial amount", "Source comes from fresh verified options, never inferred original receipt session", "CAJA current physical session, CUENTA actual bank/operational association, FONDO explicit Mariana ADMIN source", "No invented balances/unlock or E9 remittance reversal", "Options are not reservation; source/state/revision errors block mutation", "One actual output, not fake abono or reversal of nonexistent credit", "Store response/UI excludes fuente/salidaId/movimientoFondoId and privileged links"]
+    },
+    {
+      "area": "Alerts and immutable documents",
+      "obligations": ["ADMIN server-provided age and alert at three original-reception days; do not reset with proposal/rejection/print", "No unrestricted global totals or new cron", "Receipt exists immediately without printing; pending wording and no paid-note/favor fiction", "Application constancia distinct from original receipt, linked IDs/folios preserved", "Frozen notes/actors/amounts and receipt/application/emission dates separate", "ADMIN-only document read/print, no automatic Caja print", "A5 landscape two copies and separate signatures", "Audit print idempotently without financial side effect; printer failure never recreates receipt/application"]
+    },
+    {
+      "area": "Every actual producer and query",
+      "obligations": ["Synchronous ref lock before await", "Stable UUID for normalized retry after timeout", "New UUID for changed content/context/intention", "Identity/role/site/client transition cancels stale pending work and isolates caches", "Actual generated keys invalidated; privileged caches not leaked", "Nested domain errors and dependency failure explicit, never zero or false success", "Role/permission/capability denials tested independently", "Fresh response must match request identity", "Pagination/filter requests use current scope", "All 14 hooks exercised through actual mounted components after MAIN stability notice"]
+    }
+  ],
+  "fixture_constraints": [
+    "All fourteen endpoint responses reference their current generated Zod schemas, then HTTP JSON serialization",
+    "No E9 delivery/cut fields transplanted into E5; no inferred session-state/source-balance fields absent from contract",
+    "Money uses independent exact fixture constants, not productive calculation helpers",
+    "Distinct notaId versus movimientoVentaId, receipt versus constancia, original versus current refund session",
+    "No mounted-test suite command or final test-count claim until stable parents and selectors are known"
+  ],
+  "contract_delta_obligations_not_final_test_ids": [
+    {"id":"E5-PLAN-EXACT-MOVEMENT","obligation":"Every assignment carries notaId AND required movimientoVentaId; approve the exact movement, not all ticket charges"},
+    {"id":"E5-PLAN-MULTICHARGE-CONTEXT","obligation":"One nota may expose several distinct movements; render/select each without collapsing by notaId"},
+    {"id":"E5-PLAN-UNIQUE-MOVEMENT","obligation":"Assignment uniqueness is movimientoVentaId; two distinct movements of the same nota are valid, duplicate movement is rejected"},
+    {"id":"E5-PLAN-RECEPTION-DOCUMENT-SET","obligation":"Reception notasIndicadas remains unique document IDs; exact non-ADMIN amount includes all current pending charges once"},
+    {"id":"E5-PLAN-APPROVAL-MOVEMENT-SUBSET","obligation":"Approval cannot substitute another movement of the same ticket or expand the proposed movement amount"},
+    {"id":"E5-PLAN-FAVOR-ADMIN-EXPLICIT","obligation":"Favor is explicit ADMIN proposal/authorization only; future A cannot prepare favor even with preparation capability"},
+    {"id":"E5-PLAN-FAVOR-BOUND","obligation":"importeFavorAutorizado is explicit and cannot exceed importeFavorPropuesto or retained money"},
+    {"id":"E5-PLAN-FAVOR-ZERO-DEFAULT","obligation":"Absent favor means zero; receipt excess, rejected proposal, paid note and residual never become favor automatically"},
+    {"id":"E5-PLAN-FAVOR-SERVER-GLOBAL-DEBT","obligation":"Server canonical debt must be zero after approved assignments; errors reject instead of redirecting FIFO or trusting local selected-note sums"},
+    {"id":"E5-PLAN-FAVOR-EMPTY-ASSIGNMENTS","obligation":"Empty assignment array allowed only with explicit positive favor, never empty/zero plan"},
+    {"id":"E5-PLAN-FAVOR-CONSUMPTION","obligation":"Authorized favor consumes retained money and permanently sets algunaVezAplicado; remaining money is not refundable"},
+    {"id":"E5-PLAN-FAVOR-DOCUMENT","obligation":"Application and immutable constancia expose importeFavorGenerado independently of note allocations; original receipt unchanged"}
+  ],
+  "schema_validation_command": "node reports/e5/validate-frontend-fixtures.cjs",
+  "schema_validation_result": {
+    "status": "SCHEMA_SUPPORT_VALIDATED_NOT_UI_OR_BACKEND_PASS",
+    "scenarios": 39,
+    "nested_missing_movement_rejections": 4,
+    "ui_tests_executed": 0,
+    "backend_tests_executed": 0
+  },
+  "schema_validation_scope": "Explicit MAIN-requested runtime Zod support validation only. Memory-only TS transpilation, restricted import VM, no UI/backend tests or final anchors."
+}

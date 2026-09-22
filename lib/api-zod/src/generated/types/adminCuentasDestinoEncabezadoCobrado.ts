@@ -11,6 +11,10 @@ export type AdminCuentasDestinoEncabezadoCobrado = {
   contado: string;
   abonos: string;
   saldosFavor: string;
+  /** Recepciones E5 reales del periodo; no aplicaciones. */
+  recepcionesRetenidas?: string;
+  /** Salidas E5 de caja o cuenta del periodo */
+  devolucionesRetenidas?: string;
   total: string;
   /** @nullable */
   totalAnterior: string | null;
