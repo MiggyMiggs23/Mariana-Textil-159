@@ -10,7 +10,7 @@ name = "API Server"
 paths = ["/api"]
 
 [services.development]
-run = "cd /home/runner/workspace && exec strace -f -e trace=openat -o /home/runner/workspace/reports/e2-liberacion-20260922/candidate-worker-open.trace bash reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh"
+run = "cd /home/runner/workspace && exec bash reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh"
 
 [services.development.env]
 API_INSPECTION_BOOT = "1"

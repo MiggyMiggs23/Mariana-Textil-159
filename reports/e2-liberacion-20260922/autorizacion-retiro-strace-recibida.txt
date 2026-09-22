@@ -1,0 +1,7 @@
+miguelestza: Autorización del propietario. Guarda este texto tal cual en reports/e2-liberacion-20260922/ antes de la primera escritura.
+
+El comando del workflow de API quedó con strace (artifacts/api-server/.replit-artifact/artifact.toml, línea 13). Era solo para observar el arranque de liberación. Autorizo cambiar ese comando a exactamente:
+
+cd /home/runner/workspace && exec bash reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh
+
+Sin ningún otro cambio. Si el cambio reinicia la API, autorizo ese reinicio. Después verifica: PID, hash del bundle 008dfd54…e7f5 completo, modo inspección, /api/healthz 200, que candidate-worker-open.trace no se haya modificado y que reports/arranques-api.log registró el arranque. Si algo no coincide, detente y repórtamelo.
