@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "at": "2026-09-22T15:16:24.850Z",
+  "pid": 2419,
+  "args": [
+    "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+    "--enable-source-maps",
+    "artifacts/api-server/dist-e2-20260927/index.mjs"
+  ],
+  "mode": {
+    "API_INSPECTION_BOOT": "1",
+    "NODE_ENV": "development",
+    "PORT": "8080"
+  },
+  "closedFlags": {
+    "FONDO_E10_ENABLED": "unset (closed default)",
+    "CREDIT_REFUNDS_ENABLED": "unset (closed default)",
+    "CREDIT_CASH_INCOME_ENABLED": "unset (closed default)",
+    "CREDIT_ABONO_EVIDENCE_ENABLED": "unset (closed default)",
+    "CREDIT_PENDING_RECEIPTS_ENABLED": "unset (closed default)",
+    "CREDIT_HISTORICAL_ATTRIBUTION_ENABLED": "unset (closed default)"
+  },
+  "runtimeConnectionMatchesApprovedSource": true,
+  "workerOpens": {
+    "thread-stream-worker.mjs": [
+      "2452  openat(AT_FDCWD, \"/home/runner/workspace/artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs\", O_RDONLY|O_CLOEXEC) = 26"
+    ],
+    "pino-pretty.mjs": [
+      "2452  openat(AT_FDCWD, \"/home/runner/workspace/artifacts/api-server/dist-e2-20260927/pino-pretty.mjs\", O_RDONLY|O_CLOEXEC) = 26"
+    ]
+  },
+  "health": {
+    "status": 200,
+    "body": {
+      "status": "ok"
+    }
+  },
+  "oneReleaseStartup": true,
+  "positivePreflightProof": true,
+  "inspectionLogVerified": true,
+  "approvedPackageHashesUnchanged": true,
+  "retainedAndCandidateBundleHashesUnchanged": true,
+  "observation": "Existing workflow invokes the exact approved bash wrapper under read-only strace openat observation. No wrapper/bundle/preload change."
+}

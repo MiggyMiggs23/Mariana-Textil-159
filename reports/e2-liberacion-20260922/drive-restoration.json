@@ -1,0 +1,783 @@
+{
+  "status": "PASS",
+  "verifiedAtUtc": "2026-09-22T15:10:06.652Z",
+  "driveVerification": "/home/runner/workspace/reports/e2-liberacion-20260922/drive-verification.json",
+  "originalBackupMetadata": "/home/runner/workspace/reports/e2-liberacion-20260922/e2-backup-restore-20260922-metadata.json",
+  "sourceSnapshot": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/source-snapshot.json",
+  "backupDirectory": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888",
+  "downloadedDump": {
+    "file": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/drive-redownload.dump",
+    "sha256": "fbd7fd4bbbc1b2411ab8c7c40ad40047c552d3388ff8697a49f21a6cd7b649f6",
+    "sizeBytes": 522472
+  },
+  "originalArchiveSha256": "fbd7fd4bbbc1b2411ab8c7c40ad40047c552d3388ff8697a49f21a6cd7b649f6",
+  "executedBackupOperatorSha256": "00fd86f205664de840edd816729759b79203486b0041b7bc6e3977c42c13b311",
+  "evidenceSha256": "fbd7fd4bbbc1b2411ab8c7c40ad40047c552d3388ff8697a49f21a6cd7b649f6",
+  "hashesMatch": true,
+  "restore": {
+    "clusterDirectory": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/drive-redownload-restore",
+    "socketDirectory": "/tmp/e2-drive-redownload-restore-20260922090513-1888-drive-2083",
+    "superuserRole": "postgres",
+    "unixSocketOnlyVerified": true,
+    "database": "e2_drive_restore_disposable_20260922090513-1888-drive",
+    "adminDatabase": "e2_drive_restore_admin_20260922090513-1888-drive",
+    "adminConnectionCommand": "PGHOST=\"/tmp/e2-drive-redownload-restore-20260922090513-1888-drive-2083\" \"/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin/psql\" --no-psqlrc --no-password --dbname=\"e2_drive_restore_admin_20260922090513-1888-drive\"",
+    "restoredConnectionCommand": "PGHOST=\"/tmp/e2-drive-redownload-restore-20260922090513-1888-drive-2083\" \"/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin/psql\" --no-psqlrc --no-password --dbname=\"e2_drive_restore_disposable_20260922090513-1888-drive\"",
+    "postgresBinaryDirectory": "/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin",
+    "sourceDatabase": "heliumdb",
+    "sourceOwner": "postgres",
+    "restoredOwner": "postgres",
+    "restoreExitCode": 0
+  },
+  "comparison": {
+    "status": "PASS",
+    "databaseMetadataMatched": true,
+    "categories": {
+      "tables": [],
+      "columns": [],
+      "constraints": [],
+      "indexes": [],
+      "functions": [],
+      "triggers": [],
+      "sequences": [],
+      "tableCountsAndCanonicalRowHashes": [],
+      "sequenceStateAfterDump": []
+    },
+    "dynamicTableCount": 69,
+    "restoredTableCount": 69,
+    "sourceTriggerCount": 34,
+    "restoredTriggerCount": 34,
+    "allNoninternalTriggerEnabledStatesCompared": true,
+    "sequenceChangedDuringDump": false,
+    "sourceSequenceStateBeforeDump": [
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_credito_id_seq",
+        "last_value": "9"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+        "last_value": "18"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_faltante_reactivaciones_id_seq",
+        "last_value": "5"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_id_seq",
+        "last_value": "4188"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_sobrante_decisiones_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditorias_inventario_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "autorizaciones_nota_id_seq",
+        "last_value": "8"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "camionetas_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "choferes_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cliente_documentos_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "clientes_id_seq",
+        "last_value": "7"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedor_lineas_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_folio_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cuadre_fiscal_registros_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "entradas_id_seq",
+        "last_value": "434"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "equipos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "fondo_movimientos_ordinal_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_credito_id_seq",
+        "last_value": "54"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_id_seq",
+        "last_value": "6906"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_credito_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_sistema_id_seq",
+        "last_value": "42"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pagos_proveedor_id_seq",
+        "last_value": "452"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_rol_id_seq",
+        "last_value": "34004"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_ubicacion_id_seq",
+        "last_value": "9828"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_usuario_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pisos_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "precio_historial_id_seq",
+        "last_value": "1016"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "productos_id_seq",
+        "last_value": "2077"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "proveedores_id_seq",
+        "last_value": "225"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "reimpresiones_etiqueta_id_seq",
+        "last_value": "170"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "revisiones_etiqueta_id_seq",
+        "last_value": "31"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "rollos_id_seq",
+        "last_value": "5803"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_lineas_id_seq",
+        "last_value": "28"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_rollos_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_dinero_caja_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_id_seq",
+        "last_value": "26"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "sesiones_caja_id_seq",
+        "last_value": "44"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "solicitudes_pago_dirigido_id_seq",
+        "last_value": "1"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimo_episodios_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimos_id_seq",
+        "last_value": "3"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_linea_consumos_id_seq",
+        "last_value": "32"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_lineas_id_seq",
+        "last_value": "365"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_pagos_id_seq",
+        "last_value": "89"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "tickets_id_seq",
+        "last_value": "107"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ubicaciones_id_seq",
+        "last_value": "834"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "usuarios_id_seq",
+        "last_value": "233"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "viajes_id_seq",
+        "last_value": null
+      }
+    ],
+    "sourceSequenceStateAfterDump": [
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_credito_id_seq",
+        "last_value": "9"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+        "last_value": "18"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_faltante_reactivaciones_id_seq",
+        "last_value": "5"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_id_seq",
+        "last_value": "4188"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_sobrante_decisiones_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditorias_inventario_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "autorizaciones_nota_id_seq",
+        "last_value": "8"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "camionetas_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "choferes_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cliente_documentos_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "clientes_id_seq",
+        "last_value": "7"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedor_lineas_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_folio_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cuadre_fiscal_registros_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "entradas_id_seq",
+        "last_value": "434"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "equipos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "fondo_movimientos_ordinal_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_credito_id_seq",
+        "last_value": "54"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_id_seq",
+        "last_value": "6906"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_credito_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_sistema_id_seq",
+        "last_value": "42"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pagos_proveedor_id_seq",
+        "last_value": "452"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_rol_id_seq",
+        "last_value": "34004"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_ubicacion_id_seq",
+        "last_value": "9828"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_usuario_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pisos_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "precio_historial_id_seq",
+        "last_value": "1016"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "productos_id_seq",
+        "last_value": "2077"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "proveedores_id_seq",
+        "last_value": "225"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "reimpresiones_etiqueta_id_seq",
+        "last_value": "170"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "revisiones_etiqueta_id_seq",
+        "last_value": "31"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "rollos_id_seq",
+        "last_value": "5803"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_lineas_id_seq",
+        "last_value": "28"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_rollos_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_dinero_caja_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_id_seq",
+        "last_value": "26"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "sesiones_caja_id_seq",
+        "last_value": "44"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "solicitudes_pago_dirigido_id_seq",
+        "last_value": "1"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimo_episodios_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimos_id_seq",
+        "last_value": "3"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_linea_consumos_id_seq",
+        "last_value": "32"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_lineas_id_seq",
+        "last_value": "365"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_pagos_id_seq",
+        "last_value": "89"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "tickets_id_seq",
+        "last_value": "107"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ubicaciones_id_seq",
+        "last_value": "834"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "usuarios_id_seq",
+        "last_value": "233"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "viajes_id_seq",
+        "last_value": null
+      }
+    ],
+    "restoredSequenceState": [
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_credito_id_seq",
+        "last_value": "9"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+        "last_value": "18"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_faltante_reactivaciones_id_seq",
+        "last_value": "5"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_id_seq",
+        "last_value": "4188"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_sobrante_decisiones_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditorias_inventario_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "autorizaciones_nota_id_seq",
+        "last_value": "8"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "camionetas_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "choferes_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cliente_documentos_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "clientes_id_seq",
+        "last_value": "7"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedor_lineas_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_folio_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cuadre_fiscal_registros_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "entradas_id_seq",
+        "last_value": "434"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "equipos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "fondo_movimientos_ordinal_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_credito_id_seq",
+        "last_value": "54"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_id_seq",
+        "last_value": "6906"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_credito_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_sistema_id_seq",
+        "last_value": "42"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pagos_proveedor_id_seq",
+        "last_value": "452"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_rol_id_seq",
+        "last_value": "34004"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_ubicacion_id_seq",
+        "last_value": "9828"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_usuario_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pisos_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "precio_historial_id_seq",
+        "last_value": "1016"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "productos_id_seq",
+        "last_value": "2077"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "proveedores_id_seq",
+        "last_value": "225"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "reimpresiones_etiqueta_id_seq",
+        "last_value": "170"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "revisiones_etiqueta_id_seq",
+        "last_value": "31"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "rollos_id_seq",
+        "last_value": "5803"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_lineas_id_seq",
+        "last_value": "28"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_rollos_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_dinero_caja_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_id_seq",
+        "last_value": "26"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "sesiones_caja_id_seq",
+        "last_value": "44"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "solicitudes_pago_dirigido_id_seq",
+        "last_value": "1"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimo_episodios_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimos_id_seq",
+        "last_value": "3"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_linea_consumos_id_seq",
+        "last_value": "32"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_lineas_id_seq",
+        "last_value": "365"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_pagos_id_seq",
+        "last_value": "89"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "tickets_id_seq",
+        "last_value": "107"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ubicaciones_id_seq",
+        "last_value": "834"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "usuarios_id_seq",
+        "last_value": "233"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "viajes_id_seq",
+        "last_value": null
+      }
+    ]
+  },
+  "retainedCluster": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/drive-redownload-restore",
+  "retainedForB0Comparison": true,
+  "sourceDatabaseConnected": false,
+  "originalBackupFileModified": false
+}

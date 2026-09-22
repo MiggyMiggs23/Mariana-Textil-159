@@ -1,0 +1,17 @@
+{
+  "at": "2026-09-22T15:12:39.612Z",
+  "status": "PASS",
+  "proof": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "rows": 1519,
+    "schemaSha256": "37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8",
+    "attributesSha256": "c08c02eae60d61c611ff4ce3cb5854a4cb117a7a015ee8d50a0618eb4264626b",
+    "phase": "before",
+    "mode": "INSPECTION",
+    "capture": false,
+    "refund": false
+  },
+  "backupStillExact": true,
+  "otherClients": 0
+}

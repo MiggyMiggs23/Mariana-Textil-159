@@ -1,0 +1,5 @@
+{
+  "exit": 0,
+  "stdout": "DO\nREFUSED: canonical A+C schema contract mismatch\n",
+  "stderr": "psql:reports/e2-paquete-liberacion-preparado-20260921/sql/03-preflight-schema-prepared.sql:119: warning: \\quit: extra argument \"3\" ignored\n"
+}

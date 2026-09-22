@@ -1,0 +1,32 @@
+{
+  "at": "2026-09-22T15:16:51.044Z",
+  "status": "VERIFIED_ALREADY_STOPPED",
+  "initialStopAttempt": {
+    "exit": 1,
+    "message": "pg_ctl could not send stop signal: recorded PID 1941 no longer existed",
+    "noRetry": true
+  },
+  "clusters": [
+    {
+      "cluster": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/restore-cluster",
+      "recordedPid": "1941",
+      "pidPresent": false,
+      "pgCtlStatusExit": 3,
+      "pgCtlStatus": "pg_ctl: no server running",
+      "pgIsReadyExit": 2,
+      "dataDirectoryPreserved": true,
+      "removed": false
+    },
+    {
+      "cluster": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/drive-redownload-restore",
+      "recordedPid": "2119",
+      "pidPresent": false,
+      "pgCtlStatusExit": 3,
+      "pgCtlStatus": "pg_ctl: no server running",
+      "pgIsReadyExit": 2,
+      "dataDirectoryPreserved": true,
+      "removed": false
+    }
+  ],
+  "noBackupsOrEvidenceDeleted": true
+}

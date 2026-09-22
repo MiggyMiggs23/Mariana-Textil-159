@@ -1,0 +1,844 @@
+{
+  "status": "PASS",
+  "report": "/home/runner/workspace/reports/e2-liberacion-20260922/e2-backup-restore-20260922.md",
+  "backupDirectory": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888",
+  "archive": {
+    "file": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/e2-release-backup-20260922-20260922090513-1888.dump",
+    "sha256": "fbd7fd4bbbc1b2411ab8c7c40ad40047c552d3388ff8697a49f21a6cd7b649f6",
+    "sizeBytes": 522472,
+    "format": "custom",
+    "includesAcl": true,
+    "includesOwnership": true
+  },
+  "capturedAtUtc": "2026-09-22T15:05:13.295Z",
+  "capturedAtMexico": "2026-09-22 09:05:13",
+  "sourceProvenance": {
+    "operatorFile": "/home/runner/workspace/scripts/src/e2-release-backup-20260922.mts",
+    "operatorSha256": "00fd86f205664de840edd816729759b79203486b0041b7bc6e3977c42c13b311",
+    "operatorDiffFromOriginalSha256": "58426e7039318de550a0922a7aa47e651cfc86d727d4f33086c8f85a431b6af0",
+    "operatorDiffFromOriginal": "diff --git a/home/runner/workspace/scripts/src/prompt-h-block2-backup-restore.mts b/home/runner/workspace/scripts/src/e2-release-backup-20260922.mts\nindex bbdfdc8..e11bb6f 100644\n--- a/home/runner/workspace/scripts/src/prompt-h-block2-backup-restore.mts\n+++ b/home/runner/workspace/scripts/src/e2-release-backup-20260922.mts\n@@ -1,12 +1,11 @@\n /**\n- * Prompt H / Block 2: full backup and local disposable restore only.\n+ * E2 CLOSED release prerequisite: full backup and local disposable restore.\n  *\n  * This operator-only command intentionally does not run a preflight, purge,\n  * seed, API initializer, Drive operation, or source write.  The source\n  * connection remains in one REPEATABLE READ READ ONLY transaction until\n  * pg_dump has completed.  The disposable PostgreSQL cluster is intentionally\n- * left running after this command so that the later purge procedure can use\n- * it for read queries.\n+ * left running so a later Drive redownload restore and B0 comparison can use it.\n  */\n import { createHash } from \"node:crypto\";\n import { execFile, execFileSync } from \"node:child_process\";\n@@ -16,7 +15,7 @@ import { promisify } from \"node:util\";\n import { fileURLToPath } from \"node:url\";\n import type { Client as PgClient, QueryResultRow } from \"../../lib/db/node_modules/@types/pg\";\n // pg has no declarations in this workspace's local runtime package.\n-// @ts-expect-error Runtime import is deliberately local to the workspace.\n+// @ts-ignore Runtime import is deliberately local to the workspace.\n import pgRuntime from \"../../lib/db/node_modules/pg/lib/index.js\";\n \n type Row = QueryResultRow & Record<string, unknown>;\n@@ -26,28 +25,10 @@ const execFileAsync = promisify(execFile);\n \n const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), \"../..\");\n const BACKUPS = `${ROOT}/.local/backups`;\n-const baseCatalogScope = process.argv.includes(\"--catalog-base-approved\");\n-const e1ApprovedScope = process.argv.includes(\"--e1-approved\");\n-const e10OperationalScope = process.argv.includes(\"--e10-operativo\");\n-const REPORTS = `${ROOT}/reports/${\n-  e10OperationalScope\n-    ? \"e10-operativo-2026-09-18\"\n-    : e1ApprovedScope\n-      ? \"e1-ensayo-2026-09-17\"\n-      : baseCatalogScope\n-        ? \"base-catalog-2026-09-17\"\n-        : \"prompt-h\"\n-}`;\n-const APPROVAL = e10OperationalScope\n-  ? `${ROOT}/reports/e10-autorizacion-operativa-2026-09-18.md`\n-  : `${REPORTS}/${\n-      e1ApprovedScope\n-      ? \"autorizacion.md\"\n-      : baseCatalogScope\n-        ? \"aprobacion.md\"\n-        : \"aprobacion-listas-no-purga.md\"\n-    }`;\n-const E1_IDENTITY = `${ROOT}/reports/e1-ensayo-2026-09-17/api-pool-identity.json`;\n+const REPORTS = `${ROOT}/reports/e2-liberacion-20260922`;\n+const APPROVAL =\n+  `${ROOT}/reports/e2-paquete-liberacion-preparado-20260921/autorizacion-fase-b-20260922-recibida.txt`;\n+const APPROVAL_SHA256 = \"ea0115d5b57cc3ca5a356271e65164f00bca5acd60f58ac83a4f605f572f788b\";\n const PG_BIN = \"/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin\";\n const TZ = \"America/Mexico_City\";\n const LOCAL_SUPERUSER = \"postgres\";\n@@ -98,7 +79,9 @@ interface Snapshot {\n   sourceProvenance: {\n     operatorFile: string;\n     operatorSha256: string;\n-    operatorDiffFromHeadSha256: string;\n+    operatorDiffFromOriginalSha256: string;\n+    operatorDiffFromOriginal: string;\n+    invocation: string[];\n     headCommit: string;\n     headTree: string;\n     headParent: string | null;\n@@ -112,12 +95,8 @@ interface Snapshot {\n     sequenceStateBeforeDump: SequenceState[];\n     sequenceStateAfterDump?: SequenceState[];\n     sequenceChangedDuringDump?: boolean;\n-    apiPoolIdentityEvidence?: {\n-      file: string;\n-      sha256: string;\n-      identity: Record<string, unknown>;\n-    };\n-    apiPoolIdentityMatched?: boolean;\n+    identity: Row;\n+    otherClientBackendsBeforeSnapshot: number;\n   };\n   archive?: {\n     file: string;\n@@ -146,60 +125,15 @@ interface RestoreMetadata {\n }\n \n let backupDirectory = \"\";\n-let reportPath = `${REPORTS}/${e10OperationalScope ? \"backup-restore.md\" : \"block2-restore.md\"}`;\n-let metadataPath = `${REPORTS}/${e10OperationalScope ? \"backup-restore-metadata.json\" : \"block2-restore-metadata.json\"}`;\n+let reportPath = `${REPORTS}/e2-backup-restore-20260922.md`;\n+let metadataPath = `${REPORTS}/e2-backup-restore-20260922-metadata.json`;\n let statePath = \"\";\n let stage = \"initializing\";\n let clusterStarted = false;\n \n function progress(message: string): void {\n   stage = message;\n-  console.error(`[prompt-h-block2] ${message}`);\n-}\n-\n-function optionValue(name: string): string | null {\n-  const prefix = `${name}=`;\n-  const argument = process.argv.find((value) => value.startsWith(prefix));\n-  return argument ? argument.slice(prefix.length) : null;\n-}\n-\n-async function readPinnedApiIdentity(): Promise<{\n-  file: string;\n-  sha256: string;\n-  identity: Record<string, unknown>;\n-}> {\n-  const supplied = optionValue(\"--api-pool-identity\");\n-  if (!supplied) {\n-    throw new Error(\"E10 requires --api-pool-identity=<current evidence file>.\");\n-  }\n-  const file = resolve(ROOT, supplied);\n-  const reportsRoot = `${ROOT}/reports/`;\n-  if (!file.startsWith(reportsRoot)) {\n-    throw new Error(\"API pool identity evidence must be a file under reports/.\");\n-  }\n-  const bytes = await fs.readFile(file);\n-  const parsed: unknown = JSON.parse(bytes.toString(\"utf8\"));\n-  if (!parsed || typeof parsed !== \"object\" || Array.isArray(parsed)) {\n-    throw new Error(\"API pool identity evidence is not an object.\");\n-  }\n-  const evidence = parsed as Record<string, unknown>;\n-  if (\n-    evidence.actualProcessPool !== true ||\n-    evidence.readOnly !== true ||\n-    typeof evidence.apiPid !== \"number\" ||\n-    typeof evidence.capturedAtUtc !== \"string\"\n-  ) {\n-    throw new Error(\"API pool identity evidence is not a read-only live-process capture.\");\n-  }\n-  const identity = evidence.identity;\n-  if (!identity || typeof identity !== \"object\" || Array.isArray(identity)) {\n-    throw new Error(\"API pool identity evidence has no identity object.\");\n-  }\n-  return {\n-    file,\n-    sha256: createHash(\"sha256\").update(bytes).digest(\"hex\"),\n-    identity: identity as Record<string, unknown>,\n-  };\n+  console.error(`[e2-release-backup-20260922] ${message}`);\n }\n \n function q(value: string): string {\n@@ -364,23 +298,43 @@ function gitText(args: string[]): string {\n   return gitOutput(args).trim();\n }\n \n+function operatorDiff(originalFile: string, operatorFile: string): string {\n+  try {\n+    return execFileSync(\n+      \"git\",\n+      [\"diff\", \"--no-index\", \"--binary\", \"--\", originalFile, operatorFile],\n+      {\n+        cwd: ROOT,\n+        encoding: \"utf8\",\n+        stdio: [\"ignore\", \"pipe\", \"ignore\"],\n+        maxBuffer: 32 * 1024 * 1024,\n+      },\n+    );\n+  } catch (error) {\n+    const result = error as { status?: number; stdout?: string };\n+    if (result.status === 1 && typeof result.stdout === \"string\") return result.stdout;\n+    throw new Error(\"Could not record exact operator diff.\");\n+  }\n+}\n+\n async function sourceProvenance(): Promise<Snapshot[\"sourceProvenance\"]> {\n   const operatorFile = fileURLToPath(import.meta.url);\n+  const originalFile = `${ROOT}/scripts/src/prompt-h-block2-backup-restore.mts`;\n   const operator = await sha256Size(operatorFile);\n   const headCommit = gitText([\"rev-parse\", \"HEAD\"]);\n   const headTree = gitText([\"rev-parse\", \"HEAD^{tree}\"]);\n   const parentLine = gitText([\"rev-list\", \"--parents\", \"-n\", \"1\", \"HEAD\"]).split(/\\s+/);\n   const status = gitOutput([\"status\", \"--porcelain=v1\", \"--untracked-files=all\"]);\n-  const operatorDiff = gitOutput([\n-    \"diff\", \"--binary\", \"HEAD\", \"--\", \"scripts/src/prompt-h-block2-backup-restore.mts\",\n-  ]);\n+  const exactOperatorDiff = operatorDiff(originalFile, operatorFile);\n   const workingTreeStatusPorcelainV1 = status\n     ? status.replace(/\\n$/, \"\").split(\"\\n\")\n     : [];\n   return {\n     operatorFile,\n     operatorSha256: operator.sha256,\n-    operatorDiffFromHeadSha256: createHash(\"sha256\").update(operatorDiff).digest(\"hex\"),\n+    operatorDiffFromOriginalSha256: createHash(\"sha256\").update(exactOperatorDiff).digest(\"hex\"),\n+    operatorDiffFromOriginal: exactOperatorDiff,\n+    invocation: [process.execPath, ...process.argv.slice(1)],\n     headCommit,\n     headTree,\n     headParent: parentLine[1] ?? null,\n@@ -736,9 +690,9 @@ async function restoreAndVerify(\n   stampValue: string,\n ): Promise<{ metadata: RestoreMetadata; comparison: Record<string, unknown> }> {\n   const cluster = `${backupDirectory}/restore-cluster`;\n-  const socket = `/tmp/prompt-h-block2-${stampValue}-${process.pid}`;\n-  const admin = `restore_admin_${stampValue}`;\n-  const restored = `restore_disposable_${stampValue}`;\n+  const socket = `/tmp/e2-release-backup-20260922-${stampValue}-${process.pid}`;\n+  const admin = `e2_restore_admin_${stampValue}`;\n+  const restored = `e2_restore_disposable_${stampValue}`;\n   if (existsSync(cluster)) throw new Error(\"A fresh restore cluster path already exists.\");\n   await createCluster(cluster, socket);\n   // PostgreSQL cannot rename the database to which the session is connected.\n@@ -891,23 +845,19 @@ function markdown(\n     ? `- Administrador: \\`${metadata.adminConnectionCommand}\\`\n - Base restaurada: \\`${metadata.restoredConnectionCommand}\\``\n     : \"- Comandos de reconexión: no disponibles porque la restauración no completó.\";\n-  return `# ${e10OperationalScope ? \"E10 operativo\" : \"Prompt H — Bloque 2\"}: respaldo + restauración desechable local\n+  return `# E2 CLOSED — respaldo + restauración desechable local — 2026-09-22\n \n ## Veredicto\n \n **${status}**${sequenceChanged ? \" (se detectó cambio de estado de secuencias durante el dump; la comparación usa el estado capturado después del dump)\" : \"\"}.\n \n-La autorización usada es \\`${APPROVAL}\\`. Esta ejecución se limitó a respaldo y\n+La autorización actual usada es \\`${APPROVAL}\\` (SHA-256\n+\\`${APPROVAL_SHA256}\\`). Esta ejecución se limitó a respaldo y\n restauración local. No ejecutó Drive, preflight, purga, seed, identidad de\n aplicación, ni reinicio de API/workflows. No se hicieron escrituras en la base\n-fuente. La aprobación de identidad de la aplicación queda separada para el\n-agente principal.\n-\n-${e10OperationalScope ? `Cotejo de identidad de origen contra la evidencia\n-actual del pool vivo de la API: \\`${snapshot.source.apiPoolIdentityEvidence?.file ?? \"no disponible\"}\\`\n-(SHA-256 \\`${snapshot.source.apiPoolIdentityEvidence?.sha256 ?? \"no disponible\"}\\`):\n-**${snapshot.source.apiPoolIdentityMatched ? \"PASS\" : \"FAIL/no completado\"}**. La API podía\n-permanecer activa; cualquier cambio de secuencia durante la ventana causa FAIL.` : \"\"}\n+fuente. Drive sigue siendo un prerrequisito posterior independiente: este\n+reporte nunca afirma que fue ejecutado. Los demás client backends antes de\n+iniciar el snapshot fueron: **${snapshot.source.otherClientBackendsBeforeSnapshot}**.\n \n ## Fuente exacta del operador\n \n@@ -916,8 +866,16 @@ permanecer activa; cualquier cambio de secuencia durante la ventana causa FAIL.`\n - Commit HEAD: \\`${snapshot.sourceProvenance.headCommit}\\`\n - Árbol del commit HEAD: \\`${snapshot.sourceProvenance.headTree}\\`\n - Padre del commit HEAD: \\`${snapshot.sourceProvenance.headParent ?? \"sin padre\"}\\`\n-- SHA-256 del diff binario del operador contra HEAD:\n-  \\`${snapshot.sourceProvenance.operatorDiffFromHeadSha256}\\`\n+- SHA-256 del diff binario exacto contra el operador original:\n+  \\`${snapshot.sourceProvenance.operatorDiffFromOriginalSha256}\\`\n+- Invocación exacta (arreglo argv; DATABASE_URL no se registra):\n+  \\`${JSON.stringify(snapshot.sourceProvenance.invocation)}\\`\n+- Diff binario exacto contra \\`scripts/src/prompt-h-block2-backup-restore.mts\\`:\n+\n+\\`\\`\\`diff\n+${snapshot.sourceProvenance.operatorDiffFromOriginal}\n+\\`\\`\\`\n+- Metadata sanitizada: \\`${metadataPath}\\`\n - Árbol de trabajo limpio al capturar: **${snapshot.sourceProvenance.workingTreeClean ? \"sí\" : \"no\"}**\n - Estado porcelain v1: ${snapshot.sourceProvenance.workingTreeStatusPorcelainV1.length\n     ? snapshot.sourceProvenance.workingTreeStatusPorcelainV1.map((line) => `\\`${line}\\``).join(\", \")\n@@ -927,6 +885,7 @@ permanecer activa; cualquier cambio de secuencia durante la ventana causa FAIL.`\n \n - Base efectiva: \\`${snapshot.source.database.database_name}\\`\n - PostgreSQL: \\`${snapshot.source.database.server_version}\\`\n+- Identidad exigida/comprobada: \\`heliumdb / OID 16384 / public / postgres / PG 160010\\`\n - Snapshot UTC: \\`${snapshot.capturedAtUtc}\\`\n - Snapshot Mexico City: \\`${snapshot.capturedAtMexico}\\`\n - Transacción: \\`REPEATABLE READ READ ONLY\\`; \\`pg_export_snapshot()\\` fue\n@@ -972,9 +931,9 @@ ${mismatchLines.length ? `## Discrepancias (procedimiento detenido)\\n\\n${mismatc\n ## Secuencias no-MVCC\n \n El estado de secuencias se capturó antes y después del dump fuera de la\n-garantía MVCC. Cambio detectado: **${sequenceChanged ? \"sí\" : \"no\"}**. Un\n-${e10OperationalScope ? \"En E10 cualquier cambio detiene el procedimiento con FAIL; nunca se acepta silenciosamente.\" : \"\"}\n-snapshot prueba el instante del respaldo, no frescura de un preflight\n+garantía MVCC. Cambio detectado: **${sequenceChanged ? \"sí\" : \"no\"}**.\n+En E2 cualquier desigualdad detiene el procedimiento con FAIL; nunca se acepta\n+silenciosamente. Un snapshot prueba el instante del respaldo, no frescura de un preflight\n posterior; no se realizó ese preflight.\n \n ## Restauración local persistente\n@@ -986,49 +945,53 @@ ${metadata ? `- Cluster: \\`${metadata.clusterDirectory}\\`\n ${reconnect}` : \"- El cluster no quedó disponible.\"}\n \n El cluster, sus archivos y la base desechable **no se eliminan** después del\n-éxito; ${e10OperationalScope\n-    ? \"deben conservarse junto con el respaldo hasta el cierre de E10.\"\n-    : \"deben permanecer disponibles hasta que el procedimiento completo de purga cierre.\"}\n+éxito; deben conservarse para la comparación posterior de la restauración de\n+la redescarga de Drive y para la comparación B0. No se purgan en este operador.\n La restauración no sembró usuarios ni identidad de aplicación.\n `;\n }\n \n async function main(): Promise<void> {\n+  if (process.argv.slice(2).length !== 0) {\n+    throw new Error(\"E2 mode is fixed; command-line scopes and connection arguments are disabled.\");\n+  }\n   if (!existsSync(APPROVAL)) throw new Error(\"Owner approval file is missing.\");\n-  const approval = await fs.readFile(APPROVAL, \"utf8\");\n-  const e1UserQuote = approval.split(\"\\n\").filter((line) => /^\\s*>/.test(line)).join(\"\\n\");\n-  const approved = e10OperationalScope\n-    ? approval.includes(\"Respaldo nuevo antes, verificado por restauración\") &&\n-      approval.includes(\"Conserva la copia aislada y el respaldo hasta que E10 cierre\")\n-    : e1ApprovedScope\n-    ? /respaldo/i.test(e1UserQuote) && /API pausado/i.test(e1UserQuote) && /ensayo/i.test(e1UserQuote)\n-    : baseCatalogScope\n-      ? /Apruebo la desactivación de los 12 candidatos/i.test(approval) && /respaldo nuevo/i.test(approval)\n-      : /Apruebo las listas/i.test(approval) && /respaldo/i.test(approval);\n-  if (!approved) {\n-    throw new Error(\"Owner approval does not authorize the backup scope.\");\n+  const approvalBytes = await fs.readFile(APPROVAL);\n+  const approvalHash = createHash(\"sha256\").update(approvalBytes).digest(\"hex\");\n+  if (approvalHash !== APPROVAL_SHA256) throw new Error(\"Current E2 approval hash does not match.\");\n+  const approval = approvalBytes.toString(\"utf8\");\n+  for (const required of [\n+    \"Autorizo la liberación E2 CLOSED\",\n+    \"Antes del SQL, exijo respaldo completo verificado en Google Drive\",\n+    \"descarga/restauración de ensayo\",\n+    \"El destino lógico es heliumdb, OID 16384, public, rol postgres, PostgreSQL 160010\",\n+  ]) {\n+    if (!approval.includes(required)) {\n+      throw new Error(`Current E2 approval is missing required prerequisite text: ${required}`);\n+    }\n   }\n   const sourceUrl = process.env.DATABASE_URL;\n-  if (!sourceUrl) throw new Error(\"DATABASE_URL is not configured.\");\n+  if (!sourceUrl) throw new Error(\"Parent-provided runtime DATABASE_URL is required.\");\n   for (const key of [\"TEST_DATABASE_URL\", \"DATABASE_TEST_URL\", \"APPLICATION_DATABASE_URL\"]) {\n     if (process.env[key]) throw new Error(`Refusing test/application override: ${key}.`);\n   }\n-  // E10's evidence is deliberately loaded and validated before constructing or\n-  // connecting the source client. The parent captures this from the live API\n-  // process pool and supplies its path explicitly for this invocation.\n-  const pinnedApiIdentity = e10OperationalScope ? await readPinnedApiIdentity() : null;\n   const parts = parseSource(sourceUrl);\n   if (parts.database !== \"heliumdb\") throw new Error(\"Effective DATABASE_URL must target heliumdb.\");\n+  for (const binary of [\"pg_dump\", \"pg_restore\", \"initdb\", \"pg_ctl\", \"psql\"]) {\n+    if (!existsSync(`${PG_BIN}/${binary}`)) {\n+      throw new Error(`Required retained PostgreSQL 16 binary is missing: ${binary}.`);\n+    }\n+  }\n   const captured = new Date();\n   const stampValue = `${stamp(captured)}-${process.pid}`;\n-  backupDirectory = `${BACKUPS}/${e10OperationalScope ? \"e10-operativo\" : \"prompt-h-block2\"}-${stampValue}`;\n+  backupDirectory = `${BACKUPS}/e2-release-backup-20260922-${stampValue}`;\n   if (existsSync(backupDirectory) && readdirSync(backupDirectory).length > 0) {\n     throw new Error(\"Backup directory already exists; refusing to reuse stale inventory.\");\n   }\n   mkdirSync(backupDirectory, { recursive: true, mode: 0o700 });\n   chmodSync(backupDirectory, 0o700);\n   statePath = `${backupDirectory}/state.json`;\n-  const dumpPath = `${backupDirectory}/${e10OperationalScope ? \"e10-operativo\" : \"prompt-h-block2\"}-${stampValue}.dump`;\n+  const dumpPath = `${backupDirectory}/e2-release-backup-20260922-${stampValue}.dump`;\n   const sourcePath = `${backupDirectory}/source-snapshot.json`;\n   const restoreMetadataPath = `${backupDirectory}/restore-metadata.json`;\n   await writePrivate(statePath, { status: \"RUNNING\", stage, updatedAtUtc: captured.toISOString() });\n@@ -1044,7 +1007,8 @@ async function main(): Promise<void> {\n         functions: [], triggers: [], sequences: [], database: {},\n       },\n       sequenceStateBeforeDump: [],\n-      apiPoolIdentityEvidence: pinnedApiIdentity ?? undefined,\n+      identity: {},\n+      otherClientBackendsBeforeSnapshot: -1,\n     },\n   };\n   let metadata: RestoreMetadata | null = null;\n@@ -1055,98 +1019,56 @@ async function main(): Promise<void> {\n   try {\n     const sourceClient = new pg.Client({\n       connectionString: sourceUrl,\n-      application_name: e10OperationalScope ? \"e10-operativo-readonly-backup\" : \"prompt-h-block2-backup\",\n-      options: e10OperationalScope ? \"-c default_transaction_read_only=on -c timezone=UTC\" : undefined,\n+      application_name: \"e2-release-backup-20260922-readonly\",\n+      options: \"-c default_transaction_read_only=on -c timezone=UTC\",\n     });\n     source = sourceClient;\n     await source.connect();\n     await source.query(\"SET TIME ZONE 'UTC'\");\n-    const identity = await one<{ database_name: string; server_version: string; server_version_num: string }>(\n+    const clients = await one<{ count: number }>(\n       source,\n-      \"SELECT current_database() AS database_name, current_setting('server_version') AS server_version, current_setting('server_version_num') AS server_version_num\",\n+      \"SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend'\",\n       [],\n-      \"Verifying effective source identity\",\n+      \"Verifying zero other source clients before starting snapshot\",\n     );\n-    if (identity.database_name !== \"heliumdb\") throw new Error(\"Source identity is not heliumdb.\");\n-    if (!identity.server_version.startsWith(\"16.10\")) {\n-      throw new Error(\"Source identity is not PostgreSQL 16.10.\");\n+    snapshot.source.otherClientBackendsBeforeSnapshot = clients.count;\n+    if (clients.count !== 0) {\n+      throw new Error(\"Other source client backends are connected; E2 snapshot blocked.\");\n     }\n-    if (e1ApprovedScope || e10OperationalScope) {\n-      const identityEvidence = e10OperationalScope\n-        ? { identity: pinnedApiIdentity?.identity }\n-        : JSON.parse(await fs.readFile(E1_IDENTITY, \"utf8\")) as {\n-        identity?: Record<string, unknown>;\n-      };\n-      const expected = identityEvidence.identity;\n-      if (!expected) throw new Error(\"API pool identity evidence has no identity object.\");\n-      const identityFields = e10OperationalScope\n-        ? [\n-            \"database_name\", \"database_oid\", \"database_role\", \"schema_name\",\n-            \"server_version\", \"server_address\", \"server_port\", \"server_started_at\",\n-            \"unix_socket_directories\", \"data_directory\", \"configured_port\",\n-            \"listen_addresses\", \"search_schemas\", \"replication_role\",\n-            \"system_identifier\",\n-          ]\n-        : [\n-            \"database_name\", \"database_oid\", \"server_version\", \"database_role\",\n-            \"server_started_at\", \"server_address\", \"server_port\",\n-          ];\n-      if (\n-        identityFields.some((field) => !(field in expected)) ||\n-        expected.server_address !== null ||\n-        expected.server_port !== null\n-      ) {\n-        throw new Error(\"E1 API pool identity evidence has an invalid identity shape.\");\n-      }\n-      const sourceIdentity = await one<Record<string, unknown>>(\n-        source,\n-        `SELECT current_database()::text AS database_name,\n-                (SELECT oid::text FROM pg_database WHERE datname = current_database()) AS database_oid,\n-                current_user::text AS database_role,\n-                current_schema()::text AS schema_name,\n-                current_setting('server_version')::text AS server_version,\n-                inet_server_addr()::text AS server_address,\n-                inet_server_port()::int AS server_port,\n-                pg_postmaster_start_time()::text AS server_started_at,\n-                current_setting('unix_socket_directories')::text AS unix_socket_directories,\n-                current_setting('data_directory')::text AS data_directory,\n-                current_setting('port')::text AS configured_port,\n-                current_setting('listen_addresses')::text AS listen_addresses,\n-                current_schemas(false)::text[] AS search_schemas,\n-                current_setting('session_replication_role')::text AS replication_role,\n-                (SELECT system_identifier::text FROM pg_control_system()) AS system_identifier`,\n-        [],\n-        \"Matching source to current API pool identity\",\n-      );\n-      const expectedIdentity = Object.fromEntries(identityFields.map((field) => [\n-        field,\n-        field === \"database_oid\" || field === \"system_identifier\" || field === \"configured_port\"\n-          ? String(expected[field])\n-          : expected[field],\n-      ]));\n-      const comparableSourceIdentity = Object.fromEntries(\n-        identityFields.map((field) => [field, sourceIdentity[field]]),\n-      );\n-      if (stable(comparableSourceIdentity) !== stable(expectedIdentity)) {\n-        throw new Error(\"Source SQL identity does not match the current API pool identity evidence.\");\n-      }\n-      if (e10OperationalScope) snapshot.source.apiPoolIdentityMatched = true;\n+    const identity = await one<{\n+      database_name: string;\n+      database_oid: string;\n+      database_role: string;\n+      schema_name: string;\n+      server_version: string;\n+      server_version_num: string;\n+    }>(\n+      source,\n+      `SELECT current_database()::text AS database_name,\n+              (SELECT oid::text FROM pg_database WHERE datname=current_database()) AS database_oid,\n+              current_user::text AS database_role,\n+              current_schema()::text AS schema_name,\n+              current_setting('server_version')::text AS server_version,\n+              current_setting('server_version_num')::text AS server_version_num`,\n+      [],\n+      \"Verifying effective source identity\",\n+    );\n+    if (\n+      identity.database_name !== \"heliumdb\" ||\n+      identity.database_oid !== \"16384\" ||\n+      identity.database_role !== \"postgres\" ||\n+      identity.schema_name !== \"public\" ||\n+      identity.server_version_num !== \"160010\"\n+    ) {\n+      throw new Error(\"Source identity is not heliumdb/OID16384/public/postgres/PG160010.\");\n     }\n+    snapshot.source.identity = identity;\n     await source.query(\"BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY\");\n     sourceTransactionOpen = true;\n     const txMode = await one<{ transaction_read_only: string }>(\n       source, \"SHOW transaction_read_only\", [], \"Verifying read-only source transaction\",\n     );\n     if (txMode.transaction_read_only !== \"on\") throw new Error(\"Source transaction is not read-only.\");\n-    if (baseCatalogScope || e1ApprovedScope) {\n-      const clients = await one<{ count: number }>(\n-        source,\n-        \"SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend'\",\n-        [],\n-        \"Verifying paused source before catalog backup\",\n-      );\n-      if (clients.count !== 0) throw new Error(\"Other source clients are connected; catalog backup blocked.\");\n-    }\n     const exported = await one<{ snapshot: string }>(\n       source, \"SELECT pg_export_snapshot() AS snapshot\", [], \"Exporting source snapshot\",\n     );\n@@ -1184,7 +1106,7 @@ async function main(): Promise<void> {\n       includesOwnership: true,\n     };\n     await writePrivate(sourcePath, snapshot);\n-    if (e10OperationalScope && snapshot.source.sequenceChangedDuringDump) {\n+    if (snapshot.source.sequenceChangedDuringDump) {\n       throw new Error(\"Sequence state changed during the source snapshot/backup window.\");\n     }\n     if (sourceTransactionOpen) {\n@@ -1219,6 +1141,18 @@ async function main(): Promise<void> {\n     sourceProvenance: snapshot.sourceProvenance,\n     sourceDatabase: snapshot.source.database.database_name ?? \"unknown\",\n     sourceServerVersion: snapshot.source.database.server_version ?? \"unknown\",\n+    sourceIdentity: snapshot.source.identity,\n+    otherClientBackendsBeforeSnapshot: snapshot.source.otherClientBackendsBeforeSnapshot,\n+    authorization: {\n+      file: APPROVAL,\n+      sha256: APPROVAL_SHA256,\n+      exactHashMatched: true,\n+      e2ClosedTextRequired: true,\n+      drivePrerequisiteTextRequired: true,\n+    },\n+    invocation: snapshot.sourceProvenance.invocation,\n+    operatorDiffFromOriginal: snapshot.sourceProvenance.operatorDiffFromOriginal,\n+    metadataPath,\n     restore: metadata,\n     comparison,\n     sourceMutationPolicy: {\n@@ -1228,17 +1162,20 @@ async function main(): Promise<void> {\n       purgeExecuted: false,\n       driveExecuted: false,\n       apiRestarted: false,\n-      apiAllowedToRemainActive: e10OperationalScope,\n+      otherClientBackendsRequiredBeforeSnapshot: 0,\n       identitySeeded: false,\n       restoreSuperuser: LOCAL_SUPERUSER,\n       disposableClusterKeptAlive: clusterStarted,\n+      disposableClusterRetentionPurpose: [\n+        \"later Drive redownload-restore comparison\",\n+        \"later B0 comparison\",\n+      ],\n+      disposableClusterMustNotBePurged: true,\n     },\n     allTablesAndRowsIncluded: true,\n     tableDataExclusions: [],\n     applicationUsersCreated: 0,\n     applicationSessionsCreated: 0,\n-    apiPoolIdentityEvidence: snapshot.source.apiPoolIdentityEvidence ?? null,\n-    apiPoolIdentityMatched: snapshot.source.apiPoolIdentityMatched ?? false,\n     failure,\n   };\n   await writePrivate(metadataPath, publicMetadata);\n@@ -1269,7 +1206,7 @@ if (mainModulePath === fileURLToPath(import.meta.url)) {\n   await main().catch((error: unknown) => {\n     // The detailed sanitized report is written by main.  Keep process output\n     // terse and never print DATABASE_URL or child process diagnostics.\n-    console.error(`Prompt H Block 2 failed: ${error instanceof Error ? error.message : \"unknown failure\"}`);\n+    console.error(`E2 release backup failed: ${error instanceof Error ? error.message : \"unknown failure\"}`);\n     process.exitCode = 1;\n   });\n }\n\\ No newline at end of file\n",
+    "invocation": [
+      "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+      "/home/runner/workspace/scripts/src/e2-release-backup-20260922.mts"
+    ],
+    "headCommit": "b9acb26f5fed5e54a8cbf53ca192299bd701d2f7",
+    "headTree": "8e9f9c215b0e11ee59a136094a5c9411e696904b",
+    "headParent": "e263d2dfb14b2308c4c276252e0bcbec29892877",
+    "workingTreeStatusPorcelainV1": [
+      "?? attached_assets/Pasted-Autorizaci-n-del-propietario-Guarda-este-texto-tal-cual_1790089009230.txt",
+      "?? reports/e2-liberacion-20260922/workflows-before.json",
+      "?? reports/e2-paquete-liberacion-preparado-20260921/autorizacion-fase-b-20260922-recibida.txt",
+      "?? reports/e2-paquete-liberacion-preparado-20260921/entrada-fase-b-20260922.json",
+      "?? scripts/src/e2-release-backup-20260922.mts"
+    ],
+    "workingTreeClean": false
+  },
+  "sourceDatabase": "heliumdb",
+  "sourceServerVersion": "16.10",
+  "sourceIdentity": {
+    "database_name": "heliumdb",
+    "database_oid": "16384",
+    "database_role": "postgres",
+    "schema_name": "public",
+    "server_version": "16.10",
+    "server_version_num": "160010"
+  },
+  "otherClientBackendsBeforeSnapshot": 0,
+  "authorization": {
+    "file": "/home/runner/workspace/reports/e2-paquete-liberacion-preparado-20260921/autorizacion-fase-b-20260922-recibida.txt",
+    "sha256": "ea0115d5b57cc3ca5a356271e65164f00bca5acd60f58ac83a4f605f572f788b",
+    "exactHashMatched": true,
+    "e2ClosedTextRequired": true,
+    "drivePrerequisiteTextRequired": true
+  },
+  "invocation": [
+    "/nix/store/9cyx2v23dip6p9q98384k9v06c96qskb-nodejs-24.13.0/bin/node",
+    "/home/runner/workspace/scripts/src/e2-release-backup-20260922.mts"
+  ],
+  "operatorDiffFromOriginal": "diff --git a/home/runner/workspace/scripts/src/prompt-h-block2-backup-restore.mts b/home/runner/workspace/scripts/src/e2-release-backup-20260922.mts\nindex bbdfdc8..e11bb6f 100644\n--- a/home/runner/workspace/scripts/src/prompt-h-block2-backup-restore.mts\n+++ b/home/runner/workspace/scripts/src/e2-release-backup-20260922.mts\n@@ -1,12 +1,11 @@\n /**\n- * Prompt H / Block 2: full backup and local disposable restore only.\n+ * E2 CLOSED release prerequisite: full backup and local disposable restore.\n  *\n  * This operator-only command intentionally does not run a preflight, purge,\n  * seed, API initializer, Drive operation, or source write.  The source\n  * connection remains in one REPEATABLE READ READ ONLY transaction until\n  * pg_dump has completed.  The disposable PostgreSQL cluster is intentionally\n- * left running after this command so that the later purge procedure can use\n- * it for read queries.\n+ * left running so a later Drive redownload restore and B0 comparison can use it.\n  */\n import { createHash } from \"node:crypto\";\n import { execFile, execFileSync } from \"node:child_process\";\n@@ -16,7 +15,7 @@ import { promisify } from \"node:util\";\n import { fileURLToPath } from \"node:url\";\n import type { Client as PgClient, QueryResultRow } from \"../../lib/db/node_modules/@types/pg\";\n // pg has no declarations in this workspace's local runtime package.\n-// @ts-expect-error Runtime import is deliberately local to the workspace.\n+// @ts-ignore Runtime import is deliberately local to the workspace.\n import pgRuntime from \"../../lib/db/node_modules/pg/lib/index.js\";\n \n type Row = QueryResultRow & Record<string, unknown>;\n@@ -26,28 +25,10 @@ const execFileAsync = promisify(execFile);\n \n const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), \"../..\");\n const BACKUPS = `${ROOT}/.local/backups`;\n-const baseCatalogScope = process.argv.includes(\"--catalog-base-approved\");\n-const e1ApprovedScope = process.argv.includes(\"--e1-approved\");\n-const e10OperationalScope = process.argv.includes(\"--e10-operativo\");\n-const REPORTS = `${ROOT}/reports/${\n-  e10OperationalScope\n-    ? \"e10-operativo-2026-09-18\"\n-    : e1ApprovedScope\n-      ? \"e1-ensayo-2026-09-17\"\n-      : baseCatalogScope\n-        ? \"base-catalog-2026-09-17\"\n-        : \"prompt-h\"\n-}`;\n-const APPROVAL = e10OperationalScope\n-  ? `${ROOT}/reports/e10-autorizacion-operativa-2026-09-18.md`\n-  : `${REPORTS}/${\n-      e1ApprovedScope\n-      ? \"autorizacion.md\"\n-      : baseCatalogScope\n-        ? \"aprobacion.md\"\n-        : \"aprobacion-listas-no-purga.md\"\n-    }`;\n-const E1_IDENTITY = `${ROOT}/reports/e1-ensayo-2026-09-17/api-pool-identity.json`;\n+const REPORTS = `${ROOT}/reports/e2-liberacion-20260922`;\n+const APPROVAL =\n+  `${ROOT}/reports/e2-paquete-liberacion-preparado-20260921/autorizacion-fase-b-20260922-recibida.txt`;\n+const APPROVAL_SHA256 = \"ea0115d5b57cc3ca5a356271e65164f00bca5acd60f58ac83a4f605f572f788b\";\n const PG_BIN = \"/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin\";\n const TZ = \"America/Mexico_City\";\n const LOCAL_SUPERUSER = \"postgres\";\n@@ -98,7 +79,9 @@ interface Snapshot {\n   sourceProvenance: {\n     operatorFile: string;\n     operatorSha256: string;\n-    operatorDiffFromHeadSha256: string;\n+    operatorDiffFromOriginalSha256: string;\n+    operatorDiffFromOriginal: string;\n+    invocation: string[];\n     headCommit: string;\n     headTree: string;\n     headParent: string | null;\n@@ -112,12 +95,8 @@ interface Snapshot {\n     sequenceStateBeforeDump: SequenceState[];\n     sequenceStateAfterDump?: SequenceState[];\n     sequenceChangedDuringDump?: boolean;\n-    apiPoolIdentityEvidence?: {\n-      file: string;\n-      sha256: string;\n-      identity: Record<string, unknown>;\n-    };\n-    apiPoolIdentityMatched?: boolean;\n+    identity: Row;\n+    otherClientBackendsBeforeSnapshot: number;\n   };\n   archive?: {\n     file: string;\n@@ -146,60 +125,15 @@ interface RestoreMetadata {\n }\n \n let backupDirectory = \"\";\n-let reportPath = `${REPORTS}/${e10OperationalScope ? \"backup-restore.md\" : \"block2-restore.md\"}`;\n-let metadataPath = `${REPORTS}/${e10OperationalScope ? \"backup-restore-metadata.json\" : \"block2-restore-metadata.json\"}`;\n+let reportPath = `${REPORTS}/e2-backup-restore-20260922.md`;\n+let metadataPath = `${REPORTS}/e2-backup-restore-20260922-metadata.json`;\n let statePath = \"\";\n let stage = \"initializing\";\n let clusterStarted = false;\n \n function progress(message: string): void {\n   stage = message;\n-  console.error(`[prompt-h-block2] ${message}`);\n-}\n-\n-function optionValue(name: string): string | null {\n-  const prefix = `${name}=`;\n-  const argument = process.argv.find((value) => value.startsWith(prefix));\n-  return argument ? argument.slice(prefix.length) : null;\n-}\n-\n-async function readPinnedApiIdentity(): Promise<{\n-  file: string;\n-  sha256: string;\n-  identity: Record<string, unknown>;\n-}> {\n-  const supplied = optionValue(\"--api-pool-identity\");\n-  if (!supplied) {\n-    throw new Error(\"E10 requires --api-pool-identity=<current evidence file>.\");\n-  }\n-  const file = resolve(ROOT, supplied);\n-  const reportsRoot = `${ROOT}/reports/`;\n-  if (!file.startsWith(reportsRoot)) {\n-    throw new Error(\"API pool identity evidence must be a file under reports/.\");\n-  }\n-  const bytes = await fs.readFile(file);\n-  const parsed: unknown = JSON.parse(bytes.toString(\"utf8\"));\n-  if (!parsed || typeof parsed !== \"object\" || Array.isArray(parsed)) {\n-    throw new Error(\"API pool identity evidence is not an object.\");\n-  }\n-  const evidence = parsed as Record<string, unknown>;\n-  if (\n-    evidence.actualProcessPool !== true ||\n-    evidence.readOnly !== true ||\n-    typeof evidence.apiPid !== \"number\" ||\n-    typeof evidence.capturedAtUtc !== \"string\"\n-  ) {\n-    throw new Error(\"API pool identity evidence is not a read-only live-process capture.\");\n-  }\n-  const identity = evidence.identity;\n-  if (!identity || typeof identity !== \"object\" || Array.isArray(identity)) {\n-    throw new Error(\"API pool identity evidence has no identity object.\");\n-  }\n-  return {\n-    file,\n-    sha256: createHash(\"sha256\").update(bytes).digest(\"hex\"),\n-    identity: identity as Record<string, unknown>,\n-  };\n+  console.error(`[e2-release-backup-20260922] ${message}`);\n }\n \n function q(value: string): string {\n@@ -364,23 +298,43 @@ function gitText(args: string[]): string {\n   return gitOutput(args).trim();\n }\n \n+function operatorDiff(originalFile: string, operatorFile: string): string {\n+  try {\n+    return execFileSync(\n+      \"git\",\n+      [\"diff\", \"--no-index\", \"--binary\", \"--\", originalFile, operatorFile],\n+      {\n+        cwd: ROOT,\n+        encoding: \"utf8\",\n+        stdio: [\"ignore\", \"pipe\", \"ignore\"],\n+        maxBuffer: 32 * 1024 * 1024,\n+      },\n+    );\n+  } catch (error) {\n+    const result = error as { status?: number; stdout?: string };\n+    if (result.status === 1 && typeof result.stdout === \"string\") return result.stdout;\n+    throw new Error(\"Could not record exact operator diff.\");\n+  }\n+}\n+\n async function sourceProvenance(): Promise<Snapshot[\"sourceProvenance\"]> {\n   const operatorFile = fileURLToPath(import.meta.url);\n+  const originalFile = `${ROOT}/scripts/src/prompt-h-block2-backup-restore.mts`;\n   const operator = await sha256Size(operatorFile);\n   const headCommit = gitText([\"rev-parse\", \"HEAD\"]);\n   const headTree = gitText([\"rev-parse\", \"HEAD^{tree}\"]);\n   const parentLine = gitText([\"rev-list\", \"--parents\", \"-n\", \"1\", \"HEAD\"]).split(/\\s+/);\n   const status = gitOutput([\"status\", \"--porcelain=v1\", \"--untracked-files=all\"]);\n-  const operatorDiff = gitOutput([\n-    \"diff\", \"--binary\", \"HEAD\", \"--\", \"scripts/src/prompt-h-block2-backup-restore.mts\",\n-  ]);\n+  const exactOperatorDiff = operatorDiff(originalFile, operatorFile);\n   const workingTreeStatusPorcelainV1 = status\n     ? status.replace(/\\n$/, \"\").split(\"\\n\")\n     : [];\n   return {\n     operatorFile,\n     operatorSha256: operator.sha256,\n-    operatorDiffFromHeadSha256: createHash(\"sha256\").update(operatorDiff).digest(\"hex\"),\n+    operatorDiffFromOriginalSha256: createHash(\"sha256\").update(exactOperatorDiff).digest(\"hex\"),\n+    operatorDiffFromOriginal: exactOperatorDiff,\n+    invocation: [process.execPath, ...process.argv.slice(1)],\n     headCommit,\n     headTree,\n     headParent: parentLine[1] ?? null,\n@@ -736,9 +690,9 @@ async function restoreAndVerify(\n   stampValue: string,\n ): Promise<{ metadata: RestoreMetadata; comparison: Record<string, unknown> }> {\n   const cluster = `${backupDirectory}/restore-cluster`;\n-  const socket = `/tmp/prompt-h-block2-${stampValue}-${process.pid}`;\n-  const admin = `restore_admin_${stampValue}`;\n-  const restored = `restore_disposable_${stampValue}`;\n+  const socket = `/tmp/e2-release-backup-20260922-${stampValue}-${process.pid}`;\n+  const admin = `e2_restore_admin_${stampValue}`;\n+  const restored = `e2_restore_disposable_${stampValue}`;\n   if (existsSync(cluster)) throw new Error(\"A fresh restore cluster path already exists.\");\n   await createCluster(cluster, socket);\n   // PostgreSQL cannot rename the database to which the session is connected.\n@@ -891,23 +845,19 @@ function markdown(\n     ? `- Administrador: \\`${metadata.adminConnectionCommand}\\`\n - Base restaurada: \\`${metadata.restoredConnectionCommand}\\``\n     : \"- Comandos de reconexión: no disponibles porque la restauración no completó.\";\n-  return `# ${e10OperationalScope ? \"E10 operativo\" : \"Prompt H — Bloque 2\"}: respaldo + restauración desechable local\n+  return `# E2 CLOSED — respaldo + restauración desechable local — 2026-09-22\n \n ## Veredicto\n \n **${status}**${sequenceChanged ? \" (se detectó cambio de estado de secuencias durante el dump; la comparación usa el estado capturado después del dump)\" : \"\"}.\n \n-La autorización usada es \\`${APPROVAL}\\`. Esta ejecución se limitó a respaldo y\n+La autorización actual usada es \\`${APPROVAL}\\` (SHA-256\n+\\`${APPROVAL_SHA256}\\`). Esta ejecución se limitó a respaldo y\n restauración local. No ejecutó Drive, preflight, purga, seed, identidad de\n aplicación, ni reinicio de API/workflows. No se hicieron escrituras en la base\n-fuente. La aprobación de identidad de la aplicación queda separada para el\n-agente principal.\n-\n-${e10OperationalScope ? `Cotejo de identidad de origen contra la evidencia\n-actual del pool vivo de la API: \\`${snapshot.source.apiPoolIdentityEvidence?.file ?? \"no disponible\"}\\`\n-(SHA-256 \\`${snapshot.source.apiPoolIdentityEvidence?.sha256 ?? \"no disponible\"}\\`):\n-**${snapshot.source.apiPoolIdentityMatched ? \"PASS\" : \"FAIL/no completado\"}**. La API podía\n-permanecer activa; cualquier cambio de secuencia durante la ventana causa FAIL.` : \"\"}\n+fuente. Drive sigue siendo un prerrequisito posterior independiente: este\n+reporte nunca afirma que fue ejecutado. Los demás client backends antes de\n+iniciar el snapshot fueron: **${snapshot.source.otherClientBackendsBeforeSnapshot}**.\n \n ## Fuente exacta del operador\n \n@@ -916,8 +866,16 @@ permanecer activa; cualquier cambio de secuencia durante la ventana causa FAIL.`\n - Commit HEAD: \\`${snapshot.sourceProvenance.headCommit}\\`\n - Árbol del commit HEAD: \\`${snapshot.sourceProvenance.headTree}\\`\n - Padre del commit HEAD: \\`${snapshot.sourceProvenance.headParent ?? \"sin padre\"}\\`\n-- SHA-256 del diff binario del operador contra HEAD:\n-  \\`${snapshot.sourceProvenance.operatorDiffFromHeadSha256}\\`\n+- SHA-256 del diff binario exacto contra el operador original:\n+  \\`${snapshot.sourceProvenance.operatorDiffFromOriginalSha256}\\`\n+- Invocación exacta (arreglo argv; DATABASE_URL no se registra):\n+  \\`${JSON.stringify(snapshot.sourceProvenance.invocation)}\\`\n+- Diff binario exacto contra \\`scripts/src/prompt-h-block2-backup-restore.mts\\`:\n+\n+\\`\\`\\`diff\n+${snapshot.sourceProvenance.operatorDiffFromOriginal}\n+\\`\\`\\`\n+- Metadata sanitizada: \\`${metadataPath}\\`\n - Árbol de trabajo limpio al capturar: **${snapshot.sourceProvenance.workingTreeClean ? \"sí\" : \"no\"}**\n - Estado porcelain v1: ${snapshot.sourceProvenance.workingTreeStatusPorcelainV1.length\n     ? snapshot.sourceProvenance.workingTreeStatusPorcelainV1.map((line) => `\\`${line}\\``).join(\", \")\n@@ -927,6 +885,7 @@ permanecer activa; cualquier cambio de secuencia durante la ventana causa FAIL.`\n \n - Base efectiva: \\`${snapshot.source.database.database_name}\\`\n - PostgreSQL: \\`${snapshot.source.database.server_version}\\`\n+- Identidad exigida/comprobada: \\`heliumdb / OID 16384 / public / postgres / PG 160010\\`\n - Snapshot UTC: \\`${snapshot.capturedAtUtc}\\`\n - Snapshot Mexico City: \\`${snapshot.capturedAtMexico}\\`\n - Transacción: \\`REPEATABLE READ READ ONLY\\`; \\`pg_export_snapshot()\\` fue\n@@ -972,9 +931,9 @@ ${mismatchLines.length ? `## Discrepancias (procedimiento detenido)\\n\\n${mismatc\n ## Secuencias no-MVCC\n \n El estado de secuencias se capturó antes y después del dump fuera de la\n-garantía MVCC. Cambio detectado: **${sequenceChanged ? \"sí\" : \"no\"}**. Un\n-${e10OperationalScope ? \"En E10 cualquier cambio detiene el procedimiento con FAIL; nunca se acepta silenciosamente.\" : \"\"}\n-snapshot prueba el instante del respaldo, no frescura de un preflight\n+garantía MVCC. Cambio detectado: **${sequenceChanged ? \"sí\" : \"no\"}**.\n+En E2 cualquier desigualdad detiene el procedimiento con FAIL; nunca se acepta\n+silenciosamente. Un snapshot prueba el instante del respaldo, no frescura de un preflight\n posterior; no se realizó ese preflight.\n \n ## Restauración local persistente\n@@ -986,49 +945,53 @@ ${metadata ? `- Cluster: \\`${metadata.clusterDirectory}\\`\n ${reconnect}` : \"- El cluster no quedó disponible.\"}\n \n El cluster, sus archivos y la base desechable **no se eliminan** después del\n-éxito; ${e10OperationalScope\n-    ? \"deben conservarse junto con el respaldo hasta el cierre de E10.\"\n-    : \"deben permanecer disponibles hasta que el procedimiento completo de purga cierre.\"}\n+éxito; deben conservarse para la comparación posterior de la restauración de\n+la redescarga de Drive y para la comparación B0. No se purgan en este operador.\n La restauración no sembró usuarios ni identidad de aplicación.\n `;\n }\n \n async function main(): Promise<void> {\n+  if (process.argv.slice(2).length !== 0) {\n+    throw new Error(\"E2 mode is fixed; command-line scopes and connection arguments are disabled.\");\n+  }\n   if (!existsSync(APPROVAL)) throw new Error(\"Owner approval file is missing.\");\n-  const approval = await fs.readFile(APPROVAL, \"utf8\");\n-  const e1UserQuote = approval.split(\"\\n\").filter((line) => /^\\s*>/.test(line)).join(\"\\n\");\n-  const approved = e10OperationalScope\n-    ? approval.includes(\"Respaldo nuevo antes, verificado por restauración\") &&\n-      approval.includes(\"Conserva la copia aislada y el respaldo hasta que E10 cierre\")\n-    : e1ApprovedScope\n-    ? /respaldo/i.test(e1UserQuote) && /API pausado/i.test(e1UserQuote) && /ensayo/i.test(e1UserQuote)\n-    : baseCatalogScope\n-      ? /Apruebo la desactivación de los 12 candidatos/i.test(approval) && /respaldo nuevo/i.test(approval)\n-      : /Apruebo las listas/i.test(approval) && /respaldo/i.test(approval);\n-  if (!approved) {\n-    throw new Error(\"Owner approval does not authorize the backup scope.\");\n+  const approvalBytes = await fs.readFile(APPROVAL);\n+  const approvalHash = createHash(\"sha256\").update(approvalBytes).digest(\"hex\");\n+  if (approvalHash !== APPROVAL_SHA256) throw new Error(\"Current E2 approval hash does not match.\");\n+  const approval = approvalBytes.toString(\"utf8\");\n+  for (const required of [\n+    \"Autorizo la liberación E2 CLOSED\",\n+    \"Antes del SQL, exijo respaldo completo verificado en Google Drive\",\n+    \"descarga/restauración de ensayo\",\n+    \"El destino lógico es heliumdb, OID 16384, public, rol postgres, PostgreSQL 160010\",\n+  ]) {\n+    if (!approval.includes(required)) {\n+      throw new Error(`Current E2 approval is missing required prerequisite text: ${required}`);\n+    }\n   }\n   const sourceUrl = process.env.DATABASE_URL;\n-  if (!sourceUrl) throw new Error(\"DATABASE_URL is not configured.\");\n+  if (!sourceUrl) throw new Error(\"Parent-provided runtime DATABASE_URL is required.\");\n   for (const key of [\"TEST_DATABASE_URL\", \"DATABASE_TEST_URL\", \"APPLICATION_DATABASE_URL\"]) {\n     if (process.env[key]) throw new Error(`Refusing test/application override: ${key}.`);\n   }\n-  // E10's evidence is deliberately loaded and validated before constructing or\n-  // connecting the source client. The parent captures this from the live API\n-  // process pool and supplies its path explicitly for this invocation.\n-  const pinnedApiIdentity = e10OperationalScope ? await readPinnedApiIdentity() : null;\n   const parts = parseSource(sourceUrl);\n   if (parts.database !== \"heliumdb\") throw new Error(\"Effective DATABASE_URL must target heliumdb.\");\n+  for (const binary of [\"pg_dump\", \"pg_restore\", \"initdb\", \"pg_ctl\", \"psql\"]) {\n+    if (!existsSync(`${PG_BIN}/${binary}`)) {\n+      throw new Error(`Required retained PostgreSQL 16 binary is missing: ${binary}.`);\n+    }\n+  }\n   const captured = new Date();\n   const stampValue = `${stamp(captured)}-${process.pid}`;\n-  backupDirectory = `${BACKUPS}/${e10OperationalScope ? \"e10-operativo\" : \"prompt-h-block2\"}-${stampValue}`;\n+  backupDirectory = `${BACKUPS}/e2-release-backup-20260922-${stampValue}`;\n   if (existsSync(backupDirectory) && readdirSync(backupDirectory).length > 0) {\n     throw new Error(\"Backup directory already exists; refusing to reuse stale inventory.\");\n   }\n   mkdirSync(backupDirectory, { recursive: true, mode: 0o700 });\n   chmodSync(backupDirectory, 0o700);\n   statePath = `${backupDirectory}/state.json`;\n-  const dumpPath = `${backupDirectory}/${e10OperationalScope ? \"e10-operativo\" : \"prompt-h-block2\"}-${stampValue}.dump`;\n+  const dumpPath = `${backupDirectory}/e2-release-backup-20260922-${stampValue}.dump`;\n   const sourcePath = `${backupDirectory}/source-snapshot.json`;\n   const restoreMetadataPath = `${backupDirectory}/restore-metadata.json`;\n   await writePrivate(statePath, { status: \"RUNNING\", stage, updatedAtUtc: captured.toISOString() });\n@@ -1044,7 +1007,8 @@ async function main(): Promise<void> {\n         functions: [], triggers: [], sequences: [], database: {},\n       },\n       sequenceStateBeforeDump: [],\n-      apiPoolIdentityEvidence: pinnedApiIdentity ?? undefined,\n+      identity: {},\n+      otherClientBackendsBeforeSnapshot: -1,\n     },\n   };\n   let metadata: RestoreMetadata | null = null;\n@@ -1055,98 +1019,56 @@ async function main(): Promise<void> {\n   try {\n     const sourceClient = new pg.Client({\n       connectionString: sourceUrl,\n-      application_name: e10OperationalScope ? \"e10-operativo-readonly-backup\" : \"prompt-h-block2-backup\",\n-      options: e10OperationalScope ? \"-c default_transaction_read_only=on -c timezone=UTC\" : undefined,\n+      application_name: \"e2-release-backup-20260922-readonly\",\n+      options: \"-c default_transaction_read_only=on -c timezone=UTC\",\n     });\n     source = sourceClient;\n     await source.connect();\n     await source.query(\"SET TIME ZONE 'UTC'\");\n-    const identity = await one<{ database_name: string; server_version: string; server_version_num: string }>(\n+    const clients = await one<{ count: number }>(\n       source,\n-      \"SELECT current_database() AS database_name, current_setting('server_version') AS server_version, current_setting('server_version_num') AS server_version_num\",\n+      \"SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend'\",\n       [],\n-      \"Verifying effective source identity\",\n+      \"Verifying zero other source clients before starting snapshot\",\n     );\n-    if (identity.database_name !== \"heliumdb\") throw new Error(\"Source identity is not heliumdb.\");\n-    if (!identity.server_version.startsWith(\"16.10\")) {\n-      throw new Error(\"Source identity is not PostgreSQL 16.10.\");\n+    snapshot.source.otherClientBackendsBeforeSnapshot = clients.count;\n+    if (clients.count !== 0) {\n+      throw new Error(\"Other source client backends are connected; E2 snapshot blocked.\");\n     }\n-    if (e1ApprovedScope || e10OperationalScope) {\n-      const identityEvidence = e10OperationalScope\n-        ? { identity: pinnedApiIdentity?.identity }\n-        : JSON.parse(await fs.readFile(E1_IDENTITY, \"utf8\")) as {\n-        identity?: Record<string, unknown>;\n-      };\n-      const expected = identityEvidence.identity;\n-      if (!expected) throw new Error(\"API pool identity evidence has no identity object.\");\n-      const identityFields = e10OperationalScope\n-        ? [\n-            \"database_name\", \"database_oid\", \"database_role\", \"schema_name\",\n-            \"server_version\", \"server_address\", \"server_port\", \"server_started_at\",\n-            \"unix_socket_directories\", \"data_directory\", \"configured_port\",\n-            \"listen_addresses\", \"search_schemas\", \"replication_role\",\n-            \"system_identifier\",\n-          ]\n-        : [\n-            \"database_name\", \"database_oid\", \"server_version\", \"database_role\",\n-            \"server_started_at\", \"server_address\", \"server_port\",\n-          ];\n-      if (\n-        identityFields.some((field) => !(field in expected)) ||\n-        expected.server_address !== null ||\n-        expected.server_port !== null\n-      ) {\n-        throw new Error(\"E1 API pool identity evidence has an invalid identity shape.\");\n-      }\n-      const sourceIdentity = await one<Record<string, unknown>>(\n-        source,\n-        `SELECT current_database()::text AS database_name,\n-                (SELECT oid::text FROM pg_database WHERE datname = current_database()) AS database_oid,\n-                current_user::text AS database_role,\n-                current_schema()::text AS schema_name,\n-                current_setting('server_version')::text AS server_version,\n-                inet_server_addr()::text AS server_address,\n-                inet_server_port()::int AS server_port,\n-                pg_postmaster_start_time()::text AS server_started_at,\n-                current_setting('unix_socket_directories')::text AS unix_socket_directories,\n-                current_setting('data_directory')::text AS data_directory,\n-                current_setting('port')::text AS configured_port,\n-                current_setting('listen_addresses')::text AS listen_addresses,\n-                current_schemas(false)::text[] AS search_schemas,\n-                current_setting('session_replication_role')::text AS replication_role,\n-                (SELECT system_identifier::text FROM pg_control_system()) AS system_identifier`,\n-        [],\n-        \"Matching source to current API pool identity\",\n-      );\n-      const expectedIdentity = Object.fromEntries(identityFields.map((field) => [\n-        field,\n-        field === \"database_oid\" || field === \"system_identifier\" || field === \"configured_port\"\n-          ? String(expected[field])\n-          : expected[field],\n-      ]));\n-      const comparableSourceIdentity = Object.fromEntries(\n-        identityFields.map((field) => [field, sourceIdentity[field]]),\n-      );\n-      if (stable(comparableSourceIdentity) !== stable(expectedIdentity)) {\n-        throw new Error(\"Source SQL identity does not match the current API pool identity evidence.\");\n-      }\n-      if (e10OperationalScope) snapshot.source.apiPoolIdentityMatched = true;\n+    const identity = await one<{\n+      database_name: string;\n+      database_oid: string;\n+      database_role: string;\n+      schema_name: string;\n+      server_version: string;\n+      server_version_num: string;\n+    }>(\n+      source,\n+      `SELECT current_database()::text AS database_name,\n+              (SELECT oid::text FROM pg_database WHERE datname=current_database()) AS database_oid,\n+              current_user::text AS database_role,\n+              current_schema()::text AS schema_name,\n+              current_setting('server_version')::text AS server_version,\n+              current_setting('server_version_num')::text AS server_version_num`,\n+      [],\n+      \"Verifying effective source identity\",\n+    );\n+    if (\n+      identity.database_name !== \"heliumdb\" ||\n+      identity.database_oid !== \"16384\" ||\n+      identity.database_role !== \"postgres\" ||\n+      identity.schema_name !== \"public\" ||\n+      identity.server_version_num !== \"160010\"\n+    ) {\n+      throw new Error(\"Source identity is not heliumdb/OID16384/public/postgres/PG160010.\");\n     }\n+    snapshot.source.identity = identity;\n     await source.query(\"BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY\");\n     sourceTransactionOpen = true;\n     const txMode = await one<{ transaction_read_only: string }>(\n       source, \"SHOW transaction_read_only\", [], \"Verifying read-only source transaction\",\n     );\n     if (txMode.transaction_read_only !== \"on\") throw new Error(\"Source transaction is not read-only.\");\n-    if (baseCatalogScope || e1ApprovedScope) {\n-      const clients = await one<{ count: number }>(\n-        source,\n-        \"SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND pid<>pg_backend_pid() AND backend_type='client backend'\",\n-        [],\n-        \"Verifying paused source before catalog backup\",\n-      );\n-      if (clients.count !== 0) throw new Error(\"Other source clients are connected; catalog backup blocked.\");\n-    }\n     const exported = await one<{ snapshot: string }>(\n       source, \"SELECT pg_export_snapshot() AS snapshot\", [], \"Exporting source snapshot\",\n     );\n@@ -1184,7 +1106,7 @@ async function main(): Promise<void> {\n       includesOwnership: true,\n     };\n     await writePrivate(sourcePath, snapshot);\n-    if (e10OperationalScope && snapshot.source.sequenceChangedDuringDump) {\n+    if (snapshot.source.sequenceChangedDuringDump) {\n       throw new Error(\"Sequence state changed during the source snapshot/backup window.\");\n     }\n     if (sourceTransactionOpen) {\n@@ -1219,6 +1141,18 @@ async function main(): Promise<void> {\n     sourceProvenance: snapshot.sourceProvenance,\n     sourceDatabase: snapshot.source.database.database_name ?? \"unknown\",\n     sourceServerVersion: snapshot.source.database.server_version ?? \"unknown\",\n+    sourceIdentity: snapshot.source.identity,\n+    otherClientBackendsBeforeSnapshot: snapshot.source.otherClientBackendsBeforeSnapshot,\n+    authorization: {\n+      file: APPROVAL,\n+      sha256: APPROVAL_SHA256,\n+      exactHashMatched: true,\n+      e2ClosedTextRequired: true,\n+      drivePrerequisiteTextRequired: true,\n+    },\n+    invocation: snapshot.sourceProvenance.invocation,\n+    operatorDiffFromOriginal: snapshot.sourceProvenance.operatorDiffFromOriginal,\n+    metadataPath,\n     restore: metadata,\n     comparison,\n     sourceMutationPolicy: {\n@@ -1228,17 +1162,20 @@ async function main(): Promise<void> {\n       purgeExecuted: false,\n       driveExecuted: false,\n       apiRestarted: false,\n-      apiAllowedToRemainActive: e10OperationalScope,\n+      otherClientBackendsRequiredBeforeSnapshot: 0,\n       identitySeeded: false,\n       restoreSuperuser: LOCAL_SUPERUSER,\n       disposableClusterKeptAlive: clusterStarted,\n+      disposableClusterRetentionPurpose: [\n+        \"later Drive redownload-restore comparison\",\n+        \"later B0 comparison\",\n+      ],\n+      disposableClusterMustNotBePurged: true,\n     },\n     allTablesAndRowsIncluded: true,\n     tableDataExclusions: [],\n     applicationUsersCreated: 0,\n     applicationSessionsCreated: 0,\n-    apiPoolIdentityEvidence: snapshot.source.apiPoolIdentityEvidence ?? null,\n-    apiPoolIdentityMatched: snapshot.source.apiPoolIdentityMatched ?? false,\n     failure,\n   };\n   await writePrivate(metadataPath, publicMetadata);\n@@ -1269,7 +1206,7 @@ if (mainModulePath === fileURLToPath(import.meta.url)) {\n   await main().catch((error: unknown) => {\n     // The detailed sanitized report is written by main.  Keep process output\n     // terse and never print DATABASE_URL or child process diagnostics.\n-    console.error(`Prompt H Block 2 failed: ${error instanceof Error ? error.message : \"unknown failure\"}`);\n+    console.error(`E2 release backup failed: ${error instanceof Error ? error.message : \"unknown failure\"}`);\n     process.exitCode = 1;\n   });\n }\n\\ No newline at end of file\n",
+  "metadataPath": "/home/runner/workspace/reports/e2-liberacion-20260922/e2-backup-restore-20260922-metadata.json",
+  "restore": {
+    "clusterDirectory": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/restore-cluster",
+    "socketDirectory": "/tmp/e2-release-backup-20260922-20260922090513-1888-1888",
+    "superuserRole": "postgres",
+    "unixSocketOnlyVerified": true,
+    "database": "e2_restore_disposable_20260922090513-1888",
+    "adminDatabase": "e2_restore_admin_20260922090513-1888",
+    "adminConnectionCommand": "PGHOST=\"/tmp/e2-release-backup-20260922-20260922090513-1888-1888\" \"/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin/psql\" --no-psqlrc --no-password --dbname=\"e2_restore_admin_20260922090513-1888\"",
+    "restoredConnectionCommand": "PGHOST=\"/tmp/e2-release-backup-20260922-20260922090513-1888-1888\" \"/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin/psql\" --no-psqlrc --no-password --dbname=\"e2_restore_disposable_20260922090513-1888\"",
+    "postgresBinaryDirectory": "/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin",
+    "sourceDatabase": "heliumdb",
+    "sourceOwner": "postgres",
+    "restoredOwner": "postgres",
+    "restoreExitCode": 0
+  },
+  "comparison": {
+    "status": "PASS",
+    "databaseMetadataMatched": true,
+    "categories": {
+      "tables": [],
+      "columns": [],
+      "constraints": [],
+      "indexes": [],
+      "functions": [],
+      "triggers": [],
+      "sequences": [],
+      "tableCountsAndCanonicalRowHashes": [],
+      "sequenceStateAfterDump": []
+    },
+    "dynamicTableCount": 69,
+    "restoredTableCount": 69,
+    "sourceTriggerCount": 34,
+    "restoredTriggerCount": 34,
+    "allNoninternalTriggerEnabledStatesCompared": true,
+    "sequenceChangedDuringDump": false,
+    "sourceSequenceStateBeforeDump": [
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_credito_id_seq",
+        "last_value": "9"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+        "last_value": "18"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_faltante_reactivaciones_id_seq",
+        "last_value": "5"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_id_seq",
+        "last_value": "4188"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_sobrante_decisiones_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditorias_inventario_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "autorizaciones_nota_id_seq",
+        "last_value": "8"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "camionetas_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "choferes_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cliente_documentos_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "clientes_id_seq",
+        "last_value": "7"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedor_lineas_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_folio_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cuadre_fiscal_registros_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "entradas_id_seq",
+        "last_value": "434"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "equipos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "fondo_movimientos_ordinal_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_credito_id_seq",
+        "last_value": "54"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_id_seq",
+        "last_value": "6906"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_credito_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_sistema_id_seq",
+        "last_value": "42"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pagos_proveedor_id_seq",
+        "last_value": "452"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_rol_id_seq",
+        "last_value": "34004"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_ubicacion_id_seq",
+        "last_value": "9828"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_usuario_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pisos_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "precio_historial_id_seq",
+        "last_value": "1016"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "productos_id_seq",
+        "last_value": "2077"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "proveedores_id_seq",
+        "last_value": "225"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "reimpresiones_etiqueta_id_seq",
+        "last_value": "170"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "revisiones_etiqueta_id_seq",
+        "last_value": "31"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "rollos_id_seq",
+        "last_value": "5803"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_lineas_id_seq",
+        "last_value": "28"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_rollos_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_dinero_caja_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_id_seq",
+        "last_value": "26"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "sesiones_caja_id_seq",
+        "last_value": "44"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "solicitudes_pago_dirigido_id_seq",
+        "last_value": "1"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimo_episodios_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimos_id_seq",
+        "last_value": "3"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_linea_consumos_id_seq",
+        "last_value": "32"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_lineas_id_seq",
+        "last_value": "365"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_pagos_id_seq",
+        "last_value": "89"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "tickets_id_seq",
+        "last_value": "107"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ubicaciones_id_seq",
+        "last_value": "834"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "usuarios_id_seq",
+        "last_value": "233"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "viajes_id_seq",
+        "last_value": null
+      }
+    ],
+    "sourceSequenceStateAfterDump": [
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_credito_id_seq",
+        "last_value": "9"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+        "last_value": "18"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_faltante_reactivaciones_id_seq",
+        "last_value": "5"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_id_seq",
+        "last_value": "4188"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_sobrante_decisiones_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditorias_inventario_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "autorizaciones_nota_id_seq",
+        "last_value": "8"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "camionetas_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "choferes_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cliente_documentos_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "clientes_id_seq",
+        "last_value": "7"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedor_lineas_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_folio_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cuadre_fiscal_registros_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "entradas_id_seq",
+        "last_value": "434"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "equipos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "fondo_movimientos_ordinal_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_credito_id_seq",
+        "last_value": "54"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_id_seq",
+        "last_value": "6906"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_credito_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_sistema_id_seq",
+        "last_value": "42"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pagos_proveedor_id_seq",
+        "last_value": "452"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_rol_id_seq",
+        "last_value": "34004"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_ubicacion_id_seq",
+        "last_value": "9828"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_usuario_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pisos_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "precio_historial_id_seq",
+        "last_value": "1016"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "productos_id_seq",
+        "last_value": "2077"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "proveedores_id_seq",
+        "last_value": "225"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "reimpresiones_etiqueta_id_seq",
+        "last_value": "170"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "revisiones_etiqueta_id_seq",
+        "last_value": "31"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "rollos_id_seq",
+        "last_value": "5803"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_lineas_id_seq",
+        "last_value": "28"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_rollos_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_dinero_caja_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_id_seq",
+        "last_value": "26"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "sesiones_caja_id_seq",
+        "last_value": "44"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "solicitudes_pago_dirigido_id_seq",
+        "last_value": "1"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimo_episodios_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimos_id_seq",
+        "last_value": "3"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_linea_consumos_id_seq",
+        "last_value": "32"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_lineas_id_seq",
+        "last_value": "365"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_pagos_id_seq",
+        "last_value": "89"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "tickets_id_seq",
+        "last_value": "107"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ubicaciones_id_seq",
+        "last_value": "834"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "usuarios_id_seq",
+        "last_value": "233"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "viajes_id_seq",
+        "last_value": null
+      }
+    ],
+    "restoredSequenceState": [
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_credito_id_seq",
+        "last_value": "9"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "aplicaciones_pago_proveedor_id_seq",
+        "last_value": "18"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_faltante_reactivaciones_id_seq",
+        "last_value": "5"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_id_seq",
+        "last_value": "4188"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditoria_sobrante_decisiones_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "auditorias_inventario_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "autorizaciones_nota_id_seq",
+        "last_value": "8"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "camionetas_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "choferes_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cliente_documentos_id_seq",
+        "last_value": "4"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "clientes_id_seq",
+        "last_value": "7"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedor_lineas_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_folio_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "contenedores_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "cuadre_fiscal_registros_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "entradas_id_seq",
+        "last_value": "434"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "equipos_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "fondo_movimientos_ordinal_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_credito_id_seq",
+        "last_value": "54"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "movimientos_id_seq",
+        "last_value": "6906"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_credito_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "notificaciones_sistema_id_seq",
+        "last_value": "42"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pagos_proveedor_id_seq",
+        "last_value": "452"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_rol_id_seq",
+        "last_value": "34004"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_ubicacion_id_seq",
+        "last_value": "9828"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "permisos_usuario_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "pisos_id_seq",
+        "last_value": "2"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "precio_historial_id_seq",
+        "last_value": "1016"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "productos_id_seq",
+        "last_value": "2077"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "proveedores_id_seq",
+        "last_value": "225"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "reimpresiones_etiqueta_id_seq",
+        "last_value": "170"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "revisiones_etiqueta_id_seq",
+        "last_value": "31"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "rollos_id_seq",
+        "last_value": "5803"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_lineas_id_seq",
+        "last_value": "28"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salida_rollos_id_seq",
+        "last_value": "125"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_dinero_caja_id_seq",
+        "last_value": null
+      },
+      {
+        "schema": "public",
+        "sequence_name": "salidas_id_seq",
+        "last_value": "26"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "sesiones_caja_id_seq",
+        "last_value": "44"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "solicitudes_pago_dirigido_id_seq",
+        "last_value": "1"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimo_episodios_id_seq",
+        "last_value": "10"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "stock_minimos_id_seq",
+        "last_value": "3"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_linea_consumos_id_seq",
+        "last_value": "32"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_lineas_id_seq",
+        "last_value": "365"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ticket_pagos_id_seq",
+        "last_value": "89"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "tickets_id_seq",
+        "last_value": "107"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "ubicaciones_id_seq",
+        "last_value": "834"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "usuarios_id_seq",
+        "last_value": "233"
+      },
+      {
+        "schema": "public",
+        "sequence_name": "viajes_id_seq",
+        "last_value": null
+      }
+    ]
+  },
+  "sourceMutationPolicy": {
+    "sourceTransaction": "REPEATABLE READ READ ONLY",
+    "sourceWrites": false,
+    "preflightExecuted": false,
+    "purgeExecuted": false,
+    "driveExecuted": false,
+    "apiRestarted": false,
+    "otherClientBackendsRequiredBeforeSnapshot": 0,
+    "identitySeeded": false,
+    "restoreSuperuser": "postgres",
+    "disposableClusterKeptAlive": true,
+    "disposableClusterRetentionPurpose": [
+      "later Drive redownload-restore comparison",
+      "later B0 comparison"
+    ],
+    "disposableClusterMustNotBePurged": true
+  },
+  "allTablesAndRowsIncluded": true,
+  "tableDataExclusions": [],
+  "applicationUsersCreated": 0,
+  "applicationSessionsCreated": 0,
+  "failure": null
+}

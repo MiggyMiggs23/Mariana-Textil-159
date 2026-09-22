@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "at": "2026-09-22T15:06:25.464Z",
+  "folder": {
+    "id": "1zRywlS_Q1t4TRUTZ00Y7EGcSjCeyPmeu",
+    "name": "Mariana Textil — E2 CLOSED respaldo 2026-09-22",
+    "webViewLink": "https://drive.google.com/drive/folders/1zRywlS_Q1t4TRUTZ00Y7EGcSjCeyPmeu"
+  },
+  "file": {
+    "id": "1axX9PuTdeVoQbceX_l0CVDA6z1OOSsvc",
+    "name": "e2-release-backup-20260922-20260922090513-1888.dump",
+    "trashed": false,
+    "webViewLink": "https://drive.google.com/file/d/1axX9PuTdeVoQbceX_l0CVDA6z1OOSsvc/view?usp=drivesdk",
+    "md5Checksum": "4c4461e52e877e4f7f986487d4f8f8d0",
+    "sha256Checksum": "fbd7fd4bbbc1b2411ab8c7c40ad40047c552d3388ff8697a49f21a6cd7b649f6",
+    "size": "522472"
+  },
+  "permissions": {
+    "1zRywlS_Q1t4TRUTZ00Y7EGcSjCeyPmeu": [
+      {
+        "id": "02938770931288994627",
+        "type": "user",
+        "role": "owner"
+      }
+    ],
+    "1axX9PuTdeVoQbceX_l0CVDA6z1OOSsvc": [
+      {
+        "id": "02938770931288994627",
+        "type": "user",
+        "role": "owner"
+      }
+    ]
+  },
+  "sourceSha256": "fbd7fd4bbbc1b2411ab8c7c40ad40047c552d3388ff8697a49f21a6cd7b649f6",
+  "downloadedSha256": "fbd7fd4bbbc1b2411ab8c7c40ad40047c552d3388ff8697a49f21a6cd7b649f6",
+  "hashesMatch": true,
+  "privatePermissionsVerified": true,
+  "sizeBytes": 522472,
+  "downloadedPath": "/home/runner/workspace/.local/backups/e2-release-backup-20260922-20260922090513-1888/drive-redownload.dump",
+  "restoreOfDownloadedFile": "PENDING"
+}

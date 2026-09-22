@@ -1,0 +1,12 @@
+[
+  {
+    "command": "cd /home/runner/workspace && test \"$(sha256sum reports/e2-apertura-limitada/reconstruccion/runtime-preflight.mjs | cut -d' ' -f1)\" = 9a87b47b52d3776b10d760bdab6b9f5e71158f75ef71921ec8adbb3e0585de9f && test \"$(sha256sum artifacts/api-server/dist/index.mjs | cut -d' ' -f1)\" = 3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98 && export API_INSPECTION_BOOT=1 NODE_ENV=development && node reports/e2-apertura-limitada/reconstruccion/runtime-preflight.mjs && test \"$(sha256sum artifacts/api-server/dist/index.mjs | cut -d' ' -f1)\" = 3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98 && exec node --enable-source-maps artifacts/api-server/dist/index.mjs",
+    "name": "artifacts/api-server: API Server",
+    "state": "running"
+  },
+  {
+    "command": "pnpm --filter @workspace/mariana-textil run dev",
+    "name": "artifacts/mariana-textil: web",
+    "state": "running"
+  }
+]

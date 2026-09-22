@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-22T15:12:39.614Z",
+  "sqlSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
+  "lockTimeout": "2s",
+  "statementTimeout": "60s",
+  "onErrorStop": true,
+  "attempt": 1
+}

@@ -1921,3 +1921,17 @@ mtime_ms = 1790085812107
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/043fe8f5-f853-4cc8-8493-476f7d24f985/b3a1eea1-fed3-4b33-85e3-1c89f43adbb4"
 storage_version_token = "1790085841755343"
 content_type = "text/plain"
+
+[[outputs]]
+id = "VLpytlt5ANn5zA1PUVKjS"
+uri = "file://reports/e2-liberacion-20260922/resultado.md"
+type = "text"
+title = "E2 CLOSED — informe de liberación"
+description = "Resultados del respaldo y restauración desde Drive, aplicación A+C, arranque único, preservación de datos y primer cierre pendiente del propietario."
+logical_id = "ad059090-4588-4d6b-9914-0a5210fd84a4"
+content_hash = "sha256:b27b516b4afe567aa6825875d1b860fda587dc172d2ad25f591625df1927e641"
+size = 6131
+mtime_ms = 1790090263743
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/ad059090-4588-4d6b-9914-0a5210fd84a4/9abff100-97f2-4643-8bfa-fc884229ca05"
+storage_version_token = "1790090326222907"
+content_type = "text/markdown"

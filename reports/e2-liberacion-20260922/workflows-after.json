@@ -1,0 +1,12 @@
+[
+  {
+    "command": "cd /home/runner/workspace && exec strace -f -e trace=openat -o /home/runner/workspace/reports/e2-liberacion-20260922/candidate-worker-open.trace bash reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh",
+    "name": "artifacts/api-server: API Server",
+    "state": "running"
+  },
+  {
+    "command": "pnpm --filter @workspace/mariana-textil run dev",
+    "name": "artifacts/mariana-textil: web",
+    "state": "running"
+  }
+]
