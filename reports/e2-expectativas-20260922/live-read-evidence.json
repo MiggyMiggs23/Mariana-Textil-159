@@ -1,0 +1,11 @@
+{
+  "capturedAt": "2026-09-22T13:59:10.992Z",
+  "pid": 185,
+  "startTicks": "4972",
+  "source": "Unique retained API process connection; no credentials persisted",
+  "querySha256": "a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea",
+  "transaction": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; ROLLBACK",
+  "defaultTransactionReadOnly": true,
+  "schemaSha256": "37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8",
+  "attributesSha256": "c08c02eae60d61c611ff4ce3cb5854a4cb117a7a015ee8d50a0618eb4264626b"
+}

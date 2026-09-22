@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-22T13:59:25.822Z",
+  "successful": true,
+  "protectedFilesUnchanged": true,
+  "protectedFileCount": 183,
+  "apiPid": 185,
+  "apiStartTicksUnchanged": true,
+  "apiRestarts": 0,
+  "workflowActions": 0,
+  "liveDDL": 0,
+  "exportRemoved": true,
+  "disposableCleanup": "verified in preflight/preflight-results.json"
+}

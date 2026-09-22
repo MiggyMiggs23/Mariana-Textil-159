@@ -1907,3 +1907,17 @@ mtime_ms = 1790015051372
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0f050770-7b14-4eae-9441-3b8dd9403af1/fe75363b-947d-45a6-9506-fc4f3be1a4fe"
 storage_version_token = "1790015343958048"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "wvuAg9G48UYPEbaqMBnfk"
+uri = "file://reports/e2-expectativas-20260922/fase-b-20260922.txt"
+type = "text"
+title = "Fase B — texto actualizado para pegar"
+description = "Texto completo fechado el 22 de septiembre de 2026, con hashes actualizados y comienzo a partir del momento en que el propietario pegue el texto. Preparado; liberación no ejecutada."
+logical_id = "043fe8f5-f853-4cc8-8493-476f7d24f985"
+content_hash = "sha256:bebffab397fe3bbfcde692df1f5e9c0e21ddbc87d852921e466832a5c4f95d15"
+size = 6467
+mtime_ms = 1790085812107
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/043fe8f5-f853-4cc8-8493-476f7d24f985/b3a1eea1-fed3-4b33-85e3-1c89f43adbb4"
+storage_version_token = "1790085841755343"
+content_type = "text/plain"

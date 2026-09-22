@@ -99,19 +99,19 @@
     "artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a",
     "reports/e2-paquete-liberacion-preparado-20260921/release-preflight.mjs": "463287fb115c59c0cec4654a264f13a75e0ddd6c9d3adcd7db42047435df9139",
     "reports/e2-paquete-liberacion-preparado-20260921/release-catalog.sql": "a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea",
-    "reports/e2-paquete-liberacion-preparado-20260921/release-expected.json": "dc6df26888aae04eee23ffe24afc2edeb8c9eb4d8b8470c896c33f10cdba02de",
+    "reports/e2-paquete-liberacion-preparado-20260921/release-expected.json": "990c85fdd6251d6d0f55b62bb0f9a2b4afb3c3fe35468dc12ea6ec8708077ca6",
     "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit-record.mjs": "167f1c342f91e79e16686937844b44856bec7dec3606cba09bb5e19fdb228f98",
     "reports/e2-paquete-liberacion-preparado-20260921/sql/01-install-evidence-prepared.sql": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c",
     "reports/e2-paquete-liberacion-preparado-20260921/sql/02-revert-before-capture-only.sql": "0f5952b874bb9fead4f782b9b169636564d302f00f20d5e4bf135896c9b32b3c",
     "reports/e2-paquete-liberacion-preparado-20260921/sql/03-preflight-schema-prepared.sql": "b368c7239f83b088d1fa5c30d1c1d0dd08538842d18a694315bd88b7f1e5980c",
-    "reports/e2-paquete-liberacion-preparado-20260921/release-assets.sha256": "9bd719c5faea69c903d53cdbed306fbf65d8763140a616f34c791d514e85a230",
-    "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh": "48f1f785121778352ddcf71301901f1287c1496c37c4078b92794d62df681654"
+    "reports/e2-paquete-liberacion-preparado-20260921/release-assets.sha256": "2f62ecdcd6e2127f8724e42fbb0a1e81205479219ed1ccd69eef7dc5f1798be1",
+    "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh": "58ffd38c057f40ef4fbe9b8f50cad20aadfc4a3612e2060184c81f4b5ef7480f"
   },
   "checks": {
     "rootTypecheck": "PASS after runtime fix, all selected packages, zero errors",
     "offline": "119/119 PASS after runtime fix",
-    "wrapper": "Current 2026-09-22: 9/9 PASS after authorized literal hash repin; exact final wrapper also rejects altered inventory before preflight/exec.",
-    "preflight": "Current 2026-09-22: 24/24 disposable checks PASS; fresh READ ONLY live B0 reproduced exactly; exact A+C B1 preserves enums/ALWAYS. No new API startup.",
+    "wrapper": "9/9 PASS after hash repin; symlink CLI regression also PASS",
+    "preflight": "20 independent disposable PostgreSQL checks PASS plus actual startup positive proof",
     "candidateHealthAndWorkers": "PASS corrected candidate: healthz 200, real workers loaded",
     "wholeReleaseJourney": "PREPARATION PASS; no operational release, backup, SQL or first close executed",
     "runtimeImportRegression": "Actual uncorrected source FAIL (exit 1), corrected source PASS (exit 0); lazy-import/listen-before-preflight/writer/initializer mutants rejected",
@@ -325,34 +325,7 @@
     "reports/e2-paquete-liberacion-preparado-20260921/verificacion-cinco-pruebas/runtime-source-integrity.json": "28616ef9534b3f73b848d46812707576883e812f19211e07dbd82d1fb5011d4f",
     "reports/e2-paquete-liberacion-preparado-20260921/verificacion-cinco-pruebas/same-hash.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
     "reports/e2-paquete-liberacion-preparado-20260921/verificacion-cinco-pruebas/typecheck-same-path.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
-    "reports/e2-paquete-liberacion-preparado-20260921/verificacion-cinco-pruebas/typecheck-same-path.log": "3bf1f831e433b1dd2bfedc0bc8f2e4b387f6ef8f06a09507346fa916692a8162",
-    "reports/e2-expectativas-20260922/accepted-live-B0-fixture.sql": "3034b8f9bd7e0e5e174f37270bb8c79468fbfd4d48b709dccea9600fdbce85f7",
-    "reports/e2-expectativas-20260922/autorizacion-ampliada-del-propietario.txt": "0cb20918123a5946fd21b91c1e49f0c946a3a066643a634621701b631b3d1170",
-    "reports/e2-expectativas-20260922/bloqueo-wrapper.md": "255b1cb82e891505136ce2e93deff46014f6351808c83161acc222e14228df71",
-    "reports/e2-expectativas-20260922/catalog-B0-live.json": "442bbbcf32e534df4e51d05579925b57b3da4572880c3ae5c83cfdee70dc5be9",
-    "reports/e2-expectativas-20260922/fase-b-anterior-conservada.md": "0e357669df2f2809ceb645ccc57e735022e37e9c268f122666a7b8d90f1c0cbc",
-    "reports/e2-expectativas-20260922/finalize-package.mjs": "a945e8bd46d0ada645795c20b42f7e78e4ece00b6086b51bf243f4f09efa4bbe",
-    "reports/e2-expectativas-20260922/isolated-validator-used.mjs.txt": "68189fc267c0b0eebd43b76e5d4c4f64b0bb7897823c632b544775861a685421",
-    "reports/e2-expectativas-20260922/live-read-evidence.json": "e613c2155ffd4716729e78fd13b29ada02a30946461e3b3c0e1670daa3e650c6",
-    "reports/e2-expectativas-20260922/manifest-anterior-conservado.json": "607ea898de8cadcf86a5811e61ccef27c2829f83018f50bd296f174c4b25e14d",
-    "reports/e2-expectativas-20260922/preflight/catalog-B0.json": "4bb0f17122536f64e580dd7e7533a9534f2452cb2ad916a4e6524b9b107a3830",
-    "reports/e2-expectativas-20260922/preflight/catalog-B1.json": "4714592ea7172e546f88a6c40629cdd48f4ee03672b8deea3051e96d0bfd90bb",
-    "reports/e2-expectativas-20260922/preflight/fresh-database-identity.json": "1a4b0fec14dc5b7218eff6d2f40c50f4d2eafccc38dcede519a419cacde8280c",
-    "reports/e2-expectativas-20260922/preflight/preflight-cli-symlink.log": "3436cd087aba75a4f1172391b936c0782c3696613e7b7bc1d7acb5b6907890ea",
-    "reports/e2-expectativas-20260922/preflight/preflight-cli.log": "3436cd087aba75a4f1172391b936c0782c3696613e7b7bc1d7acb5b6907890ea",
-    "reports/e2-expectativas-20260922/preflight/preflight-results.json": "51b1570beb1843c397ffc807aac31eb5116cb5424118ee884d2fdd7c6e58e67e",
-    "reports/e2-expectativas-20260922/preflight-validation.log": "51b1570beb1843c397ffc807aac31eb5116cb5424118ee884d2fdd7c6e58e67e",
-    "reports/e2-expectativas-20260922/preservation-and-cleanup.json": "397a6fdaa0ecf02835c36ccdca450a5a760dc268c1a8da901d9efe134780f8e6",
-    "reports/e2-expectativas-20260922/projected-B1-accepted-differences.json": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
-    "reports/e2-expectativas-20260922/protected-before.json": "8fe70925c53cd24dd67f6749773006b0cd013f8b53c7fba7279e9f359ad133a0",
-    "reports/e2-expectativas-20260922/regenerate.mjs": "4fc908ea22996d1573e50cc935a6c5f6167cada61a3a50e04904dec0a421f412",
-    "reports/e2-expectativas-20260922/release-expected.validated.json": "dc6df26888aae04eee23ffe24afc2edeb8c9eb4d8b8470c896c33f10cdba02de",
-    "reports/e2-expectativas-20260922/resultado.md": "8ccd7df29b396c03288239c16f2b56bcab5634cb3e1451bf033e418cb46ab3d0",
-    "reports/e2-expectativas-20260922/scope-preservation.json": "9f0022832344d40a675c50f7927f20c0f079236f407752732ca9d0c03f9de31a",
-    "reports/e2-expectativas-20260922/verify-wrapper.mjs": "c2a0edc229aa3951bf1aea9f84fb0ca0685ca2de9689c6c23e839f5cddd832d6",
-    "reports/e2-expectativas-20260922/wrapper-9-tests.tap": "7930caa2d536706c0bf34621ce6dd78fd6158cf663d9496519a9665ff9ceeb3a",
-    "reports/e2-expectativas-20260922/wrapper-first-run-default-reporter.log": "aeb33528e75c5f2250387712a2a10e86836597a96f021e7fa99a6cb5ff558319",
-    "reports/e2-expectativas-20260922/wrapper-verification.json": "0f64e706a705b1fd5677bae77dcb1ae05fc166bb9bbd7f472d921d3a823c28e2"
+    "reports/e2-paquete-liberacion-preparado-20260921/verificacion-cinco-pruebas/typecheck-same-path.log": "3bf1f831e433b1dd2bfedc0bc8f2e4b387f6ef8f06a09507346fa916692a8162"
   },
   "packageSupportFiles": {
     "reports/e2-paquete-liberacion-preparado-20260921/README.md": "d596b06def8a2d58cdf8fc8606382f735a9814ee3d5b675c5c6bef5eac285646",
@@ -379,44 +352,15 @@
     "reports/e2-paquete-liberacion-preparado-20260921/release-wrapper.test.mjs": "a4235a580654dd8f80e2d6d6b002063db538d4024ff95d1e5d0d6e129e215ac8",
     "reports/e2-paquete-liberacion-preparado-20260921/preflight-cli-regression.test.mjs": "741324a34b9f2973ee4631ac71db62c47cb07b57f92b570c7b4d8a281bfd998a",
     "reports/e2-paquete-liberacion-preparado-20260921/no-db-manifest.txt": "649df5a2931f07971b5dfe4194b03bf9efb2d62afc2c74c9e2709a6edcfb90b6",
-    "reports/e2-paquete-liberacion-preparado-20260921/anexos/clasificacion-arrastre.json": "662b71a721df91ff4af90f0b1d68c23d9a22e6e4e6f8f31c5d9e11555ce3018d",
-    "reports/e2-paquete-liberacion-preparado-20260921/autorizacion-regenerar-expectativas-b0-b1.txt": "b643d45659809d40b8f2899e3baa2524862683334caa461e8d49be8a709a1acb",
-    "reports/e2-paquete-liberacion-preparado-20260921/autorizacion-diagnostico-b0-solo-lectura.txt": "6f6ac98959aeb22c091e44b3be4b1fd440c57908b4a5b0c1439d768b3a90fc16"
+    "reports/e2-paquete-liberacion-preparado-20260921/anexos/clasificacion-arrastre.json": "662b71a721df91ff4af90f0b1d68c23d9a22e6e4e6f8f31c5d9e11555ce3018d"
   },
   "authorizationDraft": {
     "path": "reports/e2-paquete-liberacion-preparado-20260921/09-fase-b-texto.md",
     "status": "PREPARED_NOT_GRANTED",
-    "blankFields": [],
-    "integrity": "Draft references this final manifest hash; its own hash is in package-integrity.sha256 to avoid a circular dependency.",
-    "date": "2026-09-22",
-    "time": "a partir del momento en que el propietario pegue el texto"
+    "blankFields": [
+      "window hour"
+    ],
+    "integrity": "Draft references this final manifest hash; its own hash is in package-integrity.sha256 to avoid a circular dependency."
   },
-  "packageIntegrity": "package-integrity.sha256 covers prior inventory, all package files, 2026-09-22 regeneration evidence and final phase-B text; excludes only itself.",
-  "expectationsRegeneration": {
-    "date": "2026-09-22",
-    "status": "VALIDATED_NOT_RELEASED",
-    "expectations": {
-      "source": "31804125a1e752bde128d72e9fd44d23972ffff1",
-      "basis": "Fresh READ ONLY catalog from the retained API database accepted as B0 on 2026-09-22; identical empty reconstruction plus exact approved A+C SQL defines B1. Preserves live enums and ALWAYS trigger. Evidence: reports/e2-expectativas-20260922/.",
-      "identity": {
-        "database": "heliumdb",
-        "databaseOid": "16384",
-        "schema": "public",
-        "role": "postgres",
-        "serverVersionNum": "160010"
-      },
-      "baseSchemaSha256": "37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8",
-      "baseAttributesSha256": "c08c02eae60d61c611ff4ce3cb5854a4cb117a7a015ee8d50a0618eb4264626b",
-      "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
-      "attributesSha256": "597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665",
-      "installSha256": "3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c"
-    },
-    "evidenceDirectory": "reports/e2-expectativas-20260922",
-    "authorization": "reports/e2-expectativas-20260922/autorizacion-ampliada-del-propietario.txt",
-    "liveCatalog": "reports/e2-expectativas-20260922/catalog-B0-live.json",
-    "disposableB1": "reports/e2-expectativas-20260922/preflight/catalog-B1.json",
-    "wrapperProof": "reports/e2-expectativas-20260922/wrapper-verification.json",
-    "historicalEvidenceNotice": "All pre-existing actualStartup, control/candidate startup, preflightFix, historicalFirstFailedStartup and verificacion* records remain historical and unchanged. No current API startup was authorized or performed. Prior hash references in historical records are not current expectations.",
-    "scope": "Expectations and derived hashes only; wrapper literal pin only; no bundle, SQL, preflight logic, workflow, API restart or live write."
-  }
+  "packageIntegrity": "package-integrity.sha256 covers final manifest, phase B, all package files, permanent candidate and control outputs; excludes only itself."
 }

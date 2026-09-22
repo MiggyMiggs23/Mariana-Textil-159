@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-22T14:03:31.908Z",
+  "onlyAuthorizedPackagePaths": [
+    "reports/e2-paquete-liberacion-preparado-20260921/release-expected.json",
+    "reports/e2-paquete-liberacion-preparado-20260921/release-assets.sha256",
+    "reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh",
+    "reports/e2-paquete-liberacion-preparado-20260921/manifest-final.json",
+    "reports/e2-paquete-liberacion-preparado-20260921/manifest-final.sha256",
+    "reports/e2-paquete-liberacion-preparado-20260921/package-integrity.sha256",
+    "reports/e2-paquete-liberacion-preparado-20260921/09-fase-b-texto.md"
+  ],
+  "allOtherProtectedFilesUnchanged": true,
+  "protectedFileCount": 183,
+  "assetsChange": "Only release-expected.json entry replaced",
+  "wrapperChange": "Only literal release-assets.sha256 hash replaced; byte-for-byte comparison passed",
+  "apiPid": 185,
+  "apiStartTicksUnchanged": true,
+  "apiRestarts": 0,
+  "workflowChanges": 0,
+  "liveSQLWrites": 0,
+  "originalPreflightLogicAndSQLUnchanged": true,
+  "bundlesUnchanged": true
+}

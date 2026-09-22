@@ -1,0 +1,39 @@
+{
+  "at": "2026-09-22T14:01:18.598Z",
+  "nineTests": {
+    "passed": 9,
+    "failed": 0,
+    "exit": 0
+  },
+  "intactAssetsCheckExit": 0,
+  "exactWrapperSha256": "48f1f785121778352ddcf71301901f1287c1496c37c4078b92794d62df681654",
+  "expectedInventorySha256": "9bd719c5faea69c903d53cdbed306fbf65d8763140a616f34c791d514e85a230",
+  "tamperedInventorySha256": "49f785f7cf31e28fdaf139830781f67d14bdfcd17cb4efc92e31a5bb230bca81",
+  "exactWrapperUnmodifiedInProbe": true,
+  "rejection": {
+    "exit": 1,
+    "stdout": "",
+    "audit": {
+      "utc": "2026-09-22T14:01:18.595Z",
+      "pid": 1299,
+      "pid_role": "startup_shell_no_api",
+      "api_exec_attempted": false,
+      "bundle_sha256": null,
+      "bundle_hash_error": "ENOENT",
+      "mode": {
+        "NODE_ENV": null,
+        "API_INSPECTION_BOOT": null
+      },
+      "preflight": {
+        "result": "not_run",
+        "exit_code": null
+      },
+      "stage": "release_hash_before",
+      "startup_exit_before_exec": 1
+    }
+  },
+  "databaseAccess": false,
+  "appStarted": false,
+  "isolation": "/tmp/e2-exact-wrapper-tamper-Inhkn7",
+  "isolationDestroyed": true
+}

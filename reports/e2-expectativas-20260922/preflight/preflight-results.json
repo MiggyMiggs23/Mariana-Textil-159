@@ -1,0 +1,106 @@
+[
+  {
+    "name": "fresh live B0 reproduced exactly BEFORE A+C",
+    "result": "PASS"
+  },
+  {
+    "name": "archived B0 complete catalog reproduced",
+    "result": "PASS"
+  },
+  {
+    "name": "exact approved install SQL",
+    "result": "PASS"
+  },
+  {
+    "name": "B1 differs from historical B1 only by the ten accepted B0 attributes",
+    "result": "PASS"
+  },
+  {
+    "name": "A+C preserves all B0 enums and ALWAYS trigger",
+    "result": "PASS"
+  },
+  {
+    "name": "full B1 positive",
+    "result": "PASS"
+  },
+  {
+    "name": "full B0 positive before SQL",
+    "result": "PASS"
+  },
+  {
+    "name": "A+C missing rejected",
+    "result": "PASS"
+  },
+  {
+    "name": "wrong identity rejected",
+    "result": "PASS"
+  },
+  {
+    "name": "non-readonly rejected",
+    "result": "PASS"
+  },
+  {
+    "name": "missing inspection rejected before connection",
+    "result": "PASS"
+  },
+  {
+    "name": "alternate PG settings cannot redirect runtime connection",
+    "result": "PASS"
+  },
+  {
+    "name": "E1 guard disabled rejected",
+    "result": "PASS"
+  },
+  {
+    "name": "E1 guard disabled restored",
+    "result": "PASS"
+  },
+  {
+    "name": "A+C stamp disabled rejected",
+    "result": "PASS"
+  },
+  {
+    "name": "A+C stamp disabled restored",
+    "result": "PASS"
+  },
+  {
+    "name": "unrelated table column drift rejected",
+    "result": "PASS"
+  },
+  {
+    "name": "unrelated table column drift restored",
+    "result": "PASS"
+  },
+  {
+    "name": "function execution privilege drift rejected",
+    "result": "PASS"
+  },
+  {
+    "name": "function execution privilege drift restored",
+    "result": "PASS"
+  },
+  {
+    "name": "prepared psql postflight",
+    "result": "PASS"
+  },
+  {
+    "name": "external preflight CLI B0 rejects B1",
+    "result": "PASS"
+  },
+  {
+    "name": "external preflight CLI on fresh B1",
+    "result": "PASS"
+  },
+  {
+    "name": "symlink CLI executes real fresh B1 checks",
+    "result": "PASS"
+  },
+  {
+    "name": "disposable PostgreSQL stopped",
+    "exit": 0
+  },
+  {
+    "name": "disposable PostgreSQL directory destroyed",
+    "absent": true
+  }
+]

@@ -1,15 +1,12 @@
 # Fase B — texto final preparado para autorización futura
 
-**Paquete con expectativas regeneradas y validado, no liberado. Este nuevo texto de autorización NO ha sido otorgado ni
-ejecutado.** Los ensayos de arranque de control y candidato son históricos; no se repitieron.
-El preflight pasó 24 comprobaciones desechables y el wrapper sus 9 pruebas más
-el rechazo del inventario alterado. No hay campos en blanco. El propietario
-debe pegar expresamente el texto siguiente para autorizar esta fase B.
-Se conservan todos los fallos y resultados previos como evidencia histórica.
+**Paquete validado, no liberado. Esta autorización NO ha sido otorgada ni
+ejecutada.** Control y candidato corregido pasaron el ensayo real. El único
+campo por completar es la hora; el propietario debe emitir expresamente el
+texto con esa hora. Los fallos previos permanecen como evidencia histórica.
 
-> Autorizo la liberación E2 CLOSED el martes 22 de septiembre de 2026,
-> a partir del momento en que el propietario pegue el texto,
-> hora local de Mariana, en una ventana sin escritores.
+> Autorizo la liberación E2 CLOSED el domingo 27 de septiembre de 2026,
+> a las ______, hora local de Mariana, en una ventana sin escritores.
 > La ventana dura hasta concluir todas las verificaciones o declarar aborto;
 > no reanudar escritores con una verificación fallida o incierta. Fijo
 > lock_timeout 2 s y statement_timeout 60 s para las sesiones DDL, con
@@ -24,7 +21,7 @@ Se conservan todos los fallos y resultados previos como evidencia histórica.
 >
 > Apruebo el manifiesto final
 > reports/e2-paquete-liberacion-preparado-20260921/manifest-final.json,
-> SHA-256 8e9ffc71872d16b0193b00d51aa1f4cd47458bef918057a0ef8529f3f34bb831.
+> SHA-256 607ea898de8cadcf86a5811e61ccef27c2829f83018f50bd296f174c4b25e14d.
 > Sus hashes fijan fuentes, outputs, SQL, preflight, logger y evidencia;
 > package-integrity.sha256 permite cotejar además el paquete completo y este
 > texto sin una dependencia circular entre sus hashes.
@@ -37,14 +34,6 @@ Se conservan todos los fallos y resultados previos como evidencia histórica.
 > El árbol base es 6337df3ae1dc67b8de91fabda3cbf73dd255cf59.
 > La corrección independiente de preflight/wrapper es
 > af48ed59696d34ab1f6d8c65df61c53a0f614f1f, con los hashes finales de abajo.
-> Acepto la regeneración de expectativas del 22 de septiembre de 2026:
-> B0 es el catálogo real leído en READ ONLY; B1 es ese mismo B0 más exactamente
-> A+C, validado en PostgreSQL desechable, sin alterar enums ni el trigger ALWAYS.
-> Solo cambian las expectativas y sus hashes derivados, incluida la entrada del
-> inventario y su hash literal en el wrapper; no su lógica ni sus controles.
-> La evidencia nueva está en reports/e2-expectativas-20260922/.
-> Los ensayos de arranque anteriores permanecen históricos; esta regeneración
-> no reinició la API ni modificó el workflow o la base real.
 > Se acepta el arrastre enumerado: E8, E6 y el atajo de cantidades por rollo
 > en Entradas. Remate, precio mínimo y borrado de producto permanecen apagados.
 > No se instala frontend ni se copia el workflow de la revisión fuente.
@@ -55,17 +44,17 @@ Se conservan todos los fallos y resultados previos como evidencia histórica.
 > No sobrescribir ni mover el dist retenido.
 > El manifiesto de todos los workers/mapas/fonts y entradas de preflight es
 > reports/e2-paquete-liberacion-preparado-20260921/release-assets.sha256,
-> SHA-256 9bd719c5faea69c903d53cdbed306fbf65d8763140a616f34c791d514e85a230.
+> SHA-256 2f62ecdcd6e2127f8724e42fbb0a1e81205479219ed1ccd69eef7dc5f1798be1.
 >
 > El wrapper será
 > reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh,
-> SHA-256 48f1f785121778352ddcf71301901f1287c1496c37c4078b92794d62df681654.
+> SHA-256 58ffd38c057f40ef4fbe9b8f50cad20aadfc4a3612e2060184c81f4b5ef7480f.
 > El preflight será release-preflight.mjs del mismo directorio,
 > SHA-256 463287fb115c59c0cec4654a264f13a75e0ddd6c9d3adcd7db42047435df9139,
 > con release-catalog.sql
 > a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea
 > y release-expected.json
-> dc6df26888aae04eee23ffe24afc2edeb8c9eb4d8b8470c896c33f10cdba02de.
+> 990c85fdd6251d6d0f55b62bb0f9a2b4afb3c3fe35468dc12ea6ec8708077ca6.
 > El registrador será api-start-audit-record.mjs,
 > SHA-256 167f1c342f91e79e16686937844b44856bec7dec3606cba09bb5e19fdb228f98.
 >
@@ -73,9 +62,7 @@ Se conservan todos los fallos y resultados previos como evidencia histórica.
 > PostgreSQL 160010, usando exactamente la DATABASE_URL del runtime aprobado.
 > Exijo preflight B0 antes de SQL y B1 después, sin aceptar por nombre solamente.
 > B0 catálogo: 37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8.
-> B0 atributos: c08c02eae60d61c611ff4ce3cb5854a4cb117a7a015ee8d50a0618eb4264626b.
 > B1 catálogo: 89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358.
-> B1 atributos: 597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665.
 > Si la identidad o cualquier expectativa no coincide, detener sin reparación.
 >
 > Antes del SQL, exijo respaldo completo verificado en Google Drive,

@@ -12,7 +12,7 @@ eb85ecec9468722c122087e54c9f5eaf2a1577e16e89de20103b51fd87a3bbb6  artifacts/api-
 e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a  artifacts/api-server/dist-e2-20260927/thread-stream-worker.mjs.map
 463287fb115c59c0cec4654a264f13a75e0ddd6c9d3adcd7db42047435df9139  reports/e2-paquete-liberacion-preparado-20260921/release-preflight.mjs
 a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea  reports/e2-paquete-liberacion-preparado-20260921/release-catalog.sql
-990c85fdd6251d6d0f55b62bb0f9a2b4afb3c3fe35468dc12ea6ec8708077ca6  reports/e2-paquete-liberacion-preparado-20260921/release-expected.json
+dc6df26888aae04eee23ffe24afc2edeb8c9eb4d8b8470c896c33f10cdba02de  reports/e2-paquete-liberacion-preparado-20260921/release-expected.json
 167f1c342f91e79e16686937844b44856bec7dec3606cba09bb5e19fdb228f98  reports/e2-paquete-liberacion-preparado-20260921/api-start-audit-record.mjs
 3360d2b7edea27342cc073a7d6f864690dfb677f73dd3a0d57de46a522120a7c  reports/e2-paquete-liberacion-preparado-20260921/sql/01-install-evidence-prepared.sql
 0f5952b874bb9fead4f782b9b169636564d302f00f20d5e4bf135896c9b32b3c  reports/e2-paquete-liberacion-preparado-20260921/sql/02-revert-before-capture-only.sql

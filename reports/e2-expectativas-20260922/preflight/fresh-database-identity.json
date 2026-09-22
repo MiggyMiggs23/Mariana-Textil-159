@@ -1,0 +1,15 @@
+{
+  "path": "/tmp/e2-release-pg-ZuwM2q",
+  "socket": "/tmp/e2-release-pg-ZuwM2q/socket",
+  "port": "55438",
+  "data": "/tmp/e2-release-pg-ZuwM2q/data",
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "containsBusinessRows": false,
+  "source": "empty metadata fixture, not clone"
+}

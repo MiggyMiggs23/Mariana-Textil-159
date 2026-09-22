@@ -11,7 +11,7 @@ record_attempt() {
 }
 trap 'rc=$?; record_attempt "$rc"' EXIT
 verify_hashes() {
-  test "$(sha256sum "$package/release-assets.sha256" | cut -d' ' -f1)" = 2f62ecdcd6e2127f8724e42fbb0a1e81205479219ed1ccd69eef7dc5f1798be1 || return 1
+  test "$(sha256sum "$package/release-assets.sha256" | cut -d' ' -f1)" = 9bd719c5faea69c903d53cdbed306fbf65d8763140a616f34c791d514e85a230 || return 1
   sha256sum --check --status "$package/release-assets.sha256"
 }
 verify_hashes || exit 1

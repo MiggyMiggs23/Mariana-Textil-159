@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: exec same PID, inspection mode, exact bundle hash and append log
+ok 1 - exec same PID, inspection mode, exact bundle hash and append log
+  ---
+  duration_ms: 233.565282
+  type: 'test'
+  ...
+# Subtest: preflight failure stays fatal with original exit
+ok 2 - preflight failure stays fatal with original exit
+  ---
+  duration_ms: 70.203695
+  type: 'test'
+  ...
+# Subtest: bundle hash failure prevents exec
+ok 3 - bundle hash failure prevents exec
+  ---
+  duration_ms: 44.644116
+  type: 'test'
+  ...
+# Subtest: preflight hash failure prevents exec
+ok 4 - preflight hash failure prevents exec
+  ---
+  duration_ms: 43.654129
+  type: 'test'
+  ...
+# Subtest: manifest hash failure prevents exec
+ok 5 - manifest hash failure prevents exec
+  ---
+  duration_ms: 42.542308
+  type: 'test'
+  ...
+# Subtest: missing hash failure prevents exec
+ok 6 - missing hash failure prevents exec
+  ---
+  duration_ms: 43.432461
+  type: 'test'
+  ...
+# Subtest: post-preflight bundle change blocks exec
+ok 7 - post-preflight bundle change blocks exec
+  ---
+  duration_ms: 82.976298
+  type: 'test'
+  ...
+# Subtest: append failure never blocks stub exec or masks fatal preflight
+ok 8 - append failure never blocks stub exec or masks fatal preflight
+  ---
+  duration_ms: 189.299069
+  type: 'test'
+  ...
+# Subtest: zero exit without positive preflight proof is fatal
+ok 9 - zero exit without positive preflight proof is fatal
+  ---
+  duration_ms: 100.119149
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 929.237217
