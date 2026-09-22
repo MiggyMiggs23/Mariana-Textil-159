@@ -1,0 +1,21 @@
+# Fuentes frontend E4 exactas para revisar/stagear por MAIN (no se hizo git add).
+package.json
+artifacts/mariana-textil/package.json
+artifacts/mariana-textil/src/components/e4-node.dom.test.tsx
+artifacts/mariana-textil/src/components/e4-node-test-harness.tsx
+artifacts/mariana-textil/src/components/salidas-dinero-e4-item.tsx
+artifacts/mariana-textil/src/components/salidas-dinero-e4-panel.tsx
+artifacts/mariana-textil/src/lib/e4-feature-flags.ts
+artifacts/mariana-textil/src/pages/cobros.tsx
+artifacts/mariana-textil/src/pages/corte-detail-shared.tsx
+
+# Reports/harness de este frente; conservar intentos rechazados y referencias.
+# Pathspecs glob para git add (entre comillas, no expansión de shell):
+:(glob)reports/tanda-b-20260922/e4/frontend-*
+:(glob)reports/tanda-b-20260922/e4/frontend-*/**
+:(glob)reports/tanda-b-20260922/e4/run-frontend-*
+:(glob)reports/tanda-b-20260922/e4/reference-vite-tests/**
+
+# Las cuatro rutas *.dom.test.tsx Vitest previas NO deben quedar en src.
+# Se movieron como *.tsx.reference, nunca se borró su contenido.
+# Esta lista no incorpora backend, codegen, SQL, replit.md ni .agents.

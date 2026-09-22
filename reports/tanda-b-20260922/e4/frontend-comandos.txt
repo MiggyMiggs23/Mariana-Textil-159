@@ -1,0 +1,21 @@
+# CONSOLIDADO 21/21 = 2 + 13 + 6. MAIN ya ejecutó; NO reanudar pruebas.
+# Comandos de reproducción futura únicamente (no son una nueva orden de ejecución):
+# Root: pnpm test:e4-cash-out
+# App: pnpm --filter @workspace/mariana-textil test:e4-cash-out
+# Ambos apuntan al runner Node seguro. Sólo 21 casos nativos activos.
+# La selección inferior de 6 ya finalizó y se conserva como trazabilidad.
+# ACTUAL: runner nativo seguro; sólo MAIN ejecuta.
+# Desde raíz:
+node reports/tanda-b-20260922/e4/run-frontend-node-mutants.mjs --ids E4-PARENT-COCO,E4-PARENT-CRUCES,E4-PARENT-VIEW,E4-PARENT-CREATE,E4-PARENT-OFF-COCO,E4-PARENT-OFF-MARIANA
+# Selección explícita de 6: no repite los 15 ciclos ya terminales.
+# MAIN typecheck frontend offline separado, sin emitir ni incremental:
+bash reports/tanda-b-20260922/e4/run-frontend-types.sh
+# IDs vacíos, duplicados, desconocidos u opciones adicionales abortan.
+# Un PASS_SELECTED_CASES no equivale a cierre total E4.
+# package test:e4-cash-out ahora apunta al runner nativo; sin --ids ejecuta 21.
+
+# HISTÓRICO RETIRADO / NO EJECUTAR / EVIDENCIA NO ACEPTADA:
+# Las líneas siguientes se conservan sólo como registro del enfoque abandonado.
+# Comandos anteriores para ejecutar las pruebas offline del frontend para E4
+cd artifacts/mariana-textil
+PORT=3000 BASE_PATH=/ pnpm exec vitest run src/components/salidas-dinero-e4-item.dom.test.tsx

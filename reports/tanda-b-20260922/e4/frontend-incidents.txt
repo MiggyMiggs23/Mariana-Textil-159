@@ -1,0 +1,40 @@
+E4 frontend — incidentes y consolidación (sin nuevas ejecuciones)
+
+1. Runner histórico mutaba fuentes vigiladas, heredaba entorno y aceptaba
+   errores no semánticos; mutante UUID podía romper sintaxis. Evidencia histórica
+   frontend-mutants/ intacta y NO ACEPTADA.
+2. Vitest intento 18-00-38: guard reemplazó Resolver; fallo de preload.
+3. Vitest intento 18-03-05: cache .vite-temp intentó escribir en dependencia
+   compartida; guard bloqueó correctamente.
+4. Preflight 18-04-56 sólo cargó config/transform; nunca prueba de componentes.
+5. Vitest intento 18-05-53: setup /@fs/... no resolvió. Enfoque retirado; script
+   run-frontend-mutants.mjs aborta. Ninguno de estos intentos cuenta como RED.
+6. Nativo R1 18-19-01: ADMIN/SUPERVISOR completaron ciclos válidos. OTHER-STORE
+   GREEN válido pero RED timeout, sin reporte terminal. Formateo DOM/fibers es
+   hipótesis, no causa raíz demostrada. Timeout permanece NO ACEPTADO.
+7. Fix acotado a ausencia DOM mediante booleanos, misma semántica/marcadores.
+   R2 18-25-48 completó otros 13 ciclos válidos. No se recontaron los dos previos.
+   Parent COCO GREEN falló por global location ausente: error de fixture.
+8. Fix sólo globals de JSDOM requeridos por wouter: location/history y eventos
+   ligados a window. Timers/process/guard/red/productivos intactos.
+   R3 18-32-33 completó los seis parents. TOTAL 21 ciclos disjuntos aceptados.
+
+Consolidación: lectura de JSON/manifiestos confirma 21 IDs únicos, semántica de
+ERR_ASSERTION exacta y hashes productivos coincidentes. No pruebas repetidas.
+Typecheck PASS reportado por MAIN: frontend-types-20260922T183323Z.log.
+Archivos originales de evidencia nunca se borraron, normalizaron ni alteraron.
+Los snapshots temporales permanecen disponibles; no se hizo limpieza /tmp.
+
+Archivo de las cuatro suites Vitest (mv fuera de src, bytes preservados):
+reference-vite-tests/salidas-dinero-e4-item.dom.test.tsx.reference
+SHA256 e7bf8f45920c67a730dacc085600f50b0575231c4285287d8227c6ac220ab816
+reference-vite-tests/salidas-dinero-e4-panel.dom.test.tsx.reference
+SHA256 2247a21e5ad73ee063b586c4f8850eccbdc48cde4b2834683a0f3336934dba4a
+reference-vite-tests/cobros-e4-off.dom.test.tsx.reference
+SHA256 73fec6e8efa0b0341323d199cf72a7e0a74b22331e89990ab0820297027b4aff
+reference-vite-tests/cobros-e4-parent.dom.test.tsx.reference
+SHA256 0f135529ad9359bf25b4e568f6bdfadbaa27a9ce678fee0e4a83e2fbed680665
+
+Después del último PASS sólo archivo de referencias, selección de fuentes
+snapshot y entrypoint root seguro; sin cambio a componentes o 21 aserciones.
+No nueva ejecución atribuida a esta limpieza. MAIN decide staging/commit.

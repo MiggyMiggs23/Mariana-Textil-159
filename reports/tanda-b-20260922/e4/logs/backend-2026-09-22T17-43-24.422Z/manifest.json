@@ -1,0 +1,598 @@
+{
+  "startedAt": "2026-09-22T17:43:24.423Z",
+  "mode": "OFFLINE_SYNTHETIC_REPOSITORIES_NO_SQL_NO_APP",
+  "sourceHashes": {
+    "artifacts/api-server/src/lib/e4-cash-out.ts": "fb3138c52d6f7ecb954c197c51316f97e07cb59741ff3aa69525d09f58b1ab6b",
+    "artifacts/api-server/src/lib/e4-cash-out-repository.ts": "63f1a36bfdf9332f4026201acbd8f2425b165cfcba9007b64ead2e5e1c804e9a",
+    "artifacts/api-server/src/lib/e4-cash-out.test.ts": "018c4b49e13875f8e61b2cc3eb08f118bffe1c001175d8ea25f6f449592aae0a",
+    "artifacts/api-server/src/lib/caja-cash-ledger.ts": "d5663a1e88af3e4443f919fc280dd349cbf208893dc5ea4eb841b73690e7b78a",
+    "lib/api-zod/src/generated/api.ts": "982479e06bdb0ab946d52725e4ba1db4237f2c6d6f3bc556ef5446d64fbe933a",
+    "reports/tanda-b-20260922/e4/offline-guard.cjs": "94b060bed8b03f8d1f80e6be93177e4593879a18ed9ae98cfd55d40c1765eab1"
+  },
+  "cases": [
+    {
+      "name": "E4-OFF-CREATE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!enabled) fail(",
+      "after": "if (false) fail(",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-OFF-CREATE-green.log",
+        "E4-OFF-CREATE-red.log"
+      ]
+    },
+    {
+      "name": "E4-OFF-REVIEW",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!enabled) fail(",
+      "after": "if (false) fail(",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-OFF-REVIEW-green.log",
+        "E4-OFF-REVIEW-red.log"
+      ]
+    },
+    {
+      "name": "E4-OFF-READ",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "if (!enabled) return new Map();",
+      "after": "if (false) return new Map();",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-OFF-READ-green.log",
+        "E4-OFF-READ-red.log"
+      ]
+    },
+    {
+      "name": "E4-CAPTURE-ROLE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!roles.includes(actor.rol))",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-CAPTURE-ROLE-green.log",
+        "E4-CAPTURE-ROLE-red.log"
+      ]
+    },
+    {
+      "name": "E4-OWN-STORE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (actor.rol !== \"ADMIN\" && actor.ubicacionId !== location)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-OWN-STORE-green.log",
+        "E4-OWN-STORE-red.log"
+      ]
+    },
+    {
+      "name": "E4-PROVIDER-LOCATION",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo === \"PROVEEDOR\" && session.ubicacionId !== E4_MARIANA_LOCATION_ID)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-PROVIDER-LOCATION-green.log",
+        "E4-PROVIDER-LOCATION-red.log"
+      ]
+    },
+    {
+      "name": "E4-PROVIDER-REQUIRED",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo === \"PROVEEDOR\" && (!Number.isInteger(proveedorId) || Number(proveedorId) <= 0))",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-PROVIDER-REQUIRED-green.log",
+        "E4-PROVIDER-REQUIRED-red.log"
+      ]
+    },
+    {
+      "name": "E4-PROVIDER-ACTIVE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (proveedorId !== null && !await repo.providerActive(proveedorId))",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-PROVIDER-ACTIVE-green.log",
+        "E4-PROVIDER-ACTIVE-red.log"
+      ]
+    },
+    {
+      "name": "E4-EXTRA-ACCOUNT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo === \"EXTRAORDINARIA\" && (proveedorId !== null || input.cuentaOrigen !== \"CAJA_FISICA\"))",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-EXTRA-ACCOUNT-green.log",
+        "E4-EXTRA-ACCOUNT-red.log"
+      ]
+    },
+    {
+      "name": "E4-EXPLICIT-KIND",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo !== \"EXTRAORDINARIA\" && input.tipo !== \"PROVEEDOR\")",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-EXPLICIT-KIND-green.log",
+        "E4-EXPLICIT-KIND-red.log"
+      ]
+    },
+    {
+      "name": "E4-REASON",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "|| !value.trim() ||",
+      "after": "|| false ||",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-REASON-green.log",
+        "E4-REASON-red.log"
+      ]
+    },
+    {
+      "name": "E4-AMOUNT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (cents <= 0n || cents > 999999999999n)",
+      "after": "if (cents < 0n || cents > 999999999999n)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-AMOUNT-green.log",
+        "E4-AMOUNT-red.log"
+      ]
+    },
+    {
+      "name": "E4-CLOSED",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (session.estado !== \"ABIERTA\")",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-CLOSED-green.log",
+        "E4-CLOSED-red.log"
+      ]
+    },
+    {
+      "name": "E4-CAPTURE-RETRY",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (previous) return retry(previous, actor, request) as E4Salida;",
+      "after": "if (false) return retry(previous!, actor, request) as E4Salida;",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-CAPTURE-RETRY-green.log",
+        "E4-CAPTURE-RETRY-red.log"
+      ]
+    },
+    {
+      "name": "E4-RETRY-CONTENT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "operation.actorId !== actor.id || operation.request !== request",
+      "after": "operation.actorId !== actor.id",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-RETRY-CONTENT-green.log",
+        "E4-RETRY-CONTENT-red.log"
+      ]
+    },
+    {
+      "name": "E4-RETRY-ACTOR",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "operation.actorId !== actor.id || operation.request !== request",
+      "after": "operation.request !== request",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-RETRY-ACTOR-green.log",
+        "E4-RETRY-ACTOR-red.log"
+      ]
+    },
+    {
+      "name": "E4-REVIEW-ROLE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "input.accion === \"RESPONDER\" ? [\"SUPERVISOR\"] : [\"ADMIN\"]",
+      "after": "[\"ADMIN\", \"SUPERVISOR\", \"CAJA\"]",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-REVIEW-ROLE-green.log",
+        "E4-REVIEW-ROLE-red.log"
+      ]
+    },
+    {
+      "name": "E4-RESPONSE-REASON",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": ": text(input.explicacion, 2000);",
+      "after": ": (input.explicacion ?? \"\");",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-RESPONSE-REASON-green.log",
+        "E4-RESPONSE-REASON-red.log"
+      ]
+    },
+    {
+      "name": "E4-RESPONSE-SCOPE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (actor.rol !== \"ADMIN\" && actor.ubicacionId !== location)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-RESPONSE-SCOPE-green.log",
+        "E4-RESPONSE-SCOPE-red.log"
+      ]
+    },
+    {
+      "name": "E4-REVIEW-VERSION",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (current.version !== input.version)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-REVIEW-VERSION-green.log",
+        "E4-REVIEW-VERSION-red.log"
+      ]
+    },
+    {
+      "name": "E4-REVIEW-STATE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!allowed.includes(current.estado))",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-REVIEW-STATE-green.log",
+        "E4-REVIEW-STATE-red.log"
+      ]
+    },
+    {
+      "name": "E4-REVIEW-RETRY",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (previous) return retry(previous, actor, request) as E4Revision;",
+      "after": "if (false) return retry(previous!, actor, request) as E4Revision;",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-REVIEW-RETRY-green.log",
+        "E4-REVIEW-RETRY-red.log"
+      ]
+    },
+    {
+      "name": "E4-COMPETING-REVIEWS",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (current.version !== input.version)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-COMPETING-REVIEWS-green.log",
+        "E4-COMPETING-REVIEWS-red.log"
+      ]
+    },
+    {
+      "name": "E4-CYCLE-CASH",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": ": \"RESPONDIDA\",",
+      "after": ": \"ACEPTADA\",",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-CYCLE-CASH-green.log",
+        "E4-CYCLE-CASH-red.log"
+      ]
+    },
+    {
+      "name": "E4-ATOMIC-AUDIT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "await repo.audit(created.id, actor.id, \"SALIDA_DINERO_CAJA\", {\n    ...created, ubicacionId: session.ubicacionId,\n  }, input.ip);",
+      "after": "/* DEFECT: omitted final atomic audit */",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-ATOMIC-AUDIT-green.log",
+        "E4-ATOMIC-AUDIT-red.log"
+      ]
+    },
+    {
+      "name": "E4-PROOF",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.accion !== \"RESPONDER\" || !valid || comprobanteUrl.length > 2000)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-PROOF-green.log",
+        "E4-PROOF-red.log"
+      ]
+    },
+    {
+      "name": "E4-ADAPTER-LOCKS",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "FOR UPDATE OF s`",
+      "after": "`",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-ADAPTER-LOCKS-green.log",
+        "E4-ADAPTER-LOCKS-red.log"
+      ]
+    },
+    {
+      "name": "E4-ADAPTER-CAS",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "if (result.rows.length !== 1)",
+      "after": "if (false)",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-ADAPTER-CAS-green.log",
+        "E4-ADAPTER-CAS-red.log"
+      ]
+    },
+    {
+      "name": "E4-READER",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "row.revision as E4Revision",
+      "after": "undefined as unknown as E4Revision",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-READER-green.log",
+        "E4-READER-red.log"
+      ]
+    },
+    {
+      "name": "E4-CONTRACT",
+      "file": "lib/api-zod/src/generated/api.ts",
+      "before": "export const ObtenerCorteCajaResponse = zod.object({",
+      "after": "export const ObtenerCorteCajaResponse = zod.object({",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-CONTRACT-green.log",
+        "E4-CONTRACT-red.log"
+      ]
+    },
+    {
+      "name": "E4-OFFLINE-GUARD",
+      "file": "reports/tanda-b-20260922/e4/offline-guard.cjs",
+      "before": "require(\"node:net\").Socket.prototype.connect = deny;",
+      "after": "require(\"node:net\").Socket.prototype.connect = function () { return this; };",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-OFFLINE-GUARD-green.log",
+        "E4-OFFLINE-GUARD-red.log"
+      ]
+    },
+    {
+      "name": "E4-ADAPTER-WRITE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "estado: input.tipo === \"EXTRAORDINARIA\" ? \"PENDIENTE\" : \"NO_APLICA\"",
+      "after": "estado: input.tipo === \"EXTRAORDINARIA\" ? \"ACEPTADA\" : \"NO_APLICA\"",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-ADAPTER-WRITE-green.log",
+        "E4-ADAPTER-WRITE-red.log"
+      ]
+    }
+  ],
+  "tests": "artifacts/api-server/src/lib/e4-cash-out.test.ts",
+  "sandbox": "/tmp/e4-backend-offline-ebRD6I",
+  "plannedCases": [
+    {
+      "name": "E4-OFF-CREATE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!enabled) fail(",
+      "after": "if (false) fail("
+    },
+    {
+      "name": "E4-OFF-REVIEW",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!enabled) fail(",
+      "after": "if (false) fail("
+    },
+    {
+      "name": "E4-OFF-READ",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "if (!enabled) return new Map();",
+      "after": "if (false) return new Map();"
+    },
+    {
+      "name": "E4-CAPTURE-ROLE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!roles.includes(actor.rol))",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-OWN-STORE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (actor.rol !== \"ADMIN\" && actor.ubicacionId !== location)",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-PROVIDER-LOCATION",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo === \"PROVEEDOR\" && session.ubicacionId !== E4_MARIANA_LOCATION_ID)",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-PROVIDER-REQUIRED",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo === \"PROVEEDOR\" && (!Number.isInteger(proveedorId) || Number(proveedorId) <= 0))",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-PROVIDER-ACTIVE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (proveedorId !== null && !await repo.providerActive(proveedorId))",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-EXTRA-ACCOUNT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo === \"EXTRAORDINARIA\" && (proveedorId !== null || input.cuentaOrigen !== \"CAJA_FISICA\"))",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-EXPLICIT-KIND",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.tipo !== \"EXTRAORDINARIA\" && input.tipo !== \"PROVEEDOR\")",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-REASON",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "|| !value.trim() ||",
+      "after": "|| false ||"
+    },
+    {
+      "name": "E4-AMOUNT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (cents <= 0n || cents > 999999999999n)",
+      "after": "if (cents < 0n || cents > 999999999999n)"
+    },
+    {
+      "name": "E4-CLOSED",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (session.estado !== \"ABIERTA\")",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-CAPTURE-RETRY",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (previous) return retry(previous, actor, request) as E4Salida;",
+      "after": "if (false) return retry(previous!, actor, request) as E4Salida;"
+    },
+    {
+      "name": "E4-RETRY-CONTENT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "operation.actorId !== actor.id || operation.request !== request",
+      "after": "operation.actorId !== actor.id"
+    },
+    {
+      "name": "E4-RETRY-ACTOR",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "operation.actorId !== actor.id || operation.request !== request",
+      "after": "operation.request !== request"
+    },
+    {
+      "name": "E4-REVIEW-ROLE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "input.accion === \"RESPONDER\" ? [\"SUPERVISOR\"] : [\"ADMIN\"]",
+      "after": "[\"ADMIN\", \"SUPERVISOR\", \"CAJA\"]"
+    },
+    {
+      "name": "E4-RESPONSE-REASON",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": ": text(input.explicacion, 2000);",
+      "after": ": (input.explicacion ?? \"\");"
+    },
+    {
+      "name": "E4-RESPONSE-SCOPE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (actor.rol !== \"ADMIN\" && actor.ubicacionId !== location)",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-REVIEW-VERSION",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (current.version !== input.version)",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-REVIEW-STATE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (!allowed.includes(current.estado))",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-REVIEW-RETRY",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (previous) return retry(previous, actor, request) as E4Revision;",
+      "after": "if (false) return retry(previous!, actor, request) as E4Revision;"
+    },
+    {
+      "name": "E4-COMPETING-REVIEWS",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (current.version !== input.version)",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-CYCLE-CASH",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": ": \"RESPONDIDA\",",
+      "after": ": \"ACEPTADA\","
+    },
+    {
+      "name": "E4-ATOMIC-AUDIT",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "await repo.audit(created.id, actor.id, \"SALIDA_DINERO_CAJA\", {\n    ...created, ubicacionId: session.ubicacionId,\n  }, input.ip);",
+      "after": "/* DEFECT: omitted final atomic audit */"
+    },
+    {
+      "name": "E4-PROOF",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "if (input.accion !== \"RESPONDER\" || !valid || comprobanteUrl.length > 2000)",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-ADAPTER-LOCKS",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "FOR UPDATE OF s`",
+      "after": "`"
+    },
+    {
+      "name": "E4-ADAPTER-CAS",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "if (result.rows.length !== 1)",
+      "after": "if (false)"
+    },
+    {
+      "name": "E4-READER",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "row.revision as E4Revision",
+      "after": "undefined as unknown as E4Revision"
+    },
+    {
+      "name": "E4-CONTRACT",
+      "file": "lib/api-zod/src/generated/api.ts",
+      "before": "export const ObtenerCorteCajaResponse = zod.object({",
+      "after": "export const ObtenerCorteCajaResponse = zod.object({",
+      "special": "corte"
+    },
+    {
+      "name": "E4-OFFLINE-GUARD",
+      "file": "reports/tanda-b-20260922/e4/offline-guard.cjs",
+      "before": "require(\"node:net\").Socket.prototype.connect = deny;",
+      "after": "require(\"node:net\").Socket.prototype.connect = function () { return this; };"
+    },
+    {
+      "name": "E4-ADAPTER-WRITE",
+      "file": "artifacts/api-server/src/lib/e4-cash-out-repository.ts",
+      "before": "estado: input.tipo === \"EXTRAORDINARIA\" ? \"PENDIENTE\" : \"NO_APLICA\"",
+      "after": "estado: input.tipo === \"EXTRAORDINARIA\" ? \"ACEPTADA\" : \"NO_APLICA\""
+    }
+  ],
+  "caseCount": 32,
+  "status": "PASS",
+  "finishedAt": "2026-09-22T17:43:43.374Z"
+}

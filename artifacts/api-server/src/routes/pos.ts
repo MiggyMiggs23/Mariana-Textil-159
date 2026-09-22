@@ -12,6 +12,9 @@ import {
   CrearSalidaDineroCajaResponse,
   ListarSalidasDineroCajaParams,
   ListarSalidasDineroCajaResponse,
+  RevisarSalidaDineroCajaParams,
+  RevisarSalidaDineroCajaBody,
+  RevisarSalidaDineroCajaResponse,
   BuscarPosQueryParams,
   BuscarPosResponse,
   CancelarTicketBody,
@@ -60,6 +63,8 @@ import {
   proveedoresTable,
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
+import { E4_CASH_OUT_ENABLED, E4CashOutError, e4CashOutPermission, requireE4, reviewE4CashOut } from "../lib/e4-cash-out";
+import { e4CashOutRepository } from "../lib/e4-cash-out-repository";
 import {
   requierePermiso,
   resolvePermiso,
@@ -106,6 +111,10 @@ function handlePosError(
   res: Response,
   next: NextFunction,
 ): void {
+  if (error instanceof E4CashOutError) {
+    res.status(error.status).json({ error: error.message, code: error.code });
+    return;
+  }
   if (error instanceof CreditEvidenceError) {
     res.status(error.status).json({ error: error.message, code: "CREDIT_EVIDENCE_E1" });
     return;
@@ -1054,7 +1063,7 @@ router.post(
 
 router.get(
   "/sesiones-caja/:id/salidas-dinero",
-  requierePermiso("cortes", "ver"),
+  e4CashOutPermission("ver", requierePermiso),
   async (req, res, next): Promise<void> => {
     try {
       const sesionId = ListarSalidasDineroCajaParams.parse(req.params).id;
@@ -1068,18 +1077,20 @@ router.get(
 
 router.post(
   "/sesiones-caja/:id/salidas-dinero",
-  requierePermiso("cortes", "ver"),
-  requierePermiso("cortes", "crear"),
+  e4CashOutPermission("ver", requierePermiso),
+  e4CashOutPermission("crear", requierePermiso),
   async (req, res, next): Promise<void> => {
     try {
       const sesionId = CrearSalidaDineroCajaParams.parse(req.params).id;
       const body = CrearSalidaDineroCajaBody.parse(req.body);
+      if (!E4_CASH_OUT_ENABLED && (body.tipo !== undefined || body.claveOperacion !== undefined)) requireE4();
       const session = await getSesion(sesionId);
       if (!session) { res.status(404).json({ error: "Sesión no encontrada." }); return; }
       assertOperationalLocation(req, session.ubicacionId);
       const salida = await db.transaction((tx) => crearSalidaDineroCaja(tx, {
         sesionCajaId: sesionId, monto: body.monto, motivo: body.motivo, proveedorId: body.proveedorId,
         cuentaOrigen: body.cuentaOrigen, creadoPorId: req.auth!.user.id, ip: getRequestIp(req),
+        tipo: body.tipo, claveOperacion: body.claveOperacion, actor: req.auth!.user,
       }));
       res.status(201).json(CrearSalidaDineroCajaResponse.parse({
         ...salida, createdAt: salida.createdAt,
@@ -1088,9 +1099,25 @@ router.post(
   },
 );
 
+router.post(
+  "/sesiones-caja/:id/salidas-dinero/:salidaId/revision",
+  requierePermiso("cortes", "ver"),
+  async (req, res, next): Promise<void> => {
+    try {
+      requireE4();
+      const params = RevisarSalidaDineroCajaParams.parse(req.params);
+      const body = RevisarSalidaDineroCajaBody.parse(req.body);
+      const revision = await db.transaction((tx) => reviewE4CashOut(e4CashOutRepository(tx), req.auth!.user, {
+        ...body, sesionCajaId: params.id, salidaId: params.salidaId, ip: getRequestIp(req),
+      }));
+      res.json(RevisarSalidaDineroCajaResponse.parse(revision));
+    } catch (error) { handlePosError(error, res, next); }
+  },
+);
+
 router.get(
   "/caja/proveedores-activos",
-  requierePermiso("cortes", "ver"),
+  e4CashOutPermission("ver", requierePermiso),
   async (_req, res, next): Promise<void> => {
     try {
       // Deliberately a minimal operational catalog: no balances, contact data, or purchases.

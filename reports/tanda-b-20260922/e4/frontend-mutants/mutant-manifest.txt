@@ -1,0 +1,73 @@
+MANIFIESTO DE PRUEBAS DE MUTACIÓN FRONTEND - E4
+
+Baseline (Código intacto): GREEN
+
+Mutante: Roles Rotos
+Resultado: RED (Asesinado)
+Salida Parcial (Comprueba defecto específico):
+
+ RUN  v5.0.1 /home/runner/workspace/artifacts/mariana-textil
+
+ ❯ src/components/salidas-dinero-e4-item.dom.test.tsx (4 tests | 1 failed) 1343ms
+   ❯ SalidaDineroE4Item Contract Tests (4)
+     × SUPERVISOR de OTRA tienda NO puede RESPONDER 37ms
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 6 passed (7)
+   Start at  17:45:36
+   Duration  6.05s (transform 34%, import 28%, tests 21%, environment 17%)
+
+  Transform  transforming modules took 5.66s · 34% of tracked time, re-done on eve
+
+---
+Mutante: Sin validación Proveedor
+Resultado: RED (Asesinado)
+Salida Parcial (Comprueba defecto específico):
+
+ RUN  v5.0.1 /home/runner/workspace/artifacts/mariana-textil
+
+ ❯ src/components/salidas-dinero-e4-panel.dom.test.tsx (2 tests | 1 failed) 1718ms
+   ❯ SalidasDineroE4Panel Contract Tests (2)
+     × PROVEEDOR requiere proveedor seleccionado y rechaza envío sin él 392ms
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 6 passed (7)
+   Start at  17:45:44
+   Duration  5.73s (import 37%, transform 27%, environment 18%, tests 18%)
+
+  Transform  transforming modules took 4.25s · 27% of trac
+
+---
+Mutante: Idempotencia rota
+Resultado: RED (Asesinado)
+Salida Parcial (Comprueba defecto específico):
+
+ RUN  v5.0.1 /home/runner/workspace/artifacts/mariana-textil
+
+ ❯ src/components/salidas-dinero-e4-panel.dom.test.tsx (0 test)
+ ❯ src/pages/cobros-e4-off.dom.test.tsx (0 test)
+
+ Test Files  2 failed | 1 passed (3)
+      Tests  4 passed (4)
+   Start at  17:45:51
+   Duration  4.69s (environment 62%, transform 18%, import 14%, tests 6%)
+
+[replit-cartographer] Error processing /home/runner/workspace/artifacts/mariana-textil/src/components/salidas-dinero-e4-panel.tsx: SyntaxError: Unexpected token, e
+
+---
+Mutante: Gate E4 OFF roto
+Resultado: RED (Asesinado)
+Salida Parcial (Comprueba defecto específico):
+
+ RUN  v5.0.1 /home/runner/workspace/artifacts/mariana-textil
+
+ ❯ src/pages/cobros-e4-off.dom.test.tsx (1 test | 1 failed) 409ms
+   ❯ Cobros OFF State Tests (1)
+     × Con E4_CASH_OUT_ENABLED=false renderiza el formulario original y no llama hooks E4 407ms
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 6 passed (7)
+   Start at  17:45:57
+   Duration  4.66s (transform 28%, import 28%, environment 25%, tests 19%)
+
+  Transform  transforming modules took 3.36s · 28% of tracked time, re

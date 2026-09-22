@@ -1,0 +1,72 @@
+// @vitest-environment jsdom
+import { render, screen, cleanup } from "@testing-library/react";
+import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { test, describe, beforeEach, vi, expect, afterEach } from "vitest";
+
+// Forzamos que la flag sea false
+vi.mock("@/lib/e4-feature-flags", () => ({
+  E4_CASH_OUT_ENABLED: false,
+}));
+
+import { SalidasDineroPanel } from "../pages/cobros";
+import * as apiClientReact from "@workspace/api-client-react";
+
+vi.mock("@workspace/api-client-react", async () => {
+  const actual = await vi.importActual("@workspace/api-client-react");
+  return {
+    ...(actual as any),
+    useCrearSalidaDineroCaja: vi.fn(),
+    useGetCurrentUser: vi.fn(() => ({ data: { rol: "ADMIN", ubicacion: { id: 1 } } })),
+    useListarSalidasDineroCaja: vi.fn(),
+    useListarProveedoresActivosCaja: vi.fn(),
+    getListarSalidasDineroCajaQueryKey: vi.fn(() => ["listarSalidas"]),
+    getObtenerCorteCajaQueryKey: vi.fn(() => ["obtenerCorte"]),
+  };
+});
+
+describe("Cobros OFF State Tests", () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient();
+    
+    (apiClientReact.useCrearSalidaDineroCaja as any).mockReturnValue({
+      mutate: vi.fn(),
+      isPending: false
+    });
+    
+    (apiClientReact.useListarSalidasDineroCaja as any).mockReturnValue({
+      data: { salidas: [] },
+      isLoading: false,
+      isError: false
+    });
+    
+    (apiClientReact.useListarProveedoresActivosCaja as any).mockReturnValue({
+      data: []
+    });
+
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  test("Con E4_CASH_OUT_ENABLED=false renderiza el formulario original y no llama hooks E4", () => {
+    render(
+      <QueryClientProvider client={queryClient}>
+        <SalidasDineroPanel sesionId={10} canCreate={true} tiendaId={1} />
+      </QueryClientProvider>
+    );
+
+    // Verificamos que el botón dice simplemente "Registrar salida" (el original no dice extraordinaria ni proveedor)
+    expect(screen.queryByRole("button", { name: /^Registrar salida$/i }), "E4-GATE-OFF").toBeTruthy();
+    
+    // Verificamos que no existe el selector de Tipo (Extraordinaria/Proveedor)
+    expect(screen.queryByRole("combobox", { name: /Tipo de Salida/i })).toBeNull();
+    
+    // Verificamos que se renderiza el texto de descripción original
+    expect(screen.getByText("Solo pagos operativos de Tienda Mariana.")).toBeTruthy();
+  });
+});

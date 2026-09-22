@@ -94,6 +94,8 @@ import {
   DevolucionCreditoInactivaDialog,
 } from "@/components/devolucion-credito-inactiva-dialog";
 import { CorteEfectivoDesglose } from "@/components/corte-efectivo-desglose";
+import { E4_CASH_OUT_ENABLED } from "@/lib/e4-feature-flags";
+import { SalidasDineroE4Panel } from "@/components/salidas-dinero-e4-panel";
 
 /** Tienda Mariana (MA), the sole location currently authorized for cash disbursements. */
 const MARIANA_LOCATION_ID = 1;
@@ -1138,7 +1140,11 @@ function CobroDialog({
   );
 }
 
-function SalidasDineroPanel({ sesionId, canCreate }: { sesionId: number; canCreate: boolean }) {
+export function SalidasDineroPanel({ sesionId, canCreate, tiendaId }: { sesionId: number; canCreate: boolean; tiendaId?: number }) {
+  if (E4_CASH_OUT_ENABLED) {
+    return <SalidasDineroE4Panel sesionId={sesionId} canCreate={canCreate} tiendaId={tiendaId} />;
+  }
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [monto, setMonto] = useState("");
@@ -1287,6 +1293,8 @@ function CobrosContent() {
   const canManageCash =
     canViewCashManagement &&
     hasPermission(currentUser, Modules.CORTES, "crear");
+  const canViewE4 = hasPermission(currentUser, Modules.COBROS_PAGOS, "ver");
+  const canCreateE4 = hasPermission(currentUser, Modules.COBROS_PAGOS, "crear");
   const queryClient = useQueryClient();
   const [selectedTicketId, setSelectedTicketId] = useState<number | null>(null);
   const [cobroOpen, setCobroOpen] = useState(false);
@@ -1512,7 +1520,13 @@ function CobrosContent() {
           </CardContent>
         </Card>
       )}
-      {canViewCashManagement && sesionData.sesion.ubicacionId === MARIANA_LOCATION_ID && <SalidasDineroPanel sesionId={sesionId} canCreate={canManageCash} />}
+      {(E4_CASH_OUT_ENABLED ? canViewE4 : (canViewCashManagement && sesionData.sesion.ubicacionId === MARIANA_LOCATION_ID)) && (
+        <SalidasDineroPanel 
+          sesionId={sesionId} 
+          canCreate={E4_CASH_OUT_ENABLED ? canCreateE4 : canManageCash} 
+          tiendaId={sesionData.sesion.ubicacionId} 
+        />
+      )}
 
       <div className="flex flex-col flex-1 min-h-0">
         <Card className="flex-1 flex flex-col shadow-sm border-sidebar-border/10">

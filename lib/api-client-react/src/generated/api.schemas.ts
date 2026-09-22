@@ -7437,6 +7437,17 @@ export const SalidaDineroCajaInputCuentaOrigen = {
   CUENTA_FISCAL: 'CUENTA_FISCAL',
 } as const;
 
+/**
+ * Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.
+ */
+export type SalidaDineroCajaInputTipo = typeof SalidaDineroCajaInputTipo[keyof typeof SalidaDineroCajaInputTipo];
+
+
+export const SalidaDineroCajaInputTipo = {
+  EXTRAORDINARIA: 'EXTRAORDINARIA',
+  PROVEEDOR: 'PROVEEDOR',
+} as const;
+
 export interface SalidaDineroCajaInput {
   /** @pattern ^[0-9]+(\.[0-9]{1,2})?$ */
   monto: string;
@@ -7448,6 +7459,87 @@ export interface SalidaDineroCajaInput {
   /** @nullable */
   proveedorId?: number | null;
   cuentaOrigen: SalidaDineroCajaInputCuentaOrigen;
+  /** Obligatorio al liberar E4; nunca se infiere a partir de proveedorId. */
+  tipo?: SalidaDineroCajaInputTipo;
+  /** Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar. */
+  claveOperacion?: string;
+}
+
+export type SalidaDineroRevisionInputAccion = typeof SalidaDineroRevisionInputAccion[keyof typeof SalidaDineroRevisionInputAccion];
+
+
+export const SalidaDineroRevisionInputAccion = {
+  ACEPTAR: 'ACEPTAR',
+  RECLAMAR: 'RECLAMAR',
+  RESPONDER: 'RESPONDER',
+} as const;
+
+export interface SalidaDineroRevisionInput {
+  accion: SalidaDineroRevisionInputAccion;
+  /** @minimum 0 */
+  version: number;
+  claveOperacion: string;
+  /**
+     * Obligatoria y no vacía al reclamar o responder.
+     * @minLength 1
+     * @maxLength 2000
+     */
+  explicacion?: string;
+  /**
+     * Enlace HTTPS opcional a un comprobante ya disponible; no admite bytes ni base64.
+     * @maxLength 2000
+     * @nullable
+     */
+  comprobanteUrl?: string | null;
+}
+
+export type SalidaDineroRevisionEventoAccion = typeof SalidaDineroRevisionEventoAccion[keyof typeof SalidaDineroRevisionEventoAccion];
+
+
+export const SalidaDineroRevisionEventoAccion = {
+  ACEPTAR: 'ACEPTAR',
+  RECLAMAR: 'RECLAMAR',
+  RESPONDER: 'RESPONDER',
+} as const;
+
+export interface SalidaDineroRevisionEvento {
+  accion: SalidaDineroRevisionEventoAccion;
+  /** @minimum 1 */
+  version: number;
+  usuarioId: number;
+  createdAt: string;
+  /** @nullable */
+  explicacion: string | null;
+  /** @nullable */
+  comprobanteUrl: string | null;
+}
+
+export type SalidaDineroRevisionTipo = typeof SalidaDineroRevisionTipo[keyof typeof SalidaDineroRevisionTipo];
+
+
+export const SalidaDineroRevisionTipo = {
+  EXTRAORDINARIA: 'EXTRAORDINARIA',
+  PROVEEDOR: 'PROVEEDOR',
+} as const;
+
+export type SalidaDineroRevisionEstado = typeof SalidaDineroRevisionEstado[keyof typeof SalidaDineroRevisionEstado];
+
+
+export const SalidaDineroRevisionEstado = {
+  PENDIENTE: 'PENDIENTE',
+  RECLAMADA: 'RECLAMADA',
+  RESPONDIDA: 'RESPONDIDA',
+  ACEPTADA: 'ACEPTADA',
+  NO_APLICA: 'NO_APLICA',
+} as const;
+
+export interface SalidaDineroRevision {
+  tipo: SalidaDineroRevisionTipo;
+  estado: SalidaDineroRevisionEstado;
+  /** @minimum 0 */
+  version: number;
+  claveOperacion: string;
+  historial: SalidaDineroRevisionEvento[];
 }
 
 export type SalidaDineroCaja = SalidaDineroCajaInput & {
@@ -7455,6 +7547,7 @@ export type SalidaDineroCaja = SalidaDineroCajaInput & {
   sesionCajaId: number;
   creadoPorId: number;
   createdAt: string;
+  e4?: SalidaDineroRevision;
 };
 
 export interface SalidasDineroCajaResponse {
@@ -7605,6 +7698,7 @@ export type CorteCajaSalidasItem = {
   createdAt: string;
   /** @nullable */
   proveedor: string | null;
+  e4?: SalidaDineroRevision;
 };
 
 export type CorteCajaSalidasPorCuenta = {[key: string]: string};

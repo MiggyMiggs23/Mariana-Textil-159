@@ -859,6 +859,26 @@ Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el 
 
 **Una sola sesión de caja por sitio y por día:** se registra el fondo de caja chica en la mañana, se opera, y se corta al terminar. Únicamente Tienda Mariana registra salidas de dinero a proveedores, y el sitio autorizado es una constante nombrada. Al cerrar se imprime la hoja de ventas del día, agrupada por producto y sin series.
 
+**E4 — implementación preparada, no liberada:** `E4_CASH_OUT_ENABLED=false` conserva
+la experiencia previa y evita consultar el esquema E4 en OFF. Al liberarse,
+SUPERVISOR/CAJA capturan extraordinarias en su propia tienda y ADMIN puede
+capturar en tiendas autorizadas, con motivo, sesión abierta y caja física;
+Coco/Cruces no usan Fondo. La clasificación EXTRAORDINARIA/PROVEEDOR es explícita:
+proveedor exige proveedor activo y exclusivamente Mariana, nunca se deduce por
+proveedor vacío. La salida registrada descuenta inmediatamente el corte usando
+el egreso existente; no espera revisión. ADMIN acepta/reclama; SUPERVISOR de la
+tienda responde al reclamo con explicación obligatoria y comprobante opcional
+(enlace HTTPS a documento disponible). Responder no autoacepta. Revisión,
+aceptación y reclamo no alteran importes, incluso con sesión cerrada. UUID por
+intención, candados transaccionales, versión de revisión y auditoría atómica
+evitan duplicados/reintentos divergentes. ON, la captura/listado y catálogo
+mínimo usan `cobros_pagos` (ver/crear según acción), para no exigir permisos
+administrativos de cortes a CAJA; OFF conserva sus permisos anteriores.
+La revisión mantiene `cortes/ver` más autoridad/alcance del dominio.
+No se conceden filas ni permisos nuevos. Los históricos no se reclasifican.
+SQL y reversión preparados en `reports/tanda-b-20260922/e4/`, sin ejecución.
+No habilita E12, pagos partidos, Fondo, inventario, ni amplía los 69 vetos.
+
 **Historial de compras:** vive en una **pestaña dentro de Proveedores**, no en la barra lateral. Muestra **un renglón por línea de entrada** —por producto, no por rollo—: una entrada de 750 rollos en dos productos son dos renglones. Solo existe para proveedores; a los clientes se les vende, no se les compra.
 
 Ordena por fecha de más reciente a más antigua por omisión, y cada columna alterna entre ascendente y descendente **sin un tercer estado**, porque "sin orden" no se distingue visualmente del predeterminado.

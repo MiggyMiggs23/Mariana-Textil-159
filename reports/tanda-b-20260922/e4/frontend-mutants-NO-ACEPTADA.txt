@@ -1,0 +1,45 @@
+La evidencia histórica en frontend-mutants/ NO ESTÁ ACEPTADA.
+Se conserva intacta, incluyendo manifiestos, logs y afirmaciones previas.
+El runner anterior escribía fuentes vigiladas y consideraba cualquier error rojo.
+En particular, la sustitución UUID podía producir un error de sintaxis.
+Ningún resultado anterior acredita aislamiento, ausencia de red ni cobertura.
+El runner sustituto requiere ejecución MAIN y revisión de su manifiesto nuevo.
+
+frontend-mutants-2026-09-22T18-00-38.287Z/ también NO ACEPTADA:
+falló el preload antes del primer GREEN (constructor dns.promises.Resolver
+reemplazado por el bloqueo genérico). Se conservan sus logs/manifiesto intactos.
+Corrección posterior: bloqueo DNS dirigido a consultas, conservando Resolver y
+configuración local. Preflight Node --require en copia física y entorno vacío:
+PRELOAD_PREFLIGHT_OK. No consulta DNS/socket/listen/proceso hijo/app/test fue
+ejecutado por ese preflight; no constituye resultado GREEN/RED de componentes.
+
+frontend-mutants-2026-09-22T18-03-05.884Z/ también NO ACEPTADA:
+Vite intentó crear .vite-temp en node_modules compartido y el guard lo bloqueó.
+Se conservan logs/manifiesto originales. La arquitectura posterior usa
+node_modules y scopes físicos, enlaces sólo por dependencia externa, sin
+compartir directorios de cache ni enlaces @workspace.
+
+frontend-mutants-2026-09-22T18-04-56.291Z/ es exclusivamente preflight:
+carga/resolución de config Vite y transformación esbuild de los cuatro archivos.
+CONFIG_TRANSFORM_PREFLIGHT_ONLY_NOT_TEST_PASS. No servidor/listen/app/prueba
+ejecutado. No sustituye resultados GREEN/RED pendientes de MAIN.
+
+frontend-mutants-2026-09-22T18-05-53.128Z/ también NO ACEPTADA:
+fallo de resolución setup /@fs/.../setup.ts antes de ejecutar pruebas.
+Todos los intentos Vite/Vitest se preservan; el runner queda RETIRADO y aborta
+explícitamente. No se atribuye ningún GREEN ni RED a esos intentos.
+
+Alternativa preparada: run-frontend-node-mutants.mjs usa node:test nativo,
+esbuild con aliases de infraestructura, y JSDOM sin servidor ni recursos/red.
+21 obligaciones anteriores mapeadas individualmente a 21 pruebas nativas y los
+mismos defectos productivos. Los archivos Vitest se conservan como referencia,
+pero no se descubren ni ejecutan. La alternativa NO SE HA EJECUTADO.
+
+Actualización posterior — primera ejecución nativa por MAIN:
+frontend-node-mutants-2026-09-22T18-19-01.845Z conserva dos ciclos aceptados:
+E4-ADMIN y E4-SUPERVISOR (GREEN / RED semántico / GREEN restaurado).
+Su estado global FAIL_NOT_ACCEPTED no invalida esos dos resultados terminales.
+E4-OTHER-STORE RED terminó por timeout, sin TAP/JSON terminal: NO ACEPTADO.
+Formateo DOM/fibers es hipótesis, NO causa raíz demostrada. El arreglo autorizado
+convierte exclusivamente ausencia DOM a booleanos; no aumenta timeout ni cambia
+componentes. Se preparó continuación con 19 IDs explícitos, aún no ejecutada.

@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E4-REVIEW-RETRY",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E4-REVIEW-RETRY\n+ actual - expected\n\n  {\n    data: {\n      accion: 'RESPONDER',\n+     claveOperacion: '7614c32a-5410-4fe9-885b-05c7eb381202',\n-     claveOperacion: '33d19c51-d7ee-4b69-b57c-28295734f1e9',\n      comprobanteUrl: null,\n      explicacion: 'Soporte fixture',\n      version: 2\n    },\n    id: 10,\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E4-REVIEW-RETRY\n+ actual - expected\n\n  {\n    data: {\n      accion: 'RESPONDER',\n+     claveOperacion: '7614c32a-5410-4fe9-885b-05c7eb381202',\n-     claveOperacion: '33d19c51-d7ee-4b69-b57c-28295734f1e9',\n      comprobanteUrl: null,\n      explicacion: 'Soporte fixture',\n      version: 2\n    },\n    id: 10,\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 1905.242641"
+  ]
+}

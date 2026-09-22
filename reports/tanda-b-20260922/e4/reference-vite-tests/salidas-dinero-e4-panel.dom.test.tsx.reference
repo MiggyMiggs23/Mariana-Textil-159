@@ -1,0 +1,178 @@
+// @vitest-environment jsdom
+import { render, screen, fireEvent, waitFor, cleanup, act } from "@testing-library/react";
+import React from "react";
+import { SalidasDineroE4Panel } from "../components/salidas-dinero-e4-panel";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { test, describe, beforeEach, vi, expect, afterEach } from "vitest";
+import { Role } from "@workspace/api-client-react";
+import * as apiClientReact from "@workspace/api-client-react";
+import { CrearSalidaDineroCajaBody, ListarProveedoresActivosCajaResponse, ListarSalidasDineroCajaResponse } from "@workspace/api-zod";
+
+vi.mock("@workspace/api-client-react", async () => {
+  const actual = await vi.importActual("@workspace/api-client-react");
+  return {
+    ...(actual as any),
+    useCrearSalidaDineroCaja: vi.fn(),
+    useListarSalidasDineroCaja: vi.fn(),
+    useListarProveedoresActivosCaja: vi.fn(),
+    useGetCurrentUser: vi.fn(),
+    getListarSalidasDineroCajaQueryKey: vi.fn(() => ["listarSalidas"]),
+    getObtenerCorteCajaQueryKey: vi.fn(() => ["obtenerCorte"]),
+  };
+});
+
+const mockCrearMutate = vi.fn();
+
+describe("SalidasDineroE4Panel Contract Tests", () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient();
+    
+    (apiClientReact.useCrearSalidaDineroCaja as any).mockReturnValue({
+      mutate: mockCrearMutate,
+      isPending: false
+    });
+    
+    (apiClientReact.useListarSalidasDineroCaja as any).mockReturnValue({
+      data: ListarSalidasDineroCajaResponse.parse({ salidas: [] }),
+      isLoading: false,
+      isError: false
+    });
+    
+    (apiClientReact.useListarProveedoresActivosCaja as any).mockReturnValue({
+      data: ListarProveedoresActivosCajaResponse.parse([{ id: 1, nombre: "Mariana Test Prov" }])
+    });
+    
+    (apiClientReact.useGetCurrentUser as any).mockReturnValue({
+      data: { rol: Role.ADMIN, ubicacion: { id: 1 } }
+    });
+
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  const renderComponent = (props: any) => {
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <SalidasDineroE4Panel {...props} />
+      </QueryClientProvider>
+    );
+  };
+
+  test("EXTRAORDINARIA envía el payload correcto con cuentaOrigen bloqueada y claveOperacion constante", async () => {
+    renderComponent({ sesionId: 10, canCreate: true, tiendaId: 1 });
+
+    // Rellenar formulario
+    fireEvent.change(screen.getByLabelText(/Monto/i), { target: { value: "150.50" } });
+    fireEvent.change(screen.getByLabelText(/Motivo/i), { target: { value: "Gastos de limpieza" } });
+    
+    // Enviar
+    fireEvent.click(screen.getByRole("button", { name: /Registrar salida extraordinaria/i }));
+
+    await waitFor(() => {
+      expect(mockCrearMutate).toHaveBeenCalledTimes(1);
+      const callArgs = mockCrearMutate.mock.calls[0][0];
+      CrearSalidaDineroCajaBody.parse(callArgs.data);
+      
+      expect(callArgs.id).toBe(10);
+      expect(callArgs.data.monto).toBe("150.50");
+      expect(callArgs.data.motivo).toBe("Gastos de limpieza");
+      expect(callArgs.data.cuentaOrigen).toBe("CAJA_FISICA");
+      expect(callArgs.data.tipo).toBe("EXTRAORDINARIA");
+      expect(callArgs.data.proveedorId).toBeNull();
+      // Debe incluir claveOperacion por idempotencia
+      expect(typeof callArgs.data.claveOperacion).toBe("string");
+      expect(callArgs.data.claveOperacion.length).toBeGreaterThan(10);
+    });
+
+    // A retry is NOT a double click: deliver the transport failure first.
+    act(() => {
+      mockCrearMutate.mock.calls[0][1].onError(new Error("offline synthetic transport"));
+      mockCrearMutate.mock.calls[0][1].onSettled();
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Registrar salida extraordinaria/i }));
+    
+    await waitFor(() => {
+      expect(mockCrearMutate).toHaveBeenCalledTimes(2);
+      const callArgs1 = mockCrearMutate.mock.calls[0][0];
+      const callArgs2 = mockCrearMutate.mock.calls[1][0];
+      expect(callArgs1.data.claveOperacion, "E4-CAPTURE-RETRY").toBe(callArgs2.data.claveOperacion);
+      expect(callArgs1.data).toEqual(callArgs2.data);
+    });
+  });
+
+  test("PROVEEDOR requiere proveedor seleccionado y rechaza envío sin él", async () => {
+    renderComponent({ sesionId: 10, canCreate: true, tiendaId: 1 }); // Tienda Mariana ID=1
+
+    // Cambiar a PROVEEDOR, pero dejar el proveedor sin seleccionar ("Sin proveedor")
+    // Usamos el trigger del Select
+    const tipoTrigger = screen.getByRole("combobox", { name: /Tipo de Salida/i });
+    fireEvent.focus(tipoTrigger);
+    fireEvent.keyDown(tipoTrigger, { key: "ArrowDown" }); // open select
+    fireEvent.click(screen.getByRole("option", { name: "Proveedor" }));
+
+    fireEvent.change(screen.getByLabelText(/Monto/i), { target: { value: "300" } });
+    fireEvent.change(screen.getByLabelText(/Motivo/i), { target: { value: "Pago mercancia" } });
+    
+    // Enviar (proveedor está en 'none' implícitamente por el test)
+    fireEvent.click(screen.getByRole("button", { name: /Registrar salida proveedor/i }));
+
+    // No debe llamar a mutate porque falló la validación
+    expect(mockCrearMutate, "E4-PROVIDER-REQUIRED").not.toHaveBeenCalled();
+
+    // Seleccionar proveedor válido
+    const provTrigger = screen.getByRole("combobox", { name: /Proveedor/i });
+    fireEvent.focus(provTrigger);
+    fireEvent.keyDown(provTrigger, { key: "ArrowDown" });
+    fireEvent.click(screen.getByRole("option", { name: "Mariana Test Prov" }));
+
+    fireEvent.click(screen.getByRole("button", { name: /Registrar salida proveedor/i }));
+
+    await waitFor(() => {
+      expect(mockCrearMutate).toHaveBeenCalledTimes(1);
+      const callArgs = mockCrearMutate.mock.calls[0][0];
+      expect(callArgs.data.tipo).toBe("PROVEEDOR");
+      expect(callArgs.data.proveedorId).toBe(1);
+    });
+  });
+
+  const fill = () => {
+    fireEvent.change(screen.getByLabelText(/Monto/i), { target: { value: "150.50" } });
+    fireEvent.change(screen.getByLabelText(/Motivo/i), { target: { value: "Limpieza" } });
+  };
+  test("E4-CAPTURE-DOUBLE", () => {
+    renderComponent({ sesionId: 10, canCreate: true, tiendaId: 1 });
+    fill();
+    const form = screen.getByRole("form", { name: "Registrar salida de dinero" });
+    act(() => { fireEvent.submit(form); fireEvent.submit(form); });
+    expect(mockCrearMutate.mock.calls.length, "E4-CAPTURE-DOUBLE").toBe(1);
+  });
+  test("E4-CAPTURE-CONTENT", () => {
+    renderComponent({ sesionId: 10, canCreate: true, tiendaId: 1 });
+    fill();
+    const form = screen.getByRole("form", { name: "Registrar salida de dinero" });
+    fireEvent.submit(form);
+    const first = mockCrearMutate.mock.calls[0][0].data.claveOperacion;
+    act(() => {
+      mockCrearMutate.mock.calls[0][1].onError(new Error("synthetic failure"));
+      mockCrearMutate.mock.calls[0][1].onSettled();
+    });
+    fireEvent.change(screen.getByLabelText(/Motivo/i), { target: { value: "Otro gasto" } });
+    fireEvent.submit(form);
+    expect(mockCrearMutate.mock.calls[1][0].data.claveOperacion, "E4-CAPTURE-CONTENT").not.toBe(first);
+  });
+  test("E4-CAPTURE-PERMISSION", () => {
+    renderComponent({ sesionId: 10, canCreate: false, tiendaId: 1 });
+    expect(screen.queryByRole("form"), "E4-CAPTURE-PERMISSION").toBeNull();
+  });
+  test("E4-PROVIDER-LOCATION", () => {
+    renderComponent({ sesionId: 10, canCreate: true, tiendaId: 2 });
+    const trigger = screen.getByRole("combobox", { name: /Tipo de Salida/i });
+    fireEvent.focus(trigger); fireEvent.keyDown(trigger, { key: "ArrowDown" });
+    expect(screen.queryByRole("option", { name: "Proveedor" }), "E4-PROVIDER-LOCATION").toBeNull();
+  });
+});

@@ -1,0 +1,221 @@
+// @vitest-environment jsdom
+import { render, screen, fireEvent, waitFor, cleanup, act } from "@testing-library/react";
+import React from "react";
+import { SalidaDineroE4Item } from "../components/salidas-dinero-e4-item";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { test, describe, beforeEach, vi, expect, afterEach } from "vitest";
+import { Role } from "@workspace/api-client-react";
+import { ListarSalidasDineroCajaResponse } from "@workspace/api-zod";
+
+vi.mock("@workspace/api-client-react", async () => {
+  const actual = await vi.importActual("@workspace/api-client-react");
+  return {
+    ...(actual as any),
+    useRevisarSalidaDineroCaja: vi.fn(),
+    getListarSalidasDineroCajaQueryKey: vi.fn(() => ["listarSalidas"]),
+    getObtenerCorteCajaQueryKey: vi.fn(() => ["obtenerCorte"]),
+  };
+});
+
+import { useRevisarSalidaDineroCaja } from "@workspace/api-client-react";
+const mockRevisarMutate = vi.fn();
+
+describe("SalidaDineroE4Item Contract Tests", () => {
+  let queryClient: QueryClient;
+
+  beforeEach(() => {
+    queryClient = new QueryClient();
+    (useRevisarSalidaDineroCaja as any).mockReturnValue({
+      mutate: mockRevisarMutate,
+      isPending: false
+    });
+    vi.clearAllMocks();
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  const renderComponent = (props: any) => {
+    const parsed = ListarSalidasDineroCajaResponse.parse({ salidas: [{
+      ...props.salida, sesionCajaId: props.sesionId, creadoPorId: 1,
+    }] });
+    const salida = JSON.parse(JSON.stringify(parsed.salidas[0]));
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <SalidaDineroE4Item {...props} salida={salida} />
+      </QueryClientProvider>
+    );
+  };
+
+  const claimed = {
+    id: 11, monto: "100.00", motivo: "Gasto observado", cuentaOrigen: "CAJA_FISICA",
+    createdAt: "2026-09-22T12:00:00.000Z",
+    e4: { estado: "RECLAMADA", tipo: "EXTRAORDINARIA", version: 2, historial: [], claveOperacion: "11111111-1111-4111-8111-111111111111" },
+  };
+  const response = () => {
+    renderComponent({ salida: claimed, sesionId: 10, userRole: Role.SUPERVISOR, tiendaId: 1, userUbicacionId: 1 });
+    fireEvent.click(screen.getByText("Responder"));
+    fireEvent.change(screen.getByPlaceholderText(/Detalla el motivo/i), { target: { value: "Se adjunta soporte" } });
+    return screen.getByRole("button", { name: /Confirmar responder/i });
+  };
+  test("E4-REVIEW-DOUBLE", () => {
+    const confirm = response();
+    act(() => { fireEvent.click(confirm); fireEvent.click(confirm); });
+    expect(mockRevisarMutate.mock.calls.length, "E4-REVIEW-DOUBLE").toBe(1);
+  });
+  test("E4-REVIEW-RETRY", () => {
+    const confirm = response();
+    fireEvent.click(confirm);
+    const first = mockRevisarMutate.mock.calls[0][0];
+    act(() => {
+      mockRevisarMutate.mock.calls[0][1].onError(new Error("synthetic transport failure"));
+      mockRevisarMutate.mock.calls[0][1].onSettled();
+    });
+    fireEvent.click(confirm);
+    expect(mockRevisarMutate.mock.calls[1][0], "E4-REVIEW-RETRY").toEqual(first);
+    expect(first.data).toMatchObject({ accion: "RESPONDER", version: 2, explicacion: "Se adjunta soporte" });
+  });
+  test("E4-REVIEW-CONTENT", () => {
+    const confirm = response();
+    fireEvent.click(confirm);
+    const first = mockRevisarMutate.mock.calls[0][0].data.claveOperacion;
+    act(() => {
+      mockRevisarMutate.mock.calls[0][1].onError(new Error("synthetic transport failure"));
+      mockRevisarMutate.mock.calls[0][1].onSettled();
+    });
+    fireEvent.change(screen.getByPlaceholderText(/Detalla el motivo/i), { target: { value: "Soporte corregido" } });
+    fireEvent.click(confirm);
+    expect(mockRevisarMutate.mock.calls[1][0].data.claveOperacion, "E4-REVIEW-CONTENT").not.toBe(first);
+  });
+  test("E4-CAJA-NO-REVIEW", () => {
+    renderComponent({ salida: { ...claimed, e4: { ...claimed.e4, estado: "PENDIENTE" } }, sesionId: 10, userRole: Role.CAJA, tiendaId: 1, userUbicacionId: 1 });
+    expect(screen.queryByText("Aceptar"), "E4-CAJA-NO-REVIEW").toBeNull();
+    expect(screen.queryByText("Reclamar")).toBeNull();
+    expect(screen.queryByText("Responder")).toBeNull();
+  });
+
+  test("ADMIN puede ACEPTAR y RECLAMAR una salida PENDIENTE", () => {
+    const salida = {
+      id: 1,
+      monto: "100.00",
+      motivo: "Prueba E4",
+      cuentaOrigen: "CAJA_FISICA",
+      createdAt: new Date().toISOString(),
+      e4: {
+        estado: "PENDIENTE",
+        tipo: "EXTRAORDINARIA",
+        version: 1,
+        claveOperacion: "11111111-1111-4111-8111-111111111111",
+        historial: []
+      }
+    };
+
+    renderComponent({
+      salida,
+      sesionId: 10,
+      userRole: Role.ADMIN,
+      tiendaId: 1
+    });
+
+    expect(screen.queryByText("Aceptar"), "E4-ADMIN").toBeTruthy();
+    expect(screen.queryByText("Reclamar")).toBeTruthy();
+    expect(screen.queryByText("Responder")).toBeNull();
+  });
+
+  test("SUPERVISOR de la misma tienda puede RESPONDER sobre una salida RECLAMADA", () => {
+    const salida = {
+      id: 2,
+      monto: "200.00",
+      motivo: "Prueba Reclamo",
+      cuentaOrigen: "CAJA_FISICA",
+      createdAt: new Date().toISOString(),
+      e4: {
+        estado: "RECLAMADA",
+        tipo: "EXTRAORDINARIA",
+        version: 2,
+        claveOperacion: "22222222-2222-4222-8222-222222222222",
+        historial: []
+      }
+    };
+
+    renderComponent({
+      salida,
+      sesionId: 10,
+      userRole: Role.SUPERVISOR,
+      tiendaId: 1,
+      userUbicacionId: 1
+    });
+
+    expect(screen.queryByText("Aceptar")).toBeNull();
+    expect(screen.queryByText("Reclamar")).toBeNull();
+    expect(screen.queryByText("Responder"), "E4-SUPERVISOR").toBeTruthy();
+  });
+
+  test("SUPERVISOR de OTRA tienda NO puede RESPONDER", () => {
+    const salida = {
+      id: 3,
+      monto: "200.00",
+      motivo: "Prueba Reclamo Ajeno",
+      cuentaOrigen: "CAJA_FISICA",
+      createdAt: new Date().toISOString(),
+      e4: {
+        estado: "RECLAMADA",
+        tipo: "EXTRAORDINARIA",
+        version: 2,
+        claveOperacion: "33333333-3333-4333-8333-333333333333",
+        historial: []
+      }
+    };
+
+    renderComponent({
+      salida,
+      sesionId: 10,
+      userRole: Role.SUPERVISOR,
+      tiendaId: 3,
+      userUbicacionId: 1
+    });
+
+    expect(screen.queryByText("Responder"), "E4-OTHER-STORE").toBeNull();
+  });
+
+  test("RECLAMAR requiere explicación y envía datos correctos", async () => {
+    const salida = {
+      id: 4,
+      monto: "100.00",
+      motivo: "Reclamar E4",
+      cuentaOrigen: "CAJA_FISICA",
+      createdAt: new Date().toISOString(),
+      e4: {
+        estado: "PENDIENTE",
+        tipo: "EXTRAORDINARIA",
+        version: 1,
+        claveOperacion: "44444444-4444-4444-8444-444444444444",
+        historial: []
+      }
+    };
+
+    renderComponent({
+      salida,
+      sesionId: 10,
+      userRole: Role.ADMIN,
+      tiendaId: 1
+    });
+
+    fireEvent.click(screen.getByText("Reclamar"));
+    
+    fireEvent.click(screen.getByRole("button", { name: /Confirmar reclamar/i }));
+    expect(mockRevisarMutate, "E4-CLAIM-REASON").not.toHaveBeenCalled();
+
+    fireEvent.change(screen.getByPlaceholderText(/Detalla el motivo/i), { target: { value: "Falta comprobante original" } });
+    fireEvent.click(screen.getByRole("button", { name: /Confirmar reclamar/i }));
+
+    await waitFor(() => {
+      expect(mockRevisarMutate).toHaveBeenCalled();
+      const callArgs = mockRevisarMutate.mock.calls[0][0];
+      expect(callArgs.salidaId).toBe(4);
+      expect(callArgs.data.accion).toBe("RECLAMAR");
+      expect(callArgs.data.explicacion).toBe("Falta comprobante original");
+    });
+  });
+});

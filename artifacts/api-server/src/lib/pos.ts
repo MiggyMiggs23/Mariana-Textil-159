@@ -1,4 +1,6 @@
 import { and, asc, count, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
+import { E4_CASH_OUT_ENABLED, E4CashOutError, createE4CashOut, type E4Actor, type E4Kind } from "./e4-cash-out";
+import { e4CashOutRepository, readE4CashOutRevisions } from "./e4-cash-out-repository";
 import { readSessionCash } from "./caja-corte-reader";
 import { cashCents, cashMoney } from "./caja-cash-ledger";
 import type { Request } from "express";
@@ -1757,8 +1759,15 @@ export async function abrirSesionCaja(
 
 export async function crearSalidaDineroCaja(
   tx: Tx,
-  input: { sesionCajaId: number; monto: string; motivo: string; proveedorId?: number | null; cuentaOrigen: "CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL"; creadoPorId: number; ip: string },
+  input: { sesionCajaId: number; monto: string; motivo: string; proveedorId?: number | null; cuentaOrigen: "CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL"; creadoPorId: number; ip: string; tipo?: E4Kind; claveOperacion?: string; actor?: E4Actor },
 ) {
+  if (E4_CASH_OUT_ENABLED) {
+    if (!input.actor || input.actor.id !== input.creadoPorId)
+      throw new E4CashOutError("Se requiere el actor autenticado.", "E4_ACTOR_REQUIRED", 403);
+    return createE4CashOut(e4CashOutRepository(tx), input.actor, input);
+  }
+  if (input.tipo !== undefined || input.claveOperacion !== undefined)
+    throw new E4CashOutError("Las salidas extraordinarias E4 aún no están liberadas.", "E4_DISABLED", 403);
   const monto = money(input.monto);
   if (monto <= 0) throw new PosError("El monto de la salida debe ser mayor a cero.", "INVALID_AMOUNT");
   const motivo = input.motivo.trim();
@@ -2685,7 +2694,13 @@ export async function buildCorteCaja(database: Reader, sesionId: number) {
         importe: decimalMoney(cuentas.CUENTAS_POR_COBRAR),
       },
     ],
-    salidas: salidas.map((salida) => ({ ...salida, createdAt: salida.createdAt.toISOString() })),
+    salidas: await (async () => {
+      const revisions = await readE4CashOutRevisions(database, sesion.id);
+      return salidas.map((salida) => ({
+        ...salida, createdAt: salida.createdAt.toISOString(),
+        ...(revisions.has(salida.id) ? { e4: revisions.get(salida.id)! } : {}),
+      }));
+    })(),
     salidasPorCuenta: Object.fromEntries(Object.entries(salidasPorCuenta).map(([cuentaOrigen, cents]) => [cuentaOrigen, decimalMoney(cents)])),
     facturacion: [
       {

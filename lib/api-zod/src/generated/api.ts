@@ -8324,6 +8324,9 @@ export const ObtenerCorteCajaParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const obtenerCorteCajaResponseSalidasItemE4VersionMin = 0;
+
+
 export const obtenerCorteCajaResponseHojaVentasDiaFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
@@ -8358,7 +8361,21 @@ export const ObtenerCorteCajaResponse = zod.object({
   "proveedorId": zod.number().nullable(),
   "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
   "createdAt": zod.coerce.date(),
-  "proveedor": zod.string().nullable()
+  "proveedor": zod.string().nullable(),
+  "e4": zod.object({
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']),
+  "estado": zod.enum(['PENDIENTE', 'RECLAMADA', 'RESPONDIDA', 'ACEPTADA', 'NO_APLICA']),
+  "version": zod.number().int().min(obtenerCorteCajaResponseSalidasItemE4VersionMin),
+  "claveOperacion": zod.string().uuid(),
+  "historial": zod.array(zod.object({
+  "accion": zod.enum(['ACEPTAR', 'RECLAMAR', 'RESPONDER']),
+  "version": zod.number().int().min(1),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "explicacion": zod.string().nullable(),
+  "comprobanteUrl": zod.string().nullable()
+}))
+}).optional()
 })),
   "salidasPorCuenta": zod.record(zod.string(), zod.string()),
   "facturacion": zod.array(zod.object({
@@ -8491,6 +8508,9 @@ export const CerrarSesionCajaBody = zod.object({
   "efectivoContado": zod.number().min(cerrarSesionCajaBodyEfectivoContadoMin)
 })
 
+export const cerrarSesionCajaResponseSalidasItemE4VersionMin = 0;
+
+
 export const cerrarSesionCajaResponseHojaVentasDiaFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
@@ -8525,7 +8545,21 @@ export const CerrarSesionCajaResponse = zod.object({
   "proveedorId": zod.number().nullable(),
   "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
   "createdAt": zod.coerce.date(),
-  "proveedor": zod.string().nullable()
+  "proveedor": zod.string().nullable(),
+  "e4": zod.object({
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']),
+  "estado": zod.enum(['PENDIENTE', 'RECLAMADA', 'RESPONDIDA', 'ACEPTADA', 'NO_APLICA']),
+  "version": zod.number().int().min(cerrarSesionCajaResponseSalidasItemE4VersionMin),
+  "claveOperacion": zod.string().uuid(),
+  "historial": zod.array(zod.object({
+  "accion": zod.enum(['ACEPTAR', 'RECLAMAR', 'RESPONDER']),
+  "version": zod.number().int().min(1),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "explicacion": zod.string().nullable(),
+  "comprobanteUrl": zod.string().nullable()
+}))
+}).optional()
 })),
   "salidasPorCuenta": zod.record(zod.string(), zod.string()),
   "facturacion": zod.array(zod.object({
@@ -8653,6 +8687,9 @@ export const ListarSalidasDineroCajaParams = zod.object({
 export const listarSalidasDineroCajaResponseSalidasItemOneMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
 export const listarSalidasDineroCajaResponseSalidasItemOneMotivoMax = 500;
 
+export const listarSalidasDineroCajaResponseSalidasItemTwoE4VersionMin = 0;
+
+
 
 
 export const ListarSalidasDineroCajaResponse = zod.object({
@@ -8660,18 +8697,34 @@ export const ListarSalidasDineroCajaResponse = zod.object({
   "monto": zod.string().regex(listarSalidasDineroCajaResponseSalidasItemOneMontoRegExp),
   "motivo": zod.string().min(1).max(listarSalidasDineroCajaResponseSalidasItemOneMotivoMax),
   "proveedorId": zod.number().nullish(),
-  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL'])
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']).optional().describe('Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.'),
+  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.')
 }).and(zod.object({
   "id": zod.number(),
   "sesionCajaId": zod.number(),
   "creadoPorId": zod.number(),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "e4": zod.object({
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']),
+  "estado": zod.enum(['PENDIENTE', 'RECLAMADA', 'RESPONDIDA', 'ACEPTADA', 'NO_APLICA']),
+  "version": zod.number().int().min(listarSalidasDineroCajaResponseSalidasItemTwoE4VersionMin),
+  "claveOperacion": zod.string().uuid(),
+  "historial": zod.array(zod.object({
+  "accion": zod.enum(['ACEPTAR', 'RECLAMAR', 'RESPONDER']),
+  "version": zod.number().int().min(1),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "explicacion": zod.string().nullable(),
+  "comprobanteUrl": zod.string().nullable()
+}))
+}).optional()
 })))
 })
 
 
 /**
- * @summary Registra una salida de dinero de caja en Tienda Mariana
+ * @summary Registra una salida de dinero; E4 requiere clasificación e idempotencia cuando se libere
  */
 export const CrearSalidaDineroCajaParams = zod.object({
   "id": zod.coerce.number()
@@ -8686,11 +8739,16 @@ export const CrearSalidaDineroCajaBody = zod.object({
   "monto": zod.string().regex(crearSalidaDineroCajaBodyMontoRegExp),
   "motivo": zod.string().min(1).max(crearSalidaDineroCajaBodyMotivoMax),
   "proveedorId": zod.number().nullish(),
-  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL'])
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']).optional().describe('Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.'),
+  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.')
 })
 
 export const crearSalidaDineroCajaResponseOneMontoRegExp = new RegExp('^[0-9]+(\\.[0-9]{1,2})?$');
 export const crearSalidaDineroCajaResponseOneMotivoMax = 500;
+
+export const crearSalidaDineroCajaResponseTwoE4VersionMin = 0;
+
 
 
 
@@ -8698,13 +8756,77 @@ export const CrearSalidaDineroCajaResponse = zod.object({
   "monto": zod.string().regex(crearSalidaDineroCajaResponseOneMontoRegExp),
   "motivo": zod.string().min(1).max(crearSalidaDineroCajaResponseOneMotivoMax),
   "proveedorId": zod.number().nullish(),
-  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL'])
+  "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']).optional().describe('Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.'),
+  "claveOperacion": zod.string().uuid().optional().describe('Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.')
 }).and(zod.object({
   "id": zod.number(),
   "sesionCajaId": zod.number(),
   "creadoPorId": zod.number(),
-  "createdAt": zod.coerce.date()
+  "createdAt": zod.coerce.date(),
+  "e4": zod.object({
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']),
+  "estado": zod.enum(['PENDIENTE', 'RECLAMADA', 'RESPONDIDA', 'ACEPTADA', 'NO_APLICA']),
+  "version": zod.number().int().min(crearSalidaDineroCajaResponseTwoE4VersionMin),
+  "claveOperacion": zod.string().uuid(),
+  "historial": zod.array(zod.object({
+  "accion": zod.enum(['ACEPTAR', 'RECLAMAR', 'RESPONDER']),
+  "version": zod.number().int().min(1),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "explicacion": zod.string().nullable(),
+  "comprobanteUrl": zod.string().nullable()
 }))
+}).optional()
+}))
+
+
+/**
+ * @summary E4 apagado; ADMIN acepta o reclama y SUPERVISOR responde extraordinarias
+ */
+
+
+
+export const RevisarSalidaDineroCajaParams = zod.object({
+  "id": zod.coerce.number(),
+  "salidaId": zod.coerce.number().int().min(1)
+})
+
+export const revisarSalidaDineroCajaBodyVersionMin = 0;
+
+export const revisarSalidaDineroCajaBodyExplicacionMax = 2000;
+
+export const revisarSalidaDineroCajaBodyComprobanteUrlMax = 2000;
+
+
+
+export const RevisarSalidaDineroCajaBody = zod.object({
+  "accion": zod.enum(['ACEPTAR', 'RECLAMAR', 'RESPONDER']),
+  "version": zod.number().int().min(revisarSalidaDineroCajaBodyVersionMin),
+  "claveOperacion": zod.string().uuid(),
+  "explicacion": zod.string().min(1).max(revisarSalidaDineroCajaBodyExplicacionMax).optional().describe('Obligatoria y no vacía al reclamar o responder.'),
+  "comprobanteUrl": zod.string().max(revisarSalidaDineroCajaBodyComprobanteUrlMax).nullish().describe('Enlace HTTPS opcional a un comprobante ya disponible; no admite bytes ni base64.')
+})
+
+export const revisarSalidaDineroCajaResponseVersionMin = 0;
+
+
+
+
+export const RevisarSalidaDineroCajaResponse = zod.object({
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']),
+  "estado": zod.enum(['PENDIENTE', 'RECLAMADA', 'RESPONDIDA', 'ACEPTADA', 'NO_APLICA']),
+  "version": zod.number().int().min(revisarSalidaDineroCajaResponseVersionMin),
+  "claveOperacion": zod.string().uuid(),
+  "historial": zod.array(zod.object({
+  "accion": zod.enum(['ACEPTAR', 'RECLAMAR', 'RESPONDER']),
+  "version": zod.number().int().min(1),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "explicacion": zod.string().nullable(),
+  "comprobanteUrl": zod.string().nullable()
+}))
+})
 
 
 /**
@@ -11022,6 +11144,9 @@ export const GetAdminCorteParams = zod.object({
   "id": zod.coerce.number()
 })
 
+export const getAdminCorteResponseSalidasItemE4VersionMin = 0;
+
+
 export const getAdminCorteResponseHojaVentasDiaFechaOperativaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
 
 
@@ -11056,7 +11181,21 @@ export const GetAdminCorteResponse = zod.object({
   "proveedorId": zod.number().nullable(),
   "cuentaOrigen": zod.enum(['CAJA_FISICA', 'CUENTA_NO_FISCAL', 'CUENTA_FISCAL']),
   "createdAt": zod.coerce.date(),
-  "proveedor": zod.string().nullable()
+  "proveedor": zod.string().nullable(),
+  "e4": zod.object({
+  "tipo": zod.enum(['EXTRAORDINARIA', 'PROVEEDOR']),
+  "estado": zod.enum(['PENDIENTE', 'RECLAMADA', 'RESPONDIDA', 'ACEPTADA', 'NO_APLICA']),
+  "version": zod.number().int().min(getAdminCorteResponseSalidasItemE4VersionMin),
+  "claveOperacion": zod.string().uuid(),
+  "historial": zod.array(zod.object({
+  "accion": zod.enum(['ACEPTAR', 'RECLAMAR', 'RESPONDER']),
+  "version": zod.number().int().min(1),
+  "usuarioId": zod.number().int(),
+  "createdAt": zod.coerce.date(),
+  "explicacion": zod.string().nullable(),
+  "comprobanteUrl": zod.string().nullable()
+}))
+}).optional()
 })),
   "salidasPorCuenta": zod.record(zod.string(), zod.string()),
   "facturacion": zod.array(zod.object({

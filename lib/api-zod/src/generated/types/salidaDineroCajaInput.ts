@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { SalidaDineroCajaInputCuentaOrigen } from './salidaDineroCajaInputCuentaOrigen';
+import type { SalidaDineroCajaInputTipo } from './salidaDineroCajaInputTipo';
 
 export interface SalidaDineroCajaInput {
   /** @pattern ^[0-9]+(\.[0-9]{1,2})?$ */
@@ -18,4 +19,8 @@ export interface SalidaDineroCajaInput {
   /** @nullable */
   proveedorId?: number | null;
   cuentaOrigen: SalidaDineroCajaInputCuentaOrigen;
+  /** Obligatorio al liberar E4; nunca se infiere a partir de proveedorId. */
+  tipo?: SalidaDineroCajaInputTipo;
+  /** Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar. */
+  claveOperacion?: string;
 }

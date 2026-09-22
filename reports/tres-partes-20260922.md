@@ -97,4 +97,58 @@ Incluye pines, respaldo/ventana exclusiva, SQL acotado y límites de reversión.
 No se ejecutó ni se recibió esa autorización. El paquete CLOSED anterior y
 E2 permanecen intactos, al igual que PID 3800, workflow, bundle, log y traza.
 
-## Parte 3 — se inicia solo después de presentar la entrega E3
+Revisión de Parte 2: `291757c183d092dd262bf26ab242ef282cd9ed2c`.
+La fase B y el README se presentaron antes de iniciar construcción de Tanda B.
+
+## Parte 3 — Tanda B, construcción ordenada y apagada
+
+### E4 — construida OFF; SQL preparado, no ejecutado
+
+- Captura extraordinaria y proveedor explícitas, motivo y sesión abierta.
+  SUPERVISOR/CAJA operan su tienda; proveedor solo Mariana. Extraordinarias
+  usan caja física, sin Fondo en Coco/Cruces. Se preserva el flujo anterior OFF.
+- ADMIN acepta/reclama; SUPERVISOR de la tienda responde con explicación y
+  comprobante HTTPS opcional. Hay historial, control de versión, reintentos
+  idempotentes y bloqueo síncrono de doble envío en captura y revisión.
+- El egreso afecta inmediatamente el corte, independiente de su revisión.
+  Revisar no cambia importes y se permite después del cierre.
+- Permisos operativos ON desde `cobros_pagos`; OFF conserva `cortes`.
+  No se concedieron permisos en la base. UI y servidor permanecen OFF.
+- SQL y reversión en `reports/tanda-b-20260922/e4/`; no ejecutados.
+  La reversión aborta si hay evidencia. P12 se documenta como dependencia
+  concreta de E12; aceptar una salida no autoriza sobregiro.
+
+**Verificación aceptada:** 34 pruebas backend y 34 defectos aislados
+(32 originales más dos selectores de permisos); 21 pruebas sobre componentes
+reales y 21 defectos aislados, con restauración GREEN. Las pruebas de interfaz
+se completaron en grupos de 2, 13 y 6, conservando resultados ya válidos.
+Typecheck API y frontend PASS.
+
+Evidencia backend:
+`e4/logs/backend-2026-09-22T17-43-24.422Z/manifest.json` y
+`e4/logs/backend-2026-09-22T17-52-41.648Z/manifest.json`.
+Evidencia de interfaz:
+`e4/frontend-node-mutants-2026-09-22T18-19-01.845Z/manifest.json`,
+`e4/frontend-node-mutants-2026-09-22T18-25-48.496Z/manifest.json` y
+`e4/frontend-node-mutants-2026-09-22T18-32-33.050Z/manifest.json`.
+Rutas relativas a `reports/tanda-b-20260922/`.
+
+**Incidentes y límites:** el primer arnés de interfaz modificó temporalmente
+fuentes vigiladas y las restauró; su evidencia queda rechazada. Se sustituyó
+por copias físicas, guardias de red/escritura y entorno limpio. Tres intentos
+Vitest fallaron antes de ejecutar casos y no cuentan como rojos. La alternativa
+nativa detectó un timeout al reportar una aserción con un objeto DOM; se cambió
+solo su representación a un booleano, sin ampliar timeout ni cambiar la
+obligación, y el caso terminó correctamente. Un fixture del contenedor carecía
+de los globals de navegador usados por Wouter; se completó antes de verificar
+los seis casos pendientes. Todos los intentos se conservan.
+
+La cobertura backend usa repositorios sintéticos y captura consultas del
+adaptador real: no acredita ejecución PostgreSQL del SQL preparado ni una
+prueba HTTP montada. La interfaz usa componentes reales con infraestructura
+aislada, sin acceder a la API en marcha. PID 3800, gates OFF e inventario de
+archivos protegidos fueron comprobados tras el incidente.
+
+### Entregas siguientes
+
+E12, E9, E5, E11, E7 y adaptación de suites: pendientes, en ese orden.

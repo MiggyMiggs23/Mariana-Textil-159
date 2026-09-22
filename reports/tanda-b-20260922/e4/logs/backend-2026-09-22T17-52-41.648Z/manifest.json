@@ -1,0 +1,58 @@
+{
+  "startedAt": "2026-09-22T17:52:41.649Z",
+  "mode": "OFFLINE_SYNTHETIC_REPOSITORIES_NO_SQL_NO_APP",
+  "sourceHashes": {
+    "artifacts/api-server/src/lib/e4-cash-out.ts": "f14dab0260ff8485d3990d733b8f0854bdd98046b6b4912e265631bfa8548216",
+    "artifacts/api-server/src/lib/e4-cash-out-repository.ts": "d1849e6cd7a761549a04d870e6a01ac96175c5419fce0d48cdafcff0a3602225",
+    "artifacts/api-server/src/lib/e4-cash-out.test.ts": "8b4aafd8c58f660da6e9c3efe36a29683b0467f18cafbf78b075de28777ffa94",
+    "artifacts/api-server/src/lib/caja-cash-ledger.ts": "d5663a1e88af3e4443f919fc280dd349cbf208893dc5ea4eb841b73690e7b78a",
+    "lib/api-zod/src/generated/api.ts": "982479e06bdb0ab946d52725e4ba1db4237f2c6d6f3bc556ef5446d64fbe933a",
+    "reports/tanda-b-20260922/e4/offline-guard.cjs": "94b060bed8b03f8d1f80e6be93177e4593879a18ed9ae98cfd55d40c1765eab1"
+  },
+  "cases": [
+    {
+      "name": "E4-PERMISSIONS-ON",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "enabled ? \"cobros_pagos\" : \"cortes\"",
+      "after": "enabled ? \"cortes\" : \"cortes\"",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-PERMISSIONS-ON-green.log",
+        "E4-PERMISSIONS-ON-red.log"
+      ]
+    },
+    {
+      "name": "E4-PERMISSIONS-OFF",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "enabled ? \"cobros_pagos\" : \"cortes\"",
+      "after": "enabled ? \"cobros_pagos\" : \"cobros_pagos\"",
+      "green": 0,
+      "red": 1,
+      "logs": [
+        "E4-PERMISSIONS-OFF-green.log",
+        "E4-PERMISSIONS-OFF-red.log"
+      ]
+    }
+  ],
+  "tests": "artifacts/api-server/src/lib/e4-cash-out.test.ts",
+  "sandbox": "/tmp/e4-backend-offline-rxWpIC",
+  "plannedCases": [
+    {
+      "name": "E4-PERMISSIONS-ON",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "enabled ? \"cobros_pagos\" : \"cortes\"",
+      "after": "enabled ? \"cortes\" : \"cortes\""
+    },
+    {
+      "name": "E4-PERMISSIONS-OFF",
+      "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+      "before": "enabled ? \"cobros_pagos\" : \"cortes\"",
+      "after": "enabled ? \"cobros_pagos\" : \"cobros_pagos\""
+    }
+  ],
+  "caseCount": 2,
+  "totalDeclaredCases": 34,
+  "status": "PASS",
+  "finishedAt": "2026-09-22T17:52:43.650Z"
+}

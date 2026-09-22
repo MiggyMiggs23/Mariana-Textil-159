@@ -1,0 +1,106 @@
+CONSOLIDADO FINAL — 21/21 OBLIGACIONES FRONTEND NATIVAS ACEPTADAS.
+No es una corrida monolítica nueva: son 2 + 13 + 6 ciclos terminales disjuntos.
+Cada ciclo tiene GREEN exit 0, RED exit 1 con ERR_ASSERTION y marcador exacto,
+y GREEN restaurado exit 0. Inspección sólo lectura de manifiestos: IDs únicos,
+marcadores semánticos y hashes de fuentes productivas coinciden con candidato.
+
+R1 = frontend-node-mutants-2026-09-22T18-19-01.845Z (2 ciclos terminales)
+R2 = frontend-node-mutants-2026-09-22T18-25-48.496Z (13 ciclos terminales)
+R3 = frontend-node-mutants-2026-09-22T18-32-33.050Z (6 ciclos terminales)
+R1/R2 conservan FAIL_NOT_ACCEPTED global por sus casos posteriores fallidos;
+no se cambia ese estado histórico. R3 conserva PASS_SELECTED_CASES.
+
+ID                         Evidencia  Defecto productivo específico detectado
+E4-ADMIN                   R1         quitar privilegio ADMIN de revisión
+E4-SUPERVISOR              R1         impedir respuesta SUPERVISOR local
+E4-OTHER-STORE             R2         quitar comparación de tienda
+E4-CLAIM-REASON            R2         quitar explicación obligatoria RECLAMAR
+E4-CAPTURE-RETRY           R2         regenerar UUID de captura en reintento
+E4-PROVIDER-REQUIRED       R2         permitir proveedor vacío
+E4-GATE-OFF                R2         forzar panel E4 con gate OFF
+E4-CAPTURE-DOUBLE          R2         quitar bloqueo síncrono doble submit
+E4-CAPTURE-CONTENT         R2         no renovar UUID al cambiar contenido
+E4-CAPTURE-PERMISSION      R2         ignorar canCreate
+E4-PROVIDER-LOCATION       R2         permitir proveedor fuera de Mariana
+E4-REVIEW-DOUBLE           R2         quitar bloqueo síncrono revisión
+E4-REVIEW-RETRY            R2         regenerar UUID de revisión en reintento
+E4-REVIEW-CONTENT          R2         no renovar UUID por contenido distinto
+E4-CAJA-NO-REVIEW          R2         conceder privilegios ADMIN a CAJA
+E4-PARENT-COCO             R3         usar cortes/ver en vez de cobros_pagos/ver
+E4-PARENT-CRUCES           R3         volver a limitar parent ON a Mariana
+E4-PARENT-VIEW             R3         ignorar permiso ver del parent
+E4-PARENT-CREATE           R3         ignorar permiso crear del parent
+E4-PARENT-OFF-COCO         R3         mostrar panel OFF fuera de Mariana
+E4-PARENT-OFF-MARIANA      R3         mostrar formulario E4 en Mariana OFF
+
+Única suite activa E4: src/components/e4-node.dom.test.tsx (21 test() nativos).
+Las cuatro suites Vitest retiradas se movieron fuera de src a
+reference-vite-tests/*.tsx.reference, conservando bytes/SHA256. No cuentan como
+pruebas adicionales. Runner sólo selecciona suite nativa; snapshots excluyen
+otras suites *.test/ *.spec y jamás copian el archivo histórico de referencias.
+Scripts root/app test:e4-cash-out apuntan al runner Node seguro.
+
+TYPECHECK frontend: MAIN confirmó PASS, frontend-types-20260922T183323Z.log
+sin diagnósticos, con noEmit/incremental false y preload offline.
+No se ejecutaron nuevamente pruebas ni typecheck durante la consolidación.
+La mudanza de referencias y exclusión de suites ajenas son posteriores a esas
+evidencias; no se presentan como una nueva ejecución de la suite.
+
+Límites: componentes/page/UI primitives reales montados en JSDOM; hooks y shell
+de navegación aislados. No navegador visual/layout, servidor, API, SQL, DB ni
+persistencia real. Retry/concurrencia aquí son contratos UI con callbacks
+controlados; no sustituyen pruebas backend. Gate productivo sigue OFF.
+Ningún timeout, error setup/parser/infra ni fallo histórico cuenta como RED.
+No se afirma liberación funcional, despliegue ni activación E4.
+
+--- REGISTRO HISTÓRICO CONSERVADO (NO ES ESTADO ACTUAL) ---
+ESTADO ANTERIOR — NO HABÍA PASS TOTAL FRONTEND E4.
+Actualización frontend-node-mutants-2026-09-22T18-25-48.496Z:
+13 ciclos nuevos completos se suman a ADMIN/SUPERVISOR anteriores: 15/21.
+Las aserciones booleanas evitaron repetir el timeout observado; esto no
+demuestra retrospectivamente una causa raíz del timeout anterior.
+Primer parent COCO: GREEN falló por ReferenceError location is not defined
+en wouter/use-browser-location.js:42; NO hay resultado aceptado para ese caso.
+Fix sólo fixture JSDOM: location/history, PopStateEvent/HashChangeEvent y
+addEventListener/removeEventListener/dispatchEvent ligados a window.
+Fuentes productivas y semántica de los 21 casos permanecen intactas.
+MAIN pendiente: seis parents y typecheck offline (frontend-comandos.txt).
+No reejecutar los 15 ciclos aceptados. No afirmar cierre E4 antes de resultados.
+
+--- Registro previo, conservado para trazabilidad ---
+Retiradas todas las afirmaciones de certificación del bloque histórico inferior.
+frontend-mutants/ y los tres intentos Vite/Vitest NO son evidencia aceptada.
+Se conservan intactos, incluidos sus mensajes previos.
+
+Evidencia nativa frontend-node-mutants-2026-09-22T18-19-01.845Z:
+- E4-ADMIN y E4-SUPERVISOR: ciclos terminales GREEN / RED semántico / restaurado
+  GREEN registrados y válidos para los snapshots/hashes de esa ejecución.
+- E4-OTHER-STORE: GREEN; RED ETIMEDOUT sin reporte terminal, NO ACEPTADO.
+- Resto: no ejecutado en esa pasada.
+Hipótesis del timeout: formateo de HTMLElement/React fibers en error/reporters.
+No hay stack/perfil que confirme causa raíz. No se reclasifica timeout como RED.
+
+Preparación posterior autorizada: sólo aserciones de ausencia DOM transformadas
+a Boolean(query) === false conservando semántica y marcadores; timeout intacto.
+21 obligaciones conservadas. Selección MAIN restante: los 19 IDs explícitos de
+frontend-comandos.txt. No se repiten los dos ciclos aceptados. Si vuelve a faltar
+un resultado terminal semántico, detener e informar limitación, no cierre E4.
+
+--- HISTÓRICO RETIRADO / NO ACEPTADO (texto original conservado) ---
+Componente: SalidaDineroE4Item (src/components/salidas-dinero-e4-item.tsx) y SalidasDineroE4Panel (src/components/salidas-dinero-e4-panel.tsx)
+
+Casos cubiertos con PRUEBAS E ISOLACIÓN JSDOM (mutantes verificados en `reports/tanda-b-20260922/e4/frontend-mutants`):
+1. **Captura REAL montada**:
+   - `EXTRAORDINARIA`: Envía cuentaOrigen=`CAJA_FISICA`, tipo=`EXTRAORDINARIA` y proveedorId nulo.
+   - Idempotencia y Reintentos: Al enviar dos veces el formulario simulando fallo/reintento, la UUID (`claveOperacion`) se envía exactamente igual en ambos payload. Si falla, el mutante lo rompe generando una nueva (Verificado en Mutante 3).
+   - `PROVEEDOR`: Validado para bloquear envíos si no se selecciona un Proveedor (Verificado en Mutante 2).
+2. **Revisión**:
+   - Permisos de revisión: ADMIN puede ACEPTAR y RECLAMAR una salida PENDIENTE, pero no RESPONDER.
+   - Permisos de revisión local: SUPERVISOR de la misma tienda puede RESPONDER sobre una salida RECLAMADA.
+   - Aislamiento por tienda: SUPERVISOR de OTRA tienda NO puede RESPONDER, los botones no se renderizan (Verificado en Mutante 1).
+   - Validación y payload: RECLAMAR requiere una explicación obligatoria; rechaza si no hay texto y envía payload correcto.
+3. **Restricción OFF (Feature Flag)**:
+   - Se validó el flag `E4_CASH_OUT_ENABLED = false`. En este estado no ejecuta hooks del API para Salidas de Dinero E4 (Verificado en Mutante 4, comprobando que si está activo de forma errónea, falla al no renderizar la UI clásica).
+
+Estrategia: JSDOM real-montado sin DB/Red. Todo certificado con script mutante `run-frontend-mutants.mjs` que evalúa que los test arrojan rojo cuando se eliminan las salvaguardas de UI y lógicas.
+Estado del Feature Flag: Se conserva `export const E4_CASH_OUT_ENABLED = false` por defecto para no afectar el entorno OFF original.

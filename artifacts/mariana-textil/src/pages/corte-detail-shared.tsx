@@ -11,6 +11,7 @@ import { Link } from "wouter";
 import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import { useListCajaRecibosE3, getListCajaRecibosE3QueryKey, useGetCurrentUser } from "@workspace/api-client-react";
 import { CorteEfectivoDesglose } from "@/components/corte-efectivo-desglose";
+import { SalidaDineroE4Item } from "@/components/salidas-dinero-e4-item";
 
 export function CorteTicketFolioLink({
   ticketId,
@@ -335,6 +336,31 @@ export default function CorteDetail({ corte }: { corte: CorteCaja }) {
               <span>Diferencia de Arqueo</span>
               <span className="font-mono">{dif > 0 ? "+" : ""}{formatNumber(corte.diferencia || "0", { kind: "money" })}</span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {corte.salidas && corte.salidas.length > 0 && (
+        <div className="mt-6">
+          <h3 className="font-bold border-b pb-2 mb-3">Salidas de Dinero ({corte.salidas.length})</h3>
+          <div className="space-y-4">
+            {corte.salidas.map((salida) => (
+              <SalidaDineroE4Item
+                key={salida.id}
+                salida={{
+                  ...salida,
+                  createdAt: salida.createdAt,
+                  proveedorId: salida.proveedorId,
+                  cuentaOrigen: salida.cuentaOrigen,
+                  e4: salida.e4
+                }}
+                nombreProveedor={salida.proveedor || undefined}
+                sesionId={corte.sesion.id}
+                userRole={user?.rol}
+                userUbicacionId={user?.ubicacion?.id}
+                tiendaId={corte.sesion.ubicacionId}
+              />
+            ))}
           </div>
         </div>
       )}

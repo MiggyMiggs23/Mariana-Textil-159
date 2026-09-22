@@ -330,6 +330,8 @@ import type {
   SalidaDetailResponseResponse,
   SalidaDineroCaja,
   SalidaDineroCajaInput,
+  SalidaDineroRevision,
+  SalidaDineroRevisionInput,
   SalidaExtraordinaria,
   SalidaExtraordinariaInput,
   SalidaListResult,
@@ -15335,7 +15337,7 @@ export const getCrearSalidaDineroCajaUrl = (id: number,) => {
 }
 
 /**
- * @summary Registra una salida de dinero de caja en Tienda Mariana
+ * @summary Registra una salida de dinero; E4 requiere clasificación e idempotencia cuando se libere
  */
 export const crearSalidaDineroCaja = async (id: number,
     salidaDineroCajaInput: SalidaDineroCajaInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDineroCaja> => {
@@ -15385,7 +15387,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type CrearSalidaDineroCajaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
 
     /**
- * @summary Registra una salida de dinero de caja en Tienda Mariana
+ * @summary Registra una salida de dinero; E4 requiere clasificación e idempotencia cuando se libere
  */
 export const useCrearSalidaDineroCaja = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crearSalidaDineroCaja>>, TError,{id: number;data: BodyType<SalidaDineroCajaInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -15396,6 +15398,80 @@ export const useCrearSalidaDineroCaja = <TError = ErrorType<ValidationErrorRespo
         TContext
       > => {
       return useMutation(getCrearSalidaDineroCajaMutationOptions(options));
+    }
+
+export const getRevisarSalidaDineroCajaUrl = (id: number,
+    salidaId: number,) => {
+
+
+
+
+  return `/api/sesiones-caja/${id}/salidas-dinero/${salidaId}/revision`
+}
+
+/**
+ * @summary E4 apagado; ADMIN acepta o reclama y SUPERVISOR responde extraordinarias
+ */
+export const revisarSalidaDineroCaja = async (id: number,
+    salidaId: number,
+    salidaDineroRevisionInput: SalidaDineroRevisionInput, options?: Parameters<typeof customFetch>[1]): Promise<SalidaDineroRevision> => {
+
+  return customFetch<SalidaDineroRevision>(getRevisarSalidaDineroCajaUrl(id,salidaId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(salidaDineroRevisionInput)
+  }
+);}
+
+
+
+
+
+export const getRevisarSalidaDineroCajaMutationOptions = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revisarSalidaDineroCaja>>, TError,{id: number;salidaId: number;data: BodyType<SalidaDineroRevisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof revisarSalidaDineroCaja>>, TError,{id: number;salidaId: number;data: BodyType<SalidaDineroRevisionInput>}, TContext> => {
+
+const mutationKey = ['revisarSalidaDineroCaja'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof revisarSalidaDineroCaja>>, {id: number;salidaId: number;data: BodyType<SalidaDineroRevisionInput>}> = (props) => {
+          const {id,salidaId,data} = props ?? {};
+
+          return  revisarSalidaDineroCaja(id,salidaId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RevisarSalidaDineroCajaMutationResult = NonNullable<Awaited<ReturnType<typeof revisarSalidaDineroCaja>>>
+    export type RevisarSalidaDineroCajaMutationBody = BodyType<SalidaDineroRevisionInput>
+    export type RevisarSalidaDineroCajaMutationError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>
+
+    /**
+ * @summary E4 apagado; ADMIN acepta o reclama y SUPERVISOR responde extraordinarias
+ */
+export const useRevisarSalidaDineroCaja = <TError = ErrorType<ValidationErrorResponse | UnauthorizedResponse | ForbiddenResponse | NotFoundResponse | ConflictResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof revisarSalidaDineroCaja>>, TError,{id: number;salidaId: number;data: BodyType<SalidaDineroRevisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof revisarSalidaDineroCaja>>,
+        TError,
+        {id: number;salidaId: number;data: BodyType<SalidaDineroRevisionInput>},
+        TContext
+      > => {
+      return useMutation(getRevisarSalidaDineroCajaMutationOptions(options));
     }
 
 export const getListarProveedoresActivosCajaUrl = () => {

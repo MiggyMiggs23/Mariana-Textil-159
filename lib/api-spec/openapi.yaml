@@ -4529,7 +4529,7 @@ paths:
     post:
       operationId: crearSalidaDineroCaja
       tags: [caja]
-      summary: Registra una salida de dinero de caja en Tienda Mariana
+      summary: Registra una salida de dinero; E4 requiere clasificación e idempotencia cuando se libere
       parameters:
         - $ref: "#/components/parameters/SesionCajaId"
       requestBody:
@@ -4539,6 +4539,29 @@ paths:
         "201":
           description: Salida registrada
           content: { application/json: { schema: { $ref: "#/components/schemas/SalidaDineroCaja" } } }
+        "400": { $ref: "#/components/responses/ValidationError" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { $ref: "#/components/responses/Forbidden" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+  /sesiones-caja/{id}/salidas-dinero/{salidaId}/revision:
+    post:
+      operationId: revisarSalidaDineroCaja
+      tags: [caja]
+      summary: E4 apagado; ADMIN acepta o reclama y SUPERVISOR responde extraordinarias
+      parameters:
+        - $ref: "#/components/parameters/SesionCajaId"
+        - name: salidaId
+          in: path
+          required: true
+          schema: { type: integer, minimum: 1 }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/SalidaDineroRevisionInput" } } }
+      responses:
+        "200":
+          description: Revisión persistida, sin modificar el egreso ni los importes del corte
+          content: { application/json: { schema: { $ref: "#/components/schemas/SalidaDineroRevision" } } }
         "400": { $ref: "#/components/responses/ValidationError" }
         "401": { $ref: "#/components/responses/Unauthorized" }
         "403": { $ref: "#/components/responses/Forbidden" }
@@ -14315,6 +14338,51 @@ components:
         motivo: { type: string, minLength: 1, maxLength: 500 }
         proveedorId: { type: ["number", "null"] }
         cuentaOrigen: { type: string, enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL] }
+        tipo:
+          type: string
+          enum: [EXTRAORDINARIA, PROVEEDOR]
+          description: Obligatorio al liberar E4; nunca se infiere a partir de proveedorId.
+        claveOperacion:
+          type: string
+          format: uuid
+          description: Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.
+    SalidaDineroRevisionInput:
+      type: object
+      required: [accion, version, claveOperacion]
+      properties:
+        accion: { type: string, enum: [ACEPTAR, RECLAMAR, RESPONDER] }
+        version: { type: integer, minimum: 0 }
+        claveOperacion: { type: string, format: uuid }
+        explicacion:
+          type: string
+          minLength: 1
+          maxLength: 2000
+          description: Obligatoria y no vacía al reclamar o responder.
+        comprobanteUrl:
+          type: ["string", "null"]
+          maxLength: 2000
+          description: Enlace HTTPS opcional a un comprobante ya disponible; no admite bytes ni base64.
+    SalidaDineroRevisionEvento:
+      type: object
+      required: [accion, version, usuarioId, createdAt, explicacion, comprobanteUrl]
+      properties:
+        accion: { type: string, enum: [ACEPTAR, RECLAMAR, RESPONDER] }
+        version: { type: integer, minimum: 1 }
+        usuarioId: { type: integer }
+        createdAt: { type: string, format: date-time }
+        explicacion: { type: ["string", "null"] }
+        comprobanteUrl: { type: ["string", "null"] }
+    SalidaDineroRevision:
+      type: object
+      required: [tipo, estado, version, claveOperacion, historial]
+      properties:
+        tipo: { type: string, enum: [EXTRAORDINARIA, PROVEEDOR] }
+        estado: { type: string, enum: [PENDIENTE, RECLAMADA, RESPONDIDA, ACEPTADA, NO_APLICA] }
+        version: { type: integer, minimum: 0 }
+        claveOperacion: { type: string, format: uuid }
+        historial:
+          type: array
+          items: { $ref: "#/components/schemas/SalidaDineroRevisionEvento" }
     SalidaDineroCaja:
       allOf:
         - $ref: "#/components/schemas/SalidaDineroCajaInput"
@@ -14325,6 +14393,7 @@ components:
             sesionCajaId: { type: number }
             creadoPorId: { type: number }
             createdAt: { type: string, format: date-time }
+            e4: { $ref: "#/components/schemas/SalidaDineroRevision" }
     SalidasDineroCajaResponse:
       type: object
       required: [salidas]
@@ -14462,6 +14531,7 @@ components:
               cuentaOrigen: { type: string, enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL] }
               createdAt: { type: string, format: date-time }
               proveedor: { type: ["string", "null"] }
+              e4: { $ref: "#/components/schemas/SalidaDineroRevision" }
         salidasPorCuenta:
           type: object
           additionalProperties: { type: string }

@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CorteCajaSalidasItemCuentaOrigen } from './corteCajaSalidasItemCuentaOrigen';
+import type { SalidaDineroRevision } from './salidaDineroRevision';
 
 export type CorteCajaSalidasItem = {
   id: number;
@@ -17,4 +18,5 @@ export type CorteCajaSalidasItem = {
   createdAt: Date;
   /** @nullable */
   proveedor: string | null;
+  e4?: SalidaDineroRevision;
 };

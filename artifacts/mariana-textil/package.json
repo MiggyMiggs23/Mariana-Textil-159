@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:campo-escaneo": "node ../../scripts/src/frontend-test-runner.mjs src/components/campo-escaneo.contract.test.ts",
     "test:impresion": "node ../../scripts/src/frontend-test-runner.mjs src/pages/impresion.contract.test.ts",
+    "test:e4-cash-out": "node ../../reports/tanda-b-20260922/e4/run-frontend-node-mutants.mjs",
     "test": "node ../../scripts/src/frontend-test-runner.mjs"
   },
   "devDependencies": {

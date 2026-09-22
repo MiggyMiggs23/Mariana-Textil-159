@@ -1,0 +1,74 @@
+// @vitest-environment jsdom
+import React from "react";
+import { render, screen, cleanup } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { beforeEach, afterEach, describe, test, expect, vi } from "vitest";
+import { GetCurrentUserResponse, ObtenerSesionCajaActualResponse } from "@workspace/api-zod";
+import CobrosPage from "./cobros";
+
+const state = vi.hoisted(() => ({ enabled: true, tienda: 2, role: "CAJA", view: true, create: true, cortes: false, closed: false }));
+vi.mock("@/lib/e4-feature-flags", () => ({ get E4_CASH_OUT_ENABLED() { return state.enabled; } }));
+vi.mock("@/lib/location-scope", () => ({ useLocationScope: () => ({ selectedLocationId: state.tienda }) }));
+// Only the navigation shell is isolated. CobrosPage -> CobrosContent ->
+// SalidasDineroPanel -> SalidasDineroE4Panel are the actual production modules.
+vi.mock("@/components/layout/app-layout", () => ({ AppLayout: ({ children }: React.PropsWithChildren) => <>{children}</> }));
+vi.mock("@workspace/api-client-react", async () => {
+  const actual = await vi.importActual<Record<string, unknown>>("@workspace/api-client-react");
+  const hooks = Object.fromEntries(Object.keys(actual).filter(k => /^use[A-Z]/.test(k)).map(k => [k, vi.fn(() => ({
+    data: undefined, isPending: false, isLoading: false, isError: false, mutate: vi.fn(), refetch: vi.fn(),
+  }))]));
+  return { ...actual, ...hooks };
+});
+import * as api from "@workspace/api-client-react";
+describe("E4 mounted parent", () => {
+  beforeEach(() => {
+    Object.assign(state, { enabled: true, tienda: 2, role: "CAJA", view: true, create: true, cortes: false, closed: false });
+    vi.clearAllMocks();
+    vi.mocked(api.useGetCurrentUser).mockImplementation(() => ({ data: GetCurrentUserResponse.parse({
+      id: 10, nombre: "Operador", usuario: "operador", rol: state.role, alcanceConsulta: "PROPIA",
+      ubicacion: { id: state.tienda, nombre: "Tienda", iniciales: "CO", tipo: "TIENDA", activa: true, esSistema: false },
+      permisos: [
+        { modulo: "cobros_pagos", puedeVer: state.view, puedeCrear: state.create, puedeEditar: false, puedeAutorizar: false },
+        { modulo: "cortes", puedeVer: state.cortes, puedeCrear: state.cortes, puedeEditar: false, puedeAutorizar: false },
+      ],
+    }) }) as ReturnType<typeof api.useGetCurrentUser>);
+    vi.mocked(api.useObtenerSesionCajaActual).mockImplementation(() => ({ data: JSON.parse(JSON.stringify(ObtenerSesionCajaActualResponse.parse({
+      sesion: state.closed ? null : { id: 10, ubicacionId: state.tienda, nombreUbicacion: "Tienda", usuarioId: 10,
+        nombreUsuario: "Operador", abiertaAt: new Date().toISOString(), cerradaAt: null,
+        fondoInicial: "0.00", efectivoContado: null, estado: "ABIERTA" },
+      resumen: null,
+    }))), isLoading: false, isError: false }) as ReturnType<typeof api.useObtenerSesionCajaActual>);
+    vi.mocked(api.useListarTicketsCaja).mockReturnValue({ data: [], isError: false } as unknown as ReturnType<typeof api.useListarTicketsCaja>);
+    vi.mocked(api.useListarSalidasDineroCaja).mockReturnValue({ data: { salidas: [] }, isLoading: false } as ReturnType<typeof api.useListarSalidasDineroCaja>);
+    vi.mocked(api.useListarProveedoresActivosCaja).mockReturnValue({ data: [] } as unknown as ReturnType<typeof api.useListarProveedoresActivosCaja>);
+  });
+  afterEach(cleanup);
+  const mount = () => render(<QueryClientProvider client={new QueryClient()}><CobrosPage /></QueryClientProvider>);
+  test("E4-PARENT-COCO", () => {
+    mount();
+    expect(screen.queryByRole("button", { name: /Registrar salida extraordinaria/i }), "E4-PARENT-COCO").toBeTruthy();
+    expect(screen.queryByText("Caja Operativa")).toBeTruthy();
+  });
+  test("E4-PARENT-CRUCES", () => {
+    state.tienda = 3; state.role = "SUPERVISOR"; mount();
+    expect(screen.queryByRole("button", { name: /Registrar salida extraordinaria/i }), "E4-PARENT-CRUCES").toBeTruthy();
+  });
+  test("E4-PARENT-VIEW", () => {
+    state.view = false; state.cortes = true; mount();
+    expect(screen.queryByText("Salidas de dinero"), "E4-PARENT-VIEW").toBeNull();
+  });
+  test("E4-PARENT-CREATE", () => {
+    state.create = false; state.cortes = true; mount();
+    expect(screen.queryByRole("form", { name: "Registrar salida de dinero" }), "E4-PARENT-CREATE").toBeNull();
+    expect(screen.queryByText("Salidas de dinero")).toBeTruthy();
+  });
+  test("E4-PARENT-OFF-COCO", () => {
+    state.enabled = false; state.cortes = true; mount();
+    expect(screen.queryByText("Salidas de dinero"), "E4-PARENT-OFF-COCO").toBeNull();
+  });
+  test("E4-PARENT-OFF-MARIANA", () => {
+    state.enabled = false; state.tienda = 1; state.cortes = true; mount();
+    expect(screen.queryByRole("button", { name: /^Registrar salida$/i }), "E4-PARENT-OFF-MARIANA").toBeTruthy();
+    expect(screen.queryByRole("combobox", { name: /Tipo de Salida/i })).toBeNull();
+  });
+});

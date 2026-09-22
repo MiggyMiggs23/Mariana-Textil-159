@@ -1,0 +1,85 @@
+CONSOLIDACIÓN TERMINADA: MAIN confirmó 21/21 ciclos en 2+13+6 y typecheck.
+NO reanudar pruebas. Comandos inferiores son registro/reproducción futura.
+Scripts root y app test:e4-cash-out apuntan al runner nativo seguro.
+Suites Vitest ya archivadas fuera de src en reference-vite-tests/*.tsx.reference.
+Detalle por caso y límites: frontend-cobertura.txt. Incidentes: frontend-incidents.txt.
+
+MAIN ONLY (desde raíz del workspace):
+node reports/tanda-b-20260922/e4/run-frontend-node-mutants.mjs --ids E4-PARENT-COCO,E4-PARENT-CRUCES,E4-PARENT-VIEW,E4-PARENT-CREATE,E4-PARENT-OFF-COCO,E4-PARENT-OFF-MARIANA
+
+ACTUALIZACIÓN: 15/21 ciclos terminales válidos entre las dos pasadas nativas.
+Sólo faltan seis parents. E4-PARENT-COCO falló GREEN por global location ausente
+en JSDOM, no por regresión productiva. Preload ahora expone location/history,
+eventos de navegación y add/remove/dispatchEvent ligados a window. No timers,
+process, fetch guard ni componentes modificados. Semántica de los 21 casos intacta.
+MAIN typecheck frontend offline:
+bash reports/tanda-b-20260922/e4/run-frontend-types.sh
+Comandos preparados, no ejecutados durante este arreglo.
+
+--- Selección anterior de 19 ya intentada; NO repetir sus 13 ciclos válidos ---
+
+CONTINUACIÓN AUTORIZADA: sólo los 19 IDs restantes. E4-ADMIN y E4-SUPERVISOR
+ya tienen ciclos terminales aceptados en frontend-node-mutants-2026-09-22T18-19-01.845Z.
+OTHER-STORE tuvo GREEN pero RED timeout: no resultado RED aceptado.
+Fix diagnóstico limitado a Boolean(query) === false en ausencia DOM; no causa
+raíz demostrada. Timeout y componentes intactos. No repetir los dos aceptados.
+Sin argumentos el script/package seguro selecciona 21; para esta continuación
+usar exclusivamente la lista anterior. PASS_SELECTED_CASES no declara cierre E4.
+
+ACTUAL: node:test + esbuild + JSDOM, sin Vite ni pool/servidor/browser.
+El runner run-frontend-mutants.mjs fue RETIRADO tras tres fallos de setup y
+ahora aborta explícitamente. Las instrucciones Vite inferiores son históricas,
+NO son autorización para reintentarlo.
+Selección: src/components/e4-node.dom.test.tsx, 21 nombres E4-* individuales.
+Helpers de infraestructura: e4-node-test-harness.tsx; hooks no configurados
+fallan explícitamente. Los componentes/page/UI primitives siguen productivos.
+La API stub reexporta enums y query keys auténticos del snapshot.
+Se validan fixtures con los parsers reales de sus endpoints.
+Node --test-isolation=none evita forks; preload guard y DOM antes de imports.
+Reporter nativo exige ERR_ASSERTION y marcador semántico en el test exacto,
+permitiendo sólo el wrapper nativo testCodeFailure (nunca hook/setup failure).
+Cada fase conserva bundle/metafile/hash y TAP+JSON completos.
+Verificado sólo sintaxis y correspondencia estática 21/21. No alternativa
+ejecutada durante preparación; MAIN realiza una única pasada.
+
+--- Contexto histórico del runner retirado (NO REEJECUTAR) ---
+
+PREPARADO, NO EJECUTADO. No afirmar PASS antes de revisar el manifiesto.
+21 pruebas explícitas / 21 defectos productivos específicos / 4 archivos.
+Cada caso exige GREEN, RED AssertionError con identificador semántico, GREEN
+restaurado dentro del snapshot. Cero selección, errores de parser, imports,
+guard offline, timeout o setup son fallo del runner, nunca RED aceptado.
+
+Verificación realizada durante preparación: node --check de scripts; parser TS
+de pruebas/mutantes y unicidad de las 21 anclas. NO se ejecutaron pruebas,
+aplicaciones, APIs, SQL, workflows ni compilaciones de producción.
+
+Fuentes y dependencias workspace: copias físicas en /tmp/e4-frontend-*.
+Los directorios node_modules/scopes son físicos. Sólo cada dependencia externa
+individual usa symlink readonly; .vite/.vite-temp/.cache/.bin y enlaces workspace
+no se comparten. Aliases workspace apuntan a las
+copias. Guard de lectura rechaza fuentes originales; guard de escritura
+rechaza destinos fuera de sandbox, incluyendo node_modules compartidos.
+Entorno child whitelist sin credenciales. Bloquea sockets, DNS, fetch, DB
+imports y procesos hijos salvo binario esbuild instalado y protocolo exacto.
+dns.lookup admite sólo localhost/127.0.0.1/::1 mediante tabla literal en memoria;
+no delega al resolver del SO. Consultas DNS externas y listen siguen bloqueados.
+Las APIs DOM ausentes en jsdom se suplementan; no se reemplazan componentes.
+La página CobrosPage, su contenido/panel y componentes E4 son productivos.
+Sólo shell de navegación y hooks de infraestructura están aislados.
+
+La salida crea frontend-mutants-<fecha>/ con manifiesto, hashes por caso,
+logs completos y reportes JSON; nunca sobrescribe frontend-mutants/.
+La evidencia histórica frontend-mutants/ se conserva NO ACEPTADA; véase
+frontend-mutants-NO-ACEPTADA.txt.
+
+Ante fallo: conservar logs/snapshot y atribuir causa. No sustituir una aserción
+por un error de infraestructura ni corregir componentes productivos desde
+este runner. No activar gates productivos.
+
+Modo exclusivo de preflight (sin colección/ejecución Vitest):
+node reports/tanda-b-20260922/e4/run-frontend-mutants.mjs --preflight-only
+Carga config Vite, resuelve opciones y transforma TSX con esbuild. Nunca llama
+createServer de Vite, listen ni importa/ejecuta componentes o pruebas.
+Preflight autorizado observado: frontend-mutants-2026-09-22T18-04-56.291Z/
+CONFIG_TRANSFORM_PREFLIGHT_ONLY_NOT_TEST_PASS.

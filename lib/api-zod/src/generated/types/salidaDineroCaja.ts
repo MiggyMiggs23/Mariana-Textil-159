@@ -6,10 +6,12 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { SalidaDineroCajaInput } from './salidaDineroCajaInput';
+import type { SalidaDineroRevision } from './salidaDineroRevision';
 
 export type SalidaDineroCaja = SalidaDineroCajaInput & {
   id: number;
   sesionCajaId: number;
   creadoPorId: number;
   createdAt: Date;
+  e4?: SalidaDineroRevision;
 };

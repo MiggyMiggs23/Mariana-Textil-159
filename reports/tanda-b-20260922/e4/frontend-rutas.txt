@@ -1,0 +1,3 @@
+/cobros (SalidasDineroPanel modificado para bifurcar lógica ON/OFF E4)
+/caja/cortes (Mediante importación de CorteDetailShared)
+[Dialog] /cobros -> Historial de cortes -> Detalle de corte (Integrado listado de salidas y UI de revisión E4)
