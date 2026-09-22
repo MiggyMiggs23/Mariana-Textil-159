@@ -1,0 +1,4 @@
+green=0
+negative_control_product=1 (1 expected)
+negative_control_physical_cost=1 (1 expected)
+typecheck=0

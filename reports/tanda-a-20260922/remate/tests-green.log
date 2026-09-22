@@ -1,0 +1,13 @@
+✔ OFF conserva las dos conductas previas y no consulta esquema remate (1.654029ms)
+✔ ON autoriza bajo costo solo por cada rollo activo leído del store (0.474919ms)
+✔ BOLSA ON usa costos físicos: el promedio no oculta una fuente bajo costo (1.160626ms)
+✔ producto o payload no sustituyen una fuente física activa (0.382821ms)
+✔ precio no bajo costo no se etiqueta como remate (0.201597ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 578.728991

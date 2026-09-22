@@ -1,0 +1,23 @@
+✔ OFF conserva las dos conductas previas y no consulta esquema remate (1.521873ms)
+✔ ON autoriza bajo costo solo por cada rollo activo leído del store (0.370864ms)
+✖ BOLSA ON usa costos físicos: el promedio no oculta una fuente bajo costo (0.93274ms)
+✔ producto o payload no sustituyen una fuente física activa (0.152591ms)
+✔ precio no bajo costo no se etiqueta como remate (0.175237ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9.373709
+
+✖ failing tests:
+
+test at artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:135:1
+✖ BOLSA ON usa costos físicos: el promedio no oculta una fuente bajo costo (0.93274ms)
+  Error: PRICE_BELOW_COST
+      at fifoSale (file:///home/runner/workspace/artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:174:56)
+      at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:188:20)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)

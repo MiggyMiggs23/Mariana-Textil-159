@@ -1,0 +1,50 @@
+{
+  "revision": "e165c04",
+  "historicalScopeSources": [
+    {
+      "file": "reports/tanda-nocturna-20260919/tarea-2/resultado.md",
+      "lines": [7, 81]
+    },
+    {
+      "file": "reports/prompt-u-plan-de-implementacion.md",
+      "lines": [356, 437]
+    }
+  ],
+  "searches": [
+    "rg -n -i 'export\\.(xlsx|pdf)|attachment\\(|create.*(Workbook|Pdf)|addWorksheet|sheet\\.columns|header:|concepto:|label:' artifacts/api-server/src --glob '*.ts' | rg -i 'venta|cobrad|cobran|credito|crédito|destino|estad'",
+    "rg -n -i 'Cobrado|Cobranza|Contado|Ventas a cr[eé]dito|Ventas totales|Vendido' artifacts/api-server/src artifacts/mariana-textil/src --glob '*.ts' --glob '*.tsx' | rg -i 'export|xlsx|pdf|workbook|worksheet|columns|header|concepto|label|reporte|estad'",
+    "find artifacts/api-server/src -type f \\( -name '*.ts' -o -name '*.tsx' \\) -print0 | xargs -0 rg -l -i 'xlsx|pdf|exceljs'",
+    "git grep -n -i -E 'Cobrado|Cobranza|Contado|Ventas a cr[eé]dito|Ventas totales|Vendido' e165c04 -- artifacts/api-server/src | rg -i 'export|xlsx|pdf|workbook|worksheet|columns|header|concepto|label|reporte|estad'"
+  ],
+  "surfaces": [
+    {
+      "surface": "/admin/cuentas-destino/export.xlsx",
+      "classification": "E6_COMPLETED"
+    },
+    {
+      "surface": "/admin/cuentas-destino/export.pdf",
+      "classification": "E6_COMPLETED"
+    },
+    {
+      "surface": "/admin/cuentas-destino/:cuentaDestino/movimientos/export.xlsx",
+      "classification": "NO_AMBIGUOUS_E6_LABEL"
+    },
+    {
+      "surface": "/reportes/:seccion/export.xlsx|pdf",
+      "classification": "SALES_ONLY_NO_COLLECTION_AGGREGATE"
+    },
+    {
+      "surface": "clientes analytics XLSX",
+      "classification": "NO_SALES_COLLECTION_AMBIGUITY"
+    },
+    {
+      "surface": "/admin/cortes exports",
+      "classification": "DISTINCT_CASH_SESSION_SCOPE"
+    }
+  ],
+  "missingE6ExportLabels": [],
+  "sourceChangesFromAudit": false,
+  "calculationsChanged": false,
+  "keysChanged": false,
+  "scopesChanged": false
+}

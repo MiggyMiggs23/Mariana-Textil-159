@@ -43,6 +43,10 @@ import { buildCorteCaja } from "../lib/pos";
 import { db, pool } from "@workspace/db";
 import { createTextPdf } from "../lib/pdf";
 import {
+  createDestinationAccountsPdf,
+  createDestinationAccountsWorkbook,
+} from "../lib/cuentas-destino-export";
+import {
   AnalyticsInputError,
   compareStores,
   comparisonRange,
@@ -448,19 +452,7 @@ async function destinationsXlsx(req: any, res: any) {
   const filters = scopedAnalyticsFilters(req, query, res);
   if (!filters) return;
   const data = await getDestinationAccounts(filters);
-  const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Cuentas destino");
-  sheet.columns = [
-    { header: "Cuenta destino", key: "cuentaDestino", width: 28 },
-    { header: "Forma de pago", key: "formaPago", width: 20 },
-    { header: "Importe", key: "importe", width: 16 },
-    { header: "Operaciones", key: "operaciones", width: 14 },
-  ];
-  sheet.getColumn("importe").numFmt = EXCEL_NUMBER_FORMAT.money;
-  sheet.getColumn("operaciones").numFmt = EXCEL_NUMBER_FORMAT.count;
-  sheet.addRows(data.resumen.map((row) => ({
-    ...row, cuentaDestino: formatAccountDestination(row.cuentaDestino), importe: toExcelNumber(row.importe), operaciones: toExcelNumber(row.operaciones),
-  })));
+  const workbook = createDestinationAccountsWorkbook(data);
   res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
   res.attachment("cuentas-destino.xlsx");
   await workbook.xlsx.write(res); res.end();
@@ -520,9 +512,7 @@ router.get("/admin/cuentas-destino/export.pdf", async (req, res, next): Promise<
     const filters = scopedAnalyticsFilters(req, query, res);
     if (!filters) return;
     const data = await getDestinationAccounts(filters);
-    const pdf = createTextPdf("Cuentas destino", data.resumen.map((row) =>
-      `${formatAccountDestination(row.cuentaDestino)} | ${row.formaPago} | ${formatNumber(row.importe, { kind: "money" })} | ${formatNumber(row.operaciones, { kind: "count" })} operaciones`,
-    ));
+    const pdf = createDestinationAccountsPdf(data);
     res.type("application/pdf"); res.attachment("cuentas-destino.pdf"); res.send(pdf);
   } catch (error) { if (!badInput(error, res)) next(error); }
 });

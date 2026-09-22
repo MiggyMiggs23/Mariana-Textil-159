@@ -1,0 +1,17 @@
+✖ XLSX y PDF reales distinguen ventas, contado cobrado y cobranza sin recalcular (728.318597ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3907.966573
+
+✖ failing tests:
+
+✖ XLSX y PDF reales distinguen ventas, contado cobrado y cobranza sin recalcular
+  AssertionError [ERR_ASSERTION]: el XLSX debe incluir la hoja visible Ventas y cobranza
+  actual: undefined
+  expected: true
+  operator: ==

@@ -1,0 +1,36 @@
+✔ Ticket and Note are absolute, independently processed operations (1121.582207ms)
+✖ authorization uses the shared ledger projection and has no override (736.927693ms)
+✔ Note cancellation reverses its authorized ledger charge, never a payment (1.178244ms)
+✔ sales identity excludes operational pending amounts (0.188139ms)
+✔ all financial report read models use the canonical accounted predicate (6.081828ms)
+✔ Caja feed uses the canonical pending-document predicate (0.570275ms)
+✔ sales summary excludes only credit from collected payment methods (1.685893ms)
+✔ fiscal financial ranges use Caja processing timestamps (1.812336ms)
+✔ summary and realtime sales require explicit Caja processing date basis (1.427926ms)
+✔ supplier margin and realtime documents respect Caja processing (2.816571ms)
+✔ legacy authorized Notes receive deterministic authorization timestamps (0.450639ms)
+✔ pending Notes do not reserve customer credit before authorization (0.874893ms)
+✔ Caja only retains cut printing (0.803638ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2623.011765
+
+✖ failing tests:
+
+test at artifacts/api-server/src/pos-caja-final.contract.test.ts:92:1
+✖ authorization uses the shared ledger projection and has no override (736.927693ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/pos-caja-final.contract.test.ts:102:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }

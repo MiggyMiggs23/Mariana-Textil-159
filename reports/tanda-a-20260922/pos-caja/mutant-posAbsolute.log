@@ -1,0 +1,47 @@
+✖ Ticket and Note are absolute, independently processed operations (325.29779ms)
+✔ authorization uses the shared ledger projection and has no override (169.075836ms)
+✔ Note cancellation reverses its authorized ledger charge, never a payment (0.774118ms)
+✔ sales identity excludes operational pending amounts (0.155706ms)
+✔ all financial report read models use the canonical accounted predicate (1.639838ms)
+✔ Caja feed uses the canonical pending-document predicate (0.336137ms)
+✔ sales summary excludes only credit from collected payment methods (0.344048ms)
+✔ fiscal financial ranges use Caja processing timestamps (0.297263ms)
+✔ summary and realtime sales require explicit Caja processing date basis (0.818385ms)
+✔ supplier margin and realtime documents respect Caja processing (1.006348ms)
+✔ legacy authorized Notes receive deterministic authorization timestamps (0.33072ms)
+✔ pending Notes do not reserve customer credit before authorization (0.409538ms)
+✔ Caja only retains cut printing (0.536226ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1013.775479
+
+✖ failing tests:
+
+test at artifacts/api-server/src/pos-caja-final.contract.test.ts:8:1
+✖ Ticket and Note are absolute, independently processed operations (325.29779ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  Error: authorization continued past the expected credit-limit rejection
+      at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/pos-caja-final.contract.test.ts:17:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: authorization continued past the expected credit-limit rejection
+        at consumirRollosSalidaVenta (file:///home/runner/workspace/artifacts/api-server/src/tarea3-behavior-harness.mjs:275:17)
+        at Object.cobrarTicket (artifacts/api-server/src/lib/pos.ts:1343:51)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/pos-caja-final.contract.test.ts:17:3)
+        at async Test.run (node:internal/test_runner/test:1113:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3),
+    operator: 'rejects',
+    diff: 'simple'
+  }

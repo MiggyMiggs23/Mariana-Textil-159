@@ -1,0 +1,27 @@
+✔ XLSX y PDF reales distinguen ventas, contado cobrado y cobranza sin recalcular (93.624955ms)
+✔ Ticket and Note are absolute, independently processed operations (816.533828ms)
+✔ authorization uses the shared ledger projection and has no override (383.450277ms)
+✔ Note cancellation reverses its authorized ledger charge, never a payment (2.072238ms)
+✔ sales identity excludes operational pending amounts (0.289491ms)
+✔ all financial report read models use the canonical accounted predicate (7.330222ms)
+✔ Caja feed uses the canonical pending-document predicate (2.362412ms)
+✔ sales summary excludes only credit from collected payment methods (1.202103ms)
+✔ fiscal financial ranges use Caja processing timestamps (0.927482ms)
+✔ summary and realtime sales require explicit Caja processing date basis (2.296376ms)
+✔ supplier margin and realtime documents respect Caja processing (6.221551ms)
+✔ legacy authorized Notes receive deterministic authorization timestamps (0.402698ms)
+✔ pending Notes do not reserve customer credit before authorization (1.362485ms)
+✔ Caja only retains cut printing (2.256559ms)
+✔ OFF conserva las dos conductas previas y no consulta esquema remate (1.421666ms)
+✔ ON autoriza bajo costo solo por cada rollo activo leído del store (0.519277ms)
+✔ BOLSA ON usa costos físicos: el promedio no oculta una fuente bajo costo (0.827751ms)
+✔ producto o payload no sustituyen una fuente física activa (0.246489ms)
+✔ precio no bajo costo no se etiqueta como remate (0.194159ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5955.752726

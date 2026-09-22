@@ -1,29 +1,123 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import { cajaActionsFor, posOperations } from "./tarea3-behavior-harness.mjs";
 
 const read = (path: string) => readFileSync(new URL(path, import.meta.url), "utf8");
 
-test("Ticket and Note are absolute, independently processed operations", () => {
-  const pos = read("./lib/pos.ts");
-  const caja = read("../../mariana-textil/src/pages/cobros.tsx");
-  assert.match(pos, /documentoTipo !== "TICKET"[\s\S]*NOTE_CHARGE_FORBIDDEN/);
-  assert.match(pos, /documentoTipo !== "NOTA"[\s\S]*NOT_A_CREDIT_NOTE/);
-  assert.match(pos, /autorizacionEstado: "AUTORIZADA"/);
-  assert.match(pos, /origen: "AUTORIZACION_NOTA"/);
-  assert.match(caja, /Ticket"} folio/);
-  assert.match(caja, />\s*Cobrar\s*</);
-  assert.match(caja, />\s*Autorizar\s*</);
+test("Ticket and Note are absolute, independently processed operations", async () => {
+  const harness = posOperations();
+  const note = harness.ticket({
+    documentoTipo: "NOTA",
+    credito: true,
+    diasPlazo: 30,
+    fechaVencimiento: "2026-02-02",
+  });
+  const noteRuntime = harness.load(note);
+  await assert.rejects(
+    noteRuntime.pos.cobrarTicket(noteRuntime.tx, {
+      ticketId: note.id,
+      sesionCajaId: 31,
+      usuarioId: 7,
+      pagos: [{ formaPago: "EFECTIVO", importe: "40.00" }],
+      ip: "127.0.0.1",
+    }, false),
+    (error: any) => error?.code === "NOTE_CHARGE_FORBIDDEN" && error?.status === 409,
+  );
+  assert.deepEqual(
+    cajaActionsFor({ documentoTipo: "NOTA", autorizacionEstado: "PENDIENTE" }),
+    ["Autorizar"],
+  );
+
+  const ticket = harness.ticket();
+  const ticketRuntime = harness.load(ticket);
+  await assert.rejects(
+    ticketRuntime.pos.autorizarNota(
+      ticketRuntime.tx,
+      harness.authorizeInput(ticket.id, "999.00"),
+      false,
+    ),
+    (error: any) => error?.code === "NOT_A_CREDIT_NOTE" && error?.status === 409,
+  );
+  assert.deepEqual(
+    cajaActionsFor({ documentoTipo: "TICKET", cobrado: false }),
+    ["Cobrar"],
+  );
+
+  const payableTicket = harness.ticket();
+  const chargeRuntime = harness.load(payableTicket, { flow: "charge" });
+  assert.equal(await chargeRuntime.pos.cobrarTicket(chargeRuntime.tx, {
+    ticketId: payableTicket.id,
+    sesionCajaId: 31,
+    usuarioId: 7,
+    pagos: [{ formaPago: "EFECTIVO", importe: "40.00" }],
+    ip: "127.0.0.1",
+  }, false), null);
+  assert.ok(chargeRuntime.calls.some((call: any) =>
+    call?.insert === "ticketPagosTable"
+    && call.values.formaPago === "EFECTIVO"
+    && call.values.importe === "40.00"));
+  assert.ok(chargeRuntime.calls.some((call: any) =>
+    call?.update?.cobrado === true
+    && call.update.usuarioCajaId === 7
+    && call.update.sesionCajaId === 31));
+  assert.equal(chargeRuntime.calls.some((call: any) => call?.movement), false);
+
+  const authorizableNote = harness.ticket({
+    documentoTipo: "NOTA",
+    credito: true,
+    diasPlazo: 30,
+    fechaVencimiento: "2026-02-02",
+  });
+  const authorizationRuntime = harness.load(authorizableNote, {
+    existingCharge: "50.00",
+  });
+  assert.equal(await authorizationRuntime.pos.autorizarNota(
+    authorizationRuntime.tx,
+    harness.authorizeInput(authorizableNote.id, "999.00"),
+    false,
+  ), null);
+  assert.ok(authorizationRuntime.calls.some((call: any) =>
+    call?.movement?.metadata === JSON.stringify({ origen: "AUTORIZACION_NOTA" })
+    && call.movement.tipo === "VENTA_CREDITO"));
+  assert.ok(authorizationRuntime.calls.some((call: any) =>
+    call?.insert === "autorizacionesNotaTable"
+    && call.values.ticketId === authorizableNote.id));
+  assert.ok(authorizationRuntime.calls.some((call: any) =>
+    call?.update?.autorizacionEstado === "AUTORIZADA"
+    && call.update.autorizadoPor === 7
+    && call.update.sesionCajaId === 31));
 });
 
-test("authorization uses the shared ledger projection and has no override", () => {
-  const pos = read("./lib/pos.ts");
-  const route = read("./routes/pos.ts");
-  assert.match(pos, /loadCustomerCreditLedgerInTransaction/);
-  assert.match(pos, /projectCreditLedger\(ledger\)/);
-  assert.match(pos, /Un ADMIN debe subir el límite del cliente/);
-  assert.doesNotMatch(pos.slice(pos.indexOf("export async function autorizarNota")), /override|password|credenciales/i);
-  assert.match(route, /db\.transaction\(\(tx\) => autorizarNota/);
+test("authorization uses the shared ledger projection and has no override", async () => {
+  const harness = posOperations();
+  for (const aplicarSaldoAFavor of ["0.00", "999.00"]) {
+    const note = harness.ticket({
+      documentoTipo: "NOTA",
+      credito: true,
+      diasPlazo: 30,
+      fechaVencimiento: "2026-02-02",
+    });
+    const runtime = harness.load(note);
+    await assert.rejects(
+      runtime.pos.autorizarNota(
+        runtime.tx,
+        {
+          ...harness.authorizeInput(note.id, aplicarSaldoAFavor),
+          rol: "ADMIN",
+          override: true,
+          password: "ignored-by-contract",
+          credenciales: { administradora: true },
+        },
+        false,
+      ),
+      (error: any) =>
+        error?.code === "CREDIT_LIMIT_EXCEEDED"
+        && error?.status === 409
+        && /Un ADMIN debe subir el límite del cliente/.test(error.message),
+    );
+    assert.equal(runtime.calls.filter((call) => call === "ledger").length, 2);
+  }
 });
 
 test("Note cancellation reverses its authorized ledger charge, never a payment", () => {

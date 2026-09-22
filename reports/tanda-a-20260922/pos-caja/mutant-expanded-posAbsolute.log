@@ -1,0 +1,46 @@
+✖ Ticket and Note are absolute, independently processed operations (474.248231ms)
+✔ authorization uses the shared ledger projection and has no override (536.03739ms)
+✔ Note cancellation reverses its authorized ledger charge, never a payment (1.289126ms)
+✔ sales identity excludes operational pending amounts (0.246747ms)
+✔ all financial report read models use the canonical accounted predicate (4.845366ms)
+✔ Caja feed uses the canonical pending-document predicate (0.386476ms)
+✔ sales summary excludes only credit from collected payment methods (0.416866ms)
+✔ fiscal financial ranges use Caja processing timestamps (0.336879ms)
+✔ summary and realtime sales require explicit Caja processing date basis (0.913872ms)
+✔ supplier margin and realtime documents respect Caja processing (1.926975ms)
+✔ legacy authorized Notes receive deterministic authorization timestamps (0.401895ms)
+✔ pending Notes do not reserve customer credit before authorization (0.588172ms)
+✔ Caja only retains cut printing (5.909812ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 12
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2995.804649
+
+✖ failing tests:
+
+test at artifacts/api-server/src/pos-caja-final.contract.test.ts:8:1
+✖ Ticket and Note are absolute, independently processed operations (474.248231ms)
+  AssertionError [ERR_ASSERTION]: The validation function is expected to return "true". Received false
+  
+  Caught error:
+  
+  TypeError: Cannot read properties of undefined (reading 'esCredito')
+      at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/pos-caja-final.contract.test.ts:17:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: Cannot read properties of undefined (reading 'esCredito')
+        at buildTicketDetail (artifacts/api-server/src/lib/pos.ts:306:38)
+        at async waitForActual (node:assert:646:5)
+        at async strict.rejects (node:assert:769:25)
+        at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/pos-caja-final.contract.test.ts:17:3)
+        at async Test.run (node:internal/test_runner/test:1113:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3),
+    operator: 'rejects',
+    diff: 'simple'
+  }

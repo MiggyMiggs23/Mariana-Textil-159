@@ -1,0 +1,31 @@
+{
+  "revision": "e165c04",
+  "offlineGuard": "reports/e2-apertura-limitada/evidencia-a-c/validacion-offline-20260919/offline-test-guard.cjs",
+  "manifest": [
+    "artifacts/api-server/src/lib/cuentas-destino-export.test.ts"
+  ],
+  "databaseEnvironmentRemoved": [
+    "DATABASE_URL",
+    "TEST_DATABASE_URL",
+    "DIRECT_URL"
+  ],
+  "current": {
+    "command": "cd artifacts/api-server && env -u DATABASE_URL -u TEST_DATABASE_URL -u DIRECT_URL NODE_ENV=test node --require ../../reports/e2-apertura-limitada/evidencia-a-c/validacion-offline-20260919/offline-test-guard.cjs --import ./node_modules/tsx/dist/loader.mjs --test --test-isolation=none ./src/lib/cuentas-destino-export.test.ts",
+    "exit": 0,
+    "passed": 1,
+    "failed": 0
+  },
+  "isolatedBaseline": {
+    "command": "cd artifacts/api-server && env -u DATABASE_URL -u TEST_DATABASE_URL -u DIRECT_URL NODE_ENV=test E6_EXPORT_BASELINE=1 node --require ../../reports/e2-apertura-limitada/evidencia-a-c/validacion-offline-20260919/offline-test-guard.cjs --import ./node_modules/tsx/dist/loader.mjs --test --test-isolation=none ./src/lib/cuentas-destino-export.test.ts",
+    "exit": 1,
+    "passed": 0,
+    "failed": 1,
+    "failure": "el XLSX debe incluir la hoja visible Ventas y cobranza"
+  },
+  "typecheck": {
+    "command": "env -u DATABASE_URL -u TEST_DATABASE_URL -u DIRECT_URL pnpm --filter @workspace/api-server run typecheck",
+    "exit": 0
+  },
+  "networkOrDatabaseAccess": false,
+  "servicesRestarted": false
+}

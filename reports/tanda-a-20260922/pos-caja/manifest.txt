@@ -1,0 +1,1 @@
+artifacts/api-server/src/pos-caja-final.contract.test.ts

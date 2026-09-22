@@ -1,0 +1,58 @@
+ALCANCE HISTÓRICO E6
+
+Fuente de alcance:
+- reports/tanda-nocturna-20260919/tarea-2/resultado.md:7
+  Identifica como pendientes destinationsXlsx, /admin/cuentas-destino/export.xlsx,
+  /admin/cuentas-destino/export.pdf y menciona el exporte de movimientos alojado
+  en el mismo archivo protegido.
+- reports/prompt-u-plan-de-implementacion.md:356
+  Limita E6 a etiquetas/exportaciones de Cuentas Destino, sin tocar la consulta.
+- reports/prompt-u-plan-de-implementacion.md:437
+  Enumera admin-analytics.ts como exportador E6 y prohíbe cambiar el cálculo.
+- reports/tanda-nocturna-20260919/tarea-2/resultado.md:81
+  Prohíbe sustituir indiscriminadamente Cobrado por existir métricas de caja,
+  efectivo contado y snapshots con otros alcances.
+
+INVENTARIO DE SUPERFICIES XLSX/PDF CON RÓTULOS FINANCIEROS
+
+1. /admin/cuentas-destino/export.xlsx
+   Estado E6: COMPLETADO.
+   Rótulos: Ventas totales; Contado cobrado; Ventas a crédito;
+   Cobranza del periodo; Contado cobrado; Abonos a notas; Saldo a favor.
+   Conserva la hoja Cuentas destino, importes y operaciones anteriores.
+
+2. /admin/cuentas-destino/export.pdf
+   Estado E6: COMPLETADO.
+   Mismos conceptos e importes que XLSX; PDF WinAnsi conserva «crédito».
+
+3. /admin/cuentas-destino/:cuentaDestino/movimientos/export.xlsx
+   Estado E6: SIN RÓTULO PENDIENTE.
+   Encabezados: Fecha, Tipo, Documento, Cliente, Sitio, Monto, Registró; cierre
+   Total. No muestra un agregado llamado Cobrado/Contado/Cobranza/Ventas y no
+   requiere renombre E6.
+
+4. /reportes/:seccion/export.xlsx y /reportes/:seccion/export.pdf
+   Estado E6: FUERA DEL RENOMBRE; SIN RÓTULO AMBIGUO E6.
+   La sección ventas presenta Ventas totales/Ventas y usa el predicado canónico
+   de documento contabilizado. No presenta Contado cobrado ni Cobranza del
+   periodo, por lo que no confunde ambas mediciones. «Cobro asignado por
+   subtotal» es una columna de distribución de formas de pago de las ventas,
+   no el agregado de cobranza.
+
+5. Analítica/estadísticas de clientes y sus XLSX
+   Estado E6: FUERA DEL RENOMBRE; SIN RÓTULO AMBIGUO E6.
+   buildAnaliticaClientesWorkbook expone Cliente, Folio, Fecha, Subtotal,
+   Modalidad, Unidad, Cantidad y Utilidad. Los reportes comerciales dicen
+   Ventas/Ventas por cliente y no presentan la medición Cobranza del periodo.
+
+6. /admin/cortes/export.xlsx, /admin/cortes/export.pdf y corte individual
+   Estado E6: FUERA DEL RENOMBRE.
+   «Total cobrado», «Efectivo contado» y «Ticket cobrado» pertenecen al corte
+   de caja/sesión. El antecedente E6 prohíbe el reemplazo global de estas
+   métricas de otro alcance.
+
+CONCLUSIÓN
+
+No queda otro rótulo XLSX/PDF pendiente dentro del alcance histórico E6.
+No se cambiaron funciones, consultas, cifras, claves, predicados ni alcances
+como resultado de este inventario.

@@ -1,0 +1,21 @@
+✔ Ticket and Note are absolute, independently processed operations (368.814067ms)
+✔ authorization uses the shared ledger projection and has no override (173.8013ms)
+✔ Note cancellation reverses its authorized ledger charge, never a payment (0.849041ms)
+✔ sales identity excludes operational pending amounts (0.147981ms)
+✔ all financial report read models use the canonical accounted predicate (2.141881ms)
+✔ Caja feed uses the canonical pending-document predicate (0.365987ms)
+✔ sales summary excludes only credit from collected payment methods (0.392071ms)
+✔ fiscal financial ranges use Caja processing timestamps (0.318878ms)
+✔ summary and realtime sales require explicit Caja processing date basis (0.884667ms)
+✔ supplier margin and realtime documents respect Caja processing (0.970474ms)
+✔ legacy authorized Notes receive deterministic authorization timestamps (0.446067ms)
+✔ pending Notes do not reserve customer credit before authorization (0.540644ms)
+✔ Caja only retains cut printing (0.55876ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1038.959881

@@ -85,6 +85,12 @@ import {
   recordTicketLineConsumption,
   reverseTicketLineConsumptions,
 } from "./supplier-trace";
+import { REMATE_RELEASED } from "./tarea4-gates";
+import {
+  decideConsumedRemateSale,
+  decideRemateSale,
+  loadActiveRemateRollIds,
+} from "./tarea4-remate-sale";
 
 const FOLIO_ROW_ID = 1;
 
@@ -665,14 +671,37 @@ export async function validarPrecioPos(
       mensaje: rollWithoutValidUnitCostMessage(rollo.serie),
     };
   }
-  if (precioCents < money(rollo.costoUnitario!)) {
+  const activeRemateRollIds = await loadActiveRemateRollIds(
+    REMATE_RELEASED,
+    [rollo.id],
+    async ids => {
+      const result = await database.execute(sql`
+        SELECT rollo_id
+        FROM tarea4_rollo_remate
+        WHERE rollo_id = ANY(${ids}::int[])
+      `);
+      return result.rows.map(row => Number(row.rollo_id));
+    },
+  );
+  const remateDecision = decideRemateSale({
+    released: REMATE_RELEASED,
+    priceCents: precioCents,
+    costCents: money(rollo.costoUnitario!),
+    rolloIds: [rollo.id],
+    activeRollIds: activeRemateRollIds,
+    legacyBlocksBelowCost: true,
+  });
+  if (!remateDecision.allowed) {
     return {
       valido: false,
       mensaje: priceBelowCostMessage(rollo.tela, rollo.color, rollo.serie),
       code: "PRICE_BELOW_COST",
     };
   }
-  return { valido: true };
+  return {
+    valido: true,
+    ...(remateDecision.remate ? { remate: true } : {}),
+  };
 }
 
 export async function crearTicket(
@@ -874,6 +903,25 @@ export async function crearTicket(
       ] as const),
     ),
   );
+  const remateCandidateRollIds = input.lineas.flatMap(linea => {
+    const tipo = linea.tipo ?? input.tipo;
+    if (tipo === "NORMAL") {
+      return linea.rolloId == null ? [] : [linea.rolloId];
+    }
+    return linea.fuentesRollo?.map(source => source.rolloId) ?? [];
+  });
+  const activeRemateRollIds = await loadActiveRemateRollIds(
+    REMATE_RELEASED,
+    remateCandidateRollIds,
+    async ids => {
+      const result = await tx.execute(sql`
+        SELECT rollo_id
+        FROM tarea4_rollo_remate
+        WHERE rollo_id = ANY(${ids}::int[])
+      `);
+      return result.rows.map(row => Number(row.rollo_id));
+    },
+  );
 
   const lineasPreparadas = input.lineas.map((linea) => {
     const tipo = linea.tipo ?? input.tipo;
@@ -1036,18 +1084,34 @@ export async function crearTicket(
           "ROLLO_SIN_COSTO",
         );
       }
-      if (tipo === "NORMAL" && precioCents < money(rollo.costoUnitario!)) {
-        throw new PosError(
-          priceBelowCostMessage(producto.tela, producto.color, rollo.serie),
-          "PRICE_BELOW_COST",
-        );
-      }
     }
-    const importeCents = quantityTimesMoneyCents(cantidad, precioCents);
     const costoUnitario =
       tipo === "NORMAL"
         ? rollo!.costoUnitario!
         : (meteredCosts.get(linea.productoId)?.cost ?? null);
+    const remateSourceRollIds =
+      tipo === "NORMAL"
+        ? (rollo == null ? [] : [rollo.id])
+        : (linea.fuentesRollo?.map(source => source.rolloId) ?? []);
+    const remateDecision = decideRemateSale({
+      released: REMATE_RELEASED,
+      priceCents: precioCents,
+      costCents: costoUnitario == null ? null : money(costoUnitario),
+      rolloIds: remateSourceRollIds,
+      activeRollIds: activeRemateRollIds,
+      legacyBlocksBelowCost: tipo === "NORMAL",
+      allowDeferredPhysicalSources:
+        tipo === "METREADO" && producto.unidad === "BOLSA",
+    });
+    if (!remateDecision.allowed) {
+      throw new PosError(
+        tipo === "NORMAL" && rollo != null
+          ? priceBelowCostMessage(producto.tela, producto.color, rollo.serie)
+          : "La venta bajo costo requiere que todos los rollos físicos consumidos tengan una marca de remate activa.",
+        "PRICE_BELOW_COST",
+      );
+    }
+    const importeCents = quantityTimesMoneyCents(cantidad, precioCents);
     const costoReferenciaEstado =
       tipo === "METREADO"
         ? meteredCosts.get(linea.productoId)!.status
@@ -1072,6 +1136,10 @@ export async function crearTicket(
         costoCents == null ? null : decimalMoney(costoCents),
       costoReferenciaEstado,
       fuentesRollo: linea.fuentesRollo ?? [],
+      remate: remateDecision.remate,
+      remateRolloIds: remateDecision.rolloIds,
+      remateRequiereFuentesFisicas:
+        remateDecision.requiresPhysicalValidation,
       importeCents,
     };
   });
@@ -1184,6 +1252,47 @@ export async function crearTicket(
           documentoId: String(ticket!.id),
           justificacion: `Venta metreada de bolsas ticket ${folio}`,
         });
+        if (linea.remateRequiereFuentesFisicas) {
+          const physicalDecision = await decideConsumedRemateSale(
+            {
+              released: REMATE_RELEASED,
+              priceCents: money(linea.precioUnitario),
+              movements: movimientos,
+            },
+            async ids => {
+              const rows = await tx
+                .select({
+                  rolloId: rollosTable.id,
+                  costoUnitario: rollosTable.costoUnitario,
+                })
+                .from(rollosTable)
+                .where(inArray(rollosTable.id, [...ids]));
+              return rows.map(row => ({
+                rolloId: row.rolloId,
+                costCents: isValidUnitCost(row.costoUnitario)
+                  ? money(row.costoUnitario!)
+                  : null,
+              }));
+            },
+            async ids => {
+              const result = await tx.execute(sql`
+                SELECT rollo_id
+                FROM tarea4_rollo_remate
+                WHERE rollo_id = ANY(${ids}::int[])
+              `);
+              return result.rows.map(row => Number(row.rollo_id));
+            },
+          );
+          if (!physicalDecision.allowed) {
+            throw new PosError(
+              "La venta bajo costo requiere que todas las cajas consumidas por FIFO tengan una marca de remate activa.",
+              "PRICE_BELOW_COST",
+            );
+          }
+          linea.remate = physicalDecision.remate;
+          linea.remateRolloIds = physicalDecision.rolloIds;
+          linea.remateRequiereFuentesFisicas = false;
+        }
         movimientosPorLinea.set(lineIndex, movimientos);
       } catch (error) {
         if (error instanceof InventarioError) {
@@ -1216,6 +1325,15 @@ export async function crearTicket(
         throw error;
       }
     }
+  }
+
+  if (
+    lineasPreparadas.some(linea => linea.remateRequiereFuentesFisicas)
+  ) {
+    throw new PosError(
+      "No se comprobaron las fuentes físicas de una venta bajo costo.",
+      "PRICE_BELOW_COST",
+    );
   }
 
   for (const [lineIndex, movimientos] of movimientosPorLinea) {
@@ -1260,6 +1378,14 @@ export async function crearTicket(
       nombreDestinatario,
       direccionEntregaSnapshot,
       lineas: input.lineas.length,
+      ...(REMATE_RELEASED
+        ? {
+            remate: lineasPreparadas.some(linea => linea.remate),
+            rollosRemate: [
+              ...new Set(lineasPreparadas.flatMap(linea => linea.remateRolloIds)),
+            ],
+          }
+        : {}),
     },
     ip: input.ip,
   });
