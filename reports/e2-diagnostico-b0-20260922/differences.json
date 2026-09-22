@@ -1,0 +1,202 @@
+[
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "forma_pago_proveedor",
+      "CHEQUE"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "CHEQUE",
+      "definition": "4"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "CHEQUE",
+      "definition": "3"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "forma_pago_proveedor",
+      "FACTURADO"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "FACTURADO",
+      "definition": "3"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "FACTURADO",
+      "definition": "5"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "forma_pago_proveedor",
+      "OTRO"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "OTRO",
+      "definition": "5"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "OTRO",
+      "definition": "4"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "rol_usuario",
+      "BODEGA"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "BODEGA",
+      "definition": "5"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "BODEGA",
+      "definition": "4"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "rol_usuario",
+      "CAJA"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CAJA",
+      "definition": "3"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CAJA",
+      "definition": "2"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "rol_usuario",
+      "CONTADOR"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CONTADOR",
+      "definition": "7"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CONTADOR",
+      "definition": "6"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "rol_usuario",
+      "SISTEMAS"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SISTEMAS",
+      "definition": "6"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SISTEMAS",
+      "definition": "5"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "rol_usuario",
+      "SUPERVISOR"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SUPERVISOR",
+      "definition": "4"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SUPERVISOR",
+      "definition": "3"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "enum",
+      "rol_usuario",
+      "TERMINAL"
+    ],
+    "expected": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "TERMINAL",
+      "definition": "2"
+    },
+    "actual": {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "TERMINAL",
+      "definition": "1.5"
+    }
+  },
+  {
+    "section": "attributes",
+    "key": [
+      "trigger",
+      "ticket_linea_consumos",
+      "ticket_linea_consumos_append_only"
+    ],
+    "expected": {
+      "kind": "trigger",
+      "parent": "ticket_linea_consumos",
+      "name": "ticket_linea_consumos_append_only",
+      "definition": "O:31:f:f:f"
+    },
+    "actual": {
+      "kind": "trigger",
+      "parent": "ticket_linea_consumos",
+      "name": "ticket_linea_consumos_append_only",
+      "definition": "A:31:f:f:f"
+    }
+  }
+]

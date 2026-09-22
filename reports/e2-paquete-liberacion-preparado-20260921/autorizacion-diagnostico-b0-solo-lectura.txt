@@ -1,0 +1,7 @@
+Autorización del propietario. Guarda este texto tal cual en reports/e2-paquete-liberacion-preparado-20260921/ antes de la primera escritura.
+
+Autorizo un diagnóstico de solo lectura del aborto B0. Lee los atributos de la base de la API con la misma consulta de release-catalog.sql, en transacción READ ONLY. Reconstruye lo esperado con el mismo método en una base PostgreSQL desechable y compara renglón por renglón.
+
+Reporta cada diferencia: tipo (trigger, función, índice, restricción, tabla, enum), objeto, valor esperado, valor real y tu explicación de por qué difiere. Clasifícala como diferencia del entorno (dueños o permisos propios de la base real) o como diferencia de fondo (estructura, triggers desactivados, índices inválidos, enums distintos).
+
+No repares nada, no cambies hashes ni el manifiesto, no reinicies la API y no toques el workflow. Destruye la base desechable al terminar.

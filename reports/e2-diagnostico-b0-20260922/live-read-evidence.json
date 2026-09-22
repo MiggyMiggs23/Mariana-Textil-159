@@ -1,0 +1,18 @@
+{
+  "capturedAt": "2026-09-22T10:46:56.173Z",
+  "pid": 164,
+  "connectionSource": "Environment of the uniquely identified retained API node process; credentials not persisted",
+  "query": "Unmodified release-catalog.sql via original readCatalog",
+  "querySha256": "a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea",
+  "transaction": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY; ... ROLLBACK",
+  "defaultTransactionReadOnly": true,
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010",
+    "readOnly": "on",
+    "enabledEventTriggers": 0
+  }
+}

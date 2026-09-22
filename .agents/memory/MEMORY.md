@@ -79,3 +79,4 @@
 - [Procedencia de INSERT](insert-provenance-vs-xmin.md) — xmin identifica versiones y subtransacciones; visibilidad más estado de un XID reconstruido no demuestra inserción propia.
 - [Identidad y portabilidad del build](build-path-identity.md) — una ruta de compilación puede cambiar hashes sin cambios de fuente; reproducibilidad no demuestra portabilidad.
 - [Entrada CLI bajo symlinks](cli-symlink-preflight.md) — exit 0 puede significar que main nunca corrió; exigir evidencia positiva del preflight.
+- [Fidelidad de catálogos reconstruidos](reconstructed-catalog-fidelity.md) — recrear triggers y enums puede perder ALWAYS o posiciones incrementales; no atribuir el rechazo a drift sin comparar.

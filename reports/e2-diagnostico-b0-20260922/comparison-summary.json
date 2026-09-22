@@ -1,0 +1,42 @@
+{
+  "counts": {
+    "schemaRows": {
+      "expected": 1519,
+      "actual": 1519,
+      "equal": 1519,
+      "differences": 0
+    },
+    "attributes": {
+      "expected": 857,
+      "actual": 857,
+      "equal": 847,
+      "differences": 10
+    }
+  },
+  "sourceRevision": "31804125a1e752bde128d72e9fd44d23972ffff1",
+  "reconstructionMatchesApprovedB0": true,
+  "expectedIdentity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010",
+    "readOnly": "on",
+    "enabledEventTriggers": 0
+  },
+  "actualIdentity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010",
+    "readOnly": "on",
+    "enabledEventTriggers": 0
+  },
+  "expectedSchemaSha256": "37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8",
+  "actualSchemaSha256": "37f6af5a2e06748a8499b995caeec072770090c36f2ad741d35c65953421bec8",
+  "expectedAttributesSha256": "381cd3566d475a48e08ea2be82927718d69bd3332b83d38ead3b4a266594aff6",
+  "actualAttributesSha256": "c08c02eae60d61c611ff4ce3cb5854a4cb117a7a015ee8d50a0618eb4264626b",
+  "fixtureSha256": "d4f296bd6360892c53ec2b1c61d585ea581b64be18bda24fac7214b6c2afe44f",
+  "onlyB0Reconstructed": true
+}
