@@ -490,7 +490,7 @@ await test("P-21: BODEGA cannot see proveedores_finanzas", async () => {
   assert.equal(p.puedeVer, false);
 });
 
-await test("P-22: BODEGA has exactly the operational baseline including etiquetas", async () => {
+await test("P-22: BODEGA has exactly the operational baseline including etiquetas but not contenedores", async () => {
   const matrix = await buildPermissionMatrix(bodegaUserId, "BODEGA");
   const expected: Record<string, { ver: boolean; crear: boolean; editar: boolean }> = {
     dashboard: { ver: true, crear: false, editar: false },
@@ -500,7 +500,6 @@ await test("P-22: BODEGA has exactly the operational baseline including etiqueta
     movimientos: { ver: true, crear: false, editar: false },
     ajustes: { ver: true, crear: true, editar: false },
     etiquetas: { ver: true, crear: true, editar: false },
-    contenedores: { ver: true, crear: false, editar: false },
   };
   for (const modulo of MODULOS) {
     const permission = matrix[modulo];
@@ -510,7 +509,7 @@ await test("P-22: BODEGA has exactly the operational baseline including etiqueta
     assert.equal(permission.puedeEditar, wanted.editar, `${modulo}.editar`);
     assert.equal(permission.puedeAutorizar, false, `${modulo}.autorizar`);
   }
-  for (const modulo of ["productos", "proveedores", "reportes"]) {
+  for (const modulo of ["productos", "proveedores", "reportes", "contenedores"]) {
     assert.equal(matrix[modulo].puedeVer, false, `${modulo} must be revoked`);
   }
 });
