@@ -530,7 +530,7 @@ Mientras esta decisión siga pendiente, continúa vigente el procedimiento de ra
 
 ## Cierre del plan de cinco partes
 
-La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Las acciones destructivas exigen escribir un texto exacto para confirmarse. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. Las acciones de SUPERVISOR sobre clientes, proveedores y productos se resuelven desde la matriz configurada; una descripción general del rol no justifica un techo adicional.
+La bitácora de auditoría es de solo lectura, sin excepciones ni siquiera para ADMIN. Cada acción destructiva conserva su confirmación específica: la purga de productos exige usuario y contraseña de ADMIN; las demás entidades de la ruta de purga conservan el texto exacto. No se generaliza una confirmación a todos los flujos ni se permite saltar sus reglas de integridad. El sistema impide dejar la instalación sin ningún ADMIN activo con acceso completo, validado en el servidor dentro de la transacción. Las acciones de SUPERVISOR sobre clientes, proveedores y productos se resuelven desde la matriz configurada; una descripción general del rol no justifica un techo adicional.
 
 ## Parte 10 — Catálogo por tela y unidad BOLSA
 
@@ -703,9 +703,15 @@ no son instrucciones operativas.
 - **C (18):** `auditoria`, `camionetas`, `choferes`, `cliente_documentos`, `clientes`, `equipos`, `equipos_checklist`, `permisos_rol`, `permisos_ubicacion`, `permisos_usuario`, `pisos`, `precio_historial`, `productos`, `proveedores`, `stock_minimo_sitios`, `stock_minimos`, `ubicaciones`, `usuarios`.
 
 **Regla de reconstrucción de listas:** en cada ejecución se debe redescubrir y
-listar el conjunto completo, comprobar que A+B+C suma las 60 tablas y clasificar
-cualquier tabla nueva u omitida antes como A hasta que exista una autorización
-distinta. No se heredan listas parciales entre ejecuciones.
+listar el catálogo efectivo completo, sin fijar su tamaño a las 58 o 60 tablas
+históricas. Cada tabla y sus dependencias requieren una clasificación explícita
+y autorizada: borrar, reajustar/reconstruir o preservar. Una tabla nueva,
+omitida o desconocida queda pendiente y bloquea la ejecución; nunca se clasifica
+como A por omisión. No se heredan listas ni autorizaciones entre ejecuciones.
+El ejecutable del 13 de septiembre está fijado a su respaldo y catálogo
+históricos y no debe reutilizarse contra el esquema ampliado. El procedimiento
+documental y los pendientes de adaptación están en
+`reports/tanda-c-20260923/10-procedimiento-purga.md`; no autorizan una purga.
 
 **Deriva vigente de esquema:** `cuadre_fiscal_registros` está viva en la base y ausente de Drizzle. Se reporta como deriva entre esquema y base; no se crea ni se borra del esquema en este bloque.
 
@@ -721,7 +727,7 @@ su propia autorización, respaldo y preflight.
 
 **Registro histórico separado — comparación C de la purga del 13 de septiembre de 2026 (no es evidencia actual de Prompt H):** la comparación C de esa ejecución mostró los mismos conteos y hashes antes/después en las 18 tablas; `auditoria` conservó sus 3045 renglones. Los mínimos de stock conservados en Cruces (`ubicacion_id=2`, sitio activo) son producto 1374: 2500, `2026-09-13T15:21:35.374621+00:00`, autor `1`; producto 1389: 5000, `2026-09-13T15:21:40.979699+00:00`, autor `1`; y producto 1390: 5000, `2026-09-13T15:21:56.751931+00:00`, autor `1`. Stock mínimo, equipos y permisos por ubicación son configuración y se conservaron; solo se borraron los episodios de faltantes (`stock_minimo_episodios`).
 
-**Evidencia histórica de esa purga:** la consulta exacta posterior dejó habilitados los 11 triggers no internos (`tgenabled='O'`): `aplicaciones_credito_inmutables`, `aplicaciones_credito_validas`, `aplicaciones_pago_proveedor_append_only`, `aplicaciones_pago_proveedor_validar_insert`, `auditoria_append_only`, `auditoria_enriquecer_insert`, `movimientos_credito_inmutables`, `movimientos_credito_reversos_validos`, `pagos_proveedor_inmutables`, `reimpresiones_etiqueta_inmutable` y `ticket_pagos_inmutables`. El inventario vivo posterior registra 14; ningún trigger se modificó para corregir el conteo.
+**Evidencia histórica de esa purga:** la consulta exacta posterior dejó habilitados los 11 triggers no internos (`tgenabled='O'`): `aplicaciones_credito_inmutables`, `aplicaciones_credito_validas`, `aplicaciones_pago_proveedor_append_only`, `aplicaciones_pago_proveedor_validar_insert`, `auditoria_append_only`, `auditoria_enriquecer_insert`, `movimientos_credito_inmutables`, `movimientos_credito_reversos_validos`, `pagos_proveedor_inmutables`, `reimpresiones_etiqueta_inmutable` y `ticket_pagos_inmutables`. La captura histórica posterior de Prompt H registró 14; ninguno de estos conteos representa el inventario actual. Ningún trigger se modificó para corregir aquella descripción del conteo.
 
 La comprobación disposable autenticada creó el ticket técnico con folio 1000 y luego la restauración prístina lo eliminó; el contador quedó nuevamente en 999. En las ocho pantallas comprobadas con navegador disposable, Cruces apareció Activo con sus tres mínimos; la explicación stale de Mariana/Apagado quedó corregida; el SKU restaurado `ALA-BEI` conservó precio de lista `$85.00`, costo y márgenes como `—`, y estado `Sin costo`. La evidencia está en `.local/phase2-ui-rehearsal/phase2-disposable-postpurge-proof.json` (SHA-256 `cf41530d9b3b6923c80247cccd2f9947819c61194b4e9acd4d06a8cf7dfed88c`) y `.local/phase2-ui-rehearsal/ui-clarification.json`. El intento de UI LIVE histórico quedó **BLOCKED**, no PASS, en `.local/phase2-live-ui-evidence.json`.
 
@@ -1244,14 +1250,14 @@ La organización aprobada responde a decisiones, no a tipos de datos:
 ## Tablero: venta y cobranza — Prompt C
 
 - **Contado cobrado** renombra la anterior tarjeta Cobrado (Caja), conservando su cálculo, el identificador interno COBRADO y su desglose. La fila de cuatro tarjetas mantiene **Ventas = Contado + Ventas a crédito**, donde Contado cobrado es la etiqueta de Contado; un abono no es una nueva venta ni reduce la venta a crédito histórica.
-- **Cobrado en el periodo**, como cifra con aclaración adjunta sin encabezado de sección propio, sigue el orden de bloques definido en «Caja en Tiempo Real». Consume `useSharedCuentasDestino` en `artifacts/mariana-textil/src/hooks/use-shared-cuentas-destino.ts`, igual que Cuentas Destino. Ambas usan el mismo endpoint y la función existente `getDestinationAccounts` de `artifacts/api-server/src/lib/admin-analytics.ts`. No hay un cálculo financiero alternativo de cobranza en el navegador ni una segunda implementación SQL.
+- **Cobranza del periodo**, como cifra con aclaración adjunta sin encabezado de sección propio, sigue el orden de bloques definido en «Caja en Tiempo Real». Consume `useSharedCuentasDestino` en `artifacts/mariana-textil/src/hooks/use-shared-cuentas-destino.ts`, igual que Cuentas Destino. Ambas usan el mismo endpoint y la función existente `getDestinationAccounts` de `artifacts/api-server/src/lib/admin-analytics.ts`. No hay un cálculo financiero alternativo de cobranza en el navegador ni una segunda implementación SQL.
 - El total y los grupos Cobros directos, Abonos a notas (neto de reversos) y Saldo a favor (neto de reversos) vienen de `encabezado.cobrado`. Los enlaces reutilizan el detalle canónico conservando periodo, sitio y fuentes. Los filtros públicos de abonos incluyen sus reversos mediante la expansión existente del servidor. Carga o error de cobranza se muestran en su propia aclaración, sin ocultar las tarjetas de ventas.
 - El día de la nueva banda se obtiene explícitamente en `America/Mexico_City`, igual que el día del tablero en el servidor. No se interpreta la zona local del dispositivo como la del negocio.
 - La cobranza es un resultado contable neto sujeto al periodo, sitio y fuentes del reporte; por sí sola **no prueba una entrada física adicional de efectivo**. La diferencia entre consulta global y por sitio se conserva, no se corrige ni se unifica en esta entrega.
 
 ### Corte de caja: pendiente de alta prioridad antes del piloto
 
-La fórmula anterior de detalle e historial era **fondo inicial + pagos EFECTIVO de tickets − salidas de efectivo**, sin abonos de crédito. E2 prepara el nuevo lector común descrito abajo; el servidor API aún no se reinició con ese código. Los cortes cerrados anteriores conservan la fórmula histórica de cada superficie; no se ejecutó ningún cierre ni cuadre para esta preparación.
+La fórmula anterior de detalle e historial era **fondo inicial + pagos EFECTIVO de tickets − salidas de efectivo**, sin abonos de crédito. El lector común E2 fue liberado en modo CLOSED según `reports/e2-liberacion-20260922/resultado.md`; eso no habilitó captura ni devolución de efectivo de crédito. Los cortes cerrados anteriores conservan la fórmula histórica de cada superficie. El primer cierre real quedó pendiente del propietario; la preparación y la liberación no acreditan que se haya ejecutado.
 
 Un abono genuinamente recibido en el cajón y no incluido en ese cálculo podría producir una diferencia sin explicar. No se afirma que existiera un sobrante físico de $25,000 el 15 de septiembre: las recapturas 49/50 no acreditan un ingreso físico nuevo y sus reversos tampoco deben ignorarse al estudiar el caso. Evidencia y límites: `reports/prompt-c-readonly-2026-09-15-after.md`.
 
@@ -1312,7 +1318,7 @@ Siguen fuera de esta entrega las pantallas independientes de **ajuste de inventa
 
 **Restricción vigente de arranque:** no arrancar ni reiniciar la API automáticamente al terminar código, documentación, pruebas o migración; tampoco iniciar workflows, inicializadores o mantenimiento sin autorización. Tras el reinicio externo del workspace, el propietario autorizó recuperar exclusivamente el bundle anterior, previo cotejo de identidad y tres guardas E1. La recuperación se detuvo: coincidieron identidad/guardas, pero el arranque automático normal había reemplazado el bundle y actualizado filas de permisos. No se arrancó la API durante la recuperación; el frontend está en ejecución. Evidencia en `reports/e2-apertura-limitada/recuperacion/resultado.md`. No sustituir silenciosamente el bundle autorizado ni continuar con la compilación encontrada.
 
-**Identidad de bundles reconstruidos:** la procedencia se acredita por el commit exacto y por demostrar que todas las entradas versionadas de la construcción estaban limpias e idénticas a su árbol. El SHA-256 de la salida registra y protege los bytes aceptados, pero no se usa por sí solo para exigir que dos compilaciones independientes sean idénticas. Registrar juntos commit, árbol, limpieza, herramientas, comando, fecha y hash resultante. No llamar “worktree limpio” a una extracción `git archive` sin `.git`: acreditar en ese caso la igualdad de todas sus rutas con los blobs del commit. El bundle vigente autorizado por el propietario procede de `7cb77f8cfc6287fa51325a25122c48af392a7ada`, árbol `c36407dc8310b9da47a0d3bbc40ffe44c6183f60`, y su `index.mjs` tiene SHA-256 `3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98`; evidencia en `reports/e2-apertura-limitada/reconstruccion/autorizacion-bundle-7cb.md`.
+**Identidad de bundles reconstruidos:** la procedencia se acredita por el commit exacto y por demostrar que todas las entradas versionadas de la construcción estaban limpias e idénticas a su árbol. El SHA-256 de la salida registra y protege los bytes aceptados, pero no se usa por sí solo para exigir que dos compilaciones independientes sean idénticas. Registrar juntos commit, árbol, limpieza, herramientas, comando, fecha y hash resultante. No llamar “worktree limpio” a una extracción `git archive` sin `.git`: acreditar en ese caso la igualdad de todas sus rutas con los blobs del commit. El bundle anterior autorizado por el propietario procede de `7cb77f8cfc6287fa51325a25122c48af392a7ada`, árbol `c36407dc8310b9da47a0d3bbc40ffe44c6183f60`, y su `index.mjs` tiene SHA-256 `3415998ed6eb1b8d6977793ac53f43ce91477f691b12f5c8dc11d14a2b801a98`; evidencia en `reports/e2-apertura-limitada/reconstruccion/autorizacion-bundle-7cb.md`. Quedó conservado como runtime retenido durante la liberación E2 CLOSED del 22 de septiembre; no se lo identifica como bundle servido actual. El artefacto liberado y los límites de las observaciones posteriores están en «E2 — lector CLOSED liberado; captura y devolución cerradas».
 
 **Regla de autorización de arranque:** la API normal ejecuta escrituras de inicialización; ese arranque no equivale a solo lectura. Reanudarla requiere autorización expresa que contemple esas escrituras y el mantenimiento posterior. La autorización de un arranque pasado no es permiso permanente, y una autorización de DDL no equivale a autorización de arranque. No se permiten escrituras adicionales, ni siquiera en un clon, fuera del alcance aprobado: esto incluye inicialización, fixtures y mantenimiento. Un modo de inspección o el nuevo arranque acotado tampoco se activa por preparar su código; cada ejecución requiere autorización aparte.
 
@@ -1331,7 +1337,7 @@ Después de comenzar a servir, el arranque normal también inicia:
 - **Backfill de compras de proveedor** (`artifacts/api-server/src/lib/compras-proveedor.ts`): inserta las COMPRA faltantes derivadas de entradas elegibles, según las reglas existentes de costos, con protección de unicidad y `ON CONFLICT DO NOTHING`. No duplica las ya registradas.
 - **Monitor de mínimos** (`artifacts/api-server/src/lib/stock-minimos.ts`): evalúa cada 30 segundos los sitios habilitados, abre/actualiza/cierra episodios de stock mínimo y genera las notificaciones correspondientes. Que no haya alertas nuevas no implica que esté apagado.
 
-El modo optativo de inspección sigue disponible en el código, pero **no está habilitado** ni es el modo normal de desarrollo. No convierte la API en un servidor globalmente de solo lectura: incluso los GET autenticados pueden renovar la sesión.
+El modo optativo de inspección sigue disponible en el código y no es el arranque normal de desarrollo. La liberación E2 CLOSED del 22 de septiembre lo utilizó con inicializadores, backfill y monitor pausados, según su evidencia de arranque; no se deduce de ello el modo de cualquier proceso posterior. No convierte la API en un servidor globalmente de solo lectura: incluso los GET autenticados pueden renovar la sesión.
 
 ### Pendiente abierto — verificación autenticada del detalle de crédito
 
@@ -1420,9 +1426,13 @@ La comparación aislada ejecutó handlers anteriores y actuales con el mismo fix
 
 ## Prompt Q — antecedente de diseño de atribución
 
+Esta sección conserva el estado del diseño de Prompt Q, anterior a la liberación E2 CLOSED documentada más adelante; no describe por sí sola el runtime posterior.
+
 Documento histórico de decisión para el propietario y su socio: `reports/prompt-q-diseno-atribucion-sitio.md`. Identificó la ausencia de sitio y sesión explícitos en `movimientos_credito` como una causa común de tres defectos: abonos omitidos del corte, asimetría de cobranza por sitio y pérdida de abonos sin ticket en el estado de cuenta restringido. E1 ya incorpora el esquema de origen, naturaleza y evidencia con DDL verificado; agregar esas columnas no activó los lectores. La preparación posterior del lector de caja corresponde a E2, sin declarar activación ni aceptación operativa.
 
-## Apertura limitada y arranque acotado — preparación sin ejecución
+## Apertura limitada y arranque acotado — antecedente de preparación
+
+Los resultados de esta sección corresponden a las revisiones y fases históricas citadas. En particular, el fallo de instalación de `f8818255` no es el estado final de E2: las validaciones posteriores y la liberación CLOSED se documentan en la sección siguiente. Se conserva el fallo original sin reescribirlo como aprobado. La apertura de captura y devolución sigue siendo una decisión separada.
 
 El propietario autorizó preparar únicamente ABONO/INGRESO_FISICO/EFECTIVO con sitio y sesión correctos. Ingreso y devolución tienen permisos separados, ambos apagados por defecto; retenidos y atribución histórica siguen cerrados. El SQL de apertura/reversión y los parches de activación no se aplicaron. La interfaz candidata se probó en copias temporales y permanece en archivos de parche, sin alterar el frontend servido durante el primer corte real.
 
@@ -1436,7 +1446,13 @@ El arranque `EXPLICIT_LIMITED` comprueba esquema, identidad y guardas en transac
 
 Verificación de la preparación anterior a los cambios A+C: 67/67 en aplicación, 17/17 en arranque; candidato frontend 2/2 cerrado, 4/4 activo y 7/7 de contrato; SQL estructural y 10 negativos. Typecheck canónico final exit 0/cero diagnósticos. Los mismos manifiestos de baseline contienen 154 pruebas (una prueba de guarda global fue sustituida por seis): 149 PASS y exactamente los cinco fallos previos, sin nuevos. Reconfirmación acotada y hashes en `reports/e2-apertura-limitada/verificacion/final-reconfirm-summary.txt`. No se ejecutó PostgreSQL para esas comprobaciones ni se activó el flujo. Estos resultados no sustituyen la validación pendiente del candidato A+C posterior.
 
-## E2 — corte y devolución preparados, sin activación de devolución
+## E2 — lector CLOSED liberado; captura y devolución cerradas
+
+**Estado documentado al 22 de septiembre de 2026:** `reports/e2-liberacion-20260922/resultado.md` registra la liberación técnica E2 CLOSED, la instalación autorizada de las dos tablas A+C y el arranque en inspección del bundle SHA-256 `008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5`. El artefacto 7cb anterior quedó retenido. La comparación posterior a esa liberación conservó datos, catálogo y secuencias; no hubo login ni cierre creado por el agente. El primer cierre real quedó pendiente exclusivamente del propietario. Captura, devolución, retenidos, atribución, Fondo, remate, precio mínimo y borrado preparado de producto continuaron cerrados.
+
+**Límite de actualidad y cronología posterior:** la reanudación observada está en `reports/e2-liberacion-20260922/verificacion-reanudacion-workflow-api.md`; ese episodio no incluyó una comparación de filas y secuencias antes/después de su arranque. El intento posterior de fase B E3 se detuvo ante un PID distinto, aunque el hash del bundle coincidía (`reports/e3-fase-b-detenida-20260923.md`); en ese intento no se comprobó la conexión efectiva ni el modo del proceso nuevo y no se abrió E3. Posteriormente, la tarea 4 de Tanda C sí comprobó la conexión efectiva del PID 191 mediante una transacción READ ONLY, sin escrituras (`reports/tanda-c-20260923/04-creditos.md`). La tarea 7 registró captura READONLY y preflight CLI reales PASS, pero la reconstrucción del fixture quedó bloqueada por diferencias de `enumsortorder` de `rol_usuario`: no se arrancó el candidato ni se liberó Tanda B (`reports/tanda-c-20260923/07-paquete-tanda-b.md`). El READ ONLY de esas consultas no prueba el modo de arranque actual de la API. Estos reportes no certifican indefinidamente el estado de la API ni autorizan otro arranque.
+
+Los párrafos de preparación y sus pruebas que siguen conservan sus revisiones y límites históricos. La liberación del lector no equivale a ejecutar el SQL de devolución ni a activar sus productores; tampoco instala las fuentes nuevas de E3 o Tanda B por el hecho de existir en el repositorio.
 
 **Alcance autorizado:** `reports/e2-alcance-autorizado-2026-09-18.md`. El propietario confirmó construir la devolución **inactiva**, sin eliminar ni eludir ninguna guarda de E1. El SQL de soporte de devolución está preparado, no aplicado; no lo ejecuta ningún inicializador. Esta preparación no autoriza escrituras en la base ni la activación posterior. Tampoco autoriza reiniciar la API con inicializadores que escriben.
 
