@@ -843,7 +843,7 @@ BEGIN
   LOCK TABLE public.e5_operaciones,public.e5_cobros IN ACCESS EXCLUSIVE MODE;
   FOR expected IN SELECT * FROM (VALUES
     ('public.e5_insert_authority()','124271a0007f135354a031abc7ee33ec74c6e6eafb255dd8341a9525c904e6f5'),
-    ('public.e5_graph_guard()','303366993fe3529b329a2a0c980a4efcda37eef1c1bf0a1e9bd43bb52ca73267'),
+    ('public.e5_graph_guard()','87911ce23ea2ad1f936e2aa4a718788f7aba2a7b95f1ec9845f5d5baaa520c02'),
     ('public.e5_detail_guard()','460b84a67964bbe42c66adf643d966f48731f030917ffcc083b1feaa9845a027'),
     ('public.e5_closed()','76bb2925cae2f65d1bffae17408fc49efc41271304e8c6778047cd3eaa5ae4c6'),
     ('public.e5_owned_credit_source(public.movimientos_credito)','9cbe5d2eeb339394878cf1e4d41de19d1225af5cdcdb6b572a4388c172795d9c')

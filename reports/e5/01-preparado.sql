@@ -583,11 +583,11 @@ BEGIN
       IF prev IS NULL THEN RAISE EXCEPTION 'E5: historia sin predecesor'; END IF;
       IF (prev->>'importePendiente')::numeric<=0
         OR jsonb_array_length(o.response->'propuestas') <>
-          jsonb_array_length(prev->'propuestas')+CASE WHEN o.accion='PROPONER' THEN 1 ELSE 0 END
+          jsonb_array_length(prev->'propuestas')+(CASE WHEN o.accion='PROPONER' THEN 1 ELSE 0 END)
         OR jsonb_array_length(o.response->'aplicaciones') <>
-          jsonb_array_length(prev->'aplicaciones')+CASE WHEN o.accion='AUTORIZAR' THEN 1 ELSE 0 END
+          jsonb_array_length(prev->'aplicaciones')+(CASE WHEN o.accion='AUTORIZAR' THEN 1 ELSE 0 END)
         OR jsonb_array_length(o.response->'rechazos') <>
-          jsonb_array_length(prev->'rechazos')+CASE WHEN o.accion='RECHAZAR' THEN 1 ELSE 0 END
+          jsonb_array_length(prev->'rechazos')+(CASE WHEN o.accion='RECHAZAR' THEN 1 ELSE 0 END)
         OR (o.accion<>'DEVOLVER' AND o.response->'devolucion' IS DISTINCT FROM prev->'devolucion')
       THEN RAISE EXCEPTION 'E5: evento no corresponde a transición de historia'; END IF;
       FOREACH k IN ARRAY ARRAY['propuestas','aplicaciones','rechazos'] LOOP
