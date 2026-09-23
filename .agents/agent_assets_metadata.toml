@@ -2089,3 +2089,17 @@ mtime_ms = 1790181710478
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0855c04a-a638-42eb-b41e-c8daeba09967/a1ff0f05-a694-4fe7-8eaa-dac4dff9228d"
 storage_version_token = "1790181810300124"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "zqV_OJsjFvLmQ53EL7Ggv"
+uri = "file://reports/liberacion-simple-20260923/continuacion-resultado.md"
+type = "text"
+title = "E3 y Tanda B — resultado de liberación"
+description = "E3 ordinario abierto; cinco SQL de Tanda B confirmados y candidato combinado funcionando. Incluye verificaciones y pruebas de pantalla pendientes."
+logical_id = "c4a06d7d-7e27-47d5-907a-c7745ebf647b"
+content_hash = "sha256:b9f66bfe95f0d5b88085c6c7a5f95caae275f6d565f6cf394c6566f6be134551"
+size = 6052
+mtime_ms = 1790182772710
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c4a06d7d-7e27-47d5-907a-c7745ebf647b/e214bb1e-034e-4a30-a9f7-3dc733498130"
+storage_version_token = "1790182785556623"
+content_type = "text/markdown"

@@ -1,0 +1,9 @@
+miguelestza: Corrige el comando de arranque de la UI y termina la liberación de E3 con el procedimiento simple ya autorizado.
+
+Antes de aplicarlo, valida el comando tal como quedará escrito y compruébalo sirviendo la UI en un puerto de prueba. Cuando sirva los archivos correctos, cambia el workflow, arranca el candidato API y UI de E3 y verifica /api/healthz 200 y que la pantalla carga.
+
+Si vuelve a fallar la configuración, detente y repórtame el texto exacto del comando que intentaste y el error, sin seguir probando variantes.
+
+Cuando E3 quede arriba, sigue con la Tanda B como te autoricé: sus cinco SQL de corrido y su arranque. Si uno falla a media tanda, detente y repórtame el estado exacto.
+
+Al terminar, dime qué quedó liberado, qué puertas están abiertas y qué me toca probar desde la pantalla.

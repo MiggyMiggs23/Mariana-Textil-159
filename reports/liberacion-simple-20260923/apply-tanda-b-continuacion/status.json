@@ -1,0 +1,45 @@
+{
+  "mode": "apply",
+  "stage": "tanda-b",
+  "status": "PASS",
+  "sql": [
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/1.sql",
+      "label": "tanda-b-1",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/2.sql",
+      "label": "tanda-b-2",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/3.sql",
+      "label": "tanda-b-3",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/4.sql",
+      "label": "tanda-b-4",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    },
+    {
+      "file": "reports/tanda-b-b0-b1-20260923/r5/sql/5.sql",
+      "label": "tanda-b-5",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    }
+  ],
+  "candidateHealth200": false,
+  "disposableDestroyed": false,
+  "effectiveApiPid": 10692
+}

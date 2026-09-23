@@ -10,7 +10,7 @@ name = "API Server"
 paths = ["/api"]
 
 [services.development]
-run = "cd /home/runner/workspace && exec node --enable-source-maps artifacts/api-server/dist-e2-20260927/index.mjs"
+run = "cd /home/runner/workspace && API_STARTUP_MODE=NORMAL API_INSPECTION_BOOT=1 NODE_ENV=development exec node artifacts/api-server/dist-simple-e3-tanda-b-20260923/index.mjs"
 
 [services.development.env]
 API_STARTUP_MODE = "NORMAL"
