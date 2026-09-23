@@ -2131,3 +2131,17 @@ mtime_ms = 1790188003818
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/520ee264-0b0a-4416-92d1-1fce3cc141e1/a05f86d5-5a9b-4f18-ac8d-31507bf00544"
 storage_version_token = "1790188149086408"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "Dy-pdE5avydNX7yEL3ixs"
+uri = "file://reports/liberacion-e9-e7-e11-20260923/INFORME.md"
+type = "text"
+title = "E9, E7 y E11 — resultado y pendientes"
+description = "Informe único con resultados, commits separados, bloqueo SQL de E9 y estado de las doce entregas."
+logical_id = "7fabe127-4b25-48a5-ac9f-fc5ec078bad3"
+content_hash = "sha256:577d7d82d5b98eda8dba55d3a4760fcc2087bda66997a3c497dd56b2cc7737a6"
+size = 16120
+mtime_ms = 1790190263382
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/7fabe127-4b25-48a5-ac9f-fc5ec078bad3/1d857cbe-6e53-4b3e-84bc-6bafe099903b"
+storage_version_token = "1790190324668413"
+content_type = "text/markdown"
