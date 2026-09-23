@@ -1,0 +1,13 @@
+✔ renumbering preserving label order passes without mutating captures (13.921232ms)
+✔ permuting, adding, removing or renaming labels fails (1.770714ms)
+✔ enum identity and other catalog attributes remain significant (3.191297ms)
+✔ separate types and schemas normalize independently (0.248468ms)
+✔ invalid or ambiguous enum captures fail closed (0.455916ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.380619

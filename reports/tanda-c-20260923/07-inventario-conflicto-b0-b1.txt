@@ -1,0 +1,74 @@
+PREPARACIÓN DETENIDA — revisión estática, sin SQL ejecutado
+
+Alcance: autorización-propietario-tanda-b-b0-b1.txt exige B0 real READ ONLY
+y B1 = B0 más objetos Tanda B, sin alterar enums ni triggers.
+No se ha generado B1, paquete nuevo, fixture, build ni scripts adicionales.
+Paquete histórico y evidencia FAIL conservados sin modificaciones.
+
+SQL exacto localizado (SHA-256 del archivo completo, sin recortes):
+E4 reports/tanda-b-20260922/e4/01-preparado.sql
+046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60
+E12 reports/tanda-b-20260922/e12/01-preparado.sql
+85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a
+E9 reports/e9/01-preparado.sql
+232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4
+E5 reports/e5/01-preparado.sql
+9906258f00dd47212fe7e73d660eef6a8c6c26900deffe9aa6c64f77b829f8d0
+E11 reports/e11/01-preparado.sql
+f61fe0f5a6a449ae345c86cd939b192026befabcae6e658274d6141ec60d044f
+E7: no archivo de instalación SQL localizado; lectores y gates, sin DDL
+identificado. Esto no equivale a validación funcional del lector.
+
+CONFLICTO E5: cuatro objetos E1 anteriores a Tanda B
+1. public.validar_movimiento_credito_e1():
+   líneas 775–786 capturan definición y sustituyen el cuerpo para aceptar
+   E5_APLICACION_RETENIDA mediante e5_owned_credit_source(NEW).
+2. operaciones_productor_naturaleza_ck_e1, tabla public.operaciones_credito_e1:
+   líneas 768–774 y 787–789 archivan, eliminan y recrean el CHECK ampliado.
+3. public.e1_guard_pending_receipts_closed():
+   líneas 790–795 archivan; desde 806 CREATE OR REPLACE sustituye el rechazo
+   incondicional por comprobación de procedencia E5 de la transition relation.
+4. zz_e1_pending_receipts_closed, tabla public.cobros_credito_pendientes_e1:
+   líneas 796–802 verifican/archivan; 840–843 DROP/CREATE añade
+   REFERENCING NEW TABLE AS e5_pending_rows.
+
+Corrección expresa al aviso preliminar: NO cambia BEFORE a AFTER.
+El trigger original exigido por SQL tiene tgtype=4 (AFTER INSERT STATEMENT);
+el histórico B0 también muestra AFTER INSERT STATEMENT. Cambia su definición
+al incorporar la transition relation, además del cuerpo de su función.
+Los cuatro objetos aparecen en el catálogo histórico archivado; esa lectura
+offline NO sustituye captura actual de PID204 ni demuestra identidad vigente.
+
+OTROS SQL:
+E4: no reemplazo/drop de objeto B0 identificado. Añade tablas/índices/funciones
+y triggers, incluido uno NUEVO sobre salidas_dinero_caja (línea 112).
+E12: no reemplazo/drop de objeto B0 identificado. Añade objetos, incluidos
+triggers NUEVOS sobre pagos_proveedor y fondo_movimientos (174–177).
+E9: no reemplazo/drop de objeto B0 identificado. Añade objetos, incluido
+trigger NUEVO sobre fondo_movimientos (170–172).
+Estas adiciones cambian comportamiento de tablas existentes; no deben
+confundirse con ausencia de efectos ni con permisos de aplicación real.
+
+E11: líneas 840–870 revisan cinco funciones E5, pero reemplazan únicamente
+public.e5_insert_authority(), para permitir PROPONER A validado por E11.
+Archiva las cinco definiciones/hashes en tabla nueva e11_e5_definiciones;
+no reemplaza e5_graph_guard/e5_detail_guard/e5_closed/e5_owned_credit_source.
+Si E5 nace dentro de esta misma tanda, esa función pertenece al delta nuevo
+y su versión final E11 puede formar parte del delta conjunto. Si ya existiera
+en B0, sería otra modificación B0 incompatible con una unión aditiva.
+Añade triggers NUEVOS en usuarios y notificaciones_sistema (426–446),
+además de tablas E5/E11; no se identificó reemplazo de un trigger viejo E11.
+No hay ALTER enum identificado en estos cinco SQL.
+
+Índices/constraints/FKs y triggers internos que PostgreSQL crea para objetos
+nuevos son objetos derivados del DDL exacto: no autorizan normalizar, omitir,
+reparar o reemplazar atributos/ACL/tgenabled de objetos antiguos.
+Conservar B0 y agregar filas no representa los cuatro reemplazos E1 de E5.
+No recortar el SQL para producir un B1 aparentemente aditivo.
+
+Pendiente decisión del propietario/MAIN: resolver explícitamente el conflicto
+entre SQL E5 exacto y autorización aditiva/sin alterar triggers. El commit
+separado de comparación semántica enum no resuelve este conflicto de alcance.
+Fase B NO EJECUTADA; no hay manifiesto de liberación ni sello positivo nuevo.
+Sin DB, red, arranques, workflows, bundles activos o permisos modificados
+por esta revisión. MAIN conserva exclusivamente cualquier ejecución posterior.
