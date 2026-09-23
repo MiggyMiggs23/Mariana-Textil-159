@@ -1,0 +1,38 @@
+TAP version 13
+# Subtest: E11-CANONICAL-KEY-ORDER
+not ok 1 - E11-CANONICAL-KEY-ORDER
+  ---
+  duration_ms: 3.012377
+  type: 'test'
+  location: '/tmp/e11-native-T53MUK/E11-CANONICAL-KEY-ORDER-red/test.mjs:37960:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '{"z":1,"a":{"y":2,"b":3}}'
+    - '{"a":{"b":3,"y":2},"z":1}'
+         ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '{"a":{"b":3,"y":2},"z":1}'
+  actual: '{"z":1,"a":{"y":2,"b":3}}'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-T53MUK/E11-CANONICAL-KEY-ORDER-red/test.mjs:37961:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91.982298
+

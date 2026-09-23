@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: E11-HASH-CONTENT-SENSITIVE
+not ok 1 - E11-HASH-CONTENT-SENSITIVE
+  ---
+  duration_ms: 2.177126
+  type: 'test'
+  location: '/tmp/e11-native-T53MUK/E11-HASH-CONTENT-SENSITIVE-red/test.mjs:37963:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected "actual" to be strictly unequal to:
+    
+    '96f6549c6b97a641e4d1099e39ebf966e649de64f5bf8274d27afad33541e702'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '96f6549c6b97a641e4d1099e39ebf966e649de64f5bf8274d27afad33541e702'
+  actual: '96f6549c6b97a641e4d1099e39ebf966e649de64f5bf8274d27afad33541e702'
+  operator: 'notStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-T53MUK/E11-HASH-CONTENT-SENSITIVE-red/test.mjs:37965:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 80.255467
+

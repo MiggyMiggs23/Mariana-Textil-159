@@ -13,6 +13,7 @@ import { E5Boundary, E5Problem, e5Date, e5Money } from "@/components/e5-pendient
 import { e5Error } from "@/hooks/use-e5-actions";
 import { waitForPrintableAssets } from "@/lib/print";
 import { e5AuthorizationContext, e5CanRead, assertE5Detail } from "@/lib/e5-authorization";
+import { useE11Session } from "@/lib/e11-session";
 
 type Row = { key: number; folio: string; saldo: string; importe?: string };
 
@@ -121,6 +122,7 @@ export default function E5DocumentoPage() {
   }</E5Boundary></AppLayout>;
 }
 function DocumentAccess({ id, documentId, site, scope }: { id: string; documentId: string; site: number; scope: string }) {
+  const e11 = useE11Session();
   const user = useGetCurrentUser();
   const receipt = useGetE5Cobro(id, { query: { queryKey: [...getGetE5CobroQueryKey(id), scope], staleTime: 0, refetchOnMount: "always" } });
   if (receipt.error) return <E5Problem error={receipt.error} />;
@@ -130,8 +132,9 @@ function DocumentAccess({ id, documentId, site, scope }: { id: string; documentI
   if (!known) return <E5Problem error="El documento no pertenece a esta recepción." />;
   return <DocumentBody id={id} documentId={documentId} receiptId={receipt.data.reciboId} receiverId={receipt.data.receptor.id} scope={scope} verify={async () => {
     const actor = await user.refetch();
+    const e11Identity = e11 ? await e11.check() : undefined;
     if (actor.error || !actor.data || actor.data.rol !== "ADMIN" || String(actor.data.id) !== scope.split(":")[0]
-      || !e5CanRead(actor.data) || e5AuthorizationContext(actor.data) !== scope.split(":")[2]) throw new Error("Identidad/permisos ADMIN cambiaron. No se solicitó impresión.");
+      || !e5CanRead(actor.data) || e5AuthorizationContext(actor.data, e11Identity) !== scope.split(":")[2]) throw new Error("Identidad/permisos ADMIN cambiaron. No se solicitó impresión.");
     const fresh = await receipt.refetch();
     if (fresh.error || !fresh.data || fresh.data.ubicacionId !== site || !fresh.data.capacidades.puedeImprimir) throw new Error("No se pudo confirmar acceso vigente a la impresión.");
     assertE5Detail(fresh.data, id, site, receipt.data?.clienteId);

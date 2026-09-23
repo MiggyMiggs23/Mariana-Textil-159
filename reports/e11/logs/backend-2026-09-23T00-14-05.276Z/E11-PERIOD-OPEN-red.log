@@ -1,0 +1,37 @@
+TAP version 13
+# Subtest: E11-PERIOD-OPEN
+not ok 1 - E11-PERIOD-OPEN
+  ---
+  duration_ms: 5.40389
+  type: 'test'
+  location: '/tmp/e11-native-m8Wn0j/E11-PERIOD-OPEN-red/test.mjs:38006:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'PENDIENTE'
+    - 'ABIERTO'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'ABIERTO'
+  actual: 'PENDIENTE'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-m8Wn0j/E11-PERIOD-OPEN-red/test.mjs:38007:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 102.72163
+

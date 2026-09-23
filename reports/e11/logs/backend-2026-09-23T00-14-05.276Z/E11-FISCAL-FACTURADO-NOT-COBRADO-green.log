@@ -1,0 +1,44 @@
+TAP version 13
+# Subtest: E11-FISCAL-FACTURADO-NOT-COBRADO
+not ok 1 - E11-FISCAL-FACTURADO-NOT-COBRADO
+  ---
+  duration_ms: 6.754296
+  type: 'test'
+  location: '/tmp/e11-native-m8Wn0j/E11-FISCAL-FACTURADO-NOT-COBRADO-green/test.mjs:38090:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input was expected to not match the regular expression /cobrad|pagos|aplicaciones/i. Input:
+    
+    'SELECT t.id,t.folio,t.cliente_id,c.nombre,t.total::text,\n' +
+      "    CASE WHEN t.documento_tipo='TICKET' THEN t.cobrado_at ELSE t.autorizado_at END AS fecha\n" +
+      '    FROM tickets t JOIN clientes c ON c.id=t.cliente_id\n' +
+      "    WHERE t.facturado=true AND (t.estado='VENDIDO' AND ((t.documento_tipo='TICKET' AND t.cobrado=true) OR (t.documento_tipo='NOTA' AND t.autorizacion_estado='AUTORIZADA')))\n" +
+      '    \n' +
+      '     ORDER BY t.id'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    SELECT t.id,t.folio,t.cliente_id,c.nombre,t.total::text,
+        CASE WHEN t.documento_tipo='TICKET' THEN t.cobrado_at ELSE t.autorizado_at END AS fecha
+        FROM tickets t JOIN clientes c ON c.id=t.cliente_id
+        WHERE t.facturado=true AND (t.estado='VENDIDO' AND ((t.documento_tipo='TICKET' AND t.cobrado=true) OR (t.documento_tipo='NOTA' AND t.autorizacion_estado='AUTORIZADA')))
+        
+         ORDER BY t.id
+  operator: 'doesNotMatch'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-m8Wn0j/E11-FISCAL-FACTURADO-NOT-COBRADO-green/test.mjs:38101:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 155.986236
+

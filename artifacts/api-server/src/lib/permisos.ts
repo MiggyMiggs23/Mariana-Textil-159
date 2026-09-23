@@ -24,6 +24,7 @@ import {
   ADVISORY_LOCK_NAMESPACES,
   transactionAdvisoryLock,
 } from "@workspace/db/advisory-locks";
+import { E11_ENABLED } from "./e11-feature";
 
 export type AccionPermiso = "ver" | "crear" | "editar" | "autorizar";
 
@@ -128,6 +129,8 @@ export async function resolvePermiso(
   modulo: string,
   database: PermissionReader = db,
 ): Promise<ModulePermission | null> {
+  if (E11_ENABLED && rol === "CONTADOR")
+    return { modulo, puedeVer: false, puedeCrear: false, puedeEditar: false, puedeAutorizar: false };
   if (rol === "ADMIN") {
     return { modulo, ...FULL_ACCESS };
   }
@@ -194,6 +197,9 @@ export async function buildPermissionMatrix(
   rol: RolUsuario,
   database: PermissionReader = db,
 ): Promise<PermissionMatrix> {
+  if (E11_ENABLED && rol === "CONTADOR")
+    return Object.fromEntries(MODULOS.map(modulo => [modulo,
+      { modulo, puedeVer: false, puedeCrear: false, puedeEditar: false, puedeAutorizar: false }]));
   if (rol === "ADMIN") {
     return Object.fromEntries(
       MODULOS.map((modulo) => [modulo, { modulo, ...FULL_ACCESS }]),

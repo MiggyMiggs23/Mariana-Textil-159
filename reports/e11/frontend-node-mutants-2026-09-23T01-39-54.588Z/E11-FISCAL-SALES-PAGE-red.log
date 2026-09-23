@@ -1,0 +1,34 @@
+TAP version 13
+# Subtest: E11-FISCAL-SALES-PAGE
+not ok 1 - E11-FISCAL-SALES-PAGE
+  ---
+  duration_ms: 223.320656
+  type: 'test'
+  location: '/tmp/e11-node-m0yxCb/E11-FISCAL-SALES-PAGE-red/artifacts/mariana-textil/case.test.cjs:71503:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-FISCAL-SALES-PAGE
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    check (/tmp/e11-node-m0yxCb/E11-FISCAL-SALES-PAGE-red/artifacts/mariana-textil/case.test.cjs:70738:46)
+    paginate (/tmp/e11-node-m0yxCb/E11-FISCAL-SALES-PAGE-red/artifacts/mariana-textil/case.test.cjs:71489:3)
+    async TestContext.<anonymous> (/tmp/e11-node-m0yxCb/E11-FISCAL-SALES-PAGE-red/artifacts/mariana-textil/case.test.cjs:71506:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2454.596924

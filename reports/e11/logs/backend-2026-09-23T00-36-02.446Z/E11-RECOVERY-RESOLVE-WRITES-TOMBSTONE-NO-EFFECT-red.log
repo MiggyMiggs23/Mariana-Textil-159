@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT
+not ok 1 - E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT
+  ---
+  duration_ms: 11.445163
+  type: 'test'
+  location: '/tmp/e11-native-tLELqD/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-red/test.mjs:38512:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   0,
+        1,
+    -   1,
+        0
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 1
+    1: 1
+    2: 0
+  actual:
+    0: 0
+    1: 1
+    2: 0
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-red/test.mjs:38528:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91.058872
+

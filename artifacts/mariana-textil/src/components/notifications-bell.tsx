@@ -35,6 +35,8 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { useToast } from "@/hooks/use-toast";
 import { getApiErrorMessage } from "@/lib/api-error";
 import { pickCreditEvidence } from "@/lib/credit-evidence";
+import { e11On, useE11Session } from "@/lib/e11-session";
+import { E11_RECONCILIATION_ENABLED } from "@/lib/e11-feature-flags";
 
 const FAMILY_LABELS: Record<NotificationFamily, string> = {
   AVISO: "Aviso",
@@ -72,6 +74,8 @@ export function NotificationsBell({
   mobile?: boolean;
   isAdmin?: boolean;
 }) {
+  const e11 = useE11Session();
+  const e11LinkAllowed = e11On() && E11_RECONCILIATION_ENABLED && e11?.flags.conciliacion && e11.identity.rolBase === "ADMIN";
   const [open, setOpen] = useState(false);
   const [rejecting, setRejecting] = useState<number | null>(null);
   const [motivoRechazo, setMotivoRechazo] = useState("");
@@ -259,7 +263,7 @@ export function NotificationsBell({
                             <Button size="sm" variant="destructive" disabled={loadingApproval || approve.isPending || reject.isPending} onClick={() => { setRejecting(event.action!.requestId); setMotivoRechazo(""); }}>Rechazar</Button>
                           </div>
                         </div>
-                      ) : (
+                      ) : event.href.startsWith("/contabilidad/") && !e11LinkAllowed ? null : (
                         <Link
                           href={event.href}
                           onClick={() => {

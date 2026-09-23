@@ -1,0 +1,2817 @@
+{
+  "status": "CONSOLIDATED_COMPLETE_FROM_TERMINAL_CYCLES",
+  "scope": "OFFLINE_SYNTHETIC_SQL_CAPTURE_NO_DB_NO_APP_NO_POSTGRES_OR_HTTP_PROOF",
+  "cardinality": {
+    "tests": 60,
+    "mutants": 60,
+    "consolidated": 60
+  },
+  "parentManifests": [
+    {
+      "name": "historic1",
+      "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/manifest.json",
+      "status": "FAIL",
+      "cases": 8,
+      "bytes": 46156,
+      "sha256": "29ce4b5631f40b010c290a073572ec441fdde7b2f89e4c7da76f50e752955e19"
+    },
+    {
+      "name": "historic2",
+      "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/manifest.json",
+      "status": "FAIL",
+      "cases": 14,
+      "bytes": 52348,
+      "sha256": "e623c3e9dfebc9ac41e8d62d4ee9b1b96e528764ca11faeab587d7f02d864060"
+    },
+    {
+      "name": "historic3",
+      "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/manifest.json",
+      "status": "FAIL",
+      "cases": 14,
+      "bytes": 52481,
+      "sha256": "cd258fcbc6dde2536f297d992dc4ce85bf5d8b920127693d088fed89b5b8d986"
+    },
+    {
+      "name": "revalidated",
+      "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/manifest.json",
+      "status": "FAIL",
+      "cases": 6,
+      "bytes": 45452,
+      "sha256": "0c32a2a5a3a2446164417c61f76fcb1a4aee8e57788ceb6a98d693cf25fcff32"
+    },
+    {
+      "name": "final",
+      "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/manifest.json",
+      "status": "COMPLETE_EXPLICIT_SUBSET",
+      "cases": 23,
+      "bytes": 60932,
+      "sha256": "2a0b9e86bb14a25fed8394420631a933346acab2acb499c1662480c9da1dee96"
+    }
+  ],
+  "provenance": {
+    "historicUnaffected": {
+      "count": 31,
+      "ids": [
+        "E11-OFF-ALL-GATES",
+        "E11-OFF-SECURITY-NO-SQL",
+        "E11-OFF-ROLE-CHANGE-NO-SQL",
+        "E11-CANONICAL-KEY-ORDER",
+        "E11-HASH-CONTENT-SENSITIVE",
+        "E11-MONEY-EXACT-CENTS",
+        "E11-MONEY-REJECTS-NONCANONICAL",
+        "E11-CALENDAR-DAY-OPTIONAL",
+        "E11-CALENDAR-WEEK-MONDAY",
+        "E11-CALENDAR-MONTH-BOUNDARY",
+        "E11-CALENDAR-NO-DEADLINES",
+        "E11-PERIOD-OPEN",
+        "E11-RANGE-NONEMPTY",
+        "E11-ADVANCE-CALENDAR",
+        "E11-CAPABILITY-EXPLICIT",
+        "E11-CURSOR-BINDS-IDENTITY-VERSION",
+        "E11-CURSOR-BINDS-FILTERS",
+        "E11-CURSOR-BINDS-SOURCE",
+        "E11-PAGINATION-LIMIT",
+        "E11-FISCAL-FACTURADO-NOT-COBRADO",
+        "E11-FISCAL-DTO-WHITELIST",
+        "E11-FISCAL-TOTAL-ALL-DOCUMENTS",
+        "E11-FISCAL-CLIENTS-DISTINCT-SOURCE",
+        "E11-PROFILE-HISTORY-APPEND-ORDER",
+        "E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION",
+        "E11-SNAPSHOT-FROZEN-SALES",
+        "E11-SNAPSHOT-EVIDENCE-CAS",
+        "E11-PERIOD-LIST-SEPARATE-OBLIGATIONS",
+        "E11-IDENTITY-CONTADOR-DEFAULT-F",
+        "E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION",
+        "E11-ROLE-CHANGE-REVOKES-A"
+      ],
+      "review": "MANUAL_FUNCTION_REACHABILITY: named test bodies and reached helpers/functions do not call the modified e11Replay body or recovery APIs; terminal log/hash checks are algorithmic."
+    },
+    "replayRegressionsRevalidated": {
+      "count": 5,
+      "ids": [
+        "E11-REPLAY-LOCK-NAMESPACE",
+        "E11-REPLAY-SAME-BODY-NO-WORK",
+        "E11-REPLAY-DIFFERENT-BODY-DENIED",
+        "E11-ASSIGN-ADMIN-CAS-HISTORY",
+        "E11-ASSIGN-STALE-CAS-NO-WRITE"
+      ],
+      "review": "ALGORITHMIC_TERMINAL_REVALIDATION on frozen recovery backend."
+    },
+    "previouslyPending": {
+      "count": 12,
+      "ids": [
+        "E11-ROLE-REENTRY-STARTS-F",
+        "E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY",
+        "E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION",
+        "E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT",
+        "E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY",
+        "E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION",
+        "E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY",
+        "E11-A-PREPARATION-DUPLICATE-NOTES-DENIED",
+        "E11-LEGACY-DEFAULT-DENY-POLICY",
+        "E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES",
+        "E11-E5-A-CLOSED-WHILE-OFF",
+        "E11-ERROR-BODY-IS-PRIVATE"
+      ],
+      "review": "One terminal reentry cycle in revalidated manifest plus eleven terminal cycles in final manifest."
+    },
+    "recoveryNew": {
+      "count": 12,
+      "ids": [
+        "E11-RECOVERY-QUERY-PENDING-NOT-404",
+        "E11-RECOVERY-NORMALIZES-ORIGINAL-UUID",
+        "E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE",
+        "E11-RECOVERY-REQUIRES-FRESH-ADMIN",
+        "E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT",
+        "E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE",
+        "E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION",
+        "E11-RECOVERY-RESOLVE-CAS-NO-WRITE",
+        "E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT",
+        "E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST",
+        "E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE",
+        "E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE"
+      ],
+      "review": "ALGORITHMIC_TERMINAL_NEW_COVERAGE in final manifest."
+    }
+  },
+  "sourceReachAudit": {
+    "algorithmicFacts": {
+      "historicRepositorySha256": [
+        "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad"
+      ],
+      "finalRepositorySha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "historicTestSha256": [
+        "99822214f91353bf1c6066557f0a5762f1b9392b661a6fa9efd6fd6efe2ac20a",
+        "add3575ebb3e41aab6b259859a7e5487fbdc00d249211483566324894ef62711",
+        "6710609f3953946b7e9aeb991f1c4f5d7e231363ccd095eadcf052d60e8bda99"
+      ],
+      "finalTestSha256": "d3cb43f25ca5fea0dbaca3a7a59710178eef0d45ae3ae9aff56b1fdbdcd951ab"
+    },
+    "manualReview": {
+      "method": "Manual named-test -> helper -> production-function reachability review; not an algorithmic AST/call-graph proof.",
+      "changedReachableProduction": "The five regression IDs reach the modified e11Replay body and were rerun terminally.",
+      "unaffectedHistoric": "The 31 listed historic IDs do not reach the modified e11Replay body or newly appended recovery functions. Their old terminal evidence is retained without pretending whole-file repository hashes are equal.",
+      "newRecovery": "The 12 new IDs reach the stable recovery/query/resolution/tombstone interfaces and use final-source evidence."
+    },
+    "postEvidenceTypeOnlyTestDelta": {
+      "file": "artifacts/api-server/src/lib/e11.test.ts",
+      "recordedSha256": "d3cb43f25ca5fea0dbaca3a7a59710178eef0d45ae3ae9aff56b1fdbdcd951ab",
+      "currentSha256": "5af9d17c47a1bef956e30a20ffa26a45835995504e0678c804a7d2d0f32ed524",
+      "changes": [
+        {
+          "before": "    const identityHandler = identityRoute(transaction === 1 ? \"A\" : \"F\", transaction === 1 ? 4 : 5);",
+          "after": "    const identityHandler = identityRoute(transaction === 1 ? \"A\" : \"F\", transaction === 1 ? 4 : 5) as\n      (text: string, params: unknown[]) => Record<string, unknown>[];"
+        },
+        {
+          "before": "    const handler = identityRoute(\"F\", 2);",
+          "after": "    const handler = identityRoute(\"F\", 2) as\n      (text: string, params: unknown[]) => Record<string, unknown>[];"
+        },
+        {
+          "before": "  const boundary = createE11LegacyBoundary(true, ((req, _res, next) => {",
+          "after": "  const boundary = createE11LegacyBoundary(true, ((req: { auth?: unknown }, _res: unknown, next: () => void) => {"
+        }
+      ],
+      "reversedSourceMatchesRecordedHash": true,
+      "priorTestEmitSha256": "ee43735b4c99b40063ce56238c98f89b76270b2b8e2855454b9663eb404301eb",
+      "currentTestEmitSha256": "ee43735b4c99b40063ce56238c98f89b76270b2b8e2855454b9663eb404301eb",
+      "javascriptEmitEquivalent": true
+    }
+  },
+  "checks": {
+    "exactIds": true,
+    "uniqueMutantAnchors": true,
+    "greenPass": true,
+    "redSpecificErrAssertion": true,
+    "restoredPassAndSourceHash": true,
+    "parentFailuresPreserved": true,
+    "currentPhysicalSnapshotMatchesFinalExceptExplicitTypeOnlyTestDelta": true,
+    "currentPhysicalMismatches": [
+      {
+        "file": "artifacts/api-server/src/lib/e11.test.ts",
+        "expected": "d3cb43f25ca5fea0dbaca3a7a59710178eef0d45ae3ae9aff56b1fdbdcd951ab",
+        "actual": "5af9d17c47a1bef956e30a20ffa26a45835995504e0678c804a7d2d0f32ed524"
+      }
+    ],
+    "liveMutableWorkspaceInputsRejectedByRunner": true,
+    "sourceKind": "Synthetic SQL request capture only; no driver, DB, PostgreSQL, HTTP server, or live user proof.",
+    "aliasing": "Only @workspace/db is explicitly mapped to the copied physical snapshot; metafile realpaths reject live non-node_modules workspace inputs. No ghost source alias is accepted as evidence.",
+    "fullSourceTypecheck": {
+      "checkedAt": "2026-09-23T00:51:23.647Z",
+      "sourceOnly": true,
+      "noEmit": true,
+      "configFilePath": "/home/runner/workspace/artifacts/api-server/tsconfig.json",
+      "rootDir": "/home/runner/workspace",
+      "projectReferences": [],
+      "rootFileCount": 351,
+      "diagnosticCount": 0,
+      "diagnostics": []
+    }
+  },
+  "finalShell": {
+    "status": "EPHEMERAL_STDOUT_LOST_AFTER_WORKSPACE_RESTART",
+    "formerLocation": "/tmp/replit-shell-output-logs/84U3UVYYEPIYWPVNQB6XJ/log",
+    "rawBytesAvailable": false,
+    "evidenceUsedForConsolidation": false,
+    "reconstruction": null,
+    "terminalSubsetEvidence": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/manifest.json"
+  },
+  "currentFiles": [
+    {
+      "file": "artifacts/api-server/src/lib/e11.test.ts",
+      "bytes": 44065,
+      "sha256": "5af9d17c47a1bef956e30a20ffa26a45835995504e0678c804a7d2d0f32ed524"
+    },
+    {
+      "file": "reports/e11/backend-mutants.mjs",
+      "bytes": 9955,
+      "sha256": "fe84283c17f754b2b8a72572cc0d6f06267a990a455be0acc277c427eae4b0e3"
+    },
+    {
+      "file": "reports/e11/run-backend-offline.mjs",
+      "bytes": 10541,
+      "sha256": "6cd6ddc5265ad9938e19826b5351f0f5da153d7d4d223c828ff70f6e839ed26a"
+    },
+    {
+      "file": "reports/e11/audit-backend-consolidation.mjs",
+      "bytes": 18102,
+      "sha256": "6eba6c456dbdb0ceadc5efb5936c09a694fc5a8d34bfc49df59a3752f96d1a0f"
+    },
+    {
+      "file": "reports/e11/backend-source-typecheck.json",
+      "bytes": 301,
+      "sha256": "72b3d5a1556caf89ea69d2089cda41480e2039b940ac7708fcbf95d3303cbfbc"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/e11.ts",
+      "bytes": 5323,
+      "sha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/e11-repository.ts",
+      "bytes": 34992,
+      "sha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/e11-runtime.ts",
+      "bytes": 2428,
+      "sha256": "ad64af6f1efe5d1bd96ab90f35cd01b7e417362a5e4143fdb31af4c0f04cc28f"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/e5.ts",
+      "bytes": 21490,
+      "sha256": "d93eb7ac9103213f35ec62cbeb33fa1851ef677e9f22ad27e23a7ace945d1cc3"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/e5-repository.ts",
+      "bytes": 25459,
+      "sha256": "159e2922ac1e853f1e761250553971ccd68321d2b7bfa4207615b663e60585ba"
+    },
+    {
+      "file": "artifacts/api-server/src/middlewares/e11-legacy.ts",
+      "bytes": 1063,
+      "sha256": "772c7fab46901f7366c65d084d7b54068b0359dfdb26a2935c46417e1f8f70b8"
+    }
+  ],
+  "archive": {
+    "files": [
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-DAY-OPTIONAL-green.log",
+        "bytes": 240,
+        "sha256": "9ea5a0d70a4bd2fcb3bf800f24a7242b3a71527634fc3ad425fbc1bf5b680b62"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-DAY-OPTIONAL-red.log",
+        "bytes": 1039,
+        "sha256": "85d05c3974f56bb41fded772f9ea99c6173648bc86bbe96dc93d0b1b5e9ae12d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-DAY-OPTIONAL-restored-green.log",
+        "bytes": 240,
+        "sha256": "1f11e5df1bcbacd910eee4aa36e45dac2f0128f0256425abe0ab875bfd47de90"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-WEEK-MONDAY-green.log",
+        "bytes": 236,
+        "sha256": "9dc8b158d11c98e90760b189f97b9aaf00722730952c4d813ec00229a6d5ffc0"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-WEEK-MONDAY-red.log",
+        "bytes": 886,
+        "sha256": "f06b8b610c1cc2222e19762d4310f0776ff57ecf63dfc73ec736d033f1865b8c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CANONICAL-KEY-ORDER-green.log",
+        "bytes": 236,
+        "sha256": "3b617bd4e0745795214a6b0094d4dae0b4924b782ce5e4d4bdcf2446c3d8ca7c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CANONICAL-KEY-ORDER-red.log",
+        "bytes": 1028,
+        "sha256": "7bc7d2f313eb95796b8239838e0a656d7655eb8fedfc19cc8b6652f9d52ec66f"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CANONICAL-KEY-ORDER-restored-green.log",
+        "bytes": 235,
+        "sha256": "1ee9cbb18ed763211ac15a883adbd1717285eabbbdb3bd194969ddd928540390"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-HASH-CONTENT-SENSITIVE-green.log",
+        "bytes": 242,
+        "sha256": "48497c1d49189ba00c3c9122d53112a6886534570b88cea9c027f19c5322e034"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-HASH-CONTENT-SENSITIVE-red.log",
+        "bytes": 1091,
+        "sha256": "60bee5df9b2540e3e407fe4c0858a818f86506bdebd86cbbb79fce13dafa183e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-HASH-CONTENT-SENSITIVE-restored-green.log",
+        "bytes": 242,
+        "sha256": "11b9e6f0da8a5b95d697600c4ace052ea507727a7c22830c1ba868ec7bb0f917"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-EXACT-CENTS-green.log",
+        "bytes": 233,
+        "sha256": "0b9ddad8456113dee73e937e9e751b32231fd4c82e177dbcb3b5720d65a11bdf"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-EXACT-CENTS-red.log",
+        "bytes": 940,
+        "sha256": "95c87b315621d2724ba675e44373e4af87c2339d57988bb603bc7985e54188de"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-EXACT-CENTS-restored-green.log",
+        "bytes": 232,
+        "sha256": "601f6499b4313a371566922faa252352d4bd926447cc22a21d18732ca75dbf42"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-REJECTS-NONCANONICAL-green.log",
+        "bytes": 249,
+        "sha256": "07b8ed0e36c23246a8300e59fe3dfec9f76fe94501bee17695bd68bbd4330fd0"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-REJECTS-NONCANONICAL-red.log",
+        "bytes": 880,
+        "sha256": "fc35ec5a9a83342a4040a81f6123e3d7e84443ed9f5daabd2b2de565298721a0"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-REJECTS-NONCANONICAL-restored-green.log",
+        "bytes": 249,
+        "sha256": "138b2b9395aa2b521f3e5a77908bdb112813bc59571293969c7b325c1d018c5c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ALL-GATES-green.log",
+        "bytes": 225,
+        "sha256": "6fe7ea3b4c68e537479464fe7139e2a632eff8e78d538eb531a5ec6f1225c294"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ALL-GATES-red.log",
+        "bytes": 1070,
+        "sha256": "88798532aa1173ceb01f907bbab5ca1aabc8b6d55aa2da96d53f35dc3315b10e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ALL-GATES-restored-green.log",
+        "bytes": 224,
+        "sha256": "5eebdc3b54d272f3e112ab80b07df6019aa6d4c97ddadc2ba65b46bd69700690"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ROLE-CHANGE-NO-SQL-green.log",
+        "bytes": 242,
+        "sha256": "8aae79264873fa7a5b55d35e0fa2088a6986d3723154d7f879ce15177eeba448"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ROLE-CHANGE-NO-SQL-red.log",
+        "bytes": 800,
+        "sha256": "bb8e3f04fb1dc59a829e079c83c7574964b8d294f91ad2d9597d59767efb4cdd"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ROLE-CHANGE-NO-SQL-restored-green.log",
+        "bytes": 242,
+        "sha256": "7c91cf58552242d71cd9ed015d7206a53b1f131aca2d4a71865d4911c531b730"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-SECURITY-NO-SQL-green.log",
+        "bytes": 237,
+        "sha256": "0b9d86b900f4210490e0cf370a398c5ccc107fdb02fbd816a54ea8abb5e83901"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-SECURITY-NO-SQL-red.log",
+        "bytes": 788,
+        "sha256": "91bd37d7175b0b4367a2ca7a8f498e45c367b0ebf947209d5fc474109a6a6ff8"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-SECURITY-NO-SQL-restored-green.log",
+        "bytes": 235,
+        "sha256": "c0196d71434194068ddbeef0efecd630da37b9c564a697415056c72ae3ef3dfa"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/manifest.json",
+        "bytes": 46156,
+        "sha256": "29ce4b5631f40b010c290a073572ec441fdde7b2f89e4c7da76f50e752955e19"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-ADVANCE-CALENDAR-green.log",
+        "bytes": 230,
+        "sha256": "db431f9ea4f01b123f2a4caac118546dda1d59cfe70df3a8f5d514f97bd3ef18"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-ADVANCE-CALENDAR-red.log",
+        "bytes": 961,
+        "sha256": "90aa3af923b48efe1df09d6381d5c1f71cde08c86fbbdb1c59f68633c9a2dd77"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-ADVANCE-CALENDAR-restored-green.log",
+        "bytes": 227,
+        "sha256": "ae4602b6fe809232eb43f17699a839baa81f7ffd06f5520c912c057ce7dc8e49"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-MONTH-BOUNDARY-green.log",
+        "bytes": 244,
+        "sha256": "a24722b894cc22d81f090294ed663c01895f91d1f24af9d1a4d33c5b96042829"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-MONTH-BOUNDARY-red.log",
+        "bytes": 1631,
+        "sha256": "186ddb47979bfd1dbed82e749af5ca51a81c8060bfc29f60e22ee0f200af6720"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-MONTH-BOUNDARY-restored-green.log",
+        "bytes": 244,
+        "sha256": "9d53debb3f389c2985814c209f6487578bdb27bf6339d2f22edb67586777ff0a"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-NO-DEADLINES-green.log",
+        "bytes": 240,
+        "sha256": "227dc60324568b73219fead513b64a87836be23a697496a1844b578990f54ccf"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-NO-DEADLINES-red.log",
+        "bytes": 1382,
+        "sha256": "eddd285822f89a342d2fed8f132a97c839b11f41a59e6454835c1bd2090796db"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-NO-DEADLINES-restored-green.log",
+        "bytes": 240,
+        "sha256": "b7702581afe96bdf71a7aeba5321dec4c46648473a7c9b9ff46894849a6789bf"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-WEEK-MONDAY-green.log",
+        "bytes": 238,
+        "sha256": "0b5b36ae2a26a2cfaa346d029a4fa932e0c1596b4d7d7d5be6f8515eb95c0135"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-WEEK-MONDAY-red.log",
+        "bytes": 1610,
+        "sha256": "6d10eab99dcb0b9497cd5cc241fdb7bfa07e715cff137cf7dbc73cbe6a110bbd"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-WEEK-MONDAY-restored-green.log",
+        "bytes": 237,
+        "sha256": "d8204ba5b025606d1965401b4e4ee2194e569fefabca5ea78b00853fa6d92b4e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CAPABILITY-EXPLICIT-green.log",
+        "bytes": 237,
+        "sha256": "b8003f96ffe149465fe5ccd3a155595cc70b4eee67f0888ac0af269c8045a238"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CAPABILITY-EXPLICIT-red.log",
+        "bytes": 852,
+        "sha256": "ade6e75951d49149dfbf5eae9e7a1e9070db1a4ed184da01323c8e8f0cf8b28b"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CAPABILITY-EXPLICIT-restored-green.log",
+        "bytes": 237,
+        "sha256": "1e1d721682c4cae6bf9ae5a9ed951c26a6418a4a36354b4543cf1dba6ab363be"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-FILTERS-green.log",
+        "bytes": 237,
+        "sha256": "bee77c1e797c3b486ca8cddb19617ab2eea0cd67efd8a2df914a99686751e868"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-FILTERS-red.log",
+        "bytes": 856,
+        "sha256": "a0a218f46294fa4d864e996d1eae5c8f4d6ee63dd639161222eeedca8a131bab"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-FILTERS-restored-green.log",
+        "bytes": 238,
+        "sha256": "fe2c8726930c6f16567e2a211b1d781b169b11a4ee1c77f3c859e09c2ebd8184"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-IDENTITY-VERSION-green.log",
+        "bytes": 256,
+        "sha256": "deaa87d0e295b04d22eb916f00280dfc227fd07bb72e20d5401569161192880d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-IDENTITY-VERSION-red.log",
+        "bytes": 892,
+        "sha256": "fad010185e2e0ba69b5cc345305f4da1dd9b62805c141d40305f4a103a2c2a20"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-IDENTITY-VERSION-restored-green.log",
+        "bytes": 256,
+        "sha256": "7fc027720ba1fef908cdada89bdcbefa61d488b97f01be6cccbb4a71f57a90fa"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-SOURCE-green.log",
+        "bytes": 237,
+        "sha256": "ea871a4cdd78f0e59a671ae1dd3f0a00431e557f5062ffb5cd9f1ba91d16638a"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-SOURCE-red.log",
+        "bytes": 853,
+        "sha256": "d5bceebf9d476f5abf9252d2de2d446875eb853af987687e7c4b6c1c5ade5764"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-SOURCE-restored-green.log",
+        "bytes": 236,
+        "sha256": "aa2146d36b425046e75e73d001929ac5c79f116444970eaee92130061d36abaf"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-FISCAL-FACTURADO-NOT-COBRADO-green.log",
+        "bytes": 1769,
+        "sha256": "08b152d366f2bbbba04541be9d8810499efd2495a1605b0778b741fb6b6a649f"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PAGINATION-LIMIT-green.log",
+        "bytes": 228,
+        "sha256": "80ae88fea600a6bd28652b6279caf7cbb2bf736d5dbba0725b4a81f7763d78ed"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PAGINATION-LIMIT-red.log",
+        "bytes": 972,
+        "sha256": "3cf2f1d67f015e5bf4ceeae291a9b6b8b618150e436c0c770f27ecaebf1a34be"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PAGINATION-LIMIT-restored-green.log",
+        "bytes": 230,
+        "sha256": "2a7930ae5d9df076a647516a1dd9eeaabaa12e547d7384aa42aa7053aaba254e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PERIOD-OPEN-green.log",
+        "bytes": 220,
+        "sha256": "ae85d8feb351effcb98d6574b6d3134397e0fbbdc244e9ddc42fb44b3d07e032"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PERIOD-OPEN-red.log",
+        "bytes": 916,
+        "sha256": "c04376b0c1947b867460b311f3355678e2fdd25707170fab8fdfd4640bb0ab59"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PERIOD-OPEN-restored-green.log",
+        "bytes": 221,
+        "sha256": "aea04698df71a33988ffef930c69632e97cc100e0b65ee310553524e319d461e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-RANGE-NONEMPTY-green.log",
+        "bytes": 225,
+        "sha256": "a0ad19fd1d3eb9798516a4b557152295a3e41d6ea0700c33bb32812d7c90dc86"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-RANGE-NONEMPTY-red.log",
+        "bytes": 833,
+        "sha256": "a8cfa42067d974755b829ddb0b719edd5a87145b02eeb6f3df63285dc67cfe21"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-RANGE-NONEMPTY-restored-green.log",
+        "bytes": 226,
+        "sha256": "db94154e821dc6c494d1ed93bf17e4fc0ab7da85a0cc9cc08b08fb9d98837982"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-DIFFERENT-BODY-DENIED-green.log",
+        "bytes": 254,
+        "sha256": "da37a68ca125387dedbddd9061f58cb46e40dedf777f253fce732fb347a85665"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-DIFFERENT-BODY-DENIED-red.log",
+        "bytes": 798,
+        "sha256": "57a58db636f3e77b6915c1dc227bada63ee14129be6e3fd6d43ccb99140ea6c6"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-DIFFERENT-BODY-DENIED-restored-green.log",
+        "bytes": 255,
+        "sha256": "34fefecb245a1cc1ee92a800dc083c6f169ce01599bf52d87fb64ea1fefcd4a6"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-LOCK-NAMESPACE-green.log",
+        "bytes": 241,
+        "sha256": "85123466a44614a7bbdad07bb0c00414a44d3ecc65af175b2fd633cde8a627a2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-LOCK-NAMESPACE-red.log",
+        "bytes": 810,
+        "sha256": "4ea29a7bd5311755b1d26adff7d05a2d2933fe564ed231840f8939a85474ac64"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-LOCK-NAMESPACE-restored-green.log",
+        "bytes": 241,
+        "sha256": "6013926d361b234e526fe78c640db6d353a9a884ffd8a274e709b4c043258780"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-SAME-BODY-NO-WORK-green.log",
+        "bytes": 245,
+        "sha256": "1b4e10916e3782478aee40d3df0c7e7f44895ff819ee8a363f613cc31f7224cd"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-SAME-BODY-NO-WORK-red.log",
+        "bytes": 928,
+        "sha256": "2ac45a254f4e4f76de530c21614c5160aed211a6cb581dd44782c4f8097a3947"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-REPLAY-SAME-BODY-NO-WORK-restored-green.log",
+        "bytes": 247,
+        "sha256": "5824d3fc0be631042f2a1df5807c1d5c95725131de57bb90d41509c3b875d73c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/manifest.json",
+        "bytes": 52348,
+        "sha256": "e623c3e9dfebc9ac41e8d62d4ee9b1b96e528764ca11faeab587d7f02d864060"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ASSIGN-ADMIN-CAS-HISTORY-green.log",
+        "bytes": 245,
+        "sha256": "8c67780ad95a228de57df1f9fe3820219f3897aeb31c9c67cbca8903d6937e2c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ASSIGN-ADMIN-CAS-HISTORY-red.log",
+        "bytes": 810,
+        "sha256": "680fc5d8011cea15cc35f2b2a26e84dab82d8f6de7df0bc47da7f62c68bf34d7"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ASSIGN-ADMIN-CAS-HISTORY-restored-green.log",
+        "bytes": 248,
+        "sha256": "8ae82a64326f97261af69437293a0435326a5d2f4e86faa8b8fb2e7f3840b229"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ASSIGN-STALE-CAS-NO-WRITE-green.log",
+        "bytes": 248,
+        "sha256": "43b02482db9c75527c13d34b5a5427f2fd16a5554b4be7d23b82c52801dc7e90"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ASSIGN-STALE-CAS-NO-WRITE-red.log",
+        "bytes": 784,
+        "sha256": "02c84f9340537370a1994bba7af76f3c6786e39cd75665b57bc545a8fb0cbf47"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ASSIGN-STALE-CAS-NO-WRITE-restored-green.log",
+        "bytes": 248,
+        "sha256": "6712bcc27ad97aa9f87ed0684fdcb2209da05a03b56b8bbf1d2627128bb11d56"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-CLIENTS-DISTINCT-SOURCE-green.log",
+        "bytes": 258,
+        "sha256": "77959f68507550bd0656ea2e57ca46d718037f305d11e869d65556e881f5579e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-CLIENTS-DISTINCT-SOURCE-red.log",
+        "bytes": 1419,
+        "sha256": "4aec7cde31ec70c0a91353d6ed51b4960248a13ca4eedeedfc53e78a6b134836"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-CLIENTS-DISTINCT-SOURCE-restored-green.log",
+        "bytes": 256,
+        "sha256": "bc9dc63bd1f456dee10e37b2d4629645dd7000a961506e0c8a37391239b42a5c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-DTO-WHITELIST-green.log",
+        "bytes": 239,
+        "sha256": "cf396e158891943ae08c353b15baa8f635ec8bec7c929f5f15bf13507b58bf06"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-DTO-WHITELIST-red.log",
+        "bytes": 1343,
+        "sha256": "d78dbd674360a988adb257a08a4f681c4b9bc9f0b7329259ea99e51d23da10a2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-DTO-WHITELIST-restored-green.log",
+        "bytes": 238,
+        "sha256": "bf2ffc1b7ebe28180b9fb2c4cfacb1943d6d076c5c09e06f0d438e3713966865"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-FACTURADO-NOT-COBRADO-green.log",
+        "bytes": 255,
+        "sha256": "295273adf700ae39d384a260f80eb432cded0e6fbe03cb9874919332485a50af"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-FACTURADO-NOT-COBRADO-red.log",
+        "bytes": 1738,
+        "sha256": "afd5c94396ba16a98252809b563978ec0d9d1b51a3577bce908b0fb29e9e130b"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-FACTURADO-NOT-COBRADO-restored-green.log",
+        "bytes": 255,
+        "sha256": "768bd8818125d2bd01a31f742f111daa0eed66b7ad3d1b45ec1866ac03a2806d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-TOTAL-ALL-DOCUMENTS-green.log",
+        "bytes": 251,
+        "sha256": "5e519b7271e3a1a7439cd7953b20b1b02ec3cb58ef3fff2474e78fb4955fda69"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-TOTAL-ALL-DOCUMENTS-red.log",
+        "bytes": 840,
+        "sha256": "aa8d9f2a90c2d061d99f0eff13c7696ada30d93b6fa8684d50bd6e329e26abf9"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-TOTAL-ALL-DOCUMENTS-restored-green.log",
+        "bytes": 251,
+        "sha256": "b306511035db888ef480e9213808bdb5c4f6ed44281a48fcc9a6e377bcc67f97"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-green.log",
+        "bytes": 268,
+        "sha256": "5d5212630dfb559bcc915f107b7aa1900f7e042b497ed18d3fe5a70ac25c7732"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-red.log",
+        "bytes": 852,
+        "sha256": "3c830004dbbd837fac226fb959debca806174f6b6e88206cc9bc904c92ae4f5e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-restored-green.log",
+        "bytes": 268,
+        "sha256": "2341af21875bfc9d1fd9d9fad94aba7f1d27edaf5b39129f1753b7a829ac52a1"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-CONTADOR-DEFAULT-F-green.log",
+        "bytes": 252,
+        "sha256": "c5c92236d64e405619e9dfc5da742f19aec504a4c06157fdb91686d25f6c2949"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-CONTADOR-DEFAULT-F-red.log",
+        "bytes": 829,
+        "sha256": "d95abaa4b9aa1c585753f4b630c1ed3d746c1233c83b61f85f1bb599ecf3ca2b"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-CONTADOR-DEFAULT-F-restored-green.log",
+        "bytes": 253,
+        "sha256": "0b0d27bfc8f2f1716c1e3e3630c754e56db93ebefe0d36f6b485fc70a01c20a8"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-green.log",
+        "bytes": 261,
+        "sha256": "f2ca354ef0f2e65e5c48b1bc972971587238fc19d89b75532525b027d327514a"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-red.log",
+        "bytes": 1183,
+        "sha256": "c8a490e424433caeb300764f8a331e9ddf34e467ba87f8fd36c3de232c7f3d6e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-restored-green.log",
+        "bytes": 263,
+        "sha256": "cd9d7aeac697c89737475b47d2ecbfebe79bba3a286dcfedd0a3acaad7a63e42"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PROFILE-HISTORY-APPEND-ORDER-green.log",
+        "bytes": 254,
+        "sha256": "081db47a5deb0b5e256cf03083e8b4015c8bf565f37b044fb90100b3e2ae2d69"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PROFILE-HISTORY-APPEND-ORDER-red.log",
+        "bytes": 1016,
+        "sha256": "366cf84ce3751f3acfe5336d6e8971a18a698ffc13a7a94d90f502a5b489bbb7"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PROFILE-HISTORY-APPEND-ORDER-restored-green.log",
+        "bytes": 254,
+        "sha256": "3083d1dd8021ef1046fd3ad2570e5c1a118c9220f32333baa6bc6226cc27cf3c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-CHANGE-REVOKES-A-green.log",
+        "bytes": 239,
+        "sha256": "01d7051497b3ea2dc05c16e611b0b42902d67b12f834c897b7a40f6fbd3d486d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-CHANGE-REVOKES-A-red.log",
+        "bytes": 803,
+        "sha256": "62e5d7ba0fa3917606d64fb1eabf01cc0385e6e127bd25f7badb148910bb4169"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-CHANGE-REVOKES-A-restored-green.log",
+        "bytes": 239,
+        "sha256": "e73daa02a0dab605b61cf75e36715bf7cef3f02266bcc0d674a522b9d8f22f06"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-REENTRY-STARTS-F-green.log",
+        "bytes": 239,
+        "sha256": "17caebe85403c20b0160c47b7648233bca40dd6633a3cc914c1e11e452476ade"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-REENTRY-STARTS-F-red.log",
+        "bytes": 240,
+        "sha256": "be389f1852f7d9deb8ae8e58a364b8c87475d29a0ca8cd55a034423cb4b2b113"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-EVIDENCE-CAS-green.log",
+        "bytes": 241,
+        "sha256": "6f5b71eebeac1d95750b527919e31c2127d7e375842b032d8a6bf86d66f204bb"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-EVIDENCE-CAS-red.log",
+        "bytes": 769,
+        "sha256": "aeb3ac80b65f3a635e35e67d1e74f40d53fac440f7616ac2c3add6e6cef86357"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-EVIDENCE-CAS-restored-green.log",
+        "bytes": 240,
+        "sha256": "44094b82eb10581bfd902ab53075ef191f86fb860da22a76e6c6b507f9756170"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-FROZEN-SALES-green.log",
+        "bytes": 241,
+        "sha256": "57fc0f426b18f1e5a5286c2fc99609f6f827750580499f152ad00e8652d60130"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-FROZEN-SALES-red.log",
+        "bytes": 1033,
+        "sha256": "4c0bc22653f30973d242fb8694e839abb10af5fe93f664f7e6e98512e8a84ffa"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-FROZEN-SALES-restored-green.log",
+        "bytes": 240,
+        "sha256": "5ca2ae69cf9e45d0c553fb6aca25ca279ffd4272fc37f9d5c1540df31f198952"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION-green.log",
+        "bytes": 278,
+        "sha256": "838058d0453d44f7eac03e3e91fd0565644798ad8adaecc68d6c6cc6c4b7dbe2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION-red.log",
+        "bytes": 886,
+        "sha256": "03a339225925da24b77be7d58f8b58df4451121e6f0682dff34e404f6fc56dfc"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION-restored-green.log",
+        "bytes": 279,
+        "sha256": "01a86642bd583fd102bb2d8d266027bdb9b2f1a60ef105976eef6bbd761491eb"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/manifest.json",
+        "bytes": 52481,
+        "sha256": "cd258fcbc6dde2536f297d992dc4ce85bf5d8b920127693d088fed89b5b8d986"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-ADMIN-CAS-HISTORY-green.log",
+        "bytes": 245,
+        "sha256": "9ea8686df308c543de3d248a7fed05f63ef005c5aa672700208b897644ace535"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-ADMIN-CAS-HISTORY-red.log",
+        "bytes": 810,
+        "sha256": "b9e7f5a0b33306325af25cdc472acd95a3f56c6a93cecb842dc61dab6f0141ae"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-ADMIN-CAS-HISTORY-restored-green.log",
+        "bytes": 247,
+        "sha256": "40cbf194a2bef16fe5d028c4a4c443d1f8935293146c258f3f57bf4c77653806"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-STALE-CAS-NO-WRITE-green.log",
+        "bytes": 249,
+        "sha256": "10b3ad474591f70e6e63ef2ac8a24201a15bc1e06b4598fa8917ed8e148fb911"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-STALE-CAS-NO-WRITE-red.log",
+        "bytes": 785,
+        "sha256": "845c3dc48e492baf81bbc6e5829ba1e088029b7d9d56c34eb04c9389c16b2682"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-STALE-CAS-NO-WRITE-restored-green.log",
+        "bytes": 247,
+        "sha256": "80f18fd0c1d72f6dabb1dd4b50ea9b4ba082b62cf0fc71ad7e2a0e784db60843"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-green.log",
+        "bytes": 275,
+        "sha256": "5d3a1d4e4c89c1a00900c125f4e15a5d7eabae93597673166b4cfecc87b91ca8"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-red.log",
+        "bytes": 275,
+        "sha256": "48dab4297ddcfb9c7412608fbf9d3054523e20a8109efc67c2562d30b54e2b7a"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-DIFFERENT-BODY-DENIED-green.log",
+        "bytes": 254,
+        "sha256": "a03f9f4ab6af8eaaf42961c6d0f941b6a495470bc555875ac236f7d738b3970c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-DIFFERENT-BODY-DENIED-red.log",
+        "bytes": 797,
+        "sha256": "0df96d684ff1f70d191d94a7b2ed2d9758a2646be475c65ffe2e5d71d2fc62f7"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-DIFFERENT-BODY-DENIED-restored-green.log",
+        "bytes": 254,
+        "sha256": "6437957825f4658e49ca6412a7b5d3e73f3d3be7f6878c5e88dcaa8c038087d5"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-LOCK-NAMESPACE-green.log",
+        "bytes": 241,
+        "sha256": "dccbddb85f61c109b10041804d5fee1b23b9b06adc1997870d4a83dfcf948790"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-LOCK-NAMESPACE-red.log",
+        "bytes": 811,
+        "sha256": "5610ae484e07e11028209d01b32f365d0173e3fad595dedab3c986c657130cdb"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-LOCK-NAMESPACE-restored-green.log",
+        "bytes": 239,
+        "sha256": "3024a2f48993e719097ebd685adf100e1f22402cb49d830e8d938aba0bd2762c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-SAME-BODY-NO-WORK-green.log",
+        "bytes": 246,
+        "sha256": "c64f7a5fdc145b95d51cadcf840bc6b6ec06e7878654ef27b5ded6a023d3f672"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-SAME-BODY-NO-WORK-red.log",
+        "bytes": 928,
+        "sha256": "caa719119c39b24978d4b88842d9d107a6dec58ec891d1b0401de2fa3254e2e8"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-SAME-BODY-NO-WORK-restored-green.log",
+        "bytes": 247,
+        "sha256": "01bc894734a304273055aeafa0cb402c9fa1c439de6375628b4c869a98d1dd63"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ROLE-REENTRY-STARTS-F-green.log",
+        "bytes": 239,
+        "sha256": "7b4667d69dc78803cd70f5fec61c4bfe4969add1b999280a7660caea6b16eaf2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ROLE-REENTRY-STARTS-F-red.log",
+        "bytes": 804,
+        "sha256": "f5b821001c202e87f2f8f0554a23d5efeeec7323044605ab29fd3cab8e953ec5"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ROLE-REENTRY-STARTS-F-restored-green.log",
+        "bytes": 240,
+        "sha256": "b6fffd0f65aacd4cf423f1b0bbd9bb3a5789088010de2949d5e8fcbc98a3b29e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/manifest.json",
+        "bytes": 45452,
+        "sha256": "0c32a2a5a3a2446164417c61f76fcb1a4aee8e57788ceb6a98d693cf25fcff32"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-green.log",
+        "bytes": 270,
+        "sha256": "8c050dd012f09cde115baf7a957af0b8f3af1ecb862cf6f3b8504ef3bec178fa"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red.log",
+        "bytes": 1984,
+        "sha256": "ed53af284d48e8aceb8ea478e2ea559fb1373c3dfd7c0804779d6047eb29d056"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-restored-green.log",
+        "bytes": 270,
+        "sha256": "5179d9b2c226b167a4ea9d81feecf2159813adc5d5b8ba214ed7d196b5645005"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-green.log",
+        "bytes": 264,
+        "sha256": "9aa21a7658659c7f6c9c9d622ec55b838302afa6cb45b33595c30b9e8651268c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red.log",
+        "bytes": 1686,
+        "sha256": "3a3bc36a3cb9871b89edfc464caea63a206b5835baf9d93d3a31c8d1b136c55a"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-restored-green.log",
+        "bytes": 264,
+        "sha256": "15c05c817e581bd08b10076be3c6e12bf19a48435fb81c12dadc7170ceae81e2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-E5-A-CLOSED-WHILE-OFF-green.log",
+        "bytes": 240,
+        "sha256": "17763508246a1d4d47e8ed23225eb7aab253c7efa922c0b4f883dff11dfa5811"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-E5-A-CLOSED-WHILE-OFF-red.log",
+        "bytes": 905,
+        "sha256": "127edf9bea2af626cf5a3d51c74d5fd44dc131669180e321dfadcdb40cc4027e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-E5-A-CLOSED-WHILE-OFF-restored-green.log",
+        "bytes": 240,
+        "sha256": "fa61d23173f9cad161ba24414b5c3e45542f2e72a07e333e650d1f689981823e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-ERROR-BODY-IS-PRIVATE-green.log",
+        "bytes": 239,
+        "sha256": "65e9ae44bea9e447a0bec7e0127945ad3570afd452f692f2485622eab1f92c69"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-ERROR-BODY-IS-PRIVATE-red.log",
+        "bytes": 1151,
+        "sha256": "580c8e2a1b9aa207c1caf450c9bc2a9a05660bf5527a86af5b5f7ddf385bb855"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-ERROR-BODY-IS-PRIVATE-restored-green.log",
+        "bytes": 240,
+        "sha256": "56cc5df0ba7f9525c4877522d8bc727af3300d672af683a21cd9cfc373e00349"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT-green.log",
+        "bytes": 266,
+        "sha256": "6ff7d84a4d04d37e715270f8bd3b8f74cc0cfb3fffe2964b3c1c380afda4b05d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT-red.log",
+        "bytes": 821,
+        "sha256": "b91e80e7b211760c063fdd06e3976f5e23a8f703c20251aed61b10c1d5f58727"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT-restored-green.log",
+        "bytes": 265,
+        "sha256": "4756a66c55695e5bf0fc2e39d113e412d5dbef08a340900536bbfefde629b66c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-green.log",
+        "bytes": 272,
+        "sha256": "de5c70f57c5226532320be2453a9ee709b662ab2d5a6f85da99e742b44cc5c5c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red.log",
+        "bytes": 1957,
+        "sha256": "cd0fc6bec28059cf290f70bec4cbf77f2bb578664f3d5685bc671e3e9040d2bb"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-restored-green.log",
+        "bytes": 272,
+        "sha256": "20f2e84b6865409344084dd8861856e5a7f869027672be5bf57bc6426375a1c1"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-green.log",
+        "bytes": 274,
+        "sha256": "fc436524642038930e753b1c90a117eacfbb06d55914c203be87d5c0e0b4595d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-red.log",
+        "bytes": 835,
+        "sha256": "61fe6987411df8179f15a018e2b3565e1f588440c7a0667e6133de5af400c786"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-restored-green.log",
+        "bytes": 274,
+        "sha256": "d5978d782b6cf13cbbffafc603d2dd71c67968d650b78c97cd1018dc86e7fda2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES-green.log",
+        "bytes": 280,
+        "sha256": "06dbfb943afbb576fa2120bed0a07e9c07eccbf11ccd6f0da06270ccd22f3f04"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES-red.log",
+        "bytes": 880,
+        "sha256": "6455c82dbea8e085833d2cf7c1c7d6d0a8c0b64cb51f3e8580c6695b810bb10c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES-restored-green.log",
+        "bytes": 279,
+        "sha256": "4c55d49a7bc9b84f9b34931eaba14f3648fd9e0b7ec3fbb6b516d9edda7939dc"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-DEFAULT-DENY-POLICY-green.log",
+        "bytes": 250,
+        "sha256": "dba9d5c9f37ce950f91af61f56c95b14078fdf71c5c7e5d1957330daddaf0997"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-DEFAULT-DENY-POLICY-red.log",
+        "bytes": 927,
+        "sha256": "0dcaf0cefffab7d2068097af7f75220b47f6c53a9e5015a9f5d2f3bb67289c2b"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-DEFAULT-DENY-POLICY-restored-green.log",
+        "bytes": 249,
+        "sha256": "eedde16ebd8052647e3f25a2f83fe9e9f4ff2039dc8001633aeee0e16ab8475a"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY-green.log",
+        "bytes": 274,
+        "sha256": "13e8da324a20c191ba5ca82471f73b893c70c70688bba0a5ce505ec6e8f1cdc4"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY-red.log",
+        "bytes": 812,
+        "sha256": "3e349739afc9d71b35ef213ef9947d8da5e4f7cd32183dd9844932e3d428be78"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY-restored-green.log",
+        "bytes": 274,
+        "sha256": "a9c7888a3fac51a4a1c6c5ccd28fc53325e26fde99002567e9472c2121ca2c12"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION-green.log",
+        "bytes": 277,
+        "sha256": "04a16662b00e0751cc26b914c240502729c196fab6e366e0d2d3f82031ff63b8"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION-red.log",
+        "bytes": 1835,
+        "sha256": "769eb0cc921230145bbe26518fe7941a9eb70ff6a9889198c07800ccdb0862bb"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION-restored-green.log",
+        "bytes": 277,
+        "sha256": "3489f8ca96b79438b4840f44171cb49c81347c78ec8ada9eb88bcff1f1025f5f"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-NORMALIZES-ORIGINAL-UUID-green.log",
+        "bytes": 264,
+        "sha256": "7029333721741090b32c5eed89e47ba50945bf8551f45051d91ff2e7d38d61e8"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-NORMALIZES-ORIGINAL-UUID-red.log",
+        "bytes": 1020,
+        "sha256": "92a2a0ad69162b81a8d4c887dd0ddb2f786c00713bbd7a0539148a7e1eb7d90d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-NORMALIZES-ORIGINAL-UUID-restored-green.log",
+        "bytes": 265,
+        "sha256": "37956e3544fe1c7d2eb4fe4c1fa9fb1449754c8ec87f1812265050a38e08b453"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE-green.log",
+        "bytes": 279,
+        "sha256": "117299f85e60665f04aa186200cb1c6de623c6bd18c15a07b985625c323fc55c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE-red.log",
+        "bytes": 1139,
+        "sha256": "64ea34d9e0a217b98e9de18b43f719cd5c0cd44f9c418737b996df893137169b"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE-restored-green.log",
+        "bytes": 279,
+        "sha256": "1e8b5bfc3337e64c2fbff6d13239ac7f73c0377ba251d01cd45ed925772d2470"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-QUERY-PENDING-NOT-404-green.log",
+        "bytes": 257,
+        "sha256": "1331a423821143155b3af4e37bd3adf9df811e3fce6c82e12d542c833e94f6f1"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-QUERY-PENDING-NOT-404-red.log",
+        "bytes": 1011,
+        "sha256": "cef0f626ff406a2c6d33dcb29a4a6cfe04a283bab91ce163a6605b0b2e5c6763"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-QUERY-PENDING-NOT-404-restored-green.log",
+        "bytes": 258,
+        "sha256": "0edf3790fe96a47ac9609c2a1a9c365def90e8c2f2e6bc4096d6431e1f88042e"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-REQUIRES-FRESH-ADMIN-green.log",
+        "bytes": 258,
+        "sha256": "b9c002055c787c129c917384e86546c749276f3dd350206328fb37baa4ceeedc"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-REQUIRES-FRESH-ADMIN-red.log",
+        "bytes": 800,
+        "sha256": "ff4f924834e43587439be5463855bffc31f525b1f297e4e8ab6de9f89b83a4bf"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-REQUIRES-FRESH-ADMIN-restored-green.log",
+        "bytes": 256,
+        "sha256": "1c1668e847b8b90b3a1724ec60872e60b893252a820620eb3980c565fb809610"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT-green.log",
+        "bytes": 274,
+        "sha256": "0102798e8e340943cc70341558c99a22643d56aaf1a9b2b9e0944a24d00544f3"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT-red.log",
+        "bytes": 1692,
+        "sha256": "ed1e368c044c6ea1c3e257e9e875f26e6b5864e8c8d1d75fa528724127dd263a"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT-restored-green.log",
+        "bytes": 274,
+        "sha256": "e519c3cab2913f84e5848c351b2298742c63892d7ebaa2fee4ea8dae19f01a95"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CAS-NO-WRITE-green.log",
+        "bytes": 256,
+        "sha256": "5ff7397b4541508a23b857a24f0db789e9940ca53bf0fe741c5fa4b5352c6374"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CAS-NO-WRITE-red.log",
+        "bytes": 803,
+        "sha256": "17bdcf3587fea468987f9ea40a737678c1a81b57e5929be2678895ca36c1be66"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CAS-NO-WRITE-restored-green.log",
+        "bytes": 257,
+        "sha256": "1c8ad035d327e0d58cb550fdf8d0803b1c626e1e8a49ee8fb6b1349abb7173c2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE-green.log",
+        "bytes": 287,
+        "sha256": "74c0d8861c21659cde8179e2478fd49352fe4190ed5e9b25284bfd4a9e19c5fa"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE-red.log",
+        "bytes": 978,
+        "sha256": "fdc43f5ee336cf0041a3bb50387cbd4b58a4e6ba7d0f4dae79d5ecf81ca3ee65"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE-restored-green.log",
+        "bytes": 288,
+        "sha256": "31f296d4dd8c7450d7281b5dd398223f7bc71bdeae63386e180677f0b76d1865"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION-green.log",
+        "bytes": 287,
+        "sha256": "8443da17afa5e8701a585546eac392ab2bf55bb0c4a6e48ca164f2272d22ce9c"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION-red.log",
+        "bytes": 861,
+        "sha256": "3bc7657cfe8556d04c58c86292d4f65e12f1407ba75aec4b3e906d12a0fdbc14"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION-restored-green.log",
+        "bytes": 288,
+        "sha256": "6424ca9641cbb2d4387336f2e8171fb7c7b644d2998ea655edd2e8b3219092cc"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-green.log",
+        "bytes": 285,
+        "sha256": "028ef0a1ccb0752c970ddd56b425f3d0312c69848a774e16577bda1b2060ff44"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-red.log",
+        "bytes": 1015,
+        "sha256": "601eecf6d6ae57da3ea5c49b4337e09cfed377f3df859ee5acd0a48b31548ba8"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-restored-green.log",
+        "bytes": 283,
+        "sha256": "6097685e02b53b58b836c2f979945d069b8b1b7c0b68a23d9a27b19f1e867727"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE-green.log",
+        "bytes": 286,
+        "sha256": "6cf0e3249ce1b4073d3a585d48395a074daeccb044f43a9cfd0475e770fe9b38"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE-red.log",
+        "bytes": 999,
+        "sha256": "335ac22aba2b10df70eec96e0a59b1399324778f4d7f6bc96a1fb909606bc3f1"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE-restored-green.log",
+        "bytes": 286,
+        "sha256": "c0b93e3ebd8f8fa446e01c49d68fd94d6f061a0ed3ddd133e13144963f945305"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-green.log",
+        "bytes": 275,
+        "sha256": "3a2878c94a04b320d4d4bcc7c8f9ebfb8add64cc5131f3693013fbd70c35415f"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-red.log",
+        "bytes": 1668,
+        "sha256": "24284780e2615ddbe42d7eb35869b75e3c8543f2dbf07f727cfd99998221863d"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-restored-green.log",
+        "bytes": 275,
+        "sha256": "a2088c7917f8a906cf5235e9057a8faa83a3130a9cae9e60991a997a12e725d2"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE-green.log",
+        "bytes": 277,
+        "sha256": "5ae0eddf3502a3db0451e11a5ef63d5722c304b2a8dab59c7aca368ed0b9c4d6"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE-red.log",
+        "bytes": 883,
+        "sha256": "31a309bba06396308281280e47a9e573e1bc684d941f3c5210516f59ffd24a16"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE-restored-green.log",
+        "bytes": 276,
+        "sha256": "a300793b71723ab2548583fa9ef169aa105dc0f71a1433e6a08619fc7ba47aff"
+      },
+      {
+        "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/manifest.json",
+        "bytes": 60932,
+        "sha256": "2a0b9e86bb14a25fed8394420631a933346acab2acb499c1662480c9da1dee96"
+      }
+    ],
+    "totalBytes": 361981
+  },
+  "cases": [
+    {
+      "id": "E11-OFF-ALL-GATES",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11-feature.ts",
+      "sourceSha256": "8de5cf7470259e7efd2c8c7336cbe27a6874f1377f24fc98d01cfb88a609e9e1",
+      "mutantSha256": "b6c628911d83f719b968ead82341de1d12bcc39c8551f21210c45eece6e923f3",
+      "restoredSha256": "8de5cf7470259e7efd2c8c7336cbe27a6874f1377f24fc98d01cfb88a609e9e1",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ALL-GATES-green.log",
+          "bytes": 225,
+          "sha256": "6fe7ea3b4c68e537479464fe7139e2a632eff8e78d538eb531a5ec6f1225c294"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ALL-GATES-red.log",
+          "bytes": 1070,
+          "sha256": "88798532aa1173ceb01f907bbab5ca1aabc8b6d55aa2da96d53f35dc3315b10e"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ALL-GATES-restored-green.log",
+          "bytes": 224,
+          "sha256": "5eebdc3b54d272f3e112ab80b07df6019aa6d4c97ddadc2ba65b46bd69700690"
+        }
+      }
+    },
+    {
+      "id": "E11-OFF-SECURITY-NO-SQL",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "521bbdd0fac209f7bca2ed07b95d09e344dde8139d27c71957bf216b9b723902",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-SECURITY-NO-SQL-green.log",
+          "bytes": 237,
+          "sha256": "0b9d86b900f4210490e0cf370a398c5ccc107fdb02fbd816a54ea8abb5e83901"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-SECURITY-NO-SQL-red.log",
+          "bytes": 788,
+          "sha256": "91bd37d7175b0b4367a2ca7a8f498e45c367b0ebf947209d5fc474109a6a6ff8"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-SECURITY-NO-SQL-restored-green.log",
+          "bytes": 235,
+          "sha256": "c0196d71434194068ddbeef0efecd630da37b9c564a697415056c72ae3ef3dfa"
+        }
+      }
+    },
+    {
+      "id": "E11-OFF-ROLE-CHANGE-NO-SQL",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "0864155acbd93a57e605ad52d076c127322c403a7c9c7a33cbf80dbeda3305b6",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ROLE-CHANGE-NO-SQL-green.log",
+          "bytes": 242,
+          "sha256": "8aae79264873fa7a5b55d35e0fa2088a6986d3723154d7f879ce15177eeba448"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ROLE-CHANGE-NO-SQL-red.log",
+          "bytes": 800,
+          "sha256": "bb8e3f04fb1dc59a829e079c83c7574964b8d294f91ad2d9597d59767efb4cdd"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-OFF-ROLE-CHANGE-NO-SQL-restored-green.log",
+          "bytes": 242,
+          "sha256": "7c91cf58552242d71cd9ed015d7206a53b1f131aca2d4a71865d4911c531b730"
+        }
+      }
+    },
+    {
+      "id": "E11-CANONICAL-KEY-ORDER",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "c4a34e36af0f6b890e0e1b3204e37c582ad392c7086902878ba6c30bf4741a13",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CANONICAL-KEY-ORDER-green.log",
+          "bytes": 236,
+          "sha256": "3b617bd4e0745795214a6b0094d4dae0b4924b782ce5e4d4bdcf2446c3d8ca7c"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CANONICAL-KEY-ORDER-red.log",
+          "bytes": 1028,
+          "sha256": "7bc7d2f313eb95796b8239838e0a656d7655eb8fedfc19cc8b6652f9d52ec66f"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CANONICAL-KEY-ORDER-restored-green.log",
+          "bytes": 235,
+          "sha256": "1ee9cbb18ed763211ac15a883adbd1717285eabbbdb3bd194969ddd928540390"
+        }
+      }
+    },
+    {
+      "id": "E11-HASH-CONTENT-SENSITIVE",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "f1084a84649c6d31d51e3c5a7bb7d45ff7acdc40de0cb48ef2974b00db4f0a7b",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-HASH-CONTENT-SENSITIVE-green.log",
+          "bytes": 242,
+          "sha256": "48497c1d49189ba00c3c9122d53112a6886534570b88cea9c027f19c5322e034"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-HASH-CONTENT-SENSITIVE-red.log",
+          "bytes": 1091,
+          "sha256": "60bee5df9b2540e3e407fe4c0858a818f86506bdebd86cbbb79fce13dafa183e"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-HASH-CONTENT-SENSITIVE-restored-green.log",
+          "bytes": 242,
+          "sha256": "11b9e6f0da8a5b95d697600c4ace052ea507727a7c22830c1ba868ec7bb0f917"
+        }
+      }
+    },
+    {
+      "id": "E11-MONEY-EXACT-CENTS",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "2e1c3a8711bf205280d80facede4452cf95f9321bbe31a4b31ee88f5625da675",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-EXACT-CENTS-green.log",
+          "bytes": 233,
+          "sha256": "0b9ddad8456113dee73e937e9e751b32231fd4c82e177dbcb3b5720d65a11bdf"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-EXACT-CENTS-red.log",
+          "bytes": 940,
+          "sha256": "95c87b315621d2724ba675e44373e4af87c2339d57988bb603bc7985e54188de"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-EXACT-CENTS-restored-green.log",
+          "bytes": 232,
+          "sha256": "601f6499b4313a371566922faa252352d4bd926447cc22a21d18732ca75dbf42"
+        }
+      }
+    },
+    {
+      "id": "E11-MONEY-REJECTS-NONCANONICAL",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "957eaec5b569cd2d9e74f76682b5721055f0503e2a5b9b4d844882dfacf7c14f",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-REJECTS-NONCANONICAL-green.log",
+          "bytes": 249,
+          "sha256": "07b8ed0e36c23246a8300e59fe3dfec9f76fe94501bee17695bd68bbd4330fd0"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-REJECTS-NONCANONICAL-red.log",
+          "bytes": 880,
+          "sha256": "fc35ec5a9a83342a4040a81f6123e3d7e84443ed9f5daabd2b2de565298721a0"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-MONEY-REJECTS-NONCANONICAL-restored-green.log",
+          "bytes": 249,
+          "sha256": "138b2b9395aa2b521f3e5a77908bdb112813bc59571293969c7b325c1d018c5c"
+        }
+      }
+    },
+    {
+      "id": "E11-CALENDAR-DAY-OPTIONAL",
+      "provenance": "historic1",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "18830da62f391455451c56d09a36870204cbd3543aaa82e3f843c5834113b97c",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-DAY-OPTIONAL-green.log",
+          "bytes": 240,
+          "sha256": "9ea5a0d70a4bd2fcb3bf800f24a7242b3a71527634fc3ad425fbc1bf5b680b62"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-DAY-OPTIONAL-red.log",
+          "bytes": 1039,
+          "sha256": "85d05c3974f56bb41fded772f9ea99c6173648bc86bbe96dc93d0b1b5e9ae12d"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-11-44.214Z/E11-CALENDAR-DAY-OPTIONAL-restored-green.log",
+          "bytes": 240,
+          "sha256": "1f11e5df1bcbacd910eee4aa36e45dac2f0128f0256425abe0ab875bfd47de90"
+        }
+      }
+    },
+    {
+      "id": "E11-CALENDAR-WEEK-MONDAY",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "f0a8abf2144b6f41af9c34b881ebd97b5bc7e6ebaf92aeb0db816214e396f095",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-WEEK-MONDAY-green.log",
+          "bytes": 238,
+          "sha256": "0b5b36ae2a26a2cfaa346d029a4fa932e0c1596b4d7d7d5be6f8515eb95c0135"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-WEEK-MONDAY-red.log",
+          "bytes": 1610,
+          "sha256": "6d10eab99dcb0b9497cd5cc241fdb7bfa07e715cff137cf7dbc73cbe6a110bbd"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-WEEK-MONDAY-restored-green.log",
+          "bytes": 237,
+          "sha256": "d8204ba5b025606d1965401b4e4ee2194e569fefabca5ea78b00853fa6d92b4e"
+        }
+      }
+    },
+    {
+      "id": "E11-CALENDAR-MONTH-BOUNDARY",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "48cfe3b4d27e035bd59f11afb7af3604c3e84aa442a8e36e985af7b8551f718c",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-MONTH-BOUNDARY-green.log",
+          "bytes": 244,
+          "sha256": "a24722b894cc22d81f090294ed663c01895f91d1f24af9d1a4d33c5b96042829"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-MONTH-BOUNDARY-red.log",
+          "bytes": 1631,
+          "sha256": "186ddb47979bfd1dbed82e749af5ca51a81c8060bfc29f60e22ee0f200af6720"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-MONTH-BOUNDARY-restored-green.log",
+          "bytes": 244,
+          "sha256": "9d53debb3f389c2985814c209f6487578bdb27bf6339d2f22edb67586777ff0a"
+        }
+      }
+    },
+    {
+      "id": "E11-CALENDAR-NO-DEADLINES",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "40b74c08e856c16414cb395a8b251691138114abe170376d3b395364c953af29",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-NO-DEADLINES-green.log",
+          "bytes": 240,
+          "sha256": "227dc60324568b73219fead513b64a87836be23a697496a1844b578990f54ccf"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-NO-DEADLINES-red.log",
+          "bytes": 1382,
+          "sha256": "eddd285822f89a342d2fed8f132a97c839b11f41a59e6454835c1bd2090796db"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CALENDAR-NO-DEADLINES-restored-green.log",
+          "bytes": 240,
+          "sha256": "b7702581afe96bdf71a7aeba5321dec4c46648473a7c9b9ff46894849a6789bf"
+        }
+      }
+    },
+    {
+      "id": "E11-PERIOD-OPEN",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "9683011fe9f0b4b8c5734050f55856cd89189bae00e23102713ac12122e930fe",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PERIOD-OPEN-green.log",
+          "bytes": 220,
+          "sha256": "ae85d8feb351effcb98d6574b6d3134397e0fbbdc244e9ddc42fb44b3d07e032"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PERIOD-OPEN-red.log",
+          "bytes": 916,
+          "sha256": "c04376b0c1947b867460b311f3355678e2fdd25707170fab8fdfd4640bb0ab59"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PERIOD-OPEN-restored-green.log",
+          "bytes": 221,
+          "sha256": "aea04698df71a33988ffef930c69632e97cc100e0b65ee310553524e319d461e"
+        }
+      }
+    },
+    {
+      "id": "E11-RANGE-NONEMPTY",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "3f638fb980966d12d75eae3a6838c747816843ea1b93706317f2080714afbe3b",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-RANGE-NONEMPTY-green.log",
+          "bytes": 225,
+          "sha256": "a0ad19fd1d3eb9798516a4b557152295a3e41d6ea0700c33bb32812d7c90dc86"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-RANGE-NONEMPTY-red.log",
+          "bytes": 833,
+          "sha256": "a8cfa42067d974755b829ddb0b719edd5a87145b02eeb6f3df63285dc67cfe21"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-RANGE-NONEMPTY-restored-green.log",
+          "bytes": 226,
+          "sha256": "db94154e821dc6c494d1ed93bf17e4fc0ab7da85a0cc9cc08b08fb9d98837982"
+        }
+      }
+    },
+    {
+      "id": "E11-ADVANCE-CALENDAR",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "83d0e6f5602bbe34984bc846eaf6d2aa8925ebaef2a23f4f7ea3db12d6ab3e6d",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-ADVANCE-CALENDAR-green.log",
+          "bytes": 230,
+          "sha256": "db431f9ea4f01b123f2a4caac118546dda1d59cfe70df3a8f5d514f97bd3ef18"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-ADVANCE-CALENDAR-red.log",
+          "bytes": 961,
+          "sha256": "90aa3af923b48efe1df09d6381d5c1f71cde08c86fbbdb1c59f68633c9a2dd77"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-ADVANCE-CALENDAR-restored-green.log",
+          "bytes": 227,
+          "sha256": "ae4602b6fe809232eb43f17699a839baa81f7ffd06f5520c912c057ce7dc8e49"
+        }
+      }
+    },
+    {
+      "id": "E11-CAPABILITY-EXPLICIT",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "b970c679ca0d4d9e124c24539570fb07b723f51a8c1dc1b607991d8e284542b9",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CAPABILITY-EXPLICIT-green.log",
+          "bytes": 237,
+          "sha256": "b8003f96ffe149465fe5ccd3a155595cc70b4eee67f0888ac0af269c8045a238"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CAPABILITY-EXPLICIT-red.log",
+          "bytes": 852,
+          "sha256": "ade6e75951d49149dfbf5eae9e7a1e9070db1a4ed184da01323c8e8f0cf8b28b"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CAPABILITY-EXPLICIT-restored-green.log",
+          "bytes": 237,
+          "sha256": "1e1d721682c4cae6bf9ae5a9ed951c26a6418a4a36354b4543cf1dba6ab363be"
+        }
+      }
+    },
+    {
+      "id": "E11-CURSOR-BINDS-IDENTITY-VERSION",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "78f1a8c8836580ac0008ab296a1a3ee2ae3b8b4eaf77099fbd8f9877c2fce5ae",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-IDENTITY-VERSION-green.log",
+          "bytes": 256,
+          "sha256": "deaa87d0e295b04d22eb916f00280dfc227fd07bb72e20d5401569161192880d"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-IDENTITY-VERSION-red.log",
+          "bytes": 892,
+          "sha256": "fad010185e2e0ba69b5cc345305f4da1dd9b62805c141d40305f4a103a2c2a20"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-IDENTITY-VERSION-restored-green.log",
+          "bytes": 256,
+          "sha256": "7fc027720ba1fef908cdada89bdcbefa61d488b97f01be6cccbb4a71f57a90fa"
+        }
+      }
+    },
+    {
+      "id": "E11-CURSOR-BINDS-FILTERS",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "f9d84f7a2e5c1c0037aa882d63b66f5cc296fcf943182d71f649844ad490e5db",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-FILTERS-green.log",
+          "bytes": 237,
+          "sha256": "bee77c1e797c3b486ca8cddb19617ab2eea0cd67efd8a2df914a99686751e868"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-FILTERS-red.log",
+          "bytes": 856,
+          "sha256": "a0a218f46294fa4d864e996d1eae5c8f4d6ee63dd639161222eeedca8a131bab"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-FILTERS-restored-green.log",
+          "bytes": 238,
+          "sha256": "fe2c8726930c6f16567e2a211b1d781b169b11a4ee1c77f3c859e09c2ebd8184"
+        }
+      }
+    },
+    {
+      "id": "E11-CURSOR-BINDS-SOURCE",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "8a5e6d0de48b93ef3ea09a6ffbb695d1623f6a84ea3e1331714e9bf7b247a71f",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-SOURCE-green.log",
+          "bytes": 237,
+          "sha256": "ea871a4cdd78f0e59a671ae1dd3f0a00431e557f5062ffb5cd9f1ba91d16638a"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-SOURCE-red.log",
+          "bytes": 853,
+          "sha256": "d5bceebf9d476f5abf9252d2de2d446875eb853af987687e7c4b6c1c5ade5764"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-CURSOR-BINDS-SOURCE-restored-green.log",
+          "bytes": 236,
+          "sha256": "aa2146d36b425046e75e73d001929ac5c79f116444970eaee92130061d36abaf"
+        }
+      }
+    },
+    {
+      "id": "E11-PAGINATION-LIMIT",
+      "provenance": "historic2",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "9ddc4a5879354cff406030bf5b305b8768174dfade007407957f31c4e5852f0f",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PAGINATION-LIMIT-green.log",
+          "bytes": 228,
+          "sha256": "80ae88fea600a6bd28652b6279caf7cbb2bf736d5dbba0725b4a81f7763d78ed"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PAGINATION-LIMIT-red.log",
+          "bytes": 972,
+          "sha256": "3cf2f1d67f015e5bf4ceeae291a9b6b8b618150e436c0c770f27ecaebf1a34be"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-14-05.276Z/E11-PAGINATION-LIMIT-restored-green.log",
+          "bytes": 230,
+          "sha256": "2a7930ae5d9df076a647516a1dd9eeaabaa12e547d7384aa42aa7053aaba254e"
+        }
+      }
+    },
+    {
+      "id": "E11-REPLAY-LOCK-NAMESPACE",
+      "provenance": "revalidated",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "1f87981ce5bfb6f43093c007622fcdff7bd301569c5b8271f0f8b26f9a0ef69b",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-LOCK-NAMESPACE-green.log",
+          "bytes": 241,
+          "sha256": "dccbddb85f61c109b10041804d5fee1b23b9b06adc1997870d4a83dfcf948790"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-LOCK-NAMESPACE-red.log",
+          "bytes": 811,
+          "sha256": "5610ae484e07e11028209d01b32f365d0173e3fad595dedab3c986c657130cdb"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-LOCK-NAMESPACE-restored-green.log",
+          "bytes": 239,
+          "sha256": "3024a2f48993e719097ebd685adf100e1f22402cb49d830e8d938aba0bd2762c"
+        }
+      }
+    },
+    {
+      "id": "E11-REPLAY-SAME-BODY-NO-WORK",
+      "provenance": "revalidated",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "59a7a4e9487ddf4d86ddfd24e3bf4c8c379fcb4cae106a451c6b0381fb2fc077",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-SAME-BODY-NO-WORK-green.log",
+          "bytes": 246,
+          "sha256": "c64f7a5fdc145b95d51cadcf840bc6b6ec06e7878654ef27b5ded6a023d3f672"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-SAME-BODY-NO-WORK-red.log",
+          "bytes": 928,
+          "sha256": "caa719119c39b24978d4b88842d9d107a6dec58ec891d1b0401de2fa3254e2e8"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-SAME-BODY-NO-WORK-restored-green.log",
+          "bytes": 247,
+          "sha256": "01bc894734a304273055aeafa0cb402c9fa1c439de6375628b4c869a98d1dd63"
+        }
+      }
+    },
+    {
+      "id": "E11-REPLAY-DIFFERENT-BODY-DENIED",
+      "provenance": "revalidated",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "e88d6c6f4e6e881520c6509a022054f977db2c3c2d5948abfd8838d1b7d79329",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-DIFFERENT-BODY-DENIED-green.log",
+          "bytes": 254,
+          "sha256": "a03f9f4ab6af8eaaf42961c6d0f941b6a495470bc555875ac236f7d738b3970c"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-DIFFERENT-BODY-DENIED-red.log",
+          "bytes": 797,
+          "sha256": "0df96d684ff1f70d191d94a7b2ed2d9758a2646be475c65ffe2e5d71d2fc62f7"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-REPLAY-DIFFERENT-BODY-DENIED-restored-green.log",
+          "bytes": 254,
+          "sha256": "6437957825f4658e49ca6412a7b5d3e73f3d3be7f6878c5e88dcaa8c038087d5"
+        }
+      }
+    },
+    {
+      "id": "E11-FISCAL-FACTURADO-NOT-COBRADO",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "bdeb56ecde5fe8b9d23e4232ffc4835cc24764a1b5f77323bd2db54925f6b0e4",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-FACTURADO-NOT-COBRADO-green.log",
+          "bytes": 255,
+          "sha256": "295273adf700ae39d384a260f80eb432cded0e6fbe03cb9874919332485a50af"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-FACTURADO-NOT-COBRADO-red.log",
+          "bytes": 1738,
+          "sha256": "afd5c94396ba16a98252809b563978ec0d9d1b51a3577bce908b0fb29e9e130b"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-FACTURADO-NOT-COBRADO-restored-green.log",
+          "bytes": 255,
+          "sha256": "768bd8818125d2bd01a31f742f111daa0eed66b7ad3d1b45ec1866ac03a2806d"
+        }
+      }
+    },
+    {
+      "id": "E11-FISCAL-DTO-WHITELIST",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "2906c45c5dc939fd266d20be1e3c0b903bec027b9c40926c0367184217987e3f",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-DTO-WHITELIST-green.log",
+          "bytes": 239,
+          "sha256": "cf396e158891943ae08c353b15baa8f635ec8bec7c929f5f15bf13507b58bf06"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-DTO-WHITELIST-red.log",
+          "bytes": 1343,
+          "sha256": "d78dbd674360a988adb257a08a4f681c4b9bc9f0b7329259ea99e51d23da10a2"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-DTO-WHITELIST-restored-green.log",
+          "bytes": 238,
+          "sha256": "bf2ffc1b7ebe28180b9fb2c4cfacb1943d6d076c5c09e06f0d438e3713966865"
+        }
+      }
+    },
+    {
+      "id": "E11-FISCAL-TOTAL-ALL-DOCUMENTS",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "e7a27ac544635f17fcd4c5f807d1b9c4db15812028877a1337486313c9ebed6e",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-TOTAL-ALL-DOCUMENTS-green.log",
+          "bytes": 251,
+          "sha256": "5e519b7271e3a1a7439cd7953b20b1b02ec3cb58ef3fff2474e78fb4955fda69"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-TOTAL-ALL-DOCUMENTS-red.log",
+          "bytes": 840,
+          "sha256": "aa8d9f2a90c2d061d99f0eff13c7696ada30d93b6fa8684d50bd6e329e26abf9"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-TOTAL-ALL-DOCUMENTS-restored-green.log",
+          "bytes": 251,
+          "sha256": "b306511035db888ef480e9213808bdb5c4f6ed44281a48fcc9a6e377bcc67f97"
+        }
+      }
+    },
+    {
+      "id": "E11-FISCAL-CLIENTS-DISTINCT-SOURCE",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "1a93e5f9804dea936671bad6f724cae94cc37949b3bd3df0d31d456e7b95b60d",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-CLIENTS-DISTINCT-SOURCE-green.log",
+          "bytes": 258,
+          "sha256": "77959f68507550bd0656ea2e57ca46d718037f305d11e869d65556e881f5579e"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-CLIENTS-DISTINCT-SOURCE-red.log",
+          "bytes": 1419,
+          "sha256": "4aec7cde31ec70c0a91353d6ed51b4960248a13ca4eedeedfc53e78a6b134836"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-FISCAL-CLIENTS-DISTINCT-SOURCE-restored-green.log",
+          "bytes": 256,
+          "sha256": "bc9dc63bd1f456dee10e37b2d4629645dd7000a961506e0c8a37391239b42a5c"
+        }
+      }
+    },
+    {
+      "id": "E11-PROFILE-HISTORY-APPEND-ORDER",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "a69256121e64278b727dc8db91bb7c71a43ef166780af5dd3e82f91a4fd1191c",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PROFILE-HISTORY-APPEND-ORDER-green.log",
+          "bytes": 254,
+          "sha256": "081db47a5deb0b5e256cf03083e8b4015c8bf565f37b044fb90100b3e2ae2d69"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PROFILE-HISTORY-APPEND-ORDER-red.log",
+          "bytes": 1016,
+          "sha256": "366cf84ce3751f3acfe5336d6e8971a18a698ffc13a7a94d90f502a5b489bbb7"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PROFILE-HISTORY-APPEND-ORDER-restored-green.log",
+          "bytes": 254,
+          "sha256": "3083d1dd8021ef1046fd3ad2570e5c1a118c9220f32333baa6bc6226cc27cf3c"
+        }
+      }
+    },
+    {
+      "id": "E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "103070f27a744905382f45fc95f6ba4234a43930507dbdc73ef95897ea908519",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION-green.log",
+          "bytes": 278,
+          "sha256": "838058d0453d44f7eac03e3e91fd0565644798ad8adaecc68d6c6cc6c4b7dbe2"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION-red.log",
+          "bytes": 886,
+          "sha256": "03a339225925da24b77be7d58f8b58df4451121e6f0682dff34e404f6fc56dfc"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-SOURCE-CHANGE-REQUIRES-REVISION-restored-green.log",
+          "bytes": 279,
+          "sha256": "01a86642bd583fd102bb2d8d266027bdb9b2f1a60ef105976eef6bbd761491eb"
+        }
+      }
+    },
+    {
+      "id": "E11-SNAPSHOT-FROZEN-SALES",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "b657b068346c4c31f243a317645c7123073081677626a11be0a8ffe458e240b8",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-FROZEN-SALES-green.log",
+          "bytes": 241,
+          "sha256": "57fc0f426b18f1e5a5286c2fc99609f6f827750580499f152ad00e8652d60130"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-FROZEN-SALES-red.log",
+          "bytes": 1033,
+          "sha256": "4c0bc22653f30973d242fb8694e839abb10af5fe93f664f7e6e98512e8a84ffa"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-FROZEN-SALES-restored-green.log",
+          "bytes": 240,
+          "sha256": "5ca2ae69cf9e45d0c553fb6aca25ca279ffd4272fc37f9d5c1540df31f198952"
+        }
+      }
+    },
+    {
+      "id": "E11-SNAPSHOT-EVIDENCE-CAS",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "dec69f1e5d6f557aaa06531a451d11d09649155792f94f39a3bacba2cde35f85",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-EVIDENCE-CAS-green.log",
+          "bytes": 241,
+          "sha256": "6f5b71eebeac1d95750b527919e31c2127d7e375842b032d8a6bf86d66f204bb"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-EVIDENCE-CAS-red.log",
+          "bytes": 769,
+          "sha256": "aeb3ac80b65f3a635e35e67d1e74f40d53fac440f7616ac2c3add6e6cef86357"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-SNAPSHOT-EVIDENCE-CAS-restored-green.log",
+          "bytes": 240,
+          "sha256": "44094b82eb10581bfd902ab53075ef191f86fb860da22a76e6c6b507f9756170"
+        }
+      }
+    },
+    {
+      "id": "E11-PERIOD-LIST-SEPARATE-OBLIGATIONS",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "252a5363a9da42b166269cbd614a69e0e8b894271bbcba6e13656364bb7af599",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-green.log",
+          "bytes": 261,
+          "sha256": "f2ca354ef0f2e65e5c48b1bc972971587238fc19d89b75532525b027d327514a"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-red.log",
+          "bytes": 1183,
+          "sha256": "c8a490e424433caeb300764f8a331e9ddf34e467ba87f8fd36c3de232c7f3d6e"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-restored-green.log",
+          "bytes": 263,
+          "sha256": "cd9d7aeac697c89737475b47d2ecbfebe79bba3a286dcfedd0a3acaad7a63e42"
+        }
+      }
+    },
+    {
+      "id": "E11-IDENTITY-CONTADOR-DEFAULT-F",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "c13d9347c6e41ad2e072d615c6463e04a870a27974a83a2334abb5a1a18fa552",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-CONTADOR-DEFAULT-F-green.log",
+          "bytes": 252,
+          "sha256": "c5c92236d64e405619e9dfc5da742f19aec504a4c06157fdb91686d25f6c2949"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-CONTADOR-DEFAULT-F-red.log",
+          "bytes": 829,
+          "sha256": "d95abaa4b9aa1c585753f4b630c1ed3d746c1233c83b61f85f1bb599ecf3ca2b"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-CONTADOR-DEFAULT-F-restored-green.log",
+          "bytes": 253,
+          "sha256": "0b0d27bfc8f2f1716c1e3e3630c754e56db93ebefe0d36f6b485fc70a01c20a8"
+        }
+      }
+    },
+    {
+      "id": "E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "2df8a9a0ebcdadbd7cc6b7990dffe40cf4a7d7f036a0d01c3f0c819da26f82ed",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-green.log",
+          "bytes": 268,
+          "sha256": "5d5212630dfb559bcc915f107b7aa1900f7e042b497ed18d3fe5a70ac25c7732"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-red.log",
+          "bytes": 852,
+          "sha256": "3c830004dbbd837fac226fb959debca806174f6b6e88206cc9bc904c92ae4f5e"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-restored-green.log",
+          "bytes": 268,
+          "sha256": "2341af21875bfc9d1fd9d9fad94aba7f1d27edaf5b39129f1753b7a829ac52a1"
+        }
+      }
+    },
+    {
+      "id": "E11-ASSIGN-ADMIN-CAS-HISTORY",
+      "provenance": "revalidated",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "73237ac4c994bb23ec64f11a24112acb80b9b43644c4d519054ad450a16e6861",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-ADMIN-CAS-HISTORY-green.log",
+          "bytes": 245,
+          "sha256": "9ea8686df308c543de3d248a7fed05f63ef005c5aa672700208b897644ace535"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-ADMIN-CAS-HISTORY-red.log",
+          "bytes": 810,
+          "sha256": "b9e7f5a0b33306325af25cdc472acd95a3f56c6a93cecb842dc61dab6f0141ae"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-ADMIN-CAS-HISTORY-restored-green.log",
+          "bytes": 247,
+          "sha256": "40cbf194a2bef16fe5d028c4a4c443d1f8935293146c258f3f57bf4c77653806"
+        }
+      }
+    },
+    {
+      "id": "E11-ASSIGN-STALE-CAS-NO-WRITE",
+      "provenance": "revalidated",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "ec7bef7cec3a5aec602965c8d8649e4af078b0858bd4638113e822d727a72227",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-STALE-CAS-NO-WRITE-green.log",
+          "bytes": 249,
+          "sha256": "10b3ad474591f70e6e63ef2ac8a24201a15bc1e06b4598fa8917ed8e148fb911"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-STALE-CAS-NO-WRITE-red.log",
+          "bytes": 785,
+          "sha256": "845c3dc48e492baf81bbc6e5829ba1e088029b7d9d56c34eb04c9389c16b2682"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ASSIGN-STALE-CAS-NO-WRITE-restored-green.log",
+          "bytes": 247,
+          "sha256": "80f18fd0c1d72f6dabb1dd4b50ea9b4ba082b62cf0fc71ad7e2a0e784db60843"
+        }
+      }
+    },
+    {
+      "id": "E11-ROLE-CHANGE-REVOKES-A",
+      "provenance": "historic3",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "mutantSha256": "e7efd8de5d5e5b675902ef1829e9e6c3749e51100facb74e148d86b0de1b2c01",
+      "restoredSha256": "716dc348fcbc0d2571023f1fe05e7e6a67532b31e6a6fbe1a099ca5ffa9911ad",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-CHANGE-REVOKES-A-green.log",
+          "bytes": 239,
+          "sha256": "01d7051497b3ea2dc05c16e611b0b42902d67b12f834c897b7a40f6fbd3d486d"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-CHANGE-REVOKES-A-red.log",
+          "bytes": 803,
+          "sha256": "62e5d7ba0fa3917606d64fb1eabf01cc0385e6e127bd25f7badb148910bb4169"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-16-53.924Z/E11-ROLE-CHANGE-REVOKES-A-restored-green.log",
+          "bytes": 239,
+          "sha256": "e73daa02a0dab605b61cf75e36715bf7cef3f02266bcc0d674a522b9d8f22f06"
+        }
+      }
+    },
+    {
+      "id": "E11-ROLE-REENTRY-STARTS-F",
+      "provenance": "revalidated",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "06119defde26bb1ae57ef379de02263258a4a8e965225a6c9257183e878f34b7",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ROLE-REENTRY-STARTS-F-green.log",
+          "bytes": 239,
+          "sha256": "7b4667d69dc78803cd70f5fec61c4bfe4969add1b999280a7660caea6b16eaf2"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ROLE-REENTRY-STARTS-F-red.log",
+          "bytes": 804,
+          "sha256": "f5b821001c202e87f2f8f0554a23d5efeeec7323044605ab29fd3cab8e953ec5"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-29-54.702Z/E11-ROLE-REENTRY-STARTS-F-restored-green.log",
+          "bytes": 240,
+          "sha256": "b6fffd0f65aacd4cf423f1b0bbd9bb3a5789088010de2949d5e8fcbc98a3b29e"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-QUERY-PENDING-NOT-404",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "3f850db3717d8fe45696caae39d574d1c92d4d615cf0caed691648a3f508d3d3",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-QUERY-PENDING-NOT-404-green.log",
+          "bytes": 257,
+          "sha256": "1331a423821143155b3af4e37bd3adf9df811e3fce6c82e12d542c833e94f6f1"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-QUERY-PENDING-NOT-404-red.log",
+          "bytes": 1011,
+          "sha256": "cef0f626ff406a2c6d33dcb29a4a6cfe04a283bab91ce163a6605b0b2e5c6763"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-QUERY-PENDING-NOT-404-restored-green.log",
+          "bytes": 258,
+          "sha256": "0edf3790fe96a47ac9609c2a1a9c365def90e8c2f2e6bc4096d6431e1f88042e"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-NORMALIZES-ORIGINAL-UUID",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "770373cf7a02b02c048ebdf0465307a0f9527f61955bbaa23ddac81c59377fba",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-NORMALIZES-ORIGINAL-UUID-green.log",
+          "bytes": 264,
+          "sha256": "7029333721741090b32c5eed89e47ba50945bf8551f45051d91ff2e7d38d61e8"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-NORMALIZES-ORIGINAL-UUID-red.log",
+          "bytes": 1020,
+          "sha256": "92a2a0ad69162b81a8d4c887dd0ddb2f786c00713bbd7a0539148a7e1eb7d90d"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-NORMALIZES-ORIGINAL-UUID-restored-green.log",
+          "bytes": 265,
+          "sha256": "37956e3544fe1c7d2eb4fe4c1fa9fb1449754c8ec87f1812265050a38e08b453"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "7870e15a6c8304a773ffcc5c196adccb58fa8365994733e172ea36fdb90528e7",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE-green.log",
+          "bytes": 277,
+          "sha256": "5ae0eddf3502a3db0451e11a5ef63d5722c304b2a8dab59c7aca368ed0b9c4d6"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE-red.log",
+          "bytes": 883,
+          "sha256": "31a309bba06396308281280e47a9e573e1bc684d941f3c5210516f59ffd24a16"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-USES-PRODUCER-REPLAY-NAMESPACE-restored-green.log",
+          "bytes": 276,
+          "sha256": "a300793b71723ab2548583fa9ef169aa105dc0f71a1433e6a08619fc7ba47aff"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-REQUIRES-FRESH-ADMIN",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "bdbc59cf88bf54c1d47fa6379a8b5fff6f4436c6f17c425e71fb027809f9ca03",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-REQUIRES-FRESH-ADMIN-green.log",
+          "bytes": 258,
+          "sha256": "b9c002055c787c129c917384e86546c749276f3dd350206328fb37baa4ceeedc"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-REQUIRES-FRESH-ADMIN-red.log",
+          "bytes": 800,
+          "sha256": "ff4f924834e43587439be5463855bffc31f525b1f297e4e8ab6de9f89b83a4bf"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-REQUIRES-FRESH-ADMIN-restored-green.log",
+          "bytes": 256,
+          "sha256": "1c1668e847b8b90b3a1724ec60872e60b893252a820620eb3980c565fb809610"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "4e57256692465ed682fd6aa1dcd884d14a697fc58f28faaa8f1427544bd97f5b",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-green.log",
+          "bytes": 285,
+          "sha256": "028ef0a1ccb0752c970ddd56b425f3d0312c69848a774e16577bda1b2060ff44"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-red.log",
+          "bytes": 1015,
+          "sha256": "601eecf6d6ae57da3ea5c49b4337e09cfed377f3df859ee5acd0a48b31548ba8"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-WRITES-TOMBSTONE-NO-EFFECT-restored-green.log",
+          "bytes": 283,
+          "sha256": "6097685e02b53b58b836c2f979945d069b8b1b7c0b68a23d9a27b19f1e867727"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "3bcb51296dcc8e4e7c715d4dbf527109efd0e5c253230b4ed61ba91404cf8061",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE-green.log",
+          "bytes": 287,
+          "sha256": "74c0d8861c21659cde8179e2478fd49352fe4190ed5e9b25284bfd4a9e19c5fa"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE-red.log",
+          "bytes": 978,
+          "sha256": "fdc43f5ee336cf0041a3bb50387cbd4b58a4e6ba7d0f4dae79d5ecf81ca3ee65"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CONFIRMED-WITHOUT-TOMBSTONE-restored-green.log",
+          "bytes": 288,
+          "sha256": "31f296d4dd8c7450d7281b5dd398223f7bc71bdeae63386e180677f0b76d1865"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "1e167d37da39e244b37e528bd67602bf1dd08a22c740c7fea6778c1dfa86cd77",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION-green.log",
+          "bytes": 287,
+          "sha256": "8443da17afa5e8701a585546eac392ab2bf55bb0c4a6e48ca164f2272d22ce9c"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION-red.log",
+          "bytes": 861,
+          "sha256": "3bc7657cfe8556d04c58c86292d4f65e12f1407ba75aec4b3e906d12a0fdbc14"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-REJECTS-STALE-ADMIN-VERSION-restored-green.log",
+          "bytes": 288,
+          "sha256": "6424ca9641cbb2d4387336f2e8171fb7c7b644d2998ea655edd2e8b3219092cc"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-RESOLVE-CAS-NO-WRITE",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "11ec5a7d1e948b2fdc9615c0d0b80925aca35e7f7e780813c22a9a6844814fbd",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CAS-NO-WRITE-green.log",
+          "bytes": 256,
+          "sha256": "5ff7397b4541508a23b857a24f0db789e9940ca53bf0fe741c5fa4b5352c6374"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CAS-NO-WRITE-red.log",
+          "bytes": 803,
+          "sha256": "17bdcf3587fea468987f9ea40a737678c1a81b57e5929be2678895ca36c1be66"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLVE-CAS-NO-WRITE-restored-green.log",
+          "bytes": 257,
+          "sha256": "1c8ad035d327e0d58cb550fdf8d0803b1c626e1e8a49ee8fb6b1349abb7173c2"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "ca9a27336759cf3ae327732d55627e92a3888363cb562974f4e6273cdcc65278",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT-green.log",
+          "bytes": 274,
+          "sha256": "0102798e8e340943cc70341558c99a22643d56aaf1a9b2b9e0944a24d00544f3"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT-red.log",
+          "bytes": 1692,
+          "sha256": "ed1e368c044c6ea1c3e257e9e875f26e6b5864e8c8d1d75fa528724127dd263a"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-RESOLUTION-REPLAY-IDEMPOTENT-restored-green.log",
+          "bytes": 274,
+          "sha256": "e519c3cab2913f84e5848c351b2298742c63892d7ebaa2fee4ea8dae19f01a95"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "c0ce5b5977b142cd1fe2c3786fca706347f40b69a9a174bd45febb1077d47631",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-green.log",
+          "bytes": 275,
+          "sha256": "3a2878c94a04b320d4d4bcc7c8f9ebfb8add64cc5131f3693013fbd70c35415f"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-red.log",
+          "bytes": 1668,
+          "sha256": "24284780e2615ddbe42d7eb35869b75e3c8543f2dbf07f727cfd99998221863d"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-restored-green.log",
+          "bytes": 275,
+          "sha256": "a2088c7917f8a906cf5235e9057a8faa83a3130a9cae9e60991a997a12e725d2"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "0de5cb47afc74eb7939c178a56315e541fba9453008230b8a36711c066a57528",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE-green.log",
+          "bytes": 279,
+          "sha256": "117299f85e60665f04aa186200cb1c6de623c6bd18c15a07b985625c323fc55c"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE-red.log",
+          "bytes": 1139,
+          "sha256": "64ea34d9e0a217b98e9de18b43f719cd5c0cd44f9c418737b996df893137169b"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-POSTCOMMIT-PRIVATE-NONRECURSIVE-restored-green.log",
+          "bytes": 279,
+          "sha256": "1e8b5bfc3337e64c2fbff6d13239ac7f73c0377ba251d01cd45ed925772d2470"
+        }
+      }
+    },
+    {
+      "id": "E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "91c5a6cb6d97b1a894ca6156daac74d4e768fd9f5b1866a0070b1e4347976347",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE-green.log",
+          "bytes": 286,
+          "sha256": "6cf0e3249ce1b4073d3a585d48395a074daeccb044f43a9cfd0475e770fe9b38"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE-red.log",
+          "bytes": 999,
+          "sha256": "335ac22aba2b10df70eec96e0a59b1399324778f4d7f6bc96a1fb909606bc3f1"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-RECOVERY-TARGET-REJECTS-RECURSIVE-QUARANTINE-restored-green.log",
+          "bytes": 286,
+          "sha256": "c0b93e3ebd8f8fa446e01c49d68fd94d6f061a0ed3ddd133e13144963f945305"
+        }
+      }
+    },
+    {
+      "id": "E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "3ade9d0baa8a7afb8060539f3b5c0556dc5f193311d7ea373d48e3d1996ca8c5",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-green.log",
+          "bytes": 274,
+          "sha256": "fc436524642038930e753b1c90a117eacfbb06d55914c203be87d5c0e0b4595d"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-red.log",
+          "bytes": 835,
+          "sha256": "61fe6987411df8179f15a018e2b3565e1f588440c7a0667e6133de5af400c786"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-REAUTH-DENIES-REVOKED-DELIVERY-restored-green.log",
+          "bytes": 274,
+          "sha256": "d5978d782b6cf13cbbffafc603d2dd71c67968d650b78c97cd1018dc86e7fda2"
+        }
+      }
+    },
+    {
+      "id": "E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "93df422a57ba75c30e1d2dc85c4146279e0514ab026aafbf0ca65705540c2c8c",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-green.log",
+          "bytes": 272,
+          "sha256": "de5c70f57c5226532320be2453a9ee709b662ab2d5a6f85da99e742b44cc5c5c"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red.log",
+          "bytes": 1957,
+          "sha256": "cd0fc6bec28059cf290f70bec4cbf77f2bb578664f3d5685bc671e3e9040d2bb"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-restored-green.log",
+          "bytes": 272,
+          "sha256": "20f2e84b6865409344084dd8861856e5a7f869027672be5bf57bc6426375a1c1"
+        }
+      }
+    },
+    {
+      "id": "E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "75d1b56f7c6aa81b8ba4c2bd2caad3d5c4648dbcbc7c55cfb824ec814ac3a25f",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT-green.log",
+          "bytes": 266,
+          "sha256": "6ff7d84a4d04d37e715270f8bd3b8f74cc0cfb3fffe2964b3c1c380afda4b05d"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT-red.log",
+          "bytes": 821,
+          "sha256": "b91e80e7b211760c063fdd06e3976f5e23a8f703c20251aed61b10c1d5f58727"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-EXECUTE-DELIVER-FAILS-AFTER-COMMIT-restored-green.log",
+          "bytes": 265,
+          "sha256": "4756a66c55695e5bf0fc2e39d113e412d5dbef08a340900536bbfefde629b66c"
+        }
+      }
+    },
+    {
+      "id": "E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "1a1d2e780782f9e107331ab5c0093622489eab1d93e479bf51dcada7c7ac6656",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY-green.log",
+          "bytes": 274,
+          "sha256": "13e8da324a20c191ba5ca82471f73b893c70c70688bba0a5ce505ec6e8f1cdc4"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY-red.log",
+          "bytes": 812,
+          "sha256": "3e349739afc9d71b35ef213ef9947d8da5e4f7cd32183dd9844932e3d428be78"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-NOTIFICATION-ROLLBACK-RETRY-restored-green.log",
+          "bytes": 274,
+          "sha256": "a9c7888a3fac51a4a1c6c5ccd28fc53325e26fde99002567e9472c2121ca2c12"
+        }
+      }
+    },
+    {
+      "id": "E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "59a7a4e9487ddf4d86ddfd24e3bf4c8c379fcb4cae106a451c6b0381fb2fc077",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION-green.log",
+          "bytes": 277,
+          "sha256": "04a16662b00e0751cc26b914c240502729c196fab6e366e0d2d3f82031ff63b8"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION-red.log",
+          "bytes": 1835,
+          "sha256": "769eb0cc921230145bbe26518fe7941a9eb70ff6a9889198c07800ccdb0862bb"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-NO-CUADRA-REPLAY-NO-DOUBLE-NOTIFICATION-restored-green.log",
+          "bytes": 277,
+          "sha256": "3489f8ca96b79438b4840f44171cb49c81347c78ec8ada9eb88bcff1f1025f5f"
+        }
+      }
+    },
+    {
+      "id": "E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "216a7224e0fc0f6d94cefdf472a720a73e20e24e80f4162ce918367aca6abc32",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-green.log",
+          "bytes": 264,
+          "sha256": "9aa21a7658659c7f6c9c9d622ec55b838302afa6cb45b33595c30b9e8651268c"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red.log",
+          "bytes": 1686,
+          "sha256": "3a3bc36a3cb9871b89edfc464caea63a206b5835baf9d93d3a31c8d1b136c55a"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-restored-green.log",
+          "bytes": 264,
+          "sha256": "15c05c817e581bd08b10076be3c6e12bf19a48435fb81c12dadc7170ceae81e2"
+        }
+      }
+    },
+    {
+      "id": "E11-A-PREPARATION-DUPLICATE-NOTES-DENIED",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11-repository.ts",
+      "sourceSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "mutantSha256": "90170d7dd248bba44cc176b8734ad680edd2ab3919ac643551931a6a746483e8",
+      "restoredSha256": "d0672d27a900e75946e3c6ae28986432ec6077290e605e9a76ae5d3bd0ab2ec2",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-green.log",
+          "bytes": 270,
+          "sha256": "8c050dd012f09cde115baf7a957af0b8f3af1ecb862cf6f3b8504ef3bec178fa"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red.log",
+          "bytes": 1984,
+          "sha256": "ed53af284d48e8aceb8ea478e2ea559fb1373c3dfd7c0804779d6047eb29d056"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-restored-green.log",
+          "bytes": 270,
+          "sha256": "5179d9b2c226b167a4ea9d81feecf2159813adc5d5b8ba214ed7d196b5645005"
+        }
+      }
+    },
+    {
+      "id": "E11-LEGACY-DEFAULT-DENY-POLICY",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/middlewares/e11-legacy.ts",
+      "sourceSha256": "772c7fab46901f7366c65d084d7b54068b0359dfdb26a2935c46417e1f8f70b8",
+      "mutantSha256": "b26b4202d23a786a7e6ce43fcbd54be63c2c0f2fb03df7aee20921852ed33831",
+      "restoredSha256": "772c7fab46901f7366c65d084d7b54068b0359dfdb26a2935c46417e1f8f70b8",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-DEFAULT-DENY-POLICY-green.log",
+          "bytes": 250,
+          "sha256": "dba9d5c9f37ce950f91af61f56c95b14078fdf71c5c7e5d1957330daddaf0997"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-DEFAULT-DENY-POLICY-red.log",
+          "bytes": 927,
+          "sha256": "0dcaf0cefffab7d2068097af7f75220b47f6c53a9e5015a9f5d2f3bb67289c2b"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-DEFAULT-DENY-POLICY-restored-green.log",
+          "bytes": 249,
+          "sha256": "eedde16ebd8052647e3f25a2f83fe9e9f4ff2039dc8001633aeee0e16ab8475a"
+        }
+      }
+    },
+    {
+      "id": "E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/middlewares/e11-legacy.ts",
+      "sourceSha256": "772c7fab46901f7366c65d084d7b54068b0359dfdb26a2935c46417e1f8f70b8",
+      "mutantSha256": "5aad2d5b44a103b0f89c511634965dba2238c6602c3a8c7709eec2c90dc9d28c",
+      "restoredSha256": "772c7fab46901f7366c65d084d7b54068b0359dfdb26a2935c46417e1f8f70b8",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES-green.log",
+          "bytes": 280,
+          "sha256": "06dbfb943afbb576fa2120bed0a07e9c07eccbf11ccd6f0da06270ccd22f3f04"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES-red.log",
+          "bytes": 880,
+          "sha256": "6455c82dbea8e085833d2cf7c1c7d6d0a8c0b64cb51f3e8580c6695b810bb10c"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-LEGACY-BOUNDARY-AUTHENTICATES-THEN-DENIES-restored-green.log",
+          "bytes": 279,
+          "sha256": "4c55d49a7bc9b84f9b34931eaba14f3648fd9e0b7ec3fbb6b516d9edda7939dc"
+        }
+      }
+    },
+    {
+      "id": "E11-E5-A-CLOSED-WHILE-OFF",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e5.ts",
+      "sourceSha256": "d93eb7ac9103213f35ec62cbeb33fa1851ef677e9f22ad27e23a7ace945d1cc3",
+      "mutantSha256": "c7b228d884f4471c819b9da17ed0d253ffc1ca2aab26cdb9a2212bf050bede9c",
+      "restoredSha256": "d93eb7ac9103213f35ec62cbeb33fa1851ef677e9f22ad27e23a7ace945d1cc3",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-E5-A-CLOSED-WHILE-OFF-green.log",
+          "bytes": 240,
+          "sha256": "17763508246a1d4d47e8ed23225eb7aab253c7efa922c0b4f883dff11dfa5811"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-E5-A-CLOSED-WHILE-OFF-red.log",
+          "bytes": 905,
+          "sha256": "127edf9bea2af626cf5a3d51c74d5fd44dc131669180e321dfadcdb40cc4027e"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-E5-A-CLOSED-WHILE-OFF-restored-green.log",
+          "bytes": 240,
+          "sha256": "fa61d23173f9cad161ba24414b5c3e45542f2e72a07e333e650d1f689981823e"
+        }
+      }
+    },
+    {
+      "id": "E11-ERROR-BODY-IS-PRIVATE",
+      "provenance": "final",
+      "mutationFile": "artifacts/api-server/src/lib/e11.ts",
+      "sourceSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "mutantSha256": "0de5cb47afc74eb7939c178a56315e541fba9453008230b8a36711c066a57528",
+      "restoredSha256": "a92cc6ce0954304edabf3ee9e86aed98b3413f79fbf230ca4107cd533f48c2f5",
+      "logs": {
+        "green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-ERROR-BODY-IS-PRIVATE-green.log",
+          "bytes": 239,
+          "sha256": "65e9ae44bea9e447a0bec7e0127945ad3570afd452f692f2485622eab1f92c69"
+        },
+        "red": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-ERROR-BODY-IS-PRIVATE-red.log",
+          "bytes": 1151,
+          "sha256": "580c8e2a1b9aa207c1caf450c9bc2a9a05660bf5527a86af5b5f7ddf385bb855"
+        },
+        "restored-green": {
+          "file": "reports/e11/logs/backend-2026-09-23T00-36-02.446Z/E11-ERROR-BODY-IS-PRIVATE-restored-green.log",
+          "bytes": 240,
+          "sha256": "56cc5df0ba7f9525c4877522d8bc727af3300d672af683a21cd9cfc373e00349"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: E11-SNAPSHOT-ID
+ok 1 - E11-SNAPSHOT-ID
+  ---
+  duration_ms: 125.468585
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2322.160265

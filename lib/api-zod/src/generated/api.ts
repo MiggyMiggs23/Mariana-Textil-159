@@ -8,6 +8,837 @@
 import * as zod from 'zod';
 
 
+/**
+ * Gate E11_ENABLED OFF por defecto. No devuelve payload ni IDs financieros. PENDIENTE significa ausencia observada, NO ausencia definitiva de efectos. Sólo CONFIRMADA o CERRADA_SIN_EFECTO con resolucionId no null permiten liberar cuarentena de la terna exacta actorId/accion/uuidOriginal. Un 404 o timeout nunca la libera. Sesión/identidad ADMIN se revalidan antes de entregar. No otorga mutación financiera.
+ * @summary Consultar metadata de intención exacta, sólo ADMIN real con FISCAL_LEER
+ */
+export const getE11OperacionRecuperacionPathActorIdMax = 2147483647;
+
+
+
+export const GetE11OperacionRecuperacionParams = zod.object({
+  "actorId": zod.coerce.number().int().min(1).max(getE11OperacionRecuperacionPathActorIdMax),
+  "accion": zod.enum(['PERFIL', 'SNAPSHOT', 'DECISION', 'PREPARACION']),
+  "uuidOriginal": zod.coerce.string().uuid()
+})
+
+export const getE11OperacionRecuperacionResponseActorIdMax = 2147483647;
+
+export const getE11OperacionRecuperacionResponseRevisionRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const GetE11OperacionRecuperacionResponse = zod.object({
+  "actorId": zod.number().int().min(1).max(getE11OperacionRecuperacionResponseActorIdMax),
+  "accion": zod.enum(['PERFIL', 'SNAPSHOT', 'DECISION', 'PREPARACION']),
+  "uuidOriginal": zod.string().uuid(),
+  "estado": zod.enum(['PENDIENTE', 'CONFIRMADA', 'CERRADA_SIN_EFECTO']),
+  "revision": zod.string().regex(getE11OperacionRecuperacionResponseRevisionRegExp),
+  "resolucionId": zod.string().uuid().nullable(),
+  "resueltoEn": zod.coerce.date().nullable()
+})
+
+
+/**
+ * Gate E11_ENABLED OFF. Requiere identidadVersion igual a permisosVersion de identidad ADMIN fresca y revisionEsperada de GET para la terna exacta. Si existe operación confirma metadata; si no, inserta tombstone append-only bajo el mismo lock/PK de todos los productores antes de cerrar sin efecto. Audita admin, actor original, terna, motivo, revisión e UUID resolutor. UUID del cuerpo es del resolutor, distinto conceptualmente del UUID original del path. Retry usa mismo admin/UUID/cuerpo/path y retorna resolución original. Nunca escribe en caja, cartera, aplicación, devolución ni propuestas E5. Si POST tiene outcome incierto, consultar GET de la terna original o repetir este POST exacto; nunca crear cuarentena recursiva de la resolución.
+ * @summary Resolver cuarentena sin replicar operación, sólo ADMIN real con FISCAL_LEER
+ */
+export const resolveE11OperacionPathActorIdMax = 2147483647;
+
+
+
+export const ResolveE11OperacionParams = zod.object({
+  "actorId": zod.coerce.number().int().min(1).max(resolveE11OperacionPathActorIdMax),
+  "accion": zod.enum(['PERFIL', 'SNAPSHOT', 'DECISION', 'PREPARACION']),
+  "uuidOriginal": zod.coerce.string().uuid()
+})
+
+export const resolveE11OperacionBodyRevisionEsperadaRegExp = new RegExp('^[a-f0-9]{64}$');
+export const resolveE11OperacionBodyIdentidadVersionRegExp = new RegExp('^[a-f0-9]{64}$');
+export const resolveE11OperacionBodyMotivoMax = 500;
+
+
+
+export const ResolveE11OperacionBody = zod.object({
+  "uuid": zod.string().uuid(),
+  "revisionEsperada": zod.string().regex(resolveE11OperacionBodyRevisionEsperadaRegExp),
+  "identidadVersion": zod.string().regex(resolveE11OperacionBodyIdentidadVersionRegExp),
+  "motivo": zod.string().min(1).max(resolveE11OperacionBodyMotivoMax)
+})
+
+export const resolveE11OperacionResponseActorIdMax = 2147483647;
+
+export const resolveE11OperacionResponseRevisionRegExp = new RegExp('^[a-f0-9]{64}$');
+
+
+export const ResolveE11OperacionResponse = zod.object({
+  "actorId": zod.number().int().min(1).max(resolveE11OperacionResponseActorIdMax),
+  "accion": zod.enum(['PERFIL', 'SNAPSHOT', 'DECISION', 'PREPARACION']),
+  "uuidOriginal": zod.string().uuid(),
+  "estado": zod.enum(['PENDIENTE', 'CONFIRMADA', 'CERRADA_SIN_EFECTO']),
+  "revision": zod.string().regex(resolveE11OperacionResponseRevisionRegExp),
+  "resolucionId": zod.string().uuid().nullable(),
+  "resueltoEn": zod.coerce.date().nullable()
+})
+
+
+export const GetE11DisponibilidadResponse = zod.object({
+  "enabled": zod.boolean(),
+  "perfiles": zod.boolean(),
+  "conciliacion": zod.boolean(),
+  "preparacionE5": zod.boolean()
+})
+
+
+export const getE11IdentidadResponsePerfilVersionMin = 0;
+
+
+
+export const GetE11IdentidadResponse = zod.object({
+  "usuarioId": zod.number().int(),
+  "rolBase": zod.string().describe('Rol existente sin roles técnicos CONTADOR_A o CONTADOR_F'),
+  "perfil": zod.union([zod.literal('F'),zod.literal('A'),zod.literal(null)]).nullable(),
+  "perfilVersion": zod.number().int().min(getE11IdentidadResponsePerfilVersionMin),
+  "permisosVersion": zod.string(),
+  "capacidades": zod.array(zod.enum(['FISCAL_LEER', 'FISCAL_CONCILIAR', 'FINANZAS_LIMITADAS_LEER', 'E5_PREPARAR', 'PERFILES_ADMINISTRAR']))
+})
+
+
+
+
+
+export const GetE11PerfilParams = zod.object({
+  "usuarioId": zod.coerce.number().int().min(1)
+})
+
+export const getE11PerfilResponsePerfilVersionMin = 0;
+
+
+
+export const GetE11PerfilResponse = zod.object({
+  "usuarioId": zod.number().int(),
+  "rolBase": zod.string().describe('Rol existente sin roles técnicos CONTADOR_A o CONTADOR_F'),
+  "perfil": zod.union([zod.literal('F'),zod.literal('A'),zod.literal(null)]).nullable(),
+  "perfilVersion": zod.number().int().min(getE11PerfilResponsePerfilVersionMin),
+  "permisosVersion": zod.string(),
+  "capacidades": zod.array(zod.enum(['FISCAL_LEER', 'FISCAL_CONCILIAR', 'FINANZAS_LIMITADAS_LEER', 'E5_PREPARAR', 'PERFILES_ADMINISTRAR']))
+})
+
+
+
+
+
+export const AssignE11PerfilParams = zod.object({
+  "usuarioId": zod.coerce.number().int().min(1)
+})
+
+export const assignE11PerfilBodyRevisionEsperadaMin = 0;
+
+export const assignE11PerfilBodyMotivoMax = 1000;
+
+
+
+export const AssignE11PerfilBody = zod.object({
+  "uuid": zod.string().uuid(),
+  "revisionEsperada": zod.number().int().min(assignE11PerfilBodyRevisionEsperadaMin),
+  "perfil": zod.enum(['A', 'F']),
+  "motivo": zod.string().min(1).max(assignE11PerfilBodyMotivoMax)
+})
+
+export const AssignE11PerfilResponse = zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "usuarioId": zod.number().int(),
+  "actorId": zod.number().int(),
+  "anterior": zod.union([zod.literal('A'),zod.literal('F'),zod.literal(null)]).nullable(),
+  "posterior": zod.union([zod.literal('A'),zod.literal('F'),zod.literal(null)]).nullable(),
+  "revision": zod.number().int(),
+  "motivo": zod.string(),
+  "creadoEn": zod.coerce.date()
+})
+
+
+
+
+
+export const ListE11PerfilHistorialParams = zod.object({
+  "usuarioId": zod.coerce.number().int().min(1)
+})
+
+export const listE11PerfilHistorialQueryCursorMax = 2048;
+
+export const listE11PerfilHistorialQueryLimitDefault = 50;
+export const listE11PerfilHistorialQueryLimitMax = 100;
+
+
+
+export const ListE11PerfilHistorialQueryParams = zod.object({
+  "cursor": zod.coerce.string().max(listE11PerfilHistorialQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11PerfilHistorialQueryLimitMax).default(listE11PerfilHistorialQueryLimitDefault)
+})
+
+export const ListE11PerfilHistorialResponse = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "usuarioId": zod.number().int(),
+  "actorId": zod.number().int(),
+  "anterior": zod.union([zod.literal('A'),zod.literal('F'),zod.literal(null)]).nullable(),
+  "posterior": zod.union([zod.literal('A'),zod.literal('F'),zod.literal(null)]).nullable(),
+  "revision": zod.number().int(),
+  "motivo": zod.string(),
+  "creadoEn": zod.coerce.date()
+})),
+  "nextCursor": zod.string().nullable()
+})
+
+
+export const listE11FiscalClientesQueryCursorMax = 2048;
+
+export const listE11FiscalClientesQueryLimitDefault = 50;
+export const listE11FiscalClientesQueryLimitMax = 100;
+
+
+
+export const ListE11FiscalClientesQueryParams = zod.object({
+  "cursor": zod.coerce.string().max(listE11FiscalClientesQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11FiscalClientesQueryLimitMax).default(listE11FiscalClientesQueryLimitDefault)
+})
+
+export const ListE11FiscalClientesResponse = zod.object({
+  "items": zod.array(zod.object({
+  "clienteId": zod.number().int(),
+  "nombre": zod.string()
+})),
+  "nextCursor": zod.string().nullable(),
+  "fuenteRevision": zod.string()
+})
+
+
+export const listE11FiscalVentasQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listE11FiscalVentasQueryHastaExclusivoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+export const listE11FiscalVentasQueryCursorMax = 2048;
+
+export const listE11FiscalVentasQueryLimitDefault = 50;
+export const listE11FiscalVentasQueryLimitMax = 100;
+
+
+
+export const ListE11FiscalVentasQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listE11FiscalVentasQueryDesdeRegExp),
+  "hastaExclusivo": zod.coerce.string().regex(listE11FiscalVentasQueryHastaExclusivoRegExp),
+  "clienteId": zod.coerce.number().int().min(1).optional(),
+  "cursor": zod.coerce.string().max(listE11FiscalVentasQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11FiscalVentasQueryLimitMax).default(listE11FiscalVentasQueryLimitDefault)
+})
+
+export const listE11FiscalVentasResponseItemsItemTotalFacturadoMax = 13;
+
+
+export const listE11FiscalVentasResponseItemsItemTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE11FiscalVentasResponseTotalFacturadoMax = 13;
+
+
+export const listE11FiscalVentasResponseTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const ListE11FiscalVentasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "facturaId": zod.number().int(),
+  "ventaId": zod.number().int(),
+  "folioFactura": zod.string(),
+  "cliente": zod.object({
+  "clienteId": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "fechaFacturacion": zod.coerce.date(),
+  "totalFacturado": zod.string().max(listE11FiscalVentasResponseItemsItemTotalFacturadoMax).regex(listE11FiscalVentasResponseItemsItemTotalFacturadoRegExp),
+  "moneda": zod.enum(['MXN']),
+  "estado": zod.enum(['VIGENTE', 'CANCELADA'])
+}).describe('Documento interno facturado (tickets.facturado), no CFDI inventado. facturaId y ventaId identifican ticket; folioFactura es su folio interno; fechaFacturacion es fecha canónica del documento contabilizado, no fecha de timbrado. No afirma integración fiscal externa.')),
+  "nextCursor": zod.string().nullable(),
+  "fuenteRevision": zod.string(),
+  "totalFacturado": zod.string().max(listE11FiscalVentasResponseTotalFacturadoMax).regex(listE11FiscalVentasResponseTotalFacturadoRegExp)
+})
+
+
+
+
+
+export const GetE11FiscalFacturaParams = zod.object({
+  "facturaId": zod.coerce.number().int().min(1)
+})
+
+export const getE11FiscalFacturaResponseTotalFacturadoMax = 13;
+
+
+export const getE11FiscalFacturaResponseTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const GetE11FiscalFacturaResponse = zod.object({
+  "facturaId": zod.number().int(),
+  "ventaId": zod.number().int(),
+  "folioFactura": zod.string(),
+  "cliente": zod.object({
+  "clienteId": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "fechaFacturacion": zod.coerce.date(),
+  "totalFacturado": zod.string().max(getE11FiscalFacturaResponseTotalFacturadoMax).regex(getE11FiscalFacturaResponseTotalFacturadoRegExp),
+  "moneda": zod.enum(['MXN']),
+  "estado": zod.enum(['VIGENTE', 'CANCELADA'])
+}).describe('Documento interno facturado (tickets.facturado), no CFDI inventado. facturaId y ventaId identifican ticket; folioFactura es su folio interno; fechaFacturacion es fecha canónica del documento contabilizado, no fecha de timbrado. No afirma integración fiscal externa.')
+
+
+export const listE11FinanzasClientesQueryCursorMax = 2048;
+
+export const listE11FinanzasClientesQueryLimitDefault = 50;
+export const listE11FinanzasClientesQueryLimitMax = 100;
+
+
+
+export const ListE11FinanzasClientesQueryParams = zod.object({
+  "cursor": zod.coerce.string().max(listE11FinanzasClientesQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11FinanzasClientesQueryLimitMax).default(listE11FinanzasClientesQueryLimitDefault)
+})
+
+export const listE11FinanzasClientesResponseItemsItemLimiteCreditoMax = 13;
+
+
+export const listE11FinanzasClientesResponseItemsItemLimiteCreditoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE11FinanzasClientesResponseItemsItemSaldoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const ListE11FinanzasClientesResponse = zod.object({
+  "items": zod.array(zod.object({
+  "clienteId": zod.number().int(),
+  "nombre": zod.string(),
+  "contacto": zod.string().nullable().describe('Solo teléfono o correo; nunca notas libres o domicilio'),
+  "limiteCredito": zod.string().max(listE11FinanzasClientesResponseItemsItemLimiteCreditoMax).regex(listE11FinanzasClientesResponseItemsItemLimiteCreditoRegExp),
+  "saldo": zod.string().regex(listE11FinanzasClientesResponseItemsItemSaldoRegExp)
+})),
+  "nextCursor": zod.string().nullable(),
+  "fuenteRevision": zod.string()
+})
+
+
+
+
+
+export const ListE11FinanzasNotasParams = zod.object({
+  "clienteId": zod.coerce.number().int().min(1)
+})
+
+export const listE11FinanzasNotasQueryCursorMax = 2048;
+
+export const listE11FinanzasNotasQueryLimitDefault = 50;
+export const listE11FinanzasNotasQueryLimitMax = 100;
+
+
+
+export const ListE11FinanzasNotasQueryParams = zod.object({
+  "cursor": zod.coerce.string().max(listE11FinanzasNotasQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11FinanzasNotasQueryLimitMax).default(listE11FinanzasNotasQueryLimitDefault)
+})
+
+export const listE11FinanzasNotasResponseItemsItemTotalMax = 13;
+
+
+export const listE11FinanzasNotasResponseItemsItemTotalRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE11FinanzasNotasResponseItemsItemSaldoMax = 13;
+
+
+export const listE11FinanzasNotasResponseItemsItemSaldoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const ListE11FinanzasNotasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int().describe('Identidad exacta del cargo E5'),
+  "folio": zod.string(),
+  "clienteId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "facturada": zod.boolean(),
+  "total": zod.string().max(listE11FinanzasNotasResponseItemsItemTotalMax).regex(listE11FinanzasNotasResponseItemsItemTotalRegExp),
+  "saldo": zod.string().max(listE11FinanzasNotasResponseItemsItemSaldoMax).regex(listE11FinanzasNotasResponseItemsItemSaldoRegExp)
+})),
+  "nextCursor": zod.string().nullable(),
+  "fuenteRevision": zod.string()
+})
+
+
+
+
+
+export const GetE11FinanzasEstadoCuentaParams = zod.object({
+  "clienteId": zod.coerce.number().int().min(1)
+})
+
+export const getE11FinanzasEstadoCuentaQueryCursorMax = 2048;
+
+export const getE11FinanzasEstadoCuentaQueryLimitDefault = 50;
+export const getE11FinanzasEstadoCuentaQueryLimitMax = 100;
+
+
+
+export const GetE11FinanzasEstadoCuentaQueryParams = zod.object({
+  "cursor": zod.coerce.string().max(getE11FinanzasEstadoCuentaQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(getE11FinanzasEstadoCuentaQueryLimitMax).default(getE11FinanzasEstadoCuentaQueryLimitDefault)
+})
+
+export const getE11FinanzasEstadoCuentaResponseClienteLimiteCreditoMax = 13;
+
+
+export const getE11FinanzasEstadoCuentaResponseClienteLimiteCreditoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE11FinanzasEstadoCuentaResponseClienteSaldoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE11FinanzasEstadoCuentaResponseItemsItemFechaEfectivaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getE11FinanzasEstadoCuentaResponseItemsItemImporteRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const GetE11FinanzasEstadoCuentaResponse = zod.object({
+  "cliente": zod.object({
+  "clienteId": zod.number().int(),
+  "nombre": zod.string(),
+  "contacto": zod.string().nullable().describe('Solo teléfono o correo; nunca notas libres o domicilio'),
+  "limiteCredito": zod.string().max(getE11FinanzasEstadoCuentaResponseClienteLimiteCreditoMax).regex(getE11FinanzasEstadoCuentaResponseClienteLimiteCreditoRegExp),
+  "saldo": zod.string().regex(getE11FinanzasEstadoCuentaResponseClienteSaldoRegExp)
+}),
+  "items": zod.array(zod.object({
+  "id": zod.number().int(),
+  "tipo": zod.enum(['VENTA', 'ABONO', 'REVERSO', 'AJUSTE']),
+  "fechaEfectiva": zod.string().regex(getE11FinanzasEstadoCuentaResponseItemsItemFechaEfectivaRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "importe": zod.string().regex(getE11FinanzasEstadoCuentaResponseItemsItemImporteRegExp),
+  "notaId": zod.number().int().nullable()
+})),
+  "nextCursor": zod.string().nullable(),
+  "fuenteRevision": zod.string()
+})
+
+
+export const listE11ConciliacionesQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listE11ConciliacionesQueryHastaExclusivoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listE11ConciliacionesQueryCursorMax = 2048;
+
+export const listE11ConciliacionesQueryLimitDefault = 50;
+export const listE11ConciliacionesQueryLimitMax = 100;
+
+
+
+export const ListE11ConciliacionesQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(listE11ConciliacionesQueryDesdeRegExp),
+  "hastaExclusivo": zod.coerce.string().regex(listE11ConciliacionesQueryHastaExclusivoRegExp),
+  "cursor": zod.coerce.string().max(listE11ConciliacionesQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11ConciliacionesQueryLimitMax).default(listE11ConciliacionesQueryLimitDefault)
+})
+
+export const listE11ConciliacionesResponseItemsItemInicioRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const listE11ConciliacionesResponseItemsItemFinExclusivoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
+export const ListE11ConciliacionesResponse = zod.object({
+  "items": zod.array(zod.object({
+  "tipo": zod.enum(['DIA', 'SEMANA', 'MES']),
+  "inicio": zod.string().regex(listE11ConciliacionesResponseItemsItemInicioRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "finExclusivo": zod.string().regex(listE11ConciliacionesResponseItemsItemFinExclusivoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "zona": zod.enum(['America/Mexico_City']),
+  "obligatorio": zod.boolean().describe('SEMANA y MES true; DIA false'),
+  "estado": zod.enum(['ABIERTO', 'PENDIENTE', 'CONGELADO', 'ACEPTADA', 'NO_CUADRA', 'REQUIERE_REVISION']),
+  "ultimaConciliacionId": zod.string().uuid().nullable()
+})),
+  "nextCursor": zod.string().nullable()
+})
+
+
+export const createE11ConciliacionBodyPerfilVersionMin = 0;
+
+export const createE11ConciliacionBodyInicioRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+
+
+
+export const CreateE11ConciliacionBody = zod.object({
+  "uuid": zod.string().uuid(),
+  "perfilVersion": zod.number().int().min(createE11ConciliacionBodyPerfilVersionMin),
+  "tipo": zod.enum(['DIA', 'SEMANA', 'MES']),
+  "inicio": zod.string().regex(createE11ConciliacionBodyInicioRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "fuenteRevision": zod.string().min(1),
+  "revisionAnteriorId": zod.string().uuid().nullable()
+})
+
+export const createE11ConciliacionResponsePeriodoInicioRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const createE11ConciliacionResponsePeriodoFinExclusivoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const createE11ConciliacionResponseTotalFacturadoMax = 13;
+
+
+export const createE11ConciliacionResponseTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const createE11ConciliacionResponseEvidenciaHashRegExp = new RegExp('^[a-f0-9]{64}$');
+export const createE11ConciliacionResponseDecisionesItemTotalExternoMax = 13;
+
+
+export const createE11ConciliacionResponseDecisionesItemTotalExternoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const CreateE11ConciliacionResponse = zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "periodo": zod.object({
+  "tipo": zod.enum(['DIA', 'SEMANA', 'MES']),
+  "inicio": zod.string().regex(createE11ConciliacionResponsePeriodoInicioRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "finExclusivo": zod.string().regex(createE11ConciliacionResponsePeriodoFinExclusivoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "zona": zod.enum(['America/Mexico_City']),
+  "obligatorio": zod.boolean().describe('SEMANA y MES true; DIA false'),
+  "estado": zod.enum(['ABIERTO', 'PENDIENTE', 'CONGELADO', 'ACEPTADA', 'NO_CUADRA', 'REQUIERE_REVISION']),
+  "ultimaConciliacionId": zod.string().uuid().nullable()
+}),
+  "revision": zod.number().int(),
+  "anteriorId": zod.string().uuid().nullable(),
+  "fuenteRevision": zod.string(),
+  "vigente": zod.boolean(),
+  "congeladoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "totalFacturado": zod.string().max(createE11ConciliacionResponseTotalFacturadoMax).regex(createE11ConciliacionResponseTotalFacturadoRegExp),
+  "cantidadVentas": zod.number().int(),
+  "evidenciaHash": zod.string().regex(createE11ConciliacionResponseEvidenciaHashRegExp),
+  "decisiones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "actorId": zod.number().int(),
+  "creadoEn": zod.coerce.date(),
+  "resultado": zod.enum(['ACEPTADA', 'NO_CUADRA']),
+  "totalExterno": zod.string().max(createE11ConciliacionResponseDecisionesItemTotalExternoMax).regex(createE11ConciliacionResponseDecisionesItemTotalExternoRegExp),
+  "referenciaExterna": zod.string(),
+  "observacion": zod.string(),
+  "avisoAdminId": zod.string().uuid().nullable()
+}))
+})
+
+
+export const GetE11ConciliacionParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const getE11ConciliacionResponsePeriodoInicioRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getE11ConciliacionResponsePeriodoFinExclusivoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getE11ConciliacionResponseTotalFacturadoMax = 13;
+
+
+export const getE11ConciliacionResponseTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE11ConciliacionResponseEvidenciaHashRegExp = new RegExp('^[a-f0-9]{64}$');
+export const getE11ConciliacionResponseDecisionesItemTotalExternoMax = 13;
+
+
+export const getE11ConciliacionResponseDecisionesItemTotalExternoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const GetE11ConciliacionResponse = zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "periodo": zod.object({
+  "tipo": zod.enum(['DIA', 'SEMANA', 'MES']),
+  "inicio": zod.string().regex(getE11ConciliacionResponsePeriodoInicioRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "finExclusivo": zod.string().regex(getE11ConciliacionResponsePeriodoFinExclusivoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "zona": zod.enum(['America/Mexico_City']),
+  "obligatorio": zod.boolean().describe('SEMANA y MES true; DIA false'),
+  "estado": zod.enum(['ABIERTO', 'PENDIENTE', 'CONGELADO', 'ACEPTADA', 'NO_CUADRA', 'REQUIERE_REVISION']),
+  "ultimaConciliacionId": zod.string().uuid().nullable()
+}),
+  "revision": zod.number().int(),
+  "anteriorId": zod.string().uuid().nullable(),
+  "fuenteRevision": zod.string(),
+  "vigente": zod.boolean(),
+  "congeladoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "totalFacturado": zod.string().max(getE11ConciliacionResponseTotalFacturadoMax).regex(getE11ConciliacionResponseTotalFacturadoRegExp),
+  "cantidadVentas": zod.number().int(),
+  "evidenciaHash": zod.string().regex(getE11ConciliacionResponseEvidenciaHashRegExp),
+  "decisiones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "actorId": zod.number().int(),
+  "creadoEn": zod.coerce.date(),
+  "resultado": zod.enum(['ACEPTADA', 'NO_CUADRA']),
+  "totalExterno": zod.string().max(getE11ConciliacionResponseDecisionesItemTotalExternoMax).regex(getE11ConciliacionResponseDecisionesItemTotalExternoRegExp),
+  "referenciaExterna": zod.string(),
+  "observacion": zod.string(),
+  "avisoAdminId": zod.string().uuid().nullable()
+}))
+})
+
+
+export const DecideE11ConciliacionParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const decideE11ConciliacionBodyPerfilVersionMin = 0;
+
+
+
+export const decideE11ConciliacionBodyTotalExternoMax = 13;
+
+
+export const decideE11ConciliacionBodyTotalExternoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const decideE11ConciliacionBodyReferenciaExternaMax = 250;
+
+export const decideE11ConciliacionBodyObservacionMax = 1000;
+
+
+
+export const DecideE11ConciliacionBody = zod.object({
+  "uuid": zod.string().uuid(),
+  "perfilVersion": zod.number().int().min(decideE11ConciliacionBodyPerfilVersionMin),
+  "revisionEsperada": zod.number().int().min(1),
+  "fuenteRevision": zod.string().min(1),
+  "resultado": zod.enum(['ACEPTADA', 'NO_CUADRA']),
+  "totalExterno": zod.string().max(decideE11ConciliacionBodyTotalExternoMax).regex(decideE11ConciliacionBodyTotalExternoRegExp),
+  "referenciaExterna": zod.string().min(1).max(decideE11ConciliacionBodyReferenciaExternaMax),
+  "observacion": zod.string().max(decideE11ConciliacionBodyObservacionMax).describe('Obligatoria no vacía para NO_CUADRA; no incluir datos sensibles')
+})
+
+export const decideE11ConciliacionResponsePeriodoInicioRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const decideE11ConciliacionResponsePeriodoFinExclusivoRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const decideE11ConciliacionResponseTotalFacturadoMax = 13;
+
+
+export const decideE11ConciliacionResponseTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const decideE11ConciliacionResponseEvidenciaHashRegExp = new RegExp('^[a-f0-9]{64}$');
+export const decideE11ConciliacionResponseDecisionesItemTotalExternoMax = 13;
+
+
+export const decideE11ConciliacionResponseDecisionesItemTotalExternoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const DecideE11ConciliacionResponse = zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "periodo": zod.object({
+  "tipo": zod.enum(['DIA', 'SEMANA', 'MES']),
+  "inicio": zod.string().regex(decideE11ConciliacionResponsePeriodoInicioRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "finExclusivo": zod.string().regex(decideE11ConciliacionResponsePeriodoFinExclusivoRegExp).describe('Calendar day in YYYY-MM-DD; never coerced to an instant.'),
+  "zona": zod.enum(['America/Mexico_City']),
+  "obligatorio": zod.boolean().describe('SEMANA y MES true; DIA false'),
+  "estado": zod.enum(['ABIERTO', 'PENDIENTE', 'CONGELADO', 'ACEPTADA', 'NO_CUADRA', 'REQUIERE_REVISION']),
+  "ultimaConciliacionId": zod.string().uuid().nullable()
+}),
+  "revision": zod.number().int(),
+  "anteriorId": zod.string().uuid().nullable(),
+  "fuenteRevision": zod.string(),
+  "vigente": zod.boolean(),
+  "congeladoEn": zod.coerce.date(),
+  "actorId": zod.number().int(),
+  "totalFacturado": zod.string().max(decideE11ConciliacionResponseTotalFacturadoMax).regex(decideE11ConciliacionResponseTotalFacturadoRegExp),
+  "cantidadVentas": zod.number().int(),
+  "evidenciaHash": zod.string().regex(decideE11ConciliacionResponseEvidenciaHashRegExp),
+  "decisiones": zod.array(zod.object({
+  "id": zod.string().uuid(),
+  "uuid": zod.string().uuid(),
+  "actorId": zod.number().int(),
+  "creadoEn": zod.coerce.date(),
+  "resultado": zod.enum(['ACEPTADA', 'NO_CUADRA']),
+  "totalExterno": zod.string().max(decideE11ConciliacionResponseDecisionesItemTotalExternoMax).regex(decideE11ConciliacionResponseDecisionesItemTotalExternoRegExp),
+  "referenciaExterna": zod.string(),
+  "observacion": zod.string(),
+  "avisoAdminId": zod.string().uuid().nullable()
+}))
+})
+
+
+export const ListE11ConciliacionVentasParams = zod.object({
+  "id": zod.coerce.string().uuid()
+})
+
+export const listE11ConciliacionVentasQueryCursorMax = 2048;
+
+export const listE11ConciliacionVentasQueryLimitDefault = 50;
+export const listE11ConciliacionVentasQueryLimitMax = 100;
+
+
+
+export const ListE11ConciliacionVentasQueryParams = zod.object({
+  "cursor": zod.coerce.string().max(listE11ConciliacionVentasQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11ConciliacionVentasQueryLimitMax).default(listE11ConciliacionVentasQueryLimitDefault)
+})
+
+export const listE11ConciliacionVentasResponseItemsItemTotalFacturadoMax = 13;
+
+
+export const listE11ConciliacionVentasResponseItemsItemTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE11ConciliacionVentasResponseTotalFacturadoMax = 13;
+
+
+export const listE11ConciliacionVentasResponseTotalFacturadoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const ListE11ConciliacionVentasResponse = zod.object({
+  "items": zod.array(zod.object({
+  "facturaId": zod.number().int(),
+  "ventaId": zod.number().int(),
+  "folioFactura": zod.string(),
+  "cliente": zod.object({
+  "clienteId": zod.number().int(),
+  "nombre": zod.string()
+}),
+  "fechaFacturacion": zod.coerce.date(),
+  "totalFacturado": zod.string().max(listE11ConciliacionVentasResponseItemsItemTotalFacturadoMax).regex(listE11ConciliacionVentasResponseItemsItemTotalFacturadoRegExp),
+  "moneda": zod.enum(['MXN']),
+  "estado": zod.enum(['VIGENTE', 'CANCELADA'])
+}).describe('Documento interno facturado (tickets.facturado), no CFDI inventado. facturaId y ventaId identifican ticket; folioFactura es su folio interno; fechaFacturacion es fecha canónica del documento contabilizado, no fecha de timbrado. No afirma integración fiscal externa.')),
+  "nextCursor": zod.string().nullable(),
+  "fuenteRevision": zod.string(),
+  "totalFacturado": zod.string().max(listE11ConciliacionVentasResponseTotalFacturadoMax).regex(listE11ConciliacionVentasResponseTotalFacturadoRegExp)
+})
+
+
+
+export const listE11PreparacionesQueryCursorMax = 2048;
+
+export const listE11PreparacionesQueryLimitDefault = 50;
+export const listE11PreparacionesQueryLimitMax = 100;
+
+
+
+export const ListE11PreparacionesQueryParams = zod.object({
+  "clienteId": zod.coerce.number().int().min(1).optional(),
+  "cursor": zod.coerce.string().max(listE11PreparacionesQueryCursorMax).optional().describe('Opaco, ligado a actor\/perfilVersion\/filtros\/snapshot; no acepta cursor de otro alcance'),
+  "limit": zod.coerce.number().int().min(1).max(listE11PreparacionesQueryLimitMax).default(listE11PreparacionesQueryLimitDefault)
+})
+
+export const listE11PreparacionesResponseItemsItemRetenidoMax = 13;
+
+
+export const listE11PreparacionesResponseItemsItemRetenidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE11PreparacionesResponseItemsItemNotasItemTotalMax = 13;
+
+
+export const listE11PreparacionesResponseItemsItemNotasItemTotalRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const listE11PreparacionesResponseItemsItemNotasItemSaldoMax = 13;
+
+
+export const listE11PreparacionesResponseItemsItemNotasItemSaldoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const ListE11PreparacionesResponse = zod.object({
+  "items": zod.array(zod.object({
+  "cobroId": zod.string().uuid(),
+  "clienteId": zod.number().int(),
+  "revision": zod.number().int(),
+  "fuenteRevision": zod.string(),
+  "retenido": zod.string().max(listE11PreparacionesResponseItemsItemRetenidoMax).regex(listE11PreparacionesResponseItemsItemRetenidoRegExp),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int().describe('Identidad exacta del cargo E5'),
+  "folio": zod.string(),
+  "clienteId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "facturada": zod.boolean(),
+  "total": zod.string().max(listE11PreparacionesResponseItemsItemNotasItemTotalMax).regex(listE11PreparacionesResponseItemsItemNotasItemTotalRegExp),
+  "saldo": zod.string().max(listE11PreparacionesResponseItemsItemNotasItemSaldoMax).regex(listE11PreparacionesResponseItemsItemNotasItemSaldoRegExp)
+})),
+  "propuestaId": zod.string().uuid().nullable()
+})),
+  "nextCursor": zod.string().nullable()
+})
+
+
+export const GetE11PreparacionParams = zod.object({
+  "cobroId": zod.coerce.string().uuid()
+})
+
+export const getE11PreparacionResponseRetenidoMax = 13;
+
+
+export const getE11PreparacionResponseRetenidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE11PreparacionResponseNotasItemTotalMax = 13;
+
+
+export const getE11PreparacionResponseNotasItemTotalRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE11PreparacionResponseNotasItemSaldoMax = 13;
+
+
+export const getE11PreparacionResponseNotasItemSaldoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const GetE11PreparacionResponse = zod.object({
+  "cobroId": zod.string().uuid(),
+  "clienteId": zod.number().int(),
+  "revision": zod.number().int(),
+  "fuenteRevision": zod.string(),
+  "retenido": zod.string().max(getE11PreparacionResponseRetenidoMax).regex(getE11PreparacionResponseRetenidoRegExp),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int().describe('Identidad exacta del cargo E5'),
+  "folio": zod.string(),
+  "clienteId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "facturada": zod.boolean(),
+  "total": zod.string().max(getE11PreparacionResponseNotasItemTotalMax).regex(getE11PreparacionResponseNotasItemTotalRegExp),
+  "saldo": zod.string().max(getE11PreparacionResponseNotasItemSaldoMax).regex(getE11PreparacionResponseNotasItemSaldoRegExp)
+})),
+  "propuestaId": zod.string().uuid().nullable()
+})
+
+
+export const PrepareE11AplicacionParams = zod.object({
+  "cobroId": zod.coerce.string().uuid()
+})
+
+export const prepareE11AplicacionBodyPerfilVersionMin = 0;
+
+
+
+
+
+export const prepareE11AplicacionBodyAsignacionesItemImporteMax = 13;
+
+
+export const prepareE11AplicacionBodyAsignacionesItemImporteRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+
+export const PrepareE11AplicacionBody = zod.object({
+  "uuid": zod.string().uuid(),
+  "perfilVersion": zod.number().int().min(prepareE11AplicacionBodyPerfilVersionMin),
+  "revisionEsperada": zod.number().int().min(1),
+  "fuenteRevision": zod.string().min(1),
+  "asignaciones": zod.array(zod.object({
+  "notaId": zod.number().int().min(1),
+  "movimientoVentaId": zod.number().int().min(1).describe('Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket'),
+  "importe": zod.string().max(prepareE11AplicacionBodyAsignacionesItemImporteMax).regex(prepareE11AplicacionBodyAsignacionesItemImporteRegExp)
+})).min(1)
+})
+
+export const prepareE11AplicacionResponseRetenidoMax = 13;
+
+
+export const prepareE11AplicacionResponseRetenidoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const prepareE11AplicacionResponseNotasItemTotalMax = 13;
+
+
+export const prepareE11AplicacionResponseNotasItemTotalRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const prepareE11AplicacionResponseNotasItemSaldoMax = 13;
+
+
+export const prepareE11AplicacionResponseNotasItemSaldoRegExp = new RegExp('^(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const PrepareE11AplicacionResponse = zod.object({
+  "cobroId": zod.string().uuid(),
+  "clienteId": zod.number().int(),
+  "revision": zod.number().int(),
+  "fuenteRevision": zod.string(),
+  "retenido": zod.string().max(prepareE11AplicacionResponseRetenidoMax).regex(prepareE11AplicacionResponseRetenidoRegExp),
+  "notas": zod.array(zod.object({
+  "notaId": zod.number().int(),
+  "movimientoVentaId": zod.number().int().describe('Identidad exacta del cargo E5'),
+  "folio": zod.string(),
+  "clienteId": zod.number().int(),
+  "fecha": zod.coerce.date(),
+  "facturada": zod.boolean(),
+  "total": zod.string().max(prepareE11AplicacionResponseNotasItemTotalMax).regex(prepareE11AplicacionResponseNotasItemTotalRegExp),
+  "saldo": zod.string().max(prepareE11AplicacionResponseNotasItemSaldoMax).regex(prepareE11AplicacionResponseNotasItemSaldoRegExp)
+})),
+  "propuestaId": zod.string().uuid().nullable()
+})
+
+
 
 
 

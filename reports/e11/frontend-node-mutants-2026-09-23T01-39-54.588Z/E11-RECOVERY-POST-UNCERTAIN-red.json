@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E11-RECOVERY-POST-UNCERTAIN",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E11-RECOVERY-POST-UNCERTAIN\n+ actual - expected\n\n+ undefined\n- {\n-   identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',\n-   motivo: 'Evidencia documental revisada',\n-   revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',\n-   uuid: 'c7b1ebc7-a4e5-4a50-bc90-88600a14f4a6'\n- }\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E11-RECOVERY-POST-UNCERTAIN\n+ actual - expected\n\n+ undefined\n- {\n-   identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',\n-   motivo: 'Evidencia documental revisada',\n-   revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',\n-   uuid: 'c7b1ebc7-a4e5-4a50-bc90-88600a14f4a6'\n- }\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2440.050342"
+  ]
+}

@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: E11-POSTCOMMIT-PROFILE-PRIVACY-UUID
+not ok 1 - E11-POSTCOMMIT-PROFILE-PRIVACY-UUID
+  ---
+  duration_ms: 308.531208
+  type: 'test'
+  location: '/tmp/e11-node-m0yxCb/E11-POSTCOMMIT-PROFILE-PRIVACY-UUID-red/artifacts/mariana-textil/case.test.cjs:71249:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-POSTCOMMIT-PROFILE-PRIVACY-UUID
+    + actual - expected
+    
+    + undefined
+    - {
+    -   accion: 'PREPARACION',
+    -   actorId: 7,
+    -   state: 'QUARANTINE',
+    -   uuidOriginal: 'de5e7ea1-5a5b-47d7-90a4-de59ff3d74be'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    actorId: 7
+    accion: 'PREPARACION'
+    uuidOriginal: 'de5e7ea1-5a5b-47d7-90a4-de59ff3d74be'
+    state: 'QUARANTINE'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e11-node-m0yxCb/E11-POSTCOMMIT-PROFILE-PRIVACY-UUID-red/artifacts/mariana-textil/case.test.cjs:71261:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2602.587799

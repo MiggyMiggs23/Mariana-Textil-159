@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: E11-A-NOT-F
+ok 1 - E11-A-NOT-F
+  ---
+  duration_ms: 90.949738
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3363.976527

@@ -1,0 +1,43 @@
+TAP version 13
+# Subtest: E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY
+not ok 1 - E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY
+  ---
+  duration_ms: 11.223216
+  type: 'test'
+  location: '/tmp/e11-native-tLELqD/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red/test.mjs:38844:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Got unwanted rejection.
+    Actual message: "Acción no autorizada."
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    status: 403
+  error: 'Acción no autorizada.'
+  code: 'E5_FORBIDDEN'
+  stack: |-
+    e5Command (file:///tmp/e11-native-tLELqD/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red/test.mjs:36750:11)
+    file:///tmp/e11-native-tLELqD/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red/test.mjs:37686:11
+    e11Replay (file:///tmp/e11-native-tLELqD/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red/test.mjs:37363:24)
+    async file:///tmp/e11-native-tLELqD/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red/test.mjs:38911:14
+    async waitForActual (node:assert:646:5)
+    async strict.doesNotReject (node:assert:789:33)
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red/test.mjs:38910:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'doesNotReject'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-A-PREPARES-REAL-E5-PROPOSAL-ONLY-red/test.mjs:38910:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 113.12539
+

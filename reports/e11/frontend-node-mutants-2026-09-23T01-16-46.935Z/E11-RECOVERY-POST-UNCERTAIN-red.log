@@ -1,0 +1,43 @@
+TAP version 13
+Encountered two children with the same key, `[7,"ADMIN",null,3,"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",["FISCAL_LEER"]]`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+# Subtest: E11-RECOVERY-POST-UNCERTAIN
+not ok 1 - E11-RECOVERY-POST-UNCERTAIN
+  ---
+  duration_ms: 233.398528
+  type: 'test'
+  location: '/tmp/e11-node-4nCvXd/E11-RECOVERY-POST-UNCERTAIN-red/artifacts/mariana-textil/case.test.cjs:71965:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-RECOVERY-POST-UNCERTAIN
+    + actual - expected
+    
+    + undefined
+    - {
+    -   identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+    -   motivo: 'Evidencia documental revisada',
+    -   revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
+    -   uuid: '6e79228c-3eca-4331-b4cd-46e5af0d2da6'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    uuid: '6e79228c-3eca-4331-b4cd-46e5af0d2da6'
+    revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+    motivo: 'Evidencia documental revisada'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e11-node-4nCvXd/E11-RECOVERY-POST-UNCERTAIN-red/artifacts/mariana-textil/case.test.cjs:71970:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2537.41829

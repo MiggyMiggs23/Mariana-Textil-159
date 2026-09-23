@@ -15,6 +15,7 @@ import { formatNumber } from "@workspace/number-format";
 import { Link } from "wouter";
 import { ClienteNotaEstadoBadge, type EstadoNota } from "@/components/cliente-nota-estado-badge";
 import { formatDateOnlyMx } from "@/lib/date-only";
+import { E11AdminNotices, E11SnapshotNoticeLink } from "@/pages/e11";
 
 export default function Notificaciones() {
   const queryClient = useQueryClient();
@@ -32,6 +33,7 @@ export default function Notificaciones() {
 
   return <AppLayout>
     <div className="mx-auto max-w-6xl space-y-6">
+      <E11AdminNotices />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div><h1 className="text-2xl font-bold text-sidebar">Notificaciones</h1><p className="text-sm text-muted-foreground">Avisos operativos, ventas a crédito y alertas calculadas con el saldo actual.</p></div>
         <div className="flex gap-2"><Button variant="outline" onClick={() => notifications.refetch()}><RefreshCw className="mr-2 h-4 w-4" />Actualizar</Button><Button onClick={() => markAll.mutate()} disabled={markAll.isPending || !data || ![...data.sistema, ...data.notificaciones].some((item) => !item.leidaAt)}><Check className="mr-2 h-4 w-4" />Marcar guardadas como leídas</Button></div>
@@ -42,7 +44,7 @@ export default function Notificaciones() {
         {!data?.sistema.length ? <Card><CardContent className="p-6 text-muted-foreground">No hay avisos operativos.</CardContent></Card> : data.sistema.map((item) =>
           <Card key={item.id} className={item.leidaAt ? "opacity-70" : "border-amber-300 bg-amber-50/40"}>
             <CardContent className="flex flex-wrap items-center justify-between gap-4 p-4">
-              <div className="space-y-1"><p className="font-semibold">{item.titulo}</p><p className="text-sm text-muted-foreground">{item.mensaje}</p>{item.entidad === "solicitudes_pago_dirigido" ? <Link href="/pagos-dirigidos" className="text-sm font-medium text-primary hover:underline">Ver pagos dirigidos</Link> : null}<p className="text-xs text-muted-foreground">{new Date(item.createdAt).toLocaleString("es-MX")}</p></div>
+              <div className="space-y-1"><p className="font-semibold">{item.titulo}</p><p className="text-sm text-muted-foreground">{item.mensaje}</p>{item.entidad === "solicitudes_pago_dirigido" ? <Link href="/pagos-dirigidos" className="text-sm font-medium text-primary hover:underline">Ver pagos dirigidos</Link> : null}<E11SnapshotNoticeLink entity={item.entidad} id={item.entidadId} /><p className="text-xs text-muted-foreground">{new Date(item.createdAt).toLocaleString("es-MX")}</p></div>
               {!item.leidaAt ? <Button size="sm" variant="outline" onClick={() => markOne.mutate({ tipo: "sistema", id: item.id })}><Check className="mr-1 h-4 w-4" />Leída</Button> : <span className="text-sm text-muted-foreground">Leída</span>}
             </CardContent>
           </Card>,

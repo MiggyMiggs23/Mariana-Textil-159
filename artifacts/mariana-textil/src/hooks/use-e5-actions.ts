@@ -9,6 +9,7 @@ import {
   type E5RechazarInput, type E5DevolverInput, type E5Cobro,
 } from "@workspace/api-client-react";
 import { E5_ENABLED } from "@/lib/e5-feature-flags";
+import { useE11Session } from "@/lib/e11-session";
 import { e5AuthorizationContext, e5CanRead, e5CanReceive, e5CanPrepare, assertE5Context, assertE5Detail } from "@/lib/e5-authorization";
 
 export type E5Command =
@@ -94,6 +95,7 @@ export function useE5Identity() {
 }
 
 export function useE5Actions(scope: string, target: Target) {
+  const e11 = useE11Session();
   const queryClient = useQueryClient();
   const user = useGetCurrentUser();
   const receive = useCreateE5Cobro();
@@ -141,8 +143,9 @@ export function useE5Actions(scope: string, target: Target) {
     try {
       assertCommandScope(command, scope);
       const actor = await user.refetch();
+      const e11Identity = e11 ? await e11.check() : undefined;
       if (actor.error || !actor.data || String(actor.data.id) !== scope.split(":")[0]
-        || e5AuthorizationContext(actor.data) !== scope.split(":")[2]) throw new Error("Cambió la identidad, rol o permisos. La intención incierta se conserva para consulta; no se reenviará dinero.");
+        || e5AuthorizationContext(actor.data, e11Identity) !== scope.split(":")[2]) throw new Error("Cambió la identidad, rol o permisos. La intención incierta se conserva para consulta; no se reenviará dinero.");
       const adminAction = ["autorizar", "rechazar", "devolver"].includes(command.kind)
         || (command.kind === "recibir" && !!command.data.aplicarAhora)
         || (command.kind === "preparar" && !!command.data.importeFavorPropuesto);
@@ -182,8 +185,9 @@ export function useE5Actions(scope: string, target: Target) {
       if (!alive.current) return;
       if (additionalReview) await additionalReview();
       const lastActor = await user.refetch();
+      const lastE11Identity = e11 ? await e11.check() : undefined;
       if (lastActor.error || !lastActor.data || lastActor.data.id !== actor.data.id
-        || e5AuthorizationContext(lastActor.data) !== scope.split(":")[2])
+        || e5AuthorizationContext(lastActor.data, lastE11Identity) !== scope.split(":")[2])
         throw new Error("Autorización cambió durante la comprobación. No se envía; conserva la intención para consulta.");
       if (!alive.current) return;
       // Must persist before sending; a reload cannot silently create another collection.

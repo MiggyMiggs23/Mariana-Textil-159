@@ -5,11 +5,512 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export interface E11Disponibilidad {
+  enabled: boolean;
+  perfiles: boolean;
+  conciliacion: boolean;
+  preparacionE5: boolean;
+}
+
+/**
+ * @nullable
+ */
+export type E11IdentidadPerfil = typeof E11IdentidadPerfil[keyof typeof E11IdentidadPerfil] | null;
+
+
+export const E11IdentidadPerfil = {
+  F: 'F',
+  A: 'A',
+} as const;
+
+export type E11IdentidadCapacidadesItem = typeof E11IdentidadCapacidadesItem[keyof typeof E11IdentidadCapacidadesItem];
+
+
+export const E11IdentidadCapacidadesItem = {
+  FISCAL_LEER: 'FISCAL_LEER',
+  FISCAL_CONCILIAR: 'FISCAL_CONCILIAR',
+  FINANZAS_LIMITADAS_LEER: 'FINANZAS_LIMITADAS_LEER',
+  E5_PREPARAR: 'E5_PREPARAR',
+  PERFILES_ADMINISTRAR: 'PERFILES_ADMINISTRAR',
+} as const;
+
+export interface E11Identidad {
+  usuarioId: number;
+  /** Rol existente sin roles técnicos CONTADOR_A o CONTADOR_F */
+  rolBase: string;
+  /** @nullable */
+  perfil: E11IdentidadPerfil;
+  /** @minimum 0 */
+  perfilVersion: number;
+  permisosVersion: string;
+  capacidades: E11IdentidadCapacidadesItem[];
+}
+
+export type E11PerfilInputPerfil = typeof E11PerfilInputPerfil[keyof typeof E11PerfilInputPerfil];
+
+
+export const E11PerfilInputPerfil = {
+  A: 'A',
+  F: 'F',
+} as const;
+
+export interface E11PerfilInput {
+  uuid: string;
+  /** @minimum 0 */
+  revisionEsperada: number;
+  perfil: E11PerfilInputPerfil;
+  /**
+     * @minLength 1
+     * @maxLength 1000
+     */
+  motivo: string;
+}
+
+/**
+ * @nullable
+ */
+export type E11PerfilEventoAnterior = typeof E11PerfilEventoAnterior[keyof typeof E11PerfilEventoAnterior] | null;
+
+
+export const E11PerfilEventoAnterior = {
+  A: 'A',
+  F: 'F',
+} as const;
+
+/**
+ * @nullable
+ */
+export type E11PerfilEventoPosterior = typeof E11PerfilEventoPosterior[keyof typeof E11PerfilEventoPosterior] | null;
+
+
+export const E11PerfilEventoPosterior = {
+  A: 'A',
+  F: 'F',
+} as const;
+
+export interface E11PerfilEvento {
+  id: string;
+  uuid: string;
+  usuarioId: number;
+  actorId: number;
+  /** @nullable */
+  anterior: E11PerfilEventoAnterior;
+  /** @nullable */
+  posterior: E11PerfilEventoPosterior;
+  revision: number;
+  motivo: string;
+  creadoEn: string;
+}
+
+export interface E11PerfilHistorial {
+  items: E11PerfilEvento[];
+  /** @nullable */
+  nextCursor: string | null;
+}
+
+export interface E11FiscalCliente {
+  clienteId: number;
+  nombre: string;
+}
+
+export interface E11FiscalClientes {
+  items: E11FiscalCliente[];
+  /** @nullable */
+  nextCursor: string | null;
+  fuenteRevision: string;
+}
+
+export type E11FiscalVentaMoneda = typeof E11FiscalVentaMoneda[keyof typeof E11FiscalVentaMoneda];
+
+
+export const E11FiscalVentaMoneda = {
+  MXN: 'MXN',
+} as const;
+
+export type E11FiscalVentaEstado = typeof E11FiscalVentaEstado[keyof typeof E11FiscalVentaEstado];
+
+
+export const E11FiscalVentaEstado = {
+  VIGENTE: 'VIGENTE',
+  CANCELADA: 'CANCELADA',
+} as const;
+
 /**
  * @maxLength 13
  * @pattern ^(0|[1-9][0-9]*)\.[0-9]{2}$
  */
 export type E5Money = string;
+
+/**
+ * Documento interno facturado (tickets.facturado), no CFDI inventado. facturaId y ventaId identifican ticket; folioFactura es su folio interno; fechaFacturacion es fecha canónica del documento contabilizado, no fecha de timbrado. No afirma integración fiscal externa.
+ */
+export interface E11FiscalVenta {
+  facturaId: number;
+  ventaId: number;
+  folioFactura: string;
+  cliente: E11FiscalCliente;
+  fechaFacturacion: string;
+  totalFacturado: E5Money;
+  moneda: E11FiscalVentaMoneda;
+  estado: E11FiscalVentaEstado;
+}
+
+export interface E11FiscalVentas {
+  items: E11FiscalVenta[];
+  /** @nullable */
+  nextCursor: string | null;
+  fuenteRevision: string;
+  totalFacturado: E5Money;
+}
+
+export interface E11FinanzasCliente {
+  clienteId: number;
+  nombre: string;
+  /**
+     * Solo teléfono o correo; nunca notas libres o domicilio
+     * @nullable
+     */
+  contacto: string | null;
+  limiteCredito: E5Money;
+  /** @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$ */
+  saldo: string;
+}
+
+export interface E11FinanzasClientes {
+  items: E11FinanzasCliente[];
+  /** @nullable */
+  nextCursor: string | null;
+  fuenteRevision: string;
+}
+
+export interface E11FinanzasNota {
+  notaId: number;
+  /** Identidad exacta del cargo E5 */
+  movimientoVentaId: number;
+  folio: string;
+  clienteId: number;
+  fecha: string;
+  facturada: boolean;
+  total: E5Money;
+  saldo: E5Money;
+}
+
+export interface E11FinanzasNotas {
+  items: E11FinanzasNota[];
+  /** @nullable */
+  nextCursor: string | null;
+  fuenteRevision: string;
+}
+
+export type E11MovimientoTipo = typeof E11MovimientoTipo[keyof typeof E11MovimientoTipo];
+
+
+export const E11MovimientoTipo = {
+  VENTA: 'VENTA',
+  ABONO: 'ABONO',
+  REVERSO: 'REVERSO',
+  AJUSTE: 'AJUSTE',
+} as const;
+
+/**
+ * Calendar day in YYYY-MM-DD; never coerced to an instant.
+ * @pattern ^(?:(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8])))|(?:(?:\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$
+ */
+export type CalendarDate = string;
+
+export interface E11Movimiento {
+  id: number;
+  tipo: E11MovimientoTipo;
+  fechaEfectiva: CalendarDate;
+  /** @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$ */
+  importe: string;
+  /** @nullable */
+  notaId: number | null;
+}
+
+export interface E11EstadoCuenta {
+  cliente: E11FinanzasCliente;
+  items: E11Movimiento[];
+  /** @nullable */
+  nextCursor: string | null;
+  fuenteRevision: string;
+}
+
+export type E11PeriodoTipo = typeof E11PeriodoTipo[keyof typeof E11PeriodoTipo];
+
+
+export const E11PeriodoTipo = {
+  DIA: 'DIA',
+  SEMANA: 'SEMANA',
+  MES: 'MES',
+} as const;
+
+export type E11PeriodoZona = typeof E11PeriodoZona[keyof typeof E11PeriodoZona];
+
+
+export const E11PeriodoZona = {
+  'America/Mexico_City': 'America/Mexico_City',
+} as const;
+
+export type E11PeriodoEstado = typeof E11PeriodoEstado[keyof typeof E11PeriodoEstado];
+
+
+export const E11PeriodoEstado = {
+  ABIERTO: 'ABIERTO',
+  PENDIENTE: 'PENDIENTE',
+  CONGELADO: 'CONGELADO',
+  ACEPTADA: 'ACEPTADA',
+  NO_CUADRA: 'NO_CUADRA',
+  REQUIERE_REVISION: 'REQUIERE_REVISION',
+} as const;
+
+export interface E11Periodo {
+  tipo: E11PeriodoTipo;
+  inicio: CalendarDate;
+  finExclusivo: CalendarDate;
+  zona: E11PeriodoZona;
+  /** SEMANA y MES true; DIA false */
+  obligatorio: boolean;
+  estado: E11PeriodoEstado;
+  /** @nullable */
+  ultimaConciliacionId: string | null;
+}
+
+export interface E11Periodos {
+  items: E11Periodo[];
+  /** @nullable */
+  nextCursor: string | null;
+}
+
+export type E11SnapshotInputTipo = typeof E11SnapshotInputTipo[keyof typeof E11SnapshotInputTipo];
+
+
+export const E11SnapshotInputTipo = {
+  DIA: 'DIA',
+  SEMANA: 'SEMANA',
+  MES: 'MES',
+} as const;
+
+export interface E11SnapshotInput {
+  uuid: string;
+  /** @minimum 0 */
+  perfilVersion: number;
+  tipo: E11SnapshotInputTipo;
+  inicio: CalendarDate;
+  /** @minLength 1 */
+  fuenteRevision: string;
+  /** @nullable */
+  revisionAnteriorId: string | null;
+}
+
+export type E11DecisionInputResultado = typeof E11DecisionInputResultado[keyof typeof E11DecisionInputResultado];
+
+
+export const E11DecisionInputResultado = {
+  ACEPTADA: 'ACEPTADA',
+  NO_CUADRA: 'NO_CUADRA',
+} as const;
+
+export interface E11DecisionInput {
+  uuid: string;
+  /** @minimum 0 */
+  perfilVersion: number;
+  /** @minimum 1 */
+  revisionEsperada: number;
+  /** @minLength 1 */
+  fuenteRevision: string;
+  resultado: E11DecisionInputResultado;
+  totalExterno: E5Money;
+  /**
+     * @minLength 1
+     * @maxLength 250
+     */
+  referenciaExterna: string;
+  /**
+     * Obligatoria no vacía para NO_CUADRA; no incluir datos sensibles
+     * @maxLength 1000
+     */
+  observacion: string;
+}
+
+export type E11DecisionResultado = typeof E11DecisionResultado[keyof typeof E11DecisionResultado];
+
+
+export const E11DecisionResultado = {
+  ACEPTADA: 'ACEPTADA',
+  NO_CUADRA: 'NO_CUADRA',
+} as const;
+
+export interface E11Decision {
+  id: string;
+  uuid: string;
+  actorId: number;
+  creadoEn: string;
+  resultado: E11DecisionResultado;
+  totalExterno: E5Money;
+  referenciaExterna: string;
+  observacion: string;
+  /** @nullable */
+  avisoAdminId: string | null;
+}
+
+export interface E11Conciliacion {
+  id: string;
+  uuid: string;
+  periodo: E11Periodo;
+  revision: number;
+  /** @nullable */
+  anteriorId: string | null;
+  fuenteRevision: string;
+  vigente: boolean;
+  congeladoEn: string;
+  actorId: number;
+  totalFacturado: E5Money;
+  cantidadVentas: number;
+  /** @pattern ^[a-f0-9]{64}$ */
+  evidenciaHash: string;
+  decisiones: E11Decision[];
+}
+
+export interface E5Asignacion {
+  /** @minimum 1 */
+  notaId: number;
+  /**
+     * Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket
+     * @minimum 1
+     */
+  movimientoVentaId: number;
+  importe: E5Money;
+}
+
+export interface E11PreparacionInput {
+  uuid: string;
+  /** @minimum 0 */
+  perfilVersion: number;
+  /** @minimum 1 */
+  revisionEsperada: number;
+  /** @minLength 1 */
+  fuenteRevision: string;
+  /** @minItems 1 */
+  asignaciones: E5Asignacion[];
+}
+
+export interface E11Preparacion {
+  cobroId: string;
+  clienteId: number;
+  revision: number;
+  fuenteRevision: string;
+  retenido: E5Money;
+  notas: E11FinanzasNota[];
+  /** @nullable */
+  propuestaId: string | null;
+}
+
+export interface E11Preparaciones {
+  items: E11Preparacion[];
+  /** @nullable */
+  nextCursor: string | null;
+}
+
+export type E11OperacionAccion = typeof E11OperacionAccion[keyof typeof E11OperacionAccion];
+
+
+export const E11OperacionAccion = {
+  PERFIL: 'PERFIL',
+  SNAPSHOT: 'SNAPSHOT',
+  DECISION: 'DECISION',
+  PREPARACION: 'PREPARACION',
+} as const;
+
+export interface ResolveE11OperacionBody {
+  uuid: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  revisionEsperada: string;
+  /** @pattern ^[a-f0-9]{64}$ */
+  identidadVersion: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+}
+
+export type E11OperacionRecuperacionEstado = typeof E11OperacionRecuperacionEstado[keyof typeof E11OperacionRecuperacionEstado];
+
+
+export const E11OperacionRecuperacionEstado = {
+  PENDIENTE: 'PENDIENTE',
+  CONFIRMADA: 'CONFIRMADA',
+  CERRADA_SIN_EFECTO: 'CERRADA_SIN_EFECTO',
+} as const;
+
+export interface E11OperacionRecuperacion {
+  /**
+     * @minimum 1
+     * @maximum 2147483647
+     */
+  actorId: number;
+  accion: E11OperacionAccion;
+  uuidOriginal: string;
+  estado: E11OperacionRecuperacionEstado;
+  /** @pattern ^[a-f0-9]{64}$ */
+  revision: string;
+  /** @nullable */
+  resolucionId: string | null;
+  /** @nullable */
+  resueltoEn: string | null;
+}
+
+export type E11OrdinaryErrorCode = typeof E11OrdinaryErrorCode[keyof typeof E11OrdinaryErrorCode];
+
+
+export const E11OrdinaryErrorCode = {
+  VALIDACION: 'VALIDACION',
+  NO_AUTENTICADO: 'NO_AUTENTICADO',
+  E11_DISABLED: 'E11_DISABLED',
+  PERFIL_DENEGADO: 'PERFIL_DENEGADO',
+  PERMISO_DENEGADO: 'PERMISO_DENEGADO',
+  ADMIN_REQUERIDO: 'ADMIN_REQUERIDO',
+  E5_DISABLED: 'E5_DISABLED',
+  NO_ENCONTRADO: 'NO_ENCONTRADO',
+  UUID_REUTILIZADO: 'UUID_REUTILIZADO',
+  REVISION_OBSOLETA: 'REVISION_OBSOLETA',
+  PERFIL_CAMBIADO: 'PERFIL_CAMBIADO',
+  FUENTE_CAMBIADA: 'FUENTE_CAMBIADA',
+  PERIODO_ABIERTO: 'PERIODO_ABIERTO',
+  ESTADO_INVALIDO: 'ESTADO_INVALIDO',
+  NOTA_SIN_SALDO: 'NOTA_SIN_SALDO',
+  IMPORTE_NO_COINCIDE: 'IMPORTE_NO_COINCIDE',
+  USUARIO_NO_CONTADOR: 'USUARIO_NO_CONTADOR',
+  DEPENDENCIA_NO_DISPONIBLE: 'DEPENDENCIA_NO_DISPONIBLE',
+  OPERACION_CERRADA_SIN_EFECTO: 'OPERACION_CERRADA_SIN_EFECTO',
+} as const;
+
+export interface E11OrdinaryError {
+  code: E11OrdinaryErrorCode;
+  message: string;
+  requestId: string;
+}
+
+export type E11OutcomeErrorCode = typeof E11OutcomeErrorCode[keyof typeof E11OutcomeErrorCode];
+
+
+export const E11OutcomeErrorCode = {
+  RESULTADO_CONFIRMADO_NO_CONSULTABLE: 'RESULTADO_CONFIRMADO_NO_CONSULTABLE',
+  RESULTADO_INCIERTO: 'RESULTADO_INCIERTO',
+} as const;
+
+/**
+ * No demuestra ausencia de efectos; conservar UUID e intención sin exponer el resultado privado.
+ */
+export interface E11OutcomeError {
+  code: E11OutcomeErrorCode;
+  message: string;
+  requestId: string;
+  uuid: string;
+}
+
+export type E11Error = E11OrdinaryError | E11OutcomeError;
 
 export type E5Estado = typeof E5Estado[keyof typeof E5Estado];
 
@@ -40,17 +541,6 @@ export interface E5Evidencia {
   referencias: string[];
 }
 
-export interface E5Asignacion {
-  /** @minimum 1 */
-  notaId: number;
-  /**
-     * Movimiento exacto aprobado; notaId por sí solo no distingue cargos del mismo ticket
-     * @minimum 1
-     */
-  movimientoVentaId: number;
-  importe: E5Money;
-}
-
 export interface E5Nota {
   notaId: number;
   movimientoVentaId: number;
@@ -77,12 +567,6 @@ export interface E5Disponibilidad {
   enabled: boolean;
   capacidades: E5Capacidades;
 }
-
-/**
- * Calendar day in YYYY-MM-DD; never coerced to an instant.
- * @pattern ^(?:(?:\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|02-(?:0[1-9]|1\d|2[0-8])))|(?:(?:\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$
- */
-export type CalendarDate = string;
 
 export interface E5Sesion {
   id: number;
@@ -8956,6 +9440,11 @@ export interface AuditoriaInventarioEscaneoResult {
 export type E5ErrorResponseResponse = E5Error;
 
 /**
+ * 400 VALIDACION; 401 NO_AUTENTICADO; 403 E11_DISABLED/PERFIL_DENEGADO/PERMISO_DENEGADO/ADMIN_REQUERIDO/E5_DISABLED; 404 NO_ENCONTRADO; 409 UUID_REUTILIZADO/REVISION_OBSOLETA/PERFIL_CAMBIADO/FUENTE_CAMBIADA/PERIODO_ABIERTO/ESTADO_INVALIDO/NOTA_SIN_SALDO; 422 IMPORTE_NO_COINCIDE/USUARIO_NO_CONTADOR; 503 DEPENDENCIA_NO_DISPONIBLE. Sin fallback legacy.
+ */
+export type E11ErrorResponseResponse = E11Error;
+
+/**
  * Error E9 explícito; sin efecto financiero parcial
  */
 export type E9ErrorResponseResponse = E9Error;
@@ -8994,6 +9483,13 @@ export type ConflictResponse = Error;
  * Demasiados intentos
  */
 export type RateLimitedResponse = Error;
+
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ */
+export type E11CursorParameter = string;
+
+export type E11LimitParameter = number;
 
 export type ReportePeriodoParameter = typeof ReportePeriodoParameter[keyof typeof ReportePeriodoParameter];
 
@@ -9058,6 +9554,135 @@ export type AnalyticsDesdeParameter = string;
 export type AnalyticsHastaParameter = string;
 
 export type AnalyticsUbicacionIdParameter = number;
+
+export type ListE11PerfilHistorialParams = {
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type ListE11FiscalClientesParams = {
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type ListE11FiscalVentasParams = {
+desde: CalendarDate;
+hastaExclusivo: CalendarDate;
+/**
+ * @minimum 1
+ */
+clienteId?: number;
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type ListE11FinanzasClientesParams = {
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type ListE11FinanzasNotasParams = {
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type GetE11FinanzasEstadoCuentaParams = {
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type ListE11ConciliacionesParams = {
+desde: CalendarDate;
+hastaExclusivo: CalendarDate;
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type ListE11ConciliacionVentasParams = {
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
+
+export type ListE11PreparacionesParams = {
+/**
+ * @minimum 1
+ */
+clienteId?: number;
+/**
+ * Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+ * @maxLength 2048
+ */
+cursor?: E11CursorParameter;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: E11LimitParameter;
+};
 
 export type GetE5DisponibilidadParams = {
 /**

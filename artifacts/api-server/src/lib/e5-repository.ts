@@ -3,6 +3,9 @@ import { projectCreditLedger, type CreditLedgerMovement } from "./credit-allocat
 import { crearMovimientoFondoEnTransaccion } from "./fondo";
 import { e12FondoExecutor } from "./e12-fondo-executor";
 import { E5_ENABLED } from "./e5-feature";
+import { e11Identity, e11AssertVersion } from "./e11-repository";
+import { e11Capability } from "./e11";
+import { e11Runtime } from "./e11-runtime";
 import { E5Error, e5Scope, e5Cents, e5Decimal, e5Hash, e5Capabilities, e5View,
   type E5Repository, type E5Actor, type E5Context, type E5Cobro, type E5FuenteDevolucion, type E5Documento } from "./e5";
 
@@ -22,6 +25,13 @@ async function lockClient(tx: E5Sql, id: number) {
   await tx.execute(sql`SELECT pg_advisory_xact_lock(650006,${id}::int)`);
 }
 async function liveActor(tx: E5Sql, actor: E5Actor) {
+  if (actor.rol === "CONTADOR") {
+    const current = await e11Identity(tx, actor.id);
+    e11Capability(current, "E5_PREPARAR");
+    if (!actor.capacidadAE11 || actor.e11PerfilVersion === undefined)
+      throw new E5Error("E5_FORBIDDEN", "Falta identidad E11 explícita.", 403);
+    e11AssertVersion(current, actor.e11PerfilVersion);
+  }
   const result = await tx.execute(sql`SELECT id,rol,ubicacion_id FROM usuarios WHERE id=${actor.id} AND activo=true FOR SHARE`);
   const row = result.rows[0];
   if (!row || row.rol !== actor.rol || row.ubicacion_id !== actor.ubicacionId)
@@ -60,14 +70,14 @@ export async function e5Context(tx: E5Sql, deps: E5Dependencies, client: number,
       ubicacionId: Number(doc.ubicacion_id), fecha: charge.createdAt.toISOString(),
       saldoPendiente: e5Decimal(BigInt(charge.pendienteCents)), facturada: doc.facturado === true }] : [];
   }).sort((a, b) => a.movimientoVentaId - b.movimientoVentaId);
-  const sessions = await tx.execute(sql`SELECT s.id,s.ubicacion_id AS "ubicacionId",u.nombre AS "ubicacionNombre",
+  const sessions = actor.rol === "CONTADOR" && actor.capacidadAE11 ? { rows: [] } : await tx.execute(sql`SELECT s.id,s.ubicacion_id AS "ubicacionId",u.nombre AS "ubicacionNombre",
     s.fecha_operativa AS "fechaOperativa" FROM sesiones_caja s JOIN ubicaciones u ON u.id=s.ubicacion_id
     WHERE s.estado='ABIERTA' AND s.cerrada_at IS NULL AND s.ubicacion_id=${site} AND u.activa AND u.tipo='TIENDA' ORDER BY s.id`);
   return { clienteId: client, clienteNombre: String(identity.rows[0].nombre), ubicacionId: site,
     ubicacionNombre: String(identity.rows[0].sitio),
     versionContexto: `e5:v1:${e5Hash({ client, site, notes, ledger: ledger.map(m => ({
       id: m.id, importe: m.importe, tipo: m.tipo, fecha: m.createdAt.toISOString(), destino: m.directedMovimientoId ?? null,
-    })) })}`, consultadoAt: new Date().toISOString(),
+    })) })}`, consultadoAt: e11Runtime().now().toISOString(),
     notas: notes, sesiones: sessions.rows as unknown as E5Context["sesiones"],
     capacidades: e5Capabilities(actor), deudaGlobal: e5Decimal(BigInt(projection.balanceCents)) };
 }

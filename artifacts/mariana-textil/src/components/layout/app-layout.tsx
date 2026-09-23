@@ -41,6 +41,7 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import { NotificationAudioController } from "@/components/notification-audio-controller";
 import { getVisibleNavGroups } from "@/components/layout/app-navigation";
 import { getHomeRoute } from "@/lib/home-route";
+import { E11Navigation } from "@/pages/e11";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const [location, setLocation] = useLocation();
@@ -432,7 +433,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         )}
 
-        <main className="flex-1 p-4 md:p-8 overflow-y-auto" data-history-scroll-key="content">{children}</main>
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto" data-history-scroll-key="content"><E11Navigation />{children}</main>
       </div>
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
         <DialogContent>

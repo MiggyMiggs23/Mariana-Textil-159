@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { E11AdminNotices } from "@/pages/e11";
 import { Link } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { ProductCombobox } from "@/components/product-combobox";
@@ -67,6 +68,7 @@ export default function Conciliacion() {
   return (
     <AppLayout>
       <div className="max-w-6xl mx-auto space-y-6">
+        <E11AdminNotices />
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-sidebar">Conciliación de Kardex</h1>
           <p className="text-muted-foreground mt-1">

@@ -23,6 +23,7 @@ import { presentUser } from "../lib/presenters";
 import { buildPermissionMatrix } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
+import { e11AuthIdentity } from "../lib/e11-repository";
 import {
   getLoginLockoutReason,
   LOGIN_LOCKOUT_WINDOW_MS,
@@ -135,6 +136,17 @@ router.post("/auth/login", async (req, res): Promise<void> => {
   });
 
   const permisos = await buildPermissionMatrix(row.user.id, row.user.rol);
+  const e11 = await e11AuthIdentity(row.user.id, sessionId);
+  if (e11) {
+    if (e11.rolBase !== row.user.rol) {
+      res.status(409).json({ code: "PERFIL_CAMBIADO", message: "La identidad cambió; inicia sesión nuevamente." });
+      return;
+    }
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-E11-Perfil", e11.perfil ?? "NINGUNO");
+    res.setHeader("X-E11-Perfil-Version", String(e11.perfilVersion));
+    res.setHeader("X-E11-Permisos-Version", e11.permisosVersion);
+  }
 
   setSessionCookie(res, sessionId);
   res.json(

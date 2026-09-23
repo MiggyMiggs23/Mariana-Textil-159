@@ -1,10 +1,12 @@
-import type { CurrentUser, E5Capacidades, E5Contexto, E5Cobro } from "@workspace/api-client-react";
+import type { CurrentUser, E5Capacidades, E5Contexto, E5Cobro, E11Identidad } from "@workspace/api-client-react";
 import { hasPermission, Modules } from "@/lib/permisos";
+import { E11_ENABLED, E11_UI_ENABLED } from "@/lib/e11-feature-flags";
 
 export const E5_READ_MODULES = [Modules.CAJA_ABONOS, Modules.CLIENTES_FINANZAS];
-export function e5AuthorizationContext(user: CurrentUser): string {
+export function e5AuthorizationContext(user: CurrentUser, e11?: E11Identidad | null): string {
   return encodeURIComponent(JSON.stringify({
     role: user.rol, site: user.ubicacion?.id ?? null, alcance: user.alcanceConsulta,
+    ...(e11 ? { e11: [e11.usuarioId, e11.rolBase, e11.perfil, e11.perfilVersion, e11.permisosVersion] } : {}),
     permisos: (user.permisos ?? []).filter(p => E5_READ_MODULES.includes(p.modulo as typeof E5_READ_MODULES[number]))
       .map(p => [p.modulo, p.puedeVer, p.puedeCrear, p.puedeEditar, p.puedeAutorizar])
       .sort((a, b) => String(a[0]).localeCompare(String(b[0]))),
@@ -16,11 +18,11 @@ export function e5CanReceive(user: CurrentUser, entrada: "CAJA" | "CLIENTE") {
 }
 export function e5CanRead(user: CurrentUser, caps?: E5Capacidades) {
   if (["SISTEMAS", "BODEGA"].includes(user.rol)) return false;
-  if (user.rol === "CONTADOR") return !!caps?.preparacionADisponible && caps.puedePreparar;
+  if (user.rol === "CONTADOR") return !(E11_ENABLED && E11_UI_ENABLED) && !!caps?.preparacionADisponible && caps.puedePreparar;
   return E5_READ_MODULES.some(module => hasPermission(user, module, "ver"));
 }
 export function e5CanPrepare(user: CurrentUser, caps: E5Capacidades) {
-  return caps.puedePreparar && (user.rol === "ADMIN" || (user.rol === "CONTADOR" && caps.preparacionADisponible));
+  return caps.puedePreparar && (user.rol === "ADMIN" || (user.rol === "CONTADOR" && !(E11_ENABLED && E11_UI_ENABLED) && caps.preparacionADisponible));
 }
 export function assertE5Context(context: E5Contexto, client: number, site: number) {
   if (context.clienteId !== client || context.ubicacionId !== site) throw new Error("Contexto ajeno al cliente/sitio solicitado. Operación detenida.");

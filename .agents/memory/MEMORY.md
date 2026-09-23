@@ -81,3 +81,5 @@
 - [Entrada CLI bajo symlinks](cli-symlink-preflight.md) — exit 0 puede significar que main nunca corrió; exigir evidencia positiva del preflight.
 - [Fidelidad de catálogos reconstruidos](reconstructed-catalog-fidelity.md) — recrear triggers y enums puede perder ALWAYS o posiciones incrementales; no atribuir el rechazo a drift sin comparar.
 - [Vida de PostgreSQL desechable](disposable-postgres-process-lifetime.md) — comprobar proceso y socket entre herramientas; conservar el directorio no demuestra que el servidor siga activo.
+- [Recuperación de operaciones inciertas](uncertain-operation-recovery.md) — pérdida de acceso no prueba rollback; resolver ausencia bajo el mismo lock y bloquear solicitudes tardías.
+- [Vida de árboles aislados](isolated-test-tree-lifetime.md) — espacio libre no descarta cuotas; archivar evidencia antes de limpiar los temporales propios de cada ciclo.

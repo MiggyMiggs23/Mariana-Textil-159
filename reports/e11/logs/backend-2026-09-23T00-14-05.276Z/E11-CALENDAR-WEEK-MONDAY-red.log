@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: E11-CALENDAR-WEEK-MONDAY
+not ok 1 - E11-CALENDAR-WEEK-MONDAY
+  ---
+  duration_ms: 2.695076
+  type: 'test'
+  location: '/tmp/e11-native-m8Wn0j/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:37978:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Got unwanted exception.
+    Actual message: "El inicio no corresponde al periodo calendario."
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    status: 400
+  error: 'El inicio no corresponde al periodo calendario.'
+  code: 'VALIDACION'
+  stack: |-
+    e11Period (file:///tmp/e11-native-m8Wn0j/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:36439:11)
+    file:///tmp/e11-native-m8Wn0j/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:37981:9
+    getActual (node:assert:611:5)
+    strict.doesNotThrow (node:assert:779:32)
+    TestContext.<anonymous> (file:///tmp/e11-native-m8Wn0j/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:37980:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  operator: 'doesNotThrow'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-m8Wn0j/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:37980:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 83.389042
+

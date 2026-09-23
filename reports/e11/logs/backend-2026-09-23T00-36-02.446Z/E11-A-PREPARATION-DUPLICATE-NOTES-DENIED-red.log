@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: E11-A-PREPARATION-DUPLICATE-NOTES-DENIED
+not ok 1 - E11-A-PREPARATION-DUPLICATE-NOTES-DENIED
+  ---
+  duration_ms: 10.470609
+  type: 'test'
+  location: '/tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:38925:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The validation function is expected to return "true". Received false
+    
+    Caught error:
+    
+    Error: La identidad o alcance del actor cambió.
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function (anonymous)]
+  actual:
+    status: 403
+  error: 'La identidad o alcance del actor cambió.'
+  code: 'E5_FORBIDDEN'
+  stack: |-
+    liveActor (file:///tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:37063:11)
+    async Object.load (file:///tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:37137:7)
+    async e5Command (file:///tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:36813:22)
+    async file:///tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:37686:5
+    async e11Replay (file:///tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:37363:18)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:38933:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-A-PREPARATION-DUPLICATE-NOTES-DENIED-red/test.mjs:38933:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 106.20797
+

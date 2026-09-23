@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: E11-RECOVERY-POST-FRESH-CAS
+ok 1 - E11-RECOVERY-POST-FRESH-CAS
+  ---
+  duration_ms: 226.105525
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2508.916201

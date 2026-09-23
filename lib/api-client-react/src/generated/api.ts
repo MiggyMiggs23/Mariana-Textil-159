@@ -119,6 +119,27 @@ import type {
   CuadreFiscalResolucionInput,
   CurrentUser,
   Dashboard,
+  E11Conciliacion,
+  E11DecisionInput,
+  E11Disponibilidad,
+  E11ErrorResponseResponse,
+  E11EstadoCuenta,
+  E11FinanzasClientes,
+  E11FinanzasNotas,
+  E11FiscalClientes,
+  E11FiscalVenta,
+  E11FiscalVentas,
+  E11Identidad,
+  E11OperacionAccion,
+  E11OperacionRecuperacion,
+  E11PerfilEvento,
+  E11PerfilHistorial,
+  E11PerfilInput,
+  E11Periodos,
+  E11Preparacion,
+  E11PreparacionInput,
+  E11Preparaciones,
+  E11SnapshotInput,
   E12OpcionesPagoEfectivo,
   E12ProveedorReversoInput,
   E3CollectionContext,
@@ -211,6 +232,7 @@ import type {
   GetClientesResumenParams,
   GetConciliacionParams,
   GetDashboardParams,
+  GetE11FinanzasEstadoCuentaParams,
   GetE5ContextoParams,
   GetE5DisponibilidadParams,
   GetE9DisponibilidadParams,
@@ -249,6 +271,14 @@ import type {
   ListContenedoresParams,
   ListCuentasIncobrables200,
   ListCuentasIncobrablesParams,
+  ListE11ConciliacionVentasParams,
+  ListE11ConciliacionesParams,
+  ListE11FinanzasClientesParams,
+  ListE11FinanzasNotasParams,
+  ListE11FiscalClientesParams,
+  ListE11FiscalVentasParams,
+  ListE11PerfilHistorialParams,
+  ListE11PreparacionesParams,
   ListE5AvisosParams,
   ListE5CobrosParams,
   ListE9EntregasParams,
@@ -345,6 +375,7 @@ import type {
   ReporteQueComprarEvidencia,
   ReporteSeccion,
   ReportesCatalogos,
+  ResolveE11OperacionBody,
   ReversoSalidaExtraordinariaInput,
   RevertirMovimientoInput,
   RevisarEtiquetaRolloBody,
@@ -438,6 +469,1582 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetE11OperacionRecuperacionUrl = (actorId: number,
+    accion: E11OperacionAccion,
+    uuidOriginal: string,) => {
+
+
+
+
+  return `/api/e11/operaciones/${actorId}/${accion}/${uuidOriginal}`
+}
+
+/**
+ * Gate E11_ENABLED OFF por defecto. No devuelve payload ni IDs financieros. PENDIENTE significa ausencia observada, NO ausencia definitiva de efectos. Sólo CONFIRMADA o CERRADA_SIN_EFECTO con resolucionId no null permiten liberar cuarentena de la terna exacta actorId/accion/uuidOriginal. Un 404 o timeout nunca la libera. Sesión/identidad ADMIN se revalidan antes de entregar. No otorga mutación financiera.
+ * @summary Consultar metadata de intención exacta, sólo ADMIN real con FISCAL_LEER
+ */
+export const getE11OperacionRecuperacion = async (actorId: number,
+    accion: E11OperacionAccion,
+    uuidOriginal: string, options?: Parameters<typeof customFetch>[1]): Promise<E11OperacionRecuperacion> => {
+
+  return customFetch<E11OperacionRecuperacion>(getGetE11OperacionRecuperacionUrl(actorId,accion,uuidOriginal),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11OperacionRecuperacionQueryKey = (actorId: number,
+    accion: E11OperacionAccion,
+    uuidOriginal: string,) => {
+    return [
+    `/api/e11/operaciones/${actorId}/${accion}/${uuidOriginal}`
+    ] as const;
+    }
+
+
+export const getGetE11OperacionRecuperacionQueryOptions = <TData = Awaited<ReturnType<typeof getE11OperacionRecuperacion>>, TError = ErrorType<E11ErrorResponseResponse>>(actorId: number,
+    accion: E11OperacionAccion,
+    uuidOriginal: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11OperacionRecuperacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11OperacionRecuperacionQueryKey(actorId,accion,uuidOriginal);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11OperacionRecuperacion>>> = ({ signal }) => getE11OperacionRecuperacion(actorId,accion,uuidOriginal, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: actorId !== null && actorId !== undefined && accion !== null && accion !== undefined && uuidOriginal !== null && uuidOriginal !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11OperacionRecuperacion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11OperacionRecuperacionQueryResult = NonNullable<Awaited<ReturnType<typeof getE11OperacionRecuperacion>>>
+export type GetE11OperacionRecuperacionQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+/**
+ * @summary Consultar metadata de intención exacta, sólo ADMIN real con FISCAL_LEER
+ */
+
+export function useGetE11OperacionRecuperacion<TData = Awaited<ReturnType<typeof getE11OperacionRecuperacion>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ actorId: number,
+    accion: E11OperacionAccion,
+    uuidOriginal: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11OperacionRecuperacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11OperacionRecuperacionQueryOptions(actorId,accion,uuidOriginal,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getResolveE11OperacionUrl = (actorId: number,
+    accion: E11OperacionAccion,
+    uuidOriginal: string,) => {
+
+
+
+
+  return `/api/e11/operaciones/${actorId}/${accion}/${uuidOriginal}/resolucion`
+}
+
+/**
+ * Gate E11_ENABLED OFF. Requiere identidadVersion igual a permisosVersion de identidad ADMIN fresca y revisionEsperada de GET para la terna exacta. Si existe operación confirma metadata; si no, inserta tombstone append-only bajo el mismo lock/PK de todos los productores antes de cerrar sin efecto. Audita admin, actor original, terna, motivo, revisión e UUID resolutor. UUID del cuerpo es del resolutor, distinto conceptualmente del UUID original del path. Retry usa mismo admin/UUID/cuerpo/path y retorna resolución original. Nunca escribe en caja, cartera, aplicación, devolución ni propuestas E5. Si POST tiene outcome incierto, consultar GET de la terna original o repetir este POST exacto; nunca crear cuarentena recursiva de la resolución.
+ * @summary Resolver cuarentena sin replicar operación, sólo ADMIN real con FISCAL_LEER
+ */
+export const resolveE11Operacion = async (actorId: number,
+    accion: E11OperacionAccion,
+    uuidOriginal: string,
+    resolveE11OperacionBody: ResolveE11OperacionBody, options?: Parameters<typeof customFetch>[1]): Promise<E11OperacionRecuperacion> => {
+
+  return customFetch<E11OperacionRecuperacion>(getResolveE11OperacionUrl(actorId,accion,uuidOriginal),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(resolveE11OperacionBody)
+  }
+);}
+
+
+
+
+
+export const getResolveE11OperacionMutationOptions = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolveE11Operacion>>, TError,{actorId: number;accion: E11OperacionAccion;uuidOriginal: string;data: BodyType<ResolveE11OperacionBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof resolveE11Operacion>>, TError,{actorId: number;accion: E11OperacionAccion;uuidOriginal: string;data: BodyType<ResolveE11OperacionBody>}, TContext> => {
+
+const mutationKey = ['resolveE11Operacion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof resolveE11Operacion>>, {actorId: number;accion: E11OperacionAccion;uuidOriginal: string;data: BodyType<ResolveE11OperacionBody>}> = (props) => {
+          const {actorId,accion,uuidOriginal,data} = props ?? {};
+
+          return  resolveE11Operacion(actorId,accion,uuidOriginal,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ResolveE11OperacionMutationResult = NonNullable<Awaited<ReturnType<typeof resolveE11Operacion>>>
+    export type ResolveE11OperacionMutationBody = BodyType<ResolveE11OperacionBody>
+    export type ResolveE11OperacionMutationError = ErrorType<E11ErrorResponseResponse>
+
+    /**
+ * @summary Resolver cuarentena sin replicar operación, sólo ADMIN real con FISCAL_LEER
+ */
+export const useResolveE11Operacion = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof resolveE11Operacion>>, TError,{actorId: number;accion: E11OperacionAccion;uuidOriginal: string;data: BodyType<ResolveE11OperacionBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof resolveE11Operacion>>,
+        TError,
+        {actorId: number;accion: E11OperacionAccion;uuidOriginal: string;data: BodyType<ResolveE11OperacionBody>},
+        TContext
+      > => {
+      return useMutation(getResolveE11OperacionMutationOptions(options));
+    }
+
+export const getGetE11DisponibilidadUrl = () => {
+
+
+
+
+  return `/api/e11/disponibilidad`
+}
+
+export const getE11Disponibilidad = async ( options?: Parameters<typeof customFetch>[1]): Promise<E11Disponibilidad> => {
+
+  return customFetch<E11Disponibilidad>(getGetE11DisponibilidadUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11DisponibilidadQueryKey = () => {
+    return [
+    `/api/e11/disponibilidad`
+    ] as const;
+    }
+
+
+export const getGetE11DisponibilidadQueryOptions = <TData = Awaited<ReturnType<typeof getE11Disponibilidad>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11DisponibilidadQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11Disponibilidad>>> = ({ signal }) => getE11Disponibilidad({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11Disponibilidad>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11DisponibilidadQueryResult = NonNullable<Awaited<ReturnType<typeof getE11Disponibilidad>>>
+export type GetE11DisponibilidadQueryError = ErrorType<unknown>
+
+
+
+export function useGetE11Disponibilidad<TData = Awaited<ReturnType<typeof getE11Disponibilidad>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11DisponibilidadQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE11IdentidadUrl = () => {
+
+
+
+
+  return `/api/e11/identidad`
+}
+
+export const getE11Identidad = async ( options?: Parameters<typeof customFetch>[1]): Promise<E11Identidad> => {
+
+  return customFetch<E11Identidad>(getGetE11IdentidadUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11IdentidadQueryKey = () => {
+    return [
+    `/api/e11/identidad`
+    ] as const;
+    }
+
+
+export const getGetE11IdentidadQueryOptions = <TData = Awaited<ReturnType<typeof getE11Identidad>>, TError = ErrorType<E11ErrorResponseResponse>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Identidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11IdentidadQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11Identidad>>> = ({ signal }) => getE11Identidad({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11Identidad>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11IdentidadQueryResult = NonNullable<Awaited<ReturnType<typeof getE11Identidad>>>
+export type GetE11IdentidadQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useGetE11Identidad<TData = Awaited<ReturnType<typeof getE11Identidad>>, TError = ErrorType<E11ErrorResponseResponse>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Identidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11IdentidadQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE11PerfilUrl = (usuarioId: number,) => {
+
+
+
+
+  return `/api/e11/usuarios/${usuarioId}/perfil`
+}
+
+export const getE11Perfil = async (usuarioId: number, options?: Parameters<typeof customFetch>[1]): Promise<E11Identidad> => {
+
+  return customFetch<E11Identidad>(getGetE11PerfilUrl(usuarioId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11PerfilQueryKey = (usuarioId: number,) => {
+    return [
+    `/api/e11/usuarios/${usuarioId}/perfil`
+    ] as const;
+    }
+
+
+export const getGetE11PerfilQueryOptions = <TData = Awaited<ReturnType<typeof getE11Perfil>>, TError = ErrorType<E11ErrorResponseResponse>>(usuarioId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Perfil>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11PerfilQueryKey(usuarioId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11Perfil>>> = ({ signal }) => getE11Perfil(usuarioId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: usuarioId !== null && usuarioId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11Perfil>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11PerfilQueryResult = NonNullable<Awaited<ReturnType<typeof getE11Perfil>>>
+export type GetE11PerfilQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useGetE11Perfil<TData = Awaited<ReturnType<typeof getE11Perfil>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ usuarioId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Perfil>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11PerfilQueryOptions(usuarioId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getAssignE11PerfilUrl = (usuarioId: number,) => {
+
+
+
+
+  return `/api/e11/usuarios/${usuarioId}/perfil`
+}
+
+export const assignE11Perfil = async (usuarioId: number,
+    e11PerfilInput: E11PerfilInput, options?: Parameters<typeof customFetch>[1]): Promise<E11PerfilEvento> => {
+
+  return customFetch<E11PerfilEvento>(getAssignE11PerfilUrl(usuarioId),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e11PerfilInput)
+  }
+);}
+
+
+
+
+
+export const getAssignE11PerfilMutationOptions = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignE11Perfil>>, TError,{usuarioId: number;data: BodyType<E11PerfilInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof assignE11Perfil>>, TError,{usuarioId: number;data: BodyType<E11PerfilInput>}, TContext> => {
+
+const mutationKey = ['assignE11Perfil'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof assignE11Perfil>>, {usuarioId: number;data: BodyType<E11PerfilInput>}> = (props) => {
+          const {usuarioId,data} = props ?? {};
+
+          return  assignE11Perfil(usuarioId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AssignE11PerfilMutationResult = NonNullable<Awaited<ReturnType<typeof assignE11Perfil>>>
+    export type AssignE11PerfilMutationBody = BodyType<E11PerfilInput>
+    export type AssignE11PerfilMutationError = ErrorType<E11ErrorResponseResponse>
+
+    export const useAssignE11Perfil = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof assignE11Perfil>>, TError,{usuarioId: number;data: BodyType<E11PerfilInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof assignE11Perfil>>,
+        TError,
+        {usuarioId: number;data: BodyType<E11PerfilInput>},
+        TContext
+      > => {
+      return useMutation(getAssignE11PerfilMutationOptions(options));
+    }
+
+export const getListE11PerfilHistorialUrl = (usuarioId: number,
+    params?: ListE11PerfilHistorialParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/usuarios/${usuarioId}/perfil/historial?${stringifiedParams}` : `/api/e11/usuarios/${usuarioId}/perfil/historial`
+}
+
+export const listE11PerfilHistorial = async (usuarioId: number,
+    params?: ListE11PerfilHistorialParams, options?: Parameters<typeof customFetch>[1]): Promise<E11PerfilHistorial> => {
+
+  return customFetch<E11PerfilHistorial>(getListE11PerfilHistorialUrl(usuarioId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11PerfilHistorialQueryKey = (usuarioId: number,
+    params?: ListE11PerfilHistorialParams,) => {
+    return [
+    `/api/e11/usuarios/${usuarioId}/perfil/historial`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11PerfilHistorialQueryOptions = <TData = Awaited<ReturnType<typeof listE11PerfilHistorial>>, TError = ErrorType<E11ErrorResponseResponse>>(usuarioId: number,
+    params?: ListE11PerfilHistorialParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11PerfilHistorial>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11PerfilHistorialQueryKey(usuarioId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11PerfilHistorial>>> = ({ signal }) => listE11PerfilHistorial(usuarioId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: usuarioId !== null && usuarioId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11PerfilHistorial>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11PerfilHistorialQueryResult = NonNullable<Awaited<ReturnType<typeof listE11PerfilHistorial>>>
+export type ListE11PerfilHistorialQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11PerfilHistorial<TData = Awaited<ReturnType<typeof listE11PerfilHistorial>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ usuarioId: number,
+    params?: ListE11PerfilHistorialParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11PerfilHistorial>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11PerfilHistorialQueryOptions(usuarioId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE11FiscalClientesUrl = (params?: ListE11FiscalClientesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/fiscal/clientes?${stringifiedParams}` : `/api/e11/fiscal/clientes`
+}
+
+export const listE11FiscalClientes = async (params?: ListE11FiscalClientesParams, options?: Parameters<typeof customFetch>[1]): Promise<E11FiscalClientes> => {
+
+  return customFetch<E11FiscalClientes>(getListE11FiscalClientesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11FiscalClientesQueryKey = (params?: ListE11FiscalClientesParams,) => {
+    return [
+    `/api/e11/fiscal/clientes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11FiscalClientesQueryOptions = <TData = Awaited<ReturnType<typeof listE11FiscalClientes>>, TError = ErrorType<E11ErrorResponseResponse>>(params?: ListE11FiscalClientesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FiscalClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11FiscalClientesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11FiscalClientes>>> = ({ signal }) => listE11FiscalClientes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11FiscalClientes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11FiscalClientesQueryResult = NonNullable<Awaited<ReturnType<typeof listE11FiscalClientes>>>
+export type ListE11FiscalClientesQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11FiscalClientes<TData = Awaited<ReturnType<typeof listE11FiscalClientes>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ params?: ListE11FiscalClientesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FiscalClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11FiscalClientesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE11FiscalVentasUrl = (params: ListE11FiscalVentasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/fiscal/ventas?${stringifiedParams}` : `/api/e11/fiscal/ventas`
+}
+
+export const listE11FiscalVentas = async (params: ListE11FiscalVentasParams, options?: Parameters<typeof customFetch>[1]): Promise<E11FiscalVentas> => {
+
+  return customFetch<E11FiscalVentas>(getListE11FiscalVentasUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11FiscalVentasQueryKey = (params?: ListE11FiscalVentasParams,) => {
+    return [
+    `/api/e11/fiscal/ventas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11FiscalVentasQueryOptions = <TData = Awaited<ReturnType<typeof listE11FiscalVentas>>, TError = ErrorType<E11ErrorResponseResponse>>(params: ListE11FiscalVentasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FiscalVentas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11FiscalVentasQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11FiscalVentas>>> = ({ signal }) => listE11FiscalVentas(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11FiscalVentas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11FiscalVentasQueryResult = NonNullable<Awaited<ReturnType<typeof listE11FiscalVentas>>>
+export type ListE11FiscalVentasQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11FiscalVentas<TData = Awaited<ReturnType<typeof listE11FiscalVentas>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ params: ListE11FiscalVentasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FiscalVentas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11FiscalVentasQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE11FiscalFacturaUrl = (facturaId: number,) => {
+
+
+
+
+  return `/api/e11/fiscal/facturas/${facturaId}`
+}
+
+export const getE11FiscalFactura = async (facturaId: number, options?: Parameters<typeof customFetch>[1]): Promise<E11FiscalVenta> => {
+
+  return customFetch<E11FiscalVenta>(getGetE11FiscalFacturaUrl(facturaId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11FiscalFacturaQueryKey = (facturaId: number,) => {
+    return [
+    `/api/e11/fiscal/facturas/${facturaId}`
+    ] as const;
+    }
+
+
+export const getGetE11FiscalFacturaQueryOptions = <TData = Awaited<ReturnType<typeof getE11FiscalFactura>>, TError = ErrorType<E11ErrorResponseResponse>>(facturaId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11FiscalFactura>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11FiscalFacturaQueryKey(facturaId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11FiscalFactura>>> = ({ signal }) => getE11FiscalFactura(facturaId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: facturaId !== null && facturaId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11FiscalFactura>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11FiscalFacturaQueryResult = NonNullable<Awaited<ReturnType<typeof getE11FiscalFactura>>>
+export type GetE11FiscalFacturaQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useGetE11FiscalFactura<TData = Awaited<ReturnType<typeof getE11FiscalFactura>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ facturaId: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11FiscalFactura>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11FiscalFacturaQueryOptions(facturaId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE11FinanzasClientesUrl = (params?: ListE11FinanzasClientesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/finanzas/clientes?${stringifiedParams}` : `/api/e11/finanzas/clientes`
+}
+
+export const listE11FinanzasClientes = async (params?: ListE11FinanzasClientesParams, options?: Parameters<typeof customFetch>[1]): Promise<E11FinanzasClientes> => {
+
+  return customFetch<E11FinanzasClientes>(getListE11FinanzasClientesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11FinanzasClientesQueryKey = (params?: ListE11FinanzasClientesParams,) => {
+    return [
+    `/api/e11/finanzas/clientes`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11FinanzasClientesQueryOptions = <TData = Awaited<ReturnType<typeof listE11FinanzasClientes>>, TError = ErrorType<E11ErrorResponseResponse>>(params?: ListE11FinanzasClientesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FinanzasClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11FinanzasClientesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11FinanzasClientes>>> = ({ signal }) => listE11FinanzasClientes(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11FinanzasClientes>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11FinanzasClientesQueryResult = NonNullable<Awaited<ReturnType<typeof listE11FinanzasClientes>>>
+export type ListE11FinanzasClientesQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11FinanzasClientes<TData = Awaited<ReturnType<typeof listE11FinanzasClientes>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ params?: ListE11FinanzasClientesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FinanzasClientes>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11FinanzasClientesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE11FinanzasNotasUrl = (clienteId: number,
+    params?: ListE11FinanzasNotasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/finanzas/clientes/${clienteId}/notas?${stringifiedParams}` : `/api/e11/finanzas/clientes/${clienteId}/notas`
+}
+
+export const listE11FinanzasNotas = async (clienteId: number,
+    params?: ListE11FinanzasNotasParams, options?: Parameters<typeof customFetch>[1]): Promise<E11FinanzasNotas> => {
+
+  return customFetch<E11FinanzasNotas>(getListE11FinanzasNotasUrl(clienteId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11FinanzasNotasQueryKey = (clienteId: number,
+    params?: ListE11FinanzasNotasParams,) => {
+    return [
+    `/api/e11/finanzas/clientes/${clienteId}/notas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11FinanzasNotasQueryOptions = <TData = Awaited<ReturnType<typeof listE11FinanzasNotas>>, TError = ErrorType<E11ErrorResponseResponse>>(clienteId: number,
+    params?: ListE11FinanzasNotasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FinanzasNotas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11FinanzasNotasQueryKey(clienteId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11FinanzasNotas>>> = ({ signal }) => listE11FinanzasNotas(clienteId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clienteId !== null && clienteId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11FinanzasNotas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11FinanzasNotasQueryResult = NonNullable<Awaited<ReturnType<typeof listE11FinanzasNotas>>>
+export type ListE11FinanzasNotasQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11FinanzasNotas<TData = Awaited<ReturnType<typeof listE11FinanzasNotas>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ clienteId: number,
+    params?: ListE11FinanzasNotasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11FinanzasNotas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11FinanzasNotasQueryOptions(clienteId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE11FinanzasEstadoCuentaUrl = (clienteId: number,
+    params?: GetE11FinanzasEstadoCuentaParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/finanzas/clientes/${clienteId}/estado-cuenta?${stringifiedParams}` : `/api/e11/finanzas/clientes/${clienteId}/estado-cuenta`
+}
+
+export const getE11FinanzasEstadoCuenta = async (clienteId: number,
+    params?: GetE11FinanzasEstadoCuentaParams, options?: Parameters<typeof customFetch>[1]): Promise<E11EstadoCuenta> => {
+
+  return customFetch<E11EstadoCuenta>(getGetE11FinanzasEstadoCuentaUrl(clienteId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11FinanzasEstadoCuentaQueryKey = (clienteId: number,
+    params?: GetE11FinanzasEstadoCuentaParams,) => {
+    return [
+    `/api/e11/finanzas/clientes/${clienteId}/estado-cuenta`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetE11FinanzasEstadoCuentaQueryOptions = <TData = Awaited<ReturnType<typeof getE11FinanzasEstadoCuenta>>, TError = ErrorType<E11ErrorResponseResponse>>(clienteId: number,
+    params?: GetE11FinanzasEstadoCuentaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11FinanzasEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11FinanzasEstadoCuentaQueryKey(clienteId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11FinanzasEstadoCuenta>>> = ({ signal }) => getE11FinanzasEstadoCuenta(clienteId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clienteId !== null && clienteId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11FinanzasEstadoCuenta>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11FinanzasEstadoCuentaQueryResult = NonNullable<Awaited<ReturnType<typeof getE11FinanzasEstadoCuenta>>>
+export type GetE11FinanzasEstadoCuentaQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useGetE11FinanzasEstadoCuenta<TData = Awaited<ReturnType<typeof getE11FinanzasEstadoCuenta>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ clienteId: number,
+    params?: GetE11FinanzasEstadoCuentaParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11FinanzasEstadoCuenta>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11FinanzasEstadoCuentaQueryOptions(clienteId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE11ConciliacionesUrl = (params: ListE11ConciliacionesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/conciliaciones?${stringifiedParams}` : `/api/e11/conciliaciones`
+}
+
+export const listE11Conciliaciones = async (params: ListE11ConciliacionesParams, options?: Parameters<typeof customFetch>[1]): Promise<E11Periodos> => {
+
+  return customFetch<E11Periodos>(getListE11ConciliacionesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11ConciliacionesQueryKey = (params?: ListE11ConciliacionesParams,) => {
+    return [
+    `/api/e11/conciliaciones`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11ConciliacionesQueryOptions = <TData = Awaited<ReturnType<typeof listE11Conciliaciones>>, TError = ErrorType<E11ErrorResponseResponse>>(params: ListE11ConciliacionesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11Conciliaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11ConciliacionesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11Conciliaciones>>> = ({ signal }) => listE11Conciliaciones(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11Conciliaciones>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11ConciliacionesQueryResult = NonNullable<Awaited<ReturnType<typeof listE11Conciliaciones>>>
+export type ListE11ConciliacionesQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11Conciliaciones<TData = Awaited<ReturnType<typeof listE11Conciliaciones>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ params: ListE11ConciliacionesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11Conciliaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11ConciliacionesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateE11ConciliacionUrl = () => {
+
+
+
+
+  return `/api/e11/conciliaciones`
+}
+
+export const createE11Conciliacion = async (e11SnapshotInput: E11SnapshotInput, options?: Parameters<typeof customFetch>[1]): Promise<E11Conciliacion> => {
+
+  return customFetch<E11Conciliacion>(getCreateE11ConciliacionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e11SnapshotInput)
+  }
+);}
+
+
+
+
+
+export const getCreateE11ConciliacionMutationOptions = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE11Conciliacion>>, TError,{data: BodyType<E11SnapshotInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createE11Conciliacion>>, TError,{data: BodyType<E11SnapshotInput>}, TContext> => {
+
+const mutationKey = ['createE11Conciliacion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createE11Conciliacion>>, {data: BodyType<E11SnapshotInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createE11Conciliacion(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateE11ConciliacionMutationResult = NonNullable<Awaited<ReturnType<typeof createE11Conciliacion>>>
+    export type CreateE11ConciliacionMutationBody = BodyType<E11SnapshotInput>
+    export type CreateE11ConciliacionMutationError = ErrorType<E11ErrorResponseResponse>
+
+    export const useCreateE11Conciliacion = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createE11Conciliacion>>, TError,{data: BodyType<E11SnapshotInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createE11Conciliacion>>,
+        TError,
+        {data: BodyType<E11SnapshotInput>},
+        TContext
+      > => {
+      return useMutation(getCreateE11ConciliacionMutationOptions(options));
+    }
+
+export const getGetE11ConciliacionUrl = (id: string,) => {
+
+
+
+
+  return `/api/e11/conciliaciones/${id}`
+}
+
+export const getE11Conciliacion = async (id: string, options?: Parameters<typeof customFetch>[1]): Promise<E11Conciliacion> => {
+
+  return customFetch<E11Conciliacion>(getGetE11ConciliacionUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11ConciliacionQueryKey = (id: string,) => {
+    return [
+    `/api/e11/conciliaciones/${id}`
+    ] as const;
+    }
+
+
+export const getGetE11ConciliacionQueryOptions = <TData = Awaited<ReturnType<typeof getE11Conciliacion>>, TError = ErrorType<E11ErrorResponseResponse>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Conciliacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11ConciliacionQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11Conciliacion>>> = ({ signal }) => getE11Conciliacion(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11Conciliacion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11ConciliacionQueryResult = NonNullable<Awaited<ReturnType<typeof getE11Conciliacion>>>
+export type GetE11ConciliacionQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useGetE11Conciliacion<TData = Awaited<ReturnType<typeof getE11Conciliacion>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Conciliacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11ConciliacionQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDecideE11ConciliacionUrl = (id: string,) => {
+
+
+
+
+  return `/api/e11/conciliaciones/${id}/decisiones`
+}
+
+export const decideE11Conciliacion = async (id: string,
+    e11DecisionInput: E11DecisionInput, options?: Parameters<typeof customFetch>[1]): Promise<E11Conciliacion> => {
+
+  return customFetch<E11Conciliacion>(getDecideE11ConciliacionUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e11DecisionInput)
+  }
+);}
+
+
+
+
+
+export const getDecideE11ConciliacionMutationOptions = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof decideE11Conciliacion>>, TError,{id: string;data: BodyType<E11DecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof decideE11Conciliacion>>, TError,{id: string;data: BodyType<E11DecisionInput>}, TContext> => {
+
+const mutationKey = ['decideE11Conciliacion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof decideE11Conciliacion>>, {id: string;data: BodyType<E11DecisionInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  decideE11Conciliacion(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DecideE11ConciliacionMutationResult = NonNullable<Awaited<ReturnType<typeof decideE11Conciliacion>>>
+    export type DecideE11ConciliacionMutationBody = BodyType<E11DecisionInput>
+    export type DecideE11ConciliacionMutationError = ErrorType<E11ErrorResponseResponse>
+
+    export const useDecideE11Conciliacion = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof decideE11Conciliacion>>, TError,{id: string;data: BodyType<E11DecisionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof decideE11Conciliacion>>,
+        TError,
+        {id: string;data: BodyType<E11DecisionInput>},
+        TContext
+      > => {
+      return useMutation(getDecideE11ConciliacionMutationOptions(options));
+    }
+
+export const getListE11ConciliacionVentasUrl = (id: string,
+    params?: ListE11ConciliacionVentasParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/conciliaciones/${id}/ventas?${stringifiedParams}` : `/api/e11/conciliaciones/${id}/ventas`
+}
+
+export const listE11ConciliacionVentas = async (id: string,
+    params?: ListE11ConciliacionVentasParams, options?: Parameters<typeof customFetch>[1]): Promise<E11FiscalVentas> => {
+
+  return customFetch<E11FiscalVentas>(getListE11ConciliacionVentasUrl(id,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11ConciliacionVentasQueryKey = (id: string,
+    params?: ListE11ConciliacionVentasParams,) => {
+    return [
+    `/api/e11/conciliaciones/${id}/ventas`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11ConciliacionVentasQueryOptions = <TData = Awaited<ReturnType<typeof listE11ConciliacionVentas>>, TError = ErrorType<E11ErrorResponseResponse>>(id: string,
+    params?: ListE11ConciliacionVentasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11ConciliacionVentas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11ConciliacionVentasQueryKey(id,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11ConciliacionVentas>>> = ({ signal }) => listE11ConciliacionVentas(id,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11ConciliacionVentas>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11ConciliacionVentasQueryResult = NonNullable<Awaited<ReturnType<typeof listE11ConciliacionVentas>>>
+export type ListE11ConciliacionVentasQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11ConciliacionVentas<TData = Awaited<ReturnType<typeof listE11ConciliacionVentas>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ id: string,
+    params?: ListE11ConciliacionVentasParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11ConciliacionVentas>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11ConciliacionVentasQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListE11PreparacionesUrl = (params?: ListE11PreparacionesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e11/a/preparaciones?${stringifiedParams}` : `/api/e11/a/preparaciones`
+}
+
+export const listE11Preparaciones = async (params?: ListE11PreparacionesParams, options?: Parameters<typeof customFetch>[1]): Promise<E11Preparaciones> => {
+
+  return customFetch<E11Preparaciones>(getListE11PreparacionesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListE11PreparacionesQueryKey = (params?: ListE11PreparacionesParams,) => {
+    return [
+    `/api/e11/a/preparaciones`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListE11PreparacionesQueryOptions = <TData = Awaited<ReturnType<typeof listE11Preparaciones>>, TError = ErrorType<E11ErrorResponseResponse>>(params?: ListE11PreparacionesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11Preparaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListE11PreparacionesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listE11Preparaciones>>> = ({ signal }) => listE11Preparaciones(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listE11Preparaciones>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListE11PreparacionesQueryResult = NonNullable<Awaited<ReturnType<typeof listE11Preparaciones>>>
+export type ListE11PreparacionesQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useListE11Preparaciones<TData = Awaited<ReturnType<typeof listE11Preparaciones>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ params?: ListE11PreparacionesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listE11Preparaciones>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListE11PreparacionesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE11PreparacionUrl = (cobroId: string,) => {
+
+
+
+
+  return `/api/e11/a/preparaciones/${cobroId}`
+}
+
+export const getE11Preparacion = async (cobroId: string, options?: Parameters<typeof customFetch>[1]): Promise<E11Preparacion> => {
+
+  return customFetch<E11Preparacion>(getGetE11PreparacionUrl(cobroId),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE11PreparacionQueryKey = (cobroId: string,) => {
+    return [
+    `/api/e11/a/preparaciones/${cobroId}`
+    ] as const;
+    }
+
+
+export const getGetE11PreparacionQueryOptions = <TData = Awaited<ReturnType<typeof getE11Preparacion>>, TError = ErrorType<E11ErrorResponseResponse>>(cobroId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Preparacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE11PreparacionQueryKey(cobroId);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE11Preparacion>>> = ({ signal }) => getE11Preparacion(cobroId, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: cobroId !== null && cobroId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE11Preparacion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE11PreparacionQueryResult = NonNullable<Awaited<ReturnType<typeof getE11Preparacion>>>
+export type GetE11PreparacionQueryError = ErrorType<E11ErrorResponseResponse>
+
+
+
+export function useGetE11Preparacion<TData = Awaited<ReturnType<typeof getE11Preparacion>>, TError = ErrorType<E11ErrorResponseResponse>>(
+ cobroId: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE11Preparacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE11PreparacionQueryOptions(cobroId,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getPrepareE11AplicacionUrl = (cobroId: string,) => {
+
+
+
+
+  return `/api/e11/a/preparaciones/${cobroId}`
+}
+
+export const prepareE11Aplicacion = async (cobroId: string,
+    e11PreparacionInput: E11PreparacionInput, options?: Parameters<typeof customFetch>[1]): Promise<E11Preparacion> => {
+
+  return customFetch<E11Preparacion>(getPrepareE11AplicacionUrl(cobroId),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(e11PreparacionInput)
+  }
+);}
+
+
+
+
+
+export const getPrepareE11AplicacionMutationOptions = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof prepareE11Aplicacion>>, TError,{cobroId: string;data: BodyType<E11PreparacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof prepareE11Aplicacion>>, TError,{cobroId: string;data: BodyType<E11PreparacionInput>}, TContext> => {
+
+const mutationKey = ['prepareE11Aplicacion'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof prepareE11Aplicacion>>, {cobroId: string;data: BodyType<E11PreparacionInput>}> = (props) => {
+          const {cobroId,data} = props ?? {};
+
+          return  prepareE11Aplicacion(cobroId,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PrepareE11AplicacionMutationResult = NonNullable<Awaited<ReturnType<typeof prepareE11Aplicacion>>>
+    export type PrepareE11AplicacionMutationBody = BodyType<E11PreparacionInput>
+    export type PrepareE11AplicacionMutationError = ErrorType<E11ErrorResponseResponse>
+
+    export const usePrepareE11Aplicacion = <TError = ErrorType<E11ErrorResponseResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof prepareE11Aplicacion>>, TError,{cobroId: string;data: BodyType<E11PreparacionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof prepareE11Aplicacion>>,
+        TError,
+        {cobroId: string;data: BodyType<E11PreparacionInput>},
+        TContext
+      > => {
+      return useMutation(getPrepareE11AplicacionMutationOptions(options));
+    }
 
 export const getGetE5DisponibilidadUrl = (params: GetE5DisponibilidadParams,) => {
   const normalizedParams = new URLSearchParams();

@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E11-POSTCOMMIT-PROFILE-PRIVACY-UUID",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E11-POSTCOMMIT-PROFILE-PRIVACY-UUID\n+ actual - expected\n\n+ undefined\n- {\n-   accion: 'PREPARACION',\n-   actorId: 7,\n-   state: 'QUARANTINE',\n-   uuidOriginal: 'de5e7ea1-5a5b-47d7-90a4-de59ff3d74be'\n- }\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E11-POSTCOMMIT-PROFILE-PRIVACY-UUID\n+ actual - expected\n\n+ undefined\n- {\n-   accion: 'PREPARACION',\n-   actorId: 7,\n-   state: 'QUARANTINE',\n-   uuidOriginal: 'de5e7ea1-5a5b-47d7-90a4-de59ff3d74be'\n- }\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2602.587799"
+  ]
+}

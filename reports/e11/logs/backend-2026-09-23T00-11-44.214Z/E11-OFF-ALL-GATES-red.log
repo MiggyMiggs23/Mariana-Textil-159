@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: E11-OFF-ALL-GATES
+not ok 1 - E11-OFF-ALL-GATES
+  ---
+  duration_ms: 2.728349
+  type: 'test'
+  location: '/tmp/e11-native-T53MUK/E11-OFF-ALL-GATES-red/test.mjs:37942:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   true,
+        false,
+        false,
+        false,
+    -   false
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: false
+    1: false
+    2: false
+    3: false
+  actual:
+    0: true
+    1: false
+    2: false
+    3: false
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-T53MUK/E11-OFF-ALL-GATES-red/test.mjs:37943:11)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 99.369818
+

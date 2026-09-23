@@ -6,7 +6,16 @@ info:
 servers:
   - url: /api
     description: Base API path
+x-e11-gates:
+  E11_ENABLED: false
+  E11_UI_ENABLED: false
+  E11_PROFILE_ASSIGNMENT_ENABLED: false
+  E11_RECONCILIATION_ENABLED: false
+  E11_E5_PREPARATION_ENABLED: false
+  description: Contrato solamente; ninguna puerta activa implementación, migración o permisos.
 tags:
+  - name: e11
+    description: Contrato OFF de perfiles CONTADOR A/F, lectores dedicados y conciliación facturada
   - name: e9
     description: Contrato preparado OFF de entregas completas y recepción ADMIN
   - name: health
@@ -60,6 +69,288 @@ tags:
   - name: equipos
     description: Registro de equipo del sistema y su configuración por sitio
 paths:
+  /e11/operaciones/{actorId}/{accion}/{uuidOriginal}:
+    parameters:
+      - { name: actorId, in: path, required: true, schema: { type: integer, minimum: 1, maximum: 2147483647 } }
+      - { name: accion, in: path, required: true, schema: { $ref: "#/components/schemas/E11OperacionAccion" } }
+      - { name: uuidOriginal, in: path, required: true, schema: { type: string, format: uuid } }
+    get:
+      operationId: getE11OperacionRecuperacion
+      tags: [e11]
+      summary: Consultar metadata de intención exacta, sólo ADMIN real con FISCAL_LEER
+      description: >
+        Gate E11_ENABLED OFF por defecto. No devuelve payload ni IDs financieros.
+        PENDIENTE significa ausencia observada, NO ausencia definitiva de efectos.
+        Sólo CONFIRMADA o CERRADA_SIN_EFECTO con resolucionId no null permiten liberar cuarentena de la
+        terna exacta actorId/accion/uuidOriginal. Un 404 o timeout nunca la libera.
+        Sesión/identidad ADMIN se revalidan antes de entregar. No otorga mutación financiera.
+      responses:
+        "200":
+          description: Metadata saneada de la intención y revisión CAS
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E11OperacionRecuperacion" }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/operaciones/{actorId}/{accion}/{uuidOriginal}/resolucion:
+    parameters:
+      - { name: actorId, in: path, required: true, schema: { type: integer, minimum: 1, maximum: 2147483647 } }
+      - { name: accion, in: path, required: true, schema: { $ref: "#/components/schemas/E11OperacionAccion" } }
+      - { name: uuidOriginal, in: path, required: true, schema: { type: string, format: uuid } }
+    post:
+      operationId: resolveE11Operacion
+      tags: [e11]
+      summary: Resolver cuarentena sin replicar operación, sólo ADMIN real con FISCAL_LEER
+      description: >
+        Gate E11_ENABLED OFF. Requiere identidadVersion igual a permisosVersion
+        de identidad ADMIN fresca y revisionEsperada de GET para la terna exacta.
+        Si existe operación confirma metadata; si no, inserta tombstone append-only
+        bajo el mismo lock/PK de todos los productores antes de cerrar sin efecto.
+        Audita admin, actor original, terna, motivo, revisión e UUID resolutor.
+        UUID del cuerpo es del resolutor, distinto conceptualmente del UUID original
+        del path. Retry usa mismo admin/UUID/cuerpo/path y retorna resolución original.
+        Nunca escribe en caja, cartera, aplicación, devolución ni propuestas E5.
+        Si POST tiene outcome incierto, consultar GET de la terna original o repetir
+        este POST exacto; nunca crear cuarentena recursiva de la resolución.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ResolveE11OperacionBody" }
+      responses:
+        "200":
+          description: Resolución terminal saneada, no efecto financiero
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E11OperacionRecuperacion" }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/disponibilidad:
+    get:
+      operationId: getE11Disponibilidad
+      tags: [e11]
+      responses:
+        "200":
+          description: OFF constante, sin sesión ni consultas a tablas E11 o columnas nuevas de usuarios
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Disponibilidad" } } }
+  /e11/identidad:
+    get:
+      operationId: getE11Identidad
+      tags: [e11]
+      responses:
+        "200":
+          description: Identidad autoritativa; no cambia el rol base
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Identidad" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/usuarios/{usuarioId}/perfil:
+    parameters:
+      - { name: usuarioId, in: path, required: true, schema: { type: integer, minimum: 1 } }
+    get:
+      operationId: getE11Perfil
+      tags: [e11]
+      responses:
+        "200":
+          description: Solo ADMIN real; perfil efectivo y versión del usuario CONTADOR
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Identidad" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+    put:
+      operationId: assignE11Perfil
+      tags: [e11]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E11PerfilInput" } } }
+      responses:
+        "200":
+          description: Asignación e historial atómicos; replay no duplica
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11PerfilEvento" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/usuarios/{usuarioId}/perfil/historial:
+    get:
+      operationId: listE11PerfilHistorial
+      tags: [e11]
+      parameters:
+        - { name: usuarioId, in: path, required: true, schema: { type: integer, minimum: 1 } }
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: Solo ADMIN real, historial append-only
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11PerfilHistorial" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/fiscal/clientes:
+    get:
+      operationId: listE11FiscalClientes
+      tags: [e11]
+      parameters:
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: F o ADMIN; exclusivamente clientes con ventas facturadas, sin cartera ni crédito global
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11FiscalClientes" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/fiscal/ventas:
+    get:
+      operationId: listE11FiscalVentas
+      tags: [e11]
+      parameters:
+        - { name: desde, in: query, required: true, schema: { type: string, format: date } }
+        - { name: hastaExclusivo, in: query, required: true, schema: { type: string, format: date } }
+        - { name: clienteId, in: query, schema: { type: integer, minimum: 1 } }
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: F o ADMIN, lector fiscal global dedicado; total FACTURADO, nunca cobrado
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11FiscalVentas" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/fiscal/facturas/{facturaId}:
+    get:
+      operationId: getE11FiscalFactura
+      tags: [e11]
+      parameters:
+        - { name: facturaId, in: path, required: true, schema: { type: integer, minimum: 1 } }
+      responses:
+        "200":
+          description: Proyección saneada, no XML/PDF fiscal original con domicilio o identificación
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11FiscalVenta" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/finanzas/clientes:
+    get:
+      operationId: listE11FinanzasClientes
+      tags: [e11]
+      parameters:
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: Solo A explícito o ADMIN, consulta global limitada; no endpoints generales E7
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11FinanzasClientes" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/finanzas/clientes/{clienteId}/notas:
+    get:
+      operationId: listE11FinanzasNotas
+      tags: [e11]
+      parameters:
+        - { name: clienteId, in: path, required: true, schema: { type: integer, minimum: 1 } }
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: A o ADMIN; facturadas y no facturadas, saldos canónicos sin datos de mercancía
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11FinanzasNotas" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/finanzas/clientes/{clienteId}/estado-cuenta:
+    get:
+      operationId: getE11FinanzasEstadoCuenta
+      tags: [e11]
+      parameters:
+        - { name: clienteId, in: path, required: true, schema: { type: integer, minimum: 1 } }
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: A o ADMIN; proyección contable limitada, sin medios, cuentas, comprobantes o links legacy
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11EstadoCuenta" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/conciliaciones:
+    get:
+      operationId: listE11Conciliaciones
+      tags: [e11]
+      parameters:
+        - { name: desde, in: query, required: true, schema: { type: string, format: date } }
+        - { name: hastaExclusivo, in: query, required: true, schema: { type: string, format: date } }
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: F o ADMIN; incluye periodos obligatorios pendientes aunque aún no tengan snapshot
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Periodos" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+    post:
+      operationId: createE11Conciliacion
+      tags: [e11]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E11SnapshotInput" } } }
+      responses:
+        "200":
+          description: F; congela conjunto completo de ventas facturadas y cifras, sin dinero
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Conciliacion" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/conciliaciones/{id}:
+    get:
+      operationId: getE11Conciliacion
+      tags: [e11]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: F o ADMIN; evidencia congelada e historial de revisiones, nunca recálculo silencioso
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Conciliacion" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/conciliaciones/{id}/decisiones:
+    post:
+      operationId: decideE11Conciliacion
+      tags: [e11]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E11DecisionInput" } } }
+      responses:
+        "200":
+          description: F; ACEPTADA o NO_CUADRA, aviso ADMIN atómico en discrepancia; no operación monetaria
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Conciliacion" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/conciliaciones/{id}/ventas:
+    get:
+      operationId: listE11ConciliacionVentas
+      tags: [e11]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: F o ADMIN; renglones congelados del snapshot, nunca ventas actuales
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11FiscalVentas" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/a/preparaciones:
+    get:
+      operationId: listE11Preparaciones
+      tags: [e11]
+      parameters:
+        - { name: clienteId, in: query, schema: { type: integer, minimum: 1 } }
+        - { $ref: "#/components/parameters/E11Cursor" }
+        - { $ref: "#/components/parameters/E11Limit" }
+      responses:
+        "200":
+          description: A explícito y gates E11/E5; bandeja global de fuentes pendientes reales
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Preparaciones" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+  /e11/a/preparaciones/{cobroId}:
+    get:
+      operationId: getE11Preparacion
+      tags: [e11]
+      parameters:
+        - { name: cobroId, in: path, required: true, schema: { type: string, format: uuid } }
+      responses:
+        "200":
+          description: A explícito, E11 y E5 habilitados; fuente E5 real proyectada sin documentos sensibles
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Preparacion" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
+    post:
+      operationId: prepareE11Aplicacion
+      tags: [e11]
+      parameters:
+        - { name: cobroId, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/E11PreparacionInput" } } }
+      responses:
+        "200":
+          description: Adaptador del servicio real E5 de propuesta; no recepción ni aplicación paralela
+          content: { application/json: { schema: { $ref: "#/components/schemas/E11Preparacion" } } }
+        default: { $ref: "#/components/responses/E11ErrorResponse" }
   /e5/disponibilidad:
     get:
       operationId: getE5Disponibilidad
@@ -6828,6 +7119,15 @@ paths:
         "403": { $ref: "#/components/responses/Forbidden" }
 components:
   parameters:
+    E11Cursor:
+      name: cursor
+      in: query
+      schema: { type: string, maxLength: 2048 }
+      description: Opaco, ligado a actor/perfilVersion/filtros/snapshot; no acepta cursor de otro alcance
+    E11Limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
     PurgaEntidad:
       name: entidad
       in: path
@@ -7027,6 +7327,9 @@ components:
     E5ErrorResponse:
       description: Error E5 explícito; no inferir éxito ni dinero cero
       content: { application/json: { schema: { $ref: "#/components/schemas/E5Error" } } }
+    E11ErrorResponse:
+      description: 400 VALIDACION; 401 NO_AUTENTICADO; 403 E11_DISABLED/PERFIL_DENEGADO/PERMISO_DENEGADO/ADMIN_REQUERIDO/E5_DISABLED; 404 NO_ENCONTRADO; 409 UUID_REUTILIZADO/REVISION_OBSOLETA/PERFIL_CAMBIADO/FUENTE_CAMBIADA/PERIODO_ABIERTO/ESTADO_INVALIDO/NOTA_SIN_SALDO; 422 IMPORTE_NO_COINCIDE/USUARIO_NO_CONTADOR; 503 DEPENDENCIA_NO_DISPONIBLE. Sin fallback legacy.
+      content: { application/json: { schema: { $ref: "#/components/schemas/E11Error" } } }
     E9ErrorResponse:
       description: Error E9 explícito; sin efecto financiero parcial
       content:
@@ -7076,6 +7379,309 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    E11Disponibilidad:
+      type: object
+      additionalProperties: false
+      required: [enabled, perfiles, conciliacion, preparacionE5]
+      properties:
+        enabled: { type: boolean }
+        perfiles: { type: boolean }
+        conciliacion: { type: boolean }
+        preparacionE5: { type: boolean }
+    E11Identidad:
+      type: object
+      additionalProperties: false
+      required: [usuarioId, rolBase, perfil, perfilVersion, permisosVersion, capacidades]
+      properties:
+        usuarioId: { type: integer }
+        rolBase: { type: string, description: Rol existente sin roles técnicos CONTADOR_A o CONTADOR_F }
+        perfil: { type: [string, "null"], enum: [F, A, null] }
+        perfilVersion: { type: integer, minimum: 0 }
+        permisosVersion: { type: string }
+        capacidades:
+          type: array
+          uniqueItems: true
+          items: { type: string, enum: [FISCAL_LEER, FISCAL_CONCILIAR, FINANZAS_LIMITADAS_LEER, E5_PREPARAR, PERFILES_ADMINISTRAR] }
+    E11PerfilInput:
+      type: object
+      additionalProperties: false
+      required: [uuid, revisionEsperada, perfil, motivo]
+      properties:
+        uuid: { type: string, format: uuid }
+        revisionEsperada: { type: integer, minimum: 0 }
+        perfil: { type: string, enum: [A, F] }
+        motivo: { type: string, minLength: 1, maxLength: 1000 }
+    E11PerfilEvento:
+      type: object
+      additionalProperties: false
+      required: [id, usuarioId, actorId, anterior, posterior, revision, motivo, creadoEn, uuid]
+      properties:
+        id: { type: string, format: uuid }
+        uuid: { type: string, format: uuid }
+        usuarioId: { type: integer }
+        actorId: { type: integer }
+        anterior: { type: [string, "null"], enum: [A, F, null] }
+        posterior: { type: [string, "null"], enum: [A, F, null] }
+        revision: { type: integer }
+        motivo: { type: string }
+        creadoEn: { type: string, format: date-time }
+    E11PerfilHistorial:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/E11PerfilEvento" } }
+        nextCursor: { type: [string, "null"] }
+    E11FiscalCliente:
+      type: object
+      additionalProperties: false
+      required: [clienteId, nombre]
+      properties:
+        clienteId: { type: integer }
+        nombre: { type: string }
+    E11FiscalClientes:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor, fuenteRevision]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/E11FiscalCliente" } }
+        nextCursor: { type: [string, "null"] }
+        fuenteRevision: { type: string }
+    E11FiscalVenta:
+      type: object
+      description: Documento interno facturado (tickets.facturado), no CFDI inventado. facturaId y ventaId identifican ticket; folioFactura es su folio interno; fechaFacturacion es fecha canónica del documento contabilizado, no fecha de timbrado. No afirma integración fiscal externa.
+      additionalProperties: false
+      required: [facturaId, ventaId, folioFactura, cliente, fechaFacturacion, totalFacturado, moneda, estado]
+      properties:
+        facturaId: { type: integer }
+        ventaId: { type: integer }
+        folioFactura: { type: string }
+        cliente: { $ref: "#/components/schemas/E11FiscalCliente" }
+        fechaFacturacion: { type: string, format: date-time }
+        totalFacturado: { $ref: "#/components/schemas/E5Money" }
+        moneda: { type: string, enum: [MXN] }
+        estado: { type: string, enum: [VIGENTE, CANCELADA] }
+    E11FiscalVentas:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor, fuenteRevision, totalFacturado]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/E11FiscalVenta" } }
+        nextCursor: { type: [string, "null"] }
+        fuenteRevision: { type: string }
+        totalFacturado: { $ref: "#/components/schemas/E5Money" }
+    E11FinanzasCliente:
+      type: object
+      additionalProperties: false
+      required: [clienteId, nombre, contacto, limiteCredito, saldo]
+      properties:
+        clienteId: { type: integer }
+        nombre: { type: string }
+        contacto: { type: [string, "null"], description: Solo teléfono o correo; nunca notas libres o domicilio }
+        limiteCredito: { $ref: "#/components/schemas/E5Money" }
+        saldo: { type: string, pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$' }
+    E11FinanzasClientes:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor, fuenteRevision]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/E11FinanzasCliente" } }
+        nextCursor: { type: [string, "null"] }
+        fuenteRevision: { type: string }
+    E11FinanzasNota:
+      type: object
+      additionalProperties: false
+      required: [notaId, movimientoVentaId, folio, clienteId, fecha, facturada, total, saldo]
+      properties:
+        notaId: { type: integer }
+        movimientoVentaId: { type: integer, description: Identidad exacta del cargo E5, no deducirla del ticket }
+        folio: { type: string }
+        clienteId: { type: integer }
+        fecha: { type: string, format: date-time }
+        facturada: { type: boolean }
+        total: { $ref: "#/components/schemas/E5Money" }
+        saldo: { $ref: "#/components/schemas/E5Money" }
+    E11FinanzasNotas:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor, fuenteRevision]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/E11FinanzasNota" } }
+        nextCursor: { type: [string, "null"] }
+        fuenteRevision: { type: string }
+    E11Movimiento:
+      type: object
+      additionalProperties: false
+      required: [id, tipo, fechaEfectiva, importe, notaId]
+      properties:
+        id: { type: integer }
+        tipo: { type: string, enum: [VENTA, ABONO, REVERSO, AJUSTE] }
+        fechaEfectiva: { type: string, format: date }
+        importe: { type: string, pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$' }
+        notaId: { type: [integer, "null"] }
+    E11EstadoCuenta:
+      type: object
+      additionalProperties: false
+      required: [cliente, items, nextCursor, fuenteRevision]
+      properties:
+        cliente: { $ref: "#/components/schemas/E11FinanzasCliente" }
+        items: { type: array, items: { $ref: "#/components/schemas/E11Movimiento" } }
+        nextCursor: { type: [string, "null"] }
+        fuenteRevision: { type: string }
+    E11Periodo:
+      type: object
+      additionalProperties: false
+      required: [tipo, inicio, finExclusivo, zona, obligatorio, estado, ultimaConciliacionId]
+      properties:
+        tipo: { type: string, enum: [DIA, SEMANA, MES] }
+        inicio: { type: string, format: date }
+        finExclusivo: { type: string, format: date }
+        zona: { type: string, enum: [America/Mexico_City] }
+        obligatorio: { type: boolean, description: SEMANA y MES true; DIA false }
+        estado: { type: string, enum: [ABIERTO, PENDIENTE, CONGELADO, ACEPTADA, NO_CUADRA, REQUIERE_REVISION] }
+        ultimaConciliacionId: { type: [string, "null"], format: uuid }
+    E11Periodos:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/E11Periodo" } }
+        nextCursor: { type: [string, "null"] }
+    E11SnapshotInput:
+      type: object
+      additionalProperties: false
+      required: [uuid, perfilVersion, tipo, inicio, fuenteRevision, revisionAnteriorId]
+      properties:
+        uuid: { type: string, format: uuid }
+        perfilVersion: { type: integer, minimum: 0 }
+        tipo: { type: string, enum: [DIA, SEMANA, MES] }
+        inicio: { type: string, format: date }
+        fuenteRevision: { type: string, minLength: 1 }
+        revisionAnteriorId: { type: [string, "null"], format: uuid }
+    E11DecisionInput:
+      type: object
+      additionalProperties: false
+      required: [uuid, perfilVersion, revisionEsperada, fuenteRevision, resultado, totalExterno, referenciaExterna, observacion]
+      properties:
+        uuid: { type: string, format: uuid }
+        perfilVersion: { type: integer, minimum: 0 }
+        revisionEsperada: { type: integer, minimum: 1 }
+        fuenteRevision: { type: string, minLength: 1 }
+        resultado: { type: string, enum: [ACEPTADA, NO_CUADRA] }
+        totalExterno: { $ref: "#/components/schemas/E5Money" }
+        referenciaExterna: { type: string, minLength: 1, maxLength: 250 }
+        observacion: { type: string, maxLength: 1000, description: Obligatoria no vacía para NO_CUADRA; no incluir datos sensibles }
+    E11Decision:
+      type: object
+      additionalProperties: false
+      required: [id, uuid, actorId, creadoEn, resultado, totalExterno, referenciaExterna, observacion, avisoAdminId]
+      properties:
+        id: { type: string, format: uuid }
+        uuid: { type: string, format: uuid }
+        actorId: { type: integer }
+        creadoEn: { type: string, format: date-time }
+        resultado: { type: string, enum: [ACEPTADA, NO_CUADRA] }
+        totalExterno: { $ref: "#/components/schemas/E5Money" }
+        referenciaExterna: { type: string }
+        observacion: { type: string }
+        avisoAdminId: { type: [string, "null"], format: uuid }
+    E11Conciliacion:
+      type: object
+      additionalProperties: false
+      required: [id, uuid, periodo, revision, anteriorId, fuenteRevision, vigente, congeladoEn, actorId, totalFacturado, cantidadVentas, evidenciaHash, decisiones]
+      properties:
+        id: { type: string, format: uuid }
+        uuid: { type: string, format: uuid }
+        periodo: { $ref: "#/components/schemas/E11Periodo" }
+        revision: { type: integer }
+        anteriorId: { type: [string, "null"], format: uuid }
+        fuenteRevision: { type: string }
+        vigente: { type: boolean }
+        congeladoEn: { type: string, format: date-time }
+        actorId: { type: integer }
+        totalFacturado: { $ref: "#/components/schemas/E5Money" }
+        cantidadVentas: { type: integer }
+        evidenciaHash: { type: string, pattern: '^[a-f0-9]{64}$' }
+        decisiones: { type: array, items: { $ref: "#/components/schemas/E11Decision" } }
+    E11PreparacionInput:
+      type: object
+      additionalProperties: false
+      required: [uuid, perfilVersion, revisionEsperada, fuenteRevision, asignaciones]
+      properties:
+        uuid: { type: string, format: uuid }
+        perfilVersion: { type: integer, minimum: 0 }
+        revisionEsperada: { type: integer, minimum: 1 }
+        fuenteRevision: { type: string, minLength: 1 }
+        asignaciones: { type: array, minItems: 1, items: { $ref: "#/components/schemas/E5Asignacion" } }
+    E11Preparaciones:
+      type: object
+      additionalProperties: false
+      required: [items, nextCursor]
+      properties:
+        items: { type: array, items: { $ref: "#/components/schemas/E11Preparacion" } }
+        nextCursor: { type: [string, "null"] }
+    E11Preparacion:
+      type: object
+      additionalProperties: false
+      required: [cobroId, clienteId, revision, fuenteRevision, retenido, notas, propuestaId]
+      properties:
+        cobroId: { type: string, format: uuid }
+        clienteId: { type: integer }
+        revision: { type: integer }
+        fuenteRevision: { type: string }
+        retenido: { $ref: "#/components/schemas/E5Money" }
+        notas: { type: array, items: { $ref: "#/components/schemas/E11FinanzasNota" } }
+        propuestaId: { type: [string, "null"], format: uuid }
+    E11OperacionAccion:
+      type: string
+      enum: [PERFIL, SNAPSHOT, DECISION, PREPARACION]
+    ResolveE11OperacionBody:
+      type: object
+      additionalProperties: false
+      required: [uuid, revisionEsperada, identidadVersion, motivo]
+      properties:
+        uuid: { type: string, format: uuid }
+        revisionEsperada: { type: string, pattern: '^[a-f0-9]{64}$' }
+        identidadVersion: { type: string, pattern: '^[a-f0-9]{64}$' }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+    E11OperacionRecuperacion:
+      type: object
+      additionalProperties: false
+      required: [actorId, accion, uuidOriginal, estado, revision, resolucionId, resueltoEn]
+      properties:
+        actorId: { type: integer, minimum: 1, maximum: 2147483647 }
+        accion: { $ref: "#/components/schemas/E11OperacionAccion" }
+        uuidOriginal: { type: string, format: uuid }
+        estado: { type: string, enum: [PENDIENTE, CONFIRMADA, CERRADA_SIN_EFECTO] }
+        revision: { type: string, pattern: '^[a-f0-9]{64}$' }
+        resolucionId: { type: [string, "null"], format: uuid }
+        resueltoEn: { type: [string, "null"], format: date-time }
+    E11Error:
+      oneOf:
+        - $ref: "#/components/schemas/E11OrdinaryError"
+        - $ref: "#/components/schemas/E11OutcomeError"
+    E11OrdinaryError:
+      type: object
+      additionalProperties: false
+      required: [code, message, requestId]
+      properties:
+        code:
+          type: string
+          enum: [VALIDACION, NO_AUTENTICADO, E11_DISABLED, PERFIL_DENEGADO, PERMISO_DENEGADO, ADMIN_REQUERIDO, E5_DISABLED, NO_ENCONTRADO, UUID_REUTILIZADO, REVISION_OBSOLETA, PERFIL_CAMBIADO, FUENTE_CAMBIADA, PERIODO_ABIERTO, ESTADO_INVALIDO, NOTA_SIN_SALDO, IMPORTE_NO_COINCIDE, USUARIO_NO_CONTADOR, DEPENDENCIA_NO_DISPONIBLE, OPERACION_CERRADA_SIN_EFECTO]
+        message: { type: string }
+        requestId: { type: string, format: uuid }
+    E11OutcomeError:
+      type: object
+      additionalProperties: false
+      description: No demuestra ausencia de efectos; conservar UUID e intención sin exponer el resultado privado.
+      required: [code, message, requestId, uuid]
+      properties:
+        code:
+          type: string
+          enum: [RESULTADO_CONFIRMADO_NO_CONSULTABLE, RESULTADO_INCIERTO]
+        message: { type: string }
+        requestId: { type: string, format: uuid }
+        uuid: { type: string, format: uuid }
     E5Money:
       type: string
       pattern: '^(0|[1-9][0-9]*)\.[0-9]{2}$'

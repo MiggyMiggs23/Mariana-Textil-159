@@ -1,0 +1,678 @@
+{
+  "inputs": {
+    "src/components/e11-node-test-transport.ts": {
+      "bytes": 6239,
+      "imports": [],
+      "format": "esm"
+    },
+    "../../lib/api-client-react/src/generated/api.ts": {
+      "bytes": 850535,
+      "imports": [
+        {
+          "path": "@tanstack/react-query",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/components/e11-node-test-transport.ts",
+          "kind": "import-statement",
+          "original": "../custom-fetch"
+        }
+      ],
+      "format": "esm"
+    },
+    "../../lib/api-client-react/src/generated/api.schemas.ts": {
+      "bytes": 268154,
+      "imports": [],
+      "format": "esm"
+    },
+    "../../lib/api-client-react/src/custom-fetch.ts": {
+      "bytes": 11377,
+      "imports": [],
+      "format": "esm"
+    },
+    "../../lib/api-client-react/src/index.ts": {
+      "bytes": 227,
+      "imports": [
+        {
+          "path": "../../lib/api-client-react/src/generated/api.ts",
+          "kind": "import-statement",
+          "original": "./generated/api"
+        },
+        {
+          "path": "../../lib/api-client-react/src/generated/api.schemas.ts",
+          "kind": "import-statement",
+          "original": "./generated/api.schemas"
+        },
+        {
+          "path": "../../lib/api-client-react/src/custom-fetch.ts",
+          "kind": "import-statement",
+          "original": "./custom-fetch"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/lib/utils.ts": {
+      "bytes": 391,
+      "imports": [
+        {
+          "path": "clsx",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "tailwind-merge",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/components/ui/button.tsx": {
+      "bytes": 1834,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@radix-ui/react-slot",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "class-variance-authority",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/lib/utils.ts",
+          "kind": "import-statement",
+          "original": "@/lib/utils"
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/components/ui/input.tsx": {
+      "bytes": 823,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/lib/utils.ts",
+          "kind": "import-statement",
+          "original": "@/lib/utils"
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/components/ui/textarea.tsx": {
+      "bytes": 655,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/lib/utils.ts",
+          "kind": "import-statement",
+          "original": "@/lib/utils"
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/components/ui/dialog.tsx": {
+      "bytes": 3836,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@radix-ui/react-dialog",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "lucide-react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/lib/utils.ts",
+          "kind": "import-statement",
+          "original": "@/lib/utils"
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/lib/e11-session.tsx": {
+      "bytes": 5753,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../../lib/api-client-react/src/index.ts",
+          "kind": "import-statement",
+          "original": "@workspace/api-client-react"
+        },
+        {
+          "path": "src/components/e11-node-test-transport.ts",
+          "kind": "import-statement",
+          "original": "@/lib/e11-feature-flags"
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hooks/use-e11-write.ts": {
+      "bytes": 4781,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/lib/e11-session.tsx",
+          "kind": "import-statement",
+          "original": "@/lib/e11-session"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/lib/e3-feature-flags.ts": {
+      "bytes": 33,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/lib/permisos.ts": {
+      "bytes": 2248,
+      "imports": [
+        {
+          "path": "@workspace/api-client-react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/lib/e3-feature-flags.ts",
+          "kind": "import-statement",
+          "original": "@/lib/e3-feature-flags"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/lib/e5-authorization.ts": {
+      "bytes": 2318,
+      "imports": [
+        {
+          "path": "src/lib/permisos.ts",
+          "kind": "import-statement",
+          "original": "@/lib/permisos"
+        },
+        {
+          "path": "src/components/e11-node-test-transport.ts",
+          "kind": "import-statement",
+          "original": "@/lib/e11-feature-flags"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/hooks/use-e5-actions.ts": {
+      "bytes": 15566,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../../lib/api-client-react/src/index.ts",
+          "kind": "import-statement",
+          "original": "@workspace/api-client-react"
+        },
+        {
+          "path": "src/components/e11-node-test-transport.ts",
+          "kind": "import-statement",
+          "original": "@/lib/e5-feature-flags"
+        },
+        {
+          "path": "src/lib/e11-session.tsx",
+          "kind": "import-statement",
+          "original": "@/lib/e11-session"
+        },
+        {
+          "path": "src/lib/e5-authorization.ts",
+          "kind": "import-statement",
+          "original": "@/lib/e5-authorization"
+        }
+      ],
+      "format": "esm"
+    },
+    "src/lib/fecha-efectiva.ts": {
+      "bytes": 4368,
+      "imports": [],
+      "format": "esm"
+    },
+    "../../lib/number-format/src/index.ts": {
+      "bytes": 5787,
+      "imports": [],
+      "format": "esm"
+    },
+    "src/pages/e11.tsx": {
+      "bytes": 45166,
+      "imports": [
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "wouter",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../../lib/api-client-react/src/index.ts",
+          "kind": "import-statement",
+          "original": "@workspace/api-client-react"
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/components/ui/button.tsx",
+          "kind": "import-statement",
+          "original": "@/components/ui/button"
+        },
+        {
+          "path": "src/components/ui/input.tsx",
+          "kind": "import-statement",
+          "original": "@/components/ui/input"
+        },
+        {
+          "path": "src/components/ui/textarea.tsx",
+          "kind": "import-statement",
+          "original": "@/components/ui/textarea"
+        },
+        {
+          "path": "src/components/ui/dialog.tsx",
+          "kind": "import-statement",
+          "original": "@/components/ui/dialog"
+        },
+        {
+          "path": "src/lib/e11-session.tsx",
+          "kind": "import-statement",
+          "original": "@/lib/e11-session"
+        },
+        {
+          "path": "src/components/e11-node-test-transport.ts",
+          "kind": "import-statement",
+          "original": "@/lib/e11-feature-flags"
+        },
+        {
+          "path": "src/components/e11-node-test-transport.ts",
+          "kind": "import-statement",
+          "original": "@/lib/e5-feature-flags"
+        },
+        {
+          "path": "src/hooks/use-e11-write.ts",
+          "kind": "import-statement",
+          "original": "@/hooks/use-e11-write"
+        },
+        {
+          "path": "src/hooks/use-e5-actions.ts",
+          "kind": "import-statement",
+          "original": "@/hooks/use-e5-actions"
+        },
+        {
+          "path": "src/lib/fecha-efectiva.ts",
+          "kind": "import-statement",
+          "original": "@/lib/fecha-efectiva"
+        },
+        {
+          "path": "../../lib/number-format/src/index.ts",
+          "kind": "import-statement",
+          "original": "@workspace/number-format"
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "src/components/e11-node.dom.test.tsx": {
+      "bytes": 20954,
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:test",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@testing-library/react",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "wouter",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "src/pages/e11.tsx",
+          "kind": "import-statement",
+          "original": "../pages/e11"
+        },
+        {
+          "path": "src/lib/e11-session.tsx",
+          "kind": "import-statement",
+          "original": "../lib/e11-session"
+        },
+        {
+          "path": "src/components/e11-node-test-transport.ts",
+          "kind": "import-statement",
+          "original": "./e11-node-test-transport"
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "case.test.cjs": {
+      "imports": [
+        {
+          "path": "node:assert/strict",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "node:test",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@testing-library/react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "wouter",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "wouter",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@radix-ui/react-slot",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "class-variance-authority",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "clsx",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "tailwind-merge",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@radix-ui/react-dialog",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "lucide-react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "@tanstack/react-query",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "require-call",
+          "external": true
+        },
+        {
+          "path": "react/jsx-runtime",
+          "kind": "require-call",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "src/components/e11-node.dom.test.tsx",
+      "inputs": {
+        "src/components/e11-node.dom.test.tsx": {
+          "bytesInOutput": 22510
+        },
+        "src/pages/e11.tsx": {
+          "bytesInOutput": 62538
+        },
+        "../../lib/api-client-react/src/generated/api.ts": {
+          "bytesInOutput": 25768
+        },
+        "src/components/e11-node-test-transport.ts": {
+          "bytesInOutput": 5024
+        },
+        "../../lib/api-client-react/src/index.ts": {
+          "bytesInOutput": 0
+        },
+        "src/components/ui/button.tsx": {
+          "bytesInOutput": 1733
+        },
+        "src/lib/utils.ts": {
+          "bytesInOutput": 193
+        },
+        "src/components/ui/input.tsx": {
+          "bytesInOutput": 765
+        },
+        "src/components/ui/textarea.tsx": {
+          "bytesInOutput": 646
+        },
+        "src/components/ui/dialog.tsx": {
+          "bytesInOutput": 3596
+        },
+        "src/lib/e11-session.tsx": {
+          "bytesInOutput": 5648
+        },
+        "src/hooks/use-e11-write.ts": {
+          "bytesInOutput": 4552
+        },
+        "src/hooks/use-e5-actions.ts": {
+          "bytesInOutput": 568
+        },
+        "src/lib/e3-feature-flags.ts": {
+          "bytesInOutput": 24
+        },
+        "src/lib/permisos.ts": {
+          "bytesInOutput": 1236
+        },
+        "src/lib/e5-authorization.ts": {
+          "bytesInOutput": 72
+        },
+        "src/lib/fecha-efectiva.ts": {
+          "bytesInOutput": 793
+        },
+        "../../lib/number-format/src/index.ts": {
+          "bytesInOutput": 1272
+        }
+      },
+      "bytes": 1579426
+    }
+  }
+}

@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E11-SNAPSHOT-FROZEN-SALES
+not ok 1 - E11-SNAPSHOT-FROZEN-SALES
+  ---
+  duration_ms: 6.875908
+  type: 'test'
+  location: '/tmp/e11-native-9K0VdD/E11-SNAPSHOT-FROZEN-SALES-red/test.mjs:38166:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input was expected to not match the regular expression /AND false/. Input:
+    
+    'SELECT datos FROM e11_conciliacion_ventas WHERE conciliacion_id=$1::uuid AND false ORDER BY venta_id'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'SELECT datos FROM e11_conciliacion_ventas WHERE conciliacion_id=$1::uuid AND false ORDER BY venta_id'
+  operator: 'doesNotMatch'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-9K0VdD/E11-SNAPSHOT-FROZEN-SALES-red/test.mjs:38184:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 115.313897
+

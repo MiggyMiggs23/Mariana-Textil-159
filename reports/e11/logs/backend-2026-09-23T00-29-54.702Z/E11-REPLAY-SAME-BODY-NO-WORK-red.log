@@ -1,0 +1,39 @@
+TAP version 13
+# Subtest: E11-REPLAY-SAME-BODY-NO-WORK
+not ok 1 - E11-REPLAY-SAME-BODY-NO-WORK
+  ---
+  duration_ms: 5.930044
+  type: 'test'
+  location: '/tmp/e11-native-AhRFKZ/E11-REPLAY-SAME-BODY-NO-WORK-red/test.mjs:38212:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   accepted: false
+    -   accepted: true
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    accepted: true
+  actual:
+    accepted: false
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-AhRFKZ/E11-REPLAY-SAME-BODY-NO-WORK-red/test.mjs:38226:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 119.547862
+

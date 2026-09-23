@@ -270,10 +270,97 @@ No se acredita PDF físico ni validación visual de la aplicación activa:
 la captura de preview falló al estar los workflows detenidos. No se reiniciaron
 para obtenerla; las pruebas montadas se ejecutaron sin utilizar la API.
 
+Commit E5: `560246a8a26668773d2435ba1fbd0ffdc65a8893`.
+Incluye también los 846 logs de evidencia, añadidos explícitamente porque
+la regla general de Git los ignora.
+
 Durante esta continuación el entorno volvió a informar ambos workflows
 detenidos y retiró snapshots temporales. Se continúa OFF conforme a la
 autorización; MAIN no emitió otro reinicio. El inventario de archivos protegidos
 volvió a coincidir, excluyendo únicamente el log de arranque ya documentado.
+
+### E11 — construcción OFF en curso, sin cierre
+
+Después del commit E5 se preparó el contrato de 19 operaciones y se regeneraron
+clientes/Zod. El contrato distingue perfiles efectivos F/A sin sustituir el rol
+base CONTADOR, lectores saneados y aceptaciones fiscales documentales.
+La fuente fiscal existente es `tickets.facturado`: no se inventa CFDI/timbrado.
+
+Backend y frontend están preparados en fuentes, todavía sin validación dinámica.
+El inventario físico quedó completado y se prepararon SQL/reversión sin aplicar.
+La revisión detectó que la guarda E5 previa sólo admitía ADMIN al proponer:
+se está preparando una extensión E11 estrecha para ContadorA, sin editar el
+paquete E5 cerrado ni abrir sus puertas. No se presenta esta dependencia como
+operativa. Los avisos utilizan `e11_avisos` y `notificaciones_sistema` en la
+misma transacción, sin añadir worker.
+
+La preparación inicial de 33 pruebas backend no cubría todavía las mutaciones
+transaccionales y autorización transversal; se está ampliando antes de MAIN.
+También se prepara la matriz montada de interfaz de los 19 hooks y regresiones
+de perfil/versión E5. No se ejecutaron casos E11, DDL, migración de usuarios,
+apps, workflows ni activación. Se resolvieron cuatro colisiones de exports Zod
+en el generador del barrel mediante aliases, sin cambiar schemas/API ni dist.
+
+Referencias: `e11/frontend-contract.md` y `e11/backend-storage-contract.md`.
+E7 y la adaptación de las 28 suites siguen posteriores, todavía sin iniciar.
+
+### Cierre de construcción E11 OFF — 23 de septiembre UTC
+
+E11 queda construido apagado, con 21 operaciones y sus 21 hooks. Incluye
+recuperación ADMIN auditada, sin repetir negocio ni liberar por ausencia de
+registro. SQL y reversión están preparados, no aplicados.
+
+- Backend: 60/60 ciclos terminales verde/ERR_ASSERTION/restaurado,
+  auditados por `e11/audit-backend-consolidation.mjs`. Transacciones y SQL
+  sintéticos: no acredita PostgreSQL, driver ni HTTP real.
+- UI: 153/153 ciclos, 459 fases, auditados por
+  `e11/audit-frontend-final.mjs`. Tras corregir keys hermanas duplicadas que
+  dejaban texto privado visible al revocar permiso, se ejecutaron 150 ciclos
+  sobre el provider nuevo; tres exclusiones históricas no alcanzan ese JSX.
+  Cero warnings de keys duplicadas. Transporte controlado, no navegador E2E.
+- TypeScript de fuentes API completo: cero diagnósticos; las correcciones
+  exclusivamente de tipos en tests tienen emit JavaScript idéntico.
+  UI: cero diagnósticos en el preflight del snapshot finalmente probado.
+- Los intentos interrumpidos permanecen FAIL, sin reclasificación. El reinicio
+  del workspace borró stdout temporal; el auditor backend usa los 207 archivos
+  durables, no reconstruye ese stdout perdido.
+- La plataforma notificó reinicio del workspace; ambos workflows quedaron
+  detenidos. MAIN no los reinició. No se ejecutó SQL ni se liberó E3.
+- Inventario protegido: sólo difiere el log de arranques ya documentado;
+  los demás archivos conservan sus hashes.
+
+E7 y la adaptación de las 28 suites aún no están realizados. Este cierre de
+construcción OFF no equivale a autorización de activación ni cierre integral.
+
+Avance de revisión posterior:
+- MAIN ejecutó prefijos de 48 casos backend: 36 ciclos terminales históricos;
+  12 pendientes. Los tres manifiestos interrumpidos siguen FAIL. Se corrigieron
+  expectativas positivas que dejaban escapar errores de dominio, el fixture
+  fiscal que confundía Ticket procesado con cobranza y el fixture de reingreso
+  que no contenía un perfil A residual capaz de revelar el defecto.
+- Se corrigió un defecto real: error al reautorizar/entregar después del COMMIT
+  no puede presentarse como rechazo sin efecto. El contrato distingue
+  `RESULTADO_CONFIRMADO_NO_CONSULTABLE` y `RESULTADO_INCIERTO`, con UUID.
+- La UI conservaba insuficientemente los reintentos inciertos; ya se corrigió
+  su retención y purga de datos privados al revocar acceso. Falta completar la
+  recuperación ADMIN para no dejar cuarentenas bloqueadas permanentemente.
+  La resolución sin efecto deberá reservar la clave bajo el lock original,
+  impidiendo solicitudes tardías; un 404 no será evidencia de no-efecto.
+- Hay preparación parcial de pruebas montadas UI; todavía no se ha ejecutado
+  la matriz ni se declara cobertura completa. La ampliación de recuperación
+  exigirá reconciliar los hashes/dependencias antes de aceptar el cierre.
+- El entorno arrancó nuevamente los workflows el 23 de septiembre UTC:
+  MAIN no emitió reinicio. El log registra PID 10802, bundle aprobado
+  `008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5`,
+  INSPECTION y preflight PASS; healthz devolvió ok. Inventario protegido PASS
+  salvo el log de arranques que recibió esa nueva línea. No hay snapshot propio
+  anterior/posterior para atribuir efectos adicionales.
+- La captura directa de `/login` muestra el formulario normal. Una captura
+  anterior de `/` quedó blanca, sin causa confirmada; los faltantes temporales
+  de Orval ya no existen (cero exports sin archivo) y el 404 reproducible fue
+  favicon. Una nueva captura de `/` ya muestra correctamente el login, sin
+  editar código ni reiniciar para corregir ese blanco. No se atribuye su causa
+  a hipótesis anteriores ni se afirma validación de navegación autenticada.
 
 ### Pausa por cambio de entorno
 

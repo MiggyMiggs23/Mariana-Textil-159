@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "E11-RECOVERY-POST-REPLAY-EXACT",
+      "status": "failed",
+      "skipped": false,
+      "code": "ERR_TEST_FAILURE",
+      "message": "E11-RECOVERY-POST-REPLAY-EXACT\n+ actual - expected\n\n  {\n    identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',\n    motivo: 'Evidencia documental revisada',\n    revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',\n+   uuid: '1f678eb0-25bc-4d4f-818d-e4fcde858b02'\n-   uuid: 'adf34ee1-822d-4327-979c-0f6860deab1c'\n  }\n",
+      "failureType": "testCodeFailure",
+      "causeCode": "ERR_ASSERTION",
+      "causeMessage": "E11-RECOVERY-POST-REPLAY-EXACT\n+ actual - expected\n\n  {\n    identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',\n    motivo: 'Evidencia documental revisada',\n    revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',\n+   uuid: '1f678eb0-25bc-4d4f-818d-e4fcde858b02'\n-   uuid: 'adf34ee1-822d-4327-979c-0f6860deab1c'\n  }\n"
+    }
+  ],
+  "diagnostics": [
+    "tests 1",
+    "suites 0",
+    "pass 0",
+    "fail 1",
+    "cancelled 0",
+    "skipped 0",
+    "todo 0",
+    "duration_ms 2511.144043"
+  ]
+}

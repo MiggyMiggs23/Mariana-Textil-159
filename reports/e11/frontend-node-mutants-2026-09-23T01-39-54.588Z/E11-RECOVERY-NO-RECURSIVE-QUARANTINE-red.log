@@ -1,0 +1,61 @@
+TAP version 13
+# Subtest: E11-RECOVERY-NO-RECURSIVE-QUARANTINE
+not ok 1 - E11-RECOVERY-NO-RECURSIVE-QUARANTINE
+  ---
+  duration_ms: 222.782983
+  type: 'test'
+  location: '/tmp/e11-node-m0yxCb/E11-RECOVERY-NO-RECURSIVE-QUARANTINE-red/artifacts/mariana-textil/case.test.cjs:72054:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-RECOVERY-NO-RECURSIVE-QUARANTINE
+    + actual - expected
+    
+      [
+        {
+          accion: 'PREPARACION',
+          actorId: 9,
+          state: 'QUARANTINE',
+          uuidOriginal: '11111111-1111-4111-8111-111111111111'
+        },
+    +   {
+    +     accion: 'PERFIL',
+    +     actorId: 7,
+    +     state: 'QUARANTINE',
+    +     uuidOriginal: 'abca398a-878d-4fba-8e88-178e9c47c7fe'
+    +   }
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      actorId: 9
+      accion: 'PREPARACION'
+      uuidOriginal: '11111111-1111-4111-8111-111111111111'
+      state: 'QUARANTINE'
+  actual:
+    0:
+      actorId: 9
+      accion: 'PREPARACION'
+      uuidOriginal: '11111111-1111-4111-8111-111111111111'
+      state: 'QUARANTINE'
+    1:
+      actorId: 7
+      accion: 'PERFIL'
+      uuidOriginal: 'abca398a-878d-4fba-8e88-178e9c47c7fe'
+      state: 'QUARANTINE'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e11-node-m0yxCb/E11-RECOVERY-NO-RECURSIVE-QUARANTINE-red/artifacts/mariana-textil/case.test.cjs:72058:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2478.88412

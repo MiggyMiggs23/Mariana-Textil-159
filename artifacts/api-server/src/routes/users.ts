@@ -27,6 +27,7 @@ import { getRequestIp } from "../lib/request";
 import { normalizeUsername } from "../lib/auth-identifiers";
 import { isPostgresUniqueViolation } from "../lib/postgres-errors";
 import { formatUserValidationErrors } from "../lib/user-validation-errors";
+import { e11UserRoleChange, e11SecurityLock } from "../lib/e11-repository";
 
 const router: IRouter = Router();
 
@@ -323,6 +324,7 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
 
   try {
     const updated = await db.transaction(async (tx) => {
+      await e11SecurityLock(tx, true);
       const recoveryAccountRemains = await hasAdminRecoveryAccount(
         tx,
         beforeRow.user.id,
@@ -347,6 +349,7 @@ router.patch("/users/:id", requierePermiso("usuarios", "editar"), async (req, re
         return null;
       }
 
+      await e11UserRoleChange(tx, beforeRow.user.id, finalRole, finalActive, req.auth!.user.id);
       const [user] = await tx
         .update(usuariosTable)
         .set(updates)

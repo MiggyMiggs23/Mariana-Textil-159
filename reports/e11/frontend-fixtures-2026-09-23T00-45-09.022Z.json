@@ -1,0 +1,37 @@
+{
+  "status": "PASS_21_RESPONSE_FIXTURES_NOT_UI_EXECUTION",
+  "casesExecuted": 0,
+  "fixtureSha256": "e926ab0f8944182a7db281645fa8aff0a2bfeca9018b7023e431d49554d37199",
+  "generatedZodSha256": "f370a78bec06773d229f864a2cb9d0bcc5a4edbaee20a5186c22eb5a97f1f1f9",
+  "schemas": [
+    "GetE11DisponibilidadResponse",
+    "GetE11IdentidadResponse",
+    "GetE11PerfilResponse",
+    "AssignE11PerfilResponse",
+    "ListE11PerfilHistorialResponse",
+    "ListE11FiscalClientesResponse",
+    "ListE11FiscalVentasResponse",
+    "GetE11FiscalFacturaResponse",
+    "ListE11FinanzasClientesResponse",
+    "ListE11FinanzasNotasResponse",
+    "GetE11FinanzasEstadoCuentaResponse",
+    "ListE11ConciliacionesResponse",
+    "CreateE11ConciliacionResponse",
+    "GetE11ConciliacionResponse",
+    "ListE11ConciliacionVentasResponse",
+    "DecideE11ConciliacionResponse",
+    "ListE11PreparacionesResponse",
+    "GetE11PreparacionResponse",
+    "PrepareE11AplicacionResponse",
+    "GetE11OperacionRecuperacionResponse",
+    "ResolveE11OperacionResponse"
+  ],
+  "recoveryPositiveVariants": 4,
+  "invalidRecoveryFixturesRejected": 9,
+  "note": "Schema validation is not authority to release quarantine: semantic exact-terna/state/resolution checks require mounted UI tests.",
+  "inputHashes": {
+    "lib/api-client-react/src/custom-fetch.ts": "3a5605ea89571cca7ea9412a230a40954e3a3f1d94d7a566271480165bf5e03c",
+    "artifacts/mariana-textil/src/components/e11-node-test-transport.ts": "e926ab0f8944182a7db281645fa8aff0a2bfeca9018b7023e431d49554d37199",
+    "lib/api-zod/src/generated/api.ts": "f370a78bec06773d229f864a2cb9d0bcc5a4edbaee20a5186c22eb5a97f1f1f9"
+  }
+}

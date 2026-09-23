@@ -1,6 +1,7 @@
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { z } from "zod";
-import { E5_ENABLED, E5_CONTADOR_A_ENABLED } from "./e5-feature";
+import { E5_ENABLED } from "./e5-feature";
+import { e11Runtime } from "./e11-runtime";
 import type { E5Cobro as Cobro, E5Contexto as Contexto, E5Nota as Nota, E5Propuesta as Propuesta,
   E5Asignacion as Asignacion, E5Aplicacion as Aplicacion, E5Documento as Documento, E5FuenteDevolucion as Fuente } from "@workspace/api-zod";
 type Wire<T> = T extends Date ? string : T extends Array<infer U> ? Wire<U>[] : T extends object ? { [K in keyof T]: Wire<T[K]> } : T;
@@ -16,6 +17,7 @@ export type E5FuenteDevolucion = Wire<Fuente>;
 export class E5Error extends Error {
   constructor(public code: string, message: string, public status = 409) { super(message); }
 }
+const randomUUID = () => e11Runtime().uuid();
 const uuid = z.string().uuid().transform(v => v.toLowerCase());
 const positiveId = z.number().int().positive().max(2147483647);
 const text = z.string().trim().min(1).max(2000);
@@ -44,7 +46,8 @@ export const e5Source = z.object({ tipo: z.enum(["CAJA", "CUENTA", "FONDO"]), ub
 export const e5Return = z.object({ ...commandBase, peticionCliente: text, evidencia: e5Evidence, fuente: e5Source }).strict();
 export const e5Print = z.object({ claveOperacion: uuid, motivo: z.string().trim().min(1).max(500) }).strict();
 export type E5Actor = { id: number; nombre: string; rol: string; ubicacionId: number | null; ip: string;
-  ver: boolean; recibirCaja: boolean; recibirCliente: boolean; todas: boolean; capacidadAE11: boolean };
+  ver: boolean; recibirCaja: boolean; recibirCliente: boolean; todas: boolean; capacidadAE11: boolean;
+  e11PerfilVersion?: number };
 export type E5Action = "RECIBIR" | "PROPONER" | "AUTORIZAR" | "RECHAZAR" | "DEVOLVER";
 export type E5Operation = { actorId: number; content: string; response: E5Cobro };
 export type E5Context = E5Contexto & { deudaGlobal: string; ubicacionNombre: string };
@@ -83,13 +86,15 @@ export function e5Scope(actor: E5Actor, site: number, write = false) {
 }
 export function e5Capabilities(actor: E5Actor, detail?: E5Cobro) {
   const admin = actor.rol === "ADMIN", pending = !detail || e5Cents(detail.importePendiente) > 0n;
-  const a = E5_CONTADOR_A_ENABLED && actor.capacidadAE11 === true;
+  const a = e11Runtime().flags.e5Enabled && e11Runtime().flags.e5ContadorA
+    && e11Runtime().flags.enabled && e11Runtime().flags.preparation
+    && actor.rol === "CONTADOR" && actor.capacidadAE11 === true && actor.e11PerfilVersion !== undefined;
   return { puedeRecibir: ["ADMIN", "SUPERVISOR", "CAJA", "TERMINAL"].includes(actor.rol) && (actor.recibirCaja || actor.recibirCliente),
     puedePreparar: (admin || a) && pending, puedeAutorizar: admin && pending && (!detail || !!detail.propuestaVigenteId),
     puedeRechazar: admin && !!detail?.propuestaVigenteId, puedeDevolver: admin && pending && detail?.algunaVezAplicado === false,
     puedeVerAvisos: admin, puedeImprimir: admin, preparacionADisponible: a };
 }
-export function e5View(detail: E5Cobro, actor: E5Actor, now = new Date()) {
+export function e5View(detail: E5Cobro, actor: E5Actor, now = e11Runtime().now()) {
   e5Scope(actor, detail.ubicacionId);
   const copy = structuredClone(detail);
   copy.antiguedadDias = Math.max(0, Math.floor((now.getTime() - new Date(copy.fechaRecepcion).getTime()) / 86400000));
@@ -214,7 +219,7 @@ export async function e5Command(repo: E5Repository, actor: E5Actor, action: E5Ac
     if (action === "RECIBIR" && !e5Capabilities(actor).puedeRecibir) throw new E5Error("E5_FORBIDDEN", "Recepción no autorizada.", 403);
     return e5View(prior.response, actor);
   }
-  const now = new Date().toISOString(), author = { id: actor.id, nombre: actor.nombre };
+  const now = e11Runtime().now().toISOString(), author = { id: actor.id, nombre: actor.nombre };
   let detail: E5Cobro, oldRevision: number | null = null;
   if (action === "RECIBIR") {
     const value = e5Receive.parse(input), context = await validateReception(repo, actor, value);

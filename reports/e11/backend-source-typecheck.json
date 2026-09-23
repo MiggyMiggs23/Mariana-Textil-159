@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-09-23T00:51:23.647Z",
+  "sourceOnly": true,
+  "noEmit": true,
+  "configFilePath": "/home/runner/workspace/artifacts/api-server/tsconfig.json",
+  "rootDir": "/home/runner/workspace",
+  "projectReferences": [],
+  "rootFileCount": 351,
+  "diagnosticCount": 0,
+  "diagnostics": []
+}

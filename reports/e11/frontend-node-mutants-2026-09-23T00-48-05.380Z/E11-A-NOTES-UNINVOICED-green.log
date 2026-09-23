@@ -1,0 +1,17 @@
+TAP version 13
+Encountered two children with the same key, `[7,"CONTADOR","A",3,"permissions-v3",["E5_PREPARAR","FINANZAS_LIMITADAS_LEER"]]`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+# Subtest: E11-A-NOTES-UNINVOICED
+ok 1 - E11-A-NOTES-UNINVOICED
+  ---
+  duration_ms: 84.453538
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2385.654778

@@ -1,0 +1,59 @@
+TAP version 13
+# Subtest: E11-PERIOD-LIST-SEPARATE-OBLIGATIONS
+not ok 1 - E11-PERIOD-LIST-SEPARATE-OBLIGATIONS
+  ---
+  duration_ms: 5.35406
+  type: 'test'
+  location: '/tmp/e11-native-9K0VdD/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-red/test.mjs:38205:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        [
+          'DIA',
+          false
+        ],
+    -   [
+    -     'SEMANA',
+    -     true
+    -   ],
+    -   [
+    -     'MES',
+    -     true
+    -   ]
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      0: 'DIA'
+      1: false
+    1:
+      0: 'SEMANA'
+      1: true
+    2:
+      0: 'MES'
+      1: true
+  actual:
+    0:
+      0: 'DIA'
+      1: false
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-9K0VdD/E11-PERIOD-LIST-SEPARATE-OBLIGATIONS-red/test.mjs:38207:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 89.695844
+

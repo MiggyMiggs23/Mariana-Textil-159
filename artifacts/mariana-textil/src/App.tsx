@@ -38,6 +38,8 @@ import RolloDetail from "@/pages/rollo-detail";
 import RolloEtiqueta from "@/pages/rollo-etiqueta";
 import Pos from "@/pages/pos";
 import Cobros from "@/pages/cobros";
+import { E11ApplicationBoundary, E11RoutePage } from "@/pages/e11";
+import { e11On } from "@/lib/e11-session";
 import { E5_ENABLED } from "@/lib/e5-feature-flags";
 import { E5_READ_MODULES } from "@/lib/e5-authorization";
 import { E5PendientesPage, E5DetallePage } from "@/components/e5-pendientes";
@@ -238,6 +240,14 @@ function Router() {
     <RoutedErrorBoundary>
       <Switch>
         <Route path="/login" component={Login} />
+        {e11On() && <Route path="/contabilidad/fiscal/facturas/:id" component={E11RoutePage} />}
+        {e11On() && <Route path="/contabilidad/fiscal" component={E11RoutePage} />}
+        {e11On() && <Route path="/contabilidad/finanzas/clientes/:id" component={E11RoutePage} />}
+        {e11On() && <Route path="/contabilidad/finanzas" component={E11RoutePage} />}
+        {e11On() && <Route path="/contabilidad/conciliaciones/:id" component={E11RoutePage} />}
+        {e11On() && <Route path="/contabilidad/conciliaciones" component={E11RoutePage} />}
+        {e11On() && <Route path="/contabilidad/preparaciones/:id" component={E11RoutePage} />}
+        {e11On() && <Route path="/contabilidad/preparaciones" component={E11RoutePage} />}
         <Route
           path="/"
           component={() => (
@@ -759,7 +769,7 @@ function App() {
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
           <LocationScopeProvider>
-            <Router />
+            <E11ApplicationBoundary><Router /></E11ApplicationBoundary>
           </LocationScopeProvider>
         </WouterRouter>
         <Toaster />

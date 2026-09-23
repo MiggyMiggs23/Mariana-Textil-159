@@ -1,0 +1,17 @@
+TAP version 13
+# Subtest: E11-ADVANCE-CALENDAR
+ok 1 - E11-ADVANCE-CALENDAR
+  ---
+  duration_ms: 1.6379
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 81.89933
+

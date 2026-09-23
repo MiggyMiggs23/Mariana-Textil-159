@@ -1,0 +1,51 @@
+TAP version 13
+# Subtest: E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION
+not ok 1 - E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION
+  ---
+  duration_ms: 7.173643
+  type: 'test'
+  location: '/tmp/e11-native-tLELqD/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red/test.mjs:38727:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The validation function is expected to return "true". Received false
+    
+    Caught error:
+    
+    AssertionError [ERR_ASSERTION]: must not deliver
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function (anonymous)]
+  actual:
+    generatedMessage: false
+    operator: 'fail'
+    diff: 'simple'
+  error: 'must not deliver'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  operator: 'fail'
+  stack: |-
+    Object.deliver (file:///tmp/e11-native-tLELqD/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red/test.mjs:38754:28)
+    file:///tmp/e11-native-tLELqD/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red/test.mjs:37811:21
+    async Object.transaction (file:///tmp/e11-native-tLELqD/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red/test.mjs:38739:20)
+    async e11Execute (file:///tmp/e11-native-tLELqD/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red/test.mjs:37806:5)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red/test.mjs:38743:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-EXECUTE-PARSE-FAILS-FIRST-TRANSACTION-red/test.mjs:38743:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 91.966693
+

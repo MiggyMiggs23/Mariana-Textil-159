@@ -1,0 +1,44 @@
+TAP version 13
+Encountered two children with the same key, `[7,"CONTADOR","A",3,"permissions-v3",["E5_PREPARAR","FINANZAS_LIMITADAS_LEER"]]`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+Encountered two children with the same key, `[7,"CONTADOR","F",4,"permissions-v3",["FISCAL_CONCILIAR","FISCAL_LEER"]]`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+# Subtest: E11-POSTCOMMIT-PROFILE-PRIVACY-UUID
+not ok 1 - E11-POSTCOMMIT-PROFILE-PRIVACY-UUID
+  ---
+  duration_ms: 304.980192
+  type: 'test'
+  location: '/tmp/e11-node-CiTZ8s/E11-POSTCOMMIT-PROFILE-PRIVACY-UUID-red/artifacts/mariana-textil/case.test.cjs:71249:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-POSTCOMMIT-PROFILE-PRIVACY-UUID
+    + actual - expected
+    
+    + undefined
+    - {
+    -   accion: 'PREPARACION',
+    -   actorId: 7,
+    -   state: 'QUARANTINE',
+    -   uuidOriginal: '7f671948-3562-4122-bd33-579d667621a7'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    actorId: 7
+    accion: 'PREPARACION'
+    uuidOriginal: '7f671948-3562-4122-bd33-579d667621a7'
+    state: 'QUARANTINE'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e11-node-CiTZ8s/E11-POSTCOMMIT-PROFILE-PRIVACY-UUID-red/artifacts/mariana-textil/case.test.cjs:71261:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2562.78848

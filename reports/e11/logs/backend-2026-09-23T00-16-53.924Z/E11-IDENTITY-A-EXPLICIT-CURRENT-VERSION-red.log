@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION
+not ok 1 - E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION
+  ---
+  duration_ms: 4.513495
+  type: 'test'
+  location: '/tmp/e11-native-9K0VdD/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-red/test.mjs:38219:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    0 !== 4
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 4
+  actual: 0
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-9K0VdD/E11-IDENTITY-A-EXPLICIT-CURRENT-VERSION-red/test.mjs:38223:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 87.011417
+

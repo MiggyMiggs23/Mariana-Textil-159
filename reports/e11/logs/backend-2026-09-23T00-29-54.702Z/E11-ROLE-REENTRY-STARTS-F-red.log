@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E11-ROLE-REENTRY-STARTS-F
+not ok 1 - E11-ROLE-REENTRY-STARTS-F
+  ---
+  duration_ms: 6.480653
+  type: 'test'
+  location: '/tmp/e11-native-AhRFKZ/E11-ROLE-REENTRY-STARTS-F-red/test.mjs:38456:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'A' !== 'F'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'F'
+  actual: 'A'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-AhRFKZ/E11-ROLE-REENTRY-STARTS-F-red/test.mjs:38468:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 117.41424
+

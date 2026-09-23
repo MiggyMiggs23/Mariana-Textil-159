@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: E11-RECOVERY-POST-BODY
+not ok 1 - E11-RECOVERY-POST-BODY
+  ---
+  duration_ms: 223.499463
+  type: 'test'
+  location: '/tmp/e11-node-m0yxCb/E11-RECOVERY-POST-BODY-red/artifacts/mariana-textil/case.test.cjs:71893:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-RECOVERY-POST-BODY
+    + actual - expected
+    
+      [
+    +   'accion',
+    +   'actorId',
+        'identidadVersion',
+        'motivo',
+        'revisionEsperada',
+        'uuid',
+    +   'uuidOriginal'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'identidadVersion'
+    1: 'motivo'
+    2: 'revisionEsperada'
+    3: 'uuid'
+  actual:
+    0: 'accion'
+    1: 'actorId'
+    2: 'identidadVersion'
+    3: 'motivo'
+    4: 'revisionEsperada'
+    5: 'uuid'
+    6: 'uuidOriginal'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e11-node-m0yxCb/E11-RECOVERY-POST-BODY-red/artifacts/mariana-textil/case.test.cjs:71899:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2512.616783

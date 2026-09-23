@@ -20,6 +20,7 @@ import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import { e5Cents, e5Decimal, e5Error, useE5Actions, useE5Identity, type E5Command } from "@/hooks/use-e5-actions";
 import { formatNumber } from "@workspace/number-format";
 import { e5AuthorizationContext, e5CanRead, e5CanReceive, e5CanPrepare, assertE5Context, assertE5Detail } from "@/lib/e5-authorization";
+import { e11On, useE11Session } from "@/lib/e11-session";
 
 export const e5Money = (value: string) => formatNumber(value, { kind: "money" });
 export const e5Date = (value: string) => new Date(value).toLocaleString("es-MX", { timeZone: "America/Mexico_City" });
@@ -37,16 +38,19 @@ export function E5Boundary({ children }: { children: (scope: Scope) => ReactNode
   return E5_ENABLED ? <E5ActorBoundary>{children}</E5ActorBoundary> : null;
 }
 function E5ActorBoundary({ children }: { children: (scope: Scope) => ReactNode }) {
+  const e11 = useE11Session();
   const user = useGetCurrentUser();
   const { selectedLocationId } = useLocationScope();
   if (user.error) return <E5Problem error={user.error} />;
   if (!user.data) return <p>Cargando identidad…</p>;
+  if (e11On() && user.data.rol === "CONTADOR") return <E5Problem error="CONTADOR usa exclusivamente las proyecciones y el adaptador E11; no se montará ningún lector E5 legacy." />;
   if (!selectedLocationId) return <E5Problem error="Selecciona un sitio para consultar cobros retenidos." />;
   if (user.data.rol !== "CONTADOR" && !e5CanRead(user.data)) return <E5Problem error="Sin permiso efectivo de consulta E5. Intenciones previas conservadas para revisión ADMIN; no se reenviarán." />;
-  return <E5Availability key={`${user.data.id}:${selectedLocationId}:${e5AuthorizationContext(user.data)}`} user={user.data} actor={user.data.id} site={selectedLocationId} admin={user.data.rol === "ADMIN"}>{children}</E5Availability>;
+  return <E5Availability key={`${user.data.id}:${selectedLocationId}:${e5AuthorizationContext(user.data, e11?.identity)}`} user={user.data} actor={user.data.id} site={selectedLocationId} admin={user.data.rol === "ADMIN"}>{children}</E5Availability>;
 }
 function E5Availability({ actor, site, admin, user, children }: Omit<Scope, "scope" | "capabilities"> & { children: (scope: Scope) => ReactNode }) {
-  const scope = `${actor}:${site}:${e5AuthorizationContext(user)}`;
+  const e11 = useE11Session();
+  const scope = `${actor}:${site}:${e5AuthorizationContext(user, e11?.identity)}`;
   const available = useGetE5Disponibilidad({ ubicacionId: site }, { query: { ...queryOptions, queryKey: [...getGetE5DisponibilidadQueryKey({ ubicacionId: site }), scope] } });
   if (available.error) return <E5Problem error={available.error} />;
   if (!available.data) return <p>Comprobando disponibilidad E5…</p>;

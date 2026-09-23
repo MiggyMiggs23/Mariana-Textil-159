@@ -323,6 +323,8 @@ router.get("/notificaciones/feed", async (req, res, next): Promise<void> => {
               ? `/inventario/auditorias?auditoriaId=${encodeURIComponent(row.entidadId)}`
               : row.entidad === "solicitudes_pago_dirigido"
               ? "/pagos-dirigidos"
+              : row.entidad === "e11_conciliaciones" && user.rol === "ADMIN"
+              ? `/contabilidad/conciliaciones/${encodeURIComponent(row.entidadId)}`
               : "/notificaciones",
         updatedAt: row.createdAt.toISOString(),
         siteId: systemRow.episodioUbicacionId ?? null,

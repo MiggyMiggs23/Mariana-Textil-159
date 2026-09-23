@@ -1,0 +1,27 @@
+{
+  "status": "PASS_19_RESPONSE_FIXTURES_NOT_UI_EXECUTION",
+  "casesExecuted": 0,
+  "fixtureSha256": "96b163adaf8d3d082651cb6f7d0620544f59d307ed478b183c806118883c225e",
+  "generatedZodSha256": "455619926fa26d25cc9fa5fb1f627dc8866d0028285a980a32700db40705b87f",
+  "schemas": [
+    "GetE11DisponibilidadResponse",
+    "GetE11IdentidadResponse",
+    "GetE11PerfilResponse",
+    "AssignE11PerfilResponse",
+    "ListE11PerfilHistorialResponse",
+    "ListE11FiscalClientesResponse",
+    "ListE11FiscalVentasResponse",
+    "GetE11FiscalFacturaResponse",
+    "ListE11FinanzasClientesResponse",
+    "ListE11FinanzasNotasResponse",
+    "GetE11FinanzasEstadoCuentaResponse",
+    "ListE11ConciliacionesResponse",
+    "CreateE11ConciliacionResponse",
+    "GetE11ConciliacionResponse",
+    "ListE11ConciliacionVentasResponse",
+    "DecideE11ConciliacionResponse",
+    "ListE11PreparacionesResponse",
+    "GetE11PreparacionResponse",
+    "PrepareE11AplicacionResponse"
+  ]
+}

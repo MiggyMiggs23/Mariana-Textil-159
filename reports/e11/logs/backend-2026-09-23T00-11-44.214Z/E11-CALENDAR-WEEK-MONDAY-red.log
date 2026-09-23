@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: E11-CALENDAR-WEEK-MONDAY
+not ok 1 - E11-CALENDAR-WEEK-MONDAY
+  ---
+  duration_ms: 2.303012
+  type: 'test'
+  location: '/tmp/e11-native-T53MUK/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:37978:1'
+  failureType: 'testCodeFailure'
+  error: 'El inicio no corresponde al periodo calendario.'
+  code: 'VALIDACION'
+  stack: |-
+    e11Period (file:///tmp/e11-native-T53MUK/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:36439:11)
+    TestContext.<anonymous> (file:///tmp/e11-native-T53MUK/E11-CALENDAR-WEEK-MONDAY-red/test.mjs:37979:13)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1106:25)
+    Test.start (node:internal/test_runner/test:1003:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 100.060945
+

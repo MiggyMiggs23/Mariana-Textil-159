@@ -1,4 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
+import { e11AuthIdentity } from "../lib/e11-repository";
+import { e11ErrorBody, E11Error, type E11Identity } from "../lib/e11";
 import { and, eq, gt } from "drizzle-orm";
 import {
   db,
@@ -11,6 +13,10 @@ import {
 } from "@workspace/db";
 
 const SESSION_COOKIE = "mariana_session";
+function unauthenticated(req: Request, res: Response, message: string) {
+  res.status(401).json(req.baseUrl.endsWith("/e11")
+    ? e11ErrorBody(new E11Error("NO_AUTENTICADO", message, 401)) : { error: message });
+}
 // Eight idle hours cover a complete quiet shift but still let the session die
 // overnight. The fixed sixteen-hour ceiling protects unusually long shifts and
 // never slides with activity.
@@ -27,6 +33,8 @@ export type AuthContext = {
   sessionId: string;
   user: Usuario;
   location: Ubicacion | null;
+  /** Separate gated sidecar identity; never a new base role or users column. */
+  e11?: E11Identity;
 };
 
 declare global {
@@ -63,7 +71,7 @@ export async function requireSession(
 ): Promise<void> {
   const sessionId = req.cookies?.[SESSION_COOKIE] as string | undefined;
   if (!sessionId) {
-    res.status(401).json({ error: "Debes iniciar sesión." });
+    unauthenticated(req, res, "Debes iniciar sesión.");
     return;
   }
 
@@ -91,7 +99,7 @@ export async function requireSession(
 
   if (!row) {
     clearSessionCookie(res);
-    res.status(401).json({ error: "La sesión venció. Inicia sesión de nuevo." });
+    unauthenticated(req, res, "La sesión venció. Inicia sesión de nuevo.");
     return;
   }
 
@@ -99,7 +107,7 @@ export async function requireSession(
 
   if (nextExpiry <= now) {
     clearSessionCookie(res);
-    res.status(401).json({ error: "La sesión venció. Inicia sesión de nuevo." });
+    unauthenticated(req, res, "La sesión venció. Inicia sesión de nuevo.");
     return;
   }
 
@@ -113,6 +121,18 @@ export async function requireSession(
     user: row.user,
     location: row.location,
   };
+  const e11 = await e11AuthIdentity(row.user.id, sessionId);
+  if (e11) {
+    if (e11.rolBase !== row.user.rol) {
+      res.status(409).json(e11ErrorBody(new E11Error("PERFIL_CAMBIADO", "La identidad cambió; recarga la sesión.")));
+      return;
+    }
+    req.auth.e11 = e11;
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-E11-Perfil", e11.perfil ?? "NINGUNO");
+    res.setHeader("X-E11-Perfil-Version", String(e11.perfilVersion));
+    res.setHeader("X-E11-Permisos-Version", e11.permisosVersion);
+  }
   next();
 }
 

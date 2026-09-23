@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST
+not ok 1 - E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST
+  ---
+  duration_ms: 10.81898
+  type: 'test'
+  location: '/tmp/e11-native-tLELqD/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-red/test.mjs:38616:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The validation function is expected to return "true". Received false
+    
+    Caught error:
+    
+    Error: UUID utilizado para otra intención.
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function (anonymous)]
+  actual:
+    status: 409
+  error: 'UUID utilizado para otra intención.'
+  code: 'UUID_REUTILIZADO'
+  stack: |-
+    e11Replay (file:///tmp/e11-native-tLELqD/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-red/test.mjs:37360:46)
+    async Object.transaction (file:///tmp/e11-native-tLELqD/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-red/test.mjs:38052:20)
+    async waitForActual (node:assert:646:5)
+    async strict.rejects (node:assert:769:25)
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-red/test.mjs:38632:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-RECOVERY-TOMBSTONE-BLOCKS-LATE-REQUEST-red/test.mjs:38632:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 106.726985
+

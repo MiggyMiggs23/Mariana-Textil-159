@@ -1,0 +1,3783 @@
+{
+  "status": "NEW_PRODUCTIVE_SNAPSHOT_REQUIRES_150_CYCLES_NOT_EXECUTED",
+  "previousEvidence": "reports/e11/frontend-recovery-session-loss-proof-2026-09-23T01-33-02.478Z.json",
+  "previousEvidenceHash": "cab1c32184e39a4577c780c44d167dd97802c2b99d84067a2846e0e03d2b3903",
+  "productDelta": {
+    "file": "artifacts/mariana-textil/src/lib/e11-session.tsx",
+    "oldHash": "27508d2d76d7d84eb8152409d81dd107bafd60ff20e7fe75e8dfd95d556e5112",
+    "newHash": "6fdab59b97202257224a779e8390adc9aff5e0a5b0c6a581e676dda85c2f13ca",
+    "exactReconstructionMatchesPrevious": true,
+    "description": "Only sibling key prefixes recovery:/business: and explanatory comment; provider behavior intentionally changes on scope reconciliation."
+  },
+  "sourceDifferences": [
+    "artifacts/mariana-textil/src/lib/e11-session.tsx"
+  ],
+  "helperDifferences": [],
+  "testAstsUnchanged": 153,
+  "anchorsValidated": 153,
+  "counts": {
+    "total": 153,
+    "priorTerminalEvidence": 149,
+    "priorAffectedRequireRegression": 146,
+    "priorUnaffectedRetained": 3,
+    "firstPendingSmoke": 4,
+    "totalNewSnapshotCyclesRequired": 150
+  },
+  "firstPendingIds": [
+    "E11-RECOVERY-ADMIN-SESSION-LOSS",
+    "E11-RECOVERY-SECOND-ADMIN",
+    "E11-RECOVERY-LEGACY-MARKER-NO-GUESS",
+    "E11-RECOVERY-NO-BUSINESS-RESEND"
+  ],
+  "regressionIdsAfterFour": [
+    "E11-OFF-ROUTE",
+    "E11-IDENTITY-USER",
+    "E11-IDENTITY-ROLE",
+    "E11-F-CLIENTS-SALES",
+    "E11-F-NOT-A",
+    "E11-A-NOT-F",
+    "E11-CAPABILITY-FISCAL",
+    "E11-CLIENT-PARENT-F",
+    "E11-CLIENT-PARENT-A",
+    "E11-E5-PARENT-A",
+    "E11-E5-PARENT-F",
+    "E11-LEGACY-DEEP-DENIED",
+    "E11-F-DOCUMENT",
+    "E11-F-DOCUMENT-ID",
+    "E11-F-SALES-CLIENT-ID",
+    "E11-F-PAGER",
+    "E11-READ-ERROR-NOT-ZERO",
+    "E11-A-CLIENTS",
+    "E11-A-NOTES-UNINVOICED",
+    "E11-A-ACCOUNT-ID",
+    "E11-A-NOTE-ID",
+    "E11-PROFILE-ADMIN",
+    "E11-PROFILE-NONADMIN",
+    "E11-PROFILE-REASON",
+    "E11-PROFILE-HISTORY-ID",
+    "E11-PROFILE-FRESH",
+    "E11-PROFILE-RESPONSE-ID",
+    "E11-PERIOD-WEEK-CALENDAR",
+    "E11-PERIOD-OBLIGATION",
+    "E11-PERIOD-OPEN",
+    "E11-SNAPSHOT-SEND",
+    "E11-SNAPSHOT-FRESH",
+    "E11-SNAPSHOT-ID",
+    "E11-SNAPSHOT-FROZEN",
+    "E11-DECISION-EXACT",
+    "E11-DECISION-OBSERVATION",
+    "E11-DECISION-NO-CUADRA",
+    "E11-DECISION-FRESH",
+    "E11-ADMIN-NOTICE",
+    "E11-ADMIN-NOTICE-LINK",
+    "E11-PREPARATIONS",
+    "E11-PREPARATION-ID",
+    "E11-PREPARATION-SEND",
+    "E11-PREPARATION-RETAINED",
+    "E11-PREPARATION-FRESH",
+    "E11-PREPARATION-RESPONSE",
+    "E11-WRITE-DOUBLE",
+    "E11-WRITE-RETRY-EXACT",
+    "E11-WRITE-409-NEW-UUID",
+    "E11-WRITE-REVOKED",
+    "E11-CACHE-PROFILE-VERSION",
+    "E11-UNCERTAIN-RETRY-403-PRESERVES",
+    "E11-UNCERTAIN-RETRY-STALE-PRESERVES",
+    "E11-POSTCOMMIT-PROFILE-PRIVACY-UUID",
+    "E11-APP-COUNTER-BOUNDARY",
+    "E11-APP-ADMIN-ROUTE",
+    "E11-APP-E5-DOCUMENT-PRIVATE",
+    "E11-APP-PAGOS-REDIRECT",
+    "E11-USUARIOS-PARENT-CONTROL",
+    "E11-USUARIOS-NOT-OTHER-ROLES",
+    "E11-USUARIOS-PARENT-ASSIGN",
+    "E11-NOTIFICACIONES-PARENT",
+    "E11-CONCILIACION-PARENT",
+    "E11-E5-SCOPE-PROFILE-VERSION",
+    "E11-E5-SCOPE-PERMISSIONS-VERSION",
+    "E11-E5-LEGACY-CONTADOR-BLOCKED",
+    "E11-CALENDAR-MONTH-FIRST",
+    "E11-CALENDAR-WEEK-LENGTH",
+    "E11-CALENDAR-MONTH-LEAP",
+    "E11-CALENDAR-DAY-OPTIONAL",
+    "E11-CALENDAR-NO-DEADLINE",
+    "E11-CALENDAR-FUTURE",
+    "E11-CALENDAR-ACCEPTED",
+    "E11-SNAPSHOT-PERIOD-FRESH",
+    "E11-SNAPSHOT-RESPONSE-PERIOD",
+    "E11-SNAPSHOT-RESPONSE-TOTAL",
+    "E11-DECISION-RESPONSE-ACTOR",
+    "E11-DECISION-HISTORICAL",
+    "E11-DECISION-ALREADY-DECIDED",
+    "E11-PROFILE-RESPONSE-UUID",
+    "E11-PROFILE-RESPONSE-ACTOR",
+    "E11-PROFILE-RESPONSE-REVISION",
+    "E11-FISCAL-PRIVATE-FIELDS",
+    "E11-A-PRIVATE-FIELDS",
+    "E11-A-TO-F-REVOKES-CACHE",
+    "E11-FINANCE-NOTES-PAGE",
+    "E11-FINANCE-ACCOUNT-PAGE",
+    "E11-FISCAL-SALES-PAGE",
+    "E11-SNAPSHOT-SALES-PAGE",
+    "E11-PREPARATIONS-PAGE",
+    "E11-HISTORY-PAGE",
+    "E11-PAGE-ERROR-RESTART",
+    "E11-IDENTITY-AUTH-REVOKED",
+    "E11-FISCAL-FORBIDDEN-NO-FALLBACK",
+    "E11-PERIODS-PAGE",
+    "E11-FINANCE-CLIENTS-PAGE",
+    "E11-PREPARATION-NOTE-BALANCE",
+    "E11-PREPARATION-EXACT-CHARGE-FRESH",
+    "E11-PREPARATION-NOTES-SAME-CLIENT",
+    "E11-PREPARATION-LIST-CLIENT",
+    "E11-PREPARATION-DEPENDENCY-OFF",
+    "E11-PROFILE-DEPENDENCY-OFF",
+    "E11-CONCILIATION-DEPENDENCY-OFF",
+    "E11-APP-OFF-USUARIOS",
+    "E11-APP-ADMIN-NAVIGATION",
+    "E11-ADMIN-BELL-LINK",
+    "E11-E5-LAST-PROFILE-RECHECK",
+    "E11-E5-LAST-PERMISSIONS-RECHECK",
+    "E11-RECOVERY-ORIGINAL-ACTOR",
+    "E11-RECOVERY-ORIGINAL-ACTION",
+    "E11-RECOVERY-ORIGINAL-UUID",
+    "E11-RECOVERY-RELOAD",
+    "E11-RECOVERY-ADMIN-INDEPENDENT-GATES",
+    "E11-RECOVERY-CAPABILITY",
+    "E11-RECOVERY-NONADMIN",
+    "E11-RECOVERY-OFF",
+    "E11-RECOVERY-GET-PENDING",
+    "E11-RECOVERY-GET-COMMITTED-UNAUDITED",
+    "E11-RECOVERY-GET-CONFIRMED",
+    "E11-RECOVERY-GET-TOMBSTONE",
+    "E11-RECOVERY-GET-404",
+    "E11-RECOVERY-GET-ERROR",
+    "E11-RECOVERY-RESPONSE-ACTOR",
+    "E11-RECOVERY-RESPONSE-ACTION",
+    "E11-RECOVERY-RESPONSE-UUID",
+    "E11-RECOVERY-RESPONSE-REVISION",
+    "E11-RECOVERY-RESPONSE-RESOLUTION-ID",
+    "E11-RECOVERY-RESPONSE-RESOLVED-AT",
+    "E11-RECOVERY-EXACT-RELEASE",
+    "E11-RECOVERY-POST-BODY",
+    "E11-RECOVERY-POST-UUID",
+    "E11-RECOVERY-POST-REASON",
+    "E11-RECOVERY-POST-FRESH-IDENTITY",
+    "E11-RECOVERY-POST-FRESH-CAS",
+    "E11-RECOVERY-POST-DOUBLE",
+    "E11-RECOVERY-POST-TERMINAL",
+    "E11-RECOVERY-POST-PENDING",
+    "E11-RECOVERY-POST-UNCERTAIN",
+    "E11-RECOVERY-POST-OUTCOME-ERRORS",
+    "E11-RECOVERY-POST-REPLAY-EXACT",
+    "E11-RECOVERY-POST-REPLAY-403",
+    "E11-RECOVERY-POST-CAS-PENDING",
+    "E11-RECOVERY-POST-CAS-TERMINAL",
+    "E11-RECOVERY-POST-TIMEOUT-GET-CONFIRMED",
+    "E11-RECOVERY-POST-TIMEOUT-GET-TOMBSTONE",
+    "E11-RECOVERY-NO-RECURSIVE-QUARANTINE"
+  ],
+  "allNewSnapshotIds": [
+    "E11-RECOVERY-ADMIN-SESSION-LOSS",
+    "E11-RECOVERY-SECOND-ADMIN",
+    "E11-RECOVERY-LEGACY-MARKER-NO-GUESS",
+    "E11-RECOVERY-NO-BUSINESS-RESEND",
+    "E11-OFF-ROUTE",
+    "E11-IDENTITY-USER",
+    "E11-IDENTITY-ROLE",
+    "E11-F-CLIENTS-SALES",
+    "E11-F-NOT-A",
+    "E11-A-NOT-F",
+    "E11-CAPABILITY-FISCAL",
+    "E11-CLIENT-PARENT-F",
+    "E11-CLIENT-PARENT-A",
+    "E11-E5-PARENT-A",
+    "E11-E5-PARENT-F",
+    "E11-LEGACY-DEEP-DENIED",
+    "E11-F-DOCUMENT",
+    "E11-F-DOCUMENT-ID",
+    "E11-F-SALES-CLIENT-ID",
+    "E11-F-PAGER",
+    "E11-READ-ERROR-NOT-ZERO",
+    "E11-A-CLIENTS",
+    "E11-A-NOTES-UNINVOICED",
+    "E11-A-ACCOUNT-ID",
+    "E11-A-NOTE-ID",
+    "E11-PROFILE-ADMIN",
+    "E11-PROFILE-NONADMIN",
+    "E11-PROFILE-REASON",
+    "E11-PROFILE-HISTORY-ID",
+    "E11-PROFILE-FRESH",
+    "E11-PROFILE-RESPONSE-ID",
+    "E11-PERIOD-WEEK-CALENDAR",
+    "E11-PERIOD-OBLIGATION",
+    "E11-PERIOD-OPEN",
+    "E11-SNAPSHOT-SEND",
+    "E11-SNAPSHOT-FRESH",
+    "E11-SNAPSHOT-ID",
+    "E11-SNAPSHOT-FROZEN",
+    "E11-DECISION-EXACT",
+    "E11-DECISION-OBSERVATION",
+    "E11-DECISION-NO-CUADRA",
+    "E11-DECISION-FRESH",
+    "E11-ADMIN-NOTICE",
+    "E11-ADMIN-NOTICE-LINK",
+    "E11-PREPARATIONS",
+    "E11-PREPARATION-ID",
+    "E11-PREPARATION-SEND",
+    "E11-PREPARATION-RETAINED",
+    "E11-PREPARATION-FRESH",
+    "E11-PREPARATION-RESPONSE",
+    "E11-WRITE-DOUBLE",
+    "E11-WRITE-RETRY-EXACT",
+    "E11-WRITE-409-NEW-UUID",
+    "E11-WRITE-REVOKED",
+    "E11-CACHE-PROFILE-VERSION",
+    "E11-UNCERTAIN-RETRY-403-PRESERVES",
+    "E11-UNCERTAIN-RETRY-STALE-PRESERVES",
+    "E11-POSTCOMMIT-PROFILE-PRIVACY-UUID",
+    "E11-APP-COUNTER-BOUNDARY",
+    "E11-APP-ADMIN-ROUTE",
+    "E11-APP-E5-DOCUMENT-PRIVATE",
+    "E11-APP-PAGOS-REDIRECT",
+    "E11-USUARIOS-PARENT-CONTROL",
+    "E11-USUARIOS-NOT-OTHER-ROLES",
+    "E11-USUARIOS-PARENT-ASSIGN",
+    "E11-NOTIFICACIONES-PARENT",
+    "E11-CONCILIACION-PARENT",
+    "E11-E5-SCOPE-PROFILE-VERSION",
+    "E11-E5-SCOPE-PERMISSIONS-VERSION",
+    "E11-E5-LEGACY-CONTADOR-BLOCKED",
+    "E11-CALENDAR-MONTH-FIRST",
+    "E11-CALENDAR-WEEK-LENGTH",
+    "E11-CALENDAR-MONTH-LEAP",
+    "E11-CALENDAR-DAY-OPTIONAL",
+    "E11-CALENDAR-NO-DEADLINE",
+    "E11-CALENDAR-FUTURE",
+    "E11-CALENDAR-ACCEPTED",
+    "E11-SNAPSHOT-PERIOD-FRESH",
+    "E11-SNAPSHOT-RESPONSE-PERIOD",
+    "E11-SNAPSHOT-RESPONSE-TOTAL",
+    "E11-DECISION-RESPONSE-ACTOR",
+    "E11-DECISION-HISTORICAL",
+    "E11-DECISION-ALREADY-DECIDED",
+    "E11-PROFILE-RESPONSE-UUID",
+    "E11-PROFILE-RESPONSE-ACTOR",
+    "E11-PROFILE-RESPONSE-REVISION",
+    "E11-FISCAL-PRIVATE-FIELDS",
+    "E11-A-PRIVATE-FIELDS",
+    "E11-A-TO-F-REVOKES-CACHE",
+    "E11-FINANCE-NOTES-PAGE",
+    "E11-FINANCE-ACCOUNT-PAGE",
+    "E11-FISCAL-SALES-PAGE",
+    "E11-SNAPSHOT-SALES-PAGE",
+    "E11-PREPARATIONS-PAGE",
+    "E11-HISTORY-PAGE",
+    "E11-PAGE-ERROR-RESTART",
+    "E11-IDENTITY-AUTH-REVOKED",
+    "E11-FISCAL-FORBIDDEN-NO-FALLBACK",
+    "E11-PERIODS-PAGE",
+    "E11-FINANCE-CLIENTS-PAGE",
+    "E11-PREPARATION-NOTE-BALANCE",
+    "E11-PREPARATION-EXACT-CHARGE-FRESH",
+    "E11-PREPARATION-NOTES-SAME-CLIENT",
+    "E11-PREPARATION-LIST-CLIENT",
+    "E11-PREPARATION-DEPENDENCY-OFF",
+    "E11-PROFILE-DEPENDENCY-OFF",
+    "E11-CONCILIATION-DEPENDENCY-OFF",
+    "E11-APP-OFF-USUARIOS",
+    "E11-APP-ADMIN-NAVIGATION",
+    "E11-ADMIN-BELL-LINK",
+    "E11-E5-LAST-PROFILE-RECHECK",
+    "E11-E5-LAST-PERMISSIONS-RECHECK",
+    "E11-RECOVERY-ORIGINAL-ACTOR",
+    "E11-RECOVERY-ORIGINAL-ACTION",
+    "E11-RECOVERY-ORIGINAL-UUID",
+    "E11-RECOVERY-RELOAD",
+    "E11-RECOVERY-ADMIN-INDEPENDENT-GATES",
+    "E11-RECOVERY-CAPABILITY",
+    "E11-RECOVERY-NONADMIN",
+    "E11-RECOVERY-OFF",
+    "E11-RECOVERY-GET-PENDING",
+    "E11-RECOVERY-GET-COMMITTED-UNAUDITED",
+    "E11-RECOVERY-GET-CONFIRMED",
+    "E11-RECOVERY-GET-TOMBSTONE",
+    "E11-RECOVERY-GET-404",
+    "E11-RECOVERY-GET-ERROR",
+    "E11-RECOVERY-RESPONSE-ACTOR",
+    "E11-RECOVERY-RESPONSE-ACTION",
+    "E11-RECOVERY-RESPONSE-UUID",
+    "E11-RECOVERY-RESPONSE-REVISION",
+    "E11-RECOVERY-RESPONSE-RESOLUTION-ID",
+    "E11-RECOVERY-RESPONSE-RESOLVED-AT",
+    "E11-RECOVERY-EXACT-RELEASE",
+    "E11-RECOVERY-POST-BODY",
+    "E11-RECOVERY-POST-UUID",
+    "E11-RECOVERY-POST-REASON",
+    "E11-RECOVERY-POST-FRESH-IDENTITY",
+    "E11-RECOVERY-POST-FRESH-CAS",
+    "E11-RECOVERY-POST-DOUBLE",
+    "E11-RECOVERY-POST-TERMINAL",
+    "E11-RECOVERY-POST-PENDING",
+    "E11-RECOVERY-POST-UNCERTAIN",
+    "E11-RECOVERY-POST-OUTCOME-ERRORS",
+    "E11-RECOVERY-POST-REPLAY-EXACT",
+    "E11-RECOVERY-POST-REPLAY-403",
+    "E11-RECOVERY-POST-CAS-PENDING",
+    "E11-RECOVERY-POST-CAS-TERMINAL",
+    "E11-RECOVERY-POST-TIMEOUT-GET-CONFIRMED",
+    "E11-RECOVERY-POST-TIMEOUT-GET-TOMBSTONE",
+    "E11-RECOVERY-NO-RECURSIVE-QUARANTINE"
+  ],
+  "affectedPriorCases": [
+    {
+      "id": "E11-OFF-ROUTE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-OFF-ROUTE-green.log",
+          "sha256": "b5f07858a5af64ddad767f88fa7c12086960168208c881361eca4dac34361e33",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-OFF-ROUTE-red.log",
+          "sha256": "137fafef8eb8ba2a8f3f4e445753cedef8fd377a8568a40cd31002b3d1c4f048",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-OFF-ROUTE-restored.log",
+          "sha256": "2883af0bafe36308fe4cb02d0760a18cb5b2a580150972234724dfff24ef357f",
+          "reachedSiblingKeys": false
+        }
+      ]
+    },
+    {
+      "id": "E11-IDENTITY-USER",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-IDENTITY-USER-green.log",
+          "sha256": "10c51a11abab97bb5ae5aba13af1cef0bfbafbbe654ad76653a3de2957d8c003",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-IDENTITY-USER-red.log",
+          "sha256": "1a23cc96cb410be3734eea4b14520554440d0084839283ba90de981a3ad25860",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-IDENTITY-USER-restored.log",
+          "sha256": "d61599e64dbb8a27b1a90ecdafd094f45f8ca9a5311cb71e3b4dc9f3f7a248ed",
+          "reachedSiblingKeys": false
+        }
+      ]
+    },
+    {
+      "id": "E11-IDENTITY-ROLE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-IDENTITY-ROLE-green.log",
+          "sha256": "b37e25298a58dfc988d6d976cf87d83cfc6451dffe29c736d287ec3199d95a4c",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-IDENTITY-ROLE-red.log",
+          "sha256": "bce9b26e7c1372508f9a7b624f863f00ab40e1f00a297cde418cc35e0626864c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-IDENTITY-ROLE-restored.log",
+          "sha256": "5fefbd815dadbfebc72408288a838d8c0bcacaaab7c79a7464fab6fac9430331",
+          "reachedSiblingKeys": false
+        }
+      ]
+    },
+    {
+      "id": "E11-F-CLIENTS-SALES",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-CLIENTS-SALES-green.log",
+          "sha256": "ffb4e93090fc5398a54f27d2dd21d5a0173580e6bc2dbf88c040480b79c98ab8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-CLIENTS-SALES-red.log",
+          "sha256": "37850566d8087e245edd51fc3979218fb7f3c64393c5c99b43357e68fe16fb04",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-CLIENTS-SALES-restored.log",
+          "sha256": "8d2f5c48c5b20023661812c6dd8d213dabaed692611b7c4d6a75ae25447af335",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-F-NOT-A",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-NOT-A-green.log",
+          "sha256": "ad90ce499994bcb174b7775e88c343adf51a09474e9714610059f88ca76b6818",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-NOT-A-red.log",
+          "sha256": "0459cffdf0f512c65f764d932076ae34128b5a7bda097a6b0506f45b6ae387e8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-NOT-A-restored.log",
+          "sha256": "4eae377cd24c14322b03ba96a7e63aa3209a727f38f71b6422b8bfb506998dad",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-A-NOT-F",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-NOT-F-green.log",
+          "sha256": "63edf03641d2108bd90229a87c6076c8c14030c33924aa6acc1af09b3db3c4dd",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-NOT-F-red.log",
+          "sha256": "dea2e81ace11fabc3f44e726ac2221018cb4a0ba1daaddb9234100505916199a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-NOT-F-restored.log",
+          "sha256": "08765e1a68d784b4decd2902f9f5de9a12dca65a2e98f2e221e731fc9327de39",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CAPABILITY-FISCAL",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CAPABILITY-FISCAL-green.log",
+          "sha256": "edf764d4f891465686cf222fc5e9bde4cdc0b6274ff24c4e62d69ef14de09102",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CAPABILITY-FISCAL-red.log",
+          "sha256": "f37ca8f53bc3ad52a87a6befe70b5d9d82756fec08699335c53490c333fb61e2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CAPABILITY-FISCAL-restored.log",
+          "sha256": "2f84d4d31d48f05c18246335c8f17ce3ae7a4647a452f55fda819d25bd702cb8",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CLIENT-PARENT-F",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CLIENT-PARENT-F-green.log",
+          "sha256": "77243bb791860288085120cc984c2057286f567570ef971fe27edf55327bc381",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CLIENT-PARENT-F-red.log",
+          "sha256": "eca07c03b7af708487606f7748faaae579b7edb6de0ae1f2b8ca38020aaf6553",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CLIENT-PARENT-F-restored.log",
+          "sha256": "535fab6d6d2f392db3595b00ba3e464052080d794dbfba5ff64340e1db3a4a8b",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CLIENT-PARENT-A",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CLIENT-PARENT-A-green.log",
+          "sha256": "0488012b72079f7b5b6c00b1820ef59471a1f9d76058adee53aba943aa6a3e7c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CLIENT-PARENT-A-red.log",
+          "sha256": "c3ed9eedbc96d72b8f41164cc8485c73540cb478fe8dbc909950af339230c3fe",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-CLIENT-PARENT-A-restored.log",
+          "sha256": "082afacc0790eafda637b613e3d1a53246c5fc7562b4e31d3e120385c08d0676",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-E5-PARENT-A",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-E5-PARENT-A-green.log",
+          "sha256": "1d3ef788df6592b0d85538058077fe4454ff77caea679abf62eae42d8ab9c4a3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-E5-PARENT-A-red.log",
+          "sha256": "c0ac3ff0c8ddf0c76ad11f846369a6593c49ada93f2db6d0cbc93e7a923f8b75",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-E5-PARENT-A-restored.log",
+          "sha256": "39658ba5a5d2b5d06a272bb7c76ff85038012611291831a8e630ded139b32bd8",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-E5-PARENT-F",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-E5-PARENT-F-green.log",
+          "sha256": "62c6fdb3509e23231c1d13e39435c9f09f4ee44799bf5de506a3eaca34120a32",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-E5-PARENT-F-red.log",
+          "sha256": "c0e900406e2f1f94f497fb4156e88247d058c45c45bf4fe372f63f84cdf6878e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-E5-PARENT-F-restored.log",
+          "sha256": "66569124b437beb064950873421db2fb57695a1a5ceddb2ba0ac4c2a3a365a2e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-LEGACY-DEEP-DENIED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-LEGACY-DEEP-DENIED-green.log",
+          "sha256": "4950b4c922901371327539bdc707348e99adf9cde4cda67b48efe4b5f1612cd9",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-LEGACY-DEEP-DENIED-red.log",
+          "sha256": "62bc4cceb94e500a779ee69f8f87a9059f59e3092d32dc67160219a0b3aafa9b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-LEGACY-DEEP-DENIED-restored.log",
+          "sha256": "5ad98268ae45e85d9f6a1bc430a967edebbbabf4ff389202007c6899f722ad4a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-F-DOCUMENT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-DOCUMENT-green.log",
+          "sha256": "dc24d625bd23adec30aa1ac1dc240d3159e0f8aa01664ab5fdee73923d03a736",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-DOCUMENT-red.log",
+          "sha256": "211b39bf429995b9ffa32dc8e3cd2dee40f8d84e068bf0be93688c98e0cf8923",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-DOCUMENT-restored.log",
+          "sha256": "ec87efe2f0ce1d44e684ec011126a1cd4cccabb07f427e2a257d765083392661",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-F-DOCUMENT-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-DOCUMENT-ID-green.log",
+          "sha256": "d68a4c0797e573056c84ce97d221bc953f9ac9f508c6a4519cab2ad2741ebff5",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-DOCUMENT-ID-red.log",
+          "sha256": "8cb1707282720dae4d44d5e33cd5fc5a8c53004b470b086b797dcc17ff95cd41",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-DOCUMENT-ID-restored.log",
+          "sha256": "b0e80a606bf5f4459e6ff86300bdba610571d2d4c1b0a5bca9a486620c721a89",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-F-SALES-CLIENT-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-SALES-CLIENT-ID-green.log",
+          "sha256": "5ed2a943529afa7b2fa15daaabae88244909ab0c464bfc96ba59dfffa3d28d9b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-SALES-CLIENT-ID-red.log",
+          "sha256": "d7f047da32f5621254826d0e0ff29f4c2ceeb248c44db4ea5c0c2d541ecc54c3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-SALES-CLIENT-ID-restored.log",
+          "sha256": "9b20cebbf32cf79c53f9f3e4a4c66434e72a086960747c851de60d96c860ec0a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-F-PAGER",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-PAGER-green.log",
+          "sha256": "8f47ac6dcca05c4e110e519f4bebab1d1039e8c98ca12448e8b998a61d66c63e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-PAGER-red.log",
+          "sha256": "cce081a367c83685638bd3f640168ffbd54b0d36627dc7020594e7ae418ceb96",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-F-PAGER-restored.log",
+          "sha256": "5f8b5918bb2dae2e18ba4b0e1df32946a04b2c13f34744126e289e659cfdc0a7",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-READ-ERROR-NOT-ZERO",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-READ-ERROR-NOT-ZERO-green.log",
+          "sha256": "79f80c763545f93dd218d20913d9111fdd4af96f66f80faf0e9a5d2c944133a5",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-READ-ERROR-NOT-ZERO-red.log",
+          "sha256": "80621e15d77a386f830a40c83a8cd627c578d2827a5207fc55be5f546191d4c6",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-READ-ERROR-NOT-ZERO-restored.log",
+          "sha256": "ae00e4779a047916d479b71b2dd758a2bf78150a402a08bee2dc4c94a963fd27",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-A-CLIENTS",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-CLIENTS-green.log",
+          "sha256": "e57e19674e99a8e930a28ee1709d282337d92b1e7e7c205006f706107c28e36a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-CLIENTS-red.log",
+          "sha256": "b530c632bd3fb1c6a8437133695f1f626a17bd55a04eaf321a0eab10b72388fa",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-CLIENTS-restored.log",
+          "sha256": "e4d2fa7002f8f20121e3f9c58eaee8f10255c0182f8a3c04d77d1e9767473641",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-A-NOTES-UNINVOICED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-NOTES-UNINVOICED-green.log",
+          "sha256": "2e8b4c76a82d576583497dce1d8081519641914fd696fc874b9f061ae52bd80e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-NOTES-UNINVOICED-red.log",
+          "sha256": "75f0a53212a8d70e4c617b70d1cad7cdf54a5eb696642326a1496d003f5b31dd",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-NOTES-UNINVOICED-restored.log",
+          "sha256": "ddb2efbcbd30f711d5729f636a8ab7c9e0c73b2955a6ba3ba018a0255c56976e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-A-ACCOUNT-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-ACCOUNT-ID-green.log",
+          "sha256": "9436721356bd23aeae56fdc0d1d1982d53608dcce36ab5ee362ffef1f2ca3fe7",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-ACCOUNT-ID-red.log",
+          "sha256": "d144fd4a8fbb664ea1e5fabb3d3307e75146f9e10068080571979e4277d75e30",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-A-ACCOUNT-ID-restored.log",
+          "sha256": "f6aac7db448ea7e87fe8e04c2efc92c72c3e61af5f1f63e01ee53c2d9da5cc7f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-A-NOTE-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-A-NOTE-ID-green.log",
+          "sha256": "5ec8cd14511d14a0d85546e4bd621d096ccd84e1f768ef087d857d9197ea0e9b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-A-NOTE-ID-red.log",
+          "sha256": "1eecf81c12e121cb1ea11dffacc75c5dd317c3d8786a9b04eff9685855cd1039",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-A-NOTE-ID-restored.log",
+          "sha256": "274acef2e642e5666d56e9e20b9a26bb934ad5f39bf7a047910e8b0459d0da60",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-ADMIN",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-ADMIN-green.log",
+          "sha256": "283e7d5c11506ac5a5e5a536f20474e8d1c8f89a07a838c2b63f77276f8acdaf",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-ADMIN-red.log",
+          "sha256": "f8bd2c5837d3d3d2d75e5551f8c9364808b1f14969cd7486490d846b6f64501b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-ADMIN-restored.log",
+          "sha256": "fd8f7b0c930870a2011aa897f35f589fc8751524ec70620f90fedfb76a1cadc0",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-NONADMIN",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-NONADMIN-green.log",
+          "sha256": "a5e32043b486f595ac4d4419413da514067a1f68b1f3617873509d7c878caccc",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-NONADMIN-red.log",
+          "sha256": "3508be7ab755c7b22845f5a3d17bdb02956ac8ef9e06b3a14f694d036b52082f",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-NONADMIN-restored.log",
+          "sha256": "1bd16a576f42edcb5df963257f35538d1117c4f4bae2cc7b519f402fb12d4e54",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-REASON",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-REASON-green.log",
+          "sha256": "69d83ab4b22399ae24947b98aa8856f0dcf3e95ba6ea9690361fdf7423aa68e8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-REASON-red.log",
+          "sha256": "e083ddcee844d0861d786ac1a66d715b4535598b5f3434a24052d3392ee5ded0",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-REASON-restored.log",
+          "sha256": "c4a64b24bcac2b783dcc516d95a3d27adb98add0a5440dde972066e5cfdd717e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-HISTORY-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-HISTORY-ID-green.log",
+          "sha256": "41d5b8476b789f242e274c0b11d71f42462e3d5ad5f879a50ae19eae10f345b7",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-HISTORY-ID-red.log",
+          "sha256": "b68841d0003ecbc72184ebb4a7d69f01b879204617872717291823a2bd588bec",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-HISTORY-ID-restored.log",
+          "sha256": "8592654cbc6d18d5e6dea0f6319063add4286dd031d805bac47210c19b81f541",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-FRESH",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-FRESH-green.log",
+          "sha256": "3102980203255fbe46b04c16bb14790e778dc432c04397f28edd65926f7480a2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-FRESH-red.log",
+          "sha256": "a305bfc02d669ceeb9ee349f2658d33c939e75943f8b023171646387ccdeaf4d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-FRESH-restored.log",
+          "sha256": "0880f3ebb52024f31095ba5358e6b8e60ecb0b86952c71640c9dd76a565387f7",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-RESPONSE-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-RESPONSE-ID-green.log",
+          "sha256": "d48695a160ab052a94974f62c4a69842c0fb25e505413bec98408d9d3510418f",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-RESPONSE-ID-red.log",
+          "sha256": "42565cbec541395f8f310776c556585b94380d642dadd50e8e51981ef6094444",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PROFILE-RESPONSE-ID-restored.log",
+          "sha256": "08811928f344c567d66e2bc41a6e92b58b716fcf13c3b9ba0960e5d87d3c797e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PERIOD-WEEK-CALENDAR",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-WEEK-CALENDAR-green.log",
+          "sha256": "fd339874f78ba4255882a39489911dcaa11e0ff81719fd42bf3f88992798306e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-WEEK-CALENDAR-red.log",
+          "sha256": "771a0400a5294281139aaf8d07ba10b5923b89a99d39ec936698ec5b549d5a80",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-WEEK-CALENDAR-restored.log",
+          "sha256": "aad6ca7ffabcbb99b5d4223a825e326558510d196889ac73da0c4dac2b3f27cd",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PERIOD-OBLIGATION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-OBLIGATION-green.log",
+          "sha256": "ec6439d6e6483d67465545d2a60df5a49aa39d6be8b9eddcdcef1ea4ef30e00a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-OBLIGATION-red.log",
+          "sha256": "5fbeda1568c7edca673f690c760d5ffbd5637d28d40a1c3158c440c8ed8975cf",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-OBLIGATION-restored.log",
+          "sha256": "cc4a49c16fe5e9b633c3a80cdd9a6e64318364e9f89a41cd0bd6bda4b869037d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PERIOD-OPEN",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-OPEN-green.log",
+          "sha256": "8c9017644af67eca7f6ea721018fee3b56ab1e31e3e589702ef3f2d8534442f8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-OPEN-red.log",
+          "sha256": "a1eabcb55c6a9a1159d9c8ae549e8a3a1265a16a7c61abdcd0dbc2edc8fc12f9",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-PERIOD-OPEN-restored.log",
+          "sha256": "f7dee709afcca37e667daac48eebf631b49220686663439facfbb216db84e13f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-SEND",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-SNAPSHOT-SEND-green.log",
+          "sha256": "47c1555f8e4b4db778faf2f6e908d574cf5b28424d761602e4f965aea4d25e39",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-SNAPSHOT-SEND-red.log",
+          "sha256": "9af114a011879d426f1dbc1ff376381f20f45ce8295629d441cb9cb976291310",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-SNAPSHOT-SEND-restored.log",
+          "sha256": "5851c9b9c6130b479063a924af982740efe21c1a9b031cb6d2499ba0b32f1571",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-FRESH",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-SNAPSHOT-FRESH-green.log",
+          "sha256": "03059d1b77cb707c1af2d59ff11758d11f3c2eb987ae8dc89f9544513b178a24",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-SNAPSHOT-FRESH-red.log",
+          "sha256": "f96f975c3b1f814dc278391a79553f95ff4fef6a14072b9a46d8e55129359ba1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/E11-SNAPSHOT-FRESH-restored.log",
+          "sha256": "65a3a0f1462b3773192a716c0e4ac3f7e115bcb77b3dade0989039fc1f712e28",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-SNAPSHOT-ID-green.log",
+          "sha256": "ea7f5f2da9e01dc7900e6e3fdc2b052b87dc4e8abc6e3017c57f996185ded325",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-SNAPSHOT-ID-red.log",
+          "sha256": "36fb87a2e5d3b88ce94f516371ddd2b0bfea5f1939a88695cd7c4ee97f506350",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-SNAPSHOT-ID-restored.log",
+          "sha256": "099bdca1863069af9a40a6f23c2ac78b9ad71cd4a07bf9af20403d8c29d7f084",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-FROZEN",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-SNAPSHOT-FROZEN-green.log",
+          "sha256": "2a5d44d2ff5743f66d0815a4004c2065afaf17d3624a87ec0858a50562083fbc",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-SNAPSHOT-FROZEN-red.log",
+          "sha256": "72b94fda02789fe4a50c6c727ec55749f575c79255b7ef9939c90ade7e1134c0",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-SNAPSHOT-FROZEN-restored.log",
+          "sha256": "3425cab8c783e64d98f618e9cbe8d31a51ede225e84c320ddc0749cc33bb5e84",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-DECISION-EXACT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-EXACT-green.log",
+          "sha256": "b87b04cf382d522e7f38cea1d898eaf7f2355bec9d0ee66c0845d5c81bff0c6e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-EXACT-red.log",
+          "sha256": "ad2bc288a549d9e7f86384cf4d4d1d5641c6a89ec8184f4c03eceb37e6355b84",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-EXACT-restored.log",
+          "sha256": "567ac4c60f9273edeab9aae19ce2c5f4c9cc1502ac7f0efeab3db3da231da640",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-DECISION-OBSERVATION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-OBSERVATION-green.log",
+          "sha256": "66b6e957ac34e90e1dc45f89c7b217d23c4e164d5858efba4258874c6590f22a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-OBSERVATION-red.log",
+          "sha256": "7b827acbb65635b83e897db4ddada48309f66c6fedb26cedae46643f44bd30d3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-OBSERVATION-restored.log",
+          "sha256": "92ea4f0c08477ea4d711f9df660bafddda89d8500093cb2d8a9df6141ff7dc65",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-DECISION-NO-CUADRA",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-NO-CUADRA-green.log",
+          "sha256": "c815934e1ccfdc8927901607290680702fe0ec32a3deaf0fd10be3cac9fcf5d4",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-NO-CUADRA-red.log",
+          "sha256": "044fbf493bac9c0825e2a8bebc63a6b2436549930c1310f7aa5588d279cd1263",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-NO-CUADRA-restored.log",
+          "sha256": "113f7a57d8e9f089e6504563c1dd44187f09462482423f41dbae4981877a928d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-DECISION-FRESH",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-FRESH-green.log",
+          "sha256": "4072e22b2ae00a5d44037316a791f42ae505b834d05c15e8328acf81280c72c9",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-FRESH-red.log",
+          "sha256": "2a5413c33a94fd701596fd848371e9f240b702853bb9126bcedd4e695506af6e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-DECISION-FRESH-restored.log",
+          "sha256": "26ff561ec2516ec42b36b60f611aa22db53257f09ccf494b4efbac34d7a9d78c",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-ADMIN-NOTICE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-ADMIN-NOTICE-green.log",
+          "sha256": "e4b49cb2986158e4cc8bb0ec217d5b7ff9022d0fa7fd02ef2f1bd7ea7debc4ad",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-ADMIN-NOTICE-red.log",
+          "sha256": "ff8304b3bec49221f63f73dd3a1c24b15645a5fa770acbd602b3f8cec4f3c570",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-ADMIN-NOTICE-restored.log",
+          "sha256": "546cc107d54a310f99947f3ce68bd900e62823eb1ff3cc6e1c7621e554cc3357",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-ADMIN-NOTICE-LINK",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-ADMIN-NOTICE-LINK-green.log",
+          "sha256": "c187807bb41c9d46065cff9fec15c2e27ae698a7993e0fb089db545c258ef33b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-ADMIN-NOTICE-LINK-red.log",
+          "sha256": "94735beb75c76e2b97b4fc26e080d3e1f57d7b2c44216469135f23a4b1eeaf25",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-ADMIN-NOTICE-LINK-restored.log",
+          "sha256": "7155d7279d6487dd8acfb15110afa42e498559d89cdca2391d0f9422a01db56a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATIONS",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATIONS-green.log",
+          "sha256": "98dc6c1519f4d9d55254bf956533f68798d724cab11c558a45223c5874006012",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATIONS-red.log",
+          "sha256": "28237d63893eb8a3e41f3537ecaedc09d63a7553a4782592157f424a9d743b15",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATIONS-restored.log",
+          "sha256": "e14033af6974ff7bbd7fcaf28f04c20310af52df8beb3dfb1b49dba677a1b8ab",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-ID-green.log",
+          "sha256": "411e8a039349e938fdf321c2bbbf8320a08deb79781630bd62cda61fecfda673",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-ID-red.log",
+          "sha256": "66d168cb5f64245eea2b41c22b3393512198947745df809b7811e09b23d3dfa4",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-ID-restored.log",
+          "sha256": "1e35d1df3439e9c78fcccdbf8bbcd193dc2e17b832e8725a7fec5fade6b02b63",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-SEND",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-SEND-green.log",
+          "sha256": "f3130878e832ca020d2f090e789af0da679e56536fc03d863088e29f073deaa3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-SEND-red.log",
+          "sha256": "4d3442c3fd7746fbe17ddc14b8ac79e84d2d86f850b7f83deceadaf373156475",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-SEND-restored.log",
+          "sha256": "67de49f6299ba233e5563fb6e065aabba58706b6ee59486bb20d07fc939a0a5f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-RETAINED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-RETAINED-green.log",
+          "sha256": "86eaefbe0ce84f1de4df5d5af7cc3bcee2dc6912227655f0e377f1986c88731a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-RETAINED-red.log",
+          "sha256": "0487812d88467c9f278a56fe15b288f46714114cf5396f79fe02ebd8f76278e1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-RETAINED-restored.log",
+          "sha256": "ab9bf270f90adddd16715ebdc2ea9d2c2eb4014083e594a543222f69cd8e43b1",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-FRESH",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-FRESH-green.log",
+          "sha256": "b9be4f84c6d304a9f874e35e5171896ab78e64486b4d5c12bff172e6f01d878b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-FRESH-red.log",
+          "sha256": "f23a2b04c9bf4b2576addd7a141ad3da8584c3f0843d376adb58f28d42bfb327",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-FRESH-restored.log",
+          "sha256": "7c79cd71c9df0151dbeb3aacdf3b43a601c459a5128fd22d5d69f9f7491cb78c",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-RESPONSE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-RESPONSE-green.log",
+          "sha256": "16ad756fdd7b5128f0af98d884d18ab7aa71e9987c021d47f3899e222b4850c2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-RESPONSE-red.log",
+          "sha256": "f52c9e8250e4036a1dffcf05929d4c50f8287cc3c20b5040ff5c1070d48337cb",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-PREPARATION-RESPONSE-restored.log",
+          "sha256": "185d3d11fe6e0efe1a46e0e323ed397c30d11e07ee16119b42c7c78595066198",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-WRITE-DOUBLE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-DOUBLE-green.log",
+          "sha256": "3bb028ac6bd8b6944c8c3dc1ded269e1dcd4f6cbd85dc70b8f9dff0f9e229519",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-DOUBLE-red.log",
+          "sha256": "8a13a3c180a06ec6522cf488d165d2683c97298ef7251e0b14a2c5bd3a4722d9",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-DOUBLE-restored.log",
+          "sha256": "b044e9932803e4f3ea3d2939d1e4047323f9ce8bdc968869ac321a550fa5d786",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-WRITE-RETRY-EXACT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-RETRY-EXACT-green.log",
+          "sha256": "3a65285d4b26b6db5aff6902218babc3d7f4fcf060b12e082650a2f364bdc10b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-RETRY-EXACT-red.log",
+          "sha256": "66c5b0f3104852b2784e0c62c2a04c48d6b29c4fee94b982d7aeac7a9db28423",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-RETRY-EXACT-restored.log",
+          "sha256": "467cb1d394a3c18f19bfceb91372684b4c2bbaf6ff8f0ece4d12af92b8df435d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-WRITE-409-NEW-UUID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-409-NEW-UUID-green.log",
+          "sha256": "19a62542133da0066c9a361ecea007890b3077dfc202b4f0bc6a0f62985ca551",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-409-NEW-UUID-red.log",
+          "sha256": "6509a56aeffbb418c52fed664967ec85c57bf715b14d16bd70eeae430e59fbb8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-409-NEW-UUID-restored.log",
+          "sha256": "16035a82507b681506d0f7de8d0a59adffceb9ddd4eacd8016261770a4c7faed",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-WRITE-REVOKED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-REVOKED-green.log",
+          "sha256": "a04543d9eecb7915b94123cae5ac7d4064be82b1a03e835bba622a4f71bd1440",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-REVOKED-red.log",
+          "sha256": "006d1cf493c66c0d683461b3b361cacc6acc3bdb18919dcf40dc99e259fbf4ba",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-WRITE-REVOKED-restored.log",
+          "sha256": "c1c7b146f8a539e865d5b55334c1ce2e41db1a98f8faefb3662fe1193ae28b81",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CACHE-PROFILE-VERSION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-CACHE-PROFILE-VERSION-green.log",
+          "sha256": "b5d23e37adda8926e98bf40e0cc2da9a8f414753b44fa6213c6459a9d42e8da4",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-CACHE-PROFILE-VERSION-red.log",
+          "sha256": "cb122d1efecdcf539524911af4baf546cc12fe61af8b106a84edda4b228fb699",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-CACHE-PROFILE-VERSION-restored.log",
+          "sha256": "0fd490add400ec0203871bdbe7c29f75e40f5bc0c9f3c17041c51a92048ef856",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-UNCERTAIN-RETRY-403-PRESERVES",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-UNCERTAIN-RETRY-403-PRESERVES-green.log",
+          "sha256": "a20451c8d538f292dc4eaa928f66464c6aa8c22bbcabf4878bb3bf3fe13795f9",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-UNCERTAIN-RETRY-403-PRESERVES-red.log",
+          "sha256": "6902cc7c7113baa9f742edb3f6c2a8e353eb3f8fee06ab0f4d1f4eff2ebad87b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-UNCERTAIN-RETRY-403-PRESERVES-restored.log",
+          "sha256": "5a963acb4b0150bc5547565366f31106b3ce67c97c0b814346f9e90b711c9f4b",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-UNCERTAIN-RETRY-STALE-PRESERVES",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-UNCERTAIN-RETRY-STALE-PRESERVES-green.log",
+          "sha256": "27ba077a342db67bdc9f716454ecec09d4c887a519af07715a6c8b4bbda9f000",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-UNCERTAIN-RETRY-STALE-PRESERVES-red.log",
+          "sha256": "3d1f308881b82dde4a2ac64d810fdfff9c08d93e1c056c939123a288c0f511c4",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-UNCERTAIN-RETRY-STALE-PRESERVES-restored.log",
+          "sha256": "e2a9ba802b85b9b0e40c70d0aec79a99b8990f063c4a44d2c490fe75ba6a6b3a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-POSTCOMMIT-PROFILE-PRIVACY-UUID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-POSTCOMMIT-PROFILE-PRIVACY-UUID-green.log",
+          "sha256": "22686ef5f13d922cd56067c0ebe2712d433c7382471935d0a9dfa908a9ad33b5",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-POSTCOMMIT-PROFILE-PRIVACY-UUID-red.log",
+          "sha256": "7b8f6d68eddbe37401da05ec0f6baecccaff38cc496a4ce3b0dc6c56117f5138",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-POSTCOMMIT-PROFILE-PRIVACY-UUID-restored.log",
+          "sha256": "b75035e3a1e1ee221f90fb8cacb9c85fff1808c009b570b281ff5748da07ac09",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-APP-COUNTER-BOUNDARY",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-COUNTER-BOUNDARY-green.log",
+          "sha256": "249fec64aeff14b551cda13f17b3011795e6bca751f34c046cca3acbadee95ce",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-COUNTER-BOUNDARY-red.log",
+          "sha256": "066df27b342f17410b17e9a9efedb0282d1a09b449ccf064f679882528557181",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-COUNTER-BOUNDARY-restored.log",
+          "sha256": "adb73d764c8ff93e754c8c0b69105e4e428c49079df9525ae23f1a76548c5557",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-APP-ADMIN-ROUTE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-ADMIN-ROUTE-green.log",
+          "sha256": "f7da4367eecebcbe9c33becfea8e7e44c87b8529e4d2a477e40aae0ade199a39",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-ADMIN-ROUTE-red.log",
+          "sha256": "08ccde1ab0ae36f431fc46ad12e295d6e7fc39a59c031dc016bf64b4914d3e73",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-ADMIN-ROUTE-restored.log",
+          "sha256": "fe2846ff2847642c39efb529ae504f6973df16e6bf7881245f712a437406580c",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-APP-E5-DOCUMENT-PRIVATE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-E5-DOCUMENT-PRIVATE-green.log",
+          "sha256": "5e2c9a33b286767c52ec037ca7e3b2b318fbd3a023f9de7d6203abca69e33ae4",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-E5-DOCUMENT-PRIVATE-red.log",
+          "sha256": "fa1634b3880d8688c49cc8372a13039f86b54ba9948607a1e6fc3d3a99b79c7e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-E5-DOCUMENT-PRIVATE-restored.log",
+          "sha256": "d9a63341d07c62b5683faa6c051b11431807646013f7e547835125043ddf982a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-APP-PAGOS-REDIRECT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-PAGOS-REDIRECT-green.log",
+          "sha256": "bd11ef30952d7d0c79b2f2f42f963d714181784af4568934621729c2996b1d8b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-PAGOS-REDIRECT-red.log",
+          "sha256": "c08de18e08a8970605a64d3f00546da8c7095370a68d3fc7b191fed7390f4788",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-APP-PAGOS-REDIRECT-restored.log",
+          "sha256": "890f6d43da717d912ae7a06b9502adb63415e522335caf1dd39a90c5975f6a6c",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-USUARIOS-PARENT-CONTROL",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-PARENT-CONTROL-green.log",
+          "sha256": "654fdcc4bd8976d55c921a813a876c8863292b2163eb21d1c4851c537445c52a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-PARENT-CONTROL-red.log",
+          "sha256": "a5e04a0f85e79c3b3c941ad77eea4790cc0ce42b9af90b973d93e7878c596aa2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-PARENT-CONTROL-restored.log",
+          "sha256": "574c6f27d8f631667f200cb9b7db11a48db138b7ef37ec1dd196d359dd584ee7",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-USUARIOS-NOT-OTHER-ROLES",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-NOT-OTHER-ROLES-green.log",
+          "sha256": "7519ec899ad0f4dcfd7a2c94e4687a653f88732a560e25b1e48b63a832ed6c5b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-NOT-OTHER-ROLES-red.log",
+          "sha256": "5101ce7f854b1b4b1e9e4d87a928611627c1a0da186ef9c566da35d3f1eeccb0",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-NOT-OTHER-ROLES-restored.log",
+          "sha256": "e1d4e40ffe1b109c60f2651ae71ebaab590cd3577743c6ae3c10fcda4e8865ae",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-USUARIOS-PARENT-ASSIGN",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-PARENT-ASSIGN-green.log",
+          "sha256": "f4b49d0dcb63c52c51bb5564e4ac77efbf3f59fed3105f702d56983bac28415d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-PARENT-ASSIGN-red.log",
+          "sha256": "6db2187d994f15b3c85e075e1fcb81ef9d912dc7de2786dc6f09b808d59e56e3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-USUARIOS-PARENT-ASSIGN-restored.log",
+          "sha256": "03e5c865ca6a2f39e01c6b18850d1353c23ef7bfac83f23e54a27e915fbb08f5",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-NOTIFICACIONES-PARENT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-NOTIFICACIONES-PARENT-green.log",
+          "sha256": "d592925439e984212433f5cd97e6a2eea4036f72f4561598bc51726ba4ed320b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-NOTIFICACIONES-PARENT-red.log",
+          "sha256": "eb2da3e0c426c5ad81307db90efc6f92db2b6fd095c12e2b525cd94a130bd649",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-05-24.864Z/E11-NOTIFICACIONES-PARENT-restored.log",
+          "sha256": "4a3a63aef63e4e019012c93c30642e48718be85a414d3d98ada14c82433b55b2",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CONCILIACION-PARENT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CONCILIACION-PARENT-green.log",
+          "sha256": "d23ac3db46b4c5f1b608350cc448291b3dc6ba1a655d19373a3e782202044e16",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CONCILIACION-PARENT-red.log",
+          "sha256": "7b453e446437acaf36815a6806df3a3bc88e965f7de4f8a3ffa5a2d4f70f7362",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CONCILIACION-PARENT-restored.log",
+          "sha256": "390d3f0c7fc73731d20a05e73d134f3345c72b1bfa25ce5bd89c270b639cde86",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-E5-SCOPE-PROFILE-VERSION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-SCOPE-PROFILE-VERSION-green.log",
+          "sha256": "ef0e3b90d124cf4dd1941c8f710f8e24bf51b3a173a089b7d932fca11086aa6c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-SCOPE-PROFILE-VERSION-red.log",
+          "sha256": "65abf0dc81b0079df2943e0905f8e178c7c610a405475efd3cbd1fd0398e097d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-SCOPE-PROFILE-VERSION-restored.log",
+          "sha256": "64d011b4850272d35583e3ab28ac9347b3b9a09508b7585587c5a133b645d265",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-E5-SCOPE-PERMISSIONS-VERSION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-SCOPE-PERMISSIONS-VERSION-green.log",
+          "sha256": "3f11df710378bcbecefe950751493752964d7408576bd1f23d5f81886ac52b41",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-SCOPE-PERMISSIONS-VERSION-red.log",
+          "sha256": "aa763b11d93c48cac9afa986cbbe17ffc5547ed59697bde7815f2a9f79e6d444",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-SCOPE-PERMISSIONS-VERSION-restored.log",
+          "sha256": "b2065cc25eb014f5271989276f99862d77f8d559943abba37ae9a5d094797fe1",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-E5-LEGACY-CONTADOR-BLOCKED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LEGACY-CONTADOR-BLOCKED-green.log",
+          "sha256": "506427fe4f6fdc5ea50565322d8dbca0debd91e97c0fa4f9731f008695dc531d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LEGACY-CONTADOR-BLOCKED-red.log",
+          "sha256": "1be5830bbcd9be35fcc20f659cd575638cc281b93d9d7b5694ae0243ed9b34e8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LEGACY-CONTADOR-BLOCKED-restored.log",
+          "sha256": "cf77f648a20fdb4145fbe44081b9f4c02ea5d281451a66e0f46757071c283d6f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CALENDAR-MONTH-FIRST",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-MONTH-FIRST-green.log",
+          "sha256": "34e698d15f2e0821c069ae86fe0b627e911cbe7a732e1e65c7826a22790fd0ba",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-MONTH-FIRST-red.log",
+          "sha256": "bf0eb042f1bedbfe64869917011252ad07a8772f9b657cc5d6e5c82a35be81fa",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-MONTH-FIRST-restored.log",
+          "sha256": "43a7272acae1b043ba8a7cd424463c56c39b2d58ce1d8c24022120e3238c5cf1",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CALENDAR-WEEK-LENGTH",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-WEEK-LENGTH-green.log",
+          "sha256": "2a2f5bfa85ee1fbc734b4d983eee29d66a70ffff5f81dd6e2c46d825de51af51",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-WEEK-LENGTH-red.log",
+          "sha256": "c83209336b519c1e682f6ec2097bec61b96cc35aa9585210d59aeffbb4de3f23",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-WEEK-LENGTH-restored.log",
+          "sha256": "fab415c444514be7f5be17d5c03a43aa4b95b2e6bfd24f33360b3f62a5c8db74",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CALENDAR-MONTH-LEAP",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-MONTH-LEAP-green.log",
+          "sha256": "9f5089a59c00cba21e7e0f9a33863b3c62c86d6b7800692d9297abb318ee44a1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-MONTH-LEAP-red.log",
+          "sha256": "02e9e4d90a0dafdad17f1eed32b7832d06593098094694bec24ee0594459e27c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-MONTH-LEAP-restored.log",
+          "sha256": "a1b16abba659b35dd775a9a50de4be7b49c281b5ff4d8a1bd3ecfd7464284eac",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CALENDAR-DAY-OPTIONAL",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-DAY-OPTIONAL-green.log",
+          "sha256": "d11811110ff4c638b5dfd7a881231fbfa84fe64c9a9a8b3c0a8578f5fd6233d1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-DAY-OPTIONAL-red.log",
+          "sha256": "7c88bcfef4ab07590c59569b73c8b1daf1cf98a1dc91a36dd09cb08178d38d4b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-DAY-OPTIONAL-restored.log",
+          "sha256": "ed80f21878600afa8c0cdcd9e463191938e83c4d95769c3b7318dc6e99697cd8",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CALENDAR-NO-DEADLINE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-NO-DEADLINE-green.log",
+          "sha256": "c53027ca95acfe2a3b181772afcbeaa84a047d799ec31239420f8f1252d4a84e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-NO-DEADLINE-red.log",
+          "sha256": "fe701f8501cd10dfa34e11954f8eca82ec9bb854b9e91c65eb451c020d1796bc",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-NO-DEADLINE-restored.log",
+          "sha256": "452e535bb24a8f9fa359c35f41d7c303370075b84ce6ad0235fd3b18354a9778",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CALENDAR-FUTURE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-FUTURE-green.log",
+          "sha256": "e94a89136fc5307c6a1357d56ecc1758e8af16fd2cba786d0782fece58127790",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-FUTURE-red.log",
+          "sha256": "49283976e75d21d05990f78583055f5081c16655e3d14677a5075885522bda8b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-FUTURE-restored.log",
+          "sha256": "65b2ecfb62afa9c810b1809f201e5058fb4c95f89855c72b03e7bf1431dafb1e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CALENDAR-ACCEPTED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-ACCEPTED-green.log",
+          "sha256": "32cbc038209377e71cda65f96082a54609e4dddbfc17b0d7b60af36ff4ba227d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-ACCEPTED-red.log",
+          "sha256": "76d25a6d3725124784255529746bf2e3e5f36b41fa267ec62523c813145f3a73",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CALENDAR-ACCEPTED-restored.log",
+          "sha256": "b1c25deac0de5c035fb60b349b7f3804c4f45bab7c9cc869dd47926bc893273d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-PERIOD-FRESH",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-PERIOD-FRESH-green.log",
+          "sha256": "c8fe1fc42fb3bb4ed1a7a18f49774ee0019b2d9074c1e7fe740d8ae3f9c53f78",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-PERIOD-FRESH-red.log",
+          "sha256": "4f1a493c0859d37dda6a8893b027a40f2a486cf62a1022e5ebaceda3edd0ff0b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-PERIOD-FRESH-restored.log",
+          "sha256": "b05f7799db74cb74d3cb82c1746f78267cef1cd6a6936b2ad303ec413e5e92f8",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-RESPONSE-PERIOD",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-RESPONSE-PERIOD-green.log",
+          "sha256": "d91d0ea21a36c74fb9083757dc0fac3ea984120f7ec8c6c5384478a95a7787ed",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-RESPONSE-PERIOD-red.log",
+          "sha256": "bb4a261e584a01c52f2ba8d284fc1fc141bc74834d920832592b1ef611260966",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-RESPONSE-PERIOD-restored.log",
+          "sha256": "ea96248f934ae068176f2b70da5d761aaf720496427a018e99a2c127fe91cda9",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-RESPONSE-TOTAL",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-RESPONSE-TOTAL-green.log",
+          "sha256": "76eb2270e9fbe169fdba7991ceb21d943c39b98c2e971decd001154be0ea33e0",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-RESPONSE-TOTAL-red.log",
+          "sha256": "cc12533a7c82500439683a33c1fcfb4f3437755f1e5f6366d5c9a4ce1db9820c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-RESPONSE-TOTAL-restored.log",
+          "sha256": "ec05f8406e3092282d33ed961e8a8a82bd76c4f9e465df8362d759cd91724207",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-DECISION-RESPONSE-ACTOR",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-RESPONSE-ACTOR-green.log",
+          "sha256": "a2428bc601b938b888d94a80a58c6fbd46a2c6de75de6bc13cd6e19a05edfd19",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-RESPONSE-ACTOR-red.log",
+          "sha256": "eb9122646cb089782239b23296db9594f77b58b2b78dae19deb7c2e5635f0af6",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-RESPONSE-ACTOR-restored.log",
+          "sha256": "17aa489ad8ac931b4459fce3b5e1e580a0422f56333ccc26de65e0fc8ba2638f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-DECISION-HISTORICAL",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-HISTORICAL-green.log",
+          "sha256": "299ea811a900c42c5828821ccbc89e1effea77103859e14d0f3a4ae3c204e6cb",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-HISTORICAL-red.log",
+          "sha256": "ac369e037332693790c5253b19257e0d3ff21f6a711d4edefb93286bfbfab076",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-HISTORICAL-restored.log",
+          "sha256": "d1343bfc856e5059a1d8592226bef155d8759f20c879a1548b58971f511c1f5f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-DECISION-ALREADY-DECIDED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-ALREADY-DECIDED-green.log",
+          "sha256": "9f1f0b0e8275defeee2e3b6808b66e52a7a914726f9a445ae8940e08cc1aa971",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-ALREADY-DECIDED-red.log",
+          "sha256": "0e6565c980bc8d7c4b66a742257bffe2e9e91002167dab2e4ac6eddd4b39a63b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-DECISION-ALREADY-DECIDED-restored.log",
+          "sha256": "5aaed9dd41eb187464627928a9ff95509b50ba467093df12e079270768e7132e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-RESPONSE-UUID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-UUID-green.log",
+          "sha256": "3c6d2057c8c857729c9f98dd8b4130f3351f3a8ac936901a12bda18745166228",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-UUID-red.log",
+          "sha256": "13061e57c3545467bfff90c2e9ec0fb91a8a703025ec3363f5ebb05306bfedd3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-UUID-restored.log",
+          "sha256": "09b27d60eea93635ab18f9fd5373b87d74469decf908703c2d8bdf25f32b9926",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-RESPONSE-ACTOR",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-ACTOR-green.log",
+          "sha256": "e634759b50237d7b6421c0a7f05ee353adc26ef045f987931f48975ee8818ea8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-ACTOR-red.log",
+          "sha256": "710be19353ac947d4c48b219fa83e993e20f60dda94c56c410a3d337eb03d55e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-ACTOR-restored.log",
+          "sha256": "81dda8e11b68eb6f970016313a05aa51437824c8555dadb2436e9304a173d2e4",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-RESPONSE-REVISION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-REVISION-green.log",
+          "sha256": "0aeeec43eb7bd743c4924684552d947a9248d398e63c02d7050daab8ece97927",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-REVISION-red.log",
+          "sha256": "eb0731904c93dd6ab1a6a0a039ffbfd6a86035f235723de8dc1eb053f027dba5",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-RESPONSE-REVISION-restored.log",
+          "sha256": "3f110d6f9e505dfbd91cfa1ff594bf3323175db7c9975173d4bfd30888c7663d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-FISCAL-PRIVATE-FIELDS",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-PRIVATE-FIELDS-green.log",
+          "sha256": "6337034608d39ccfe071135be3429ca51621e552d7c7a88832096e694563bccd",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-PRIVATE-FIELDS-red.log",
+          "sha256": "711ab0e7647c967e42947a0c99840f93bc1daa6fd2daa7a56b57e389cb5dacc7",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-PRIVATE-FIELDS-restored.log",
+          "sha256": "16747e0d2958aef822427ac2cca46ff5ec5acefc52d16eff6c9407bf83e41b3e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-A-PRIVATE-FIELDS",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-A-PRIVATE-FIELDS-green.log",
+          "sha256": "4b7619c3a374e30a5e6b18707cb4a65aeafd2de4dd2071cd6ae667403c641e45",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-A-PRIVATE-FIELDS-red.log",
+          "sha256": "fe12513b99aec5dfed667e50cc6770480559a9432e1ba3a2c5d158293d17d986",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-A-PRIVATE-FIELDS-restored.log",
+          "sha256": "46439ec6b416a38fb5e4209d5831cc162416c11abe6c9591ccbbd56425de6455",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-A-TO-F-REVOKES-CACHE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-A-TO-F-REVOKES-CACHE-green.log",
+          "sha256": "eb5c42774444de553a6152c919f7e1bff01062bac65d1527f1acd0f7e5aa4417",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-A-TO-F-REVOKES-CACHE-red.log",
+          "sha256": "3801aabae1c9bed371fba1207ea00a7ad41368c1e411b6fcccd0e5a44cc2fcbc",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-A-TO-F-REVOKES-CACHE-restored.log",
+          "sha256": "c3a405fdca2801b5feadd80886a6c0580c80e74a295594556d7cf21ec9fd60d7",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-FINANCE-NOTES-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-NOTES-PAGE-green.log",
+          "sha256": "120e115f5dbf1c6ed5a8be46dce8570ab23b18de3984494742428c13bac3fe86",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-NOTES-PAGE-red.log",
+          "sha256": "0dbd078aa8fdaa090335faebbd1de0d4dc7d5e8f16b8a710b9f346b7df810da6",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-NOTES-PAGE-restored.log",
+          "sha256": "e72aa7bd8018ea7086b10545c835651efb5cef303013f961d4cb5134fc186528",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-FINANCE-ACCOUNT-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-ACCOUNT-PAGE-green.log",
+          "sha256": "cc69ce2158a93075c993c64c3c9f3920efcdf49efdfe20cbe983042e1d83602c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-ACCOUNT-PAGE-red.log",
+          "sha256": "fe9eee937bb38673f5b6061928d820d095b0b9e079cac61157e50f9848b8c5fe",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-ACCOUNT-PAGE-restored.log",
+          "sha256": "98888dab88607ea67ebde55d6b666c525dcf207c07ee536d816d4f450b195cbc",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-FISCAL-SALES-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-SALES-PAGE-green.log",
+          "sha256": "eace1edf423f31dbdba8c5debbee5533a55ea2fe814567983c4bdd950d0029ab",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-SALES-PAGE-red.log",
+          "sha256": "99405198b97b9e5eee522eac1c655eef3f2d14778d22ef93113503088b50b7e6",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-SALES-PAGE-restored.log",
+          "sha256": "997ff2c20a7c722cb7ffc21e8e57c47a006a3840afe6c981ff25fdddc258de2d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-SNAPSHOT-SALES-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-SALES-PAGE-green.log",
+          "sha256": "6fe85ba2960013f1d9276afe7aeec14b8f2c760f3ea55ff7c3c12a2356ea21fb",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-SALES-PAGE-red.log",
+          "sha256": "079148e813f29a8da9aab5ee7e88c2543200b77dd1cb86169459fbf99bdc5f55",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-SNAPSHOT-SALES-PAGE-restored.log",
+          "sha256": "57ca3646b1c61491c1ead583661ce3595f87237de0f0af05ee1f12936357b69f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATIONS-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATIONS-PAGE-green.log",
+          "sha256": "0e5698ca8d61319d91453b6bc0fe5d32784c8ec4a2e499aa5b4f17a5c0237012",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATIONS-PAGE-red.log",
+          "sha256": "fea8f3ef3fc0a90fe73581a33ed8612e1526e540ce8fc6a325aa70b66211592b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATIONS-PAGE-restored.log",
+          "sha256": "e2b9230d11b29503370d7327377ea909831e41767298af6658b462f59c1aeee8",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-HISTORY-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-HISTORY-PAGE-green.log",
+          "sha256": "256bde35cb6d6a36a32719fe6180f0655053cd1df74d3308e3ea55568f310237",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-HISTORY-PAGE-red.log",
+          "sha256": "7f04d78b6417afe7f37b3f3e1b62c9728a67563c54133b2295ccae1ed244cc80",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-HISTORY-PAGE-restored.log",
+          "sha256": "5809991d36f2019b61d1c9ad5b545872c5957dc35f16bad4db817dfa9ea529d3",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PAGE-ERROR-RESTART",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PAGE-ERROR-RESTART-green.log",
+          "sha256": "f8abcc0bcee0211b391a2a53c4d571122a966d0c0dd694b8e2e3c8d753626f32",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PAGE-ERROR-RESTART-red.log",
+          "sha256": "725197139e38ad6e534ff1bfb7c4c811ae340208ce86b79cb27bccf2805260b8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PAGE-ERROR-RESTART-restored.log",
+          "sha256": "643fe4ad326752196ddc1aa21bf1d6cdc1176820c8b6c494346556cacc4997d6",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-IDENTITY-AUTH-REVOKED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-IDENTITY-AUTH-REVOKED-green.log",
+          "sha256": "fea2aeda951ec25aecc9730cd44a3cf512ffb71b7d9ef75270e3727f1b2194cf",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-IDENTITY-AUTH-REVOKED-red.log",
+          "sha256": "955afe802f1757e084e61eacfa6a6a1059a099ad52d9d3b8433f6abea36a6394",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-IDENTITY-AUTH-REVOKED-restored.log",
+          "sha256": "f9a178baf87473a1f46ceb37dabb23e6dba496bf7220aae0856803ebb434b88b",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-FISCAL-FORBIDDEN-NO-FALLBACK",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-FORBIDDEN-NO-FALLBACK-green.log",
+          "sha256": "50c94c5208b01b9f774e325cc945ddcde874407e384007e3f95fc2dc727bc3a3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-FORBIDDEN-NO-FALLBACK-red.log",
+          "sha256": "dd781f1b54912fb8266f074211f74924dcc3a854506430147b28c6dadcaad2d1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FISCAL-FORBIDDEN-NO-FALLBACK-restored.log",
+          "sha256": "dae5b311e81c6ed7b36881a3cc30caa036c05e4dd4c907a238343712840cfbe4",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PERIODS-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PERIODS-PAGE-green.log",
+          "sha256": "d6e051b971066ada902ad37ef5ec952a8c09a72b08822d019fea2b5d7b9df5ad",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PERIODS-PAGE-red.log",
+          "sha256": "0bc2ccdbf027b35fb31696bbe17f9012e18ddc218aac853a9b948a6e010bbba3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PERIODS-PAGE-restored.log",
+          "sha256": "c16024f5d2c5e3663dfa595d7f9309e4b7d64d5570155902f3af709700585eb0",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-FINANCE-CLIENTS-PAGE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-CLIENTS-PAGE-green.log",
+          "sha256": "50aad103dd75b24b4a8b5d96c3c53bffc1cee83cbddc4810ff04ee5360865b11",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-CLIENTS-PAGE-red.log",
+          "sha256": "ddced01d116cb3929e67bca84619d729d8fb55898d5f12b78c9a59e2c2a53974",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-FINANCE-CLIENTS-PAGE-restored.log",
+          "sha256": "3eabea12983b4692f183a95e1bcc7eed5beffea38914e8d2a5202b82eb037272",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-NOTE-BALANCE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-NOTE-BALANCE-green.log",
+          "sha256": "04ca4ba8d8329601be9775ec242f66bd7eba394e82b5f7e5b5eed31a045ccfcc",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-NOTE-BALANCE-red.log",
+          "sha256": "b5e44c0890086288b693a1dec0a78470af55cef554012941e953c7d72f88cd23",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-NOTE-BALANCE-restored.log",
+          "sha256": "94588ef387009ba24b805d9d294024d4ddae630a3187499de41925de819c2a10",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-EXACT-CHARGE-FRESH",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-EXACT-CHARGE-FRESH-green.log",
+          "sha256": "a6e29e0f9a16c5c6064204dbcbd645e1557e25b398ed3aa9a06c02e4066f12c7",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-EXACT-CHARGE-FRESH-red.log",
+          "sha256": "85858409e8b668cfc56d4aaaee2731a6e57f9b80b694d712a69edcdacbdc09dd",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-EXACT-CHARGE-FRESH-restored.log",
+          "sha256": "51c6727ca5da58a5e5fca216a6afed38ceaadf05114843be7f6c5037e4560fff",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-NOTES-SAME-CLIENT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-NOTES-SAME-CLIENT-green.log",
+          "sha256": "6ad1b3521040a09ce95d3e46b7da522a4b4467f1856b8c7059d967ae966ee702",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-NOTES-SAME-CLIENT-red.log",
+          "sha256": "af6374ca7519c28de84299418b18280035cbf07bb50c55dca24451b2150c9eae",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-NOTES-SAME-CLIENT-restored.log",
+          "sha256": "49265c183190d5d0817186fc2bb46ae203cf0a5f4b25bd345a73b163df067a7f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-LIST-CLIENT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-LIST-CLIENT-green.log",
+          "sha256": "fd75b217b430879899706dee8eefbe319ed45fbc5ead68dd7c6695ae319c5ebf",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-LIST-CLIENT-red.log",
+          "sha256": "ff2d198202cd28564e267bad0c1b3b40b4843d05d7b2ffead8e76b75630b7a7e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-LIST-CLIENT-restored.log",
+          "sha256": "9967662d16d80ba099791d6a52f91aeba166ec957c059b6d871f71133eabda91",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PREPARATION-DEPENDENCY-OFF",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-DEPENDENCY-OFF-green.log",
+          "sha256": "6b5cc939fde75ebedbb403a9926b2ec02b4bc84e9fc671f9ee793951625fd8f1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-DEPENDENCY-OFF-red.log",
+          "sha256": "c03781629e7467aa5ccf278a88e64c20c72b41e7132763ed78cf9ea4decb76e5",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PREPARATION-DEPENDENCY-OFF-restored.log",
+          "sha256": "dacd87fce0ba1f66508eae7e7498d1cd1bd9f5c9f5c8ce1a906f41beb8324acf",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-PROFILE-DEPENDENCY-OFF",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-DEPENDENCY-OFF-green.log",
+          "sha256": "3079f6665ba51dfe897a5f95ddc0478951ac23da7cae5c0513e82422711fdef6",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-DEPENDENCY-OFF-red.log",
+          "sha256": "6f53c1cec8f042b66ef6c3855d2b0c695eaaf9bf610ffd47cf4c3b1e737c8e53",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-PROFILE-DEPENDENCY-OFF-restored.log",
+          "sha256": "ddd106fd7b04767aadc44f038d8a8278eb54b3386e80534c83f500a9c32df1ee",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-CONCILIATION-DEPENDENCY-OFF",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CONCILIATION-DEPENDENCY-OFF-green.log",
+          "sha256": "8da5ac13edd7fbf4a1b4b002abefb88752c9cb059450f2e99f9a983a49a74fc4",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CONCILIATION-DEPENDENCY-OFF-red.log",
+          "sha256": "c35074be664dcb2180061b411713289ee088f472064bb52e88127f693ac10744",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-CONCILIATION-DEPENDENCY-OFF-restored.log",
+          "sha256": "c6851d0ded8e17691ae5cabe2a88c52fe11fc3a8bf5b6e1029ef7d1feba3be6e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-APP-OFF-USUARIOS",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-APP-OFF-USUARIOS-green.log",
+          "sha256": "983ab604a8d164278e3149a7140c01be806792309fccc5447e504adedc9bac6f",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-APP-OFF-USUARIOS-red.log",
+          "sha256": "20687517107a89f63fcada03aa9e58e49e5aac6bd1aa7787487df0c94a5f153b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-APP-OFF-USUARIOS-restored.log",
+          "sha256": "744b7ec104822dbc59ea6d72ffa1547f8beb38cdc7d2204c936d12f21cd4cb36",
+          "reachedSiblingKeys": false
+        }
+      ]
+    },
+    {
+      "id": "E11-APP-ADMIN-NAVIGATION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-APP-ADMIN-NAVIGATION-green.log",
+          "sha256": "b5aac5ed22c6e5753970608fcede5b72d3292f7176c3d86e6d0a4db5a778c53a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-APP-ADMIN-NAVIGATION-red.log",
+          "sha256": "b48bb9f2a64c8fd04dc2b43dacba14e3075e552849e5dba4a91bccdf8d88a084",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-APP-ADMIN-NAVIGATION-restored.log",
+          "sha256": "4d7ac986e7350f6190b5a34e26863784f9c56dfc8d6353b1486ec5ec2a93b929",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-ADMIN-BELL-LINK",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-ADMIN-BELL-LINK-green.log",
+          "sha256": "1261dd942d3f7511d79b0a1de35d0b1aac36d5d1a98c50db34839793f59c1dd9",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-ADMIN-BELL-LINK-red.log",
+          "sha256": "046425014dedee2cb1a6d0219182f63ce0bde0f0b110b489defab0d4fab88a30",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-ADMIN-BELL-LINK-restored.log",
+          "sha256": "2e773da3eee73ca23b5199f9835daecfe879d2b32cc363da9b5ddd18936ce183",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-E5-LAST-PROFILE-RECHECK",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LAST-PROFILE-RECHECK-green.log",
+          "sha256": "8f88f72dc5e185feec21745760b36ffe33ee540775152526e0f55ccdbbbd861a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LAST-PROFILE-RECHECK-red.log",
+          "sha256": "0e0dd39d2b52067b1837eb3c578ebe0d737fe7ca33b71bedf3903be1e4e925d8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LAST-PROFILE-RECHECK-restored.log",
+          "sha256": "ec252ddbd238e6c9cabe49df01432315f814713ea22fd645447242fb1a7e95d2",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-E5-LAST-PERMISSIONS-RECHECK",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LAST-PERMISSIONS-RECHECK-green.log",
+          "sha256": "b06f2a96f6b050138c8ead035bba7df1b8223704a68b0c063e826e46cc1788e8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LAST-PERMISSIONS-RECHECK-red.log",
+          "sha256": "062fea00f28b0304af496ea5f8f1dec99a7e5ea29490f1526862779ce0e8bdb1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-LAST-PERMISSIONS-RECHECK-restored.log",
+          "sha256": "82a64755d3964d011839971ebe677b2da789d6385ea533085c7d8b12febb9d70",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-ORIGINAL-ACTOR",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-ACTOR-green.log",
+          "sha256": "0e3129a66ed6036059649c4ad5ff5e62ee25db81672b4d6bd900b280cc97e33d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-ACTOR-red.log",
+          "sha256": "042e05d8e9ca3e1592ba41d5104977f73447b7b6865bb5f561d5a27780bc9c1e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-ACTOR-restored.log",
+          "sha256": "691f6d7b783d814242ec080794e502cd047772ace4c02a8559c861907dd7426d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-ORIGINAL-ACTION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-ACTION-green.log",
+          "sha256": "65bd01c75e021124640e6e5207c00599308806ad99758ff499356f50d8fd556b",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-ACTION-red.log",
+          "sha256": "f09cbd120c5c25ee48c022af5d9a92c03592aa19bd48bbb0d1d1818846976964",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-ACTION-restored.log",
+          "sha256": "2fe47a71d62c82312aa26abd8d2c7429dd99eeaaab8402a85eaeda2c34a1a9e7",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-ORIGINAL-UUID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-UUID-green.log",
+          "sha256": "771a4b52e7f5bbc3b508b1a21f98f8d6fadce58bd6ee978f684b967f8419d09d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-UUID-red.log",
+          "sha256": "65a1a018d0b3e62c265fa849f3ddceb694a7ab3194c86752da7ac998c0ce59bf",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ORIGINAL-UUID-restored.log",
+          "sha256": "28f097cd047997235089d2569134f198b8f81c21f6494809c3bdf3fbc9a0177a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-RELOAD",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RELOAD-green.log",
+          "sha256": "4559cafd7dc56e42ca2f958e304614569e51d43a432f3fcee6a849fb9d83b4fe",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RELOAD-red.log",
+          "sha256": "0d0048dae4c8e36d03daa2246941cfae84e2d5d6e19abc865ae5e234eebd4199",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RELOAD-restored.log",
+          "sha256": "1e6573c9b190fb1454da48d83a2f6c005fbb07a507c6883cf76901fbca6e145e",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-ADMIN-INDEPENDENT-GATES",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ADMIN-INDEPENDENT-GATES-green.log",
+          "sha256": "f8078357b6cc48ab0bbb26f896802c64e570878c25cbe8cbf3920e371782804f",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ADMIN-INDEPENDENT-GATES-red.log",
+          "sha256": "95770d6789e91ce97b88acf68a056a3cff8ac64da7cae1d2bc32baf90a41020c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-ADMIN-INDEPENDENT-GATES-restored.log",
+          "sha256": "984989fca862e8a7f80619ddbb511d45070ec4e4f7bf85c5d663e55ac6cd0deb",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-CAPABILITY",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-CAPABILITY-green.log",
+          "sha256": "912d581c7cb420b25e7513f4b87628b3b30e1cc50e91e18b62cd6f3f48e08b20",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-CAPABILITY-red.log",
+          "sha256": "8c6ab4fdeef236572643c875a0f3bb12960d8efa61e54f56a02435a290ef915c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-CAPABILITY-restored.log",
+          "sha256": "4809eb4f52786a373a262a9065f10320d45f1cda280ad1930128ee6bd64d5e33",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-NONADMIN",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-NONADMIN-green.log",
+          "sha256": "c66b76c4ddf4503f410092e5729172e5af290a740e1e103084a4e0aa61e2f984",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-NONADMIN-red.log",
+          "sha256": "62f844195349cea0767635a854618e69f559c2b7d8bf936cd80b5baed5c95c8e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-NONADMIN-restored.log",
+          "sha256": "8467d317a848a2a487220c78e6b6939d8db49d5918926cef7b467bb5d6bbdf50",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-OFF",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-OFF-green.log",
+          "sha256": "aaa4634d9cb667bbf2b1d923fe0eba42c3700281fcb8915af5f3e0cf3563eeff",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-OFF-red.log",
+          "sha256": "a3ed32bffad763a606f74650d4833a83bb4a129e45d66c4b25ff0158a1d07fbc",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-OFF-restored.log",
+          "sha256": "767b3895db706ebfe3fde4c6cf4a34985ca6fd5ae824dd7e9bdee8bf8fb81aac",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-GET-PENDING",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-PENDING-green.log",
+          "sha256": "23474b7ad6785f2ffd50fa30a9b83c3fc0d432b3c2344d7b78d8476a02152fa8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-PENDING-red.log",
+          "sha256": "5fcbc720193e219d140aeb60ab88b2c4ea177cf90bac7ac9851fa56b7e92fb86",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-PENDING-restored.log",
+          "sha256": "837cfe292fd92f927a7cc01444883c732532a2c4d90df7d8b52c4e750a10c1fe",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-GET-COMMITTED-UNAUDITED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-COMMITTED-UNAUDITED-green.log",
+          "sha256": "0c0a25cb3868091a84c7a319d18f5555cf74880a67c227c08aefb34c7917deb2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-COMMITTED-UNAUDITED-red.log",
+          "sha256": "dda97b1b742c7d65f4b6522297f297e5f9bdff5c1e62831d27159d03f7f3297e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-COMMITTED-UNAUDITED-restored.log",
+          "sha256": "bc687cad16dc0c0417ef3d24c8b7143ed27b49169250feab815cea6d56a14030",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-GET-CONFIRMED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-CONFIRMED-green.log",
+          "sha256": "74d7ab4dd482f05279ebb44796a8a966ab71633e35fbd46570418453c91ff590",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-CONFIRMED-red.log",
+          "sha256": "0902cb0e04fc77965916ec229f81fcadc561b50d9d716f58a1b4b0ed55e283a6",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-CONFIRMED-restored.log",
+          "sha256": "2b382dc5cae852de5a79f9aea8a76f8d78f088f6d6fc8cbc59c197de5e80250f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-GET-TOMBSTONE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-TOMBSTONE-green.log",
+          "sha256": "d8c830b23f4b6235a50db0f66a329cb4d31c04195bf1d10b8964743a51ada76e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-TOMBSTONE-red.log",
+          "sha256": "8015b3ee264d99381da47f0f7b57a1c6bfdbd5e0fbc7fff49e37d63a09d55992",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-TOMBSTONE-restored.log",
+          "sha256": "5dface0e6da652d53802e55d4e891a1ef11c3aefc48ae298fa6f587ea2fee872",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-GET-404",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-404-green.log",
+          "sha256": "ba589cf5d8e968d402004064f5df67b9060f23d39e86b6817a704ab32dfcb3cd",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-404-red.log",
+          "sha256": "e840e49d042f06692301611a48f76fc02fc89436592edc2a8459ba2fec2c2d96",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-404-restored.log",
+          "sha256": "15ef5d9f1c93a1f503a8d7249da68374b33369b0937b56ddbf9867d3bb8cd2cd",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-GET-ERROR",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-ERROR-green.log",
+          "sha256": "a08d96e00418a9294c6ef5378810d62b2dd844440933dedeec8a188dfc49e391",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-ERROR-red.log",
+          "sha256": "c0dfd89eb1c207918c2cce0e596a97bc6dc7d8bd63209692f875fbb2fcf948e9",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-GET-ERROR-restored.log",
+          "sha256": "a6b8fa9135dfc11145ed19eace62704ee69476a47fd821bd65860becfcc7ae4a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-RESPONSE-ACTOR",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-ACTOR-green.log",
+          "sha256": "303b72cc3b4ccc2bbfaaa15f3acd6552836a8371cf65f975badfe877ad60f359",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-ACTOR-red.log",
+          "sha256": "58f3c3667a66d571e5b3b39877bca3cc1143aa5e7c878890810ba0897f84e763",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-ACTOR-restored.log",
+          "sha256": "86ba212393b659ae9b07612d54054c91a32dc640b9813e68072b427cb9f00ec1",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-RESPONSE-ACTION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-ACTION-green.log",
+          "sha256": "b20cb4b7f114bbc5f522f16f483eef2b04c0a89a2d6eb922ed5ee44cb5439cb4",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-ACTION-red.log",
+          "sha256": "93fb1c3eeadae9a40de8d9c6f7030213f5f481a184965395df2fec67cc014d73",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-ACTION-restored.log",
+          "sha256": "d44fc3c28003d0b59b6b5a42d064230668b3bc23b14e0ce538497ba671b0a58d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-RESPONSE-UUID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-UUID-green.log",
+          "sha256": "a5af3f51783ff5a4a0a11069d1638bd2d94a62f49fe3ef5ffd91499e798ef0fd",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-UUID-red.log",
+          "sha256": "cff9a8f4827234b6ae6440b1ffb8829250b2a71a95c8039346d6afb41465041e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-UUID-restored.log",
+          "sha256": "862c853497ce3236cbb7ecd34c2fff985993c93e05a6496af0f2243b7dd423be",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-RESPONSE-REVISION",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-REVISION-green.log",
+          "sha256": "89334b071ee57a5a113f17ed3bf57f3739d2076813354b54ec046bf402036116",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-REVISION-red.log",
+          "sha256": "85ac7bc9aab47d930fcf14333852c499cc0291f8c7e73f36aa5654e2b7cd44ca",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-REVISION-restored.log",
+          "sha256": "5876b69625434cdfe7761be87b5426b9b0b525d24bf58d2c8319ff5a8c9482c1",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-RESPONSE-RESOLUTION-ID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-RESOLUTION-ID-green.log",
+          "sha256": "43267c7956bd215359606f05859b42062d3cb31b989a7ade3cc2570569c28d03",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-RESOLUTION-ID-red.log",
+          "sha256": "aaa5bade9c47965937f379ce33055cac8adfe6adce546af596d54193e35bc129",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-RESOLUTION-ID-restored.log",
+          "sha256": "3859e1ac5263a637e11c195af4182cb103aaa8acd882351d039e4894df66078c",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-RESPONSE-RESOLVED-AT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-RESOLVED-AT-green.log",
+          "sha256": "ad80b3e4ca3be1bdb99c472e8689f15d77fa7525fe7e4740c2b042bcb621a4bd",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-RESOLVED-AT-red.log",
+          "sha256": "2cfa8d44390450d26ed020a9b38e3cc32cbd32849e14667038a95c2545353ff3",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-RESPONSE-RESOLVED-AT-restored.log",
+          "sha256": "6b8cb2f2b453ed088539b9e00ea4c917010ef4c96b231d67c415a6511c0123a2",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-EXACT-RELEASE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-EXACT-RELEASE-green.log",
+          "sha256": "c4b5b7b296964673bf266c088f0adc7642b756487c332859c21897b5382565b7",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-EXACT-RELEASE-red.log",
+          "sha256": "5afd6e21c6960f5324e01e8b958a446254279b3309b98eb555ffcda9b46cea5e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-EXACT-RELEASE-restored.log",
+          "sha256": "f8ccf56a29630af69c30fcc5d35d58c90cac4fbd275c91c176539ca1988ea4a5",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-BODY",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-BODY-green.log",
+          "sha256": "61cbd35bc0bdebc139d0a8ed6c0dae9ea925dd12ea293b80883bb9559b876cf7",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-BODY-red.log",
+          "sha256": "712beb4f4a343d3852cf298afc2427521ac2c5ac029930a51612c655bd2ca4ba",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-BODY-restored.log",
+          "sha256": "1553aa0f9f7271bf3d879214c4f01d73b0d315f0292726f6470e9bcdcd1ffe0a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-UUID",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-UUID-green.log",
+          "sha256": "ce01048fb31d2b4b00aed95b705bd697e032a9fe8932a886637e1e02f1c42e1d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-UUID-red.log",
+          "sha256": "f2c9a84926a9b7f4f16896547125c1061db5ebeb287a218d471d348d4a406697",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-UUID-restored.log",
+          "sha256": "8008ee2ff0f03c65f209a122f34736522895bfdb4e7c3efc4fd8656462454a86",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-REASON",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REASON-green.log",
+          "sha256": "2e1e66b256d5f38b342a3acf9cfdfed117340e510dc4e7b5cc8ff499bdc89a1c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REASON-red.log",
+          "sha256": "de906b9eb758abbdf44fc195d493c6e49b8bf39ee9237c8f88b21418850099db",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REASON-restored.log",
+          "sha256": "c2cff49e65c1fec42d29d6bf5cb00fc6ad2d9fd885e5a4eec8d55afc277f6478",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-FRESH-IDENTITY",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-FRESH-IDENTITY-green.log",
+          "sha256": "80926962e8d8116be9619ed830cd3d79f6ab69433944078b96a275f461739b92",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-FRESH-IDENTITY-red.log",
+          "sha256": "5b853139a97d65fb0d8614893915d88b557f9d8ea774f2f6f2b1f5596a96edc5",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-FRESH-IDENTITY-restored.log",
+          "sha256": "a74c087fbf70cd3617087d451d1460d177d9fa655f6401d39e5f9231f9fef84b",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-FRESH-CAS",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-FRESH-CAS-green.log",
+          "sha256": "897d21c603358c06d1fdf2239060bbba8803e9bbe19817e24178902202677114",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-FRESH-CAS-red.log",
+          "sha256": "5276f9c585cdb8214ab03fd98c4046b3d3dd6364648ff0e90a118d2b8a9aff0d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-FRESH-CAS-restored.log",
+          "sha256": "1a78b27375e90471439627fbdbc12018d5173074d37f2d2955ae3cad7065e8f6",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-DOUBLE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-DOUBLE-green.log",
+          "sha256": "83ce8de439aa9bfbde2d71d79c8c3fe7ea77cf9d2f632dc38498f743f52bcd13",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-DOUBLE-red.log",
+          "sha256": "3cb24bad2cc8d5adcf11a86c98220dc2476d40202fa525e72e66d654bbd9d971",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-DOUBLE-restored.log",
+          "sha256": "c22fdc25fae8f418c0ebac5870facadbe20519ec2e001bdca7679805536be89d",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-TERMINAL",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TERMINAL-green.log",
+          "sha256": "f7bac311bcff90e5e12875b85fbb0a90bd99e4f8e239b07950159b580d87daea",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TERMINAL-red.log",
+          "sha256": "685f9af34ff8ea83eb16fb033b22050b54807e54148228bb085f027532596778",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TERMINAL-restored.log",
+          "sha256": "d993d7c992dc921774877aae67cda76ac3f28cd115d3b1e2c82ea04832b1947f",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-PENDING",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-PENDING-green.log",
+          "sha256": "f5b7e3b26f258c82d54d639a0317f2cec4bc5c691b89a2015db0e577acf9b90a",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-PENDING-red.log",
+          "sha256": "e810ef62ad39bb50c28ec247542c0b8c65e9b28afdbd505abbf764e34fa8064c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-PENDING-restored.log",
+          "sha256": "1913fdaf19398e68ad6c1700e55d46239a3b511c79850dab7d767447ddbd5712",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-UNCERTAIN",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-UNCERTAIN-green.log",
+          "sha256": "cc5fb05eb4d5aa88931a871fd33da3f22cef9491a8d189f8a40091facdcbfecc",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-UNCERTAIN-red.log",
+          "sha256": "aedcb1d9053fbd2ba3f3bb5e0c9f23283647a1bd14857372436ca9acf5cbfeb1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-UNCERTAIN-restored.log",
+          "sha256": "7400c03bbf5dd9ba036b0dcfc9ee032130db4c8068837b703e6c7b8fd6f00f17",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-OUTCOME-ERRORS",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-OUTCOME-ERRORS-green.log",
+          "sha256": "47fc1a6bb342175181a2d6aaf92df2faecd0730f39512c90ae962bf4d2940779",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-OUTCOME-ERRORS-red.log",
+          "sha256": "f5247f275fd998ce952939aac9381783f36a9afa26a7a55f55cd4d5cc36a98d1",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-OUTCOME-ERRORS-restored.log",
+          "sha256": "1de0cb9569c44634ab90922afc6c701846d7757bc0415c32fd43d90cf102d9c0",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-REPLAY-EXACT",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REPLAY-EXACT-green.log",
+          "sha256": "ab7a596ca4ae2238a7f086b3c46c3b3c478cef6799f6ba7e63f0ca21f81bfd86",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REPLAY-EXACT-red.log",
+          "sha256": "c26dae56edad26bdfa64aea9114e20a5e23c14a515b88131d1b3b501282588f0",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REPLAY-EXACT-restored.log",
+          "sha256": "1b011852ec6a8ddce20bd7b2bc1131d2f89956745b3bfb40b7e36075c2535029",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-REPLAY-403",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REPLAY-403-green.log",
+          "sha256": "d46a825d938535863c1858d7b593d0bfc1a43b134db12a2f3048c82d90faf2d2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REPLAY-403-red.log",
+          "sha256": "115763255333cf64823b13811a43de531d4f2a8aac6b2c3f91c3b7519d2d0186",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-REPLAY-403-restored.log",
+          "sha256": "47169501318d21e1d335be1d2f1ab6ef784a4324a86ca6410cce8ab4ad936f33",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-CAS-PENDING",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-CAS-PENDING-green.log",
+          "sha256": "01b98f0cdd47ce9f3292e3ac5e9ec81869a94eff74a00d502656489c3577aa4c",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-CAS-PENDING-red.log",
+          "sha256": "5938569154e65f8fff1d8a344390ad1aadb13d0543e61d0ace43e2c93d0b64f2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-CAS-PENDING-restored.log",
+          "sha256": "2266f00eda63fa486c49f2d52c4b3ab400c7ba93f60954526e0c430ca52bd7c4",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-CAS-TERMINAL",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-CAS-TERMINAL-green.log",
+          "sha256": "3b1fcc7931f7d2f8da1e11406bfca6578524dccbb890e8b02a8b97faa5234373",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-CAS-TERMINAL-red.log",
+          "sha256": "0a01a268ee07483e77553097ee8deebda4db5193933ef1d292638fd006c07c36",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-CAS-TERMINAL-restored.log",
+          "sha256": "e173af1d6c6861b0e9faf149119997bf74b3b5641e462e263b660a0399ce5d39",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-TIMEOUT-GET-CONFIRMED",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TIMEOUT-GET-CONFIRMED-green.log",
+          "sha256": "27f0f21ac025f89e3acf26bcf28f22aecb542750031bbf5c6f399722e6d29ae8",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TIMEOUT-GET-CONFIRMED-red.log",
+          "sha256": "0f81a8effac7e0df76c4c243d9d73adca880ee702a570138f2922cd16bc295c2",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TIMEOUT-GET-CONFIRMED-restored.log",
+          "sha256": "94f809d4b19edc56728eeed707007da5c3be990a754cf3061201f12a5f50c4d5",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-POST-TIMEOUT-GET-TOMBSTONE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TIMEOUT-GET-TOMBSTONE-green.log",
+          "sha256": "92395277138465d9e173e80b987ec2fc49eff20caf1f96b0b9cca4f3fecb8761",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TIMEOUT-GET-TOMBSTONE-red.log",
+          "sha256": "ce4aaf813974504da0aca2c1cbe5cc5813cd0eb7b71cce916dc4e1c79a15d276",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-POST-TIMEOUT-GET-TOMBSTONE-restored.log",
+          "sha256": "52618ceaad6099ca3c1eb8735f80681792fe2255d010d72960a0cec265cf1097",
+          "reachedSiblingKeys": true
+        }
+      ]
+    },
+    {
+      "id": "E11-RECOVERY-NO-RECURSIVE-QUARANTINE",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-NO-RECURSIVE-QUARANTINE-green.log",
+          "sha256": "cc6674cf34b0fcb34baddb7f56455ce0d6083f6491cd8c459412977a04eea34d",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-NO-RECURSIVE-QUARANTINE-red.log",
+          "sha256": "0c99fd31e005ee5546a428816ef6b246444665aed4fa23bee290d2c6cec8e34e",
+          "reachedSiblingKeys": true
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-RECOVERY-NO-RECURSIVE-QUARANTINE-restored.log",
+          "sha256": "8f479c0518b2a521342dd8099ad11291fa0f6356bb7bc637a984febd083e685a",
+          "reachedSiblingKeys": true
+        }
+      ]
+    }
+  ],
+  "retainedUnaffectedCases": [
+    {
+      "id": "E11-DISABLED-NO-IDENTITY",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-DISABLED-NO-IDENTITY-green.log",
+          "sha256": "3c0535d0fc18a9a017a4559d94a0af25c9a9f0da51d5cbfd62084e75bbba1974",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-DISABLED-NO-IDENTITY-red.log",
+          "sha256": "f4ee61875849546b475042c4ed024a8730d832fda52186767e38eb0325af5b76",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/E11-DISABLED-NO-IDENTITY-restored.log",
+          "sha256": "7b74ea0a2f277032d9d4862b7fa40831f8fec4ff79973dbbd8efd6af5c4ec8c7",
+          "reachedSiblingKeys": false
+        }
+      ],
+      "reason": "Provider invoked but available.enabled=false in all phases; both original and query-enabled mutant return at disabled guard before changed sibling JSX.",
+      "retainedOnlyBecause": "Exact unchanged nonexecuted-branch semantics plus all three original logs free of duplicate-key warnings; not bundle equality."
+    },
+    {
+      "id": "E11-OFF-BELL-NO-LINK",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-OFF-BELL-NO-LINK-green.log",
+          "sha256": "e966fde0479a3fdec85602284f560d70ee5f44d42e5a1a9c44c22a469d84deeb",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-OFF-BELL-NO-LINK-red.log",
+          "sha256": "ae75e43421317fcc28a4599e4998b622db9378c790a94657471decc620d4b8db",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-OFF-BELL-NO-LINK-restored.log",
+          "sha256": "b52ce8892d18e078fe6ad8aab266e0be6e5ec900f28603aa1d9b316f1da630ef",
+          "reachedSiblingKeys": false
+        }
+      ],
+      "reason": "E11 gates false for every phase; real App boundary bypasses provider. Mutant changes notification href only, not gates or ancestry.",
+      "retainedOnlyBecause": "Exact unchanged nonexecuted-branch semantics plus all three original logs free of duplicate-key warnings; not bundle equality."
+    },
+    {
+      "id": "E11-E5-OFF-LEGACY-CAPABILITY",
+      "phaseLogs": [
+        {
+          "phase": "green",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-OFF-LEGACY-CAPABILITY-green.log",
+          "sha256": "ec8c3ab6e3c833c974f7255e4f48e705b967ded89bac1eb2fc9fa37d7e7b2ef6",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "red",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-OFF-LEGACY-CAPABILITY-red.log",
+          "sha256": "3ad3aa0e7b42b67bbbcff27cadfe6dfb0725472344eeb183f6fd87fdf4428485",
+          "reachedSiblingKeys": false
+        },
+        {
+          "phase": "restored",
+          "path": "reports/e11/frontend-node-mutants-2026-09-23T01-16-46.935Z/E11-E5-OFF-LEGACY-CAPABILITY-restored.log",
+          "sha256": "07ba21cc971de90a399c7fd981ba029f4dd33a25f44e3bb71dab92637044af40",
+          "reachedSiblingKeys": false
+        }
+      ],
+      "reason": "Direct E5Entry render under QueryClient/Router/LocationScope, no E11SessionProvider; gates false throughout. Mutant affects only E5 legacy authorization.",
+      "retainedOnlyBecause": "Exact unchanged nonexecuted-branch semantics plus all three original logs free of duplicate-key warnings; not bundle equality."
+    }
+  ],
+  "policy": "Run the four pending first. Only after MAIN confirms complete cycles, run 146 affected prior obligations. Do not recertify old 146 by AST/test/helper equality: productive provider changed and old logs prove branch reached. Three unaffected obligations retain terminal evidence. A conservative full rerun of 153 is permissible but not necessary under this reachability proof.",
+  "preflight": {
+    "static": "reports/e11/frontend-static-2026-09-23T01-37-26.745Z.json",
+    "diagnosticCount": 0,
+    "buildOnly": "reports/e11/frontend-node-mutants-2026-09-23T01-37-31.707Z/manifest.json",
+    "bundleHash": "23602ea206a47c9c4a9ab90570026c307bc3ccaa8d3674eeeac2f71289ba0d5c",
+    "executedCases": 0
+  },
+  "posthocClosure": {
+    "checker": "reports/e11/check-frontend-duplicate-keys.mjs",
+    "checkerHash": "121fa9e0ba5ff06df6f9266fe583b05db41399ec3b05a344724f641013f0cef3",
+    "requirement": "Zero duplicate/nonunique React-key warnings across GREEN, RED and restored logs. Separate from and in addition to runner terminal/assertion checks; no runtime changes."
+  },
+  "testsExecutedByHelper": 0
+}

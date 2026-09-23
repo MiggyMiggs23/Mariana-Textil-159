@@ -1,0 +1,47 @@
+TAP version 13
+# Subtest: E11-RECOVERY-POST-REPLAY-EXACT
+not ok 1 - E11-RECOVERY-POST-REPLAY-EXACT
+  ---
+  duration_ms: 288.928877
+  type: 'test'
+  location: '/tmp/e11-node-m0yxCb/E11-RECOVERY-POST-REPLAY-EXACT-red/artifacts/mariana-textil/case.test.cjs:71984:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-RECOVERY-POST-REPLAY-EXACT
+    + actual - expected
+    
+      {
+        identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+        motivo: 'Evidencia documental revisada',
+        revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
+    +   uuid: 'fa369b93-8b49-4f45-8a08-63a213fc06cf'
+    -   uuid: '60b10654-ea9c-4fca-9df9-f16ec6425f6f'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    uuid: '60b10654-ea9c-4fca-9df9-f16ec6425f6f'
+    revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+    motivo: 'Evidencia documental revisada'
+  actual:
+    uuid: 'fa369b93-8b49-4f45-8a08-63a213fc06cf'
+    revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+    motivo: 'Evidencia documental revisada'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e11-node-m0yxCb/E11-RECOVERY-POST-REPLAY-EXACT-red/artifacts/mariana-textil/case.test.cjs:71991:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2831.404765

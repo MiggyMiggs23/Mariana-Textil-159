@@ -1,0 +1,476 @@
+{
+  "status": "PASS_LOCALIZED_FIXTURE_PREFIX_EQUIVALENCE_NOT_EXECUTED",
+  "priorManifests": [
+    {
+      "path": "reports/e11/frontend-node-mutants-2026-09-23T00-48-05.380Z/manifest.json",
+      "hash": "ecd178fbee6f6b4f3a26e31c59babb300c40896bfea1d24c10c456088155cadb",
+      "status": "FAIL_NOT_ACCEPTED",
+      "terminalCount": 21
+    },
+    {
+      "path": "reports/e11/frontend-node-mutants-2026-09-23T00-58-35.984Z/manifest.json",
+      "hash": "9383d3e3b3afb56d5796879221cd2b0f37b3581b20c6f74ff05abe48cba345d9",
+      "status": "FAIL_NOT_ACCEPTED",
+      "terminalCount": 12
+    }
+  ],
+  "totalDeclared": 153,
+  "preservedTerminalCount": 33,
+  "remainingCount": 120,
+  "remainingIds": [
+    "E11-SNAPSHOT-ID",
+    "E11-SNAPSHOT-FROZEN",
+    "E11-DECISION-EXACT",
+    "E11-DECISION-OBSERVATION",
+    "E11-DECISION-NO-CUADRA",
+    "E11-DECISION-FRESH",
+    "E11-ADMIN-NOTICE",
+    "E11-ADMIN-NOTICE-LINK",
+    "E11-PREPARATIONS",
+    "E11-PREPARATION-ID",
+    "E11-PREPARATION-SEND",
+    "E11-PREPARATION-RETAINED",
+    "E11-PREPARATION-FRESH",
+    "E11-PREPARATION-RESPONSE",
+    "E11-WRITE-DOUBLE",
+    "E11-WRITE-RETRY-EXACT",
+    "E11-WRITE-409-NEW-UUID",
+    "E11-WRITE-REVOKED",
+    "E11-CACHE-PROFILE-VERSION",
+    "E11-UNCERTAIN-RETRY-403-PRESERVES",
+    "E11-UNCERTAIN-RETRY-STALE-PRESERVES",
+    "E11-POSTCOMMIT-PROFILE-PRIVACY-UUID",
+    "E11-APP-COUNTER-BOUNDARY",
+    "E11-APP-ADMIN-ROUTE",
+    "E11-APP-E5-DOCUMENT-PRIVATE",
+    "E11-APP-PAGOS-REDIRECT",
+    "E11-USUARIOS-PARENT-CONTROL",
+    "E11-USUARIOS-NOT-OTHER-ROLES",
+    "E11-USUARIOS-PARENT-ASSIGN",
+    "E11-NOTIFICACIONES-PARENT",
+    "E11-CONCILIACION-PARENT",
+    "E11-E5-SCOPE-PROFILE-VERSION",
+    "E11-E5-SCOPE-PERMISSIONS-VERSION",
+    "E11-E5-LEGACY-CONTADOR-BLOCKED",
+    "E11-CALENDAR-MONTH-FIRST",
+    "E11-CALENDAR-WEEK-LENGTH",
+    "E11-CALENDAR-MONTH-LEAP",
+    "E11-CALENDAR-DAY-OPTIONAL",
+    "E11-CALENDAR-NO-DEADLINE",
+    "E11-CALENDAR-FUTURE",
+    "E11-CALENDAR-ACCEPTED",
+    "E11-SNAPSHOT-PERIOD-FRESH",
+    "E11-SNAPSHOT-RESPONSE-PERIOD",
+    "E11-SNAPSHOT-RESPONSE-TOTAL",
+    "E11-DECISION-RESPONSE-ACTOR",
+    "E11-DECISION-HISTORICAL",
+    "E11-DECISION-ALREADY-DECIDED",
+    "E11-PROFILE-RESPONSE-UUID",
+    "E11-PROFILE-RESPONSE-ACTOR",
+    "E11-PROFILE-RESPONSE-REVISION",
+    "E11-FISCAL-PRIVATE-FIELDS",
+    "E11-A-PRIVATE-FIELDS",
+    "E11-A-TO-F-REVOKES-CACHE",
+    "E11-FINANCE-NOTES-PAGE",
+    "E11-FINANCE-ACCOUNT-PAGE",
+    "E11-FISCAL-SALES-PAGE",
+    "E11-SNAPSHOT-SALES-PAGE",
+    "E11-PREPARATIONS-PAGE",
+    "E11-HISTORY-PAGE",
+    "E11-PAGE-ERROR-RESTART",
+    "E11-IDENTITY-AUTH-REVOKED",
+    "E11-FISCAL-FORBIDDEN-NO-FALLBACK",
+    "E11-PERIODS-PAGE",
+    "E11-FINANCE-CLIENTS-PAGE",
+    "E11-PREPARATION-NOTE-BALANCE",
+    "E11-PREPARATION-EXACT-CHARGE-FRESH",
+    "E11-PREPARATION-NOTES-SAME-CLIENT",
+    "E11-PREPARATION-LIST-CLIENT",
+    "E11-PREPARATION-DEPENDENCY-OFF",
+    "E11-PROFILE-DEPENDENCY-OFF",
+    "E11-CONCILIATION-DEPENDENCY-OFF",
+    "E11-APP-OFF-USUARIOS",
+    "E11-APP-ADMIN-NAVIGATION",
+    "E11-ADMIN-BELL-LINK",
+    "E11-OFF-BELL-NO-LINK",
+    "E11-E5-LAST-PROFILE-RECHECK",
+    "E11-E5-LAST-PERMISSIONS-RECHECK",
+    "E11-E5-OFF-LEGACY-CAPABILITY",
+    "E11-RECOVERY-ORIGINAL-ACTOR",
+    "E11-RECOVERY-ORIGINAL-ACTION",
+    "E11-RECOVERY-ORIGINAL-UUID",
+    "E11-RECOVERY-RELOAD",
+    "E11-RECOVERY-ADMIN-INDEPENDENT-GATES",
+    "E11-RECOVERY-CAPABILITY",
+    "E11-RECOVERY-NONADMIN",
+    "E11-RECOVERY-OFF",
+    "E11-RECOVERY-GET-PENDING",
+    "E11-RECOVERY-GET-COMMITTED-UNAUDITED",
+    "E11-RECOVERY-GET-CONFIRMED",
+    "E11-RECOVERY-GET-TOMBSTONE",
+    "E11-RECOVERY-GET-404",
+    "E11-RECOVERY-GET-ERROR",
+    "E11-RECOVERY-RESPONSE-ACTOR",
+    "E11-RECOVERY-RESPONSE-ACTION",
+    "E11-RECOVERY-RESPONSE-UUID",
+    "E11-RECOVERY-RESPONSE-REVISION",
+    "E11-RECOVERY-RESPONSE-RESOLUTION-ID",
+    "E11-RECOVERY-RESPONSE-RESOLVED-AT",
+    "E11-RECOVERY-EXACT-RELEASE",
+    "E11-RECOVERY-POST-BODY",
+    "E11-RECOVERY-POST-UUID",
+    "E11-RECOVERY-POST-REASON",
+    "E11-RECOVERY-POST-FRESH-IDENTITY",
+    "E11-RECOVERY-POST-FRESH-CAS",
+    "E11-RECOVERY-POST-DOUBLE",
+    "E11-RECOVERY-POST-TERMINAL",
+    "E11-RECOVERY-POST-PENDING",
+    "E11-RECOVERY-POST-UNCERTAIN",
+    "E11-RECOVERY-POST-OUTCOME-ERRORS",
+    "E11-RECOVERY-POST-REPLAY-EXACT",
+    "E11-RECOVERY-POST-REPLAY-403",
+    "E11-RECOVERY-POST-CAS-PENDING",
+    "E11-RECOVERY-POST-CAS-TERMINAL",
+    "E11-RECOVERY-POST-TIMEOUT-GET-CONFIRMED",
+    "E11-RECOVERY-POST-TIMEOUT-GET-TOMBSTONE",
+    "E11-RECOVERY-NO-RECURSIVE-QUARANTINE",
+    "E11-RECOVERY-ADMIN-SESSION-LOSS",
+    "E11-RECOVERY-SECOND-ADMIN",
+    "E11-RECOVERY-LEGACY-MARKER-NO-GUESS",
+    "E11-RECOVERY-NO-BUSINESS-RESEND"
+  ],
+  "changedTests": [
+    "E11-SNAPSHOT-ID"
+  ],
+  "helpersAstUnchanged": true,
+  "sourceDifferences": [
+    "artifacts/mariana-textil/src/components/e11-node.dom.test.tsx"
+  ],
+  "helperDifferences": [],
+  "prefixProof": [
+    {
+      "id": "E11-OFF-ROUTE",
+      "ast": "bfe023729c31ef3fb94b50343072f4aa6f9585f726d5581857cf8a1367eb6f13",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-DISABLED-NO-IDENTITY",
+      "ast": "592300504bff6185a6fd3b1c1af14d50d042bd037cc4266c28a0fa6514debe5c",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-IDENTITY-USER",
+      "ast": "ab26316c9dc52b2db6bef9ca98017ee150a88a9480b38ed0cf6e3666deff9b5b",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-IDENTITY-ROLE",
+      "ast": "b7020330f11dfaed00d561870e30b3ab6964682c2b2e8a7e3e365eed5614b865",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-F-CLIENTS-SALES",
+      "ast": "1f05c598a06303a2f81c4964a5db0472d7cb8c48f45e43a712d9becf32ad3df0",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-F-NOT-A",
+      "ast": "60709027eb2bc9567651975e0ba851b70d80b9907eac0756582e141f9865c4a7",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-A-NOT-F",
+      "ast": "2a426b49b2522d50af31f98e0681489bae7ad8c1c96291858ff67d42a0fba23f",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-CAPABILITY-FISCAL",
+      "ast": "d73f04856ff6b6afdc8e982db04e4357e8553c702939014162f7f1619e2ec697",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-CLIENT-PARENT-F",
+      "ast": "3762855581da04ea124fcca65ca3f30eaade8761f15f5eadea97ee26dadcd0fe",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-CLIENT-PARENT-A",
+      "ast": "46f1bf0eadd38c985bfaac90c459ccf73cb739732446ea52800d45190adff1cb",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-E5-PARENT-A",
+      "ast": "cf72a24e7c09275a5ec2d3a0bb3191af1ae74017024f6e4eb8890dd4077f57ff",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-E5-PARENT-F",
+      "ast": "420aed690de79debb9acac68dda0a6c3ed7e8215978733a92087922452d730d1",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-LEGACY-DEEP-DENIED",
+      "ast": "b0b1240dcf090ec790d5c865ab53ba6334e3f286ddd36a0cbaf49077d4d70ef0",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-F-DOCUMENT",
+      "ast": "ae8004076ff97e80b479f2e77e7c459f5208cd7e4a8b3186e4c01f0138209c8d",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-F-DOCUMENT-ID",
+      "ast": "1630ea03ecc4b430f3aaf832a9d7327546cbf5b96ec09fd521282838859a3a5e",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-F-SALES-CLIENT-ID",
+      "ast": "2b52e0aeb8a6db16ef64a6f5b1ffddf1a17ada81db5c7a7712b76e0a3fae01b9",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-F-PAGER",
+      "ast": "b5ac855abff4f093f3d346d1cb66d47e63b8e88c054f40c0d90b7551a004158b",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-READ-ERROR-NOT-ZERO",
+      "ast": "3adbdca988ae33568f668703012b8e9e7338c26b8684ee7e0a98033c10bf5fd1",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-A-CLIENTS",
+      "ast": "f42c8d0b89a63571f0670c7f5658c3bc34a011604884e8e2fbb859cd13b5eb4e",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-A-NOTES-UNINVOICED",
+      "ast": "10254490ba0ad5afe2d79e71386679ab75ff8c33a10ab6875327c7dae520eae5",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-A-ACCOUNT-ID",
+      "ast": "9558065a760f3dc17224d021ca61b4460fba815acfbe36d9e48074280ecf957b",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-A-NOTE-ID",
+      "ast": "348609640005bb00df1b8eb1061ab9bc6cb0ca1246f29f32ee4bb9fe68a9ecf0",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PROFILE-ADMIN",
+      "ast": "5995ed7bc2992aca9cc087dfe425c4688ce55d3ec40b4ace15fafaf11c24b37d",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PROFILE-NONADMIN",
+      "ast": "90211fb101c525a2a98eb19b20ddc36c133f69505af138fbc30652ca7189b64c",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PROFILE-REASON",
+      "ast": "4121dbcb03519e0683cfad97d3e8a389599827293a077eaa8f3b3ed833893bc2",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PROFILE-HISTORY-ID",
+      "ast": "7340744ab848748d821ae47c86a279a8bcaa6f5ff6124a59f502c4064ffa07c5",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PROFILE-FRESH",
+      "ast": "27d273cbe20eac135fae0a5f8623d20c5a7f1b326b98c9ac9c3d5b3684738dd2",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PROFILE-RESPONSE-ID",
+      "ast": "c1514cedf0924a850cf6f1f4750e6858e771042cd896134ed4ce4876570abbd6",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PERIOD-WEEK-CALENDAR",
+      "ast": "77eae185156015ddba6c52d1443fc823d96f5f7ec25b3a42f510d91cace476f4",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PERIOD-OBLIGATION",
+      "ast": "cf1ccd1a57532a6440b97f6c0dccb2855a9e70853f701df1d360f1993a517501",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-PERIOD-OPEN",
+      "ast": "1b2aa7c4c3b0fc47e6709e91304183a9ce40afb7d6209553ebc6066b063d5ca5",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-SNAPSHOT-SEND",
+      "ast": "269d3ec96de455d64de16ffa76e3c98f2f970bad117ae6ac28215885b9bad656",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    },
+    {
+      "id": "E11-SNAPSHOT-FRESH",
+      "ast": "c3d65f96944c966dbb73501adcc7c9f975cf4a62baf5edcff5064063316b79f4",
+      "astSame": true,
+      "sourceSame": true,
+      "mutantSame": true,
+      "restoredSame": true
+    }
+  ],
+  "newFixturesZod": {
+    "source": "Exact AST initializers of corrected case",
+    "schemas": [
+      "GetE11ConciliacionResponse",
+      "ListE11ConciliacionVentasResponse"
+    ],
+    "fixtures": {
+      "otherSnapshot": {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "uuid": "22222222-2222-4222-8222-222222222222",
+        "periodo": {
+          "tipo": "SEMANA",
+          "inicio": "2026-01-05",
+          "finExclusivo": "2026-01-12",
+          "zona": "America/Mexico_City",
+          "obligatorio": true,
+          "estado": "PENDIENTE",
+          "ultimaConciliacionId": null
+        },
+        "revision": 1,
+        "anteriorId": null,
+        "fuenteRevision": "source-v1",
+        "vigente": true,
+        "congeladoEn": "2026-01-15T18:00:00.000Z",
+        "actorId": 7,
+        "totalFacturado": "120.00",
+        "cantidadVentas": 1,
+        "evidenciaHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "decisiones": []
+      },
+      "otherSales": {
+        "items": [
+          {
+            "facturaId": 42,
+            "ventaId": 42,
+            "folioFactura": "FACTURADO-SNAPSHOT-AJENO",
+            "cliente": {
+              "clienteId": 21,
+              "nombre": "Cliente autorizado E11"
+            },
+            "fechaFacturacion": "2026-01-15T18:00:00.000Z",
+            "totalFacturado": "120.00",
+            "moneda": "MXN",
+            "estado": "VIGENTE"
+          }
+        ],
+        "nextCursor": null,
+        "fuenteRevision": "source-v1",
+        "totalFacturado": "120.00"
+      }
+    },
+    "generatedHash": "f370a78bec06773d229f864a2cb9d0bcc5a4edbaee20a5186c22eb5a97f1f1f9"
+  },
+  "testSourceHash": "541b74f868022c846a2f4e9707e5c43a8b66fb17a380b6a8f0db340cb5cbf817",
+  "preflight": {
+    "fixtures": "reports/e11/frontend-fixtures-2026-09-23T01-03-00.015Z.json",
+    "static": "reports/e11/frontend-static-2026-09-23T01-03-32.550Z.json",
+    "build": "reports/e11/frontend-node-mutants-2026-09-23T01-03-33.705Z/manifest.json"
+  },
+  "testsExecutedByHelper": 0
+}

@@ -1,0 +1,28 @@
+TAP version 13
+# Subtest: E11-RECOVERY-REQUIRES-FRESH-ADMIN
+not ok 1 - E11-RECOVERY-REQUIRES-FRESH-ADMIN
+  ---
+  duration_ms: 8.126075
+  type: 'test'
+  location: '/tmp/e11-native-tLELqD/E11-RECOVERY-REQUIRES-FRESH-ADMIN-red/test.mjs:38503:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function (anonymous)]
+  operator: 'rejects'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e11-native-tLELqD/E11-RECOVERY-REQUIRES-FRESH-ADMIN-red/test.mjs:38506:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 98.94459
+

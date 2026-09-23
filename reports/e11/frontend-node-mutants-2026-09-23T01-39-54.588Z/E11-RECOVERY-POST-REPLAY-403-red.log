@@ -1,0 +1,42 @@
+TAP version 13
+# Subtest: E11-RECOVERY-POST-REPLAY-403
+not ok 1 - E11-RECOVERY-POST-REPLAY-403
+  ---
+  duration_ms: 281.788955
+  type: 'test'
+  location: '/tmp/e11-node-m0yxCb/E11-RECOVERY-POST-REPLAY-403-red/artifacts/mariana-textil/case.test.cjs:71996:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E11-RECOVERY-POST-REPLAY-403
+    + actual - expected
+    
+    + undefined
+    - {
+    -   identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+    -   motivo: 'Evidencia documental revisada',
+    -   revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc',
+    -   uuid: 'a80853b8-c76f-42ee-b4c2-312dbfba76a4'
+    - }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    uuid: 'a80853b8-c76f-42ee-b4c2-312dbfba76a4'
+    revisionEsperada: 'cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
+    identidadVersion: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'
+    motivo: 'Evidencia documental revisada'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e11-node-m0yxCb/E11-RECOVERY-POST-REPLAY-403-red/artifacts/mariana-textil/case.test.cjs:72007:25)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2508.789948

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { E11ProfileControl } from "@/pages/e11";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   useListUsers,
@@ -267,6 +268,7 @@ export default function Usuarios() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
+                      {isAdmin && user.rol === Role.CONTADOR && <E11ProfileControl usuarioId={user.id} active={user.activo} />}
                       {canEdit && (isAdmin || user.rol !== Role.ADMIN) && (
                         <Button variant="ghost" size="sm" onClick={() => openEdit(user)}>
                           <Pencil className="w-4 h-4 mr-2" />

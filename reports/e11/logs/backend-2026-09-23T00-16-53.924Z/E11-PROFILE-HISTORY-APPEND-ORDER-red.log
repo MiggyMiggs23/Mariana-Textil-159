@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E11-PROFILE-HISTORY-APPEND-ORDER
+not ok 1 - E11-PROFILE-HISTORY-APPEND-ORDER
+  ---
+  duration_ms: 4.007764
+  type: 'test'
+  location: '/tmp/e11-native-9K0VdD/E11-PROFILE-HISTORY-APPEND-ORDER-red/test.mjs:38145:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /ORDER BY revision,id/. Input:
+    
+    'SELECT datos FROM e11_perfil_eventos WHERE usuario_id=$1 ORDER BY revision DESC,id'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: 'SELECT datos FROM e11_perfil_eventos WHERE usuario_id=$1 ORDER BY revision DESC,id'
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e11-native-9K0VdD/E11-PROFILE-HISTORY-APPEND-ORDER-red/test.mjs:38149:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 82.900736
+
