@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-15-03.755Z-73ea4f6c",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "ed8828fd8445d4af3e841c4986b1c2e7a19f602a84cf512d2ad5940b72cc2d88",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/kardex-api.test.ts",
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ]
+}

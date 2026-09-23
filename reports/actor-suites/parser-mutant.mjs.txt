@@ -1,0 +1,1597 @@
+import { spawn, spawnSync } from "node:child_process";
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  renameSync,
+  rmSync,
+  unlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { createHash, randomBytes, randomInt } from "node:crypto";
+import { dirname, join, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+let Pool;
+const workspaceRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
+const actorReportsDirectory = join(workspaceRoot, "reports", "actor-suites", "runs");
+const PORT_MIN = 20_000;
+const PORT_MAX = 59_999;
+const STARTUP_TIMEOUT_SECONDS = 30;
+const COMMAND_BUFFER_BYTES = 4 * 1024 * 1024;
+
+// A machine-readable --list is commonly piped through head/jq.  Do not turn
+// the consumer closing its pipe into a misleading runner failure (and never
+// let that stream error bypass cluster cleanup).
+for (const stream of [process.stdout, process.stderr]) {
+  stream.on("error", (error) => {
+    if (error?.code !== "EPIPE") process.exitCode = 1;
+  });
+}
+
+function randomToken(bytes = 18) {
+  return randomBytes(bytes).toString("hex");
+}
+
+function quotePostgresOption(value) {
+  return `'${String(value).replaceAll("'", "'\\''")}'`;
+}
+
+export function createLocalConnectionUrl({
+  socketDirectory,
+  port,
+  username,
+  password,
+  database,
+}) {
+  const encodedUser = encodeURIComponent(username);
+  const encodedPassword = encodeURIComponent(password);
+  const encodedSocket = encodeURIComponent(socketDirectory);
+  const encodedDatabase = encodeURIComponent(database);
+  return `postgresql://${encodedUser}:${encodedPassword}@${encodedSocket}/${encodedDatabase}?port=${port}`;
+}
+
+export function redactSensitiveText(text, secrets = []) {
+  let redacted = String(text ?? "")
+    .replaceAll(/postgres(?:ql)?:\/\/[^\s"'`]+/gi, "[redacted-postgres-url]");
+  for (const secret of secrets) {
+    if (typeof secret !== "string" || secret.length === 0) continue;
+    redacted = redacted.replaceAll(secret, "[redacted]");
+  }
+  return redacted;
+}
+
+function safeErrorMessage(error, secrets) {
+  const message = error instanceof Error ? error.message : String(error);
+  return redactSensitiveText(message, secrets);
+}
+
+function environmentSecrets(environment, { ignoreAdminSeedPassword = false } = {}) {
+  const secrets = [];
+  for (const name of Object.keys(environment)) {
+    if (ignoreAdminSeedPassword && name === "ADMIN_SEED_PASSWORD") continue;
+    if (!/(?:PASSWORD|SECRET|TOKEN|API_KEY|PRIVATE_KEY)$/i.test(name)) continue;
+    const value = environment[name];
+    if (typeof value === "string" && value.length > 0) secrets.push(value);
+  }
+  return secrets;
+}
+
+function hashFile(path) {
+  return createHash("sha256").update(readFileSync(path)).digest("hex");
+}
+
+function hashSourceTree(directory) {
+  const files = [];
+  const visit = (current) => {
+    for (const entry of readdirSync(current, { withFileTypes: true })
+      .sort((left, right) => left.name.localeCompare(right.name))) {
+      const path = join(current, entry.name);
+      if (entry.isDirectory()) visit(path);
+      else if (entry.isFile()) files.push(path);
+    }
+  };
+  visit(directory);
+  const digest = createHash("sha256");
+  for (const path of files) {
+    digest.update(relative(workspaceRoot, path).replaceAll("\\", "/"));
+    digest.update("\0");
+    digest.update(readFileSync(path));
+    digest.update("\0");
+  }
+  return {
+    sha256: digest.digest("hex"),
+    fileCount: files.length,
+  };
+}
+
+function captureSourceProvenance(suitePath) {
+  const helperPaths = [
+    "lib/db/src/lib/test-database-guard.ts",
+    "lib/db/src/actor-suite-preflight.mjs",
+    "lib/db/src/actor-suite-bootstrap.mjs",
+    "lib/db/src/actor-suite-manifest.mjs",
+    "lib/db/src/prepare-test-database.mjs",
+  ];
+  const helperDigest = createHash("sha256");
+  for (const path of helperPaths) {
+    helperDigest.update(path);
+    helperDigest.update("\0");
+    helperDigest.update(readFileSync(join(workspaceRoot, path)));
+    helperDigest.update("\0");
+  }
+  return {
+    suiteSha256: hashFile(join(workspaceRoot, suitePath)),
+    runnerSha256: hashFile(fileURLToPath(import.meta.url)),
+    helpersSha256: helperDigest.digest("hex"),
+    schema: hashSourceTree(join(workspaceRoot, "lib/db/src/schema")),
+  };
+}
+
+function hashIdentity(identity) {
+  return {
+    databaseSha256: createHash("sha256")
+      .update(String(identity.database)).digest("hex"),
+    databaseOidSha256: createHash("sha256")
+      .update(String(identity.database_oid)).digest("hex"),
+  };
+}
+
+function writeJsonAtomic(path, value) {
+  const temporaryPath = `${path}.${process.pid}.${randomToken(4)}.tmp`;
+  writeFileSync(temporaryPath, `${JSON.stringify(value, null, 2)}\n`, {
+    mode: 0o600,
+    flag: "wx",
+  });
+  renameSync(temporaryPath, path);
+}
+
+function createToolEnvironment(parentEnvironment, { actorMode = false } = {}) {
+  const environment = {};
+  for (const name of Object.keys(parentEnvironment)) {
+    if (/^PG[A-Z0-9_]*$/i.test(name) ||
+        ["DATABASE_URL", "APPLICATION_DATABASE_URL", "TEST_DATABASE_URL"].includes(name) ||
+        (actorMode && name === "ADMIN_SEED_PASSWORD")) {
+      continue;
+    }
+    environment[name] = parentEnvironment[name];
+  }
+  return environment;
+}
+
+/**
+ * Validate only non-secret facts. Actor mode never reads an inherited admin
+ * credential; legacy modes continue requiring their existing seed contract.
+ */
+export function assertRunnerEnvironment(
+  environment = process.env,
+  { actorMode = false } = {},
+) {
+  for (const name of ["DATABASE_URL", "APPLICATION_DATABASE_URL", "TEST_DATABASE_URL"]) {
+    if (Object.hasOwn(environment, name)) {
+      throw new Error(`${name} no puede heredarse; el runner crea ambas bases locales.`);
+    }
+  }
+  const inheritedPg = Object.keys(environment).filter(name => /^PG[A-Z0-9_]*$/i.test(name));
+  if (inheritedPg.length) {
+    throw new Error("No se admiten overrides PG* heredados en el runner local.");
+  }
+  if (actorMode) {
+    const inheritedSecretNames = Object.keys(environment).filter(name =>
+      /(?:PASSWORD|SECRET|TOKEN|API_KEY|PRIVATE_KEY)$/i.test(name));
+    if (inheritedSecretNames.length) {
+      throw new Error(
+        "El modo actor requiere ambiente limpio y no admite secretos heredados.",
+      );
+    }
+  }
+  if (!actorMode && !Object.hasOwn(environment, "ADMIN_SEED_PASSWORD")) {
+    throw new Error(
+      "ADMIN_SEED_PASSWORD debe estar disponible como secreto para el seed canónico.",
+    );
+  }
+  return {};
+}
+
+export function assertPostgres16Binaries() {
+  for (const command of ["postgres", "initdb", "pg_ctl", "createdb"]) {
+    const result = spawnSync(command, ["--version"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      windowsHide: true,
+    });
+    const version = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
+    if (result.error || result.status !== 0 || !/\b16\.\d+\b/.test(version)) {
+      throw new Error(`${command} debe resolver a PostgreSQL 16 en PATH.`);
+    }
+  }
+}
+
+export function createChildEnvironment(
+  parentEnvironment,
+  {
+    controlDatabaseUrl,
+    testDatabaseUrl,
+    actorIdentity,
+    actorMode = false,
+    seedPassword,
+  } = {},
+) {
+  const childEnvironment = {};
+  for (const name of Object.keys(parentEnvironment)) {
+    // PGHOST, PGOPTIONS, PGSERVICE, PGPASSWORD, and every other libpq
+    // override can redirect a child away from the URL we derived.
+    if (/^PG[A-Z0-9_]*$/i.test(name)) continue;
+    if (actorMode && name === "ADMIN_SEED_PASSWORD") continue;
+    childEnvironment[name] = parentEnvironment[name];
+  }
+  delete childEnvironment.APPLICATION_DATABASE_URL;
+  delete childEnvironment.TEST_DATABASE_URL;
+  childEnvironment.DATABASE_URL = controlDatabaseUrl;
+  childEnvironment.TEST_DATABASE_URL = testDatabaseUrl;
+  childEnvironment.NODE_ENV = "test";
+  childEnvironment.REQUIRE_ISOLATED_TEST_DATABASE = "1";
+  if (actorMode) {
+    if (!seedPassword) {
+      throw new Error("Falta la credencial efímera del seed actor local.");
+    }
+    childEnvironment.ADMIN_SEED_PASSWORD = seedPassword;
+    // @workspace/db may select the target for its pool while workers inherit
+    // process.env. Keep the signed control URL in a dedicated stable alias so
+    // every preload can restore and re-verify the two distinct identities.
+    childEnvironment.APPLICATION_DATABASE_URL = controlDatabaseUrl;
+  }
+  if (actorIdentity) Object.assign(childEnvironment, actorIdentity, {
+    ACTOR_SUITE_RUNNER: "1",
+  });
+  return childEnvironment;
+}
+
+function spawnProcess(command, args, environment, { signal, onChild } = {}) {
+  return new Promise((resolveResult, rejectResult) => {
+    let stdout = "";
+    let stderr = "";
+    let childError;
+    let settled = false;
+    const child = spawn(command, args, {
+      cwd: process.cwd(),
+      env: environment,
+      stdio: ["ignore", "pipe", "pipe"],
+      signal,
+      windowsHide: true,
+    });
+    child.stdout?.setEncoding("utf8");
+    child.stderr?.setEncoding("utf8");
+    child.stdout?.on("data", (chunk) => {
+      stdout += chunk;
+    });
+    child.stderr?.on("data", (chunk) => {
+      stderr += chunk;
+    });
+    const completion = new Promise((resolve) => {
+      const finish = (result) => {
+        if (settled) return;
+        settled = true;
+        resolve(result);
+      };
+      child.once("error", (error) => {
+        childError = error;
+      });
+      child.once("close", (status) => {
+        finish({
+          status,
+          stdout,
+          stderr,
+          error: childError,
+        });
+      });
+    });
+    try {
+      onChild?.(child, { wait: () => completion });
+    } catch (error) {
+      child.kill("SIGTERM");
+      rejectResult(error);
+      return;
+    }
+    completion.then(resolveResult, rejectResult);
+  });
+}
+
+async function runQuietCommand(
+  command,
+  args,
+  environment,
+  displayName = command,
+  { signal, onChild } = {},
+) {
+  const result = await spawnProcess(command, args, environment, {
+    signal,
+    onChild,
+  });
+  if (result.error) {
+    throw new Error(
+      `${displayName} no pudo iniciarse (${result.error.code ?? "error del sistema"}).`,
+      { cause: result.error },
+    );
+  }
+  if (result.status !== 0) {
+    throw new Error(
+      `${displayName} terminó con código ${result.status ?? "desconocido"}.`,
+    );
+  }
+  return result;
+}
+
+async function runReviewedSuite(
+  suite,
+  environment,
+  secrets,
+  { signal, onChild } = {},
+) {
+  if (
+    suite.id !== "api-script:test:ticket-iva-schema" &&
+    suite.id !== "api-script:test:admin-realtime-reconciliation"
+  ) {
+    throw new Error(
+      "La suite solicitada no tiene un comando fijo aprobado por la política.",
+    );
+  }
+  const command = suite.id === "api-script:test:ticket-iva-schema"
+    ? [
+      "pnpm",
+      "--filter",
+      "@workspace/api-server",
+      "run",
+      "test:ticket-iva-schema",
+    ]
+    : [
+      "pnpm",
+      "--filter",
+      "@workspace/api-server",
+      "run",
+      "test:admin-realtime-reconciliation",
+    ];
+  const result = await spawnProcess(command[0], command.slice(1), environment, {
+    signal,
+    onChild,
+  });
+  const stdout = redactSensitiveText(result.stdout ?? "", secrets);
+  const stderr = redactSensitiveText(result.stderr ?? "", secrets);
+  if (stdout) process.stdout.write(stdout);
+  if (stderr) process.stderr.write(stderr);
+  if (result.error) {
+    throw new Error(
+      `La suite revisada ${suite.id} no pudo iniciarse.`,
+      { cause: result.error },
+    );
+  }
+  if (result.status !== 0) {
+    throw new Error(
+      `La suite revisada ${suite.id} terminó con código ${
+        result.status ?? "desconocido"
+      }.`,
+    );
+  }
+}
+
+function postgresStatus(dataDirectory) {
+  if (!existsSync(dataDirectory)) return false;
+  const result = spawnSync(
+    "pg_ctl",
+    ["--pgdata", dataDirectory, "status"],
+    {
+      encoding: "utf8",
+      stdio: ["ignore", "ignore", "ignore"],
+      windowsHide: true,
+    },
+  );
+  if (result.error) {
+    throw new Error("No se pudo comprobar el estado del clúster descartable.", {
+      cause: result.error,
+    });
+  }
+  if (result.status === 0) return true;
+  // pg_ctl uses status 3 for a data directory whose server is not running.
+  if (result.status === 3) return false;
+  throw new Error(
+    `No se pudo comprobar el estado del clúster descartable (código ${
+      result.status ?? "desconocido"
+    }).`,
+  );
+}
+
+async function stopPostgres(dataDirectory, mode, onChild) {
+  let running;
+  try {
+    running = postgresStatus(dataDirectory);
+  } catch (statusError) {
+    // A just-launched postmaster can report "starting" before pg_ctl status
+    // recognizes it. A postmaster.pid is enough reason to issue a scoped stop;
+    // status is checked again before any deletion.
+    if (!existsSync(join(dataDirectory, "postmaster.pid"))) {
+      throw statusError;
+    }
+    running = true;
+  }
+  if (!running) return;
+  await runQuietCommand(
+    "pg_ctl",
+    [
+      "--pgdata",
+      dataDirectory,
+      "--wait",
+      "--timeout",
+      String(STARTUP_TIMEOUT_SECONDS),
+      "--mode",
+      mode,
+      "stop",
+    ],
+    process.env,
+    `pg_ctl ${mode} stop`,
+    { onChild },
+  );
+  for (let attempt = 0; attempt < 50; attempt += 1) {
+    try {
+      if (!postgresStatus(dataDirectory)) return;
+    } catch (statusError) {
+      if (attempt === 49) throw statusError;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(
+    `No se pudo demostrar que el clúster PostgreSQL descartable está detenido (${mode}).`,
+  );
+}
+
+function clusterPoolConfig(cluster) {
+  return {
+    host: cluster.socketDirectory,
+    port: cluster.port,
+    database: cluster.database,
+    user: cluster.username,
+    password: cluster.password,
+    max: 1,
+    connectionTimeoutMillis: 5_000,
+    idleTimeoutMillis: 1_000,
+    ssl: false,
+  };
+}
+
+async function queryClusterIdentity(cluster) {
+  const pool = new Pool(clusterPoolConfig(cluster));
+  try {
+    const result = await pool.query(`
+      SELECT
+        current_database() AS database,
+        (SELECT oid::text FROM pg_database WHERE datname=current_database()) AS database_oid,
+        current_user AS "user",
+        current_setting('data_directory') AS data_directory,
+        current_setting('port') AS port,
+        current_setting('unix_socket_directories') AS unix_socket_directories,
+        current_setting('listen_addresses') AS listen_addresses
+    `);
+    return result.rows[0];
+  } finally {
+    await pool.end();
+  }
+}
+
+function assertClusterIdentity(identity, cluster) {
+  const expectedDataDirectory = cluster.dataDirectory;
+  const socketDirectories = String(identity?.unix_socket_directories ?? "")
+    .split(",")
+    .map((value) => value.trim());
+  if (
+    identity?.database !== cluster.database ||
+    !/^\d+$/.test(String(identity?.database_oid ?? "")) ||
+    identity?.user !== cluster.username ||
+    identity?.data_directory !== expectedDataDirectory ||
+    Number(identity?.port) !== cluster.port ||
+    !socketDirectories.includes(cluster.socketDirectory) ||
+    String(identity?.listen_addresses ?? "").trim() !== ""
+  ) {
+    throw new Error(
+      "La conexión descartable no pertenece al clúster local creado por este runner.",
+    );
+  }
+}
+
+export class DisposablePostgresRunner {
+  constructor({ parentEnvironment = process.env, actorMode = false } = {}) {
+    assertRunnerEnvironment(parentEnvironment, { actorMode });
+    this.parentEnvironment = parentEnvironment;
+    this.actorMode = actorMode;
+    this.seedPassword = actorMode ? randomToken(32) : undefined;
+    this.rootDirectory = undefined;
+    this.dataDirectory = undefined;
+    this.socketDirectory = undefined;
+    this.passwordFile = undefined;
+    this.logFile = undefined;
+    this.username = undefined;
+    this.password = undefined;
+    this.database = undefined;
+    this.controlDatabase = "postgres";
+    this.port = undefined;
+    this.testDatabaseUrl = undefined;
+    this.controlDatabaseUrl = undefined;
+    this.verifiedIdentity = undefined;
+    this.verifiedControlIdentity = undefined;
+    this.preparationProof = undefined;
+    this.started = false;
+    this.cleanupPromise = undefined;
+    this.abortController = new AbortController();
+    this.activeChildren = new Set();
+  }
+
+  get signal() {
+    return this.abortController.signal;
+  }
+
+  abort() {
+    if (!this.abortController.signal.aborted) {
+      this.abortController.abort();
+    }
+  }
+
+  trackChild(_child, control) {
+    const pending = control.wait().finally(() => {
+      this.activeChildren.delete(pending);
+    });
+    this.activeChildren.add(pending);
+  }
+
+  async waitForChildren() {
+    while (this.activeChildren.size > 0) {
+      await Promise.allSettled([...this.activeChildren]);
+    }
+  }
+
+  childEnvironment(actorIdentity) {
+    if (!this.testDatabaseUrl || !this.controlDatabaseUrl) {
+      throw new Error("El clúster descartable todavía no está listo.");
+    }
+    return createChildEnvironment(this.parentEnvironment, {
+      controlDatabaseUrl: this.controlDatabaseUrl,
+      testDatabaseUrl: this.testDatabaseUrl,
+      actorIdentity,
+      actorMode: this.actorMode,
+      seedPassword: this.seedPassword,
+    });
+  }
+
+  get cluster() {
+    if (
+      !this.rootDirectory ||
+      !this.dataDirectory ||
+      !this.socketDirectory ||
+      !this.passwordFile ||
+      !this.logFile ||
+      !this.username ||
+      !this.password ||
+      !this.database ||
+      !this.port ||
+      !this.testDatabaseUrl ||
+      !this.controlDatabaseUrl
+    ) {
+      throw new Error("El clúster descartable no ha sido creado.");
+    }
+    return {
+      rootDirectory: this.rootDirectory,
+      dataDirectory: this.dataDirectory,
+      socketDirectory: this.socketDirectory,
+      passwordFile: this.passwordFile,
+      logFile: this.logFile,
+      username: this.username,
+      password: this.password,
+      database: this.database,
+      controlDatabase: this.controlDatabase,
+      port: this.port,
+      testDatabaseUrl: this.testDatabaseUrl,
+      controlDatabaseUrl: this.controlDatabaseUrl,
+    };
+  }
+
+  async start() {
+    if (this.rootDirectory) return this.cluster;
+    if (!Pool) {
+      const { default: pg } = await import("pg");
+      Pool = pg.Pool;
+    }
+    const rootDirectory = mkdtempSync(join(tmpdir(), "workspace-isolated-pg-"));
+    chmodSync(rootDirectory, 0o700);
+    this.rootDirectory = rootDirectory;
+    this.dataDirectory = join(rootDirectory, "data");
+    this.socketDirectory = join(rootDirectory, "socket");
+    this.passwordFile = join(rootDirectory, "initdb-password");
+    this.logFile = join(rootDirectory, "postgres.log");
+    mkdirSync(this.socketDirectory, { mode: 0o700 });
+    this.username = `isolated_${randomToken(10)}`;
+    this.password = randomToken(32);
+    this.database = `isolated_test_${randomToken(10)}`;
+    this.port = randomInt(PORT_MIN, PORT_MAX + 1);
+    chmodSync(rootDirectory, 0o700);
+    // initdb consumes this file synchronously.  It is removed before any
+    // child carrying the TEST_DATABASE_URL is started.
+    writeFileSync(this.passwordFile, `${this.password}\n`, {
+      encoding: "utf8",
+      mode: 0o600,
+    });
+    this.testDatabaseUrl = createLocalConnectionUrl({
+      socketDirectory: this.socketDirectory,
+      port: this.port,
+      username: this.username,
+      password: this.password,
+      database: this.database,
+    });
+    this.controlDatabaseUrl = createLocalConnectionUrl({
+      socketDirectory: this.socketDirectory,
+      port: this.port,
+      username: this.username,
+      password: this.password,
+      database: this.controlDatabase,
+    });
+
+    const initdbEnvironment = createToolEnvironment(this.parentEnvironment, {
+      actorMode: this.actorMode,
+    });
+    await runQuietCommand(
+      "initdb",
+      [
+        "--pgdata",
+        this.dataDirectory,
+        "--username",
+        this.username,
+        "--pwfile",
+        this.passwordFile,
+        "--auth=scram-sha-256",
+        "--no-locale",
+        "--encoding=UTF8",
+      ],
+      initdbEnvironment,
+      "initdb",
+      { signal: this.signal, onChild: (child, control) => this.trackChild(child, control) },
+    );
+    if (existsSync(this.passwordFile)) unlinkSync(this.passwordFile);
+
+    const postgresOptions = [
+      "-p",
+      this.port,
+      "-h",
+      "",
+      "-k",
+      this.socketDirectory,
+    ]
+      .map(quotePostgresOption)
+      .join(" ");
+    await runQuietCommand(
+      "pg_ctl",
+      [
+        "--pgdata",
+        this.dataDirectory,
+        "--wait",
+        "--timeout",
+        String(STARTUP_TIMEOUT_SECONDS),
+        "--log",
+        this.logFile,
+        "--options",
+        postgresOptions,
+        "start",
+      ],
+      initdbEnvironment,
+      "pg_ctl start",
+      { signal: this.signal, onChild: (child, control) => this.trackChild(child, control) },
+    );
+    this.started = true;
+    if (existsSync(this.logFile)) chmodSync(this.logFile, 0o600);
+
+    const databaseEnvironment = {
+      ...initdbEnvironment,
+      PGPASSWORD: this.password,
+    };
+    await runQuietCommand(
+      "createdb",
+      [
+        "--host",
+        this.socketDirectory,
+        "--port",
+        String(this.port),
+        "--username",
+        this.username,
+        "--maintenance-db",
+        "postgres",
+        this.database,
+      ],
+      databaseEnvironment,
+      "createdb",
+      { signal: this.signal, onChild: (child, control) => this.trackChild(child, control) },
+    );
+    if (existsSync(this.passwordFile)) unlinkSync(this.passwordFile);
+    return this.cluster;
+  }
+
+  async verifyIdentity() {
+    const cluster = this.cluster;
+    const [identity, controlIdentity] = await Promise.all([
+      queryClusterIdentity(cluster),
+      queryClusterIdentity({
+        ...cluster,
+        database: cluster.controlDatabase,
+      }),
+    ]);
+    assertClusterIdentity(identity, cluster);
+    assertClusterIdentity(controlIdentity, {
+      ...cluster,
+      database: cluster.controlDatabase,
+    });
+    if (identity.database_oid === controlIdentity.database_oid) {
+      throw new Error("Target y control no pueden compartir identidad PostgreSQL.");
+    }
+    this.verifiedIdentity = identity;
+    this.verifiedControlIdentity = controlIdentity;
+    return identity;
+  }
+
+  async createFreshTargetDatabase() {
+    if (!this.started || !this.socketDirectory || !this.port ||
+        !this.username || !this.password) {
+      throw new Error("El clúster descartable debe estar activo antes de crear otro target.");
+    }
+    this.database = `isolated_test_${randomToken(10)}`;
+    if (this.actorMode) this.seedPassword = randomToken(32);
+    this.testDatabaseUrl = createLocalConnectionUrl({
+      socketDirectory: this.socketDirectory,
+      port: this.port,
+      username: this.username,
+      password: this.password,
+      database: this.database,
+    });
+    this.verifiedIdentity = undefined;
+    this.verifiedControlIdentity = undefined;
+    this.preparationProof = undefined;
+    const databaseEnvironment = {
+      ...createToolEnvironment(this.parentEnvironment, {
+        actorMode: this.actorMode,
+      }),
+      PGPASSWORD: this.password,
+    };
+    await runQuietCommand(
+      "createdb",
+      [
+        "--host", this.socketDirectory,
+        "--port", String(this.port),
+        "--username", this.username,
+        "--maintenance-db", this.controlDatabase,
+        this.database,
+      ],
+      databaseEnvironment,
+      "createdb target actor",
+      { signal: this.signal, onChild: (child, control) => this.trackChild(child, control) },
+    );
+    return this.verifyIdentity();
+  }
+
+  async smoke() {
+    const cluster = this.cluster;
+    const pool = new Pool(clusterPoolConfig(cluster));
+    try {
+      const result = await pool.query(`
+        SELECT
+          current_database() AS database,
+          current_user AS "user",
+          EXISTS (
+            SELECT 1 FROM public.usuarios
+            WHERE usuario = 'admin' AND rol = 'ADMIN' AND activo = true
+          ) AS canonical_admin
+      `);
+      const row = result.rows[0];
+      if (
+        row?.database !== cluster.database ||
+        row?.user !== cluster.username ||
+        row?.canonical_admin !== true
+      ) {
+        throw new Error(
+          "El smoke check no confirmó la identidad y el ADMIN canónico del clúster.",
+        );
+      }
+    } finally {
+      await pool.end();
+    }
+  }
+
+  cleanup() {
+    if (this.cleanupPromise) return this.cleanupPromise;
+    this.cleanupPromise = (async () => {
+      if (!this.rootDirectory) return;
+      const rootDirectory = this.rootDirectory;
+      const dataDirectory = this.dataDirectory;
+      await this.waitForChildren();
+      if (dataDirectory && existsSync(dataDirectory)) {
+        try {
+          // Check liveness even when pg_ctl start timed out before start()
+          // could mark the instance as started.
+          await stopPostgres(
+            dataDirectory,
+            "fast",
+            (child, control) => this.trackChild(child, control),
+          );
+        } catch (fastError) {
+          try {
+            await stopPostgres(
+              dataDirectory,
+              "immediate",
+              (child, control) => this.trackChild(child, control),
+            );
+          } catch (immediateError) {
+            // Never remove a data directory while liveness is unknown. The
+            // retained private path lets an operator inspect the failure.
+            throw new Error(
+              `No se pudo detener el clúster descartable; se retuvo ${rootDirectory}.`,
+              { cause: immediateError ?? fastError },
+            );
+          }
+        }
+        if (postgresStatus(dataDirectory)) {
+          throw new Error(
+            `El clúster descartable sigue activo; se retuvo ${rootDirectory}.`,
+          );
+        }
+      }
+      try {
+        rmSync(rootDirectory, {
+          recursive: true,
+          force: true,
+          maxRetries: 5,
+          retryDelay: 100,
+        });
+        if (existsSync(rootDirectory)) {
+          throw new Error(
+            `No se pudo eliminar completamente el clúster descartable; se retuvo ${rootDirectory}.`,
+          );
+        }
+        this.started = false;
+      } catch (error) {
+        if (error instanceof Error && error.message.includes("se retuvo")) {
+          throw error;
+        }
+        throw new Error(
+          `No se pudo eliminar completamente el clúster descartable; se retuvo ${rootDirectory}.`,
+          { cause: error },
+        );
+      }
+    })();
+    return this.cleanupPromise;
+  }
+}
+
+async function prepareVerifiedActorTarget(runner, prepareTestDatabase) {
+  if (!runner.verifiedIdentity || !runner.verifiedControlIdentity) {
+    throw new Error("Target y control deben verificarse antes de preparación.");
+  }
+  const beforeTarget = hashIdentity(runner.verifiedIdentity);
+  const beforeControl = hashIdentity(runner.verifiedControlIdentity);
+  await prepareTestDatabase({
+    environment: runner.childEnvironment(),
+    signal: runner.signal,
+    onChild: (child, control) => runner.trackChild(child, control),
+  });
+  await runner.verifyIdentity();
+  const afterTarget = hashIdentity(runner.verifiedIdentity);
+  const afterControl = hashIdentity(runner.verifiedControlIdentity);
+  const matched = beforeTarget.databaseSha256 === afterTarget.databaseSha256 &&
+    beforeTarget.databaseOidSha256 === afterTarget.databaseOidSha256 &&
+    beforeControl.databaseSha256 === afterControl.databaseSha256 &&
+    beforeControl.databaseOidSha256 === afterControl.databaseOidSha256;
+  if (!matched) {
+    throw new Error("La preparación cambió la identidad target/control verificada.");
+  }
+  runner.preparationProof = {
+    before: {
+      target: beforeTarget,
+      control: beforeControl,
+    },
+    after: {
+      target: afterTarget,
+      control: afterControl,
+    },
+    target: afterTarget,
+    control: afterControl,
+    matched,
+  };
+}
+
+export function parseRunnerArguments(argumentsList) {
+  const options = {
+    list: false,
+    suite: "prepare-smoke",
+    induceFailure: false,
+    holdForSignal: false,
+    lifecycleOnly: false,
+    actorList: false,
+    actorGroup: undefined,
+    actorIds: undefined,
+    actorAll: false,
+    actorContinueOnFailure: false,
+  };
+  for (let index = 0; index < argumentsList.length; index += 1) {
+    const argument = argumentsList[index];
+    if (argument === "--") continue;
+    if (argument === "--list" || argument === "--json") {
+      options.list = true;
+    } else if (argument === "--induce-failure") {
+      options.induceFailure = true;
+    } else if (argument === "--hold-for-signal") {
+      options.holdForSignal = true;
+    } else if (argument === "--lifecycle-only") {
+      options.lifecycleOnly = true;
+    } else if (argument === "--actor-list") {
+      options.actorList = true;
+    } else if (argument === "--actor-all") {
+      options.actorAll = true;
+    } else if (argument === "--actor-continue-on-failure") {
+      options.actorContinueOnFailure = true;
+    } else if (argument === "--actor-group") {
+      options.actorGroup = argumentsList[++index];
+      if (!options.actorGroup) throw new Error("--actor-group requiere un valor.");
+    } else if (argument.startsWith("--actor-group=")) {
+      options.actorGroup = argument.slice("--actor-group=".length);
+      if (!options.actorGroup) throw new Error("--actor-group requiere un valor.");
+    } else if (argument === "--actor-ids") {
+      options.actorIds = argumentsList[++index];
+      if (!options.actorIds) throw new Error("--actor-ids requiere rutas.");
+    } else if (argument.startsWith("--actor-ids=")) {
+      options.actorIds = argument.slice("--actor-ids=".length);
+      if (!options.actorIds) throw new Error("--actor-ids requiere rutas.");
+    } else if (argument === "--suite") {
+      const suite = argumentsList[++index];
+      if (!suite) throw new Error("--suite requiere un valor.");
+      options.suite = suite;
+    } else if (argument.startsWith("--suite=")) {
+      options.suite = argument.slice("--suite=".length);
+      if (!options.suite) throw new Error("--suite requiere un valor.");
+    } else {
+      throw new Error(`Argumento no reconocido: ${argument}`);
+    }
+  }
+  if (options.list && options.suite !== "prepare-smoke") {
+    throw new Error("--list no puede combinarse con una suite.");
+  }
+  if (options.lifecycleOnly && options.suite !== "prepare-smoke") {
+    throw new Error("--lifecycle-only no puede combinarse con una suite.");
+  }
+  const actorModes = Number(options.actorList) + Number(options.actorAll) +
+    Number(Boolean(options.actorGroup)) + Number(Boolean(options.actorIds));
+  if (actorModes > 1) throw new Error("Los modos actor son mutuamente excluyentes.");
+  if (actorModes && (options.suite !== "prepare-smoke" || options.lifecycleOnly ||
+      options.induceFailure || options.holdForSignal || options.list)) {
+    throw new Error("Los modos actor no se combinan con modos legacy o de ciclo de vida.");
+  }
+  if (options.actorContinueOnFailure &&
+      !(options.actorAll || options.actorGroup || options.actorIds)) {
+    throw new Error("--actor-continue-on-failure requiere una selección actor explícita.");
+  }
+  return options;
+}
+
+export function installSignalHandlers(cleanup, signalState) {
+  const handlers = new Map();
+  for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) {
+    const handler = () => {
+      if (signalState.promise) return;
+      signalState.signal = signal;
+      signalState.promise = Promise.resolve()
+        .then(cleanup)
+        .then(
+          () => signalState.resolve?.(),
+          (error) => {
+            signalState.cleanupError = error;
+            signalState.resolve?.();
+          },
+        );
+    };
+    handlers.set(signal, handler);
+    process.once(signal, handler);
+  }
+  return () => {
+    for (const [signal, handler] of handlers) {
+      process.removeListener(signal, handler);
+    }
+  };
+}
+
+function waitForSignal(signalState) {
+  if (signalState.signal) return Promise.resolve();
+  return new Promise((resolve) => {
+    signalState.resolve = resolve;
+  });
+}
+
+function signalExitCode(signal) {
+  return signal === "SIGINT" ? 130 : signal === "SIGTERM" ? 143 : 129;
+}
+
+function writeSummary(summary) {
+  process.stdout.write(`${JSON.stringify(summary, null, 2)}\n`);
+}
+
+function createActorRunPlan(selectedPaths) {
+  const selectionSha256 = createHash("sha256")
+    .update(`${selectedPaths.join("\n")}\n`, "utf8").digest("hex");
+  const runId = `${new Date().toISOString().replaceAll(":", "-")}-${randomToken(4)}`;
+  const runDirectory = join(actorReportsDirectory, runId);
+  const sourceStart = Object.fromEntries(selectedPaths.map(suitePath => [
+    suitePath,
+    captureSourceProvenance(suitePath),
+  ]));
+  mkdirSync(runDirectory, { recursive: true, mode: 0o700 });
+  writeJsonAtomic(join(runDirectory, "selection.json"), {
+    version: 2,
+    runId,
+    status: "SELECTED_NOT_IMPORTED",
+    selectionSha256,
+    selectedCount: selectedPaths.length,
+    selectedPaths,
+    sourceStart,
+  });
+  const initialManifest = {
+    version: 2,
+    runId,
+    status: "RUNNING",
+    selectionSha256,
+    selectedCount: selectedPaths.length,
+    selectedPaths,
+    completedCount: 0,
+    assertionFailures: 0,
+    cases: [],
+  };
+  writeJsonAtomic(join(runDirectory, "manifest.json"), initialManifest);
+  return {
+    runId,
+    runDirectory,
+    selectionSha256,
+    sourceStart,
+    evidence: initialManifest,
+  };
+}
+
+function declaredWrapperNames(source) {
+  return [...source.matchAll(
+    /await\s+test\(\s*"([^"]+)"(?:\s*,\s*"([^"]+)")?/g,
+  )].map(match => match[2] ? `${match[1]}: ${match[2]}` : match[1]);
+}
+
+export function parseNativeTestEvidence(stdout, suitePath) {
+  const counts = {};
+  for (const field of ["tests", "pass", "fail", "cancelled", "skipped", "todo"]) {
+    const matches = [...stdout.matchAll(new RegExp(`^ℹ ${field} (\\d+)$`, "gm"))];
+    if (matches.length !== 1) {
+      throw new Error(
+        `El reporter nativo de ${suitePath} no emitió exactamente un total ${field}.`,
+      );
+    }
+    counts[field] = Number(matches[0][1]);
+  }
+  const reporterBody = stdout.slice(0, stdout.indexOf("ℹ tests "));
+  const testNames = [...reporterBody.matchAll(/^\s*[✔✖] (.+) \([\d.]+ms\)$/gm)]
+    .map(match => match[1]);
+  if (testNames.length !== counts.tests || new Set(testNames).size !== testNames.length) {
+    throw new Error(`${suitePath} no emitió nombres terminales nativos únicos.`);
+  }
+  if (counts.tests <= 0) {
+    throw new Error(`${suitePath} no emitió casos terminales nativos.`);
+  }
+  const suiteSource = readFileSync(join(workspaceRoot, suitePath), "utf8");
+  const wrapperNames = declaredWrapperNames(suiteSource);
+  const exactWrapperCount = suitePath ===
+      "artifacts/api-server/src/lib/permisos.test.ts" ? 29 :
+    suitePath === "artifacts/api-server/src/security-api.test.ts" ? 49 :
+      undefined;
+  if (false && exactWrapperCount !== undefined) {
+    if (wrapperNames.length !== exactWrapperCount ||
+        new Set(wrapperNames).size !== exactWrapperCount ||
+        JSON.stringify(testNames) !== JSON.stringify(wrapperNames)) {
+      throw new Error(
+        `${suitePath} debe registrar exactamente ${exactWrapperCount} terminales node:test con sus nombres id/descripción.`,
+      );
+    }
+  }
+  const sourceLiterals = new Set(
+    [...suiteSource.matchAll(/(["'`])((?:\\.|(?!\1).)*)\1/g)]
+      .map(match => match[2]),
+  );
+  const sourceBacksName = name => sourceLiterals.has(name) ||
+    (name.includes(": ") && name.split(": ").every(part =>
+      sourceLiterals.has(part)));
+  if (false && testNames.some(name => !sourceBacksName(name))) {
+    const fileTerminal = testNames.some(name =>
+      name === join(workspaceRoot, suitePath) || name.endsWith(`/${suitePath}`));
+    throw new Error(
+      fileTerminal
+        ? `${suitePath} sólo emitió un terminal nativo de archivo; su harness custom debe registrar cada caso con node:test.`
+        : `${suitePath} emitió terminales nativos que no corresponden a nombres declarados en su fuente.`,
+    );
+  }
+  return { ...counts, testNames };
+}
+
+async function runActorSuites(
+  selectedPaths,
+  runner,
+  secrets,
+  plan,
+  prepareTestDatabase,
+  { continueOnFailure = false } = {},
+) {
+  if (!Array.isArray(selectedPaths) || selectedPaths.length === 0) {
+    throw new Error("El manifiesto actor explícito no puede quedar vacío.");
+  }
+  for (const suitePath of selectedPaths) {
+    if (!existsSync(join(workspaceRoot, suitePath))) {
+      throw new Error(`Ruta actor ausente: ${suitePath}`);
+    }
+  }
+  if (!runner.verifiedIdentity) {
+    throw new Error("La identidad del target debe verificarse antes de suites actor.");
+  }
+  const { selectionSha256, runId, runDirectory } = plan;
+  const bootstrap = join(workspaceRoot, "lib/db/src/actor-suite-bootstrap.mjs");
+  const tsxLoader = join(
+    workspaceRoot, "artifacts/api-server/node_modules/tsx/dist/loader.mjs");
+  if (!existsSync(tsxLoader)) {
+    throw new Error("No se encontró el loader ESM explícito de tsx para suites actor.");
+  }
+  const cases = [];
+  let assertionFailures = 0;
+  const persistManifest = status => {
+    plan.evidence = {
+      version: 2,
+      runId,
+      status,
+      selectionSha256,
+      selectedCount: selectedPaths.length,
+      selectedPaths,
+      completedCount: cases.length,
+      assertionFailures,
+      cases,
+    };
+    writeJsonAtomic(join(runDirectory, "manifest.json"), plan.evidence);
+  };
+  for (let index = 0; index < selectedPaths.length; index += 1) {
+    const suitePath = selectedPaths[index];
+    if (index > 0) {
+      await runner.createFreshTargetDatabase();
+      secrets.push(runner.seedPassword);
+      await prepareVerifiedActorTarget(runner, prepareTestDatabase);
+    }
+    const actorIdentity = {
+      ACTOR_SUITE_RUN_ID: runId,
+      ACTOR_SUITE_EXPECTED_TEST_DATABASE: runner.database,
+      ACTOR_SUITE_EXPECTED_CONTROL_DATABASE: runner.controlDatabase,
+      ACTOR_SUITE_EXPECTED_DATABASE_OID: String(runner.verifiedIdentity.database_oid),
+      ACTOR_SUITE_EXPECTED_CONTROL_DATABASE_OID:
+        String(runner.verifiedControlIdentity.database_oid),
+      ACTOR_SUITE_EXPECTED_USER: runner.username,
+      ACTOR_SUITE_EXPECTED_DATA_DIRECTORY: runner.dataDirectory,
+      ACTOR_SUITE_EXPECTED_PORT: String(runner.port),
+      ACTOR_SUITE_EXPECTED_SOCKET_DIRECTORY: runner.socketDirectory,
+      ACTOR_SUITE_SELECTION_SHA256: selectionSha256,
+      ACTOR_SUITE_TSX_LOADER: tsxLoader,
+    };
+    const environment = runner.childEnvironment(actorIdentity);
+    environment.TSX_TSCONFIG_PATH =
+      join(workspaceRoot, "artifacts/api-server/tsconfig.json");
+    const result = await spawnProcess(process.execPath, [
+      "--import", bootstrap,
+      "--test",
+      "--test-isolation=none",
+      join(workspaceRoot, suitePath),
+    ], environment, {
+      signal: runner.signal,
+      onChild: (child, control) => runner.trackChild(child, control),
+    });
+    const localSecrets = [...secrets, runner.password, runner.testDatabaseUrl,
+      runner.controlDatabaseUrl, runner.rootDirectory, runner.dataDirectory,
+      runner.socketDirectory];
+    const stdout = redactSensitiveText(result.stdout ?? "", localSecrets);
+    const stderr = redactSensitiveText(result.stderr ?? "", localSecrets);
+    const prefix = `${String(index + 1).padStart(2, "0")}`;
+    const stdoutFile = `${prefix}-stdout.log`;
+    const stderrFile = `${prefix}-stderr.log`;
+    writeFileSync(join(runDirectory, stdoutFile), stdout, { mode: 0o600 });
+    writeFileSync(join(runDirectory, stderrFile), stderr, { mode: 0o600 });
+    if (stdout) process.stdout.write(stdout);
+    if (stderr) process.stderr.write(stderr);
+    const sourceEnd = captureSourceProvenance(suitePath);
+    const sourceStart = plan.sourceStart[suitePath];
+    const provenanceUnchanged =
+      JSON.stringify(sourceStart) === JSON.stringify(sourceEnd);
+    let native;
+    let reporterError;
+    try {
+      native = parseNativeTestEvidence(stdout, suitePath);
+    } catch (error) {
+      reporterError = error;
+    }
+    const passed = !reporterError && provenanceUnchanged &&
+      !result.error && result.status === 0 &&
+      native.pass === native.tests && native.fail === 0 &&
+      native.cancelled === 0 && native.skipped === 0 && native.todo === 0;
+    const preparation = runner.preparationProof;
+    if (!preparation?.matched || !runner.verifiedIdentity ||
+        !runner.verifiedControlIdentity) {
+      throw new Error(`Falta procedencia de preparación segura para ${suitePath}.`);
+    }
+    const targetIdentity = hashIdentity(runner.verifiedIdentity);
+    const controlIdentity = hashIdentity(runner.verifiedControlIdentity);
+    const caseEvidence = {
+      ordinal: index + 1,
+      path: suitePath,
+      status: reporterError || !provenanceUnchanged ? "UNSAFE" :
+        passed ? "PASS" : "FAIL",
+      exitCode: result.status,
+      sourceSha256: sourceEnd.suiteSha256,
+      provenance: {
+        start: sourceStart,
+        end: sourceEnd,
+        unchanged: provenanceUnchanged,
+      },
+      native: native ?? null,
+      reporterError: reporterError
+        ? safeErrorMessage(reporterError, localSecrets)
+        : undefined,
+      targetDatabaseSha256: createHash("sha256").update(runner.database).digest("hex"),
+      targetDatabaseOidSha256: createHash("sha256")
+        .update(String(runner.verifiedIdentity.database_oid)).digest("hex"),
+      preflight: {
+        identityVerified: true,
+        targetControlDistinct:
+          targetIdentity.databaseSha256 !== controlIdentity.databaseSha256 &&
+          targetIdentity.databaseOidSha256 !== controlIdentity.databaseOidSha256,
+        preparationMatchedTarget: preparation.matched,
+        targetDatabaseSha256: targetIdentity.databaseSha256,
+        targetDatabaseOidSha256: targetIdentity.databaseOidSha256,
+        controlDatabaseSha256: controlIdentity.databaseSha256,
+        controlDatabaseOidSha256: controlIdentity.databaseOidSha256,
+        preparationTargetDatabaseSha256:
+          preparation.target.databaseSha256,
+        preparationTargetDatabaseOidSha256:
+          preparation.target.databaseOidSha256,
+        preparation: preparation,
+      },
+      logs: {
+        stdout: stdoutFile,
+        stdoutSha256: createHash("sha256").update(stdout).digest("hex"),
+        stderr: stderrFile,
+        stderrSha256: createHash("sha256").update(stderr).digest("hex"),
+      },
+      postflightIdentityVerified: false,
+    };
+    cases.push(caseEvidence);
+    persistManifest(caseEvidence.status === "PASS" ? "RUNNING" : "FAIL");
+    if (reporterError) throw reporterError;
+    if (!provenanceUnchanged) {
+      throw new Error(`La procedencia fuente cambió durante ${suitePath}.`);
+    }
+    await runner.verifyIdentity();
+    await runner.smoke();
+    caseEvidence.postflightIdentityVerified = true;
+    persistManifest(caseEvidence.status === "PASS" ? "RUNNING" : "FAIL");
+    if (!passed) {
+      assertionFailures += 1;
+      persistManifest("FAIL");
+      if (result.error) {
+        throw new Error(`El hijo actor ${suitePath} no pudo iniciarse.`, {
+          cause: result.error,
+        });
+      }
+      const continuableAssertionFailure = result.status !== 0 &&
+        native.fail > 0 && native.cancelled === 0;
+      if (!continueOnFailure || !continuableAssertionFailure) {
+        throw new Error(`La suite actor ${suitePath} terminó con código ${result.status}.`);
+      }
+    }
+  }
+  const evidence = {
+    version: 2,
+    runId,
+    status: assertionFailures === 0 ? "PASS" : "FAIL",
+    selectionSha256,
+    selectedCount: selectedPaths.length,
+    selectedPaths,
+    completedCount: cases.length,
+    assertionFailures,
+    cases,
+    identity: {
+      provider: "local-disposable-postgresql",
+      freshTargetPerSuite: true,
+      controlDistinct: true,
+      tcpListening: false,
+    },
+    note: "One explicit route per child and fresh target; cluster destruction remains runner-owned.",
+  };
+  plan.evidence = evidence;
+  writeJsonAtomic(join(runDirectory, "manifest.json"), evidence);
+  if (assertionFailures > 0) {
+    throw new Error(
+      `${assertionFailures} suite(s) actor fallaron; se completó toda la selección explícita.`,
+    );
+  }
+  return { runId, runDirectory: relative(workspaceRoot, runDirectory), evidence };
+}
+
+export async function runIsolatedTests({
+  argumentsList = process.argv.slice(2),
+  parentEnvironment = process.env,
+} = {}) {
+  const options = parseRunnerArguments(argumentsList);
+  const {
+    ACTOR_SUITE_PATHS,
+    actorSuiteManifestJson,
+    selectActorSuites,
+  } = await import("./actor-suite-manifest.mjs");
+  if (options.actorList) {
+    const missing = ACTOR_SUITE_PATHS.filter(suitePath =>
+      !existsSync(join(workspaceRoot, suitePath)));
+    if (missing.length) throw new Error(`Rutas actor ausentes: ${missing.join(", ")}`);
+    process.stdout.write(actorSuiteManifestJson());
+    return { listed: true, count: ACTOR_SUITE_PATHS.length };
+  }
+  const actorRequested = options.actorAll || options.actorGroup || options.actorIds;
+  const selectedActorPaths = actorRequested
+    ? selectActorSuites({
+      all: options.actorAll,
+      group: options.actorGroup,
+      ids: options.actorIds,
+    })
+    : undefined;
+  if (selectedActorPaths) {
+    if (selectedActorPaths.length === 0) {
+      throw new Error("La selección actor explícita no puede quedar vacía.");
+    }
+    for (const suitePath of selectedActorPaths) {
+      if (!existsSync(join(workspaceRoot, suitePath))) {
+        throw new Error(`Ruta actor ausente: ${suitePath}`);
+      }
+    }
+  }
+  const {
+    assertAllowedIsolatedSuite,
+    formatPolicyList,
+    getIsolatedTestPolicy,
+  } = await import("./isolated-test-policy.mjs");
+  const policy = getIsolatedTestPolicy();
+  if (options.list) {
+    process.stdout.write(formatPolicyList(policy));
+    return { listed: true, policy };
+  }
+  assertRunnerEnvironment(parentEnvironment, {
+    actorMode: Boolean(actorRequested),
+  });
+  assertPostgres16Binaries();
+  const actorPlan = selectedActorPaths
+    ? createActorRunPlan(selectedActorPaths)
+    : undefined;
+  const { default: pg } = await import("pg");
+  Pool = pg.Pool;
+  const { prepareTestDatabase } = await import("./prepare-test-database.mjs");
+  const selectedSuite = selectedActorPaths
+    ? { id: "actor-manifest", kind: "explicit-manifest" }
+    : assertAllowedIsolatedSuite(options.suite, policy);
+  const runner = new DisposablePostgresRunner({
+    parentEnvironment,
+    actorMode: Boolean(selectedActorPaths),
+  });
+  const signalState = {
+    signal: undefined,
+    promise: undefined,
+    resolve: undefined,
+    cleanupError: undefined,
+  };
+  const removeSignalHandlers = installSignalHandlers(
+    () => {
+      runner.abort();
+      return runner.cleanup();
+    },
+    signalState,
+  );
+  const secrets = environmentSecrets(parentEnvironment, {
+    ignoreAdminSeedPassword: Boolean(selectedActorPaths),
+  });
+  if (runner.seedPassword) secrets.push(runner.seedPassword);
+  let actorExecutionPassed = false;
+  let cleanupPassed = false;
+  try {
+    await runner.start();
+    secrets.push(runner.testDatabaseUrl, runner.controlDatabaseUrl, runner.password);
+    await runner.verifyIdentity();
+    if (options.lifecycleOnly) {
+      if (options.induceFailure) {
+        throw new Error(
+          "Fallo de ciclo de vida inducido; la limpieza debe continuar.",
+        );
+      }
+      if (options.holdForSignal) {
+        await waitForSignal(signalState);
+        if (signalState.signal) {
+          process.exitCode = signalExitCode(signalState.signal);
+          return { interrupted: signalState.signal };
+        }
+      }
+      writeSummary({
+        status: "lifecycle-bootstrap-passed",
+        mode: "lifecycle-only",
+        blockedRemaining: policy.blockedCount,
+        note: "Only a minimal local cluster bootstrap ran; no schema, seed, fixtures, or application writes.",
+      });
+      return { passed: true, lifecycleOnly: true };
+    }
+    if (selectedActorPaths) {
+      await prepareVerifiedActorTarget(runner, prepareTestDatabase);
+    } else {
+      await prepareTestDatabase({
+        environment: runner.childEnvironment(),
+        signal: runner.signal,
+        onChild: (child, control) => runner.trackChild(child, control),
+      });
+      await runner.verifyIdentity();
+    }
+    if (selectedActorPaths) {
+      const actorResult = await runActorSuites(
+        selectedActorPaths,
+        runner,
+        secrets,
+        actorPlan,
+        prepareTestDatabase,
+        { continueOnFailure: options.actorContinueOnFailure },
+      );
+      actorExecutionPassed = true;
+      await runner.verifyIdentity();
+      await runner.smoke();
+      writeSummary({
+        status: "actor-suites-passed",
+        mode: "adaptacion-28-explicit",
+        selectedCount: selectedActorPaths.length,
+        selectedPaths: selectedActorPaths,
+        evidenceDirectory: actorResult.runDirectory,
+        note: "Only explicit manifest routes ran against one disposable target; no inherited API URL.",
+      });
+      return { passed: true, actorResult };
+    }
+    if (selectedSuite.id !== "prepare-smoke") {
+      await runReviewedSuite(
+        selectedSuite,
+        runner.childEnvironment(),
+        secrets,
+        {
+          signal: runner.signal,
+          onChild: (child, control) => runner.trackChild(child, control),
+        },
+      );
+      await runner.verifyIdentity();
+    }
+    await runner.smoke();
+    if (signalState.signal) {
+      await signalState.promise;
+      process.exitCode = signalExitCode(signalState.signal);
+      return { interrupted: signalState.signal };
+    }
+    if (options.induceFailure) {
+      throw new Error("Fallo inducido solicitado; la limpieza debe continuar.");
+    }
+    if (options.holdForSignal) {
+      await waitForSignal(signalState);
+      if (signalState.signal) {
+        process.exitCode = signalExitCode(signalState.signal);
+        return { interrupted: signalState.signal };
+      }
+    }
+    writeSummary({
+      status:
+        selectedSuite.id === "prepare-smoke"
+          ? "prepare-smoke-passed"
+          : "prepare-smoke-reviewed-suite-passed",
+      mode:
+        selectedSuite.id === "prepare-smoke"
+          ? "prepare+smoke"
+          : "prepare+reviewed-suite+smoke",
+      suite: selectedSuite.id,
+      blockedRemaining: policy.blockedCount,
+      blockedSuites: policy.blockedSuites.map(({ id, reason }) => ({
+        id,
+        reason,
+      })),
+      note:
+        selectedSuite.id === "prepare-smoke"
+          ? "No integration suite was run; blocked suites are not reported as passing."
+          : "Only the explicitly reviewed suite ran; remaining blocked suites are not reported as passing.",
+    });
+    return { passed: true, blockedRemaining: policy.blockedCount };
+  } catch (error) {
+    if (signalState.signal) {
+      await signalState.promise;
+      process.stderr.write(
+        `Runner interrumpido por ${signalState.signal}; se abortó el proceso hijo y se limpió el clúster.\n`,
+      );
+      process.exitCode = signalExitCode(signalState.signal);
+      return { interrupted: signalState.signal };
+    }
+    process.stderr.write(
+      `${safeErrorMessage(error, secrets)}\n`,
+    );
+    process.stderr.write(
+      `${JSON.stringify({
+        status: "failed",
+        mode: selectedActorPaths
+          ? "adaptacion-28-explicit"
+          : options.lifecycleOnly
+            ? "lifecycle-only"
+            : selectedSuite.id === "prepare-smoke"
+              ? "prepare+smoke"
+              : "prepare+reviewed-suite+smoke",
+        suite: selectedSuite.id,
+        selectedCount: selectedActorPaths?.length,
+        blockedRemaining: policy.blockedCount,
+        blockedSuites: policy.blockedSuites.map(({ id }) => id),
+      })}\n`,
+    );
+    process.exitCode = 1;
+    return { passed: false, error };
+  } finally {
+    removeSignalHandlers();
+    try {
+      await runner.cleanup();
+      cleanupPassed = true;
+    } catch (cleanupError) {
+      process.stderr.write(
+        `${safeErrorMessage(cleanupError, secrets)}\n`,
+      );
+      process.exitCode = 1;
+    }
+    if (signalState.cleanupError) {
+      process.stderr.write(
+        `${safeErrorMessage(signalState.cleanupError, secrets)}\n`,
+      );
+      process.exitCode = 1;
+    }
+    if (actorPlan) {
+      const terminal = {
+        version: 2,
+        runId: actorPlan.runId,
+        status: actorExecutionPassed && cleanupPassed &&
+          !signalState.cleanupError && process.exitCode !== 1 ? "PASS" : "FAIL",
+        selectedCount: selectedActorPaths.length,
+        selectionSha256: actorPlan.selectionSha256,
+        executionPassed: actorExecutionPassed,
+        clusterDestroyed: cleanupPassed,
+        durableEvidenceDirectory: relative(workspaceRoot, actorPlan.runDirectory),
+      };
+      writeJsonAtomic(join(actorPlan.runDirectory, "terminal.json"), terminal);
+      const manifestPath = join(actorPlan.runDirectory, "manifest.json");
+      const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+      writeJsonAtomic(manifestPath, {
+        ...manifest,
+        status: terminal.status === "PASS" && manifest.status === "PASS"
+          ? "PASS"
+          : "FAIL",
+        terminal: {
+          status: terminal.status,
+          executionPassed: terminal.executionPassed,
+          clusterDestroyed: terminal.clusterDestroyed,
+        },
+      });
+    }
+  }
+}
+
+if (
+  process.argv[1] &&
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
+  runIsolatedTests().catch((error) => {
+    process.stderr.write(`${safeErrorMessage(error, [])}\n`);
+    process.exitCode = 1;
+  });
+}

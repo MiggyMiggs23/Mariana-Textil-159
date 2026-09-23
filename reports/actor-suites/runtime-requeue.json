@@ -1,0 +1,67 @@
+{
+  "status": "SUPERSEDED_BY_REPORTER_V2_ISOLATION_DELTA",
+  "currentRequirement": "Revalidate all 28 routes with one homogeneous --test-isolation=none reporter-v2 provenance. Earlier valid prefixes remain immutable historical evidence but cannot complete the new homogeneous harness proof.",
+  "infraFix": "Bootstrap keeps raw target/control identity checks but no longer forces DB readiness into inherited logging workers.",
+  "retainedPassingPrefixes": [
+    {
+      "runId": "2026-09-23T05-39-33.006Z-4ceca98e",
+      "paths": [
+        "artifacts/api-server/src/admin-alertas.integration.test.ts"
+      ]
+    },
+    {
+      "runId": "2026-09-23T05-39-22.188Z-644611c8",
+      "paths": [
+        "artifacts/api-server/src/kardex-api.test.ts"
+      ]
+    },
+    {
+      "runId": "2026-09-23T05-39-23.525Z-ed1faaf4",
+      "paths": [
+        "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts"
+      ]
+    }
+  ],
+  "requeue": {
+    "grupo-1-after-prefix": [
+      "artifacts/api-server/src/admin-invariants.integration.test.ts",
+      "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+      "artifacts/api-server/src/auditoria.integration.test.ts",
+      "artifacts/api-server/src/contenedores.integration.test.ts",
+      "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+      "artifacts/api-server/src/equipos.integration.test.ts",
+      "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+      "artifacts/api-server/src/inventory-six-view.integration.test.ts"
+    ],
+    "grupo-2-after-prefix": [
+      "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "artifacts/api-server/src/lib/permisos.test.ts",
+      "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+      "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+      "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+      "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+      "artifacts/api-server/src/precios.integration.test.ts",
+      "artifacts/api-server/src/productos-cache.integration.test.ts"
+    ],
+    "grupo-3-after-prefix": [
+      "artifacts/api-server/src/reportes.integration.test.ts",
+      "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+      "artifacts/api-server/src/productos-purge.integration.test.ts",
+      "artifacts/api-server/src/security-api.test.ts",
+      "artifacts/api-server/src/store-sales-global.integration.test.ts",
+      "artifacts/api-server/src/task57.integration.test.ts",
+      "artifacts/api-server/src/task58.integration.test.ts",
+      "artifacts/api-server/src/viajes.integration.test.ts"
+    ]
+  },
+  "separatePendingBusinessCase": [
+    "artifacts/api-server/src/clientes-ajustes-api.test.ts"
+  ],
+  "classification": {
+    "admin-invariants.integration.test.ts": "INFRA_REGRESSION_ASSERT_PREPARED_IN_LOGGING_WORKER",
+    "lib/notificaciones-credito.test.ts": "BUSINESS_ASSERTION_404_VS_200",
+    "reportes.integration.test.ts": "BUSINESS_ASSERTION_3_VS_4"
+  },
+  "runtimeCasesExecutedByThisReport": 0,
+  "sqlExecutedByThisReport": 0
+}

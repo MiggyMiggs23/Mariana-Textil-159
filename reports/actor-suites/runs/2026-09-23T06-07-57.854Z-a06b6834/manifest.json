@@ -1,0 +1,534 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T06-07-57.854Z-a06b6834",
+  "status": "FAIL",
+  "selectionSha256": "6a649936db4370bb60df8b11f4c61ac20e04f7513c1055f19bc1ea265d8578db",
+  "selectedCount": 5,
+  "selectedPaths": [
+    "artifacts/api-server/src/security-api.test.ts",
+    "artifacts/api-server/src/store-sales-global.integration.test.ts",
+    "artifacts/api-server/src/task57.integration.test.ts",
+    "artifacts/api-server/src/task58.integration.test.ts",
+    "artifacts/api-server/src/viajes.integration.test.ts"
+  ],
+  "completedCount": 5,
+  "assertionFailures": 5,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "sourceSha256": "c530cf24e7c7b4907c8bea1cd8279b323d7292ddab9cd31d28b25eb31a6b33e6",
+      "provenance": {
+        "start": {
+          "suiteSha256": "c530cf24e7c7b4907c8bea1cd8279b323d7292ddab9cd31d28b25eb31a6b33e6",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "c530cf24e7c7b4907c8bea1cd8279b323d7292ddab9cd31d28b25eb31a6b33e6",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 49,
+        "pass": 45,
+        "fail": 4,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "S-01: All four roles login → 200 + permisos array present",
+          "S-01A: session lasts eight idle hours, stops at sixteen, and logout invalidates it",
+          "S-02: ADMIN /auth/me effective matrix — all modules have full access",
+          "S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores denied",
+          "S-03A: Caja ticket list is location-scoped and denied to BODEGA",
+          "S-03AA: Store sales requires an explicit override for CAJA and remains scoped",
+          "S-03B: TERMINAL API responses omit costs, margins and profits",
+          "S-03C: POS price rejection is JSON, visible and contains no cost",
+          "S-03D: legacy zero-cost roll is blocked by advance and definitive POS validation",
+          "S-03E: entrada without costoUnitario is rejected without creating a roll",
+          "S-04: BODEGA — POST /inventario/rollos/:id/vender → 403",
+          "S-05: BODEGA GET /clientes → 403",
+          "S-05A: BODEGA POST /clientes → 403",
+          "S-05B: concurrent normalized client creates → 201 + structured 409",
+          "S-06: CAJA direct inventory sale is denied; ticketing is mandatory",
+          "S-07: CAJA GET /proveedores → 403",
+          "S-08: SUPERVISOR GET /proveedores → 200, no financial JSON keys",
+          "S-08A: SUPERVISOR operational JSON is recursively redacted",
+          "S-08AA: SUPERVISOR creates and edits clients/providers without sensitive data",
+          "S-08AB: SUPERVISOR role-matrix grants flow into the effective matrix",
+          "S-08B: SUPERVISOR creates a pending-cost entry at any real location",
+          "S-08C: SUPERVISOR XLSX/PDF exports contain no financial fields or sentinel",
+          "S-09: BODEGA entry catalogs → 200; /productos and /proveedores → 403",
+          "S-09A: BODEGA stages, owns, and sends a null-cost roll in one final action",
+          "S-09B: CAJA only lists and opens outputs received at its assigned store",
+          "S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied by matrix)",
+          "S-10A: SUPERVISOR matrix denies store-sales without resumen_caja grant",
+          "S-11: SUPERVISOR finance override is honored by the matrix",
+          "S-12: false override denies and DELETE restores the matrix role default",
+          "S-13: Override true beats role false: BODEGA clientes 403 → override → 200",
+          "S-14: DELETE override → BODEGA clientes reverts to role 403",
+          "S-15: Deny-by-default — BODEGA inventario allowed; remove denies; restore allows",
+          "S-16: PUT /permisos/roles/ADMIN/usuarios with puedeVer=false → 403",
+          "S-17: PUT /permisos/roles/ADMIN/permisos with puedeCrear=false → 403",
+          "S-18: Self-override modification → 403 (cannot modify own permissions)",
+          "S-19: Last active ADMIN — deactivate → 409 (must keep at least one)",
+          "S-20: BODEGA PROPIA — GET /inventario/rollos?ubicacionId=other → forced to own",
+          "S-21: BODEGA PROPIA — GET /inventario/existencias?ubicacionId=other → forced to own",
+          "S-22: BODEGA PROPIA — GET /inventario/kardex → ignores other ubicacionId param",
+          "S-23: BODEGA alcanceConsulta=TODAS — GET /inventario/rollos?ubicacionId=other → honors filter",
+          "S-23A: operational locations allow TODAS selection; grouped inventory still enforces PROPIA",
+          "S-24: Non-ADMIN mutation on other-location → 403; ADMIN same → succeeds",
+          "S-25: GET /clientes/:id — no limiteCredito / saldoCredito in response",
+          "S-26: clientes_credito / clientes_precios / clientes_finanzas independently gated",
+          "S-27: SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA revert + cache reconcile",
+          "S-28: Non-ADMIN with usuarios permissions cannot escalate to ADMIN",
+          "S-29: promotion to ADMIN removes overrides and ADMIN override routes → 403",
+          "S-30: explicit CAJA CORTES override authorizes cash management while location rules remain enforced",
+          "S-30A: extraordinary exits require direct ADMIN despite full salidas overrides"
+        ]
+      },
+      "targetDatabaseSha256": "faed3ce43c5ce95b83a13ae9b551aefa6903100d022d7f9153596fb40948035d",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "faed3ce43c5ce95b83a13ae9b551aefa6903100d022d7f9153596fb40948035d",
+        "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "faed3ce43c5ce95b83a13ae9b551aefa6903100d022d7f9153596fb40948035d",
+        "preparationTargetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "faed3ce43c5ce95b83a13ae9b551aefa6903100d022d7f9153596fb40948035d",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "faed3ce43c5ce95b83a13ae9b551aefa6903100d022d7f9153596fb40948035d",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "faed3ce43c5ce95b83a13ae9b551aefa6903100d022d7f9153596fb40948035d",
+            "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "65218d27451e6fde5699c03479771fb68290e86c8dc1d95d8d327b6a7800dc29",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "2d0fdcbe862d5876f0005e423eee352fd2f2c2a03b5d74bb8b62f2cf22f3781d"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/store-sales-global.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "sourceSha256": "969ff66b3001395155bfa3ee47f5d6f0a4587de750161eb0e8269e4cb6523f6b",
+      "provenance": {
+        "start": {
+          "suiteSha256": "969ff66b3001395155bfa3ee47f5d6f0a4587de750161eb0e8269e4cb6523f6b",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "969ff66b3001395155bfa3ee47f5d6f0a4587de750161eb0e8269e4cb6523f6b",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "store sales global reports isolated sold-line hierarchy and enforces scope"
+        ]
+      },
+      "targetDatabaseSha256": "ffb765ed0dcc2c5db111b83a52eb25cc36ceb9abf9545fa5f258b8437c706ea3",
+      "targetDatabaseOidSha256": "a4c0e96baf7347ad77a233c03301227e8b74533df34c816f9b862e8195da1b14",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "ffb765ed0dcc2c5db111b83a52eb25cc36ceb9abf9545fa5f258b8437c706ea3",
+        "targetDatabaseOidSha256": "a4c0e96baf7347ad77a233c03301227e8b74533df34c816f9b862e8195da1b14",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "ffb765ed0dcc2c5db111b83a52eb25cc36ceb9abf9545fa5f258b8437c706ea3",
+        "preparationTargetDatabaseOidSha256": "a4c0e96baf7347ad77a233c03301227e8b74533df34c816f9b862e8195da1b14",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "ffb765ed0dcc2c5db111b83a52eb25cc36ceb9abf9545fa5f258b8437c706ea3",
+              "databaseOidSha256": "a4c0e96baf7347ad77a233c03301227e8b74533df34c816f9b862e8195da1b14"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "ffb765ed0dcc2c5db111b83a52eb25cc36ceb9abf9545fa5f258b8437c706ea3",
+              "databaseOidSha256": "a4c0e96baf7347ad77a233c03301227e8b74533df34c816f9b862e8195da1b14"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "ffb765ed0dcc2c5db111b83a52eb25cc36ceb9abf9545fa5f258b8437c706ea3",
+            "databaseOidSha256": "a4c0e96baf7347ad77a233c03301227e8b74533df34c816f9b862e8195da1b14"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "bf812e72d94a4bdba7da60f19ab5568ccb65c0344974f82c37a7c3dad29da6e1",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 3,
+      "path": "artifacts/api-server/src/task57.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "sourceSha256": "77d9527ccbd9d69470843f613dcf1f42da1f0256a6f2d59ee0db266f736f33de",
+      "provenance": {
+        "start": {
+          "suiteSha256": "77d9527ccbd9d69470843f613dcf1f42da1f0256a6f2d59ee0db266f736f33de",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "77d9527ccbd9d69470843f613dcf1f42da1f0256a6f2d59ee0db266f736f33de",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 2,
+        "pass": 1,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB aislada",
+          "Task 57: caja diaria serializa aperturas y descuenta salidas una vez"
+        ]
+      },
+      "targetDatabaseSha256": "09e733ef3235a35a4cda50e40027d4499c684015a3ad3c2a29026a483775a8a1",
+      "targetDatabaseOidSha256": "829c6fa2c9995f5e54e5c579fa108bc50e6d7fd0c2c449f60a65dfed166c08b5",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "09e733ef3235a35a4cda50e40027d4499c684015a3ad3c2a29026a483775a8a1",
+        "targetDatabaseOidSha256": "829c6fa2c9995f5e54e5c579fa108bc50e6d7fd0c2c449f60a65dfed166c08b5",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "09e733ef3235a35a4cda50e40027d4499c684015a3ad3c2a29026a483775a8a1",
+        "preparationTargetDatabaseOidSha256": "829c6fa2c9995f5e54e5c579fa108bc50e6d7fd0c2c449f60a65dfed166c08b5",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "09e733ef3235a35a4cda50e40027d4499c684015a3ad3c2a29026a483775a8a1",
+              "databaseOidSha256": "829c6fa2c9995f5e54e5c579fa108bc50e6d7fd0c2c449f60a65dfed166c08b5"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "09e733ef3235a35a4cda50e40027d4499c684015a3ad3c2a29026a483775a8a1",
+              "databaseOidSha256": "829c6fa2c9995f5e54e5c579fa108bc50e6d7fd0c2c449f60a65dfed166c08b5"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "09e733ef3235a35a4cda50e40027d4499c684015a3ad3c2a29026a483775a8a1",
+            "databaseOidSha256": "829c6fa2c9995f5e54e5c579fa108bc50e6d7fd0c2c449f60a65dfed166c08b5"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "975be3910087a6f795433bac0b24e8c40152aa30f961c97bb7618db682fde860",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 4,
+      "path": "artifacts/api-server/src/task58.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "sourceSha256": "cf8ff1b76feeefab0c6908685285f596886b567b7629701ecf07824c06d0e0b1",
+      "provenance": {
+        "start": {
+          "suiteSha256": "cf8ff1b76feeefab0c6908685285f596886b567b7629701ecf07824c06d0e0b1",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "cf8ff1b76feeefab0c6908685285f596886b567b7629701ecf07824c06d0e0b1",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 6,
+        "pass": 4,
+        "fail": 2,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "CRUD/listado usa sesión real, ADMIN administra y no ADMIN es rechazado",
+          "entrada exige piso sólo si el sitio lo tiene y valida pertenencia/actividad",
+          "cambio y filtro por piso son físicos: Bitácora sí, movimientos/existencias no",
+          "tránsito limpia piso y recepción exige/asigna el piso destino",
+          "auditoría reporta MAL_ACOMODADO, confirma sólo piso y deja carreras manuales",
+          "Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex"
+        ]
+      },
+      "targetDatabaseSha256": "a7d7ca08797b61c82af0a1b712c330d8b1bdfcd1e1d430ad3488d127784eaf5b",
+      "targetDatabaseOidSha256": "39e955517122efe85c4b345fc3547b6f1608c3922e81c69bbb219ab840c780d9",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "a7d7ca08797b61c82af0a1b712c330d8b1bdfcd1e1d430ad3488d127784eaf5b",
+        "targetDatabaseOidSha256": "39e955517122efe85c4b345fc3547b6f1608c3922e81c69bbb219ab840c780d9",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "a7d7ca08797b61c82af0a1b712c330d8b1bdfcd1e1d430ad3488d127784eaf5b",
+        "preparationTargetDatabaseOidSha256": "39e955517122efe85c4b345fc3547b6f1608c3922e81c69bbb219ab840c780d9",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "a7d7ca08797b61c82af0a1b712c330d8b1bdfcd1e1d430ad3488d127784eaf5b",
+              "databaseOidSha256": "39e955517122efe85c4b345fc3547b6f1608c3922e81c69bbb219ab840c780d9"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "a7d7ca08797b61c82af0a1b712c330d8b1bdfcd1e1d430ad3488d127784eaf5b",
+              "databaseOidSha256": "39e955517122efe85c4b345fc3547b6f1608c3922e81c69bbb219ab840c780d9"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "a7d7ca08797b61c82af0a1b712c330d8b1bdfcd1e1d430ad3488d127784eaf5b",
+            "databaseOidSha256": "39e955517122efe85c4b345fc3547b6f1608c3922e81c69bbb219ab840c780d9"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "04-stdout.log",
+        "stdoutSha256": "3f4667b966c23a0fec5cc0f5ad4ca91e3bae9fe80004843bdcd242a313ce0d84",
+        "stderr": "04-stderr.log",
+        "stderrSha256": "edd4620e41ccfd737a1bcfe950b9e850e8756c2da117fcb2d08597d22c82e676"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 5,
+      "path": "artifacts/api-server/src/viajes.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "sourceSha256": "8a6c96a5180bdfce105b5dd6b6856d14401a274f39e90a2aaae726296789bd77",
+      "provenance": {
+        "start": {
+          "suiteSha256": "8a6c96a5180bdfce105b5dd6b6856d14401a274f39e90a2aaae726296789bd77",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "8a6c96a5180bdfce105b5dd6b6856d14401a274f39e90a2aaae726296789bd77",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 1,
+        "pass": 0,
+        "fail": 1,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "Task 51 Block 6: catalogs and viaje projection preserve dispatch invariants"
+        ]
+      },
+      "targetDatabaseSha256": "9f52e9d6380c5bb6a0d7e2b6031714be9ac9ee6fa10d2c6ba55e006645886b40",
+      "targetDatabaseOidSha256": "ae0361559bd58b922653d1e67ccc97700892a9eae99e97216a79b89ff20d6030",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "9f52e9d6380c5bb6a0d7e2b6031714be9ac9ee6fa10d2c6ba55e006645886b40",
+        "targetDatabaseOidSha256": "ae0361559bd58b922653d1e67ccc97700892a9eae99e97216a79b89ff20d6030",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "9f52e9d6380c5bb6a0d7e2b6031714be9ac9ee6fa10d2c6ba55e006645886b40",
+        "preparationTargetDatabaseOidSha256": "ae0361559bd58b922653d1e67ccc97700892a9eae99e97216a79b89ff20d6030",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "9f52e9d6380c5bb6a0d7e2b6031714be9ac9ee6fa10d2c6ba55e006645886b40",
+              "databaseOidSha256": "ae0361559bd58b922653d1e67ccc97700892a9eae99e97216a79b89ff20d6030"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "9f52e9d6380c5bb6a0d7e2b6031714be9ac9ee6fa10d2c6ba55e006645886b40",
+              "databaseOidSha256": "ae0361559bd58b922653d1e67ccc97700892a9eae99e97216a79b89ff20d6030"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "9f52e9d6380c5bb6a0d7e2b6031714be9ac9ee6fa10d2c6ba55e006645886b40",
+            "databaseOidSha256": "ae0361559bd58b922653d1e67ccc97700892a9eae99e97216a79b89ff20d6030"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "05-stdout.log",
+        "stdoutSha256": "efb7f36fd16573311e46b153f60d897321085304b84a00f045b609b8d1010212",
+        "stderr": "05-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    }
+  ],
+  "identity": {
+    "provider": "local-disposable-postgresql",
+    "freshTargetPerSuite": true,
+    "controlDistinct": true,
+    "tcpListening": false
+  },
+  "note": "One explicit route per child and fresh target; cluster destruction remains runner-owned.",
+  "terminal": {
+    "status": "FAIL",
+    "executionPassed": false,
+    "clusterDestroyed": true
+  }
+}

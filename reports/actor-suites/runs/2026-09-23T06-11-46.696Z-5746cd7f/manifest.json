@@ -1,0 +1,301 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T06-11-46.696Z-5746cd7f",
+  "status": "PASS",
+  "selectionSha256": "7e6849806e3e4882e0d2bda0ecfa7d0f07c5f7f7b2b49f2351e756b2cb45cea4",
+  "selectedCount": 3,
+  "selectedPaths": [
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ],
+  "completedCount": 3,
+  "assertionFailures": 0,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+      "provenance": {
+        "start": {
+          "suiteSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "clientes maps a barrier-forced concurrent unique conflict to 409",
+          "productos maps a barrier-forced concurrent unique conflict to 400",
+          "ubicaciones maps a barrier-forced concurrent unique conflict to 400",
+          "usuarios maps a barrier-forced concurrent unique conflict to 400"
+        ]
+      },
+      "targetDatabaseSha256": "730e16dbb8e68dacd1816f80442dd2186f3990d7de71ec4402c2870f4721ea33",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "730e16dbb8e68dacd1816f80442dd2186f3990d7de71ec4402c2870f4721ea33",
+        "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "730e16dbb8e68dacd1816f80442dd2186f3990d7de71ec4402c2870f4721ea33",
+        "preparationTargetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "730e16dbb8e68dacd1816f80442dd2186f3990d7de71ec4402c2870f4721ea33",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "730e16dbb8e68dacd1816f80442dd2186f3990d7de71ec4402c2870f4721ea33",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "730e16dbb8e68dacd1816f80442dd2186f3990d7de71ec4402c2870f4721ea33",
+            "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "5d42340bf95ee2e90ae1514a541f5e0243bad8927406f8c9c51bfd103bbd03c2",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/precios.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+      "provenance": {
+        "start": {
+          "suiteSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "precios is ADMIN-only and changes only catalog price/history"
+        ]
+      },
+      "targetDatabaseSha256": "6f6f0a4b33507736fd3252cc92c09dabf2bd677157edd2e6875fa8ed702a13e5",
+      "targetDatabaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "6f6f0a4b33507736fd3252cc92c09dabf2bd677157edd2e6875fa8ed702a13e5",
+        "targetDatabaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "6f6f0a4b33507736fd3252cc92c09dabf2bd677157edd2e6875fa8ed702a13e5",
+        "preparationTargetDatabaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "6f6f0a4b33507736fd3252cc92c09dabf2bd677157edd2e6875fa8ed702a13e5",
+              "databaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "6f6f0a4b33507736fd3252cc92c09dabf2bd677157edd2e6875fa8ed702a13e5",
+              "databaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "6f6f0a4b33507736fd3252cc92c09dabf2bd677157edd2e6875fa8ed702a13e5",
+            "databaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "2abe3520783c316da05d40429543b8352df347d387a78b9b45b47db055ad6f22",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 3,
+      "path": "artifacts/api-server/src/productos-cache.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+      "provenance": {
+        "start": {
+          "suiteSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "Block 2 products use scoped existencias cache and redact TERMINAL finances"
+        ]
+      },
+      "targetDatabaseSha256": "9cb54c184d52ecb63d325b8f81abc5728ca044eac30a4575c3d2a129b1d70dec",
+      "targetDatabaseOidSha256": "96121155d48eb49ab968dbf21002274cd16537e36248e5c8e91938f387552c6f",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "9cb54c184d52ecb63d325b8f81abc5728ca044eac30a4575c3d2a129b1d70dec",
+        "targetDatabaseOidSha256": "96121155d48eb49ab968dbf21002274cd16537e36248e5c8e91938f387552c6f",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "9cb54c184d52ecb63d325b8f81abc5728ca044eac30a4575c3d2a129b1d70dec",
+        "preparationTargetDatabaseOidSha256": "96121155d48eb49ab968dbf21002274cd16537e36248e5c8e91938f387552c6f",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "9cb54c184d52ecb63d325b8f81abc5728ca044eac30a4575c3d2a129b1d70dec",
+              "databaseOidSha256": "96121155d48eb49ab968dbf21002274cd16537e36248e5c8e91938f387552c6f"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "9cb54c184d52ecb63d325b8f81abc5728ca044eac30a4575c3d2a129b1d70dec",
+              "databaseOidSha256": "96121155d48eb49ab968dbf21002274cd16537e36248e5c8e91938f387552c6f"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "9cb54c184d52ecb63d325b8f81abc5728ca044eac30a4575c3d2a129b1d70dec",
+            "databaseOidSha256": "96121155d48eb49ab968dbf21002274cd16537e36248e5c8e91938f387552c6f"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "45e7ac137c00e894c3c83ca52edd2008614cb859ac502ad9673bcc54f43b6598",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    }
+  ],
+  "identity": {
+    "provider": "local-disposable-postgresql",
+    "freshTargetPerSuite": true,
+    "controlDistinct": true,
+    "tcpListening": false
+  },
+  "note": "One explicit route per child and fresh target; cluster destruction remains runner-owned.",
+  "terminal": {
+    "status": "PASS",
+    "executionPassed": true,
+    "clusterDestroyed": true
+  }
+}

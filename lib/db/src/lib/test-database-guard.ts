@@ -56,11 +56,24 @@ function requireTestEnvironment(
   }
 }
 
+function expectedActorDatabaseName(): string | undefined {
+  if (process.env.ACTOR_SUITE_RUNNER !== "1") return undefined;
+  if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+    throw new Error(
+      "La identidad actor debe verificarse antes de importar la base o la aplicación.",
+    );
+  }
+  const expected = process.env.ACTOR_SUITE_EXPECTED_TEST_DATABASE;
+  if (!expected) throw new Error("Falta el nombre de base actor esperado.");
+  return expected;
+}
+
 export async function assertIsolatedTestDatabaseUrls(
   testDatabaseUrl: string | undefined,
   applicationDatabaseUrl: string | undefined,
 ) {
   requireTestEnvironment(testDatabaseUrl, applicationDatabaseUrl);
+  const expectedActor = expectedActorDatabaseName();
   const testPool = new pg.Pool({ connectionString: testDatabaseUrl });
   const applicationPool = new pg.Pool({
     connectionString: applicationDatabaseUrl,
@@ -86,6 +99,11 @@ export async function assertIsolatedTestDatabaseUrls(
         "current_database() confirmó que TEST_DATABASE_URL es la base de development; se rechazó cualquier operación.",
       );
     }
+    if (expectedActor && testDatabaseName !== expectedActor) {
+      throw new Error(
+        "current_database() no coincide con la base actor firmada por el runner.",
+      );
+    }
     return { testDatabaseName, applicationDatabaseName };
   } finally {
     await Promise.all([testPool.end(), applicationPool.end()]);
@@ -103,6 +121,7 @@ export async function createTestDatabaseGuard(
       ? preservedApplicationUrl
       : applicationDatabaseUrl;
   requireTestEnvironment(testDatabaseUrl, effectiveApplicationUrl);
+  const expectedActor = expectedActorDatabaseName();
 
   const testIdentity = await testClient.query<{ database: string }>(
     "SELECT current_database() AS database",
@@ -110,6 +129,11 @@ export async function createTestDatabaseGuard(
   const testDatabaseName = testIdentity.rows[0]?.database;
   if (!testDatabaseName) {
     throw new Error("No se pudo identificar la base de pruebas.");
+  }
+  if (expectedActor && testDatabaseName !== expectedActor) {
+    throw new Error(
+      "La conexión de la suite no coincide con la base actor firmada.",
+    );
   }
 
   const applicationPool = new pg.Pool({

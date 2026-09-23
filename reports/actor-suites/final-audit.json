@@ -1,0 +1,1433 @@
+{
+  "version": 1,
+  "status": "INCOMPLETE_OR_FAIL",
+  "generatedBy": "reports/actor-suites/audit.mjs",
+  "executedTestsByAuditor": 0,
+  "explicitRuns": [
+    "reports/actor-suites/runs/2026-09-23T05-59-00.642Z-d61d54bf",
+    "reports/actor-suites/runs/2026-09-23T05-59-05.739Z-71c69b08",
+    "reports/actor-suites/runs/2026-09-23T05-59-12.534Z-467b28f2",
+    "reports/actor-suites/runs/2026-09-23T06-07-46.777Z-d488ba7e",
+    "reports/actor-suites/runs/2026-09-23T06-07-57.854Z-a06b6834",
+    "reports/actor-suites/runs/2026-09-23T06-11-46.696Z-5746cd7f",
+    "reports/actor-suites/runs/2026-09-23T06-16-57.093Z-772e0279",
+    "reports/actor-suites/runs/2026-09-23T06-21-02.689Z-562fac1c",
+    "reports/actor-suites/runs/2026-09-23T06-23-36.114Z-6ada79f7",
+    "reports/actor-suites/runs/2026-09-23T06-26-47.484Z-db9e5d21"
+  ],
+  "exactManifest": {
+    "count": 28,
+    "groups": {
+      "grupo-1": 10,
+      "grupo-2": 9,
+      "grupo-3": 9
+    },
+    "paths": [
+      "artifacts/api-server/src/admin-alertas.integration.test.ts",
+      "artifacts/api-server/src/admin-invariants.integration.test.ts",
+      "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+      "artifacts/api-server/src/auditoria.integration.test.ts",
+      "artifacts/api-server/src/clientes-ajustes-api.test.ts",
+      "artifacts/api-server/src/contenedores.integration.test.ts",
+      "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+      "artifacts/api-server/src/equipos.integration.test.ts",
+      "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+      "artifacts/api-server/src/inventory-six-view.integration.test.ts",
+      "artifacts/api-server/src/kardex-api.test.ts",
+      "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "artifacts/api-server/src/lib/permisos.test.ts",
+      "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+      "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+      "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+      "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+      "artifacts/api-server/src/precios.integration.test.ts",
+      "artifacts/api-server/src/productos-cache.integration.test.ts",
+      "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+      "artifacts/api-server/src/reportes.integration.test.ts",
+      "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+      "artifacts/api-server/src/productos-purge.integration.test.ts",
+      "artifacts/api-server/src/security-api.test.ts",
+      "artifacts/api-server/src/store-sales-global.integration.test.ts",
+      "artifacts/api-server/src/task57.integration.test.ts",
+      "artifacts/api-server/src/task58.integration.test.ts",
+      "artifacts/api-server/src/viajes.integration.test.ts"
+    ]
+  },
+  "provenRouteCount": 25,
+  "cases": [
+    {
+      "path": "artifacts/api-server/src/admin-alertas.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 1,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "GET /admin/alertas is live, FIFO-based, ordered, and ADMIN-only"
+      ],
+      "sourceSha256": "71c92e46eaae3b1ed6b00f218b1b1a88853b389760419d7ef78e230506ada4d7",
+      "provenance": {
+        "start": {
+          "suiteSha256": "71c92e46eaae3b1ed6b00f218b1b1a88853b389760419d7ef78e230506ada4d7",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "71c92e46eaae3b1ed6b00f218b1b1a88853b389760419d7ef78e230506ada4d7",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "b42d7c22cdcf67d3fee32c08c98c7ce5c176c54f30b602cc1d22b524ba4409bd",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "e8fa9eefa3d04c61b70c4cdf11addbd2008296a8c6ff2df12d57f9f35fb327c6",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/admin-invariants.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 2,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales"
+      ],
+      "sourceSha256": "6ad66ed295e54e3c0be86a23ddcc45359e004a3e016d3d7dbea7f5ff48ad2664",
+      "provenance": {
+        "start": {
+          "suiteSha256": "6ad66ed295e54e3c0be86a23ddcc45359e004a3e016d3d7dbea7f5ff48ad2664",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "6ad66ed295e54e3c0be86a23ddcc45359e004a3e016d3d7dbea7f5ff48ad2664",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "d634e70841c2cdfa5b1c94d63223ac3372227298787b06e7835a2513e4fde60f",
+      "targetDatabaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "abd29c79e85ee1688db0a0b0d2596bc197bd05e93cfa399724cbf27a6b86f64d",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 3,
+      "exitCode": 0,
+      "native": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "aplicaciones_pago_proveedor valida PAGO→COMPRA, límites y append-only",
+        "ensure materializa pago legado dirigido una sola vez"
+      ],
+      "sourceSha256": "f52dc08491afe5e08af20ca851a336b09d8780b756cb0ebdd8dedaf3dbdfeaaa",
+      "provenance": {
+        "start": {
+          "suiteSha256": "f52dc08491afe5e08af20ca851a336b09d8780b756cb0ebdd8dedaf3dbdfeaaa",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "f52dc08491afe5e08af20ca851a336b09d8780b756cb0ebdd8dedaf3dbdfeaaa",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "f1bcf47acbb485d3f2740d0961eccc8066cb00f5981088bdf01c8d0152f2ddd6",
+      "targetDatabaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b",
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "029c4a9889e187ff46f9445a071b816df0a06daea89627570964c624ce2ed0ea",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/auditoria.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 4,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "auditoría: snapshots de roles, filtros, acceso por permiso e inmutabilidad"
+      ],
+      "sourceSha256": "9a749b2aa02b9a2addb532e02b2e44716d86c814bc6e852fc4e1da7dc7067180",
+      "provenance": {
+        "start": {
+          "suiteSha256": "9a749b2aa02b9a2addb532e02b2e44716d86c814bc6e852fc4e1da7dc7067180",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "9a749b2aa02b9a2addb532e02b2e44716d86c814bc6e852fc4e1da7dc7067180",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "26731fa14e5037d8bae52be5b0b7391255b4ec218b851c81e9e10b0cfce4f365",
+      "targetDatabaseOidSha256": "de1986e564f03062c907d48c26d8cd4f3bdbdcd6538c046895c94eb92b8e18e9",
+      "logs": {
+        "stdout": "04-stdout.log",
+        "stdoutSha256": "d5ea6058a757cc65958c81fb2f898d9b5f2f2ec3f1902f918f2f0e7512dc1e6c",
+        "stderr": "04-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/clientes-ajustes-api.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 5,
+      "exitCode": 0,
+      "native": {
+        "tests": 9,
+        "pass": 9,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "migración conserva dirección y helper usa entrega/fallback",
+        "API acepta y expone alias temporal direccion",
+        "ensure siembra seis clientes y GET clientes aplica español/sistema",
+        "baja: elimina sin historial, desactiva historial saldo cero y bloquea saldo vigente",
+        "resúmenes y baja usan aging ante reverso de ticket y ABONO revertido",
+        "crearTicket y baja se serializan con el mismo lock de cliente",
+        "baja vencida requiere ADMIN activo/motivo y conserva historial como incobrable; reactivar no revierte",
+        "Venta a Público permanece protegido",
+        "INE: ADMIN, MIME/tamaño, slots/reemplazo, privacidad y auditoría"
+      ],
+      "sourceSha256": "caec73191b0c57d6dbc420de5fa6c000c3397ca22050d474f3fad37048b3396c",
+      "provenance": {
+        "start": {
+          "suiteSha256": "caec73191b0c57d6dbc420de5fa6c000c3397ca22050d474f3fad37048b3396c",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "caec73191b0c57d6dbc420de5fa6c000c3397ca22050d474f3fad37048b3396c",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "356c1488736376522934b9f42ece1eb45547359824c7f61882e3839bb42f326c",
+      "targetDatabaseOidSha256": "6946ee01eaeb09b31d4f12f35e96275ba2d5ffbb2ac389e6dbae2859646d6001",
+      "logs": {
+        "stdout": "05-stdout.log",
+        "stdoutSha256": "0276290c78028a279f24453fe949385ca73519cbe345fe2da1c2a521cb17653b",
+        "stderr": "05-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/contenedores.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 6,
+      "exitCode": 0,
+      "native": {
+        "tests": 12,
+        "pass": 12,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "database identity before every mutation",
+        "database identity after HTTP harness start",
+        "role permission matrix is enforced by live endpoints",
+        "ADMIN create/list/detail/update/cancel lifecycle and folio sequence",
+        "line duplicate and quantity validation are rejected",
+        "SUPERVISOR creates and edits but cannot cancel",
+        "BODEGA sees only its assigned site and unassigned BODEGA is fail-closed",
+        "linked entrada is idempotent, receives container, and creates inventory once",
+        "pending costs stay null and summary units/differences are complete",
+        "ADMIN economics exist and non-admin JSON economics are recursively absent",
+        "XLSX and PDF exports are complete, typed, nonempty, and non-admin-redacted",
+        "isolated live contenedores HTTP and transaction matrix"
+      ],
+      "sourceSha256": "7fd2d8ed09c611b8565c7fee820b5ee84d2c11c0073c443ce48cb14bb4f8450e",
+      "provenance": {
+        "start": {
+          "suiteSha256": "7fd2d8ed09c611b8565c7fee820b5ee84d2c11c0073c443ce48cb14bb4f8450e",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "7fd2d8ed09c611b8565c7fee820b5ee84d2c11c0073c443ce48cb14bb4f8450e",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "431e66422aa3219b732f3250fa8b9ffa5b6c98cadbc7256085056714b9543a98",
+      "targetDatabaseOidSha256": "b74475fb2f07705ffa2900322938c29d52c7e679634b7cae4293d476cf3d515a",
+      "logs": {
+        "stdout": "06-stdout.log",
+        "stdoutSha256": "8a536f2ba7674d1f2c917599e822b04df2776fe124a7d6691a1ec2bf24f58aca",
+        "stderr": "06-stderr.log",
+        "stderrSha256": "7600af87a57ea829d38784e6a7ba496ce7c289633f689d68fee79c1739c00b9c"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 7,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "cuadre fiscal freezes fiscal figures and preserves its approval workflow"
+      ],
+      "sourceSha256": "15c14ddc9779637fd7a1ac330a19f3525d3f22ecfdf9a06cb968a35f31ee979d",
+      "provenance": {
+        "start": {
+          "suiteSha256": "15c14ddc9779637fd7a1ac330a19f3525d3f22ecfdf9a06cb968a35f31ee979d",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "15c14ddc9779637fd7a1ac330a19f3525d3f22ecfdf9a06cb968a35f31ee979d",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "f2daabb7500068f1c4deb6b0c2fce720c6fb8d204f88d4fc625339dbf19d4264",
+      "targetDatabaseOidSha256": "229b6a87959f4b27ed58737a72c49f53b4485065d9d377c83456538b1e807b43",
+      "logs": {
+        "stdout": "07-stdout.log",
+        "stdoutSha256": "34c88dd4ee59eabcfc501b746d1227b68a848b879115f12ce93379fa427a4985",
+        "stderr": "07-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/equipos.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 8,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "equipment scope, derived active state, attribution and edit denial"
+      ],
+      "sourceSha256": "c5827ff7729685f694bad9f5b26584400fb8511bb128fd3f690a168e02091e65",
+      "provenance": {
+        "start": {
+          "suiteSha256": "c5827ff7729685f694bad9f5b26584400fb8511bb128fd3f690a168e02091e65",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "c5827ff7729685f694bad9f5b26584400fb8511bb128fd3f690a168e02091e65",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "insert(usuariosTable)",
+      "targetDatabaseSha256": "813ad98362fec7a817285c5c3f34905fe4588eee0294c20b9f06c4ee38ff5fef",
+      "targetDatabaseOidSha256": "d54ad3e70d3772e512e5dd263a7b79cbb6230c58dfe64a0434fa5ffb54e4220f",
+      "logs": {
+        "stdout": "08-stdout.log",
+        "stdoutSha256": "29b4cea9011c6e465f120a0be242c79b514feb1cd1b160d81c3fcc20e53d8e39",
+        "stderr": "08-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 9,
+      "exitCode": 0,
+      "native": {
+        "tests": 27,
+        "pass": 27,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "1 búsqueda por serie exacta",
+        "2 búsqueda por SKU y total real aunque la página limite a 50",
+        "3 búsqueda por tela y color",
+        "4 búsqueda por QR SKU-SERIE",
+        "5 PROPIA ve únicamente rollos del sitio asignado",
+        "6 PROPIA no puede sobreescribir alcance mandando otro sitio",
+        "7 ADMIN reimprime directamente con motivo",
+        "sitioId arbitrario no es aceptado en el body",
+        "8 motivo ausente o menor a diez se rechaza",
+        "9 misma serie, QR y marca REIMPRESA",
+        "10 BODEGA sin credenciales se rechaza",
+        "11 BODEGA con contraseña incorrecta se rechaza",
+        "12 credenciales válidas de no-ADMIN se rechazan",
+        "13 BODEGA con ADMIN válido registra autorizador",
+        "14 API directa SUPERVISOR sin credenciales devuelve 403",
+        "15 registro contiene rollo, solicitante, sitio, motivo y fecha",
+        "auditoría rechaza UPDATE y DELETE directos fuera del bypass de cleanup",
+        "16 historial ADMIN camelCase y export XLSX filtrado",
+        "17 detalle muestra contador y última fecha",
+        "18 tercera reimpresión activa aviso y alert count",
+        "19 TERMINAL recibe 403 en todos los endpoints",
+        "20 CAJA recibe 403 en todos los endpoints",
+        "21 BODEGA no puede consultar historial ni exportarlo",
+        "22 batch ADMIN multisite devuelve cinco etiquetas",
+        "23 batch de cinco crea cinco filas con el sitio real de cada rollo",
+        "24 más de 50 rollos se rechazan con 400 y no insertan",
+        "Etiquetas HTTP + DB: casos obligatorios 1-24"
+      ],
+      "sourceSha256": "c6c5af45ad11a2ff7d2b7d19ebd1f626e6e0b8dbc760701bbd35e86c1077f44e",
+      "provenance": {
+        "start": {
+          "suiteSha256": "c6c5af45ad11a2ff7d2b7d19ebd1f626e6e0b8dbc760701bbd35e86c1077f44e",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "c6c5af45ad11a2ff7d2b7d19ebd1f626e6e0b8dbc760701bbd35e86c1077f44e",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "insert(usuariosTable)",
+      "targetDatabaseSha256": "c5395683c043bb8c9c4f215822e1b66869da923e1c87a17b2773afe586b1be91",
+      "targetDatabaseOidSha256": "1d4c3bf72c5e3e124b99bce31b8b1fb5b3f4f3956380ee8d1356190c8ab9861d",
+      "logs": {
+        "stdout": "09-stdout.log",
+        "stdoutSha256": "9b9725cff3149a838aca603866408c73ddac0e3f802160aa570ade22b8b43aae",
+        "stderr": "09-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/inventory-six-view.integration.test.ts",
+      "runId": "2026-09-23T05-59-00.642Z-d61d54bf",
+      "ordinal": 10,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "Part 1 Block 5: six HTTP views share inventory truth and scope"
+      ],
+      "sourceSha256": "db11d00b6f23f97329cbf24c2184e8ccf6a9adab924c3a71f589a0d9a689cd5f",
+      "provenance": {
+        "start": {
+          "suiteSha256": "db11d00b6f23f97329cbf24c2184e8ccf6a9adab924c3a71f589a0d9a689cd5f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "db11d00b6f23f97329cbf24c2184e8ccf6a9adab924c3a71f589a0d9a689cd5f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "b736d7a169c0fad7024ee3928e76af6c28b97a51e36126b4d71a22b37f1355fd",
+      "targetDatabaseOidSha256": "c691a12be1f927ba4995ef3081f64cb905917cb9765bf3ade3e0a795670b8353",
+      "logs": {
+        "stdout": "10-stdout.log",
+        "stdoutSha256": "4f0b991fad7255f625557d867b635c0527e2413cfa1bc8fd48673d9dced480f6",
+        "stderr": "10-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/kardex-api.test.ts",
+      "runId": "2026-09-23T05-59-05.739Z-71c69b08",
+      "ordinal": 1,
+      "exitCode": 0,
+      "native": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "history covers types, order, pagination, search, documents and safe fields",
+        "scope, inactive policy and filter metadata are enforced",
+        "XLSX export is a real filtered workbook without sensitive columns"
+      ],
+      "sourceSha256": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+      "provenance": {
+        "start": {
+          "suiteSha256": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "insert(usuariosTable)",
+      "targetDatabaseSha256": "92fd954a3639f13be647afdc2de0128a7ee3fcf89ff22575317933da4c4049e6",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "b49e01045c920f9e10c2ffef69e6a22f2a2ee67971738f89237e97832a581f83",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "runId": "2026-09-23T05-59-05.739Z-71c69b08",
+      "ordinal": 2,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "notification endpoints preserve calendar dates, authorization, and persistence"
+      ],
+      "sourceSha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+      "provenance": {
+        "start": {
+          "suiteSha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "c373920b49528978b4b3fd1f03b7c0f081e8f5ef917673b28598875ce8ff8327",
+      "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "89b39e59be9f568259db0c2f9d5b0a5f6bfeb182c51543682b8a4170dd5df57a",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+      "runId": "2026-09-23T06-07-46.777Z-d488ba7e",
+      "ordinal": 2,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "uses entradas.fecha and gives each received roll equal weight"
+      ],
+      "sourceSha256": "c48cb2081811d87bc062e5f4ac7def2941ece4ce34d321d22453b13afc7629d9",
+      "provenance": {
+        "start": {
+          "suiteSha256": "c48cb2081811d87bc062e5f4ac7def2941ece4ce34d321d22453b13afc7629d9",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "c48cb2081811d87bc062e5f4ac7def2941ece4ce34d321d22453b13afc7629d9",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "8ddb83b1d81b22060c5d378dcf3bca8318ee47aeebeea2f9392cd8186b73c025",
+      "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "7bea42ce2ebacb9055e7da448af542ad2aa19a152c5bb261c6505d18e7335697",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+      "runId": "2026-09-23T06-07-46.777Z-d488ba7e",
+      "ordinal": 4,
+      "exitCode": 0,
+      "native": {
+        "tests": 5,
+        "pass": 5,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "CONTADOR tiene lectura global inmutable",
+        "CONTADOR no opera fuera de ubicación aunque tenga permisos",
+        "SISTEMAS tiene lectura global inmutable",
+        "SISTEMAS no opera fuera de ubicación aunque tenga permisos",
+        "CONTADOR y SISTEMAS leen tickets globalmente pero no operan fuera de ubicación"
+      ],
+      "sourceSha256": "4af47f27b8b6c0d6a1e0f00a9772031f0815dcc191ec019fe4b64515e1a2c63c",
+      "provenance": {
+        "start": {
+          "suiteSha256": "4af47f27b8b6c0d6a1e0f00a9772031f0815dcc191ec019fe4b64515e1a2c63c",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "4af47f27b8b6c0d6a1e0f00a9772031f0815dcc191ec019fe4b64515e1a2c63c",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "10b18ce546b35f1f231c1a32a35ce1e268587252eeb71f273ae65a033e02094f",
+      "targetDatabaseOidSha256": "95a88235925481ba7c1d47442d30ee24d5d651490072ef8756292b38675f490a",
+      "logs": {
+        "stdout": "04-stdout.log",
+        "stdoutSha256": "05139a12a619d6c7106ac0467f1221f3860fe1c5e4ca9563abb335dcbc99c328",
+        "stderr": "04-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "evidenceAddendum": {
+        "classification": "RECOVERED_PARSER_UNSAFE",
+        "basis": "DURABLE_LOG_REPARSE",
+        "originalStatus": "UNSAFE",
+        "originalReporterError": "artifacts/api-server/src/pos-location-authorization.integration.test.ts emitió terminales nativos que no corresponden a nombres declarados en su fuente.",
+        "historicalManifestModified": false
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+      "runId": "2026-09-23T06-11-46.696Z-5746cd7f",
+      "ordinal": 1,
+      "exitCode": 0,
+      "native": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "clientes maps a barrier-forced concurrent unique conflict to 409",
+        "productos maps a barrier-forced concurrent unique conflict to 400",
+        "ubicaciones maps a barrier-forced concurrent unique conflict to 400",
+        "usuarios maps a barrier-forced concurrent unique conflict to 400"
+      ],
+      "sourceSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+      "provenance": {
+        "start": {
+          "suiteSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "730e16dbb8e68dacd1816f80442dd2186f3990d7de71ec4402c2870f4721ea33",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "5d42340bf95ee2e90ae1514a541f5e0243bad8927406f8c9c51bfd103bbd03c2",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/precios.integration.test.ts",
+      "runId": "2026-09-23T06-11-46.696Z-5746cd7f",
+      "ordinal": 2,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "precios is ADMIN-only and changes only catalog price/history"
+      ],
+      "sourceSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+      "provenance": {
+        "start": {
+          "suiteSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "6f6f0a4b33507736fd3252cc92c09dabf2bd677157edd2e6875fa8ed702a13e5",
+      "targetDatabaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "2abe3520783c316da05d40429543b8352df347d387a78b9b45b47db055ad6f22",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/productos-cache.integration.test.ts",
+      "runId": "2026-09-23T06-11-46.696Z-5746cd7f",
+      "ordinal": 3,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "Block 2 products use scoped existencias cache and redact TERMINAL finances"
+      ],
+      "sourceSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+      "provenance": {
+        "start": {
+          "suiteSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "9cb54c184d52ecb63d325b8f81abc5728ca044eac30a4575c3d2a129b1d70dec",
+      "targetDatabaseOidSha256": "96121155d48eb49ab968dbf21002274cd16537e36248e5c8e91938f387552c6f",
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "45e7ac137c00e894c3c83ca52edd2008614cb859ac502ad9673bcc54f43b6598",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+      "runId": "2026-09-23T05-59-12.534Z-467b28f2",
+      "ordinal": 1,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "compras y reportes respetan PROPIA y las compras usan fecha de recepción"
+      ],
+      "sourceSha256": "ea92128c7a0bc7702e2e6f4582ffa0cf1ae91c02a9914b8e483c7f4b62bb34b1",
+      "provenance": {
+        "start": {
+          "suiteSha256": "ea92128c7a0bc7702e2e6f4582ffa0cf1ae91c02a9914b8e483c7f4b62bb34b1",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "ea92128c7a0bc7702e2e6f4582ffa0cf1ae91c02a9914b8e483c7f4b62bb34b1",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "0d2132bf9c071837f8e41e47941b6caa925b32993daf8c4cb9c2eeebab7d12bf",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "280415a43e3a7f19bcb4c49908cbb0f73001ea6f62d1b39058a65b49e6f01182",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/reportes.integration.test.ts",
+      "runId": "2026-09-23T05-59-12.534Z-467b28f2",
+      "ordinal": 2,
+      "exitCode": 0,
+      "native": {
+        "tests": 4,
+        "pass": 4,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "sales and margin use frozen, valid lines and filter correctly",
+        "inventory, color, heat map, purchase and client blocks are coherent",
+        "ranges, helper invariants, access redaction, exports and timing",
+        "reportes build committed, isolated decision reports"
+      ],
+      "sourceSha256": "ec654631e89b6055bcce244282342ca5620bbcfe0f25b1a3061d6931aee98861",
+      "provenance": {
+        "start": {
+          "suiteSha256": "ec654631e89b6055bcce244282342ca5620bbcfe0f25b1a3061d6931aee98861",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "ec654631e89b6055bcce244282342ca5620bbcfe0f25b1a3061d6931aee98861",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "996ed396679f68e2ad5a1c20773e890d40cf2fe19a12b3770eae58fbb91ac3e1",
+      "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "9cc0810569c0b1cc60ede6a0ea30be754c9ac815888ff6c1c440589a6382639f",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+      "runId": "2026-09-23T05-59-12.534Z-467b28f2",
+      "ordinal": 3,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "Task 54 Block 6: configurable roles have real HTTP access boundaries"
+      ],
+      "sourceSha256": "6feba1b540f67d4e9881a8d8c0d8f1a6c5d817a21b1210423145cd3fc0da853f",
+      "provenance": {
+        "start": {
+          "suiteSha256": "6feba1b540f67d4e9881a8d8c0d8f1a6c5d817a21b1210423145cd3fc0da853f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "6feba1b540f67d4e9881a8d8c0d8f1a6c5d817a21b1210423145cd3fc0da853f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "insert(usuariosTable)",
+      "targetDatabaseSha256": "005f34172226b6dd13ad3c76f1ea7f8e49b0ab50f599bb969781e893df82cd70",
+      "targetDatabaseOidSha256": "a15fb939aeb2db3d8e2c3915e41218e5da49011b2f9d37b60a1a2fdc24b21867",
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "488223ec421b7b06253f1c6ed782208692e0b4aab161d15ddff472659613d2c7",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/productos-purge.integration.test.ts",
+      "runId": "2026-09-23T05-59-12.534Z-467b28f2",
+      "ordinal": 4,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "producto solo se borra sin existencia ni historia y su SKU queda reservado"
+      ],
+      "sourceSha256": "f0335b1d6b1c983ace68dc6a352853dc073ee5da361c4fab85e8ac8b8c0fe827",
+      "provenance": {
+        "start": {
+          "suiteSha256": "f0335b1d6b1c983ace68dc6a352853dc073ee5da361c4fab85e8ac8b8c0fe827",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "f0335b1d6b1c983ace68dc6a352853dc073ee5da361c4fab85e8ac8b8c0fe827",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "b6121b1c4b4e34c55c244238c47c427ce5b721f2e39dbb9299fc682030895b41",
+      "targetDatabaseOidSha256": "be95b4c493220842bcc23c3125ffa28c635f8f819e00c4ca8de37c5887efcb07",
+      "logs": {
+        "stdout": "04-stdout.log",
+        "stdoutSha256": "161ea5a6f76e787b97bc69bfdf0c54d923b2a161a6add69a950877fc9b982545",
+        "stderr": "04-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/store-sales-global.integration.test.ts",
+      "runId": "2026-09-23T06-16-57.093Z-772e0279",
+      "ordinal": 3,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "store sales global reports isolated sold-line hierarchy and enforces scope"
+      ],
+      "sourceSha256": "b42d1b751d82a8e01fb968133a7455cff33855ba8329fc9d0d34afb6106180c3",
+      "provenance": {
+        "start": {
+          "suiteSha256": "b42d1b751d82a8e01fb968133a7455cff33855ba8329fc9d0d34afb6106180c3",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "b42d1b751d82a8e01fb968133a7455cff33855ba8329fc9d0d34afb6106180c3",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "f8b81a674347f42d248101b4a021208daad919f22116e1c607438d2a948331d5",
+      "targetDatabaseOidSha256": "a4b6b6d6333054c9f1ddae3d43e4d76cf33fa5a8659f74c2f3f01b820a4061bb",
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "5227b8f94970470908723eda1a8197abf4485551d059e5f822a56345a9a75bb9",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/task57.integration.test.ts",
+      "runId": "2026-09-23T06-16-57.093Z-772e0279",
+      "ordinal": 4,
+      "exitCode": 0,
+      "native": {
+        "tests": 2,
+        "pass": 2,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB aislada",
+        "Task 57: caja diaria serializa aperturas y descuenta salidas una vez"
+      ],
+      "sourceSha256": "a0af59076153af283991dd02ec84d02ab1e0e0b81322ebbb0bdc4fd67fcf8f2c",
+      "provenance": {
+        "start": {
+          "suiteSha256": "a0af59076153af283991dd02ec84d02ab1e0e0b81322ebbb0bdc4fd67fcf8f2c",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "a0af59076153af283991dd02ec84d02ab1e0e0b81322ebbb0bdc4fd67fcf8f2c",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "57c436e07dce20011cbf473868668e627dcc6c5c2f6d447704e2eecf9115fd9b",
+      "targetDatabaseOidSha256": "49d2e894a899d58694f1afc27ab9c04b3b36e992b977a32ad26fa058df985624",
+      "logs": {
+        "stdout": "04-stdout.log",
+        "stdoutSha256": "578ca85d5a1ca23b395f235139da7cc826299319ae094ff4ab636968dccad66b",
+        "stderr": "04-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/task58.integration.test.ts",
+      "runId": "2026-09-23T06-16-57.093Z-772e0279",
+      "ordinal": 5,
+      "exitCode": 0,
+      "native": {
+        "tests": 6,
+        "pass": 6,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "CRUD/listado usa sesión real, ADMIN administra y no ADMIN es rechazado",
+        "entrada exige piso sólo si el sitio lo tiene y valida pertenencia/actividad",
+        "cambio y filtro por piso son físicos: Bitácora sí, movimientos/existencias no",
+        "tránsito limpia piso y recepción exige/asigna el piso destino",
+        "auditoría reporta MAL_ACOMODADO, confirma sólo piso y deja carreras manuales",
+        "Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex"
+      ],
+      "sourceSha256": "49ebdd063b7008fb10a8545aef06f4ec4c9e28856177fa55f499b022b3f1259f",
+      "provenance": {
+        "start": {
+          "suiteSha256": "49ebdd063b7008fb10a8545aef06f4ec4c9e28856177fa55f499b022b3f1259f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "49ebdd063b7008fb10a8545aef06f4ec4c9e28856177fa55f499b022b3f1259f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "INSERT INTO usuarios",
+      "targetDatabaseSha256": "b62b8cd89cca38d50d420850bbf46dcee9f6df1667507bc4f338abc1c1a62abe",
+      "targetDatabaseOidSha256": "e94c0e6dce7e3edc8f1b09ccdd25c364864028ad5cd7fd3c840f1d39a1adfc03",
+      "logs": {
+        "stdout": "05-stdout.log",
+        "stdoutSha256": "05a53146947924d3618ae6d6865c28aa54917db166515e4a4b0b83a5cd5c5a09",
+        "stderr": "05-stderr.log",
+        "stderrSha256": "b03831f05309cd79c7800f2097a93844fb6fdfb3b4f9b5d949e67428c9a16b7d"
+      }
+    },
+    {
+      "path": "artifacts/api-server/src/viajes.integration.test.ts",
+      "runId": "2026-09-23T06-16-57.093Z-772e0279",
+      "ordinal": 6,
+      "exitCode": 0,
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0
+      },
+      "nativeTestNames": [
+        "Task 51 Block 6: catalogs and viaje projection preserve dispatch invariants"
+      ],
+      "sourceSha256": "24b23d13c9642cda1fb4e3122b7073db3fa1ebcc233079fe4c1d4672e765c6ed",
+      "provenance": {
+        "start": {
+          "suiteSha256": "24b23d13c9642cda1fb4e3122b7073db3fa1ebcc233079fe4c1d4672e765c6ed",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "24b23d13c9642cda1fb4e3122b7073db3fa1ebcc233079fe4c1d4672e765c6ed",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "actorCreationCallsite": "insert(usuariosTable)",
+      "targetDatabaseSha256": "4c90394561075f902c535c3472b7761ac0950fa075a972f51a08b455a43ba1de",
+      "targetDatabaseOidSha256": "b1b019b514aa2d0a6fc83bbc0b9460e80f42639626ef922dded348b0658d6b1d",
+      "logs": {
+        "stdout": "06-stdout.log",
+        "stdoutSha256": "2d8da0dd7193aae898de0a621d7a7840148818999bbb2308fd7579245214f955",
+        "stderr": "06-stderr.log",
+        "stderrSha256": "6ddad5e2bb4f973a53e0beb959807dbf5364401f3ce1aed21a33d1aefb82ca3a"
+      }
+    }
+  ],
+  "nonQualifyingEvidence": [
+    {
+      "runId": "2026-09-23T05-59-05.739Z-71c69b08",
+      "path": "artifacts/api-server/src/lib/permisos.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": [
+        "artifacts/api-server/src/lib/permisos.test.ts: invalid non-PASS case terminal."
+      ]
+    },
+    {
+      "runId": "2026-09-23T05-59-12.534Z-467b28f2",
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": [
+        "artifacts/api-server/src/security-api.test.ts: invalid non-PASS case terminal."
+      ]
+    },
+    {
+      "runId": "2026-09-23T06-07-46.777Z-d488ba7e",
+      "path": "artifacts/api-server/src/lib/permisos.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": [
+        "artifacts/api-server/src/lib/permisos.test.ts: invalid non-PASS case terminal."
+      ]
+    },
+    {
+      "runId": "2026-09-23T06-07-46.777Z-d488ba7e",
+      "path": "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": [
+        "artifacts/api-server/src/pagos-dirigidos.integration.test.ts: invalid non-PASS case terminal."
+      ]
+    },
+    {
+      "runId": "2026-09-23T06-07-57.854Z-a06b6834",
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-07-57.854Z-a06b6834",
+      "path": "artifacts/api-server/src/store-sales-global.integration.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-07-57.854Z-a06b6834",
+      "path": "artifacts/api-server/src/task57.integration.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-07-57.854Z-a06b6834",
+      "path": "artifacts/api-server/src/task58.integration.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-07-57.854Z-a06b6834",
+      "path": "artifacts/api-server/src/viajes.integration.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-16-57.093Z-772e0279",
+      "path": "artifacts/api-server/src/lib/permisos.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-16-57.093Z-772e0279",
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-21-02.689Z-562fac1c",
+      "path": "artifacts/api-server/src/lib/permisos.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-21-02.689Z-562fac1c",
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-23-36.114Z-6ada79f7",
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    },
+    {
+      "runId": "2026-09-23T06-26-47.484Z-db9e5d21",
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "qualification": "FAILED_CASE",
+      "errors": []
+    }
+  ],
+  "errors": [
+    "Missing route evidence: artifacts/api-server/src/lib/permisos.test.ts, artifacts/api-server/src/pagos-dirigidos.integration.test.ts, artifacts/api-server/src/security-api.test.ts"
+  ]
+}

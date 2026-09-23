@@ -1,0 +1,101 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T05-59-05.739Z-71c69b08",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "ed8828fd8445d4af3e841c4986b1c2e7a19f602a84cf512d2ad5940b72cc2d88",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/kardex-api.test.ts",
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ],
+  "sourceStart": {
+    "artifacts/api-server/src/kardex-api.test.ts": {
+      "suiteSha256": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts": {
+      "suiteSha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/lib/permisos.test.ts": {
+      "suiteSha256": "5e2477b7be711e1e1d1242ed818983560a941197164c1825f8d5f644ff32e373",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts": {
+      "suiteSha256": "c48cb2081811d87bc062e5f4ac7def2941ece4ce34d321d22453b13afc7629d9",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts": {
+      "suiteSha256": "e4af999a425cf827d03b89f96fc148c980e8914f60062f83a3a45035f3f3b653",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts": {
+      "suiteSha256": "4af47f27b8b6c0d6a1e0f00a9772031f0815dcc191ec019fe4b64515e1a2c63c",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts": {
+      "suiteSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/precios.integration.test.ts": {
+      "suiteSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/productos-cache.integration.test.ts": {
+      "suiteSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    }
+  }
+}

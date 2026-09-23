@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T05-39-23.525Z-ed1faaf4",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "94e58d2cf7671d2de4d80fa19ea372513c248a876dce1454baad52673031e6ff",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+    "artifacts/api-server/src/reportes.integration.test.ts",
+    "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+    "artifacts/api-server/src/productos-purge.integration.test.ts",
+    "artifacts/api-server/src/security-api.test.ts",
+    "artifacts/api-server/src/store-sales-global.integration.test.ts",
+    "artifacts/api-server/src/task57.integration.test.ts",
+    "artifacts/api-server/src/task58.integration.test.ts",
+    "artifacts/api-server/src/viajes.integration.test.ts"
+  ]
+}

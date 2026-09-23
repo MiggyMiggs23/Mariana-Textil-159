@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-13-40.761Z-ce0c483a",
+  "status": "FAIL",
+  "selectionSha256": "344b06dbc1bb0241df862aaade9fe537114de728c425fdf293bf15dfc84f9973",
+  "selectedCount": 10,
+  "selectedPaths": [
+    "artifacts/api-server/src/admin-alertas.integration.test.ts",
+    "artifacts/api-server/src/admin-invariants.integration.test.ts",
+    "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+    "artifacts/api-server/src/auditoria.integration.test.ts",
+    "artifacts/api-server/src/clientes-ajustes-api.test.ts",
+    "artifacts/api-server/src/contenedores.integration.test.ts",
+    "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+    "artifacts/api-server/src/equipos.integration.test.ts",
+    "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+    "artifacts/api-server/src/inventory-six-view.integration.test.ts"
+  ],
+  "completedCount": 5,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/admin-alertas.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "targetDatabaseSha256": "f8a1f1eddf005240d83050975856e22a1344b80d5a30e455d37b0318c3ff513f",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "b4d3ffa407a08c08772c0d88163797987482cbfc39784ec536ebb6f0ca3c4f70",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/admin-invariants.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "targetDatabaseSha256": "99b39442d79c83f2da4aa683ec2fdbe14713e82255c27cfb87f8a8e90b88d1aa",
+      "targetDatabaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "0b8830fa2ca5f11c53f948ced173d2c68be2ddbc6ebac4dce207a6826c634d70",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "ordinal": 3,
+      "path": "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "targetDatabaseSha256": "761887b385b3351e20668b82a3d98bb2f4b020443c66c62b88eb2e15819a0c00",
+      "targetDatabaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b",
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "6a04ad00669cbc84803cad344761c4f765893a94dfb27adeb86f19597f0d9ed5",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "ordinal": 4,
+      "path": "artifacts/api-server/src/auditoria.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "targetDatabaseSha256": "ece9d74b23429823a94c7f60acdbfeca97a5bdb45371897da15900b180e7fe19",
+      "targetDatabaseOidSha256": "de1986e564f03062c907d48c26d8cd4f3bdbdcd6538c046895c94eb92b8e18e9",
+      "logs": {
+        "stdout": "04-stdout.log",
+        "stdoutSha256": "494f8c9372f7f4a3466aa50dd71b02bf6be5c7d36ea5845806196618bac11e62",
+        "stderr": "04-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "ordinal": 5,
+      "path": "artifacts/api-server/src/clientes-ajustes-api.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "1f74e739383b0d113fe0a3b4c67c1156047f7d5dbe63d4be147762e28755262e",
+      "targetDatabaseOidSha256": "6946ee01eaeb09b31d4f12f35e96275ba2d5ffbb2ac389e6dbae2859646d6001",
+      "logs": {
+        "stdout": "05-stdout.log",
+        "stdoutSha256": "cf84abb0502ee87747ce08be7de2ccb16245345487adb0a7bbf144c828bbae71",
+        "stderr": "05-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

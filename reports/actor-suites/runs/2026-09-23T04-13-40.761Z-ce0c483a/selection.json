@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-13-40.761Z-ce0c483a",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "344b06dbc1bb0241df862aaade9fe537114de728c425fdf293bf15dfc84f9973",
+  "selectedCount": 10,
+  "selectedPaths": [
+    "artifacts/api-server/src/admin-alertas.integration.test.ts",
+    "artifacts/api-server/src/admin-invariants.integration.test.ts",
+    "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+    "artifacts/api-server/src/auditoria.integration.test.ts",
+    "artifacts/api-server/src/clientes-ajustes-api.test.ts",
+    "artifacts/api-server/src/contenedores.integration.test.ts",
+    "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+    "artifacts/api-server/src/equipos.integration.test.ts",
+    "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+    "artifacts/api-server/src/inventory-six-view.integration.test.ts"
+  ]
+}

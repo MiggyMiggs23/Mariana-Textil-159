@@ -4,7 +4,14 @@ import { createServer, type Server } from "node:http";
 import { randomUUID } from "node:crypto";
 import { inArray } from "drizzle-orm";
 import ExcelJS from "exceljs";
-import {
+// @ts-ignore Shared preflight is a plain ESM module with no DB imports.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") throw new Error("Actor disposable identity must be verified before DB imports.");
+const actorApplicationUrl = process.env.DATABASE_URL;
+const actorDatabase = await import("@workspace/db");
+await (await actorDatabase.createTestDatabaseGuard(actorDatabase.pool, process.env.TEST_DATABASE_URL, actorApplicationUrl)).assertIsolated();
+const {
   db,
   entradasTable,
   movimientosTable,
@@ -18,8 +25,8 @@ import {
   tipoMovimientoEnum,
   ubicacionesTable,
   usuariosTable,
-} from "@workspace/db";
-import app from "./app";
+} = actorDatabase;
+const { default: app } = await import("./app");
 
 if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
   throw new Error(
@@ -147,12 +154,13 @@ before(async () => {
     .returning();
   ids.rolls.push(...rolls.map(({ id }) => id));
 
+  const receptionRoll = rolls[tipoMovimientoEnum.enumValues.indexOf("RECEPCION") % rolls.length]!;
   const folio = 1_000_000_000 + Math.floor(Math.random() * 100_000_000);
   const [entry] = await db
     .insert(entradasTable)
     .values({
       folio,
-      ubicacionId: ownLocationId,
+      ubicacionId: receptionRoll.ubicacionId!,
       usuarioId: admin.created.id,
       fecha: new Date(),
       totalRollos: 1,
@@ -162,6 +170,10 @@ before(async () => {
     .returning();
   assert.ok(entry);
   ids.entries.push(entry.id);
+  // A human folio in documentoId is deliberately not a trusted entry PK.
+  // The productive resolver requires the actual roll -> entry relationship.
+  await db.update(rollosTable).set({ recepcionId: entry.id })
+    .where(inArray(rollosTable.id, [receptionRoll.id]));
 
   const documentFolio = 1_100_000_000 + Math.floor(Math.random() * 10_000_000);
   ticketFolio = documentFolio;
@@ -242,7 +254,8 @@ before(async () => {
   const cancellation = inserted.find(({ tipo }) => tipo === "CANCELACION")!;
   await db
     .update(movimientosTable)
-    .set({ movimientoOrigenId: sale.id })
+    // A cancellation may inherit a document only from its own roll's movement.
+    .set({ movimientoOrigenId: sale.id, rolloId: sale.rolloId, ubicacionId: sale.ubicacionId })
     .where(inArray(movimientosTable.id, [cancellation.id]));
 
   const historical = await db

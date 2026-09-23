@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-16-23.523Z-59b4cc7a",
+  "status": "FAIL",
+  "selectionSha256": "f09ed8a78161fedb2a2f3305b23ac4937f246daf4c451c23346c1ebb3ead71a1",
+  "selectedCount": 5,
+  "selectedPaths": [
+    "artifacts/api-server/src/contenedores.integration.test.ts",
+    "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+    "artifacts/api-server/src/equipos.integration.test.ts",
+    "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+    "artifacts/api-server/src/inventory-six-view.integration.test.ts"
+  ],
+  "completedCount": 1,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/contenedores.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "821a26e8da16784a6e243664a9335e788e8851456cd64ce5f17a311422ad90c7",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "8e2b3e10ffc6383976a70c38843c789d49cf0a6c8c109f22cddd2e2c83c1672b",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

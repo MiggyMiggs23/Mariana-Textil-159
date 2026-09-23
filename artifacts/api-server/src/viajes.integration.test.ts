@@ -1,27 +1,47 @@
 /**
  * Task 51 / Block 6: real HTTP coverage for the transport catalog and trips.
- * This suite is deliberately opt-in: it writes only to an explicitly isolated
- * database. Cleanup is performed by deleting the disposable Neon branch,
- * because the audit log is intentionally append-only.
+ * This suite writes only to the local disposable database created by the
+ * isolated runner. The runner destroys the whole cluster because audit is
+ * intentionally append-only.
  */
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
 import { sql } from "drizzle-orm";
-import {
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+const testUrl = process.env.TEST_DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("viajes integration requires NODE_ENV=test.");
+}
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("viajes integration requires the isolated database runner.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("viajes integration requires explicit test and application database URLs.");
+}
+if (testUrl === applicationUrl) {
+  throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
+}
+
+const {
   camionetasTable, choferesTable, clientesTable, db, permisosUsuarioTable, productosTable, rollosTable, salidasTable,
   salidaLineasTable, salidaRollosTable, ticketLineasTable, ticketsTable, ubicacionesTable, usuariosTable, viajeFolioTable,
-} from "@workspace/db";
-import app from "./app";
-
-const testUrl = process.env.TEST_DATABASE_URL;
-if (!testUrl || process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
-  throw new Error("viajes integration requires explicit TEST_DATABASE_URL and REQUIRE_ISOLATED_TEST_DATABASE=1");
-}
-const databaseResult = await db.execute<{ database: string }>(sql`select current_database() as database`);
-const database = databaseResult.rows[0]?.database;
-if (database === "heliumdb") throw new Error("Refusing to run viajes integration against heliumdb");
+  pool, createTestDatabaseGuard,
+} = await import("@workspace/db");
+const { assertIsolated, testDatabaseName } = await createTestDatabaseGuard(
+  pool,
+  testUrl,
+  applicationUrl,
+);
+await assertIsolated();
+const expectedDatabase = decodeURIComponent(new URL(testUrl).pathname).replace(/^\/+/, "");
+assert.equal(testDatabaseName, expectedDatabase, "viajes suite connected outside TEST_DATABASE_URL");
+const { default: app } = await import("./app");
 
 const run = `VJ${randomUUID().replaceAll("-", "")}`;
 let server: Server | undefined;
@@ -109,10 +129,10 @@ test("Task 51 Block 6: catalogs and viaje projection preserve dispatch invariant
     ]).returning({ id: productosTable.id });
     ids.products.push(metro!.id, kilo!.id);
     const [notaMetro, notaKilo, ticket, notaOtherOrigin] = await db.insert(ticketsTable).values([
-      { folio: 800000 + ids.users[0]!, ubicacionId: originA, usuarioTerminalId: admin.id, clienteId: customer!.id, documentoTipo: "NOTA", notaSinPrecios: true, nombreDestinatario: "Destino nota metro", direccionEntregaSnapshot: "Calle Metro", subtotal: "10", iva: "0", total: "10", uuidCliente: randomUUID() },
-      { folio: 810000 + ids.users[0]!, ubicacionId: originA, usuarioTerminalId: admin.id, clienteId: customer!.id, documentoTipo: "NOTA", notaSinPrecios: true, nombreDestinatario: "Destino nota kilo", direccionEntregaSnapshot: "Calle Kilo", subtotal: "10", iva: "0", total: "10", uuidCliente: randomUUID() },
+      { folio: 800000 + ids.users[0]!, ubicacionId: originA, usuarioTerminalId: admin.id, clienteId: customer!.id, documentoTipo: "NOTA", notaSinPrecios: true, nombreDestinatario: "Destino nota metro", direccionEntregaSnapshot: "Calle Metro", subtotal: "10", iva: "0", total: "10", autorizacionEstado: "PENDIENTE", uuidCliente: randomUUID() },
+      { folio: 810000 + ids.users[0]!, ubicacionId: originA, usuarioTerminalId: admin.id, clienteId: customer!.id, documentoTipo: "NOTA", notaSinPrecios: true, nombreDestinatario: "Destino nota kilo", direccionEntregaSnapshot: "Calle Kilo", subtotal: "10", iva: "0", total: "10", autorizacionEstado: "PENDIENTE", uuidCliente: randomUUID() },
       { folio: 820000 + ids.users[0]!, ubicacionId: originA, usuarioTerminalId: admin.id, clienteId: customer!.id, documentoTipo: "TICKET", subtotal: "10", iva: "0", total: "10", uuidCliente: randomUUID() },
-      { folio: 821000 + ids.users[0]!, ubicacionId: originB, usuarioTerminalId: admin.id, clienteId: customer!.id, documentoTipo: "NOTA", notaSinPrecios: true, subtotal: "10", iva: "0", total: "10", uuidCliente: randomUUID() },
+      { folio: 821000 + ids.users[0]!, ubicacionId: originB, usuarioTerminalId: admin.id, clienteId: customer!.id, documentoTipo: "NOTA", notaSinPrecios: true, subtotal: "10", iva: "0", total: "10", autorizacionEstado: "PENDIENTE", uuidCliente: randomUUID() },
     ]).returning({ id: ticketsTable.id });
     ids.tickets.push(notaMetro!.id, notaKilo!.id, ticket!.id, notaOtherOrigin!.id);
     const [physicalRoll, preparedExitRoll] = await db.insert(rollosTable).values([{
@@ -202,5 +222,7 @@ test("Task 51 Block 6: catalogs and viaje projection preserve dispatch invariant
     assert.equal((await request("DELETE", `/camionetas/${truck.body.id}`, undefined, adminSession.cookie)).status, 404);
   } finally {
     if (server) await new Promise<void>((resolve) => server!.close(() => resolve()));
+    await assertIsolated();
+    await pool.end();
   }
 });

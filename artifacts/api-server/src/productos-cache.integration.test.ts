@@ -2,9 +2,16 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared preflight is a plain ESM module with no DB imports.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") throw new Error("Actor disposable identity must be verified before DB imports.");
+const actorApplicationUrl = process.env.DATABASE_URL;
+const actorDatabase = await import("@workspace/db");
+await (await actorDatabase.createTestDatabaseGuard(actorDatabase.pool, process.env.TEST_DATABASE_URL, actorApplicationUrl)).assertIsolated();
 
 const testUrl = process.env.TEST_DATABASE_URL;
-const appUrl = process.env.DATABASE_URL;
+const appUrl = actorApplicationUrl;
 
 if (process.env.NODE_ENV !== "test" || !testUrl) {
   throw new Error(

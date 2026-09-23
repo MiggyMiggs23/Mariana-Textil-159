@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T05-39-33.006Z-4ceca98e",
+  "status": "FAIL",
+  "selectionSha256": "634790baf21b19a25f784599f903ee4dba660f83de3f1e85928836120f814e80",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/admin-alertas.integration.test.ts",
+    "artifacts/api-server/src/admin-invariants.integration.test.ts",
+    "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+    "artifacts/api-server/src/auditoria.integration.test.ts",
+    "artifacts/api-server/src/contenedores.integration.test.ts",
+    "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+    "artifacts/api-server/src/equipos.integration.test.ts",
+    "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+    "artifacts/api-server/src/inventory-six-view.integration.test.ts"
+  ],
+  "completedCount": 2,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/admin-alertas.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "targetDatabaseSha256": "a4e08f19c77248c4583c93ffa1fc76bb23cd2d720dcfc99b17f2cc454960ea71",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "f1c1c09a3f5a8544fc18d46f9dc7db717089707590604060027f6084e3c56435",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/admin-invariants.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "2d8910f99414a4a6e5932d5a9b69fe935a68037306b8056999227cbcea6fef43",
+      "targetDatabaseOidSha256": "8f57b5eff5b6c4d9e3e3d3079d4c54e6172432fd835c02a430790d0c3d1467f9",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "b2865067ecbb48fbf8dab0b6322b6a91fecd61d91d3c11fd0c22da5fa1149e2d",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

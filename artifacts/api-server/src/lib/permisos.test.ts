@@ -1,10 +1,8 @@
 /**
  * Integration tests for the permission system.
  *
- * Run with:
- *   cd /home/runner/workspace/artifacts/api-server && \
- *   DATABASE_URL="postgres://..." \
- *   pnpm tsx src/lib/permisos.test.ts
+ * Run only through the actor-suite disposable runner with this explicit path.
+ * Each original sequential case is registered as a real node:test terminal.
  *
  * Covers:
  *  - Permission resolution order (user override > role > deny)
@@ -19,22 +17,30 @@
  */
 
 import assert from "node:assert/strict";
+import { after, test as nativeTest } from "node:test";
 import { and, eq } from "drizzle-orm";
-import {
+import type { RolUsuario } from "@workspace/db";
+import { formatErrorWithCauses } from "./postgres-errors";
+// @ts-ignore Shared preflight is a plain ESM module with no DB imports.
+import { assertActorSuiteEnvironmentSync } from "../../../../lib/db/src/actor-suite-preflight.mjs";
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") throw new Error("Actor disposable identity must be verified before DB imports.");
+const actorApplicationUrl = process.env.DATABASE_URL;
+const actorDatabase = await import("@workspace/db");
+await (await actorDatabase.createTestDatabaseGuard(actorDatabase.pool, process.env.TEST_DATABASE_URL, actorApplicationUrl)).assertIsolated();
+const {
   db,
   permisosRolTable,
   permisosUsuarioTable,
   usuariosTable,
   ubicacionesTable,
-  type RolUsuario,
-} from "@workspace/db";
-import {
+} = actorDatabase;
+const {
   resolvePermiso,
   buildPermissionMatrix,
   validateAdminInvariants,
   MODULOS,
-} from "./permisos";
-import { formatErrorWithCauses } from "./postgres-errors";
+} = await import("./permisos");
 
 // ── Test harness ───────────────────────────────────────────────────────────────
 
@@ -45,16 +51,24 @@ const createdPermisosRolIds: number[] = [];
 const createdPermisosUsuarioIds: number[] = [];
 
 async function test(name: string, fn: () => Promise<void>): Promise<void> {
-  try {
-    await fn();
-    process.stdout.write(`  ✓ ${name}\n`);
-    passed++;
-  } catch (err) {
-    process.stdout.write(
-      `  ✗ ${name}\n${formatErrorWithCauses(err)}\n`,
-    );
-    failed++;
-  }
+  // Register only: awaiting the native completion promise during module
+  // evaluation deadlocks --test-isolation=none's import/bootstrap phase.
+  // The native runner owns callback failures and sequential execution.
+  void nativeTest(name, { concurrency: false }, async () => {
+    try {
+      await fn();
+      process.stdout.write(`  ✓ ${name}\n`);
+      passed++;
+    } catch (err) {
+      process.stdout.write(
+        `  ✗ ${name}\n${formatErrorWithCauses(err)}\n`,
+      );
+      failed++;
+      // Native reporter receives the actual assertion/error, never a green
+      // wrapper around a counter-only failure.
+      throw err;
+    }
+  });
 }
 
 // ── Setup: create test users ──────────────────────────────────────────────────
@@ -75,6 +89,25 @@ const [tienda] = await db
 if (!tienda) {
   throw new Error("No hay ubicaciones TIENDA para los tests. Ejecuta el seed primero.");
 }
+
+// TERMINAL's baseline must not inherit Mariana's salidas_venta exception.
+// This fixture site remains in the disposable target until runner destruction.
+const availableInitials = await actorDatabase.pool.query<{ iniciales: string }>(`
+  SELECT candidate AS iniciales FROM (
+    SELECT chr(65 + n / 676) || chr(65 + (n / 26) % 26) || chr(65 + n % 26) AS candidate
+    FROM generate_series(0, 17575) AS n
+  ) AS candidates
+  WHERE NOT EXISTS (SELECT 1 FROM ubicaciones WHERE iniciales = candidate)
+  ORDER BY candidate LIMIT 1
+`);
+if (!availableInitials.rows[0]) throw new Error("No hay iniciales disponibles para la TIENDA de TERMINAL.");
+const [terminalLocation] = await db.insert(ubicacionesTable).values({
+  nombre: `Permisos Terminal ${Date.now()}`,
+  iniciales: availableInitials.rows[0].iniciales,
+  tipo: "TIENDA",
+  activa: true,
+}).returning({ id: ubicacionesTable.id });
+if (!terminalLocation) throw new Error("No se creó la TIENDA propia de TERMINAL.");
 
 // Create temporary test users (will be cleaned up)
 const [admin] = await db
@@ -97,7 +130,7 @@ const [terminal] = await db
     usuario: `test_terminal_perms_${Date.now()}`,
     passwordHash: "hash",
     rol: "TERMINAL" as RolUsuario,
-    ubicacionId: tienda.id,
+    ubicacionId: terminalLocation.id,
   })
   .returning({ id: usuariosTable.id });
 terminalUserId = terminal.id;
@@ -239,12 +272,14 @@ await test("P-06C: SUPERVISOR conserva exactamente sus permisos base", async () 
     movimientos: [true, false, false],
     etiquetas: [true, true, false],
     inventario: [true, false, false],
+    auditoria_inventario: [true, true, true],
     productos: [true, false, false],
     ajustes: [true, true, false],
     clientes: [true, true, true],
     proveedores: [true, true, true],
     contenedores: [true, true, true],
     reportes: [true, false, false],
+    viajes: [true, true, false],
   };
 
   for (const modulo of MODULOS) {
@@ -571,11 +606,19 @@ async function cleanup(): Promise<void> {
 
 // ── Summary ───────────────────────────────────────────────────────────────────
 
-await cleanup();
+after(async () => {
+  try {
+    await cleanup();
+  } finally {
+    await actorDatabase.pool.end();
+  }
 
-const total = passed + failed;
-process.stdout.write(
-  `\nPermisos tests: ${passed}/${total} passed${failed > 0 ? `, ${failed} failed` : ""}\n`,
-);
+  const total = passed + failed;
+  if (total !== 29) throw new Error(`Permission terminal accounting mismatch: ${total}/29.`);
+  process.stdout.write(
+    `\nPermisos tests: ${passed}/${total} passed${failed > 0 ? `, ${failed} failed` : ""}\n`,
+  );
 
-if (failed > 0) process.exit(1);
+  // Do not terminate early: allow Node's native reporter to flush every terminal.
+  if (failed > 0) process.exitCode = 1;
+});

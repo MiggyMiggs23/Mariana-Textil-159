@@ -2,20 +2,26 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
 
+assertActorSuiteEnvironmentSync(process.env);
 const testUrl = process.env.TEST_DATABASE_URL;
-const applicationUrl = process.env.DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
 if (process.env.NODE_ENV !== "test") throw new Error("La prueba requiere NODE_ENV=test.");
-if (!testUrl) throw new Error("La prueba requiere TEST_DATABASE_URL explícita.");
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("La prueba requiere el runner de base aislada.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("La prueba requiere URLs explícitas de prueba y aplicación.");
+}
 if (testUrl === applicationUrl) throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
 
 test("compras y reportes respetan PROPIA y las compras usan fecha de recepción", async () => {
-  const [{ pool, createTestDatabaseGuard }, { default: app }] = await Promise.all([
-    import("@workspace/db"),
-    import("./app"),
-  ]);
+  const { pool, createTestDatabaseGuard } = await import("@workspace/db");
   const { assertIsolated } = await createTestDatabaseGuard(pool, testUrl, applicationUrl);
   await assertIsolated();
+  const { default: app } = await import("./app");
 
   const tag = `PAF-${randomUUID()}`;
   const initials = randomUUID()

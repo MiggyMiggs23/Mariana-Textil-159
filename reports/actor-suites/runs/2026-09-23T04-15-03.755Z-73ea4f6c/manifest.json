@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-15-03.755Z-73ea4f6c",
+  "status": "FAIL",
+  "selectionSha256": "ed8828fd8445d4af3e841c4986b1c2e7a19f602a84cf512d2ad5940b72cc2d88",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/kardex-api.test.ts",
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ],
+  "completedCount": 1,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/kardex-api.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "9dc35a982a272c2814b02f40a85c01b48acedf3e1c4654fefcad435b0775ad3f",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "880c59afcffef79da144434b1a3508c028c70becc687b2c95f51598049494d1d",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

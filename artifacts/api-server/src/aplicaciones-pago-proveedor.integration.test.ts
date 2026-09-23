@@ -1,14 +1,25 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { after } from "node:test";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const applicationDatabaseUrl = process.env.DATABASE_URL;
+if (!testDatabaseUrl) {
+  throw new Error("Aplicaciones proveedor integration requires the isolated actor runner.");
+}
+
+after(async () => {
+  const { pool } = await import("@workspace/db");
+  await pool.end();
+});
 
 test("aplicaciones_pago_proveedor valida PAGO→COMPRA, límites y append-only", async (t) => {
-  if (!testDatabaseUrl) {
-    t.skip("TEST_DATABASE_URL no está configurada; integración PostgreSQL omitida.");
-    return;
-  }
   if (testDatabaseUrl === applicationDatabaseUrl) throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   const { pool } = await import("@workspace/db");
   const { createTestDatabaseGuard } = await import("@workspace/db");
@@ -39,23 +50,12 @@ test("aplicaciones_pago_proveedor valida PAGO→COMPRA, límites y append-only",
   try {
     await guard(); // required before BEGIN on this exact writing connection
     await client.query("BEGIN");
-    const activeUser = await client.query<{ id: number }>(
-      "SELECT id FROM usuarios WHERE activo LIMIT 1",
-    );
-    let usuarioId = activeUser.rows[0]?.id;
-    if (!usuarioId) {
-      const admin = await client.query<{ id: number }>(
-        "SELECT id FROM usuarios WHERE rol='ADMIN' LIMIT 1",
-      );
-      usuarioId = admin.rows[0]?.id;
-    }
-    if (!usuarioId) {
-      usuarioId = (await write(
+    // Own actor in the disposable database; never borrow a seeded/shared user.
+    const usuarioId = (await write(
         `INSERT INTO usuarios(nombre,usuario,password_hash,rol,activo,alcance_consulta)
          VALUES('Integración Parte 6','parte6-integracion-' || txid_current()::text,'no-login','ADMIN',true,'TODAS')
          RETURNING id`,
       )).rows[0]!.id as number;
-    }
     const proveedorId = (await write(
       `INSERT INTO proveedores(nombre,tipo,moneda_default,activo)
        VALUES('Proveedor temporal integración Parte 6 ' || txid_current()::text,'NACIONAL','MXN',true)
@@ -131,10 +131,6 @@ test("aplicaciones_pago_proveedor valida PAGO→COMPRA, límites y append-only",
 });
 
 test("ensure materializa pago legado dirigido una sola vez", async (t) => {
-  if (!testDatabaseUrl) {
-    t.skip("TEST_DATABASE_URL no está configurada; integración PostgreSQL omitida.");
-    return;
-  }
   if (testDatabaseUrl === applicationDatabaseUrl) {
     throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   }
@@ -160,15 +156,15 @@ test("ensure materializa pago legado dirigido una sola vez", async (t) => {
   try {
     await guard();
     await client.query("BEGIN");
-    const seed = await client.query<{ usuario_id: number; ubicacion_id: number }>(
-      `SELECT u.id usuario_id, b.id ubicacion_id
-       FROM usuarios u CROSS JOIN ubicaciones b
-       WHERE u.activo AND b.activa LIMIT 1`,
-    );
-    if (!seed.rows[0]) {
-      throw new Error("La base temporal requiere usuario y ubicación activos.");
-    }
-    const { usuario_id: usuarioId, ubicacion_id: ubicacionId } = seed.rows[0];
+    const usuarioId = (await write(
+      `INSERT INTO usuarios(nombre,usuario,password_hash,rol,activo,alcance_consulta)
+       VALUES('Legado local','legado-local-' || txid_current()::text,'no-login','ADMIN',true,'TODAS')
+       RETURNING id`,
+    )).rows[0]!.id as number;
+    const ubicacionId = (await write(
+      `INSERT INTO ubicaciones(nombre,iniciales,tipo,activa)
+       VALUES('Legado local','PGL','BODEGA',true) RETURNING id`,
+    )).rows[0]!.id as number;
     const proveedorId = (await write(
       `INSERT INTO proveedores(nombre,tipo,moneda_default,activo)
        VALUES('Proveedor legado ' || txid_current(),'NACIONAL','MXN',true)

@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T06-23-36.114Z-6ada79f7",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "665491433166eb5de110cf306d85e020efd76fc63c0591a947d2855f7a0bb8b9",
+  "selectedCount": 1,
+  "selectedPaths": [
+    "artifacts/api-server/src/security-api.test.ts"
+  ],
+  "sourceStart": {
+    "artifacts/api-server/src/security-api.test.ts": {
+      "suiteSha256": "5444e01afc03883f104f3678d62906dd7b7d79c01e2d58d8668982b6191951d1",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    }
+  }
+}

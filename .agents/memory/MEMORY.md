@@ -83,3 +83,5 @@
 - [Vida de PostgreSQL desechable](disposable-postgres-process-lifetime.md) — comprobar proceso y socket entre herramientas; conservar el directorio no demuestra que el servidor siga activo.
 - [Recuperación de operaciones inciertas](uncertain-operation-recovery.md) — pérdida de acceso no prueba rollback; resolver ausencia bajo el mismo lock y bloquear solicitudes tardías.
 - [Vida de árboles aislados](isolated-test-tree-lifetime.md) — espacio libre no descarta cuotas; archivar evidencia antes de limpiar los temporales propios de cada ciclo.
+- [Identidad y preparación en workers](disposable-worker-readiness.md) — verificar aislamiento no exige que los datos del seed permanezcan intactos durante un caso.
+- [Registro del runner nativo](native-runner-lifecycle.md) — con isolation=none, esperar node:test durante el import puede bloquear el bootstrap; cerrar recursos en hooks.

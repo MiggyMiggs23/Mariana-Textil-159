@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-13-40.761Z-ce0c483a",
+  "status": "FAIL",
+  "selectedCount": 10,
+  "selectionSha256": "344b06dbc1bb0241df862aaade9fe537114de728c425fdf293bf15dfc84f9973",
+  "executionPassed": false,
+  "clusterDestroyed": true,
+  "durableEvidenceDirectory": "reports/actor-suites/runs/2026-09-23T04-13-40.761Z-ce0c483a"
+}

@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T06-11-46.696Z-5746cd7f",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "7e6849806e3e4882e0d2bda0ecfa7d0f07c5f7f7b2b49f2351e756b2cb45cea4",
+  "selectedCount": 3,
+  "selectedPaths": [
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ],
+  "sourceStart": {
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts": {
+      "suiteSha256": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/precios.integration.test.ts": {
+      "suiteSha256": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/productos-cache.integration.test.ts": {
+      "suiteSha256": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    }
+  }
+}

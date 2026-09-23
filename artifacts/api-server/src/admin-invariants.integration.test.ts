@@ -2,6 +2,13 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
 
 const testUrl = process.env.TEST_DATABASE_URL;
 const applicationUrl = process.env.DATABASE_URL;
@@ -103,7 +110,7 @@ test("ADMIN invariants: rechazos auditados, transaccionales y sin cambios parcia
          puede_editar=excluded.puede_editar, puede_autorizar=excluded.puede_autorizar`,
     );
 
-    // The production fixtures are never deleted. Their active state is
+    // Only this disposable database's bootstrap actors can be present. Their active state is
     // restored below; limiting this window lets the HTTP requests exercise
     // the actual "last recoverable ADMIN" branch.
     const activeNonFixtures = await pool.query(

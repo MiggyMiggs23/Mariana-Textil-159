@@ -1,0 +1,101 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T05-50-33.496Z-6b2c4dea",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "94e58d2cf7671d2de4d80fa19ea372513c248a876dce1454baad52673031e6ff",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+    "artifacts/api-server/src/reportes.integration.test.ts",
+    "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+    "artifacts/api-server/src/productos-purge.integration.test.ts",
+    "artifacts/api-server/src/security-api.test.ts",
+    "artifacts/api-server/src/store-sales-global.integration.test.ts",
+    "artifacts/api-server/src/task57.integration.test.ts",
+    "artifacts/api-server/src/task58.integration.test.ts",
+    "artifacts/api-server/src/viajes.integration.test.ts"
+  ],
+  "sourceStart": {
+    "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts": {
+      "suiteSha256": "ea92128c7a0bc7702e2e6f4582ffa0cf1ae91c02a9914b8e483c7f4b62bb34b1",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/reportes.integration.test.ts": {
+      "suiteSha256": "ec654631e89b6055bcce244282342ca5620bbcfe0f25b1a3061d6931aee98861",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/role-access-matrix.integration.test.ts": {
+      "suiteSha256": "6feba1b540f67d4e9881a8d8c0d8f1a6c5d817a21b1210423145cd3fc0da853f",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/productos-purge.integration.test.ts": {
+      "suiteSha256": "283884b49ccffe76280be204018c8c8aa8cdfec91f6d369ebde441f8958ac73c",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/security-api.test.ts": {
+      "suiteSha256": "4a9437342900201efef0c9f46a82c601b9c178513d0db5c84898931d50c221ca",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/store-sales-global.integration.test.ts": {
+      "suiteSha256": "969ff66b3001395155bfa3ee47f5d6f0a4587de750161eb0e8269e4cb6523f6b",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/task57.integration.test.ts": {
+      "suiteSha256": "77d9527ccbd9d69470843f613dcf1f42da1f0256a6f2d59ee0db266f736f33de",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/task58.integration.test.ts": {
+      "suiteSha256": "cf8ff1b76feeefab0c6908685285f596886b567b7629701ecf07824c06d0e0b1",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/viajes.integration.test.ts": {
+      "suiteSha256": "8a6c96a5180bdfce105b5dd6b6856d14401a274f39e90a2aaae726296789bd77",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    }
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T06-16-57.093Z-772e0279",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "584eaa1500e13c30f26981653932672201f3267dca393d3bfa62ebeb5dcb6558",
+  "selectedCount": 6,
+  "selectedPaths": [
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/security-api.test.ts",
+    "artifacts/api-server/src/store-sales-global.integration.test.ts",
+    "artifacts/api-server/src/task57.integration.test.ts",
+    "artifacts/api-server/src/task58.integration.test.ts",
+    "artifacts/api-server/src/viajes.integration.test.ts"
+  ],
+  "sourceStart": {
+    "artifacts/api-server/src/lib/permisos.test.ts": {
+      "suiteSha256": "4c8cb01ff8b2bf05d9b54280dd95b673bae6f09c9b8c1a5e1903d2b9aa1f5971",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/security-api.test.ts": {
+      "suiteSha256": "50dd9d0cffae5e0a1622533f072a39c3ad2cdf46a772629a5ef6e03e26a78a0a",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/store-sales-global.integration.test.ts": {
+      "suiteSha256": "b42d1b751d82a8e01fb968133a7455cff33855ba8329fc9d0d34afb6106180c3",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/task57.integration.test.ts": {
+      "suiteSha256": "a0af59076153af283991dd02ec84d02ab1e0e0b81322ebbb0bdc4fd67fcf8f2c",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/task58.integration.test.ts": {
+      "suiteSha256": "49ebdd063b7008fb10a8545aef06f4ec4c9e28856177fa55f499b022b3f1259f",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/viajes.integration.test.ts": {
+      "suiteSha256": "24b23d13c9642cda1fb4e3122b7073db3fa1ebcc233079fe4c1d4672e765c6ed",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    }
+  }
+}

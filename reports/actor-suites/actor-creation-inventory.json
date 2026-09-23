@@ -1,0 +1,52 @@
+{
+  "status": "STATIC_SOURCE_REVALIDATED",
+  "count": 28,
+  "criterion": "The suite contains a real PostgreSQL/Drizzle usuarios insert callsite; in-memory AuthContext and read-only selection of a seeded user do not qualify.",
+  "groups": {
+    "grupo-1": 10,
+    "grupo-2": 9,
+    "grupo-3": 9
+  },
+  "routes": [
+    { "path": "artifacts/api-server/src/admin-alertas.integration.test.ts", "line": 76, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/admin-invariants.integration.test.ts", "line": 71, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts", "line": 55, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/auditoria.integration.test.ts", "line": 59, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/clientes-ajustes-api.test.ts", "line": 113, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/contenedores.integration.test.ts", "line": 82, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/cuadre-fiscal.integration.test.ts", "line": 61, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/equipos.integration.test.ts", "line": 76, "callsite": "insert(usuariosTable)" },
+    { "path": "artifacts/api-server/src/etiquetas-api.integration.test.ts", "line": 76, "callsite": "insert(usuariosTable)" },
+    { "path": "artifacts/api-server/src/inventory-six-view.integration.test.ts", "line": 174, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/kardex-api.test.ts", "line": 68, "callsite": "insert(usuariosTable)" },
+    { "path": "artifacts/api-server/src/lib/notificaciones-credito.test.ts", "line": 85, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/lib/permisos.test.ts", "line": 91, "callsite": "insert(usuariosTable)" },
+    { "path": "artifacts/api-server/src/metered-reference-cost.integration.test.ts", "line": 52, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/pagos-dirigidos.integration.test.ts", "line": 84, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/pos-location-authorization.integration.test.ts", "line": 112, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts", "line": 166, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/precios.integration.test.ts", "line": 64, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/productos-cache.integration.test.ts", "line": 198, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts", "line": 51, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/reportes.integration.test.ts", "line": 75, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/role-access-matrix.integration.test.ts", "line": 125, "callsite": "insert(usuariosTable)" },
+    { "path": "artifacts/api-server/src/productos-purge.integration.test.ts", "line": 94, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/security-api.test.ts", "line": 324, "callsite": "insert(usuariosTable)" },
+    { "path": "artifacts/api-server/src/store-sales-global.integration.test.ts", "line": 108, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/task57.integration.test.ts", "line": 86, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/task58.integration.test.ts", "line": 108, "callsite": "INSERT INTO usuarios" },
+    { "path": "artifacts/api-server/src/viajes.integration.test.ts", "line": 72, "callsite": "insert(usuariosTable)" }
+  ],
+  "removedFalsePositives": [
+    {
+      "path": "artifacts/api-server/src/lib/salidas.test.ts",
+      "reason": "Selects an active seeded usuarios row; it does not insert an actor."
+    },
+    {
+      "path": "artifacts/api-server/src/salidas-api.test.ts",
+      "reason": "Builds an in-memory AuthContext; it does not insert an actor."
+    }
+  ],
+  "runtimeCasesExecuted": 0,
+  "sqlExecuted": 0
+}

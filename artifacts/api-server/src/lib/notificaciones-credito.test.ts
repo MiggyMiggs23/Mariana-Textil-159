@@ -2,8 +2,15 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test, { after, before } from "node:test";
-import { ensureClientesSchema, pool } from "@workspace/db";
-import app from "../app";
+// @ts-ignore Shared preflight is a plain ESM module with no DB imports.
+import { assertActorSuiteEnvironmentSync } from "../../../../lib/db/src/actor-suite-preflight.mjs";
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") throw new Error("Actor disposable identity must be verified before DB imports.");
+const actorApplicationUrl = process.env.DATABASE_URL;
+const actorDatabase = await import("@workspace/db");
+await (await actorDatabase.createTestDatabaseGuard(actorDatabase.pool, process.env.TEST_DATABASE_URL, actorApplicationUrl)).assertIsolated();
+const { ensureClientesSchema, pool } = actorDatabase;
+const { default: app } = await import("../app");
 
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
 const enabled = process.env.NODE_ENV === "test" && Boolean(testDatabaseUrl);
@@ -62,7 +69,7 @@ async function request(
 
 before(async () => {
   if (!enabled) return;
-  if (testDatabaseUrl === process.env.DATABASE_URL) {
+  if (testDatabaseUrl === actorApplicationUrl) {
     throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
   }
   await ensureClientesSchema(pool);
@@ -216,20 +223,18 @@ test("notification endpoints preserve calendar dates, authorization, and persist
   assert.equal(listed.leidaAt, null);
 
   const readResponse = await request(
-    `/notificaciones/${notificationId}/leer`,
+    `/notificaciones/credito/${notificationId}/leer`,
     adminSession,
     { method: "POST" },
   );
   assert.equal(readResponse.status, 200);
   const marked = (await readResponse.json()) as {
     id: number;
-    fechaVencimiento: string;
-    urgente: boolean;
+    tipo: "credito";
     leidaAt: string | null;
   };
   assert.equal(marked.id, notificationId);
-  assert.equal(marked.fechaVencimiento, dueDate);
-  assert.equal(marked.urgente, true);
+  assert.equal(marked.tipo, "credito");
   assert.ok(marked.leidaAt);
 
   const persistedResponse = await request("/notificaciones", adminSession);
@@ -249,4 +254,5 @@ test("notification endpoints preserve calendar dates, authorization, and persist
   assert.equal(persisted.fechaVencimiento, dueDate);
   assert.equal(persisted.urgente, true);
   assert.ok(persisted.leidaAt);
+  assert.equal(persisted.leidaAt, marked.leidaAt);
 });

@@ -10,19 +10,47 @@ import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
 import { eq, sql } from "drizzle-orm";
-import {
+import type { RolUsuario } from "@workspace/db";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+const testUrl = process.env.TEST_DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("role access integration requires NODE_ENV=test.");
+}
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("role access integration requires the isolated database runner.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("role access integration requires explicit test and application database URLs.");
+}
+if (testUrl === applicationUrl) {
+  throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
+}
+
+const {
   db,
   pool,
   productosTable,
   rollosTable,
-  sesionesTable,
   ubicacionesTable,
   usuariosTable,
-  type RolUsuario,
   createTestDatabaseGuard,
-} from "@workspace/db";
-import app from "./app";
-import { isSupervisorSensitiveKey } from "./lib/sensitive-data";
+} = await import("@workspace/db");
+const { assertIsolated, testDatabaseName } = await createTestDatabaseGuard(
+  pool,
+  testUrl,
+  applicationUrl,
+);
+await assertIsolated();
+const expectedDatabase = decodeURIComponent(new URL(testUrl).pathname).replace(/^\/+/, "");
+assert.equal(testDatabaseName, expectedDatabase, "role access suite connected outside TEST_DATABASE_URL");
+const [{ default: app }, { isSupervisorSensitiveKey }] = await Promise.all([
+  import("./app"),
+  import("./lib/sensitive-data"),
+]);
 
 type ConfigurableRole =
   | "TERMINAL"
@@ -37,20 +65,6 @@ type HttpResponse = {
   body: unknown;
   cookie: string;
 };
-
-const testUrl = process.env.TEST_DATABASE_URL;
-if (!testUrl || process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
-  throw new Error(
-    "role access integration requires TEST_DATABASE_URL and REQUIRE_ISOLATED_TEST_DATABASE=1",
-  );
-}
-
-const { assertIsolated } = await createTestDatabaseGuard(
-  pool,
-  testUrl,
-  process.env.DATABASE_URL,
-);
-await assertIsolated();
 
 const run = `T54${randomUUID().replaceAll("-", "")}`;
 const password = "Task54Role!pass";
@@ -143,29 +157,8 @@ async function cleanup(): Promise<void> {
   if (server) {
     await new Promise<void>((resolve) => server!.close(() => resolve()));
   }
-  if (createdRolloId != null) {
-    await db.delete(rollosTable).where(eq(rollosTable.id, createdRolloId));
-  }
-  if (createdProductId != null) {
-    await db.delete(productosTable).where(eq(productosTable.id, createdProductId));
-  }
-  if (createdLocationId != null) {
-    await db.delete(ubicacionesTable).where(eq(ubicacionesTable.id, createdLocationId));
-  }
-  for (const userId of createdUserIds) {
-    await db.delete(sesionesTable).where(eq(sesionesTable.usuarioId, userId));
-    try {
-      await db.delete(usuariosTable).where(eq(usuariosTable.id, userId));
-    } catch (error) {
-      // Login attempts are append-only audit events. Their foreign key retains
-      // this disposable fixture user, which is expected on the test branch.
-      assert.equal(
-        (error as { cause?: { code?: string } }).cause?.code,
-        "23503",
-        "fixture cleanup failed for a reason other than the immutable audit log",
-      );
-    }
-  }
+  await assertIsolated();
+  await pool.end();
 }
 
 test("Task 54 Block 6: configurable roles have real HTTP access boundaries", async () => {

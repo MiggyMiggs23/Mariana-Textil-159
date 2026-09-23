@@ -1,0 +1,65 @@
+{
+  "status": "STATIC_FIX_PREPARED_NOT_RERUN",
+  "evidenceRuns": [
+    "reports/actor-suites/runs/2026-09-23T04-13-40.761Z-ce0c483a",
+    "reports/actor-suites/runs/2026-09-23T04-15-03.755Z-73ea4f6c",
+    "reports/actor-suites/runs/2026-09-23T04-16-18.123Z-bb5c8d78",
+    "reports/actor-suites/runs/2026-09-23T04-16-23.523Z-59b4cc7a",
+    "reports/actor-suites/runs/2026-09-23T04-16-31.886Z-d9f5fde0"
+  ],
+  "confirmedCleanup": {
+    "allTerminalEvidenceSaysClusterDestroyed": true
+  },
+  "commonFailures": [
+    {
+      "kind": "CONTROL_ALIAS_LOST_AFTER_DB_SINGLETON_SELECTION",
+      "observedIn": [
+        "clientes-ajustes-api.test.ts descendant workers",
+        "kardex-api.test.ts descendant workers",
+        "proveedores-alcance-fechas.integration.test.ts descendant workers",
+        "lib/notificaciones-credito.test.ts direct before hook"
+      ],
+      "cause": "@workspace/db selects TEST_DATABASE_URL for its pool and its legacy environment compatibility rewrites DATABASE_URL to the target. Descendants inherit that target alias, while direct suite checks also observe equal values.",
+      "fix": "Runner supplies APPLICATION_DATABASE_URL as a stable runner-created control alias. Every actor preload restores DATABASE_URL synchronously from it and validates both signed URLs and both live identities before suite/worker imports. Suites capture the stable control alias before selecting their target pool.",
+      "guardRelaxed": false
+    },
+    {
+      "kind": "TARGET_NAME_NOT_VISIBLY_TEST",
+      "observedIn": [
+        "contenedores.integration.test.ts"
+      ],
+      "cause": "Runner-created target names used isolated_<random>, while the suite requires a visible test/ci/e2e marker.",
+      "fix": "Every fresh target is now named isolated_test_<cryptographic-random>.",
+      "suiteRegexpRelaxed": false
+    }
+  ],
+  "regressionCorrection": {
+    "evidenceRun": "reports/actor-suites/runs/2026-09-23T05-39-33.006Z-4ceca98e",
+    "cause": "The preload forced @workspace/db into every inherited worker. A logging worker therefore repeated assertPreparedTestDatabase after the business case had legally changed canonical-admin state.",
+    "fix": "The preload retains raw target/control identity verification but no longer forces DB/readiness imports. Workers that actually import DB keep that module's own contracts.",
+    "identityGuardSkippedForWorkers": false,
+    "readinessConfusedWithMutableFixtureIdentity": false
+  },
+  "reporterV2Correction": {
+    "evidenceRuns": [
+      "reports/actor-suites/runs/2026-09-23T05-50-27.471Z-39ab9bd1",
+      "reports/actor-suites/runs/2026-09-23T05-50-33.496Z-6b2c4dea"
+    ],
+    "issues": [
+      "manifest was not persisted before parser validation",
+      "permisos hit Node test child binary IPC deserialization failure after six native terminals",
+      "security-api exposed one file terminal around 49 custom cases"
+    ],
+    "fix": "Evidence files are atomic and incremental, finally seals FAIL, each already-external per-route child uses --test-isolation=none, and exact wrapper declarations map id/title pairs to native names.",
+    "assertionsRelaxed": false,
+    "zeroTestPassAllowed": false,
+    "historicalEvidenceReconstructed": false,
+    "fullHarnessRevalidationRequired": true
+  },
+  "scope": {
+    "businessAssertionFailuresChanged": false,
+    "suiteSourcesChanged": false,
+    "runtimeCasesExecutedByThisFix": 0,
+    "sqlExecutedByThisFix": 0
+  }
+}

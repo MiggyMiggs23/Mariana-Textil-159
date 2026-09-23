@@ -2,6 +2,13 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
 
 const testUrl = process.env.TEST_DATABASE_URL;
 const appUrl = process.env.DATABASE_URL;
@@ -815,41 +822,7 @@ test("Part 1 Block 5: six HTTP views share inventory truth and scope", async () 
     }
   } finally {
     await closeServer();
-    if (ids.sessions.length) {
-      await mutate("DELETE FROM sesiones WHERE id=ANY($1::uuid[])", [ids.sessions]);
-    }
-    if (ids.movements.length) {
-      await mutate("DELETE FROM movimientos WHERE id=ANY($1::bigint[])", [ids.movements]);
-    }
-    if (ids.products.length) {
-      await mutate(
-        "DELETE FROM existencias WHERE producto_id=ANY($1::int[])",
-        [ids.products],
-      );
-    }
-    if (ids.rolls.length) {
-      await mutate("DELETE FROM rollos WHERE id=ANY($1::int[])", [ids.rolls]);
-    }
-    if (ids.floors.length) {
-      await mutate("DELETE FROM pisos WHERE id=ANY($1::int[])", [ids.floors]);
-    }
-    if (ids.users.length) {
-      await mutate(
-        "DELETE FROM auditoria WHERE usuario_id=ANY($1::int[])",
-        [ids.users],
-      );
-      await mutate(
-        "DELETE FROM permisos_usuario WHERE usuario_id=ANY($1::int[])",
-        [ids.users],
-      );
-      await mutate("DELETE FROM usuarios WHERE id=ANY($1::int[])", [ids.users]);
-    }
-    if (ids.products.length) {
-      await mutate("DELETE FROM productos WHERE id=ANY($1::int[])", [ids.products]);
-    }
-    if (ids.locations.length) {
-      await mutate("DELETE FROM ubicaciones WHERE id=ANY($1::int[])", [ids.locations]);
-    }
+    // Leave all evidence intact for cluster-owner disposal.
     await pool.end();
   }
 });

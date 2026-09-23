@@ -2,17 +2,26 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
 
 const testUrl = process.env.TEST_DATABASE_URL;
 const applicationUrl = process.env.DATABASE_URL;
 
 if (!testUrl) {
-  test.skip("admin alerts integration (TEST_DATABASE_URL not set)", () => {});
-} else if (testUrl === applicationUrl) {
+  throw new Error("Admin alerts integration requires the isolated actor runner.");
+}
+if (testUrl === applicationUrl) {
   throw new Error(
     "TEST_DATABASE_URL must differ from DATABASE_URL; refusing to mutate the application database.",
   );
-} else {
+}
+{
   test("GET /admin/alertas is live, FIFO-based, ordered, and ADMIN-only", async () => {
     const [{ pool, ensureClientesSchema }, { default: app }] = await Promise.all([
       import("@workspace/db"),
@@ -308,17 +317,7 @@ if (!testUrl) {
       if (server) {
         await new Promise<void>((resolve) => server!.close(() => resolve()));
       }
-      if (ids.notifications.length) {
-        await pool.query("DELETE FROM notificaciones_credito WHERE id=ANY($1::int[])", [
-          ids.notifications,
-        ]);
-      }
-       if (ids.salidas.length) {
-         await pool.query("DELETE FROM salidas WHERE id=ANY($1::int[])", [ids.salidas]);
-       }
-      if (ids.sessions.length) {
-        await pool.query("DELETE FROM sesiones WHERE id=ANY($1::uuid[])", [ids.sessions]);
-      }
+      // The cluster owner discards this suite's database; never delete ledger evidence.
       await pool.end();
     }
   });

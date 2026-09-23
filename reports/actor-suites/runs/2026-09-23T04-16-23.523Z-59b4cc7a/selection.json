@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-16-23.523Z-59b4cc7a",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "f09ed8a78161fedb2a2f3305b23ac4937f246daf4c451c23346c1ebb3ead71a1",
+  "selectedCount": 5,
+  "selectedPaths": [
+    "artifacts/api-server/src/contenedores.integration.test.ts",
+    "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+    "artifacts/api-server/src/equipos.integration.test.ts",
+    "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+    "artifacts/api-server/src/inventory-six-view.integration.test.ts"
+  ]
+}

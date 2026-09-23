@@ -2,8 +2,8 @@
  * HTTP/API Security Integration Tests — 29 named scenarios.
  *
  * Spins up the real Express app on an ephemeral port, exercises every
- * scenario through actual HTTP (native fetch), and tears down the server
- * plus every temporary DB row in `finally`, even on failure.
+ * scenario through actual HTTP (native fetch), and tears down the server and
+ * pool. The runner destroys the disposable cluster with all fixture evidence.
  *
  * Run:
  *   cd /home/runner/workspace/artifacts/api-server
@@ -50,11 +50,35 @@
 import assert from "node:assert/strict";
 import { createServer, type Server } from "node:http";
 import { randomUUID } from "node:crypto";
-import { and, count, eq, inArray, sql } from "drizzle-orm";
-import {
+import { after, test as nodeTest } from "node:test";
+import { and, count, eq, sql } from "drizzle-orm";
+import ExcelJS from "exceljs";
+import type { RolUsuario } from "@workspace/db";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+const testUrl = process.env.TEST_DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("security API integration requires NODE_ENV=test.");
+}
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("security API integration requires the isolated database runner.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("security API integration requires explicit test and application database URLs.");
+}
+if (testUrl === applicationUrl) {
+  throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
+}
+
+const {
   db,
+  clientesTable,
   entradasTable,
   auditoriaTable,
+  ensureCajaPermissions,
   ensureClientesSchema,
   ensureSalidasSchema,
   ensureSupervisorRole,
@@ -66,44 +90,48 @@ import {
   proveedoresTable,
   pool,
   rollosTable,
-  salidaLineasTable,
-  salidaRollosTable,
-  salidasTable,
-  sesionesCajaTable,
   sesionesTable,
   ticketLineasTable,
   ticketsTable,
   ubicacionesTable,
   usuariosTable,
-  type RolUsuario,
-} from "@workspace/db";
-import { MODULOS } from "./lib/permisos";
-import { isSupervisorSensitiveKey } from "./lib/sensitive-data";
-import { ABSOLUTE_SESSION_MS, INACTIVITY_MS } from "./middlewares/auth";
-import app from "./app";
-import { crearEntrada, crearRollo } from "./lib/inventario";
-import { formatErrorWithCauses } from "./lib/postgres-errors";
-import ExcelJS from "exceljs";
+  createTestDatabaseGuard,
+} = await import("@workspace/db");
+const { assertIsolated, testDatabaseName } = await createTestDatabaseGuard(
+  pool,
+  testUrl,
+  applicationUrl,
+);
+await assertIsolated();
+const expectedDatabase = decodeURIComponent(new URL(testUrl).pathname).replace(/^\/+/, "");
+assert.equal(testDatabaseName, expectedDatabase, "security suite connected outside TEST_DATABASE_URL");
+const [
+  { MODULOS },
+  { isSupervisorSensitiveKey },
+  { ABSOLUTE_SESSION_MS, INACTIVITY_MS },
+  { default: app },
+  { crearEntrada, crearRollo },
+] = await Promise.all([
+  import("./lib/permisos"),
+  import("./lib/sensitive-data"),
+  import("./middlewares/auth"),
+  import("./app"),
+  import("./lib/inventario"),
+]);
 
 // ─── Test Harness ──────────────────────────────────────────────────────────────
-
-let passed = 0;
-let failed = 0;
-const failures: string[] = [];
 
 async function test(name: string, fn: () => Promise<void>): Promise<void> {
   const scenarioFilter = process.env.SECURITY_SCENARIO;
   if (scenarioFilter && !name.includes(scenarioFilter)) return;
-  try {
-    await fn();
-    process.stdout.write(`  ✓ ${name}\n`);
-    passed++;
-  } catch (err) {
-    const msg = formatErrorWithCauses(err);
-    process.stdout.write(`  ✗ ${name}\n    ${msg}\n`);
-    failures.push(`${name}: ${msg}`);
-    failed++;
-  }
+  nodeTest(name, { concurrency: false }, async () => {
+    try {
+      await fn();
+    } catch (error) {
+      process.exitCode = 1;
+      throw error;
+    }
+  });
 }
 
 // ─── Ephemeral Server ──────────────────────────────────────────────────────────
@@ -115,6 +143,9 @@ async function startServer(): Promise<void> {
   await ensureSupervisorRole(pool);
   await ensureClientesSchema(pool);
   await ensureSalidasSchema(pool);
+  // Match production startup ordering: module migrations may restore legacy
+  // CAJA grants, then the final inherited CAJA baseline repairs those defaults.
+  await ensureCajaPermissions(pool);
   return new Promise((resolve, reject) => {
     server = createServer(app);
     server.listen(0, "127.0.0.1", () => {
@@ -137,7 +168,12 @@ async function stopServer(): Promise<void> {
   });
 }
 
-// ─── Tracked fixtures (cleaned up in finally) ─────────────────────────────────
+async function cleanup(): Promise<void> {
+  await assertIsolated();
+  await pool.end();
+}
+
+// ─── Tracked fixtures retained until disposable-cluster destruction ───────────
 
 const createdUserIds: number[] = [];
 const createdUbicacionIds: number[] = [];
@@ -422,6 +458,10 @@ const sharedProductoId = await mkProducto();
 const sharedRolloId = await mkRolloDisponible(seedTienda.id, sharedProductoId, testAdmin.id);
 
 await startServer();
+after(async () => {
+  await stopServer();
+  await cleanup();
+});
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -1518,6 +1558,21 @@ await test("S-09A: BODEGA stages, owns, and sends a null-cost roll in one final 
 });
 
 await test("S-09B: CAJA only lists and opens outputs received at its assigned store", async () => {
+  const cajaSalidas = await mkUser("CAJA", seedTienda.id, {
+    alcanceConsulta: "PROPIA",
+  });
+  const [salidasGrant] = await db
+    .insert(permisosUsuarioTable)
+    .values({
+      usuarioId: cajaSalidas.id,
+      modulo: "salidas",
+      puedeVer: true,
+      puedeCrear: null,
+      puedeEditar: null,
+      puedeAutorizar: null,
+    })
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(salidasGrant!.id);
   const ownBodegaLogin = await login(testBodega.usuario, testBodega.password);
   const otherBodegaLogin = await login(testBodegaOtherLoc.usuario, testBodegaOtherLoc.password);
   const stageAndSend = async (
@@ -1577,7 +1632,7 @@ await test("S-09B: CAJA only lists and opens outputs received at its assigned st
   );
   createdSalidaIds.push(inboundId);
 
-  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  const cajaLogin = await login(cajaSalidas.usuario, cajaSalidas.password);
   const listed = await api(
     "GET",
     `/salidas?destinoId=${otherTiendaId}&page=1&pageSize=100`,
@@ -1612,6 +1667,25 @@ await test("S-09B: CAJA only lists and opens outputs received at its assigned st
 // S-10: Financial proveedor routes denied by the SUPERVISOR matrix
 await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied by matrix)", async () => {
   const login_r = await login(testSupervisor.usuario, testSupervisor.password);
+  const [customer] = await db
+    .select({ id: clientesTable.id })
+    .from(clientesTable)
+    .limit(1);
+  assert.ok(customer, "seed must provide a customer for the ticket authorization gate");
+  const [ticketForAuthorization] = await db
+    .insert(ticketsTable)
+    .values({
+      folio: 1_700_000_000 + testSupervisor.id,
+      ubicacionId: seedTienda.id,
+      usuarioTerminalId: testAdmin.id,
+      clienteId: customer.id,
+      documentoTipo: "TICKET",
+      subtotal: "10.00",
+      iva: "0.00",
+      total: "10.00",
+      uuidCliente: randomUUID(),
+    })
+    .returning({ id: ticketsTable.id });
   const forbidden: Array<[string, string]> = [
     ["GET", "/proveedores/resumen"],
     ["GET", "/proveedores/analitica-global"],
@@ -1628,7 +1702,7 @@ await test("S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finan
     ["GET", "/clientes/1/pagos"],
     ["POST", "/clientes/1/pagos"],
     ["GET", "/pos/buscar"],
-    ["GET", "/tickets/1"],
+    ["GET", `/tickets/${ticketForAuthorization!.id}`],
     ["GET", "/caja/tickets"],
     // The default SUPERVISOR matrix denies resumen_caja, independently of
     // sensitive-field redaction.
@@ -2164,7 +2238,25 @@ await test("S-23A: operational locations allow TODAS selection; grouped inventor
     assert.equal(location.activa, true);
   }
 
-  const cajaLogin = await login(testCaja.usuario, testCaja.password);
+  const cajaInventario = await mkUser("CAJA", seedTienda.id, {
+    alcanceConsulta: "TODAS",
+  });
+  const [inventarioGrant] = await db
+    .insert(permisosUsuarioTable)
+    .values({
+      usuarioId: cajaInventario.id,
+      modulo: "inventario",
+      puedeVer: true,
+      puedeCrear: null,
+      puedeEditar: null,
+      puedeAutorizar: null,
+    })
+    .returning({ id: permisosUsuarioTable.id });
+  createdPermisosUsuarioIds.push(inventarioGrant!.id);
+  const cajaLogin = await login(
+    cajaInventario.usuario,
+    cajaInventario.password,
+  );
   const administrative = await api(
     "GET",
     "/locations",
@@ -2363,7 +2455,12 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   const disponibilidadBody = disponibilidadTerminal.body as Record<string, unknown>;
   assert.deepEqual(
     Object.keys(disponibilidadBody).sort(),
-    ["clienteId", "creditoDisponible", "limiteCredito", "puedeComprarCredito", "saldoComprometido"].sort(),
+    ["clienteId", "creditoDisponible", "limiteCredito", "puedeComprarCredito", "saldoAFavor", "saldoComprometido"].sort(),
+  );
+  assert.equal(
+    disponibilidadBody.saldoAFavor,
+    "0.00",
+    "A fresh client must expose the explicit zero favorable balance required by the POS contract",
   );
 
   const posViewer = await mkUser("BODEGA", seedTienda.id);
@@ -2413,6 +2510,11 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
     "POST",
     `/clientes/${clienteId}/ajustes`,
     {
+      sitioOrigenId: seedTienda.id,
+      naturaleza: "CORRECCION_CONTABLE",
+      operacionClave: randomUUID(),
+      origenJustificacion:
+        "Corrección contable propia para validar la exportación XLSX.",
       importe: 1234.56,
       motivo: "Ajuste temporal para validar exportación XLSX",
       referencia: `XLSX-${RUN}`,
@@ -2486,16 +2588,23 @@ await test("S-26: clientes_credito / clientes_precios / clientes_finanzas indepe
   );
   const clientStatementSheet = clientStatementWorkbook.getWorksheet("Estado de cuenta");
   assert.ok(clientStatementSheet);
-  assert.equal(typeof clientStatementSheet.getCell("C2").value, "number");
+  assert.equal(
+    clientStatementSheet.getCell("C2").value,
+    null,
+    "A manual adjustment has no credit-note due date",
+  );
   assert.equal(typeof clientStatementSheet.getCell("D2").value, "number");
+  assert.equal(typeof clientStatementSheet.getCell("E2").value, "number");
   const projectedBalanceRow = clientStatementSheet
     .getRows(2, Math.max(1, clientStatementSheet.rowCount - 1))
     ?.find((row) => row.getCell(2).value === "SALDO ACTUAL PROYECTADO");
   assert.ok(projectedBalanceRow);
-  assert.equal(typeof projectedBalanceRow.getCell(5).value, "number");
-  assert.equal(clientStatementSheet.getColumn(3).numFmt, '"$"#,##0.00');
+  assert.equal(typeof projectedBalanceRow.getCell(6).value, "number");
+  assert.equal(typeof projectedBalanceRow.getCell(7).value, "number");
+  assert.equal(typeof projectedBalanceRow.getCell(10).value, "number");
   assert.equal(clientStatementSheet.getColumn(4).numFmt, '"$"#,##0.00');
-  assert.equal(projectedBalanceRow.getCell(5).numFmt, '"$"#,##0.00');
+  assert.equal(clientStatementSheet.getColumn(5).numFmt, '"$"#,##0.00');
+  assert.equal(projectedBalanceRow.getCell(6).numFmt, '"$"#,##0.00');
 
   const carteraXlsx = await api(
     "GET",
@@ -3241,118 +3350,3 @@ await test("S-30A: extraordinary exits require direct ADMIN despite full salidas
     "retry must keep one reversal audit",
   );
 });
-
-// ─── Cleanup ──────────────────────────────────────────────────────────────────
-
-async function cleanup(): Promise<void> {
-  // Restore any temporarily deleted role rows
-  for (const row of deletedRolRows) {
-    try {
-      await db
-        .insert(permisosRolTable)
-        .values(row)
-        .onConflictDoUpdate({
-          target: [permisosRolTable.rol, permisosRolTable.modulo],
-          set: {
-            puedeVer: row.puedeVer,
-            puedeCrear: row.puedeCrear,
-            puedeEditar: row.puedeEditar,
-            puedeAutorizar: row.puedeAutorizar,
-          },
-        });
-    } catch { /* best effort */ }
-  }
-
-  // Delete permisos_usuario overrides
-  for (const id of createdPermisosUsuarioIds) {
-    try {
-      await db.delete(permisosUsuarioTable).where(eq(permisosUsuarioTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  // Delete any remaining overrides for created users
-  for (const userId of createdUserIds) {
-    try {
-      await db.delete(permisosUsuarioTable).where(eq(permisosUsuarioTable.usuarioId, userId));
-      await db.delete(sesionesTable).where(eq(sesionesTable.usuarioId, userId));
-    } catch { /* best effort */ }
-  }
-  try {
-    await db.delete(auditoriaTable).where(inArray(auditoriaTable.usuarioId, createdUserIds));
-  } catch { /* best effort */ }
-
-  // Delete clientes
-  for (const id of createdClienteIds) {
-    try {
-      const { clientesTable } = await import("@workspace/db");
-      await db.delete(clientesTable).where(eq(clientesTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  // Delete only suppliers created by this test run.
-  for (const id of createdProveedorIds) {
-    try {
-      await db.delete(proveedoresTable).where(eq(proveedoresTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  // Delete rollos (movimientos and existencias cascade or must be done in order)
-  for (const id of createdSalidaIds) {
-    try {
-      await db.delete(salidaRollosTable).where(eq(salidaRollosTable.salidaId, id));
-      await db.delete(salidaLineasTable).where(eq(salidaLineasTable.salidaId, id));
-      await db.delete(salidasTable).where(eq(salidasTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  for (const id of createdRolloIds) {
-    try {
-      await db.delete(movimientosTable).where(eq(movimientosTable.rolloId, id));
-    } catch { /* best effort */ }
-    try {
-      await db.delete(rollosTable).where(eq(rollosTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  // Delete entrada headers created by mkRolloDisponible after their rollos.
-  for (const id of createdEntradaIds) {
-    try {
-      await db.delete(entradasTable).where(eq(entradasTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  // Clean up existencias and movimientos for created products
-  for (const id of createdProductoIds) {
-    try {
-      await db.delete(existenciasTable).where(eq(existenciasTable.productoId, id));
-    } catch { /* best effort */ }
-    try {
-      await db.delete(movimientosTable).where(eq(movimientosTable.productoId, id));
-    } catch { /* best effort */ }
-    try {
-      await db.delete(productosTable).where(eq(productosTable.id, id));
-    } catch { /* best effort */ }
-  }
-
-  for (const id of createdSesionCajaIds) {
-    try {
-      await db.delete(sesionesCajaTable).where(eq(sesionesCajaTable.id, id));
-    } catch { /* best effort */ }
-  }
-}
-
-// ─── Summary ──────────────────────────────────────────────────────────────────
-
-await stopServer();
-await cleanup();
-
-const total = passed + failed;
-process.stdout.write(
-  `\nSecurity API tests: ${passed}/${total} passed${failed > 0 ? `, ${failed} FAILED` : ""}\n`,
-);
-if (failures.length > 0) {
-  process.stdout.write("\nFailed scenarios:\n");
-  for (const f of failures) process.stdout.write(`  • ${f}\n`);
-}
-
-if (failed > 0) process.exit(1);

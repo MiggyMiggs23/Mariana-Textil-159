@@ -2,23 +2,39 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import test from "node:test";
 import ExcelJS from "exceljs";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
 
+assertActorSuiteEnvironmentSync(process.env);
 const testUrl = process.env.TEST_DATABASE_URL;
-const applicationUrl = process.env.DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
 
 /*
  * This suite is deliberately opt-in.  Do this validation before importing the
  * pool: importing @workspace/db creates a connection using DATABASE_URL.
  */
-if (!testUrl) {
-  test.skip("reportes database integration (TEST_DATABASE_URL not set)", () => {});
-} else {
-  if (testUrl === applicationUrl) {
-    throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL; refusing to mutate the application database.");
-  }
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("reportes integration requires NODE_ENV=test.");
+}
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("reportes integration requires the isolated database runner.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("reportes integration requires explicit test and application database URLs.");
+}
+if (testUrl === applicationUrl) {
+  throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL; refusing to mutate the application database.");
+}
+{
   test("reportes build committed, isolated decision reports", async (t) => {
-    const [{ pool }, reports, sales, inventory, commercial, { requierePermiso }, { toExcelNumber }, { loadCustomerCreditProjection }] = await Promise.all([
-      import("@workspace/db"),
+    const { pool, createTestDatabaseGuard } = await import("@workspace/db");
+    const { assertIsolated } = await createTestDatabaseGuard(
+      pool,
+      testUrl,
+      applicationUrl,
+    );
+    await assertIsolated();
+    const [reports, sales, inventory, commercial, { requierePermiso }, { toExcelNumber }, { loadCustomerCreditProjection }] = await Promise.all([
       import("./lib/reportes"),
       import("./lib/reportes-sales"),
       import("./lib/reportes-inventory"),
@@ -27,13 +43,6 @@ if (!testUrl) {
       import("@workspace/number-format"),
       import("./lib/credit-aging-read-model"),
     ]);
-    const { createTestDatabaseGuard } = await import("@workspace/db");
-    const { assertIsolated } = await createTestDatabaseGuard(
-      pool,
-      testUrl,
-      applicationUrl,
-    );
-    await assertIsolated();
     const tag = `RPI-${randomUUID()}`;
     const ids = { sites: [] as number[], users: [] as number[], clients: [] as number[], suppliers: [] as number[],
       products: [] as number[], entries: [] as number[], rolls: [] as number[], tickets: [] as number[],
@@ -247,7 +256,12 @@ if (!testUrl) {
         assert.ok(colorHeatmap.rows.every((row: any) => typeof row.label === "string"));
         assert.ok(colorHeatmap.series.every((series: any) => series.kind === "quantity"));
         const heatmaps = heat.charts as any[];
-        assert.equal(heatmaps.length, 4);
+        // The monthly color chart was intentionally removed; color analysis is
+        // exposed by the dedicated color report instead.
+        assert.deepEqual(
+          heatmaps.map((chart) => chart.id),
+          ["mes-producto", "mes-tela", "mes-sitio"],
+        );
         assert.ok(heatmaps.every(chart =>
           chart.categoryKey === "label" &&
           chart.series.length >= 12 &&

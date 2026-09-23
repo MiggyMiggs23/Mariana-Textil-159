@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T06-21-02.689Z-562fac1c",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "2eb7b2b771ce740f99196061674f61a357f5b6132d8625d0080df0596934a4fe",
+  "selectedCount": 2,
+  "selectedPaths": [
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/security-api.test.ts"
+  ],
+  "sourceStart": {
+    "artifacts/api-server/src/lib/permisos.test.ts": {
+      "suiteSha256": "592cf006f3a6a481783f916760b72a66f6013db24313b12f144073d9ffd0bdfc",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/security-api.test.ts": {
+      "suiteSha256": "a841b845495720fdeece37629265b6b3624edd106ac6c461ddce987eac2fa1a9",
+      "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    }
+  }
+}

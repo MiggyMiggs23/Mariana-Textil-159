@@ -4,7 +4,19 @@ import { createServer, type Server } from "node:http";
 import test, { after, before } from "node:test";
 import ExcelJS from "exceljs";
 import { inArray, sql } from "drizzle-orm";
-import {
+import type { RolUsuario } from "@workspace/db";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
+
+if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
+  throw new Error("Etiquetas integration requiere NODE_ENV=test y TEST_DATABASE_URL.");
+}
+const {
   db,
   ensureEtiquetasSchema,
   entradasTable,
@@ -16,17 +28,13 @@ import {
   sesionesTable,
   ubicacionesTable,
   usuariosTable,
-  type RolUsuario,
-} from "@workspace/db";
-import app from "./app";
-
-if (process.env.NODE_ENV !== "test" || !process.env.TEST_DATABASE_URL) {
-  throw new Error("Etiquetas integration requiere NODE_ENV=test y TEST_DATABASE_URL.");
-}
+} = await import("@workspace/db");
+const { default: app } = await import("./app");
 // @workspace/db refuses to initialize test files when TEST_DATABASE_URL is
 // missing or equals the original DATABASE_URL, before exporting this pool.
 
-const run = `ETQ-${randomUUID()}`;
+// Free-text fixtures must not end in 7–8 digits recognized as a scanned series.
+const run = `ETQ-${randomUUID()}-TEXT`;
 const password = "Etiquetas-Test-2026!";
 const created = {
   locations: [] as number[],
@@ -251,33 +259,8 @@ after(async () => {
       );
     }
   } finally {
-    try {
-      if (created.rolls.length) {
-        await db.transaction(async (tx) => {
-          await tx.execute(sql`SET LOCAL app.etiquetas_cleanup = 'on'`);
-          await tx
-            .delete(reimpresionesEtiquetaTable)
-            .where(inArray(reimpresionesEtiquetaTable.rolloId, created.rolls));
-        });
-        await db.delete(rollosTable).where(inArray(rollosTable.id, created.rolls));
-      }
-      if (created.entries.length)
-        await db.delete(entradasTable).where(inArray(entradasTable.id, created.entries));
-      if (created.sessions.length)
-        await db.delete(sesionesTable).where(inArray(sesionesTable.id, created.sessions));
-      if (created.users.length) {
-        await db
-          .delete(permisosUsuarioTable)
-          .where(inArray(permisosUsuarioTable.usuarioId, created.users));
-        await db.delete(usuariosTable).where(inArray(usuariosTable.id, created.users));
-      }
-      if (created.products.length)
-        await db.delete(productosTable).where(inArray(productosTable.id, created.products));
-      if (created.locations.length)
-        await db.delete(ubicacionesTable).where(inArray(ubicacionesTable.id, created.locations));
-    } finally {
-      await pool.end();
-    }
+    // No append-only bypass: cluster owner disposes the entire private database.
+    await pool.end();
   }
 });
 

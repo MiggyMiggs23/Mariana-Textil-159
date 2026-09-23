@@ -2,11 +2,20 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import test from "node:test";
 import { sql } from "drizzle-orm";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
 
+assertActorSuiteEnvironmentSync(process.env);
 const testUrl = process.env.TEST_DATABASE_URL;
-const applicationUrl = process.env.DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
 
-if (!testUrl) throw new Error("Task 57 integration requiere TEST_DATABASE_URL explícita.");
+if (process.env.NODE_ENV !== "test") throw new Error("Task 57 integration requiere NODE_ENV=test.");
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("Task 57 integration requiere el runner de base aislada.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("Task 57 integration requiere URLs explícitas de prueba y aplicación.");
+}
 if (testUrl === applicationUrl) {
   throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
 }
@@ -21,17 +30,13 @@ function databaseNameFromUrl(value: string): string {
 
 test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB aislada", async () => {
   const expectedDatabase = databaseNameFromUrl(testUrl!);
-  const [
-    { db, pool, ensureAuditSchema, ensureAuditoriaInventarioSchema, createTestDatabaseGuard },
-    inventoryAudit,
-    inventoryEngine,
-    purge,
-  ] = await Promise.all([
-    import("@workspace/db"),
-    import("./lib/auditoria-inventario"),
-    import("./lib/inventario"),
-    import("./lib/purga-catalogos"),
-  ]);
+  const {
+    db,
+    pool,
+    ensureAuditSchema,
+    ensureAuditoriaInventarioSchema,
+    createTestDatabaseGuard,
+  } = await import("@workspace/db");
   const { assertIsolated } = await createTestDatabaseGuard(pool, testUrl, applicationUrl);
   await assertIsolated();
   assert.equal(
@@ -39,6 +44,11 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
     expectedDatabase,
     "la conexión de prueba debe coincidir con el pathname de TEST_DATABASE_URL",
   );
+  const [inventoryAudit, inventoryEngine, purge] = await Promise.all([
+    import("./lib/auditoria-inventario"),
+    import("./lib/inventario"),
+    import("./lib/purga-catalogos"),
+  ]);
   await Promise.all([ensureAuditSchema(pool), ensureAuditoriaInventarioSchema(pool)]);
 
   const tag = `T57-${randomUUID()}`;
@@ -74,7 +84,7 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
     ids.locations.push(Number(location.id), Number(otherLocation.id));
     const actor = await one(
       `INSERT INTO usuarios(nombre,usuario,password_hash,rol,ubicacion_id,activo,alcance_consulta)
-       VALUES($1,$2,'integration-only','ADMIN',$3,true,'TODAS') RETURNING id`,
+       VALUES($1,$2,crypt('Task57-Admin-Test!',gen_salt('bf',8)),'ADMIN',$3,true,'TODAS') RETURNING id`,
       [`${tag} actor`, `${tag.toLowerCase()}-actor`, location.id],
     );
     const purgeTarget = await one(
@@ -228,23 +238,50 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
     );
 
     const activePreflight = await purge.getPurgaPreflight("productos", Number(activeProduct.id));
-    assert.equal(activePreflight.puedeEliminar, false);
+    assert.equal(activePreflight.puedeEliminar, true);
+    assert.equal(activePreflight.totalReferencias, 0);
     await assert.rejects(
       () => purge.purgeInactiveRecord({
         entidad: "productos", id: Number(activeProduct.id),
         actorId: Number(actor.id), ip: "127.0.0.1",
       }),
-      /inactivos/,
+      { message: "Se requiere usuario y contraseña de un ADMIN activo." },
     );
+    const productPurge = {
+      entidad: "productos" as const, id: Number(activeProduct.id),
+      actorId: Number(actor.id), ip: "127.0.0.1",
+      adminUsuario: `${tag.toLowerCase()}-actor`,
+    };
+    await assert.rejects(
+      () => purge.purgeInactiveRecord({ ...productPurge, adminPassword: "Incorrecta!" }),
+      { message: "Las credenciales no son válidas o el usuario no es un ADMIN activo." },
+    );
+    assert.equal((await pool.query("SELECT activo FROM productos WHERE id=$1", [activeProduct.id])).rows[0]?.activo, true);
+    assert.equal((await pool.query(
+      "SELECT count(*)::int n FROM auditoria WHERE accion='PURGAR' AND entidad='productos' AND entidad_id=$1",
+      [String(activeProduct.id)],
+    )).rows[0]?.n, 0);
+    await purge.purgeInactiveRecord({ ...productPurge, adminPassword: "Task57-Admin-Test!" });
+    assert.equal((await pool.query("SELECT 1 FROM productos WHERE id=$1", [activeProduct.id])).rowCount, 0);
+    assert.equal((await pool.query(
+      "SELECT count(*)::int n FROM auditoria WHERE accion='PURGAR' AND entidad='productos' AND entidad_id=$1",
+      [String(activeProduct.id)],
+    )).rows[0]?.n, 1);
     const referencedPreflight = await purge.getPurgaPreflight("productos", Number(referencedProduct.id));
     assert.equal(referencedPreflight.puedeEliminar, false);
     assert.ok(referencedPreflight.totalReferencias > 0);
+    assert.ok(
+      referencedPreflight.motivoBloqueo?.includes(
+        "El producto tiene historial operativo y no puede borrarse. Desactívalo para conservar tickets, kardex, documentos y reportes históricos.",
+      ),
+    );
     await assert.rejects(
       () => purge.purgeInactiveRecord({
         entidad: "productos", id: Number(referencedProduct.id),
         actorId: Number(actor.id), ip: "127.0.0.1",
+        adminUsuario: productPurge.adminUsuario, adminPassword: "Task57-Admin-Test!",
       }),
-      /referencias/,
+      { message: referencedPreflight.motivoBloqueo! },
     );
 
     const purgePreflight = await purge.getPurgaPreflight("usuarios", Number(purgeTarget.id));
@@ -267,18 +304,15 @@ test("Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB
 
 test("Task 57: caja diaria serializa aperturas y descuenta salidas una vez", async () => {
   const expectedDatabase = databaseNameFromUrl(testUrl!);
-  const [
-    {
-      db,
-      pool,
-      ensureAuditSchema,
-      ensureCashSessionSchema,
-      ensureTicketIvaSchema,
-      ensureTicketLineTypesSchema,
-      createTestDatabaseGuard,
-    },
-    pos,
-  ] = await Promise.all([import("@workspace/db"), import("./lib/pos")]);
+  const {
+    db,
+    pool,
+    ensureAuditSchema,
+    ensureCashSessionSchema,
+    ensureTicketIvaSchema,
+    ensureTicketLineTypesSchema,
+    createTestDatabaseGuard,
+  } = await import("@workspace/db");
   const { assertIsolated } = await createTestDatabaseGuard(pool, testUrl, applicationUrl);
   await assertIsolated();
   assert.equal(
@@ -286,6 +320,7 @@ test("Task 57: caja diaria serializa aperturas y descuenta salidas una vez", asy
     expectedDatabase,
     "caja debe seguir conectada a la base indicada por TEST_DATABASE_URL",
   );
+  const pos = await import("./lib/pos");
   await Promise.all([
     ensureAuditSchema(pool),
     ensureCashSessionSchema(pool),
@@ -408,14 +443,7 @@ test("Task 57: caja diaria serializa aperturas y descuenta salidas una vez", asy
     );
   } finally {
     await assertIsolated();
-    // Caja fixtures may be removed; audit is append-only and is deliberately untouched.
-    if (mainSessionId != null) await pool.query(`DELETE FROM salidas_dinero_caja WHERE sesion_caja_id=$1`, [mainSessionId]);
-    if (otherSessionId != null) await pool.query(`DELETE FROM salidas_dinero_caja WHERE sesion_caja_id=$1`, [otherSessionId]);
-    if (mainSessionId != null) await pool.query(`DELETE FROM sesiones_caja_dias WHERE sesion_caja_id=$1`, [mainSessionId]);
-    if (otherSessionId != null) await pool.query(`DELETE FROM sesiones_caja_dias WHERE sesion_caja_id=$1`, [otherSessionId]);
-    await pool.query(`DELETE FROM sesiones_caja WHERE id = ANY($1::int[])`, [[mainSessionId, otherSessionId].filter((id): id is number => id != null)]);
-    if (otherLocationId != null) await pool.query(`DELETE FROM ubicaciones WHERE id=$1`, [otherLocationId]);
-    await pool.query(`DELETE FROM proveedores WHERE nombre=$1`, [`${tag} proveedor inactivo`]);
+    // The runner destroys the complete disposable cluster, including append-only audit evidence.
     await pool.end();
   }
 });

@@ -1,0 +1,68 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "scope": "ADAPTACION_28_SHARED_INFRASTRUCTURE",
+  "manifest": {
+    "count": 28,
+    "groups": {
+      "grupo-1": 10,
+      "grupo-2": 9,
+      "grupo-3": 9
+    },
+    "implicitDiscovery": false,
+    "emptySelectionAllowed": false,
+    "explicitContinuation": true
+  },
+  "database": {
+    "provider": "PostgreSQL 16 local disposable",
+    "parentDatabaseUrlsAllowed": false,
+    "target": "fresh runner-created unique database per suite",
+    "control": "real reachable postgres database in the same disposable cluster",
+    "targetAndControlMustDiffer": true,
+    "freshTargetPerSuite": true,
+    "stableSignedControlAlias": "APPLICATION_DATABASE_URL local disposable control only",
+    "targetNamePattern": "isolated_test_<cryptographic-random>",
+    "actorSeedCredential": "cryptographically-random-ephemeral-per-target",
+    "inheritedAdminSeedCredentialReadOrCopied": false,
+    "tcpListening": false,
+    "clusterOwnerCleanup": true
+  },
+  "ordering": [
+    "synchronous environment, binary, manifest and path preflight",
+    "dynamic pg import",
+    "disposable cluster, real control database and first fresh target",
+    "target and control database identity comparison",
+    "per-route canonical schema, seed and startup initializers",
+    "per-route identity reconfirmation",
+    "per-route child synchronous actor preflight",
+    "per-route child target/control identity guard",
+    "per-route dynamic tsx registration",
+    "one explicit suite import per fresh child",
+    "pool/server close",
+    "cluster destruction in finally",
+    "durable terminal evidence"
+  ],
+  "preflight": {
+    "nodeCheck": "PASS",
+    "manifestStatic": "PASS_28",
+    "groupCardinality": "10_9_9",
+    "postgres16Binaries": "PASS",
+    "pgUnixSocketUrlStaticParse": "PASS_NO_CONNECTION",
+    "syncActorEnvironment": "PASS_SYNTHETIC_NO_DB",
+    "signedControlAliasRestore": "PASS_SYNTHETIC_NO_DB",
+    "dbSourceOnlyRootFiles": 87,
+    "dbSourceOnlyDiagnostics": 0,
+    "diffCheck": "PASS",
+    "integrationCasesExecuted": 0,
+    "sqlExecuted": 0,
+    "databaseStarted": false,
+    "applicationImported": false
+  },
+  "sourceSha256": {
+    "lib/db/src/run-isolated-tests.mjs": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+    "lib/db/src/lib/test-database-guard.ts": "ffd9f8244e7845db67c0ce8db9a938c764912d4054beea707120589e390f25e0",
+    "lib/db/src/actor-suite-manifest.mjs": "e525c36e319aa2cc6d3f9775d8245dc898b4757e2662f90b8789081a3047941e",
+    "lib/db/src/actor-suite-preflight.mjs": "557f95d6bac39793045ab97489b9b0f716e74f11d9b9e2e5754142c296983b6a",
+    "lib/db/src/actor-suite-bootstrap.mjs": "39b6d04e047e4b4668ed0aa3d5461ef6ca081b4a33d5b4d971a4d0cef5a4443e",
+    "reports/actor-suites/contrato.md": "b69639aca13cef3a2f77ab226e63653a45924f12334c5ecd19dfe4fcaa999cf2"
+  }
+}

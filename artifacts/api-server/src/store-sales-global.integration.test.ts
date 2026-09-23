@@ -3,12 +3,21 @@ import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
 import { omitSupervisorSensitiveFields } from "./lib/sensitive-data";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
 
+assertActorSuiteEnvironmentSync(process.env);
 const testUrl = process.env.TEST_DATABASE_URL;
-const applicationUrl = process.env.DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
 
-if (!testUrl || process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("store-sales-global integration requires NODE_ENV=test.");
+}
+if (!testUrl || !applicationUrl || process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
   throw new Error("store-sales-global integration requires TEST_DATABASE_URL and REQUIRE_ISOLATED_TEST_DATABASE=1.");
+}
+if (testUrl === applicationUrl) {
+  throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
 }
 
 function databaseNameFromUrl(value: string): string {
@@ -121,10 +130,14 @@ test("store sales global reports isolated sold-line hierarchy and enforces scope
     const createdAt = new Date("2025-01-10T18:00:00.000Z");
     const addTicket = async (total: number, state: "VENDIDO" | "CANCELADO", credit = false) => one(
       `INSERT INTO tickets(folio,ubicacion_id,usuario_terminal_id,cliente_id,subtotal,iva,total,estado,cobrado,
-        credito,dias_plazo,fecha_vencimiento,uuid_cliente,created_at)
-       VALUES($1,$2,$3,$4,$5,0,$5,$6,$7,$8,$9,$10,$11,$12) RETURNING id`,
-      [++folio, store.id, admin.id, client.id, total, state, credit, credit,
-        credit ? 30 : null, credit ? "2025-02-09" : null, randomUUID(), createdAt],
+        credito,dias_plazo,fecha_vencimiento,uuid_cliente,created_at,
+        documento_tipo,cobrado_at,autorizado_at,autorizacion_estado,autorizado_por)
+       VALUES($1,$2,$3,$4,$5,0,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING id`,
+      // Financial reporting uses Caja processing, not operational creation time.
+      [++folio, store.id, admin.id, client.id, total, state, !credit, credit,
+        credit ? 30 : null, credit ? "2025-02-09" : null, randomUUID(), createdAt,
+        credit ? "NOTA" : "TICKET", credit ? null : createdAt,
+        credit ? createdAt : null, credit ? "AUTORIZADA" : "NO_APLICA", credit ? admin.id : null],
     );
     const creditTicket = await addTicket(160, "VENDIDO", true);
     const kiloTicket = await addTicket(50, "VENDIDO");

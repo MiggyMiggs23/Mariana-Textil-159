@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T05-39-22.188Z-644611c8",
+  "status": "FAIL",
+  "selectionSha256": "ed8828fd8445d4af3e841c4986b1c2e7a19f602a84cf512d2ad5940b72cc2d88",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/kardex-api.test.ts",
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ],
+  "completedCount": 2,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/kardex-api.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "targetDatabaseSha256": "f8aed9d687f5b30161c7b69ec4c8a7933e5e3f7486cad6cc4aeff8e1fe8a7f6d",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "30bb58235e99ee361df5d2082ec66d01fd8e13e57e79199b22bf4420330b8ab2",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "c5e12228924218d3a2498190268de088efaf715de50a1bb6d2c2f08f8cfd9a77",
+      "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "5ed9f97ecfe34442827aa34a06b1c9223614005f798eb1a2454e8fa7711dfc8c",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

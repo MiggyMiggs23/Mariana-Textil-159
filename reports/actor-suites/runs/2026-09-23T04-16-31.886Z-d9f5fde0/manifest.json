@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-16-31.886Z-d9f5fde0",
+  "status": "FAIL",
+  "selectionSha256": "770f5d44932df8ba6aac4221a19e686c6bde52c2b299766c523e8521fe46e9ea",
+  "selectedCount": 8,
+  "selectedPaths": [
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ],
+  "completedCount": 1,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "0504edd69d1489f5187ceb083cedee52e55dd0fcd90fd3351a6108e608b2da1b",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "b7b42f4e0988afbe79658de880232138ec66cce7102e11327503a86febdfce0d",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

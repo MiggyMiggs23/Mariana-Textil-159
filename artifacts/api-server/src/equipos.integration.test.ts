@@ -3,7 +3,20 @@ import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
 import { eq, sql } from "drizzle-orm";
-import {
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
+const testUrl = process.env.TEST_DATABASE_URL;
+if (!testUrl || process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error(
+    "equipos integration requires explicit TEST_DATABASE_URL and REQUIRE_ISOLATED_TEST_DATABASE=1",
+  );
+}
+const {
   auditoriaTable,
   db,
   ensureEquiposSchema,
@@ -11,15 +24,8 @@ import {
   pool,
   ubicacionesTable,
   usuariosTable,
-} from "@workspace/db";
-import app from "./app";
-
-const testUrl = process.env.TEST_DATABASE_URL;
-if (!testUrl || process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
-  throw new Error(
-    "equipos integration requires explicit TEST_DATABASE_URL and REQUIRE_ISOLATED_TEST_DATABASE=1",
-  );
-}
+} = await import("@workspace/db");
+const { default: app } = await import("./app");
 const identity = await db.execute<{ database: string }>(
   sql`select current_database() as database`,
 );
@@ -379,5 +385,6 @@ test("equipment scope, derived active state, attribution and edit denial", async
     await new Promise<void>((resolve, reject) =>
       server?.close((error) => (error ? reject(error) : resolve())),
     );
+    await pool.end();
   }
 });

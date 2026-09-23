@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T05-39-23.525Z-ed1faaf4",
+  "status": "FAIL",
+  "selectionSha256": "94e58d2cf7671d2de4d80fa19ea372513c248a876dce1454baad52673031e6ff",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+    "artifacts/api-server/src/reportes.integration.test.ts",
+    "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+    "artifacts/api-server/src/productos-purge.integration.test.ts",
+    "artifacts/api-server/src/security-api.test.ts",
+    "artifacts/api-server/src/store-sales-global.integration.test.ts",
+    "artifacts/api-server/src/task57.integration.test.ts",
+    "artifacts/api-server/src/task58.integration.test.ts",
+    "artifacts/api-server/src/viajes.integration.test.ts"
+  ],
+  "completedCount": 2,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "targetDatabaseSha256": "5cf9359ab57c6ed8f32d2c7c267977b46088b4b6a039f27463c94d17a2600631",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "4e42919278563b3ffe06f9ab7152e24ebe27f1af8f6334eb74507b092ec9897c",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/reportes.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "7b9004f8fb1eb2faff52f8ef96029239ca5b397ba92ab1d225fde11a9469327f",
+      "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "c72f068b181306ebfe624202a7888e0c06c61b6e0d6b2d1e2b3c7ba16452f5ee",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

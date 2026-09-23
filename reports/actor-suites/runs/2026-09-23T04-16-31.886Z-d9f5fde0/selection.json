@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-16-31.886Z-d9f5fde0",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "770f5d44932df8ba6aac4221a19e686c6bde52c2b299766c523e8521fe46e9ea",
+  "selectedCount": 8,
+  "selectedPaths": [
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ]
+}

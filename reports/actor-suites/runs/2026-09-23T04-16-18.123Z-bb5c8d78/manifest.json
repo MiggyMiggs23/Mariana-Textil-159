@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "runId": "2026-09-23T04-16-18.123Z-bb5c8d78",
+  "status": "FAIL",
+  "selectionSha256": "94e58d2cf7671d2de4d80fa19ea372513c248a876dce1454baad52673031e6ff",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+    "artifacts/api-server/src/reportes.integration.test.ts",
+    "artifacts/api-server/src/role-access-matrix.integration.test.ts",
+    "artifacts/api-server/src/productos-purge.integration.test.ts",
+    "artifacts/api-server/src/security-api.test.ts",
+    "artifacts/api-server/src/store-sales-global.integration.test.ts",
+    "artifacts/api-server/src/task57.integration.test.ts",
+    "artifacts/api-server/src/task58.integration.test.ts",
+    "artifacts/api-server/src/viajes.integration.test.ts"
+  ],
+  "completedCount": 1,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts",
+      "status": "FAIL",
+      "exitCode": 1,
+      "targetDatabaseSha256": "9b8921dd91a4671340e3a35ed9ba10f58519d0f92b8e340131a1aa41c50c310d",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "229977eba079570bf629373296848065e5c58cb7bae579220e0b7a9cea10af13",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ]
+}

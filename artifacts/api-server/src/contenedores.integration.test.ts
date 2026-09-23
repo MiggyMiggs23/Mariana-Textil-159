@@ -2,6 +2,13 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
 
 const originalDatabaseUrl = process.env.DATABASE_URL;
 const testDatabaseUrl = process.env.TEST_DATABASE_URL;
@@ -449,38 +456,7 @@ test("isolated live contenedores HTTP and transaction matrix", async (t) => {
         server!.close((error) => (error ? reject(error) : resolve())),
       );
     }
-    // Cleanup is ID/tag-scoped and ordered from transactional children outward.
-    if (created.users.length) {
-      await pool.query(
-        `DELETE FROM movimientos WHERE usuario_id=ANY($1::int[])
-          OR rollo_id IN (SELECT id FROM rollos WHERE recepcion_id IN
-            (SELECT id FROM entradas WHERE usuario_id=ANY($1::int[])))`,
-        [created.users],
-      );
-      await pool.query(
-        `DELETE FROM existencias WHERE ubicacion_id=ANY($1::int[])
-          AND producto_id=ANY($2::int[])`,
-        [created.sites, created.products],
-      );
-      await pool.query(
-        `DELETE FROM rollos WHERE recepcion_id IN
-          (SELECT id FROM entradas WHERE usuario_id=ANY($1::int[]))`,
-        [created.users],
-      );
-      await pool.query("UPDATE contenedores SET entrada_id=NULL,estado='EN_TRANSITO',fecha_real_llegada=NULL WHERE usuario_id=ANY($1::int[])", [created.users]);
-      await pool.query(
-        `DELETE FROM pagos_proveedor WHERE entrada_id IN
-          (SELECT id FROM entradas WHERE usuario_id=ANY($1::int[]))`,
-        [created.users],
-      );
-      await pool.query("DELETE FROM entradas WHERE usuario_id=ANY($1::int[])", [created.users]);
-      await pool.query("DELETE FROM contenedores WHERE usuario_id=ANY($1::int[])", [created.users]);
-      await pool.query("DELETE FROM sesiones WHERE usuario_id=ANY($1::int[])", [created.users]);
-      await pool.query("DELETE FROM permisos_usuario WHERE usuario_id=ANY($1::int[])", [created.users]);
-    }
-    if (created.products.length)
-      await pool.query("DELETE FROM productos WHERE id=ANY($1::int[])", [created.products]);
-    if (created.providers.length)
-      await pool.query("DELETE FROM proveedores WHERE id=ANY($1::int[])", [created.providers]);
+    // The cluster owner discards this suite's database, including append-only evidence.
+    await pool.end();
   }
 });

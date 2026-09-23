@@ -2,28 +2,45 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
 
+assertActorSuiteEnvironmentSync(process.env);
 const testUrl = process.env.TEST_DATABASE_URL;
-const appUrl = process.env.DATABASE_URL;
+const appUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
 
-if (!testUrl) {
-  test.skip("product purge integration requires explicit TEST_DATABASE_URL", () => {});
-} else if (testUrl === appUrl) {
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("product purge integration requires NODE_ENV=test.");
+}
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("product purge integration requires the isolated database runner.");
+}
+if (!testUrl || !appUrl) {
+  throw new Error("product purge integration requires explicit test and application database URLs.");
+}
+if (testUrl === appUrl) {
   throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
-} else {
+}
+{
   test("producto solo se borra sin existencia ni historia y su SKU queda reservado", async () => {
+    const { pool, db, createTestDatabaseGuard } = await import("@workspace/db");
+    const { assertIsolated, testDatabaseName } = await createTestDatabaseGuard(
+      pool,
+      testUrl,
+      appUrl,
+    );
+    await assertIsolated();
+    const expectedDb = decodeURIComponent(new URL(testUrl).pathname).replace(/^\/+/, "");
+    assert.equal(testDatabaseName, expectedDb, "TEST_DATABASE_URL database identity changed");
     const [
-      { pool, db },
       { default: app },
-      { crearRollo },
+      { crearEntrada },
       { crearTicket },
     ] = await Promise.all([
-      import("@workspace/db"),
       import("./app"),
       import("./lib/inventario"),
       import("./lib/pos"),
     ]);
-    const expectedDb = decodeURIComponent(new URL(testUrl).pathname.slice(1));
     const tag = `PURGE-${randomUUID()}`;
     const session = randomUUID();
     const confirmingUsername = `purge.admin.${randomUUID()}`.toLowerCase();
@@ -332,16 +349,26 @@ if (!testUrl) {
          VALUES($1,$2,$3,'METRO','30.00') RETURNING id`,
         [`${tag}-MOVED`, `${tag} Vendido`, "Verde"],
       );
-      const soldRoll = await db.transaction((tx) =>
-        crearRollo(tx, {
-          productoId: Number(movedProduct.rows[0].id),
+      const supplier = await mutate(
+        `INSERT INTO proveedores(nombre,tipo,activo)
+         VALUES($1,'NACIONAL',true) RETURNING id`,
+        [`${tag} Proveedor trazable`],
+      );
+      const entry = await db.transaction((tx) =>
+        crearEntrada(tx, {
           ubicacionId: location.rows[0].id,
-          cantidadInicial: "10.000",
-          costoUnitario: "15.00",
+          proveedorId: Number(supplier.rows[0].id),
           usuarioId: admin.rows[0].id,
-          estado: "DISPONIBLE",
+          ip: "127.0.0.1",
+          uuidCliente: randomUUID(),
+          lineas: [{
+            productoId: Number(movedProduct.rows[0].id),
+            costoUnitario: "15.00",
+            cantidades: ["10.000"],
+          }],
         }),
       );
+      const soldRoll = entry.rollos[0]!;
       const soldTicket = await db.transaction((tx) =>
         crearTicket(
           tx,
@@ -353,7 +380,7 @@ if (!testUrl) {
             uuidCliente: randomUUID(),
             lineas: [
               {
-                rolloId: soldRoll.rollo.id,
+                rolloId: soldRoll.id,
                 productoId: Number(movedProduct.rows[0].id),
                 tipo: "NORMAL",
                 cantidad: "10.000",
@@ -489,7 +516,8 @@ if (!testUrl) {
       if (server) {
         await new Promise<void>((resolve) => server!.close(() => resolve()));
       }
-      await mutate("DELETE FROM sesiones WHERE id=$1", [session]);
+      await assertIsolated();
+      await pool.end();
     }
   });
 }

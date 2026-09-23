@@ -8,17 +8,25 @@ import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import { Readable } from "node:stream";
 import test, { after, before } from "node:test";
-import { db, ensureClientesSchema, pool } from "@workspace/db";
-import {
+import type { PrivateObjectStorageAdapter } from "./lib/private-object-storage";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
+
+const { db, ensureClientesSchema, pool } = await import("@workspace/db");
+const {
   ADVISORY_LOCK_NAMESPACES,
   transactionAdvisoryLock,
-} from "@workspace/db/advisory-locks";
-import app from "./app";
-import {
+} = await import("@workspace/db/advisory-locks");
+const { default: app } = await import("./app");
+const {
   setPrivateObjectStorageForTests,
-  type PrivateObjectStorageAdapter,
-} from "./lib/private-object-storage";
-import { loadCustomerCreditProjection, loadCustomerCreditProjections } from "./lib/credit-aging-read-model";
+} = await import("./lib/private-object-storage");
+const { loadCustomerCreditProjection, loadCustomerCreditProjections } = await import("./lib/credit-aging-read-model");
 
 const RUN = `clientes-ajustes-${Date.now()}`;
 let server: Server;
@@ -31,6 +39,7 @@ let adminCookie = "";
 let terminalCookie = "";
 const clientIds: number[] = [];
 const objects = new Map<string, Buffer>();
+const originalPrivateObjectDir = process.env.PRIVATE_OBJECT_DIR;
 
 const memoryStorage: PrivateObjectStorageAdapter = {
   async save(path, body) { objects.set(path, Buffer.from(body)); },
@@ -74,6 +83,8 @@ async function credit(clientId: number, amount: string, due: string | null) {
 
 before(async () => {
   await ensureClientesSchema(pool);
+  // Only the memory transport below uses this inert, local object namespace.
+  process.env.PRIVATE_OBJECT_DIR = `/actor-suite-memory/${RUN}`;
   setPrivateObjectStorageForTests(memoryStorage);
   const location = await pool.query(
     `WITH candidate AS (
@@ -269,6 +280,29 @@ test("resúmenes y baja usan aging ante reverso de ticket y ABONO revertido", as
 
 test("crearTicket y baja se serializan con el mismo lock de cliente", async () => {
   const id = await createClient("concurrent");
+  const provider = await pool.query(
+    `INSERT INTO proveedores(nombre,tipo,moneda_default,activo)
+     VALUES($1,'NACIONAL','MXN',true) RETURNING id`, [`${RUN} source provider`],
+  );
+  const entry = await pool.query(
+    `INSERT INTO entradas(folio,ubicacion_id,proveedor_id,usuario_id,fecha,total_rollos,total_costo,uuid_cliente)
+     VALUES((SELECT COALESCE(MAX(folio),0)+1 FROM entradas WHERE ubicacion_id=$1),
+       $1,$2,$3,now(),1,400,$4) RETURNING id`,
+    [locationId, provider.rows[0].id, adminId, randomUUID()],
+  );
+  const source = await pool.query(
+    `INSERT INTO rollos(serie,producto_id,ubicacion_id,recepcion_id,estado,
+       cantidad_inicial,cantidad_actual,costo_unitario,costo_total)
+     VALUES($1,$2,$3,$4,'DISPONIBLE',10,10,40,400) RETURNING id`,
+    [String(700000000000 + productId), productId, locationId, entry.rows[0].id],
+  );
+  const sourceRollId = Number(source.rows[0].id);
+  await pool.query(
+    `INSERT INTO movimientos(rollo_id,producto_id,ubicacion_id,tipo,cantidad,saldo_posterior,
+       usuario_id,documento_tipo,documento_id)
+     VALUES($1,$2,$3,'ALTA',10,10,$4,'ENTRADA',$5)`,
+    [sourceRollId, productId, locationId, adminId, String(entry.rows[0].id)],
+  );
   const blocker = await pool.connect();
   await blocker.query("BEGIN");
   await transactionAdvisoryLock(
@@ -292,6 +326,7 @@ test("crearTicket y baja se serializan con el mismo lock de cliente", async () =
          tipo: "METREADO",
         cantidad: 1,
         precioUnitario: 100,
+        fuentesRollo: [{ rolloId: sourceRollId, cantidad: 1 }],
       }],
     }),
   });
@@ -328,21 +363,51 @@ test("baja vencida requiere ADMIN activo/motivo y conserva historial como incobr
   });
   assert.equal(result.response.status, 401);
   assert.equal(result.body.code, "ADMIN_AUTH_REQUIRED");
+  const writeoff = {
+    adminUsuario: `${RUN}-admin`, adminPassword: "Admin123!",
+    sitioOrigenId: locationId,
+    naturaleza: "CORRECCION_CONTABLE" as const,
+    operacionClave: randomUUID(),
+    montoIncobrable: "80.00",
+    origenJustificacion: "Saldo vencido del cliente registrado en la tienda local de esta prueba.",
+  };
   result = await json(`/clientes/${id}/baja`, {
     method: "POST", headers: { "content-type": "application/json" },
-    body: JSON.stringify({ adminUsuario: `${RUN}-admin`, adminPassword: "Admin123!", motivo: "corto" }),
+    body: JSON.stringify({ ...writeoff, motivo: "corto" }),
   });
   assert.equal(result.response.status, 400);
-  assert.equal(result.body.code, "INCOBRABLE_REASON_REQUIRED");
+  // Current E1 preflight rejects the short reason before the legacy coded branch.
+  assert.deepEqual(result.body, {
+    error: "Declara monto incobrable positivo y motivo de al menos 20 caracteres.",
+  });
+  const rejected = await pool.query(
+    `SELECT c.activo,
+       (SELECT COALESCE(sum(importe),0)::text FROM movimientos_credito WHERE cliente_id=c.id) AS saldo,
+       (SELECT count(*)::int FROM movimientos_credito WHERE cliente_id=c.id AND es_incobrable) AS incobrables,
+       (SELECT count(*)::int FROM auditoria WHERE entidad='clientes' AND entidad_id=c.id::text
+         AND accion='BAJA_INCOBRABLE') AS auditorias,
+       (SELECT count(*)::int FROM operaciones_credito_e1
+         WHERE productor='BAJA_INCOBRABLE' AND clave=$2::uuid) AS claims
+     FROM clientes c WHERE c.id=$1`,
+    [id, writeoff.operacionClave],
+  );
+  assert.deepEqual(rejected.rows[0], {
+    activo: true, saldo: "80.00", incobrables: 0, auditorias: 0, claims: 0,
+  });
   result = await json(`/clientes/${id}/baja`, {
     method: "POST", headers: { "content-type": "application/json" },
     body: JSON.stringify({
-      adminUsuario: `${RUN}-admin`, adminPassword: "Admin123!",
+      ...writeoff,
       motivo: "Cliente insolvente confirmado por administración",
     }),
   });
   assert.equal(result.response.status, 200);
   assert.equal(result.body.resultado, "DESACTIVADO_INCOBRABLE");
+  assert.equal((await pool.query(
+    `SELECT count(*)::int n FROM operaciones_credito_e1
+     WHERE productor='BAJA_INCOBRABLE' AND clave=$1::uuid AND naturaleza='CORRECCION_CONTABLE'`,
+    [writeoff.operacionClave],
+  )).rows[0].n, 1);
   const ledger = await pool.query(
     `SELECT COALESCE(sum(importe),0)::text saldo, count(*) FILTER (WHERE es_incobrable)::int AS incobrables
      FROM movimientos_credito WHERE cliente_id=$1`, [id],
@@ -418,6 +483,8 @@ test("INE: ADMIN, MIME/tamaño, slots/reemplazo, privacidad y auditoría", async
 
 after(async () => {
   setPrivateObjectStorageForTests(null);
+  if (originalPrivateObjectDir === undefined) delete process.env.PRIVATE_OBJECT_DIR;
+  else process.env.PRIVATE_OBJECT_DIR = originalPrivateObjectDir;
   await new Promise<void>((resolve) => server.close(() => resolve()));
   await pool.end();
 });

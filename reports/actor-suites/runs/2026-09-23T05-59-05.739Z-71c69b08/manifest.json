@@ -1,0 +1,290 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T05-59-05.739Z-71c69b08",
+  "status": "FAIL",
+  "selectionSha256": "ed8828fd8445d4af3e841c4986b1c2e7a19f602a84cf512d2ad5940b72cc2d88",
+  "selectedCount": 9,
+  "selectedPaths": [
+    "artifacts/api-server/src/kardex-api.test.ts",
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts"
+  ],
+  "completedCount": 3,
+  "assertionFailures": 0,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/kardex-api.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha256": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+      "provenance": {
+        "start": {
+          "suiteSha256": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "history covers types, order, pagination, search, documents and safe fields",
+          "scope, inactive policy and filter metadata are enforced",
+          "XLSX export is a real filtered workbook without sensitive columns"
+        ]
+      },
+      "targetDatabaseSha256": "92fd954a3639f13be647afdc2de0128a7ee3fcf89ff22575317933da4c4049e6",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "92fd954a3639f13be647afdc2de0128a7ee3fcf89ff22575317933da4c4049e6",
+        "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "92fd954a3639f13be647afdc2de0128a7ee3fcf89ff22575317933da4c4049e6",
+        "preparationTargetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "92fd954a3639f13be647afdc2de0128a7ee3fcf89ff22575317933da4c4049e6",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "92fd954a3639f13be647afdc2de0128a7ee3fcf89ff22575317933da4c4049e6",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "92fd954a3639f13be647afdc2de0128a7ee3fcf89ff22575317933da4c4049e6",
+            "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "b49e01045c920f9e10c2ffef69e6a22f2a2ee67971738f89237e97832a581f83",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+      "provenance": {
+        "start": {
+          "suiteSha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 1,
+        "pass": 1,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "notification endpoints preserve calendar dates, authorization, and persistence"
+        ]
+      },
+      "targetDatabaseSha256": "c373920b49528978b4b3fd1f03b7c0f081e8f5ef917673b28598875ce8ff8327",
+      "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "c373920b49528978b4b3fd1f03b7c0f081e8f5ef917673b28598875ce8ff8327",
+        "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "c373920b49528978b4b3fd1f03b7c0f081e8f5ef917673b28598875ce8ff8327",
+        "preparationTargetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "c373920b49528978b4b3fd1f03b7c0f081e8f5ef917673b28598875ce8ff8327",
+              "databaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "c373920b49528978b4b3fd1f03b7c0f081e8f5ef917673b28598875ce8ff8327",
+              "databaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "c373920b49528978b4b3fd1f03b7c0f081e8f5ef917673b28598875ce8ff8327",
+            "databaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "89b39e59be9f568259db0c2f9d5b0a5f6bfeb182c51543682b8a4170dd5df57a",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 3,
+      "path": "artifacts/api-server/src/lib/permisos.test.ts",
+      "status": "UNSAFE",
+      "exitCode": 1,
+      "sourceSha256": "5e2477b7be711e1e1d1242ed818983560a941197164c1825f8d5f644ff32e373",
+      "provenance": {
+        "start": {
+          "suiteSha256": "5e2477b7be711e1e1d1242ed818983560a941197164c1825f8d5f644ff32e373",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "5e2477b7be711e1e1d1242ed818983560a941197164c1825f8d5f644ff32e373",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": null,
+      "reporterError": "artifacts/api-server/src/lib/permisos.test.ts no emitió nombres terminales nativos únicos.",
+      "targetDatabaseSha256": "1347b6ee77653ffcb8a7f2095aa81f37b50b6f84dc9eb40bba3659bf9469c2ed",
+      "targetDatabaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "1347b6ee77653ffcb8a7f2095aa81f37b50b6f84dc9eb40bba3659bf9469c2ed",
+        "targetDatabaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "1347b6ee77653ffcb8a7f2095aa81f37b50b6f84dc9eb40bba3659bf9469c2ed",
+        "preparationTargetDatabaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "1347b6ee77653ffcb8a7f2095aa81f37b50b6f84dc9eb40bba3659bf9469c2ed",
+              "databaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "1347b6ee77653ffcb8a7f2095aa81f37b50b6f84dc9eb40bba3659bf9469c2ed",
+              "databaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "1347b6ee77653ffcb8a7f2095aa81f37b50b6f84dc9eb40bba3659bf9469c2ed",
+            "databaseOidSha256": "ebfe0b13fd62869d1405bfc47dad4b03af2de40b6dc48959e3a9e2fb60e32c0b"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "03-stdout.log",
+        "stdoutSha256": "1aa01eeb466fa500af911bfe79bad87c0b07f48b5f77f3786fe2842b151608d7",
+        "stderr": "03-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": false
+    }
+  ],
+  "terminal": {
+    "status": "FAIL",
+    "executionPassed": false,
+    "clusterDestroyed": true
+  }
+}

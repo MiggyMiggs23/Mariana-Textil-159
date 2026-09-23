@@ -1,0 +1,264 @@
+{
+  "status": "PASS_STATIC_NOEMIT_AUTHORIZED_CONTRACT_DELTA_NOT_EXECUTED",
+  "casesExecuted": 0,
+  "sqlExecuted": 0,
+  "appImports": 0,
+  "effectiveAssignedManifestSuites": [
+    "artifacts/api-server/src/kardex-api.test.ts",
+    "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+    "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+    "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+    "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+    "artifacts/api-server/src/precios.integration.test.ts",
+    "artifacts/api-server/src/productos-cache.integration.test.ts",
+    "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "artifacts/api-server/src/lib/permisos.test.ts"
+  ],
+  "notOwned": [
+    "productos-purge.integration.test.ts",
+    "salidas-api.test.ts"
+  ],
+  "authorizedInventoryCorrection": {
+    "lib/notificaciones-credito.test.ts": "Adapted following explicit MAIN authorization covering all actor creators; shared manifest owner must include this real actor suite.",
+    "lib/permisos.test.ts": "Adapted following explicit MAIN authorization. Five actor inserts retained. All 29 original sequential cases (P-01..26 plus P-06A/B/C) now register real node:test terminals; original failures are rethrown, not counter-only swallowed."
+  },
+  "suites": [
+    {
+      "file": "artifacts/api-server/src/kardex-api.test.ts",
+      "originalHash": "521720a92f6bf202b17c16c97680c5e7b881472eea22de6b067bb09fa2dcaaed",
+      "finalHash": "970e5f3c5b221b1d2e24b2989595ea78b84ce292320160b4c8a4f6730c528f5f",
+      "originalBusinessCallCount": 59,
+      "businessCallsUnchanged": true,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "68a5e75bc827d328215e4f0f48100f939de98271dc6f1fd101704cbfcf71bcbe"
+    },
+    {
+      "file": "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+      "originalHash": "898ba6f8ce21e62b121644475e134b200e811a19ebbbf186501521426325e922",
+      "finalHash": "c48cb2081811d87bc062e5f4ac7def2941ece4ce34d321d22453b13afc7629d9",
+      "originalBusinessCallCount": 7,
+      "businessCallsUnchanged": true,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "8ce6c96b8824db95c2458038ba9eb66f89a50134139640c19338cfbb4ad4dafa"
+    },
+    {
+      "file": "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+      "originalHash": "6a0e715e756f179b355c3b830b992027959044dcdce742ed1fe9144721e05d2d",
+      "finalHash": "e4af999a425cf827d03b89f96fc148c980e8914f60062f83a3a45035f3f3b653",
+      "originalBusinessCallCount": 74,
+      "businessCallsUnchanged": true,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "11bdcc57404f6f9fd6048d12be8f65095a5718f78fcbf1b0ab24d23e4290d1ed"
+    },
+    {
+      "file": "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+      "originalHash": "62b63e532c963a0b95b46a801d17ce6aac8b4025065a00d0aa29f5eaa89d6c2d",
+      "finalHash": "4af47f27b8b6c0d6a1e0f00a9772031f0815dcc191ec019fe4b64515e1a2c63c",
+      "originalBusinessCallCount": 12,
+      "businessCallsUnchanged": true,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "cb7bb3ba3bdd2529a2e2d591bd16e11eceb2e484b07f5198d231bad9d6113fd7"
+    },
+    {
+      "file": "artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts",
+      "originalHash": "665881fc17d2e6beed95bccac2b95290f84e2165d0f6e12df08cb3e055b1824f",
+      "finalHash": "ef6e88a7f2508910159eac649354cc4f06299b82aed4a8a3556698f8a6ca5fc2",
+      "originalBusinessCallCount": 9,
+      "businessCallsUnchanged": true,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "4ba08eda0a52240f2ce298037b7bd52a6f56a52296dadb2872475fc5bbe34fb6"
+    },
+    {
+      "file": "artifacts/api-server/src/precios.integration.test.ts",
+      "originalHash": "263a482a3fabe9ed6c1b475596942693635c9cac6e941d2d55fee062c13ecf47",
+      "finalHash": "651b06ff2d0d0374e8d1e890388b48dc4ebe30cfd20f98701726fdd702192d19",
+      "originalBusinessCallCount": 43,
+      "businessCallsUnchanged": true,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "7311cdc40448a0e4f804739b5080f795036314e461a6648ca5e0922980f43c0e"
+    },
+    {
+      "file": "artifacts/api-server/src/productos-cache.integration.test.ts",
+      "originalHash": "460fac29c28167988252ac34573fecf6df7315b71ae554a8a22f15c0b414d0e2",
+      "finalHash": "9aed0d868f5d794e95b477bf3f3fa3db78220d872e16504b2ba6d0b1e3e8054f",
+      "originalBusinessCallCount": 40,
+      "businessCallsUnchanged": true,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "19e03859b6efe3f2df47cd000f6507df5eb6bd6148ec0d841f7063535a54e96b"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+      "originalHash": "3316bf59f154b55ce0bf80f58dac01b1caad1cb471f61553380c9a3ad94c412e",
+      "finalHash": "047d8949e0e807dc8a5545372d13b7971d1192bf7e439f7421dbca78bb2d4600",
+      "originalBusinessCallCount": 20,
+      "businessCallsUnchanged": false,
+      "authorizedNotificationContract": true,
+      "authorizedPermissionContract": false,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "f939bd0bd679834c88c2928499ac6d64a1f0f8f619cb7a77bcddf6d54025c91c"
+    },
+    {
+      "file": "artifacts/api-server/src/lib/permisos.test.ts",
+      "originalHash": "296cc8d1edb4f9b4d078f20364ced8c7892eadee7b87e54069a2313465d32723",
+      "finalHash": "592cf006f3a6a481783f916760b72a66f6013db24313b12f144073d9ffd0bdfc",
+      "originalBusinessCallCount": 104,
+      "businessCallsUnchanged": false,
+      "authorizedNotificationContract": false,
+      "authorizedPermissionContract": true,
+      "matchesExpectedBusinessCalls": true,
+      "businessCallHash": "0e3da6df147844f9ab7907e8e26bf92544c9b3da568a6a3d625c937dd3b20275"
+    }
+  ],
+  "diagnostics": [],
+  "authorizedContractDelta": {
+    "suite": "artifacts/api-server/src/lib/notificaciones-credito.test.ts",
+    "authority": "MAIN explicitly authorized alignment with current route and OpenAPI; no productive changes.",
+    "request": "POST /notificaciones/:id/leer replaced by POST /notificaciones/credito/:id/leer.",
+    "obsoleteAssertions": [
+      "marked.fechaVencimiento === dueDate",
+      "marked.urgente === true"
+    ],
+    "replacement": "Mutation asserts id, tipo=credito and nonempty leidaAt; subsequent GET asserts the identical persisted leidaAt. Before/after GET retain fechaVencimiento and urgente checks on notificationId-matched records.",
+    "reason": "Current route and OpenAPI return only id/tipo/leidaAt for mutation; dates/urgency belong to list representations.",
+    "verification": "Seven suites retain baseline business-call AST exactly; notifications and permissions must equal baseline plus only explicit MAIN-authorized transformations."
+  },
+  "lifecycle": "Per-path child required by infra. Existing fixture-scoped cleanup unchanged; no new deletion, audit bypass or seed-user mutation. Added pool closure for metered/precios/permisos. Cluster destruction remains runner-owned.",
+  "excludedSeedReader": {
+    "file": "artifacts/api-server/src/lib/salidas.test.ts",
+    "restoredByteExactTo": "5aadfec",
+    "sha256": "8cedf988dfdad0c2dd5c802abab80b0731ed72dcfdcf24f83642a3eca52faf4b"
+  },
+  "permissionNativeTerminals": {
+    "expected": 29,
+    "originalCaseBodiesUnchanged": false,
+    "actualExecution": "LATEST_SOURCE_NOT_RUN",
+    "authorizedDelta": "MAIN authorized P06C SUPERVISOR expected auditoria_inventario VCE and viajes VC [true,true,false], not VCE. Static comparison of all 32 current seed rows found viajes the sole remaining P06C mismatch; permission-writing startup initializers do not elevate SUPERVISOR viajes.editar. All other case bodies unchanged. TERMINAL alone gets a new non-Mariana TIENDA fixture to test role baseline outside the site exception. BODEGA expected contenedores.ver remains true, disputed and blocked. Latest preceding MAIN run 2026-09-23T06-16-57.093Z reported 27 PASS/2 FAIL; newest source is unexecuted, not 28 PASS.",
+    "registration": "29 native leaves, no parent wrapper. Async registration helper returns without awaiting native completion; callers retain await test, but wait only for registration. Cleanup, pool.end and accounting occur in after.",
+    "noInterleavedEffects": "AST confirms all 29 top-level await test calls are consecutive statements: all setup precedes registration, all between-case mutations remain inside native callbacks.",
+    "labels": [
+      "P-01: ADMIN tiene acceso total a dashboard",
+      "P-02: CAJA no usa dashboard administrativo",
+      "P-03: BODEGA no puede acceder a POS",
+      "P-04: BODEGA no puede ver clientes",
+      "P-05: CAJA no puede ver proveedores",
+      "P-06: CAJA puede ver cobros_pagos pero no POS",
+      "P-06A: CAJA conserva exactamente los permisos operativos documentados",
+      "P-06B: TERMINAL conserva la matriz operativa configurada",
+      "P-06C: SUPERVISOR conserva exactamente sus permisos base",
+      "P-07: módulo sin fila en ninguna tabla → denegar (null)",
+      "P-08: usuario override sobrescribe permiso del rol",
+      "P-09: null override means inherit from role",
+      "P-10: ADMIN cannot be configured in permisos_rol",
+      "P-11: ADMIN rejects partial permission updates",
+      "P-12: ADMIN rejects even redundant full-access rows",
+      "P-13: ADMIN cannot be configured for any module",
+      "P-14: validateAdminInvariants allows any value for non-ADMIN roles",
+      "P-15: buildPermissionMatrix returns every configured module",
+      "P-16: ADMIN matrix has full access to all modules",
+      "P-17: CAJA has no access to proveedores_finanzas",
+      "P-18: CAJA cannot access clientes_finanzas",
+      "P-19: CAJA cannot see clientes_credito",
+      "P-20: Dynamically updating role matrix affects future permission checks",
+      "P-21: BODEGA cannot see proveedores_finanzas",
+      "P-22: BODEGA has exactly the operational baseline including etiquetas",
+      "P-23: CAJA cannot see clientes_precios",
+      "P-24: CAJA cannot see clientes_finanzas",
+      "P-25: user override with explicit true overrides role false",
+      "P-26: ADMIN ignores a false override on an ordinary module"
+    ],
+    "errorPropagation": "Native callback rethrows original error; custom counters retained, total must equal 29; failed count sets exitCode without truncating reporter output.",
+    "runnerRequirement": "Select this explicit suite in a per-path child. Require 29 native terminal cases, no skipped/failed cases and exit 0 for acceptance; stdout summary or file-level/zero-case success is insufficient."
+  },
+  "preservedFailures": [
+    {
+      "directory": "reports/actor-suites/runs/2026-09-23T04-15-03.755Z-73ea4f6c",
+      "status": "FAIL",
+      "recordedChildResults": 1,
+      "acceptedSuites": 0,
+      "clusterDestroyed": true,
+      "hashes": {
+        "01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "01-stdout.log": "880c59afcffef79da144434b1a3508c028c70becc687b2c95f51598049494d1d",
+        "manifest.json": "e22bff5adc7a1530999f207481356a38e0b2f6def0979a89b9fc1b0728f98003",
+        "selection.json": "563806ee294005153ceaa22e2bdaa1ebfd462ce306a381a3d941c11253a846c7",
+        "terminal.json": "1caad6f0d51cefd6e1e5029f67f12cac26826e8d3daf0902abeb2da791b31f36"
+      }
+    },
+    {
+      "directory": "reports/actor-suites/runs/2026-09-23T04-16-31.886Z-d9f5fde0",
+      "status": "FAIL",
+      "recordedChildResults": 1,
+      "acceptedSuites": 0,
+      "clusterDestroyed": true,
+      "hashes": {
+        "01-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "01-stdout.log": "b7b42f4e0988afbe79658de880232138ec66cce7102e11327503a86febdfce0d",
+        "manifest.json": "9eb24ca68ab9677554a4c01ef5d3475cb5b78c2092b25b75888e040c731b987b",
+        "selection.json": "a1d355cdd33733689555a97af0d194a6ccd9dd993bab8f60e8e0ae35889500f0",
+        "terminal.json": "09174cbd4ba664a579117f07b5f54918260c3f496d2c9469f95f35cf48e16604"
+      }
+    }
+  ],
+  "failureDiagnosis": {
+    "kardex": "History reached HTTP 200 and a structured response with documentoRuta=null. resolveMovementReference intentionally ignores human entry folio documentoId and requires rollos.recepcionId. Fixture omitted this relationship. No entry approval-state column/default or document-permission check explains this null; the route is session + movimientos permission, followed by document resolution/Zod parsing. ADMIN positive response and other two native cases passed within the failed suite.",
+    "fixtureRepair": "Link only RECEPCION's existing roll to the inserted entry PK and align entry site to that roll. Keep historical documentoId folio and original link assertion. Also repair pre-existing cancellation fixture: enum VENTA index 2 and CANCELACION index 9 chose different rolls under index%3. Resolver requires same-roll origin; cancellation now uses the sale's roll/site, keeping original origin/document assertions.",
+    "notifications": "Suite imported DB before reading control URL. DB index preserves APPLICATION_DATABASE_URL but assigns DATABASE_URL=TEST_DATABASE_URL for legacy consumers. The later inequality check thus compared target to target. All nine suites now capture the original signed control URL before DB import and pass that immutable URL to both shared guard and legacy comparisons. No environment writes or relaxed checks added.",
+    "worker": "Independent infrastructure failure: nonproduction pino uses thread-stream Worker; inherited --import bootstrap reruns synchronous preflight after DB index has assigned DATABASE_URL to target. Observed first async error is target/control equality, followed by worker exited errors. Owner must fix worker/bootstrap lifecycle without weakening identity; no logger, bootstrap or production code edited here.",
+    "acceptance": "Zero group2 suites accepted from these FAIL runs; fixture diagnosis does not turn worker errors into success. Re-execution awaits MAIN and infrastructure correction."
+  },
+  "mainCommandsAfterInfrastructureReady": {
+    "focusedPermissionsDiagnosticOnly": "env -i PATH=\"$PATH\" HOME=\"$HOME\" LANG=\"$LANG\" node lib/db/src/run-isolated-tests.mjs --actor-ids=artifacts/api-server/src/lib/permisos.test.ts",
+    "threeNeverExecuted": "env -i PATH=\"$PATH\" HOME=\"$HOME\" LANG=\"$LANG\" node lib/db/src/run-isolated-tests.mjs --actor-ids=artifacts/api-server/src/postgres-unique-concurrency.integration.test.ts,artifacts/api-server/src/precios.integration.test.ts,artifacts/api-server/src/productos-cache.integration.test.ts"
+  },
+  "latestMainResult": {
+    "directory": "reports/actor-suites/runs/2026-09-23T06-07-46.777Z-d488ba7e",
+    "status": "FAIL",
+    "manifestSha256": "6ce180181bb91e3f28244b773a80b2123c1537ce87fbe268a259223c3095543c",
+    "childResults": [
+      {
+        "path": "artifacts/api-server/src/lib/permisos.test.ts",
+        "status": "FAIL",
+        "exitCode": 1
+      },
+      {
+        "path": "artifacts/api-server/src/metered-reference-cost.integration.test.ts",
+        "status": "PASS",
+        "exitCode": 0
+      },
+      {
+        "path": "artifacts/api-server/src/pagos-dirigidos.integration.test.ts",
+        "status": "FAIL",
+        "exitCode": 1
+      },
+      {
+        "path": "artifacts/api-server/src/pos-location-authorization.integration.test.ts",
+        "status": "UNSAFE",
+        "exitCode": 0
+      }
+    ],
+    "interpretation": "MAIN reports permisos 29 native leaves: 26 PASS/3 FAIL on preceding source; metered PASS; pagos-dirigidos FAIL; POS native PASS with parser rejection under infrastructure review. Three unexecuted: concurrency, precios, productos-cache. Newly authorized permission preparation/expected changes NOT EXECUTED; do not infer 28 PASS."
+  },
+  "policyBlockers": {
+    "bodega": "BLOCKED_POLICY: seed-permissions.mjs grants BODEGA contenedores.ver, pending-costs-schema.ts:36-42 revokes every inherited BODEGA module outside six names, including contenedores. No assertion/productive change authorized or made.",
+    "directedPayments": "BLOCKED_OFF: original client payload lacks mandatory E1 sitioOrigenId/naturaleza/operacionClave, causing 400 before balance check, not the expected 409. Approval body {} and later ordinary payments/reversals also lack E1. Honest physical EFECTIVO requires matching origin/session; ABONO_DIRIGIDO physical cash is disabled by source-controlled CREDIT_CASH_INCOME_CAPTURE_ENABLED=false. E3 ordinary release does not open directed cash. No gates enabled, no change to CORRECCION_CONTABLE or TRANSFERENCIA to obtain green, no assertions changed. Historical FAIL preserved."
+  },
+  "remainingSevenStaticReview": {
+    "scope": "Limited source-only scan of HTTP route names, service exports and representative contracts, not integration acceptance.",
+    "findings": "No additional obsolete endpoint equivalent to the notification route found. Directed payments already use /notificaciones/sistema/:id/leer. POS ticket/cash-session routes, prices endpoints, product endpoints, and uniqueness-create endpoints exist. Metered cost status vocabulary matches its service. Permission service exports resolve and noemit succeeds.",
+    "unchanged": "No assertions or fixtures in these seven were changed during this review. Permission seed-dependent semantics, transactional behavior and response correctness still require MAIN execution."
+  }
+}

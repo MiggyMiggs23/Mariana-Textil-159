@@ -1,0 +1,111 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T05-50-23.441Z-0fb10cb2",
+  "status": "SELECTED_NOT_IMPORTED",
+  "selectionSha256": "344b06dbc1bb0241df862aaade9fe537114de728c425fdf293bf15dfc84f9973",
+  "selectedCount": 10,
+  "selectedPaths": [
+    "artifacts/api-server/src/admin-alertas.integration.test.ts",
+    "artifacts/api-server/src/admin-invariants.integration.test.ts",
+    "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts",
+    "artifacts/api-server/src/auditoria.integration.test.ts",
+    "artifacts/api-server/src/clientes-ajustes-api.test.ts",
+    "artifacts/api-server/src/contenedores.integration.test.ts",
+    "artifacts/api-server/src/cuadre-fiscal.integration.test.ts",
+    "artifacts/api-server/src/equipos.integration.test.ts",
+    "artifacts/api-server/src/etiquetas-api.integration.test.ts",
+    "artifacts/api-server/src/inventory-six-view.integration.test.ts"
+  ],
+  "sourceStart": {
+    "artifacts/api-server/src/admin-alertas.integration.test.ts": {
+      "suiteSha256": "71c92e46eaae3b1ed6b00f218b1b1a88853b389760419d7ef78e230506ada4d7",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/admin-invariants.integration.test.ts": {
+      "suiteSha256": "6ad66ed295e54e3c0be86a23ddcc45359e004a3e016d3d7dbea7f5ff48ad2664",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/aplicaciones-pago-proveedor.integration.test.ts": {
+      "suiteSha256": "f52dc08491afe5e08af20ca851a336b09d8780b756cb0ebdd8dedaf3dbdfeaaa",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/auditoria.integration.test.ts": {
+      "suiteSha256": "9a749b2aa02b9a2addb532e02b2e44716d86c814bc6e852fc4e1da7dc7067180",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/clientes-ajustes-api.test.ts": {
+      "suiteSha256": "8da1997acc7ba7b68c7e708447d263a2e5266483dd73df5ec92aab7d634786cc",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/contenedores.integration.test.ts": {
+      "suiteSha256": "7fd2d8ed09c611b8565c7fee820b5ee84d2c11c0073c443ce48cb14bb4f8450e",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/cuadre-fiscal.integration.test.ts": {
+      "suiteSha256": "15c14ddc9779637fd7a1ac330a19f3525d3f22ecfdf9a06cb968a35f31ee979d",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/equipos.integration.test.ts": {
+      "suiteSha256": "c5827ff7729685f694bad9f5b26584400fb8511bb128fd3f690a168e02091e65",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/etiquetas-api.integration.test.ts": {
+      "suiteSha256": "2efeb0e509eac2bacaf6839a7205a3b84554c62cecc62ca4c2ce348b9e391b7b",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    },
+    "artifacts/api-server/src/inventory-six-view.integration.test.ts": {
+      "suiteSha256": "db11d00b6f23f97329cbf24c2184e8ccf6a9adab924c3a71f589a0d9a689cd5f",
+      "runnerSha256": "f1c4bcbcc66287d72117cd04aa6fa5d60418449a4e2a0c3cf894ce86a55b36d5",
+      "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+      "schema": {
+        "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+        "fileCount": 35
+      }
+    }
+  }
+}

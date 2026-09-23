@@ -2,17 +2,26 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared infrastructure preflight is plain ESM without declarations.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+if (process.env.ACTOR_SUITE_IDENTITY_VERIFIED !== "1") {
+  throw new Error("Actor bootstrap must verify the local database identity before suite imports.");
+}
 
 const testUrl = process.env.TEST_DATABASE_URL;
 const applicationUrl = process.env.DATABASE_URL;
 
 if (!testUrl) {
-  test.skip("cuadre fiscal integration (TEST_DATABASE_URL not set)", () => {});
-} else if (testUrl === applicationUrl) {
+  throw new Error("Cuadre fiscal integration requires the isolated actor runner.");
+}
+if (testUrl === applicationUrl) {
   throw new Error(
     "TEST_DATABASE_URL must differ from DATABASE_URL; refusing to mutate the application database.",
   );
-} else {
+}
+{
   test("cuadre fiscal freezes fiscal figures and preserves its approval workflow", async () => {
     const [{ pool, ensureCuadreFiscalSchema, createTestDatabaseGuard }, { default: app }] =
       await Promise.all([import("@workspace/db"), import("./app")]);

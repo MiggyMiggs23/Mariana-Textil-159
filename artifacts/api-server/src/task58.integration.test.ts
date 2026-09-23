@@ -2,12 +2,20 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { createServer, type Server } from "node:http";
 import test from "node:test";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
 
 // Fail closed before importing anything that can initialize @workspace/db.
+assertActorSuiteEnvironmentSync(process.env);
 const testUrl = process.env.TEST_DATABASE_URL;
-const applicationUrl = process.env.DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
 if (process.env.NODE_ENV !== "test") throw new Error("Task 58 requiere NODE_ENV=test.");
-if (!testUrl) throw new Error("Task 58 requiere TEST_DATABASE_URL explícita.");
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("Task 58 requiere el runner de base aislada.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("Task 58 requiere URLs explícitas de prueba y aplicación.");
+}
 if (testUrl === applicationUrl) throw new Error("TEST_DATABASE_URL debe ser distinta de DATABASE_URL.");
 const parsedTestUrl = new URL(testUrl);
 const expectedDatabase = decodeURIComponent(parsedTestUrl.pathname).replace(/^\/+/, "");
@@ -22,27 +30,15 @@ type Actor = { id: number; sessionId: string; cookie: string };
 type Json = Record<string, unknown>;
 
 test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", async (t) => {
-  const [
-    {
-      db,
-      pool,
-      ensureAuditSchema,
-      ensureAuditoriaInventarioSchema,
-      ensurePisosSchema,
-      ensureSalidasSchema,
-      createTestDatabaseGuard,
-    },
-    { default: app },
-    salidas,
-    inventario,
-    auditoriaInventario,
-  ] = await Promise.all([
-    import("@workspace/db"),
-    import("./app"),
-    import("./lib/salidas"),
-    import("./lib/inventario"),
-    import("./lib/auditoria-inventario"),
-  ]);
+  const {
+    db,
+    pool,
+    ensureAuditSchema,
+    ensureAuditoriaInventarioSchema,
+    ensurePisosSchema,
+    ensureSalidasSchema,
+    createTestDatabaseGuard,
+  } = await import("@workspace/db");
   const { assertIsolated } = await createTestDatabaseGuard(pool, testUrl, applicationUrl);
   const assertDatabase = async (stage: string) => {
     await assertIsolated();
@@ -53,6 +49,17 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
     assert.match(current ?? "", /test|ci|e2e/i);
   };
   await assertDatabase("inicio");
+  const [
+    { default: app },
+    salidas,
+    inventario,
+    auditoriaInventario,
+  ] = await Promise.all([
+    import("./app"),
+    import("./lib/salidas"),
+    import("./lib/inventario"),
+    import("./lib/auditoria-inventario"),
+  ]);
   await assertDatabase("antes de ensureAuditSchema");
   await ensureAuditSchema(pool);
   await assertDatabase("antes de ensurePisosSchema");
@@ -528,32 +535,48 @@ test("Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex", a
         ip: "127.0.0.1",
         action: "CERRAR",
       }));
+      const surplusIds = [availableSurplus.id, raced.id];
+      const surplusBefore = (await pool.query(
+        "SELECT id,ubicacion_id,estado,piso_id FROM rollos WHERE id=ANY($1::int[]) ORDER BY id",
+        [surplusIds],
+      )).rows;
+      const surplusMovementsBefore = (await pool.query(
+        "SELECT count(*)::int n FROM movimientos WHERE rollo_id=ANY($1::int[])",
+        [surplusIds],
+      )).rows[0]?.n;
+      const surplusExistenceBefore = (await pool.query(
+        "SELECT producto_id,ubicacion_id,cantidad_total,rollos_count FROM existencias WHERE producto_id=$1 ORDER BY ubicacion_id",
+        [productId],
+      )).rows;
       await domainMutation((tx) => auditoriaInventario.confirmAuditoria(tx, {
         auditoriaId: surplusAudit.id,
         usuarioId: admin.id,
         ip: "127.0.0.1",
       }));
+      assert.deepEqual(
+        (await pool.query(
+          "SELECT id,ubicacion_id,estado,piso_id FROM rollos WHERE id=ANY($1::int[]) ORDER BY id",
+          [surplusIds],
+        )).rows,
+        surplusBefore,
+        "confirmar conserva ubicación, estado y piso de todos los sobrantes",
+      );
+      assert.equal((await pool.query(
+        "SELECT count(*)::int n FROM movimientos WHERE rollo_id=ANY($1::int[])",
+        [surplusIds],
+      )).rows[0]?.n, surplusMovementsBefore, "confirmar sobrantes no crea kardex");
+      assert.deepEqual((await pool.query(
+        "SELECT producto_id,ubicacion_id,cantidad_total,rollos_count FROM existencias WHERE producto_id=$1 ORDER BY ubicacion_id",
+        [productId],
+      )).rows, surplusExistenceBefore, "confirmar sobrantes no altera existencias");
       for (const item of [availableSurplus, raced]) {
-        const relocated = (await pool.query(
-          "SELECT ubicacion_id,estado,piso_id FROM rollos WHERE id=$1",
-          [item.id],
-        )).rows[0];
-        assert.deepEqual(
-          {
-            ubicacionId: Number(relocated?.ubicacion_id),
-            estado: relocated?.estado,
-            pisoId: Number(relocated?.piso_id),
-          },
-          { ubicacionId: sourceId, estado: "DISPONIBLE", pisoId: floorB },
-          "los sobrantes disponibles o en tránsito usan el piso real capturado",
-        );
         assert.equal(
           (await pool.query(
             `SELECT resolucion FROM auditoria_inventario_escaneos
               WHERE auditoria_id=$1 AND rollo_id=$2`,
             [surplusAudit.id, item.id],
           )).rows[0]?.resolucion,
-          "APLICADA",
+          "RESOLUCION_MANUAL",
         );
       }
     });
