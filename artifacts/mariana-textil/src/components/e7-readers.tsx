@@ -6,7 +6,7 @@ import {
   exportE7AtribucionPdf, exportE7AtribucionXlsx,
   type E7Movimiento, type E7Retenido, type CarteraAlcance, type GetE7AtribucionParams,
 } from "@workspace/api-client-react";
-import { e7On } from "@/lib/e7-feature-flags";
+import { e7ClientFinancialOn, e7On } from "@/lib/e7-feature-flags";
 import { hasPermission, Modules } from "@/lib/permisos";
 import { useLocationScope } from "@/lib/location-scope";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export function E7Attribution({ desde, hasta, surface }: { desde: string; hasta:
   return <Boundary surface={surface}>{identity => <Attribution desde={desde} hasta={hasta} identity={identity} />}</Boundary>;
 }
 export function E7ClientExport({ clienteId }: { clienteId: number }) {
-  if (!e7On()) return null;
+  if (!e7ClientFinancialOn()) return null;
   return <Boundary surface="exportacion">{identity => <ClientExport clienteId={clienteId} identity={identity} />}</Boundary>;
 }
 function Boundary({ surface, children }: { surface: Surface; children: (identity: string) => ReactNode }) {
@@ -45,13 +45,16 @@ function Boundary({ surface, children }: { surface: Surface; children: (identity
     ? hasPermission(user.data, Modules.CLIENTES_FINANZAS, "ver")
     : surface === "tiempo-real" ? user.data.rol === "ADMIN" : ["ADMIN", "SISTEMAS"].includes(user.data.rol));
   if (!allowed) return <p role="alert">Consulta E7 no autorizada. CONTADOR utiliza exclusivamente E11.</p>;
-  return <Available key={`${surface}:${identity}`} identity={identity}>{children(identity)}</Available>;
+  return <Available key={`${surface}:${identity}`} identity={identity} surface={surface}>{children(identity)}</Available>;
 }
-function Available({ identity, children }: { identity: string; children: ReactNode }) {
+function Available({ identity, surface, children }: { identity: string; surface: Surface; children: ReactNode }) {
   const q = useGetE7Disponibilidad({ query: { queryKey: ["/api/e7/disponibilidad", identity], staleTime: 0, retry: false, refetchOnMount: "always", refetchOnWindowFocus: "always", refetchInterval: 15000 } });
   if (q.error) return <p role="alert">{message(q.error)}</p>;
   if (!q.data || !q.isFetchedAfterMount) return <p role="status">Comprobando disponibilidad E7…</p>;
-  if (!q.data.enabled) return <p role="alert">E7 está cerrado. No se usa una fuente alternativa para atribución.</p>;
+  const enabled = surface === "exportacion"
+    ? (q.data.clienteFinanzas ?? q.data.enabled)
+    : (q.data.atribucion ?? q.data.enabled);
+  if (!enabled) return <p role="alert">Esta lectura E7 está cerrada. No se usa una fuente alternativa.</p>;
   return <>{children}</>;
 }
 function Legends({ extra = [] }: { extra?: string[] }) {
@@ -117,7 +120,7 @@ function ClientExportScope({ clienteId, identity, siteId }: { clienteId: number;
   const d = q.data;
   if (d.clienteId !== clienteId) return <p role="alert">Respuesta ajena al cliente solicitado; exportación bloqueada.</p>;
   const suffix = siteId ? `?ubicacionId=${siteId}` : "";
-  return <section data-testid="e7-client-export" className="space-y-4 rounded border p-4"><h2 className="font-semibold text-xl">Vista previa de exportación · Grupo 1</h2><p>No sustituye el estado de cuenta interactivo.</p><Scope scope={d.alcance} generated={d.generadoEn} /><Legends extra={d.leyendas} />
+  return <section data-testid="e7-client-export" className="space-y-4 rounded border p-4"><h2 className="font-semibold text-xl">Estado de cuenta financiero</h2><p>El resumen de crédito es global; los movimientos corresponden únicamente al alcance autorizado.</p><Scope scope={d.alcance} generated={d.generadoEn} /><Legends extra={d.leyendas} />
     <div data-testid="e7-global-four" className="grid gap-3 md:grid-cols-4"><p>Deuda actual: {money(d.resumenGlobal.deudaActual)}</p><p>Saldo a favor: {money(d.resumenGlobal.saldoAFavor)}</p><p>Límite de crédito global: {money(d.resumenGlobal.limiteCredito)}</p><p>Crédito disponible: {money(d.resumenGlobal.creditoDisponible)}</p></div>
     <nav className="flex gap-4" aria-label="Archivos de estado de cuenta E7">{[["estado-cuenta.pdf", "PDF"], ["estado-cuenta.xlsx", "XLSX"], ["estado-cuenta/imprimir", "Imprimir"]].map(([path, label]) => <a className="underline" key={path} href={`/api/clientes/${clienteId}/${path}${suffix}`} target="_blank" rel="noreferrer" data-testid={`e7-client-export-${label.toLowerCase()}`}>{label}</a>)}</nav>
     <Movements rows={d.movimientos} scope={d.alcance} /><Retained rows={d.retenidos} total={d.totalRetenido} scope={d.alcance} generated={d.generadoEn} />

@@ -16,8 +16,12 @@ export const legends = [
   "Las aplicaciones a notas no son nuevos ingresos.",
   "El dinero retenido pendiente de aplicación no es saldo a favor ni reduce la deuda.",
 ];
-export const available = { enabled: true } satisfies GetE7Disponibilidad200;
-export const unavailable = { enabled: false } satisfies GetE7Disponibilidad200;
+export const available = {
+  enabled: true, clienteFinanzas: true, atribucion: true,
+} satisfies GetE7Disponibilidad200;
+export const unavailable = {
+  enabled: false, clienteFinanzas: false, atribucion: false,
+} satisfies GetE7Disponibilidad200;
 export const range = { desde: "2026-09-22", hasta: "2026-09-24" } satisfies GetE7AtribucionParams;
 export const xlsxQuery = { ...range, ubicacionId: "2" } satisfies ExportE7AtribucionXlsxParams;
 export const pdfQuery = { ...range, ubicacionIds: "1,2" } satisfies ExportE7AtribucionPdfParams;

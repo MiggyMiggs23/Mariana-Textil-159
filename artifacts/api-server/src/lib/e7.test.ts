@@ -13,6 +13,13 @@ import {
   e7StatementPdf,
   e7StatementWorkbook,
 } from "./e7-export";
+import {
+  E7_ATTRIBUTION_ENABLED,
+  E7_CLIENT_FINANCIAL_READS_ENABLED,
+  E7_E5_READ_SOURCE_ENABLED,
+  E7_ENABLED,
+} from "./e7-feature";
+import { E5_ENABLED } from "./e5-feature";
 import type { CreditLedgerQuery } from "./credit-aging-read-model";
 
 const now = new Date("2026-02-01T12:00:00.000Z");
@@ -120,7 +127,7 @@ function databaseFixture(options: { actors?: Array<Actor | null>; historicalSql?
     get authReads() { return authReads; }, get transactions() { return transactions; } };
 }
 function reader(fixture: ReturnType<typeof databaseFixture>, extra: Record<string, unknown> = {}) {
-  return createE7Reader({ enabled: true, e5Enabled: true, now: () => now,
+  return createE7Reader({ enabled: true, attributionEnabled: true, e5Enabled: true, now: () => now,
     database: fixture.database, transaction: fixture.transaction, ...extra });
 }
 const attributionQuery = { desde: "2026-01-01", hasta: "2026-01-31" };
@@ -134,6 +141,21 @@ function extractLatin1PdfLines(pdf: Buffer) {
   assert.equal(lines.length > 2, true);
   return lines;
 }
+test("E7-PRODUCTION-GATES-CLIENT-READ-ONLY", () => {
+  assert.deepEqual({
+    e7: E7_ENABLED,
+    clientFinancialReads: E7_CLIENT_FINANCIAL_READS_ENABLED,
+    installedE5ReadSource: E7_E5_READ_SOURCE_ENABLED,
+    attribution: E7_ATTRIBUTION_ENABLED,
+    e5Operations: E5_ENABLED,
+  }, {
+    e7: true,
+    clientFinancialReads: true,
+    installedE5ReadSource: true,
+    attribution: false,
+    e5Operations: false,
+  });
+});
 
 test("E7-OFF-NO-READS", async () => {
   const fixture = databaseFixture(), api = createE7Reader({
@@ -145,9 +167,18 @@ test("E7-OFF-NO-READS", async () => {
 });
 test("E7-E5-DEPENDENCY-NO-FALLBACK", async () => {
   const fixture = databaseFixture(), api = createE7Reader({
-    enabled: true, e5Enabled: false, database: fixture.database, transaction: fixture.transaction,
+    enabled: true, attributionEnabled: true, e5Enabled: false,
+    database: fixture.database, transaction: fixture.transaction,
   });
   await assert.rejects(() => api.attribution(session, attributionQuery), code("E7_DEPENDENCIA_NO_DISPONIBLE"));
+  assert.deepEqual([fixture.queries, fixture.transactions], [0, 0]);
+});
+test("E7-ATTRIBUTION-GATE-IS-INDEPENDENT", async () => {
+  const fixture = databaseFixture(), api = createE7Reader({
+    enabled: true, attributionEnabled: false, e5Enabled: true,
+    database: fixture.database, transaction: fixture.transaction,
+  });
+  await assert.rejects(() => api.attribution(session, attributionQuery), code("E7_ATRIBUCION_DISABLED"));
   assert.deepEqual([fixture.queries, fixture.transactions], [0, 0]);
 });
 test("E7-SESSION-MUST-BE-CURRENT", async () => {

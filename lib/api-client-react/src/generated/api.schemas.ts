@@ -9710,6 +9710,8 @@ export type AnalyticsUbicacionIdParameter = number;
 
 export type GetE7Disponibilidad200 = {
   enabled: boolean;
+  clienteFinanzas: boolean;
+  atribucion: boolean;
 };
 
 export type GetE7AtribucionParams = {

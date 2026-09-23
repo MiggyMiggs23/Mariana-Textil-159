@@ -8,6 +8,7 @@ export let E7_ENABLED = true;
 export let E7_UI_ENABLED = true;
 export const E5_ENABLED = false;
 export const e7On = () => E7_ENABLED && E7_UI_ENABLED;
+export const e7ClientFinancialOn = () => E7_ENABLED && E7_UI_ENABLED;
 export function e7Gates(on: boolean) { E7_ENABLED = E7_UI_ENABLED = on; }
 const cell = { importe: "0.00", cuentaDestino: null, formasPago: [] };
 export const legacyAccounts: api.AdminCuentasDestino = {

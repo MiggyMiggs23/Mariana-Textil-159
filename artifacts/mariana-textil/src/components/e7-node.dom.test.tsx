@@ -123,18 +123,19 @@ test("E7-GROUP1-FOUR", async () => {
   await until(() => node("e7-global-four"));
   const four = node("e7-global-four")!;
   check(four.children.length === 4 && four.textContent?.includes("150.00") && four.textContent?.includes("500.00") && four.textContent?.includes("350.00"));
-  check(text().includes("No sustituye el estado de cuenta interactivo.") && text().includes("Movimientos, pagos y ajustes"));
-  check(seen("/api/clientes/21/estado-cuenta") && !node("button-export-account") && !node("button-print-account"));
+  check(text().includes("Estado de cuenta financiero") && text().includes("El resumen de crédito es global"));
+  check(!seen("/api/clientes/21/estado-cuenta") && !node("button-export-account") && !node("button-print-account"));
+  check(node("e7-client-export-pdf") && node("e7-client-export-xlsx") && node("e7-client-export-imprimir"));
 });
 test("E7-GROUP1-LINKS", async () => {
-  t.respond("/api/auth/me", t.actorAtSite(2)); await app("E7-GROUP1-LINKS", "/clientes/21");
+  t.respond("/api/auth/me", t.actorAtSite(2)); await app("E7-GROUP1-LINKS", "/clientes/21?tab=estado");
   await until(() => node("e7-client-export"));
   for (const [label, path] of [["pdf", "estado-cuenta.pdf"], ["xlsx", "estado-cuenta.xlsx"], ["imprimir", "estado-cuenta/imprimir"]])
     check(node(`e7-client-export-${label}`)?.getAttribute("href") === `/api/clientes/21/${path}?ubicacionId=2`);
   check(!node("e7-movements")?.textContent?.includes("NOTA-OTRO-SITIO"));
 });
 test("E7-FOREIGN-PREVIEW", async () => {
-  await app("E7-FOREIGN-PREVIEW", "/clientes/21"); await until(() => node("e7-client-export"));
+  await app("E7-FOREIGN-PREVIEW", "/clientes/21?tab=estado"); await until(() => node("e7-client-export"));
   t.respond("/api/e7/clientes/21/exportacion", t.f.foreignPreview); await focus();
   await until(() => text().includes("Respuesta ajena al cliente"));
   check(!node("e7-global-four") && !node("e7-client-export-pdf"));

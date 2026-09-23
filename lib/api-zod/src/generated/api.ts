@@ -53,7 +53,9 @@ export const RetirarRolloRemateResponse = zod.object({
 
 
 export const GetE7DisponibilidadResponse = zod.object({
-  "enabled": zod.boolean()
+  "enabled": zod.boolean(),
+  "clienteFinanzas": zod.boolean(),
+  "atribucion": zod.boolean()
 })
 
 

@@ -36,7 +36,7 @@ export const cases = [
   one("E7-OPERATIONAL-BOUNDARY", "src/pages/caja/cuenta-destino-detalle.tsx", 'No sumar este subtotal a la cobranza E7.', 'Sumar este subtotal a la cobranza E7.'),
   one("E7-RANGE", reader, '(end - start) / 86400000 + 1 > 366)', '(end - start) / 86400000 + 1 > 3660)'),
   one("E7-SCOPE-QUERY", reader, '...(selectedLocationId ? { ubicacionId: String(selectedLocationId) } : {})', '...({})'),
-  one("E7-AVAILABILITY", reader, 'if (!q.data.enabled) return', 'if (false) return'),
+  one("E7-AVAILABILITY", reader, 'if (!enabled) return', 'if (false) return'),
   one("E7-COUNTER-BOUNDARY", reader, 'user.data.rol !== "CONTADOR" && (surface === "exportacion"', 'true && (surface === "exportacion"'),
   one("E7-SISTEMAS-TIEMPO", reader, ': surface === "tiempo-real" ? user.data.rol === "ADMIN" :', ': surface === "tiempo-real" ? ["ADMIN", "SISTEMAS"].includes(user.data.rol) :'),
   one("E7-LEGENDS", reader, '<p key={t}>{t}</p>', '<p key={t}>{t.replace("todos los sitios", "el sitio actual")}</p>'),

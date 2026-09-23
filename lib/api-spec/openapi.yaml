@@ -14,11 +14,14 @@ x-e11-gates:
   E11_E5_PREPARATION_ENABLED: false
   description: Contrato solamente; ninguna puerta activa implementación, migración o permisos.
 x-e7-gates:
-  E7_ENABLED: false
-  description: Lectura E7 OFF; no activa E3, E4, E5 ni atribución histórica. Grupo 1 únicamente.
+  E7_ENABLED: true
+  E7_CLIENT_FINANCIAL_READS_ENABLED: true
+  E7_ATTRIBUTION_ENABLED: false
+  E7_E5_READ_SOURCE_ENABLED: true
+  description: Lecturas financieras de clientes ON; atribución y operaciones E5 permanecen OFF.
 tags:
   - name: e7
-    description: Atribución de lecturas y exportaciones Grupo 1, construcción OFF
+    description: Lecturas financieras de clientes; atribución operativa cerrada
   - name: e11
     description: Contrato OFF de perfiles CONTADOR A/F, lectores dedicados y conciliación facturada
   - name: e9
@@ -120,15 +123,17 @@ paths:
       tags: [e7]
       responses:
         "200":
-          description: Gate de fuente, sin auth ni DB estando OFF
+          description: Gates de fuente; no consulta DB
           content:
             application/json:
               schema:
                 type: object
                 additionalProperties: false
-                required: [enabled]
+                required: [enabled, clienteFinanzas, atribucion]
                 properties:
                   enabled: { type: boolean }
+                  clienteFinanzas: { type: boolean }
+                  atribucion: { type: boolean }
   /e7/atribucion:
     get:
       operationId: getE7Atribucion

@@ -1,6 +1,10 @@
 import { Router, type Request, type Response, type NextFunction } from "express";
 import { z } from "zod";
-import { E7_ENABLED } from "../lib/e7-feature";
+import {
+  E7_ATTRIBUTION_ENABLED,
+  E7_CLIENT_FINANCIAL_READS_ENABLED,
+  E7_ENABLED,
+} from "../lib/e7-feature";
 import { E7Error, E7ScopeQuery, E7AttributionQuery, e7Reader } from "../lib/e7-read-model";
 import { requireSession } from "../middlewares/auth";
 import { e7AttributionWorkbook, e7AttributionPdf } from "../lib/e7-export";
@@ -21,13 +25,26 @@ export function e7Error(error: unknown, res: Response, next: NextFunction) {
   else next(error);
 }
 const router = Router();
-router.get("/e7/disponibilidad", (_req, res) => { res.json({ enabled: E7_ENABLED }); });
+router.get("/e7/disponibilidad", (_req, res) => {
+  res.json({
+    enabled: E7_ENABLED,
+    clienteFinanzas: E7_CLIENT_FINANCIAL_READS_ENABLED,
+    atribucion: E7_ATTRIBUTION_ENABLED,
+  });
+});
 router.use("/e7", (_req, res, next) => {
   if (!E7_ENABLED) { res.status(403).json({ code: "E7_DISABLED", message: "E7 no está habilitado." }); return; }
   next();
 });
 router.use("/e7", requireSession);
 const session = (req: Request) => ({ userId: req.auth!.user.id, sessionId: req.auth!.sessionId });
+router.use(["/e7/atribucion", "/e7/atribucion.xlsx", "/e7/atribucion.pdf"], (_req, res, next) => {
+  if (!E7_ATTRIBUTION_ENABLED) {
+    res.status(403).json({ code: "E7_ATRIBUCION_DISABLED", message: "La atribución E7 permanece cerrada." });
+    return;
+  }
+  next();
+});
 router.get("/e7/atribucion", async (req, res, next) => {
   try {
     const result = await e7Reader.attribution(session(req), E7AttributionQuery.parse(req.query));
@@ -48,6 +65,8 @@ router.get(["/e7/atribucion.xlsx", "/e7/atribucion.pdf"], async (req, res, next)
 });
 router.get("/e7/clientes/:clienteId/exportacion", async (req, res, next) => {
   try {
+    if (!E7_CLIENT_FINANCIAL_READS_ENABLED)
+      throw new E7Error("E7_DISABLED", "Los lectores financieros de clientes permanecen cerrados.", 403);
     const id = z.coerce.number().int().positive().max(2147483647).parse(req.params.clienteId);
     const result = await e7Reader.statement(session(req), id, E7ScopeQuery.parse(req.query));
     res.setHeader("Cache-Control", "no-store"); res.json(result);

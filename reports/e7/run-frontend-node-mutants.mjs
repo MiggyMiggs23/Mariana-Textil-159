@@ -15,8 +15,10 @@ const require = createRequire(path.join(root, app, "package.json")), ts = requir
 const compiler = createRequire(require.resolve("vite/package.json")).resolve("esbuild");
 const binary = fs.realpathSync(createRequire(compiler).resolve(`@esbuild/${process.platform}-${process.arch}/bin/esbuild`));
 const args = process.argv.slice(2), buildOnly = args.length === 1 && args[0] === "--build-only";
-need(buildOnly || args.length === 2 && args[0] === "--ids", "MAIN: --ids E7-ID,...; helper: --build-only. No implicit all-case execution.");
-const ids = buildOnly ? cases.map(c => c.id) : args[1].split(",");
+const releaseReads = args.length === 3 && args[0] === "--release-reads" && args[1] === "--ids";
+need(buildOnly || releaseReads || args.length === 2 && args[0] === "--ids",
+  "MAIN: --ids E7-ID,... or --release-reads --ids E7-ID,...; helper: --build-only. No implicit all-case execution.");
+const ids = buildOnly ? cases.map(c => c.id) : args[releaseReads ? 2 : 1].split(",");
 need(ids.length && new Set(ids).size === ids.length && ids.every(id => cases.some(c => c.id === id)), "E7_INVALID_SELECTION");
 const originals = new Map(), excluded = [];
 function collect(dir) {
@@ -32,11 +34,16 @@ function collect(dir) {
 collect(`${app}/src`); collect("lib");
 const documentEvidence = "reports/e7/frontend-document-preflight-2026-09-23T02-56-23.609Z/manifest.json";
 const documentProof = JSON.parse(fs.readFileSync(documentEvidence));
-need(hash(fs.readFileSync("reports/e7/frontend-document-bytes.json")) === documentProof.documentFixtureHash, "E7_REAL_BINARY_HASH_CHANGED");
-for (const [file, sourceHash] of Object.entries(documentProof.sourceHashes))
-  need(hash(fs.readFileSync(file)) === sourceHash, `E7_DOCUMENT_SOURCE_DRIFT ${file}`);
+if (!releaseReads) {
+  need(hash(fs.readFileSync("reports/e7/frontend-document-bytes.json")) === documentProof.documentFixtureHash, "E7_REAL_BINARY_HASH_CHANGED");
+  for (const [file, sourceHash] of Object.entries(documentProof.sourceHashes))
+    need(hash(fs.readFileSync(file)) === sourceHash, `E7_DOCUMENT_SOURCE_DRIFT ${file}`);
+}
+const documentInputs = releaseReads
+  ? []
+  : ["reports/e7/frontend-document-bytes.json", documentEvidence, ...Object.keys(documentProof.sourceHashes)];
 for (const f of [`${app}/package.json`, "tsconfig.base.json", "reports/e7/frontend-fixtures.ts",
-  "reports/e7/frontend-document-bytes.json", documentEvidence, ...Object.keys(documentProof.sourceHashes)])
+  "reports/e7/frontend-document-bytes.json", ...documentInputs])
   originals.set(f, fs.readFileSync(f));
 const testSource = originals.get(`${app}/${testFile}`).toString();
 const ast = ts.createSourceFile(testFile, testSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
@@ -53,8 +60,10 @@ fs.mkdirSync(evidence);
 const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), "e7-native-")), identity = fs.lstatSync(sandbox), owned = new Set();
 const harnessFiles = [...helpers.map(f => `${infrastructure}/${f}`), builder, "reports/e7/frontend-mutants-cases.mjs", "reports/e7/run-frontend-node-mutants.mjs"];
 const manifest = {
-  status: "PREPARING_NOT_EXECUTED", mode: buildOnly ? "BUILD_ONLY" : "GREEN_SPECIFIC_RED_RESTORED", coverageStatus, hookCoverage, limits,
-  sandbox, testFile, selectedIds: ids, omittedIds: cases.filter(c => !ids.includes(c.id)).map(c => c.id), excluded, documentEvidence,
+  status: "PREPARING_NOT_EXECUTED", mode: buildOnly ? "BUILD_ONLY" : releaseReads ? "RELEASE_READS_GREEN_SPECIFIC_RED_RESTORED_NO_BINARY_PROOF" : "GREEN_SPECIFIC_RED_RESTORED", coverageStatus, hookCoverage, limits,
+  sandbox, testFile, selectedIds: ids, omittedIds: cases.filter(c => !ids.includes(c.id)).map(c => c.id), excluded,
+  documentEvidence: releaseReads ? null : documentEvidence,
+  releaseReadsLimit: releaseReads ? "Scoped client-reader DOM run; historical binary-document hashes intentionally not claimed." : null,
   cases: [], cleanup: [], cleanupErrors: [], testsExecuted: 0,
   caseInventory: cases.map(c => ({ ...c, caseAstHash: hash(declarations.find(s => s.expression.arguments[0]?.text === c.id).getText()), sourceHash: hash(originals.get(`${app}/${c.file}`)) })),
   sourceHashes: Object.fromEntries([...originals].map(([f, b]) => [f, hash(b)])),

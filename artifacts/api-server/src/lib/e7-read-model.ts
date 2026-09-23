@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { projectCreditLedger, moneyToCents, type CreditLedgerMovement } from "./credit-allocation";
-import { E7_ENABLED } from "./e7-feature";
-import { E5_ENABLED } from "./e5-feature";
+import {
+  E7_ATTRIBUTION_ENABLED,
+  E7_CLIENT_FINANCIAL_READS_ENABLED,
+  E7_E5_READ_SOURCE_ENABLED,
+} from "./e7-feature";
 import { accountedDocumentAt, accountedDocumentPredicate } from "./accounted-document";
 import { parseMexicoDateQuery } from "./mexico-date";
 import { resolveReadScope } from "./read-scope";
@@ -32,7 +35,7 @@ type Query = z.infer<typeof E7ScopeQuery>;
 export type E7Session = { userId: number; sessionId: string };
 export type E7Transaction = <T>(work: (database: CreditLedgerQuery) => Promise<T>) => Promise<T>;
 export type E7Infrastructure = {
-  enabled?: boolean; e5Enabled?: boolean; now?: () => Date;
+  enabled?: boolean; attributionEnabled?: boolean; e5Enabled?: boolean; now?: () => Date;
   database?: CreditLedgerQuery;
   permissionDatabase?: Parameters<typeof resolvePermiso>[3];
   transaction?: E7Transaction;
@@ -125,7 +128,13 @@ async function retained(database: CreditLedgerQuery, scope: ClienteFinancialRead
   });
 }
 export function createE7Reader(infrastructure: E7Infrastructure = {}) {
-  const options = Object.freeze({ enabled: E7_ENABLED, e5Enabled: E5_ENABLED, now: () => new Date(), ...infrastructure });
+  const options = Object.freeze({
+    enabled: E7_CLIENT_FINANCIAL_READS_ENABLED,
+    attributionEnabled: E7_ATTRIBUTION_ENABLED,
+    e5Enabled: E7_E5_READ_SOURCE_ENABLED,
+    now: () => new Date(),
+    ...infrastructure,
+  });
   const database = async () => options.database ?? (await import("@workspace/db")).pool;
   async function authorize(session: E7Session, attribution: boolean) {
     const db = await database(), now = options.now();
@@ -162,6 +171,8 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
   async function read<T>(session: E7Session, query: Query, attribution: boolean,
     work: (db: CreditLedgerQuery, scope: ClienteFinancialReadScope, now: Date) => Promise<T>) {
     if (!options.enabled) throw new E7Error("E7_DISABLED", "E7 no está habilitado.", 403);
+    if (attribution && !options.attributionEnabled)
+      throw new E7Error("E7_ATRIBUCION_DISABLED", "La atribución E7 permanece cerrada.", 403);
     if (!options.e5Enabled) throw new E7Error("E7_DEPENDENCIA_NO_DISPONIBLE", "Falta habilitación de la fuente E5; no se fabrica cero.");
     const auth = await authorize(session, attribution);
     const result = await transaction(async db => {

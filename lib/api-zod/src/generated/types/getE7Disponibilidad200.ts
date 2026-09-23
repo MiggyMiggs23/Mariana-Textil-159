@@ -8,4 +8,6 @@
 
 export type GetE7Disponibilidad200 = {
   enabled: boolean;
+  clienteFinanzas: boolean;
+  atribucion: boolean;
 };
