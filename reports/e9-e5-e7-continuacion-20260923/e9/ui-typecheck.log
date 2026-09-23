@@ -1,0 +1,4 @@
+
+> @workspace/mariana-textil@0.0.0 typecheck /home/runner/workspace/artifacts/mariana-textil
+> tsc -p tsconfig.json --noEmit
+

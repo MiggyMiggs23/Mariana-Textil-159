@@ -95,7 +95,9 @@ BEGIN
     IF (d-'investigacion') IS DISTINCT FROM (oldd-'investigacion')
       OR coalesce(oldd#>>'{investigacion,estado}','')<>'ABIERTA'
       OR coalesce(d#>>'{investigacion,estado}','')<>'CERRADA_DOCUMENTAL'
-      OR (d->'investigacion'-ARRAY['estado','cierre']) IS DISTINCT FROM (oldd->'investigacion'-ARRAY['estado','cierre'])
+      -- Parentheses are required: without them PostgreSQL resolves the key
+      -- literal `investigacion` as the jsonb operand of jsonb - text[].
+      OR ((d->'investigacion')-ARRAY['estado','cierre']) IS DISTINCT FROM ((oldd->'investigacion')-ARRAY['estado','cierre'])
       OR nullif(btrim(d#>>'{investigacion,cierre,conclusion}'),'') IS NULL
       OR NOT e9_evidence_valid(d#>'{investigacion,cierre,evidencia}')
       OR NOT EXISTS (SELECT 1 FROM usuarios WHERE id=(d#>>'{investigacion,cierre,actor,id}')::integer AND rol::text='ADMIN')

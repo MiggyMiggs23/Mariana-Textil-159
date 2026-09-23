@@ -1,0 +1,29 @@
+{
+  "result": "PASS",
+  "effectiveApiPid": 41386,
+  "database": "heliumdb",
+  "sqlApplied": true,
+  "committed": true,
+  "rowsUnchanged": true,
+  "fondoIngressEnabled": false,
+  "before": {
+    "database": "heliumdb",
+    "e9Count": 0,
+    "e9Fingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+    "fondoCount": 0,
+    "fondoFingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+    "functionHash": "9aaec5d7f83c6c93c8a511847e9d3a04",
+    "correctedParentheses": false,
+    "buggyExpression": true
+  },
+  "after": {
+    "database": "heliumdb",
+    "e9Count": 0,
+    "e9Fingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+    "fondoCount": 0,
+    "fondoFingerprint": "d41d8cd98f00b204e9800998ecf8427e",
+    "functionHash": "fa2fbbef73f7d4e2a415fcd0610f1192",
+    "correctedParentheses": true,
+    "buggyExpression": false
+  }
+}

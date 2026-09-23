@@ -1,0 +1,25 @@
+{
+  "result": "PASS",
+  "postgresErrorFixed": "22P02",
+  "offendingExpression": "d->'investigacion'-ARRAY['estado','cierre']",
+  "offendingValue": "investigacion",
+  "actualCoercion": "text to jsonb",
+  "expectedOperation": "jsonb object minus text[] keys",
+  "correctedExpression": "(d->'investigacion')-ARRAY['estado','cierre']",
+  "producerCoverage": [
+    "send by real same-site SUPERVISOR",
+    "count and authorize by real ADMIN",
+    "negative mismatch investigation and documentary close",
+    "positive mismatch investigation",
+    "send and authorization idempotent replay",
+    "cross-site denial",
+    "forged ADMIN role denial against database role",
+    "audit failure atomic rollback",
+    "no Fondo rows or links",
+    "closed cut unchanged"
+  ],
+  "sqlAppliedInDisposable": true,
+  "realDatabaseSqlApplied": false,
+  "fondoIngressEnabled": false,
+  "clusterDestroyed": true
+}

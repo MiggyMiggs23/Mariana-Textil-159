@@ -1,0 +1,106 @@
+Preparación: aplicar schema vigente...
+
+> @workspace/db@0.0.0 push-force /home/runner/workspace/lib/db
+> drizzle-kit push --force --config ./drizzle.config.ts
+
+Reading config file '/home/runner/workspace/lib/db/drizzle.config.ts'
+Using 'pg' driver for database querying
+[⣷] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[✓] Changes applied
+Preparación: ejecutar seed completo...
+
+> @workspace/db@0.0.0 seed /home/runner/workspace/lib/db
+> node ./src/seed.mjs
+
+Seed completado: ubicaciones, admin, ticket_folio y matriz de permisos para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR.
+Usuarios existentes con rol CAJA conservados sin cambios: 0.
+Usuarios que tenían el rol SOPORTE antes de migrar a SISTEMAS: 0.
+ADVERTENCIA: cambia la contraseña inicial del usuario admin inmediatamente después del primer acceso.
+Preparación: ejecutar inicializadores y comprobar readiness...
+[19:12:00.376] [32mINFO[39m (44550): [36mSchema initializer complete: ensureAuditSchema[39m
+    [35mdurationMs[39m: 24
+[19:12:00.380] [32mINFO[39m (44550): [36mSchema initializer complete: ensureNotificacionesSchema[39m
+    [35mdurationMs[39m: 3
+[19:12:00.385] [32mINFO[39m (44550): [36mSchema initializer complete: ensureStockMinimosSchema[39m
+    [35mdurationMs[39m: 5
+[19:12:00.386] [32mINFO[39m (44550): [36mSchema initializer complete: ensureCamionetasSchema[39m
+    [35mdurationMs[39m: 1
+[19:12:00.387] [32mINFO[39m (44550): [36mSchema initializer complete: ensureChoferesSchema[39m
+    [35mdurationMs[39m: 1
+[19:12:00.388] [32mINFO[39m (44550): [36mSchema initializer complete: ensureViajesSchema[39m
+    [35mdurationMs[39m: 1
+[19:12:00.414] [32mINFO[39m (44550): [36mSchema initializer complete: ensureEquiposSchema[39m
+    [35mdurationMs[39m: 26
+[19:12:00.423] [32mINFO[39m (44550): [36mSchema initializer complete: ensurePagosProveedorSchema[39m
+    [35mdurationMs[39m: 9
+[19:12:00.431] [32mINFO[39m (44550): [36mSchema initializer complete: ensureSolicitudesPagoDirigidoSchema[39m
+    [35mdurationMs[39m: 7
+[19:12:00.439] [32mINFO[39m (44550): [36mSchema initializer complete: ensureAplicacionesPagoProveedorSchema[39m
+    [35mdurationMs[39m: 8
+[19:12:00.439] [32mINFO[39m (44550): [36mSchema startup phase complete: audit and logistics[39m
+    [35mdurationMs[39m: 86
+[19:12:00.445] [32mINFO[39m (44550): [36mSchema initializer complete: ensureEstadoRolloSchema[39m
+    [35mdurationMs[39m: 7
+[19:12:00.449] [32mINFO[39m (44550): [36mSchema initializer complete: ensureExtraordinaryExitsSchema[39m
+    [35mdurationMs[39m: 4
+[19:12:00.454] [32mINFO[39m (44550): [36mSchema initializer complete: ensureProductUnitSchema[39m
+    [35mdurationMs[39m: 5
+[19:12:00.460] [32mINFO[39m (44550): [36mSchema initializer complete: ensureProductMeterSchema[39m
+    [35mdurationMs[39m: 6
+[19:12:00.467] [32mINFO[39m (44550): [36mSchema initializer complete: ensureProductPricingSchema[39m
+    [35mdurationMs[39m: 7
+[19:12:00.472] [32mINFO[39m (44550): [36mSchema initializer complete: ensureProductColorSchema[39m
+    [35mdurationMs[39m: 5
+[19:12:00.476] [32mINFO[39m (44550): [36mSchema initializer complete: ensureProductSpecificationsSchema[39m
+    [35mdurationMs[39m: 3
+[19:12:00.476] [32mINFO[39m (44550): [36mSchema startup phase complete: inventory and products[39m
+    [35mdurationMs[39m: 37
+[19:12:00.486] [32mINFO[39m (44550): [36mSchema initializer complete: ensureSupervisorRole[39m
+    [35mdurationMs[39m: 10
+[19:12:00.493] [32mINFO[39m (44550): [36mSchema initializer complete: ensureAuditoriaInventarioSchema[39m
+    [35mdurationMs[39m: 6
+[19:12:00.497] [32mINFO[39m (44550): [36mSchema initializer complete: ensurePisosSchema[39m
+    [35mdurationMs[39m: 4
+[19:12:00.497] [32mINFO[39m (44550): [36mRoles SUPERVISOR, SISTEMAS y CONTADOR verificados[39m
+    [35mmigratedSupportUsers[39m: 0
+[19:12:00.497] [32mINFO[39m (44550): [36mSchema startup phase complete: roles and inventory audit[39m
+    [35mdurationMs[39m: 21
+[19:12:00.537] [32mINFO[39m (44550): [36mSchema initializer complete: ensureClientesSchema[39m
+    [35mdurationMs[39m: 40
+[19:12:00.541] [32mINFO[39m (44550): [36mSchema initializer complete: ensureTicketIvaSchema[39m
+    [35mdurationMs[39m: 4
+[19:12:00.545] [32mINFO[39m (44550): [36mSchema initializer complete: ensureCashSessionSchema[39m
+    [35mdurationMs[39m: 4
+[19:12:00.549] [32mINFO[39m (44550): [36mSchema initializer complete: ensureTicketAuthorizationSchema[39m
+    [35mdurationMs[39m: 4
+[19:12:00.557] [32mINFO[39m (44550): [36mSchema initializer complete: ensureTicketLineTypesSchema[39m
+    [35mdurationMs[39m: 8
+[19:12:00.589] [32mINFO[39m (44550): [36mSchema initializer complete: ensureSalidasSchema[39m
+    [35mdurationMs[39m: 32
+[19:12:00.600] [32mINFO[39m (44550): [36mSchema initializer complete: ensureAuditoriaResolucionesSchema[39m
+    [35mdurationMs[39m: 11
+[19:12:00.626] [32mINFO[39m (44550): [36mSchema initializer complete: ensureDocumentFoliosSchema[39m
+    [35mdurationMs[39m: 26
+[19:12:00.626] [32mINFO[39m (44550): [36mSchema startup phase complete: customers and tickets[39m
+    [35mdurationMs[39m: 129
+[19:12:00.632] [32mINFO[39m (44550): [36mSchema initializer complete: ensurePendingCostsSchema[39m
+    [35mdurationMs[39m: 6
+[19:12:00.644] [32mINFO[39m (44550): [36mSchema initializer complete: ensureAdminAnalyticsSchema[39m
+    [35mdurationMs[39m: 12
+[19:12:00.662] [32mINFO[39m (44550): [36mSchema initializer complete: ensureCuadreFiscalSchema[39m
+    [35mdurationMs[39m: 18
+[19:12:00.670] [32mINFO[39m (44550): [36mSchema initializer complete: ensureEtiquetasSchema[39m
+    [35mdurationMs[39m: 8
+[19:12:00.675] [32mINFO[39m (44550): [36mSchema initializer complete: ensureCajaPermissions[39m
+    [35mdurationMs[39m: 5
+Inicializadores y readiness de base de pruebas completados.
+[19:12:00.681] [32mINFO[39m (44550): [36mSchema initializer complete: ensureSalidasVentaPermissions[39m
+    [35mdurationMs[39m: 6
+[19:12:00.681] [32mINFO[39m (44550): [36mSchema startup phase complete: reporting and labels[39m
+    [35mdurationMs[39m: 55
+[19:12:00.681] [32mINFO[39m (44550): [36mSchema startup complete[39m
+    [35mdurationMs[39m: 337
+Base de pruebas preparada completamente: isolated_test_1a2126f77d953f4ce207.
+E9_DISPOSABLE_PG_PASS
+E9_DISPOSABLE_CLUSTER_DESTROYED_PASS

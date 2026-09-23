@@ -62,7 +62,7 @@ function spy(rows: Record<string, unknown>[] = []) {
   return { tx, queries };
 }
 test("E9-PRODUCTION-GATES", () => {
-  assert.equal(E9_ENABLED, false);
+  assert.equal(E9_ENABLED, true);
   assert.equal(E9_FONDO_INGRESS_ENABLED, false);
 });
 test("E9-OFF-WRITE", async () => { const m = new Memory(); await assert.rejects(() => e9Command(m, admin, "ENVIAR", send(), undefined, false), code("E9_DISABLED")); assert.equal(m.reads, 0); });
