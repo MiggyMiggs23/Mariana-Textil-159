@@ -65,8 +65,7 @@ function E9List({ user, site }: { user: CurrentUser; site: number }) {
         {list.error && <p role="alert" className="text-destructive">{e9Error(list.error)}</p>}
         {!list.isLoading && !list.error && list.data?.items.length === 0 && <p>No hay entregas en este filtro.</p>}
         {!list.error && list.data?.items.filter(item => item.ubicacionId === site).map(item => <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded border p-3">
-          <div><p className="font-semibold">{item.ubicacionNombre} · Corte #{item.corteId}</p><p className="text-sm">Enviado {item.importeEnviado} · {item.estado} · Investigación: {item.investigacion?.estado ?? "Sin investigación"}</p><p className="text-xs text-muted-foreground">{item.enviadoAt} · {item.enviadoPor.nombre}</p></div>
-          <Button variant="outline" data-testid={`button-e9-detalle-${item.id}`} onClick={() => setSelected(item.id)}>Ver detalle</Button>
+          <div><p className="font-semibold">{item.ubicacionNombre} · <button type="button" className="text-primary underline" data-testid={`button-e9-detalle-${item.id}`} onClick={() => setSelected(item.id)}>Corte #{item.corteId}</button></p><p className="text-sm">Enviado <button type="button" className="font-semibold text-primary underline" onClick={() => setSelected(item.id)} aria-label={`Abrir detalle de la entrega del corte ${item.corteId}`}>{item.importeEnviado}</button> · {item.estado} · Investigación: {item.investigacion?.estado ?? "Sin investigación"}</p><p className="text-xs text-muted-foreground">{item.enviadoAt} · {item.enviadoPor.nombre}</p></div>
         </div>)}
         <div className="flex gap-2"><Button variant="outline" disabled={cursors.length === 1 || list.isFetching} onClick={() => setCursors(value => value.slice(0, -1))}>Anterior</Button><Button variant="outline" disabled={!list.data?.nextCursor || list.isFetching} onClick={() => setCursors(value => [...value, list.data!.nextCursor])}>Siguiente</Button></div>
       </>}
@@ -79,13 +78,13 @@ function Evidence({ value }: { value: E9Evidencia }) {
   return <div className="text-sm"><p className="whitespace-pre-wrap">{value.descripcion}</p>{value.referencias.length > 0 && <ul className="list-disc pl-5">{value.referencias.map((ref, index) => <li className="break-all" key={index}>{ref}</li>)}</ul>}</div>;
 }
 
-function E9History({ data }: { data: E9Entrega }) {
+function E9History({ data, corteHref }: { data: E9Entrega; corteHref: string | null }) {
   const events: Array<{ key: string; date: string; content: ReactNode }> = [{
     key: "envio", date: data.enviadoAt,
     content: <><p>Envío · {data.enviadoAt} · {data.enviadoPor.nombre}</p><Evidence value={data.evidenciaEnvio} /></>,
   }];
   for (const item of data.conteos) events.push({ key: item.id, date: item.createdAt,
-    content: <><p>Conteo · {item.createdAt} · {item.actor.nombre}{item.id === data.conteoVigenteId ? " · Vigente" : ""}</p><p>Recibido {item.importeRecibido} · Diferencia {item.diferencia}</p><Evidence value={item.evidencia} /></>,
+    content: <><p>Conteo · {item.createdAt} · {item.actor.nombre}{item.id === data.conteoVigenteId ? " · Vigente" : ""}</p><p>Recibido {corteHref ? <a className="text-primary underline" href={corteHref}>{item.importeRecibido}</a> : item.importeRecibido} · Diferencia {corteHref ? <a className="text-primary underline" href={corteHref}>{item.diferencia}</a> : item.diferencia}</p><Evidence value={item.evidencia} /></>,
   });
   if (data.investigacion) {
     const investigation = data.investigacion;
@@ -97,7 +96,7 @@ function E9History({ data }: { data: E9Entrega }) {
   }
   if (data.autorizacion) {
     const authorization = data.autorizacion;
-    events.push({ key: "autorizacion", date: authorization.createdAt, content: <><p>Recepción autorizada · {authorization.createdAt} · {authorization.actor.nombre}</p><p>Importe recibido {authorization.importeRecibido}</p>{authorization.motivo && <p>{authorization.motivo}</p>}</> });
+    events.push({ key: "autorizacion", date: authorization.createdAt, content: <><p>Recepción autorizada · {authorization.createdAt} · {authorization.actor.nombre}</p><p>Importe recibido {corteHref ? <a className="text-primary underline" href={corteHref}>{authorization.importeRecibido}</a> : authorization.importeRecibido}</p>{authorization.motivo && <p>{authorization.motivo}</p>}</> });
   }
   return <section className="space-y-3"><h3 className="font-semibold">Cronología y evidencia</h3>{events.sort((a, b) => Date.parse(a.date) - Date.parse(b.date)).map(event => <article className="rounded border p-3" key={event.key}>{event.content}</article>)}</section>;
 }
@@ -143,6 +142,7 @@ function E9Detail({ id, site, user, onClose }: { id: string; site: number; user:
   }, []);
   const intention = useRef({ snapshot: "", uuid: "" });
   const data = !detail.error && detail.data?.ubicacionId === site ? detail.data : undefined;
+  const corteHref = data && /^\/caja\/cortes(?:\?|$)/.test(data.corteHref) ? data.corteHref : null;
   const current = data?.conteos.find(item => item.id === data.conteoVigenteId);
   const intendedCount = data?.conteos.find(item => item.id === authorizationCountId);
   const canCount = !detail.error && admin && data?.capacidades.puedeContar && data.estado !== "AUTORIZADA";
@@ -200,8 +200,8 @@ function E9Detail({ id, site, user, onClose }: { id: string; site: number; user:
       {detail.isLoading && <p role="status">Cargando detalle…</p>}
       {detail.error && <p role="alert" className="text-destructive">{e9Error(detail.error)}</p>}
       {data && <div className="space-y-4">
-        <div className="rounded border p-3"><p className="font-semibold">{data.ubicacionNombre} · Corte #{data.corteId}</p><p>Corte: {data.fechaCorte} · Versión {data.versionCorte}</p>{/^\/caja\/cortes(?:\?|$)/.test(data.corteHref) && <a className="underline" href={data.corteHref}>Ver corte exacto</a>}<p>Enviado: {data.importeEnviado} · Recepción: {data.estado}</p><p>Recibido vigente: {current?.importeRecibido ?? "Sin conteo"} · Diferencia: {current?.diferencia ?? "Sin conteo"}</p><p>Investigación: {data.investigacion?.estado ?? "Sin investigación"}</p></div>
-        <E9History data={data} />
+        <div className="rounded border p-3"><p className="font-semibold">{data.ubicacionNombre} · {corteHref ? <a className="underline" href={corteHref}>Corte #{data.corteId}</a> : <>Corte #{data.corteId}</>}</p><p>Corte: {data.fechaCorte} · Versión {data.versionCorte}</p>{corteHref && <a className="underline" href={corteHref}>Ver corte exacto</a>}<p>Enviado: {corteHref ? <a className="font-semibold text-primary underline" href={corteHref}>{data.importeEnviado}</a> : data.importeEnviado} · Recepción: {data.estado}</p><p>Recibido vigente: {corteHref && current ? <a className="text-primary underline" href={corteHref}>{current.importeRecibido}</a> : current?.importeRecibido ?? "Sin conteo"} · Diferencia: {corteHref && current ? <a className="text-primary underline" href={corteHref}>{current.diferencia}</a> : current?.diferencia ?? "Sin conteo"}</p><p>Investigación: {data.investigacion?.estado ?? "Sin investigación"}</p></div>
+        <E9History data={data} corteHref={corteHref} />
         {current && e9Cents(current.importeRecibido) === 0n && data.estado !== "AUTORIZADA" && <p className="text-sm">Conteo cero: recepción pendiente; no se autoriza.</p>}
         <div className="flex flex-wrap gap-2">{canCount && <Button disabled={pending} data-testid="button-e9-conteo" onClick={() => begin("conteo")}>Registrar conteo</Button>}{canAuthorize && <Button disabled={pending} data-testid="button-e9-autorizar" onClick={() => begin("autorizar")}>Autorizar recepción</Button>}{canClose && <Button disabled={pending} variant="outline" data-testid="button-e9-cierre" onClick={() => begin("cerrar")}>Cerrar investigación documentalmente</Button>}</div>
         {action && <fieldset disabled={pending} className="rounded border p-4 space-y-3">

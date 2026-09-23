@@ -79,13 +79,13 @@ function databaseFixture(options: { actors?: Array<Actor | null>; historicalSql?
         const historicalIds = new Set((text.match(/m\.id IN \(([\d,]+)\)/)?.[1] ?? "")
           .split(",").filter(Boolean).map(Number));
         return [
-          { id: 1, ubicacion_id: 1, folio: "F-101", cuenta_destino: null, naturaleza: null,
+          { id: 1, ticket_id: 11, ubicacion_id: 1, folio: "F-101", cuenta_destino: null, naturaleza: null,
             sitio_origen_id: 1, original_tipo: null },
-          { id: 2, ubicacion_id: 2, folio: "F-102", cuenta_destino: null, naturaleza: null,
+          { id: 2, ticket_id: 12, ubicacion_id: 2, folio: "F-102", cuenta_destino: null, naturaleza: null,
             sitio_origen_id: 2, original_tipo: null },
-          { id: 3, ubicacion_id: null, folio: null, cuenta_destino: "CAJA_FISICA",
+          { id: 3, ticket_id: null, ubicacion_id: null, folio: null, cuenta_destino: "CAJA_FISICA",
             naturaleza: "OPERACION_CREDITO_SIN_DINERO", sitio_origen_id: 1, original_tipo: null },
-          ...[51, 52, 53].map(id => ({ id, ubicacion_id: null, folio: null, cuenta_destino: "CUENTA_FISCAL",
+          ...[51, 52, 53].map(id => ({ id, ticket_id: null, ubicacion_id: null, folio: null, cuenta_destino: "CUENTA_FISCAL",
             naturaleza: null, sitio_origen_id: historicalIds.has(id) ? null : 9, original_tipo: null })),
         ];
       }
@@ -103,7 +103,7 @@ function databaseFixture(options: { actors?: Array<Actor | null>; historicalSql?
         ];
       }
       if (/FROM ticket_pagos p JOIN tickets t/.test(text)) {
-        return [{ id: "POS:1", fecha: "2026-01-08T12:00:00.000Z", importe: "30.00",
+        return [{ id: "POS:1", ticket_id: 21, folio: 201, fecha: "2026-01-08T12:00:00.000Z", importe: "30.00",
           ubicacion_id: 1, cuenta: "CAJA_FISICA" }];
       }
       if (/SELECT DISTINCT m\.cliente_id AS id/.test(text)) return [{ id: 1 }];
@@ -249,6 +249,14 @@ test("E7-RECEIPT-APPLICATION-NOT-DOUBLE-INCOME", async () => {
     ["145.00", "150.00", "135.00"]);
   assert.equal(result.movimientos.filter(row => row.id === "E5:70000000-0000-4000-8000-000000000010").length, 1);
   assert.equal(result.movimientos.some(row => row.id === "ledger:3"), false);
+  const pos = result.movimientos.find(row => row.id === "POS:1");
+  assert.deepEqual([pos?.detailHref, pos?.documentHref, pos?.folio],
+    ["/tickets/21", "/tickets/21", "201"]);
+  const application = result.movimientos.find(row => row.tipo === "APLICACION");
+  assert.deepEqual([application?.detailHref, application?.documentHref],
+    ["/clientes/1/movimientos/3", "/tickets/11"]);
+  assert.equal(result.movimientos.filter(row => row.id.startsWith("E5:"))
+    .every(row => row.detailHref === null && row.documentHref === null), true);
 });
 test("E7-RETAINED-STOCK-NOT-RANGE-FLOW", async () => {
   const fixture = databaseFixture();

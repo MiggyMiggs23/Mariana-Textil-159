@@ -23,4 +23,14 @@ export interface E7Movimiento {
      * @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$
      */
   saldoPendiente?: string | null;
+  /**
+     * Ruta SPA a evidencia detallada, derivada exclusivamente de relaciones internas verificadas y ya autorizadas para este lector.
+     * @nullable
+     */
+  detailHref?: string | null;
+  /**
+     * Ruta SPA al documento exacto cuyo folio se muestra; nunca se deriva del folio.
+     * @nullable
+     */
+  documentHref?: string | null;
 }

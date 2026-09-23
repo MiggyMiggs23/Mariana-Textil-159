@@ -32,3 +32,32 @@ test("client detail consumes E7 JSON and exports without mounting attribution", 
   assert.match(detail, /enabled: canFinances && !e7ClientFinancialOn\(\) && Number\.isFinite\(id\)/);
   assert.match(readers, /export function E7Attribution[\s\S]*if \(!e7On\(\)\) return null/);
 });
+
+test("E7 only drills into a client movement when the backend supplies its exact scoped href", () => {
+  const readers = read("e7-readers.tsx");
+  assert.match(readers, /href\?\.match\(\/\^\\\/clientes/);
+  assert.match(readers, /Number\(match\[1\]\) === clienteId/);
+  assert.match(readers, /e7DocumentHref\(r\.documentHref\)/);
+  assert.doesNotMatch(readers, /\/tickets\/\$\{r\.folio\}/);
+});
+
+test("new financial documents expose only contract-backed navigation", () => {
+  const receipt = read("../pages/caja/recibo-e3.tsx");
+  const payment = read("cliente-pago-dialog.tsx");
+  const deliveries = read("e9-entregas-panel.tsx");
+  const deliveryCreate = read("e9-envio-panel.tsx");
+  const ticket = read("../pages/ticket-detail.tsx");
+  const e4Panel = read("salidas-dinero-e4-panel.tsx");
+  const e4Item = read("salidas-dinero-e4-item.tsx");
+  assert.match(receipt, /row\.ticketId && row\.folio/);
+  assert.match(receipt, /clientes\/\$\{recibo\.clienteId\}\/movimientos\/\$\{recibo\.movimientoId\}/);
+  assert.match(payment, /recibos-e3\/\$\{e3Receipt\.folio\}/);
+  assert.match(deliveries, /setSelected\(item\.id\)/);
+  assert.match(deliveries, /test\(data\.corteHref\)/);
+  assert.match(deliveryCreate, /test\(saved\.corteHref\)/);
+  assert.match(deliveries, /corteHref && current/);
+  assert.match(ticket, /hasPermission\(user, Modules\.INVENTARIO, "ver"\)/);
+  assert.match(ticket, /inventario\/rollos\/\$\{rolloId\}/);
+  assert.match(e4Panel, /hasPermission\(user, Modules\.CORTES, "ver"\)/);
+  assert.match(e4Item, /caja\/cortes\?sesionId=\$\{sesionId\}/);
+});

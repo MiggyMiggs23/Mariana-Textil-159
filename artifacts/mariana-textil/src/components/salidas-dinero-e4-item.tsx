@@ -23,6 +23,7 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { E12_ENABLED } from "@/lib/e12-feature-flags";
+import { Link } from "wouter";
 
 type SalidaBase = {
   id: number;
@@ -43,6 +44,7 @@ export function SalidaDineroE4Item({
   userRole,
   userUbicacionId,
   tiendaId, // Location of the session
+  canViewCorte = false,
 }: {
   salida: SalidaBase;
   nombreProveedor?: string;
@@ -50,6 +52,7 @@ export function SalidaDineroE4Item({
   userRole?: string;
   userUbicacionId?: number;
   tiendaId?: number;
+  canViewCorte?: boolean;
 }) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -194,7 +197,7 @@ export function SalidaDineroE4Item({
           </div>
         </div>
         <div className="text-right flex flex-col items-end gap-1">
-          <span className="font-mono font-bold">{formatNumber(salida.monto, { kind: "money" })}</span>
+           {canViewCorte ? <Link className="font-mono font-bold text-primary underline" href={`/caja/cortes?sesionId=${sesionId}`} aria-label={`Abrir corte de la salida ${salida.id}`}>{formatNumber(salida.monto, { kind: "money" })}</Link> : <span className="font-mono font-bold">{formatNumber(salida.monto, { kind: "money" })}</span>}
           {isE4 && e4 && getEstadoBadge(e4.estado)}
         </div>
       </div>
@@ -214,7 +217,7 @@ export function SalidaDineroE4Item({
           <p className="font-semibold">Desbloqueo extraordinario de Caja</p>
           <p>{e4.desbloqueoCaja.motivo}</p>
           <p className="text-amber-800">
-            Usuario #{e4.desbloqueoCaja.usuarioId} · saldo {formatNumber(e4.desbloqueoCaja.saldoAntes, { kind: "money" })} · egreso {formatNumber(e4.desbloqueoCaja.egreso, { kind: "money" })} · {format(new Date(e4.desbloqueoCaja.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}
+             Usuario #{e4.desbloqueoCaja.usuarioId} · {canViewCorte ? <Link className="underline" href={`/caja/cortes?sesionId=${sesionId}`}>saldo {formatNumber(e4.desbloqueoCaja.saldoAntes, { kind: "money" })} · egreso {formatNumber(e4.desbloqueoCaja.egreso, { kind: "money" })}</Link> : <>saldo {formatNumber(e4.desbloqueoCaja.saldoAntes, { kind: "money" })} · egreso {formatNumber(e4.desbloqueoCaja.egreso, { kind: "money" })}</>} · {format(new Date(e4.desbloqueoCaja.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}
           </p>
         </div>
       )}

@@ -23,7 +23,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { formatNumber } from "@workspace/number-format";
 import { useGetCurrentUser, type E3CollectionPreview, type E3CollectionInput } from "@workspace/api-client-react";
 import { E3_ENABLED } from "@/lib/e3-feature-flags";
-import { hasPermission } from "@/lib/permisos";
+import { Link } from "wouter";
+import { hasPermission, Modules } from "@/lib/permisos";
 
 const recapturaSchema = z.object({
   importeCentavos: z.coerce.number().int().min(1, "El importe debe ser mayor a 0"),
@@ -310,7 +311,7 @@ export function ClienteE3RecapturaDialog({ clienteId, sitios }: ClienteE3Recaptu
                   <ul className="list-disc pl-4 mt-2">
                     {previewData.asignaciones.map((asig, i) => (
                       <li key={i}>
-                        Folio {asig.folio} - Aplica {formatNumber(asig.aplicadoCentavos / 100, { kind: "money" })}
+                        {asig.ticketId && asig.folio && (["ADMIN", "CONTADOR", "SISTEMAS"].includes(user?.rol ?? "") || [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS].some(module => hasPermission(user, module, "ver"))) ? <Link className="text-primary underline" href={`/tickets/${asig.ticketId}`}>Folio {asig.folio}</Link> : <>Folio {asig.folio ?? "sin documento identificable"}</>} - Aplica {formatNumber(asig.aplicadoCentavos / 100, { kind: "money" })}
                       </li>
                     ))}
                   </ul>

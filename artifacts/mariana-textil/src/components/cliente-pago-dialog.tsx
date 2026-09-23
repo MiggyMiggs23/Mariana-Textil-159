@@ -33,6 +33,8 @@ import { CreditEvidenceFields, useCreditEvidenceDraft } from "@/components/credi
 import { useQueryClient } from "@tanstack/react-query";
 import { E3_ENABLED } from "@/lib/e3-feature-flags";
 import { useE3AbonosPreview, useE3AbonosConfirm } from "@/hooks/use-e3";
+import { Link } from "wouter";
+import { hasPermission, Modules } from "@/lib/permisos";
 import { useLocationScope } from "@/lib/location-scope";
 import { useObtenerSesionCajaActual, getObtenerSesionCajaActualQueryKey } from "@workspace/api-client-react";
 
@@ -527,7 +529,7 @@ export function ClientePagoDialog({
                         <div key={asig.movimientoVentaId} className="w-full text-left bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between">
                           <div>
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>
+                               {asig.ticketId && asig.folio && (["ADMIN", "CONTADOR", "SISTEMAS"].includes(e3User?.rol ?? "") || [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS].some(module => hasPermission(e3User, module, "ver"))) ? <Link className="font-black text-sm text-primary underline" href={`/tickets/${asig.ticketId}`}>#{asig.folio}</Link> : <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               Saldo original: <span className="font-medium line-through decoration-muted-foreground/50">{formatNumber(asig.saldoAntesCentavos / 100, { kind: "money" })}</span> → <span className="font-bold text-sidebar">{formatNumber(asig.saldoDespuesCentavos / 100, { kind: "money" })}</span>
@@ -627,7 +629,7 @@ export function ClientePagoDialog({
                   <h3 className="font-black text-xl text-sidebar">
                     {isE3Flow ? "Abono registrado exitosamente" : (mode === "DIRIGIDO" ? "Solicitud de pago dirigido registrada" : "Abono registrado exitosamente")}
                   </h3>
-                  {isE3Flow && e3Receipt && <p className="text-emerald-700 text-sm font-bold mb-2">Folio Recibo: {e3Receipt.folio}</p>}
+                  {isE3Flow && e3Receipt && <p className="text-emerald-700 text-sm font-bold mb-2">Folio Recibo: {e3User?.rol === "ADMIN" ? <Link className="underline" href={`/recibos-e3/${e3Receipt.folio}`}>{e3Receipt.folio}</Link> : e3Receipt.folio}</p>}
                  <p className="text-muted-foreground text-sm font-medium">Se registró {isE3Flow && e3Receipt ? formatNumber(e3Receipt.importeCentavos / 100, { kind: "money" }) : formatNumber(amount, { kind: "money" })} en la cuenta del cliente.</p>
                  {isE3Flow && <p className="text-xs text-muted-foreground mt-2">El recibo debe imprimirse desde la computadora conectada a la impresora de recibos.</p>}
              </div>

@@ -323,6 +323,11 @@ test("E9-DETAIL-EXACT-NAVIGATION", async t => {
   await detail();
   const href = screen.getByRole("link", { name: "Ver corte exacto" }).getAttribute("href");
   assert.equal(href, `/caja/cortes?sesionId=${f.CUT}`, t.name);
+  const figureLinks = screen.getAllByRole("link")
+    .filter(link => link.getAttribute("href") === href);
+  assert.equal(figureLinks.some(link => link.textContent === state.detail.importeEnviado), true, t.name);
+  assert.equal(figureLinks.some(link => link.textContent === state.detail.conteoVigente?.importeRecibido), true, t.name);
+  assert.equal(figureLinks.some(link => link.textContent === state.detail.conteoVigente?.diferencia), true, t.name);
   cleanup(); window.history.replaceState(null, "", href!); state.users = schema.ListUsersResponse.parse([]);
   mount(<CajaCortes />);
   assert.equal(visits.some(v => v.name === "useGetAdminCorte" && v.args[0] === f.CUT && v.enabled), true, t.name);

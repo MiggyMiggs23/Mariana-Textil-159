@@ -44,9 +44,11 @@ export type E7Movement = {
   id: string; fecha: string; tipo: string; importe: string;
   ubicacionId: number | null; cuentaDestino: string | null;
   folio: string | null; saldoPendiente: string | null;
+  detailHref: string | null; documentHref: string | null;
 };
 type Metadata = { id: number; site: number | null; origin: number | null;
-  account: string | null; nature: string | null; originalType: string | null; folio: string | null };
+  account: string | null; nature: string | null; originalType: string | null;
+  ticketId: number | null; folio: string | null };
 const iso = (value: unknown) => new Date(value as string | Date).toISOString();
 const validSite = (scope: ClienteFinancialReadScope, site: number | null) =>
   scope.tipo === "GLOBAL" || (site !== null && scope.ubicaciones.some(s => s.id === site));
@@ -56,7 +58,7 @@ const safeMoney = (cents: number) => {
   return `${value < 0n ? "-" : ""}${absolute / 100n}.${String(absolute % 100n).padStart(2, "0")}`;
 };
 const sum = (rows: { importe: string }[]) => safeMoney(rows.reduce((n, r) => n + moneyToCents(r.importe), 0));
-function projectedPortions(ledger: CreditLedgerMovement[], metadata: Map<number, Metadata>,
+function projectedPortions(clientId: number, ledger: CreditLedgerMovement[], metadata: Map<number, Metadata>,
   scope: ClienteFinancialReadScope, projection: ReturnType<typeof projectCreditLedger>): E7Movement[] {
   const rows: E7Movement[] = [];
   let previous = new Map<string, number>();
@@ -78,7 +80,9 @@ function projectedPortions(ledger: CreditLedgerMovement[], metadata: Map<number,
       if (!validSite(scope, target.site)) continue;
       rows.push({ id: `proyeccion:${prefix.movementId}:${key}`, fecha: event.createdAt.toISOString(),
         tipo: delta > 0 ? "APLICACION" : "REVERSO_APLICACION", importe: safeMoney(delta),
-        ubicacionId: target.site, cuentaDestino: source.account, folio: target.folio, saldoPendiente: null });
+        ubicacionId: target.site, cuentaDestino: source.account, folio: target.folio, saldoPendiente: null,
+        detailHref: `/clientes/${clientId}/movimientos/${prefix.movementId}`,
+        documentHref: target.ticketId === null ? null : `/tickets/${target.ticketId}` });
     }
     previous = current;
   }
@@ -89,7 +93,7 @@ async function loadClient(database: CreditLedgerQuery, id: number, scope: Client
   const ledger = await loadCustomerCreditLedger(id, database);
   const projection = projectCreditLedger(ledger, { includeMovementProjections: true, includeAllocationTraces: true });
   const raw = await database.query<Record<string, unknown>>(`SELECT m.id,
-    t.ubicacion_id, t.folio, COALESCE(m.cuenta_destino,original.cuenta_destino,receipt.cuenta_destino) AS cuenta_destino, m.naturaleza,
+    t.id AS ticket_id,t.ubicacion_id, t.folio, COALESCE(m.cuenta_destino,original.cuenta_destino,receipt.cuenta_destino) AS cuenta_destino, m.naturaleza,
     CASE WHEN m.id IN (51,52,53) THEN NULL ELSE m.sitio_origen_id END AS sitio_origen_id,
     original.tipo AS original_tipo
     FROM movimientos_credito m LEFT JOIN movimientos_credito original ON original.id=m.movimiento_origen_id
@@ -104,10 +108,11 @@ async function loadClient(database: CreditLedgerQuery, id: number, scope: Client
     account: r.cuenta_destino == null ? null : String(r.cuenta_destino),
     nature: r.naturaleza == null ? null : String(r.naturaleza),
     originalType: r.original_tipo == null ? null : String(r.original_tipo),
+    ticketId: r.ticket_id == null ? null : Number(r.ticket_id),
     folio: r.folio == null ? null : String(r.folio),
   }]));
   if (ledger.some(m => !metadata.has(m.id))) throw new E7Error("E7_FUENTE_INVALIDA", "Ledger incompleto.");
-  return { ledger, metadata, projection, portions: projectedPortions(ledger, metadata, scope, projection) };
+  return { ledger, metadata, projection, portions: projectedPortions(id, ledger, metadata, scope, projection) };
 }
 async function retained(database: CreditLedgerQuery, scope: ClienteFinancialReadScope, now: Date, client?: number) {
   const result = await database.query<Record<string, unknown>>(`SELECT r.id,r.fecha_recepcion,r.ubicacion_id,
@@ -203,7 +208,9 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
           movements.push({ id: String(m.id), fecha: m.createdAt.toISOString(),
             tipo: m.tipo === "ABONO" && meta.nature === "OPERACION_CREDITO_SIN_DINERO" ? "APLICACION_SIN_DINERO" : m.tipo,
             importe: safeMoney(moneyToCents(m.importe)), ubicacionId: meta.site, cuentaDestino: null,
-            folio: meta.folio, saldoPendiente: charge ? safeMoney(charge.pendienteCents) : null });
+            folio: meta.folio, saldoPendiente: charge ? safeMoney(charge.pendienteCents) : null,
+            detailHref: `/clientes/${client}/movimientos/${m.id}`,
+            documentHref: meta.ticketId === null ? null : `/tickets/${meta.ticketId}` });
         }
         if (scope.tipo === "SITIOS") movements.push(...data.portions.map(p => ({ ...p, importe: safeMoney(-moneyToCents(p.importe)), cuentaDestino: null })));
         if (scope.tipo === "GLOBAL") {
@@ -219,7 +226,7 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
             movements.push({ id: `E5:${r.tipo}:${r.id}`, fecha: iso(r.fecha), tipo: String(r.tipo),
               importe: safeMoney(moneyToCents(String(r.importe))),
               ubicacionId: r.ubicacion_id == null ? null : Number(r.ubicacion_id), cuentaDestino: null,
-              folio: null, saldoPendiente: null });
+              folio: null, saldoPendiente: null, detailHref: null, documentHref: null });
           }
         }
         const pending = await retained(db, scope, now, client);
@@ -240,7 +247,7 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
         const sites = scope.tipo === "GLOBAL" ? null : scope.ubicaciones.map(s => s.id);
         const movements: E7Movement[] = [];
         const physical = await db.query<Record<string, unknown>>(`SELECT 'POS:'||p.id AS id,
-          ${accountedDocumentAt("t")} AS fecha,p.importe::text,t.ubicacion_id,
+          ${accountedDocumentAt("t")} AS fecha,p.importe::text,t.id AS ticket_id,t.folio,t.ubicacion_id,
           CASE WHEN p.forma_pago='EFECTIVO' THEN 'CAJA_FISICA' WHEN t.facturado THEN 'CUENTA_FISCAL' ELSE 'CUENTA_NO_FISCAL' END AS cuenta
           FROM ticket_pagos p JOIN tickets t ON t.id=p.ticket_id
           WHERE p.forma_pago<>'CREDITO' AND ${accountedDocumentPredicate("t")}
@@ -248,7 +255,8 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
             AND ($3::int[] IS NULL OR t.ubicacion_id=ANY($3))`, [start, end, sites]);
         for (const row of physical.rows) movements.push({ id: String(row.id), fecha: iso(row.fecha), tipo: "VENTA_CONTADO",
           importe: safeMoney(moneyToCents(String(row.importe))), ubicacionId: Number(row.ubicacion_id),
-          cuentaDestino: String(row.cuenta), folio: null, saldoPendiente: null });
+          cuentaDestino: String(row.cuenta), folio: String(row.folio), saldoPendiente: null,
+          detailHref: `/tickets/${Number(row.ticket_id)}`, documentHref: `/tickets/${Number(row.ticket_id)}` });
         const clients = await db.query<{ id: number }>(`SELECT DISTINCT m.cliente_id AS id FROM movimientos_credito m
           JOIN tickets t ON t.cliente_id=m.cliente_id WHERE ($1::int[] IS NULL OR t.ubicacion_id=ANY($1))
           UNION SELECT cliente_id AS id FROM movimientos_credito WHERE $1::int[] IS NULL`, [sites]);
@@ -267,7 +275,9 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
               tipo: historical ? "REGISTRO_HISTORICO" : physicalReceipt ? "RECEPCION"
                 : meta.nature === "DEVOLUCION_FISICA" ? "DEVOLUCION" : "CORRECCION",
               importe: safeMoney(-moneyToCents(m.importe)),
-              ubicacionId: meta.origin, cuentaDestino: meta.account, folio: null, saldoPendiente: null });
+              ubicacionId: meta.origin, cuentaDestino: meta.account, folio: meta.folio, saldoPendiente: null,
+              detailHref: `/clientes/${id}/movimientos/${m.id}`,
+              documentHref: meta.ticketId === null ? null : `/tickets/${meta.ticketId}` });
           }
         }
         // Immutable receipts, never e5_cobros detail nor E1 mirror nor E5 credit applications.
@@ -276,7 +286,8 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
             FROM e5_recepciones WHERE fecha_recepcion >=$1 AND fecha_recepcion <=$2`, [start, end]);
           for (const r of receipts.rows) movements.push({ id: `E5:${r.id}`, fecha: iso(r.fecha_recepcion), tipo: "RECEPCION",
             importe: safeMoney(moneyToCents(String(r.importe))), ubicacionId: Number(r.ubicacion_id),
-            cuentaDestino: String(r.cuenta_destino), folio: null, saldoPendiente: null });
+            cuentaDestino: String(r.cuenta_destino), folio: null, saldoPendiente: null,
+            detailHref: null, documentHref: null });
           const refunds = await db.query<Record<string, unknown>>(`SELECT d.clave,d.importe::text,d.fuente,
             c.detail#>>'{devolucion,fecha}' AS fecha FROM e5_devoluciones d
             JOIN e5_cobros c ON c.id=d.cobro_id`);
@@ -285,7 +296,8 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
             const source = r.fuente as { tipo: string; cuentaOrigen?: string };
             movements.push({ id: `E5D:${r.clave}`, fecha: iso(r.fecha), tipo: "DEVOLUCION",
               importe: safeMoney(-moneyToCents(String(r.importe))), ubicacionId: null,
-              cuentaDestino: source.tipo === "FONDO" ? null : source.cuentaOrigen ?? null, folio: null, saldoPendiente: null });
+              cuentaDestino: source.tipo === "FONDO" ? null : source.cuentaOrigen ?? null, folio: null, saldoPendiente: null,
+              detailHref: null, documentHref: null });
           }
         }
         const selected = movements.filter(m => new Date(m.fecha) >= start && new Date(m.fecha) <= end);
@@ -301,7 +313,7 @@ export function createE7Reader(infrastructure: E7Infrastructure = {}) {
           recepcionesFisicas: scope.tipo === "GLOBAL" ? sum(selected.filter(m =>
             ["RECEPCION", "VENTA_CONTADO"].includes(m.tipo))) : null,
           aplicacionesNotas: sum(selected.filter(m => ["APLICACION", "REVERSO_APLICACION"].includes(m.tipo))),
-          movimientos: selected.map(({ folio: _f, saldoPendiente: _s, ...m }) => m),
+          movimientos: selected,
           puente: [...groups.values()].map(rows => ({ tipo: rows[0]!.tipo, cuentaDestino: rows[0]!.cuentaDestino,
             ubicacionId: rows[0]!.ubicacionId, total: sum(rows) })),
           retenidos: pending, totalRetenido: sum(pending.map(r => ({ importe: r.importePendiente }))) };

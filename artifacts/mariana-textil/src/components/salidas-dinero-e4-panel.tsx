@@ -25,6 +25,8 @@ import { getApiErrorMessage } from "@/lib/api-error";
 import { E4_CASH_OUT_ENABLED } from "@/lib/e4-feature-flags";
 import { cents } from "@/components/proveedor-efectivo-e12";
 import { SalidaDineroE4Item } from "./salidas-dinero-e4-item";
+import { hasPermission, Modules } from "@/lib/permisos";
+import { Link } from "wouter";
 
 export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesionId: number; canCreate: boolean; tiendaId?: number }) {
   const { toast } = useToast();
@@ -41,6 +43,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
 
   const { data: user } = useGetCurrentUser();
   const isAdmin = user?.rol === Role.ADMIN;
+  const canViewCorte = hasPermission(user, Modules.CORTES, "ver");
   // If MARIANA_LOCATION_ID = 1, it's defined in cobros.tsx but we can check if it's 1
   const isMariana = tiendaId === 1;
 
@@ -236,7 +239,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
             </div>
 
 
-            {requiresCashValidation && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {disponibilidad.data?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar; la API conserva la autoridad final.</p>}
+            {requiresCashValidation && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {canViewCorte && disponibilidad.data?.efectivoEsperado != null ? <Link className="text-primary underline" href={`/caja/cortes?sesionId=${sesionId}`}>{disponibilidad.data.efectivoEsperado}</Link> : disponibilidad.data?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar; la API conserva la autoridad final.</p>}
             {requiresCashValidation && disponibilidad.error && <p role="alert" className="text-destructive">{getApiErrorMessage(disponibilidad.error)}</p>}
             {(isAdmin && requiresCashValidation && tipo === "EXTRAORDINARIA") && (
               <div className="md:col-span-2 space-y-1 mt-2 bg-amber-50 border border-amber-200 p-3 rounded-lg">
@@ -273,6 +276,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
                       userRole={user?.rol}
                       userUbicacionId={user?.ubicacion?.id}
                       tiendaId={tiendaId}
+                      canViewCorte={canViewCorte}
                     />
                   );
                 })

@@ -7576,6 +7576,12 @@ components:
         cuentaDestino: { type: [string, "null"] }
         folio: { type: [string, "null"] }
         saldoPendiente: { type: [string, "null"], pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$' }
+        detailHref:
+          type: [string, "null"]
+          description: Ruta SPA a evidencia detallada, derivada exclusivamente de relaciones internas verificadas y ya autorizadas para este lector.
+        documentHref:
+          type: [string, "null"]
+          description: Ruta SPA al documento exacto cuyo folio se muestra; nunca se deriva del folio.
     E7ClienteExportacion:
       type: object
       additionalProperties: false

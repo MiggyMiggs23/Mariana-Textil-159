@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { useParams } from "wouter";
+import { Link, useParams } from "wouter";
 import { AppLayout } from "@/components/layout/app-layout";
 import { Button } from "@/components/ui/button";
 import { useE3GetRecibo, useE3RegistrarImpresion } from "@/hooks/use-e3";
@@ -67,7 +67,7 @@ export function ReceiptPages({ recibo, printedAt, onReady }: {
       <table>
         <thead><tr><th>Nota</th><th>Saldo anterior</th><th>Aplicado</th><th>Saldo posterior</th></tr></thead>
         <tbody>{rows.length ? rows.map(row => (
-          <tr key={row.movimientoVentaId}><td>{row.folio ?? `Movimiento ${row.movimientoVentaId}`}</td><td>{money(row.saldoAntesCentavos)}</td><td>{money(row.aplicadoCentavos)}</td><td>{money(row.saldoDespuesCentavos)}</td></tr>
+          <tr key={row.movimientoVentaId}><td>{row.ticketId && row.folio ? <Link href={`/tickets/${row.ticketId}`}>{row.folio}</Link> : row.folio ?? `Movimiento ${row.movimientoVentaId}`}</td><td>{money(row.saldoAntesCentavos)}</td><td>{money(row.aplicadoCentavos)}</td><td>{money(row.saldoDespuesCentavos)}</td></tr>
         )) : <tr><td colSpan={4}>Anticipo sin aplicación a notas. Saldo a favor registrado: {money(recibo.saldoAFavorCentavos)}.</td></tr>}</tbody>
       </table>
       <footer className="e3-footer">
@@ -138,6 +138,7 @@ export default function ReciboE3() {
       error || !recibo ? <p role="alert">{getApiErrorMessage(error, "No hay evidencia íntegra del recibo. No se reconstruirá con saldos actuales.")}</p> :
       <>
         <div className="e3-no-print"><h1>Recibo {recibo.folio}</h1><p>Dos copias A5. La solicitud se audita; cancelar la impresora no vuelve a cobrar.</p>
+          <p><Link className="font-semibold text-primary underline" href={`/clientes/${recibo.clienteId}/movimientos/${recibo.movimientoId}`}>Ver detalle del movimiento #{recibo.movimientoId}</Link></p>
           <Button disabled={!ready || audit.isPending} onClick={handlePrint} data-testid="button-print-receipt">Solicitar impresión / reimpresión</Button>
           {printError && <p role="alert">{printError}</p>}
         </div>

@@ -92,7 +92,7 @@ function E9Send({ user, site, corteId }: { user: CurrentUser; site: number; cort
     <Dialog open={open} onOpenChange={value => { if (!guard.current) setOpen(value); }}>
       <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader><DialogTitle>Documentar envío de efectivo</DialogTitle><DialogDescription>Se entrega todo el efectivo físico contado del cierre, sin descontar fondo inicial ni reservar cambio. No registra una recepción ni un ingreso anticipado.</DialogDescription></DialogHeader>
-        {saved ? <div role="status" className="space-y-2"><p>Envío registrado · {saved.estado}</p><p>{saved.ubicacionNombre} · Corte #{saved.corteId} · Enviado {saved.importeEnviado}</p><p>{saved.enviadoAt} · {saved.enviadoPor.nombre}</p><p>La recepción queda pendiente. Consulta su detalle en Entregas de efectivo.</p></div> : <fieldset disabled={pending} className="space-y-3">
+        {saved ? <div role="status" className="space-y-2"><p>Envío registrado · {saved.estado}</p><p>{saved.ubicacionNombre} · {/^\/caja\/cortes(?:\?|$)/.test(saved.corteHref) ? <a className="text-primary underline" href={saved.corteHref}>Corte #{saved.corteId}</a> : <>Corte #{saved.corteId}</>} · Enviado {saved.importeEnviado}</p><p>{saved.enviadoAt} · {saved.enviadoPor.nombre}</p><p>La recepción queda pendiente. Consulta su detalle en Entregas de efectivo.</p></div> : <fieldset disabled={pending} className="space-y-3">
           <p>Corte #{corteId} · {corte?.sesion.nombreUbicacion}</p>
           <p>Fecha de cierre: {corte?.sesion.cerradaAt ?? "No disponible"}</p>
           <p data-testid="text-e9-total-envio" className="font-semibold">Total físico contado congelado: {corte?.efectivoContado ?? "No disponible"}</p>

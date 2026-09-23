@@ -109,7 +109,9 @@ export const GetE7AtribucionResponse = zod.object({
   "ubicacionId": zod.number().int().nullable(),
   "cuentaDestino": zod.string().nullable(),
   "folio": zod.string().nullish(),
-  "saldoPendiente": zod.string().regex(getE7AtribucionResponseMovimientosItemSaldoPendienteRegExp).nullish()
+  "saldoPendiente": zod.string().regex(getE7AtribucionResponseMovimientosItemSaldoPendienteRegExp).nullish(),
+  "detailHref": zod.string().nullish().describe('Ruta SPA a evidencia detallada, derivada exclusivamente de relaciones internas verificadas y ya autorizadas para este lector.'),
+  "documentHref": zod.string().nullish().describe('Ruta SPA al documento exacto cuyo folio se muestra; nunca se deriva del folio.')
 })),
   "puente": zod.array(zod.object({
   "tipo": zod.string(),
@@ -226,7 +228,9 @@ export const GetE7ClienteExportacionResponse = zod.object({
   "ubicacionId": zod.number().int().nullable(),
   "cuentaDestino": zod.string().nullable(),
   "folio": zod.string().nullish(),
-  "saldoPendiente": zod.string().regex(getE7ClienteExportacionResponseMovimientosItemSaldoPendienteRegExp).nullish()
+  "saldoPendiente": zod.string().regex(getE7ClienteExportacionResponseMovimientosItemSaldoPendienteRegExp).nullish(),
+  "detailHref": zod.string().nullish().describe('Ruta SPA a evidencia detallada, derivada exclusivamente de relaciones internas verificadas y ya autorizadas para este lector.'),
+  "documentHref": zod.string().nullish().describe('Ruta SPA al documento exacto cuyo folio se muestra; nunca se deriva del folio.')
 })),
   "retenidos": zod.array(zod.object({
   "cobroId": zod.string().uuid(),
