@@ -1,0 +1,9 @@
+miguelestza: User responded to AskQuestion.
+
+Question: ¿Incluyes en B1 los cuatro reemplazos E1 del SQL E5, para prepararlos y ensayarlos solo en PostgreSQL desechable?
+
+Answers:
+- [answer] Answer: Sí, incluir exactamente esos cuatro reemplazos
+- [answer_comment] Additional comments: (not provided)
+
+queryId: inv_18wN1nIEeAOk5Z4LsShFpMhbQDiVEfcaFr:call_OKXURVT4vem70nFuvZbnngUb

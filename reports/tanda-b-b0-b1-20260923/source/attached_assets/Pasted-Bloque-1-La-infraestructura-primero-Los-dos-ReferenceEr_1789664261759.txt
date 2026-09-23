@@ -1,0 +1,25 @@
+Bloque 1 — La infraestructura, primero.
+
+Los dos ReferenceError: React is not defined no son expectativas desactualizadas: el corredor de pruebas no resuelve JSX y las dos fallan antes de llegar a sus aserciones. Arréglalo en el corredor, no agregando importaciones a los componentes para contentarlo.
+
+Esto va primero porque afecta a cualquier prueba futura sobre un componente TSX. Y confirma cuántas pruebas más estaban ocultas detrás de ese error.
+
+Bloque 2 — Las diez expectativas desactualizadas.
+
+Reescríbelas para que comprueben comportamiento observable, no texto del código. Ninguna debe depender de un nombre de variable, un ternario escrito a mano, el orden de clases CSS, ni el número de apariciones de una cadena.
+
+Al reescribir, la expectativa nueva debe reflejar la regla vigente, no la vieja. Varias de estas fallan porque la regla cambió a propósito: el saldo a favor se aplica solo y no lleva casilla; la tarjeta se llama Contado cobrado; el enlace del kardex vive en MovimientoDocumento; la etiqueta de documento usa el helper compartido. Si una prueba reescrita todavía exige el flujo retirado, está mal.
+
+Antes de reescribir cada una, di qué regla vigente debe comprobar. Si no encuentras la regla en replit.md, repórtalo: puede que sea una regla que nunca se escribió.
+
+Para cada prueba reescrita, demuestra que falla: introduce el defecto que debía detectar, enséñame que truena, y quítalo. Una prueba que nunca se vio fallar no acredita nada.
+
+Bloque 3 — La causa de fondo.
+
+Diez de doce fallan por lo mismo: buscan texto del código en vez de comportamiento. Es idéntico a las cinco que acabamos de arreglar. Mientras se sigan escribiendo así, cada mejora va a romper una y vamos a estar reparando pruebas en lugar de confiar en ellas.
+
+Escribe en replit.md la regla: una prueba de contrato comprueba comportamiento observable, nunca la forma textual del código. Nada de nombres de variable, orden de clases, conteo de apariciones ni condiciones escritas literalmente. Y una prueba nueva solo se acepta después de verla fallar con el defecto que debe detectar.
+
+Verificación: la suite amplia en verde, con su conteo antes y después; cada prueba reescrita vista fallar; typecheck completo en cero. Si alguna no se puede reescribir sobre comportamiento sin cambiar código de aplicación, detente y repórtala en vez de forzarla.
+
+Restricciones: no cambies comportamiento de la aplicación; no conviertas ninguna prueba en omisión; no toques el Prompt P ni cierres su Grupo 1; no crees usuarios ni sesiones, no escribas en la base.

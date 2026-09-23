@@ -1,0 +1,160 @@
+# E10 — Fondo de Mariana: movimientos, arqueo e historial
+
+Corresponde a la entrega **E10** de `reports/prompt-u-plan-de-implementacion.md`.
+
+**No depende de ninguna otra entrega** y desbloquea E9 y E12. Puede trabajarse en
+paralelo con E1: no comparten archivos.
+
+---
+
+## Qué es el Fondo
+
+Es **el destino final del efectivo de la empresa**. Una pestaña en la sección financiera
+de la barra lateral.
+
+Hoy el dinero de la empresa tiene un origen rastreable —la venta— y después desaparece
+del sistema cuando sale de la tienda. El Fondo cierra ese ciclo.
+
+---
+
+## Las reglas que lo gobiernan
+
+**Solo Mariana, y siempre Mariana.** No puede crearse un Fondo por tienda ni elegirse
+Coco o Cruces como su ubicación. Las salidas extraordinarias de las otras tiendas salen
+de su propia caja, no del Fondo.
+
+**Solo ADMIN.** Ningún contador, supervisor ni cajero recibe pantalla, endpoints, saldo,
+movimientos, archivos ni enlaces al Fondo. **Comprueba que no haya vía indirecta**: un
+enlace, un endpoint sin filtrar, una exportación que lo incluya.
+
+**Todo movimiento lleva motivo obligatorio.**
+
+**Ingresos:**
+
+- Entregas de tiendas, que ingresan **en el momento en que Mariana autoriza la
+  recepción** — esa integración es E9 y **no se construye aquí**.
+- Ingresos directos: saldo inicial, inyecciones de capital, cualquier otro origen
+  permitido.
+- **El saldo inicial es el primer ingreso con motivo «saldo inicial»**, no un campo
+  editable fuera del historial. No es un caso especial: es un ingreso más.
+- Ese primer ingreso **reconoce efectivo que ya existe**: no es venta, ni cobro de
+  cliente, ni capital nuevo por el solo hecho de cargarlo. Al fijarlo hay que conciliar
+  con lo que ya figure en caja o en entregas pendientes, **para no contar el mismo dinero
+  en dos lugares**.
+
+**Salidas:** retiros para cualquier concepto, con motivo. Los pagos a proveedor se
+conectan mediante E12 y **no se construyen aquí**. Un retiro genérico **no debe
+sustituir en silencio** el registro de un pago a proveedor.
+
+**Arqueo:** saldo del sistema, efectivo contado, fecha, autor y **diferencia
+persistida**. **Contar no ajusta el saldo en silencio.** La diferencia queda registrada y
+no desaparece al cerrar la pantalla.
+
+**Historial completo** de movimientos y de arqueos.
+
+**No usa DELETE.** Un movimiento mal capturado se corrige con su inverso, conservando el
+original, su motivo y su enlace. **No se edita el importe de un movimiento existente.**
+
+**Ninguna cifra es un callejón sin salida.** El saldo abre los movimientos que lo
+explican; cada ingreso y cada gasto abre su detalle; un arqueo abre su conteo y su
+diferencia.
+
+---
+
+## Lo que NO cambia
+
+**Ventas, Contado cobrado, cobranza de clientes y deuda de clientes no cambian por nada
+del Fondo.** Una inyección de capital o un traspaso interno no son venta ni cobranza.
+
+Un ingreso directo o un retiro cambian **el saldo del Fondo y el efectivo total de la
+empresa** según su naturaleza real. Una remesa interna solo cambia dónde está el dinero,
+no cuánto hay.
+
+**El arqueo agrega el conteo y la diferencia, no un ajuste monetario automático.**
+
+No reutilices el saldo de sesión de caja para el Fondo: son cosas distintas.
+
+---
+
+## Bloque 0 — Confirmar antes de escribir
+
+1. Cómo está resuelto el **arqueo de caja** hoy, para seguir ese patrón en vez de
+   inventar uno paralelo.
+2. Cómo se garantiza hoy que un saldo **no se lea inconsistente con escrituras
+   concurrentes**. El Fondo necesita lo mismo.
+3. Qué patrón usa el sistema para **corregir con inverso** en lugar de editar, para
+   reutilizarlo.
+4. Cómo se declara que una pantalla es **exclusiva de un rol** en el servidor, y cómo se
+   comprueba que ningún endpoint la deja pasar por otra vía.
+
+---
+
+## Bloque 1 — Etapas
+
+El plan dice que se puede construir por etapas internas —movimientos e historial primero,
+arqueo después— pero recomienda **entregar y habilitar los dos juntos**, y estoy de
+acuerdo.
+
+Razón, que es la del propietario: **publicar movimientos reales sin arqueo deja meses de
+errores sin detectar.** El Fondo no tiene un corte diario que los encuentre.
+
+Constrúyelo en el orden interno que prefieras, pero **no habilites el Fondo en
+producción sin su arqueo**.
+
+Las integraciones **E9 y E12 sí llegan después**, sobre un Fondo ya completo. **No
+habilites accesos incompletos a ellas**: ni un botón de recepción, ni una fuente de pago
+a proveedor, hasta que su entrega los verifique.
+
+---
+
+## Verificación
+
+1. **Solo ADMIN**, comprobado también sobre endpoints y exportaciones, no solo sobre la
+   pantalla. Que un contador o supervisor **no obtenga dato alguno** del Fondo por
+   ninguna vía.
+2. **El Fondo es siempre Mariana**, incluso manipulando la solicitud para pedir otra
+   ubicación.
+3. Ingresos con su motivo; el primero como «saldo inicial»; un inverso que corrige sin
+   borrar; un reintento que no duplica.
+4. **Saldo e historial conciliados**: la suma de los movimientos da el saldo, al centavo.
+5. **Arqueo con sobrante y con faltante**, y con movimientos concurrentes. La diferencia
+   queda persistida.
+6. **Los enlaces llevan a donde dicen**: el saldo a sus movimientos, cada movimiento a su
+   detalle, el arqueo a su conteo.
+7. **Ventas, Contado cobrado, cobranza y deuda de clientes no cambian** por ningún
+   movimiento del Fondo. Compruébalo antes y después.
+8. Suite completa sin rojos nuevos y typecheck en cero. Cada prueba nueva **vista
+   fallar** con su defecto introducido.
+
+**Lo que solo puede verificar el propietario:** contar el efectivo físico, reconocer el
+saldo inicial y el capital, y comprobar que una diferencia de arqueo queda registrada sin
+desaparecer al cerrar la pantalla.
+
+---
+
+## Restricciones
+
+- **No construyas la recepción desde tiendas (E9) ni el pago a proveedor (E12).** Solo la
+  base: movimientos, ingresos directos, retiros, arqueo e historial.
+- **No cargues ningún saldo inicial ni importes históricos.** Eso lo hace el propietario
+  cuando cuente el efectivo.
+- No permitas editar ni borrar un movimiento. Corrección solo por inverso.
+- No hagas que el arqueo ajuste el saldo automáticamente.
+- No reutilices el saldo de sesión de caja.
+- No toques crédito, FIFO, cortes de tienda ni inventario.
+- No construyas nada de E1 a E9, E11 ni E12.
+- No reanudes el Prompt P ni cierres su Grupo 1.
+- No crees usuarios ni sesiones de prueba.
+- **Cualquier escritura en la base requiere autorización textual del propietario guardada
+  en `reports/` antes de la primera escritura.** Preséntame el alcance exacto y espera.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Qué es el Fondo, que existe **solo en Mariana y solo para ADMIN**, y qué entra y sale.
+2. Que el saldo inicial es el primer ingreso con su motivo, no un campo aparte, y que
+   reconoce efectivo existente —no es venta, ni cobro, ni capital nuevo—.
+3. Que el arqueo persiste la diferencia y **no ajusta el saldo en silencio**.
+4. Que el Fondo no usa DELETE y se corrige con inversos.
+5. Que ningún movimiento del Fondo cambia Ventas, cobranza ni deuda de clientes.
+6. Que E9 y E12 quedan pendientes de conectar, y que sus accesos no se habilitan antes.
+7. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

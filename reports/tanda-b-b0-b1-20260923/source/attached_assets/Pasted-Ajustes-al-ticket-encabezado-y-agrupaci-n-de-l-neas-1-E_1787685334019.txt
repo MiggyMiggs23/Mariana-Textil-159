@@ -1,0 +1,40 @@
+Ajustes al ticket: encabezado y agrupación de líneas
+
+1. Encabezado con logo
+El ticket debe empezar con el logo de Mariana Textil centrado en la parte superior, en tamaño visible y prominente. Es lo primero que se ve.
+Debajo del logo, en este orden:
+	•	Mariana Textil S.A. de C.V.
+	•	Nombre de la tienda
+	•	Línea divisoria
+	•	Folio, fecha y hora, usuario que atendió, cliente
+Consideraciones de impresión térmica: el logo va en negro sólido, sin degradados ni grises intermedios. Debe ocupar buena parte del ancho del ticket sin llegar a los márgenes. En el formato de 80 mm, aproximadamente 50 mm de ancho.
+Aplica en los dos formatos: 80 mm térmico y media carta.
+
+2. Agrupar líneas del ticket impreso
+Hoy el ticket imprime un renglón por rollo. Si un cliente se lleva 40 rollos del mismo producto, salen 40 renglones idénticos y el ticket queda ilegible.
+Agrupa las líneas por producto y precio unitario.
+Cada renglón muestra:
+| Producto | Rollos | Cantidad total | Precio unitario | Importe |
+Ejemplo: Tafeta Amarillo · 40 rollos · 2,000.000 m · $5.50/m · $11,000.00
+Reglas:
+	•	Se agrupan las líneas del mismo producto vendidas al mismo precio unitario
+	•	Si el mismo producto se vendió a precios distintos en el mismo ticket, se separa en renglones distintos, uno por precio. Es poco frecuente pero debe manejarse bien.
+	•	La cantidad total suma los metros o kilos de los rollos agrupados
+	•	El importe es la suma de los importes individuales
+	•	Metros y kilos nunca se mezclan en un mismo renglón
+Las series NO se imprimen en el ticket. Se conservan completas en el sistema, ligadas a cada línea, para trazabilidad, cálculo de margen y devoluciones. Solo se omiten del papel.
+Esto es solo de presentación. La estructura de ticket_lineas no cambia: sigue habiendo una línea por rollo con su rollo_id, su costo congelado y su importe. La agrupación ocurre al imprimir.
+En la pantalla del sistema, al abrir un ticket:
+	•	Por defecto se muestra la vista agrupada, igual que el impreso
+	•	Un enlace “Ver rollos” despliega el desglose completo con las series individuales, su cantidad y su costo
+
+Pruebas:
+	•	El ticket inicia con el logo centrado y visible, en negro sólido
+	•	El logo se ve correcto en 80 mm y en media carta
+	•	Un ticket con 40 rollos del mismo producto al mismo precio imprime un solo renglón con 40 rollos y la cantidad total
+	•	El mismo producto vendido a dos precios distintos genera dos renglones
+	•	Un ticket con productos en metros y en kilos los mantiene separados
+	•	El total del ticket no cambia por la agrupación
+	•	En el sistema, “Ver rollos” muestra las series individuales
+	•	Las líneas de la base de datos siguen siendo una por rollo, con su serie y costo
+	•	El margen del ticket sigue calculándose sobre los costos individuales

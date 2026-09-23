@@ -1,0 +1,106 @@
+# CORRECCIÓN — Encabezado de Salida y agregación por producto en los documentos
+
+Segunda ronda sobre los documentos impresos. El diseño y la escala de Entrada quedaron correctos; no los toques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## BLOQUE 1 — El encabezado de Salida ocupa demasiado
+
+### El problema
+
+La hoja de Salida es A6 apaisado, `148mm × 105mm`. Hoy el encabezado —título, logo con su texto de marca, y QR— se come alrededor de una cuarta parte de la hoja, y **solo caben cinco renglones**.
+
+En Entrada la proporción es correcta y **no se toca**. El problema es exclusivo de Salida, porque el mismo tamaño de encabezado sobre una hoja mucho más chica pesa mucho más.
+
+### Qué se hace
+
+**Reduce la altura del encabezado de Salida hasta que quepan dos o tres renglones más**, o sea siete u ocho en lugar de cinco.
+
+Restricción que no se negocia: **la alineación entre los componentes del encabezado no cambia.** Se conserva la rejilla de tres columnas —bloque de título a la izquierda, logo centrado, QR a la derecha—, con los mismos criterios de alineación vertical y el mismo borde inferior. Lo que cambia es la escala, no el acomodo.
+
+Lineamientos:
+
+- **Logo y QR se reducen juntos y quedan del mismo tamaño entre sí.** Esa equivalencia se estableció en la corrección anterior y se mantiene. Lo que se rompe aquí es la equivalencia con Entrada, no la equivalencia entre logo y QR.
+- Ajusta también el bloque de título —"Salida", razón social, folio y paginación— para que no sea el que impone la altura.
+- Todo debe seguir siendo legible impreso en papel real, no solo en pantalla. El folio en particular tiene que leerse de un vistazo.
+
+**Recalcula `rollosPerPage` con medición**, no por tanteo, y déjalo comentado con la medición que lo justifica. Toma en cuenta que el Bloque 2 cambia lo que va en cada renglón.
+
+---
+
+## BLOQUE 2 — Los documentos imprimen el global por producto, no rollo por rollo
+
+### El criterio
+
+Hoy la Salida imprime **un renglón por rollo**, con su número de serie. Con seis rollos ya se va a dos hojas. En la operación real una salida puede llevar treinta rollos, y el papel se vuelve inservible.
+
+El criterio nuevo es el que ya usan los tickets: **un renglón por producto, con el total de rollos y la cantidad total.**
+
+En este modelo el producto **ya incluye el color** —el SKU `TAF-GRI2` es Tafetán Gris—, así que agrupar por producto es exactamente agrupar por tela y color. Y como la unidad es un atributo del producto, agrupar por producto **nunca mezcla metros con kilos ni con bolsas**. No inventes una agrupación por tela que sí los mezclaría.
+
+El registro de los números de serie **no cambia en absoluto**. Se siguen dando de alta y de baja rollo por rollo, con su serie, y el sistema conserva el detalle completo. Lo que cambia es únicamente qué se imprime.
+
+### Salida — solo el global
+
+- Un renglón por producto: producto, color, número de rollos y cantidad total con su unidad.
+- **La columna de número de serie desaparece del papel.** Las series quedan solo en el sistema.
+- El espacio que libera esa columna se reparte entre las demás.
+- Los totales del pie —Total Rollos y Total de la unidad— se conservan y deben seguir cuadrando contra el detalle guardado.
+- Desde el detalle de la salida en pantalla, el usuario debe poder ver las series de siempre. **No quites nada de la vista en pantalla**; esto es solo impresión.
+
+### Entrada — globales primero, series después
+
+Distinto a Salida, aquí sí se imprimen las series, pero separadas:
+
+1. **Primero, las hojas de globales**: un renglón por producto, con número de rollos y cantidad total. Es el formato que ya tiene hoy y que quedó bien.
+2. **Después, las hojas del listado de series**: todos los números de serie dados de alta, agrupados por producto, en un formato compacto de varias columnas para que no se desperdicie la hoja. Este listado puede ocupar tantas hojas como haga falta.
+
+La numeración de páginas es **continua sobre el documento completo**, no dos numeraciones separadas. Encabezado en todas las hojas. El pie de firmas va **solo en la última hoja de globales**, que es la que se firma; las hojas de series no lo llevan.
+
+Nota técnica: el endpoint que alimenta el documento de Entrada hoy devuelve las líneas agregadas, **no las series**. Vas a tener que extenderlo. Hazlo sin romper el contrato existente y regenera el cliente.
+
+---
+
+## BLOQUE 3 — Verificación
+
+**Encabezado de Salida**
+
+- Caben al menos siete renglones en una hoja
+- La rejilla de tres columnas y la alineación entre título, logo y QR no cambiaron
+- Logo y QR miden lo mismo entre sí
+- El folio se lee de un vistazo en impresión real
+- `rollosPerPage` está comentado con la medición que lo justifica
+- **El encabezado de Entrada no se tocó**
+
+**Agregación**
+
+- Salida con diez rollos de tres productos distintos imprime **tres renglones**
+- El papel de Salida no muestra ningún número de serie
+- El detalle de Salida en pantalla sigue mostrando todas las series
+- Los totales del pie cuadran contra el detalle guardado
+- Entrada con veinte rollos de cinco productos imprime cinco renglones de globales, y después el listado completo de las veinte series
+- La numeración de páginas es continua sobre todo el documento
+- El pie de firmas aparece solo en la última hoja de globales
+- Una entrada con productos en metros, kilos y bolsas **no suma unidades distintas en ningún renglón ni en ningún total**
+
+**Impresión**
+
+- Repite los seis casos de la ronda anterior: sin hoja fantasma cuando el contenido cabe, y encabezado repetido cuando de verdad se pasa
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las pruebas de contrato de los dos documentos siguen pasando; si alguna afirmaba el conteo de filas o la columna de serie, **actualízala, no la borres**
+
+Adjunta al reporte los PDF de prueba.
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Documentos impresos, agregación:** Entrada y Salida imprimen **un renglón por producto** con el total de rollos y la cantidad total, no un renglón por rollo. Como el producto ya incluye el color y la unidad es atributo del producto, agrupar por producto agrupa por tela y color y nunca mezcla metros con kilos ni bolsas. Agrupar por tela sí los mezclaría y está prohibido.
+>
+> El alta y la baja de rollos **siguen siendo rollo por rollo con su número de serie**, y el sistema conserva el detalle completo. Lo que cambia es solo qué se imprime.
+>
+> **Salida** no imprime números de serie: quedan en el sistema y se consultan en el detalle en pantalla. **Entrada** sí los imprime, pero después de las hojas de globales, en un listado compacto agrupado por producto, con numeración continua y sin repetir el pie de firmas —ese va solo en la última hoja de globales, que es la que se firma.
+>
+> **Escala del encabezado:** Entrada y Salida ya **no** comparten tamaño de encabezado. El mismo encabezado sobre A6 apaisado consume una cuarta parte de la hoja y deja cinco renglones. En Salida el encabezado va reducido; lo que se conserva es la rejilla de tres columnas, la alineación entre título, logo y QR, y que logo y QR midan lo mismo entre sí.

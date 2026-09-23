@@ -1,0 +1,8 @@
+{
+  "route": "/e7/atribucion",
+  "status": 403,
+  "bodyText": "{\"code\":\"E7_DISABLED\",\"message\":\"E7 no está habilitado.\"}",
+  "contentType": "application/json; charset=utf-8",
+  "contract": "candidate",
+  "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+}

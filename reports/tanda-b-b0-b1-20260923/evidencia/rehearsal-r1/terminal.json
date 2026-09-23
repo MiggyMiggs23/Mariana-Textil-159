@@ -1,0 +1,11 @@
+{
+  "status": "FAIL",
+  "phaseBExecuted": false,
+  "allGates": "OFF",
+  "liveSqlApplied": false,
+  "fixture": "MINIMAL_NOT_REAL_B0",
+  "candidateStopped": false,
+  "error": "Disposable SQL failed exit 3; sql-failure.json retained",
+  "postgresStopExit": 0,
+  "disposableDestroyed": true
+}

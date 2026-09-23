@@ -1,0 +1,65 @@
+{
+  "status": "PASS_DISPOSABLE_MAIN_REVIEW_PENDING",
+  "phaseBExecuted": false,
+  "allGates": "OFF",
+  "liveSqlApplied": false,
+  "fixture": "MINIMAL_NOT_REAL_B0",
+  "candidateStopped": true,
+  "auxiliary": "PASS_RI_AND_DEPENDENCIES",
+  "projection": "PASS_EXACT_FOUR_REPLACEMENTS",
+  "rowAndSequenceSensitivity": "PASS_REAL_DISPOSABLE_MUTATIONS",
+  "candidateProcessGroupGone": true,
+  "candidate": {
+    "status": "PASS_INSPECTION_START",
+    "health": 200,
+    "probes": [
+      {
+        "route": "/healthz",
+        "status": 200,
+        "bodyText": "{\"status\":\"ok\"}",
+        "contentType": "application/json; charset=utf-8",
+        "contract": "candidate",
+        "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+      },
+      {
+        "route": "/e7/disponibilidad",
+        "status": 200,
+        "bodyText": "{\"enabled\":false}",
+        "contentType": "application/json; charset=utf-8",
+        "contract": "candidate",
+        "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+      },
+      {
+        "route": "/e7/atribucion",
+        "status": 403,
+        "bodyText": "{\"code\":\"E7_DISABLED\",\"message\":\"E7 no está habilitado.\"}",
+        "contentType": "application/json; charset=utf-8",
+        "contract": "candidate",
+        "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+      },
+      {
+        "route": "/e5/cobros",
+        "status": 403,
+        "bodyText": "{\"error\":{\"code\":\"E5_DISABLED\",\"message\":\"E5 no está habilitado.\"}}",
+        "contentType": "application/json; charset=utf-8",
+        "contract": "candidate",
+        "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+      },
+      {
+        "route": "/e11/identidad",
+        "status": 403,
+        "bodyText": "{\"code\":\"E11_DISABLED\",\"message\":\"E11 no está habilitado.\",\"requestId\":\"398fb88e-23c9-464c-a026-9de28b847178\"}",
+        "contentType": "application/json; charset=utf-8",
+        "contract": "candidate",
+        "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+      }
+    ],
+    "sha256": "deaa31522316a38baff0bebfbcf2a418565e9b031775abe0249a51f520bfc670",
+    "loopbackWrapperSha256": "4d1cd132af2e293f633602ab52a7fd259d8222a2b20d650cc6e4ee45b8762092",
+    "bind": "127.0.0.1",
+    "bundleModified": false
+  },
+  "invariance": "PASS_CATALOG_ROWS_SEQUENCES",
+  "postgresStopExit": 0,
+  "disposableDestroyed": true
+}

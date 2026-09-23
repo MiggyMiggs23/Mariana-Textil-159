@@ -1,0 +1,46 @@
+R4: SOLO CORRECCIÓN DE REPRESENTACIÓN AUXILIAR / NO EJECUTADO PG O STARTUP
+
+No cambia ningún SQL aprobado, API/UI ni commit SQL:
+91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f.
+apiSourceRevision continúa cc628aed315a4bbfd3e6cb8766d28200ce400842.
+r1/r2/r3/FAIL/capturas/sellos/SQLcopias preservados íntegros.
+
+Defecto: UNIQUE por fila semántica rechazaba dependencias pg_depend repetidas.
+Corrección: multiset con cuenta por fila COMPLETA; no Set/deduplicación de filas.
+Cuenta(B1)=cuenta(B0real)+cuenta(fixtureAfter)-cuenta(fixtureBefore).
+Las reducciones solo pueden pertenecer a los cuatro reemplazos autorizados;
+se bloquean underflow, disminución RI o disminución de cualquier otro objeto.
+La proyección principal sigue rechazando colisiones de objetos y exactamente
+cuatro definiciones antiguas cambiadas, antes de proyectar aristas auxiliares.
+
+Consulta SQL auxiliar SIN CAMBIOS y B0 crudo SIN CAMBIOS. El campo identity ya
+capturado distingue public.tabla.columna; se conserva completo, nunca se usa
+solo name, que contiene solo tabla para "table column". RI conserva tabla de
+origen FK + constraint. No se inventan objsubid/OID ausentes ni se atribuye
+preservación física de direcciones de catálogo: solo multiset semántico de
+todos los campos efectivamente capturados. Las copias repetidas siguen como
+filas repetidas en B1 y además se documentan sus cuentas en el delta.
+
+Auditoría helper OFFLINE completa sobre evidencia real r3 conservada:
+- Proyección principal idéntica al catalog-B1-projected.json de r3, 4 reemplazos.
+- Aux B0 2950 filas pg_depend / 2944 distintas: preservadas las 6 repeticiones.
+- Proyectadas 4489 dependencias (1539 añadidas, 0 quitadas).
+- RI 776 ->1040 (264 añadidos, 0 quitados).
+- 11/11 tests puros: repetición, suma/resta exacta, conservación B0, underflow,
+  reducción no autorizada, RI, orden, columna subobjeto y tabla origen FK.
+- Sin nuevos B1 "ejecutados r4": el replay está rotulado OFFLINE de evidencia r3.
+Evidencia: evidencia/multiset-offline-audit.json y multiset-unit.log.
+
+MAIN debe obtener revisión independiente de código/evidencia ANTES de DB r4.
+Después de revisión y pin vigente explícito:
+export TANDA_B_SQL_REVISION=91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f
+export TANDA_B_ATTEMPT=r4
+export TANDA_B_MAIN_ONLY=AUTHORIZED
+# Fijar TANDA_B_RUNTIME_PID, TANDA_B_START_TICKS, TANDA_B_CMDLINE_SHA256,
+# TANDA_B_PG_BIN, TANDA_B_API_PORT como en las instrucciones anteriores.
+node reports/tanda-b-b0-b1-20260923/r4/run-main.mjs
+
+Ejecuta preflight READ ONLY nuevo, ensayo PG privado, startup OFF mediante
+wrapper loopback, invariancia por multiset/fila/secuencia, cleanup, protección
+runtime, terminal y finalizador. Todo fallo queda conservado y bloquea sello
+positivo. Fase B NO EJECUTADA; no DBreal/activación/reinicio/workflow/permisos.

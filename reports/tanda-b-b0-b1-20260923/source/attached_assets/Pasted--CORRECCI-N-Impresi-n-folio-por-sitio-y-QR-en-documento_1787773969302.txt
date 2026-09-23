@@ -1,0 +1,152 @@
+# CORRECCIÓN — Impresión, folio por sitio y QR en documentos
+
+Tarea acotada. Un commit por bloque. **No adelantes trabajo de la Parte 2.** Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## BLOQUE 1 — Iniciales por sitio
+
+Agrega a la tabla de ubicaciones un campo **`iniciales`**: 2 o 3 letras mayúsculas, obligatorio y **único**.
+
+Se edita desde Configuración → Sitios, solo ADMIN.
+
+**No las derives automáticamente del nombre.** Hay nombres que colisionan: "Cruces" y "Bodega Cruces" darían las mismas letras. El usuario las asigna a mano y el sistema valida que no se repitan.
+
+Valores iniciales sugeridos, que el usuario puede cambiar:
+
+| Sitio | Iniciales |
+|---|---|
+| Mariana | MA |
+| Cruces | CR |
+| Coco | CO |
+| Tomás | TO |
+| Don Nacho | DN |
+| Lucas Alamán | LA |
+| Bodega Cruces | BC |
+
+Las ubicaciones técnicas —"En tránsito" y "Externo"— no necesitan iniciales porque no emiten documentos. Si el esquema exige el campo, ponles un valor y anótalo.
+
+---
+
+## BLOQUE 2 — Folio por sitio
+
+Hoy el folio de entradas y el de salidas son **globales**: una sola cuenta para todas las ubicaciones, con tabla de control (`entrada_folio`) y candado para repartir el siguiente número.
+
+Cámbialo a **un contador por sitio**. Cada ubicación lleva su propia numeración desde 1.
+
+### Reglas
+
+- El folio deja de ser único por sí solo. **La identidad del documento es ubicación + folio.** Ajusta las restricciones de unicidad en consecuencia: única la pareja, no el folio.
+- Conserva el mecanismo de asignación atómica con candado que ya existe. Solo cámbialo de un contador a uno por ubicación. **Dos personas en el mismo sitio no pueden llevarse el mismo número.**
+- Los folios nunca se reutilizan, igual que hoy.
+
+### Presentación
+
+En el papel y en toda la interfaz, el folio se muestra como **`INICIALES-FOLIO`**:
+
+- `DN-000503`
+- `CR-000101`
+- `MA-000047`
+
+El folio va con ceros a la izquierda hasta 6 dígitos. **Sin comas de miles**, según la regla de formato numérico del proyecto.
+
+Aplica este formato en: lista de entradas, lista de salidas, detalle de cada una, el documento impreso, los buscadores y las exportaciones a Excel.
+
+### Búsqueda
+
+El buscador debe encontrar tanto `DN-000503` como `503`. Si se escribe el número pelón sin iniciales y hay coincidencias en varios sitios, muéstralas todas con su sitio.
+
+### Migración
+
+Cuenta cuántas entradas y salidas existen antes de migrar y repórtalo. Reasigna los folios por sitio respetando el orden cronológico de creación. **Nada se borra.**
+
+---
+
+## BLOQUE 3 — Tamaños de página
+
+### El problema
+
+Las medidas del diseño y las de la regla de impresión no coinciden, y el navegador parte el contenido.
+
+- El documento de entrada está diseñado a **11 × 8.5 pulgadas** (`entrada-documento.tsx` línea 45) pero `@page document` declara **5.5 × 8.5 in** (`index.css` línea 137). Resultado: 3 hojas para una entrada de un renglón.
+- Las etiquetas salen una por hoja gigante con el resto en blanco. 51 hojas para 51 etiquetas en una Wasp WPL308.
+
+### Entradas
+
+- **Carta vertical: 216 × 279 mm.**
+- Rediseña `entrada-documento.tsx` a esa proporción, siguiendo la primera imagen de referencia que adjunta el usuario.
+- Regla `@page` propia para entradas, con ese tamaño y orientación vertical.
+- La tabla de productos debe traer renglones vacíos hasta llenar la hoja, como en la referencia, para poder anotar a mano.
+- Bloque de firmas al pie: **RECIBIDO POR / REVISADO POR / AUTORIZADO POR**.
+
+### Salidas
+
+- **Media carta horizontal: 216 × 140 mm.**
+- Rediseña `salida-documento.tsx` a esa proporción, siguiendo la segunda imagen de referencia.
+- Regla `@page` propia para salidas, con ese tamaño y orientación horizontal.
+- Bloque de firmas al pie: **ENTREGA / TRANSPORTA / RECIBE**.
+
+En los dos casos, verifica que el diseño y la regla `@page` declaren **exactamente la misma medida**. Es el error que causó todo esto.
+
+### Etiquetas
+
+La etiqueta está diseñada a 100 × 70 mm y `@page label` declara lo mismo, pero la impresión sale en una página mayor con la etiqueta en una esquina.
+
+Diagnostica por qué la regla no se está aplicando y corrígelo. Revisa que `page: label` esté llegando al elemento correcto, que no haya un contenedor padre imponiendo otro tamaño, y que la orientación del diálogo no esté peleando con la regla.
+
+Una etiqueta de 100 × 70 debe imprimirse en **una página de 100 × 70, sin espacio sobrante.**
+
+---
+
+## BLOQUE 4 — El banner de Replit se está imprimiendo
+
+El aviso de "This is a temporary development preview" aparece **dentro de cada documento y de cada etiqueta impresa**.
+
+Agrega una regla de impresión que lo oculte. Identifícalo por su contenedor y ocúltalo en `@media print` junto con todo lo demás que no debe salir en papel.
+
+Aunque desaparece al publicar la aplicación, mientras tanto ensucia cada prueba e impide juzgar los diseños.
+
+---
+
+## BLOQUE 5 — QR en entradas y salidas
+
+Las dos hojas llevan un QR que dirige al documento dentro del sistema.
+
+- **Salidas:** ya tiene QR. Ahora que el folio no es único, el QR debe llevar **el identificador interno del documento**, no el folio. Rotúlalo "ESCANEAR PARA RECIBIR", como en la referencia.
+- **Entradas:** agrega un QR equivalente, rotulado "ESCANEAR PARA VER".
+
+Los dos deben resolverse al documento correcto sin ambigüedad de sitio.
+
+---
+
+## BLOQUE 6 — Etiqueta: quitar líneas y agrandar
+
+En `components/label-print.tsx`:
+
+- **Quita las dos líneas verticales** que separan los tres bloques (`border-l border-gray-400`). En una térmica no aportan y le roban ancho al logo y al QR.
+- Usa el espacio liberado para que el logo y el QR crezcan. Mantén una separación visual clara entre bloques con espacio, no con líneas.
+- El logo debe quedar del mismo ancho que el QR o mayor.
+
+---
+
+## BLOQUE 7 — Verificación
+
+- Una entrada de un renglón imprime en **una** hoja carta vertical
+- Una salida de dos renglones imprime en **una** media carta horizontal
+- 51 etiquetas imprimen en 51 páginas de 100 × 70 mm, sin espacio sobrante
+- El banner de Replit no aparece en ningún documento impreso
+- Dos entradas creadas en sitios distintos el mismo día reciben folios independientes
+- Dos usuarios creando entradas simultáneamente en el mismo sitio no reciben el mismo folio
+- Buscar `DN-000503` y buscar `503` encuentran el documento
+- El QR de una salida lleva a esa salida y solo a esa
+- Conteo de entradas y salidas migradas, con su reasignación de folios
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> El folio de entradas y salidas es por sitio, no global. La identidad de un documento es ubicación + folio, y se presenta como `INICIALES-FOLIO` con 6 dígitos y sin comas. Cada sitio tiene un campo `iniciales` único que asigna ADMIN a mano. Entradas: carta vertical 216 × 279 mm. Salidas: media carta horizontal 216 × 140 mm. Etiquetas: 100 × 70 mm. El diseño y la regla `@page` deben declarar siempre la misma medida.

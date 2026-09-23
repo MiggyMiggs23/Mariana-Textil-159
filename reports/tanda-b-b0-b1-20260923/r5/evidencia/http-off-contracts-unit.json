@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "scope": "20 pure contract tests only; no HTTP or application executed",
+  "tests": 20,
+  "bodyEvidenceBeforeAssertions": true,
+  "candidate404NeverPasses": true,
+  "controlE2Separate404": true,
+  "apiRebuilt": false,
+  "sqlChanged": false,
+  "r4FailureReclassified": false
+}

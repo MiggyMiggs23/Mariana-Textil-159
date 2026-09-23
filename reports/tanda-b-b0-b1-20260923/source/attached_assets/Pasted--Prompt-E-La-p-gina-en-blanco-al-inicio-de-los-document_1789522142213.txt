@@ -1,0 +1,158 @@
+# Prompt E — La página en blanco al inicio de los documentos impresos
+
+## Contexto
+
+Salidas, Entradas y Etiquetas imprimen una hoja en blanco —o un espacio en blanco
+sobre el primer contenido— antes del documento. Es un **defecto compartido por las
+tres**, no de una pantalla suelta.
+
+Ya está descartado que sea del controlador. `replit.md` lo registra: el usuario
+confirmó el espacio en blanco sobre la primera etiqueta **tanto con Microsoft Print to
+PDF como con la Wasp WPL308**, y las siguientes empiezan alineadas arriba. La
+atribución al controlador quedó retirada.
+
+Este defecto ya costó una mañana entera confundiéndolo con configuración de impresora.
+**No lo vuelvas a atribuir al controlador ni al tamaño de papel sin evidencia nueva.**
+
+---
+
+## Bloque 0 — Reproducir y medir antes de tocar nada
+
+No modifiques código en este bloque.
+
+Genera PDF de los tres documentos con escala 100% y sin márgenes adicionales del
+diálogo, y para cada uno reporta:
+
+1. Cuántas páginas produjo el navegador contra cuántas numera el documento.
+2. La **coordenada vertical del primer contenido** de la página 1, comparada con la de
+   las páginas siguientes. Si la primera arranca más abajo, ahí está el defecto, y la
+   diferencia medida en milímetros es el dato que hay que explicar.
+3. Si la página en blanco es una hoja completa adicional o un desplazamiento del
+   contenido dentro de la primera hoja. **No son lo mismo y llevan a causas
+   distintas.**
+
+Casos a usar, para que el resultado sea comparable: una Entrada de un solo producto,
+una Salida de un solo producto, y una etiqueta sola. El caso mínimo es el que mejor
+aísla el espacio sobrante, porque no hay contenido que lo explique.
+
+Pega las mediciones en el reporte. **Si no logras reproducirlo, detente y dilo**; no
+apliques una corrección a ciegas sobre algo que no viste.
+
+---
+
+## Bloque 1 — La hipótesis que hay que confirmar o descartar primero
+
+En `artifacts/mariana-textil/src/index.css`, dentro de `@media print`, conviven **dos
+estrategias incompatibles para ocultar lo que no se imprime**:
+
+- `display: none`, que **elimina la caja** del elemento y no deja espacio.
+- `visibility: hidden`, que **oculta el contenido pero conserva su caja y su espacio**.
+  Hay 12 usos de esta regla en el bloque de impresión.
+
+Las reglas de Entrada y de Salida hacen las dos cosas a la vez: primero
+`body.print-entrada * { visibility: hidden }` y después un selector con `:has()` que
+aplica `display: none` a lo que no es el documento. Si por cualquier motivo el
+selector de `display` no alcanza a un elemento que sí recibió `visibility: hidden`,
+ese elemento **sigue ocupando su altura**. Si está antes del documento en el orden del
+DOM, empuja el contenido hacia abajo, y si su altura supera lo que queda de hoja,
+produce una hoja en blanco.
+
+Eso explicaría por qué el defecto aparece igual en PDF y en la Wasp, por qué afecta a
+los tres documentos, y por qué solo se ve antes del primero.
+
+**Confirma o descarta esta hipótesis con evidencia**, midiendo qué elemento conserva
+altura durante la impresión. Si resulta ser otra causa, repórtala y ajusta el plan:
+esta hipótesis no es una instrucción de qué corregir, es por dónde empezar a buscar.
+
+Revisa también el caso de Etiquetas, que tiene una mecánica propia: su contenedor se
+monta como hijo directo de `body`, y existe un mecanismo de `print-target-scoped` con
+`data-print-target` para distinguir cuál contenedor está activo cuando hay varios
+montados. Un contenedor no activo que quede oculto por `visibility` en vez de por
+`display` produce exactamente este defecto.
+
+---
+
+## Bloque 2 — Corregir
+
+Cuando la causa esté demostrada:
+
+1. **Una sola estrategia de ocultamiento.** Lo que no se imprime se retira con
+   `display: none`, no con `visibility: hidden`. `visibility` solo se conserva donde
+   se necesite preservar el espacio a propósito, y en ese caso debe llevar un
+   comentario que explique por qué.
+2. **La misma solución para los tres documentos.** Es un defecto compartido; tres
+   parches distintos lo dejarían resuelto en el que se probó y vivo en los otros dos
+   hasta la siguiente queja de la tienda.
+3. **No toques las dimensiones de página, los márgenes reservados ni las capacidades
+   de renglones por hoja.** Entrada es carta vertical 216 × 279 mm, Salida A5
+   horizontal 210 × 148 mm, Etiquetas 100 × 70 mm, y los 5.25 mm de reserva interior
+   se conservan. Las capacidades —diez productos por hoja en Entrada y en Salida, ocho
+   renglones por copia en Nota— son mediciones reales comentadas junto a su constante
+   y **no se bajan a ojo hasta que el problema deje de verse**. Esa práctica está
+   prohibida en `replit.md` por escrito.
+4. Si la corrección altera de algún modo la altura útil de la hoja, las capacidades
+   **se remiden** y se actualiza el comentario junto a la constante. No se supone que
+   siguen cabiendo.
+
+---
+
+## Bloque 3 — Que no vuelva
+
+`replit.md` ya describe la prueba que debe existir para Etiquetas: tantas páginas como
+etiquetas, campos completos de cada etiqueta en su página, sin páginas adicionales
+iniciales ni finales, y **comparación de la coordenada vertical inicial del contenido
+de la primera página contra las demás** — porque el conteo de páginas puede pasar
+aunque la primera esté desplazada.
+
+Comprueba si esa prueba existe hoy y si realmente hace esa comparación vertical. Si no
+existe o solo cuenta páginas, **extiéndela**, y aplica el mismo criterio a Entrada y a
+Salida. Una prueba que solo cuenta páginas no detecta este defecto: es exactamente el
+falso verde que lo dejó vivo.
+
+La prueba debe cubrir el caso mínimo —un producto, una etiqueta— y el caso que pagina,
+porque el defecto se manifiesta distinto en cada uno.
+
+Que pase en Chromium o en PDF no certifica el comportamiento de un controlador físico.
+Deja esa limitación escrita en el reporte.
+
+---
+
+## Verificación
+
+1. PDF de los tres documentos, antes y después, con las mediciones del Bloque 0
+   repetidas. La coordenada vertical del primer contenido de la página 1 debe
+   coincidir con la de las siguientes.
+2. Conteo de páginas del navegador igual a la paginación que declara el documento, en
+   el caso mínimo y en el que pagina.
+3. Las cuatro bandas de seguridad siguen respetadas: al menos 5 mm sin tinta en cada
+   orilla, incluidos líneas, fondos, logo y QR.
+4. El pie de firmas sigue sin partirse entre hojas y sigue en la última hoja de
+   globales.
+5. `pnpm run typecheck` completo. Los cuatro errores preexistentes **no se corrigen
+   aquí**; confirma que no aparecieron otros.
+6. Comprobación física pendiente: esto se cierra cuando la tienda imprima en la Wasp y
+   en la láser. **No lo presentes como aprobado sin esa impresión.**
+
+## Restricciones
+
+- No cambies tamaños de papel, márgenes, escalas ni capacidades de renglones.
+- No modifiques el contenido de ningún documento: ni qué se imprime, ni el orden, ni
+  las series, ni el logo, ni el QR.
+- No crees usuarios ni sesiones de prueba, no escribas en la base.
+- No toques nada de crédito, caja, enlaces ni los cuatro errores de tipos.
+- **No bajes el número de renglones por hoja para que el problema deje de verse.** Si
+  te ves tentado a hacerlo, la causa no está encontrada.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. La causa demostrada, con la evidencia que la sostiene, sustituyendo cualquier
+   redacción anterior que atribuyera el defecto al controlador o al tamaño de papel.
+2. **La regla derivada:** en las reglas de impresión, lo que no se imprime se retira
+   con `display: none`. `visibility: hidden` conserva la caja del elemento y su
+   espacio, y por eso produce hojas en blanco y desplazamientos aunque el contenido no
+   se vea.
+3. Que la prueba de documentos compara la coordenada vertical inicial de la primera
+   página contra las demás, y que un conteo de páginas por sí solo no detecta este
+   defecto.
+4. Que la comprobación física en la Wasp y en la láser sigue pendiente, si no se
+   ejecutó.

@@ -1,0 +1,197 @@
+# Prompt J — Rediseño de Caja en Tiempo Real y Cuentas Destino
+
+## Por qué existe este prompt
+
+Las dos pantallas crecieron por capas. Tres entregas seguidas mejoraron su pedacito
+sin mirar el conjunto, y el resultado es que hoy hay títulos de sección que no hacían
+falta, encabezados de tabla desalineados, cifras en cero ocupando la mitad del ancho y
+bloques colgando con espacio vacío al lado.
+
+**Esta entrega sí rediseña ambas pantallas.** Con una sola regla que no se negocia:
+
+> **Ninguna cifra, desglose, tabla, gráfica ni enlace existente puede desaparecer ni
+> cambiar de valor.**
+
+Entrega una tabla con cada cifra de cada pantalla, su valor antes y su valor después,
+para el mismo periodo y el mismo sitio. Deben ser idénticas.
+
+---
+
+## Bloque 0 — Las dos preguntas que separan las pantallas
+
+Son dos pantallas porque contestan dos preguntas distintas. Todo lo que sigue se
+deriva de esto:
+
+- **Caja en Tiempo Real contesta: qué está pasando hoy.** Es operación. Se mira
+  durante el día.
+- **Cuentas Destino contesta: qué vendí y por dónde entró el dinero.** Es análisis. Se
+  mira para cuadrar.
+
+Si un elemento no contesta la pregunta de su pantalla, está en el lugar equivocado.
+
+---
+
+## Bloque 1 — Caja en Tiempo Real
+
+Orden de prioridad, decidido por el propietario:
+
+1. **La operación del día:** lo vendido, el contado cobrado, lo que se fue a crédito y
+   la utilidad. Conserva la identidad **Ventas = Contado cobrado + Ventas a crédito**.
+2. **Las cuatro señales operativas:** ventas pendientes de cobro o autorización,
+   salidas en tránsito, tickets cancelados y salidas canceladas.
+3. **Estado por Tienda**, que el propietario quiere **antes** que la aclaración de
+   cobranza.
+4. La aclaración de cobranza, al final.
+
+### Lo que NO se toca, por instrucción expresa
+
+**Los colores de las cuatro tarjetas operativas se conservan exactamente como están.**
+Se encienden en ámbar cuando hay algo en curso y en rojo cuando hay cancelaciones, y
+quedan neutras en cero. Su tamaño menor, su cifra menor y su orden fijo también se
+conservan. **Al propietario le gusta cómo funcionan y no quiere que cambien.** No
+toques su paleta, su umbral ni su lógica de encendido.
+
+Tampoco se toca: la identidad de ventas, que Ventas (Total) y Utilidad no sean
+clicables, ni la conciliación tarjeta/detalle de las que sí lo son.
+
+### La aclaración de cobranza: qué es y qué no es
+
+Esto lo entendí mal dos veces y quiero que quede claro.
+
+**No es una sección.** No lleva título propio, no lleva encabezado, no ocupa una fila
+entera, no es una banda. El encabezado «Qué dinero entró» y la banda de ancho completo
+fueron un error de diseño y **se retiran**.
+
+**Es la aclaración de una cifra.** Contesta una sola pregunta del propietario: *del
+dinero que entró hoy, ¿cuánto vino de ventas de hoy y cuánto de un abono a una nota
+anterior?* Sin eso, ve un monto en efectivo y no sabe si corresponde a lo que vendió
+hoy o a una deuda vieja.
+
+Va **pegada a la cifra que explica**, como desglose secundario, exactamente igual que
+«Facturado: $0.00» vive debajo de Efectivo sin ser un capítulo. Texto menor,
+subordinado, sin competir con la cifra principal.
+
+Condiciones:
+
+- **La identidad de ventas no se altera.** La cifra principal de esa tarjeta sigue
+  siendo la que hace que Ventas = Contado cobrado + Ventas a crédito. Un abono no es
+  una venta nueva: la venta ya se contó cuando Caja autorizó la nota.
+- Cada parte del desglose **sigue siendo un enlace** a su detalle filtrado por fuente.
+  Ninguna deja de ser clicable por el cambio de composición.
+- Sigue leyendo **la misma función compartida** con Cuentas Destino. No introduzcas
+  una segunda consulta.
+- Los estados de carga y error de la cobranza se conservan, con su leyenda de que las
+  cifras de ventas conservan su consulta independiente.
+
+**Propón la composición concreta y preséntala antes de darla por buena.** Dos intentos
+anteriores fallaron por diseñar de más.
+
+---
+
+## Bloque 2 — Cuentas Destino
+
+El propietario dice qué quiere ver aquí, textualmente: **lo que vendió y de qué manera
+entró.** Cuánto a cuentas fiscales, cuánto a no fiscales, qué parte de la venta se
+facturó y qué parte no, y **qué parte de lo que entró en efectivo corresponde a ventas
+facturadas y qué parte a ventas sin factura.**
+
+Esa última es la que hoy se lee como una etiqueta chiquita debajo de un cero, y es
+justo la que más le importa. La caja física es la única cuenta cuyo estatus fiscal no
+se deduce del destino, porque el cajón es uno solo; por eso necesita declararlo
+aparte, y por eso debe leerse con la importancia que tiene.
+
+### Qué arreglar
+
+1. **Separa venta de cobranza de cartera.** Son tres cosas distintas y hoy se leen como
+   tarjetas equivalentes en una cuadrícula. La venta es lo que se vendió; la cobranza
+   es el dinero que entró; la cartera es lo que deben. **La cartera se queda en esta
+   pantalla**, con su valor y su leyenda actuales, pero deja de estar colgando abajo
+   con medio ancho vacío.
+2. **Las tres cuentas reales** —Efectivo, Cuentas No Fiscales, Cuentas Fiscales— son el
+   desglose de la cobranza por destino y deben leerse subordinadas a ella, no como un
+   nivel paralelo. Conserva sus porcentajes calculados sobre Cobrado.
+3. **Corrige el título «Cobros de periodos anteriores».** Lleva desde el primer día
+   reportado como incorrecto, su propio subtítulo ya dice otra cosa, y sigue ahí.
+4. **Arregla la tabla de ese bloque.** Sus encabezados —Cuenta Destino, Origen,
+   Importe— están a distinta altura y desalineados del contenido.
+5. **La misma aclaración de cobranza del Bloque 1 va también aquí**, con los mismos
+   rótulos y la misma composición subordinada. Si las dos pantallas la nombran
+   distinto, vuelves a tener dos nombres para la misma cifra.
+6. **Cifras en cero no deben ocupar el espacio de cifras importantes.** Hoy tres ceros
+   se llevan la mitad del ancho. Compón por importancia, no por simetría.
+
+### Qué se conserva íntegro
+
+La Matriz de Operaciones y su cuadre por renglón y por columna, el orden fijo de
+destinos —Efectivo, Cuentas No Fiscales, Cuentas Fiscales, Ventas a Crédito— con sus
+etiquetas resueltas desde `@workspace/number-format`, la comparación con el periodo
+anterior bajo demanda, los flujos diarios, el IVA facturado, el desglose por tienda, la
+declaración de incongruencias, las exportaciones XLSX y PDF, y **que cada importe abre
+el mismo detalle canónico con sus filtros** y desde ahí el folio lleva al documento.
+
+---
+
+## Bloque 3 — El renglón que puede salir negativo
+
+Con datos reales del 15 de septiembre, el desglose muestra «A cuenta, sin aplicar:
+−$25,000.00». **Un saldo a cuenta sin aplicar no puede ser negativo.** Ese renglón
+agrupa el saldo a favor recibido junto con los reversos que lo anulan, y el rótulo solo
+describe el primero.
+
+1. Confirma primero en el código qué fuentes suma ese renglón hoy y repórtalo
+   textualmente.
+2. Separa los reversos en su propio renglón con su propio rótulo, o renombra el
+   existente para que describa lo que contiene. **Cualquier renglón que pueda salir
+   negativo debe llevar un nombre que explique por qué.**
+3. **El total no cambia.** Sigue siendo la suma de sus partes y sigue cuadrando al
+   centavo con el detalle que abre. Si el total cambia, detente.
+4. El renglón nuevo también enlaza a su detalle filtrado por su fuente.
+5. Aplica el mismo cambio en las dos pantallas.
+
+---
+
+## Verificación
+
+1. **Tabla del antes y el después de cada cifra** de las dos pantallas, mismo periodo y
+   mismo sitio. Salvo los rótulos y la posible separación del renglón de reversos,
+   todas idénticas. **Esta es la verificación principal.**
+2. Inventario explícito de cada tabla, gráfica y enlace que existía antes, con su
+   ubicación después. Ninguno puede faltar.
+3. La prueba de identidad entre la cobranza del tablero y el Cobrado de Cuentas Destino
+   sigue pasando, en importe y en desglose por fuente. Si cambia la forma del desglose,
+   **actualiza la prueba para que compare la forma nueva, no para que deje de
+   comparar**.
+4. La conciliación tarjeta/detalle sigue pasando: mismo conteo y mismo importe a través
+   de todas las páginas.
+5. La identidad Ventas = Contado cobrado + Ventas a crédito sigue cumpliéndose.
+6. Los colores de las cuatro tarjetas operativas no cambiaron. Pruébalo con conteo cero
+   y distinto de cero.
+7. Comprobación en navegador de las dos pantallas, en escritorio y a 402 px, con
+   captura del antes y el después. **Si no hay sesión autenticada, dilo y no lo
+   presentes como aprobado.**
+8. `pnpm run typecheck` completo en cero, con el verificador corregido.
+
+## Restricciones
+
+- **No cambies ninguna consulta, predicado ni cálculo financiero.**
+- No introduzcas una segunda consulta para la cobranza.
+- No muevas nada de una pantalla a la otra salvo lo que este prompt indica.
+- No toques los colores ni la lógica de encendido de las cuatro tarjetas operativas.
+- No toques Clientes ni Cartera de clientes.
+- No crees usuarios ni sesiones de prueba, no escribas en la base.
+- No corrijas la asimetría Cruces/global, el corte de caja sin abonos ni el vencimiento
+  en pantalla. Son entregas propias.
+- **Presenta la composición propuesta antes de implementarla.** El propietario ya
+  rechazó dos diseños por agregar estructura que no pidió.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Qué pregunta contesta cada pantalla y qué pertenece a cada una, para que nadie
+   vuelva a mezclarlas.
+2. Que la aclaración de cobranza es un desglose pegado a la cifra que explica, **nunca
+   una sección con título propio**, y que vive en las dos pantallas con los mismos
+   rótulos.
+3. Qué contiene exactamente cada renglón del desglose, incluido el de reversos.
+4. Que los colores de las cuatro tarjetas operativas son decisión cerrada del
+   propietario y no se modifican.
+5. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

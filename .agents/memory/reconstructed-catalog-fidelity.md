@@ -19,3 +19,15 @@ y a otro creado de una vez, aun conservando exactamente etiquetas y orden.
 **How to apply:** Exigir que renumerar pase y que cambiar orden o conjunto
 falle. Esta excepción de comparación no autoriza modificar enums/triggers,
 ni presentar como aditivo un SQL que sustituye objetos existentes.
+
+El inventario semántico de dependencias debe conservar multiplicidades.
+
+**Why:** Dos filas legítimas de `pg_depend` pueden representar la misma
+dependencia semántica de un índice sobre una columna. Rechazarlas como
+duplicados o eliminarlas convierte un catálogo válido en fallo o pierde
+evidencia.
+
+**How to apply:** Comparar multiconjuntos completos y aplicar deltas con
+conteos, sin perder repeticiones. Seguir exigiendo identidades únicas para
+objetos de esquema; no generalizar esta excepción a tablas, funciones o
+triggers. Los OID internos no son identidades portables entre clústeres.

@@ -1,0 +1,59 @@
+# CORRECCIÓN — Logo y tamaños de la etiqueta de rollo
+
+Tarea acotada. Un solo commit. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## El problema
+
+El logo monocromático que usa la etiqueta (`assets/mariana-textil-logo-monochrome.png`) está mal convertido. El logo original tiene cinco tonos de azul que forman los dobleces de la cinta; la conversión los aplastó todos a negro sólido y la M dejó de leerse.
+
+Además, el logo trae el texto "MARIANA TEXTIL S.A. DE C.V." metido dentro de la imagen, lo que sale borroso en una impresora térmica de 203 puntos por pulgada.
+
+---
+
+## BLOQUE 1 — Reemplazar el archivo del logo
+
+Se adjunta el archivo correcto: **la M sola, en escala de grises, sin texto**, convertida desde el original respetando la luminosidad de cada tono.
+
+- Reemplaza `artifacts/mariana-textil/src/assets/mariana-textil-logo-monochrome.png` con el archivo adjunto.
+- **No lo redibujes, no lo regeneres, no lo "mejores".** Úsalo tal cual viene. Cualquier intento de reconstruirlo produce una M genérica que no es el logo de la empresa.
+- El componente `MonochromeBrandLogo` no cambia; solo cambia el archivo que consume.
+
+---
+
+## BLOQUE 2 — El texto va aparte
+
+En `components/label-print.tsx`, debajo del logo:
+
+- Agrega el texto **"MARIANA TEXTIL"** como texto real que dibuja el sistema, no como imagen.
+- En negro sólido, mayúsculas, tipografía gruesa (peso 800 o 900).
+- Centrado y ocupando el ancho del bloque del logo.
+- **Sin "S.A. DE C.V."**
+
+El texto real sale nítido en una térmica; el texto dentro de una imagen no.
+
+---
+
+## BLOQUE 3 — Tamaños
+
+En la etiqueta de 100×70 mm, el bloque del logo hoy mide 28×34 mm y el QR 27 mm.
+
+- El logo (la M) debe quedar **del mismo ancho que el QR o un poco mayor**, aprovechando toda la altura disponible de su columna.
+- Quita los márgenes internos que hoy le roban espacio al bloque del logo.
+- El texto "MARIANA TEXTIL" va inmediatamente debajo de la M, con una separación mínima.
+- El QR y el texto `SKU-SERIE` que va bajo el QR **no cambian de tamaño.**
+
+Los tres bloques —datos, logo, QR— deben seguir alineados verticalmente y sin desbordarse de los 100×70 mm.
+
+---
+
+## BLOQUE 4 — Verificación
+
+- Genera la vista previa de una etiqueta y confirma que la M se lee, que los dobleces de la cinta se distinguen y que el texto "MARIANA TEXTIL" no se corta.
+- Confirma que nada se sale de los 100×70 mm.
+- Revisa que el mismo logo se vea correcto en el ticket del POS y en las hojas de entrada y salida, que usan el mismo componente.
+
+Deja anotado en `replit.md`:
+
+> El logo monocromático de la etiqueta es un archivo de escala de grises derivado del logo original. Nunca debe redibujarse ni regenerarse. El texto "MARIANA TEXTIL" se dibuja aparte, como texto, no como parte de la imagen.

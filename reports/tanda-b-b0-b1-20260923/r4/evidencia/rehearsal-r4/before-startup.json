@@ -1,0 +1,211 @@
+{
+  "schemaSha256": "d877b4a983ef5a9c6fdb33423bb817720daa7df09d6a76da0eedbd0c012f1ef5",
+  "attributesSha256": "0befafb7532be13633d357c024df02b2c484d68710a631592de13b4ae24dacbf",
+  "auxiliarySha256": "ac2248995f09d94458bdedac7429cc54522ac53c5196c264e32a15fd425d10b2",
+  "tables": {
+    "aplicaciones_credito": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "aplicaciones_pago_proveedor": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "auditoria": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "caja_desbloqueos_e12": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "caja_retornos_proveedor_e12": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "caja_salidas_e4": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "caja_salidas_e4_operaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "clientes": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "cobros_credito_pendientes_e1": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_avisos": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_cambios_usuario": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_conciliacion_ventas": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_conciliaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_decisiones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_e5_definiciones": {
+      "sha256": "35571a176fd23201d314da4f17cb96d1e0da72ba33a752b3de3afd12019d31c1",
+      "count": 5
+    },
+    "e11_e5_preparaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_notificacion_origen": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_operaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_perfil_eventos": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_perfiles": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e11_resoluciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_aplicaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_cobros": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_ddl_originales": {
+      "sha256": "04cc20165a73aad50e9253d50ce1cf64aef4352cd19065c8a156276826edbc90",
+      "count": 4
+    },
+    "e5_devoluciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_documentos": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_impresiones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_nacimientos": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_operaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_recepciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_salidas_bancarias": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e5_vinculos_credito": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e9_entregas": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "e9_operaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "fondo_mariana": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "fondo_movimientos": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "movimientos_credito": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "notificaciones_sistema": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "operaciones_credito_e1": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "pagos_proveedor": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "proveedor_efectivo_e12": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "proveedor_operaciones_e12": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "proveedor_solicitudes_e12": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "salidas_dinero_caja": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "sesiones_caja": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "solicitudes_pago_dirigido": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "tanda_b_probe": {
+      "sha256": "55051a4663011cc51274543da9ed342a7f2f91280cce79de688f8423b1bd3683",
+      "count": 1
+    },
+    "tickets": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "ubicaciones": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    },
+    "usuarios": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "count": 0
+    }
+  },
+  "sequences": {
+    "caja_retornos_proveedor_e12_id_seq": "1:false",
+    "tanda_b_probe_id_seq": "1:true"
+  }
+}

@@ -1,0 +1,125 @@
+# Prompt M — Los defaults 99 y 499 de los contadores de folio
+
+## El defecto
+
+La regla vigente es que **el folio de entradas y salidas es por sitio y arranca en 0**,
+de modo que el primer folio de cada sitio sea 1. El esquema del código lo declara así:
+`entrada_folio.ultimo_folio` y `salida_folio.ultimo_folio` son enteros con default 0.
+
+**La base no.** El preflight del Prompt H lo confirmó leyendo el catálogo vivo:
+
+- `entrada_folio.ultimo_folio` tiene `DEFAULT 99`
+- `salida_folio.ultimo_folio` tiene `DEFAULT 499`
+
+Es deriva entre el esquema del código y la base. Y **`drizzle-kit push` no la corrige**:
+el código ya dice 0, así que no ve diferencia que aplicar. Un push que devuelve cero
+aquí significa «nada que hacer», no «corregido». Hace falta un `ALTER` explícito.
+
+## Por qué importa aunque la purga reinicie los contadores
+
+La purga del Prompt H reinicia los **valores** de las filas existentes a 0. Eso deja el
+estado correcto hoy.
+
+Pero el **default** es lo que hereda una fila nueva. Cuando se dé de alta un sitio
+nuevo y se cree su contador sin pasar valor explícito, ese sitio arrancaría en 99 o en
+499 y su primer folio sería 100 o 500. Nadie se daría cuenta hasta ver el primer
+documento impreso de la tienda nueva.
+
+---
+
+## Bloque 0 — Confirmar antes de escribir
+
+1. Lee el catálogo vivo y reporta el default actual de **cada** contador de folio:
+   `entrada_folio`, `salida_folio`, `viaje_folio`, `auditoria_inventario_folio`,
+   `ticket_folio` y `series_consecutivo`. El preflight del Prompt H reportó 99, 499, 0,
+   0, 999 y 1000000 respectivamente; confírmalo tú.
+2. Compara cada uno contra lo que declara el esquema en `lib/db/src/schema/`. Reporta
+   **todas** las diferencias, no solo las dos conocidas.
+3. Reporta el valor actual de las filas de cada contador, para distinguir el valor del
+   default.
+
+Si aparece una diferencia que este prompt no anticipa, **repórtala y espera decisión**
+antes de corregirla.
+
+---
+
+## Bloque 1 — Alinear los defaults con el esquema del código
+
+La regla: **el default de la base debe ser exactamente el que declara el esquema del
+código.** No al revés.
+
+- `entrada_folio.ultimo_folio` → default **0**
+- `salida_folio.ultimo_folio` → default **0**
+- Cualquier otro contador cuyo default vivo difiera del esquema, alineado al esquema.
+
+Condiciones:
+
+1. **Solo se cambia el default de la columna.** No toques los valores de las filas
+   existentes: esos ya los dejó correctos la purga y cambiarlos sería reescribir
+   contadores en uso.
+2. `ticket_folio` con default 999 y `series_consecutivo` con su default vigente
+   **coinciden con su esquema** y no se tocan. Si el Prompt L ya movió el de series a
+   10000000, ese es el valor correcto y tampoco se toca aquí.
+3. Todo en una sola transacción. Si algo falla, se revierte completo.
+4. No uses `drizzle-kit push` para esto: no detecta la diferencia. Va un `ALTER TABLE
+   ... ALTER COLUMN ... SET DEFAULT` explícito.
+5. Registra la sentencia exacta ejecutada en el reporte.
+
+---
+
+## Bloque 2 — Probar que el default hace lo que debe
+
+El cambio es de una línea y la tentación es darlo por bueno al ver que el `ALTER`
+devolvió éxito. **No basta.**
+
+1. Comprueba el default leyendo de nuevo el catálogo vivo después del cambio.
+2. Comprueba el **comportamiento**: en una base desechable, inserta una fila de
+   contador **sin pasar el valor** y verifica que queda en 0, y que el primer folio
+   asignado a ese sitio es 1.
+3. Comprueba que los contadores existentes **no cambiaron de valor** por el `ALTER`.
+4. Reporta las tres comprobaciones con su salida textual.
+
+---
+
+## Autorización
+
+**Esta entrega escribe en la base.** Aplica la regla vigente del proyecto: la
+autorización textual del propietario debe quedar guardada en `reports/` **antes de la
+primera escritura**, no después. Un resumen de conversación o un reporte redactado por
+el agente no son prueba de autorización.
+
+Presenta el resultado del Bloque 0 y **espera la autorización** antes del Bloque 1.
+
+El respaldo verificado del Prompt H debe estar cerrado antes de ejecutar esto. Si no lo
+está, detente.
+
+---
+
+## Verificación
+
+1. Los defaults vivos coinciden con el esquema del código, contador por contador.
+2. Las tres comprobaciones del Bloque 2.
+3. Los valores de las filas existentes intactos, con su conteo antes y después.
+4. `pnpm run typecheck` completo en cero, con el verificador corregido.
+5. Los dos servicios arrancan limpios.
+
+## Restricciones
+
+- No ejecutes el Bloque 1 sin la autorización textual guardada.
+- **No cambies los valores de las filas**, solo los defaults de columna.
+- No toques `ticket_folio` ni `series_consecutivo` si sus defaults ya coinciden con su
+  esquema.
+- No uses `drizzle-kit push` como mecanismo de corrección.
+- No crees usuarios ni sesiones de prueba.
+- No toques nada más de la base en esta entrega.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que los defaults de `entrada_folio` y `salida_folio` quedaron en 0, alineados con el
+   esquema, con la sentencia ejecutada y su fecha. Retira la mención del pendiente
+   abierto de los 99 y 499.
+2. **La regla derivada:** el default de una columna en la base debe coincidir con el
+   que declara el esquema del código, y `drizzle-kit push` no detecta esa diferencia
+   cuando el código ya dice el valor correcto. Una comprobación de esquema que solo
+   compara columnas y tipos no detecta un default divergente.
+3. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

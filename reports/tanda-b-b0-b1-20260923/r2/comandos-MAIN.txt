@@ -1,0 +1,35 @@
+R2 — REINTENTO SOLO DESECHABLE — NO EJECUTADO
+
+Preservados: SQL1 anteriores, r1 FAIL, captura B0 cruda/auxiliar, sello original.
+Este r2 reutiliza bytes B0 sin cambiarlos; exige preflight real READ ONLY
+actual positivo contra esa identidad/catálogo y el mismo pin de proceso.
+No borra, renombra ni sobrescribe evidencia r1.
+
+Cambio SQL fuente exclusivamente:
+reports/e5/01-preparado.sql: dos paréntesis alrededor CASE en IF de e5_graph_guard.
+reports/e11/01-preparado.sql: hash exacto de ese prosrc pasa de
+564fe05aee5d577aa60ab5ed5d9a8365e819ba0b82b4e7893ad791995d7b514c a
+303366993fe3529b329a2a0c980a4efcda37eef1c1bf0a1e9bd43bb52ca73267.
+Sin cambio de lógica ni ampliación de los cuatro reemplazos E1.
+Unit textual scripts/src/e5-sql-case-regression.test.mjs: 3/3 PASS por helper.
+No constituye validación PostgreSQL del SQL; MAIN conserva esa ejecución.
+
+MAIN debe commitear aparte las dos fuentes SQL y el test textual.
+Después conservar/exportar el pin vigente como en ../comandos-MAIN.txt y fijar:
+
+export TANDA_B_SQL_REVISION="$(git rev-parse HEAD)"
+export TANDA_B_ATTEMPT=r2
+export TANDA_B_MAIN_ONLY=AUTHORIZED
+# TANDA_B_RUNTIME_PID, TANDA_B_START_TICKS, TANDA_B_CMDLINE_SHA256,
+# TANDA_B_PG_BIN y TANDA_B_API_PORT deben estar fijados por MAIN.
+node reports/tanda-b-b0-b1-20260923/r2/run-main.mjs
+
+El runner verifica git show del commit SQL contra los cinco hashes exactos
+antes de conectar, escribe identidad separada del SQL y reutiliza API/UI de
+apiSourceRevision cc628aed315a4bbfd3e6cb8766d28200ce400842. No rebuild realizado:
+la modificación reside en SQL externo, no se atribuye al código del bundle.
+
+Orden: preflight READ ONLY CLI nuevo -> ensayo SQLr2 PG privado -> candidato
+OFF con loopback wrapper -> invariancia/cleanup -> protección runtime/archivos
+-> terminal positivo orquestación -> finalizador. Si falla conserva evidencia.
+Todas puertas OFF, no instalación real ni liberación; fase B NO EJECUTADA.

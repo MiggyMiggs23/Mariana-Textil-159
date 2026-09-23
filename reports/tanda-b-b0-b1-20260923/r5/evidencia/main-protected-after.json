@@ -1,0 +1,25 @@
+{
+  "status": "PASS_UNCHANGED",
+  "pin": {
+    "pid": 195,
+    "startTicks": "27444",
+    "cmdlineSha256": "054b0b26e12077a917aff52bb87b25e57ac4d1f4c5e33ff46737352cc157b5d7",
+    "bundleSha256": "008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5"
+  },
+  "files": {
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/build-path-identity.json": "23066b57062c781626e83db5c96c6fbe06125edd7ed37c39d7c461e6605f8714",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/capture-cli.json": "74de3461f4fd714a4435e7ab917aa5185af6d1162d190aaf0549b09127b30048",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/comparacion-r1-offline.json": "658ff89831ca23ec83c82517dfb1366636b9cace643234f33d94a7e3013b66c2",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/live/catalog-B0-real.json": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/live/read-only-capture.json": "0e3d135727fab4c96faef53961a83fc3c4610a9c46825fe88896e49f6d9c096f",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/live/schema-B0-real.sql": "d0a81921ea0c6d637dbf6010b90c106b777382f2243b368647bb9a86e0604e38",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/preflight-cli.json": "dafde28c0bcff5f252cbd28c7ab820654fb087728e5db300a1ac3a48c197f27b",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/rehearsal-r1/catalog-fidelity.json": "d52d23f260148758e692f3c3c7674e69f78f63840ef6e74bcbf173b59903ccd1",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/rehearsal-r1/catalog-reconstructed.json": "8f27658fbb448448ffe6067ce9eb7d8a2b9cae1fe11738256e988a8be783827d",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/rehearsal-r1/terminal.json": "850e5969879a4f004a8e9c58b50c93f94b50dc6f7246b8c58852605fc4e8a2b0",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/source-gates.json": "a0d72d82ecadd70f5bf8283ccfa279239607df3d53b6c2328f3d50acdff277a0",
+    "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/evidencia/static-audit.json": "7e7045ace89fab250f61a4239669b6897a98715438e0fa69a1409aa579693cfc",
+    "/home/runner/workspace/.replit": "e6c356a66fbe667bfcf300219a3be3b110e3899cae4964d3dfc5b50e7cfa7866",
+    "/home/runner/workspace/artifacts/api-server/dist-e2-20260927/index.mjs": "008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5"
+  }
+}

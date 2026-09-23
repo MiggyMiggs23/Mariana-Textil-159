@@ -1,0 +1,122 @@
+{
+  "status": "PASS",
+  "scope": "12 textual/lexical tests; not PostgreSQL validation",
+  "tests": 12,
+  "sqlCaseInventory": {
+    "reports/tanda-b-20260922/e4/01-preparado.sql": [],
+    "reports/tanda-b-20260922/e12/01-preparado.sql": [],
+    "reports/e9/01-preparado.sql": [
+      {
+        "line": 148,
+        "inIfCondition": true,
+        "parenthesisDepth": 1,
+        "safe": true
+      }
+    ],
+    "reports/e5/01-preparado.sql": [
+      {
+        "line": 173,
+        "inIfCondition": false,
+        "parenthesisDepth": 0,
+        "safe": true
+      },
+      {
+        "line": 346,
+        "inIfCondition": true,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 586,
+        "inIfCondition": true,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 588,
+        "inIfCondition": true,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 590,
+        "inIfCondition": true,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 664,
+        "inIfCondition": false,
+        "parenthesisDepth": 0,
+        "safe": true
+      }
+    ],
+    "reports/e11/01-preparado.sql": [
+      {
+        "line": 227,
+        "inIfCondition": false,
+        "parenthesisDepth": 0,
+        "safe": true
+      },
+      {
+        "line": 246,
+        "inIfCondition": false,
+        "parenthesisDepth": 4,
+        "safe": true
+      },
+      {
+        "line": 252,
+        "inIfCondition": false,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 254,
+        "inIfCondition": false,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 314,
+        "inIfCondition": false,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 392,
+        "inIfCondition": false,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 441,
+        "inIfCondition": false,
+        "parenthesisDepth": 0,
+        "safe": true
+      },
+      {
+        "line": 617,
+        "inIfCondition": true,
+        "parenthesisDepth": 1,
+        "safe": true
+      },
+      {
+        "line": 627,
+        "inIfCondition": true,
+        "parenthesisDepth": 1,
+        "safe": true
+      }
+    ]
+  },
+  "oldHash": "303366993fe3529b329a2a0c980a4efcda37eef1c1bf0a1e9bd43bb52ca73267",
+  "newHash": "87911ce23ea2ad1f936e2aa4a718788f7aba2a7b95f1ec9845f5d5baaa520c02",
+  "additionalCasePairs": 3,
+  "totalExecutableCases": 16,
+  "ifConditionCases": 7,
+  "preservedR2ExternalTest": {
+    "commit": "a5ffecfac5450a666d9c800eb73bd06193d3ade2",
+    "sha256": "def9048363acd817b1c31d8640b27d75b6573f8754d54d94fa20697f814d8985",
+    "archive": "antecedentes/e5-sql-case-regression-r2.test.mjs"
+  },
+  "priorR2SealSha256": "373eaeb944e15b553debdb15aa3d593b036a276416dfe1173dcb8c07b8378f62"
+}

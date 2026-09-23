@@ -1,0 +1,174 @@
+# PROMPT 3C — Ajustes a Entradas y compras por proveedor
+### Mariana Textil
+
+> Pegar en Replit después de que el prompt 3B esté terminado y probado.
+> Haz commit en Git antes.
+
+---
+
+Cuatro ajustes. Los tres primeros son sobre la pantalla de Entradas; el cuarto agrega el historial de compras y pagos al módulo de Proveedores.
+
+**Respeta el motor:** toda creación de rollos sigue pasando por `server/lib/inventario.ts`.
+**Respeta el diseño existente:** mismos componentes, misma paleta, misma tipografía.
+
+---
+
+## AJUSTE 1 — Búsqueda escribiendo en el campo Producto
+
+El campo Producto debe permitir **escribir directamente** para filtrar, no solo desplegar una lista.
+
+Comportamiento:
+- Al hacer clic o tocar el campo, se enfoca y acepta texto de inmediato
+- Mientras el usuario escribe, la lista se filtra en vivo por **tela, color o SKU**, sin esperar a que termine
+- Coincidencias parciales y en cualquier posición: escribir "roj" encuentra "Tafeta Rojo"; escribir "taf" encuentra todas las tafetas; escribir "FORCAR" encuentra por SKU
+- Ignora acentos y mayúsculas: "tafetan" encuentra "Tafetán"
+- Cada resultado muestra: nombre completo, SKU y unidad, para distinguir productos parecidos
+- Las flechas arriba y abajo navegan los resultados; Enter selecciona el resaltado
+- Al seleccionar, se llenan solos el SKU y la unidad
+- Si no hay coincidencias, mostrar "Sin resultados para *lo que escribió*"
+- Con 154 productos la respuesta debe ser instantánea; filtra en el cliente, no con una llamada al servidor por cada tecla
+
+Aplica el mismo comportamiento al campo Producto de cualquier otra pantalla donde exista.
+
+---
+
+## AJUSTE 2 — Fecha no editable
+
+El campo Fecha de la entrada **deja de ser editable**.
+
+- Siempre toma la fecha y hora actuales del servidor, no las del dispositivo
+- Se muestra en modo lectura, con formato legible
+- Zona horaria America/Mexico_City
+- El campo `fecha` de la tabla `entradas` se llena con ese valor del servidor
+
+Motivo: una fecha editable permite registrar mercancía con fecha distinta a la real, y eso rompe la trazabilidad del kardex.
+
+---
+
+## AJUSTE 3 — Metraje uniforme en el modal de captura
+
+En el modal de captura rollo por rollo, agrega la opción de aplicar el mismo valor a todos los rollos. Es el caso más común al recibir partidas parejas.
+
+**Cómo debe funcionar:**
+
+Arriba del campo de captura, un bloque **"Todos los rollos con el mismo metraje"** (o "mismo peso" si el producto es por kilo), con:
+- Un campo numérico para la cantidad
+- Un botón **"Aplicar a todos"**
+
+Al presionarlo:
+- Se llenan los rollos pendientes con ese valor
+- La lista de rollos se puebla completa, cada uno con su serie de vista previa
+- El acumulado se actualiza
+- El botón "Confirmar" se habilita
+
+**Después de aplicar, el usuario debe poder editar rollos individuales.** Este es el caso real: llegan 40 rollos de 250 m pero tres vienen con 248, 251 y 249. Se aplica el uniforme y luego se corrigen esos tres.
+
+Detalles:
+- Si ya hay rollos capturados manualmente, avisar que se van a sobrescribir y pedir confirmación
+- Los rollos modificados después de aplicar el uniforme deben marcarse visualmente, para que el usuario vea de un vistazo cuáles cambió
+- Mostrar en la barra de acumulado cuántos rollos conservan el valor uniforme y cuántos fueron ajustados
+
+---
+
+## AJUSTE 4 — Compras y pagos por proveedor
+
+Cada entrada que tenga proveedor asignado **es una compra a ese proveedor**. No crees una tabla de compras: la entrada ya es el registro. Solo hay que consultarla desde el perfil del proveedor.
+
+### Tabla nueva: `pagos_proveedor`
+
+- id (serial, PK)
+- proveedor_id (int, FK)
+- entrada_id (int, FK a entradas, nullable) — si el pago es de una compra específica
+- importe (decimal 12,2) **CON SIGNO**: positivo aumenta la deuda, negativo la reduce
+- tipo (enum: COMPRA, PAGO, AJUSTE)
+- forma_pago (enum: EFECTIVO, TRANSFERENCIA, CHEQUE, OTRO, nullable)
+- referencia (text, nullable) — número de transferencia, folio de cheque
+- fecha (timestamptz)
+- usuario_id (int, FK)
+- notas (text, nullable)
+- created_at (timestamptz)
+- Índice en (proveedor_id, fecha)
+
+**Regla:** al guardar una entrada con proveedor, se inserta automáticamente un registro tipo COMPRA con importe positivo igual al costo total de la entrada, dentro de la misma transacción.
+
+**El saldo del proveedor es siempre `SUM(importe)`.** Nunca guardes un campo de saldo editable.
+
+### Perfil del proveedor
+
+Rediseña la vista de detalle con pestañas:
+
+**Pestaña "Datos"** — lo que ya existe: nombre, tipo, moneda, contacto, teléfono, correo, país, notas.
+
+**Pestaña "Compras"**
+- Tabla de todas las entradas de ese proveedor: folio, fecha, ubicación, rollos, cantidad total, costo total, estado de pago
+- Estado de pago por compra: **Pagada**, **Parcial** (con el monto abonado) o **Pendiente**
+- Filtros por rango de fechas y por estado de pago
+- Clic en una fila abre el documento de entrada
+- Fila de totales: número de compras, costo total del periodo
+
+**Pestaña "Pagos"**
+- Botón **"Registrar pago"** que abre un formulario: importe, forma de pago, referencia, fecha, notas, y opcionalmente ligarlo a una compra específica
+- El importe se guarda como negativo automáticamente
+- Estado de cuenta cronológico: compras y pagos mezclados por fecha, con **saldo corrido**
+- **Saldo actual** destacado arriba, grande
+- Exportable a PDF y Excel
+- Permisos: solo ADMIN puede registrar pagos
+- Los pagos no se editan ni se borran; se corrigen con un movimiento tipo AJUSTE que deja rastro
+
+**Pestaña "Estadísticas"**
+
+Con filtro de periodo (este mes, mes anterior, últimos 3 meses, año, rango personalizado):
+
+- **Resumen:** total comprado en el periodo, número de compras, rollos recibidos, ticket promedio por compra
+- **Compras por mes:** gráfica de barras con el importe mensual
+- **Productos más comprados:** tabla ordenada por importe, con columnas de producto, SKU, rollos, cantidad total y costo total
+- **Por tela:** agrupado por tela, sumando todos sus colores
+- **Por color:** los colores más comprados a ese proveedor
+- **Costo unitario promedio por producto**, con su variación contra el periodo anterior. Esto te dice si un proveedor te está subiendo precios
+- **Última compra:** fecha y cuántos días han pasado
+
+### Listado general de proveedores
+
+Agrega columnas al listado:
+- Saldo pendiente
+- Total comprado en los últimos 12 meses
+- Fecha de última compra
+
+Y un panel arriba con: deuda total a proveedores, proveedores con saldo pendiente, y compras del mes en curso.
+
+Permite ordenar por saldo pendiente descendente, para ver de un vistazo a quién le debes más.
+
+### Conexión con Reportes
+
+Deja los datos accesibles desde el módulo de Reportes para el prompt que viene. Como mínimo, funciones que devuelvan:
+- Compras por proveedor en un rango de fechas
+- Compras por producto en un rango de fechas
+- Saldos pendientes de todos los proveedores
+- Variación de costo unitario por producto y proveedor
+
+No construyas las pantallas de Reportes todavía. Solo deja las consultas listas y documentadas.
+
+---
+
+## LO QUE NO DEBES HACER
+
+- No crees una tabla de compras separada. La entrada es la compra.
+- No guardes un campo de saldo editable en el proveedor. Se calcula sumando.
+- No permitas editar ni borrar pagos ni compras.
+- No permitas fecha de entrada editable.
+- No hagas llamadas al servidor por cada tecla en el buscador de productos.
+- No cambies el motor de inventario ni el formato del SKU.
+- No implementes todavía POS, transferencias completas ni contenedores.
+
+## ENTREGABLE
+
+Repórtame:
+1. Lista de archivos creados y modificados
+2. Salida completa de las pruebas del motor — deben seguir pasando
+3. Confirmación de que puedo:
+   - Escribir "roj" en el campo Producto y ver los resultados filtrados al instante
+   - Ver la fecha de entrada fija, sin poder cambiarla
+   - Capturar 40 rollos de 250 m con un solo botón, y luego corregir tres de ellos
+   - Ver esa entrada como compra en el perfil del proveedor
+   - Registrar un pago parcial y ver el saldo actualizado correctamente
+   - Ver las estadísticas de qué le compro a ese proveedor, por mes, producto y color

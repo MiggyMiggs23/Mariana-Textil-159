@@ -1,0 +1,114 @@
+# CORRECCIÓN — Documentos impresos: Entrada y Salida
+
+Ajustes al PDF de Entrada y al de Salida. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+El contenido y los datos de los dos documentos están correctos. Esto es solamente presentación e impresión.
+
+---
+
+## Contexto que debes leer antes de tocar nada
+
+Revisé los PDF generados. **Los dos salen en dos páginas cuando deberían salir en una.**
+
+En el PDF de Entrada, con **una sola línea** de producto, el pie de firmas —RECIBIDO POR, REVISADO POR, AUTORIZADO POR— **no cabe en la primera página y se va solo a la segunda**. En el de Salida pasa lo mismo con el bloque de observaciones.
+
+El navegador confirma el diagnóstico: la leyenda que imprime al pie dice **"Page 1 of 2"**. Esa numeración no es del documento, es del navegador, y significa que el navegador está viendo dos hojas donde el contenido cabe en una. Hay una página fantasma.
+
+Con `@page` de `216mm 279mm` y `margin: 0`, y un contenedor de exactamente `h-[279mm]`, cualquier residuo de un píxel —un margen heredado, un borde, el redondeo de milímetros a píxeles— empuja una hoja en blanco. Esa es la falla a corregir, no un ajuste de tamaños de letra.
+
+**Diagnostícalo con medición, no a ojo.** Si tu conclusión es distinta a la mía, dila y explícala; lo que no acepto es que reduzcas tipografías hasta que "quepa" sin haber entendido por qué no cabía.
+
+---
+
+## BLOQUE 1 — Entrada
+
+### 1. El logo más grande
+
+Hoy el logo va en `logoClassName="h-[86px] w-[86px]"` y el QR se dibuja a `DOCUMENT_QR_SIZE`, que son **112 px**. El logo se ve chico al lado del QR.
+
+**Iguala el logo al QR: 112 px.** No lo escribas como número suelto en la página: tómalo de la constante que ya existe, para que si un día cambia el QR el logo lo siga.
+
+Verifica que el logo no se deforme ni se recorte al crecer.
+
+### 2. Una sola página
+
+El requisito, con precisión:
+
+- **Con las líneas que caben, el documento imprime exactamente una hoja.** Sin hoja fantasma, sin pie huérfano. Que el contador del navegador diga "1 of 1".
+- **Cuando las líneas realmente se pasan**, sí se genera una segunda hoja — eso está bien y así debe ser. Pero entonces **el encabezado y el pie de firmas se repiten en cada hoja**, no se quedan solos en la última.
+- Tamaño **carta siempre**. No cambies el `@page`.
+
+Averigua cuántas líneas caben de verdad con el pie de firmas incluido. Hoy `rowsPerPage` está en 20 y por la evidencia no es el número correcto. **Ajústalo a lo que realmente entre y déjalo comentado con la medición**, no con una suposición.
+
+---
+
+## BLOQUE 2 — Salida
+
+La Salida es **A6 apaisado**, `148mm × 105mm`. No cambies el tamaño.
+
+### 1. El encabezado idéntico al de Entrada
+
+Hoy la Salida usa `logoClassName="h-[72px] w-[72px]"` y la Entrada `h-[86px]`. Deben quedar **exactamente iguales en tamaño**: logo al mismo tamaño del QR, igual que en Entrada.
+
+Como el papel es mucho más chico, si el encabezado a ese tamaño no deja espacio suficiente, **dilo y repórtalo** en vez de resolverlo achicando el logo por tu cuenta. La instrucción es que los dos encabezados se vean iguales.
+
+### 2. El título dice solo "Salida"
+
+Hoy dice **"HOJA DE SALIDA"**. Debe decir únicamente **"Salida"**. Revisa que la cabecera de la vista previa en pantalla también quede coherente.
+
+### 3. La columna de Producto más angosta
+
+Hoy las columnas de Color, Cantidad, SKU y Serie tienen ancho fijo, y **Producto se queda con todo el sobrante**. Ningún nombre de producto ocupa tanto: en el ejemplo, "Tafetan" deja tres cuartos de la columna vacíos.
+
+Dale un ancho fijo acorde a los nombres reales del catálogo. **Mide contra los 154 productos del catálogo aprobado**, no contra el ejemplo de una línea. Conserva el truncado para el caso extremo.
+
+El espacio que liberes se reparte entre las demás columnas o se usa para el pie de firmas. No lo dejes en blanco.
+
+### 4. Pie con tres firmas
+
+Agrega al pie espacio con línea y leyenda para:
+
+- **Revisó**
+- **Entregó**
+- **Recibió**
+
+Mismo criterio visual que el pie de Entrada. Ojo: las leyendas de Salida son **estas tres**, no las de Entrada.
+
+### 5. Una sola página
+
+Mismo requisito que el Bloque 1, con el mismo detalle: sin hoja fantasma cuando el contenido cabe, y encabezado más pie de firmas repetidos en cada hoja cuando de verdad se pasa.
+
+`rollosPerPage` está hoy en 10 con el comentario de que es lo que cabe en A6. **Ese número deja de ser válido en cuanto agregues las tres firmas.** Recalcúlalo con el pie puesto y déjalo comentado con la medición real.
+
+---
+
+## BLOQUE 3 — Verificación
+
+**No la des por buena mirando la vista previa en pantalla. Genera PDF y ábrelo.**
+
+- Entrada con **una** línea: **una** hoja. El contador del navegador dice "1 of 1"
+- Entrada con las líneas justas para llenar la hoja: **una** hoja
+- Entrada con una línea más: **dos** hojas, **con encabezado y pie de firmas en las dos**
+- Lo mismo para Salida, en sus tres casos
+- El logo de Entrada mide igual que el QR
+- El logo de Salida mide igual que el de Entrada
+- El título de Salida dice "Salida"
+- La columna de Producto de Salida quedó angosta y ningún nombre del catálogo se corta de forma ilegible
+- El pie de Salida tiene línea y leyenda para Revisó, Entregó y Recibió
+- Los valores de líneas por página están comentados con la medición que los justifica
+- Las pruebas de contrato de los dos documentos siguen pasando; si alguna afirmaba un tamaño de logo o un conteo de filas, **actualízala, no la borres**
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+
+Adjunta al reporte los PDF de prueba de los seis casos.
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Documentos impresos:** el logo del encabezado va al mismo tamaño que el QR y toma la medida de la constante compartida, no de un número escrito en la página. Entrada y Salida usan el mismo tamaño de encabezado aunque el papel sea distinto —carta vertical y A6 apaisado.
+>
+> Un documento cuyo contenido cabe imprime **una sola hoja**: si el navegador reporta "Page 1 of 2" con una línea de producto, hay una página fantasma por redondeo entre el `@page` y la altura del contenedor, y eso se corrige midiendo, nunca reduciendo tipografías hasta que quepa. Cuando las líneas sí se pasan, la segunda hoja lleva **encabezado y pie de firmas completos**; el pie nunca queda huérfano en la última página.
+>
+> Las líneas por página de cada documento son un valor medido, comentado junto a la constante. Cambiar el pie —agregar firmas, por ejemplo— invalida ese número y obliga a recalcularlo.

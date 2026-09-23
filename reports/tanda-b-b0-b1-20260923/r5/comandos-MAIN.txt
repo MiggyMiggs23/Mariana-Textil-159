@@ -1,0 +1,45 @@
+R5 — CORRECCIÓN MÍNIMA DEL CONTRATO HTTP OFF DEL ARNÉS
+
+Sin cambios SQL/API/UI/build. SQLcommit fijo:
+91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f.
+apiSourceRevision reutilizada cc628aed315a4bbfd3e6cb8766d28200ce400842.
+
+Contrato candidato, exacto:
+- GET /api/e7/disponibilidad: HTTP200 y JSON exactamente {"enabled":false}.
+- GET /api/e7/atribucion: HTTP403 y JSON exactamente
+  {"code":"E7_DISABLED","message":"E7 no está habilitado."}.
+- GET /api/e5/cobros: HTTP403 y JSON exactamente
+  {"error":{"code":"E5_DISABLED","message":"E5 no está habilitado."}}.
+- GET /api/e11/identidad: HTTP403 y exactamente claves code/message/requestId;
+  code E11_DISABLED, message "E11 no está habilitado.", requestId UUID válido.
+No se aceptan campos adicionales; candidato404 NUNCA equivale a OFF.
+Control E2 usa contrato separado de ausencia HTTP404 en estas cuatro rutas,
+sin interpretar su cuerpo404 como prueba de puertas del candidato.
+
+Cada observación incluye ruta, status, cuerpo crudo y content-type; se escribe
+http-candidate-N.json o http-control-e2-N.json ANTES de la aserción. Salud
+/api/healthz también se registra antes de validar su status200.
+La disponibilidad pública200/false es explícitamente distinta de datos200.
+
+20/20 tests de contrato PASS (puros, no HTTP): enabledtrue rechazado, campo
+adicional raíz/nested rechazado, datarouteE7 HTTP200 rechazado, errores/códigos
+divergentes rechazados, E11 UUID inválido/faltante rechazado, y contrato E2
+separado. Log en evidencia/http-off-contracts-unit.log.
+Estos tests NO sustituyen la observación HTTP pendiente MAIN.
+
+r4 FAIL se conserva tal cual: no registró el cuerpo de disponibilidad E7;
+la revisión de fuente NO se ha presentado como prueba de aquel cuerpo.
+
+MAIN, con pin vigente y PG/puerto fijados:
+export TANDA_B_SQL_REVISION=91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f
+export TANDA_B_ATTEMPT=r5
+export TANDA_B_MAIN_ONLY=AUTHORIZED
+# TANDA_B_RUNTIME_PID, TANDA_B_START_TICKS, TANDA_B_CMDLINE_SHA256,
+# TANDA_B_PG_BIN y TANDA_B_API_PORT conservan las exigencias de pin explícito.
+node reports/tanda-b-b0-b1-20260923/r5/run-main.mjs
+
+Mismo flujo preflight READ ONLY, ensayo SQL desechable, startup OFF loopback,
+preservación catálogo/multiset/filas/secuencias, cleanup y protección runtime.
+Control E2 solo si candidato falla; el resultado candidato nunca se cambia
+a PASS porque control pase. R1–R4/capturas/SQL/sellos intactos.
+Fase B NO EJECUTADA. No aplicar SQLreal/reiniciarAPI/workflow/liberar/permisos.

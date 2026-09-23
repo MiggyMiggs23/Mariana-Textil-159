@@ -1,0 +1,117 @@
+# Prompt N — Alcance por sitio en el resumen financiero de Clientes
+
+## El defecto
+
+`GET /clientes/resumen` en `artifacts/api-server/src/routes/clientes.ts` entrega
+`totalCartera`, `totalVencido`, `clientesConSaldo` y `totalClientes` **sin filtrar por
+alcance**. El handler ignora la petición por completo —el parámetro está declarado como
+`_req`—, consulta todos los clientes activos y suma sus proyecciones de crédito.
+
+No hay una sola llamada a `resolveReadScope` en ese archivo de rutas.
+
+Consecuencia: cualquier usuario con permiso de ver `clientes_finanzas` en **una** tienda
+vería la cartera y el vencido de **las siete ubicaciones**. Hoy no se nota porque solo
+entra ADMIN; en cuanto haya usuarios de tienda, sí.
+
+Reglas del proyecto que esto incumple:
+
+- Toda consulta resuelve su alcance en el servidor, con `resolveReadScope`.
+- Las cifras económicas se filtran en el servidor, no se tapan en pantalla.
+- La matriz de permisos decide qué acción; **el alcance decide dónde**.
+
+Este hallazgo salió al intentar construir el tablero de Clientes, y el trabajo se
+detuvo correctamente en vez de presentar cifras globales como si fueran del sitio.
+
+---
+
+## Bloque 0 — Determinar qué significa «cartera de un sitio»
+
+**Esta es la parte que hay que pensar antes de programar, y quiero tu propuesta antes
+de que escribas código.**
+
+Un cliente no pertenece a un sitio: compra donde quiera. Lo que sí tiene sitio es la
+**nota** que originó la deuda. Entonces la cartera de un sitio es la suma de los saldos
+pendientes de las notas autorizadas **en ese sitio**.
+
+Confirma leyendo el código:
+
+1. Qué campo de `movimientos_credito` o del ticket asociado determina el sitio de un
+   cargo de crédito, y si está disponible en la proyección que hoy usa este endpoint.
+2. Cómo resuelven el alcance los demás consumidores de crédito —cartera, cobros,
+   alertas, estado de cuenta— y si ya existe un criterio establecido. **Si ya existe,
+   úsalo; no inventes un segundo.**
+3. Qué pasa con `clientesConSaldo` y `totalClientes` bajo alcance: un cliente con deuda
+   en dos tiendas cuenta en las dos, y eso hace que la suma de los sitios no iguale el
+   global. Propón cómo presentarlo sin que parezca un descuadre.
+4. Recuerda el defecto ya documentado y **no corregido**: los reversos de saldo a favor
+   sin aplicar no llevan ubicación y solo existen en la consulta global. Comprueba si
+   afecta a estas cifras; si afecta, dilo y **no lo arregles aquí**.
+
+Presenta tu propuesta y **espera aprobación** antes del Bloque 1.
+
+---
+
+## Bloque 1 — Aplicar el alcance
+
+1. El endpoint **recibe y usa** la petición, resuelve el alcance con `resolveReadScope`
+   y filtra por él. Deja de existir el `_req`.
+2. Un usuario con alcance global sigue viendo el total global, como hoy. Un usuario con
+   alcance de una o varias ubicaciones ve **solo lo suyo**.
+3. **El filtro va en la consulta, no en el navegador.** Las cifras que el usuario no
+   debe ver nunca salen del servidor.
+4. El cálculo de vencido conserva su criterio actual —cargos con fecha de vencimiento
+   anterior a hoy en hora de Ciudad de México— y su `pendienteCents`. **No cambies la
+   definición de vencido en esta entrega**; solo su alcance.
+5. Si el contrato necesita reflejar el alcance aplicado, actualiza `openapi.yaml` y
+   regenera cliente y Zod.
+
+## Bloque 2 — Que se vea de qué alcance habla
+
+Quien lee una cifra debe saber a qué corresponde. La pantalla debe declarar si el
+resumen es global o de un sitio, con el nombre del sitio cuando aplique.
+
+Sin eso, dos usuarios distintos ven números diferentes en la misma pantalla y ninguno
+sabe por qué.
+
+## Bloque 3 — Buscar el mismo defecto en otros endpoints
+
+Este no aparece solo. Recorre las rutas de clientes, crédito y cartera y **reporta
+cuáles otras entregan cifras económicas sin resolver alcance**.
+
+Entrega la lista con el endpoint, qué cifras expone y quién lo consume. **No las
+corrijas todas en esta entrega**: preséntamelas y decido cuáles entran.
+
+---
+
+## Verificación
+
+1. Prueba con alcance global: las cifras son idénticas a las de hoy. **Esta es la
+   prueba de no-regresión y es la principal.**
+2. Prueba con alcance de una ubicación: las cifras corresponden solo a las notas
+   autorizadas en ese sitio, y una nota de otro sitio **no** aparece.
+3. Prueba con alcance de varias ubicaciones.
+4. Prueba de que ninguna cifra económica fuera del alcance viaja en la respuesta del
+   servidor, no solo que no se pinta.
+5. `pnpm run typecheck` completo en cero. Codegen sin diferencias o con las que
+   justifique el cambio.
+6. Comprobación en navegador si hay sesión disponible; si no, **dilo y no lo presentes
+   como aprobado**.
+
+## Restricciones
+
+- **No cambies la definición de cartera ni de vencido.** Solo su alcance.
+- No toques el reparto FIFO, la proyección de crédito ni las reglas de saldo a favor.
+- No construyas el tablero de Clientes en esta entrega: eso espera a que esto cierre.
+- No corrijas la asimetría de reversos sin ubicación ni el corte de caja. Son entregas
+  propias.
+- No crees usuarios ni sesiones de prueba, no escribas en la base.
+- **No tapes cifras en el navegador como sustituto del filtro en el servidor.**
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que el resumen financiero de clientes resuelve alcance por sitio, con qué criterio
+   se determina el sitio de un cargo de crédito.
+2. Que la suma de los sitios puede no igualar el global cuando un cliente tiene deuda
+   en varias tiendas, y cómo se presenta.
+3. La lista del Bloque 3, como pendientes abiertos, sin corregir.
+4. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

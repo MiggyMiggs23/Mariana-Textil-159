@@ -1,0 +1,7 @@
+miguelestza: Autorización del propietario. Guarda este texto tal cual en reports/tanda-c-20260923/ antes de la primera escritura.
+
+El bloqueo de la tarea 7 son diferencias de numeración interna de enums al reconstruir, no un defecto. Autorizo fijar las expectativas del paquete de Tanda B con el mismo método ya usado en E2 y E3: B0 son los atributos leídos de la base real en READ ONLY, y B1 es ese mismo B0 más exactamente los objetos que agrega el SQL de Tanda B, sin alterar enums ni triggers y sin reconstruir el catálogo completo.
+
+Autorizo además que el preflight compare las etiquetas de cada enum por su orden, no por su numeración interna, para que este bloqueo no vuelva a aparecer. Cámbialo en un commit aparte, demuestra con una prueba que falla si cambia el orden o el conjunto de etiquetas y pasa si solo cambia la numeración interna, y valídalo en PostgreSQL desechable.
+
+No apliques SQL a la base de la API, no la reinicies, no cambies su workflow ni su bundle y no liberes nada. Entrega el paquete de Tanda B con manifiesto, hashes y texto de fase B, y repórtame el resultado.

@@ -1,0 +1,42 @@
+[
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/node_modules",
+    "target": "/home/runner/workspace/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/artifacts/api-server/node_modules",
+    "target": "/home/runner/workspace/artifacts/api-server/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/artifacts/mariana-textil/node_modules",
+    "target": "/home/runner/workspace/artifacts/mariana-textil/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/lib/api-client-react/node_modules",
+    "target": "/home/runner/workspace/lib/api-client-react/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/lib/api-spec/node_modules",
+    "target": "/home/runner/workspace/lib/api-spec/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/lib/api-zod/node_modules",
+    "target": "/home/runner/workspace/lib/api-zod/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/lib/db/node_modules",
+    "target": "/home/runner/workspace/lib/db/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/lib/metered-pricing/node_modules",
+    "target": "/home/runner/workspace/lib/metered-pricing/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/lib/number-format/node_modules",
+    "target": "/home/runner/workspace/lib/number-format/node_modules"
+  },
+  {
+    "link": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source/lib/scanned-code/node_modules",
+    "target": "/home/runner/workspace/lib/scanned-code/node_modules"
+  }
+]

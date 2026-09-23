@@ -1,0 +1,16 @@
+Tres partes, en orden. No escribas en la base de la API salvo lo autorizado en la parte 1, y no liberes nada.
+
+PARTE 1 — strace. Autorización del propietario; guárdala tal cual en reports/e2-liberacion-20260922/ antes de la primera escritura. Si el comando del workflow de API todavía contiene strace, cámbialo a exactamente:
+cd /home/runner/workspace && exec bash reports/e2-paquete-liberacion-preparado-20260921/api-start-audit.sh
+Sin ningún otro cambio. Si eso reinicia la API, autorizo ese reinicio. Después verifica PID, hash completo del bundle 008dfd54…e7f5, modo inspección, /api/healthz 200, que candidate-worker-open.trace no se haya modificado y que reports/arranques-api.log registró el arranque. Si algo no coincide, detente y repórtamelo.
+
+PARTE 2 — Ajustes al paquete de E3. Decisiones del propietario; regístralas en reports/prompt-u-respuestas-2026-09-18.md y replit.md:
+a) Recaptura: es un permiso de la matriz que por defecto solo tiene ADMIN, igual que el remate y los precios. No se fija ADMIN en código; el "pendiente técnico" de exigir ADMIN ante permisos personalizados se descarta. Se conserva la guarda E1 que excluye a CONTADOR, SISTEMAS y BODEGA.
+b) La liberación de E3 abre la captura de efectivo. Retiro dirigido/retenido, devolución, atribución y Fondo siguen cerrados.
+Rehaz el candidato E3 con estos cambios, con el mismo método ya autorizado en la Tanda A (bases desechables, lectura READ ONLY para expectativas, compilación en su directorio final y arranque real). Entrega un texto de fase B final, listo para autorizar, con fecha y hora "a partir del momento en que el propietario pegue el texto". No lo ejecutes.
+
+PARTE 3 — Tanda B. Cuando el paquete E3 esté entregado, construye en código, apagado, las entregas ya decididas del plan reports/prompt-u-plan-de-implementacion.md con las respuestas de reports/prompt-u-respuestas-2026-09-18.md, en este orden y cada una en su propio commit: E4 (salidas extraordinarias), E12 (pago a proveedor partido entre caja y Fondo), E9 (entrega de efectivo de las tiendas a Mariana e ingreso al Fondo), E5 (aplicación diferida del dinero dirigido), E11 (ContadorF y ContadorA) y E7 (Prompt P: endpoints financieros de clientes con resumen global y detalle por sitio). No toques el paquete E3 entregado ni su directorio de bundle.
+Reglas: no reinicies la API, no cambies el workflow ni el bundle en ejecución y no escribas en la base de la API. Todo queda apagado hasta su liberación. Si hace falta esquema, deja el SQL preparado con su reversión, sin ejecutar. Toda prueba nueva se ve fallar con su defecto introducido. Si una entrega choca con replit.md o necesita decisión del propietario, anótala y sigue con la siguiente.
+Al final adapta las 25 suites que crean usuarios para correr en bases desechables. Autorización del propietario; guárdala tal cual en reports/ antes de la primera escritura: autorizo crear, usar y destruir bases PostgreSQL desechables para las pruebas de esta tanda, nunca la base de la API ni los clones E1/E10.
+
+Entrega un informe único en reports/ con resultado por parte y por entrega, commits, revisión exacta, pruebas y lo detenido con su motivo.

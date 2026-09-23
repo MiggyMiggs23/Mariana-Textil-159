@@ -1,0 +1,55 @@
+[16:04:35.670] [33mWARN[39m (4497): [36mInspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.[39m
+[16:04:35.678] [32mINFO[39m (4497): [36mServer listening[39m
+    [35mport[39m: 18763
+[16:04:35.838] [32mINFO[39m (4497): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[16:04:35.846] [32mINFO[39m (4497): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/e7/disponibilidad"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 0
+[16:04:35.849] [32mINFO[39m (4497): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "GET",
+      "url": "/api/e7/atribucion"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 1
+[16:04:35.862] [32mINFO[39m (4497): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "GET",
+      "url": "/api/e5/cobros"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 1
+[16:04:35.864] [32mINFO[39m (4497): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "GET",
+      "url": "/api/e11/identidad"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 1
+[16:04:35.866] [32mINFO[39m (4497): [36mServer shutdown complete[39m
+    [35msignal[39m: "SIGTERM"

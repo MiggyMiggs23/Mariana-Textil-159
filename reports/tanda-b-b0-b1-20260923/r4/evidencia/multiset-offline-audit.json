@@ -1,0 +1,147 @@
+{
+  "status": "PASS",
+  "scope": "Offline replay of MAIN r3 capture/SQL catalogs plus 11 pure tests; NOT r4 DB or startup",
+  "tests": 11,
+  "sources": {
+    "reports/tanda-b-b0-b1-20260923/r3/evidencia/live/catalog-B0-real.json": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+    "reports/tanda-b-b0-b1-20260923/r3/evidencia/rehearsal-r3/fixture-before.json": "6406ef2448af7bf1437bb71f0f2c47cf6c943c4160e08d8f6472d82024006379",
+    "reports/tanda-b-b0-b1-20260923/r3/evidencia/rehearsal-r3/fixture-after.json": "1001c4c2c4f48540ffde0f424a9ca844718cf7d1a064178c76a8e0da7d09509b",
+    "reports/tanda-b-b0-b1-20260923/r3/evidencia/rehearsal-r3/catalog-B1-projected.json": "3cae1789265170a6cd3cc3a89f5ad4930f3cbdf2ffb57396dd14cc64b7e50f6a",
+    "reports/tanda-b-b0-b1-20260923/r3/evidencia/live/auxiliary-B0-real.json": "5296b0a1043bd2b82dccc811e9837135314bdf58efc0a4f307c9da47ad6b20eb",
+    "reports/tanda-b-b0-b1-20260923/r3/evidencia/rehearsal-r3/auxiliary-fixture-before.json": "5bf6898eda08a437480b5ac15aa2fe5dd2a872228aa7b294b62b6d415ad3c2b5",
+    "reports/tanda-b-b0-b1-20260923/r3/evidencia/rehearsal-r3/auxiliary-fixture-after.json": "42407352f674af7ea00311abc0a1b7c384a32dea4eb213d6dc6e21ad86e8ddb3"
+  },
+  "duplicateRows": [
+    {
+      "row": {
+        "deptype": "a",
+        "source": {
+          "kind": "index",
+          "name": "fondo_movimientos_original_uidx",
+          "schema": "public",
+          "identity": "public.fondo_movimientos_original_uidx"
+        },
+        "target": {
+          "kind": "table column",
+          "name": "fondo_movimientos",
+          "schema": "public",
+          "identity": "public.fondo_movimientos.original_id"
+        }
+      },
+      "count": 2
+    },
+    {
+      "row": {
+        "deptype": "a",
+        "source": {
+          "kind": "index",
+          "name": "movimientos_credito_reverso_origen_uidx",
+          "schema": "public",
+          "identity": "public.movimientos_credito_reverso_origen_uidx"
+        },
+        "target": {
+          "kind": "table column",
+          "name": "movimientos_credito",
+          "schema": "public",
+          "identity": "public.movimientos_credito.movimiento_origen_id"
+        }
+      },
+      "count": 2
+    },
+    {
+      "row": {
+        "deptype": "a",
+        "source": {
+          "kind": "index",
+          "name": "movimientos_operacion_uq_e1",
+          "schema": "public",
+          "identity": "public.movimientos_operacion_uq_e1"
+        },
+        "target": {
+          "kind": "table column",
+          "name": "movimientos_credito",
+          "schema": "public",
+          "identity": "public.movimientos_credito.operacion_productor"
+        }
+      },
+      "count": 2
+    },
+    {
+      "row": {
+        "deptype": "a",
+        "source": {
+          "kind": "index",
+          "name": "pagos_proveedor_entrada_compra_idx",
+          "schema": "public",
+          "identity": "public.pagos_proveedor_entrada_compra_idx"
+        },
+        "target": {
+          "kind": "table column",
+          "name": "pagos_proveedor",
+          "schema": "public",
+          "identity": "public.pagos_proveedor.entrada_id"
+        }
+      },
+      "count": 2
+    },
+    {
+      "row": {
+        "deptype": "a",
+        "source": {
+          "kind": "index",
+          "name": "pagos_proveedor_reverso_origen_uidx",
+          "schema": "public",
+          "identity": "public.pagos_proveedor_reverso_origen_uidx"
+        },
+        "target": {
+          "kind": "table column",
+          "name": "pagos_proveedor",
+          "schema": "public",
+          "identity": "public.pagos_proveedor.movimiento_origen_id"
+        }
+      },
+      "count": 2
+    },
+    {
+      "row": {
+        "deptype": "a",
+        "source": {
+          "kind": "index",
+          "name": "salidas_borrador_usuario_origen_uidx",
+          "schema": "public",
+          "identity": "public.salidas_borrador_usuario_origen_uidx"
+        },
+        "target": {
+          "kind": "table column",
+          "name": "salidas",
+          "schema": "public",
+          "identity": "public.salidas.usuario_solicita_id"
+        }
+      },
+      "count": 2
+    }
+  ],
+  "summary": {
+    "riTriggers": {
+      "base": 776,
+      "baseDistinct": 776,
+      "projected": 1040,
+      "addedMultiplicity": 264,
+      "removedMultiplicity": 0
+    },
+    "dependencies": {
+      "base": 2950,
+      "baseDistinct": 2944,
+      "projected": 4489,
+      "addedMultiplicity": 1539,
+      "removedMultiplicity": 0
+    }
+  },
+  "replacements": 4,
+  "originalB0AuxiliaryFingerprint": "1dcf2b7af43a30c5912940d138e17fcccd76bc98a3b29c9dcb292b1c30dd0b24",
+  "projectedAuxiliaryFingerprint": "28e9f236af2c29c838c7bead1df5b879b84a2eeded3e4f8668c71b851219d112",
+  "queryChanged": false,
+  "newSubobjectInformationInvented": false,
+  "sqlChanged": false,
+  "apiRebuilt": false
+}

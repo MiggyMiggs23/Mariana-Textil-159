@@ -1,0 +1,127 @@
+# Prompt para Replit Agent — Terminar Cuentas Destino y cerrar inconsistencias de cobro
+
+El servidor ya tiene todo el trabajo hecho: `artifacts/api-server/src/lib/admin-analytics.ts` expone `encabezado`, `matriz`, `ivaFacturado`, `incongruencias`, la categoría `otras` y el IVA corregido al predicado canónico. **La pantalla no se actualizó y quedó contradiciéndose.**
+
+`totalCobrado` cambió de significado —ahora es solo dinero cobrado, ya no incluye cuentas por cobrar— pero `cuentas-destino.tsx` lo sigue rotulando "Total Ingresado", mientras las secciones de abajo leen de `facturacion`, que sí suma el crédito. Hoy el encabezado y el cuerpo de la misma pantalla muestran totales distintos.
+
+**Este trabajo no toca OpenAPI ni el cliente generado, y no modifica ninguna transacción.** POS, el diálogo de cobro, `registrarCobro`, `autorizarNota`, los cortes de caja, el kardex y la impresión quedan intactos. Los únicos archivos del servidor que cambian son consultas de lectura en `admin-analytics.ts`.
+
+**Casi todo este trabajo es de presentación.** No inventes cálculos nuevos ni recalcules nada en el navegador: cada cifra se lee de la respuesta del servidor. No toques la base de datos, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+---
+
+## Bloque 1 — Reconstruir la pantalla Cuentas Destino
+
+Archivo: `artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx`.
+
+### Encabezado: tres cifras, no cuatro tarjetas
+
+Sustituye la fila actual de cuatro tarjetas por **tres cifras leídas de `encabezado`**:
+
+- **Cobrado** (`encabezado.cobrado`), **Por cobrar** (`encabezado.porCobrar`) y **Vendido** (`encabezado.vendido`).
+- Por cobrar va visualmente separada de las otras dos: no es dinero que tengas, es una promesa.
+- Junto a cada variación porcentual, muestra **el importe del periodo anterior**, que el servidor ya devuelve en `cobradoAnterior`, `porCobrarAnterior` y `vendidoAnterior`. Un porcentaje de cuatro dígitos sobre una base diminuta no informa nada; con la cifra al lado, sí. No inventes umbrales ni escondas el porcentaje.
+
+### Segunda fila: las tres cuentas donde está el dinero
+
+Debajo, las tres cuentas reales: **Caja física, Cuenta no fiscal y Cuenta fiscal**, leídas de `resumen`. **Ventas a crédito sale de esta fila**: ya está representada arriba como Por cobrar y no es una cuenta bancaria.
+
+Sus porcentajes se calculan **sobre lo cobrado**, no sobre lo vendido, de modo que sumen cien.
+
+En la tarjeta de **Caja física**, agrega un renglón secundario con cuánto de ese efectivo corresponde a ventas facturadas, tomado de la celda facturado/efectivo de `matriz`. Es la única cuenta con estatus fiscal mezclado, porque el cajón es uno solo, y el usuario no tiene otra forma de saberlo.
+
+### La matriz sustituye al Resumen Fiscal
+
+Elimina el recuadro **"Resumen Fiscal"** completo y pon en su lugar la matriz que el servidor ya calcula en `matriz`:
+
+- **Renglones:** Facturado, No facturado, Total.
+- **Columnas:** Efectivo, Transferencia, Por cobrar, Total.
+- La columna **Otras** solo se dibuja cuando tiene importe distinto de cero.
+
+Cada celda muestra el importe y, en texto pequeño debajo, **la cuenta a la que cae** —caja física, cuenta fiscal, cuenta no fiscal o cuentas por cobrar—, de modo que la tabla enseñe la regla mientras muestra el número.
+
+**El servidor ya verifica que la matriz cierre por renglón y por columna.** Cuando no cierre, la pantalla tiene que **decirlo de forma visible**, no ajustar ni ocultar la diferencia. Un descuadre es un problema de datos que hay que ver.
+
+Debajo de la matriz, **el IVA de lo facturado**, con su base y su importe, leídos de `ivaFacturado`.
+
+### Celdas clicables
+
+Cada celda con importe abre el detalle de sus movimientos usando `GET /admin/cuentas-destino/{cuentaDestino}/movimientos`, que **ya acepta los filtros de facturado y forma de pago** que necesita cada celda. No crees un endpoint paralelo ni recalcules la lista en el navegador.
+
+La suma de los movimientos listados debe cuadrar al centavo con la celda de la que salieron.
+
+### Incongruencias
+
+El servidor devuelve `incongruencias` con su conteo e importe: son abonos cuya cuenta destino contradice el estatus fiscal de la venta que los originó. Muéstralo **solo cuando el conteo sea mayor que cero**, con un indicador claro y la posibilidad de listar los casos.
+
+**No agregues ninguna validación que lo impida.** Está pendiente de decisión y este trabajo únicamente lo hace visible. Reporta al terminar cuántos encontró en los datos actuales y por qué importe.
+
+### Desglose por Tienda
+
+La tabla de abajo tiene el mismo defecto que tenía el encabezado: su columna "Total General" suma cuentas por cobrar junto con dinero real. El servidor ya devuelve por tienda los campos **`cobrado`, `porCobrar` y `vendido`**; úsalos y muestra las tres columnas, nunca solo el total.
+
+Conserva el orden de tiendas de `orderStores` y el ordenamiento en español.
+
+### Rótulos
+
+- **"Total Ingresado"** desaparece con el encabezado nuevo.
+- **"Público General (No Fact.)"** desaparece con la matriz. Busca ese texto en el resto de la aplicación —está también en `corte-detail-shared.tsx`— y cámbialo por **"Sin factura"**: no facturado y público general no son lo mismo, y "Venta a Público" es además un cliente real del POS.
+- La gráfica **"Flujos Diarios por Cuenta"** se subtitula "Monto cobrado por día y destino" pero su leyenda incluye Ventas a Crédito, que no es monto cobrado. Corrige el subtítulo para que describa lo que grafica, o saca el crédito de la gráfica. Elige una y deja escrito por qué.
+
+## Bloque 2 — Quitar la lista blanca de formas de pago del cálculo de Cobrado
+
+En `admin-analytics.ts`, dentro de `getSalesSummary`, la CTE `caja_payments` filtra con una lista escrita a mano:
+
+```
+AND p.forma_pago IN ('EFECTIVO','TRANSFERENCIA','FACTURADO')
+```
+
+Es el mismo defecto que acabamos de corregir en el resumen fiscal: una forma de pago que no esté en la lista desaparece en silencio.
+
+Ya produce una inconsistencia interna en la misma consulta: `cobrado` suma `t.total` de los tickets cobrados, mientras `ticketsCobrados` cuenta solo los que tienen un pago dentro de esa lista. **Un cobro con forma de pago fuera de la lista cuenta en el dinero y no en el conteo.**
+
+Corrígelo para que la CTE **excluya explícitamente lo que no es cobro** —`CREDITO`— en vez de enumerar lo que sí lo es. Así una forma de pago nueva entra por omisión al conteo en lugar de evaporarse. Deja un comentario explicando la razón de la inversión.
+
+Verifica que `cobrado` y `ticketsCobrados` queden consistentes: todo ticket contado en el importe debe estar contado en el conteo.
+
+## Bloque 3 — Barrido de reglas duplicadas
+
+Antes de terminar, busca en todo el repositorio cualquier otro lugar que **derive una cuenta destino, un estatus fiscal o la condición de documento contabilizado con su propia lógica**, en vez de usar `destinationReadModel()`, `accountDestination()`, `matrixPaymentCategory()` o los predicados de `accounted-document.ts`.
+
+Ya se sabe de uno: `pos.ts`, en el corte de caja, tiene una línea propia que manda `FACTURADO` a `CUENTA_FISCAL`. Hoy da el mismo número que la función canónica, pero son dos implementaciones de la misma regla y divergen en silencio.
+
+**Repórtalos todos con archivo y línea. No los unifiques en este trabajo**, salvo que uno esté produciendo una cifra distinta a la canónica; en ese caso detente y repórtalo antes de tocar nada.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo.
+2. Las suites de analytics de administración, caja y dashboard, incluidas las de contrato.
+3. En pantalla, con los datos actuales: la matriz cierra por renglón y por columna, y su gran total es igual a **Vendido**.
+4. **Cobrado más Por cobrar es igual a Vendido.**
+5. La suma de las tres tarjetas de cuenta es igual a **Cobrado**, y sus porcentajes suman cien.
+6. La tarjeta de Caja física declara cuánto de ese efectivo es de ventas facturadas, y ese número coincide con la celda facturado/efectivo de la matriz.
+7. Abre el detalle de al menos tres celdas distintas y confirma que la suma de los movimientos cuadra al centavo con la celda.
+8. Confirma que ninguna cifra de la pantalla se calcula en el navegador: todas provienen de la respuesta del servidor.
+9. Comprueba que `cobrado` y `ticketsCobrados` son consistentes entre sí después del Bloque 2, contando el mismo conjunto de tickets.
+10. Autoriza una nota facturada a crédito y confirma que su IVA aparece en el IVA facturado y que la venta cae en la celda facturado/por cobrar.
+11. Grep de "Total Ingresado", "Público General" y "Resumen Fiscal": no deben quedar fuera del historial.
+12. Verifica que un usuario con alcance de lectura PROPIA no ve otra tienda en esta pantalla ni en el detalle de las celdas, ni pidiéndola por la dirección.
+13. Revisa la pantalla en teléfono: la matriz conserva desplazamiento horizontal y sigue siendo legible.
+
+## Al terminar
+
+Escribe en `replit.md`, en la sección de Cuentas Destino:
+
+- **El modelo completo:** facturación y forma de cobro son dos preguntas independientes, cualquiera de las combinaciones puede ser a crédito, y de ahí se deriva la cuenta. Efectivo va siempre a caja física; transferencia va a cuenta fiscal si la venta está facturada y a no fiscal si no; el crédito no es una cuenta, es una promesa. Esa derivación vive en `destinationReadModel()` y `accountDestination()` y no se duplica.
+- Que **la caja física mezcla facturado y no facturado** porque el cajón es uno solo, que es la única cuenta cuyo estatus fiscal no se deduce de la cuenta, y que por eso la tarjeta lo declara aparte.
+- Que **cuentas por cobrar nunca se suma con las otras tres bajo una etiqueta de ingreso**, y que el encabezado son tres cifras: Cobrado, Por cobrar y Vendido.
+- Que la matriz **debe cerrar por renglón y por columna**, que el servidor lo verifica y que la pantalla muestra el descuadre en vez de ocultarlo. Que toda forma de pago sin columna propia cae en **Otras**, para que ninguna desaparezca en silencio.
+- Que ningún cálculo de esta pantalla se hace en el navegador.
+- Que en el cálculo de Cobrado se **excluye explícitamente lo que no es cobro**, en vez de enumerar lo que sí lo es, y por qué esa inversión importa.
+- Deja anotado como **pendiente de decisión**: `isValidPaymentDestination` permite cobrar el abono de una venta facturada a una cuenta no fiscal, y `cliente-pago-dialog.tsx` todavía ofrece "Facturado" como forma de pago del abono. La pantalla ya lo señala pero **no lo impide**. La complicación de fondo es que `allocateCreditFifo` reparte un abono entre varias notas, de modo que un solo depósito puede saldar a la vez una nota facturada y una no facturada; cualquier regla que se elija tiene que resolver ese caso.
+- La lista de reglas duplicadas que encontró el Bloque 3, con archivo y línea.
+- Un renglón con la fecha de este cambio y qué se hizo.

@@ -1,0 +1,20 @@
+✔ textual regression: parenthesized CASE and exact consumer prosrc hash (6.273016ms)
+✔ textual regression rejects removal of CASE pair 1 (3.832035ms)
+✔ textual regression rejects removal of CASE pair 2 (2.072679ms)
+✔ textual regression rejects removal of CASE pair 3 (1.237453ms)
+✔ textual regression rejects removal of CASE pair 4 (1.447889ms)
+✔ textual regression rejects stale E11 source hash (2.741952ms)
+✔ all IF/ELSIF CASE conditions in tanda-b-20260922/e4 have protected expression nesting (0.433712ms)
+✔ all IF/ELSIF CASE conditions in tanda-b-20260922/e12 have protected expression nesting (0.659316ms)
+✔ all IF/ELSIF CASE conditions in e9 have protected expression nesting (0.856475ms)
+✔ all IF/ELSIF CASE conditions in e5 have protected expression nesting (1.346778ms)
+✔ all IF/ELSIF CASE conditions in e11 have protected expression nesting (1.405441ms)
+✔ subquery/function nesting protects CASE; comments/quoted strings are not executable (0.265158ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 100.136944

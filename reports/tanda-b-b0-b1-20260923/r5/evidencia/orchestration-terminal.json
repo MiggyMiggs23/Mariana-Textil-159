@@ -1,0 +1,6 @@
+{
+  "status": "PASS_EXECUTION_AND_PROTECTED",
+  "phaseBExecuted": false,
+  "finalizerRun": false,
+  "cleanupProof": "See rehearsal attempt terminal.json; no inferred cleanup"
+}

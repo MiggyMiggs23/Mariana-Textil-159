@@ -1,0 +1,5 @@
+{
+  "status": 3,
+  "stderr": "ERROR:  syntax error at end of input\nLINE 287: ...(prev->'propuestas')+CASE WHEN o.accion='PROPONER' THEN 1 EL...\n                                                               ^\n",
+  "inputSha256": "b64b75ebfcea697908a4b28ae5f1a6e6955f9b585fc0de6224c5fa8905bef08e"
+}

@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "scope": "Textual only; PG execution remains MAIN",
+  "positive": [
+    "parenthesized CASE",
+    "E11 hash matches new exact prosrc",
+    "only two parentheses in E5",
+    "only paired hash change E11"
+  ],
+  "negative": [
+    "unparenthesized old CASE rejected",
+    "old E11 hash rejected"
+  ],
+  "oldHash": "564fe05aee5d577aa60ab5ed5d9a8365e819ba0b82b4e7893ad791995d7b514c",
+  "newHash": "303366993fe3529b329a2a0c980a4efcda37eef1c1bf0a1e9bd43bb52ca73267"
+}

@@ -1,0 +1,9 @@
+{
+  "exit": 1,
+  "signal": null,
+  "stdout": "{\"status\":\"FAIL\",\"phaseBExecuted\":false,\"allGates\":\"OFF\",\"liveSqlApplied\":false,\"fixture\":\"MINIMAL_NOT_REAL_B0\",\"candidateStopped\":false,\"error\":\"Duplicate catalog identity aux real B0: {\\\"deptype\\\":\\\"a\\\",\\\"source\\\":{\\\"identity\\\":\\\"public.fondo_movimientos_original_uidx\\\",\\\"kind\\\":\\\"index\\\",\\\"name\\\":\\\"fondo_movimientos_original_uidx\\\",\\\"schema\\\":\\\"public\\\"},\\\"target\\\":{\\\"identity\\\":\\\"public.fondo_movimientos.original_id\\\",\\\"kind\\\":\\\"table column\\\",\\\"name\\\":\\\"fondo_movimientos\\\",\\\"schema\\\":\\\"public\\\"}}\",\"postgresStopExit\":0,\"disposableDestroyed\":true}\n",
+  "stderr": "",
+  "timeout": false,
+  "forced": false,
+  "expectedToken": "PASS_DISPOSABLE_MAIN_REVIEW_PENDING"
+}

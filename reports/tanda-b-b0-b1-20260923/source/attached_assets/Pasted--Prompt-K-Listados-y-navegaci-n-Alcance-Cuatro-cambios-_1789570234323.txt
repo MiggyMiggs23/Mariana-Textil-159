@@ -1,0 +1,157 @@
+# Prompt K — Listados y navegación
+
+## Alcance
+
+Cuatro cambios de listado y navegación. **Ninguno toca cálculos financieros, motores
+de inventario ni reglas de negocio.** Si alguno lo exige, detente y repórtalo.
+
+---
+
+## Bloque 1 — Entradas con la misma forma que Salidas
+
+Hoy Entradas abre en la captura. El propietario quiere la misma forma que ya tiene
+Salidas: **al abrir se ve el historial**, y un **botón grande, azul, arriba a la
+derecha** lanza el motor de captura que ya existe.
+
+1. Revisa primero cómo está resuelto en Salidas y **reutiliza ese patrón**, no
+   inventes uno paralelo. Reporta qué encontraste antes de escribir.
+2. El historial conserva sus filtros, su orden y sus enlaces al documento de cada
+   entrada.
+3. **El motor de captura no se toca.** No cambies cómo se crea una entrada, ni sus
+   validaciones, ni los costos, ni los folios por sitio, ni la reserva de series. Lo
+   único que cambia es desde dónde se entra.
+4. Conserva el borrador si existe: quien tenga una captura a medias debe poder
+   retomarla, igual que en Salidas.
+5. El botón respeta el permiso de crear. Sin ese permiso no se muestra, y el servidor
+   sigue siendo la autoridad.
+
+---
+
+## Bloque 2 — Movimientos agrupado por documento
+
+Hoy Movimientos lista **un renglón por rollo**, y con volumen real se vuelve una lista
+interminable donde no se distingue nada.
+
+Qué quiere el propietario: **un renglón por movimiento, con su total de rollos
+englobado**, y al hacer clic se despliegan los rollos con sus números de serie.
+
+1. El renglón agrupado muestra el documento que originó el movimiento, su fecha, el
+   sitio, el tipo, el **total de rollos** y la cantidad total.
+2. **Las cantidades nunca se totalizan entre unidades distintas.** Metros, kilos,
+   bolsas y piezas no se suman entre sí: si un movimiento agrupa unidades distintas, se
+   presenta un total por unidad. El total de rollos sí es único. Esta regla no se
+   negocia.
+3. Al desplegar, cada rollo con su serie, **enlazado a `/inventario/rollos/:id`**, como
+   está hoy.
+4. **El documento del renglón agrupado enlaza a su documento**, usando la resolución
+   por tipo que ya existe. Los movimientos sin documento conservan su justificación
+   como texto y no se les inventa un enlace.
+5. **La agrupación es presentación.** El kardex sigue registrando movimiento por rollo,
+   y ningún cálculo, reporte ni conciliación cambia por esto. Si un cambio de
+   presentación toca cómo se registra un movimiento, está mal planteado.
+6. Conserva los filtros actuales, la búsqueda, la paginación y el estado del historial
+   de navegación, para que Atrás siga restaurando la vista.
+7. Comprueba en teléfono: el desplegado no debe desbordar.
+
+**Antes de implementar, propón cómo agrupar** —por documento, por operación, o por la
+llave que el modelo permita— y espera aprobación. La forma correcta depende de qué
+identifica un movimiento en el kardex, y eso hay que leerlo, no suponerlo.
+
+---
+
+## Bloque 3 — Clientes con el mismo tablero que Proveedores
+
+Proveedores tiene arriba a la derecha un tablero con su información resumida. El
+propietario quiere el mismo estilo en Clientes.
+
+1. Revisa qué muestra hoy el de Proveedores y **reutiliza el mismo componente y el
+   mismo estilo**. Dos tableros parecidos escritos por separado divergen.
+2. Las cifras deben ser las que ya entrega el servidor para clientes. **No inventes
+   indicadores nuevos ni calcules nada en el navegador.** Si falta un dato, repórtalo
+   en vez de derivarlo.
+3. **Respeta el ocultamiento económico.** Los campos de costo, precio, margen y
+   utilidad no se envían al cliente cuando el rol no debe verlos, y eso se resuelve en
+   el servidor. Taparlo en pantalla no es una restricción.
+4. El alcance por sitio se aplica siempre con `resolveReadScope`.
+5. Comprueba en teléfono.
+
+---
+
+## Bloque 4 — Sitios y usuarios inactivos: visibles y reactivables
+
+**Diagnóstico ya confirmado en el código, para que no lo busques a ciegas:** no existe
+ninguna ruta de borrado de ubicaciones ni de usuarios. Nada se está borrando. Lo que
+pasa es que `GET /locations` filtra `activa = true`, así que al desactivar un sitio
+**desaparece de la pantalla y no hay forma de volver a verlo ni de reactivarlo**.
+
+Confírmalo tú antes de tocar nada, y revisa si el listado de usuarios hace lo mismo.
+
+Qué hacer:
+
+1. La pantalla de sitios debe poder **mostrar también los inactivos**, claramente
+   marcados, con la acción de reactivar. Lo mismo en usuarios si tiene el mismo
+   defecto.
+2. **Cuidado con quién más consume ese endpoint.** El selector global de sitio, el POS,
+   Caja, Inventario y los reportes probablemente dependen de que solo lleguen sitios
+   activos. Un sitio inactivo no debe aparecer como destino de una operación. Revisa
+   todos los consumidores y reporta cuáles: la lista de administración es la que debe
+   ver los inactivos, no las pantallas operativas.
+3. La reactivación se audita como cualquier otro cambio, con usuario, entidad y valores
+   antes y después.
+
+### Sobre borrar: hay una regla vigente y no cambia
+
+El propietario pidió poder borrar una vez desactivado. `replit.md` dice:
+
+> «Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el
+> sistema. Un usuario que aparece en la bitácora o en el kardex nunca se borra: perder
+> su rastro rompe la trazabilidad.»
+
+Esa regla **se conserva**. En la práctica, cualquier sitio o usuario que haya operado
+un solo día tendrá referencias y no será borrable nunca, y eso es lo correcto.
+
+**No construyas el borrado en esta entrega.** En su lugar, entrega un informe corto:
+qué referencias tendría que comprobar un borrado seguro, en qué tablas, y qué
+proporción de los sitios y usuarios actuales serían borrables hoy. Con eso el
+propietario decide si vale la pena construirlo.
+
+Mientras tanto, la pantalla debe **explicar por qué no se puede borrar** en lugar de
+ofrecer un botón que falle o, peor, de no decir nada.
+
+---
+
+## Verificación
+
+1. `pnpm run typecheck` completo en cero, con el verificador corregido.
+2. Codegen sin diferencias, o con las que estos cambios justifiquen.
+3. Prueba de que las cantidades de Movimientos nunca se suman entre unidades distintas
+   en el renglón agrupado.
+4. Prueba de que los consumidores operativos del catálogo de ubicaciones siguen
+   recibiendo solo sitios activos.
+5. Prueba de que el botón de crear entrada respeta el permiso y de que el servidor
+   sigue rechazando sin él.
+6. Comprobación en navegador de las cuatro pantallas, escritorio y 402 px, con captura
+   del antes y el después. **Si no hay sesión autenticada, dilo y no lo presentes como
+   aprobado.**
+
+## Restricciones
+
+- No toques el motor de captura de entradas ni el registro del kardex.
+- No cambies cálculos, predicados financieros ni reglas de negocio.
+- No construyas el borrado de sitios ni de usuarios.
+- No crees usuarios ni sesiones de prueba, no escribas en la base.
+- No toques Tiempo Real, Cuentas Destino, crédito, caja ni impresión. Son entregas
+  propias.
+- **Presenta la propuesta de agrupación de Movimientos antes de implementarla.**
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que Entradas abre en historial con el mismo patrón que Salidas, y que el motor de
+   captura no cambió.
+2. Que Movimientos agrupa por documento como **presentación**, que el kardex sigue
+   registrando rollo por rollo, y que las unidades nunca se totalizan entre sí.
+3. Que la lista de administración de sitios muestra los inactivos y permite
+   reactivarlos, y que las pantallas operativas siguen recibiendo solo activos.
+4. Que el borrado de sitios y usuarios sigue sujeto a la regla de referencias y no se
+   construyó; con el informe de qué exigiría.
+5. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

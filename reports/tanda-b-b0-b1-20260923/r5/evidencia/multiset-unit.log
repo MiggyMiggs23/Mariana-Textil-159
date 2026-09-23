@@ -1,0 +1,19 @@
+✔ unchanged duplicate real dependencies remain repeated rows (1.579509ms)
+✔ multiplicity addition is delta arithmetic, not set membership (0.332446ms)
+✔ two newly emitted identical edges preserve multiplicity two (0.233391ms)
+✔ authorized removal subtracts only the observed count (1.216766ms)
+✔ authorized removal cannot underflow real capture (1.023827ms)
+✔ unauthorized old edge decrease rejected, even if another copy remains (0.314137ms)
+✔ existing RI multiplicity decrease rejected (0.702365ms)
+✔ captured column subobject identities remain distinct (0.229035ms)
+✔ FK originating table remains part of semantic RI identity (0.178769ms)
+✔ fingerprint ignores order but never multiplicity (4.264937ms)
+✔ source schema mismatch never authorizes removal (0.312887ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.030392

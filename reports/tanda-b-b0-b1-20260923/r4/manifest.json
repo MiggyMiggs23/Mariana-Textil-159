@@ -1,0 +1,55 @@
+{
+  "status": "R4_RUNNER_MULTISET_PREPARED_NOT_VALIDATED",
+  "revision": "cc628aed315a4bbfd3e6cb8766d28200ce400842",
+  "phaseBExecuted": false,
+  "releaseAuthorized": false,
+  "allGates": "OFF",
+  "activationPatch": false,
+  "sourceManifestSha256": "39c6d514a2e48d33bbb352d870ad948b17263a2db05290ea87f2e177a16102f2",
+  "tools": {
+    "node": "v24.13.0",
+    "pnpm": "10.26.1"
+  },
+  "buildCommands": [
+    "node source/artifacts/api-server/build.mjs (API_BUILD_OUTPUT_DIR=final absolute path)",
+    "vite build --outDir final absolute UI path"
+  ],
+  "outputs": {
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/index.mjs": "deaa31522316a38baff0bebfbcf2a418565e9b031775abe0249a51f520bfc670",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/index.mjs.map": "742c9069ed40cc0981947c93ddd1f686ce8b4e0bc9e623a5e6e6d1932ed692e4",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-file.mjs": "7fa13557a98d872d41f950991076675490d807b24e2f306e716bb611efd1a9cc",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-file.mjs.map": "5b4ae826c58cfbbc3c596e1f0c5b253ed021e2671249230a2c030f95f1e41a64",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-pretty.mjs": "a0e84eadb04888316e0a4c65e21dabc36554fc396206ba962b65c63d31e11b03",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-worker.mjs": "dae1918708cfeb3af7949f86266d7e216999d0c393e80aba38ad41486934eeca",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-worker.mjs.map": "22e93f5cf6a19d3f2eaf351f54a4cb6d51b17d3bdf03310fa638a94968ec0eb6",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/thread-stream-worker.mjs": "682af21c74dcff21d325b5e7856bba74ed0c660dbd6f4a0f737a2f9c3cbd9e8b",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/index-C6yDHUng.css": "f77a60e8f28334fd3402ed2c887551bf571d8f4b81df0c0192fe56990a4d8e5f",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/index-CLqeiEwA.js": "836c33b82cee4a16eb384767e767f948fe2c004621e77691833d541dd62a3c93",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/index.html": "118cfee92b28955f81685aeb0bc6d5c4d99f7233e5e5c681403aad5feaa64af6",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "pending": [
+    "FRESH_READONLY_PREFLIGHT_SAME_B0_AND_PIN",
+    "R4_DISPOSABLE_COMPLETE",
+    "CANDIDATE_STARTUP_PRESERVATION",
+    "MAIN_REVIEW"
+  ],
+  "sealed": false,
+  "apiSourceRevision": "cc628aed315a4bbfd3e6cb8766d28200ce400842",
+  "sourceSqlRevision": "r3-syntax-only",
+  "sourceSqlCommit": "91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f",
+  "reusedAssetsFrom": "reports/tanda-b-b0-b1-20260923",
+  "rebuildPerformed": false,
+  "runnerRevision": "r4-multiset-only"
+}

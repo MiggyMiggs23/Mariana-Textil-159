@@ -1,0 +1,111 @@
+# Prompt para Replit Agent — Abonos, saldo a favor, estados de nota y contador de rollos
+
+Cuatro trabajos. El **Bloque 2 es un defecto que hay que diagnosticar antes de corregir**; los demás se ejecutan.
+
+No toques la base por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+---
+
+## Bloque 1 — Contador de rollos en la salida para venta a cliente
+
+Al armar una **salida para venta a cliente**, muestra un **contador con el total de rollos escaneados**, en un círculo, visible en todo momento mientras se escanea.
+
+Simple: solo el número de rollos capturados. Nada más.
+
+Debe ser legible desde lejos —quien escanea está de pie frente a la mercancía, no sentado— y actualizarse al instante con cada lectura.
+
+## Bloque 2 — Los abonos del mismo día no aparecen en Cobrado
+
+**Síntoma reproducido:** se autoriza una nota a crédito, y más tarde **el mismo día** el cliente abona a esa nota. Ese abono **no aparece en Cobrado**, ni en el desglose de abonos.
+
+**Esto es un caso normal de la operación, no una rareza:** un cliente hace su pedido, se le emite la nota, y al rato regresa y abona. Tiene que quedar registrado el mismo día.
+
+### Dónde buscar
+
+En `admin-analytics.ts`, alrededor de la línea 166, la consulta que produce la fuente `ABONO` exige:
+
+```
+m.tipo='ABONO' AND m.cuenta_destino IS NOT NULL
+```
+
+**Mi sospecha es esa condición de `cuenta_destino`:** si el abono se registró sin cuenta destino definida, queda fuera de todas las cifras sin que nada lo advierta. El filtro de fecha sí usa `m.created_at`, que es la fecha del abono, así que el mismo día no debería ser el problema.
+
+1. **Averigua la causa real y repórtamela antes de corregir.** Revisa el abono de prueba en la base: si tiene `cuenta_destino`, qué valor, y por qué no entró a la cifra.
+2. Si la causa es esa condición, **un abono sin cuenta destino no puede desaparecer en silencio**. O se exige la cuenta al registrarlo, o se cuenta con una categoría explícita que lo haga visible. Dime cuál propones antes de implementarlo.
+3. Revisa si el mismo hueco afecta al **estado de cuenta del cliente** y al **saldo de cartera**, no solo al tablero.
+
+### Y un rótulo que está mal
+
+La categoría del desglose se llama **"De notas anteriores"**. Es incorrecto: un abono es un abono sin importar cuándo se emitió la nota, y con esa etiqueta un abono del mismo día parece no pertenecer a ninguna parte.
+
+Renómbrala a **"Abonos a notas"**. Fue un error de redacción mío, no del código.
+
+## Bloque 3 — Estados de nota en el estado de cuenta
+
+En el estado de cuenta del cliente, cada nota muestra su estado con color y texto:
+
+| Estado | Color | Texto |
+|---|---|---|
+| Sin abonos y dentro del plazo | **Amarillo** | Pendiente |
+| Con abonos parciales y dentro del plazo | **Amarillo** | Abono parcial |
+| Saldada | **Verde** | Pagada |
+| Con saldo pendiente y fecha de pago vencida | **Rojo** | Con retraso |
+
+Reglas:
+
+1. **En las tres que no están pagadas, muestra el saldo pendiente junto al estado.** Es el dato que el cobrador necesita y hoy hay que calcularlo de cabeza.
+2. **"Con retraso" gana sobre "Abono parcial":** una nota vencida con abonos parciales se muestra en rojo. El retraso es la señal urgente.
+3. El estado se **deriva** del saldo y la fecha de pago, en una sola función usada por todas las vistas —escritorio, teléfono, estado de cuenta y cualquier reporte—. No lo guardes como columna ni lo calcules en dos lugares.
+4. Deja el significado de cada color escrito en un comentario, conforme a la regla de que todo color del sistema significa algo.
+
+## Bloque 4 — Saldo a favor del cliente
+
+Hoy existe la fuente `ABONO_SALDO_FAVOR` para dinero recibido que no se aplicó a ninguna nota, pero **no hay ningún lugar donde el usuario lo vea ni lo use**.
+
+### Qué construir
+
+**En la ficha del cliente**, junto a su saldo deudor, muestra su **saldo a favor**. Si es cero, se ve en cero; no lo escondas.
+
+**Cuando un cliente paga de más**, la diferencia queda como saldo a favor en lugar de perderse. Debe quedar claro en pantalla que eso ocurrió, no en silencio.
+
+**Al autorizar una nota nueva**, si el cliente tiene saldo a favor, el sistema lo ofrece para aplicarlo, con el monto disponible a la vista. Aplicarlo es una decisión del cajero, no automático.
+
+### La regla que no se puede romper
+
+**El saldo a favor es dinero que ya entró.** Ya está contado en Cobrado desde que se recibió. **Cuando se aplica a una nota, no vuelve a contarse.** Aplicarlo mueve saldo entre el cliente y su nota; no es un ingreso nuevo.
+
+Si se contara dos veces, los ingresos quedarían inflados y nadie lo notaría hasta el corte. **Escribe una prueba que lo verifique**: recibir un saldo a favor y después aplicarlo a una nota no debe cambiar el total cobrado del periodo.
+
+**Y el saldo a favor no se borra ni se ajusta a mano.** Sube cuando entra dinero de más, baja cuando se aplica. Cualquier corrección es un movimiento, nunca una edición del número.
+
+### Presentación
+
+Que se vea claro y se use rápido: el saldo deudor y el saldo a favor son dos cifras distintas y no deben confundirse. Usa el código de color que ya tiene el sistema —rojo para lo que se debe, verde para lo que está a favor— y deja escrito su significado.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de crédito, caja, analytics y POS.
+3. Arma una salida para venta escaneando varios rollos y confirma que el contador cuadra con lo capturado.
+4. **Autoriza una nota y abona a ella el mismo día.** Confirma que el abono aparece en Cobrado, en el desglose de abonos, en el estado de cuenta del cliente y en su saldo.
+5. Comprueba los cuatro estados de nota: sin abonos, con abono parcial, pagada y vencida. Confirma que una vencida con abonos parciales se muestra **en rojo**.
+6. Confirma que el saldo pendiente se ve junto al estado en las tres que no están pagadas.
+7. Recibe un pago mayor al saldo de una nota y confirma que la diferencia queda como saldo a favor, visible en la ficha del cliente.
+8. **Aplica ese saldo a favor a una nota nueva y confirma que el total cobrado del periodo no cambió.** Es la prueba de que no se cuenta dos veces.
+9. Confirma que el saldo a favor no se puede editar directamente.
+10. Revisa las pantallas nuevas en teléfono.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- Que **un abono se registra en el periodo en que entra el dinero**, sin importar cuándo se emitió la nota, y que la categoría se llama **"Abonos a notas"**.
+- La causa del defecto que encontraste y cómo quedó resuelto el caso del abono sin cuenta destino.
+- La tabla de los cuatro estados de nota con sus colores, que **"Con retraso" gana sobre "Abono parcial"**, y que el estado se deriva en una sola función usada por todas las vistas.
+- Que **el saldo a favor es dinero ya contado en Cobrado** y que aplicarlo a una nota **no vuelve a contarse**, con la prueba que lo verifica.
+- Que el saldo a favor no se edita a mano: sube y baja por movimientos.
+- Un renglón con la fecha y qué se hizo.

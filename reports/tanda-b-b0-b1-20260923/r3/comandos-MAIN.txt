@@ -1,0 +1,51 @@
+R3 SOLO PREPARACIÓN / ENSAYO DESECHABLE — FASE B NO EJECUTADA
+
+Auditoría amplia: cinco SQL E4/E12/E9/E5/E11, 16 CASE ejecutables,
+7 dentro de condiciones IF/ELSIF. E4=0, E12=0, E9=1, E5=6, E11=9.
+Se excluyeron comentarios y literales; no se interpretó instalación como
+funcionalidad PL/pgSQL. El escáner léxico no sustituye parser PostgreSQL.
+
+Equivalentes encontrados pendientes en r2: TRES en E5, líneas586/588/590:
+historia propuestas/PROPONER, aplicaciones/AUTORIZAR, rechazos/RECHAZAR.
+Cada CASE ahora lleva dos paréntesis. El CASE estado línea346 ya estaba
+parentetizado en r2. Ningún cambio de expresión, política u objetos.
+Los otros tres CASE de condiciones (E9línea148 y E11líneas617/627) están
+protegidos por paréntesis de coalesce/subconsulta; no requieren modificación.
+Asignación/RETURN/SELECT y argumentos restantes no son el defecto de IF.
+
+Único cuerpo cambiado: e5_graph_guard. Único pin E11 actualizado: ese prosrc.
+Hash r3:
+87911ce23ea2ad1f936e2aa4a718788f7aba2a7b95f1ec9845f5d5baaa520c02
+Test textual ampliado 12/12 PASS: auditoría de cinco SQL, cuatro negativos
+quitando por separado paréntesis de cada CASE corregido, hashes anteriores
+rechazados y positivo de anidación SQL/función. Log/inventario en evidencia.
+
+MAIN: commit separado de estos CUATRO archivos fuente:
+  reports/e5/01-preparado.sql
+  reports/e11/01-preparado.sql
+  scripts/src/e5-sql-case-regression.test.mjs
+  scripts/src/sql-if-case-audit.mjs
+
+Después del commit y pin vigente explícito:
+export TANDA_B_SQL_REVISION="$(git rev-parse HEAD)"
+export TANDA_B_ATTEMPT=r3
+export TANDA_B_MAIN_ONLY=AUTHORIZED
+# Conservar/refijar TANDA_B_RUNTIME_PID, TANDA_B_START_TICKS,
+# TANDA_B_CMDLINE_SHA256, TANDA_B_PG_BIN y TANDA_B_API_PORT desde MAIN.
+node reports/tanda-b-b0-b1-20260923/r3/run-main.mjs
+
+Runner comprueba git show de los cinco SQL, luego preflight READ ONLY actual
+contra B0 conservado y pin; después SQLr3, startup candidato OFF, invariancia,
+cleanup, controles de protección, terminal positivo y finalización.
+No aplicar SQL real ni reiniciar API ni tocar workflow/bundle/permisos.
+
+Reutiliza API/UI sin rebuild de apiSourceRevision
+cc628aed315a4bbfd3e6cb8766d28200ce400842; SQL externo tiene identidad separada.
+Los cuatro reemplazos E1 permanecen exactamente los autorizados.
+
+r1/r2 SQL, scripts locales, FAIL, capturas y sellos permanecen intactos.
+El test FUENTE externo referenciado por el sello r2 evoluciona con este commit;
+su versión anterior exacta queda en antecedentes/e5-sql-case-regression-r2.test.mjs
+y commit a5ffecfac5450a666d9c800eb73bd06193d3ade2, verificada contra hash del
+sello r2. No se afirma que el archivo fuente actual sea el test antiguo.
+Sello r2 original sigue 373eaeb944e15b553debdb15aa3d593b036a276416dfe1173dcb8c07b8378f62.

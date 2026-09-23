@@ -1,0 +1,125 @@
+FASE B — TEXTO OPERATIVO PARA REVISIÓN
+BORRADOR NO EJECUTADO — SIN AUTORIZACIÓN DE INSTALACIÓN O LIBERACIÓN
+
+Este texto completa la entrega documental. No constituye instrucciones
+ejecutables ahora, no incluye comandos automatizados y no amplía las
+autorizaciones de preparación/ensayo en PostgreSQL desechable.
+El texto sellado r5/fase-b-NO-EJECUTADA.txt permanece intacto.
+
+1. IDENTIDAD PROPUESTA PARA UNA DECISIÓN FUTURA
+
+API/UI: fuente cc628aed315a4bbfd3e6cb8766d28200ce400842.
+SQL externo: commit 91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f.
+Comparador enum: commit separado 817830d3f8d4ce2d00434c0d2e9433b47dd38a9a.
+Manifiesto vigente: r5/final-manifest.json, SHA-256:
+b8550e72e090cfbebde64f09375737868b94260409180f0d325c6a144cfe6716
+API candidata, SHA-256:
+deaa31522316a38baff0bebfbcf2a418565e9b031775abe0249a51f520bfc670
+UI index.html, SHA-256:
+118cfee92b28955f81685aeb0bc6d5c4d99f7233e5e5c681403aad5feaa64af6
+
+El SQL no está atribuido a una recompilación API posterior. Antes de cualquier
+decisión real se verificarían los archivos exactos y sus dependencias desde
+estas identidades, nunca a partir de un alias móvil o un bundle sustituido.
+
+2. CONDICIONES PENDIENTES; NINGUNA SE DA POR AUTORIZADA
+
+Se necesita autorización NUEVA y separada del propietario que nombre destino,
+SQL, ventana, ejecutor y actuaciones de runtime. Las autorizaciones actuales
+solo cubren preparación y ensayo desechable, incluidos cuatro reemplazos E1.
+Siguen pendientes un respaldo verificable y su plan de restauración, una
+ventana de quiescencia de escritores y la decisión explícita sobre operación
+parcial/fallo, cambio de bundle y arranque futuro. Ni la quiescencia ni el
+respaldo se consideran cumplidos por este documento.
+
+Inmediatamente antes de una instalación futura autorizada, se revalidaría
+B0 en READ ONLY contra identidad efectiva del proceso/destino vigente,
+incluyendo pin de proceso, conexión, catálogo, atributos y auxiliares
+semánticos con multiplicidad. PID195 histórico no es una selección futura.
+Se comprobarían hashes de SQL/bundles/manifiesto y todas las puertas OFF,
+incluidas E3. Cualquier drift, identidad ambigua, hash divergente o falta de
+respaldo/quiescencia/autorización detendría la operación ANTES de escribir.
+
+B0 esperado (no sustituye una captura inmediata):
+Esquema 89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358
+Atributos comparables a8389a4be6f0765a58849a425e742fc941821fbdf9c6fab0fa9c1eeb428d5ec6
+Auxiliar multiset 1dcf2b7af43a30c5912940d138e17fcccd76bc98a3b29c9dcb292b1c30dd0b24
+La captura cruda se conservaría; comparación enum ordenada no autoriza
+reescribir numeración, labels, triggers, ACLs ni datos para hacerla coincidir.
+
+3. ORDEN EXACTO PROPUESTO, SOLO SI SE AUTORIZA EXPRESAMENTE EN EL FUTURO
+
+1) E4: r5/sql/1.sql
+   Fuente reports/tanda-b-20260922/e4/01-preparado.sql
+   SHA256 046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60
+2) E12: r5/sql/2.sql
+   Fuente reports/tanda-b-20260922/e12/01-preparado.sql
+   SHA256 85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a
+3) E9: r5/sql/3.sql
+   Fuente reports/e9/01-preparado.sql
+   SHA256 232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4
+4) E5: r5/sql/4.sql
+   Fuente reports/e5/01-preparado.sql
+   SHA256 b3c5f1d772ec95222db995ff1678f8e43afdf7509cb4b938230174e7998bd1a0
+5) E11: r5/sql/5.sql
+   Fuente reports/e11/01-preparado.sql
+   SHA256 546714912da33a22e39ea1c40dc7e5eceba5f9ebd4d68db50258c2b8f77baed0
+
+E7 no tiene SQL propio en esta entrega; sus lectores y gates permanecen OFF.
+No se repetirían instalaciones E1/E2/E3/E10 ni se añadirían migraciones fuera
+de estos cinco archivos. Se verificarían sus precondiciones, no se fabricarían.
+
+CADA ARCHIVO TIENE SU PROPIA TRANSACCIÓN. NO HAY ATOMICIDAD GLOBAL DE LA TANDA.
+El commit de un archivo anterior puede persistir si otro falla. No asumir
+que un rollback del último archivo revierte toda la tanda ni sus secuencias.
+Se registraría el estado terminal y catálogo de cada etapa antes de avanzar.
+
+El cambio B0→B1 admite únicamente los objetos nuevos del SQL exacto y estos
+CUATRO reemplazos E1:
+- public.validar_movimiento_credito_e1()
+- CHECK operaciones_productor_naturaleza_ck_e1 de public.operaciones_credito_e1
+- public.e1_guard_pending_receipts_closed()
+- trigger zz_e1_pending_receipts_closed de public.cobros_credito_pendientes_e1
+El trigger ya era AFTER INSERT STATEMENT; se añade su transition relation.
+La extensión E11 de e5_insert_authority afecta un objeto NUEVO de esta tanda.
+No habilita reemplazos adicionales de objetos B0 ni ampliación de permisos.
+
+4. VERIFICACIÓN POSTERIOR PROPUESTA, NO REALIZADA EN DESTINO REAL
+
+Se cotejaría el catálogo contra B1 proyectado completo, los cuatro before/after
+y el delta de objetos nuevos, conservando todos los demás atributos B0:
+Esquema B1 82fb728b58ee70d04b5fc6b20a359e0f01697aab2917eb626bf763e32f522f95
+Atributos comparables B1 a545824d9e3eceaa9138ac0e2854bf0763175e05bb97c4788900c0dc2997b323
+Auxiliar multiset B1 28e9f236af2c29c838c7bead1df5b879b84a2eeded3e4f8668c71b851219d112
+
+Se compararían datos operativos previos y estado de secuencias last_value/
+is_called bajo la misma ventana controlada. Se distinguirían expresamente
+las tablas/filas técnicas que el SQL añade para archivar definiciones E1/E5
+(e5_ddl_originales y e11_e5_definiciones), de nuevos movimientos de negocio:
+esos metadatos esperados NO se describirían como preservación de tabla vacía.
+Las secuencias/objetos nuevos también tendrían inventario propio; sus efectos
+no se ocultarían dentro de una afirmación genérica de "todo sin cambios".
+Las comprobaciones del desechable no sustituyen estas comprobaciones reales.
+
+Un arranque futuro, cambio de bundle o verificación de runtime requeriría
+autorización explícita aparte. Solo entonces se comprobarían identidad de
+fuente/bytes, gates OFF, endpoints y conservación antes/después. El PASS actual
+es de modo inspección con inicializadores pausados en fixture mínimo; no
+acredita arranque normal de producción ni permite ejecutarlo automáticamente.
+No se abrirían puertas ni se liberaría funcionalidad por completar este cotejo.
+
+5. ABORTO Y RESOLUCIÓN DE FALLOS
+
+Ante drift, error, timeout, resultado incierto o efectos inesperados:
+detener etapas siguientes, conservar evidencia y mantener gates OFF.
+Sin autorreintento, reparaciones del catálogo, recorte de SQL ni normalización
+para forzar igualdad. No declarar rollback a partir de la ausencia del proceso.
+Resolver por lectura el estado de commit de cada archivo y escalar a MAIN/
+propietario antes de nuevas escrituras o arranques.
+
+NO se inventa rollback compensatorio. No se asume que los SQL de reversión
+existentes sean una restauración exacta, segura o autorizada tras evidencia/
+captura. Cualquier restauración del respaldo o plan de compensación exige
+decisión separada, alcance y verificación documentados.
+
+Estado de este texto: BORRADOR PARA REVISIÓN. FASE B NO EJECUTADA.

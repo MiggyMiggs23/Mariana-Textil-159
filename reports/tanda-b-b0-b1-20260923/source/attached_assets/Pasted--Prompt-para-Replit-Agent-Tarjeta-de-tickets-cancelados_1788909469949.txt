@@ -1,0 +1,97 @@
+# Prompt para Replit Agent — Tarjeta de tickets cancelados y marcado del documento
+
+Trabajo sobre `artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx`, `artifacts/mariana-textil/src/pages/ticket-detail.tsx` y las consultas de `artifacts/api-server/src/lib/admin-analytics.ts`.
+
+No cambies ninguna regla de negocio ni ningún cálculo de dinero. No toques la base de datos, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+**El dato ya existe.** `admin-analytics.ts` cuenta cancelaciones en la línea 391 y en la 556, calcula `tasaCancelacion`, y emite la alerta `CANCELACIONES_ALTAS` cuando pasa del 10%. No inventes un conteo nuevo: usa el que ya está.
+
+---
+
+## Bloque 1 — Reacomodar las tarjetas en dos filas
+
+Hoy las cinco tarjetas van en una sola fila. Sepáralas en dos, porque contestan preguntas distintas:
+
+**Fila de arriba — el dinero:**
+`Ventas (Total)` → `Cobrado (Caja)` → `Ventas a crédito` → `Utilidad`
+
+**Fila de abajo — lo que pide atención:**
+`Ventas pendientes de cobro o autorización` → `Tickets cancelados`
+
+La fila de arriba es negocio; la de abajo es señal operativa. Que la separación se note visualmente y que la de arriba tenga más peso, siendo la principal.
+
+En pantalla angosta las dos filas se apilan; conserva el orden.
+
+## Bloque 2 — La tarjeta de tickets cancelados
+
+Mismo contorno y tratamiento que la de pendientes, pero en **rojo** en lugar de ámbar.
+
+### Qué muestra
+
+**El conteo primero, el importe después:** por ejemplo `3 tickets · $12,400.00`. La señal operativa es cuántos, no cuánto; el importe sirve para detectar una cancelación grande, pero no manda.
+
+### Reglas que esta cifra debe respetar
+
+1. **Un ticket cancelado es una venta que no ocurrió.** No se suma a nada, no resta de Ventas, no toca ninguna identidad del tablero. Igual que Por cobrar quedó fuera de Cobrado, esta cifra queda visiblemente fuera de todo. Verifica que agregarla **no mueva ni un peso** de las otras tarjetas.
+2. **El rojo aquí no significa error, significa "revisa esto".** Cancelar es una operación legítima. Es también el camino clásico de la merma: se vende, se cobra el efectivo y se cancela el ticket, y por eso merece estar a la vista. Deja ese significado escrito en un comentario junto al estilo, conforme a la regla de que todo color del sistema significa algo y debe poder explicarse en una frase.
+3. **La tarjeta usa el mismo umbral del 10% que ya usa la alerta `CANCELACIONES_ALTAS`.** Por encima de ese porcentaje se muestra en rojo intenso; por debajo, en un rojo tranquilo. **Toma el umbral del mismo lugar donde ya vive**, no lo escribas otra vez: dos definiciones del mismo hecho divergen en silencio, y ya tenemos la alerta diciéndolo en la tarjeta de tienda.
+
+### Abre a su raíz
+
+Como toda cifra de este sistema, la tarjeta abre el detalle de los tickets que la componen. Cada renglón lleva **folio, importe, quién lo canceló, cuándo y el motivo**. El folio es el único enlace del renglón y lleva al ticket.
+
+Esos tres datos ya se guardan —`canceladoAt`, `canceladoPor` y `motivoCancelacion`, escritos en `pos.ts:1238`— y el detalle del ticket ya los devuelve. **Expón el nombre del usuario, no su identificador.**
+
+La suma del detalle debe cuadrar al centavo con el importe de la tarjeta, y el conteo con el conteo.
+
+## Bloque 3 — Que el ticket cancelado se vea cancelado
+
+Un ticket cancelado no tiene ninguna validez y el documento tiene que decirlo sin que nadie lo busque. Hoy está marcado en tres lugares con muy distinta fuerza, y dos se quedan cortos.
+
+**La nota A5 ya está bien** (`ticket-detail.tsx:745`): lleva un sello CANCELADO grande, rotado, en rojo y con marco, atravesando la hoja. **No la toques.** Úsala como referencia de qué tan claro debe quedar lo demás.
+
+### En la pantalla de detalle
+
+Hoy es una píldora `text-xs` en la esquina, del mismo tamaño que diría PAGADO o PENDIENTE, y se pierde entre lo demás.
+
+Cámbiala por una **banda de ancho completo arriba del contenido**, en rojo, que diga **CANCELADO** en grande y que sea lo primero que se ve al abrir el ticket. Debajo, en la misma banda y en texto normal: **quién lo canceló, cuándo y el motivo**.
+
+La píldora de estado se queda para los demás estados; solo el cancelado sube a banda.
+
+### En el ticket térmico
+
+Hoy es un renglón `text-xs` con marco delgado debajo del total. Se lee, pero no salta.
+
+- Hazlo **grande**, en negativo o con marco grueso, aprovechando el ancho de la tira.
+- **Repítelo al principio y al final** de cada copia. En térmica no hay color ni rotación, y una tira larga se lee muchas veces por el pedazo que asoma; con la marca solo debajo del total, un ticket doblado puede parecer válido.
+- Agrega debajo, en texto chico, **quién canceló y cuándo**.
+
+Recuerda que la altura de cada página térmica se **mide en tiempo real** en `print.ts`: al crecer el contenido, la altura declarada crece sola. Comprueba que sigue cuadrando y que no aparece papel sobrante.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo.
+2. `pnpm --filter @workspace/api-spec run codegen` si tocaste OpenAPI, sin diferencias pendientes.
+3. Las suites de analytics de administración, caja e impresión.
+4. Con datos que incluyan al menos un ticket cancelado, confirma que **Ventas, Cobrado, Ventas a crédito y Utilidad no cambiaron** al agregar la tarjeta.
+5. Confirma que el conteo y el importe de la tarjeta cuadran con el detalle que abre.
+6. Con una tasa de cancelación por encima del 10%, confirma que la tarjeta se pone en rojo intenso **y** que la alerta `CANCELACIONES_ALTAS` aparece en la tarjeta de tienda: los dos deben encender juntos, porque leen el mismo umbral.
+7. Abre un ticket cancelado desde la tarjeta y confirma que la banda roja es lo primero que se ve, con quién, cuándo y el motivo.
+8. Imprime a PDF un ticket cancelado en papel de rollo de 80 mm: la marca debe aparecer **al principio y al final** de cada copia, en grande, con quién y cuándo. Confirma que no quedó papel sobrante.
+9. Imprime una nota A5 cancelada y confirma que su sello no cambió.
+10. Revisa el tablero en teléfono: las dos filas se apilan conservando el orden.
+
+## Al terminar
+
+Escribe en `replit.md`, en la sección de Caja en Tiempo Real:
+
+- El acomodo en dos filas y por qué: arriba el dinero, abajo lo que pide atención.
+- Que **un ticket cancelado es una venta que no ocurrió**: no suma, no resta y queda fuera de todas las identidades del tablero.
+- Que el rojo de esa tarjeta significa "revisa esto", no error, y por qué las cancelaciones merecen estar a la vista.
+- Que la tarjeta y la alerta `CANCELACIONES_ALTAS` **leen el mismo umbral del 10% desde un solo lugar**.
+- Que un ticket cancelado se marca en pantalla, en la tira térmica y en la nota A5, y que en los tres lleva quién canceló, cuándo y el motivo.
+- Un renglón con la fecha de este cambio y qué se hizo.

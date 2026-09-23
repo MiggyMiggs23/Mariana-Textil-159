@@ -1,0 +1,182 @@
+# CORRECCIÓN — Barra lateral y accesos del rol CAJA
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# CONTEXTO
+
+En un prompt anterior se ocultó la barra lateral para el rol CAJA, dejándolo únicamente en la pantalla de cobros. **Eso se revierte parcialmente:** el cajero necesita consultar el inventario de su sitio y verificar la mercancía que le llega de otros sitios.
+
+**TERMINAL se queda sin barra lateral.** Ese rol sigue entrando directo al POS y ahí permanece. No lo cambies.
+
+---
+
+# PARTE 1 — Barra lateral de CAJA
+
+CAJA vuelve a tener barra lateral, acotada a tres entradas:
+
+```
+Caja                    ← pantalla de inicio: cobros y corte
+Inventario              ← solo su propio sitio
+Salidas recibidas       ← lo que le mandaron, ver Parte 3
+```
+
+**Comportamiento:**
+
+- Al iniciar sesión, CAJA sigue cayendo **directo en la pantalla de Caja**, no en un dashboard
+- La barra lateral queda visible para poder navegar entre las tres entradas
+- El botón de cerrar sesión sigue arriba a la derecha, con su confirmación
+
+**Sin acceso a:** POS, clientes, proveedores, productos, ajustes, movimientos, entradas, contenedores, conciliación, reportes, sitios, usuarios y permisos.
+
+**Sigue sin acceso** a las vistas de administración de Caja que ya estaban restringidas: histórico de cortes, panel en tiempo real, control de diferencias, cuentas destino y comparativo entre tiendas. Solo ve su turno actual y el resumen del corte que acaba de cerrar.
+
+---
+
+# PARTE 2 — Inventario para CAJA
+
+- Ve únicamente el inventario de **su sitio asignado**
+- **Sin selector de sitio.** No puede consultar otros sitios.
+- Aplica el filtro **en el servidor**: si llama al endpoint con el id de otro sitio, devuelve solo el suyo
+- Usa el mismo árbol expandible por tela y color que ya existe: primer nivel la tela con sus totales, segundo nivel los colores con rollos y cantidad
+- **CAJA sí ve costos**, como ya está definido para ese rol
+- Buscador por tela, color, SKU o serie de rollo
+- Solo lectura: no puede hacer ajustes ni ninguna operación sobre el inventario
+
+---
+
+# PARTE 3 — Nueva pestaña: Salidas recibidas
+
+Muestra las salidas cuyo **sitio destino** es el sitio del usuario. Es la mercancía que le mandaron desde bodegas u otras tiendas.
+
+Sirve para que el cajero verifique contra la hoja de salida foliada que le entregó el transportista.
+
+## Listado
+
+Tabla ordenada por fecha, la más reciente arriba:
+
+| Folio | Fecha y hora | Sitio origen | Rollos | Metros | Kilos | Transportista | Estado |
+
+- Las salidas canceladas aparecen tachadas
+- Filtros por rango de fechas y sitio origen
+- Buscador por folio o por serie de rollo
+- Paginado, 100 filas por página
+
+## Detalle
+
+Al abrir una salida:
+
+- Encabezado con folio, sitio origen, fecha y hora, quién la registró, transportista
+- **Lista completa de rollos**: producto, color, SKU, serie y cantidad con su unidad
+- Resumen por producto
+- Observaciones
+- Totales: rollos, metros y kilos, siempre separados
+- **Botón para reimprimir la hoja de salida**
+
+## Restricciones
+
+**Solo lectura.** CAJA no crea, no edita, no cancela y no recibe salidas. Únicamente consulta las que llegaron a su sitio.
+
+**No ve las salidas que su propio sitio envía hacia otros lados.** Solo las recibidas. Filtra por `destino_id` igual al sitio del usuario, **en el servidor**.
+
+---
+
+# PARTE 4 — Permisos
+
+Actualiza la matriz por defecto del rol CAJA:
+
+| Módulo | Ver | Crear | Editar | Autorizar |
+|---|---|---|---|---|
+| cobros_pagos | sí | sí | no | no |
+| cortes | sí | sí | no | no |
+| resumen_caja | sí | no | no | no |
+| inventario | sí | no | no | no |
+| salidas | sí | no | no | no |
+| clientes | sí | no | no | no |
+| clientes_credito | sí | no | no | no |
+| clientes_finanzas | sí | no | no | no |
+| pos | no | no | no | no |
+| productos | no | no | no | no |
+| entradas | no | no | no | no |
+| movimientos | no | no | no | no |
+| ajustes | no | no | no | no |
+| proveedores y proveedores_finanzas | no | no | no | no |
+| contenedores | no | no | no | no |
+| conciliacion | no | no | no | no |
+| reportes | no | no | no | no |
+| ubicaciones, usuarios, permisos, auditoria | no | no | no | no |
+
+Estos son **valores por defecto**. El administrador puede ajustarlos desde la pantalla de Permisos sin tocar código.
+
+**Nota sobre clientes:** CAJA conserva el acceso que ya tenía, porque lo necesita para asignar cliente al cobrar a crédito y para consultar saldos. No lo cambies.
+
+**Todo se valida en el servidor.** Un usuario CAJA que llame directamente a un endpoint restringido debe recibir **403**, aunque la interfaz no le muestre el botón.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No le devuelvas la barra lateral a TERMINAL
+- No le des a CAJA acceso al POS
+- No le des acceso al histórico de cortes, tiempo real, diferencias, cuentas destino ni comparativo entre tiendas
+- No le muestres las salidas que su sitio envía: solo las recibidas
+- No le permitas crear, editar ni cancelar salidas
+- No pongas selector de sitio en su inventario
+- No confíes en la interfaz para aplicar los filtros: valida en el servidor
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Navegación:**
+1. CAJA inicia sesión y cae directo en la pantalla de Caja
+2. La barra lateral muestra exactamente tres entradas: Caja, Inventario y Salidas recibidas
+3. TERMINAL inicia sesión, cae en el POS y **no tiene barra lateral**
+4. El botón de cerrar sesión de CAJA está arriba a la derecha y pide confirmación
+
+**Inventario:**
+5. CAJA abre Inventario y ve solo su sitio, sin selector
+6. Llamar al endpoint de inventario como CAJA con el id de otro sitio devuelve **solo el suyo**
+7. El árbol expande telas y muestra colores con rollos y cantidad
+8. CAJA sí ve costos en inventario
+9. CAJA no puede hacer ajustes: **403**
+
+**Salidas recibidas:**
+10. CAJA ve las salidas cuyo destino es su sitio
+11. CAJA **no ve** las salidas que su sitio envió hacia otros lugares
+12. Llamar al endpoint de salidas como CAJA con filtro de otro sitio devuelve solo las suyas
+13. El detalle muestra la lista completa de rollos con serie y cantidad
+14. CAJA puede reimprimir la hoja de salida
+15. CAJA no puede crear una salida: **403**
+16. CAJA no puede cancelar una salida: **403**
+
+**Restricciones que se conservan:**
+17. CAJA llamando al endpoint del POS: **403**
+18. CAJA llamando al histórico de cortes: **403**
+19. CAJA llamando al panel en tiempo real: **403**
+20. CAJA llamando a control de diferencias, cuentas destino o comparativo: **403**
+21. CAJA llamando a productos, proveedores o reportes: **403**
+22. CAJA sigue pudiendo cobrar tickets y cerrar su corte
+
+**Regresión:**
+23. Las 12 pruebas del motor siguen pasando
+24. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Lista de archivos creados y modificados
+4. Endpoints nuevos o modificados con su módulo y acción de permiso
+5. Confirmación de que TERMINAL sigue sin barra lateral
+6. Confirmación de que el filtro de sitio se aplica en el servidor, no solo en la interfaz
+7. Salida completa de la corrida de pruebas
+8. Confirmación de que las pruebas corrieron en base aislada
+9. Cómo pruebo cada cambio: con qué usuario y en qué orden

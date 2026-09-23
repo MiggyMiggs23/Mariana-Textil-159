@@ -1,0 +1,10 @@
+{
+  "status": "REUSED_IMMUTABLE_CAPTURE_REQUIRES_FRESH_PREFLIGHT",
+  "original": "../evidencia/live",
+  "catalogSha256": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+  "auxiliarySha256": "5296b0a1043bd2b82dccc811e9837135314bdf58efc0a4f307c9da47ad6b20eb",
+  "originalCaptureSha256": "44e36157d1f612b47021b9f5cecf0c96de1bb16dfc7bae2d7dade89cb47ba417",
+  "apiSourceRevision": "cc628aed315a4bbfd3e6cb8766d28200ce400842",
+  "sourceSqlRevision": "r2-syntax-only",
+  "freshReadOnlyPreflightExecuted": false
+}

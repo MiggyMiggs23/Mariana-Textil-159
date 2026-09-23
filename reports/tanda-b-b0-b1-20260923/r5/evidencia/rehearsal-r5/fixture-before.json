@@ -1,0 +1,2726 @@
+{
+  "database": "tanda_b_disposable",
+  "databaseOid": "16384",
+  "schema": "public",
+  "role": "postgres",
+  "serverVersionNum": "160010",
+  "readOnly": "on",
+  "enabledEventTriggers": 0,
+  "schemaRows": [
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito",
+      "parent_name": "abono_movimiento_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito",
+      "parent_name": "importe",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito",
+      "parent_name": "venta_movimiento_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor",
+      "parent_name": "compra_proveedor_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor",
+      "parent_name": "importe",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor",
+      "parent_name": "pago_proveedor_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "accion",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "datos_antes",
+      "definition": "jsonb:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "datos_despues",
+      "definition": "jsonb:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "entidad",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "entidad_id",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "id",
+      "definition": "bigint:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "ip",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "modulo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "rol_snapshot",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "sitio_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "sitio_snapshot",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "usuario_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "usuario_snapshot",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "activo",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "contacto_nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "correo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "dias_credito",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "direccion_entrega",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "direccion_particular",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "es_sistema",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "limite_credito",
+      "definition": "numeric(14,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "notas",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "recibe_nota_sin_precios",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "rfc",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "saldo_credito",
+      "definition": "numeric(14,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "telefono",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "updated_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "cliente_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "cuenta_destino",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "e2_insert_xid",
+      "definition": "xid8:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "fecha_real",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "importe",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "medio",
+      "definition": "forma_pago_cuenta:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "motivo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "naturaleza",
+      "definition": "naturaleza_credito_e1:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "operacion_clave",
+      "definition": "uuid:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "operacion_productor",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "referencia",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "sesion_caja_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "sitio_origen_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "usuario_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_mariana",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_mariana",
+      "parent_name": "id",
+      "definition": "uuid:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_mariana",
+      "parent_name": "nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_mariana",
+      "parent_name": "ubicacion_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "autor_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "categoria",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "conciliacion_inicial",
+      "definition": "jsonb:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "fondo_id",
+      "definition": "uuid:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "id",
+      "definition": "uuid:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "idempotency_key",
+      "definition": "uuid:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "idempotency_producer",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "importe_centavos",
+      "definition": "bigint:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "motivo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "naturaleza",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "ordinal",
+      "definition": "bigint:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "original_id",
+      "definition": "uuid:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "payload_hash",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "autorizado_por",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "cliente_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "cuenta_destino",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "dias_plazo",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "e2_insert_xid",
+      "definition": "xid8:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "es_incobrable",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "fecha_vencimiento",
+      "definition": "date:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "forma_pago",
+      "definition": "forma_pago_cuenta:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "importe",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "metadata",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "motivo_incobrable",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "movimiento_origen_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "naturaleza",
+      "definition": "naturaleza_credito_e1:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "nota_origen_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "notas",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "operacion_clave",
+      "definition": "uuid:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "operacion_productor",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "origen_justificacion",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "referencia",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "sesion_caja_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "sitio_origen_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "ticket_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "tipo",
+      "definition": "tipo_movimiento_credito:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "usuario_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "destinatario_usuario_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "entidad",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "entidad_id",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "leida_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "mensaje",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "prioridad",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "tipo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "titulo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "operaciones_credito_e1",
+      "parent_name": "clave",
+      "definition": "uuid:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "operaciones_credito_e1",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "operaciones_credito_e1",
+      "parent_name": "naturaleza",
+      "definition": "naturaleza_credito_e1:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "operaciones_credito_e1",
+      "parent_name": "productor",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "operaciones_credito_e1",
+      "parent_name": "solicitud_canonica",
+      "definition": "jsonb:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "operaciones_credito_e1",
+      "parent_name": "usuario_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "entrada_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "fecha",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "forma_pago",
+      "definition": "forma_pago_proveedor:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "importe",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "movimiento_origen_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "notas",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "proveedor_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "referencia",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "tipo",
+      "definition": "tipo_pago_proveedor:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "usuario_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "creado_por_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "cuenta_origen",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "monto",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "motivo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "proveedor_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "sesion_caja_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "abierta_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "cerrada_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "cerrada_por_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "efectivo_contado",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "estado",
+      "definition": "estado_sesion_caja:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "fecha_operativa",
+      "definition": "date:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "fondo_inicial",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "ubicacion_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "usuario_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "autorizador_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "autorizador_nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "contraparte_nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "cuenta_destino",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "documento_folio",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "documento_movimiento_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "entidad_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "estado",
+      "definition": "estado_solicitud_pago_dirigido:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "fecha_efectiva",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "forma_pago",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "importe",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "motivo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "motivo_rechazo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "movimiento_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "notas",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "referencia",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "resuelta_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "solicitante_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "solicitante_nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "tipo",
+      "definition": "tipo_solicitud_pago_dirigido:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "ubicacion_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "ubicacion_nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tanda_b_probe",
+      "parent_name": "id",
+      "definition": "bigint:t:nextval('tanda_b_probe_id_seq'::regclass)"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tanda_b_probe",
+      "parent_name": "value",
+      "definition": "text:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "autorizacion_estado",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "autorizado_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "autorizado_por",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "cancelado_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "cancelado_por",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "cliente_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "cobrado",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "cobrado_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "credito",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "dias_plazo",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "direccion_entrega_snapshot",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "documento_tipo",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "estado",
+      "definition": "estado_ticket:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "facturado",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "fecha_vencimiento",
+      "definition": "date:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "folio",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "iva",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "motivo_cancelacion",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "nombre_destinatario",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "nota_sin_precios",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "sesion_caja_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "subtotal",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "tasa_iva",
+      "definition": "numeric(5,4):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "total",
+      "definition": "numeric(12,2):f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "ubicacion_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "usuario_caja_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "usuario_terminal_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "uuid_cliente",
+      "definition": "uuid:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "ubicaciones",
+      "parent_name": "activa",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "ubicaciones",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "ubicaciones",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "ubicaciones",
+      "parent_name": "iniciales",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "ubicaciones",
+      "parent_name": "nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "ubicaciones",
+      "parent_name": "tipo",
+      "definition": "tipo_ubicacion:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "activo",
+      "definition": "boolean:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "alcance_consulta",
+      "definition": "alcance_consulta:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "created_at",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "id",
+      "definition": "integer:t:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "nombre",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "password_hash",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "rol",
+      "definition": "rol_usuario:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "ubicacion_id",
+      "definition": "integer:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "ultimo_acceso",
+      "definition": "timestamp with time zone:f:"
+    },
+    {
+      "kind": "column",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "usuario",
+      "definition": "text:f:"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito_abono_venta_uidx",
+      "parent_name": "aplicaciones_credito",
+      "definition": "UNIQUE (abono_movimiento_id, venta_movimiento_id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito_pkey",
+      "parent_name": "aplicaciones_credito",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor_pago_compra_uidx",
+      "parent_name": "aplicaciones_pago_proveedor",
+      "definition": "UNIQUE (pago_proveedor_id, compra_proveedor_id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor_pkey",
+      "parent_name": "aplicaciones_pago_proveedor",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "auditoria_pkey",
+      "parent_name": "auditoria",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "clientes_pkey",
+      "parent_name": "clientes",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "cobros_pk_e1",
+      "parent_name": "cobros_credito_pendientes_e1",
+      "definition": "PRIMARY KEY (operacion_productor, operacion_clave)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "fondo_mariana_pkey",
+      "parent_name": "fondo_mariana",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos_pkey",
+      "parent_name": "fondo_movimientos",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "movimientos_credito_pkey",
+      "parent_name": "movimientos_credito",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema_pkey",
+      "parent_name": "notificaciones_sistema",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "operaciones_pk_e1",
+      "parent_name": "operaciones_credito_e1",
+      "definition": "PRIMARY KEY (productor, clave)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "operaciones_productor_naturaleza_ck_e1",
+      "parent_name": "operaciones_credito_e1",
+      "definition": "CHECK ((productor = ANY (ARRAY['VENTA_CREDITO'::text, 'CANCELACION_VENTA_CREDITO'::text])) AND naturaleza = 'OPERACION_CREDITO_SIN_DINERO'::naturaleza_credito_e1 OR (productor = ANY (ARRAY['AJUSTE_MANUAL'::text, 'BAJA_INCOBRABLE'::text])) AND naturaleza = 'CORRECCION_CONTABLE'::naturaleza_credito_e1 OR (productor = ANY (ARRAY['ABONO_ORDINARIO'::text, 'ABONO_DIRIGIDO'::text])) AND (naturaleza = ANY (ARRAY['INGRESO_FISICO'::naturaleza_credito_e1, 'CORRECCION_CONTABLE'::naturaleza_credito_e1])) OR productor = 'REVERSO_ABONO'::text AND (naturaleza = ANY (ARRAY['DEVOLUCION_FISICA'::naturaleza_credito_e1, 'CORRECCION_CONTABLE'::naturaleza_credito_e1])) OR productor = 'COBRO_PENDIENTE'::text AND naturaleza = 'INGRESO_FISICO'::naturaleza_credito_e1)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor_pkey",
+      "parent_name": "pagos_proveedor",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja_pkey",
+      "parent_name": "salidas_dinero_caja",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "sesiones_caja_pkey",
+      "parent_name": "sesiones_caja",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido_pkey",
+      "parent_name": "solicitudes_pago_dirigido",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "tanda_b_probe_pkey",
+      "parent_name": "tanda_b_probe",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "tickets_folio_unique",
+      "parent_name": "tickets",
+      "definition": "UNIQUE (folio)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "tickets_pkey",
+      "parent_name": "tickets",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "tickets_uuid_cliente_unique",
+      "parent_name": "tickets",
+      "definition": "UNIQUE (uuid_cliente)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "ubicaciones_nombre_unique",
+      "parent_name": "ubicaciones",
+      "definition": "UNIQUE (nombre)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "ubicaciones_pkey",
+      "parent_name": "ubicaciones",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "usuarios_pkey",
+      "parent_name": "usuarios",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "kind": "constraint",
+      "schema_name": "public",
+      "object_name": "usuarios_usuario_unique",
+      "parent_name": "usuarios",
+      "definition": "UNIQUE (usuario)"
+    },
+    {
+      "kind": "function",
+      "schema_name": "public",
+      "object_name": "e1_guard_pending_receipts_closed",
+      "parent_name": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.e1_guard_pending_receipts_closed()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog', 'public'\nAS $function$\nBEGIN\n  RAISE EXCEPTION USING\n    ERRCODE = 'E1P01',\n    MESSAGE = 'E1: el cobro retenido de crédito está deshabilitado.';\n  RETURN NULL;\nEND;\n$function$\n"
+    },
+    {
+      "kind": "function",
+      "schema_name": "public",
+      "object_name": "validar_movimiento_credito_e1",
+      "parent_name": "",
+      "definition": "CREATE OR REPLACE FUNCTION public.validar_movimiento_credito_e1()\n RETURNS trigger\n LANGUAGE plpgsql\n SET search_path TO 'pg_catalog', 'public'\nAS $function$\nDECLARE\n  op public.operaciones_credito_e1%ROWTYPE;\n  origen public.movimientos_credito%ROWTYPE;\nBEGIN\n  -- Sin corte de fecha: aplica a TODO INSERT, aunque created_at sea histórico.\n  IF NEW.sitio_origen_id IS NULL OR NEW.naturaleza IS NULL\n    OR NEW.operacion_productor IS NULL OR NEW.operacion_clave IS NULL THEN\n    RAISE EXCEPTION 'E1: todo INSERT requiere sitio, naturaleza y clave/productor explícitos';\n  END IF;\n  SELECT * INTO op FROM public.operaciones_credito_e1\n    WHERE productor = NEW.operacion_productor AND clave = NEW.operacion_clave;\n  IF NOT FOUND THEN\n    RAISE EXCEPTION 'E1: registre primero la operación en esta misma unidad transaccional';\n  END IF;\n  IF op.usuario_id IS DISTINCT FROM NEW.usuario_id\n    OR op.naturaleza IS DISTINCT FROM NEW.naturaleza THEN\n    RAISE EXCEPTION 'E1: actor/naturaleza no coinciden con la operación';\n  END IF;\n  IF NEW.importe IS NULL OR NEW.importe = 0\n    OR NEW.importe IN ('NaN'::numeric, 'Infinity'::numeric, '-Infinity'::numeric) THEN\n    RAISE EXCEPTION 'E1: importe finito distinto de cero obligatorio';\n  END IF;\n  IF NOT (\n    (NEW.operacion_productor = 'VENTA_CREDITO' AND NEW.tipo = 'VENTA_CREDITO' AND NEW.importe > 0)\n    OR (NEW.operacion_productor IN ('ABONO_ORDINARIO', 'ABONO_DIRIGIDO')\n      AND NEW.tipo = 'ABONO' AND NEW.importe < 0)\n    OR (NEW.operacion_productor = 'REVERSO_ABONO' AND NEW.tipo = 'REVERSO' AND NEW.importe > 0)\n    OR (NEW.operacion_productor = 'CANCELACION_VENTA_CREDITO'\n      AND NEW.tipo = 'REVERSO' AND NEW.importe < 0)\n    OR (NEW.operacion_productor = 'AJUSTE_MANUAL' AND NEW.tipo = 'AJUSTE' AND NOT NEW.es_incobrable)\n    OR (NEW.operacion_productor = 'BAJA_INCOBRABLE'\n      AND NEW.tipo = 'AJUSTE' AND NEW.es_incobrable AND NEW.importe < 0)\n  ) THEN\n    RAISE EXCEPTION 'E1: productor incompatible con tipo/signo/incobrable; COBRO_PENDIENTE no entra al ledger';\n  END IF;\n  IF NEW.tipo = 'REVERSO' THEN\n    SELECT * INTO origen FROM public.movimientos_credito WHERE id = NEW.movimiento_origen_id;\n    IF NOT FOUND THEN\n      RAISE EXCEPTION 'E1: falta movimiento de origen del reverso';\n    END IF;\n    IF (NEW.operacion_productor = 'REVERSO_ABONO' AND origen.tipo <> 'ABONO')\n      OR (NEW.operacion_productor = 'CANCELACION_VENTA_CREDITO' AND origen.tipo <> 'VENTA_CREDITO') THEN\n      RAISE EXCEPTION 'E1: productor de reverso incompatible con el origen';\n    END IF;\n    -- El trigger previo validate_credit_reversal conserva la comprobación\n    -- del importe exacto, cliente y ticket. No se sustituye ni se deshabilita.\n  END IF;\n  PERFORM public.validar_contexto_credito_e1(\n    NEW.usuario_id, NEW.sitio_origen_id, NEW.naturaleza,\n    NEW.forma_pago, NEW.cuenta_destino, NEW.sesion_caja_id\n  );\n  IF NEW.nota_origen_id IS NOT NULL THEN\n    PERFORM 1 FROM public.tickets\n      WHERE id = NEW.nota_origen_id AND documento_tipo = 'NOTA'\n        AND cliente_id = NEW.cliente_id AND ubicacion_id = NEW.sitio_origen_id FOR SHARE;\n    IF NOT FOUND THEN\n      RAISE EXCEPTION 'E1: nota de origen debe ser NOTA del mismo cliente y sitio atribuido';\n    END IF;\n  END IF;\n  IF NEW.tipo = 'AJUSTE' AND NEW.nota_origen_id IS NULL\n    AND NULLIF(btrim(NEW.origen_justificacion), '') IS NULL THEN\n    RAISE EXCEPTION 'E1: ajuste sin nota identificada exige justificación de origen';\n  END IF;\n  IF NEW.naturaleza = 'CORRECCION_CONTABLE'\n    AND NULLIF(btrim(NEW.origen_justificacion), '') IS NULL THEN\n    RAISE EXCEPTION 'E1: corrección/recaptura exige justificación explícita; el medio histórico no prueba efectivo';\n  END IF;\n  IF NEW.operacion_productor = 'BAJA_INCOBRABLE'\n    AND NULLIF(btrim(NEW.motivo_incobrable), '') IS NULL THEN\n    RAISE EXCEPTION 'E1: baja incobrable exige motivo';\n  END IF;\n  RETURN NEW;\nEND;\n$function$\n"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito_abono_venta_uidx",
+      "parent_name": "aplicaciones_credito",
+      "definition": "CREATE UNIQUE INDEX aplicaciones_credito_abono_venta_uidx ON public.aplicaciones_credito USING btree (abono_movimiento_id, venta_movimiento_id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito_pkey",
+      "parent_name": "aplicaciones_credito",
+      "definition": "CREATE UNIQUE INDEX aplicaciones_credito_pkey ON public.aplicaciones_credito USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor_pago_compra_uidx",
+      "parent_name": "aplicaciones_pago_proveedor",
+      "definition": "CREATE UNIQUE INDEX aplicaciones_pago_proveedor_pago_compra_uidx ON public.aplicaciones_pago_proveedor USING btree (pago_proveedor_id, compra_proveedor_id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor_pkey",
+      "parent_name": "aplicaciones_pago_proveedor",
+      "definition": "CREATE UNIQUE INDEX aplicaciones_pago_proveedor_pkey ON public.aplicaciones_pago_proveedor USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "auditoria_pkey",
+      "parent_name": "auditoria",
+      "definition": "CREATE UNIQUE INDEX auditoria_pkey ON public.auditoria USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "clientes_pkey",
+      "parent_name": "clientes",
+      "definition": "CREATE UNIQUE INDEX clientes_pkey ON public.clientes USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "cobros_pk_e1",
+      "parent_name": "cobros_credito_pendientes_e1",
+      "definition": "CREATE UNIQUE INDEX cobros_pk_e1 ON public.cobros_credito_pendientes_e1 USING btree (operacion_productor, operacion_clave)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "fondo_mariana_pkey",
+      "parent_name": "fondo_mariana",
+      "definition": "CREATE UNIQUE INDEX fondo_mariana_pkey ON public.fondo_mariana USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos_pkey",
+      "parent_name": "fondo_movimientos",
+      "definition": "CREATE UNIQUE INDEX fondo_movimientos_pkey ON public.fondo_movimientos USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "movimientos_credito_pkey",
+      "parent_name": "movimientos_credito",
+      "definition": "CREATE UNIQUE INDEX movimientos_credito_pkey ON public.movimientos_credito USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema_pkey",
+      "parent_name": "notificaciones_sistema",
+      "definition": "CREATE UNIQUE INDEX notificaciones_sistema_pkey ON public.notificaciones_sistema USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "operaciones_pk_e1",
+      "parent_name": "operaciones_credito_e1",
+      "definition": "CREATE UNIQUE INDEX operaciones_pk_e1 ON public.operaciones_credito_e1 USING btree (productor, clave)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor_pkey",
+      "parent_name": "pagos_proveedor",
+      "definition": "CREATE UNIQUE INDEX pagos_proveedor_pkey ON public.pagos_proveedor USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja_pkey",
+      "parent_name": "salidas_dinero_caja",
+      "definition": "CREATE UNIQUE INDEX salidas_dinero_caja_pkey ON public.salidas_dinero_caja USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "sesiones_caja_pkey",
+      "parent_name": "sesiones_caja",
+      "definition": "CREATE UNIQUE INDEX sesiones_caja_pkey ON public.sesiones_caja USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido_pkey",
+      "parent_name": "solicitudes_pago_dirigido",
+      "definition": "CREATE UNIQUE INDEX solicitudes_pago_dirigido_pkey ON public.solicitudes_pago_dirigido USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "tanda_b_probe_pkey",
+      "parent_name": "tanda_b_probe",
+      "definition": "CREATE UNIQUE INDEX tanda_b_probe_pkey ON public.tanda_b_probe USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "tickets_folio_unique",
+      "parent_name": "tickets",
+      "definition": "CREATE UNIQUE INDEX tickets_folio_unique ON public.tickets USING btree (folio)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "tickets_pkey",
+      "parent_name": "tickets",
+      "definition": "CREATE UNIQUE INDEX tickets_pkey ON public.tickets USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "tickets_uuid_cliente_unique",
+      "parent_name": "tickets",
+      "definition": "CREATE UNIQUE INDEX tickets_uuid_cliente_unique ON public.tickets USING btree (uuid_cliente)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "ubicaciones_nombre_unique",
+      "parent_name": "ubicaciones",
+      "definition": "CREATE UNIQUE INDEX ubicaciones_nombre_unique ON public.ubicaciones USING btree (nombre)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "ubicaciones_pkey",
+      "parent_name": "ubicaciones",
+      "definition": "CREATE UNIQUE INDEX ubicaciones_pkey ON public.ubicaciones USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "usuarios_pkey",
+      "parent_name": "usuarios",
+      "definition": "CREATE UNIQUE INDEX usuarios_pkey ON public.usuarios USING btree (id)"
+    },
+    {
+      "kind": "index",
+      "schema_name": "public",
+      "object_name": "usuarios_usuario_unique",
+      "parent_name": "usuarios",
+      "definition": "CREATE UNIQUE INDEX usuarios_usuario_unique ON public.usuarios USING btree (usuario)"
+    },
+    {
+      "kind": "sequence",
+      "schema_name": "public",
+      "object_name": "tanda_b_probe_id_seq",
+      "parent_name": "",
+      "definition": "bigint:1:1:9223372036854775807:1:f:1"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "aplicaciones_credito",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "aplicaciones_pago_proveedor",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "auditoria",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "clientes",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "cobros_credito_pendientes_e1",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "fondo_mariana",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "fondo_movimientos",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "movimientos_credito",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "notificaciones_sistema",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "operaciones_credito_e1",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "pagos_proveedor",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "salidas_dinero_caja",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "sesiones_caja",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "solicitudes_pago_dirigido",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "tanda_b_probe",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "tickets",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "ubicaciones",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "table",
+      "schema_name": "public",
+      "object_name": "usuarios",
+      "parent_name": "",
+      "definition": "r:postgres:"
+    },
+    {
+      "kind": "trigger",
+      "schema_name": "public",
+      "object_name": "zz_e1_pending_receipts_closed",
+      "parent_name": "cobros_credito_pendientes_e1",
+      "definition": "CREATE TRIGGER zz_e1_pending_receipts_closed AFTER INSERT ON cobros_credito_pendientes_e1 FOR EACH STATEMENT EXECUTE FUNCTION e1_guard_pending_receipts_closed()"
+    }
+  ],
+  "attributes": [
+    {
+      "kind": "constraint",
+      "parent": "aplicaciones_credito",
+      "name": "aplicaciones_credito_abono_venta_uidx",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "aplicaciones_credito",
+      "name": "aplicaciones_credito_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "aplicaciones_pago_proveedor",
+      "name": "aplicaciones_pago_proveedor_pago_compra_uidx",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "aplicaciones_pago_proveedor",
+      "name": "aplicaciones_pago_proveedor_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "auditoria",
+      "name": "auditoria_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "clientes",
+      "name": "clientes_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "cobros_credito_pendientes_e1",
+      "name": "cobros_pk_e1",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "fondo_mariana",
+      "name": "fondo_mariana_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "fondo_movimientos",
+      "name": "fondo_movimientos_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "movimientos_credito",
+      "name": "movimientos_credito_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "notificaciones_sistema",
+      "name": "notificaciones_sistema_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "operaciones_credito_e1",
+      "name": "operaciones_pk_e1",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "operaciones_credito_e1",
+      "name": "operaciones_productor_naturaleza_ck_e1",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "pagos_proveedor",
+      "name": "pagos_proveedor_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "salidas_dinero_caja",
+      "name": "salidas_dinero_caja_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "sesiones_caja",
+      "name": "sesiones_caja_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "solicitudes_pago_dirigido",
+      "name": "solicitudes_pago_dirigido_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "tanda_b_probe",
+      "name": "tanda_b_probe_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "tickets",
+      "name": "tickets_folio_unique",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "tickets",
+      "name": "tickets_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "tickets",
+      "name": "tickets_uuid_cliente_unique",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "ubicaciones",
+      "name": "ubicaciones_nombre_unique",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "ubicaciones",
+      "name": "ubicaciones_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "usuarios",
+      "name": "usuarios_pkey",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "constraint",
+      "parent": "usuarios",
+      "name": "usuarios_usuario_unique",
+      "definition": "t:f:f"
+    },
+    {
+      "kind": "enum",
+      "parent": "alcance_consulta",
+      "name": "PROPIA",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "alcance_consulta",
+      "name": "TODAS",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "estado_sesion_caja",
+      "name": "ABIERTA",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "estado_sesion_caja",
+      "name": "CERRADA",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "estado_solicitud_pago_dirigido",
+      "name": "APROBADA",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "estado_solicitud_pago_dirigido",
+      "name": "PENDIENTE",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "estado_solicitud_pago_dirigido",
+      "name": "RECHAZADA",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "estado_ticket",
+      "name": "CANCELADO",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "estado_ticket",
+      "name": "VENDIDO",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_cuenta",
+      "name": "CHEQUE",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_cuenta",
+      "name": "CREDITO",
+      "definition": "6"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_cuenta",
+      "name": "EFECTIVO",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_cuenta",
+      "name": "FACTURADO",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_cuenta",
+      "name": "OTRO",
+      "definition": "5"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_cuenta",
+      "name": "TRANSFERENCIA",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "CHEQUE",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "EFECTIVO",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "FACTURADO",
+      "definition": "5"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "OTRO",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "forma_pago_proveedor",
+      "name": "TRANSFERENCIA",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "naturaleza_credito_e1",
+      "name": "CORRECCION_CONTABLE",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "naturaleza_credito_e1",
+      "name": "DEVOLUCION_FISICA",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "naturaleza_credito_e1",
+      "name": "INGRESO_FISICO",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "naturaleza_credito_e1",
+      "name": "OPERACION_CREDITO_SIN_DINERO",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "ADMIN",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "BODEGA",
+      "definition": "5"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CAJA",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "CONTADOR",
+      "definition": "7"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SISTEMAS",
+      "definition": "6"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "SUPERVISOR",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "rol_usuario",
+      "name": "TERMINAL",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_movimiento_credito",
+      "name": "ABONO",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_movimiento_credito",
+      "name": "AJUSTE",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_movimiento_credito",
+      "name": "REVERSO",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_movimiento_credito",
+      "name": "VENTA_CREDITO",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_pago_proveedor",
+      "name": "AJUSTE",
+      "definition": "3"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_pago_proveedor",
+      "name": "COMPRA",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_pago_proveedor",
+      "name": "PAGO",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_pago_proveedor",
+      "name": "REVERSO",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_solicitud_pago_dirigido",
+      "name": "CLIENTE",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_solicitud_pago_dirigido",
+      "name": "PROVEEDOR",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_ubicacion",
+      "name": "BODEGA",
+      "definition": "2"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_ubicacion",
+      "name": "EXTERNO",
+      "definition": "4"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_ubicacion",
+      "name": "TIENDA",
+      "definition": "1"
+    },
+    {
+      "kind": "enum",
+      "parent": "tipo_ubicacion",
+      "name": "TRANSITO",
+      "definition": "3"
+    },
+    {
+      "kind": "function",
+      "parent": "",
+      "name": "e1_guard_pending_receipts_closed",
+      "definition": "postgres:f:v:u:f:f:f:f::{\"search_path=pg_catalog, public\"}"
+    },
+    {
+      "kind": "function",
+      "parent": "",
+      "name": "validar_movimiento_credito_e1",
+      "definition": "postgres:f:v:u:f:f:f:f::{\"search_path=pg_catalog, public\"}"
+    },
+    {
+      "kind": "index",
+      "parent": "aplicaciones_credito",
+      "name": "aplicaciones_credito_abono_venta_uidx",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "aplicaciones_credito",
+      "name": "aplicaciones_credito_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "aplicaciones_pago_proveedor",
+      "name": "aplicaciones_pago_proveedor_pago_compra_uidx",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "aplicaciones_pago_proveedor",
+      "name": "aplicaciones_pago_proveedor_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "auditoria",
+      "name": "auditoria_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "clientes",
+      "name": "clientes_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "cobros_credito_pendientes_e1",
+      "name": "cobros_pk_e1",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "fondo_mariana",
+      "name": "fondo_mariana_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "fondo_movimientos",
+      "name": "fondo_movimientos_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "movimientos_credito",
+      "name": "movimientos_credito_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "notificaciones_sistema",
+      "name": "notificaciones_sistema_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "operaciones_credito_e1",
+      "name": "operaciones_pk_e1",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "pagos_proveedor",
+      "name": "pagos_proveedor_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "salidas_dinero_caja",
+      "name": "salidas_dinero_caja_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "sesiones_caja",
+      "name": "sesiones_caja_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "solicitudes_pago_dirigido",
+      "name": "solicitudes_pago_dirigido_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "tanda_b_probe",
+      "name": "tanda_b_probe_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "tickets",
+      "name": "tickets_folio_unique",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "tickets",
+      "name": "tickets_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "tickets",
+      "name": "tickets_uuid_cliente_unique",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "ubicaciones",
+      "name": "ubicaciones_nombre_unique",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "ubicaciones",
+      "name": "ubicaciones_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "usuarios",
+      "name": "usuarios_pkey",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "index",
+      "parent": "usuarios",
+      "name": "usuarios_usuario_unique",
+      "definition": "t:t:t"
+    },
+    {
+      "kind": "table",
+      "parent": "aplicaciones_credito",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "aplicaciones_pago_proveedor",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "auditoria",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "clientes",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "cobros_credito_pendientes_e1",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "fondo_mariana",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "fondo_movimientos",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "movimientos_credito",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "notificaciones_sistema",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "operaciones_credito_e1",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "pagos_proveedor",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "salidas_dinero_caja",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "sesiones_caja",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "solicitudes_pago_dirigido",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "tanda_b_probe",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "tickets",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "ubicaciones",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "table",
+      "parent": "usuarios",
+      "name": "security",
+      "definition": "f:f:d"
+    },
+    {
+      "kind": "trigger",
+      "parent": "cobros_credito_pendientes_e1",
+      "name": "zz_e1_pending_receipts_closed",
+      "definition": "O:4:f:f:f"
+    }
+  ]
+}

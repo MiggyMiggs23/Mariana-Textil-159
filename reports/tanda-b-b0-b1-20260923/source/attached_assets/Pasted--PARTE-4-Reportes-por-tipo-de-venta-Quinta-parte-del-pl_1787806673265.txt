@@ -1,0 +1,148 @@
+# PARTE 4 — Reportes por tipo de venta
+
+Quinta parte del plan. **No adelantes trabajo de la Parte 5** (bitácora consultable, confirmaciones reforzadas, matriz del supervisor). Si encuentras algo que pertenece ahí, anótalo en `replit.md` bajo "Pendiente de partes siguientes" y sigue.
+
+Ejecuta sin pedir aprobación entre bloques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## Contexto
+
+Mariana Textil vende por rollo —el mayoreo, el fuerte del negocio— y por metro —la excepción, con precios bastante más altos y otra base de costo.
+
+Son dos negocios distintos y **hay que poder verlos por separado.** Un margen agregado que revuelva los dos no le sirve a nadie: esconde que el metraje deja mucho más por unidad y que el rollo mueve mucho más volumen.
+
+La Parte 2 ya introdujo la columna `modalidad` —ROLLOS y METRAJE— en varias tablas de la sección de Ventas. La Parte 3 le dio costo real a las líneas metreadas. **Ahora hay que completar la separación en todas las secciones y aprovechar que el margen metreado por fin se puede calcular.**
+
+---
+
+## BLOQUE 1 — Separación completa en Ventas y Utilidad
+
+En `lib/reportes-sales.ts`, la columna `modalidad` ya aparece en algunas tablas. Complétala.
+
+### Qué se hace
+
+- **Toda tabla de Ventas y de Utilidad que hoy agregue líneas de venta debe traer la modalidad**, ya sea como columna o como corte.
+- Los KPI de cada sección deben poder verse por modalidad, no solo en total.
+- **Nunca presentes un margen agregado que revuelva rollo con metraje sin distinguirlos.** Si un total combinado tiene sentido, muéstralo junto a sus dos componentes, nunca en lugar de ellos.
+
+### Filtro de modalidad
+
+Agrega un filtro en la cabecera de Reportes, junto a los de fecha y sitio, con tres opciones: **Todo / Solo rollos / Solo metraje.**
+
+Se aplica **en el servidor**, no ocultando filas en la pantalla, y afecta a todas las secciones que tengan datos de venta.
+
+### Costo pendiente
+
+Ya existe el manejo de "costo pendiente" para líneas sin costo congelado. **Consérvalo tal cual.**
+
+Con la Parte 3, las líneas metreadas nuevas sí traen costo, pero las anteriores siguen en nulo y así se quedan — no se recalculan nunca. Y un producto sin ningún costo conocido en su historia sigue produciendo líneas con costo nulo.
+
+Regla que no cambia: **si cualquier línea de un grupo no tiene costo congelado, el costo, la utilidad y el margen de ese grupo quedan pendientes.** Nunca cero, nunca calculado a medias.
+
+---
+
+## BLOQUE 2 — El costo metreado a la vista
+
+La venta metreada usa como costo el **promedio simple del costo por metro de cada rollo recibido en los últimos 12 meses**, congelado al momento del ticket. La venta por rollo usa el costo exacto del rollo específico.
+
+**Son dos bases de costo distintas y hay que rotularlo**, o el usuario va a creer que el sistema se contradice.
+
+- En las tablas y KPI de utilidad, indica de dónde sale el costo de cada modalidad.
+- Cuando una línea metreada se haya costeado con el último costo conocido por no haber compras en 12 meses, márcala. Ese margen es menos confiable y el usuario debe saberlo.
+
+Añade una tabla nueva en la sección de Utilidad: **utilidad por modalidad**, con ventas, costo, utilidad y margen porcentual para ROLLOS y para METRAJE, lado a lado.
+
+Es la tabla que responde la pregunta de fondo: cuánto deja cada forma de vender.
+
+---
+
+## BLOQUE 3 — Las demás secciones
+
+Revisa sección por sección y aplica la separación donde tenga sentido:
+
+- **Inventario y Rotación** — el inventario no tiene modalidad, pero la rotación se calcula contra ventas. Distingue qué parte de la salida fue por rollo y qué parte por metro.
+- **Mapas de Calor** — si mide venta, debe respetar el filtro de modalidad.
+- **Análisis de Color** — igual.
+- **Compras** — no tiene modalidad; las compras son siempre por rollo. **No inventes una separación que no existe.** Pero sí debe mostrar el costo promedio de 12 meses por producto, que es el insumo del costeo metreado.
+- **Clientes y Crédito** — separa cuánto compra cada cliente por rollo y cuánto por metro. Ahí puede haber información útil sobre qué tipo de cliente es cada quien.
+
+Donde la separación no aplique, **dilo explícitamente en la pantalla** en vez de dejar la duda.
+
+---
+
+## BLOQUE 4 — Arreglar Diferencias de Caja
+
+En `pages/caja/diferencias.tsx`, líneas 299 y 300, hay comentarios del agente pensando en voz alta dentro del código entregado:
+
+> *"Fake data mapping for 2nd chart using tendency array just as a placeholder... Wait, the API only returns tendency as {fecha, importe}... Since I didn't see it, I'll plot absolute value."*
+
+Es decir: **la segunda gráfica no muestra lo que debía mostrar.** Se pidió exactitud porcentual en el tiempo y se graficó el importe absoluto porque el dato pedido no estaba disponible.
+
+### Qué se hace
+
+1. Determina qué debía graficar esa vista: el porcentaje de cortes exactos a lo largo del tiempo.
+2. **Agrega el dato al endpoint** para que la serie temporal traiga tanto el importe como el conteo de cortes exactos contra el total.
+3. Grafica lo correcto.
+4. **Borra esos comentarios.** El código entregado no debe contener el razonamiento del agente.
+
+Recorre el resto del repositorio buscando comentarios del mismo tipo —dudas, "wait", "let me check", marcadores de dato falso— y límpialos o resuélvelos. Reporta cuántos encontraste y dónde.
+
+---
+
+## BLOQUE 5 — Exportación
+
+Toda tabla que se exporte a Excel debe llevar la modalidad en sus columnas, y respetar el filtro de modalidad activo al momento de exportar.
+
+Si un reporte exportado tiene grupos con costo pendiente, la celda debe decir "Pendiente", no quedar vacía ni traer cero.
+
+---
+
+## BLOQUE 6 — Lo que no cambia
+
+Estas reglas del proyecto siguen vigentes y hay que verificarlas al terminar:
+
+- **Metros y kilos nunca se suman entre sí.**
+- **El margen se calcula siempre sobre el subtotal, nunca sobre el total con IVA.**
+- La censura financiera del SUPERVISOR se aplica quitando las llaves del objeto **en el servidor**, no ocultándolas con estilos. Al agregar campos nuevos, verifica que ninguno de dinero llegue a un supervisor.
+- TERMINAL no ve costos ni margen en ningún lado.
+- Formato numérico `es-MX`: coma de miles, dinero con 2 decimales, metros y kilos con 3, conteos sin decimales, folios y años sin comas.
+
+---
+
+## BLOQUE 7 — Verificación
+
+Reporta esto:
+
+**Separación**
+- Toda tabla de venta trae modalidad, o se explica por qué no aplica
+- El filtro Todo / Solo rollos / Solo metraje funciona y se aplica en el servidor
+- La tabla de utilidad por modalidad muestra ROLLOS y METRAJE lado a lado
+- Ningún margen agregado revuelve las dos modalidades sin distinguirlas
+
+**Costo**
+- Una venta metreada con costo congelado produce margen real
+- Una venta metreada sin costo sigue apareciendo como pendiente, no como cero
+- Un grupo con una sola línea sin costo deja todo el grupo pendiente
+- Las líneas costeadas con el último costo conocido están marcadas
+
+**Diferencias de Caja**
+- La segunda gráfica muestra el porcentaje de cortes exactos, no el importe
+- Los comentarios del agente ya no están en el código
+- Conteo de comentarios similares encontrados en el resto del repositorio
+
+**Reglas del proyecto**
+- Metros y kilos separados en toda tabla de cantidad
+- Margen sobre subtotal, verificado con un caso facturado
+- Un SUPERVISOR no recibe ningún campo de dinero en la respuesta del servidor
+- Exportación a Excel con modalidad y "Pendiente" donde corresponda
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> Los reportes separan siempre ROLLOS de METRAJE. Un margen agregado que revuelva las dos modalidades sin distinguirlas no es aceptable. La venta por rollo se costea con el costo exacto del rollo; la metreada, con el promedio simple de 12 meses congelado al emitir el ticket. Si cualquier línea de un grupo carece de costo congelado, el costo, la utilidad y el margen del grupo quedan pendientes, nunca en cero.

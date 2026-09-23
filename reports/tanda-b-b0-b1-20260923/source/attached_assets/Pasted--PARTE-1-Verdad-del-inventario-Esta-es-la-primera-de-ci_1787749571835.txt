@@ -1,0 +1,201 @@
+# PARTE 1 — Verdad del inventario
+
+Esta es la primera de cinco partes. **No adelantes trabajo de las siguientes.** Si encuentras algo que pertenece a otra parte, anótalo en `replit.md` bajo "Pendiente de partes siguientes" y sigue.
+
+Ejecuta sin pedir aprobación entre bloques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## El problema
+
+Hoy hay tres respuestas distintas a la pregunta "cuánto hay de esta tela en este sitio":
+
+| Dónde | Qué cuenta hoy |
+|---|---|
+| `/inventario/existencias/agrupadas` | rollos `DISPONIBLE` + `ABIERTO`, leídos de `rollos` |
+| `reportes-inventory.ts` líneas 123 y 134 | rollos `DISPONIBLE` + `EN_TRANSITO`, leídos de `rollos` |
+| caché `existencias.cantidad_total` | suma firmada del kardex |
+
+Y hay un error de fondo encima: `salidaMostrador` en `lib/inventario.ts` inserta un movimiento negativo por la cantidad completa del rollo, pero **no toca `rollos.cantidad_actual`**. El kardex dice que el rollo salió; la tabla `rollos` sigue diciendo que tiene sus 30 metros. Como `/existencias/agrupadas` lee de `rollos` y no del caché, la pantalla de Inventario muestra metros que ya no existen.
+
+La conciliación no lo detecta porque compara el caché contra el kardex, y en ese par sí coinciden. **La pantalla miente sola.**
+
+## La buena noticia
+
+`existencias.cantidad_total` ya es correcto. Se calcula como la suma firmada del kardex, así que los rollos que salieron a mostrador o que se transfirieron ya están descontados. **El caché no está mal; las pantallas simplemente no lo están usando.**
+
+---
+
+## Definición única, para todo el sistema
+
+> **Existencia de un producto en un sitio = lo que se puede tocar y vender ahí hoy.**
+> Solo rollos en estado `DISPONIBLE` en esa ubicación.
+
+Nada más se suma a ese número. Ni rollos abiertos, ni rollos en tránsito, ni rollos que vienen en contenedor. Si hay que mostrarlos, van en renglón aparte y rotulado.
+
+Escribe esta definición en `replit.md`, en la sección de decisiones de arquitectura, con la frase completa. Es una regla del negocio y no debe "corregirse" en el futuro.
+
+---
+
+## BLOQUE 1 — Unificar la definición
+
+### 1.1 El caché
+
+En `artifacts/api-server/src/lib/inventario.ts`, función `refreshCache`:
+
+- `cantidad_total` **se queda exactamente como está**. Ya es la suma del kardex y ya es correcta. No la toques.
+- `rollos_count` hoy cuenta `DISPONIBLE` + `EN_TRANSITO`. Cámbialo a **solo `DISPONIBLE`**.
+- Corrige el comentario del encabezado de la función, que dice `DISPONIBLE/EN_TRANSITO`.
+
+Después de cambiarlo, **recalcula el caché completo** para todos los pares producto/ubicación que existan, para que los conteos guardados queden alineados con la definición nueva. Hazlo en una sola transacción.
+
+### 1.2 Inventario
+
+En `artifacts/api-server/src/routes/inventario.ts`, endpoint `/existencias/agrupadas`:
+
+Cambia `r.estado IN ('DISPONIBLE', 'ABIERTO')` por **solo `'DISPONIBLE'`**.
+
+La suma de cantidad de ese endpoint tiene que dar el mismo resultado que `existencias.cantidad_total` para el mismo par producto/ubicación. Verifícalo con una consulta y reporta el resultado. Si no cuadran, no maquilles la vista: encuentra por qué difieren y arréglalo en el origen.
+
+### 1.3 Reportes
+
+En `artifacts/api-server/src/lib/reportes-inventory.ts`, líneas 123 y 134:
+
+Cambia `r.estado IN ('DISPONIBLE','EN_TRANSITO')` por **solo `'DISPONIBLE'`**, en las dos.
+
+Esto va a bajar el valor reportado del inventario, porque los rollos que vienen en contenedor dejan de contarse. **Es correcto:** esa mercancía todavía no está en la tienda. Para que no se pierda de vista, agrega en la pestaña de Inventario un KPI separado y claramente rotulado, **"En contenedor"**, con su cantidad y su valor, que **nunca se suma** al de existencia.
+
+### 1.4 Otros lugares
+
+Recorre el resto del servidor buscando cualquier consulta que cuente existencias con un criterio distinto al de la definición. Alinéalas todas. **Deja en el commit la lista de archivos y líneas que revisaste**, incluyendo las que no necesitaron cambio.
+
+---
+
+## BLOQUE 2 — Existencias en Productos
+
+Hoy `artifacts/api-server/src/routes/productos.ts` devuelve ceros escritos a mano:
+
+- Línea 103, `presentProducto`: `rollos: 0` y `cantidad: "0.000"` fijos
+- Línea 170, `presentProductoDetail`: `inventarioPorUbicacion: emptyInventario(locations)`, una función cuyo único trabajo es devolver una lista de ceros
+
+La interfaz ya tiene las columnas y el desglose pintados. **Lo que falta es la consulta.**
+
+### En el listado
+
+Para cada producto, con datos reales leídos del caché de existencias:
+
+- **Rollos disponibles**, conteo entero
+- **Cantidad total disponible**, con la unidad del producto y 3 decimales
+- **Número de sitios** donde hay existencia
+
+Recuerda que un producto es la combinación de tela y color con su SKU. Lo que se necesita ver es cuánto hay **de cada color**, no un total de la tela.
+
+Los productos en cero se muestran en gris tenue con un cero explícito. **No los escondas.** Que un producto exista en catálogo y esté agotado es información valiosa.
+
+Agrega un filtro rápido: todos / solo con existencia / solo agotados.
+
+### Al abrir el producto
+
+Reemplaza `emptyInventario` por el desglose real por sitio, con las 7 ubicaciones reales:
+
+| Sitio | Rollos | Cantidad |
+|---|---|---|
+
+Debajo, la lista de rollos individuales con serie, cantidad y estado, para poder llegar al rollo concreto.
+
+**Borra la función `emptyInventario`** cuando ya no se use. No la dejes ahí.
+
+### De dónde salen los números
+
+Del caché de existencias, que se recalcula desde el kardex. **No los sumes desde otra tabla y no los calcules en el cliente.**
+
+### Alcance por sitio
+
+El filtrado por ubicación se aplica **en el servidor**. Un usuario BODEGA con alcance `PROPIA` ve las cantidades de su sitio, no las de los siete. Reutiliza el mismo mecanismo que ya usa `/existencias/agrupadas` (`resolveReadScope`), no escribas uno nuevo.
+
+### Censura financiera
+
+Ojo con `omitTerminalSensitiveFields`. Al agregar campos nuevos, verifica que TERMINAL siga sin recibir ningún dato de costo o precio en la respuesta del servidor.
+
+---
+
+## BLOQUE 3 — Limpiar el tránsito muerto
+
+`artifacts/api-server/src/lib/salidas.ts` **no usa `EN_TRANSITO` ni una sola vez.** El flujo de salidas entre sitios ya es de un solo paso: se escanean los rollos, se confirma, y pasan del origen al destino de inmediato. Eso está bien y no se toca.
+
+Lo que sobró son las funciones de transferencia en dos fases de `lib/inventario.ts` (alrededor de las líneas 1198 y 1306), que ya nadie llama.
+
+### Qué hacer
+
+Confirma primero, con una búsqueda en todo el repositorio, que esas funciones no se llaman desde ningún lado que no sea una prueba. Si no se llaman, elimínalas junto con sus tipos y sus pruebas.
+
+### ⚠️ NO toques el tránsito de Contenedores
+
+`EN_TRANSITO` **sigue siendo un estado válido y necesario** para los rollos que vienen en barco y todavía no se reciben. Lo usan al menos:
+
+- `lib/contenedores-helpers.ts` línea 91
+- `lib/inventario.ts` líneas 518 y 712
+
+**No elimines el valor `EN_TRANSITO` del enum `estado_rollo`.** No modifiques las transiciones que lo involucran para contenedores. No toques los ajustes sobre rollos en tránsito (`lib/inventario.ts` línea 1602). Lo único que se elimina es el código muerto de transferencias entre sitios.
+
+Si en algún punto la eliminación te obliga a tocar algo de contenedores, **detente y anótalo en `replit.md`** en vez de improvisar.
+
+---
+
+## BLOQUE 4 — El estado ABIERTO
+
+**En esta parte NO se elimina el estado `ABIERTO`.** Se elimina en la Parte 2, cuando se construya la salida a venta por metro que lo reemplaza. Si lo quitas ahora, las ventas metreadas del POS dejan de funcionar, porque hoy exigen un rollo en ese estado.
+
+Lo que sí se logra en esta parte: como la existencia pasa a ser solo `DISPONIBLE`, **los rollos abiertos dejan de contarse como inventario desde este momento.** El inventario fantasma desaparece hoy, aunque el estado siga existiendo unos días más.
+
+Deja anotado en `replit.md`, bajo "Pendiente de partes siguientes":
+
+> `ABIERTO` se elimina en la Parte 2. Nota: `salidaMostrador` deja `rollos.cantidad_actual` sin tocar mientras inserta el movimiento negativo completo. Es inconsistente pero ya no afecta la existencia. Se resuelve al eliminar el estado.
+
+---
+
+## BLOQUE 5 — Verificación
+
+Esta parte no está terminada hasta que esto se cumpla y se reporte.
+
+### Prueba de coincidencia
+
+Para **al menos 10 productos**, incluyendo por lo menos uno con rollos abiertos y uno con rollos en contenedor, compara la cantidad y el conteo de rollos entre:
+
+1. `/productos` (listado)
+2. `/productos/:id` (suma del desglose por sitio)
+3. `/inventario/existencias/agrupadas`
+4. Vista Global
+5. Reportes, pestaña de Inventario
+6. `existencias.cantidad_total` consultado directamente
+
+**Los seis tienen que dar exactamente el mismo número.** Reporta la tabla completa de la comparación en el commit.
+
+Si alguno difiere, la falla está en el origen y ahí se arregla. **No ajustes una vista para que cuadre con otra.**
+
+### Conciliación
+
+Corre la conciliación después de todos los cambios y confirma que sigue reportando sin discrepancias. Si aparecen discrepancias nuevas, no las escondas: repórtalas con el detalle de qué producto y qué sitio.
+
+### Pruebas
+
+Actualiza las pruebas existentes que asuman el criterio viejo. Agrega al menos:
+
+- Un rollo que sale a mostrador deja de contar en existencia inmediatamente, en las seis vistas
+- Un rollo en contenedor no cuenta en existencia de ninguna tienda
+- Un producto sin existencia aparece en el listado con cero, no desaparece
+- Un usuario con alcance `PROPIA` solo ve las cantidades de su sitio
+
+Para cualquier prueba que necesite crear usuarios o sesiones, usa la rama Neon desechable según el procedimiento de `replit.md`. **Está prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+- La definición de existencia, con la frase completa, en decisiones de arquitectura
+- Qué se cambió en cada bloque
+- La lista de archivos revisados del bloque 1.4
+- La nota de pendientes para la Parte 2
+- Cualquier decisión conservadora que hayas tomado por tu cuenta

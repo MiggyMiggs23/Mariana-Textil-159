@@ -1,0 +1,31 @@
+Los códigos QR de los documentos impresos deben llevar al documento dentro del sistema, al mismo destino que abre el folio en azul de su lista.
+
+	•	Entrada → el documento imprimible de esa entrada
+	•	Nota, copia interna → el documento de esa nota
+	•	Salida → la pantalla de recepción con esa salida
+	•	Viaje → el documento de ese viaje
+
+La copia del cliente de la nota sigue SIN QR. Ese papel se va con el cliente; un código que apunta al sistema no le sirve y regala la dirección a alguien de fuera. Solo la copia interna lo lleva.
+
+La dirección tiene que ser absoluta y construida en tiempo de ejecución. El QR debe contener una dirección completa con dominio, no una ruta relativa: la cámara de un teléfono no sabe resolver /entradas/409/documento.
+
+Y nunca escribas el dominio a mano. Hoy la aplicación corre en una dirección temporal de Replit; al publicarse va a cambiar, y al ponerle dominio propio va a cambiar otra vez. Constrúyela desde el origen real en el que está corriendo la aplicación. Un QR con dominio fijo convierte en papel muerto todo lo ya impreso el día que la dirección cambie, y las etiquetas pegadas no se pueden corregir.
+
+Si la sesión venció, al abrir el enlace el sistema debe llevar al login y después continuar al documento, no dejar al usuario en la pantalla de inicio. Ese mecanismo ya existe; verifica que funcione desde un QR escaneado con la cámara del teléfono.
+
+2. Posición fija del logo y del QR
+
+En todos los documentos impresos —entrada, salida, ticket, nota, nota de productos, hoja de viaje, hoja de auditoría de inventario— el encabezado sigue siempre la misma estructura:
+
+	•	El logo de Mariana Textil va centrado en la parte superior.
+	•	El QR va siempre en la esquina superior derecha, y más grande de como está hoy. Debe conservar su margen blanco alrededor, o no se escanea de manera confiable.
+
+Esto aplica también a la etiqueta de rollo en lo que se pueda, respetando que mide 100 × 70 mm y que su QR ya tiene su lugar.
+
+Que la estructura sea la misma en todos los documentos, para que quien los revise en oficina siempre encuentre lo mismo en el mismo lugar.
+
+Verificación: los siete documentos impresos tienen el logo centrado arriba y el QR en la esquina superior derecha, del mismo tamaño entre ellos; escanear cualquiera abre su documento; la copia del cliente no trae QR; ningún dominio está escrito a mano; con la sesión vencida el enlace pasa por login y termina en el documento.
+
+Anota en replit.md: todos los documentos impresos llevan el logo centrado arriba y el QR en la esquina superior derecha. El QR lleva al mismo destino que el folio en azul de su lista, con la dirección construida desde el origen en que corre la aplicación, nunca escrita a mano.
+
+Agrandar tamaño de Logo y QR en un 50% mas de su tamaño actual en todos los documentos.

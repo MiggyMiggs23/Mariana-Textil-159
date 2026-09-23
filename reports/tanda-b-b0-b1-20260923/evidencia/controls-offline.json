@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "scope": "Pure fail-closed unit controls, NOT live or HTTP proof",
+  "negative": [
+    "gate ON",
+    "artifact tamper",
+    "five identity selectors",
+    "unauthorized replacement",
+    "removal",
+    "B0 collision"
+  ],
+  "positive": [
+    "closed source gates",
+    "real output hashes",
+    "equal identity"
+  ],
+  "gatesSha256": "ae942df138c21c53656ac190fc7dd3555625b6da0dfce1f150ecef45b75f1a75"
+}

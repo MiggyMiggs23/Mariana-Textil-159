@@ -1,0 +1,9 @@
+{
+  "buildSource": "/home/runner/workspace/reports/tanda-b-b0-b1-20260923/source",
+  "finalApiOutput": "/home/runner/workspace/artifacts/api-server/dist-tanda-b-b0-b1-20260923",
+  "relocationApproved": false,
+  "workerReferences": [
+    "        const outputDir = \"/home/runner/workspace/artifacts/api-server/dist-tanda-b-b0-b1-20260923\";",
+    "    globalThis.__bundlerPathsOverrides = { ...globalThis.__bundlerPathsOverrides || {}, \"thread-stream-worker\": pinoBundlerAbsolutePath(\"./thread-stream-worker.mjs\"), \"pino-worker\": pinoBundlerAbsolutePath(\"./pino-worker.mjs\"), \"pino/file\": pinoBundlerAbsolutePath(\"./pino-file.mjs\"), \"pino-pretty\": pinoBundlerAbsolutePath(\"./pino-pretty.mjs\") };"
+  ]
+}

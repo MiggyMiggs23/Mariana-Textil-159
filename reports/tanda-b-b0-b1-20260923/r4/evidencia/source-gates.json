@@ -1,0 +1,137 @@
+[
+  {
+    "file": "artifacts/api-server/src/lib/e11-feature.ts",
+    "name": "E11_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11-feature.ts",
+    "name": "E11_PROFILE_ASSIGNMENT_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11-feature.ts",
+    "name": "E11_RECONCILIATION_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e11-feature.ts",
+    "name": "E11_E5_PREPARATION_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e12-supplier-cash.ts",
+    "name": "E12_SUPPLIER_CASH_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-collection.ts",
+    "name": "E3_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-collection.ts",
+    "name": "E3_DIRECTED_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e3-ordinary-cash-release.ts",
+    "name": "E3_ORDINARY_CASH_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e4-cash-out.ts",
+    "name": "E4_CASH_OUT_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-feature.ts",
+    "name": "E5_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e5-feature.ts",
+    "name": "E5_CONTADOR_A_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e7-feature.ts",
+    "name": "E7_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/e9-feature.ts",
+    "name": "E9_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/api-server/src/lib/tarea4-gates.ts",
+    "name": "REMATE_RELEASED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-feature-flags.ts",
+    "name": "E11_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-feature-flags.ts",
+    "name": "E11_UI_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-feature-flags.ts",
+    "name": "E11_PROFILE_ASSIGNMENT_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-feature-flags.ts",
+    "name": "E11_RECONCILIATION_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e11-feature-flags.ts",
+    "name": "E11_E5_PREPARATION_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e12-feature-flags.ts",
+    "name": "E12_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e3-feature-flags.ts",
+    "name": "E3_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e4-feature-flags.ts",
+    "name": "E4_CASH_OUT_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e5-feature-flags.ts",
+    "name": "E5_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e7-feature-flags.ts",
+    "name": "E7_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e7-feature-flags.ts",
+    "name": "E7_UI_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/e9-feature-flags.ts",
+    "name": "E9_ENABLED",
+    "value": "false"
+  },
+  {
+    "file": "artifacts/mariana-textil/src/lib/tarea4-gates.ts",
+    "name": "REMATE_UI_RELEASED",
+    "value": "false"
+  }
+]

@@ -1,0 +1,44 @@
+{
+  "inputs": {
+    "reports/tanda-b-20260922/e4/01-preparado.sql": {
+      "copy": "sql/1.sql",
+      "sha256": "046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60",
+      "previousSha256": "046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60"
+    },
+    "reports/tanda-b-20260922/e12/01-preparado.sql": {
+      "copy": "sql/2.sql",
+      "sha256": "85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a",
+      "previousSha256": "85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a"
+    },
+    "reports/e9/01-preparado.sql": {
+      "copy": "sql/3.sql",
+      "sha256": "232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4",
+      "previousSha256": "232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4"
+    },
+    "reports/e5/01-preparado.sql": {
+      "copy": "sql/4.sql",
+      "sha256": "b3c5f1d772ec95222db995ff1678f8e43afdf7509cb4b938230174e7998bd1a0",
+      "previousSha256": "f9c71db89fee7d9b9fa67de3341b3a68dc655d826112118b4e049d90d5564698"
+    },
+    "reports/e11/01-preparado.sql": {
+      "copy": "sql/5.sql",
+      "sha256": "546714912da33a22e39ea1c40dc7e5eceba5f9ebd4d68db50258c2b8f77baed0",
+      "previousSha256": "9117592c802dc0f45cbef66699a436e312e40ec34fd5c66d05f48c4bd7077a91"
+    }
+  },
+  "e7": "No standalone DDL; reader OFF",
+  "phaseBExecuted": false,
+  "revisionLabel": "r3-syntax-only",
+  "sourceSqlCommit": "91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f",
+  "sourceSqlIdentity": "Exact per-file SHA256; not attributed to the API source revision",
+  "apiSourceRevision": "cc628aed315a4bbfd3e6cb8766d28200ce400842",
+  "reusedApiAssets": true,
+  "scopeReplacements": 4,
+  "change": {
+    "e5": "Only three further CASE parenthesis pairs in graph guard IF",
+    "e11": "Matching graph guard prosrc hash only",
+    "oldHash": "303366993fe3529b329a2a0c980a4efcda37eef1c1bf0a1e9bd43bb52ca73267",
+    "newHash": "87911ce23ea2ad1f936e2aa4a718788f7aba2a7b95f1ec9845f5d5baaa520c02"
+  },
+  "runnerRevision": "r5-http-off-contract-only"
+}

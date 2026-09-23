@@ -1,0 +1,151 @@
+# MÓDULO — Salidas extraordinarias: merma, robo y muestra
+
+Última pieza de funcionalidad antes del piloto en Tienda Mariana. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+---
+
+## Qué es esto
+
+Hoy un rollo puede salir del inventario por venta, por transferencia a otro sitio o a mostrador. Falta la salida que **no es venta ni traslado**: el rollo se echó a perder, se lo robaron, o se entregó como muestra sin cobrarse.
+
+Esto ocurre en el piso y hoy no tiene dónde registrarse. Sin este flujo, el bodeguero termina inventando un ajuste de inventario para cuadrar, y el motivo real se pierde.
+
+## Las tres reglas que ya están decididas
+
+Estas no se discuten ni se amplían. Si tu implementación necesita romper alguna, **detente y repórtalo** en vez de resolverlo por tu cuenta.
+
+1. **Siempre el rollo completo.** No hay salida extraordinaria parcial. Si tres metros de un rollo se dañaron, eso no es este flujo.
+2. **Solo ADMIN.** Ni SUPERVISOR ni BODEGA pueden registrarla, ni con autorización de por medio.
+3. **La muestra no regresa.** Los tres motivos se comportan igual frente al inventario: el rollo sale y no vuelve por esta vía. El motivo es información, no un ciclo de vida distinto.
+
+---
+
+## BLOQUE 1 — Motor y contrato
+
+### Lo que ya existe y se reusa
+
+**No inventes estructura nueva.** El modelo ya tiene todo:
+
+- El estado `BAJA` existe en `estadoRolloEnum` y está documentado como *written off / scrapped*.
+- `VALID_TRANSITIONS` ya permite `DISPONIBLE → BAJA`, y `BAJA → DISPONIBLE` para reversar un error.
+- `AJUSTE_NEGATIVO` existe en `tipoMovimientoEnum`.
+- `ajustarRollo` ya hace exactamente esta mecánica: bloquea el par, bloquea la fila, exige justificación de diez caracteres, respeta idempotencia por `uuidCliente` y escribe auditoría.
+
+### Qué se agrega
+
+1. **Un motivo tipado.** Un enum nuevo con exactamente tres valores: `MERMA`, `ROBO`, `MUESTRA`. Una columna en `movimientos` que lo guarde, nula para todo movimiento que no sea salida extraordinaria.
+
+   El motivo **no** cambia el comportamiento del inventario. Es para reportar y auditar. No agregues ramas de lógica por motivo.
+
+2. **Una operación del motor** que reciba el rollo, el motivo, la justificación, el usuario y el `uuidCliente`. Debe:
+   - Exigir que el rollo esté `DISPONIBLE`. Cualquier otro estado se rechaza con mensaje claro.
+   - Escribir un movimiento `AJUSTE_NEGATIVO` por la **cantidad completa** del rollo, en negativo.
+   - Dejar el rollo en `BAJA` y `cantidad_actual` en cero.
+   - Exigir justificación de al menos diez caracteres, igual que `ajustarRollo`.
+   - Correr dentro de una transacción, tomando el candado del par antes de leer saldos, **siguiendo la regla de `docs/inventory-engine-lock-loops.md`**.
+
+   Si registrar varias salidas extraordinarias en una sola operación implica un bucle sobre el motor, **el conjunto completo de pares se bloquea antes del ciclo** y agregas la entrada al manifiesto de bucles. El contrato AST va a fallar si no lo haces.
+
+3. **Reverso.** Un error debe poder corregirse. Reusa `revertirMovimiento`, que ya existe y ya sabe llevar `BAJA → DISPONIBLE`. **Solo ADMIN.** No construyas un camino de reverso paralelo.
+
+4. **Endpoint.** Exige rol ADMIN **directamente en el servidor**, no solo por matriz de permisos, con el mismo criterio que ya usa `/precios`. Un permiso de módulo mal configurado no debe poder abrir esta puerta.
+
+### Decisión que debes tomar y anotar
+
+El módulo de permisos bajo el que vive este endpoint. Las opciones razonables son reusar `salidas` o reusar `ajustes`. **No crees un módulo nuevo**: ya son 30 y la guardia de rol ADMIN en el servidor es la que realmente protege. Elige, justifícalo y anótalo.
+
+---
+
+## BLOQUE 2 — Interfaz: una pestaña dentro de Salidas
+
+**Esto no lleva entrada en la barra lateral.** `pages/salidas.tsx` ya tiene un `Tabs` con Historial, Recepción y A mostrador. Se agrega una cuarta: **Extraordinarias**.
+
+La pestaña **solo se muestra a ADMIN**, igual que hoy `A mostrador` solo aparece con `canCreate`.
+
+### La pestaña tiene dos partes
+
+**Registrar**
+
+- Campo de escaneo con `CampoEscaneo`, exactamente como lo usa `salida-nueva`. Teclado, pistola y cámara por el mismo callback. La serie manda; la discrepancia de SKU se muestra sin bloquear.
+- Al identificar el rollo, muestra tela, color, serie, ubicación y cantidad, para que quien registra confirme que es el rollo correcto **antes** de dar de baja.
+- Selección del motivo: Merma, Robo o Muestra. Sin valor preseleccionado — que sea una elección consciente.
+- Justificación obligatoria, mínimo diez caracteres, con el contador visible.
+- Confirmación por texto exacto antes de ejecutar. Ya existe `ConfirmacionTextoExacto`; reúsalo. Esta operación saca inventario de forma permanente y no debe poder dispararse por un toque accidental en una pantalla táctil del mostrador.
+
+**Historial**
+
+- Lista de las salidas extraordinarias registradas: fecha, sitio, producto, color, serie, cantidad, motivo, quién la registró y la justificación.
+- Filtros por sitio, motivo y rango de fechas.
+- El identificador principal del renglón es enlace al detalle del rollo, **un solo enlace por renglón y sin columna de "Ver detalle"**, según la regla que ya está en `replit.md`.
+- Desde el detalle, ADMIN puede reversar.
+
+### Móvil
+
+Esta pantalla se va a usar parado en la bodega con un teléfono. Barras de acciones que se apilen, tablas con desplazamiento horizontal. Mismo criterio que ya aplicaste al detalle de salida.
+
+---
+
+## BLOQUE 3 — Reportes
+
+Un rollo que sale por merma o robo **es una pérdida con costo**, y hoy no aparece en ningún lado.
+
+1. En Reportes, un indicador de salidas extraordinarias del periodo: **cantidad y costo, desglosados por motivo**. El costo sale del `costo_unitario` del rollo, que ya está congelado en la fila.
+2. Ese costo **no se mezcla con el costeo de ventas**. No es costo de lo vendido; es pérdida de inventario. Preséntalo aparte y no lo sumes a ninguna utilidad ni margen existente.
+3. Respeta la regla que ya está en `replit.md`: **metros, kilos y bolsas nunca se suman entre sí**. Usa la función compartida de abreviaturas: **Mts.**, **Kg.**, **Bolsas**.
+4. Verifica que un rollo en `BAJA` **no cuente** como existencia en ninguna de las seis vistas de inventario. Debería estar bien porque existencia es solo `DISPONIBLE`, pero confírmalo con datos y repórtalo.
+
+---
+
+## BLOQUE 4 — Verificación
+
+**Motor**
+
+- Un rollo `DISPONIBLE` sale con motivo y justificación, queda en `BAJA` con cantidad cero
+- El movimiento es `AJUSTE_NEGATIVO` por la cantidad completa, en negativo, con el motivo guardado
+- Un rollo que no está `DISPONIBLE` se rechaza con mensaje claro
+- Una justificación de menos de diez caracteres se rechaza
+- El mismo `uuidCliente` dos veces no produce dos movimientos
+- El endpoint rechaza a SUPERVISOR y a BODEGA aunque su matriz de permisos diga que sí
+- El reverso devuelve el rollo a `DISPONIBLE` y restituye la existencia, y solo ADMIN puede ejecutarlo
+- Si se agregó un bucle, está en `docs/inventory-engine-lock-loops.md` y el contrato AST pasa
+
+**Interfaz**
+
+- La pestaña aparece dentro de Salidas y **no hay ninguna entrada nueva en la barra lateral**
+- Solo ADMIN la ve
+- El escaneo funciona por teclado y por cámara, y muestra los datos del rollo antes de confirmar
+- El motivo no viene preseleccionado
+- La confirmación por texto exacto es obligatoria
+- El historial filtra por sitio, motivo y fechas, con un solo enlace por renglón
+- Revisada en teléfono
+
+**Reportes**
+
+- El indicador muestra cantidad y costo por motivo
+- El costo no se suma a ninguna utilidad ni margen de ventas
+- Las tres unidades van separadas, con las abreviaturas compartidas
+- Confirmado con datos que `BAJA` no cuenta como existencia en ninguna vista
+
+**General**
+
+- `pnpm run typecheck` completo aprueba
+- `pnpm run build` completo desde la raíz aprueba
+- Las suites de inventario, POS y Salidas pasan enteras
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Salidas extraordinarias:** merma, robo y muestra sacan del inventario un rollo que no se vendió ni se transfirió. Son **siempre el rollo completo** —no existe la salida extraordinaria parcial— y **solo las registra ADMIN**, con guardia de rol en el servidor además de la matriz de permisos. La muestra no regresa por esta vía: los tres motivos se comportan igual frente al inventario y el motivo es información para reportar y auditar, nunca una rama de lógica.
+>
+> Mecánicamente reusan lo que ya existe: estado `BAJA`, movimiento `AJUSTE_NEGATIVO` por la cantidad completa en negativo, y `revertirMovimiento` para corregir un error. No hay tabla ni ciclo de vida propio.
+>
+> Viven en una **pestaña dentro de Salidas**, no en la barra lateral. La barra lateral no crece por cada operación nueva; las operaciones que sacan inventario entre ubicaciones o fuera de él viven en Salidas.
+>
+> El costo de las salidas extraordinarias es **pérdida de inventario, no costo de lo vendido**. Se reporta aparte y nunca se suma a la utilidad ni al margen de ventas.

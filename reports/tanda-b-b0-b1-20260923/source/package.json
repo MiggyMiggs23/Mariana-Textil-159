@@ -1,0 +1,23 @@
+{
+  "name": "workspace",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "sh -c 'rm -f package-lock.json yarn.lock; case \"$npm_config_user_agent\" in pnpm/*) ;; *) echo \"Use pnpm instead\" >&2; exit 1 ;; esac'",
+    "build": "pnpm run typecheck && pnpm -r --no-bail --if-present run build",
+    "db:verify": "pnpm --filter @workspace/db run verify-connection",
+    "test:isolated": "node ./lib/db/src/run-isolated-tests.mjs",
+    "test:e4-cash-out": "node ./reports/tanda-b-20260922/e4/run-frontend-node-mutants.mjs",
+    "typecheck:libs": "tsc --build",
+    "typecheck": "node ./scripts/src/typecheck-runner.mjs"
+  },
+  "private": true,
+  "dependencies": {
+    "@replit/connectors-sdk": "^0.4.1",
+    "exceljs": "^4.4.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.6",
+    "typescript": "~5.9.3"
+  }
+}

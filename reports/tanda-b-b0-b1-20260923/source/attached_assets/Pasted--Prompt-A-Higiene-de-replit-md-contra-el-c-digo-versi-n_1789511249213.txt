@@ -1,0 +1,218 @@
+# Prompt A — Higiene de `replit.md` contra el código (versión actualizada)
+
+## Alcance y límite
+
+Este trabajo **no modifica una sola línea de la aplicación**. No toques nada bajo
+`artifacts/`, `lib/` ni `scripts/`. El único archivo que se edita es `replit.md`, más
+los reportes que se pidan en `reports/`.
+
+`replit.md` es la fuente de verdad del proyecto y ya derivó del código varias veces.
+Este trabajo la vuelve a alinear.
+
+Si en cualquier punto el código dice algo distinto de lo que asume este prompt,
+**gana el código**: corrige `replit.md` para que describa el código y repórtame la
+diferencia. Nunca cambies el código para que coincida con el documento.
+
+**Antes de agregar cualquier cosa, comprueba si ya está escrita.** Las entregas
+recientes ya pidieron escribir varias reglas en `replit.md`. Tu trabajo aquí es
+verificar que quedaron, que son exactas y que no conviven con la versión vieja que
+sustituyeron. Corregir o borrar lo que sobre, no duplicar.
+
+---
+
+## Bloque 1 — Las dos definiciones de «Cobrado»
+
+`replit.md` contiene dos definiciones incompatibles de Cobrado, ambas redactadas como
+regla vigente, y ninguna menciona a la otra:
+
+- En «POS y Caja — regla contable vigente»: la identidad
+  **Ventas = Cobrado + Ventas a crédito**, donde Cobrado son únicamente tickets
+  cobrados.
+- En «Cuentas Destino»: **Cobrado = Contado + Abonos + Saldos a favor**, con fuentes
+  `POS`, `ABONO` y `ABONO_SALDO_FAVOR`.
+
+El código implementa las dos: `getSalesSummary` en
+`artifacts/api-server/src/lib/admin-analytics.ts` usa `collectedTicketPredicate` y no
+consulta el libro de crédito; `destinationReadModel()` en el mismo archivo hace la
+unión con las ramas de abono.
+
+La entrega del Prompt C ya renombró la tarjeta del tablero a **Contado cobrado** y
+agregó una banda de **Cobranza del periodo** que lee la misma fuente que Cuentas
+Destino. Eso resolvió la presentación, **no la ambigüedad del término en el
+documento**.
+
+Qué hacer, **sin decidir cuál definición es la correcta**, porque esa decisión es del
+propietario y sigue abierta:
+
+1. Comprueba que quedó escrito lo que pidió el Prompt C sobre Contado cobrado contra
+   cobranza del periodo, y que dice que la segunda lee la misma función que Cuentas
+   Destino y que la identidad de ventas queda intacta porque un abono no es venta
+   nueva.
+2. Agrega una sección propia, **«Cobrado: dos definiciones sin reconciliar»**, que
+   documente el hecho: las dos frases, dónde vive cada una en el código con archivo y
+   función, y que son mediciones de preguntas distintas que comparten nombre.
+3. Anota en cada una de las dos secciones existentes una referencia a la otra y a esa
+   sección nueva, para que nadie lea una creyendo que es la única.
+4. Márcalo como **decisión abierta del propietario**. No propongas una unificación.
+5. Incorpora la evidencia ya medida: el 15 de septiembre, la cobranza del periodo dio
+   **$25,000 filtrada por Cruces y $0 neto global**. Esa asimetría está confirmada con
+   datos y su causa está identificada: los reversos de saldo a favor sin aplicar no
+   llevan ubicación y solo existen en la consulta global, mientras las recapturas se
+   atribuyen al sitio de la nota. **Regístralo como pendiente abierto de alta
+   prioridad, anterior al piloto**, porque significa que una tienda puede mostrar
+   cobranza que globalmente no existe. No lo corrijas.
+
+---
+
+## Bloque 2 — Referencias `archivo:línea` desfasadas
+
+Cuatro referencias ya no apuntan a lo que describen. Verifica **cada una** leyendo el
+archivo actual y corrígela con la ubicación real; si el contenido ya no existe, dilo
+en lugar de inventar una línea:
+
+| `replit.md` dice | Estado |
+|---|---|
+| `pos.ts:2082-2088` — cuentas del corte con condicionales propios | la lógica está más adelante en el mismo archivo |
+| `admin-analytics.ts:324-335` — predicado de documento contabilizado duplicado | esa línea contiene otra cosa |
+| `admin-analytics.ts:376-378` — el mismo predicado para margen por sesión | esa línea contiene otra cosa |
+| `notificaciones.ts:194` — usa `pendingTicketPredicate()` | el uso real está más adelante |
+
+Además, **el conteo de duplicaciones está mal**. `replit.md` reporta dos repeticiones
+manuales del predicado contabilizado en `admin-analytics.ts`. Cuenta las que hay hoy
+de verdad, dentro y fuera de `getSalesSummary`, y escribe el número real con sus
+ubicaciones. **No las unifiques:** solo documenta cuántas son y dónde. Es el patrón de
+falla más caro del proyecto y merece su propia entrega con pruebas.
+
+Regla nueva a escribir: **al citar código en `replit.md`, se cita el archivo y el
+nombre de la función, no el número de línea.** Un nombre sobrevive a un cambio de
+formato; un número no. Las líneas solo se citan cuando no hay función que nombrar, y
+entonces se acompañan del fragmento de código.
+
+---
+
+## Bloque 3 — Reglas nuevas: verificar las que ya se pidieron y agregar las que falten
+
+Para cada una: comprueba si ya está, si es exacta, y si la versión vieja que sustituye
+fue efectivamente borrada del archivo completo, no solo de su sección.
+
+1. **Saldo a favor.** Debe estar **borrada** la frase que decía que la aplicación del
+   saldo a favor al autorizar una nota es siempre decisión explícita del cajero y
+   nunca automática. Debe estar la regla vigente: un cliente no puede tener saldo a
+   favor mientras tenga saldo deudor; todo dinero recibido consume primero la deuda
+   por antigüedad y solo el remanente queda a favor; al autorizar una nota nueva el
+   saldo a favor disponible se consume automáticamente. Busca la frase vieja en todo
+   el archivo.
+
+2. **Fechas entre navegador y servidor.** Toda fecha que viaje del navegador al
+   servidor lleva hora y desplazamiento explícitos. El servidor nunca infiere la zona
+   de una fecha sin hora, porque `new Date("YYYY-MM-DD")` resuelve a medianoche UTC y
+   en Ciudad de México eso es el día anterior. Ese defecto es lo que impidió que los
+   abonos del 15 de septiembre se aplicaran a sus notas: quedaron fechados antes de
+   las notas y el veto `preventImplicitFavor` los bloqueó para siempre.
+
+3. **Autorización de escrituras financieras.** Ninguna escritura financiera se ejecuta
+   sin que la autorización textual del propietario quede guardada en `reports/` antes
+   de la primera escritura. Un resumen de conversación, un contexto heredado o un
+   reporte redactado por el agente **no son prueba de autorización**. Comprueba que
+   existe el archivo de autorizaciones con la cita textual del 15 de septiembre y los
+   cuatro movimientos que ampara.
+
+4. **Saldo pendiente junto al estado.** Debe estar reescrita según el Prompt C: la
+   insignia muestra solo el estado, el saldo pendiente actual siempre está visible
+   junto a ella en su propio campo, y nunca se sustituye por el importe original. La
+   redacción anterior, que pedía el importe dentro de la insignia, debe estar borrada.
+
+5. **Verificaciones parciales.** Un comando de verificación que se detiene en el primer
+   fallo reporta un resultado parcial que se lee como total. Así se ocultaron dos
+   errores de tipos en Alertas durante meses. Escríbela junto a las demás reglas de
+   verdes falsos. Si ya existe una sección de ese tema, agrégala ahí.
+
+---
+
+## Bloque 4 — Lo ejecutado y los pendientes abiertos
+
+Comprueba que estén registrados con su estado real, sin presentarlos como resueltos:
+
+1. **Corrección financiera del 15 de septiembre.** Los dos reversos totales y las dos
+   recapturas con instante exacto, los saldos resultantes $5,750.00 y $7,022.00, que
+   los movimientos originales 45 y 46 siguen intactos con su fecha del 14, que el día
+   14 conserva los $25,000 y el 15 quedó en cero neto global, y que las notas
+   históricas conservaron su veto y por qué.
+
+2. **Cuatro errores de typecheck, no dos.** Además de `pos.ts:426` y
+   `clientes.ts:1329`, hay dos en Alertas que el comando principal ocultaba. Si
+   `replit.md` sigue diciendo dos, corrígelo.
+
+3. **Corte de caja sin abonos.** `cuadrarCaja` calcula el efectivo esperado como fondo
+   inicial más pagos en efectivo de tickets menos salidas de dinero; los abonos de
+   clientes viven en `movimientos_credito` y no entran. El Prompt C pidió
+   documentarlo; verifica que quedó, con la consecuencia concreta —$25,000 en el
+   cajón de Cruces que el corte no vería— y como pendiente anterior al piloto.
+
+4. **Vencimiento en pantalla contra impreso.** La base quedó descartada: las dos
+   copias coinciden en `2026-10-15`. El corrimiento de un día ocurre en el camino de
+   lectura o presentación. Regístralo con esa precisión, no como divergencia de datos.
+
+5. **Aplicaciones históricas que siguen ocupando capacidad aunque la venta se haya
+   revertido**, y **saldo de ajustes sin la misma vía de evidencia que un abono**.
+   Señalados y no corregidos.
+
+6. **Bloque 5** —abono al autorizar la nota— entregado como propuesta, no
+   implementado.
+
+7. **Aviso cuando un abono genera saldo a favor habiendo deuda abierta.** La vista
+   previa ya devuelve el dato; falta hacerlo visible en pantalla.
+
+8. **Nomenclatura pendiente:** la pantalla de una nota se titula «Ticket #folio» con
+   botón «Cancelar Ticket», y la insignia PENDIENTE del encabezado del documento
+   significa algo distinto de la insignia PENDIENTE del estado de nota.
+
+9. **Cobertura visual faltante.** De los cuatro estados de nota solo se han visto en
+   pantalla real ABONO PARCIAL y PENDIENTE. **PAGADA y CON RETRASO no se han
+   comprobado en navegador.** Regístralo como cobertura faltante, no como aprobado.
+
+10. **Equipos.** Verifica contra el código si los dos tipos nuevos —impresora de
+    entradas e impresora de salidas/notas— y la exclusión de las ubicaciones técnicas
+    ya están implementados, y corrige `replit.md` para que refleje el estado real. No
+    des por buena ninguna lista de pendientes previa.
+
+---
+
+## Bloque 5 — Barrido general de verificabilidad
+
+Recorre `replit.md` completo y, para cada afirmación que cite una ruta, una constante,
+un conteo o un nombre de función, comprueba que exista en el código:
+
+- Toda ruta citada debe existir textualmente en `lib/api-spec/openapi.yaml`.
+- Toda constante citada con su valor debe coincidir con su declaración.
+- Todo conteo citado debe recontarse: módulos de permisos, roles contra
+  `rolUsuarioEnum`, tipos de equipo, estados de salida, y las tablas de las listas A,
+  B y C de la purga.
+- Todo archivo de `docs/` y `reports/` citado debe existir en esa ruta exacta.
+
+Entrega una tabla con cada afirmación comprobada, su resultado y la corrección
+aplicada. **Las que no puedas comprobar quedan marcadas como no comprobadas, no como
+correctas.**
+
+---
+
+## Verificación
+
+1. `git diff --stat` debe mostrar **únicamente** `replit.md` y archivos nuevos bajo
+   `reports/`. Si aparece cualquier otro archivo, deshaz ese cambio y repórtalo.
+2. Ninguna afirmación nueva puede describir una verificación que no hayas ejecutado en
+   esta sesión.
+3. Ninguna regla nueva puede quedar conviviendo con la versión vieja que sustituye.
+   Busca en el archivo completo, no solo en la sección.
+4. Deja en `reports/` el listado de comprobaciones del Bloque 5 con su salida textual.
+5. Repórtame por separado cualquier caso en que el código contradiga lo que este
+   prompt asume.
+
+## Restricciones
+
+- No modifiques `artifacts/`, `lib/` ni `scripts/`.
+- No ejecutes escrituras en la base, ni migraciones, ni `executeSql` de escritura.
+- No crees usuarios, ADMIN ni sesiones de prueba.
+- No corrijas los cuatro errores de tipos, el corte de caja, las copias del predicado
+  contabilizado, la asimetría Cruces/global, los 69 vetos ni las pruebas frágiles.
+  Todos son entregas propias y aquí solo se documentan.

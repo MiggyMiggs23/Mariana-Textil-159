@@ -1,0 +1,53 @@
+PREPARACIÓN OFF — NO AUTORIZA SQL REAL NI LIBERACIÓN
+
+Build offline ya preparado por helper desde fuente congelada:
+cc628aed315a4bbfd3e6cb8766d28200ce400842
+Salidas nuevas en artifacts/{api-server,mariana-textil}/dist-tanda-b-b0-b1-20260923.
+No volver a ejecutar prepare.mjs sobre este paquete: todos los archivos usan
+creación exclusiva. No sobrescribir evidencia de fallo.
+
+MAIN: determinar de nuevo PID vigente y ruta absoluta PostgreSQL16 bin.
+No usar PID histórico automáticamente: 195 fue el último comunicado, no garantía.
+Ejecutar el siguiente bloque tras confirmar visualmente PID y comando actuales.
+Se leen stat/cmdline, no se imprimen credenciales.
+
+export TANDA_B_RUNTIME_PID=195
+export TANDA_B_START_TICKS="$(node -e 'const f=require("fs");const s=f.readFileSync(`/proc/${process.env.TANDA_B_RUNTIME_PID}/stat`,"utf8");console.log(s.slice(s.lastIndexOf(") ")+2).split(" ")[19])')"
+export TANDA_B_CMDLINE_SHA256="$(node -e 'console.log(require("crypto").createHash("sha256").update(require("fs").readFileSync(`/proc/${process.env.TANDA_B_RUNTIME_PID}/cmdline`)).digest("hex"))')"
+# MAIN debe fijar valor absoluto existente, no copiar literalmente este marcador:
+export TANDA_B_PG_BIN=/RUTA/ABSOLUTA/POSTGRESQL16/bin
+export TANDA_B_MAIN_ONLY=AUTHORIZED
+export TANDA_B_ATTEMPT=r1
+export TANDA_B_API_PORT=18763
+
+# Único comando de orquestación (captura, preflight, desechable y finalización).
+# El padre elimina selectores DB heredados antes de ejecutar los hijos.
+node reports/tanda-b-b0-b1-20260923/run-main.mjs
+
+Pasos manuales alternativos (no combinar con run-main que exige archivos nuevos):
+node reports/tanda-b-b0-b1-20260923/capture-readonly.mjs
+node reports/tanda-b-b0-b1-20260923/preflight.mjs
+# Ensayo debe correr con env limpio: env -i PATH="$PATH" HOME="$HOME"
+# más exactamente TANDA_B_MAIN_ONLY, TANDA_B_RUNTIME_PID, TANDA_B_START_TICKS,
+# TANDA_B_CMDLINE_SHA256, TANDA_B_PG_BIN, TANDA_B_ATTEMPT, TANDA_B_API_PORT.
+# Esto impide heredar DATABASE_URL/PGHOST/PGPASSWORD/NODE_OPTIONS/etc.
+node reports/tanda-b-b0-b1-20260923/rehearse.mjs
+# finalize.mjs exige además protected-after y orchestration-terminal positivos.
+# Por ello preferir siempre run-main.mjs para el ciclo completo.
+
+Los cuatro comandos anteriores no están ejecutados por el helper.
+En FAIL conservar directorio de ensayo; no sellar éxito ni reparar catálogos.
+Un siguiente intento necesita nombre TANDA_B_ATTEMPT distinto; revisar primero
+terminal.json para comprobar postgresStopExit=0 y disposableDestroyed=true.
+Si el cleanup falla, no borrar clúster: MAIN debe resolver el proceso indicado.
+HTTP comprobado por runner: salud y denegación sin sesión E5/E11/E7; no pretende
+probar integración con actores autenticados ni apertura de ninguna puerta.
+
+Seguridad del arnés: loopback-start.mjs fija net.Server.listen a 127.0.0.1
+para candidato y control, sin editar bundles. Su hash está en el inventario
+de preparación y en la evidencia de arranque. Timeout envía SIGTERM al runner
+y concede 45 segundos de cleanup antes de forzar fallo; jamás se infiere
+cleanup de un timeout. El runner mata grupos aunque el líder ya haya salido.
+El inventario auxiliar captura RI de FKs por tabla origen+constraint (sin
+nombres internos basados en OID) y aristas pg_depend por identidad semántica.
+La instalación DDL no acredita funcionalidad de todos los cuerpos PL/pgSQL.

@@ -1,0 +1,230 @@
+{
+  "status": "PREPARED_OFF_NOT_RELEASED",
+  "apiSourceRevision": "cc628aed315a4bbfd3e6cb8766d28200ce400842",
+  "sourceSql": {
+    "inputs": {
+      "reports/tanda-b-20260922/e4/01-preparado.sql": {
+        "copy": "sql/1.sql",
+        "sha256": "046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60",
+        "previousSha256": "046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60"
+      },
+      "reports/tanda-b-20260922/e12/01-preparado.sql": {
+        "copy": "sql/2.sql",
+        "sha256": "85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a",
+        "previousSha256": "85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a"
+      },
+      "reports/e9/01-preparado.sql": {
+        "copy": "sql/3.sql",
+        "sha256": "232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4",
+        "previousSha256": "232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4"
+      },
+      "reports/e5/01-preparado.sql": {
+        "copy": "sql/4.sql",
+        "sha256": "b3c5f1d772ec95222db995ff1678f8e43afdf7509cb4b938230174e7998bd1a0",
+        "previousSha256": "f9c71db89fee7d9b9fa67de3341b3a68dc655d826112118b4e049d90d5564698"
+      },
+      "reports/e11/01-preparado.sql": {
+        "copy": "sql/5.sql",
+        "sha256": "546714912da33a22e39ea1c40dc7e5eceba5f9ebd4d68db50258c2b8f77baed0",
+        "previousSha256": "9117592c802dc0f45cbef66699a436e312e40ec34fd5c66d05f48c4bd7077a91"
+      }
+    },
+    "e7": "No standalone DDL; reader OFF",
+    "phaseBExecuted": false,
+    "revisionLabel": "r3-syntax-only",
+    "sourceSqlCommit": "91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f",
+    "sourceSqlIdentity": "Exact per-file SHA256; not attributed to the API source revision",
+    "apiSourceRevision": "cc628aed315a4bbfd3e6cb8766d28200ce400842",
+    "reusedApiAssets": true,
+    "scopeReplacements": 4,
+    "change": {
+      "e5": "Only three further CASE parenthesis pairs in graph guard IF",
+      "e11": "Matching graph guard prosrc hash only",
+      "oldHash": "303366993fe3529b329a2a0c980a4efcda37eef1c1bf0a1e9bd43bb52ca73267",
+      "newHash": "87911ce23ea2ad1f936e2aa4a718788f7aba2a7b95f1ec9845f5d5baaa520c02"
+    },
+    "runnerRevision": "r5-http-off-contract-only"
+  },
+  "reusedApiAssets": true,
+  "phaseBExecuted": false,
+  "releaseAuthorized": false,
+  "allGates": "OFF",
+  "base": {
+    "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+    "attributesSha256": "a8389a4be6f0765a58849a425e742fc941821fbdf9c6fab0fa9c1eeb428d5ec6"
+  },
+  "projected": {
+    "schemaSha256": "82fb728b58ee70d04b5fc6b20a359e0f01697aab2917eb626bf763e32f522f95",
+    "attributesSha256": "a545824d9e3eceaa9138ac0e2854bf0763175e05bb97c4788900c0dc2997b323"
+  },
+  "comparator": {
+    "file": "scripts/src/release-catalog-comparison.mjs",
+    "sha256": "77ce5002a0751275c8b7d1ecd9f82aa858fffbfaf3c014829be3d36bff5f2828"
+  },
+  "approvedReplacements": 4,
+  "files": {
+    "reports/tanda-b-b0-b1-20260923/r5/autorizacion-cuatro-reemplazos-e5.txt": "9296e9074ac49600b2727e8b2383029c1612605748fb7c61b3f4ed77be097406",
+    "reports/tanda-b-b0-b1-20260923/r5/autorizacion-propietario-tanda-b-b0-b1.txt": "24879d9480943a213cf0260a127d43a0a70d1ad113a5db6708c66b9fe943c47f",
+    "reports/tanda-b-b0-b1-20260923/r5/auxiliary-catalog.sql": "ac9d6eba54b4883e11d2c5f4ac266eff11596b366f64256fca62a159b00e2c02",
+    "reports/tanda-b-b0-b1-20260923/r5/auxiliary-multiset.mjs": "26fef6aec52c59582d6cb0b882e52b1766f923e23c8431f2a70b42a5ab79e40a",
+    "reports/tanda-b-b0-b1-20260923/r5/comandos-MAIN.txt": "7f0927ea482ddb944531880dcff4ad0ac6d7c8276ca2e9633c16945391de99e1",
+    "reports/tanda-b-b0-b1-20260923/r5/common.mjs": "4ccbd87935a6168280cc1f5af9da16a6e895a48b2dc32e49b2a0a157daa27cd9",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/controls-offline-final.json": "73c112b68959fad9189ff1161c77570fa58f59ef161fad3394f0f1de515c1813",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/http-off-contracts-unit.json": "6b32f6b84160acf651c3b5ab6d96dad2565d91924675d56001424e7958bc073c",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/http-off-contracts-unit.log": "8ab894ca705be2db10bb4bd738ef1d215cb4938ebaf2efea2b4ca5de69b9d5c8",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/live/auxiliary-B0-real.json": "5296b0a1043bd2b82dccc811e9837135314bdf58efc0a4f307c9da47ad6b20eb",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/live/capture.json": "44e36157d1f612b47021b9f5cecf0c96de1bb16dfc7bae2d7dade89cb47ba417",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/live/catalog-B0-real.json": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/main-protected-after.json": "04be2371a7252ecc210a6a860ef6d1d86e69050216fd035c2b3b415b9c8e21bf",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/main-protected-before.json": "f070112813e5226a9f4f8e75b783644c0834e1b7a66e42a96e7f7120c4ec25cf",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/multiset-offline-audit.json": "0a8bd09a304f0bfd8876b2eb97fadbba39b41aaff406293769ee5d481b41f2a3",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/multiset-unit.log": "789ed3a265aaa35790f515a719197bb5469802d1247a5728e8cb23d143e1e45e",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/orchestration-terminal.json": "893bdb463fb414fdd79262981137dfeea5c028611f3dc8e4122464ddc738d6f9",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/preflight-cli-terminal.json": "f449cf7ed8492d3271a302c9eda9fbf3330a67af53840537e87265a4f62a84cc",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/preflight-cli.json": "7cc15b6babcdb2c19a98ddd0ae8007ea9c260e999f15429c3710f78c0c334f6e",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/after-startup.json": "2eaeb9b533b59af439da134f68b3388ba8f3cc4874493641a827f9346e520b2c",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/auxiliary-B1-projected.json": "cd02a31f73d05974a86020b8744e28b2c39abcea834bed0e301437f0e1e1bda7",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/auxiliary-exact-delta.json": "5807abac18d29bb602faeac7a978eb7d61cdc55fa38a95386c735168c8aea649",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/auxiliary-fixture-after.json": "42407352f674af7ea00311abc0a1b7c384a32dea4eb213d6dc6e21ad86e8ddb3",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/auxiliary-fixture-before.json": "5bf6898eda08a437480b5ac15aa2fe5dd2a872228aa7b294b62b6d415ad3c2b5",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/before-startup.json": "2eaeb9b533b59af439da134f68b3388ba8f3cc4874493641a827f9346e520b2c",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/candidate.log": "87eacefa9fc507b93e45ee23e030fa5ca3d538382e25a3d5aca7a2288136bd82",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/catalog-B1-projected.json": "3cae1789265170a6cd3cc3a89f5ad4930f3cbdf2ffb57396dd14cc64b7e50f6a",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/exact-delta.json": "403e7118737a01a89eab9054544a81858ee438485f1fda444b2655c98723f91f",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/fixture-after.json": "1001c4c2c4f48540ffde0f424a9ca844718cf7d1a064178c76a8e0da7d09509b",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/fixture-before.json": "6406ef2448af7bf1437bb71f0f2c47cf6c943c4160e08d8f6472d82024006379",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/fixture-minimal.sql": "f24b0a36563da4324810959ca4087523432d7abe26a77d610a81a0440959c79a",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/http-candidate-0.json": "c32a8fb2f8aea6b8d6302ed17d39a1f3c70b12127744f8f70051268c5e3b6e09",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/http-candidate-1.json": "8b5fec5a98d0e12a804a2dad9b960b6279f24521a7159dc7ee3a6a25b306ce38",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/http-candidate-2.json": "15b53189cea3d627bf77d0771eb125eb6e1c5f662f456dfe14ba22379781619f",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/http-candidate-3.json": "7eaf1e9b725c132c3ec08dccc324c402d0da846d0a6068b4b27b4e331ec6a4a6",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/http-candidate-4.json": "4a5d4c5be0b275cfc159eae8518d4dbfdd4f6452caf1ecaeca8a5ead2a1e5f31",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/terminal.json": "3493d79d86659bd828cfae0cb4a94aa4dba5ddaaf4523a0858bd17d7ab6e6a8d",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearse-cli-terminal.json": "868697c5e063649df675d1ae7e7041e1e139f634170f1df232674a8dca8dad15",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/reused-baseline.json": "b7ebfbc499ff0fddedc7fd7b54fb1217624ae452b512f861004b93067d73a075",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/source-gates.json": "a0d72d82ecadd70f5bf8283ccfa279239607df3d53b6c2328f3d50acdff277a0",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/source-sql-commit.json": "11caeeef06358c955318623bbd1a64ef98c5078d3e98dbd380a4711102864796",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/sql-syntax-unit.json": "3ca3980b146427d0d1703d2cc5067bcbc52719495c006089d4949350bf7fbd84",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/sql-syntax-unit.log": "0033a7476b8146b532ecd0f68df29d8bb888a3d08ec4358d4c48c71a53e4f0fb",
+    "reports/tanda-b-b0-b1-20260923/r5/evidencia/static-audit.json": "dc7014b8b9fc7716601c9522c0f68c7eba04c02bf39f587589dcac22816df83b",
+    "reports/tanda-b-b0-b1-20260923/r5/fase-b-NO-EJECUTADA.txt": "0111cca2ff9f2f1f51bdd672f475d4a92f660941299dc02cd32e387884b9671a",
+    "reports/tanda-b-b0-b1-20260923/r5/finalize.mjs": "2b7e41fcf252a65ac32302e24870c253fdd1718a23557c06f3303427dcfb9211",
+    "reports/tanda-b-b0-b1-20260923/r5/http-off-contracts.mjs": "288719a5faf1a2600ab67a2e8363febbd7472a7ba3b759b5829cf6455b6966ad",
+    "reports/tanda-b-b0-b1-20260923/r5/http-off-contracts.test.mjs": "ea1fd80523dd2bd9a9e9f807668c4e878e6f2255f0e50f8f64c42204cb5c6538",
+    "reports/tanda-b-b0-b1-20260923/r5/loopback-start.mjs": "4d1cd132af2e293f633602ab52a7fd259d8222a2b20d650cc6e4ee45b8762092",
+    "reports/tanda-b-b0-b1-20260923/r5/manifest.json": "9449260e65429becf3693b352de3905da33dec7f24925e625118ea14c141b256",
+    "reports/tanda-b-b0-b1-20260923/r5/manifest.sha256": "18407ae8458519b151384fc14090aca45c08c39912227443b22fea56997f5eb9",
+    "reports/tanda-b-b0-b1-20260923/r5/preflight.mjs": "b39705d018140d34670cebb4903c6730c9a4ba24e83877e4b1d985056a2bf5b4",
+    "reports/tanda-b-b0-b1-20260923/r5/preparation-inputs.json": "a17ee88d4e686754a84354721ac4935086d469caf1dad0d80e58a64b9dac7d09",
+    "reports/tanda-b-b0-b1-20260923/r5/preparation-inputs.sha256": "07bcb7073c5d8efe7970e70dfd065673be5d11a2b5d065d419f51c1ea4f4024d",
+    "reports/tanda-b-b0-b1-20260923/r5/projection.mjs": "66ad44e3458c62ddf671f4a1e78a6f5688155b4d4ae9a4425fce6f0560df7922",
+    "reports/tanda-b-b0-b1-20260923/r5/rehearse.mjs": "de37dbb6ebbe0893685dd9cd46137537bf62ad00a69575eb1a3c095f7e4b0393",
+    "reports/tanda-b-b0-b1-20260923/r5/release-assets.sha256": "f3edd8c109f85fe2ad38aae0e5598168e75bcd23efab2090efaab898b3ec887f",
+    "reports/tanda-b-b0-b1-20260923/r5/release-catalog.sql": "a8b69c5818e2f30e647df10eecd5b57711c50794aeaccc51ba79ff497225bdea",
+    "reports/tanda-b-b0-b1-20260923/r5/run-main.mjs": "65b3242e89f7bd89927ce6309ee620ec684a783e48cd1fea684a80495eb15552",
+    "reports/tanda-b-b0-b1-20260923/r5/source-manifest.json": "39c6d514a2e48d33bbb352d870ad948b17263a2db05290ea87f2e177a16102f2",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/1.sql": "046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/2.sql": "85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/3.sql": "232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/4.sql": "b3c5f1d772ec95222db995ff1678f8e43afdf7509cb4b938230174e7998bd1a0",
+    "reports/tanda-b-b0-b1-20260923/r5/sql/5.sql": "546714912da33a22e39ea1c40dc7e5eceba5f9ebd4d68db50258c2b8f77baed0",
+    "reports/tanda-b-b0-b1-20260923/r5/sql-inventory.json": "bead51dffc64d576cfb842e3370fb6873b937ef4537d661a04c13a30d4cccd01"
+  },
+  "outputs": {
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/assets/fonts/DEJAVU-LICENSE.txt": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/assets/fonts/DejaVuSans.ttf": "ae7b7855e115a5966d8b1b3f80f254ccc117ec86f9965e202ee2940453837280",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/index.mjs": "deaa31522316a38baff0bebfbcf2a418565e9b031775abe0249a51f520bfc670",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/index.mjs.map": "742c9069ed40cc0981947c93ddd1f686ce8b4e0bc9e623a5e6e6d1932ed692e4",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-file.mjs": "7fa13557a98d872d41f950991076675490d807b24e2f306e716bb611efd1a9cc",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-file.mjs.map": "5b4ae826c58cfbbc3c596e1f0c5b253ed021e2671249230a2c030f95f1e41a64",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-pretty.mjs": "a0e84eadb04888316e0a4c65e21dabc36554fc396206ba962b65c63d31e11b03",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-pretty.mjs.map": "a7d3c3a4613f9648f8cb7e69a6abeacdbe3934792fcc24cc0af74fd6fde3eb90",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-worker.mjs": "dae1918708cfeb3af7949f86266d7e216999d0c393e80aba38ad41486934eeca",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/pino-worker.mjs.map": "22e93f5cf6a19d3f2eaf351f54a4cb6d51b17d3bdf03310fa638a94968ec0eb6",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/thread-stream-worker.mjs": "682af21c74dcff21d325b5e7856bba74ed0c660dbd6f4a0f737a2f9c3cbd9e8b",
+    "artifacts/api-server/dist-tanda-b-b0-b1-20260923/thread-stream-worker.mjs.map": "e5fd66fcec3ca622f449a275bd6b14d061ed62ce34faadce8716b363a4df878a",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/index-C6yDHUng.css": "f77a60e8f28334fd3402ed2c887551bf571d8f4b81df0c0192fe56990a4d8e5f",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/index-CJ5sQYvB.js": "b2abcfeac0ea450bf4c4c0f2ab38f97dd910509d5ac8078a38cfe655c7e0c56c",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/index-CLqeiEwA.js": "836c33b82cee4a16eb384767e767f948fe2c004621e77691833d541dd62a3c93",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/mariana-textil-logo-FFOiXRd3.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/assets/mariana-textil-logo-monochrome-_7AVoW2A.png": "6128eafab97d61ae426648d38c4ac9d5a2a7b878cd99583d09d1d3c63c5aed24",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/favicon.png": "91afca960bb4b49af39c0a03c69370439d6afdd179f1ac659d37668068a5fac6",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/index.html": "118cfee92b28955f81685aeb0bc6d5c4d99f7233e5e5c681403aad5feaa64af6",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/robots.txt": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/sounds/alerta.ogg": "78938cf3e89cd804bcf1bf786300b1a3b4c84adbc7feff6022496611ba9cf80e",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/sounds/aviso.ogg": "513a138bc89a9b57abaa24337ac22dace15b94d44c1fa9cb491512a25c338cb4",
+    "artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923/sounds/solicitud.ogg": "215dc1418705195074ff57a2d1967ab6d029dfa62955b6220114c130eab0856d"
+  },
+  "auxiliaryRepresentation": "Semantic multiset of captured fields; not physical OID/subobject-address preservation",
+  "auxiliaryBase": "1dcf2b7af43a30c5912940d138e17fcccd76bc98a3b29c9dcb292b1c30dd0b24",
+  "auxiliaryProjected": "28e9f236af2c29c838c7bead1df5b879b84a2eeded3e4f8668c71b851219d112",
+  "limits": [
+    "Minimal dependency fixture is not full startup schema validation",
+    "HTTP probes are unauthenticated denials only, not actor-role integration"
+  ],
+  "terminal": {
+    "status": "PASS_DISPOSABLE_MAIN_REVIEW_PENDING",
+    "phaseBExecuted": false,
+    "allGates": "OFF",
+    "liveSqlApplied": false,
+    "fixture": "MINIMAL_NOT_REAL_B0",
+    "candidateStopped": true,
+    "auxiliary": "PASS_RI_AND_DEPENDENCIES",
+    "projection": "PASS_EXACT_FOUR_REPLACEMENTS",
+    "rowAndSequenceSensitivity": "PASS_REAL_DISPOSABLE_MUTATIONS",
+    "candidateProcessGroupGone": true,
+    "candidate": {
+      "status": "PASS_INSPECTION_START",
+      "health": 200,
+      "probes": [
+        {
+          "route": "/healthz",
+          "status": 200,
+          "bodyText": "{\"status\":\"ok\"}",
+          "contentType": "application/json; charset=utf-8",
+          "contract": "candidate",
+          "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+        },
+        {
+          "route": "/e7/disponibilidad",
+          "status": 200,
+          "bodyText": "{\"enabled\":false}",
+          "contentType": "application/json; charset=utf-8",
+          "contract": "candidate",
+          "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+        },
+        {
+          "route": "/e7/atribucion",
+          "status": 403,
+          "bodyText": "{\"code\":\"E7_DISABLED\",\"message\":\"E7 no está habilitado.\"}",
+          "contentType": "application/json; charset=utf-8",
+          "contract": "candidate",
+          "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+        },
+        {
+          "route": "/e5/cobros",
+          "status": 403,
+          "bodyText": "{\"error\":{\"code\":\"E5_DISABLED\",\"message\":\"E5 no está habilitado.\"}}",
+          "contentType": "application/json; charset=utf-8",
+          "contract": "candidate",
+          "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+        },
+        {
+          "route": "/e11/identidad",
+          "status": 403,
+          "bodyText": "{\"code\":\"E11_DISABLED\",\"message\":\"E11 no está habilitado.\",\"requestId\":\"398fb88e-23c9-464c-a026-9de28b847178\"}",
+          "contentType": "application/json; charset=utf-8",
+          "contract": "candidate",
+          "scope": "Actual unauthenticated HTTP observation; not role/actor integration"
+        }
+      ],
+      "sha256": "deaa31522316a38baff0bebfbcf2a418565e9b031775abe0249a51f520bfc670",
+      "loopbackWrapperSha256": "4d1cd132af2e293f633602ab52a7fd259d8222a2b20d650cc6e4ee45b8762092",
+      "bind": "127.0.0.1",
+      "bundleModified": false
+    },
+    "invariance": "PASS_CATALOG_ROWS_SEQUENCES",
+    "postgresStopExit": 0,
+    "disposableDestroyed": true
+  }
+}

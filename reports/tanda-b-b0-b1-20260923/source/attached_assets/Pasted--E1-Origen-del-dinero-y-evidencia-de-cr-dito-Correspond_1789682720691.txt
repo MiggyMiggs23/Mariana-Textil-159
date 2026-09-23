@@ -1,0 +1,175 @@
+# E1 — Origen del dinero y evidencia de crédito
+
+Corresponde a la entrega **E1** de `reports/prompt-u-plan-de-implementacion.md`.
+Es la primera del plan y **desbloquea siete de las doce**. No la amplíes ni te adelantes
+a las demás.
+
+Se puede trabajar en paralelo con **E10**, el Fondo: no comparten archivos.
+
+---
+
+## Qué construye
+
+**Origen explícito en todos los movimientos de crédito nuevos**, más la relación con la
+sesión de caja cuando hay efectivo real, más la distinción obligatoria entre ingreso
+físico, devolución física y corrección contable.
+
+Aplica a **todos los productores**, no solo al formulario de abono: ventas a crédito,
+abonos ordinarios y dirigidos, reversos y ajustes.
+
+Y una base nueva: **conservar un cobro recibido que todavía no se aplica**, sin que el
+cálculo de crédito lo consuma.
+
+---
+
+## Las decisiones que gobiernan esto
+
+Firmes. **No se replantean.**
+
+**Sitio explícito.** Se guarda en cada movimiento nuevo, como el lugar donde se recibió
+el dinero. **No se deduce desde la nota.** Razón: FIFO reparte entre tiendas, así que el
+sitio de recepción y el de la nota van a diferir seguido, y deducirlo daría la respuesta
+equivocada de forma sistemática.
+
+**Naturaleza obligatoria.** Ingreso físico, devolución física o corrección contable. Es
+un dato del movimiento, no una nota de texto. El 15 de septiembre, $25,000 pesos de
+recapturas contables se leyeron como dinero que entró al cajón y no lo eran. Esa
+confusión no debe poder repetirse.
+
+**Ajuste sin nota identificable.** Un ajuste se carga a la tienda de la nota que lo
+origina. Si quien lo captura **no puede identificar** esa nota, se captura de todos
+modos con **tienda elegida y justificación obligatoria**. No se queda trabado y nadie
+inventa la tienda: la justificación dice por qué se eligió esa.
+
+**Históricos.** Los tres movimientos actuales quedan como **«sin sitio determinado»**.
+No se les adivina el sitio por usuario, banco, fecha ni nota. Se construye la vía para
+asignárselo después, pero **no se ejecuta en esta entrega**.
+
+**Quién atribuye un histórico:** ADMIN y SUPERVISOR, con **evidencia y motivo
+obligatorios**, y **sin editar el movimiento original**. La atribución se registra como
+un hecho aparte que lo referencia. El movimiento queda intacto, conforme a la
+inmutabilidad del libro.
+
+**Dinero recibido en espera.** Cuando no hay un ADMIN para autorizar un pago dirigido,
+el cobro entra y **espera sin aplicarse**. Hay que conservar: cliente, monto, saldo aún
+sin aplicar, fecha y hora real de recepción, sitio, medio y cuenta, sesión si es
+efectivo, y motivo o referencia.
+
+**Crítico:** ese cobro **no se inserta como abono ordinario**. Si se inserta, el cálculo
+lo consume por FIFO antes de que nadie autorice, y se pierde la razón de haberlo
+retenido.
+
+---
+
+## Lo que NO cambia
+
+- **FIFO, la deuda global, el saldo a favor y la validación del límite de crédito.**
+  Esta entrega agrega información sobre dónde y de qué naturaleza fue un movimiento; no
+  cambia cómo se reparte ni cuánto se debe.
+- **Las cifras globales.** Deuda, saldo a favor, Ventas y cobranza total, idénticas. Lo
+  único que cambia es el reparto por sitio y el subtotal «Sin sitio determinado». Un
+  cobro nuevo retenido sí aumenta el dinero recibido y pendiente de aplicación, pero **no
+  la deuda, ni el favor, ni el crédito disponible**. **Si aparece cualquier otra
+  diferencia, repórtala por separado; no la corrijas bajo el nombre de migración.**
+- **Ningún histórico se convierte automáticamente en dinero retenido.**
+- La inmutabilidad de `movimientos_credito`. Nada se edita ni se borra.
+- Los candados por par producto y ubicación.
+
+---
+
+## Bloque 0 — Confirmar antes de escribir
+
+1. **Todos los productores** de movimientos de crédito que existen hoy, con su archivo:
+   venta a crédito al autorizar, abono ordinario, pago dirigido, reverso, ajuste, y
+   cualquier otro. **Si aparece uno que el plan no anticipó, repórtalo.**
+2. Qué impide hoy completar el sitio de un movimiento existente: triggers,
+   restricciones, contratos. La vía de atribución posterior debe ser **compatible con esa
+   protección, no quitarla por conveniencia**.
+3. Cómo se relaciona hoy un pago de ticket con su sesión de caja, para reutilizar ese
+   patrón en lugar de inventar uno paralelo.
+4. Si el identificador de operación que ya evita cobros duplicados sirve tal cual o hay
+   que extenderlo.
+5. **Dónde vive un cobro retenido sin ser un abono.** Es la decisión estructural de esta
+   entrega: propónla y **preséntamela antes de implementarla**.
+
+---
+
+## Bloque 1 — Implementar
+
+1. **Origen obligatorio en todo movimiento nuevo.** Ningún productor escribe sin él. Si
+   alguno no puede determinarlo, **falla con mensaje claro en vez de escribir un valor
+   por defecto**.
+2. **Sesión de caja cuando hay efectivo real.** Una transferencia no la exige: no toca el
+   cajón.
+3. **Naturaleza obligatoria** en todo movimiento.
+4. **Conservación del cobro retenido**, con todos los datos listados arriba, sin
+   insertarlo como abono.
+5. **Vía de atribución posterior**, construida pero no ejecutada.
+6. **Identificador de operación** conservado, para que un reintento no duplique el cobro.
+7. Al relacionar evidencia antigua, **conserva la identidad y la fecha del movimiento**:
+   un ID por sí solo puede haberse reutilizado tras una purga.
+
+---
+
+## Bloque 2 — El riesgo de los productores viejos
+
+**Una aplicación móvil o una pestaña abierta con código anterior puede intentar escribir
+sin los datos nuevos.** La estructura nueva **no se libera con productores que omitan
+sus datos obligatorios.**
+
+Propón cómo se maneja —rechazo con mensaje, periodo de transición, u otra cosa— y
+**preséntamelo antes de implementarlo.**
+
+---
+
+## Verificación
+
+1. **Cada productor guarda un origen válido.** Recórrelos todos.
+2. Efectivo y corrección contable **no se confunden**.
+3. **Mismos registros monetarios antes y después.** Deuda, saldo a favor, Ventas y
+   cobranza total idénticos. **Es la verificación principal.**
+4. **Un cobro retenido no baja la deuda, no sube el crédito disponible y FIFO no lo
+   consume.** Compruébalo explícitamente: es la razón de existir de esa estructura.
+5. **Los tres históricos intactos** y como «sin sitio determinado».
+6. Permisos negativos: quien no es ADMIN ni SUPERVISOR no puede atribuir un histórico.
+7. Reintento con el mismo identificador **sin duplicar el cobro**.
+8. La atribución posterior **no edita el movimiento ni inventa una sesión**.
+9. Suite completa sin rojos nuevos y typecheck en cero. Cada prueba nueva **vista
+   fallar** con su defecto introducido.
+
+**Lo que solo puede verificar el propietario:** qué evidencia histórica es suficiente y
+en qué tienda se recibió realmente el dinero. Déjalo señalado como pendiente suyo.
+
+---
+
+## Restricciones
+
+- **No actives la captura nueva de efectivo.** Esto es una base técnica, no un piloto.
+  Coordinar con E2 y E3.
+- **No actives el modo de cobro retenido.** Se activa solo cuando E5 y los lectores de E7
+  estén listos: no dejes dinero registrado sin capacidad de verlo, aplicarlo y
+  conciliarlo.
+- **No ejecutes la atribución de los tres históricos.** Se construye la vía; el
+  propietario decide cuándo y con qué evidencia.
+- No toques FIFO, la proyección de crédito, el saldo a favor ni la validación del límite.
+- No modifiques ni borres ningún movimiento existente.
+- No quites la protección de inmutabilidad para facilitar la atribución.
+- No construyas nada de E2 a E12: ni corte, ni recibo, ni botón de Caja, ni salidas
+  extraordinarias, ni Fondo, ni roles de contador, ni renombres.
+- No reanudes el Prompt P ni cierres su Grupo 1.
+- No crees usuarios ni sesiones de prueba.
+- **Cualquier escritura en la base requiere autorización textual del propietario guardada
+  en `reports/` antes de la primera escritura.** Preséntame el alcance exacto y espera.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que todo movimiento de crédito nuevo guarda su sitio de origen y, con efectivo, su
+   sesión; y que **el sitio no se deduce desde la nota**, con la razón.
+2. Que la naturaleza es obligatoria y por qué: una recaptura contable no es dinero que
+   entró.
+3. Qué se hace con un ajuste cuya nota de origen no se puede identificar.
+4. Que un cobro retenido **existe sin ser un abono** y por qué: para que FIFO no lo
+   consuma antes de que un ADMIN autorice.
+5. Que los tres históricos quedan «sin sitio determinado», y cómo se les asigna después,
+   por quién y con qué evidencia.
+6. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

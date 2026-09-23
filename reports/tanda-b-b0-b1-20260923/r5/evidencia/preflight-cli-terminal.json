@@ -1,0 +1,9 @@
+{
+  "exit": 0,
+  "signal": null,
+  "stdout": "TANDA_B_PREFLIGHT=PASS\n",
+  "stderr": "",
+  "timeout": false,
+  "forced": false,
+  "expectedToken": "TANDA_B_PREFLIGHT=PASS"
+}

@@ -1,0 +1,5 @@
+{
+  "status": 3,
+  "stderr": "ERROR:  syntax error at end of input\nLINE 47:         CASE WHEN returned>0 THEN 'DEVUELTO' WHEN total=0 TH...\n                                     ^\n",
+  "inputSha256": "c5428e6d099b587ee64b795f4c710955cdd7b97b9a218609c886c839923c30f2"
+}

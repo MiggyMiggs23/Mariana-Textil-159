@@ -1,0 +1,18 @@
+import {auxiliaryFingerprint} from "./auxiliary-multiset.mjs";
+import fs from "node:fs";
+import path from "node:path";
+import assert from "node:assert/strict";
+import {report,requireMain,verifyPreparation,runtimePin,runtimeUrl,pgTools,pgEnvironment,catalog,auxiliary,json,write,verifyOutputs,fingerprints} from "./common.mjs";
+requireMain();verifyPreparation();const pin=runtimePin();verifyOutputs();
+const captured=json(path.join(report,"evidencia/live/catalog-B0-real.json"));
+const receipt=json(path.join(report,"evidencia/live/capture.json"));
+assert.equal(receipt.status,"PASS_READ_ONLY");assert.equal(receipt.pid,pin.pid);
+assert.equal(receipt.startTicks,pin.startTicks);
+const url=runtimeUrl(pin);
+const bin=pgTools(),actual=catalog(pgEnvironment(url,bin),bin);
+for(const k of ["database","databaseOid","schema","role","serverVersionNum"]) assert.equal(actual[k],captured[k],`Identity ${k}`);
+assert.deepEqual(fingerprints(actual),fingerprints(captured),"B0 changed");
+assert.equal(auxiliaryFingerprint(auxiliary(pgEnvironment(url,bin),bin)),auxiliaryFingerprint(json(path.join(report,"evidencia/live/auxiliary-B0-real.json"))),"Auxiliary B0 multiset changed");
+assert.deepEqual(runtimePin(),pin);
+write(path.join(report,"evidencia/preflight-cli.json"),{status:"PASS",token:"TANDA_B_PREFLIGHT=PASS",...pin,...fingerprints(actual)});
+console.log("TANDA_B_PREFLIGHT=PASS");

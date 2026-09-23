@@ -1,0 +1,44 @@
+{
+  "status": "FAIL",
+  "phaseBExecuted": false,
+  "allGates": "OFF",
+  "liveSqlApplied": false,
+  "fixture": "MINIMAL_NOT_REAL_B0",
+  "candidateStopped": true,
+  "auxiliary": "PASS_RI_AND_DEPENDENCIES",
+  "projection": "PASS_EXACT_FOUR_REPLACEMENTS",
+  "rowAndSequenceSensitivity": "PASS_REAL_DISPOSABLE_MUTATIONS",
+  "candidateProcessGroupGone": true,
+  "candidate": {
+    "status": "FAIL",
+    "reason": "/e7/disponibilidad unexpectedly open"
+  },
+  "control": {
+    "status": "PASS_INSPECTION_START",
+    "health": 200,
+    "probes": [
+      {
+        "route": "/e5/cobros",
+        "status": 404,
+        "scope": "Unauthenticated denial only; not authenticated feature proof"
+      },
+      {
+        "route": "/e11/identidad",
+        "status": 404,
+        "scope": "Unauthenticated denial only; not authenticated feature proof"
+      },
+      {
+        "route": "/e7/disponibilidad",
+        "status": 404,
+        "scope": "Unauthenticated denial only; not authenticated feature proof"
+      }
+    ],
+    "sha256": "008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5",
+    "loopbackWrapperSha256": "4d1cd132af2e293f633602ab52a7fd259d8222a2b20d650cc6e4ee45b8762092",
+    "bind": "127.0.0.1",
+    "bundleModified": false
+  },
+  "error": "Candidate failed; control comparison recorded on SAME minimal fixture",
+  "postgresStopExit": 0,
+  "disposableDestroyed": true
+}

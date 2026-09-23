@@ -1,0 +1,24 @@
+FASE B NO EJECUTADA — NO LIBERACIÓN
+
+Este directorio es preparación aislada, no instalación. Todas las puertas E3
+y Tanda B permanecen OFF. No aplicar ninguno de sus SQL a la base de la API,
+ni reiniciar API, cambiar workflow/bundle activo o permisos.
+
+B0 procederá únicamente de captura real READ ONLY con identidad efectiva del
+PID vigente fijada por MAIN. B1 se deriva de ese B0 crudo + objetos exactos del
+DDL Tanda B y exactamente los cuatro reemplazos E1 autorizados separadamente.
+No se crea B1 antes del ensayo y las comprobaciones del delta. Los atributos
+crudos de enums, triggers y ACL restantes no se normalizan ni reconstruyen.
+La comparación semántica enum ordenada está separada de la captura cruda.
+
+El fixture desechable contiene solo dependencias vacías seleccionadas y un
+sentinela sintético local de fila/secuencia; nunca se presenta como clon B0.
+Arranque candidato en modo inspección real, sin inicializadores; NO acredita
+arranque normal de producción. Si falla, se prueba el bundle E2 retenido sobre
+el MISMO fixture; se conserva FAIL aunque el control arranque.
+HTTP sin sesión solo acredita denegación sin autenticar, no integración por
+actor ni facultades. El finalizador enumera explícitamente estas limitaciones.
+
+La creación de final-manifest.json requiere todos los tokens positivos de
+captura, preflight, controles negativos, delta, arranque y cleanup desechable.
+Ni ese manifiesto ni esta preparación constituyen permiso de aplicación.

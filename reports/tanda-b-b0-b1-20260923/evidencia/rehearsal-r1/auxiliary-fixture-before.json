@@ -1,0 +1,2406 @@
+{
+  "readOnly": "on",
+  "riTriggers": [],
+  "dependencies": [
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "default value",
+        "name": null,
+        "schema": null,
+        "identity": "for public.tanda_b_probe.id"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "sequence",
+        "name": "tanda_b_probe_id_seq",
+        "schema": "public",
+        "identity": "public.tanda_b_probe_id_seq"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_credito_abono_venta_uidx on public.aplicaciones_credito"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito.abono_movimiento_id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_credito_abono_venta_uidx on public.aplicaciones_credito"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito.venta_movimiento_id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_credito_pkey on public.aplicaciones_credito"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_pago_proveedor_pago_compra_uidx on public.aplicaciones_pago_proveedor"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor.compra_proveedor_id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_pago_proveedor_pago_compra_uidx on public.aplicaciones_pago_proveedor"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor.pago_proveedor_id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_pago_proveedor_pkey on public.aplicaciones_pago_proveedor"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "auditoria_pkey on public.auditoria"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "auditoria",
+        "schema": "public",
+        "identity": "public.auditoria.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "clientes_pkey on public.clientes"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "clientes",
+        "schema": "public",
+        "identity": "public.clientes.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "cobros_pk_e1 on public.cobros_credito_pendientes_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1.operacion_clave"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "cobros_pk_e1 on public.cobros_credito_pendientes_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1.operacion_productor"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "fondo_mariana_pkey on public.fondo_mariana"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "fondo_mariana",
+        "schema": "public",
+        "identity": "public.fondo_mariana.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "fondo_movimientos_pkey on public.fondo_movimientos"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "fondo_movimientos",
+        "schema": "public",
+        "identity": "public.fondo_movimientos.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "movimientos_credito_pkey on public.movimientos_credito"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "notificaciones_sistema_pkey on public.notificaciones_sistema"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "notificaciones_sistema",
+        "schema": "public",
+        "identity": "public.notificaciones_sistema.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_pk_e1 on public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1.clave"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_pk_e1 on public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1.productor"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_productor_naturaleza_ck_e1 on public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1.naturaleza"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_productor_naturaleza_ck_e1 on public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1.productor"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "pagos_proveedor_pkey on public.pagos_proveedor"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "salidas_dinero_caja_pkey on public.salidas_dinero_caja"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "salidas_dinero_caja",
+        "schema": "public",
+        "identity": "public.salidas_dinero_caja.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "sesiones_caja_pkey on public.sesiones_caja"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "sesiones_caja",
+        "schema": "public",
+        "identity": "public.sesiones_caja.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "solicitudes_pago_dirigido_pkey on public.solicitudes_pago_dirigido"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tanda_b_probe_pkey on public.tanda_b_probe"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tickets_folio_unique on public.tickets"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets.folio"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tickets_pkey on public.tickets"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tickets_uuid_cliente_unique on public.tickets"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets.uuid_cliente"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "ubicaciones_nombre_unique on public.ubicaciones"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones.nombre"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "ubicaciones_pkey on public.ubicaciones"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "usuarios_pkey on public.usuarios"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios.id"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "usuarios_usuario_unique on public.usuarios"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios.usuario"
+      }
+    },
+    {
+      "deptype": "a",
+      "source": {
+        "kind": "trigger",
+        "name": null,
+        "schema": null,
+        "identity": "zz_e1_pending_receipts_closed on public.cobros_credito_pendientes_e1"
+      },
+      "target": {
+        "kind": "table",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "aplicaciones_credito_abono_venta_uidx",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito_abono_venta_uidx"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_credito_abono_venta_uidx on public.aplicaciones_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "aplicaciones_credito_pkey",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_credito_pkey on public.aplicaciones_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "aplicaciones_pago_proveedor_pago_compra_uidx",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor_pago_compra_uidx"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_pago_proveedor_pago_compra_uidx on public.aplicaciones_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "aplicaciones_pago_proveedor_pkey",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "aplicaciones_pago_proveedor_pkey on public.aplicaciones_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "auditoria_pkey",
+        "schema": "public",
+        "identity": "public.auditoria_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "auditoria_pkey on public.auditoria"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "clientes_pkey",
+        "schema": "public",
+        "identity": "public.clientes_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "clientes_pkey on public.clientes"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "cobros_pk_e1",
+        "schema": "public",
+        "identity": "public.cobros_pk_e1"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "cobros_pk_e1 on public.cobros_credito_pendientes_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "fondo_mariana_pkey",
+        "schema": "public",
+        "identity": "public.fondo_mariana_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "fondo_mariana_pkey on public.fondo_mariana"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "fondo_movimientos_pkey",
+        "schema": "public",
+        "identity": "public.fondo_movimientos_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "fondo_movimientos_pkey on public.fondo_movimientos"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "movimientos_credito_pkey",
+        "schema": "public",
+        "identity": "public.movimientos_credito_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "movimientos_credito_pkey on public.movimientos_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "notificaciones_sistema_pkey",
+        "schema": "public",
+        "identity": "public.notificaciones_sistema_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "notificaciones_sistema_pkey on public.notificaciones_sistema"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "operaciones_pk_e1",
+        "schema": "public",
+        "identity": "public.operaciones_pk_e1"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_pk_e1 on public.operaciones_credito_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "pagos_proveedor_pkey",
+        "schema": "public",
+        "identity": "public.pagos_proveedor_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "pagos_proveedor_pkey on public.pagos_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "salidas_dinero_caja_pkey",
+        "schema": "public",
+        "identity": "public.salidas_dinero_caja_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "salidas_dinero_caja_pkey on public.salidas_dinero_caja"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "sesiones_caja_pkey",
+        "schema": "public",
+        "identity": "public.sesiones_caja_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "sesiones_caja_pkey on public.sesiones_caja"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "solicitudes_pago_dirigido_pkey",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "solicitudes_pago_dirigido_pkey on public.solicitudes_pago_dirigido"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "tanda_b_probe_pkey",
+        "schema": "public",
+        "identity": "public.tanda_b_probe_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tanda_b_probe_pkey on public.tanda_b_probe"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "tickets_folio_unique",
+        "schema": "public",
+        "identity": "public.tickets_folio_unique"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tickets_folio_unique on public.tickets"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "tickets_pkey",
+        "schema": "public",
+        "identity": "public.tickets_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tickets_pkey on public.tickets"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "tickets_uuid_cliente_unique",
+        "schema": "public",
+        "identity": "public.tickets_uuid_cliente_unique"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "tickets_uuid_cliente_unique on public.tickets"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "ubicaciones_nombre_unique",
+        "schema": "public",
+        "identity": "public.ubicaciones_nombre_unique"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "ubicaciones_nombre_unique on public.ubicaciones"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "ubicaciones_pkey",
+        "schema": "public",
+        "identity": "public.ubicaciones_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "ubicaciones_pkey on public.ubicaciones"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "usuarios_pkey",
+        "schema": "public",
+        "identity": "public.usuarios_pkey"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "usuarios_pkey on public.usuarios"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "index",
+        "name": "usuarios_usuario_unique",
+        "schema": "public",
+        "identity": "public.usuarios_usuario_unique"
+      },
+      "target": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "usuarios_usuario_unique on public.usuarios"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_alcance_consulta",
+        "schema": "public",
+        "identity": "public.alcance_consulta[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "alcance_consulta",
+        "schema": "public",
+        "identity": "public.alcance_consulta"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_auditoria",
+        "schema": "public",
+        "identity": "public.auditoria[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "auditoria",
+        "schema": "public",
+        "identity": "public.auditoria"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_clientes",
+        "schema": "public",
+        "identity": "public.clientes[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "clientes",
+        "schema": "public",
+        "identity": "public.clientes"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_estado_sesion_caja",
+        "schema": "public",
+        "identity": "public.estado_sesion_caja[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "estado_sesion_caja",
+        "schema": "public",
+        "identity": "public.estado_sesion_caja"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_estado_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.estado_solicitud_pago_dirigido[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "estado_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.estado_solicitud_pago_dirigido"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_estado_ticket",
+        "schema": "public",
+        "identity": "public.estado_ticket[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "estado_ticket",
+        "schema": "public",
+        "identity": "public.estado_ticket"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_fondo_mariana",
+        "schema": "public",
+        "identity": "public.fondo_mariana[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "fondo_mariana",
+        "schema": "public",
+        "identity": "public.fondo_mariana"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_fondo_movimientos",
+        "schema": "public",
+        "identity": "public.fondo_movimientos[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "fondo_movimientos",
+        "schema": "public",
+        "identity": "public.fondo_movimientos"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_forma_pago_cuenta",
+        "schema": "public",
+        "identity": "public.forma_pago_cuenta[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "forma_pago_cuenta",
+        "schema": "public",
+        "identity": "public.forma_pago_cuenta"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_forma_pago_proveedor",
+        "schema": "public",
+        "identity": "public.forma_pago_proveedor[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "forma_pago_proveedor",
+        "schema": "public",
+        "identity": "public.forma_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_naturaleza_credito_e1",
+        "schema": "public",
+        "identity": "public.naturaleza_credito_e1[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "naturaleza_credito_e1",
+        "schema": "public",
+        "identity": "public.naturaleza_credito_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_notificaciones_sistema",
+        "schema": "public",
+        "identity": "public.notificaciones_sistema[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "notificaciones_sistema",
+        "schema": "public",
+        "identity": "public.notificaciones_sistema"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_rol_usuario",
+        "schema": "public",
+        "identity": "public.rol_usuario[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "rol_usuario",
+        "schema": "public",
+        "identity": "public.rol_usuario"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_salidas_dinero_caja",
+        "schema": "public",
+        "identity": "public.salidas_dinero_caja[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "salidas_dinero_caja",
+        "schema": "public",
+        "identity": "public.salidas_dinero_caja"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_sesiones_caja",
+        "schema": "public",
+        "identity": "public.sesiones_caja[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "sesiones_caja",
+        "schema": "public",
+        "identity": "public.sesiones_caja"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_tickets",
+        "schema": "public",
+        "identity": "public.tickets[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_tipo_movimiento_credito",
+        "schema": "public",
+        "identity": "public.tipo_movimiento_credito[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_movimiento_credito",
+        "schema": "public",
+        "identity": "public.tipo_movimiento_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_tipo_pago_proveedor",
+        "schema": "public",
+        "identity": "public.tipo_pago_proveedor[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_pago_proveedor",
+        "schema": "public",
+        "identity": "public.tipo_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_tipo_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.tipo_solicitud_pago_dirigido[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.tipo_solicitud_pago_dirigido"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_tipo_ubicacion",
+        "schema": "public",
+        "identity": "public.tipo_ubicacion[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_ubicacion",
+        "schema": "public",
+        "identity": "public.tipo_ubicacion"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "_usuarios",
+        "schema": "public",
+        "identity": "public.usuarios[]"
+      },
+      "target": {
+        "kind": "type",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito"
+      },
+      "target": {
+        "kind": "table",
+        "name": "aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor"
+      },
+      "target": {
+        "kind": "table",
+        "name": "aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "auditoria",
+        "schema": "public",
+        "identity": "public.auditoria"
+      },
+      "target": {
+        "kind": "table",
+        "name": "auditoria",
+        "schema": "public",
+        "identity": "public.auditoria"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "clientes",
+        "schema": "public",
+        "identity": "public.clientes"
+      },
+      "target": {
+        "kind": "table",
+        "name": "clientes",
+        "schema": "public",
+        "identity": "public.clientes"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1"
+      },
+      "target": {
+        "kind": "table",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "fondo_mariana",
+        "schema": "public",
+        "identity": "public.fondo_mariana"
+      },
+      "target": {
+        "kind": "table",
+        "name": "fondo_mariana",
+        "schema": "public",
+        "identity": "public.fondo_mariana"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "fondo_movimientos",
+        "schema": "public",
+        "identity": "public.fondo_movimientos"
+      },
+      "target": {
+        "kind": "table",
+        "name": "fondo_movimientos",
+        "schema": "public",
+        "identity": "public.fondo_movimientos"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito"
+      },
+      "target": {
+        "kind": "table",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "notificaciones_sistema",
+        "schema": "public",
+        "identity": "public.notificaciones_sistema"
+      },
+      "target": {
+        "kind": "table",
+        "name": "notificaciones_sistema",
+        "schema": "public",
+        "identity": "public.notificaciones_sistema"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "table",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor"
+      },
+      "target": {
+        "kind": "table",
+        "name": "pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "salidas_dinero_caja",
+        "schema": "public",
+        "identity": "public.salidas_dinero_caja"
+      },
+      "target": {
+        "kind": "table",
+        "name": "salidas_dinero_caja",
+        "schema": "public",
+        "identity": "public.salidas_dinero_caja"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "sesiones_caja",
+        "schema": "public",
+        "identity": "public.sesiones_caja"
+      },
+      "target": {
+        "kind": "table",
+        "name": "sesiones_caja",
+        "schema": "public",
+        "identity": "public.sesiones_caja"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido"
+      },
+      "target": {
+        "kind": "table",
+        "name": "solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe"
+      },
+      "target": {
+        "kind": "table",
+        "name": "tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets"
+      },
+      "target": {
+        "kind": "table",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones"
+      },
+      "target": {
+        "kind": "table",
+        "name": "ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones"
+      }
+    },
+    {
+      "deptype": "i",
+      "source": {
+        "kind": "type",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios"
+      },
+      "target": {
+        "kind": "table",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "default value",
+        "name": null,
+        "schema": null,
+        "identity": "for public.tanda_b_probe.id"
+      },
+      "target": {
+        "kind": "sequence",
+        "name": "tanda_b_probe_id_seq",
+        "schema": "public",
+        "identity": "public.tanda_b_probe_id_seq"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "function",
+        "name": null,
+        "schema": "public",
+        "identity": "public.e1_guard_pending_receipts_closed()"
+      },
+      "target": {
+        "kind": "language",
+        "name": "plpgsql",
+        "schema": null,
+        "identity": "plpgsql"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "function",
+        "name": null,
+        "schema": "public",
+        "identity": "public.e1_guard_pending_receipts_closed()"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "function",
+        "name": null,
+        "schema": "public",
+        "identity": "public.validar_movimiento_credito_e1()"
+      },
+      "target": {
+        "kind": "language",
+        "name": "plpgsql",
+        "schema": null,
+        "identity": "plpgsql"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "function",
+        "name": null,
+        "schema": "public",
+        "identity": "public.validar_movimiento_credito_e1()"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "sequence",
+        "name": "tanda_b_probe_id_seq",
+        "schema": "public",
+        "identity": "public.tanda_b_probe_id_seq"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1.medio"
+      },
+      "target": {
+        "kind": "type",
+        "name": "forma_pago_cuenta",
+        "schema": "public",
+        "identity": "public.forma_pago_cuenta"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1.naturaleza"
+      },
+      "target": {
+        "kind": "type",
+        "name": "naturaleza_credito_e1",
+        "schema": "public",
+        "identity": "public.naturaleza_credito_e1"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito.forma_pago"
+      },
+      "target": {
+        "kind": "type",
+        "name": "forma_pago_cuenta",
+        "schema": "public",
+        "identity": "public.forma_pago_cuenta"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito.naturaleza"
+      },
+      "target": {
+        "kind": "type",
+        "name": "naturaleza_credito_e1",
+        "schema": "public",
+        "identity": "public.naturaleza_credito_e1"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito.tipo"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_movimiento_credito",
+        "schema": "public",
+        "identity": "public.tipo_movimiento_credito"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1.naturaleza"
+      },
+      "target": {
+        "kind": "type",
+        "name": "naturaleza_credito_e1",
+        "schema": "public",
+        "identity": "public.naturaleza_credito_e1"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor.forma_pago"
+      },
+      "target": {
+        "kind": "type",
+        "name": "forma_pago_proveedor",
+        "schema": "public",
+        "identity": "public.forma_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor.tipo"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_pago_proveedor",
+        "schema": "public",
+        "identity": "public.tipo_pago_proveedor"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "sesiones_caja",
+        "schema": "public",
+        "identity": "public.sesiones_caja.estado"
+      },
+      "target": {
+        "kind": "type",
+        "name": "estado_sesion_caja",
+        "schema": "public",
+        "identity": "public.estado_sesion_caja"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido.estado"
+      },
+      "target": {
+        "kind": "type",
+        "name": "estado_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.estado_solicitud_pago_dirigido"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido.tipo"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.tipo_solicitud_pago_dirigido"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets.estado"
+      },
+      "target": {
+        "kind": "type",
+        "name": "estado_ticket",
+        "schema": "public",
+        "identity": "public.estado_ticket"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones.tipo"
+      },
+      "target": {
+        "kind": "type",
+        "name": "tipo_ubicacion",
+        "schema": "public",
+        "identity": "public.tipo_ubicacion"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios.alcance_consulta"
+      },
+      "target": {
+        "kind": "type",
+        "name": "alcance_consulta",
+        "schema": "public",
+        "identity": "public.alcance_consulta"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table column",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios.rol"
+      },
+      "target": {
+        "kind": "type",
+        "name": "rol_usuario",
+        "schema": "public",
+        "identity": "public.rol_usuario"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_productor_naturaleza_ck_e1 on public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1.naturaleza"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_productor_naturaleza_ck_e1 on public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "table column",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1.productor"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table constraint",
+        "name": null,
+        "schema": "public",
+        "identity": "operaciones_productor_naturaleza_ck_e1 on public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "type",
+        "name": "naturaleza_credito_e1",
+        "schema": "public",
+        "identity": "public.naturaleza_credito_e1"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "aplicaciones_credito",
+        "schema": "public",
+        "identity": "public.aplicaciones_credito"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "aplicaciones_pago_proveedor",
+        "schema": "public",
+        "identity": "public.aplicaciones_pago_proveedor"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "auditoria",
+        "schema": "public",
+        "identity": "public.auditoria"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "clientes",
+        "schema": "public",
+        "identity": "public.clientes"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "cobros_credito_pendientes_e1",
+        "schema": "public",
+        "identity": "public.cobros_credito_pendientes_e1"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "fondo_mariana",
+        "schema": "public",
+        "identity": "public.fondo_mariana"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "fondo_movimientos",
+        "schema": "public",
+        "identity": "public.fondo_movimientos"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "movimientos_credito",
+        "schema": "public",
+        "identity": "public.movimientos_credito"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "notificaciones_sistema",
+        "schema": "public",
+        "identity": "public.notificaciones_sistema"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "operaciones_credito_e1",
+        "schema": "public",
+        "identity": "public.operaciones_credito_e1"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "pagos_proveedor",
+        "schema": "public",
+        "identity": "public.pagos_proveedor"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "salidas_dinero_caja",
+        "schema": "public",
+        "identity": "public.salidas_dinero_caja"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "sesiones_caja",
+        "schema": "public",
+        "identity": "public.sesiones_caja"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "solicitudes_pago_dirigido",
+        "schema": "public",
+        "identity": "public.solicitudes_pago_dirigido"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "tanda_b_probe",
+        "schema": "public",
+        "identity": "public.tanda_b_probe"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "tickets",
+        "schema": "public",
+        "identity": "public.tickets"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "ubicaciones",
+        "schema": "public",
+        "identity": "public.ubicaciones"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "table",
+        "name": "usuarios",
+        "schema": "public",
+        "identity": "public.usuarios"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "trigger",
+        "name": null,
+        "schema": null,
+        "identity": "zz_e1_pending_receipts_closed on public.cobros_credito_pendientes_e1"
+      },
+      "target": {
+        "kind": "function",
+        "name": null,
+        "schema": "public",
+        "identity": "public.e1_guard_pending_receipts_closed()"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "alcance_consulta",
+        "schema": "public",
+        "identity": "public.alcance_consulta"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "estado_sesion_caja",
+        "schema": "public",
+        "identity": "public.estado_sesion_caja"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "estado_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.estado_solicitud_pago_dirigido"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "estado_ticket",
+        "schema": "public",
+        "identity": "public.estado_ticket"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "forma_pago_cuenta",
+        "schema": "public",
+        "identity": "public.forma_pago_cuenta"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "forma_pago_proveedor",
+        "schema": "public",
+        "identity": "public.forma_pago_proveedor"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "naturaleza_credito_e1",
+        "schema": "public",
+        "identity": "public.naturaleza_credito_e1"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "rol_usuario",
+        "schema": "public",
+        "identity": "public.rol_usuario"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "tipo_movimiento_credito",
+        "schema": "public",
+        "identity": "public.tipo_movimiento_credito"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "tipo_pago_proveedor",
+        "schema": "public",
+        "identity": "public.tipo_pago_proveedor"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "tipo_solicitud_pago_dirigido",
+        "schema": "public",
+        "identity": "public.tipo_solicitud_pago_dirigido"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    },
+    {
+      "deptype": "n",
+      "source": {
+        "kind": "type",
+        "name": "tipo_ubicacion",
+        "schema": "public",
+        "identity": "public.tipo_ubicacion"
+      },
+      "target": {
+        "kind": "schema",
+        "name": "public",
+        "schema": null,
+        "identity": "public"
+      }
+    }
+  ]
+}

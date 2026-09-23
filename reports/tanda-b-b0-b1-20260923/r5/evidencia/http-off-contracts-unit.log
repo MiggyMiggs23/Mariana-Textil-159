@@ -1,0 +1,28 @@
+✔ candidate exact OFF contract /e7/disponibilidad (5.343537ms)
+✔ candidate /e7/disponibilidad rejects additional root fields (1.354552ms)
+✔ candidate /e7/disponibilidad rejects missing route 404 (0.355336ms)
+✔ candidate exact OFF contract /e7/atribucion (0.143937ms)
+✔ candidate /e7/atribucion rejects additional root fields (0.408249ms)
+✔ candidate /e7/atribucion rejects missing route 404 (0.171714ms)
+✔ candidate exact OFF contract /e5/cobros (0.090249ms)
+✔ candidate /e5/cobros rejects additional root fields (0.274004ms)
+✔ candidate /e5/cobros rejects missing route 404 (0.185156ms)
+✔ candidate exact OFF contract /e11/identidad (0.424281ms)
+✔ candidate /e11/identidad rejects additional root fields (0.375167ms)
+✔ candidate /e11/identidad rejects missing route 404 (0.142458ms)
+✔ E7 availability rejects enabled true (0.337507ms)
+✔ E7 data route rejects 200 even when body says disabled (0.232035ms)
+✔ E5 rejects additional nested error fields (1.33237ms)
+✔ E11 rejects malformed requestId (0.599946ms)
+✔ E11 rejects missing requestId (0.332414ms)
+✔ candidate malformed JSON fails closed (0.164339ms)
+✔ wrong disabled code/message rejected (0.730517ms)
+✔ E2 absent routes use separate exact404 status contract (0.511823ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84.344119
