@@ -1,0 +1,2462 @@
+import { Router } from "express";
+import ExcelJS from "exceljs";
+import {
+  and,
+  asc,
+  count,
+  countDistinct,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  isNull,
+  lte,
+  or,
+  sql,
+} from "drizzle-orm";
+import { interpretarCodigoEscaneado } from "@workspace/scanned-code";
+import {
+  CrearEntradaBody,
+  CrearEntradaResponse,
+  ListEntradasQueryParams,
+  ListEntradasResponse,
+  GetEntradaParams,
+  GetEntradaResponse,
+  ActivarRolloParams,
+  ActivarRolloBody,
+  ActivarRolloResponse,
+  VenderRolloParams,
+  VenderRolloBody,
+  VenderRolloResponse,
+  AjustarRolloParams,
+  AjustarRolloBody,
+  AjustarRolloResponse,
+  RevertirMovimientoParams,
+  RevertirMovimientoBody,
+  RevertirMovimientoResponse,
+  GetRolloParams,
+  GetRolloResponse,
+  GetInventarioMovimientoParams,
+  GetInventarioMovimientoResponse,
+  ListRollosQueryParams,
+  ListRollosResponse,
+  GetExistenciasQueryParams,
+  GetExistenciasResponse,
+  GetKardexQueryParams,
+  GetKardexResponse,
+  GetKardexGroupedQueryParams,
+  GetKardexGroupedResponse,
+  ListKardexFiltersQueryParams,
+  ListKardexFiltersResponse,
+  ExportKardexXlsxQueryParams,
+  ListAjustesPendientesResponse,
+  RevisarAjusteParams,
+  RevisarAjusteResponse,
+  GetConciliacionQueryParams,
+  GetConciliacionResponse,
+  RecalcularExistenciasBody,
+  RecalcularExistenciasResponse,
+  GetFechaServidorResponse,
+  CapturarCostosEntradaParams,
+  CapturarCostosEntradaBody,
+  CapturarCostosEntradaResponse,
+  CountEntradasPendientesCostoResponse,
+  ListEntradasPendientesCostoQueryParams,
+  ListEntradasPendientesCostoResponse,
+  GetExistenciasAgrupadasQueryParams,
+  GetExistenciasAgrupadasResponse,
+  GetCatalogosEntradaResponse,
+  GetUbicacionesInventarioResponse,
+  UpdateRolloPisoParams,
+  UpdateRolloPisoBody,
+  UpdateRolloPisoResponse,
+  CreateSalidaExtraordinariaBody,
+  CreateSalidaExtraordinariaResponse,
+  ListSalidasExtraordinariasQueryParams,
+  ListSalidasExtraordinariasResponse,
+  RevertSalidaExtraordinariaParams,
+  RevertSalidaExtraordinariaBody,
+  RevertSalidaExtraordinariaResponse,
+} from "@workspace/api-zod";
+import {
+  db,
+  entradasTable,
+  existenciasTable,
+  movimientosTable,
+  productosTable,
+  pisosTable,
+  proveedoresTable,
+  rollosTable,
+  ubicacionesTable,
+  usuariosTable,
+  auditoriaTable,
+  type EstadoRollo,
+} from "@workspace/db";
+import { requireSession } from "../middlewares/auth";
+import type { AuthContext } from "../middlewares/auth";
+import { resolveReadScope } from "../lib/read-scope";
+export { resolveReadScope } from "../lib/read-scope";
+import { getRequestIp } from "../lib/request";
+import { parseMexicoDateQuery } from "../lib/mexico-date";
+import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
+import { requiereAdmin, requierePermiso } from "../lib/permisos";
+import {
+  crearEntrada,
+  buildEntradaResult,
+  capturarCostosEntrada,
+  activarRollo,
+  venderRollo,
+  ajustarRollo,
+  revertirMovimiento,
+  conciliarTodo,
+  recalcularExistencias,
+  revisarAjuste,
+  InventarioError,
+  inventarioErrorEnvelope,
+  crearSalidaExtraordinaria,
+} from "../lib/inventario";
+import {
+  getKardex as queryKardex,
+  loadMovementDocumentContext,
+  listKardexFilters as queryKardexFilters,
+  type KardexFiltersInput,
+} from "../lib/kardex";
+import { getKardexGrouped as queryKardexGrouped } from "../lib/kardex-grouped";
+import { isValidUnitCost } from "../lib/unit-cost";
+import {
+  EXCEL_NUMBER_FORMAT,
+  toExcelNumber,
+} from "@workspace/number-format";
+
+export const inventarioRouter = Router();
+
+// ── Scope helpers ─────────────────────────────────────────────────────────────
+//
+// Read scope (alcanceConsulta):
+//   TODAS  — user may see data for any location; if they pass a ubicacionId
+//             filter we honor it, otherwise no location filter is applied.
+//   PROPIA — user may only see data for their own assigned location; any
+//             requested ubicacionId is ignored and overridden by the assigned one.
+//
+// Operational scope (mutations):
+//   ADMIN  — may operate on any location without restriction.
+//   others — may only touch their own assigned ubicacionId. Attempting to
+//             operate on a different location returns 403 before engine call.
+
+/**
+ * Returns the `ubicacionId` that should be used to filter a read query.
+ *
+ * - ADMIN: use requestedUbicacionId (may be undefined = all), regardless of
+ *   alcanceConsulta.
+ * - Non-ADMIN with alcanceConsulta PROPIA: always use assigned ubicacionId.
+ * - If the user has no assigned location and scope is PROPIA, returns null
+ *   (caller should return an empty set or 400).
+ */
+/**
+ * For mutations: verifies that all implicated ubicacionIds are within the
+ * user's operational scope.
+ *
+ * ADMIN may operate any location (returns null = no error).
+ * Non-ADMIN must have all provided ubicacionIds equal to their assigned one.
+ *
+ * Returns an error message string if the check fails, or null if allowed.
+ */
+export function checkOperationalScope(
+  auth: AuthContext,
+  ubicacionIds: number[],
+): string | null {
+  if (auth.user.rol === "ADMIN" || auth.user.rol === "SUPERVISOR") return null;
+
+  const assigned = auth.user.ubicacionId;
+  if (assigned == null) {
+    return "No tienes una ubicación asignada.";
+  }
+
+  for (const id of ubicacionIds) {
+    if (id !== assigned) {
+      return "No tienes permiso para operar en esa ubicación.";
+    }
+  }
+  return null;
+}
+
+// ── Fecha del servidor ────────────────────────────────────────────────────────
+// Unauthenticated — returns the server clock so the UI can display the real
+// server date/time before the user submits a form. Accepts no client input.
+
+inventarioRouter.get("/fecha-servidor", (_req, res): void => {
+  const now = new Date();
+  res.json(
+    GetFechaServidorResponse.parse({
+      fecha: now.toISOString(),
+      zonaHoraria: "America/Mexico_City",
+    }),
+  );
+});
+
+// ── Helper types ──────────────────────────────────────────────────────────────
+
+type MovimientoRow = {
+  id: number;
+  rolloId: number;
+  productoId: number;
+  ubicacionId: number;
+  tipo: string;
+  motivoSalidaExtraordinaria: "MERMA" | "ROBO" | "MUESTRA" | null;
+  cantidad: string;
+  saldoPosterior: string;
+  documentoTipo: string | null;
+  documentoId: string | null;
+  documentoRuta: string | null;
+  documentoEtiqueta: string | null;
+  /** Owning client ID for a live MOVIMIENTO_CREDITO document reference. */
+  documentoClienteId: number | null;
+  movimientoOrigenId: number | null;
+  usuarioId: number;
+  justificacion: string | null;
+  revisado: boolean;
+  revisadoPor: number | null;
+  revisadoAt: string | null;
+  uuidCliente: string | null;
+  createdAt: string;
+};
+
+type MovimientoDetalle = {
+  id: number;
+  rolloId: number;
+  serie: string | null;
+  productoId: number;
+  skuProducto: string | null;
+  ubicacionId: number;
+  nombreUbicacion: string | null;
+  tipo: string;
+  cantidad: string;
+  saldoPosterior: string;
+  documentoTipo: string | null;
+  documentoId: string | null;
+  movimientoOrigenId: number | null;
+  usuarioId: number;
+  motivoSalidaExtraordinaria: "MERMA" | "ROBO" | "MUESTRA" | null;
+  justificacion: string | null;
+  revisado: boolean;
+  createdAt: string;
+};
+
+function serializeMovimiento(
+  mov: typeof movimientosTable.$inferSelect,
+  document: { label: string | null; route: string | null },
+  documentoClienteId: number | null = null,
+): MovimientoRow {
+  return {
+    id: Number(mov.id),
+    rolloId: mov.rolloId,
+    productoId: mov.productoId,
+    ubicacionId: mov.ubicacionId,
+    tipo: mov.tipo,
+    motivoSalidaExtraordinaria: mov.motivoSalidaExtraordinaria ?? null,
+    cantidad: mov.cantidad,
+    saldoPosterior: mov.saldoPosterior,
+    documentoTipo: mov.documentoTipo ?? null,
+    documentoId: mov.documentoId ?? null,
+    documentoRuta: document.route,
+    documentoEtiqueta: document.label,
+    documentoClienteId,
+    movimientoOrigenId: mov.movimientoOrigenId ?? null,
+    usuarioId: mov.usuarioId,
+    justificacion: mov.justificacion ?? null,
+    revisado: mov.revisado,
+    revisadoPor: mov.revisadoPor ?? null,
+    revisadoAt: mov.revisadoAt?.toISOString() ?? null,
+    uuidCliente: mov.uuidCliente ?? null,
+    createdAt: mov.createdAt.toISOString(),
+  };
+}
+
+async function enrichMovimiento(
+  mov: typeof movimientosTable.$inferSelect,
+): Promise<MovimientoRow> {
+  const context = await loadMovementDocumentContext([mov]);
+  return serializeMovimiento(
+    mov,
+    context.documents[0] ?? { label: null, route: null },
+    context.references[0]?.tipo === "MOVIMIENTO_CREDITO" &&
+      context.references[0]?.id
+      ? (context.creditMovementMap.get(Number(context.references[0].id))?.clienteId ??
+        null)
+      : null,
+  );
+}
+
+async function enrichMovimientos(
+  movimientos: readonly (typeof movimientosTable.$inferSelect)[],
+): Promise<MovimientoRow[]> {
+  const context = await loadMovementDocumentContext(movimientos);
+  return movimientos.map((mov, index) => {
+    return serializeMovimiento(
+      mov,
+      context.documents[index] ?? { label: null, route: null },
+      context.references[index]?.tipo === "MOVIMIENTO_CREDITO" &&
+        context.references[index]?.id
+        ? (context.creditMovementMap.get(Number(context.references[index].id))?.clienteId ??
+          null)
+        : null,
+    );
+  });
+}
+
+/**
+ * Movement detail is a read-only origin record.  Keep this response separate
+ * from the roll history shape so the adjustment modal cannot receive client
+ * UUIDs, reviewer identities, costs, or any other unrelated sensitive field.
+ */
+async function getInventoryMovementDetail(
+  movimientoId: number,
+): Promise<MovimientoDetalle | null> {
+  const [row] = await db
+    .select({
+      id: movimientosTable.id,
+      rolloId: movimientosTable.rolloId,
+      serie: rollosTable.serie,
+      productoId: movimientosTable.productoId,
+      skuProducto: productosTable.sku,
+      ubicacionId: movimientosTable.ubicacionId,
+      nombreUbicacion: ubicacionesTable.nombre,
+      tipo: movimientosTable.tipo,
+      cantidad: movimientosTable.cantidad,
+      saldoPosterior: movimientosTable.saldoPosterior,
+      documentoTipo: movimientosTable.documentoTipo,
+      documentoId: movimientosTable.documentoId,
+      movimientoOrigenId: movimientosTable.movimientoOrigenId,
+      usuarioId: movimientosTable.usuarioId,
+      motivoSalidaExtraordinaria: movimientosTable.motivoSalidaExtraordinaria,
+      justificacion: movimientosTable.justificacion,
+      revisado: movimientosTable.revisado,
+      createdAt: movimientosTable.createdAt,
+    })
+    .from(movimientosTable)
+    .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))
+    .innerJoin(productosTable, eq(movimientosTable.productoId, productosTable.id))
+    .innerJoin(ubicacionesTable, eq(movimientosTable.ubicacionId, ubicacionesTable.id))
+    .where(eq(movimientosTable.id, movimientoId))
+    .limit(1);
+  if (!row) return null;
+  return {
+    id: Number(row.id),
+    rolloId: Number(row.rolloId),
+    serie: row.serie ?? null,
+    productoId: Number(row.productoId),
+    skuProducto: row.skuProducto ?? null,
+    ubicacionId: Number(row.ubicacionId),
+    nombreUbicacion: row.nombreUbicacion ?? null,
+    tipo: row.tipo,
+    cantidad: row.cantidad,
+    saldoPosterior: row.saldoPosterior,
+    documentoTipo: row.documentoTipo ?? null,
+    documentoId: row.documentoId ?? null,
+    movimientoOrigenId: row.movimientoOrigenId == null
+      ? null
+      : Number(row.movimientoOrigenId),
+    usuarioId: Number(row.usuarioId),
+    motivoSalidaExtraordinaria: row.motivoSalidaExtraordinaria ?? null,
+    justificacion: row.justificacion ?? null,
+    revisado: row.revisado,
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+/**
+ * Canonical read-scope decision for an immutable movement.  A mismatched
+ * location intentionally becomes a 404 so PROPIA users cannot probe whether
+ * another site's movement exists.
+ */
+export function movementInReadScope(
+  auth: AuthContext,
+  movementLocationId: number,
+): "allow" | "forbidden" | "not-found" {
+  const scope = resolveReadScope(auth);
+  if (scope.scopeError) return "forbidden";
+  if (scope.ubicacionId != null && scope.ubicacionId !== movementLocationId) {
+    return "not-found";
+  }
+  return "allow";
+}
+
+async function getRolloDetail(rolloId: number) {
+  const [rollo] = await db
+    .select({
+      id: rollosTable.id,
+      serie: rollosTable.serie,
+      productoId: rollosTable.productoId,
+      sku: productosTable.sku,
+      tela: productosTable.tela,
+      color: productosTable.color,
+      unidad: productosTable.unidad,
+      ubicacionId: rollosTable.ubicacionId,
+      nombreUbicacion: ubicacionesTable.nombre,
+       pisoId: rollosTable.pisoId,
+       nombrePiso: pisosTable.nombre,
+      proveedorId: rollosTable.proveedorId,
+      recepcionId: rollosTable.recepcionId,
+      estado: rollosTable.estado,
+      cantidadInicial: rollosTable.cantidadInicial,
+      cantidadActual: rollosTable.cantidadActual,
+      costoUnitario: rollosTable.costoUnitario,
+      costoTotal: rollosTable.costoTotal,
+      notas: rollosTable.notas,
+      createdAt: rollosTable.createdAt,
+      updatedAt: rollosTable.updatedAt,
+    })
+    .from(rollosTable)
+    .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+    .innerJoin(ubicacionesTable, eq(rollosTable.ubicacionId, ubicacionesTable.id))
+    .leftJoin(pisosTable, eq(rollosTable.pisoId, pisosTable.id))
+    .where(eq(rollosTable.id, rolloId))
+    .limit(1);
+
+  if (!rollo) return null;
+
+  const movimientos = await db
+    .select()
+    .from(movimientosTable)
+    .where(eq(movimientosTable.rolloId, rolloId))
+    .orderBy(desc(movimientosTable.id));
+
+  return {
+    id: rollo.id,
+    serie: rollo.serie,
+    productoId: rollo.productoId,
+    skuProducto: rollo.sku,
+    telaProducto: rollo.tela,
+    colorProducto: rollo.color,
+    unidadProducto: rollo.unidad,
+    ubicacionId: rollo.ubicacionId,
+    nombreUbicacion: rollo.nombreUbicacion,
+    pisoId: rollo.pisoId ?? null,
+    nombrePiso: rollo.nombrePiso ?? null,
+    proveedorId: rollo.proveedorId ?? null,
+    estado: rollo.estado,
+    cantidadInicial: rollo.cantidadInicial,
+    cantidadActual: rollo.cantidadActual,
+    costoUnitario: rollo.costoUnitario,
+    costoTotal: rollo.costoTotal,
+    notas: rollo.notas ?? null,
+    historial: await enrichMovimientos(
+      movimientos.map((mov) => ({
+        ...mov,
+        recepcionId: rollo.recepcionId ?? null,
+      })),
+    ),
+    createdAt: rollo.createdAt.toISOString(),
+    updatedAt: rollo.updatedAt.toISOString(),
+  };
+}
+
+async function getSalidaExtraordinaria(movimientoId: number) {
+  const [row] = await db
+    .select({
+      movimientoId: movimientosTable.id,
+      rolloId: rollosTable.id,
+      serie: rollosTable.serie,
+      productoId: productosTable.id,
+      skuProducto: productosTable.sku,
+      telaProducto: productosTable.tela,
+      colorProducto: productosTable.color,
+      unidadProducto: productosTable.unidad,
+      ubicacionId: ubicacionesTable.id,
+      nombreUbicacion: ubicacionesTable.nombre,
+      cantidad: movimientosTable.cantidad,
+      motivo: movimientosTable.motivoSalidaExtraordinaria,
+      justificacion: movimientosTable.justificacion,
+      usuarioId: usuariosTable.id,
+      nombreUsuario: usuariosTable.nombre,
+      uuidCliente: movimientosTable.uuidCliente,
+      createdAt: movimientosTable.createdAt,
+    })
+    .from(movimientosTable)
+    .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))
+    .innerJoin(
+      productosTable,
+      eq(movimientosTable.productoId, productosTable.id),
+    )
+    .innerJoin(
+      ubicacionesTable,
+      eq(movimientosTable.ubicacionId, ubicacionesTable.id),
+    )
+    .innerJoin(usuariosTable, eq(movimientosTable.usuarioId, usuariosTable.id))
+    .where(
+      and(
+        eq(movimientosTable.id, movimientoId),
+        sql`${movimientosTable.motivoSalidaExtraordinaria} IS NOT NULL`,
+      ),
+    )
+    .limit(1);
+  if (
+    !row ||
+    row.motivo == null ||
+    row.justificacion == null ||
+    row.uuidCliente == null
+  ) {
+    return null;
+  }
+  return {
+    ...row,
+    movimientoId: Number(row.movimientoId),
+    createdAt: row.createdAt.toISOString(),
+  };
+}
+
+// Salidas extraordinarias reuse the existing salidas permission module because
+// they are inventory exits; the direct ADMIN guard remains non-configurable.
+inventarioRouter.get(
+  "/salidas-extraordinarias",
+  requireSession,
+  requierePermiso("salidas", "ver"),
+  requiereAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const query = ListSalidasExtraordinariasQueryParams.safeParse(req.query);
+      if (!query.success) {
+        res.status(400).json({ error: "Filtros inválidos." });
+        return;
+      }
+      const desde = parseMexicoDateQuery(query.data.fechaDesde, "start");
+      const hasta = parseMexicoDateQuery(query.data.fechaHasta, "end");
+      if (desde === null || hasta === null) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
+      const page = query.data.page ?? 1;
+      const pageSize = query.data.pageSize ?? 20;
+      const conditions = [
+        sql`${movimientosTable.motivoSalidaExtraordinaria} IS NOT NULL`,
+      ];
+      if (query.data.ubicacionId) {
+        conditions.push(
+          eq(movimientosTable.ubicacionId, query.data.ubicacionId),
+        );
+      }
+      if (query.data.motivo) {
+        conditions.push(
+          eq(
+            movimientosTable.motivoSalidaExtraordinaria,
+            query.data.motivo,
+          ),
+        );
+      }
+      if (desde) conditions.push(gte(movimientosTable.createdAt, desde));
+      if (hasta) conditions.push(lte(movimientosTable.createdAt, hasta));
+      const where = and(...conditions);
+
+      const [[totalRow], rows] = await Promise.all([
+        db
+          .select({ value: count() })
+          .from(movimientosTable)
+          .where(where),
+        db
+          .select({
+            movimientoId: movimientosTable.id,
+            rolloId: rollosTable.id,
+            serie: rollosTable.serie,
+            productoId: productosTable.id,
+            skuProducto: productosTable.sku,
+            telaProducto: productosTable.tela,
+            colorProducto: productosTable.color,
+            unidadProducto: productosTable.unidad,
+            ubicacionId: ubicacionesTable.id,
+            nombreUbicacion: ubicacionesTable.nombre,
+            cantidad: movimientosTable.cantidad,
+            motivo: movimientosTable.motivoSalidaExtraordinaria,
+            justificacion: movimientosTable.justificacion,
+            usuarioId: usuariosTable.id,
+            nombreUsuario: usuariosTable.nombre,
+            uuidCliente: movimientosTable.uuidCliente,
+            createdAt: movimientosTable.createdAt,
+          })
+          .from(movimientosTable)
+          .innerJoin(rollosTable, eq(movimientosTable.rolloId, rollosTable.id))
+          .innerJoin(
+            productosTable,
+            eq(movimientosTable.productoId, productosTable.id),
+          )
+          .innerJoin(
+            ubicacionesTable,
+            eq(movimientosTable.ubicacionId, ubicacionesTable.id),
+          )
+          .innerJoin(
+            usuariosTable,
+            eq(movimientosTable.usuarioId, usuariosTable.id),
+          )
+          .where(where)
+          .orderBy(desc(movimientosTable.createdAt), desc(movimientosTable.id))
+          .limit(pageSize)
+          .offset((page - 1) * pageSize),
+      ]);
+      const items = rows.map((row) => ({
+        ...row,
+        movimientoId: Number(row.movimientoId),
+        createdAt: row.createdAt.toISOString(),
+      }));
+      res.json(
+        ListSalidasExtraordinariasResponse.parse({
+          items,
+          total: totalRow?.value ?? 0,
+          page,
+          pageSize,
+        }),
+      );
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.post(
+  "/salidas-extraordinarias",
+  requireSession,
+  requierePermiso("salidas", "crear"),
+  requiereAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const body = CreateSalidaExtraordinariaBody.parse(req.body);
+      const result = await db.transaction((tx) =>
+        crearSalidaExtraordinaria(tx, {
+          rolloId: body.rolloId,
+          motivo: body.motivo,
+          justificacion: body.justificacion,
+          usuarioId: req.auth!.user.id,
+          uuidCliente: body.uuidCliente,
+          ip: getRequestIp(req),
+        }),
+      );
+      const salida = await getSalidaExtraordinaria(Number(result.movimiento.id));
+      if (!salida) {
+        throw new Error("No se pudo leer la salida extraordinaria creada.");
+      }
+      res.status(201).json(CreateSalidaExtraordinariaResponse.parse(salida));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        const status =
+          error.code === "ROLLO_NOT_FOUND"
+            ? 404
+            : error.code === "UUID_ALREADY_USED"
+              ? 409
+              : 400;
+        res.status(status).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.post(
+  "/salidas-extraordinarias/:movimientoId/revertir",
+  requireSession,
+  requierePermiso("salidas", "editar"),
+  requiereAdmin,
+  async (req, res, next): Promise<void> => {
+    try {
+      const params = RevertSalidaExtraordinariaParams.parse(req.params);
+      const body = RevertSalidaExtraordinariaBody.parse(req.body);
+      const result = await db.transaction(async (tx) => {
+        const [origin] = await tx
+          .select({
+            id: movimientosTable.id,
+            motivo: movimientosTable.motivoSalidaExtraordinaria,
+          })
+          .from(movimientosTable)
+          .where(eq(movimientosTable.id, params.movimientoId))
+          .limit(1);
+        if (!origin || origin.motivo == null) {
+          throw new InventarioError(
+            "Salida extraordinaria no encontrada.",
+            "MOVIMIENTO_NOT_FOUND",
+          );
+        }
+        const reversed = await revertirMovimiento(tx, {
+          movimientoOrigenId: params.movimientoId,
+          usuarioId: req.auth!.user.id,
+          justificacion: body.justificacion,
+          uuidCliente: body.uuidCliente,
+        });
+        if (
+          reversed.movimiento.tipo !== "CANCELACION" ||
+          reversed.movimiento.movimientoOrigenId !== params.movimientoId
+        ) {
+          throw new InventarioError(
+            "El identificador de la operación ya fue utilizado.",
+            "UUID_ALREADY_USED",
+          );
+        }
+        const [existingAudit] = await tx
+          .select({ id: auditoriaTable.id })
+          .from(auditoriaTable)
+          .where(
+            and(
+              eq(auditoriaTable.accion, "REVERTIR_SALIDA_EXTRAORDINARIA"),
+              eq(auditoriaTable.entidad, "movimientos"),
+              eq(auditoriaTable.entidadId, String(params.movimientoId)),
+            ),
+          )
+          .limit(1);
+        if (!existingAudit) {
+          await tx.insert(auditoriaTable).values({
+            usuarioId: req.auth!.user.id,
+            sitioId: reversed.movimiento.ubicacionId,
+            modulo: "salidas",
+            accion: "REVERTIR_SALIDA_EXTRAORDINARIA",
+            entidad: "movimientos",
+            entidadId: String(params.movimientoId),
+            datosAntes: { motivo: origin.motivo },
+            datosDespues: {
+              movimientoReversoId: Number(reversed.movimiento.id),
+              justificacion: reversed.movimiento.justificacion,
+            },
+            ip: getRequestIp(req),
+          });
+        }
+        return reversed;
+      });
+      const detail = await getRolloDetail(result.rollo.id);
+      res.json(RevertSalidaExtraordinariaResponse.parse(detail));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        const status =
+          error.code === "MOVIMIENTO_NOT_FOUND" ||
+          error.code === "ROLLO_NOT_FOUND"
+            ? 404
+            : error.code === "ALREADY_CANCELLED" ||
+                error.code === "UUID_ALREADY_USED"
+              ? 409
+              : 400;
+        res.status(status).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
+    }
+  },
+);
+
+// ── Crear entrada (entrada completa en una transacción) ───────────────────────
+
+inventarioRouter.post(
+  "/entradas",
+  requireSession,
+  requierePermiso("entradas", "crear"),
+  async (req, res, next) => {
+    try {
+      const body = CrearEntradaBody.parse(req.body);
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Determine target location: ADMIN uses body value; non-ADMIN is forced
+      // to their assigned location (operational scope check).
+      let ubicacionId = body.ubicacionId;
+      const scopeErr = checkOperationalScope(auth, [ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+      // For non-ADMIN, override with their assigned location to be safe even if
+      // checkOperationalScope passed (assigned === body.ubicacionId).
+      if (
+        auth.user.rol !== "ADMIN" &&
+        auth.user.rol !== "SUPERVISOR" &&
+        auth.user.ubicacionId != null
+      ) {
+        ubicacionId = auth.user.ubicacionId;
+      }
+
+      // ── Business validation ──────────────────────────────────────────────
+      if (body.lineas.length === 0) {
+        res.status(400).json({ error: "La entrada debe incluir al menos una línea." });
+        return;
+      }
+
+      // Duplicate product lines
+      const productoIds = body.lineas.map((l) => l.productoId);
+      if (new Set(productoIds).size !== productoIds.length) {
+        res
+          .status(400)
+          .json({ error: "No se permiten líneas de producto duplicadas." });
+        return;
+      }
+
+      // Quantities and costs must be positive
+      for (const linea of body.lineas) {
+        if (linea.cantidades.length === 0) {
+          res
+            .status(400)
+            .json({ error: "Cada línea debe incluir al menos una cantidad." });
+          return;
+        }
+        if (
+          auth.user.rol !== "BODEGA" &&
+          auth.user.rol !== "SUPERVISOR" &&
+          !isValidUnitCost(linea.costoUnitario)
+        ) {
+          res
+            .status(400)
+            .json({ error: "El costo unitario debe ser mayor a cero." });
+          return;
+        }
+        for (const c of linea.cantidades) {
+          if (parseFloat(c) <= 0) {
+            res
+              .status(400)
+              .json({ error: "Las cantidades deben ser mayores a cero." });
+            return;
+          }
+        }
+      }
+
+      // Location must exist, be active, and not TRANSITO/EXTERNO
+      const [ubicacion] = await db
+        .select()
+        .from(ubicacionesTable)
+        .where(eq(ubicacionesTable.id, ubicacionId))
+        .limit(1);
+      if (!ubicacion || !ubicacion.activa) {
+        res.status(400).json({ error: "Ubicación inválida o inactiva." });
+        return;
+      }
+      if (ubicacion.tipo === "TRANSITO" || ubicacion.tipo === "EXTERNO") {
+        res.status(400).json({
+          error: "No se pueden dar entradas en ubicaciones de tránsito o externas.",
+        });
+        return;
+      }
+
+      // Products must exist and be active
+      const productos = await db
+        .select({
+          id: productosTable.id,
+          activo: productosTable.activo,
+          unidad: productosTable.unidad,
+        })
+        .from(productosTable)
+        .where(inArray(productosTable.id, productoIds));
+      const productoMap = new Map(productos.map((p) => [p.id, p]));
+      for (const id of productoIds) {
+        const p = productoMap.get(id);
+        if (!p) {
+          res.status(400).json({ error: `Producto ${id} no encontrado.` });
+          return;
+        }
+        if (!p.activo) {
+          res.status(400).json({ error: `Producto ${id} está inactivo.` });
+          return;
+        }
+      }
+      for (const linea of body.lineas) {
+        if (
+          (productoMap.get(linea.productoId)?.unidad === "BOLSA" ||
+            productoMap.get(linea.productoId)?.unidad === "PIEZA") &&
+          linea.cantidades.some((cantidad) => !Number.isInteger(Number(cantidad)))
+        ) {
+          res.status(400).json({
+            error: `La cantidad de ${productoMap.get(linea.productoId)?.unidad === "PIEZA" ? "piezas" : "bolsas"} por registro debe ser un número entero.`,
+            code: `${productoMap.get(linea.productoId)?.unidad}_INTEGER_QUANTITY_REQUIRED`,
+          });
+          return;
+        }
+      }
+
+      // Provider (optional) must exist and be active
+      if (body.proveedorId != null) {
+        const [prov] = await db
+          .select({ id: proveedoresTable.id, activo: proveedoresTable.activo })
+          .from(proveedoresTable)
+          .where(eq(proveedoresTable.id, body.proveedorId))
+          .limit(1);
+        if (!prov) {
+          res.status(400).json({ error: "Proveedor no encontrado." });
+          return;
+        }
+        if (!prov.activo) {
+          res.status(400).json({ error: "El proveedor está inactivo." });
+          return;
+        }
+      }
+
+      const result = await db.transaction(async (tx) =>
+        crearEntrada(tx, {
+          ubicacionId,
+          proveedorId: body.proveedorId ?? null,
+          observaciones: body.observaciones ?? null,
+          usuarioId,
+          ip: getRequestIp(req),
+          uuidCliente: body.uuidCliente,
+           contenedorId: body.contenedorId ?? null,
+          lineas: body.lineas.map((l) => ({
+            productoId: l.productoId,
+             costoUnitario:
+                auth.user.rol === "BODEGA" ||
+                auth.user.rol === "SUPERVISOR"
+                  ? null
+                  : (l.costoUnitario ?? null),
+            cantidades: l.cantidades,
+            pisosPorCantidad: l.pisosPorCantidad,
+          })),
+            allowPendingCosts:
+              auth.user.rol === "BODEGA" ||
+              auth.user.rol === "SUPERVISOR",
+        }),
+      );
+
+      const response = CrearEntradaResponse.parse(result);
+      res
+        .status(201)
+        .json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        res.status(400).json({ error: e.message });
+        return;
+      }
+      const databaseError = e as {
+        code?: string;
+        constraint?: string;
+      };
+      if (
+        databaseError.code === "23505" &&
+        databaseError.constraint?.includes("folio")
+      ) {
+        req.log.error({ err: e }, "Entry folio conflict");
+        res.status(409).json({
+          error:
+            "No se pudo asignar el folio de la entrada. No se guardó ningún cambio; intenta registrarla nuevamente.",
+          code: "ENTRY_FOLIO_CONFLICT",
+        });
+        return;
+      }
+      req.log.error({ err: e }, "Failed to create entry");
+      res.status(500).json({
+        error:
+          "No se pudo registrar la entrada. No se guardó ningún cambio; intenta nuevamente. Si el problema continúa, reporta el folio del sitio y la hora del intento.",
+        code: "ENTRY_CREATE_FAILED",
+      });
+    }
+  },
+);
+
+// ── Listar entradas ───────────────────────────────────────────────────────────
+
+inventarioRouter.get(
+  "/entradas",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      // Keep calendar-day query values as strings through contract validation.
+      // Convert only after validation when the database needs Mexico-local
+      // timestamp bounds.
+      const q = ListEntradasQueryParams.parse(req.query);
+      const fechaDesde = parseMexicoDateQuery(q.fechaDesde, "start");
+      const fechaHasta = parseMexicoDateQuery(q.fechaHasta, "end");
+      if (
+        (q.fechaDesde !== undefined && fechaDesde === null) ||
+        (q.fechaHasta !== undefined && fechaHasta === null)
+      ) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
+      const page = q.page ?? 1;
+      const pageSize = q.pageSize ?? 20;
+      const offset = (page - 1) * pageSize;
+
+      const auth = req.auth!;
+
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const conditions = [];
+      if (q.folio) {
+        const folioMatch = q.folio.match(/^([A-Z]{2,3}-)?(\d+)$/i);
+        if (folioMatch) {
+          conditions.push(eq(entradasTable.folio, Number(folioMatch[2])));
+          if (folioMatch[1]) {
+            conditions.push(
+              sql`EXISTS (
+                SELECT 1 FROM ubicaciones u
+                 WHERE u.id = ${entradasTable.ubicacionId}
+                   AND u.iniciales = ${folioMatch[1].slice(0, -1).toUpperCase()}
+              )`,
+            );
+          }
+        }
+      }
+      if (q.proveedorId)
+        conditions.push(eq(entradasTable.proveedorId, q.proveedorId));
+
+      // Apply resolved location scope
+      if (scopedUbicacionId != null) {
+        conditions.push(eq(entradasTable.ubicacionId, scopedUbicacionId));
+      }
+
+      if (fechaDesde) conditions.push(gte(entradasTable.fecha, fechaDesde));
+      if (fechaHasta) conditions.push(lte(entradasTable.fecha, fechaHasta));
+
+      const where = conditions.length ? and(...conditions) : undefined;
+
+      const [totalRow] = await db
+        .select({ cnt: count() })
+        .from(entradasTable)
+        .where(where);
+
+      const rows = await db
+        .select({
+          id: entradasTable.id,
+          folio: entradasTable.folio,
+          ubicacionId: entradasTable.ubicacionId,
+          nombreUbicacion: ubicacionesTable.nombre,
+          inicialesSitio: ubicacionesTable.iniciales,
+          proveedorId: entradasTable.proveedorId,
+          nombreProveedor: proveedoresTable.nombre,
+          usuarioId: entradasTable.usuarioId,
+          nombreUsuario: usuariosTable.nombre,
+          fecha: entradasTable.fecha,
+          totalRollos: entradasTable.totalRollos,
+          totalCosto: entradasTable.totalCosto,
+          createdAt: entradasTable.createdAt,
+        })
+        .from(entradasTable)
+        .innerJoin(
+          ubicacionesTable,
+          eq(entradasTable.ubicacionId, ubicacionesTable.id),
+        )
+        .innerJoin(usuariosTable, eq(entradasTable.usuarioId, usuariosTable.id))
+        .leftJoin(
+          proveedoresTable,
+          eq(entradasTable.proveedorId, proveedoresTable.id),
+        )
+        .where(where)
+        .orderBy(desc(entradasTable.folio))
+        .limit(pageSize)
+        .offset(offset);
+
+      const items = rows.map((r) => ({
+        id: r.id,
+        folio: r.folio,
+        inicialesSitio: r.inicialesSitio,
+        folioFormateado: `${r.inicialesSitio}-${String(r.folio).padStart(6, "0")}`,
+        ubicacionId: r.ubicacionId,
+        nombreUbicacion: r.nombreUbicacion,
+        proveedorId: r.proveedorId ?? null,
+        nombreProveedor: r.nombreProveedor ?? null,
+        usuarioId: r.usuarioId,
+        nombreUsuario: r.nombreUsuario,
+        fecha: r.fecha.toISOString(),
+        totalRollos: r.totalRollos,
+        totalCosto: r.totalCosto,
+        createdAt: r.createdAt.toISOString(),
+      }));
+
+      const response = ListEntradasResponse.parse({
+        items,
+        total: totalRow?.cnt ?? 0,
+        page,
+        pageSize,
+      });
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+           auth.user.rol !== "ADMIN",
+        ),
+      );
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ── Catálogos operativos de Entradas ─────────────────────────────────────────
+// Protected by entradas/ver so BODEGA can capture entries without receiving
+// access to the broader Productos or Proveedores administration modules.
+
+inventarioRouter.get(
+  "/entradas/catalogos",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (_req, res, next) => {
+    try {
+      const [productos, proveedores] = await Promise.all([
+        db
+          .select({
+            id: productosTable.id,
+            sku: productosTable.sku,
+            tela: productosTable.tela,
+            color: productosTable.color,
+            unidad: productosTable.unidad,
+            activo: productosTable.activo,
+          })
+          .from(productosTable)
+          .where(eq(productosTable.activo, true))
+          .orderBy(asc(productosTable.tela), asc(productosTable.color)),
+        db
+          .select({
+            id: proveedoresTable.id,
+            nombre: proveedoresTable.nombre,
+            activo: proveedoresTable.activo,
+          })
+          .from(proveedoresTable)
+          .where(eq(proveedoresTable.activo, true))
+          .orderBy(asc(proveedoresTable.nombre)),
+      ]);
+      res.json(
+        GetCatalogosEntradaResponse.parse({ productos, proveedores }),
+      );
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+// ── Entradas con costo pendiente (exclusivo ADMIN) ────────────────────────────
+
+inventarioRouter.get(
+  "/entradas/pendientes-costo/count",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      if (req.auth!.user.rol !== "ADMIN") {
+        res.status(403).json({ error: "Esta operación requiere rol ADMIN." });
+        return;
+      }
+      const [row] = await db
+        .select({ value: countDistinct(rollosTable.recepcionId) })
+        .from(rollosTable)
+        .where(isNull(rollosTable.costoUnitario));
+      res.json(CountEntradasPendientesCostoResponse.parse({ count: row?.value ?? 0 }));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/entradas/pendientes-costo",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      if (req.auth!.user.rol !== "ADMIN") {
+        res.status(403).json({ error: "Esta operación requiere rol ADMIN." });
+        return;
+      }
+      const q = ListEntradasPendientesCostoQueryParams.parse(req.query);
+      const page = q.page ?? 1;
+      const pageSize = q.pageSize ?? 20;
+      const result = await db.execute(sql`
+        SELECT e.id, e.folio, u.iniciales AS iniciales_sitio, e.fecha, u.nombre AS nombre_ubicacion,
+               p.nombre AS nombre_proveedor, us.nombre AS nombre_usuario,
+               COUNT(r.id)::int AS rollos_pendientes,
+               COALESCE(SUM(r.cantidad_inicial) FILTER
+                 (WHERE pr.unidad = 'METRO'), 0)::text AS total_metros,
+               COALESCE(SUM(r.cantidad_inicial) FILTER
+                 (WHERE pr.unidad = 'KILO'), 0)::text AS total_kilos,
+                COALESCE(SUM(r.cantidad_inicial) FILTER
+                  (WHERE pr.unidad = 'BOLSA'), 0)::text AS total_bolsas,
+               COALESCE(SUM(r.cantidad_inicial) FILTER
+                 (WHERE pr.unidad = 'PIEZA'), 0)::text AS total_piezas,
+               (e.created_at < now() - interval '48 hours') AS overdue_48h,
+               COUNT(*) OVER()::int AS total_rows
+        FROM entradas e
+        JOIN ubicaciones u ON u.id = e.ubicacion_id
+        JOIN usuarios us ON us.id = e.usuario_id
+        LEFT JOIN proveedores p ON p.id = e.proveedor_id
+        JOIN rollos r ON r.recepcion_id = e.id AND r.costo_unitario IS NULL
+        JOIN productos pr ON pr.id = r.producto_id
+        GROUP BY e.id, u.iniciales, u.nombre, p.nombre, us.nombre
+        ORDER BY e.created_at ASC, e.id ASC
+        LIMIT ${pageSize} OFFSET ${(page - 1) * pageSize}
+      `);
+      const rows = result.rows as Array<Record<string, unknown>>;
+      res.json(ListEntradasPendientesCostoResponse.parse({
+        items: rows.map((row) => ({
+          id: Number(row.id),
+          folio: Number(row.folio),
+          inicialesSitio: String(row.iniciales_sitio),
+          folioFormateado: `${String(row.iniciales_sitio)}-${String(row.folio).padStart(6, "0")}`,
+          fecha: new Date(String(row.fecha)).toISOString(),
+          nombreUbicacion: String(row.nombre_ubicacion),
+          nombreProveedor: row.nombre_proveedor == null ? null : String(row.nombre_proveedor),
+          rollosPendientes: Number(row.rollos_pendientes),
+          totalMetros: String(row.total_metros),
+          totalKilos: String(row.total_kilos),
+          totalBolsas: String(row.total_bolsas),
+          totalPiezas: String(row.total_piezas),
+          nombreUsuario: String(row.nombre_usuario),
+          overdue48h: Boolean(row.overdue_48h),
+        })),
+        total: Number(rows[0]?.total_rows ?? 0),
+        page,
+        pageSize,
+      }));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.post(
+  "/entradas/:id/costos",
+  requireSession,
+  requierePermiso("entradas", "editar"),
+  async (req, res, next) => {
+    try {
+      if (req.auth!.user.rol !== "ADMIN") {
+        res.status(403).json({ error: "Esta operación requiere rol ADMIN." });
+        return;
+      }
+      const { id } = CapturarCostosEntradaParams.parse(req.params);
+      const body = CapturarCostosEntradaBody.parse(req.body);
+      const detail = await db.transaction((tx) =>
+        capturarCostosEntrada(tx, {
+          entradaId: id,
+          usuarioId: req.auth!.user.id,
+          ip: getRequestIp(req),
+          costosProductos: body.costosProductos,
+          costosRollos: body.costosRollos,
+        }),
+      );
+      res.json(CapturarCostosEntradaResponse.parse(detail));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        const status =
+          error.code === "ENTRADA_NOT_FOUND"
+            ? 404
+            : error.code.includes("ALREADY")
+              ? 409
+              : 400;
+        res.status(status).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
+    }
+  },
+);
+
+// ── Detalle de entrada ─────────────────────────────────────────────────────────
+
+inventarioRouter.get(
+  "/entradas/:id",
+  requireSession,
+  requierePermiso("entradas", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = GetEntradaParams.parse(req.params);
+      const auth = req.auth!;
+
+      const [entrada] = await db
+        .select({
+          ubicacionId: entradasTable.ubicacionId,
+        })
+        .from(entradasTable)
+        .where(eq(entradasTable.id, id))
+        .limit(1);
+
+      if (!entrada) {
+        res.status(404).json({ error: "Entrada no encontrada" });
+        return;
+      }
+
+      // Read scope check: PROPIA users can only see entries at their location
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(auth);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (
+        scopedUbicacionId != null &&
+        entrada.ubicacionId !== scopedUbicacionId
+      ) {
+        res.status(404).json({ error: "Entrada no encontrada" });
+        return;
+      }
+
+      const detail = await db.transaction(async (tx) =>
+        buildEntradaResult(tx, id),
+      );
+      const response = GetEntradaResponse.parse(detail);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        res.status(e.code === "ENTRADA_NOT_FOUND" ? 404 : 400).json({ error: e.message });
+        return;
+      }
+      next(e);
+    }
+  },
+);
+
+// ── Activar rollo (PROGRAMADO → DISPONIBLE) ───────────────────────────────────
+// Module: entradas / editar — rollo location is the relevant operational scope
+
+inventarioRouter.post(
+  "/rollos/:id/activar",
+  requireSession,
+  requierePermiso("entradas", "editar"),
+  async (req, res, next) => {
+    try {
+      const { id } = ActivarRolloParams.parse(req.params);
+      const body = ActivarRolloBody.parse(req.body);
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch rollo location before mutating so we can check operational scope
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+
+      const result = await db.transaction(async (tx) =>
+        activarRollo(tx, {
+          rolloId: id,
+          cantidadReal: body.cantidadReal,
+          usuarioId,
+          notas: body.notas ?? null,
+          uuidCliente: body.uuidCliente ?? null,
+        }),
+      );
+
+      const detail = await getRolloDetail(result.rollo.id);
+      if (!detail) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+      const response = ActivarRolloResponse.parse(detail);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
+        return;
+      }
+      next(e);
+    }
+  },
+);
+
+// ── Vender rollo (DISPONIBLE → VENDIDO) ──────────────────────────────────────
+// Module: pos / crear — scope: rollo's current location
+
+inventarioRouter.post(
+  "/rollos/:id/vender",
+  requireSession,
+  requierePermiso("pos", "crear"),
+  async (req, res, next) => {
+    try {
+      const { id } = VenderRolloParams.parse(req.params);
+      const body = VenderRolloBody.parse(req.body);
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+      if (auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error:
+            "Las ventas operativas deben registrarse mediante un ticket de Punto de venta.",
+        });
+        return;
+      }
+
+      // Fetch rollo location before mutating
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+
+      const result = await db.transaction(async (tx) =>
+        venderRollo(tx, {
+          rolloId: id,
+          usuarioId,
+          justificacion: body.justificacion ?? null,
+          uuidCliente: body.uuidCliente ?? null,
+        }),
+      );
+
+      const detail = await getRolloDetail(result.rollo.id);
+      if (!detail) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+      const response = VenderRolloResponse.parse(detail);
+      res.json(response);
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
+        return;
+      }
+      next(e);
+    }
+  },
+);
+
+// ── Ajustar rollo ─────────────────────────────────────────────────────────────
+// Module: ajustes / crear — scope: rollo's current location
+
+inventarioRouter.post(
+  "/rollos/:id/ajustar",
+  requireSession,
+  requierePermiso("ajustes", "crear"),
+  async (req, res, next) => {
+    try {
+      const { id } = AjustarRolloParams.parse(req.params);
+      const body = AjustarRolloBody.parse(req.body);
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch rollo location before mutating
+      const [rolloCheck] = await db
+        .select({ ubicacionId: rollosTable.ubicacionId })
+        .from(rollosTable)
+        .where(eq(rollosTable.id, id))
+        .limit(1);
+
+      if (!rolloCheck) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [rolloCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+
+      const result = await db.transaction(async (tx) =>
+        ajustarRollo(tx, {
+          rolloId: id,
+          cantidadNueva: body.cantidadNueva ?? null,
+          justificacion: body.justificacion,
+          usuarioId,
+          uuidCliente: body.uuidCliente ?? null,
+        }),
+      );
+
+      const detail = await getRolloDetail(result.rollo.id);
+      if (!detail) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+      const response = AjustarRolloResponse.parse(detail);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        res.status(e.code === "ROLLO_NOT_FOUND" ? 404 : 400).json({ error: e.message });
+        return;
+      }
+      next(e);
+    }
+  },
+);
+
+// ── Revertir movimiento ───────────────────────────────────────────────────────
+// Module: ajustes / autorizar — scope: rollo's current location (ADMIN-centric)
+
+inventarioRouter.post(
+  "/rollos/:id/revertir",
+  requireSession,
+  requierePermiso("ajustes", "autorizar"),
+  async (req, res, next) => {
+    try {
+      // id in path is rolloId, but reversal targets movimientoOrigenId from body
+      RevertirMovimientoParams.parse(req.params);
+      const body = RevertirMovimientoBody.parse(req.body);
+      const auth = req.auth!;
+      const usuarioId = auth.user.id;
+
+      // Fetch the origin movement to determine rollo's location for scope check
+      const [movCheck] = await db
+        .select({
+          ubicacionId: movimientosTable.ubicacionId,
+          rolloId: movimientosTable.rolloId,
+          motivoSalidaExtraordinaria:
+            movimientosTable.motivoSalidaExtraordinaria,
+        })
+        .from(movimientosTable)
+        .where(eq(movimientosTable.id, body.movimientoOrigenId))
+        .limit(1);
+
+      if (!movCheck) {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      if (
+        movCheck.motivoSalidaExtraordinaria != null &&
+        auth.user.rol !== "ADMIN"
+      ) {
+        res.status(403).json({
+          error: "Revertir una salida extraordinaria requiere rol ADMIN.",
+        });
+        return;
+      }
+
+      const scopeErr = checkOperationalScope(auth, [movCheck.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+
+      const result = await db.transaction(async (tx) =>
+        revertirMovimiento(tx, {
+          movimientoOrigenId: body.movimientoOrigenId,
+          usuarioId,
+          justificacion: body.justificacion ?? null,
+          uuidCliente: body.uuidCliente ?? null,
+        }),
+      );
+
+      const detail = await getRolloDetail(result.rollo.id);
+      if (!detail) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+      const response = RevertirMovimientoResponse.parse(detail);
+      res.json(omitTerminalSensitiveFields(response, auth.user.rol !== "ADMIN"));
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        const status =
+          e.code === "ROLLO_NOT_FOUND" || e.code === "MOVIMIENTO_NOT_FOUND"
+            ? 404
+            : 400;
+        res.status(status).json(
+          e.movimientoRelacionado
+            ? {
+                ...inventarioErrorEnvelope(e),
+              }
+            : { error: e.message },
+        );
+        return;
+      }
+      next(e);
+    }
+  },
+);
+
+// ── Get rollo detail ──────────────────────────────────────────────────────────
+// Module: inventario / ver — read scope applied to detail
+
+inventarioRouter.get(
+  "/rollos/:id",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = GetRolloParams.parse(req.params);
+      const auth = req.auth!;
+
+      const detail = await getRolloDetail(id);
+      if (!detail) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      // Read scope: PROPIA users can only view rollos in their assigned location
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(auth);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (scopedUbicacionId != null && detail.ubicacionId !== scopedUbicacionId) {
+        res.status(404).json({ error: "Rollo no encontrado" });
+        return;
+      }
+
+      const response = GetRolloResponse.parse(detail);
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol !== "ADMIN" && auth.user.rol !== "CAJA",
+        ),
+      );
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// Immutable movement origin used by the Ajustes drill-down.  This endpoint
+// performs one scoped read only; it never invokes an inventory operation,
+// recalculates stock, or writes an audit/ledger row.
+inventarioRouter.get(
+  "/movimientos/:id",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const { id } = GetInventarioMovimientoParams.parse(req.params);
+      const auth = req.auth!;
+      const readScope = resolveReadScope(auth);
+      if (readScope.scopeError) {
+        res.status(403).json({ error: readScope.scopeError });
+        return;
+      }
+      const detail = await getInventoryMovementDetail(id);
+      if (!detail) {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      if (movementInReadScope(auth, detail.ubicacionId) === "not-found") {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      res.json(GetInventarioMovimientoResponse.parse(detail));
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// Physical floor correction is intentionally not an inventory movement: it does
+// not change stock, state, location, ledger, or existence cache.
+inventarioRouter.patch(
+  "/rollos/:id/piso",
+  requireSession,
+  requierePermiso("inventario", "editar"),
+  async (req, res, next) => {
+    try {
+      const params = UpdateRolloPisoParams.parse(req.params);
+      const body = UpdateRolloPisoBody.parse(req.body);
+      const result = await db.transaction(async (tx) => {
+        const [rollo] = await tx.select().from(rollosTable)
+          .where(eq(rollosTable.id, params.id)).for("update").limit(1);
+        if (!rollo) throw new InventarioError("Rollo no encontrado.", "ROLLO_NOT_FOUND");
+        const scopeError = checkOperationalScope(req.auth!, [rollo.ubicacionId]);
+        if (scopeError) throw new InventarioError(scopeError, "SCOPE_DENIED");
+        const active = await tx.select({ id: pisosTable.id, nombre: pisosTable.nombre }).from(pisosTable)
+          .where(and(eq(pisosTable.ubicacionId, rollo.ubicacionId), eq(pisosTable.activo, true)));
+        const floor = body.pisoId == null ? null : active.find((item) => item.id === body.pisoId);
+        if ((active.length && !floor) || (!active.length && body.pisoId != null)) {
+          throw new InventarioError("El piso debe ser activo y pertenecer a la ubicación actual.", "INVALID_FLOOR");
+        }
+        const before = { pisoId: rollo.pisoId, nombrePiso: (await tx.select({ nombre: pisosTable.nombre }).from(pisosTable).where(eq(pisosTable.id, rollo.pisoId ?? -1)).limit(1))[0]?.nombre ?? null };
+        const [updated] = await tx.update(rollosTable).set({ pisoId: body.pisoId }).where(eq(rollosTable.id, rollo.id)).returning();
+        await tx.insert(auditoriaTable).values({
+          usuarioId: req.auth!.user.id, modulo: "inventario", accion: "CAMBIAR_PISO", entidad: "rollos",
+          entidadId: String(rollo.id), sitioId: rollo.ubicacionId, datosAntes: before,
+          datosDespues: { pisoId: body.pisoId, nombrePiso: floor?.nombre ?? null }, ip: getRequestIp(req),
+        });
+        return updated!;
+      });
+      const detail = await getRolloDetail(result.id);
+      res.json(UpdateRolloPisoResponse.parse(detail));
+    } catch (error) {
+      if (error instanceof InventarioError) {
+        res.status(error.code === "ROLLO_NOT_FOUND" ? 404 : error.code === "SCOPE_DENIED" ? 403 : 400).json({ error: error.message, code: error.code });
+        return;
+      }
+      next(error);
+    }
+  },
+);
+
+// ── List rollos ───────────────────────────────────────────────────────────────
+// Module: inventario / ver — read scope applied to list
+
+inventarioRouter.get(
+  "/rollos",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = ListRollosQueryParams.parse(req.query);
+      const page = q.page ?? 1;
+      const pageSize = q.pageSize ?? 20;
+      const offset = (page - 1) * pageSize;
+      const auth = req.auth!;
+
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const conditions = [];
+      // Apply resolved location scope (overrides any q.ubicacionId for PROPIA users)
+      if (scopedUbicacionId != null) {
+        conditions.push(eq(rollosTable.ubicacionId, scopedUbicacionId));
+      }
+      if (q.productoId)
+        conditions.push(eq(rollosTable.productoId, q.productoId));
+      if (q.pisoId) conditions.push(eq(rollosTable.pisoId, q.pisoId));
+      if (q.estado)
+        conditions.push(eq(rollosTable.estado, q.estado as EstadoRollo));
+      if (q.serie) {
+        const codigo = interpretarCodigoEscaneado(q.serie);
+        conditions.push(
+          codigo.serie
+            ? eq(rollosTable.serie, codigo.serie)
+            : ilike(rollosTable.serie, `%${q.serie}%`),
+        );
+      }
+      const where = conditions.length ? and(...conditions) : undefined;
+
+      const [totalRow] = await db
+        .select({ cnt: count() })
+        .from(rollosTable)
+        .where(where);
+
+      const rows = await db
+        .select({
+          id: rollosTable.id,
+          serie: rollosTable.serie,
+          productoId: rollosTable.productoId,
+          sku: productosTable.sku,
+          tela: productosTable.tela,
+          color: productosTable.color,
+          unidad: productosTable.unidad,
+          ubicacionId: rollosTable.ubicacionId,
+          nombreUbicacion: ubicacionesTable.nombre,
+          pisoId: rollosTable.pisoId,
+          nombrePiso: pisosTable.nombre,
+          proveedorId: rollosTable.proveedorId,
+          estado: rollosTable.estado,
+          cantidadInicial: rollosTable.cantidadInicial,
+          cantidadActual: rollosTable.cantidadActual,
+          costoUnitario: rollosTable.costoUnitario,
+          costoTotal: rollosTable.costoTotal,
+          notas: rollosTable.notas,
+          createdAt: rollosTable.createdAt,
+          updatedAt: rollosTable.updatedAt,
+        })
+        .from(rollosTable)
+        .innerJoin(productosTable, eq(rollosTable.productoId, productosTable.id))
+        .innerJoin(
+          ubicacionesTable,
+          eq(rollosTable.ubicacionId, ubicacionesTable.id),
+        )
+        .leftJoin(pisosTable, eq(rollosTable.pisoId, pisosTable.id))
+        .where(where)
+        .orderBy(desc(rollosTable.createdAt))
+        .limit(pageSize)
+        .offset(offset);
+
+      const items = rows.map((r) => ({
+        id: r.id,
+        serie: r.serie,
+        productoId: r.productoId,
+        skuProducto: r.sku,
+        telaProducto: r.tela,
+        colorProducto: r.color,
+        ubicacionId: r.ubicacionId,
+        nombreUbicacion: r.nombreUbicacion,
+        pisoId: r.pisoId ?? null,
+        nombrePiso: r.nombrePiso ?? null,
+        proveedorId: r.proveedorId ?? null,
+        estado: r.estado,
+        cantidadInicial: r.cantidadInicial,
+        cantidadActual: r.cantidadActual,
+        costoUnitario: r.costoUnitario,
+        costoTotal: r.costoTotal,
+        notas: r.notas ?? null,
+        createdAt: r.createdAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString(),
+      }));
+
+      const response = ListRollosResponse.parse({
+        items,
+        total: totalRow?.cnt ?? 0,
+        page,
+        pageSize,
+      });
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol !== "ADMIN" && auth.user.rol !== "CAJA",
+        ),
+      );
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ── Existencias ───────────────────────────────────────────────────────────────
+// Module: inventario / ver — read scope applied
+
+// Operational active-location catalog. This deliberately uses inventario/ver
+// rather than granting access to the administrative Ubicaciones module.
+inventarioRouter.get(
+  "/ubicaciones",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const auth = req.auth!;
+      if (auth.user.rol === "CAJA" && auth.user.ubicacionId == null) {
+        res.status(403).json({ error: "No tienes una ubicación asignada." });
+        return;
+      }
+      const ubicaciones = await db
+        .select({
+          id: ubicacionesTable.id,
+          nombre: ubicacionesTable.nombre,
+          tipo: ubicacionesTable.tipo,
+          activa: ubicacionesTable.activa,
+        })
+        .from(ubicacionesTable)
+        .where(
+          auth.user.rol === "CAJA"
+            ? and(
+                eq(ubicacionesTable.activa, true),
+                eq(ubicacionesTable.id, auth.user.ubicacionId!),
+              )
+            : eq(ubicacionesTable.activa, true),
+        )
+        .orderBy(asc(ubicacionesTable.nombre));
+      res.json(GetUbicacionesInventarioResponse.parse(ubicaciones));
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/existencias/agrupadas",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetExistenciasAgrupadasQueryParams.parse(req.query);
+      const { ubicacionId, scopeError } = resolveReadScope(
+        req.auth!,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      const search = q.search?.trim() ? `%${q.search.trim()}%` : null;
+      const result = await db.execute(sql`
+        SELECT p.id AS producto_id, p.sku, p.tela, p.color, p.unidad,
+               COUNT(r.id)::int AS rollos_count,
+               COALESCE(SUM(r.cantidad_actual), 0)::text AS cantidad_total
+        FROM productos p
+        LEFT JOIN rollos r
+          ON r.producto_id = p.id
+         AND r.estado = 'DISPONIBLE'
+         AND (${ubicacionId ?? null}::int IS NULL OR r.ubicacion_id = ${ubicacionId ?? null})
+        WHERE p.activo = true
+          AND (${search}::text IS NULL
+            OR p.tela ILIKE ${search}
+            OR p.color ILIKE ${search}
+            OR p.sku ILIKE ${search})
+        GROUP BY p.id
+        HAVING ${q.includeSinExistencia ?? false} OR COUNT(r.id) > 0
+        ORDER BY p.tela, p.color, p.sku
+      `);
+      type Child = {
+        productoId: number;
+        color: string;
+        sku: string;
+        rollosCount: number;
+        cantidadTotal: string;
+        unidad: "METRO" | "KILO" | "BOLSA" | "PIEZA";
+      };
+      type Parent = {
+        productoKey: string;
+        telaProducto: string;
+        coloresCount: number;
+        rollosCount: number;
+        totalMetros: string;
+        totalKilos: string;
+        totalBolsas: string;
+        totalPiezas: string;
+        colores: Child[];
+      };
+      const parents = new Map<string, Parent>();
+      for (const raw of result.rows as Array<Record<string, unknown>>) {
+        const tela = String(raw.tela);
+        const key = tela.trim().toLocaleLowerCase("es-MX");
+        const parent = parents.get(key) ?? {
+          productoKey: key,
+          telaProducto: tela,
+          coloresCount: 0,
+          rollosCount: 0,
+          totalMetros: "0.000",
+          totalKilos: "0.000",
+          totalBolsas: "0.000",
+          totalPiezas: "0.000",
+          colores: [],
+        };
+        const unidad = String(raw.unidad) as "METRO" | "KILO" | "BOLSA" | "PIEZA";
+        const quantity = Number(raw.cantidad_total);
+        const rollosCount = Number(raw.rollos_count);
+        parent.colores.push({
+          productoId: Number(raw.producto_id),
+          color: String(raw.color),
+          sku: String(raw.sku),
+          rollosCount,
+          cantidadTotal: quantity.toFixed(3),
+          unidad,
+        });
+        parent.coloresCount += 1;
+        parent.rollosCount += rollosCount;
+        if (unidad === "METRO") {
+          parent.totalMetros = (Number(parent.totalMetros) + quantity).toFixed(3);
+        } else if (unidad === "KILO") {
+          parent.totalKilos = (Number(parent.totalKilos) + quantity).toFixed(3);
+        } else if (unidad === "BOLSA") {
+          parent.totalBolsas = (Number(parent.totalBolsas) + quantity).toFixed(3);
+        } else {
+          parent.totalPiezas = (Number(parent.totalPiezas) + quantity).toFixed(3);
+        }
+        parents.set(key, parent);
+      }
+      res.json(
+        GetExistenciasAgrupadasResponse.parse(Array.from(parents.values())),
+      );
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/existencias",
+  requireSession,
+  requierePermiso("inventario", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetExistenciasQueryParams.parse(req.query);
+      const auth = req.auth!;
+
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const conditions = [];
+      // Apply resolved location scope
+      if (scopedUbicacionId != null) {
+        conditions.push(eq(existenciasTable.ubicacionId, scopedUbicacionId));
+      }
+      if (q.productoId)
+        conditions.push(eq(existenciasTable.productoId, q.productoId));
+
+      const rows = await db
+        .select({
+          productoId: existenciasTable.productoId,
+          sku: productosTable.sku,
+          tela: productosTable.tela,
+          color: productosTable.color,
+          unidad: productosTable.unidad,
+          ubicacionId: existenciasTable.ubicacionId,
+          nombreUbicacion: ubicacionesTable.nombre,
+          rollosCount: existenciasTable.rollosCount,
+          cantidadTotal: existenciasTable.cantidadTotal,
+        })
+        .from(existenciasTable)
+        .innerJoin(
+          productosTable,
+          eq(existenciasTable.productoId, productosTable.id),
+        )
+        .innerJoin(
+          ubicacionesTable,
+          eq(existenciasTable.ubicacionId, ubicacionesTable.id),
+        )
+        .where(conditions.length ? and(...conditions) : undefined)
+        .orderBy(ubicacionesTable.nombre, productosTable.tela);
+
+      const items = rows.map((r) => ({
+        productoId: r.productoId,
+        skuProducto: r.sku,
+        telaProducto: r.tela,
+        colorProducto: r.color,
+        unidadProducto: r.unidad,
+        ubicacionId: r.ubicacionId,
+        nombreUbicacion: r.nombreUbicacion,
+        rollosCount: r.rollosCount,
+        cantidadTotal: r.cantidadTotal,
+      }));
+
+      const response = GetExistenciasResponse.parse(items);
+      res.json(
+        omitTerminalSensitiveFields(
+          response,
+          auth.user.rol !== "ADMIN",
+        ),
+      );
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ── Kardex ────────────────────────────────────────────────────────────────────
+// Module: movimientos / ver — read scope applied via ubicacionId filter
+
+function normalizeKardexQuery(query: Record<string, unknown>) {
+  const normalized = { ...query };
+  if (typeof normalized.tipos === "string") {
+    normalized.tipos = [normalized.tipos];
+  }
+  if (typeof normalized.incluirUbicacionesInactivas === "string") {
+    normalized.incluirUbicacionesInactivas =
+      normalized.incluirUbicacionesInactivas === "true";
+  }
+  return normalized;
+}
+
+function parseKardexDateBounds(query: {
+  desde?: string;
+  hasta?: string;
+}): {
+  desde: Date | undefined;
+  hasta: Date | undefined;
+  invalid: boolean;
+} {
+  const desde = parseMexicoDateQuery(query.desde, "start");
+  const hasta = parseMexicoDateQuery(query.hasta, "end");
+  return {
+    desde: desde ?? undefined,
+    hasta: hasta ?? undefined,
+    invalid:
+      (query.desde !== undefined && desde === null) ||
+      (query.hasta !== undefined && hasta === null),
+  };
+}
+
+function kardexFilters(
+  query: {
+    modo?: KardexFiltersInput["modo"];
+    tipos?: KardexFiltersInput["tipos"];
+    desde?: Date;
+    hasta?: Date;
+    productoId?: number;
+    usuarioId?: number;
+    buscar?: string;
+    incluirUbicacionesInactivas: boolean;
+  },
+  ubicacionId: number | null | undefined,
+): KardexFiltersInput {
+  return {
+    // The lib also enforces this preset so no caller can bypass it.
+    modo: query.modo,
+    tipos: query.tipos,
+    desde: query.desde,
+    hasta: query.hasta,
+    productoId: query.productoId,
+    usuarioId: query.usuarioId,
+    buscar: query.buscar,
+    ubicacionId: ubicacionId ?? undefined,
+    incluirUbicacionesInactivas: query.incluirUbicacionesInactivas,
+  };
+}
+
+inventarioRouter.get(
+  "/kardex",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetKardexQueryParams.parse(normalizeKardexQuery(req.query));
+      const { invalid, ...dateBounds } = parseKardexDateBounds(q);
+      if (invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
+      const auth = req.auth!;
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
+      }
+      const result = await queryKardex(
+        kardexFilters({ ...q, ...dateBounds }, scopedUbicacionId),
+        { page: q.page, pageSize: q.pageSize },
+      );
+      const response = GetKardexResponse.parse({
+        ...result,
+        page: q.page,
+        pageSize: q.pageSize,
+        totalPages: Math.ceil(result.total / q.pageSize),
+      });
+      res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/kardex/agrupado",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetKardexGroupedQueryParams.parse(
+        normalizeKardexQuery(req.query),
+      );
+      const { invalid, ...dateBounds } = parseKardexDateBounds(q);
+      if (invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
+      const auth = req.auth!;
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
+      }
+      const result = await queryKardexGrouped(
+        kardexFilters({ ...q, ...dateBounds }, scopedUbicacionId),
+        { page: q.page, pageSize: q.pageSize },
+      );
+      res.json(GetKardexGroupedResponse.parse(result));
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/kardex/filtros",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = ListKardexFiltersQueryParams.parse(
+        normalizeKardexQuery(req.query),
+      );
+      const auth = req.auth!;
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
+      }
+      const { ubicacionId, scopeError } = resolveReadScope(auth);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      const result = await queryKardexFilters({
+        ubicacionId: ubicacionId ?? undefined,
+        incluirUbicacionesInactivas: q.incluirUbicacionesInactivas,
+      });
+      res.json(ListKardexFiltersResponse.parse(result));
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+inventarioRouter.get(
+  "/kardex/exportar",
+  requireSession,
+  requierePermiso("movimientos", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = ExportKardexXlsxQueryParams.parse(
+        normalizeKardexQuery(req.query),
+      );
+      const { invalid, ...dateBounds } = parseKardexDateBounds(q);
+      if (invalid) {
+        res.status(400).json({ error: "Rango de fechas inválido." });
+        return;
+      }
+      const auth = req.auth!;
+      const { ubicacionId, scopeError } = resolveReadScope(auth, q.ubicacionId);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+      if (q.incluirUbicacionesInactivas && auth.user.rol !== "ADMIN") {
+        res.status(403).json({
+          error: "Solo ADMIN puede incluir ubicaciones inactivas.",
+        });
+        return;
+      }
+      const { movimientos } = await queryKardex(
+        kardexFilters({ ...q, ...dateBounds }, ubicacionId),
+      );
+      const workbook = new ExcelJS.Workbook();
+      workbook.creator = "Mariana Textil";
+      workbook.created = new Date();
+      const sheet = workbook.addWorksheet("Kardex");
+      sheet.columns = [
+        { header: "Fecha", key: "fecha", width: 14 },
+        { header: "Hora", key: "hora", width: 12 },
+        { header: "Tipo", key: "tipo", width: 25 },
+        { header: "SKU", key: "sku", width: 18 },
+        { header: "Producto", key: "producto", width: 30 },
+        { header: "Serie", key: "serie", width: 18 },
+        { header: "Ubicación", key: "ubicacion", width: 24 },
+        { header: "Destino", key: "destino", width: 24 },
+        { header: "Cantidad", key: "cantidad", width: 14 },
+        { header: "Unidad", key: "unidad", width: 12 },
+        { header: "Usuario", key: "usuario", width: 24 },
+        { header: "Documento", key: "documento", width: 28 },
+        { header: "Justificación", key: "justificacion", width: 40 },
+      ];
+      sheet.getColumn("cantidad").numFmt = EXCEL_NUMBER_FORMAT.quantity;
+      const dateFormatter = new Intl.DateTimeFormat("es-MX", {
+        timeZone: "America/Mexico_City",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      const timeFormatter = new Intl.DateTimeFormat("es-MX", {
+        timeZone: "America/Mexico_City",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
+      for (const movement of movimientos) {
+        const createdAt = new Date(movement.createdAt);
+        sheet.addRow({
+          fecha: dateFormatter.format(createdAt),
+          hora: timeFormatter.format(createdAt),
+          tipo: movement.tipo,
+          sku: movement.skuProducto,
+          producto: `${movement.telaProducto} - ${movement.colorProducto}`,
+          serie: movement.serie,
+          ubicacion: movement.nombreUbicacion,
+          destino: movement.destinoEtiqueta ?? "",
+          cantidad: toExcelNumber(movement.cantidad),
+          unidad: movement.unidadProducto,
+          usuario: movement.nombreUsuario,
+          documento: movement.documentoEtiqueta ?? "",
+          justificacion: movement.justificacion ?? "",
+        });
+      }
+      sheet.getRow(1).font = { bold: true };
+      sheet.autoFilter = { from: "A1", to: "M1" };
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+      res.setHeader(
+        "Content-Disposition",
+        'attachment; filename="kardex.xlsx"',
+      );
+      await workbook.xlsx.write(res);
+      res.end();
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ── Ajustes pendientes ────────────────────────────────────────────────────────
+// Module: ajustes / autorizar (review pending adjustments — admin-level)
+
+inventarioRouter.get(
+  "/ajustes/pendientes",
+  requireSession,
+  requierePermiso("ajustes", "autorizar"),
+  async (req, res, next) => {
+    try {
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        req.auth!,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const rows = await db
+        .select()
+        .from(movimientosTable)
+        .where(
+          scopedUbicacionId == null
+            ? eq(movimientosTable.revisado, false)
+            : and(
+                eq(movimientosTable.revisado, false),
+                eq(movimientosTable.ubicacionId, scopedUbicacionId),
+              ),
+        )
+        .orderBy(desc(movimientosTable.createdAt));
+
+      const items = await enrichMovimientos(rows);
+      const response = ListAjustesPendientesResponse.parse(items);
+      res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ── Revisar ajuste ────────────────────────────────────────────────────────────
+// Module: ajustes / autorizar
+
+inventarioRouter.post(
+  "/ajustes/:id/revisar",
+  requireSession,
+  requierePermiso("ajustes", "autorizar"),
+  async (req, res, next) => {
+    try {
+      const { id } = RevisarAjusteParams.parse(req.params);
+      const [mov] = await db
+        .select()
+        .from(movimientosTable)
+        .where(eq(movimientosTable.id, id))
+        .limit(1);
+
+      if (!mov) {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+
+      const scopeError = checkOperationalScope(req.auth!, [mov.ubicacionId]);
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const usuarioId = req.auth!.user.id;
+      await revisarAjuste(id, usuarioId);
+
+      const [updated] = await db
+        .select()
+        .from(movimientosTable)
+        .where(eq(movimientosTable.id, id))
+        .limit(1);
+      if (!updated) {
+        res.status(404).json({ error: "Movimiento no encontrado" });
+        return;
+      }
+      const response = RevisarAjusteResponse.parse(
+        await enrichMovimiento(updated),
+      );
+      res.json(response);
+    } catch (e) {
+      if (e instanceof InventarioError) {
+        res
+          .status(e.code === "MOVIMIENTO_NOT_FOUND" ? 404 : 400)
+          .json({ error: e.message });
+        return;
+      }
+      next(e);
+    }
+  },
+);
+
+// ── Conciliación ──────────────────────────────────────────────────────────────
+// Module: conciliacion / ver — read scope applied
+
+inventarioRouter.get(
+  "/conciliacion",
+  requireSession,
+  requierePermiso("conciliacion", "ver"),
+  async (req, res, next) => {
+    try {
+      const q = GetConciliacionQueryParams.parse(req.query);
+      const auth = req.auth!;
+
+      // Read scope: PROPIA forces assigned location; TODAS honors requested filter
+      const { ubicacionId: scopedUbicacionId, scopeError } = resolveReadScope(
+        auth,
+        q.ubicacionId,
+      );
+      if (scopeError) {
+        res.status(403).json({ error: scopeError });
+        return;
+      }
+
+      const rows = await conciliarTodo(q.productoId, scopedUbicacionId ?? undefined);
+      const response = GetConciliacionResponse.parse(rows);
+      res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  },
+);
+
+// ── Recalcular existencias ────────────────────────────────────────────────────
+// Module: conciliacion / autorizar
+
+inventarioRouter.post(
+  "/conciliacion/recalcular",
+  requireSession,
+  requierePermiso("conciliacion", "autorizar"),
+  async (req, res, next) => {
+    try {
+      const body = RecalcularExistenciasBody.parse(req.body);
+      const auth = req.auth!;
+
+      // The contract requires a concrete pair. Non-ADMIN users may only
+      // recalculate the pair in their assigned operational location.
+      const scopeErr = checkOperationalScope(auth, [body.ubicacionId]);
+      if (scopeErr) {
+        res.status(403).json({ error: scopeErr });
+        return;
+      }
+
+      await recalcularExistencias(body.productoId, body.ubicacionId);
+
+      const rows = await conciliarTodo(body.productoId, body.ubicacionId);
+      const row = rows[0];
+      if (!row) {
+        res
+          .status(404)
+          .json({ error: "Par (producto, ubicacion) no encontrado" });
+        return;
+      }
+      const response = RecalcularExistenciasResponse.parse(row);
+      res.json(response);
+    } catch (e) {
+      next(e);
+    }
+  },
+);

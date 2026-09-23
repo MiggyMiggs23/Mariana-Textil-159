@@ -1,0 +1,81 @@
+BORRADOR — NOEJECUTABLE — NO AUTORIZA ARRANQUE REAL, SQL NI ACTIVACIÓN
+
+ACTUALIZACIÓN TERMINAL: BLOCKED — NO LISTO PARA LIBERACIÓN.
+MAIN ejecutó captura READONLY y preflight real PASS. Rehearsal r1 FAIL antes
+de boot: seis enumsortorder de rol_usuario distintos, schemaRows idénticas.
+TERMINAL 1.5→2; CAJA 2→3; SUPERVISOR 3→4; BODEGA 4→5;
+SISTEMAS 5→6; CONTADOR 6→7 (real→fixture). 42 atributos trigger idénticos.
+Cleanup r1: pg_ctl stop exit 0, cluster destruido. Candidato y control E2
+NO arrancaron sobre fixture infiel. No hubo reparación ni rebaseline.
+README.md y evidencia/comparacion-r1-offline.json contienen diagnóstico.
+Pendiente decisión explícita sobre fixture fiel; luego controles negativos,
+arranque/preservación, sensibilidad de fila y gates HTTP cerradas.
+MAIN debe hacer comprobación final de runtime de lectura antes de entregar.
+Las instrucciones siguientes se preservan como referencia de preparación:
+NO autorizan reejecutar ni sobrescribir evidencia. No hay autorización nueva.
+
+Base: 1031a630fd461c3df89767bad7a14cc777e56261.
+Paquete candidato: dist-tanda-b-off-20260923 de API y UI.
+E3 y Tanda B permanecen OFF. No activation.patch. No migración propuesta.
+
+Estado inicial histórico: build aislado preparado; captura real READONLY,
+preflight real, fidelidad y arranque desechable pendientes entonces de MAIN.
+Estado vigente: BLOCKED según actualización terminal anterior.
+Ninguna evidencia de fixtures sintéticos acredita la base real.
+Revisión MAIN y autorización posterior del propietario son indispensables.
+Un PASS del rehearsal tampoco autoriza despliegue ni reiniciar PID191.
+
+MAIN, desde /home/runner/workspace, sin imprimir DATABASE_URL:
+  export TANDA_B_MAIN_ONLY=AUTHORIZED
+  export TANDA_B_RUNTIME_PID=191
+  export TANDA_B_PG_BIN=/ruta/absoluta/postgresql-16/bin
+  node reports/tanda-b-off-preparada-20260923/run-main.mjs capture
+  node reports/tanda-b-off-preparada-20260923/run-main.mjs preflight
+
+Los dos comandos exigen DATABASE_URL explícito en el entorno; capture exige
+igualdad byte por byte contra /proc/191/environ. No se conservan credenciales.
+No se ejecuta el backend. Se rechaza sobrescribir evidencia existente.
+Conservar failures y no modificar hashes para transformar rechazo en PASS.
+
+Solo después de ambos PASS, MAIN identifica el archivo real de la línea de
+comando de PID191 y su SHA256 actual, sin importar ni ejecutar ese archivo.
+Ejecutar rehearsal con entorno vacío (no heredar DATABASE_URL/PG*):
+  env -i PATH="$PATH" HOME="$HOME" \
+    TANDA_B_MAIN_ONLY=AUTHORIZED \
+    TANDA_B_PG_BIN=/ruta/absoluta/postgresql-16/bin \
+    TANDA_B_ATTEMPT=r1 TANDA_B_API_PORT=18097 \
+    TANDA_B_CONTROL_BUNDLE=/ruta/absoluta/bundle-E2-de-PID191 \
+    TANDA_B_CONTROL_SHA256=SHA256_VERIFICADO_POR_MAIN \
+    node reports/tanda-b-off-preparada-20260923/rehearse.mjs
+
+El runner crea cluster PG16 nuevo, socket Unix privado, TCP deshabilitado,
+restaura exclusivamente schema-only real, compara catálogo/atributos crudos,
+y se detiene si se pierde enumsortorder/tgenabled/ACL/owner. No repara catálogo.
+Las identidades del cluster desechable NO se presentan como identidad real.
+No se copian usuarios/actores, sesiones ni datos operativos. Las funciones
+y permisos de esquema sí proceden del dump real.
+Arranca únicamente candidato en cluster desechable, INSPECTION explícito.
+Exige marcadores de inspection/listening, hashes antes de importación,
+preservación catálogo/filas/secuencias. Si falla candidato y DB sigue intacta,
+ejecuta control del bundle E2 actual de disco EN DESECHABLE, nunca reinicia API.
+Control de ruta/hash en disco no prueba bytes cargados en memoria por PID191.
+Cluster se detiene en finally; fallo de stop conserva directorio y FAIL.
+
+Antes de cualquier propuesta final, MAIN debe revisar evidencias y exigir:
+- Captura real estable, READONLY, misma DB de PID191.
+- Token positivo de ejecución del CLI real, no mero exit 0 ni import.
+- Hashes API/UI/source/lockfile y workers válidos en ubicación FINAL.
+- Rehearsal PASS, comparación exacta y limpieza terminal exit 0.
+- Controles negativos de gates/identidad/hash/catálogo, con evidencia propia;
+  el runner NO declara completa esta matriz.
+- Pruebas de operaciones E3/Tanda B bloqueadas y autorización HTTP pendientes;
+  arranque exitoso no sustituye integración funcional.
+- Control de sensibilidad real sobre fila del desechable pendiente; la prueba
+  estructural sintética del runner NO cumple ese control.
+- Nueva comprobación integridad inmediata al futuro arranque autorizado.
+
+Si falla fidelidad de schema-only, NO atribuirlo a cambio indebido en DB real:
+conservar catalog-reconstructed.json y catalog-fidelity.json y pedir decisión.
+No ejecutar control sobre fixture infiel ni rebautizar synthetic como real.
+No hay script de sellado automático. MAIN debe completar las puertas faltantes
+y autorizar explícitamente un documento posterior antes de declarar éxito.

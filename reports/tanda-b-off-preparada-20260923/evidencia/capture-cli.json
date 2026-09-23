@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "exit": 0,
+  "positiveExecutionToken": true,
+  "stdout": "TANDA_B_CAPTURE=PASS_READ_ONLY\n",
+  "stderr": "",
+  "credentialsRecorded": false
+}

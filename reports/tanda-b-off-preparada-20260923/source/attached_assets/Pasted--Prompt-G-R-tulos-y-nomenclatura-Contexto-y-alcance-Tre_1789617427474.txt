@@ -1,0 +1,123 @@
+# Prompt G — Rótulos y nomenclatura
+
+## Contexto y alcance
+
+Tres defectos de presentación que confunden a quien opera. Ninguno cambia un cálculo,
+un dato ni una regla de negocio: **es texto, rótulos y composición.**
+
+Si en el camino encuentras que alguno exige tocar lógica, **detente y repórtalo**. Esta
+entrega no toca lógica.
+
+---
+
+## Bloque 1 — El rótulo «Mts.» se encima en la captura de metraje
+
+En la captura de metraje, el rótulo de unidad se monta sobre el valor capturado. Es la
+pantalla donde el capturista escribe todos los días.
+
+1. Localiza el componente y reporta dónde está antes de corregir.
+2. Corrige la composición para que el rótulo y el valor no se invadan, con cualquier
+   cantidad de dígitos. Prueba con el metraje más largo que admita el campo, no con un
+   valor corto.
+3. Las unidades se muestran siempre como **Mts.**, **Kg.**, **Bolsas** y **Pzas.**,
+   traducidas por la función compartida. **Ninguna se escribe a mano.** Si encuentras
+   una escrita a mano en este componente, cámbiala por la función compartida y
+   repórtalo.
+4. Comprueba el mismo campo en los demás lugares donde se capturan cantidades con
+   unidad; si el defecto es compartido, corrígelo en un solo lugar.
+5. Comprueba a 402 px además de escritorio.
+
+---
+
+## Bloque 2 — La pantalla de una nota se titula «Ticket»
+
+`pages/ticket-detail.tsx` titula el documento **«Ticket #1005»** y ofrece el botón
+**«Cancelar Ticket»**, aunque el documento sea una **Nota de crédito**.
+
+`replit.md` es explícito: **Ticket es contado, Nota es crédito.** No existe ticket a
+crédito ni nota de contado, el servidor lo hace cumplir, y en la lista de Caja una
+venta ya se identifica por lo que es. Un ticket **se cobra**; una nota **se autoriza**.
+Que la pantalla llame Ticket a una nota contradice la regla más básica del sistema.
+
+Qué hacer:
+
+1. El título y todas las acciones de esa pantalla deben decir **Ticket** o **Nota**
+   según `documentoTipo`. Eso incluye el botón de cancelación, los diálogos de
+   confirmación y los mensajes de resultado.
+2. Revisa toda la pantalla, no solo el encabezado: cualquier texto que diga «ticket»
+   refiriéndose al documento debe adaptarse al tipo.
+3. Usa **una sola función compartida** que traduzca `documentoTipo` a su nombre
+   visible. No escribas el condicional en cada lugar: es la misma regla que ya se
+   aplicó a las etiquetas de estado de salida y a las unidades.
+4. Revisa si otras pantallas tienen el mismo problema —listados, diálogos de
+   cancelación, notificaciones, mensajes de error— y aplica la misma función. Reporta
+   dónde la aplicaste.
+
+**Lo que no cambia:** la ruta `/tickets/:id` se conserva. Renombrarla rompería todos
+los enlaces que el Prompt D acaba de construir, y el nombre interno de la tabla no es
+lo que ve el usuario. Este trabajo es de presentación.
+
+---
+
+## Bloque 3 — Dos insignias PENDIENTE que significan cosas distintas
+
+En el detalle de una nota conviven hoy dos insignias con el mismo texto:
+
+- La del encabezado de «Detalle de Operación», que significa **documento sin cobrar o
+  sin autorizar** — el estado del documento frente a Caja.
+- La de «Estado de Nota», que significa **crédito sin abonar** — el estado de la deuda,
+  derivado en `deriveEstadoNota`.
+
+Se ven prácticamente iguales y significan cosas distintas. En el mostrador alguien va
+a leer una por la otra.
+
+Qué hacer:
+
+1. Distínguelas por **texto**, no solo por color o posición. Cada una debe decir de
+   qué habla: una del documento y su procesamiento en Caja, la otra de la cobranza de
+   la nota. Elige rótulos que se expliquen solos y propónmelos en el reporte.
+2. **No toques la insignia de estado de nota.** Sus cuatro estados, sus colores y la
+   precedencia de Con retraso sobre Abono parcial están definidos en `replit.md` y
+   derivados en el servidor. Se conserva exactamente como está.
+3. La que cambia es la del encabezado del documento, que hoy dice PAGADO, PENDIENTE o
+   REGISTRADO según `cobrado`. Ese vocabulario también es ambiguo para una nota: una
+   nota autorizada no está «pagada». Ajústalo al tipo de documento usando la función
+   compartida del Bloque 2.
+4. **El color codifica información, nunca decora.** Cada color de esa insignia debe
+   tener un significado explicable en una frase, y esa frase debe quedar escrita en un
+   comentario junto al código, como exige `replit.md`.
+
+---
+
+## Verificación
+
+1. `pnpm run typecheck` completo, con el comando corregido. Reporta el total por
+   paquete. Los errores preexistentes que queden **no se corrigen aquí**.
+2. Comprobación en navegador de las pantallas tocadas, en escritorio y a 402 px. Hay
+   casos reales: la nota 1005 está autorizada y en ABONO PARCIAL, y sirve para ver las
+   dos insignias juntas. Si no hay sesión autenticada, **dilo y no lo presentes como
+   aprobado**.
+3. Una prueba que afirme que el nombre visible del documento sale de la función
+   compartida y no de una cadena escrita a mano, en cada superficie donde la aplicaste.
+4. Captura del antes y el después de los tres bloques.
+
+## Restricciones
+
+- **Nada de lógica.** No cambies cálculos, consultas, predicados, permisos ni reglas
+  de negocio. Si un rótulo correcto exige un dato que la pantalla no tiene, repórtalo
+  en vez de ir a buscarlo.
+- No renombres rutas, tablas, enums ni campos del contrato.
+- No toques la impresión de ningún documento.
+- No crees usuarios ni sesiones de prueba, no escribas en la base.
+- No toques crédito, caja, enlaces, el CSS de impresión ni las pruebas frágiles. Son
+  entregas propias.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que el nombre visible del documento se resuelve desde `documentoTipo` mediante una
+   sola función compartida, y que la ruta interna `/tickets/:id` se conserva a
+   propósito.
+2. Qué significa cada una de las dos insignias del detalle de nota y con qué rótulo
+   quedó cada una, para que nadie vuelva a igualarlas.
+3. El significado de cada color de la insignia del documento, en una frase.
+4. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

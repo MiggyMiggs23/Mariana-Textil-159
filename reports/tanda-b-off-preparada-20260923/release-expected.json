@@ -1,0 +1,15 @@
+{
+  "provenance": "REAL_READONLY_PID191",
+  "revision": "1031a630fd461c3df89767bad7a14cc777e56261",
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+  "attributesSha256": "597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665",
+  "captureSha256": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+  "dumpSha256": "d0a81921ea0c6d637dbf6010b90c106b777382f2243b368647bb9a86e0604e38"
+}

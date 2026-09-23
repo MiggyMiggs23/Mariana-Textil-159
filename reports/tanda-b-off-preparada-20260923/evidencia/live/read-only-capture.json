@@ -1,0 +1,19 @@
+{
+  "status": "PASS_READ_ONLY",
+  "pid": 191,
+  "sameDatabaseUrlAsRuntime": true,
+  "revision": "1031a630fd461c3df89767bad7a14cc777e56261",
+  "identity": {
+    "database": "heliumdb",
+    "databaseOid": "16384",
+    "schema": "public",
+    "role": "postgres",
+    "serverVersionNum": "160010"
+  },
+  "transaction": "REPEATABLE READ READ ONLY; ROLLBACK",
+  "pgOptions": "-c default_transaction_read_only=on",
+  "cmdlineSha256": "054b0b26e12077a917aff52bb87b25e57ac4d1f4c5e33ff46737352cc157b5d7",
+  "credentialsRecorded": false,
+  "actorsCopied": false,
+  "stableCatalog": true
+}

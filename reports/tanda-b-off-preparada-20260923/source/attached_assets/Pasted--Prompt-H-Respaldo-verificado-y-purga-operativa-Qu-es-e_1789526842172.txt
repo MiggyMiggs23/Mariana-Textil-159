@@ -1,0 +1,180 @@
+# Prompt H — Respaldo verificado y purga operativa
+
+## Qué es esto y qué no es
+
+Dos trabajos en un orden que **no se puede alterar**: primero un respaldo completo
+verificado por restauración, después la purga de datos operativos conservando los
+catálogos.
+
+El respaldo verificado del 8 de septiembre **ya no sirve como red**: es anterior a la
+purga del 13 y a los cuatro movimientos financieros del 15. Restaurarlo devolvería la
+base a un estado que ya no existe.
+
+**La purga no se ejecuta sin autorización textual del propietario guardada en
+`reports/` antes de la primera escritura.** Es regla vigente del proyecto: un resumen
+de conversación o un reporte redactado por el agente no son prueba de autorización.
+
+Qué se conserva, por instrucción expresa del propietario: **el catálogo de productos y
+sus colores, y todo el historial de precios.** Además, clientes, proveedores,
+usuarios, ubicaciones, permisos, equipos, camionetas, choferes, mínimos de stock y la
+bitácora.
+
+Qué se reinicia: existencias, entradas, salidas, ventas, movimientos de inventario,
+crédito, cajas, viajes, contenedores, auditorías de inventario y todos los contadores
+de folio.
+
+---
+
+## Bloque 1 — Reconstruir las tres listas contra el esquema vivo
+
+**No reuses las listas de `replit.md`.** Están caducas y este bloque lo demuestra.
+
+El procedimiento del 13 de septiembre enumera 58 tablas: 33 en la Lista A que se
+borran, 7 elementos en la Lista B que se reinician y 18 en la Lista C que se
+conservan. **El esquema de hoy tiene 59 tablas**, y dos no aparecen en ninguna lista:
+
+- `ticket_linea_consumos`, creada por la migración `20260914_supplier_trace.sql`.
+- `revisiones_etiqueta`, el control de revisión de rollos con tres o más reimpresiones.
+
+Las dos son operativas y las dos referencian `rollos`. Con las listas viejas, la purga
+las dejaría con filas huérfanas o fallaría por llave foránea.
+
+Qué hacer:
+
+1. **Enumera las tablas desde la base, no desde el código ni desde `replit.md`.** Si
+   la base tiene alguna tabla que el esquema no declara, o al revés, esa diferencia es
+   un hallazgo y se reporta antes de seguir.
+2. Clasifica **cada una** en A, B o C, con su justificación en una frase.
+3. **Invierte el criterio:** en lugar de enumerar lo que se borra, parte de que toda
+   tabla es operativa salvo las que se justifiquen explícitamente como catálogo o
+   configuración. Una lista blanca escrita a mano hace que lo nuevo desaparezca en
+   silencio; esa es la regla del proyecto y esta lista ya caducó en tres días.
+4. **Ninguna tabla puede quedar sin clasificar.** La suma de A + B + C debe ser
+   exactamente el total de la base. Reporta el conteo y la suma.
+5. Resuelve el orden de borrado respetando las llaves foráneas, o usa la estrategia
+   que la base permita dentro de una sola transacción.
+6. Presenta las tres listas al propietario **y espera aprobación** antes del Bloque 3.
+
+Criterio de clasificación, para que no haya dudas:
+
+- **Conservar (C):** catálogos y configuración — productos, colores, historial de
+  precios, clientes, proveedores, usuarios, ubicaciones, pisos, permisos por rol,
+  usuario y ubicación, camionetas, choferes, equipos y sus checklists, configuración
+  de stock mínimo, y la bitácora `auditoria`.
+- **Reiniciar (B):** contadores de folio por sitio a 0, el consecutivo de series, el
+  folio de tickets y las secuencias de PostgreSQL correspondientes. `existencias` se
+  **reconstruye**, no se vacía a mano.
+- **Borrar (A):** todo lo demás — todo lo que represente una operación ocurrida.
+
+---
+
+## Bloque 2 — Respaldo completo y verificado por restauración
+
+Un archivo de respaldo que nadie restauró no es un respaldo, es un archivo. **Se
+verifica restaurándolo.**
+
+1. Genera el respaldo completo de la base actual. Registra su ruta, su tamaño y su
+   **SHA-256**.
+2. **Restáuralo en una base desechable** y compara contra el original: conteo de filas
+   de cada una de las 59 tablas, columnas, restricciones, índices y los triggers no
+   internos con su estado habilitado.
+3. Reporta el resultado tabla por tabla. Si algún conteo difiere, **detente**: el
+   respaldo no está verificado y la purga no procede.
+4. Sube el archivo a la carpeta privada de Drive, registra su enlace y **comprueba que
+   el SHA-256 del archivo descargado coincide** con el del original. Una subida sin
+   comprobar el hash no acredita nada.
+5. Deja toda la evidencia en `reports/`, con fecha y hora de Ciudad de México.
+
+**No borres la base desechable hasta terminar todo el trabajo.** Si algo sale mal en
+el Bloque 4, esa restauración es la comprobación más rápida de qué debía haber.
+
+---
+
+## Bloque 3 — Preflight de la purga, sin escribir
+
+Con las listas aprobadas y el respaldo verificado, **simula la purga sin ejecutarla**:
+
+1. Conteo actual de filas de cada tabla de la Lista A. Ese es el registro de lo que se
+   va a perder.
+2. Estado actual de cada contador de la Lista B, con su valor antes y su valor
+   objetivo.
+3. Conteo y huella de cada tabla de la Lista C, para poder demostrar después que no
+   cambiaron.
+4. Verificación de que las llaves foráneas permiten el orden de borrado propuesto.
+5. **Comprueba los defaults de PostgreSQL de los contadores de folio.** El esquema del
+   código declara 0 para entradas y salidas, pero la base tiene `DEFAULT 99` en
+   `entrada_folio.ultimo_folio` y `DEFAULT 499` en `salida_folio.ultimo_folio`. Un
+   reinicio explícito a 0 deja el valor correcto hoy, pero una inserción futura que
+   omita el valor heredaría el arranque antiguo. **Repórtalo; no lo corrijas aquí**:
+   es una entrega propia.
+6. Reporta cuántos movimientos de crédito, tickets, notas, rollos y entradas se van a
+   perder, con sus folios. El propietario debe poder ver exactamente qué desaparece
+   antes de aprobar.
+
+Presenta el preflight y **espera la autorización textual del propietario.**
+
+---
+
+## Bloque 4 — Ejecución
+
+Solo después de: listas aprobadas, respaldo verificado con hash comprobado en Drive,
+preflight presentado y **autorización textual guardada en `reports/`**.
+
+1. Guarda primero el archivo de autorización con la cita textual del propietario, su
+   fecha y el alcance que ampara. **Antes de la primera escritura, no después.**
+2. Ejecuta **todo en una sola transacción**: borrado de la Lista A, reinicio de la
+   Lista B y reconstrucción de `existencias`. Si cualquier paso falla, propaga el
+   error y revierte todo. No dejes un estado parcial.
+3. `reconstruirCacheExistencias` debe recibir la misma transacción, no abrir una
+   propia.
+4. **No uses DELETE sobre las tablas de la Lista C** por ninguna razón, ni para
+   limpiar filas que parezcan huérfanas.
+5. No toques los triggers, no los deshabilites para acelerar el borrado, y comprueba
+   al final que los once triggers no internos siguen habilitados.
+
+---
+
+## Bloque 5 — Verificación posterior
+
+1. Las tablas de la Lista A en cero, una por una, con su conteo.
+2. Los contadores de la Lista B en su valor objetivo.
+3. Las tablas de la Lista C con **el mismo conteo y la misma huella** que en el
+   preflight. En particular: productos, colores e historial de precios intactos, que
+   es la condición expresa del propietario.
+4. `existencias` reconstruida, sin pares inconsistentes, con movimientos y rollos en
+   cero.
+5. Los once triggers no internos habilitados.
+6. `pnpm run typecheck` completo en cero, con el verificador corregido.
+7. Comprobación en pantalla de que el catálogo de productos sigue completo, con sus
+   colores, sus precios de lista y su historial. **Si no hay sesión autenticada
+   disponible, dilo y no lo presentes como aprobado.**
+8. Los dos servicios arrancan limpios.
+
+Deja el reporte completo en `reports/` con las consultas y su salida textual.
+
+---
+
+## Restricciones
+
+- **No ejecutes nada del Bloque 4 sin la autorización textual guardada.**
+- No crees usuarios, ADMIN ni sesiones de prueba.
+- No amplíes el seed ni copies identidades desde el respaldo.
+- No corrijas los defaults 99 y 499, la asimetría Cruces/global, el corte de caja ni
+  el vencimiento en pantalla. Son entregas propias.
+- No cambies la longitud del número de serie en esta entrega. Está decidido pasarlo de
+  7 a 8 dígitos, pero es prompt aparte y va **después** de esta purga.
+- No borres la base desechable de verificación hasta que todo cierre.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. **Las tres listas reconstruidas y completas**, sustituyendo expresamente las del 13
+   de septiembre. La redacción vieja se borra, no conviven las dos.
+2. **La regla derivada:** las listas de purga se reconstruyen contra el esquema vivo
+   en cada ejecución y nunca se reutilizan de una ejecución anterior. La suma de A, B
+   y C debe igualar el total de tablas de la base, y una tabla sin clasificar detiene
+   el procedimiento.
+3. Que `ticket_linea_consumos` y `revisiones_etiqueta` no estaban en ninguna lista
+   anterior, y en cuál quedaron.
+4. El respaldo nuevo con su ruta, su SHA-256, su enlace de Drive y la comprobación de
+   hash de la descarga, sustituyendo la referencia al del 8 de septiembre.
+5. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

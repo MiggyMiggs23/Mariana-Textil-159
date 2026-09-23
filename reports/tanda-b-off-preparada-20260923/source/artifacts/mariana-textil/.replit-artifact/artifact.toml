@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Mariana Textil"
+description = "Sistema interno para la operación de tiendas y bodegas de Mariana Textil, con autenticación, roles, ubicaciones y administración inicial."
+version = "1.0.0"
+id = "artifacts/mariana-textil"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20329
+
+[services.development]
+run = "pnpm --filter @workspace/mariana-textil run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/mariana-textil", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/mariana-textil/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20329"
+BASE_PATH = "/"

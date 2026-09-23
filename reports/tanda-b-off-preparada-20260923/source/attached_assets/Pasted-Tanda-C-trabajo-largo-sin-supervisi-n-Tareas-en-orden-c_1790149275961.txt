@@ -1,0 +1,19 @@
+Tanda C, trabajo largo sin supervisión. Tareas en orden, cada una en su propio commit. No escribas en la base de la API, no reinicies la API, no cambies el workflow ni el bundle en ejecución, y no liberes nada. Si una tarea se atora, anótala y sigue con la siguiente.
+
+1. Permisos de BODEGA. Decisión del propietario: BODEGA no debe ver los contenedores con costo pendiente. Resuelve el choque entre el seed que concede el acceso y pending-costs que lo revoca, dejando la revocación como regla buena. Regístralo en replit.md y en reports/prompt-u-respuestas-2026-09-18.md.
+
+2. Corrige el defecto productivo de security-api S26: numFmt de la cartera actual llega undefined en lugar del formato de moneda. Es defecto real, no de fixture.
+
+3. Con 1 y 2 hechas, cierra lo que puedas de las 28 suites actor. Deja fuera solo pagos-dirigidos, que depende de una puerta apagada. Reporta el conteo final.
+
+4. Diagnóstico, sin corregir nada: las aplicaciones de pago que siguen ocupando crédito después de revertirse la venta, y el ajuste negativo sin evidencia. Dime cuántos casos hay hoy, qué los causó y dos o tres formas de corregirlos con sus consecuencias, para que el propietario elija.
+
+5. Diagnóstico, sin corregir nada: la etiqueta de rollo no alcanza para nombres largos ahora que el catálogo tiene colores. Propón dos o tres diseños concretos con sus límites de caracteres, para que el propietario elija.
+
+6. Los 69 vetos de acción por rol del informe en reports/. Prepáralos para decisión: agrúpalos por tema, en español simple, cada grupo con qué hace hoy el sistema, qué cambiaría y tu recomendación. Sin tocar código ni permisos.
+
+7. Prepara el paquete de liberación de la Tanda B (E4, E12, E9, E5, E11, E7), con el mismo método del paquete de E3: expectativas del preflight leídas de la base real en READ ONLY, compilación en su directorio final, arranque real del candidato en base desechable y control con el bundle en ejecución si algo falla. Todas las puertas apagadas; no incluyas apertura de ninguna. Entrega manifiesto, hashes y texto de fase B, sin ejecutarlo.
+
+Autorización del propietario, que debes guardar tal cual en reports/ antes de la primera escritura: autorizo crear, usar y destruir bases PostgreSQL desechables para esta tanda, y la lectura READ ONLY de la base de la API para fijar expectativas. No autorizo aplicar SQL a la base de la API ni liberar.
+
+Entrega un informe único en reports/ con resultado por tarea, commits, revisión exacta, pruebas y lo detenido con su motivo.

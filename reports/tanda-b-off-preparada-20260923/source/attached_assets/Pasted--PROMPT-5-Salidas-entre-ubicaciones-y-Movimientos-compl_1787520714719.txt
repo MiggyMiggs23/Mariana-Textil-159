@@ -1,0 +1,362 @@
+# PROMPT 5 — Salidas entre ubicaciones y Movimientos completo
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. No te detengas a pedir aprobación entre bloques.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+Este prompt hace tres cosas: construye el flujo de movimiento de mercancía entre ubicaciones, arregla el módulo de Movimientos para que sea el historial completo, y corrige un detalle pendiente del POS.
+
+**Respeta el motor.** Todo movimiento de rollos pasa por `server/lib/inventario.ts`, que ya tiene `moverRollo` y `recibirTransferencia`.
+**No borres datos.** Catálogo, rollos, entradas, tickets y movimientos se conservan.
+**Respeta el diseño existente.** Mismo azul marino, misma tipografía, mismos componentes.
+
+---
+
+# PARTE 1 — Nomenclatura: se llama SALIDAS
+
+El negocio lleva años llamándole **"salidas"** al movimiento de mercancía entre ubicaciones. El sistema debe usar ese nombre, no "transferencias".
+
+**Cambios de nombre en todo el sistema:**
+
+- El módulo se llama **Salidas**
+- En la barra lateral queda **una sola entrada: "Salidas"**. **Elimina la entrada "Transferencias"** — eran lo mismo con dos nombres.
+- El identificador del módulo de permisos es `salidas`
+- Los documentos se llaman **"SALIDA"** y **"RECEPCIÓN"**
+- Los títulos, mensajes, botones y etiquetas usan "salida" en lugar de "transferencia"
+
+**Importante:** los tipos de movimiento del kardex **conservan sus nombres técnicos** (`TRANSFERENCIA_SALIDA`, `TRANSFERENCIA_ENTRADA`) para no romper el motor ni los datos existentes. Solo cambia lo que ve el usuario. En la interfaz esos movimientos se muestran como "Salida a ubicación" y "Entrada por salida".
+
+**Cómo lo ve el destino:** el módulo se llama Salidas para todas las ubicaciones. La tienda que recibe entra al mismo módulo y ve una pestaña **"Por recibir"** con lo que viene hacia ella. Un solo nombre, un solo lugar.
+
+---
+
+# PARTE 2 — Cómo funciona en la operación
+
+Una tienda necesita mercancía que no tiene en piso. La pide a una bodega o a otra tienda. Alguien del origen acepta, separa los rollos, los sube a la camioneta y los manda. En el destino los reciben y confirman qué llegó.
+
+**Los metros nunca desaparecen del inventario consolidado.** Cuando la mercancía salió del origen y aún no llega al destino, vive en la ubicación técnica **"En tránsito"**. Ya existe en el motor; úsala.
+
+## Máquina de estados
+
+```
+SOLICITADA  → ACEPTADA | RECHAZADA | CANCELADA
+ACEPTADA    → PREPARADA | CANCELADA
+PREPARADA   → ENVIADA | CANCELADA
+ENVIADA     → RECIBIDA
+RECIBIDA    → CERRADA
+RECHAZADA, CANCELADA, CERRADA → terminales
+```
+
+**Regla crítica:** una vez ENVIADA **no se puede cancelar**. La mercancía ya salió físicamente. Lo que salga mal se resuelve al recibir, registrando diferencias.
+
+Valida las transiciones en el servidor.
+
+---
+
+# PARTE 3 — Tablas nuevas
+
+**`salidas`**
+- id (serial, PK)
+- folio (int, único, consecutivo global iniciando en 500)
+- origen_id, destino_id (int, FK a ubicaciones)
+- estado (enum: SOLICITADA, ACEPTADA, RECHAZADA, PREPARADA, ENVIADA, RECIBIDA, CERRADA, CANCELADA)
+- usuario_solicita_id, usuario_acepta_id, usuario_prepara_id, usuario_envia_id, usuario_recibe_id, usuario_cierra_id (int, FK, nullable)
+- solicitada_at, aceptada_at, preparada_at, enviada_at, recibida_at, cerrada_at (timestamptz, nullable)
+- motivo_rechazo, motivo_cancelacion (text, nullable)
+- nota_solicitud, nota_envio, nota_recepcion (text, nullable)
+- transportista (text, nullable)
+- uuid_cliente (uuid, único)
+- created_at (timestamptz)
+- Índices en (origen_id, estado), (destino_id, estado), (estado), (folio)
+
+**`salida_lineas`** — lo solicitado, a nivel producto
+- id, salida_id (FK), producto_id (FK)
+- cantidad_solicitada, cantidad_enviada (default 0), cantidad_recibida (default 0) — decimal 10,3
+- rollos_solicitados (int, nullable)
+- nota (text, nullable)
+
+**`salida_rollos`** — los rollos físicos que viajaron
+- id, salida_id (FK), linea_id (FK), rollo_id (FK)
+- cantidad_enviada (decimal 10,3)
+- cantidad_recibida (decimal 10,3, nullable)
+- recibido (boolean, default false)
+- nota_diferencia (text, nullable)
+
+**Regla:** la solicitud se hace por producto y cantidad. Los rollos específicos se eligen al **preparar**.
+
+---
+
+# PARTE 4 — Las seis etapas
+
+## 1. Solicitud
+- Selecciona la **ubicación origen** de donde pide
+- Agrega productos con la cantidad necesaria
+- Al elegir producto, **muestra la existencia disponible en el origen**
+- Nota opcional
+- El destino es la ubicación del solicitante. Solo ADMIN puede elegir otro.
+- **No toca inventario.**
+
+## 2. Aceptación o rechazo
+- El origen ve la solicitud en su bandeja
+- Acepta o rechaza. Rechazar exige motivo de mínimo 10 caracteres.
+- **No toca inventario.**
+
+## 3. Preparación
+- Por cada línea se seleccionan los rollos DISPONIBLES de ese producto en el origen
+- Se pueden escanear los QR o elegir de una lista
+- Muestra en vivo lo acumulado contra lo solicitado
+- **No es obligatorio completar la cantidad exacta.** Si se pidieron 200 m y solo hay rollos que suman 185, se manda lo que hay y la diferencia queda registrada.
+- Permite quitar un rollo antes de confirmar
+- **No toca inventario todavía.**
+
+## 4. Envío
+- Campo de **transportista** (texto libre) y nota opcional
+- **Aquí se mueve el inventario**, en una sola transacción:
+  - Cada rollo pasa del origen a **"En tránsito"** con `moverRollo`
+  - Se generan los movimientos de salida
+  - Los rollos quedan EN_TRANSITO
+  - Se llenan las cantidades enviadas
+- **Al confirmar se imprime la hoja de SALIDA**, una copia, con lo que realmente salió
+- Ya no se puede cancelar
+
+## 5. Recepción
+- Lista de los rollos enviados
+- Por cada uno se confirma y **se captura la cantidad recibida**
+- Si difiere de lo enviado, se resalta y **exige nota obligatoria**
+- Si un rollo **no llegó**, se marca como no recibido con nota. **Se queda en "En tránsito"** hasta resolverse; no desaparece del consolidado.
+- Al confirmar, en una transacción: los rollos recibidos pasan al destino con `recibirTransferencia`, vuelven a DISPONIBLE, y si la cantidad difiere se ajusta con constancia
+- **Se imprime la hoja de RECEPCIÓN**, una copia, con lo que realmente llegó
+
+## 6. Cierre
+- Solo si **no hay diferencias pendientes** y todos los rollos fueron recibidos o marcados con nota
+- Si quedan rollos en tránsito sin resolver, **no se cierra** y aparece en pendientes
+- Lo hace ADMIN o el encargado del destino
+
+---
+
+# PARTE 5 — Documentos imprimibles
+
+Dos documentos, **una copia de cada uno**, con el mismo formato de la hoja de entrada existente: hoja carta horizontal, logo, encabezado azul marino, tabla con encabezado blanco sobre azul, recuadro de observaciones y firmas.
+
+## Hoja de SALIDA
+
+Se imprime **al confirmar el envío**, con lo que realmente salió. El transportista se la lleva para que la firmen en el destino.
+
+- **Encabezado:** "SALIDA", debajo "MARIANA TEXTIL", a la derecha la razón social con logo
+- **Datos:** folio, fecha y hora de envío, origen, destino, usuario que envía, transportista
+- **Tabla:** Producto (SKU - nombre) · Serie del rollo · Cantidad con unidad · Destino. Una fila por rollo. Rellena hasta 10 filas.
+- **Totales:** rollos y cantidad total por unidad
+- **Pie:** recuadro de OBSERVACIONES con la nota de envío, y tres firmas: **ENTREGA**, **TRANSPORTA**, **RECIBE**
+
+## Hoja de RECEPCIÓN
+
+Se imprime **al confirmar la recepción**, con lo que realmente llegó. Se queda en el destino.
+
+- **Encabezado:** "RECEPCIÓN"
+- **Datos:** folio, fecha y hora de recepción, origen, destino, usuario que recibe, transportista
+- **Tabla:** Producto · Serie · Cantidad enviada · Cantidad recibida · **Diferencia** · Observación. Las filas con diferencia resaltadas.
+- **Totales:** rollos enviados y recibidos, cantidades, diferencia total
+- **Pie:** OBSERVACIONES y dos firmas: **RECIBE** y **REVISA**
+
+Ambas exportables a PDF y reimprimibles desde el detalle en cualquier momento.
+
+---
+
+# PARTE 6 — Pantallas
+
+## Tablero de Salidas
+
+Ruta `/salidas`. Pestañas por estado:
+
+- **Por aceptar** — solicitudes que llegaron a mi ubicación como origen
+- **Por preparar** — aceptadas, esperando juntar los rollos
+- **Por enviar** — preparadas, listas para salir
+- **En tránsito** — enviadas, esperando recepción
+- **Por recibir** — en tránsito hacia mi ubicación
+- **Por cerrar** — recibidas con pendientes
+- **Historial** — cerradas, rechazadas y canceladas
+
+Cada renglón: folio, origen → destino, número de productos, cantidad total, estado, fecha de la última etapa, y el botón de la acción que corresponde.
+
+**Badge en la barra lateral** con el número de salidas que esperan acción de mi ubicación.
+
+Filtros por fechas, origen, destino y producto. Buscador por folio.
+
+## Detalle de la salida
+
+- Encabezado con folio, origen → destino, estado
+- **Línea de tiempo** de las seis etapas: cuál se completó, quién y cuándo. Las pendientes en gris.
+- Tabla de productos con solicitado / enviado / recibido y diferencia
+- Lista de rollos con serie y estado
+- Notas de cada etapa
+- Botones para reimprimir ambas hojas
+- Botón de la acción que corresponde según estado y rol
+
+---
+
+# PARTE 7 — Movimientos: historial completo
+
+## Problema actual
+
+La pantalla se titula **"Movimientos de Entrada"** y su descripción dice "Historial inmutable de documentos de entrada". Solo lista entradas. No aparecen ventas, salidas a mostrador, salidas entre ubicaciones ni ajustes.
+
+## Qué debe ser
+
+**Movimientos es el historial completo de todo lo que pasó con la mercancía.** Cambia el título a **"Movimientos"** y la descripción a algo como *"Historial completo de entradas, salidas y ventas."*
+
+Debe mostrar todos los tipos del kardex:
+
+| Tipo interno | Cómo se muestra | Documento enlazado |
+|---|---|---|
+| ALTA | Alta inicial | — |
+| RECEPCION | Entrada | Documento de entrada |
+| VENTA | Venta | Ticket |
+| DEVOLUCION | Devolución | Ticket original |
+| TRANSFERENCIA_SALIDA | Salida a ubicación | Hoja de salida |
+| TRANSFERENCIA_ENTRADA | Entrada por salida | Hoja de recepción |
+| SALIDA_MOSTRADOR | Salida a mostrador | — |
+| AJUSTE_POSITIVO / AJUSTE_NEGATIVO | Ajuste | Justificación del ajuste |
+| CANCELACION | Cancelación | Documento original |
+
+## Cómo debe verse
+
+Tabla ordenada por fecha y hora, la más reciente arriba:
+
+| Fecha y hora | Tipo | Producto | Serie | Ubicación | Cantidad | Usuario | Documento |
+
+- **Cantidad con signo y color:** entradas en verde con `+`, salidas en rojo con `-`
+- **Tipo con etiqueta visual** distinguible de un vistazo
+- **Documento enlazado y clicable**, que abre directamente el ticket, la hoja de entrada, la hoja de salida o el detalle del ajuste. Este es el punto principal: desde cualquier movimiento debo llegar a su documento en un clic.
+- **Filtros:** tipo de movimiento (selección múltiple), rango de fechas, ubicación, producto, usuario
+- **Buscador** por serie de rollo, SKU o folio de documento
+- **Paginado**, 100 filas por página
+- **Exportable a Excel**
+
+Respeta el alcance por ubicación y los permisos de costo: TERMINAL no ve costos aquí.
+
+## Filtrar datos de prueba
+
+La ubicación desactivada **UbSAT SA1787447882698_6** tiene 66 entradas de prueba que hoy dominan la vista y no aportan nada.
+
+- Por defecto, **Movimientos no muestra registros de ubicaciones inactivas**
+- Agrega un interruptor **"Incluir ubicaciones inactivas"**, apagado por defecto, visible solo para ADMIN
+- Los datos no se borran, solo se ocultan de la vista diaria
+- La pantalla de Conciliación sigue mostrándolos, como ya quedó
+
+## Movimientos sin documento
+
+Existen movimientos de VENTA y SALIDA_MOSTRADOR sin ticket asociado (series 1000735, 1000739, 1000743, 1000744, 1000745), generados por pruebas antiguas. Deben aparecer porque son parte del kardex real, pero **márcalos visualmente como "sin documento"**.
+
+---
+
+# PARTE 8 — Permisos
+
+Agrega el módulo `salidas` a la matriz. **Elimina el módulo `transferencias`** si existía, migrando su configuración.
+
+| Rol | Ver | Crear (solicitar) | Editar (aceptar, preparar, enviar, recibir) | Autorizar (cancelar, cerrar) |
+|---|---|---|---|---|
+| TERMINAL | sí | no | no | no |
+| CAJA | sí | no | no | no |
+| INVENTARIOS | sí | sí | sí | no |
+| BODEGA | sí | no | sí | no |
+| ADMIN | acceso total por bypass | | | |
+
+Reglas adicionales:
+- **Solicitar** requiere `crear`, desde la ubicación del usuario
+- **Aceptar, preparar y enviar** requieren `editar` **y** pertenecer a la ubicación **origen**
+- **Recibir** requiere `editar` **y** pertenecer a la ubicación **destino**
+- **Cancelar y cerrar** requieren `autorizar`
+- ADMIN opera en cualquier etapa y ubicación
+- Valida la pertenencia **en el servidor**, con `assertPuedeOperarEn`
+
+---
+
+# PARTE 9 — Corrección pendiente del POS
+
+En `lib/pos.ts`, la validación del piso de precio es `precioCents < money(rollo.costoUnitario)`. Si un rollo tiene costo en cero o nulo, cualquier precio pasa.
+
+1. Si el costo del rollo es **cero o nulo**, rechaza la venta con mensaje distinto: *"El rollo serie XXXXXXX no tiene costo registrado. Contacte al administrador."*
+2. En el alta de rollos, valida que el costo unitario sea **mayor a cero**
+3. Repórtame si encuentras rollos con costo en cero en la base, cuántos y cuáles
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No dejes las entradas "Salidas" y "Transferencias" duplicadas en la barra lateral
+- No cambies los nombres técnicos de los tipos de movimiento del kardex
+- No permitas cancelar una salida ya ENVIADA
+- No dejes que los metros desaparezcan del consolidado en ninguna etapa
+- No escribas directo en `rollos`, `movimientos` ni `existencias`
+- No permitas preparar, enviar o recibir desde una ubicación que no corresponde
+- No borres los datos de prueba, solo ocúltalos de la vista diaria
+- No implementes todavía salidas extraordinarias, contenedores ni reportes
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Flujo completo:**
+1. INVENTARIOS de Mariana solicita 200 m de un producto a Bodega Tomás
+2. BODEGA de Tomás acepta
+3. Prepara con 4 rollos que suman 185 m
+4. Envía: Tomás baja 185 m, "En tránsito" sube 185 m, **el consolidado no cambia**
+5. Mariana recibe: "En tránsito" baja a cero, Mariana sube 185 m, **el consolidado no cambia**
+6. Se cierra
+7. La suma del kardex sigue igualando el caché
+
+**Diferencias:**
+8. Recibir un rollo con cantidad menor exige nota y ajusta el rollo
+9. Marcar un rollo como no recibido lo deja en "En tránsito" y la salida no se puede cerrar
+10. El consolidado cuadra con rollos atorados en tránsito
+
+**Estados:**
+11. Cancelar una salida ENVIADA: **se rechaza**
+12. Saltar de SOLICITADA a ENVIADA: **se rechaza**
+13. Rechazar sin motivo suficiente: **se rechaza**
+
+**Permisos:**
+14. BODEGA de Tomás no puede recibir una salida cuyo destino es Mariana: **403**
+15. INVENTARIOS de Mariana no puede preparar una salida cuyo origen es Tomás: **403**
+16. TERMINAL no puede solicitar: **403**
+17. ADMIN opera en cualquier etapa y ubicación
+
+**Movimientos:**
+18. Aparecen los nueve tipos de movimiento, no solo entradas
+19. El enlace del documento abre el ticket, la hoja de entrada o la hoja de salida según corresponda
+20. Los filtros por tipo funcionan
+21. Las ubicaciones inactivas no aparecen por defecto
+22. El interruptor de ADMIN las muestra
+23. Los movimientos sin documento se marcan visualmente
+
+**Concurrencia:**
+24. Dos preparaciones simultáneas del mismo rollo: una gana, la otra falla limpiamente
+25. Dos solicitudes simultáneas obtienen folios distintos
+26. El mismo `uuid_cliente` no crea dos salidas
+
+**Documentos:**
+27. La hoja de SALIDA muestra lo enviado, no lo solicitado
+28. La hoja de RECEPCIÓN resalta las diferencias
+29. Ambas se reimprimen desde el detalle
+
+**Regresión:**
+30. Las 12 pruebas del motor siguen pasando
+31. Las pruebas de permisos y del POS siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Problemas sin resolver, si los hubo
+4. Lista de archivos creados y modificados
+5. Endpoints nuevos con su módulo y acción de permiso
+6. Confirmación de que la barra lateral tiene una sola entrada de Salidas
+7. Salida completa de la corrida de pruebas
+8. Confirmación de que las pruebas corrieron en base aislada
+9. Rollos con costo en cero encontrados, si los hay
+10. Cómo pruebo el flujo completo: con qué usuarios y en qué orden

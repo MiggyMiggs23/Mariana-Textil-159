@@ -1,0 +1,15 @@
+{
+  "status": "FAIL",
+  "allGates": "OFF",
+  "liveDatabaseTouched": false,
+  "actorsCopied": false,
+  "liveCaptureProvenance": "REAL_READONLY_PID191",
+  "controlAssociation": "PID191 command-line path and explicit disk hash; not proof of in-memory bytes",
+  "controlSha256": "008dfd54d93f6a1606370d44cb2086673669c51278c92ebb6a5a63f4d503e7f5",
+  "postgresStarted": true,
+  "candidateStopped": false,
+  "postgresStopExit": 0,
+  "disposableDestroyed": true,
+  "error": "BLOCKED_CATALOG_FIDELITY: retain raw differences; MAIN decision required\n+ actual - expected\n\n  {\n+   attributesSha256: 'a8389a4be6f0765a58849a425e742fc941821fbdf9c6fab0fa9c1eeb428d5ec6',\n-   attributesSha256: '597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665',\n    schemaSha256: '89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358'\n  }\n",
+  "postgresStatusBeforeCleanup": 0
+}

@@ -1,0 +1,12 @@
+{
+  "real": {
+    "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+    "attributesSha256": "597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665"
+  },
+  "reconstructed": {
+    "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+    "attributesSha256": "a8389a4be6f0765a58849a425e742fc941821fbdf9c6fab0fa9c1eeb428d5ec6"
+  },
+  "identityScope": "Disposable identity only; never substitutes for real preflight",
+  "rawEnumAndTriggerAttributesPreserved": true
+}

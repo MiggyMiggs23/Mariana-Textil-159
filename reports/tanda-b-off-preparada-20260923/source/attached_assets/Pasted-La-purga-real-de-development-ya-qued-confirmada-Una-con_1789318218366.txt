@@ -1,0 +1,37 @@
+La purga real de development ya quedó confirmada. Una consulta independiente después del commit verificó:
+
+33 tablas operativas vacías.
+18 tablas protegidas idénticas, incluidos fechas y autores.
+Los 3 mínimos y el interruptor habilitado.
+Cero diferencias en la invariante de existencias.
+Los 11 triggers en O.
+Secuencia de contenedores en 1, todavía sin consumir.
+Voy a reactivar la API y comprobar las pantallas reales. Separaré los efectos normales de ese arranque y del login —avisos nuevos, renovación de fechas de permisos y registro de acceso— del estado conservado por la purga.
+La API ya está funcionando y el evaluador quedó habilitado. La revisión de pantallas en la base desechable está completa, pero la comprobación visual autenticada en development quedó bloqueada: el verificador no pudo completar el acceso seguro a la sesión. No voy a presentarla como aprobada.
+
+Estoy cerrando el informe con esa limitación, los dos fallos de limpieza de pruebas y los avisos que se generaron realmente después del arranque.
+La purga de development (heliumdb) quedó confirmada. La API está funcionando; no se modificaron reglas de negocio ni pantallas.
+
+Verificado después del commit
+
+A33: todas vacías.
+C18: conteos y hashes completos idénticos, incluidas fechas y autores.
+Contadores reiniciados según lo autorizado.
+Existencias reconstruidas: 0 diferencias.
+Los 11 triggers habilitados en O.
+Mínimos 2500, 5000 y 5000, con interruptor activo.
+Auditoría íntegra.
+Después de reactivar
+
+El evaluador generó 3 episodios y 12 avisos, sin apagar mínimos. Solo cambiaron las fechas de actualización de permisos heredados: 72 filas de rol y 54 de ubicación; no sus flags ni autores.
+
+Límites de la validación
+
+Ensayo desechable: ocho pantallas comprobadas y ticket real 1000. Después se restauró la copia.
+Cinco suites: 75 comprobaciones funcionales aprobadas, pero dos limpiezas fallaron por protecciones de auditoría y llave foránea. No se reportan como aprobación total.
+Pantallas autenticadas en development: pendientes, porque el verificador no pudo completar el acceso seguro a la sesión. No se simularon resultados ni se crearon datos de prueba allí.
+Entregué el informe de los 11 puntos, con la tabla comparativa de C18, evidencia y limitaciones. También quedó actualizado replit.md.
+
+Respaldo verificado en Drive
+
+Los contratos y los defaults históricos 99/499 quedaron sin corregir, como pediste.

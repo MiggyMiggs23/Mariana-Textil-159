@@ -1,0 +1,28 @@
+El encabezado de la pantalla, el selector de periodo, el interruptor de comparar y los botones de Excel y PDF se quedan arriba, sin moverse.
+
+Todo lo que va debajo —Abonos y saldos a favor, Desglose por Tienda, Flujos Diarios por Cuenta y el resto— conserva su orden actual.
+
+2. Iconos en las cinco tarjetas de cobranza.
+
+Hoy son las únicas sin icono de toda la pantalla, mientras las cuatro de Ventas sí los traen. Se ven huérfanas.
+
+	•	Usa el mismo tratamiento que las tarjetas de Ventas: icono a color dentro de cuadro redondeado, mismo tamaño y misma posición.
+	•	Un icono por concepto, que ubique y no adorne: efectivo, facturación y cuenta bancaria deben distinguirse entre sí de un vistazo.
+	•	Reutiliza los iconos que ya usa el sistema para esos conceptos. No introduzcas una librería nueva ni iconos de estilo distinto.
+	•	El color del icono no puede codificar información nueva. Los colores que significan algo en esta pantalla ya están definidos; el icono ubica, no clasifica.
+
+3. Dos defectos que corregir de paso:
+
+	•	Efectivo facturado y Efectivo sin factura no muestran su porcentaje, mientras las otras tres sí. Agrégalo, calculado sobre Cobrado igual que las demás, salvo que tengas una razón para que no aplique — en cuyo caso dímela en vez de dejarlo en blanco.
+	•	Los porcentajes deben quedar legibles y separados de la cifra, sin invadirla.
+
+Verificación:
+
+	1.	Tabla del antes y el después de cada cifra de la pantalla. Todas idénticas.
+	2.	Ninguna cifra, tabla, gráfica ni enlace desaparece por el reordenamiento. Inventario explícito de qué había y dónde quedó.
+	3.	Cada importe sigue abriendo su detalle canónico; ninguno se vuelve un callejón sin salida.
+	4.	La suma Efectivo facturado + Efectivo sin factura sigue dando exactamente Total en efectivo, con su prueba pasando.
+	5.	Comprobación en escritorio y a 402 px, conservando el mismo orden y agrupación al apilar. Captura del antes y el después.
+	6.	pnpm run typecheck completo en cero.
+
+Restricciones: no cambies consultas, predicados ni cálculos; no toques la barra lateral; no toques Caja en Tiempo Real; no crees usuarios ni sesiones de prueba.

@@ -1,0 +1,19 @@
+Solo documentación. No toques código, no escribas en la base y no reinicies la API.
+
+Registra estas respuestas del propietario a las preguntas pendientes del plan U (reports/prompt-u-plan-de-implementacion.md). Guárdalas textuales en reports/prompt-u-respuestas-2026-09-18.md y actualiza replit.md donde corresponda, indicando qué texto anterior queda sustituido.
+
+P4 (E5). Si ADMIN rechaza el destino preparado, el dinero sigue esperando otra propuesta. Si el cliente pide que se le devuelva, aplica la regla vigente: importe completo nunca aplicado, solo ADMIN.
+
+P5 (E5). Se permite autorizar una parte y dejar el resto esperando. Una propuesta puede abarcar varias notas del mismo cliente. El propietario acepta la consecuencia: la parte que quede después de una aplicación parcial ya no es devolvible, porque la devolución exige importe completo nunca aplicado.
+
+P7 (E5). El dinero dirigido sin aplicar se destaca y se avisa a ADMIN a partir de 3 días desde su recepción.
+
+P9 (E11). Esto cambia lo que decía el plan. ContadorF solo ve lo facturado: facturas, clientes facturados y ventas facturadas. Ya no ve las ventas no facturadas. Además tiene un botón para aceptar que las ventas facturadas cuadran con su registro externo. Puede aceptar por día si quiere, pero las semanas y los meses siempre deben quedar aceptados. Si no cuadra, marca "no cuadra" y se notifica a ADMIN para abrir una investigación. ContadorF no ve el Fondo ni los pagos a proveedor: el manejo fiscal del Fondo se lleva fuera del sistema. ContadorA queda como estaba en el plan.
+
+P10 (E11). Todas las cuentas CONTADOR existentes pasan a ContadorF. El propietario asigna ContadorA a mano.
+
+P12 (E12). Un pago o retiro que exceda el saldo registrado de caja o del Fondo se bloquea. ADMIN puede desbloquearlo con motivo obligatorio, y el desbloqueo queda en el historial.
+
+P13 (E12). Un pago a proveedor que sale completo del Fondo no requiere turno de caja abierto. Si usa caja, esa parte sí requiere sesión abierta de Mariana.
+
+Si alguna respuesta choca con una regla vigente de replit.md, no la resuelvas: repórtamela.

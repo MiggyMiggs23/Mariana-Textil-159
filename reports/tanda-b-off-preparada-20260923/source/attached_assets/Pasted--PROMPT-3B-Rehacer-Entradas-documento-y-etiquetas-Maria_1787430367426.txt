@@ -1,0 +1,274 @@
+# PROMPT 3B — Rehacer Entradas, documento y etiquetas
+### Mariana Textil · Instrucción de reemplazo, no de ajuste
+
+> Haz commit en Git antes de empezar.
+> El logo debe estar en `client/public/logo-mariana.png`.
+
+---
+
+## ADVERTENCIA INICIAL
+
+Este prompt **reemplaza por completo** la pantalla actual de Entradas. No es un ajuste ni una mejora incremental.
+
+Antes de escribir código:
+1. Localiza el archivo actual de la pantalla de Entradas y dime su ruta.
+2. Confírmame que vas a reescribirlo completo.
+3. Al terminar, **lista todos los archivos que creaste o modificaste**. Si esa lista viene vacía o solo trae cambios menores, el trabajo no se hizo.
+
+La entrega tiene que ser **funcional de extremo a extremo**: debo poder registrar una entrada real, guardarla, ver el documento impreso y las etiquetas. No entregues maquetas ni pantallas con datos simulados.
+
+**Respeta el motor.** Toda creación de rollos pasa por `server/lib/inventario.ts`. Esta pantalla no escribe directo en `rollos`, `movimientos` ni `existencias`.
+
+**Respeta el diseño existente.** Azul marino profundo, la misma tipografía y los mismos componentes del resto del sistema. Las descripciones de abajo definen estructura y comportamiento, no estilo.
+
+---
+
+## PARTE 1 — Serie global
+
+El consecutivo pasa de ser por SKU a ser **global**.
+
+- Un solo contador para toda la empresa, iniciando en `1000001`
+- Cada rollo nuevo toma el siguiente número, sin importar el producto
+- El campo `serie` guarda solo el número: `1000001`
+- El QR codifica `SKU-SERIE`: `FORCAR-BLA-1000001`
+- Incremento atómico con bloqueo de fila
+- La serie nunca se reutiliza, aunque el rollo se dé de baja
+
+Modifica `series_consecutivo` para tener una sola fila de control global. No hay rollos existentes que preservar.
+
+**El formato del SKU no cambia.** Se mantiene `FORCAR-BLA`, `TAF-ROJ`, `GABMET-BAS`.
+
+Actualiza la prueba T-07 para verificar que dos usuarios simultáneos obtienen números globales distintos.
+
+---
+
+## PARTE 2 — Pantalla ENTRADA
+
+### Encabezado de la pantalla
+
+- Ícono a la izquierda y título **ENTRADA** en mayúsculas, grande
+- Debajo, una línea de descripción: "Registra la mercancía que llega a una ubicación. Cada rollo se da de alta con su cantidad propia y su número de serie."
+
+### Tarjeta "Detalle del artículo"
+
+Una tarjeta con borde, título "Detalle del artículo" arriba a la izquierda, y dentro un formulario de **dos columnas**. Los campos obligatorios llevan asterisco rojo antes del nombre.
+
+**Columna izquierda** (etiquetas alineadas a la derecha del campo, como en el resto del sistema):
+
+| Campo | Tipo | Comportamiento |
+|---|---|---|
+| *Producto | Selector con buscador | Busca por tela, color o SKU. Muestra "Elegir producto" cuando está vacío |
+| *SKU | Texto | Se llena solo al elegir producto. Solo lectura |
+| *Ubicación | Selector | "Elegir ubicación". Para no-ADMIN viene fija con su ubicación y deshabilitada |
+| *Cantidad de rollos | Numérico con flechas | Entero, mínimo 1. Cuántas piezas físicas entran |
+| *Unidad | Texto | Se llena sola del producto: METRO o KILO. Solo lectura |
+| *Costo unitario | Numérico con flechas | Costo por metro o por kilo, en pesos |
+| Fecha | Fecha y hora | Por defecto ahora. Editable con selector de calendario y reloj |
+
+**Columna derecha:**
+
+| Campo | Tipo | Comportamiento |
+|---|---|---|
+| Proveedor | Selector | "Elegir proveedor". Lista los proveedores activos |
+| Notas | Texto multilínea | Libre, opcional |
+| Cantidad por rollo | Área de solo lectura con scroll | Lista los rollos capturados: número consecutivo, cantidad y serie de vista previa. Vacía al inicio |
+
+Al pie de la tarjeta, alineado a la derecha: botón **"Agregar a la lista"**.
+
+### Modal de captura rollo por rollo
+
+Al presionar "Agregar a la lista", **valida primero** que estén llenos producto, ubicación, cantidad de rollos y costo unitario. Si falta alguno, resáltalo y no abras el modal.
+
+Si todo está completo, abre un modal de captura. **Este modal es el corazón de la pantalla y debe ser rapidísimo de usar**, porque se opera mientras los cargadores dictan metrajes.
+
+El modal contiene:
+
+- **Arriba:** producto, SKU, ubicación, y un contador grande "Rollo 3 de 40"
+- **Centro:** un campo numérico grande, enfocado automáticamente, para la cantidad del rollo actual. En móvil, teclado numérico propio en pantalla con botones de al menos 64 px
+- **Botón grande "Siguiente rollo"**: guarda el valor, limpia el campo, avanza el contador y vuelve a enfocar. La tecla Enter hace lo mismo
+- **Lista en vivo** de los rollos ya capturados: número, cantidad, serie de vista previa. Cada uno con botón para editar o eliminar
+- **Barra de acumulado** siempre visible: rollos capturados de los declarados, cantidad total, costo total del lote
+- **Botón "Confirmar"**, habilitado solo cuando se capturaron todos los rollos declarados
+- **Botón "Cancelar"**, que pide confirmación antes de descartar
+
+Si el usuario captura menos rollos de los declarados e intenta confirmar, avisa cuántos faltan. Si quiere cerrar con menos, permite ajustar la cantidad declarada a los capturados.
+
+**Las series se muestran como vista previa pero se reservan hasta el guardado final de la entrada.** Si el usuario captura 40 rollos y cancela, no se queman 40 folios.
+
+Al confirmar, el producto pasa a la tabla de abajo con todos sus rollos y el formulario se limpia para capturar el siguiente producto.
+
+### Tabla de la entrada
+
+Debajo de la tarjeta, una tabla con los productos ya agregados. Encabezado en azul marino con texto blanco.
+
+| ☐ | Producto | SKU | Ubicación | Rollos | Unidad | Cantidad total | Costo unitario | Costo total | Detalle |
+
+- Columna de selección con casilla, y casilla maestra en el encabezado
+- Enlace "Detalle" que despliega los rollos individuales de esa fila con su cantidad y serie
+- Cada fila permite editarse o eliminarse mientras la entrada no se haya guardado
+- **Fila de totales** al final, en negritas y fondo distinto: total de rollos, cantidad total y costo total de toda la entrada
+- Cuando no hay filas, estado vacío con ícono y el texto "Aún no has agregado productos a esta entrada"
+- Control "Mostrar filtros" arriba a la derecha de la tabla
+
+**Regla:** todos los productos de una entrada van a la misma ubicación. Si el usuario intenta agregar uno con ubicación distinta, avísale y no lo permitas.
+
+### Barra inferior
+
+Fija al pie de la pantalla:
+
+- Casilla **"Imprimir documento de entrada"**, marcada por defecto
+- Casilla **"Imprimir etiquetas de rollos"**, marcada por defecto
+- A la derecha: botón primario **"Guardar entrada"** y botón secundario **"Cancelar"**
+
+### Al guardar
+
+En **una sola transacción**:
+
+1. Se crea el registro de la entrada con su folio consecutivo
+2. Se reservan las series globales y se crean todos los rollos en estado DISPONIBLE, con su costo unitario y costo total congelados
+3. Se registran los movimientos tipo RECEPCION a través del motor
+4. Se actualizan las existencias
+5. Se registra en auditoría
+
+Si algo falla, **nada se guarda**: ni entrada, ni rollos, ni series consumidas.
+
+Al terminar, pantalla de confirmación con el folio generado, el resumen de lo registrado, y dos botones: **"Ver documento de entrada"** e **"Imprimir etiquetas"**. Si las casillas de la barra inferior estaban marcadas, abre automáticamente las vistas de impresión.
+
+---
+
+## PARTE 3 — Tabla `entradas`
+
+- id (serial, PK)
+- folio (int, único, consecutivo global iniciando en 100)
+- ubicacion_id (int, FK)
+- proveedor_id (int, FK, nullable)
+- usuario_id (int, FK)
+- fecha (timestamptz) — la capturada por el usuario
+- observaciones (text, nullable)
+- total_rollos (int)
+- total_costo (decimal 12,2)
+- uuid_cliente (uuid, único) — idempotencia
+- created_at (timestamptz) — momento real del registro
+
+Liga los rollos a su entrada con el campo `recepcion_id` que ya existe.
+
+**Las entradas no se editan ni se borran una vez guardadas.** Un error se corrige con un ajuste que deja rastro en el kardex.
+
+---
+
+## PARTE 4 — Documento de entrada
+
+Se genera al guardar. Consultable e imprimible en impresora normal, **hoja carta horizontal**.
+
+### Estructura exacta
+
+**Encabezado, franja superior:**
+- Izquierda: barra vertical azul, título **"ENTRADA"** en azul marino, muy grande y en negritas. Debajo, en gris y más chico: **"MARIANA TEXTIL"**
+- Derecha: **"Mariana Textil S.A. de C.V."** en negritas, y el logo de la empresa
+- Línea divisoria vertical entre ambos bloques
+
+**Bloque de datos, dos columnas, cada dato con ícono y etiqueta en negritas:**
+
+| Izquierda | Derecha |
+|---|---|
+| USUARIO: nombre de quien registró | HORA: fecha y hora exactas del registro |
+| FECHA: la fecha de la entrada | NO.: folio de la entrada |
+| PROVEEDOR: nombre del proveedor | NÚMERO DE PROVEEDOR: id del proveedor |
+
+Cada dato con línea inferior, como un formulario impreso.
+
+**Tabla principal**, encabezado con fondo azul marino y texto blanco, cada columna con su ícono:
+
+| PRODUCTO | CANTIDAD DE ROLLOS | TOTAL DE METROS/KILOS | SKU | UBICACIÓN |
+
+- Una fila por producto de la entrada
+- Producto se muestra como `SKU-Nombre completo`
+- Cantidad total con su unidad: "10,000 mts" o "450 kgs"
+- Ubicación en dos líneas: nombre de la ubicación y su detalle
+- **Deja renglones vacíos** hasta completar 10 filas, para que la tabla conserve altura consistente entre documentos
+
+**Pie:**
+- Izquierda: recuadro con ícono y título **"OBSERVACIONES"**, con las notas capturadas
+- Derecha: tres bloques de firma lado a lado — **RECIBIDO POR**, **REVISADO POR**, **AUTORIZADO POR** — cada uno con línea horizontal arriba y la leyenda "Nombre y Firma" debajo
+- Franja azul marino al fondo de la hoja
+
+### Requisitos
+
+- Vista imprimible con CSS `@media print`, carta horizontal, sin navegación ni botones
+- Exportable a PDF
+- Consultable desde el módulo **Movimientos**: búsqueda por folio, proveedor, ubicación o rango de fechas
+- Reimprimible en cualquier momento
+
+---
+
+## PARTE 5 — Etiquetas de rollo
+
+Se generan al guardar. Una etiqueta por rollo.
+
+### Contenido de cada etiqueta
+
+- **Nombre completo del producto** arriba, en negritas y tamaño grande. Ejemplo: "Forro Cartera Blanco"
+- **Línea divisoria horizontal** debajo del nombre
+- Bloque izquierdo, tres datos apilados, cada uno con su etiqueta descriptiva chica encima y el valor grande debajo:
+  - **SKU:** `FORCAR-BLA`
+  - **No. de Serie:** `1000001`
+  - **Metros del Rollo:** `250.00 MTS.` (o **Kilos del Rollo:** `45.50 KGS.` según la unidad)
+- **Línea vertical punteada** separando el bloque izquierdo del derecho
+- Bloque derecho: **código QR** que codifica `SKU-SERIE`, y debajo el texto legible `FORCAR-BLA-1000001`
+- **Logo de Mariana Textil** en la esquina derecha
+
+**Solo QR. No incluyas código de barras.** El escaneo se hace con un dispositivo tipo smartphone con lector.
+
+### Requisitos del QR
+
+- Corrección de errores **nivel M o superior**. Las etiquetas van sobre rollos que se estiban, se ensucian y se raspan
+- Tamaño mínimo impreso de 25 × 25 mm
+- Margen en blanco de al menos 4 módulos alrededor
+- Negro sobre blanco, sin fondos de color ni degradados detrás
+
+### Formato
+
+- Etiqueta de **100 × 60 mm**, con esquinas redondeadas y borde tenue
+- Hoja imprimible que acomoda varias etiquetas por página con guías de corte
+- CSS `@media print` con el tamaño físico exacto, para impresora térmica directa o de transferencia térmica
+- Debe verse correcta también en impresora normal sobre papel adhesivo
+- Al pie de la hoja, una nota de referencia: "Etiquetas recomendadas: papel térmico adhesivo 100×60 mm · Impresión: térmica directa o transferencia térmica"
+
+### Funcionalidad
+
+- Imprimir todas las etiquetas de una entrada
+- Reimprimir la etiqueta de un rollo individual desde el detalle del rollo
+- Seleccionar rollos específicos de una entrada y reimprimir solo esos
+- Exportable a PDF
+
+Usa una librería de QR del lado del cliente, **empaquetada con la aplicación**. No dependas de servicios externos ni de CDN: las etiquetas deben imprimirse aunque la ubicación se quede sin internet. Dime qué librería usaste y confirma que no llama a ningún servidor.
+
+---
+
+## LO QUE NO DEBES HACER
+
+- No dejes la pantalla anterior de Entradas funcionando en paralelo. Se reemplaza.
+- No entregues maquetas ni pantallas con datos simulados. Todo funcional.
+- No permitas editar ni borrar una entrada guardada.
+- No asignes series hasta el guardado final.
+- No escribas directo en `rollos`, `movimientos` ni `existencias`. Usa el motor.
+- No cambies el formato del SKU.
+- No incluyas código de barras en las etiquetas.
+- No introduzcas un estilo visual nuevo.
+- No implementes todavía contenedores, packing list ni POS.
+
+## ENTREGABLE
+
+Repórtame, en este orden:
+
+1. **La lista completa de archivos creados y modificados**
+2. Qué librería de QR usaste y que no llama a servidores externos
+3. La salida completa de la corrida de las 12 pruebas del motor
+4. Confirmación de que puedo, en la aplicación corriendo:
+   - Registrar una entrada con 3 productos de distinta cantidad de rollos
+   - Capturar metrajes en el modal, corregir uno y eliminar otro antes de confirmar
+   - Ver las series globales consecutivas desde 1000001
+   - Ver el documento de entrada y mandarlo a imprimir
+   - Ver e imprimir las etiquetas de todos los rollos
+   - Encontrar la entrada en Movimientos y reimprimirla
+   - Ver el inventario reflejando exactamente esos rollos y cantidades

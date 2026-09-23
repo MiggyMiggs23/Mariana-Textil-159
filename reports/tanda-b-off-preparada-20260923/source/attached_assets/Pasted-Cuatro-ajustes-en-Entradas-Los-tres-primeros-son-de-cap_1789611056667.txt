@@ -1,0 +1,37 @@
+Cuatro ajustes en Entradas. Los tres primeros son de captura; el cuarto es un defecto del documento impreso.
+
+1. El SKU sale dos veces en la entrada impresa y por eso se corta el nombre.
+
+Causa localizada en artifacts/mariana-textil/src/pages/entrada-documento.tsx:
+
+	•	Línea 214, columna Producto: renderiza {linea.skuProducto} - {linea.telaProducto} {linea.colorProducto} con truncate max-w-[250px].
+	•	Línea 217, columna SKU: renderiza {linea.skuProducto} otra vez.
+
+El SKU se come el ancho de la columna de producto y lo que se trunca es el color, que es justo lo que hay que poder leer.
+
+Quita el SKU de la columna Producto: debe quedar solo tela y color, separados de forma legible. El SKU se conserva en su propia columna, donde ya está. Revisa si el mismo patrón se repite en el documento de Salida y en la nota de productos, y corrígelo igual.
+
+2. El nombre completo no cabe en el buscador de producto.
+
+En components/product-combobox.tsx, líneas 162-166, el nombre se pinta con truncate y se corta por la derecha, que es donde vive el color. En productos como «Mezclilla Diamantina 10 Oz — Industrial» o «Campesina Flor Margarita — Rojo» se pierde exactamente el dato que distingue un producto de otro.
+
+El color nunca se trunca. Propón una solución y preséntamela antes de implementar. Opciones a evaluar: dar al color su propia línea o su propia columna dentro de la opción; truncar únicamente la tela y dejar el color íntegro; reducir el tamaño de fuente de la tela conservando el del color. Elige la que funcione con el catálogo real, no con dos ejemplos.
+
+Compruébalo contra el catálogo completo de 1,234 productos, no contra los que salen en mi captura. Esa regla está escrita en replit.md y es la que se incumplió la vez pasada con las etiquetas.
+
+3. El proveedor se bloquea después del primer producto.
+
+Una entrada nunca puede tener dos proveedores. Una vez que la entrada tiene al menos una línea capturada, el selector de proveedor queda bloqueado.
+
+Si el usuario necesita cambiarlo, debe poder hacerlo explícitamente vaciando la captura, con una confirmación que le advierta que perderá las líneas. No lo permitas en silencio.
+
+Respeta la mecánica que ya existe con contenedores: hoy, al cambiar de proveedor se desvincula el contenedor que no coincide, y al guardar se rechaza si el proveedor no corresponde al del contenedor. Ese comportamiento se conserva.
+
+4. Confirmación antes de guardar e imprimir.
+
+Al pulsar guardar, muestra un resumen para revisar antes de proceder: proveedor, sitio, número de líneas, total de rollos y cantidad total separada por unidad —nunca un total mezclado entre metros, kilos, bolsas y piezas—, y la lista de productos con su color completo.
+
+El usuario confirma y hasta entonces se guarda y se imprime. Si cancela, regresa a la captura sin perder nada.
+
+Razón: ya pasó varias veces que faltaba un producto y la entrada se guardó e imprimió igual.
+

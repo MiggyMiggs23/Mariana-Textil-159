@@ -1,0 +1,7 @@
+{
+  "buildSource": "/home/runner/workspace/reports/tanda-b-off-preparada-20260923/source",
+  "finalApiOutput": "/home/runner/workspace/artifacts/api-server/dist-tanda-b-off-20260923",
+  "relocationApproved": false,
+  "workerReferences": [],
+  "initialExtractorLimitation": "Initial filter missed separate outputDir and pinoBundlerAbsolutePath declarations; see static-audit.json for verified absolute path and worker hashes."
+}

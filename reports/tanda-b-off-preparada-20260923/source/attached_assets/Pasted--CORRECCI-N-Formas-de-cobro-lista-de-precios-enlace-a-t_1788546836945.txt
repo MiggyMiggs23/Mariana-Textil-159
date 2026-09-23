@@ -1,0 +1,168 @@
+# CORRECCIÓN — Formas de cobro, lista de precios, enlace a ticket y alta de proveedores
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## BLOQUE 1 — Las formas de cobro quedaron al revés
+
+### El bug, ya localizado
+
+`pages/cobros.tsx:784`:
+
+```
+disabled={hasMetreadoLine || !ticket.esCredito}
+```
+
+El botón de **Transferencia se deshabilita cuando el ticket NO es a crédito**. Está invertido: la transferencia es una forma de cobrar de contado, y quedó condicionada a que la venta sea a crédito.
+
+Verifica el diagnóstico y revisa si el mismo error de condición afecta a los demás botones de forma de pago.
+
+### La regla correcta
+
+**El crédito es exclusivo de las notas.** No es una forma de cobrar un ticket.
+
+Un ticket se cobra con **tres opciones**:
+
+1. **Efectivo**
+2. **Transferencia**
+3. **Facturado**, con el mecanismo de IVA que ya existía
+
+Las tres deben estar habilitadas para un ticket normal. Ninguna depende de que la venta sea a crédito.
+
+**Facturado conserva el comportamiento que ya tenía**, con su desglose de IVA al 16% desde la constante compartida. **No lo reinventes**: revisa qué hacía antes de los cambios recientes y restáuralo si se perdió.
+
+### Qué revisar
+
+Los cambios recientes movieron más de lo debido en esta pantalla. **Recorre el flujo de cobro completo** y reporta qué otra cosa quedó condicionada a `esCredito` que no debería.
+
+Verifica también que la restricción por línea metreada (`hasMetreadoLine`) siga aplicando donde corresponde y solo ahí. **Repórtala**: quiero saber por qué existe y a qué formas de pago afecta.
+
+---
+
+## BLOQUE 2 — La lista de precios sale en blanco
+
+La pantalla de Precios **no muestra nada** y no permite capturar precios.
+
+Los productos subidos desde Excel llegaron **sin precio**, que es el comportamiento correcto y esperado. Pero eso dejó la pantalla inservible.
+
+**Reproduce, diagnostica y repórtame la causa antes de corregir.** Las hipótesis a descartar:
+
+1. La consulta **filtra por productos con precio** y los deja fuera a todos
+2. La pantalla **falla al encontrar un precio nulo** y no renderiza nada
+3. Hay un límite o una paginación que no está devolviendo la primera página
+4. El alcance de lectura por sitio está excluyendo todo
+
+Con 566 productos activos y la mayoría sin precio, esta pantalla es la única vía para capturarlos. **Es bloqueante para el piloto.**
+
+### Lo que debe quedar
+
+- Los productos **sin precio se muestran**, marcados como "Sin precio", nunca como $0.00
+- Se puede **capturar el primer precio** de un producto que nació sin él
+- Ese primer precio **queda registrado en el historial**
+- Se puede **filtrar por productos sin precio**, para atacarlos en orden
+
+**Si existe captura en lote, dilo. Si no existe, repórtalo sin construirlo**: con cientos de productos sin precio quiero decidir si vale la pena.
+
+---
+
+## BLOQUE 3 — Enlace al ticket desde Movimientos
+
+En la pantalla de Movimientos, agrega en el **extremo derecho de cada renglón** un enlace para abrir el ticket correspondiente.
+
+- Solo en los movimientos que **provienen de un ticket**. Los demás no llevan enlace.
+- **Un solo enlace por renglón**, conforme a la regla que ya está en `replit.md`.
+- El enlace debe llevar al ticket correcto. **Verifícalo con datos**: ya hubo un bug donde el identificador del enlace era la posición en la lista y no el id real.
+- Al volver del ticket, **los filtros de Movimientos se conservan**.
+
+---
+
+## BLOQUE 4 — Alta de proveedores
+
+Da de alta estos 18 proveedores:
+
+- Hussni
+- David Ohanna
+- UNIVISA
+- El Asturcón
+- Ricardo Miguel
+- Gerardo Gonzales
+- Alfredo Lorenzo
+- Cobitel
+- Carpe
+- Jesús Poo
+- Olegario Álvarez
+- Alfredo Miguel
+- Juan Carlos Priede
+- Ping Li
+- Doña Hi
+- Paulina
+- Salomón Hilu
+- Salomón Hilu Cojab
+
+### Cómo
+
+- **Solo el nombre.** Los demás datos se capturan después.
+- Todos **activos**.
+- Si alguno ya existe, **no lo dupliques ni lo modifiques**.
+- **No los escribas en el seed ni en el código.** Son datos, no configuración. Cárgalos con el mecanismo de alta que ya existe.
+
+### Dos cosas que necesito que revises
+
+**Salomón Hilu y Salomón Hilu Cojab son proveedores distintos**, con nombres muy parecidos. Verifica que queden como dos registros separados y que ninguna búsqueda o coincidencia por nombre los confunda.
+
+**Ya se había reportado que proveedores admite nombres duplicados**, sin restricción única. Al cargar estos, **reporta cuántos duplicados existen hoy en la base**. No los corrijas: quiero ver la lista.
+
+---
+
+## BLOQUE 5 — Verificación
+
+**Cobro**
+
+- En un ticket de contado, Efectivo, Transferencia y Facturado están **los tres habilitados**
+- Facturado desglosa el IVA al 16% desde la constante compartida, con el comportamiento anterior
+- **Ninguna forma de pago depende de `esCredito`**
+- El crédito solo aplica a notas
+- Está reportado qué más quedó mal condicionado en el flujo de cobro
+- Está reportado por qué existe la restricción de línea metreada y a qué afecta
+
+**Precios**
+
+- La pantalla **muestra los productos**, con y sin precio
+- Los sin precio dicen "Sin precio", **nunca $0.00**
+- Se puede capturar el primer precio y **queda en el historial**
+- Se puede filtrar por productos sin precio
+- Está reportada la causa del blanco, **antes de la corrección**
+- Está reportado si existe captura en lote
+
+**Movimientos**
+
+- Cada movimiento con ticket tiene un enlace a la derecha, uno solo
+- Los movimientos sin ticket no lo tienen
+- El enlace abre el ticket correcto, verificado con datos
+- Los filtros se conservan al volver
+
+**Proveedores**
+
+- Los 18 quedaron dados de alta, activos, sin duplicar los existentes
+- Salomón Hilu y Salomón Hilu Cojab son dos registros distintos y no se confunden
+- **No se escribieron en el seed ni en el código**
+- Está la lista de duplicados existentes, sin corregir
+
+**General**
+
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de POS, caja, precios y proveedores pasan enteras
+- Cada bug tiene una prueba que **falla contra el código anterior** y pasa con la corrección
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Formas de cobro de un ticket:** Efectivo, Transferencia y Facturado. **El crédito es exclusivo de las notas** y no es una forma de cobrar un ticket. Ninguna forma de pago se condiciona a `esCredito`; hacerlo dejó la transferencia deshabilitada en toda venta de contado.
+>
+> **La pantalla de Precios debe mostrar los productos sin precio**, marcados como "Sin precio" y nunca como $0.00. Es la única vía para capturar el precio de un producto que se importó sin él, así que filtrarlos la vuelve inservible justo cuando más se necesita.

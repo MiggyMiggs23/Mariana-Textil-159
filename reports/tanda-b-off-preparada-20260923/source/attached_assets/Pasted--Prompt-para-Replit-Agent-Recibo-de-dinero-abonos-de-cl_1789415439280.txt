@@ -1,0 +1,99 @@
+# Prompt para Replit Agent — Recibo de dinero: abonos de cliente y pagos a proveedor
+
+Trabajo nuevo. **No cambies ninguna regla de crédito, de caja ni de cálculo.** El recibo documenta un movimiento que ya ocurrió; no lo crea, no lo modifica y no lo autoriza.
+
+No toques la base por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+---
+
+## Qué es
+
+Dos documentos del mismo formato:
+
+- **Recibo de abono** — cuando un cliente entrega dinero.
+- **Recibo de pago** — cuando se entrega dinero a un proveedor.
+
+## Bloque 1 — Formato
+
+**A5 horizontal, 210 × 148 mm**, el mismo tamaño que ya usa el documento de Salida.
+
+**Dos copias por impresión:** una para quien entrega el dinero y otra para la empresa. Ambas llevan espacio de firma. Identifica cada una con su leyenda, como ya hace el ticket con sus copias.
+
+**Deja 5 mm de margen de seguridad en los cuatro lados.** Ninguna impresora láser imprime hasta la orilla: el documento de Salida se estaba cortando justo por eso. No repitas el error.
+
+Los renglones por página son un **valor medido**, no estimado: mide cuántas notas caben completas sin partir el pie ni el bloque de firmas, deja la constante nombrada con su medida comentada, y comprueba que el conteo de páginas del navegador coincida con la paginación real.
+
+## Bloque 2 — Cuándo se imprime
+
+**A solicitud, desde el detalle del movimiento**, nunca de forma automática al registrarlo. Si la impresora falla, el abono ya quedó registrado y el papel se saca después.
+
+**Solo se puede imprimir un movimiento ya registrado.** No existe recibo de algo que no ocurrió.
+
+**Se puede reimprimir**, y toda reimpresión debe quedar marcada como tal en el papel, con su fecha, igual que hace la etiqueta de rollo. Un recibo de dinero reimpreso que se ve idéntico al original es un documento que se puede presentar dos veces.
+
+Registra cada impresión con quién y cuándo, para poder responder después cuántas veces se sacó ese recibo.
+
+## Bloque 3 — Qué dice el recibo de abono
+
+Este es el punto delicado. **Un abono se aplica a varias notas en orden FIFO**, así que un recibo que solo dijera el monto total no le permitiría al cliente verificar nada.
+
+Debe mostrar:
+
+- **Folio del recibo**, fecha y hora, sitio y quién lo recibió.
+- **Cliente**, con su identificación.
+- **Monto total recibido** y su forma de pago.
+- **El desglose de aplicación**: cada nota a la que se aplicó, con su folio, su saldo antes, lo aplicado y su saldo después.
+- **El saldo a favor**, si quedó dinero sin aplicar, dicho explícitamente y no como una resta que el cliente tenga que hacer.
+- **El saldo total del cliente después del abono.**
+- Espacio de firma de quien entrega y de quien recibe.
+
+**Los importes del recibo deben salir de la misma aplicación que registró el movimiento**, no de un recálculo. Si el papel y el sistema pueden diferir, el papel no sirve como comprobante.
+
+## Bloque 4 — Qué dice el recibo de pago a proveedor
+
+Mismo formato y mismas reglas, con el sentido invertido: la empresa entrega el dinero.
+
+- Folio, fecha y hora, sitio y quién entregó.
+- **Proveedor.**
+- Monto entregado y forma de pago.
+- **Las facturas o documentos a los que se aplicó**, con su saldo antes, lo aplicado y su saldo después.
+- Saldo a favor si quedó dinero sin aplicar.
+- Saldo total con el proveedor después del pago.
+- Firma de quien entrega y de quien recibe.
+
+Si el pago a proveedor **no usa el mismo mecanismo de aplicación** que los abonos de cliente, dímelo antes de construirlo en vez de suponer que son simétricos.
+
+## Bloque 5 — Folio propio
+
+El recibo lleva **su propio folio**, no el del movimiento. Es un documento y necesita poder citarse.
+
+Usa el mecanismo de folios que ya existe. **Dime cuál elegiste — contador por sitio o global — y por qué**, antes de implementarlo.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de crédito, proveedores, caja e impresión.
+3. Registra un abono que se aplique a **tres notas** y confirma que el recibo lista las tres, con saldo antes, aplicado y después en cada una, y que los importes **coinciden con lo registrado en el sistema**.
+4. Registra un abono **mayor al saldo** y confirma que el recibo dice explícitamente cuánto quedó como saldo a favor.
+5. Imprime a PDF y confirma: **A5 horizontal 210 × 148 mm, dos copias identificadas, nada dentro de los 5 mm de cada orilla, y ninguna página en blanco.**
+6. Con un abono aplicado a muchas notas, confirma que la paginación no parte el pie ni el bloque de firmas.
+7. Reimprime y confirma que el papel **queda marcado como reimpresión** con su fecha.
+8. Confirma que no se puede imprimir un recibo de un movimiento no registrado.
+9. Repite del 3 al 7 para el recibo de pago a proveedor.
+10. Confirma que quien no tiene permiso sobre esos movimientos tampoco puede imprimir su recibo.
+
+## Al terminar
+
+Escribe en `replit.md`, en la sección de Formatos de impresión:
+
+- Que el recibo de dinero es **A5 horizontal, dos copias, a solicitud**, y que existe en dos variantes: abono de cliente y pago a proveedor.
+- Que **lleva 5 mm de margen de seguridad** porque ninguna láser imprime hasta la orilla, y que ese fue el defecto del documento de Salida.
+- Que el desglose de aplicación es obligatorio: **qué notas, cuánto a cada una y cuánto quedó a favor**, porque un abono se reparte en orden FIFO y sin ese detalle el papel no sirve como comprobante.
+- Que los importes del recibo **provienen de la aplicación registrada**, nunca de un recálculo.
+- Que toda reimpresión queda marcada en el papel y registrada con quién y cuándo.
+- El mecanismo de folio elegido y por qué.
+- Un renglón con la fecha y qué se hizo.

@@ -1,0 +1,130 @@
+# CORRECCIÓN — Salida en una sola acción
+
+Tarea acotada. Un solo commit. **No adelantes trabajo de la Parte 2.** Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## El problema
+
+Hoy armar y enviar una salida son dos acciones separadas:
+
+1. En Salida Nueva se escanean los rollos y se oprime **"Guardar armado"**. La salida se crea en estado `ARMANDO` y **el inventario no se mueve.**
+2. Después hay que entrar al detalle de la salida y oprimir **"Enviar salida"** para que pase a `EN_TRANSITO`.
+
+El segundo paso se olvida. Ya pasó en una prueba real: la salida quedó en `ARMANDO` con 12 rollos, se imprimió la hoja, y al intentar recibirla el sistema respondió que solo se pueden recibir salidas `EN_TRANSITO`.
+
+Peor: **el botón "Enviar salida" no es visible en un teléfono.** Está en la misma fila que "Imprimir Documento" y se sale de la pantalla en un viewport angosto. El usuario solo ve el de imprimir.
+
+Y se pudo imprimir la hoja de traslado —con su QR de recepción— de una salida cuya mercancía nunca salió del origen.
+
+---
+
+## BLOQUE 1 — Un solo botón
+
+En `pages/salida-nueva.tsx`, el botón **"Guardar armado"** (línea 477) pasa a ser **"Guardar y enviar"**.
+
+Al oprimirlo, en una sola operación del usuario:
+
+1. Se crea la salida
+2. Se envía: los rollos salen del origen y la salida queda en `EN_TRANSITO`
+
+**El usuario nunca ve la palabra ARMANDO ni tiene que dar un segundo paso.**
+
+`ARMANDO` sigue existiendo por dentro, como estado de trabajo mientras se escanean los rollos (ver Bloque 2). Lo que desaparece es la necesidad de que alguien lo cierre a mano.
+
+### Requisitos
+
+- `transportista` sigue siendo obligatorio antes de enviar, como hoy. Valídalo antes de disparar la operación y muestra el error en el formulario, no después.
+- `notaEnvio` sigue siendo opcional.
+- La operación completa —crear y enviar— debe ser **atómica**. Si el envío falla, la salida no debe quedar creada a medias en `ARMANDO`.
+- Al terminar, lleva al usuario al detalle de la salida, ya en `EN_TRANSITO`, listo para imprimir.
+
+### En el detalle de la salida
+
+En `pages/salida-detail.tsx`, el botón **"Enviar salida"** (línea 234) se elimina, junto con su diálogo y la variable `canSend`.
+
+Ya no hace falta: ninguna salida debería quedar en `ARMANDO` esperando a que alguien la envíe.
+
+---
+
+## BLOQUE 2 — Guardado automático rollo por rollo
+
+Hoy los rollos escaneados viven **solo en la pantalla** hasta que se oprime el botón. Si el teléfono se apaga, se pierde la señal o se cierra la pestaña a la mitad, se pierden los 40 rollos escaneados y hay que volver a empezar.
+
+Cámbialo: **cada rollo se guarda en el servidor conforme se escanea**, sin que el usuario oprima nada.
+
+### Cómo
+
+- Al escanear el primer rollo, se crea la salida en `ARMANDO` con ese rollo.
+- Cada rollo siguiente se agrega a esa misma salida en el mismo viaje al servidor que ya se hace hoy para validarlo. **No agregues un viaje extra:** hoy ya se consulta el servidor por cada rollo escaneado para verificar que exista, esté en el origen y esté disponible.
+- Quitar un rollo escaneado por error debe eliminarlo del servidor de inmediato, con un solo toque.
+- Si el usuario vuelve a entrar a Salida Nueva y tiene una salida propia en `ARMANDO` para ese origen, retómala con sus rollos ya cargados en vez de empezar una nueva.
+
+### Higiene
+
+Las salidas que queden en `ARMANDO` sin tocarse por más de **24 horas** no deben aparecer en la lista principal de Salidas. Ponlo como constante nombrada y comentada, igual que el umbral de la alerta de tránsito.
+
+No las borres. Solo ocúltalas de la vista por defecto.
+
+---
+
+## BLOQUE 3 — No imprimir lo que no ha salido
+
+En `pages/salida-detail.tsx`, el botón **"Imprimir Documento"** solo debe estar disponible cuando la salida esté en `EN_TRANSITO` o `RECIBIDA`.
+
+Con la salida en `ARMANDO`, el botón se deshabilita con un texto que lo explique: la hoja de traslado solo existe cuando la mercancía ya va en camino.
+
+Aplícalo también en el servidor: el endpoint que sirve el documento de salida debe rechazar una salida en `ARMANDO`.
+
+Razón: la hoja lleva el QR de recepción. Un papel de una salida que no salió es una discrepancia esperando a ocurrir.
+
+---
+
+## BLOQUE 4 — Botones visibles en teléfono
+
+El caso que provocó todo esto es que un botón se salió de la pantalla en un teléfono y el usuario no supo que existía.
+
+Revisa **todas** las pantallas donde haya una fila de botones de acción —detalle de salida, detalle de entrada, detalle de ticket, detalle de cliente, detalle de rollo— y confirma que en un viewport angosto ningún botón queda cortado o fuera de vista.
+
+Donde no quepan en una fila, que se acomoden en varias. **Ningún botón de acción puede quedar invisible en un teléfono.**
+
+Deja en el commit la lista de pantallas revisadas.
+
+---
+
+## BLOQUE 5 — Limpiar el folio 00501
+
+Existe una salida de prueba, **folio 00501**, en estado `ARMANDO`, con 12 rollos de Tafeta Blanco en Don Nacho.
+
+**Cancélala.** El usuario va a rehacer las pruebas desde cero con el flujo nuevo.
+
+Confirma que al cancelarla los 12 rollos queden `DISPONIBLE` en Don Nacho y cuenten en existencia. Como la salida nunca se envió, el inventario no debió moverse; verifícalo contra el kardex y repórtalo.
+
+Cancela también cualquier otra salida que haya quedado en `ARMANDO`, y reporta cuántas fueron.
+
+---
+
+## BLOQUE 6 — Verificación
+
+Reporta esto:
+
+- Escanear rollos y oprimir "Guardar y enviar" deja la salida en `EN_TRANSITO` en una sola acción
+- Los rollos salen del origen y no cuentan en existencia de nadie mientras están en tránsito
+- Cerrar la pestaña a media captura y volver a entrar recupera los rollos ya escaneados
+- Quitar un rollo escaneado lo elimina del servidor
+- Enviar sin transportista muestra el error antes de crear nada
+- Si el envío falla, no queda ninguna salida creada a medias
+- Con la salida en `ARMANDO`, el documento no se puede imprimir ni desde la pantalla ni desde el endpoint
+- La salida enviada se puede recibir escaneando su QR en el sitio destino
+- Lista de pantallas revisadas del Bloque 4
+- Qué pasó con el folio 00501
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> Armar y enviar una salida es una sola acción del usuario. `ARMANDO` es un estado interno de trabajo que se guarda conforme se escanea; nunca requiere que alguien lo cierre a mano y no debe exponerse como paso en la interfaz. El documento de traslado solo se emite con la salida en `EN_TRANSITO` o `RECIBIDA`.

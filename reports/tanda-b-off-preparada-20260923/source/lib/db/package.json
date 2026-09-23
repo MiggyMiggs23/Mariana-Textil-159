@@ -1,0 +1,35 @@
+{
+  "name": "@workspace/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./advisory-locks": "./src/lib/advisory-locks.mjs",
+    "./schema": "./src/schema/index.ts",
+    "./sku": "./src/lib/sku.ts"
+  },
+  "scripts": {
+    "push": "drizzle-kit push --config ./drizzle.config.ts",
+    "push-force": "drizzle-kit push --force --config ./drizzle.config.ts",
+    "seed": "node ./src/seed.mjs",
+    "prepare:test": "node ./src/prepare-test-database.mjs",
+    "test:guard": "pnpm --filter @workspace/api-server exec tsx --test ../../lib/db/src/lib/test-database-guard.test.ts && node --test ./src/prepare-test-database.test.mjs",
+    "test:runner": "node --test ./src/run-isolated-tests.test.mjs",
+    "verify-connection": "node ./src/verify-connection.mjs",
+    "cleanup:bloque-7": "node ./src/scripts/cleanup-bloque-7.mjs",
+    "normalize:base-colors": "node ./src/scripts/normalize-base-colors.mjs --dry-run",
+    "seed:parte10-bolsa": "node ./src/scripts/seed-parte10-bolsa.mjs --dry-run"
+  },
+  "dependencies": {
+    "drizzle-orm": "catalog:",
+    "drizzle-zod": "^0.8.3",
+    "pg": "^8.22.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10"
+  }
+}

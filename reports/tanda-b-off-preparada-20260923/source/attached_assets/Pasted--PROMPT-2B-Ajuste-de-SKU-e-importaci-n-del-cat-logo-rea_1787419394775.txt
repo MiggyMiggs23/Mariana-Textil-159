@@ -1,0 +1,117 @@
+# PROMPT 2B — Ajuste de SKU e importación del catálogo real
+### Mariana Textil · Sistema Integral de Tiendas y Bodegas
+
+> Pegar en Replit DESPUÉS de que el prompt 2 haya terminado y esté probado.
+> Sube el archivo `catalogo-mariana-textil.xlsx` al proyecto junto con este prompt.
+> Haz commit en Git antes de pegarlo.
+
+---
+
+El módulo de catálogo ya está construido. Ahora vamos a ajustar la regla de generación de SKU y a cargar el catálogo real de la empresa.
+
+## Parte 1 — Nueva regla de generación de SKU
+
+La regla actual toma 3 letras de la tela completa. Con el catálogo real eso produce demasiadas colisiones: hay 6 gabardinas, 6 franelas, 7 mezclillas y 5 etaminas, y todas generarían el mismo prefijo. Los SKU resultantes (GAB-BAS, GAB-BAS2, GAB-BAS3) son ilegibles en una etiqueta física.
+
+**Nueva regla:**
+
+```
+[abreviatura de la tela]-[3 letras del color]
+```
+
+La abreviatura de la tela se construye tomando **las primeras 3 letras de cada palabra**, unidas sin separador, con un máximo de 12 caracteres en total.
+
+Los números y las secuencias alfanuméricas cortas se conservan completas tal cual aparecen.
+
+**Ejemplos que deben cumplirse:**
+
+| Tela | Color | SKU esperado |
+|---|---|---|
+| Tafeta | Rojo | `TAF-ROJ` |
+| Tafeta | Azul Rey | `TAF-AZU` |
+| Gabardina Metepec | Base | `GABMET-BAS` |
+| Gabardina Ripstop | Base | `GABRIP-BAS` |
+| Franela Cilo Baby | Blanco | `FRACILBAB-BLA` |
+| Franela 50 | Base | `FRA50-BAS` |
+| Loneta Economica Cruda | Base | `LONECOCRU-BAS` |
+| Mezclilla 4 oz | Base | `MEZ4OZ-BAS` |
+| Tul 15 | Base | `TUL15-BAS` |
+| Forro Cartera 60gms | Base | `FORCAR60G-BAS` |
+| Manta Cresponada Blanca Cruda | Base | `MANCREBLA-BAS` |
+| SMS Cubrebocas | Base | `SMSCUB-BAS` |
+
+Reglas de construcción:
+- Convierte a mayúsculas y elimina acentos y caracteres especiales.
+- Palabra de solo letras → sus primeras 3 letras.
+- Palabra que empieza con número o es alfanumérica corta (4 caracteres o menos) → se conserva completa: `50`, `90`, `4OZ`, `15`, `1.5` pierde el punto y queda `15`.
+- Palabra alfanumérica larga como `60gms` → primeras 3 posiciones: `60G`.
+- Une todas las partes sin separador y corta a 12 caracteres si excede.
+- El color siempre aporta sus primeras 3 letras.
+- **Se mantiene igual** la regla de desempate: si el SKU generado ya existe, agrega un dígito al final (`TAF-AZU2`).
+- **Se mantiene igual** el bloqueo: una vez que el producto tenga rollos asociados, el SKU no se puede modificar.
+- La vista previa en vivo mientras el usuario escribe tela y color debe usar esta nueva regla.
+
+**Importante:** no regeneres SKU de productos que ya existan en la base. Esta regla aplica a los productos nuevos que se creen de aquí en adelante. Si actualmente hay productos de prueba en la base, puedes eliminarlos antes de la importación, ya que no tienen rollos ni historial.
+
+Escribe pruebas automatizadas que verifiquen los 12 ejemplos de la tabla anterior. No avances a la Parte 2 hasta que pasen.
+
+## Parte 2 — Importación del catálogo real
+
+Se subió al proyecto el archivo `catalogo-mariana-textil.xlsx`. Contiene el catálogo real de la empresa.
+
+**Estructura del archivo:**
+- Hoja `Productos` — 154 filas de datos con encabezados: `tela`, `color`, `unidad`, `precio_sugerido`
+- Hoja `Notas` — documentación para el usuario. **Ignórala en la importación.**
+
+**Contenido esperado:**
+- 109 telas distintas
+- Los primeros 5 productos (Tafeta, Tafetan, Razo, Pongee, Romance) traen 10 colores cada uno
+- Los 104 restantes traen el color `Base` como marcador temporal
+- 144 filas en unidad METRO y 10 filas en unidad KILO
+- Sin duplicados en la combinación tela + color
+
+**Lo que debes hacer:**
+
+1. Importa el archivo usando la funcionalidad de importación desde Excel que ya construiste. Es la prueba real de esa funcionalidad, así que úsala, no escribas un script aparte que salte la validación.
+2. Si la importación falla o produce resultados inesperados, **corrige la funcionalidad de importación**, no el archivo. El archivo representa el formato que el usuario va a usar de aquí en adelante.
+3. Al terminar, reporta:
+   - Cuántos productos se crearon
+   - Cuántas telas distintas quedaron en el árbol
+   - Cuántos productos en METRO y cuántos en KILO
+   - Si hubo alguna colisión de SKU y cómo se resolvió
+   - Cualquier fila que se haya rechazado y por qué
+
+4. Verifica visualmente que el árbol expandible funcione con volumen real:
+   - Con 109 telas el listado debe seguir siendo rápido y navegable
+   - Las 5 telas con colores deben expandirse mostrando sus 10 variantes
+   - Buscar "gabardina" debe mostrar las 6 gabardinas
+   - Buscar "TAF" debe encontrar los productos por SKU
+   - Colapsar todo y expandir todo deben responder sin retraso
+
+5. Si con 109 filas el árbol se siente lento o incómodo de navegar, dímelo y propón una mejora (paginación, virtualización de la lista, o agrupación por categoría). No la implementes sin consultarme.
+
+## Sobre el color "Base"
+
+Las 104 filas con color `Base` son un marcador temporal. El usuario irá reemplazándolas o agregando colores reales conforme reciba mercancía.
+
+No trates `Base` como un valor especial en el código. Es un color normal como cualquier otro. Solo asegúrate de que:
+- El usuario pueda editar ese producto y cambiarle el color
+- El botón "Agregar color a esta tela" funcione correctamente sobre esas telas
+- Si un producto con color `Base` ya tiene rollos, el SKU siga bloqueado como cualquier otro
+
+## Lo que NO debes hacer
+
+- No modifiques el archivo Excel ni crees una versión "corregida".
+- No cambies la arquitectura existente: el proyecto usa React + Vite con servidor Express, TypeScript, Tailwind, PostgreSQL y Drizzle.
+- No crees todavía tablas de rollos, movimientos, recepciones ni etiquetas.
+- No agregues campos de costo al producto.
+- No inventes colores para los productos que traen `Base`.
+
+## Entregable
+
+Confirma que:
+1. Los 12 ejemplos de SKU de la tabla generan exactamente el valor esperado
+2. Se importaron las 154 filas sin rechazos
+3. El árbol muestra 109 telas y las 5 primeras expanden 10 colores cada una
+4. La búsqueda funciona por tela, color y SKU
+5. Un usuario de rol CAJA puede ver el catálogo completo pero no editarlo

@@ -1,0 +1,113 @@
+# Prompt para Replit Agent — Respaldo y purga de datos operativos
+
+**Este trabajo borra datos y no se puede deshacer sin el respaldo.** Va en dos fases. La Fase 1 crea el respaldo y entrega un inventario de lo que se borraría. **La Fase 2 no se ejecuta hasta que yo la autorice por escrito**, después de leer ese inventario.
+
+No cambies reglas de negocio, cálculos ni pantallas. Este trabajo es solo de datos.
+
+**Nota importante:** el esquema creció desde la última purga del 6 de septiembre. Hay tablas nuevas —stock mínimo, equipos, permisos por ubicación— que **no existían entonces** y que están clasificadas abajo. No reutilices las listas de aquella purga.
+
+---
+
+# FASE 1 — Respaldo y preflight. **No borres nada en esta fase.**
+
+## Bloque 1 — Respaldo verificado
+
+1. Crea un respaldo completo de la base de development, fechado y con nombre que diga qué es: `respaldo-antes-de-purga-<fecha>`.
+2. **Verifica que sirve, no solo que se creó:** restáuralo en una base desechable y compara, tabla por tabla, **conteos de filas y también restricciones e índices**. Un respaldo que restaura filas pero pierde una llave foránea se ve idéntico en conteos y no lo es.
+3. Anota en el manifiesto el **hash del commit actual**, para saber qué versión de código acompaña a esos datos.
+4. Reporta el nombre, la ubicación, la hora y la tabla de conteos comparados.
+
+**Si no puedes crear el respaldo, o si la verificación no cuadra, detente ahí y dilo.** Sin respaldo verificado no se borra nada, sin excepción.
+
+## Bloque 2 — Preflight: inventario de lo que se borraría
+
+Cuenta los renglones de cada tabla y preséntame el resultado en tres listas. **Solo cuenta; no borres, no vacíes, no reinicies nada.**
+
+### Lista A — Se borraría
+
+**Ventas y crédito:** `tickets`, `ticket_lineas`, `ticket_pagos`, `autorizaciones_nota`, `movimientos_credito`, `aplicaciones_credito`, `notificaciones_credito`
+
+**Caja:** `sesiones_caja`, `sesiones_caja_dias`, `salidas_dinero_caja`, `cuadre_fiscal_registros`
+
+**Salidas y viajes:** `salidas`, `salida_lineas`, `salida_rollos`, `viajes`, `viaje_salidas`, `viaje_tickets`
+
+**Compras y entradas:** `entradas`, `contenedores`, `contenedor_lineas`, `pagos_proveedor`, `aplicaciones_pago_proveedor`
+
+**Inventario operativo:** `movimientos`, `rollos`, `reimpresiones_etiqueta`
+
+**Auditorías físicas:** `auditorias_inventario`, `auditoria_inventario_escaneos`, `auditoria_inventario_participantes`, `auditoria_inventario_snapshot`
+
+**Otros operativos:** `solicitudes_pago_dirigido`, `notificaciones_sistema`, `stock_minimo_episodios`
+
+### Lista B — Se reiniciaría, no se borraría
+
+- Contadores de folio: `ticket_folio` (vuelve a **999**, para que el siguiente ticket sea el 1000), `entrada_folio`, `salida_folio`, `viaje_folio`, `auditoria_inventario_folio`, `series_consecutivo` (vuelve a **1000000**). Todos a su valor inicial.
+- La secuencia de Postgres de `contenedores.folio`, que es un `serial` y **no un contador en tabla**. Identifica su nombre real y repórtalo.
+- `existencias`: **no se borra ni se pone en cero a mano.** Se reconstruye con `reconstruirCacheExistencias()` después de borrar los movimientos. La invariante es `existencias.cantidad_total = SUM(movimientos.cantidad)`; poner ceros a mano la rompería.
+
+### Lista C — No se toca, bajo ninguna circunstancia
+
+`productos`, `precio_historial`, `clientes`, `cliente_documentos`, `proveedores`, `usuarios`, `ubicaciones`, `pisos`, `permisos_rol`, `permisos_usuario`, `permisos_ubicacion`, `camionetas`, `choferes`, `sesiones`, `equipos`, `equipos_checklist`, `stock_minimo_sitios`, `stock_minimos`, y **`auditoria`**.
+
+Cuatro aclaraciones sobre esta lista:
+
+- **`stock_minimos` y `stock_minimo_sitios` son configuración, no datos operativos.** Son los mínimos que capturaste y el interruptor por sitio; se conservan igual que los precios. Lo que sí se borra son los **episodios**, que son el historial de faltantes y pertenecen a la operación.
+- **`equipos` y `equipos_checklist`** son el registro de terminales, impresoras y escáneres con su configuración aplicada. Es inventario de equipo, no operación.
+- **`permisos_ubicacion`** es configuración de permisos por sitio y se conserva con los otros permisos.
+- La bitácora **`auditoria`** se conserva íntegra por decisión expresa: la regla del proyecto es que nunca se altera. Va a quedar con referencias a documentos que ya no existen, y eso es aceptable y esperado.
+
+## Bloque 3 — Lo que tengo que revisar antes de autorizar
+
+Junto al conteo, contéstame:
+
+1. **¿Hay alguna tabla del esquema que no aparezca en ninguna de las tres listas?** Enumérala, di a cuál pertenece y por qué. El esquema creció desde la purga anterior y no quiero que algo operativo sobreviva por olvido ni que algo de configuración se borre por descuido.
+2. **¿Qué llaves foráneas van a estorbar?** Dame el orden de borrado que respeta las dependencias, o di si vas a usar cascada dentro de una transacción.
+3. **¿Qué triggers de inmutabilidad hay que deshabilitar** para el borrado, cuáles son y cómo garantizas que quedan habilitados al terminar? En la purga anterior fueron seis; confirma si siguen siendo los mismos.
+4. Confirma que después de la purga **todos los productos quedarán sin costo**, porque el costo se deriva de las entradas, y que Precios mostrará "Sin costo" y márgenes en null hasta que se capturen entradas nuevas.
+5. Confirma que **los mínimos de stock sobreviven a la reconstrucción del caché de existencias**. Ya se comprobó una vez; quiero que se vuelva a comprobar en esta purga.
+
+**Termina la Fase 1 aquí y espera mi autorización.**
+
+---
+
+# FASE 2 — Purga. **Solo se ejecuta cuando yo lo autorice explícitamente.**
+
+1. Todo el borrado va en **una sola transacción**. Si algo falla, no se borra nada.
+2. Borra únicamente las tablas de la **Lista A**, en el orden de dependencias que reportaste.
+3. Reinicia los contadores y la secuencia de la **Lista B**.
+4. Ejecuta `reconstruirCacheExistencias()` **después** del borrado y dentro del mismo trabajo, para que las existencias queden en cero por reconstrucción y no por edición manual.
+5. **No toques nada de la Lista C.**
+6. Vuelve a habilitar todos los triggers que hayas deshabilitado, y **compruébalo con una consulta**, no por lectura del código.
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.**
+
+1. Cada tabla de la Lista A quedó en cero renglones.
+2. Cada tabla de la Lista C conserva **exactamente** el mismo conteo que en el preflight. Muestra las dos columnas, tabla por tabla.
+3. **Los mínimos de stock capturados siguen ahí**, con sus valores, fechas y autores.
+4. `existencias` cumple la invariante: para cada par producto-ubicación, `cantidad_total` es igual a la suma de sus movimientos, que ahora es cero. Verifícalo con una consulta.
+5. Todos los triggers quedaron habilitados. Dame el resultado de:
+   ```sql
+   SELECT c.relname AS tabla, t.tgname AS trigger, t.tgenabled
+   FROM pg_trigger t JOIN pg_class c ON c.oid = t.tgrelid
+   WHERE NOT t.tgisinternal ORDER BY c.relname, t.tgname;
+   ```
+   Todos deben decir `O`.
+6. `pnpm run typecheck` completo y las suites de inventario, POS, caja, salidas y analytics.
+7. Crea un ticket de prueba y confirma que **su folio es 1000**. Después bórralo o avísame.
+8. Abre Caja en Tiempo Real, Cuentas Destino, Reportes y Stock mínimo y confirma que **ninguna pantalla truena con la base vacía**. Una pantalla que funciona con datos y revienta sin ellos es el error que el piloto encuentra en su primer día.
+9. Abre Precios y confirma que los productos siguen ahí con sus precios, marcados "Sin costo".
+10. Abre Clientes, Proveedores y Equipos y confirma que están completos.
+11. Confirma que la bitácora `auditoria` conserva sus renglones.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- La fecha de esta purga, el nombre del respaldo, el hash del commit que lo acompaña, y las tres listas.
+- Que **stock mínimo, equipos y permisos por ubicación son configuración y se conservan**, y que solo los episodios de faltante se borran.
+- Que **existencias no se vacía a mano: se reconstruye**, y cuál es la invariante que lo obliga.
+- Que los folios usan **dos mecanismos distintos** —contadores en tabla y una secuencia de Postgres en contenedores— y que un reinicio debe cubrir los dos.
+- Que la bitácora `auditoria` se conservó íntegra y por tanto contiene referencias a documentos que ya no existen, por decisión expresa.
+- El resultado de la comprobación de triggers.

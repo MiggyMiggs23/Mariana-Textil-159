@@ -1,0 +1,172 @@
+# Prompt U — Plan de implementación de las decisiones de los socios
+
+## Esto es un plan, no una implementación
+
+**No escribas código de aplicación. No toques la base. No cambies contratos ni
+`replit.md`.** El producto de esta entrega es un plan en `reports/` que el propietario
+usará para decidir el orden de trabajo.
+
+Si en el camino te parece obvio cómo implementar algo, **eso va en el plan como
+propuesta, no en el código.**
+
+Ejecuta esto solo cuando el Prompt T haya cerrado. Si sigue abierto, detente.
+
+---
+
+## Las trece decisiones tomadas
+
+El propietario y su socio contestaron las nueve preguntas de
+`reports/prompt-q-diseno-atribucion-sitio.md` y cuatro más. Estas son las decisiones
+firmes:
+
+1. **Se guarda el sitio explícitamente** en cada movimiento de crédito nuevo, y la
+   sesión de caja cuando es efectivo. **No se deduce desde la nota.**
+2. **Se permiten anticipos y saldo a favor sin nota**, registrando dónde se recibieron.
+   Requieren **recibo impreso**.
+3. **FIFO siempre aplica**, sin importar de qué tienda sea la nota: todas las tiendas
+   son la misma empresa y el cliente le debe a la empresa. La única excepción es el
+   **pago dirigido autorizado**.
+4. **Un ajuste sin nota se carga a la tienda de la nota que lo origina.**
+5. **Se distingue obligatoriamente un ingreso o devolución física de dinero de una
+   corrección contable** sin movimiento de efectivo.
+6. **Una devolución física se registra en la caja abierta de hoy**, sin modificar el
+   corte donde se recibió originalmente.
+7. **Los tres movimientos actuales quedan como «sin sitio determinado»**, con la
+   posibilidad de asignarles un sitio después.
+8. **«Sin sitio determinado» se muestra tal cual** en la vista global; en el detalle de
+   una tienda solo aparecen las aplicaciones comprobables a sus notas, sin presentarlas
+   como cobros recibidos ahí.
+9. **Autorizado preparar este plan** antes de reanudar el Grupo 1 del Prompt P.
+10. **El pago a proveedor sigue siendo regla dura y exclusiva de Mariana.** En cambio,
+    **las tres tiendas pueden registrar una salida de dinero extraordinaria**, con
+    motivo obligatorio, visible en el reporte del día, que ADMIN acepta o reclama al
+    supervisor. Razón: el candado no impide que salga el dinero, solo impide que el
+    sistema se entere, y entonces el corte queda corto sin explicación.
+11. **Solo el propietario y su socio autorizan un pago dirigido.** SUPERVISOR no.
+    Si ninguno está disponible, **el cobro no se detiene**: el dinero entra y FIFO lo
+    reparte. Después ellos autorizan una **reasignación** hacia la nota que
+    corresponda. La autorización controla la reasignación, no el cobro.
+12. **«Cobrado» deja de compartir nombre.** Cuentas Destino se alinea con el tablero
+    —Contado cobrado y Cobranza del periodo— y la identidad de `replit.md` se corrige a
+    **Ventas = Contado + Ventas a crédito**, borrando la redacción anterior.
+13. **La consulta de Inventario filtra por `activo`.**
+
+Lo que **no cambia** y debe quedar explícito en el plan: FIFO, la deuda global, el
+saldo a favor, la validación del límite de crédito, los candados por par producto y
+ubicación, y que ninguna tabla operativa usa DELETE.
+
+---
+
+## Bloque 1 — Lo que hay que contestar leyendo el código
+
+Antes de planear, comprueba y reporta:
+
+1. **La reasignación de un pago ya aplicado.** ¿Existe hoy alguna forma de mover una
+   aplicación de una nota a otra, o el único camino es reversar el abono completo y
+   recapturarlo? Esa respuesta cambia por completo el tamaño de la decisión 11.
+2. **Qué pasa si la nota que FIFO liquidó ya se entregó al cliente como pagada** y
+   después se reasigna el dinero: esa nota vuelve a tener saldo. ¿El estado de cuenta
+   lo muestra, o el cambio quedaría en silencio?
+3. **La salida de dinero extraordinaria.** ¿Existe ya como concepto separado del pago a
+   proveedor, o habría que crearla? ¿Cómo la consume hoy el corte?
+4. **El recibo de dinero.** Confirma que no existe. Qué formato usarían los documentos
+   comparables y qué capacidad de renglones tendrían.
+5. **La asignación posterior de sitio** a un movimiento indeterminado: qué lo impide hoy
+   —inmutabilidad, triggers, contratos— y qué haría falta.
+
+---
+
+## Bloque 2 — El plan
+
+Divide el trabajo en entregas. Para **cada una**:
+
+- Qué construye y qué decisión de la lista satisface.
+- **De qué otras entregas depende**, y cuáles la esperan.
+- Qué archivos, endpoints, contratos y pantallas toca.
+- **Qué se rompe**: qué consultas, reportes, exportaciones y pruebas existentes
+  quedarían desalineadas, y qué cifras cambiarían de valor para un usuario con alcance
+  global. Si alguna cambia, nómbrala.
+- Cómo se verifica, y qué parte de esa verificación **solo puede hacer el propietario**
+  en pantalla o en papel.
+- Tamaño relativo: chica, mediana o grande.
+
+Los temas que el plan debe cubrir, sin que esto sea el orden ni la partición —**esa la
+propones tú**:
+
+- Atribución de sitio y sesión en los movimientos de crédito.
+- El corte de caja incluyendo los abonos en efectivo, con caja abierta exigida para
+  efectivo y no para transferencia.
+- El botón de registrar abono desde Caja, con FIFO por defecto y vista previa
+  obligatoria.
+- El recibo de dinero impreso.
+- Las salidas de dinero extraordinarias en las tres tiendas.
+- La reasignación autorizada de un pago.
+- El renombre de Cobrado en Cuentas Destino y la corrección de la identidad.
+- El filtro por `activo` en Inventario.
+- La reanudación del Prompt P, con su Grupo 1 sin cerrar.
+- La recepción de efectivo en Mariana con su confirmación de cuentas, que el
+  propietario decidió que va después de que el corte sea confiable.
+
+**Di explícitamente cuáles se pueden juntar en una sola entrega y cuáles no**, con la
+razón. Junta lo que comparte naturaleza y riesgo; separa lo que toca motores distintos.
+
+---
+
+## Bloque 3 — El orden recomendado
+
+Propón un orden y justifícalo por dependencias, no por tamaño.
+
+Marca con claridad:
+
+- **Qué entrega desbloquea a cuántas.** El propietario necesita ver cuál es la pieza que
+  destraba la mitad de la lista.
+- **Qué se puede hacer en paralelo** sin que dos entregas se pisen los mismos archivos.
+- **Qué exige una decisión más del propietario** antes de empezar, y cuál es esa
+  decisión.
+- **Qué exige autorización textual guardada** por escribir en la base, conforme a la
+  regla vigente.
+
+---
+
+## Bloque 4 — Lo que este plan no resuelve
+
+Lista aparte lo que sigue abierto y **no** está cubierto por estas trece decisiones,
+para que el propietario lo vea junto:
+
+- Los 69 vetos de acción por rol.
+- Las 28 suites que crean usuarios.
+- El rediseño de la etiqueta con nombres largos y color.
+- Las aplicaciones históricas que ocupan capacidad tras revertirse la venta, y el ajuste
+  negativo sin la misma vía de evidencia que un abono.
+- El título «Cobros de periodos anteriores».
+- Cualquier otro pendiente abierto que encuentres registrado en `replit.md` o en
+  `reports/` y que no esté en esta lista. **Ese barrido es parte del trabajo:** si hay
+  algo abierto que nadie está contando, quiero verlo.
+
+---
+
+## El documento
+
+Escríbelo para que el propietario lo lea **sin ser programador**. Nada de nombres de
+función en el cuerpo del texto; las referencias técnicas van en un anexo.
+
+Termina con **una recomendación clara de por dónde empezar**, marcada como
+recomendación, y con las decisiones que le falten por tomar, numeradas y formuladas
+como preguntas contestables sin leer código.
+
+---
+
+## Restricciones
+
+- **No implementes nada.** Ni columna, ni migración, ni endpoint, ni pantalla, ni
+  prueba.
+- No escribas en la base. No ejecutes migraciones ni `executeSql` de escritura.
+- **No modifiques `replit.md`** en esta entrega.
+- No reanudes el Prompt P ni cierres su Grupo 1.
+- No toques FIFO, la proyección de crédito, la validación del límite ni el motor de
+  inventario.
+- No crees usuarios ni sesiones de prueba.
+- **No presentes una sola opción como si fuera la única posible**, salvo donde el
+  propietario ya decidió: esas trece son decisiones firmes y no se replantean.
+- Si alguna de las trece decisiones **choca con una regla vigente del proyecto**,
+  dilo en el plan con la regla citada, en vez de resolverlo por tu cuenta.

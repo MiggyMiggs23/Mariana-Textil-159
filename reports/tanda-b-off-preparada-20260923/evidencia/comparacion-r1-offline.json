@@ -1,0 +1,136 @@
+{
+  "status": "BLOCKED_CATALOG_FIDELITY",
+  "method": "Offline exact raw JSON comparison; no new DB access or normalization",
+  "realFileSha256": "0fab3aa64f42f43ed9f4efa17b3715eff86723ce7b833f47cd16b4072742bd09",
+  "reconstructedFileSha256": "8f27658fbb448448ffe6067ce9eb7d8a2b9cae1fe11738256e988a8be783827d",
+  "schemaRows": {
+    "real": 1585,
+    "reconstructed": 1585,
+    "identical": true
+  },
+  "attributes": {
+    "real": 902,
+    "reconstructed": 902,
+    "changed": 6,
+    "differences": [
+      {
+        "real": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "BODEGA",
+          "definition": "4"
+        },
+        "reconstructed": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "BODEGA",
+          "definition": "5"
+        }
+      },
+      {
+        "real": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "CAJA",
+          "definition": "2"
+        },
+        "reconstructed": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "CAJA",
+          "definition": "3"
+        }
+      },
+      {
+        "real": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "CONTADOR",
+          "definition": "6"
+        },
+        "reconstructed": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "CONTADOR",
+          "definition": "7"
+        }
+      },
+      {
+        "real": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "SISTEMAS",
+          "definition": "5"
+        },
+        "reconstructed": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "SISTEMAS",
+          "definition": "6"
+        }
+      },
+      {
+        "real": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "SUPERVISOR",
+          "definition": "3"
+        },
+        "reconstructed": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "SUPERVISOR",
+          "definition": "4"
+        }
+      },
+      {
+        "real": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "TERMINAL",
+          "definition": "1.5"
+        },
+        "reconstructed": {
+          "kind": "enum",
+          "parent": "rol_usuario",
+          "name": "TERMINAL",
+          "definition": "2"
+        }
+      }
+    ]
+  },
+  "triggers": {
+    "real": 42,
+    "reconstructed": 42,
+    "identical": true
+  },
+  "enumRelativeOrder": {
+    "identical": true,
+    "labels": [
+      "ADMIN",
+      "TERMINAL",
+      "CAJA",
+      "SUPERVISOR",
+      "BODEGA",
+      "SISTEMAS",
+      "CONTADOR"
+    ]
+  },
+  "hashes": {
+    "real": {
+      "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+      "attributesSha256": "597213c727c1b825a480720b0484badf26c17a02309fba8cd57d72af0e7a7665"
+    },
+    "reconstructed": {
+      "schemaSha256": "89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358",
+      "attributesSha256": "a8389a4be6f0765a58849a425e742fc941821fbdf9c6fab0fa9c1eeb428d5ec6"
+    }
+  },
+  "originalFidelityBoolean": "rawEnumAndTriggerAttributesPreserved:true is contradicted for enums; original evidence retained unchanged",
+  "candidateStarted": false,
+  "controlBundleStarted": false,
+  "reason": "Assertion failed before boot",
+  "actualDatabaseModified": false,
+  "repairPerformed": false,
+  "expectationsRebaselined": false
+}

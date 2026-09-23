@@ -1,0 +1,37 @@
+{
+  "status": "PASS_STATIC_ONLY",
+  "revision": "1031a630fd461c3df89767bad7a14cc777e56261",
+  "frozenFiles": 2150,
+  "outputFiles": 23,
+  "gatesOff": 27,
+  "workers": [
+    {
+      "file": "./thread-stream-worker.mjs",
+      "resolved": "/home/runner/workspace/artifacts/api-server/dist-tanda-b-off-20260923/thread-stream-worker.mjs",
+      "sha256": "682af21c74dcff21d325b5e7856bba74ed0c660dbd6f4a0f737a2f9c3cbd9e8b"
+    },
+    {
+      "file": "./pino-worker.mjs",
+      "resolved": "/home/runner/workspace/artifacts/api-server/dist-tanda-b-off-20260923/pino-worker.mjs",
+      "sha256": "19b484f702b1dbccdb53939a0cd74823bbef752c7b18512ae5a3072adce95a0f"
+    },
+    {
+      "file": "./pino-file.mjs",
+      "resolved": "/home/runner/workspace/artifacts/api-server/dist-tanda-b-off-20260923/pino-file.mjs",
+      "sha256": "f9fd9b296fdf31b060c64d6fcaef976a6448c7ad11c630411ebce4322175be81"
+    },
+    {
+      "file": "./pino-pretty.mjs",
+      "resolved": "/home/runner/workspace/artifacts/api-server/dist-tanda-b-off-20260923/pino-pretty.mjs",
+      "sha256": "a0e84eadb04888316e0a4c65e21dabc36554fc396206ba962b65c63d31e11b03"
+    }
+  ],
+  "absoluteOutputDirs": [
+    "/home/runner/workspace/artifacts/api-server/dist-tanda-b-off-20260923"
+  ],
+  "relocatable": false,
+  "runtimeWorkerResolutionTested": false,
+  "realDatabaseAccess": false,
+  "applicationStarted": false,
+  "pending": "MAIN real capture/preflight, disposable fidelity and startup, negative controls, functional closed-gate verification"
+}

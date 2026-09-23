@@ -1,0 +1,10 @@
+{
+  "status": "HISTORICAL_PRELIMINARY_NOT_CURRENT_VALIDATOR",
+  "hashes": {
+    "manifest.json": "0148b0f5a894755f8b61a8477daac47a82b3db28e80a035be3952904662530c6",
+    "manifest.sha256": "74e04e242ffbd7dda14ab680f6be4890b58bc0decabf00433724aba8b8f47950",
+    "package-integrity.sha256": "89249771deb37a3efa8be0bdfed7b20cc59359b9cbef6b3db00684aac219b825",
+    "package-integrity.sha256.sha256": "6465a16195a68240997f51c8e81663b857dea7e385eb9f994653a10d1f263c6d",
+    "release-assets.sha256": "9cd691e936ef13e44b835128bd03003076eb186e9a5e28660ed7d94029594281"
+  }
+}

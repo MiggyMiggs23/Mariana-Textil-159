@@ -1,0 +1,513 @@
+# PROMPT — Reportes
+### Mariana Textil · Versión completa
+
+> Haz commit en Git antes de empezar.
+> Trabaja de forma autónoma. Ejecuta todo el documento sin detenerte a pedir aprobación entre tareas.
+> Autorizo por adelantado crear y eliminar ramas temporales de Neon para las pruebas aisladas.
+> Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# PROPÓSITO
+
+Reportes responde una sola pregunta: **¿cómo va el negocio y qué hay que cambiar?**
+
+No es consulta operativa. Es la herramienta de decisión: qué telas dejan más, qué colores mover, qué comprar, qué dejar de comprar, qué inventario está parado costando dinero, y a quién se le está vendiendo demasiado barato.
+
+**Toda la utilidad es exacta, no estimada.** Cada línea de ticket guarda el costo congelado del rollo específico que se vendió.
+
+**Respeta el motor.** Reportes solo lee. No escribe en ninguna tabla operativa.
+**Respeta el diseño existente.** Mismo azul marino, misma tipografía, mismos componentes.
+
+---
+
+# REGLAS GENERALES
+
+## Periodos
+
+Selector en todos los reportes: **Diario · Semanal · Mensual · Trimestral · Semestral · Anual · Rango personalizado**
+
+Además:
+- **Comparativo contra el periodo anterior**, con porcentaje y flecha
+- **Comparativo contra el mismo periodo del año pasado**, cuando haya historia
+
+## Filtros, disponibles en todos los reportes
+
+- **Sitio** — uno, varios o todos
+- **Producto**
+- **Tela** — agrupa todos sus colores
+- **Color** — **transversal a todas las telas.** "Muéstrame todo lo azul, sin importar la tela"
+- **Unidad** — metro o kilo
+- **Usuario**
+- **Cliente**
+- **Proveedor**
+- **Forma de pago**
+- **Facturado / no facturado**
+
+Se combinan entre sí. Cada reporte muestra arriba qué filtros están activos, con opción de limpiarlos de un toque.
+
+## Reglas de cálculo
+
+- **El margen se calcula sobre el subtotal**, nunca sobre el total con IVA
+- Los tickets **cancelados se excluyen** de todo, salvo del reporte de cancelaciones
+- Las ventas metreadas cuentan en importe y volumen, pero **no en margen** si no tienen rollo ligado. Márcalo.
+- **Los rollos con costo nulo no cuentan para margen.** Aviso obligatorio indicando cuántos hay y qué importe representan.
+- **Metros y kilos siempre separados.** Nunca los sumes.
+- Zona horaria America/Mexico_City
+
+## Presentación
+
+- **Cada reporte lleva gráficas.** Barras, líneas, barras apiladas, mapas de calor y treemaps según corresponda.
+- Toda tabla es ordenable y exportable a Excel y PDF
+- Coma de miles, dos decimales para dinero, tres para metros y kilos
+- Fila de totales en cada tabla
+
+## Permisos
+
+Requiere `reportes.puede_ver`. Los campos de costo y margen **se omiten de la respuesta JSON** para roles que no deben verlos. Por defecto solo ADMIN ve utilidad.
+
+---
+
+# PESTAÑA 1 — VENTAS
+
+## Resumen
+
+Tarjetas con comparativo: importe vendido, tickets, ticket promedio, metros, kilos, rollos, clientes distintos.
+
+## Evolución
+
+- **Gráfica de línea** de ventas en el tiempo, con la línea del periodo anterior superpuesta
+- **Mejor y peor día** del periodo
+- **Día de la semana más fuerte y más débil**
+- **Ventas por hora del día**, cuando el periodo lo permita: sirve para saber cuándo reforzar personal
+
+## Desgloses
+
+Cada uno con tabla y gráfica:
+
+- **Por sitio** — importe, tickets, ticket promedio, participación
+- **Por producto** — importe, cantidad, rollos, participación
+- **Por tela**
+- **Por color** — transversal
+- **Por vendedor** — quién vende más y su ticket promedio
+- **Por cliente**
+- **Por forma de pago**
+- **Facturado contra no facturado**
+
+## Análisis ABC (Pareto)
+
+Qué porcentaje de productos genera el 80% de las ventas. Con el corte de clase A, B y C marcado.
+
+## Productos que se venden juntos
+
+**Análisis de canasta.** De los tickets con más de un producto, qué combinaciones se repiten.
+
+Tabla: producto A, producto B, en cuántos tickets aparecen juntos, y qué porcentaje de las veces que se vende A también se vende B.
+
+Sirve para saber qué ofrecer: si quien compra tafeta casi siempre lleva forro, el vendedor puede sugerirlo.
+
+## Cancelaciones
+
+Folio, fecha, importe, quién canceló, quién autorizó, motivo. Con porcentaje sobre el total de tickets, y **desglose por producto**: qué productos se cancelan más.
+
+---
+
+# PESTAÑA 2 — UTILIDAD Y MÁRGENES
+
+**La pestaña más importante del módulo.**
+
+## Resumen
+
+Utilidad total, margen porcentual, utilidad por metro, utilidad por kilo, costo de lo vendido. Con comparativos.
+
+## Qué telas dejan más
+
+Tabla ordenable:
+
+| Tela | Vendido | Costo | Utilidad | **Margen %** | Cantidad | Utilidad por unidad | **Participación en la utilidad total** |
+
+Con gráfica de barras de utilidad y otra de margen porcentual.
+
+**Distingue dos cosas que se confunden:**
+- **Margen porcentual** — cuánto deja por cada peso vendido
+- **Contribución a la utilidad** — cuánta utilidad total aporta, que depende del volumen
+
+Una tela con 45% de margen y poco volumen puede aportar menos que una con 18% que se vende mucho. Muestra ambas columnas y **señala los casos donde el ranking difiere en más de cinco posiciones**.
+
+## Porcentaje de ganancia por producto
+
+Desglose completo, producto por producto:
+
+| Producto | SKU | Vendido | Costo | Utilidad | **% de ganancia** | Cantidad | Ranking |
+
+Ordenable por porcentaje de ganancia. Con semáforo: verde arriba del 30%, amarillo entre 15 y 30, rojo abajo del 15%.
+
+## Por color
+
+La misma tabla agrupada por color a través de todas las telas. **¿Qué colores dejan más dinero?**
+
+Con matriz cruzada tela × color para el detalle.
+
+## Evolución del margen
+
+- **Gráfica de línea** del margen porcentual en el tiempo
+- **Productos con margen a la baja**: los que perdieron más de 3 puntos porcentuales contra el periodo anterior. La alerta más útil: dónde se está erosionando la utilidad.
+- **Productos con margen al alza**
+
+## Análisis de precio y descuento
+
+### Dispersión de precios
+
+Por cada producto: a cuántos precios distintos se vendió, el más alto, el más bajo, el promedio y el rango.
+
+Una dispersión amplia significa que no hay criterio de precio y se está perdiendo dinero. **Ordena por rango de mayor a menor** para ver primero los casos más graves.
+
+### Precio más bajo por tela y a qué cliente
+
+**Reporte específico.** Por cada tela:
+
+| Tela | Precio más bajo | Cliente | Fecha | Vendedor | Sitio | Folio | Margen de esa venta | Precio promedio de la tela |
+
+Ordenable. Responde directamente: **a quién se le está vendiendo más barato y quién se lo vendió.**
+
+Con vista alterna agrupada por cliente: qué clientes obtienen sistemáticamente los precios más bajos.
+
+### Descuento
+
+- **Descuento promedio** por producto, vendedor, sitio y cliente
+- **Ventas por debajo de un umbral de margen** configurable, por defecto 15%
+- **Ranking de vendedores por descuento otorgado**: quién regala más
+- Ventas con descuento mayor al 30%, listadas para revisión
+
+### Comparativo de precio entre sitios
+
+El mismo producto vendido en distintas tiendas: precio promedio de cada una y la diferencia. Si Mariana vende más barato que Cruces sin razón, aquí sale.
+
+## Por sitio y por vendedor
+
+Utilidad y margen de cada tienda y persona, con el contraste entre volumen vendido y utilidad generada.
+
+## Calidad del dato
+
+Aviso permanente en esta pestaña:
+- Cuántos rollos vendidos tenían **costo nulo** y qué importe representan
+- Cuántas ventas metreadas sin rollo ligado y su importe
+
+Sin esto no hay forma de saber qué tan confiable es el margen mostrado.
+
+---
+
+# PESTAÑA 3 — INVENTARIO Y ROTACIÓN
+
+En textil el inventario parado es capital muerto. Esta pestaña lo hace visible.
+
+## Resumen
+
+Valor del inventario a costo, rollos, metros, kilos, y **días de inventario promedio**.
+
+## Rotación por producto
+
+| Producto | Existencia | Vendido en el periodo | **Días de inventario** | **Cobertura** | Valor a costo | Última venta |
+
+**Días de inventario** = existencia ÷ venta promedio diaria.
+**Cobertura** = para cuántos días alcanza al ritmo actual.
+
+Ordenable. Los de más días primero: ahí está el capital atrapado.
+
+## Cobertura y sugerencia de reposición
+
+**Reporte accionable.** Por cada producto:
+
+| Producto | Existencia | Venta diaria promedio | **Días de cobertura** | Estado |
+
+Estados con semáforo:
+- **Crítico** — menos de 7 días de cobertura
+- **Bajo** — entre 7 y 15 días
+- **Normal** — entre 15 y 60 días
+- **Exceso** — más de 90 días
+
+La vista arranca mostrando **críticos y bajos primero**: es la lista de qué pedir.
+
+Los umbrales deben ser configurables por el administrador.
+
+## Inventario sin movimiento
+
+**El reporte que más dinero puede liberar.**
+
+- Productos sin ventas en 30, 60, 90 y más de 180 días, en tramos
+- Por tramo: cuántos productos, rollos, cantidad y **valor a costo**
+- Lista detallada con producto, color, existencia, valor y días desde la última venta
+- **Filtrable por color**
+
+## Días sin existencia
+
+**Ventas que perdiste sin darte cuenta.**
+
+Por cada producto, cuántos días del periodo estuvo en cero en cada sitio.
+
+| Producto | Sitio | Días sin existencia | % del periodo | Venta promedio diaria | **Venta estimada perdida** |
+
+La venta perdida es una estimación: días sin existencia × venta promedio diaria del producto. Márcala claramente como estimación.
+
+Un producto agotado 40 días al año es dinero que se fue con la competencia.
+
+## Antigüedad del inventario
+
+Rollos agrupados por días desde su alta: 0-30, 31-60, 61-90, 91-180, más de 180. Con su valor a costo por tramo.
+
+## Ciclo del capital
+
+Por cada rollo vendido, cuántos días pasaron entre que entró y que se vendió.
+
+Promedio por producto, por tela y por color. Es cuánto tiempo tu dinero estuvo convertido en tela antes de volver a ser dinero.
+
+## Comprado contra vendido
+
+**El reporte más útil para decidir compras.**
+
+| Producto | Comprado | Vendido | **Diferencia** | **Relación vendido/comprado** | Existencia actual |
+
+- Relación menor a 0.5 → compras el doble de lo que vendes: **estás acumulando**
+- Relación mayor a 1.5 → vendes casi todo lo que llega: **riesgo de quedarte sin**
+
+Con **gráfica de barras enfrentadas** por producto. Vista por tela y por color.
+
+Marca visualmente los casos fuera de rango.
+
+## Mermas y ajustes
+
+Cuánto inventario se pierde por ajustes negativos:
+
+| Periodo | Sitio | Usuario | Producto | Cantidad ajustada | **Valor a costo** | Justificación |
+
+Con resumen: total perdido en el periodo, por sitio y por usuario.
+
+Es tu medida de robo hormiga, errores de conteo y merma real. **Un sitio con ajustes negativos constantes merece revisión.**
+
+## Distribución por sitio
+
+Qué producto está dónde, y si eso corresponde a dónde se vende. Un producto con todo el inventario en Don Nacho pero que se vende en Mariana necesita salidas.
+
+## Rollos abiertos
+
+Los rollos en estado ABIERTO: producto, sitio, cantidad con la que salieron, desde cuándo. Es mercancía cuyo recuperado no se rastrea.
+
+---
+
+# PESTAÑA 4 — MAPAS DE CALOR
+
+Pestaña propia dedicada a estacionalidad. Es la forma más rápida de ver patrones.
+
+## Productos por mes
+
+Matriz con **productos en las filas** y **meses en las columnas**, coloreada por intensidad de venta.
+
+- Selector para medir por importe, por cantidad o por utilidad
+- Configurable a 12 o 24 meses
+- Al tocar una celda, se abre el detalle de ese producto en ese mes
+- Ordenable por total anual
+
+## Colores por mes
+
+La misma matriz pero con **colores en las filas**, transversal a todas las telas.
+
+Si el verde bandera se dispara en septiembre o los tonos claros en primavera, aquí salta de inmediato.
+
+## Telas por mes
+
+Agrupado por tela, sumando sus colores.
+
+## Sitios por mes
+
+Qué tienda vende más en qué época. Puede revelar patrones distintos por zona.
+
+## Interpretación
+
+Debajo de cada mapa, un resumen en texto de lo más notable: qué producto tiene la estacionalidad más marcada, cuál es más estable, y cuáles muestran tendencia clara al alza o a la baja.
+
+---
+
+# PESTAÑA 5 — ANÁLISIS DE COLOR
+
+## Ranking de colores
+
+Transversal a todas las telas:
+
+| Color | Vendido | Cantidad | Utilidad | Margen % | Rollos | Participación | Existencia | Días de inventario |
+
+Responde de una vez: **qué colores venden, cuáles dejan más, cuáles están parados.**
+
+## Color × tela
+
+Matriz cruzada: qué colores funcionan en qué telas. Un color puede venderse muy bien en gabardina y nada en tafeta.
+
+## Colores sin movimiento
+
+Sin venta en 90 días o más, con existencia y valor a costo. **La lista de qué dejar de comprar.**
+
+## Colores emergentes
+
+Los que más crecieron contra el periodo anterior, en porcentaje e importe. **La lista de qué pedir más.**
+
+## Colores por sitio
+
+Qué colores se venden en qué tienda. Pueden diferir por zona y eso cambia cómo distribuir.
+
+---
+
+# PESTAÑA 6 — COMPRAS
+
+## Resumen
+
+Total comprado, número de compras, rollos recibidos, costo promedio por unidad. Con comparativos.
+
+## Por proveedor, producto, tela y color
+
+Importe, participación, frecuencia, días desde la última compra. Con gráficas.
+
+## Evolución de costos
+
+**Gráfica de línea** del costo unitario de cada producto en el tiempo, una compra por punto. La tendencia real, no un promedio.
+
+**Productos con costo al alza**: los que subieron más de 10% respecto a la compra anterior.
+
+## Comparativo entre proveedores
+
+Por cada producto que compras a más de uno: el costo de cada proveedor, el más barato, y el **ahorro potencial** si concentraras.
+
+## Concentración
+
+Qué porcentaje de tus compras representa cada proveedor, y qué productos dependen de uno solo.
+
+---
+
+# PESTAÑA 7 — CLIENTES Y CRÉDITO
+
+Vista resumida; el detalle vive en el módulo de Clientes.
+
+- **Top clientes por importe** y **top por utilidad generada**, lado a lado
+- **Cartera total** y aging desde la fecha de vencimiento
+- **Notas vencidas** y clientes con más de una
+- **Venta a público contra clientes registrados**
+- **Clientes nuevos** del periodo
+- **Clientes en riesgo**: los que dejaron de comprar según su propia frecuencia
+- **Cuentas incobrables** del periodo
+
+---
+
+# PESTAÑA 8 — COMPARATIVO ENTRE SITIOS
+
+La pantalla que ya existe, movida aquí. Conserva toda su funcionalidad.
+
+Agrega **utilidad y margen por sitio**, no solo venta.
+
+---
+
+# PESTAÑA 9 — DIFERENCIAS DE CAJA
+
+La pantalla que ya existe, movida aquí. Conserva toda su funcionalidad.
+
+---
+
+# CONSIDERACIONES TÉCNICAS
+
+- **Las consultas deben estar indexadas.** Si alguna tarda más de tres segundos con los datos actuales, repórtalo.
+- Reportes pesados: indicador de carga y resultados progresivos, nunca pantalla congelada
+- Exportaciones a Excel con números como valor numérico puro y formato de celda
+- Gráficas con la paleta del sistema, legibles en iPad
+- Filtro sin resultados: mensaje claro indicando qué filtros están activos
+- Los mapas de calor deben ser navegables en pantalla táctil, con desplazamiento horizontal si hacen falta
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No calcules margen sobre el total con IVA
+- No incluyas tickets cancelados en ventas ni utilidad
+- No sumes metros con kilos
+- No ocultes que hay rollos con costo nulo
+- No presentes la venta perdida estimada como si fuera un dato real: márcala como estimación
+- No mandes campos de costo o margen a roles que no deben verlos
+- No escribas en ninguna tabla operativa
+- No dejes tablas sin gráfica cuando la gráfica aporta
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Cálculos:**
+1. La utilidad coincide con la suma de (importe − costo congelado) de las líneas
+2. Un ticket cancelado no aparece en ventas ni utilidad
+3. Una venta metreada sin rollo ligado cuenta en importe pero no en margen, marcada
+4. El margen se calcula sobre subtotal, no sobre total con IVA
+5. Metros y kilos nunca se suman
+6. El aviso de calidad del dato muestra el conteo correcto
+
+**Filtros:**
+7. El filtro de color funciona transversalmente a todas las telas
+8. Los filtros se combinan
+9. Un resultado vacío indica qué filtros están activos
+
+**Periodos:**
+10. Los seis periodos calculan bien
+11. El comparativo anterior usa el rango equivalente
+12. El interanual usa el mismo periodo del año pasado
+
+**Rotación y cobertura:**
+13. Los días de inventario se calculan como existencia ÷ venta diaria promedio
+14. La cobertura clasifica correctamente en crítico, bajo, normal y exceso
+15. Los umbrales son configurables
+16. Un producto sin ventas aparece en el tramo correcto de sin movimiento
+
+**Días sin existencia:**
+17. Se cuentan correctamente los días en cero por producto y sitio
+18. La venta perdida estimada está marcada como estimación
+
+**Comprado contra vendido:**
+19. La diferencia y la relación se calculan bien
+20. Los casos fuera de rango quedan marcados
+
+**Precios:**
+21. La dispersión muestra correctamente el rango de precios por producto
+22. El reporte de precio más bajo identifica el cliente y el vendedor correctos
+23. El comparativo entre sitios detecta diferencias de precio del mismo producto
+
+**Mermas:**
+24. Los ajustes negativos suman correctamente por sitio y usuario
+25. El valor a costo del inventario ajustado es correcto
+
+**Color y mapas de calor:**
+26. El ranking de colores agrega a través de todas las telas
+27. El mapa de calor de colores por mes muestra la intensidad correcta
+28. El mapa de productos por mes permite cambiar entre importe, cantidad y utilidad
+29. La matriz color × tela cruza bien
+
+**Canasta:**
+30. El análisis de productos que se venden juntos identifica las combinaciones reales
+
+**Permisos:**
+31. Un rol sin `reportes.puede_ver` recibe **403**
+32. Los campos de costo y margen se omiten para roles que no deben verlos
+
+**Rendimiento:**
+33. Ningún reporte tarda más de tres segundos con los datos actuales
+34. Las exportaciones a Excel llevan números sumables
+
+**Regresión:**
+35. Las 12 pruebas del motor siguen pasando
+36. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Decisiones que tomaste ante cualquier ambigüedad
+3. Lista de archivos creados y modificados
+4. Endpoints nuevos con su módulo y acción de permiso
+5. **Qué reportes tardan más de tres segundos, si los hay**
+6. **Cuántos rollos con costo nulo hay hoy y qué importe de ventas representan**
+7. Cómo calculaste los días sin existencia y con qué precisión
+8. Salida completa de la corrida de pruebas
+9. Confirmación de que las pruebas corrieron en base aislada
+10. Cómo pruebo cada pestaña
