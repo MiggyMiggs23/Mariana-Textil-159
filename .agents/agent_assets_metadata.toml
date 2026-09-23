@@ -2159,3 +2159,31 @@ mtime_ms = 1790191926382
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/32a8c0ac-62c0-4ed5-b8a4-cad697aaa6e9/d58715a1-509f-4d17-8d8c-7a59b87128c8"
 storage_version_token = "1790192050999214"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "ttTigTdFZJ6fbkLSOd06l"
+uri = "file://reports/tanda-e-20260923/INFORME.md"
+type = "text"
+title = "Tanda E — informe único"
+description = "Resultados por tarea, seis commits, correcciones liberadas, pruebas parciales y motivos de lo detenido."
+logical_id = "6bae8e2e-c59a-4703-bc80-ee48ebf672f1"
+content_hash = "sha256:97b02db047501ac99caab9bac442a72cf45820b416713e65e570d6010d069021"
+size = 7224
+mtime_ms = 1790206835480
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6bae8e2e-c59a-4703-bc80-ee48ebf672f1/af8b8fab-5f04-4d5c-9b37-929cfbde42c9"
+storage_version_token = "1790206877075408"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "skm9B28pgyJi4pkU67wdV"
+uri = "file://reports/tanda-e-20260923/tarea-5-impresion-a5.md"
+type = "text"
+title = "Prueba física del recibo A5"
+description = "Equipo, configuración y revisión de las dos copias desde la computadora del propietario."
+logical_id = "9efbfe67-92da-4acc-be8b-45fa840edb6a"
+content_hash = "sha256:209c10dc4f635d6922f0754ba7c6884177c7aac9894fcd7a0c94a98147c338ff"
+size = 10932
+mtime_ms = 1790200424945
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/9efbfe67-92da-4acc-be8b-45fa840edb6a/55179495-6142-457c-820a-7e2d1fa09fb5"
+storage_version_token = "1790206877811503"
+content_type = "text/markdown"
