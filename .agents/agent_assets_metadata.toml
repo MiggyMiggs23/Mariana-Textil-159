@@ -2117,3 +2117,17 @@ mtime_ms = 1790184745786
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/220710c6-454d-4697-ae85-4a1c12ed2914/b09fe39c-feba-4535-a0bc-5fc07188a0f0"
 storage_version_token = "1790184930291797"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "09RTehAgLic2uA4KwLrni"
+uri = "file://reports/e4-liberacion-20260923/INFORME.md"
+type = "text"
+title = "E4 liberado — pruebas y guía de revisión"
+description = "Resultado de la base desechable, límites de la verificación y pasos para probar E4 desde la pantalla. Commit eda673c."
+logical_id = "520ee264-0b0a-4416-92d1-1fce3cc141e1"
+content_hash = "sha256:3982bbbacdd0b47409f80c9f9e812e78cc291c5d82dff91b612172b4715c1037"
+size = 6012
+mtime_ms = 1790188003818
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/520ee264-0b0a-4416-92d1-1fce3cc141e1/a05f86d5-5a9b-4f18-ac8d-31507bf00544"
+storage_version_token = "1790188149086408"
+content_type = "text/markdown"
