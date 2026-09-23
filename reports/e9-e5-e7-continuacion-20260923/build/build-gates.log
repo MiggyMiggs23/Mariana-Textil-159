@@ -1,0 +1,46 @@
+BUILD_GATE_PREFLIGHT=PASS
+EXPECTED: E9=ON E9_FONDO_INGRESS=OFF E7=ON E7_ATTRIBUTION=ON E5=OFF E5_CONTADOR_A=OFF E11_PROFILE=ON E11_E5_PREPARATION=OFF
+artifacts/api-server/src/lib/e9-feature.ts:2:export const E9_ENABLED = true;
+artifacts/api-server/src/lib/e9-feature.ts:3:export const E9_FONDO_INGRESS_ENABLED = false;
+artifacts/api-server/src/lib/e5-feature.ts:2:export const E5_ENABLED = false;
+artifacts/api-server/src/lib/e5-feature.ts:4:export const E5_CONTADOR_A_ENABLED = false;
+artifacts/api-server/src/lib/e11-feature.ts:2:export const E11_ENABLED: boolean = true;
+artifacts/api-server/src/lib/e11-feature.ts:3:export const E11_PROFILE_ASSIGNMENT_ENABLED: boolean = true;
+artifacts/api-server/src/lib/e11-feature.ts:4:export const E11_RECONCILIATION_ENABLED: boolean = true;
+artifacts/api-server/src/lib/e11-feature.ts:5:export const E11_E5_PREPARATION_ENABLED: boolean = false;
+artifacts/api-server/src/lib/e7-feature.ts:2:export const E7_ENABLED: boolean = true;
+artifacts/api-server/src/lib/e7-feature.ts:3:export const E7_CLIENT_FINANCIAL_READS_ENABLED: boolean = true;
+artifacts/api-server/src/lib/e7-feature.ts:4:export const E7_ATTRIBUTION_ENABLED: boolean = true;
+artifacts/api-server/src/lib/e7-feature.ts:6:export const E7_E5_READ_SOURCE_ENABLED: boolean = true;
+artifacts/mariana-textil/src/lib/e9-feature-flags.ts:2:export const E9_ENABLED = true;
+artifacts/mariana-textil/src/lib/e5-feature-flags.ts:2:export const E5_ENABLED = false;
+artifacts/mariana-textil/src/lib/e7-feature-flags.ts:2:export const E7_ENABLED = true;
+artifacts/mariana-textil/src/lib/e7-feature-flags.ts:3:export const E7_UI_ENABLED = true;
+artifacts/mariana-textil/src/lib/e7-feature-flags.ts:5:export const E7_ATTRIBUTION_ENABLED = true;
+artifacts/mariana-textil/src/lib/e11-feature-flags.ts:2:export const E11_ENABLED = true;
+artifacts/mariana-textil/src/lib/e11-feature-flags.ts:4:export const E11_PROFILE_ASSIGNMENT_ENABLED = true;
+artifacts/mariana-textil/src/lib/e11-feature-flags.ts:5:export const E11_RECONCILIATION_ENABLED = true;
+artifacts/mariana-textil/src/lib/e11-feature-flags.ts:6:export const E11_E5_PREPARATION_ENABLED = false;
+DESTINATIONS_ABSENT=PASS
+artifacts/api-server/dist
+artifacts/api-server/dist-e2-20260927
+artifacts/api-server/dist-e2-control-7cb77f8-20260927
+artifacts/api-server/dist-e3-20260922
+artifacts/api-server/dist-e3-apertura-20260922
+artifacts/api-server/dist-e4-20260923
+artifacts/api-server/dist-e7-e11-20260923
+artifacts/api-server/dist-e9-e7-e11-20260923
+artifacts/api-server/dist-simple-e3-tanda-b-20260923
+artifacts/api-server/dist-tanda-b-b0-b1-20260923
+artifacts/api-server/dist-tanda-b-off-20260923
+artifacts/api-server/dist-tanda-d-20260923
+artifacts/mariana-textil/dist
+artifacts/mariana-textil/dist-e3-20260922
+artifacts/mariana-textil/dist-e3-apertura-20260922
+artifacts/mariana-textil/dist-e4-20260923
+artifacts/mariana-textil/dist-e7-e11-20260923
+artifacts/mariana-textil/dist-e9-e7-e11-20260923
+artifacts/mariana-textil/dist-simple-e3-tanda-b-20260923
+artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923
+artifacts/mariana-textil/dist-tanda-b-off-20260923
+artifacts/mariana-textil/dist-tanda-d-20260923

@@ -1,0 +1,13 @@
+
+  artifacts/api-server/dist-e9-e7-20260923/index.mjs                   9.0mb ⚠️
+  artifacts/api-server/dist-e9-e7-20260923/pino-worker.mjs           153.0kb
+  artifacts/api-server/dist-e9-e7-20260923/pino-file.mjs             141.7kb
+  artifacts/api-server/dist-e9-e7-20260923/pino-pretty.mjs           113.9kb
+  artifacts/api-server/dist-e9-e7-20260923/thread-stream-worker.mjs    7.3kb
+  artifacts/api-server/dist-e9-e7-20260923/index.mjs.map              15.5mb
+  artifacts/api-server/dist-e9-e7-20260923/pino-worker.mjs.map       256.9kb
+  artifacts/api-server/dist-e9-e7-20260923/pino-file.mjs.map         229.1kb
+  artifacts/api-server/dist-e9-e7-20260923/pino-pretty.mjs.map       203.6kb
+  ...ts/api-server/dist-e9-e7-20260923/thread-stream-worker.mjs.map   12.0kb
+
+⚡ Done in 2154ms

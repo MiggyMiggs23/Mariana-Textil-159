@@ -37,10 +37,9 @@ test("released gates enable ADMIN profile assignment but keep E5 preparation clo
     uiFlag("E11_RECONCILIATION_ENABLED")], [true, true, true, true, true]);
   assert.deepEqual([E11_PROFILE_ASSIGNMENT_ENABLED, uiFlag("E11_PROFILE_ASSIGNMENT_ENABLED")], [true, true]);
   assert.deepEqual([E11_E5_PREPARATION_ENABLED, uiFlag("E11_E5_PREPARATION_ENABLED"),
-    E5_ENABLED, E5_CONTADOR_A_ENABLED, E7_ATTRIBUTION_ENABLED,
-    E12_SUPPLIER_CASH_ENABLED], Array(6).fill(false));
-  assert.deepEqual([E7_ENABLED, E7_CLIENT_FINANCIAL_READS_ENABLED], [true, true]);
-  assert.equal(E9_ENABLED, false);
+    E5_ENABLED, E5_CONTADOR_A_ENABLED, E12_SUPPLIER_CASH_ENABLED], Array(5).fill(false));
+  assert.deepEqual([E7_ENABLED, E7_CLIENT_FINANCIAL_READS_ENABLED, E7_ATTRIBUTION_ENABLED], [true, true, true]);
+  assert.equal(E9_ENABLED, true);
   assert.equal(E4_CASH_OUT_ENABLED, true);
 });
 test("Tanda D: default CONTADOR is F with fiscal read and documentary reconciliation only", async () => {

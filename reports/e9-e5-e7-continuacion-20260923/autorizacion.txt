@@ -1,0 +1,5 @@
+miguelestza: Arregla el fallo de E9. El error 22P02 en la autorización ADMIN es una conversión de tipo mal hecha en el SQL. Encuentra el valor exacto y el tipo esperado, corrígelo, vuelve a ensayar en base desechable y, si pasa, libera E9 con el procedimiento simple. El ingreso al Fondo sigue apagado.
+
+Después sigue con lo que no dependa de una decisión del propietario: termina la integración y pruebas de E5 y de la atribución de E7, y libéralas si pasan. Retiro dirigido y retenido siguen cerrados hasta que el propietario los abra.
+
+Informe único en reports/ con resultado, commits y lo detenido.

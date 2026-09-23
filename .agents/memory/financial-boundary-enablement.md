@@ -15,8 +15,9 @@ efectivo, esconder evidencia existente o conceder permisos operativos.
 
 **How to apply:** Usar gates separados y negativos verificables. E9 documental
 mantiene el ingreso Fondo OFF y nunca fabrica un movimiento monetario. E7
-proyecta la evidencia global existente y filtra detalle por sitio, pero mantiene
-OFF las escrituras E5 y la atribución. E11 permite al ADMIN elegir A/F con
+puede habilitar lectores y atribución financiera de solo lectura: proyecta la
+evidencia global existente, filtra por sitio y conserva OFF tanto las escrituras
+E5 como la atribución histórica E1. E11 permite al ADMIN elegir A/F con
 motivo, versión e historial, pero no asigna a nadie automáticamente y exige
 gates adicionales para preparar E5. Informar por separado qué está habilitado,
 qué sigue cerrado y qué acción real queda al propietario.

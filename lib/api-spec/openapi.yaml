@@ -21,7 +21,7 @@ x-e7-gates:
   description: Lecturas financieras y atribución E7 de solo lectura ON; operaciones E5 permanecen OFF.
 tags:
   - name: e7
-    description: Lecturas financieras de clientes; atribución operativa cerrada
+    description: Lecturas financieras de clientes y atribución de solo lectura; operaciones E5 cerradas
   - name: e11
     description: Contrato OFF de perfiles CONTADOR A/F, lectores dedicados y conciliación facturada
   - name: e9

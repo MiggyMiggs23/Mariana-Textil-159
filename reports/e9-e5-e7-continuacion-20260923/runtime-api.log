@@ -1,0 +1,48 @@
+workflow: artifacts/api-server: API Server
+status: RUNNING
+run_id: 8HW3HNERWnPDg5g210g6j
+timestamp: 2026-09-23T19:29:10.308Z
+
+[19:28:52.702] WARN (50695): Inspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.
+[19:28:52.705] INFO (50695): Server listening
+    port: 8080
+[19:28:53.154] INFO (50695): request completed
+    req: {
+      "id": 1,
+      "method": "GET",
+      "url": "/"
+    }
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 8
+[19:28:59.813] INFO (50695): request completed
+    req: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/healthz"
+    }
+    res: {
+      "statusCode": 200
+    }
+    responseTime: 5
+[19:29:05.158] INFO (50695): request completed
+    req: {
+      "id": 3,
+      "method": "GET",
+      "url": "/"
+    }
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 0
+[19:29:07.112] INFO (50695): request completed
+    req: {
+      "id": 4,
+      "method": "GET",
+      "url": "/"
+    }
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 0
