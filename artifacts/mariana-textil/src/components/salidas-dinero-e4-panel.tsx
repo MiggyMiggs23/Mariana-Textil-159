@@ -180,7 +180,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
   const canCaptureProveedor = isMariana;
 
   return (
-    <Card className="border-amber-200">
+    <Card>
       <CardHeader>
         <CardTitle className="text-lg">Salidas de dinero</CardTitle>
         <CardDescription>Pagos operativos y extraordinarios (E4).</CardDescription>
@@ -242,6 +242,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
             {requiresCashValidation && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {canViewCorte && disponibilidad.data?.efectivoEsperado != null ? <Link className="text-primary underline" href={`/caja/cortes?sesionId=${sesionId}`}>{disponibilidad.data.efectivoEsperado}</Link> : disponibilidad.data?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar; la API conserva la autoridad final.</p>}
             {requiresCashValidation && disponibilidad.error && <p role="alert" className="text-destructive">{getApiErrorMessage(disponibilidad.error)}</p>}
             {(isAdmin && requiresCashValidation && tipo === "EXTRAORDINARIA") && (
+              /* Amber identifies the exceptional insufficient-cash unlock, not the E4 module. */
               <div className="md:col-span-2 space-y-1 mt-2 bg-amber-50 border border-amber-200 p-3 rounded-lg">
                 <Label htmlFor="salida-desbloqueo" className="text-xs font-bold text-amber-900">Motivo de desbloqueo extraordinario (solo si hay insuficiencia)</Label>
                 <Input id="salida-desbloqueo" maxLength={1000} value={desbloqueoMotivo} onChange={(e) => setDesbloqueoMotivo(e.target.value)} disabled={crear.isPending || checking} placeholder="Justificación obligatoria cuando Caja es insuficiente" className="bg-white" />

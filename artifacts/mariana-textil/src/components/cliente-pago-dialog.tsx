@@ -376,12 +376,13 @@ export function ClientePagoDialog({
       }
     }}>
       <DialogContent className="sm:max-w-xl p-0 overflow-hidden">
-        <DialogHeader className={`p-6 text-white pb-6 ${step === "success" ? "bg-emerald-600" : "bg-sidebar"}`}>
+        {/* Green identifies a confirmed abono; form and preview headers remain neutral. */}
+        <DialogHeader className={`p-6 pb-6 ${step === "success" ? "bg-emerald-600 text-white" : "bg-muted text-foreground"}`}>
           <DialogTitle className="text-xl flex items-center gap-2">
             {step === "success" ? <CheckCircle2 className="h-5 w-5" /> : <Wallet className="h-5 w-5" />}
             {step === "form" ? "Registrar Abono" : step === "preview" ? "Vista Previa de Aplicación" : "Abono Registrado"}
           </DialogTitle>
-          <DialogDescription className="text-white/70 mt-2">
+          <DialogDescription className={`mt-2 ${step === "success" ? "text-white/80" : "text-muted-foreground"}`}>
             {step === "form"
               ? (saldoActual ? `El abono se descontará del saldo total de ${formatNumber(saldoActual, { kind: "money" })} aplicando primero a las notas más antiguas.` : "El abono se aplicará a las notas más antiguas de manera automática (FIFO).")
               : step === "preview"
@@ -517,6 +518,7 @@ export function ClientePagoDialog({
 
             {isE3Flow && e3PreviewResult ? (
               <div className="space-y-4">
+                {/* Amber means this is pending preview information, not recorded money. */}
                 <div className="bg-amber-50 p-4 border border-amber-200 rounded-lg text-center">
                   <h4 className="font-bold text-amber-800">Vista previa de abono ordinario</h4>
                   <p className="text-xs text-amber-700 font-medium">Aún no se ha registrado dinero. Al confirmar se aplicará FIFO y el remanente quedará a favor.</p>
@@ -529,6 +531,7 @@ export function ClientePagoDialog({
                         <div key={asig.movimientoVentaId} className="w-full text-left bg-white p-3 rounded-lg border shadow-sm flex items-center justify-between">
                           <div>
                             <div className="flex items-center gap-2 mb-1">
+                               {/* Primary plus underline identifies a navigable folio, never a payment state. */}
                                {asig.ticketId && asig.folio && (["ADMIN", "CONTADOR", "SISTEMAS"].includes(e3User?.rol ?? "") || [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS].some(module => hasPermission(e3User, module, "ver"))) ? <Link className="font-black text-sm text-primary underline" href={`/tickets/${asig.ticketId}`}>#{asig.folio}</Link> : <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>}
                             </div>
                             <div className="text-xs text-muted-foreground">
@@ -537,7 +540,7 @@ export function ClientePagoDialog({
                           </div>
                           <div className="text-right">
                             <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Proyectado</span>
-                            <span className="font-black text-primary tabular-nums">+{formatNumber(asig.aplicadoCentavos / 100, { kind: "money" })}</span>
+                             <span className="font-black text-foreground tabular-nums">+{formatNumber(asig.aplicadoCentavos / 100, { kind: "money" })}</span>
                           </div>
                         </div>
                       ))}
@@ -545,6 +548,7 @@ export function ClientePagoDialog({
                   </div>
                 )}
                 {e3PreviewResult.remanenteCentavos > 0 && (
+                  /* Green identifies a positive balance in favor; the copy distinguishes projection from confirmation. */
                   <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-3">
                     <div className="flex items-center justify-between gap-3">
                       <div>
@@ -570,6 +574,7 @@ export function ClientePagoDialog({
                           <div>
                             <div className="flex items-center gap-2 mb-1">
                               <span className="font-black text-sm text-sidebar">#{asig.folio || asig.ticketId || "Nota"}</span>
+                              {/* Green means settled; amber means payment remains pending. */}
                               <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${asig.resultado === "SALDADA" ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
                                 {asig.resultado}
                               </span>
@@ -580,13 +585,14 @@ export function ClientePagoDialog({
                           </div>
                           <div className="text-right">
                             <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider mb-0.5">Aplicado</span>
-                            <span className="font-black text-primary tabular-nums">+{formatNumber(asig.aplicado, { kind: "money" })}</span>
+                            <span className="font-black text-foreground tabular-nums">+{formatNumber(asig.aplicado, { kind: "money" })}</span>
                           </div>
                         </button>
                       ))}
                     </div>
                   </div>
                 ) : (
+                  /* Amber means there is no currently applicable note, not a technical error. */
                   <div className="text-center py-6 bg-amber-50 rounded-lg border border-amber-200">
                     <p className="font-medium text-amber-700">No hay notas pendientes para aplicar saldo.</p>
                   </div>
@@ -599,6 +605,7 @@ export function ClientePagoDialog({
                 )}
 
                 {Number(previewExceso) > 0 && (
+                  /* Green identifies a positive excess that becomes balance in favor. */
                   <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-3" data-testid="receipt-preview-excess">
                     <div className="flex items-center justify-between gap-3">
                       <div>
@@ -624,6 +631,7 @@ export function ClientePagoDialog({
 
         {step === "success" && ((!isE3Flow && realResult) || (isE3Flow && e3Receipt)) && (
           <div className="p-6 bg-secondary/10 space-y-6 animate-in zoom-in-95 max-h-[60vh] overflow-y-auto">
+             {/* Green identifies a successfully recorded operation and its resulting receipt. */}
              <div className="bg-white border-2 border-emerald-500/20 rounded-xl shadow-sm p-6 text-center space-y-2">
                 <CheckCircle2 className="h-12 w-12 text-emerald-500 mx-auto mb-2" />
                   <h3 className="font-black text-xl text-sidebar">
@@ -653,6 +661,7 @@ export function ClientePagoDialog({
              )}
 
               {!isE3Flow && realResult && Number(excedenteGenerado) > 0 && (
+                /* Green identifies confirmed positive excess and balance in favor. */
                <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-2 text-sm" data-testid="receipt-payment-excess">
                  <div className="flex justify-between items-center gap-3">
                    <span className="font-bold text-emerald-800">Excedente recibido</span>

@@ -159,6 +159,8 @@ export function SalidaDineroE4Item({
     );
   };
 
+  // E4 state colors: amber=pending, red=claimed, blue=answered, green=accepted.
+  // NO_APLICA and unknown values remain neutral; text always carries the state too.
   const getEstadoBadge = (estado: string) => {
     switch (estado) {
       case "PENDIENTE":
@@ -197,6 +199,7 @@ export function SalidaDineroE4Item({
           </div>
         </div>
         <div className="text-right flex flex-col items-end gap-1">
+           {/* Primary plus underline identifies a navigable amount, never an E4 state. */}
            {canViewCorte ? <Link className="font-mono font-bold text-primary underline" href={`/caja/cortes?sesionId=${sesionId}`} aria-label={`Abrir corte de la salida ${salida.id}`}>{formatNumber(salida.monto, { kind: "money" })}</Link> : <span className="font-mono font-bold">{formatNumber(salida.monto, { kind: "money" })}</span>}
           {isE4 && e4 && getEstadoBadge(e4.estado)}
         </div>
@@ -213,6 +216,7 @@ export function SalidaDineroE4Item({
       )}
 
       {isE4 && e4?.desbloqueoCaja && (
+        /* Amber identifies the exceptional cash-unlock evidence, not E4 generally. */
         <div className="mt-1 rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-950">
           <p className="font-semibold">Desbloqueo extraordinario de Caja</p>
           <p>{e4.desbloqueoCaja.motivo}</p>
@@ -238,6 +242,7 @@ export function SalidaDineroE4Item({
 
       {isE4 && (canAccept || canReclamar || canResponder) && (
         <div className="flex gap-2 justify-end mt-1">
+          {/* Action colors preview their resulting E4 state: accepted, claimed, or answered. */}
           {canAccept && (
             <Button size="sm" variant="outline" className="h-7 text-xs bg-green-50 text-green-700 border-green-200 hover:bg-green-100" onClick={() => handleAction("ACEPTAR")}>
               <Check className="w-3 h-3 mr-1" /> Aceptar

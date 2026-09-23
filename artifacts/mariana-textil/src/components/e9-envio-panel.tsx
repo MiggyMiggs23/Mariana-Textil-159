@@ -78,6 +78,7 @@ function E9Send({ user, site, corteId }: { user: CurrentUser; site: number; cort
     finally { guard.current = false; if (active.current) setPending(false); }
   };
 
+  // Destructive red is reserved for query/mutation errors; primary plus underline identifies the navigable corte.
   return <section className="rounded border p-3 space-y-2" data-testid="e9-envio-panel">
     <h3 className="font-semibold">Envío completo al cierre</h3>
     {availability.isLoading && <p role="status">Consultando capacidad de envío…</p>}

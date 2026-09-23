@@ -390,6 +390,7 @@ export default function TicketDetailPage() {
         <CardHeader className="flex flex-col items-start justify-between gap-4 border-b bg-sidebar/5 sm:flex-row">
           <div>
             <CardTitle>Detalle de Operación</CardTitle>
+            {/* Amber identifies a historical sale made from remate-marked rolls; it is neither an error nor the roll's current state. */}
             {ticket.remate && <p role="status" className="font-semibold text-amber-700">Venta de remate · Rollos {ticket.rollosRemate?.map((rolloId, index) => <span key={rolloId}>{index > 0 && ", "}{hasPermission(user, Modules.INVENTARIO, "ver") ? <Link className="underline" href={`/inventario/rollos/${rolloId}`}>{rolloId}</Link> : rolloId}</span>)}</p>}
             <CardDescription>
               Emitido por {ticket.nombreUsuarioTerminal}

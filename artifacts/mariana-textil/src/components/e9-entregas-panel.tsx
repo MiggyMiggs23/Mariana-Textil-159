@@ -45,6 +45,8 @@ function E9List({ user, site }: { user: CurrentUser; site: number }) {
     queryKey: [...getListE9EntregasQueryKey(params), identity],
     staleTime: 0, refetchOnMount: "always", refetchOnWindowFocus: true, refetchInterval: 15000,
   } });
+  // Destructive red is reserved for query/mutation errors; E9 business states remain textual.
+  // Primary plus underline identifies navigable delivery figures and identifiers, never an E9 state.
   return <Card data-testid="e9-entregas-panel">
     <CardHeader><CardTitle>Entregas de efectivo a Mariana</CardTitle></CardHeader>
     <CardContent className="space-y-4">

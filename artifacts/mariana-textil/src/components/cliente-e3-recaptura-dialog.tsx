@@ -180,6 +180,7 @@ export function ClienteE3RecapturaDialog({ clienteId, sitios }: ClienteE3Recaptu
 
         {!previewData ? (
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Destructive red is reserved for field validation errors in this form. */}
             <div className="space-y-2">
               <Label>Importe (centavos)</Label>
               <Input
@@ -311,6 +312,7 @@ export function ClienteE3RecapturaDialog({ clienteId, sitios }: ClienteE3Recaptu
                   <ul className="list-disc pl-4 mt-2">
                     {previewData.asignaciones.map((asig, i) => (
                       <li key={i}>
+                        {/* Primary plus underline identifies a navigable folio, never recapture status. */}
                         {asig.ticketId && asig.folio && (["ADMIN", "CONTADOR", "SISTEMAS"].includes(user?.rol ?? "") || [Modules.COBROS_PAGOS, Modules.POS, Modules.SALIDAS].some(module => hasPermission(user, module, "ver"))) ? <Link className="text-primary underline" href={`/tickets/${asig.ticketId}`}>Folio {asig.folio}</Link> : <>Folio {asig.folio ?? "sin documento identificable"}</>} - Aplica {formatNumber(asig.aplicadoCentavos / 100, { kind: "money" })}
                       </li>
                     ))}
@@ -319,7 +321,8 @@ export function ClienteE3RecapturaDialog({ clienteId, sitios }: ClienteE3Recaptu
               )}
             </div>
             
-            <p className="text-sm text-destructive font-medium">
+            {/* Amber means caution before creating historical evidence; it is not a validation error. */}
+            <p className="text-sm text-amber-800 font-medium">
               Al confirmar se generará una constancia histórica (SIN DINERO NUEVO).
             </p>
 
