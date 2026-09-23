@@ -2005,3 +2005,17 @@ mtime_ms = 1790145113824
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/e7055533-ef3e-4ee5-999b-d6d0bf05544d/54293643-44de-4c00-93ff-80ab5c2f0a7b"
 storage_version_token = "1790145149878555"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "I8IH4EAPRotpkHOn99Rdh"
+uri = "file://reports/e3-fase-b-detenida-20260923.md"
+type = "text"
+title = "FASE B E3 — detenida en el control inicial"
+description = "Hash e inventarios correctos; cambio de PID respecto a la referencia documentada. Sin SQL, reinicios ni activación."
+logical_id = "f92fb64a-45e7-43c3-9b81-baf9c7fecee4"
+content_hash = "sha256:09ea25993abf414776eec027c5c3026318d4f0a0895cc04e113543e364f8024a"
+size = 2367
+mtime_ms = 1790149285593
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f92fb64a-45e7-43c3-9b81-baf9c7fecee4/6d392aa5-04df-40e4-be5e-94ae6a049f2f"
+storage_version_token = "1790149290091124"
+content_type = "text/markdown"

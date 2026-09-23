@@ -1,0 +1,7 @@
+miguelestza: Autorización del propietario. Guarda este texto tal cual en reports/e3-apertura-preparada-20260922/ antes de la primera escritura.
+
+Autorizo la FASE B de E3 ordinario con efectivo exactamente con el contenido de reports/e3-apertura-preparada-20260922/fase-b-FINAL-PARA-AUTORIZAR.txt, SHA-256 8eebf2fdae6bdce1393a9b359c3dfcbba06d9c20d3a0bcdbab523d4d80e3a742, sin ningún cambio. Comprueba ese hash antes de empezar; si no coincide, detente.
+
+La autorización rige a partir del momento en que pego este texto, hora local de Mariana. Nadie está operando el sistema. Si algún control falla, detente sin reparar ni rebaselinar y repórtamelo.
+
+Cuando termine, deja la Tanda B en pausa y repórtame el resultado antes de seguir construyendo.
