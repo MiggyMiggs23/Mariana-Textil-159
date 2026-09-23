@@ -2075,3 +2075,17 @@ mtime_ms = 1790180891915
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/da7abdad-f5a2-46c8-a724-44674542fdad/3543d696-086c-4c23-8770-2849221c37d1"
 storage_version_token = "1790180908067376"
 content_type = "text/plain"
+
+[[outputs]]
+id = "v0q73btpkhJvROVsKY4N0"
+uri = "file://reports/liberacion-simple-20260923/resultado.md"
+type = "text"
+title = "Liberación detenida — estado exacto de E3 y Tanda B"
+description = "E3: dos SQL confirmados; arranque de UI bloqueado por configuración. E2 sigue activo. Tanda B no iniciada."
+logical_id = "0855c04a-a638-42eb-b41e-c8daeba09967"
+content_hash = "sha256:818e9b1c34d1fc4cab3cf2e072899548237f0a1bd2160410c3fae6e5aa749ecf"
+size = 5166
+mtime_ms = 1790181710478
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/0855c04a-a638-42eb-b41e-c8daeba09967/a1ff0f05-a694-4fe7-8eaa-dac4dff9228d"
+storage_version_token = "1790181810300124"
+content_type = "text/markdown"

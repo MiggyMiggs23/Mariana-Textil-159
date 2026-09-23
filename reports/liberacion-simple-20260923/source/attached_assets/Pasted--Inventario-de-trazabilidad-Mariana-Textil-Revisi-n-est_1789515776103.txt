@@ -1,0 +1,231 @@
+# Inventario de trazabilidad — Mariana Textil
+
+Revisión estática del código del 15 de septiembre de 2026. Cubre las 49 pantallas y
+componentes con tablas del frontend, contra las 12 rutas de detalle declaradas en
+`App.tsx`.
+
+Regla contra la que se mide, de `replit.md`:
+
+> «Ninguna cifra es un callejón sin salida: toda cifra abre el detalle de los
+> documentos que la componen, y de ahí se llega al documento por su folio.»
+
+Más la regla del propietario, más exigente: **todo renglón debe llegar a su origen**,
+no solo las cifras agregadas.
+
+---
+
+## Las tres causas
+
+Un enlace faltante no siempre significa lo mismo, y cada causa exige un arreglo
+distinto. Toda la revisión está clasificada así:
+
+- **A — Falta el enlace.** El identificador ya está en pantalla y la ruta de destino
+  ya existe en `App.tsx`. Es trabajo de frontend, de una línea por caso.
+- **B — Falta el dato en el contrato.** La ruta existe, pero el servidor no envía el
+  ID necesario para construirla. Exige tocar `openapi.yaml`, el endpoint y regenerar.
+- **C — No existe la pantalla destino.** Exige construir una vista nueva. Es la única
+  categoría que cuesta de verdad.
+
+---
+
+## Destinos que hoy existen
+
+`/tickets/:id` · `/clientes/:id` · `/proveedores/:id` · `/productos/:id` ·
+`/precios/:id` · `/inventario/rollos/:id` · `/salidas/:id` · `/viajes/:id` ·
+`/entradas/:id/documento` · `/contenedores/:id` ·
+`/caja/cuentas-destino/:cuentaDestino` · `/caja/tiendas/:ubicacionId/ventas`
+
+## Destinos que NO existen
+
+Abono o movimiento de crédito individual · Ajuste individual · Corte de caja
+individual (hoy es panel contextual) · Auditoría de inventario individual · Evento de
+bitácora individual · Salida de dinero de caja · Pago a proveedor · Reimpresión de
+etiqueta
+
+---
+
+## Categoría A — Falta el enlace, el destino ya existe
+
+Estos son los más graves, porque no hay ninguna razón técnica para que falten.
+
+### A1. Detalle de rollo — Historial de Movimientos
+
+`pages/rollo-detail.tsx`. La tabla se describe a sí misma como «Trazabilidad completa
+desde el alta hasta el estado actual». Su columna **Referencia** compone
+`${mov.documentoTipo} ${mov.documentoId}` y lo pinta como **texto truncado con
+`title`**, sin enlace. Desde el rollo ves que lo consumió el TICKET 105 y no puedes
+abrirlo.
+
+Destinos según `documentoTipo`: `TICKET`/`NOTA` → `/tickets/:id`; `SALIDA` →
+`/salidas/:id`; `ENTRADA` → `/entradas/:id/documento`. Verificar que `documentoId` sea
+el ID interno y no el folio; si es folio, el caso baja a categoría B.
+
+### A2. Detalle del corte de caja
+
+`pages/corte-detail-shared.tsx`. **Cero enlaces en 294 líneas.** Es la pantalla con la
+que se cuadra el dinero del día.
+
+El caso más claro: la tabla «Tickets Cobrados» recorre los renglones con
+`key={t.ticketId}` —el ID está literalmente en la mano— y pinta `F-{t.folio}` como
+texto monoespaciado. Falta envolverlo en el enlace a `/tickets/:id`.
+
+### A3. Series de rollo dentro del ticket y la nota
+
+`pages/ticket-detail.tsx`. Al pulsar «Ver rollos», cada `linea.serieRollo` se pinta
+como una etiqueta de color, no como enlace. Desde la venta ves la serie y no llegas al
+rollo.
+
+Nota de contexto: en el **papel** las series no se imprimen, y eso es una decisión
+tomada y vigente. Este hueco es solo de la pantalla, donde `replit.md` sí promete que
+las series «se consultan desde su detalle en pantalla».
+
+Verificar que la línea traiga el `rolloId`; si solo trae la serie, baja a categoría B.
+
+### A4. Diálogo «Ver Reparto»
+
+`components/cliente-nota-credito.tsx`. El diálogo lista las aplicaciones del abono con
+`#{asig.folio}` como texto, teniendo `asig.ticketId` disponible en el mismo objeto —se
+usa dos líneas abajo para marcar «Esta Nota». Desde el reparto ves a qué notas se
+aplicó el dinero y no puedes abrir ninguna.
+
+### A5. Cartera en Cobros
+
+`pages/cobros.tsx`. El folio de la nota se pinta como `#{nota.ticketFolio}` sin
+enlace. El contrato `AdminAlertaCredito` **no trae `ticketId`**, así que el enlace al
+ticket es categoría B.
+
+**Pero sí trae `clienteId` y `movimientoId`**, y la ruta
+`/clientes/:id?tab=estado&movimientoId=:mov` existe y el `ResponsiveTable` ya sabe
+resaltar ese renglón. `pages/alertas.tsx` ya usa exactamente ese enlace con el mismo
+contrato. Es una omisión, no una limitación.
+
+### A6. Movimientos — el documento
+
+`pages/movimientos.tsx` enlaza la serie del rollo pero deja el documento como texto.
+La justificación registrada en `detail-link-tables-review.md` es «para mantener un
+enlace por renglón».
+
+**Esa justificación es una mala lectura de la regla.** `replit.md` dice que el
+identificador principal del renglón es un enlace, uno por renglón, y que no debe
+existir una columna de «Ver detalle». Está prohibiendo una columna decorativa, no
+prohibiendo que un renglón con dos identificadores distintos —un rollo y un
+documento— tenga un camino a cada uno.
+
+Conviene precisar esa regla en `replit.md` antes de corregir, o el próximo que lea el
+documento vuelve a quitar el enlace.
+
+---
+
+## Categoría B — Falta el dato en el contrato
+
+### B1. `AdminAlertaCredito` sin `ticketId`
+
+`lib/api-spec/openapi.yaml`. El esquema entrega `movimientoId`, `clienteId`,
+`nombreCliente`, `nota`, `ticketFolio`, `importe`, `fechaVencimiento`, `estadoNota` y
+`diasRestantes`. **No entrega `ticketId`**, que es lo que `/tickets/:id` necesita.
+
+Lo consumen Cobros y Alertas. Agregar el campo resuelve las dos pantallas de una vez.
+
+### B2. `documentoId` en el historial del rollo
+
+Pendiente de confirmar si es el ID interno o el folio. Si es folio, no sirve para
+construir ninguna ruta y hay que agregar el ID al contrato del historial.
+
+### B3. Serie de rollo en las líneas de ticket
+
+Pendiente de confirmar si `ticket.lineas` trae `rolloId` además de `serieRollo`.
+
+Estas tres se verifican leyendo el contrato y el endpoint, no suponiendo.
+
+---
+
+## Categoría C — No existe la pantalla destino
+
+Aquí está la decisión de fondo, porque es la que cuesta.
+
+### C1. Movimiento de crédito individual (abono, reverso, ajuste)
+
+**Es el hueco más caro del sistema.** En el estado de cuenta del cliente, el
+`ResponsiveTable` solo crea enlace cuando la columna se llama exactamente «Folio» y el
+renglón trae `ticketId`. Los abonos, reversos y ajustes traen `ticketId` nulo, así que
+muestran guion.
+
+Un abono de $15,000 pesos tiene reparto FIFO, tiene registros de auditoría, puede
+tener un reverso que lo referencia — y desde su renglón no se llega a nada de eso.
+
+Una sola pantalla de detalle de movimiento de crédito resolvería los tres tipos, y
+además daría destino a la columna Referencia del historial del rollo cuando el
+movimiento venga de crédito.
+
+### C2. Ajuste de inventario individual
+
+`pages/ajustes.tsx` muestra la serie del rollo en la lista de pendientes. La serie sí
+puede enlazar al rollo hoy (eso es categoría A), pero el ajuste en sí no tiene
+pantalla propia.
+
+### C3. Corte de caja individual
+
+Hoy el corte se selecciona dentro de `pages/caja/cortes.tsx` mediante el parámetro
+`sesionId`, en panel contextual. Funciona, pero no es una dirección que se pueda
+compartir ni guardar como favorito, y los reportes que quieran apuntar a un corte
+concreto no tienen a dónde.
+
+### C4. Evento de bitácora individual
+
+`pages/auditoria/index.tsx` muestra `entidad` y `entidadId` como texto. Teniendo esos
+dos datos se podría enlazar **a la entidad auditada** —al ticket, al rollo, al
+cliente— que es probablemente más útil que una pantalla del evento. Eso lo bajaría a
+categoría A con una función de resolución por tipo de entidad.
+
+### C5. Conciliación de kardex
+
+`pages/conciliacion.tsx` muestra `Producto ID` como número plano. La ruta
+`/productos/:id` existe, así que el enlace al producto es categoría A. Lo que no
+existe es una vista de la discrepancia misma, y probablemente no haga falta: la acción
+es recalcular.
+
+---
+
+## Lo que sí está completo, y sirve de modelo
+
+- **Cuentas Destino y su detalle.** Cada renglón enlaza a su destino, resolviendo por
+  tipo: movimiento de crédito, cliente o ticket. Es el patrón que deberían seguir las
+  demás pantallas.
+- **Caja en Tiempo Real**, incluida la banda nueva de cobranza y los desgloses.
+- **Alertas.** Enlaza ticket, cliente, salida y el par venta/salida de las alertas de
+  entrega.
+- **Movimientos**, en su enlace al rollo.
+- **Listados maestros** —clientes, proveedores, productos, contenedores, salidas,
+  viajes, entradas pendientes de costo— enlazan su identificador principal.
+
+---
+
+## Pantallas donde la ausencia de enlace es correcta
+
+No todo renglón es un documento. Estas quedan como están y conviene dejarlo escrito
+para que nadie «las arregle» después:
+
+- Reportes agregados y comparativos: un renglón es una dimensión, no un registro.
+- Capturas en borrador: entrada nueva, contenedor nuevo, carrito del POS.
+- Catálogos que se editan en diálogo: usuarios, ubicaciones, camionetas, choferes,
+  equipos.
+- Documentos imprimibles: son el destino final, no un paso intermedio.
+- Totales por sitio del Dashboard y del Estado por Tienda: son agregados, y los que sí
+  tienen detalle ya enlazan a la vista de ventas de esa tienda.
+
+---
+
+## Orden recomendado
+
+1. **Categoría A**, salvo lo que dependa de B. Cierra la mayor parte del daño sin
+   construir nada: rollo, corte, series en la nota, reparto, cartera hacia el cliente,
+   documento en movimientos, producto en conciliación.
+2. **Categoría B**, en una sola pasada del servidor: `ticketId` en
+   `AdminAlertaCredito`, y confirmar `documentoId` y `rolloId`.
+3. **Precisar en `replit.md`** la regla del enlace por renglón, para que la corrección
+   de A6 no se revierta.
+4. **Categoría C**, empezando por el detalle de movimiento de crédito, que es el
+   hueco más caro y el que más destinos abre de una sola vez.
+
+Los puntos 1 y 2 conviene hacerlos juntos, porque varios casos de A dependen de que B
+entregue el ID.

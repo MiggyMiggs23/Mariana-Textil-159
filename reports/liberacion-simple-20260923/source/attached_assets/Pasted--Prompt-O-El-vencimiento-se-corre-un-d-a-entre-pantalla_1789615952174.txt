@@ -1,0 +1,111 @@
+# Prompt O — El vencimiento se corre un día entre pantalla e impresión
+
+## El defecto, con su causa ya localizada
+
+La misma nota muestra dos fechas de pago distintas: el papel dice un día y la pantalla
+dice el anterior. Se reportó con la nota 1005, que imprimió **15/10/2026** y mostró
+**14/10/2026** en su detalle.
+
+**La base quedó descartada.** El diagnóstico del Prompt H comprobó que
+`tickets.fecha_vencimiento` y `movimientos_credito.fecha_vencimiento` coinciden: no hay
+dos copias divergentes.
+
+**La causa está en el camino de lectura**, y el Prompt B la localizó con precisión: el
+valor `2026-10-02` se convierte en `2026-10-02T00:00:00.000Z` al pasar por el esquema
+del endpoint, y la pantalla lo pinta como `01/10/2026`, mientras la impresión conserva
+`02/10`. La frontera es **la coerción del contrato**, no la base ni la rama muerta de
+`pos.ts`.
+
+Es el mismo defecto que costó los abonos del 15 de septiembre, en otro lugar: una fecha
+sin hora resuelta a medianoche UTC se convierte en el día anterior en Ciudad de México.
+
+Regla vigente que esto incumple, escrita tras aquel episodio:
+
+> Toda fecha que viaje del navegador al servidor lleva hora y desplazamiento
+> explícitos; el servidor nunca infiere la zona de una fecha sin hora.
+
+Le faltaba la otra mitad: **una fecha que es un día del calendario y no un instante no
+debe convertirse en instante en ningún punto del camino.**
+
+---
+
+## Bloque 0 — Reproducir antes de corregir
+
+1. Toma una nota con vencimiento conocido. Compara el valor en la base, el que sale del
+   endpoint, el que recibe el componente y el que se imprime. **Los cuatro, con su
+   representación textual exacta.**
+2. Señala en cuál de esos cuatro pasos aparece la `T` y la `Z`.
+3. Confirma que la impresión y la pantalla leen el mismo campo de origen.
+4. Comprueba si el mismo defecto afecta otras fechas de día de calendario:
+   la fecha de vencimiento en cartera, en cobros, en alertas, en el Excel del estado de
+   cuenta, y los `diasVencidos` o `diasRestantes` derivados de ella.
+
+**Si no lo reproduces, detente y dilo.** No corrijas sobre una hipótesis.
+
+---
+
+## Bloque 1 — Corregir en la frontera, no en la pantalla
+
+**La corrección va donde nace el problema, no donde se ve.** Poner un parche de
+formato en el componente dejaría el defecto vivo en el Excel, en los reportes y en
+cualquier pantalla nueva que lea ese campo.
+
+1. Una fecha de vencimiento es un **día del calendario**, no un instante. Debe viajar
+   del servidor al navegador como día, sin hora ni zona, y llegar así al componente que
+   la pinta.
+2. Corrige la coerción del contrato que la está convirtiendo en instante. Si el esquema
+   la declara como `date-time` y debería ser `date`, corrígelo y regenera.
+3. Revisa que **ningún consumidor** vuelva a construir un `Date` a partir de ese valor
+   sin fijar la hora local. Si alguno lo hace, corrígelo también.
+4. Si el sistema ya tiene una función compartida para formatear días de calendario,
+   úsala en todos los consumidores. Si no existe, créala y aplícala. **Una sola
+   función, todos los consumidores.**
+5. Los `diasVencidos` y `diasRestantes` se calculan comparando días de calendario en
+   hora de Ciudad de México, nunca restando instantes. Verifica que sea así; si no,
+   corrígelo.
+
+---
+
+## Bloque 2 — Que no vuelva
+
+Agrega una prueba que afirme que, para una fecha de vencimiento dada, **el valor
+impreso y el valor en pantalla son idénticos**. Debe fallar si alguien vuelve a
+introducir una conversión a instante en cualquiera de los dos caminos.
+
+Prueba también los bordes: día 1 del mes, día último del mes, y un vencimiento que cae
+el mismo día de la consulta. Un desfase de un día se esconde bien en medio del mes y
+salta en las orillas.
+
+---
+
+## Verificación
+
+1. La nota de prueba muestra la misma fecha en pantalla, en el documento impreso, en
+   cartera, en cobros, en alertas y en el Excel del estado de cuenta.
+2. Los bordes del Bloque 2.
+3. `pnpm run typecheck` completo en cero. Codegen sin diferencias o con las que
+   justifique el cambio de contrato.
+4. Comprobación en navegador con una nota real y su impresión. Si no hay sesión
+   disponible, **dilo y no lo presentes como aprobado**.
+
+## Restricciones
+
+- **No corrijas esto formateando en el componente.** Si la corrección no está en la
+  frontera de datos, está mal.
+- No cambies cómo se calcula la fecha de vencimiento al autorizar una nota. El cálculo
+  es correcto; lo que falla es cómo viaja.
+- No toques el error de tipos de `pos.ts:426` si todavía existe: el Prompt B ya
+  determinó que no es la causa.
+- No cambies la impresión de ningún documento: hoy imprime bien.
+- No crees usuarios ni sesiones de prueba, no escribas en la base.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. La causa demostrada y dónde se corrigió, retirando la descripción del pendiente
+   abierto.
+2. **La regla derivada, como complemento de la que ya existe sobre fechas:** una fecha
+   que representa un día del calendario —vencimiento, fecha efectiva, fecha operativa—
+   no se convierte en instante en ningún punto del camino. Convertirla a medianoche UTC
+   la retrocede un día en Ciudad de México.
+3. Qué función comparte el formateo de días de calendario y qué consumidores la usan.
+4. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

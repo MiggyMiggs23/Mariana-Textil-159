@@ -1,0 +1,30 @@
+Agregar IVA a los tickets facturados
+Cuando en la terminal se marca “Requiere Factura”, el total del ticket debe incluir el 16% de IVA sobre el subtotal. El precio que negocia el vendedor es sin IVA; el impuesto se suma encima.
+Cálculo:
+	•	Subtotal = suma de los importes de las líneas (precio unitario × cantidad)
+	•	IVA = subtotal × 0.16
+	•	Total = subtotal + IVA
+Si el ticket no está facturado, el IVA es cero y el total es igual al subtotal.
+Cambios en la tabla tickets: agrega los campos iva (decimal 12,2, default 0) y tasa_iva (decimal 5,4, default 0.1600). Guardar la tasa permite que si algún día cambia el porcentaje, los tickets viejos conserven el que se les aplicó.
+En la terminal:
+	•	Al marcar o desmarcar “Requiere Factura”, el total se recalcula en vivo
+	•	El resumen del ticket muestra tres renglones: Subtotal, IVA (16%) y Total
+	•	Si no está facturado, la línea de IVA no aparece
+En el ticket impreso:
+	•	Si es facturado: desglosa Subtotal, IVA (16%) y Total, y conserva la leyenda FACTURADO
+	•	Si no: solo el Total, como está hoy
+En la pantalla de Caja:
+	•	El monto a cobrar es el total con IVA
+	•	El detalle del ticket muestra el desglose
+	•	El pago mixto debe sumar exactamente el total con IVA
+En el corte de caja:
+	•	Agrega un renglón de IVA cobrado en el periodo
+	•	En el desglose de facturado vs no facturado, muestra subtotal e IVA por separado
+En los reportes y el margen: el margen se calcula sobre el subtotal, nunca sobre el total con IVA. El IVA no es ingreso del negocio; es un impuesto que se cobra por cuenta de terceros. Revisa todos los cálculos de margen y utilidad y confirma que usen el subtotal.
+Fuera de alcance: este sistema no emite facturas fiscales ni genera CFDI. Solo calcula, registra y reporta el IVA. La factura la emite un contador externo. No construyas nada de timbrado ni de facturación electrónica.
+Pruebas:
+	•	Un ticket de $275 sin factura tiene total $275
+	•	El mismo marcado como facturado tiene subtotal $275, IVA $44 y total $319
+	•	Un pago mixto de un ticket facturado debe sumar $319, no $275
+	•	El margen de ese ticket se calcula sobre $275
+	•	El corte suma correctamente el IVA cobrado

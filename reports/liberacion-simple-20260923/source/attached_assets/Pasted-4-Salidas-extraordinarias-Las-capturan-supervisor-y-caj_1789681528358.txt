@@ -1,0 +1,56 @@
+4 — Salidas extraordinarias. Las capturan supervisor y cajero en su tienda. Cuando ADMIN reclama una, el supervisor debe escribir una explicación obligatoria, y adjuntar comprobante es opcional —solo si lo tiene—.
+
+5 — Cuentas autorizadoras. Cualquier usuario con rol ADMIN autoriza un pago dirigido. Decisión del propietario: dar de alta un ADMIN es darle luz verde completa. No se construye una lista de cuentas nombradas.
+
+6 — Nota reabierta. Deja de aplicar, por la respuesta a la 7.
+
+7 — Alcance de la reasignación. Esto cambia el plan:
+
+FIFO por defecto siempre. Un pago dirigido solo se realiza cuando hay un ADMIN presente para autorizarlo en el momento. Si no hay ninguno, el dinero entra a caja sin aplicar y espera: no lo reparte FIFO, no toca ninguna nota, el cliente recibe su comprobante, y se aplica cuando llegue quien autorice.
+
+No se construye la reasignación de un pago ya aplicado. Así ninguna nota que el cliente recibió como pagada vuelve a tener saldo — y eso elimina la pregunta 6 completa.
+
+Replantea E5 con ese alcance: deja de ser «reasignación» y pasa a ser aplicación diferida de un cobro sin aplicar. Di cómo cambian su tamaño, su riesgo y sus dependencias.
+
+Mientras el dinero está sin aplicar, la deuda del cliente no baja y su crédito disponible no sube. Eso debe ser visible: que se vea que el cliente tiene dinero esperando aplicación y cuánto lleva esperando.
+
+8 — Entrega en Mariana. Pendiente, es conversación de socios. Pero ver el punto 4: E9 cambia de naturaleza.
+
+3. Los dos roles de contador
+
+ContadorF — solo consulta, no registra nada. Cuadra su registro llevado a mano contra lo que el sistema reporta. Ve el total de ventas y cobranza, no solo lo facturado: si solo viera lo fiscal, no podría detectar algo registrado como no facturado que debía llevar factura, y encontrar ese error es su trabajo.
+
+ContadorA — prepara, no aplica. Puede preparar la aplicación de un pago a cualquier nota del cliente, facturada o no, porque el cliente tiene un solo saldo. Un ADMIN aprueba, por el flujo de pago dirigido que ya existe. Razón: aplicar a una nota específica es saltarse FIFO, y quien captura no debe ser quien decide. Como el dinero ya está cobrado, la espera no traba nada.
+
+Los dos ven de clientes: nombre, contacto, límite, cartera con saldos, estado de cuenta y las notas. No ven documentos de identificación, direcciones ni demás datos sensibles. Ninguno ve el margen por venta. Ninguno pertenece a una tienda: su alcance de lectura es global.
+
+4. Entrega nueva: el Fondo
+
+Pestaña en la sección financiera de la barra lateral. Es el destino final del efectivo de la empresa y conecta piezas que el plan tenía separadas.
+
+	1.	Solo existe en Mariana, siempre. Las salidas extraordinarias de Cruces y Coco salen de su propia caja.
+	2.	Solo ADMIN lo ve. Ningún contador, ningún supervisor, nadie más.
+	3.	Ingresos: el efectivo que las tiendas entregan, que ingresa en el momento en que Mariana autoriza la recepción, no cuando la tienda lo manda. Más ingresos directos: saldo inicial, inyecciones de capital, cualquier otro origen.
+	4.	Salidas: pagos a proveedor y retiros para cualquier concepto.
+	5.	Todo movimiento lleva motivo obligatorio. El saldo inicial no es un caso especial: es el primer ingreso, con «saldo inicial» en su motivo.
+	6.	Arqueo, como la caja: se cuenta lo físico, el sistema compara contra su saldo, la diferencia queda registrada. Sin esto, un error de captura se acumula meses sin que ningún corte diario lo detecte.
+	7.	Historial completo de movimientos.
+	8.	Ninguna cifra es un callejón sin salida: un ingreso desde tiendas lleva al corte y a la confirmación que lo originó; un pago a proveedor, a ese pago.
+	9.	No usa DELETE. Un movimiento mal capturado se corrige con su inverso.
+
+5. El pago a proveedor en efectivo cambia
+
+Puede salir de la caja del turno, del fondo, o repartido entre los dos, con los montos que el usuario elija y que sumen el total. Ejemplo del propietario: si debe un millón doscientos cuarenta y siete mil pesos, puede sacar un millón del fondo y doscientos cuarenta y siete mil de la caja.
+
+Solo la parte de caja se resta del efectivo esperado del corte. La parte de fondo se registra como salida de fondo.
+
+6. Qué quiero del plan actualizado
+
+	•	Dónde entra el Fondo en la secuencia, y qué dependencias cambia.
+	•	Cómo se reacomoda E9 ahora que es el ingreso al fondo y no una pieza aislada.
+	•	Cómo queda E5 con su alcance nuevo.
+	•	Si el Fondo se puede construir en etapas —movimientos primero, arqueo después— o conviene junto.
+	•	Si limitar el Fondo a ADMIN impide que ContadorF cuadre los pagos a proveedor, ya que no vería de dónde salió el dinero. Repórtalo como pregunta, no lo resuelvas.
+	•	Qué otras preguntas nuevas genera todo esto.
+
+Conserva el resto del plan. Las trece decisiones siguen firmes y no se replantean.

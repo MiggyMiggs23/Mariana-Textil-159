@@ -1,0 +1,172 @@
+# Prompt F — Detalle de movimiento de crédito
+
+## Contexto
+
+En el estado de cuenta del cliente, tres de cada cuatro renglones no llevan a ninguna
+parte. El `ResponsiveTable` solo crea enlace cuando la columna se llama exactamente
+«Folio» y el renglón trae `ticketId`, y el único destino posible es `/tickets/:id`.
+Los movimientos de tipo `ABONO`, `REVERSO` y `AJUSTE` traen `ticketId` nulo, así que
+muestran guion.
+
+Un abono de $15,000 pesos tiene reparto FIFO, tiene registros de auditoría, puede
+tener un reverso que lo referencia — y desde su renglón no se llega a nada de eso.
+
+La regla vigente de `replit.md`:
+
+> «Ninguna cifra es un callejón sin salida: toda cifra abre el detalle de los
+> documentos que la componen, y de ahí se llega al documento por su folio.»
+
+Más la regla del propietario: **todo renglón debe poder llegar a su origen.**
+
+Esta entrega construye la pantalla que hoy falta. Fue clasificada como categoría C en
+el inventario de trazabilidad y se dejó expresamente fuera del Prompt D.
+
+---
+
+## Bloque 0 — Qué existe ya, antes de construir
+
+Léelo en el código y repórtalo textualmente. **No supongas.**
+
+1. `GET /clientes/:id/pagos/:pagoId` ya existe y alimenta hoy el diálogo «Ver
+   Reparto» de `components/cliente-nota-credito.tsx`. Entrega el movimiento, sus
+   aplicaciones, si está revertido, el ID del reverso y su motivo.
+2. **Ese endpoint filtra `AND m.tipo='ABONO'`.** Un `REVERSO` o un `AJUSTE` consultado
+   por esa ruta devuelve 404. Confirma que sigue así.
+3. Revisa qué campos entrega hoy y cuáles faltarían para los otros dos tipos.
+4. Revisa cómo `projectCreditLedger` expone el reparto y el remanente a favor de cada
+   movimiento, para no recalcular nada en la pantalla nueva.
+
+Si algo de esto sale distinto, ajusta el plan y avísame antes de seguir.
+
+---
+
+## Bloque 1 — Una sola pantalla para los tres tipos
+
+Construye **una pantalla de detalle de movimiento de crédito**, no tres.
+
+Los tres tipos comparten casi todo —cliente, importe, fecha efectiva, forma de pago,
+cuenta destino, quién lo capturó, auditoría— y lo que cambia es el reparto, que solo
+tiene el abono. Tres pantallas serían tres consultas que van a divergir, que es el
+patrón de falla más caro de este proyecto.
+
+La pantalla se adapta al tipo del movimiento: lo que no aplica **no se muestra**, no se
+muestra en cero ni con un guion que sugiera que falta información.
+
+Ruta nueva bajo la del cliente, para que el alcance por sitio y los permisos se
+resuelvan igual que en el resto de crédito. Usa `clientes_finanzas` con acción `ver`,
+como el endpoint que ya existe.
+
+### Qué debe mostrar
+
+- **El movimiento completo:** tipo, importe, fecha efectiva en hora de Ciudad de
+  México, forma de pago, cuenta destino, referencia y notas.
+- **A qué notas se repartió**, con **enlace a cada una**. Para un abono, cada
+  aplicación con su importe y el saldo de esa nota antes y después. Este es el corazón
+  de la pantalla.
+- **Cuánto quedó como saldo a favor**, si quedó algo.
+- **Quién lo capturó y cuándo.** La fecha efectiva y el instante de captura son datos
+  distintos y ambos importan: en los abonos del 15 de septiembre diferían en un día y
+  eso fue el defecto. Muéstralos por separado y rotulados de forma que no se confundan.
+- **Su reverso, si lo tiene**, con enlace al movimiento que lo revirtió. Y desde un
+  reverso, enlace al movimiento original que revirtió. El camino va en los dos
+  sentidos.
+- **Regreso al cliente**, a su estado de cuenta, con el renglón de este movimiento
+  resaltado. La ruta `/clientes/:id?tab=estado&movimientoId=:mov` ya existe y
+  `ResponsiveTable` ya sabe resaltar por `movimientoId`.
+
+### Qué NO debe hacer
+
+- **No recalcular nada.** Los importes, el reparto y el saldo a favor salen de la
+  proyección del servidor, la misma que alimenta el estado de cuenta y la cartera. Si
+  la pantalla calcula por su cuenta, en tres meses muestra otra cifra que el estado de
+  cuenta.
+- **No permitir edición.** `movimientos_credito` es append-only y la base lo hace
+  cumplir por trigger. La corrección de un abono es su reverso total y una recaptura,
+  nunca una edición.
+- **No duplicar la acción de reversar.** Ya existe en el historial de abonos de la
+  nota. Si se agrega aquí, debe ser el mismo flujo con el mismo motivo obligatorio y
+  la misma confirmación, no una segunda implementación.
+
+---
+
+## Bloque 2 — Extender el endpoint a los tres tipos
+
+`GET /clientes/:id/pagos/:pagoId` hoy responde solo para `ABONO`. Amplíalo a `REVERSO`
+y `AJUSTE`, o crea la ruta que corresponda, con estas condiciones:
+
+- **Una sola consulta para el reparto**, la misma que ya usa el diálogo «Ver Reparto».
+  No escribas una consulta nueva que hoy coincida.
+- Un `REVERSO` no tiene reparto propio: muestra el movimiento original que revirtió y
+  las aplicaciones que dejaron de estar activas por él. `replit.md` lo dice así: sus
+  aplicaciones históricas «simplemente cesan de estar activas»; **no se borran y no se
+  reescriben**.
+- Un `AJUSTE` puede ser positivo o negativo y puede o no estar ligado a un ticket.
+  Muestra lo que tenga y omite lo que no.
+- Actualiza `openapi.yaml`, regenera cliente y Zod.
+
+---
+
+## Bloque 3 — Conectar los renglones que hoy están muertos
+
+Con la pantalla existiendo, enlaza hacia ella desde:
+
+1. **El estado de cuenta del cliente**, `pages/cliente-detail.tsx`. Los renglones de
+   `ABONO`, `REVERSO` y `AJUSTE` dejan de mostrar guion. Esto probablemente exija
+   generalizar `ResponsiveTable` para admitir un destino por renglón en vez de solo
+   `/tickets/:id` cuando la columna se llama «Folio». **Si lo generalizas, ninguna
+   tabla existente puede cambiar de comportamiento**: las que hoy enlazan deben seguir
+   enlazando al mismo destino.
+
+2. **El historial de movimientos del detalle de rollo**, cuando la referencia sea un
+   movimiento de crédito. El Prompt D resolvió los tipos con ruta existente; este es
+   el que faltaba.
+
+3. **La bitácora**, cuando la entidad auditada sea `movimientos_credito`. Usa la misma
+   función compartida de resolución por tipo de entidad que dejó el Prompt D; no
+   escribas una segunda.
+
+4. **El historial de abonos de la nota**, `components/cliente-nota-credito.tsx`: el
+   renglón del abono debe poder abrir su detalle completo, además del diálogo de
+   reparto que ya tiene.
+
+---
+
+## Verificación
+
+1. `pnpm run typecheck` completo, con el comando corregido. Reporta el total de
+   errores por paquete.
+2. Codegen ejecutado y sin diferencias tras el cambio de contrato.
+3. Prueba de que la pantalla presenta exactamente los importes de la proyección del
+   servidor y no calcula ninguno: debe fallar si alguien introduce un cálculo en el
+   navegador.
+4. Prueba de los tres tipos: un abono con reparto, un abono revertido, un reverso y un
+   ajuste. Cada uno muestra lo suyo y omite lo que no aplica.
+5. Prueba de que ninguna tabla que hoy enlaza cambió de destino, si se generalizó
+   `ResponsiveTable`.
+6. Comprobación en navegador. Hay casos reales: el cliente 7 tiene el abono original
+   del 14 de septiembre sin aplicar, su reverso, y la recaptura aplicada a la nota
+   1005. Los tres se ven en una sola pantalla y ejercitan los tres caminos. Si no hay
+   sesión autenticada, **dilo y no lo presentes como aprobado**.
+7. Comprobación a 402 px.
+
+## Restricciones
+
+- No crees usuarios, ADMIN ni sesiones de prueba en development.
+- **No ejecutes escrituras en la base, ni migraciones, ni `executeSql` de escritura.**
+  Esta entrega es de lectura y presentación.
+- No toques los movimientos 43 a 50, el veto de las notas históricas, la regla de
+  saldo a favor ni el reparto FIFO.
+- No agregues edición ni borrado de movimientos de crédito bajo ninguna forma.
+- No toques la impresión de ningún documento.
+- No corrijas la asimetría Cruces/global, el corte de caja, el vencimiento en pantalla
+  ni las copias del predicado contabilizado. Son entregas propias.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que existe el detalle de movimiento de crédito, qué muestra por tipo, y que es de
+   solo lectura porque el libro es append-only y la corrección es por reverso.
+2. Que los renglones de abono, reverso y ajuste del estado de cuenta ya tienen
+   destino, cerrando la categoría C de mayor alcance del inventario de trazabilidad.
+3. Qué sigue sin pantalla de detalle y por qué: ajuste de inventario, corte individual
+   y evento de bitácora.
+4. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

@@ -1,0 +1,76 @@
+# Prompt para Replit Agent — Correcciones del flujo de salida para venta
+
+Tres correcciones sobre la funcionalidad de salidas para venta a cliente. **Dos de ellas corrigen instrucciones mías que estaban mal planteadas**, no defectos de implementación.
+
+No cambies ninguna otra regla de negocio. No toques la base de datos por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+---
+
+## Bloque 1 — POS imprime la nota, sin esperar autorización
+
+**El sello de autorización es un sello de goma físico que pone caja, no algo que imprima el sistema.** Mi instrucción anterior decía lo contrario y produjo dos cosas equivocadas:
+
+1. El bloqueo que dice *"Impresión pendiente de autorización: la nota debe estar AUTORIZADA antes de imprimir"*. **Quítalo.** POS genera la nota y la imprime de inmediato; es el papel que el cliente lleva a caja.
+2. El recuadro grande de **AUTORIZADA** que hoy se imprime en la nota. **Quítalo también.** El sello lo pone caja con tinta sobre ese mismo papel.
+
+El flujo correcto es: POS genera e imprime la nota → el cliente la lleva a caja → caja la autoriza en el sistema y la sella físicamente → el cliente va al sitio de origen con el papel sellado.
+
+**El estado del sistema sigue siendo la otra mitad de la comprobación.** Cualquiera puede imprimir una nota desde POS, pero solo caja tiene el sello y solo caja cambia el estado. Por eso el sitio de origen tiene que poder ver el estado autorizado en el sistema antes de entregar, aunque el papel ya traiga tinta. No quites esa verificación: ahora es más importante, no menos.
+
+## Bloque 2 — Los estados que se ven en el historial de salidas
+
+Los nombres que se muestran hoy —"En tránsito", "Recibida"— no describen este flujo. En una salida para venta **la mercancía nunca se mueve**, así que "en tránsito" es falso.
+
+Para la modalidad de venta a cliente, el historial debe mostrar:
+
+| Momento | Etiqueta |
+|---|---|
+| Se creó la salida para venta | **En curso** |
+| POS recibió y generó el documento de venta | **Por autorizar** |
+| Caja cobró el ticket o autorizó la nota | **Autorizada** |
+| El sitio de origen entregó | **Entregada** |
+| Se canceló | **Cancelada** |
+
+**No agregues valores al enum `estado_salida`.** Estas son etiquetas de presentación que se derivan de los cinco estados existentes más el estado del documento de venta ligado, igual que ya se deriva "autorizada" hoy. Una sola función construye la etiqueta y la usan **todas** las vistas: escritorio, teléfono y cualquier reporte.
+
+Las salidas de traslado normal conservan sus etiquetas actuales. Solo cambia la modalidad de venta a cliente.
+
+## Bloque 3 — Los movimientos de venta salen "Sin documento"
+
+En la pantalla de Movimientos, las líneas de tipo **Venta** generadas por este flujo aparecen como **"Sin documento"**, aunque POS ya generó el ticket o la nota. El detalle del ticket sí muestra su salida de origen, así que el vínculo existe en un sentido y no en el otro.
+
+`registrarMovimiento` acepta `documentoTipo`, pero en esta ruta no se está enviando, o se envía sin el identificador que permite construir el enlace.
+
+1. **Averigua exactamente qué campos le faltan al movimiento** para poder mostrar y enlazar su documento, y repórtamelo antes de corregir.
+2. Corrige para que todo movimiento de venta generado desde una salida para venta lleve su documento, y que el renglón enlace al ticket o la nota.
+3. **Revisa si el mismo hueco existe en otros flujos.** Si hay más movimientos sin documento que deberían tenerlo, repórtalos; no los corrijas sin decírmelo.
+
+Esto no es cosmético: un movimiento de inventario que no dice qué documento lo originó rompe la trazabilidad de toda la pantalla.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de salidas, POS, caja, impresión y analytics.
+3. Recorre el ciclo completo con una salida para venta y confirma que el historial muestra, en orden: **En curso → Por autorizar → Autorizada → Entregada**, y que se ve igual en escritorio y en teléfono.
+4. Confirma que POS imprime la nota **sin exigir autorización previa** y que el papel **no trae el recuadro de AUTORIZADA**.
+5. Confirma que el resto de la nota no cambió: pagaré, plazo, fecha de pago, series y firma de conformidad.
+6. Confirma que el sitio de origen **sí puede ver en el sistema** que la venta está autorizada antes de entregar.
+7. Abre Movimientos y confirma que las líneas de venta de este flujo **muestran su documento y enlazan a él**.
+8. Confirma que las salidas de traslado normal conservan sus etiquetas de siempre.
+9. Confirma que los rollos quedan **reservados desde que se crea la salida para venta**, no desde que POS genera el documento, y que escanearlos en otro flujo sigue dando el bloqueo con su salida y cliente.
+10. Confirma que las cifras del tablero no se movieron con estos cambios.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- Que **el sello de autorización es físico**, lo pone caja con tinta, y que el sistema **no imprime ningún sello**. Corrige lo que quedó escrito al respecto.
+- Que **POS imprime la nota al generarla**, sin esperar a caja, porque ese papel es justamente el que el cliente lleva a caja.
+- Que la comprobación antes de entregar son **dos cosas juntas**: el sello físico en el papel y el estado autorizado en el sistema. Cualquiera puede imprimir una nota; solo caja tiene el sello y solo caja cambia el estado.
+- La tabla de etiquetas del historial para la modalidad de venta a cliente, y que **se derivan de los cinco estados existentes más el documento ligado**, sin agregar valores al enum, con una sola función usada por todas las vistas.
+- Que todo movimiento de venta lleva su documento, y por qué un movimiento sin documento rompe la trazabilidad.
+- Un renglón con la fecha y qué se hizo.

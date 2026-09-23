@@ -1,0 +1,151 @@
+# TICKET Y TABLAS — El total en la misma tira y los renglones encimados
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## BLOQUE 1 — El ticket se está partiendo a media venta
+
+### Lo que pasa
+
+En la impresión real, el ticket se corta antes de terminar. El **TOTAL GENERAL queda en un pedazo suelto**, separado del resto de la venta.
+
+Y es peor que eso: en el trozo cortado se ve un bloque que **arranca con "Rollos / Metros / Precio" sin el nombre del producto arriba**. O sea que el corte también partió un bloque de producto a la mitad.
+
+La causa probable: el corte automático de la impresora está configurado **por página**, y una copia del ticket ocupa más de una página. Corta donde termina la página, no donde termina la copia.
+
+### Qué se hace
+
+**Una copia del ticket es una sola tira continua, sin cortes internos.** El corte solo ocurre entre copias, y después del último tabular.
+
+- **El TOTAL GENERAL va en la misma tira** que los productos. Nunca en un pedazo aparte.
+- **El bloque de un producto es indivisible.** O cabe entero o pasa completo; nunca se parte dejando "Rollos / Metros / Precio" huérfanos.
+- Es la misma regla que ya se aplicó al renglón de producto en la nota de crédito.
+
+**Revisa cómo está estructurado el documento para impresión térmica.** Si cada copia se está generando como varias páginas, ahí está el problema: una copia debe ser **una sola página lógica**, sin importar su largo.
+
+### Verifica las tres copias
+
+Si el corte es por página y una copia ocupa varias, entonces **CLIENTE, CAJA y ADMINISTRACIÓN tampoco están saliendo separadas correctamente.**
+
+Verifica con una venta de al menos seis productos distintos que:
+
+- Cada copia sale **completa y de una pieza**
+- El corte cae **entre copias**, no dentro de una
+- Los tabulares salen al final, después de las tres copias
+
+**Repórtalo con foto de la impresión real.**
+
+---
+
+## BLOQUE 2 — El recuadro de resumen al final
+
+Al final de cada copia, después del último producto, un **recuadro de resumen** con:
+
+- **Total de rollos**
+- **Total a pagar**
+
+Nada más. Sin repetir el desglose por producto, que ya viene arriba.
+
+**El total de rollos es un solo número**, porque un rollo es un rollo sea cual sea su unidad. Las cantidades sí dependen de la unidad y **no se totalizan entre unidades distintas**; si necesitas mostrarlas, van separadas por unidad con sus abreviaturas —Mts., Kg., Bolsas—.
+
+Que el recuadro se distinga con claridad del resto: es lo que el cliente busca de un vistazo.
+
+---
+
+## BLOQUE 3 — Los renglones del carrito se enciman
+
+### Lo que pasa
+
+En el POS, los renglones del Ticket de Venta tienen **elementos superpuestos**. En las capturas se ve:
+
+- El rótulo **"Precio / Mts." encima del SKU** —"TAF-NAR2", "FIE-BLA", "LICMET-NEG"—
+- El **valor del precio** —12.5, 10, 32— suelto debajo, sin relación visual con su rótulo
+- Un carácter suelto entre el rótulo y el campo
+
+No es que falte espacio: los elementos están **puestos uno sobre otro**. Un cajero no puede leer de un vistazo qué producto es ni a qué precio va.
+
+### Qué se hace
+
+Reacomoda el renglón del carrito para que cada dato ocupe su lugar, sin superposición:
+
+- **Nombre del producto y SKU legibles**, sin nada encima
+- El **precio unitario** con su rótulo pegado a su valor
+- La **cantidad con su unidad** y el **importe**, alineados a la derecha
+- La insignia de modalidad —ROLLO o METREADO— sin invadir el texto vecino
+- El control de borrar en su lugar, sin encimarse
+
+**Reusa los componentes de tabla y formulario que ya existen.** No inventes un estilo nuevo.
+
+Verifica con el nombre de producto más largo del catálogo, con SKU largos, y con un carrito de varios renglones.
+
+### El barrido
+
+Dices que **en varias tablas del sistema se está amontonando la información**. Esta es una.
+
+**Recorre el sistema y reporta todas las tablas y listas donde los elementos se encimen o queden ilegibles**, con el nombre de la pantalla.
+
+**Repórtalas, no las corrijas todas en este commit.** Corrige solo el carrito del POS y dame la lista para decidir el alcance.
+
+Revisa en particular las pantallas con muchas columnas: Movimientos, Inventario, Historial de compras y Reportes. Y hazlo en resoluciones distintas, no solo en la tuya: recuerda que las terminales que se van a comprar pueden ser de 1366 × 768.
+
+---
+
+## BLOQUE 4 — Un detalle menor para revisar
+
+En el diálogo de captura de rollos de una entrada, con los 50 rollos ya capturados, el botón dice **"Aplicar a los 0 rollos restantes"**.
+
+Es correcto pero se lee raro. Cuando no quedan rollos por llenar, el botón debería **deshabilitarse o cambiar el texto**, no ofrecer aplicar a cero.
+
+Corrígelo si es trivial. Si toca algo más, **repórtalo y no lo hagas.**
+
+---
+
+## BLOQUE 5 — Verificación
+
+**Impresión**
+
+- Una venta de seis productos imprime **cada copia completa y de una pieza**
+- El TOTAL GENERAL está en la misma tira que los productos
+- **Ningún bloque de producto se parte** entre cortes
+- El corte cae entre copias y después del último tabular
+- Las tres copias salen separadas y completas
+- Está la foto de la impresión real
+
+**Recuadro**
+
+- Al final de cada copia hay un recuadro con total de rollos y total a pagar
+- El total de rollos es un solo número
+- Si se muestran cantidades, van separadas por unidad y **no se suman entre unidades**
+- El recuadro se distingue del resto
+
+**Carrito**
+
+- Ningún elemento se encima con otro
+- Producto, SKU, precio, cantidad e importe se leen de un vistazo
+- Probado con el nombre y el SKU más largos del catálogo, y con varios renglones
+- Probado en 1366 × 768
+
+**Barrido**
+
+- Está la lista de todas las pantallas con elementos encimados, **sin corregir**
+- Se revisaron Movimientos, Inventario, Historial de compras y Reportes
+
+**General**
+
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de POS y de impresión pasan enteras
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **Una copia del ticket es una sola tira continua.** El TOTAL GENERAL va en la misma tira que los productos y **ningún bloque de producto se parte** entre cortes. El corte de la impresora solo ocurre **entre copias** y después del último tabular; si el documento se genera como varias páginas por copia, el corte por página lo parte a media venta.
+>
+> Cada copia cierra con un **recuadro de resumen**: total de rollos y total a pagar. El total de rollos es un solo número porque un rollo es un rollo sea cual sea su unidad; las cantidades sí dependen de la unidad y **nunca se totalizan entre unidades distintas**.
+>
+> **Ninguna tabla o lista puede encimar sus elementos.** Se verifica en 1366 × 768, no solo en la resolución de quien desarrolla: las terminales del piso pueden ser de esa medida.

@@ -1,0 +1,28 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "base": "reports/tanda-b-b0-b1-20260923/r5/evidencia/rehearsal-r5/fixture-minimal.sql",
+  "additionalDefinitionsFrom": "reports/e3-apertura-preparada-20260922/evidencia/live/catalog-B0-real.json",
+  "extraTables": [
+    "permisos_rol",
+    "atribuciones_credito_e1",
+    "finalizaciones_abono_e2",
+    "evidencia_no_aplicada_e2"
+  ],
+  "functions": [
+    "e1_guard_cash_capture_closed",
+    "e1_guard_historical_attribution_closed",
+    "e2_attest_new_retained",
+    "e2_finalize_new_abono",
+    "e2_guard_finalized_capture_application",
+    "e2_reject_evidence_mutation",
+    "e2_require_abono_finalization",
+    "e2_stamp_insert_transaction",
+    "e2_validate_abono_finalization",
+    "e2_validate_unused_proof",
+    "impedir_mutacion_credito_e1",
+    "validar_atribucion_credito_e1",
+    "validar_cobro_pendiente_e1",
+    "validar_contexto_credito_e1"
+  ],
+  "limitations": "Dependency-only synthetic empty tables; not an operational database copy or full catalog equivalence."
+}

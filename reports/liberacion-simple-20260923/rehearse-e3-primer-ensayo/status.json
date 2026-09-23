@@ -1,0 +1,31 @@
+{
+  "mode": "rehearse",
+  "stage": "e3",
+  "status": "PASS",
+  "sql": [
+    {
+      "file": "reports/liberacion-simple-20260923/fixture.sql",
+      "label": "fixture",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    },
+    {
+      "file": "reports/e3-apertura-preparada-20260922/sql/01-install-prepared.sql",
+      "label": "e3-1",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    },
+    {
+      "file": "reports/e3-apertura-preparada-20260922/sql/03-prepare-ordinary-cash-gate-retirement.REHEARSAL-ONLY.sql",
+      "label": "e3-2",
+      "status": "COMPLETED",
+      "exit": 0,
+      "failureLine": null
+    }
+  ],
+  "candidateHealth200": true,
+  "disposableDestroyed": true,
+  "pgStopExit": 0
+}

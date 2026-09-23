@@ -1,0 +1,74 @@
+# Prompt para Replit Agent — Trabajo sin puntos de decisión
+
+Seis pendientes que **no requieren que yo decida nada**. Ejecútalos en orden. Si alguno te obliga a tomar una decisión de negocio que no está aquí escrita, **detente en ese bloque, repórtalo y continúa con los siguientes**.
+
+No cambies reglas de negocio ni cálculos de dinero. No toques la base por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+---
+
+## Bloque 1 — Stock mínimo al final del menú
+
+En la barra lateral, dentro de la sección **INVENTARIO**, mueve **Stock mínimo** al final de la lista, después de Precios. Queda así:
+
+Productos → Inventario → Vista Global → Ajustes → Auditorías → Etiquetas → Precios → **Stock mínimo**
+
+Es configuración, no operación diaria, y no debe estar entre las herramientas que se usan todo el día.
+
+## Bloque 2 — El typecheck que quedó en rojo
+
+Reportaste que el typecheck completo falló con **TS6059/TS5097 en `scripts`** y seguiste adelante. **Un typecheck en rojo no se deja pasar:** deja de avisar cuando algo se rompe de verdad.
+
+Corrígelo. Si no se puede corregir sin cambiar configuración que afecte a otros paquetes, **detente y explícame por qué**, con el error completo.
+
+## Bloque 3 — El aprovisionador de `TEST_DATABASE_URL`
+
+Dijiste que el aprovisionador automático no está implementado y que por eso tres suites de integración quedan bloqueadas. **Impleméntalo:** que `TEST_DATABASE_URL` se derive sola de la base desechable que ya creas en cada corrida.
+
+No debe quedar como un paso manual que alguien tenga que recordar. Es exactamente el tipo de cosa que después bloquea una verificación en el peor momento.
+
+Al terminar, corre las tres suites que estaban bloqueadas y reporta el resultado.
+
+## Bloque 4 — Suites que crean datos fuera del seed
+
+Reportaste que algunas suites crean datos fuera del seed y otras crean usuarios. **Quiero la lista por escrito:** cuáles son, qué crean y por qué lo necesitan.
+
+**No las modifiques.** La regla que acordamos es que las bases desechables se pueblan solo con lo que genera el seed; si alguna suite no alcanza con eso, quiero verlo antes de decidir cómo se resuelve.
+
+## Bloque 5 — Pantallas que escanean: el inventario
+
+Cuando se corrigió el escaneo de QR en la salida para venta, la normalización del valor escaneado se extrajo a una función compartida **para que el error no se repitiera**. Después reapareció en la pantalla de entrega, así que las pantallas nuevas no la están usando.
+
+**Enlístame todas las pantallas y componentes que reciben un valor escaneado** —pistola o cámara—, con archivo y línea, y di cuáles usan la función compartida y cuáles hacen su propio tratamiento. Dime también qué contiene exactamente el QR de la etiqueta de rollo y cómo lo interpreta cada ruta.
+
+**No corrijas nada**: este bloque es solo el inventario.
+
+## Bloque 6 — Vetos de acción por rol: la lista
+
+De la clasificación de las 130 referencias, quiero la lista completa del grupo de **vetos de acción** —un rol que no puede hacer algo aunque la matriz de permisos se lo conceda—, ordenada por rol, con archivo, línea y qué veta cada una.
+
+**No modifiques ninguna.** Con esa lista decido cuáles se retiran y cuáles se convierten en permisos de la matriz.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.**
+
+1. `pnpm run typecheck` completo **en verde**, incluido `scripts`.
+2. `codegen` sin diferencias.
+3. La suite completa que puedas correr sin intervención mía, con el conteo de aprobadas y fallidas.
+4. Las tres suites de integración que estaban bloqueadas por `TEST_DATABASE_URL`.
+5. Confirma que **Stock mínimo** aparece al final de la sección INVENTARIO, y revísalo en teléfono.
+6. Confirma que ninguna cifra de ningún tablero cambió con este trabajo.
+
+## Al terminar
+
+Escribe en `replit.md`:
+
+- Cómo se resuelve `TEST_DATABASE_URL` en adelante.
+- Que Stock mínimo vive al final de INVENTARIO por ser configuración y no operación diaria.
+- Un renglón con la fecha y qué se hizo.
+
+**Los bloques 4, 5 y 6 no se documentan**: son inventarios que espero por escrito antes de decidir nada.
+
+Al final, dame un **resumen de una pantalla** con: qué quedó hecho, qué quedó bloqueado y por qué, y las tres listas de los bloques 4, 5 y 6.

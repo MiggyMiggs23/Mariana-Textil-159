@@ -1,0 +1,160 @@
+# Prompt para Replit Agent — Salidas para venta a cliente y cobro en POS
+
+Trabajo nuevo y grande. Toca el motor de inventario, así que **todas las reglas del motor aplican sin excepción**: candado por par producto-ubicación antes de leer saldos, ordenado cuando son varios, sin DELETE en tablas operativas, y correcciones por movimiento inverso.
+
+No toques la base de datos por fuera de migraciones, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+## El caso de negocio
+
+Un cliente hace su pedido en Mariana, pero la mercancía está en otra tienda o en una bodega. Hoy eso obliga a un traslado completo. Lo que se necesita es que **la mercancía no se mueva**: se aparta en su sitio, el cliente paga en Mariana, y recoge donde está.
+
+El flujo completo:
+
+1. El sitio donde está la mercancía arma una **salida para venta**, dirigida a un cliente, con rollos identificados. Los rollos quedan bloqueados.
+2. El documento impreso de esa salida llega a Mariana. **La mercancía no viaja.**
+3. En POS, en **"Salidas pendientes a cobro"**, se recibe y se genera el documento de venta: ticket si es contado, nota si es crédito.
+4. El cliente pasa a caja. Caja cobra el ticket o autoriza la nota.
+5. Ya autorizado, se imprime el documento **con sello de autorizada**.
+6. El cliente va al sitio de origen con ese papel. El sitio verifica en el sistema que está autorizada, entrega y marca **entregada**.
+
+**El sitio que vende no es el sitio que tiene la mercancía.** Esa es la novedad de fondo y de ahí salen casi todas las reglas de abajo.
+
+---
+
+## Bloque 1 — El tipo de salida nuevo
+
+`salidas` ya tiene `modalidad` con valor por omisión `TRASLADO`, y `destinoId` ya es nulable. Agrega una modalidad nueva para este caso **sin romper las existentes**, y agrega `clienteId` a la tabla, nulable, obligatorio solo en esta modalidad.
+
+Reglas de esta modalidad:
+
+1. **`destinoId` va en nulo.** No hay ubicación destino: el destino es un cliente.
+2. **Solo se arma con rollos identificados.** Cada línea debe traer su rollo con su serie. Si alguien intenta armarla con una línea sin rollo, se rechaza con un mensaje que diga por qué. Nada de reservar por cantidad: todo el bloqueo es por serie.
+3. **El cliente debe existir y no puede ser "Venta a Público"**, porque el documento puede terminar siendo una nota a crédito.
+4. El documento impreso de esta salida **no lleva QR**. Su recepción no se escanea: se hace desde POS.
+
+## Bloque 2 — Estados y de dónde sale "autorizada"
+
+`estadoSalidaEnum` tiene ARMANDO, EN_TRANSITO, RECIBIDA y CANCELADA. Agrega **ENTREGADA**.
+
+El ciclo de esta modalidad es: `ARMANDO → EN_TRANSITO → RECIBIDA → ENTREGADA`, más CANCELADA en cualquier punto antes de la entrega.
+
+**"Autorizada" no es un estado de la salida: se deriva del documento de venta ligado.** Un ticket cobrado o una nota autorizada es lo que hace que la salida se muestre como autorizada en el historial. **No guardes esa condición por separado en la salida**: dos verdades sobre el mismo hecho divergen en silencio, y ya sabes cómo termina eso.
+
+Qué toca números en cada paso:
+
+- **EN_TRANSITO:** los rollos quedan bloqueados. No hay venta todavía.
+- **RECIBIDA:** se genera el documento de venta. Sigue sin contar; nada cuenta hasta que caja lo procesa.
+- **Cobro o autorización en caja:** aquí cuenta la venta y aquí salen los rollos del inventario.
+- **ENTREGADA:** no mueve dinero ni inventario. Cierra el ciclo y apaga la alerta.
+
+## Bloque 3 — Bloqueo de rollos y candados
+
+Son dos protecciones distintas y hacen falta las dos.
+
+### El bloqueo que ve el usuario
+
+Desde que la salida pasa a EN_TRANSITO, sus rollos quedan bloqueados. Si alguien escanea uno de esos rollos en POS, en otra salida o en cualquier otro flujo, el sistema **rechaza y muestra en rojo `ROLLO BLOQUEADO`**.
+
+Y no se queda ahí: el mensaje debe decir **por cuál salida está bloqueado, para qué cliente y desde cuándo, con enlace directo a esa salida**. Un error que solo dice que algo está mal obliga a investigar a mano; un error que dice qué lo causó se resuelve en un clic.
+
+### El candado que protege de la concurrencia
+
+El candado consultivo por par producto-ubicación se toma **sobre la ubicación de origen de la salida, no sobre el sitio que vende**. Mariana emite el documento, pero los saldos que se leen y se modifican son los de la bodega.
+
+Esto es lo más fácil de hacer mal en todo este trabajo. Si el candado se toma sobre Mariana, dos cajas pueden comprometer el mismo rollo de la bodega en el mismo instante y ninguna protección lo evita. Cuando la venta agrupe salidas de varios orígenes, **los candados se toman en orden determinista** por identificador de ubicación.
+
+## Bloque 4 — "Salidas pendientes a cobro" en POS
+
+Un tercer recuadro en POS, junto a ticket y nota, con la leyenda **"Salidas pendientes a cobro"**.
+
+### Permiso propio
+
+Es un **módulo de permisos nuevo**, apagado por omisión en todos los sitios y encendido solo en Mariana. No lo ates al sitio en el código: que sea un permiso, para que abrirlo a Coco después sea un interruptor y no un desarrollo.
+
+Los módulos pasan de 30 a 31. **Actualiza el conteo en la matriz del seed y en `replit.md`**, donde el número está escrito.
+
+### La pantalla
+
+Un listado simple: **folio de la salida, cliente, sitio de origen y un botón "Recibir y generar venta"**. Nada más. El folio es enlace al detalle de la salida.
+
+### Agrupación por cliente
+
+Si un cliente tiene varias salidas pendientes, **se agrupan todas en un solo documento de venta**, vengan del origen que vengan. No cinco notas para cinco salidas.
+
+Preséntalo como un renglón por cliente, con las salidas que lo componen visibles antes de confirmar, para que el operador vea exactamente qué está juntando. Si una salida no debe entrar, debe poder excluirla.
+
+### Generar la venta
+
+Al confirmar, se elige **ticket (contado) o nota (crédito)** y se cae en el motor que ya existe. No dupliques la lógica de venta: el documento se arma con las líneas y los rollos que ya trae la salida, y de ahí en adelante es el flujo normal, con su plazo de crédito elegido en POS y su validación dura de límite al autorizar.
+
+Los precios se toman de la lista vigente y **deben poder ajustarse antes de confirmar**, como en cualquier venta negociada.
+
+Al generarse el documento, las salidas involucradas pasan a RECIBIDA y quedan ligadas a él.
+
+## Bloque 5 — Impresión
+
+El documento de venta se imprime **después de que caja lo cobró o lo autorizó**, y lleva el sello de **AUTORIZADA**. Antes de eso no se imprime con sello, porque el sello sería falso.
+
+Formato: ticket en tira de 80 mm, nota en A5 vertical, según el documento que resulte. No inventes formatos nuevos.
+
+## Bloque 6 — Entrega y alertas
+
+El sitio de origen marca **ENTREGADA** cuando el cliente recoge. Al hacerlo, **escanea los rollos**: si escanea uno que no pertenece a esa venta, se rechaza diciendo cuál es y a qué pertenece. Las series están precisamente para esto.
+
+Antes de entregar, el sitio debe poder **verificar en el sistema que el documento está autorizado**, buscándolo por su folio. Es la otra mitad de la doble comprobación: el papel trae el sello, el sistema lo confirma.
+
+**Alerta:** una venta autorizada cuya mercancía no se ha entregado genera alerta a ADMIN. Usa **el mismo umbral de 24 horas que ya existe** para salidas en tránsito; no escribas uno nuevo.
+
+**Cancelación:** si el cliente nunca llega, se cancela por **movimiento inverso**, nunca por borrado, y los rollos vuelven a quedar disponibles en su origen.
+
+## Bloque 7 — Que todo lleve a su raíz
+
+Regla que aplica a toda esta funcionalidad: **ninguna pantalla puede dejar al usuario sin saber de dónde salió algo.**
+
+- Del rollo bloqueado, a la salida que lo bloquea.
+- De la salida, al documento de venta que generó, y al revés.
+- Del documento de venta, a cada salida que lo compone.
+- De la alerta de no entregado, a la venta y a su salida.
+- Del cliente, a sus salidas pendientes.
+
+Cada mensaje de error de este flujo debe nombrar **qué lo causó y dónde verlo**, no solo que algo falló.
+
+---
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. **No des ninguno por aprobado sin correrlo.** Si algo falla, repórtalo sin corregirlo por tu cuenta.
+
+1. `pnpm run typecheck` completo y `codegen` sin diferencias.
+2. Las suites de inventario, POS, caja, salidas e impresión.
+3. Arma una salida para venta e intenta agregarle una línea sin rollo: debe rechazarse.
+4. Intenta armarla con "Venta a Público": debe rechazarse.
+5. Con la salida en tránsito, intenta vender uno de sus rollos en POS: debe salir `ROLLO BLOQUEADO` **nombrando la salida y el cliente**, con enlace.
+6. **Prueba de concurrencia:** dos intentos simultáneos de comprometer el mismo rollo desde sitios distintos. Solo uno debe pasar. Verifica en el código que el candado se toma sobre la **ubicación de origen**, no sobre la que vende.
+7. Genera la venta desde POS y confirma que las existencias del **origen** son las que se mueven, y que las de Mariana no cambian.
+8. Confirma que la venta **no cuenta** hasta que caja cobra o autoriza, y que las cifras del tablero no se mueven antes.
+9. Agrupa tres salidas del mismo cliente desde dos orígenes distintos en una sola nota. Verifica que el kardex de cada origen refleja lo suyo y que la suma cuadra con el documento.
+10. Excluye una salida de la agrupación y confirma que sigue pendiente.
+11. Autoriza en caja e imprime: debe llevar el sello de AUTORIZADA. Confirma que antes de autorizar no se imprime con sello.
+12. Marca entregada escaneando los rollos. Escanea uno equivocado y confirma que se rechaza diciendo a qué pertenece.
+13. Deja una venta autorizada sin entregar más de 24 horas y confirma que la alerta llega a ADMIN, con enlace a la venta.
+14. Cancela una salida para venta y confirma que los rollos vuelven a estar disponibles **por movimiento inverso**, y que no se borró ningún renglón.
+15. Confirma que un POS sin el permiso nuevo no ve el recuadro y que el endpoint lo rechaza aunque se llame por la dirección.
+16. Recorre los enlaces del Bloque 7 uno por uno y confirma que todos llevan a donde dicen.
+17. Revisa las pantallas nuevas en teléfono.
+
+## Al terminar
+
+Escribe en `replit.md`, en una sección nueva sobre salidas para venta:
+
+- El flujo completo de los seis pasos y el caso de negocio que resuelve.
+- Que **la mercancía no viaja**: se aparta en su sitio y el cliente la recoge ahí.
+- Que **el sitio que vende no es el sitio que tiene la mercancía**, y que por eso **el candado se toma sobre la ubicación de origen**. Deja escrito que tomarlo sobre el sitio que vende permitiría vender el mismo rollo dos veces.
+- Que esta modalidad **solo admite rollos identificados**, y por qué: sin serie no hay qué bloquear.
+- Que **"autorizada" no es un estado de la salida**, se deriva del documento de venta, y por qué no se guarda por separado.
+- Qué toca números en cada paso del ciclo, y que ENTREGADA no mueve dinero ni inventario.
+- Que la alerta de no entregado reusa el umbral de 24 horas existente.
+- Que el permiso es propio y hoy está encendido solo en Mariana, y que abrirlo a otro sitio es un interruptor.
+- Que los módulos de permisos pasaron de 30 a 31.
+- La lista de enlaces del Bloque 7, como regla de trazabilidad de esta funcionalidad.
+- Un renglón con la fecha y qué se hizo.

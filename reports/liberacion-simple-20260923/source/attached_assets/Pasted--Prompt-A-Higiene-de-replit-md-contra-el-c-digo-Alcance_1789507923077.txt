@@ -1,0 +1,155 @@
+# Prompt A — Higiene de `replit.md` contra el código
+
+## Alcance y límite
+
+Este trabajo **no modifica una sola línea de la aplicación**. No toques nada bajo
+`artifacts/`, `lib/` ni `scripts/`. El único archivo que se edita es `replit.md`.
+
+`replit.md` es la fuente de verdad del proyecto y ya derivó del código varias veces.
+Este trabajo la vuelve a alinear. La regla de higiene que ya está escrita ahí sigue
+vigente: toda ruta citada debe existir textualmente en `lib/api-spec/openapi.yaml`,
+ninguna regla se escribe contra un conteo fijo de productos, y toda lista de roles se
+coteja contra `rolUsuarioEnum`.
+
+Si en cualquier punto encuentras que el código dice algo distinto de lo que asumo en
+este prompt, **gana el código**: corrige `replit.md` para que describa el código y
+repórtame la diferencia. No cambies el código para que coincida con el documento.
+
+---
+
+## Bloque 1 — Las dos definiciones de «Cobrado»
+
+`replit.md` contiene hoy dos definiciones incompatibles de Cobrado, ambas redactadas
+como regla vigente, y ninguna menciona a la otra:
+
+- En la sección «POS y Caja — regla contable vigente»: la identidad
+  **Ventas = Cobrado + Ventas a crédito**, donde Cobrado son únicamente tickets
+  cobrados.
+- En la sección «Cuentas Destino»: **Cobrado = Contado + Abonos + Saldos a favor**,
+  con fuentes `POS`, `ABONO` y `ABONO_SALDO_FAVOR`.
+
+El código implementa fielmente las dos: `getSalesSummary` en
+`artifacts/api-server/src/lib/admin-analytics.ts` usa `collectedTicketPredicate` y no
+consulta el libro de crédito; `destinationReadModel()` en el mismo archivo hace la
+unión con las ramas de abono.
+
+Qué hacer, **sin decidir cuál es la correcta**, porque esa decisión es del propietario
+y todavía no está tomada:
+
+1. Agregar una sección propia, titulada **«Cobrado: dos definiciones sin reconciliar»**,
+   que documente el hecho tal como está: las dos frases, dónde vive cada una en el
+   código con archivo y función, y que son mediciones de preguntas distintas —cuánta
+   venta se cerró contra cuánto dinero entró— que hoy comparten nombre.
+2. Anotar en cada una de las dos secciones existentes una referencia explícita a la
+   otra y a esa sección nueva, para que nadie lea una creyendo que es la única.
+3. Marcarlo como **decisión abierta del propietario**, no como defecto a corregir por
+   cuenta propia. No propongas una unificación dentro de `replit.md`.
+4. Incorporar la evidencia ya medida en `reports/` sobre el caso del 15 de septiembre,
+   donde el día filtrado por Cruces y el global no coinciden entre tablero y Cuentas
+   Destino, como el caso reproducible de esta divergencia.
+
+---
+
+## Bloque 2 — Referencias `archivo:línea` desfasadas
+
+Cuatro referencias de `replit.md` ya no apuntan a lo que describen. Verifica **cada
+una** leyendo el archivo actual y corrígela con la línea real; si el contenido ya no
+existe, dilo en lugar de inventar una línea nueva:
+
+| `replit.md` dice | Estado |
+|---|---|
+| `pos.ts:2082-2088` — cuentas del corte con condicionales propios | la lógica está más adelante en el mismo archivo |
+| `admin-analytics.ts:324-335` — predicado de documento contabilizado duplicado | esa línea contiene otra cosa |
+| `admin-analytics.ts:376-378` — el mismo predicado para margen por sesión | esa línea contiene otra cosa |
+| `notificaciones.ts:194` — usa `pendingTicketPredicate()` | el uso real está más adelante |
+
+Además, **el conteo de duplicaciones está mal**. `replit.md` reporta dos repeticiones
+manuales del predicado contabilizado en `admin-analytics.ts`. Cuenta las que hay hoy
+de verdad, dentro y fuera de `getSalesSummary`, y escribe el número real con sus
+líneas. **No las unifiques en este trabajo**: solo documenta cuántas son y dónde,
+porque es el patrón de falla más caro del proyecto y merece su propia entrega.
+
+Para evitar que esto se repita, al citar código en `replit.md` prefiere el nombre de
+la función y el archivo sobre el número de línea. Un nombre sobrevive a un cambio de
+formato; un número no.
+
+---
+
+## Bloque 3 — Reglas nuevas de esta sesión que deben quedar escritas
+
+1. **Saldo a favor.** Debe estar borrada la frase anterior que decía que la aplicación
+   del saldo a favor al autorizar una nota es siempre una decisión explícita del
+   cajero y nunca automática. En su lugar debe quedar la regla vigente: un cliente no
+   puede tener saldo a favor mientras tenga saldo deudor; todo dinero recibido consume
+   primero la deuda existente por antigüedad y solo el remanente queda a favor; al
+   autorizar una nota nueva el saldo a favor disponible se consume automáticamente.
+   Verifica que la frase vieja no siga en ninguna otra parte del archivo.
+2. **Fechas entre navegador y servidor.** Escribir la regla derivada del defecto que
+   costó los abonos del 15 de septiembre: toda fecha que viaje del navegador al
+   servidor lleva hora y desplazamiento explícitos; el servidor nunca infiere la zona
+   de una fecha sin hora, porque `new Date("YYYY-MM-DD")` resuelve a medianoche UTC y
+   en Ciudad de México eso es el día anterior.
+3. **Lo ejecutado el 15 de septiembre**, con su alcance real: los dos reversos totales
+   y las dos recapturas con instante exacto, los saldos resultantes, que los
+   movimientos originales siguen intactos con su fecha del 14, y que el día 14
+   conserva los $25,000 mientras el 15 quedó en cero neto global. Anota también que
+   las notas históricas conservaron su veto y por qué.
+
+---
+
+## Bloque 4 — Pendientes abiertos que faltan o están incompletos
+
+Revisa que estos estén registrados, con su estado real y sin presentarlos como
+resueltos:
+
+1. **Cuatro errores de typecheck, no dos.** Además de `pos.ts:426` y
+   `clientes.ts:1329`, hay dos más en Alertas que el comando principal ocultaba al
+   detenerse antes de llegar al frontend.
+2. **El vencimiento en pantalla contra el impreso.** La base quedó descartada: las dos
+   copias coinciden en `2026-10-15`. El corrimiento de un día ocurre en el camino de
+   lectura o presentación, no en el guardado. Regístralo como pendiente abierto con
+   esa precisión.
+3. **Aplicaciones históricas que siguen ocupando capacidad aunque la venta se haya
+   revertido**, y **saldo procedente de ajustes sin la misma vía de evidencia que un
+   abono**. Los dos hallazgos quedaron señalados y no corregidos.
+4. **Bloque 5** —abono al autorizar la nota— entregado como propuesta, no
+   implementado.
+5. **Aviso cuando un abono genera saldo a favor habiendo deuda abierta.** La vista
+   previa ya devuelve el dato; falta que la pantalla lo haga visible.
+6. **Nomenclatura pendiente:** la pantalla de una nota se titula «Ticket #folio» con
+   botón «Cancelar Ticket», y la insignia PENDIENTE del encabezado del documento
+   significa algo distinto de la insignia PENDIENTE del estado de nota.
+7. **Equipos.** Verifica contra el código si los dos tipos nuevos —impresora de
+   entradas e impresora de salidas/notas— y la exclusión de las ubicaciones técnicas
+   ya están implementados, y corrige `replit.md` para que refleje el estado real. No
+   des por buena la lista de pendientes.
+
+---
+
+## Bloque 5 — Barrido general de verificabilidad
+
+Recorre `replit.md` completo y, para cada afirmación que cite una ruta, una constante,
+un conteo o un nombre de función, comprueba que exista en el código. En particular:
+
+- Toda ruta citada debe existir textualmente en `lib/api-spec/openapi.yaml`.
+- Toda constante citada con su valor debe coincidir con su declaración.
+- Todo conteo citado debe recontarse: módulos de permisos, roles contra
+  `rolUsuarioEnum`, tipos de equipo, estados de salida, tablas de las listas A, B y C
+  de la purga.
+- Todo archivo de `docs/` y `reports/` citado debe existir en esa ruta exacta.
+
+Entrega una tabla con cada afirmación comprobada, su resultado y la corrección
+aplicada. **Las que no puedas comprobar quedan marcadas como no comprobadas, no como
+correctas.**
+
+---
+
+## Verificación
+
+1. `git diff --stat` debe mostrar **únicamente** `replit.md` modificado. Si aparece
+   cualquier otro archivo, deshaz ese cambio y repórtalo.
+2. Ninguna afirmación nueva en `replit.md` puede describir una verificación que no
+   hayas ejecutado en esta sesión.
+3. Deja en `reports/` el listado de comprobaciones del Bloque 5 con su salida textual.
+4. Repórtame por separado cualquier caso en que el código contradiga lo que este
+   prompt asume.

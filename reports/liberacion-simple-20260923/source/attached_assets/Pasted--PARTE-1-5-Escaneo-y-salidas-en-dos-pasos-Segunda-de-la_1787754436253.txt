@@ -1,0 +1,209 @@
+# PARTE 1.5 — Escaneo y salidas en dos pasos
+
+Segunda de las partes del plan. **No adelantes trabajo de la Parte 2.** Si encuentras algo que pertenece a otra parte, anótalo en `replit.md` bajo "Pendiente de partes siguientes" y sigue.
+
+Ejecuta sin pedir aprobación entre bloques. Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+---
+
+## Contexto
+
+Hay dos problemas que resolver juntos porque se tocan.
+
+**El primero: el sistema no puede escanear.** Todos los campos de "escaneo" son campos de texto que esperan una serie y un Enter. Eso sirve para una pistola conectada, pero no hay ninguna forma de leer un código con la cámara de un teléfono. La librería `qrcode.react` que está instalada solo **genera** códigos QR; no los lee.
+
+**El segundo: la salida tiene nueve estados que nadie pidió.** El enum `estado_salida` declara `REGISTRADA`, `SOLICITADA`, `ACEPTADA`, `RECHAZADA`, `PREPARADA`, `ENVIADA`, `RECIBIDA`, `CERRADA` y `CANCELADA`. Es un flujo de pedido entre sitios que no corresponde a la operación real.
+
+---
+
+## BLOQUE 1 — Componente de escaneo unificado
+
+Crea un componente reutilizable, `<CampoEscaneo>`, que reemplace todos los campos de escaneo sueltos que hay hoy.
+
+### Dos formas de entrada, una sola interfaz
+
+**Por teclado.** Es la principal. Cubre pistola conectada y smartphone rugoso con escáner de hardware: los dos se comportan igual, escriben caracteres y mandan Enter. Es lo que ya funciona y **no debe cambiar de comportamiento**: foco automático, Enter dispara la lectura, el campo se limpia y recupera el foco.
+
+**Por cámara.** Un botón discreto de ícono de cámara junto al campo. Al tocarlo se abre la cámara dentro de la aplicación, en un panel modal. Al leer un código, el panel se cierra solo y el valor entra al campo exactamente como si lo hubiera escrito una pistola — el mismo camino de código, no uno paralelo.
+
+Quien usa pistola nunca toca el botón. Quien usa un teléfono normal lo toca una vez y ya.
+
+### Requisitos de la cámara
+
+- Usa `BarcodeDetector` del navegador cuando esté disponible, y cae a una librería en JavaScript cuando no lo esté. Prefiere una librería mantenida y liviana.
+- Cámara trasera por defecto.
+- Lee QR y también códigos de barras lineales, por si alguna etiqueta vieja los trae.
+- **Apaga la cámara al cerrar el panel.** No dejes la cámara viva en segundo plano; en un teléfono eso consume batería y prende la luz indicadora, que asusta a la gente.
+- Si el navegador niega el permiso, muestra un mensaje claro que explique que hay que habilitar la cámara en los ajustes del teléfono. **No dejes un panel en negro sin explicación.**
+- Si el aparato no tiene cámara, el botón simplemente no aparece.
+- Aviso: la cámara exige conexión segura. Deja anotado en `replit.md` que si la aplicación se mueve fuera de Replit hay que conservar HTTPS o el escaneo por cámara deja de funcionar.
+
+### Dónde se aplica
+
+Reemplaza el campo suelto por `<CampoEscaneo>` en **todas** las pantallas que escanean hoy:
+
+- `pages/salida-nueva.tsx`
+- `pages/pos.tsx`
+- `pages/ajustes.tsx`
+- `pages/etiquetas.tsx`
+- `pages/entradas.tsx` — el campo de captura de rollos
+- Y la recepción de salidas del Bloque 3
+
+Recorre el repositorio y confirma que no quedó ningún campo de escaneo fuera. **Deja en el commit la lista de pantallas migradas.**
+
+### Lo que NO cambia
+
+El comportamiento de teclado es sagrado. Si hoy una pistola escanea diez rollos seguidos sin tocar la pantalla, después de este bloque tiene que seguir haciendo exactamente lo mismo. Si el foco automático se pierde o el campo deja de limpiarse, el bloque está mal.
+
+---
+
+## BLOQUE 2 — Simplificar los estados de la salida
+
+### Estados nuevos
+
+El enum `estado_salida` se reduce a cuatro:
+
+| Estado | Qué significa |
+|---|---|
+| `ARMANDO` | Se están escaneando los rollos en el origen. Todavía no sale nada. |
+| `EN_TRANSITO` | Se envió. Los rollos salieron del origen y van en camino. |
+| `RECIBIDA` | Se escaneó el QR en el destino. Los rollos aterrizaron. |
+| `CANCELADA` | Se abortó antes de enviar. |
+
+Transiciones válidas, y ninguna otra:
+
+- `ARMANDO` → `EN_TRANSITO`
+- `ARMANDO` → `CANCELADA`
+- `EN_TRANSITO` → `RECIBIDA`
+
+**Una salida `EN_TRANSITO` no se puede cancelar.** La mercancía ya salió; si algo pasó, se corrige con movimiento inverso, no borrando la salida.
+
+### Migración
+
+Antes de tocar el enum, **cuenta cuántas salidas hay en cada estado y repórtalo.** Si la base está limpia, la migración es trivial. Si hay filas vivas, aterrízalas así:
+
+- `REGISTRADA`, `SOLICITADA`, `ACEPTADA`, `PREPARADA` → `ARMANDO`
+- `ENVIADA` → `EN_TRANSITO`
+- `RECIBIDA`, `CERRADA` → `RECIBIDA`
+- `RECHAZADA`, `CANCELADA` → `CANCELADA`
+
+**Nada se borra.** Si alguna fila no encaja limpiamente, detente y anótalo en `replit.md` en vez de improvisar.
+
+### Limpieza
+
+Elimina el código, las rutas, los tipos y la interfaz que existan para solicitar, aceptar, rechazar, preparar o cerrar una salida. Si alguna de esas operaciones tiene pantalla, quítala.
+
+**Conserva** `transportista` y `notaEnvio` como campos del envío. Alimentan la hoja foliada que se revisa en oficina.
+
+**Conserva** las funciones de núcleo `moverRollo` y `recibirTransferencia` en `lib/inventario.ts`. Son las que ejecutan el movimiento real de los dos pasos y siguen siendo necesarias.
+
+**No toques Contenedores.** `EN_TRANSITO` como estado de rollo sigue siendo válido tanto para el barco como para la camioneta.
+
+---
+
+## BLOQUE 3 — Recepción por QR
+
+### El QR en la hoja
+
+La hoja impresa de la salida (`pages/salida-documento.tsx`) lleva un código QR con el folio de la salida. Usa `qrcode.react`, que ya está instalado y ya se usa en las etiquetas de rollo.
+
+Que el QR guarde una dirección web que apunte a la pantalla de recepción con ese folio, no solo el número pelón. Así quien prefiera usar la cámara del teléfono por fuera de la aplicación también llega, aunque tenga que pasar por el login.
+
+El QR va grande y en un lugar visible de la hoja, no escondido en una esquina.
+
+### La pantalla de recepción
+
+Como **pestaña dentro de Salidas**, no como entrada nueva en la barra lateral.
+
+Muestra las salidas `EN_TRANSITO` **cuyo destino sea el sitio del usuario.** Nada más.
+
+Arriba, un `<CampoEscaneo>`. Se escanea el QR de la hoja y aparece el resumen de esa salida:
+
+- Folio, origen, destino
+- Cuántos rollos y cuánta cantidad, separando metros de kilos
+- Quién la envió y cuándo
+- Transportista
+
+Debajo, dos cosas:
+
+- Una casilla: **"¿Llegó completo?"**, marcada en sí por defecto. Si se desmarca, se abre una caja de texto libre, opcional, y se manda notificación a ADMIN.
+- Un botón de confirmar recepción.
+
+**No se marca rollo por rollo.** Un escaneo, un botón, y todos los rollos de esa salida aterrizan en el destino.
+
+### Reglas del servidor
+
+Estas se aplican en el servidor, no en la pantalla:
+
+1. **Solo se puede recibir una salida cuyo destino sea el sitio del usuario.** Si alguien intenta recibir una salida que va a otro lado, rechaza con mensaje explícito. Esta es la regla más importante del bloque.
+2. **Cualquier rol puede recibir**, siempre que esté asignado a ese sitio. Sin distinción de rol.
+3. Un usuario ADMIN con alcance de todas las ubicaciones puede recibir cualquier salida.
+4. Solo se reciben salidas en `EN_TRANSITO`. Recibir dos veces se rechaza.
+5. Toda recepción queda en la bitácora de auditoría: quién, cuándo, desde dónde, y si se marcó incompleta con su nota.
+
+---
+
+## BLOQUE 4 — Alerta y separación del tránsito
+
+### Alerta de salidas sin recibir
+
+En la pantalla de **Alertas**, agrega: salidas `EN_TRANSITO` con más de **24 horas** sin recibirse.
+
+Que el umbral sea configurable desde el código con una constante nombrada y comentada, para poder ajustarlo cuando se conozca la operación real. No lo escondas en medio de una consulta.
+
+Esta alerta es lo que evita que se pierda mercancía en silencio. Sin ella, un traslado que nadie recibe desaparece del inventario y nadie se entera.
+
+### Separar el tránsito de camioneta del de barco
+
+Hoy el KPI **"En contenedor"** de Reportes muestra **todos** los rollos en `EN_TRANSITO`, así que mezcla la mercancía que viene de importación con la que anda entre los sitios. Está anotado en `replit.md` como decisión conservadora del bloque anterior.
+
+Sepáralos en dos indicadores distintos, ninguno de los cuales suma a la existencia:
+
+- **En contenedor** — rollos que vienen de importación y todavía no se reciben
+- **En tránsito entre sitios** — rollos que van en una salida `EN_TRANSITO`
+
+Si hoy no hay forma de distinguirlos por datos, **la salida activa es el criterio**: un rollo que pertenece a una salida en `EN_TRANSITO` es tránsito entre sitios; lo demás es contenedor.
+
+---
+
+## BLOQUE 5 — Verificación
+
+No des la parte por terminada hasta reportar esto:
+
+### Escaneo
+
+- Una pistola conectada escanea diez rollos seguidos en Salida Nueva sin tocar la pantalla, igual que antes
+- El botón de cámara abre el panel, lee un QR, cierra el panel y entrega el valor por el mismo camino que el teclado
+- La cámara se apaga al cerrar el panel
+- Negar el permiso de cámara muestra el mensaje explicativo y no rompe la pantalla
+- **Lista de todas las pantallas migradas a `<CampoEscaneo>`**
+
+### Salidas
+
+- Una salida completa de punta a punta: armar escaneando, enviar, imprimir la hoja con QR, escanear el QR en el destino, recibir
+- Los rollos salen del origen al enviar y no cuentan en existencia de nadie mientras están en tránsito
+- Los rollos entran al destino al recibir y aparecen en las seis vistas del inventario
+- Un usuario del sitio equivocado **no puede** recibir la salida
+- Recibir dos veces se rechaza
+- La recepción marcada incompleta genera notificación a ADMIN
+- La alerta de 24 horas aparece
+
+### Conteo de estados
+
+Reporta cuántas salidas había en cada uno de los nueve estados viejos antes de migrar, y dónde aterrizó cada grupo.
+
+### Pruebas de base
+
+Para cualquier prueba que necesite crear usuarios o sesiones, usa la rama Neon desechable según `replit.md`. **Está prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+- Los cuatro estados de salida y sus transiciones válidas
+- La lista de pantallas migradas a `<CampoEscaneo>`
+- La nota sobre HTTPS y la cámara
+- El conteo de la migración de estados
+- Cualquier decisión conservadora que hayas tomado por tu cuenta

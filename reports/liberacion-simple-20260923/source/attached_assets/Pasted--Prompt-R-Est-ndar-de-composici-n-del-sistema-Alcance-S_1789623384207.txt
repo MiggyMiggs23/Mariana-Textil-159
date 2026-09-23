@@ -1,0 +1,120 @@
+# Prompt R — Estándar de composición del sistema
+
+## Alcance
+
+**Solo se edita `replit.md`.** No toques nada bajo `artifacts/`, `lib/` ni `scripts/`.
+No cambies ninguna pantalla.
+
+El propósito es escribir una vez el estándar visual que se viene repitiendo en cada
+entrega, para que deje de repetirse y para que nadie lo reinterprete cada vez.
+
+---
+
+## Bloque 0 — Levantar lo que ya existe
+
+Antes de escribir nada nuevo, recorre `replit.md` y reporta qué reglas de composición ya
+están escritas y dónde. Al menos estas, que se establecieron en entregas recientes:
+
+- El color codifica información, nunca decora; cada color tiene un significado
+  explicable en una frase y escrito junto al código.
+- Ninguna cifra es un callejón sin salida: toda cifra abre el detalle de los documentos
+  que la componen, y de ahí se llega al documento por su folio.
+- Cada identificador del renglón enlaza a su propio destino; lo prohibido es una columna
+  decorativa de «Ver detalle», no que un renglón con dos identificadores tenga camino a
+  cada uno.
+- La insignia de estado de nota muestra solo el estado; el saldo pendiente vive en su
+  propio campo.
+- Los colores de encendido de las tarjetas operativas de Tiempo real son decisión
+  cerrada del propietario.
+- Las unidades se resuelven desde la función compartida y ninguna se escribe a mano.
+
+**No las dupliques.** Si ya existen, este trabajo las agrupa y las referencia; solo
+agrega lo que falte.
+
+---
+
+## Bloque 1 — Escribir el estándar
+
+Agrega una sección de composición que recoja lo siguiente. Redáctalo como regla, en una
+o dos frases cada punto, sin ejemplos largos.
+
+**Jerarquía.** Cada pantalla declara qué cifra manda. Lo principal se lee primero y lo
+subordinado se lee como subordinado. Una cifra en cero no ocupa el espacio de una cifra
+importante: se compone por importancia, no por simetría.
+
+**Agrupación.** Las tarjetas se agrupan por la pregunta que contestan, no por cuántas
+caben en un renglón. Un grupo de cifras del mismo nivel se presenta del mismo tamaño.
+Un dato que aclara otra cifra va pegado a ella como desglose, **nunca como sección con
+título propio**.
+
+**Iconos.** Un icono ubica, no adorna ni clasifica. Se usan los del sistema; no se
+introduce una librería nueva. Un conjunto de tarjetas del mismo nivel los lleva todos o
+ninguno. El color del icono no codifica información.
+
+**Respiración.** Nada encimado: ni un rótulo sobre su cifra, ni un porcentaje sobre su
+importe, ni un bloque colgando con espacio vacío al lado. Los títulos y sus valores
+llevan separación real.
+
+**Componentes compartidos.** Se reutilizan las tarjetas, tablas e insignias que ya
+existen. Dos componentes parecidos escritos por separado divergen, igual que dos
+consultas.
+
+**Enlaces visibles.** Lo que se puede abrir se distingue de lo que no. Un identificador
+enlazado se ve enlazado.
+
+**Teléfono.** Toda pantalla se comprueba a 402 px. Al apilar se conserva el orden y la
+agrupación de escritorio. Las tablas anchas conservan su desplazamiento horizontal y la
+página nunca se desplaza de lado.
+
+**Comprobación con datos incómodos.** Una composición se juzga con los nombres más
+largos del catálogo, los importes de más dígitos, un sitio con la caja cerrada y el caso
+de todo en cero. **Una maqueta con cifras redondas siempre se ve bien.**
+
+---
+
+## Bloque 2 — Lo que el estándar NO autoriza
+
+Escríbelo explícitamente, porque es donde se ha ido la cuerda:
+
+1. **Rediseñar no es quitar.** Ninguna cifra, desglose, tabla, gráfica ni enlace
+   existente desaparece por un cambio de composición. Toda entrega de rediseño entrega
+   la tabla del antes y el después de cada cifra, y el inventario de qué había y dónde
+   quedó.
+2. **Una referencia visual externa es referencia, no especificación.** Las maquetas no
+   conocen las reglas del sistema y omiten lo que no representan. Lo que la referencia
+   no muestra, se conserva.
+3. **La composición no cambia un cálculo.** Si un cambio visual exige tocar una consulta
+   o un predicado, ya no es composición y se detiene para reportarlo.
+4. **Ningún arreglo visual sustituye un filtro del servidor.** Tapar una cifra en
+   pantalla no es una restricción.
+
+---
+
+## Bloque 3 — La regla de las entregas de composición
+
+Agrega también cómo se entregan estos trabajos, porque ya se corrigió dos veces por lo
+mismo:
+
+- **La composición propuesta se presenta al propietario antes de implementarla** cuando
+  el cambio reorganiza una pantalla, no solo cuando lo pide el prompt.
+- El vocabulario visible que nombra conceptos del negocio —rótulos de estados,
+  encabezados de sección, nombres de documentos— **lo decide el propietario**, no el
+  agente. El agente propone.
+
+---
+
+## Verificación
+
+1. `git diff --stat` debe mostrar **únicamente** `replit.md`. Si aparece cualquier otro
+   archivo, deshaz ese cambio y repórtalo.
+2. Ninguna regla nueva queda conviviendo con una versión anterior que sustituya. Busca
+   en el archivo completo, no solo en la sección donde escribiste.
+3. Reporta qué reglas ya existían y dónde, cuáles agregaste, y cuáles refundiste.
+4. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.
+
+## Restricciones
+
+- No modifiques ninguna pantalla, componente ni hoja de estilos.
+- No ejecutes escrituras en la base.
+- No crees usuarios ni sesiones de prueba.
+- No continúes con el Prompt P ni cierres su Grupo 1: siguen detenidos.

@@ -1,0 +1,15 @@
+Dos trabajos sobre Clientes y Proveedores.
+1. Saldo a favor como ventana propia, en los dos.
+Hoy un saldo a favor se vería como saldo en negativo. En vez de eso: el saldo queda en ceros y se abre una ventana aparte que dice “Saldo a favor” con su monto. Lo mismo en la ficha del cliente y en la del proveedor.
+Se abre solo cuando hay saldo a favor; si no lo hay, no aparece. Y el saldo deudor nunca se muestra en negativo: son dos cifras distintas y cada una tiene su lugar.
+Usa el color que ya tiene significado en el sistema: rojo para lo que se debe, verde para lo que está a favor. Deja escrito ese significado.
+En proveedores, confirma primero que el concepto existe: ¿ya hay saldo a favor de proveedor, o hay que crearlo? Si no existe, dímelo antes de construirlo, porque un anticipo a proveedor no es lo mismo que un saldo a favor de cliente y quiero definirlo.
+2. Utilidad generada por proveedor.
+En la ficha del proveedor, con el mismo ojito tapado que ya usa Clientes: al hacer clic, se revela la utilidad generada por las ventas de productos de ese proveedor, con su monto.
+Sobre el enlace en la base: rollos ya tiene proveedor_id propio, y entradas también. Antes de construir, dime cuál de los dos vas a usar y qué pasa cuando no coinciden. Si un rollo tiene un proveedor distinto al de su entrada, quiero saber cuántos casos hay y cuál se considera correcto. No lo decidas solo.
+Tres cosas que la cifra debe respetar:
+	•	Solo cuenta lo vendido y procesado por caja, con el mismo predicado canónico que el resto del sistema. Un rollo en inventario no generó utilidad todavía.
+	•	Los rollos sin costo quedan fuera y se reportan aparte. Después de la purga todo está sin costo, así que la cifra va a ser cero hasta que haya entradas nuevas — y la pantalla tiene que decir cuántos rollos quedaron excluidos por no tener costo, no ocultarlos.
+	•	Un rollo vendido en partes aporta utilidad proporcional a lo vendido, no completa. Confirma cómo lo estás calculando.
+Y como toda cifra del sistema, debe abrir hasta los rollos que la componen.
+Respeta el ocultamiento por rol que ya existe: quien no puede ver costo ni margen tampoco puede revelar esto con el ojito

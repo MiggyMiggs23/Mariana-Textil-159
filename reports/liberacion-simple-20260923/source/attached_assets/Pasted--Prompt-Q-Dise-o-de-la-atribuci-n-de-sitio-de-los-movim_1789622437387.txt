@@ -1,0 +1,157 @@
+# Prompt Q — Diseño de la atribución de sitio de los movimientos de crédito
+
+## Esto es un diseño, no una implementación
+
+**No escribas código de aplicación. No toques la base. No cambies contratos.** El
+producto de esta entrega es un documento de diseño en `reports/` que el propietario y
+su socio van a usar para decidir.
+
+Si en el camino te parece obvio cómo implementarlo, **eso va en el documento como
+propuesta, no en el código.**
+
+---
+
+## El problema
+
+`movimientos_credito` **no tiene columna de ubicación ni de sesión de caja**. Un abono
+no sabe dónde se recibió ni en qué corte pertenece. Todo lo que hoy se atribuye a un
+sitio se deduce de la nota a la que el abono terminó aplicándose.
+
+Ese hueco ya produjo **tres defectos medidos**, y los tres son el mismo:
+
+1. **El corte de caja no ve los abonos en efectivo.** `cuadrarCaja` calcula el efectivo
+   esperado como fondo inicial más pagos en efectivo de tickets menos salidas de
+   dinero. Los abonos viven en `movimientos_credito` y no entran. El 15 de septiembre
+   entraron $25,000 pesos al cajón de Cruces que el corte no habría visto.
+
+2. **La cobranza del día no cuadra filtrada por sitio.** Ese mismo día dio **$25,000
+   pesos en Cruces y $0 neto global**: los reversos de saldo a favor sin aplicar no
+   llevan ubicación y solo existen en la consulta global, mientras las recapturas se
+   atribuyen al sitio de la nota.
+
+3. **El estado de cuenta por sitio quedó bloqueado.** El Grupo 1 del Prompt P filtró el
+   detalle por la ubicación del ticket, y eso **elimina todo abono ordinario con
+   `ticket_id` nulo**: el cliente vería sus compras del sitio sin los pagos que hizo.
+   Peor que no filtrar. Documentado en `reports/financial-read-scope/group-1.md`.
+
+Los tres se resuelven con la misma pieza, o no se resuelven.
+
+---
+
+## Bloque 1 — Levantar el estado real
+
+Lee y reporta, sin suponer:
+
+1. Qué columnas tiene hoy `movimientos_credito` y cuáles de sus tipos —`VENTA_CREDITO`,
+   `ABONO`, `REVERSO`, `AJUSTE`— tienen o no relación con un ticket.
+2. Cómo deduce hoy cada consumidor el sitio de un movimiento: `destinationReadModel`,
+   la cartera, el estado de cuenta, las alertas, el corte. **Cuántos criterios
+   distintos hay en el código en este momento.**
+3. Cuántos movimientos de crédito existen hoy en la base, por tipo. La purga del 15 de
+   septiembre dejó la tabla vacía, así que el volumen histórico debería ser mínimo —
+   confírmalo, porque cambia por completo el costo de la migración.
+4. Qué relación hay entre `sesiones_caja` y los pagos de ticket, para saber qué patrón
+   ya existe y no inventar uno paralelo.
+5. Qué restricciones, triggers e índices tocaría una columna nueva en esa tabla.
+
+---
+
+## Bloque 2 — Las preguntas de diseño
+
+Contesta cada una con opciones y consecuencias, **no con una sola recomendación
+presentada como hecho**. El propietario decide.
+
+### 2.1 ¿Cuál es el sitio de un abono?
+
+Hay una regla de negocio confirmada por el propietario: **una tienda siempre cobra la
+nota que ella hizo; ninguna tienda cobra la nota de otra.**
+
+Si eso es así, el sitio del abono y el sitio de la nota nunca pueden diferir, y la
+atribución actual no está mal — está **sin garantizar**. Analiza si conviene:
+
+- Guardar el sitio explícitamente en el movimiento, y además validar en el servidor que
+  coincide con el de la nota.
+- O solo validar, sin guardar, y seguir deduciendo.
+
+Di qué gana y qué pierde cada una, en particular para los casos donde no hay nota.
+
+### 2.2 Los movimientos sin nota
+
+Un abono a cuenta sin aplicar, un saldo a favor, un ajuste, un reverso de saldo a favor.
+Hoy no tienen sitio y por eso desaparecen de las consultas filtradas.
+
+¿Qué sitio les corresponde? ¿El de quien los capturó? ¿El de la sesión de caja abierta?
+¿Ninguno, y entonces cómo se presentan sin que el detalle pierda información?
+
+**Esta es la pregunta central del diseño.** El bloqueo del Prompt P es exactamente esto.
+
+### 2.3 La sesión de caja
+
+El propietario ya decidió que un abono en efectivo debe exigir caja abierta y entrar al
+corte del día, y que una transferencia no debe exigirla porque no toca el cajón.
+
+Diseña cómo se liga el abono a la sesión, qué pasa cuando no hay sesión abierta, y cómo
+lo consumiría `cuadrarCaja` para que el efectivo esperado incluya los abonos.
+
+### 2.4 Los movimientos existentes
+
+Si el volumen es mínimo, la migración es trivial y este es el momento más barato, igual
+que pasó con la serie de ocho dígitos. Si no lo es, propón cómo llenar el sitio de los
+históricos **sin inventar dónde ocurrieron**: un movimiento cuya ubicación no se pueda
+determinar debe quedar marcado como indeterminado, no adivinado.
+
+### 2.5 Los tres consumidores
+
+Para cada uno, describe qué cambiaría y qué cifra dejaría de estar mal:
+
+- El corte de caja y su efectivo esperado.
+- La cobranza por sitio en Cuentas Destino y en Tiempo real, incluida la asimetría
+  medida del día 15.
+- El detalle por sitio del estado de cuenta, que desbloquearía el Prompt P.
+
+**Una sola función resuelve el sitio de un movimiento, usada por los tres.** Si el
+diseño permite que cada uno lo resuelva por su cuenta, está mal planteado.
+
+### 2.6 Qué se rompería
+
+Sé explícito: qué consultas, reportes, exportaciones y pruebas existentes tocaría esto,
+y cuáles cifras cambiarían de valor para un usuario con alcance global. **Si alguna
+cambia, dilo con su nombre.**
+
+---
+
+## Bloque 3 — El documento
+
+Entrega en `reports/` un documento que el propietario pueda leer con su socio, **sin
+ser programadores**. Debe contener:
+
+1. El problema en lenguaje de negocio, con los tres defectos medidos y sus cifras
+   reales.
+2. Las decisiones que hay que tomar, cada una con sus opciones y lo que cuesta cada
+   opción en dinero, en riesgo y en trabajo.
+3. Tu recomendación para cada una, **claramente marcada como recomendación**.
+4. Qué habría que construir después, en orden, y qué se desbloquea con cada pieza.
+5. Qué NO resuelve este diseño.
+
+Termina con **la lista de decisiones que el propietario debe tomar**, numerada, cada una
+formulada como una pregunta que se pueda contestar sin leer código.
+
+---
+
+## Restricciones
+
+- **No implementes nada.** Ni migración, ni columna, ni endpoint, ni pantalla.
+- No escribas en la base. No ejecutes `executeSql` de escritura ni migraciones.
+- No toques el reparto FIFO ni la proyección de crédito: son correctos y globales, y el
+  diseño debe conservarlos así.
+- No continúes con los Grupos 2, 3 y 4 del Prompt P, y **no cierres el Grupo 1**.
+  Quedan detenidos hasta que este diseño se decida.
+- No crees usuarios ni sesiones de prueba.
+- No presentes una sola opción como si fuera la única posible.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que la ausencia de atribución de sitio en `movimientos_credito` es la causa raíz
+   común de tres defectos abiertos, con la referencia al documento de diseño.
+2. Que el Prompt P quedó detenido por ese bloqueo, con su Grupo 1 sin cerrar.
+3. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

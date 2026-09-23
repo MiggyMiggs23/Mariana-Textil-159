@@ -1,0 +1,349 @@
+/**
+ * Task 54 / Block 6: HTTP verification of every configurable role.
+ *
+ * This deliberately exercises the real Express application.  The seed matrix
+ * is only a default: route middleware and explicit role guards remain the
+ * authority that this test verifies.
+ */
+import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
+import { createServer, type Server } from "node:http";
+import test from "node:test";
+import { eq, sql } from "drizzle-orm";
+import type { RolUsuario } from "@workspace/db";
+// @ts-ignore Shared runner preflight is intentionally plain ESM.
+import { assertActorSuiteEnvironmentSync } from "../../../lib/db/src/actor-suite-preflight.mjs";
+
+assertActorSuiteEnvironmentSync(process.env);
+const testUrl = process.env.TEST_DATABASE_URL;
+const applicationUrl = process.env.APPLICATION_DATABASE_URL ?? process.env.DATABASE_URL;
+if (process.env.NODE_ENV !== "test") {
+  throw new Error("role access integration requires NODE_ENV=test.");
+}
+if (process.env.REQUIRE_ISOLATED_TEST_DATABASE !== "1") {
+  throw new Error("role access integration requires the isolated database runner.");
+}
+if (!testUrl || !applicationUrl) {
+  throw new Error("role access integration requires explicit test and application database URLs.");
+}
+if (testUrl === applicationUrl) {
+  throw new Error("TEST_DATABASE_URL must differ from DATABASE_URL.");
+}
+
+const {
+  db,
+  pool,
+  productosTable,
+  rollosTable,
+  ubicacionesTable,
+  usuariosTable,
+  createTestDatabaseGuard,
+} = await import("@workspace/db");
+const { assertIsolated, testDatabaseName } = await createTestDatabaseGuard(
+  pool,
+  testUrl,
+  applicationUrl,
+);
+await assertIsolated();
+const expectedDatabase = decodeURIComponent(new URL(testUrl).pathname).replace(/^\/+/, "");
+assert.equal(testDatabaseName, expectedDatabase, "role access suite connected outside TEST_DATABASE_URL");
+const [{ default: app }, { isSupervisorSensitiveKey }] = await Promise.all([
+  import("./app"),
+  import("./lib/sensitive-data"),
+]);
+
+type ConfigurableRole =
+  | "TERMINAL"
+  | "CAJA"
+  | "SUPERVISOR"
+  | "BODEGA"
+  | "SISTEMAS"
+  | "CONTADOR";
+
+type HttpResponse = {
+  status: number;
+  body: unknown;
+  cookie: string;
+};
+
+const run = `T54${randomUUID().replaceAll("-", "")}`;
+const password = "Task54Role!pass";
+const rollSerie = `9${run.replace(/\D/g, "").slice(-8)}`;
+const createdUserIds: number[] = [];
+let createdProductId: number | undefined;
+let createdRolloId: number | undefined;
+let createdLocationId: number | undefined;
+let server: Server | undefined;
+let base = "";
+
+async function startServer(): Promise<void> {
+  await new Promise<void>((resolve, reject) => {
+    server = createServer(app);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server!.address();
+      if (!address || typeof address === "string") {
+        reject(new Error("Could not allocate an HTTP port"));
+        return;
+      }
+      base = `http://127.0.0.1:${address.port}/api`;
+      resolve();
+    });
+    server.on("error", reject);
+  });
+}
+
+async function request(
+  method: string,
+  path: string,
+  body?: unknown,
+  cookie?: string,
+): Promise<HttpResponse> {
+  const response = await fetch(`${base}${path}`, {
+    method,
+    headers: {
+      "content-type": "application/json",
+      ...(cookie ? { cookie } : {}),
+    },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const contentType = response.headers.get("content-type") ?? "";
+  const value = contentType.includes("application/json")
+    ? await response.json()
+    : await response.text();
+  const session = response.headers
+    .get("set-cookie")
+    ?.match(/mariana_session=([^;]+)/)?.[0];
+  return { status: response.status, body: value, cookie: session ?? cookie ?? "" };
+}
+
+async function createUser(
+  rol: ConfigurableRole,
+  ubicacionId: number | null,
+): Promise<{ usuario: string }> {
+  const usuario = `${rol.toLowerCase()}_${run}`.slice(0, 64).toLowerCase();
+  const [user] = await db
+    .insert(usuariosTable)
+    .values({
+      nombre: `Task 54 ${rol}`,
+      usuario,
+      passwordHash: sql`crypt(${password}, gen_salt('bf', 8))`,
+      rol: rol as RolUsuario,
+      ubicacionId,
+      alcanceConsulta: rol === "BODEGA" ? "PROPIA" : "TODAS",
+    })
+    .returning({ id: usuariosTable.id });
+  assert.ok(user, `could not create ${rol} fixture`);
+  createdUserIds.push(user.id);
+  return { usuario };
+}
+
+function assertNoMoneyFields(value: unknown, path = "response"): void {
+  if (Array.isArray(value)) {
+    value.forEach((item, index) => assertNoMoneyFields(item, `${path}[${index}]`));
+    return;
+  }
+  if (value === null || typeof value !== "object") return;
+  for (const [key, nested] of Object.entries(value as Record<string, unknown>)) {
+    assert.equal(
+      isSupervisorSensitiveKey(key),
+      false,
+      `non-financial response leaked money field ${path}.${key}`,
+    );
+    assertNoMoneyFields(nested, `${path}.${key}`);
+  }
+}
+
+async function cleanup(): Promise<void> {
+  if (server) {
+    await new Promise<void>((resolve) => server!.close(() => resolve()));
+  }
+  await assertIsolated();
+  await pool.end();
+}
+
+test("Task 54 Block 6: configurable roles have real HTTP access boundaries", async () => {
+  const results: Array<{
+    role: ConfigurableRole;
+    login: number;
+    allowed: string;
+    allowedStatus: number;
+    denied: string;
+    deniedStatus: number;
+    money: string;
+  }> = [];
+
+  try {
+    const [location] = await db
+      .select({ id: ubicacionesTable.id })
+      .from(ubicacionesTable)
+      .where(eq(ubicacionesTable.tipo, "TIENDA"))
+      .limit(1);
+    assert.ok(location, "seed must provide a TIENDA location");
+
+    const [product] = await db
+      .insert(productosTable)
+      .values({
+        sku: `T54-${run}`.slice(0, 64),
+        tela: "Task 54 fabric",
+        color: run,
+        unidad: "METRO",
+        precioSugerido: "125.00",
+      })
+      .returning({ id: productosTable.id });
+    assert.ok(product, "could not create product fixture");
+    createdProductId = product.id;
+
+    const [rollo] = await db
+      .insert(rollosTable)
+      .values({
+        serie: rollSerie,
+        productoId: product.id,
+        ubicacionId: location.id,
+        estado: "DISPONIBLE",
+        cantidadInicial: "10.000",
+        cantidadActual: "10.000",
+        costoUnitario: "100.00",
+        costoTotal: "1000.00",
+      })
+      .returning({ id: rollosTable.id });
+    assert.ok(rollo, "could not create roll fixture");
+    createdRolloId = rollo.id;
+
+    const roleUsers = {
+      TERMINAL: await createUser("TERMINAL", location.id),
+      CAJA: await createUser("CAJA", location.id),
+      SUPERVISOR: await createUser("SUPERVISOR", null),
+      BODEGA: await createUser("BODEGA", location.id),
+      SISTEMAS: await createUser("SISTEMAS", null),
+      CONTADOR: await createUser("CONTADOR", null),
+    } satisfies Record<ConfigurableRole, { usuario: string }>;
+
+    await startServer();
+
+    const cases: Array<{
+      role: ConfigurableRole;
+      allowed: { method: string; path: string };
+      denied: { method: string; path: string };
+      mustHideMoney: boolean;
+    }> = [
+      // Terminal and Bodega can consult stock, but neither may see its value.
+      { role: "TERMINAL", allowed: { method: "GET", path: `/inventario/rollos?serie=${rollSerie}` }, denied: { method: "GET", path: "/proveedores" }, mustHideMoney: true },
+      { role: "CAJA", allowed: { method: "GET", path: "/caja/tickets" }, denied: { method: "GET", path: "/inventario/rollos" }, mustHideMoney: false },
+      // The configured matrix grants operational supplier reads but denies
+      // the separate financial supplier module.
+      { role: "SUPERVISOR", allowed: { method: "GET", path: "/proveedores" }, denied: { method: "GET", path: "/proveedores/resumen" }, mustHideMoney: true },
+      { role: "BODEGA", allowed: { method: "GET", path: `/inventario/rollos?serie=${rollSerie}` }, denied: { method: "GET", path: "/proveedores" }, mustHideMoney: true },
+      { role: "SISTEMAS", allowed: { method: "GET", path: "/users" }, denied: { method: "POST", path: "/pos/validar-precio" }, mustHideMoney: false },
+      { role: "CONTADOR", allowed: { method: "GET", path: "/proveedores/resumen" }, denied: { method: "GET", path: "/users" }, mustHideMoney: false },
+    ];
+
+    for (const roleCase of cases) {
+      const user = roleUsers[roleCase.role];
+      const login = await request("POST", "/auth/login", {
+        usuario: user.usuario,
+        password,
+      });
+      assert.equal(login.status, 200, `${roleCase.role} could not log in`);
+
+      const allowed = await request(
+        roleCase.allowed.method,
+        roleCase.allowed.path,
+        undefined,
+        login.cookie,
+      );
+      assert.equal(
+        allowed.status,
+        200,
+        `${roleCase.role} should reach ${roleCase.allowed.path}: ${JSON.stringify(allowed.body)}`,
+      );
+      if (roleCase.mustHideMoney) assertNoMoneyFields(allowed.body);
+
+      const denied = await request(
+        roleCase.denied.method,
+        roleCase.denied.path,
+        roleCase.denied.method === "POST" ? {} : undefined,
+        login.cookie,
+      );
+      assert.equal(
+        denied.status,
+        403,
+        `${roleCase.role} must be denied ${roleCase.denied.path}: ${JSON.stringify(denied.body)}`,
+      );
+
+      results.push({
+        role: roleCase.role,
+        login: login.status,
+        allowed: `${roleCase.allowed.method} ${roleCase.allowed.path}`,
+        allowedStatus: allowed.status,
+        denied: `${roleCase.denied.method} ${roleCase.denied.path}`,
+        deniedStatus: denied.status,
+        money: roleCase.mustHideMoney ? "redacted" : "entitled",
+      });
+
+      if (roleCase.role === "SISTEMAS") {
+        const prices = await request("GET", "/precios", undefined, login.cookie);
+        assert.equal(prices.status, 200, "SISTEMAS should read prices");
+
+        const invalidPriceChange = await request(
+          "POST",
+          `/precios/${product.id}/cambiar`,
+          {},
+          login.cookie,
+        );
+        assert.equal(
+          invalidPriceChange.status,
+          400,
+          "SISTEMAS should pass prices/edit permission before body validation",
+        );
+
+        const createdLocation = await request(
+          "POST",
+          "/locations",
+          {
+            nombre: `Task 54 site ${run}`,
+            iniciales: "TQZ",
+            tipo: "BODEGA",
+          },
+          login.cookie,
+        );
+        assert.equal(
+          createdLocation.status,
+          201,
+          `SISTEMAS should create locations: ${JSON.stringify(createdLocation.body)}`,
+        );
+        createdLocationId = Number(
+          (createdLocation.body as { id?: number }).id,
+        );
+        assert.ok(createdLocationId, "created location id is required");
+
+        const updatedLocation = await request(
+          "PATCH",
+          `/locations/${createdLocationId}`,
+          { nombre: `Task 54 updated ${run}` },
+          login.cookie,
+        );
+        assert.equal(
+          updatedLocation.status,
+          200,
+          `SISTEMAS should edit locations: ${JSON.stringify(updatedLocation.body)}`,
+        );
+      }
+
+      if (roleCase.role === "CONTADOR") {
+        const prices = await request("GET", "/precios", undefined, login.cookie);
+        assert.equal(prices.status, 200, "CONTADOR should read prices");
+
+        const priceChange = await request(
+          "POST",
+          `/precios/${product.id}/cambiar`,
+          {},
+          login.cookie,
+        );
+        assert.equal(priceChange.status, 403, "CONTADOR must not edit prices");
+      }
+    }
+  } finally {
+    console.table(results);
+    await cleanup();
+  }
+});

@@ -1,0 +1,37 @@
+# Prompt para Replit Agent — Limpieza de archivos sueltos y periodo anterior en tarjetas de cuenta
+
+Trabajo corto. **No toques ninguna regla de negocio, ninguna consulta del servidor ni ninguna transacción.** No toques la base de datos, no crees usuarios ni ADMIN temporales, y no uses `executeSql({ environment: "development" })`.
+
+## Bloque 1 — Borrar los dos archivos sueltos de la raíz
+
+Quedaron dos archivos fuera de todo workspace, creados como borradores durante el trabajo anterior. No los ejecuta nadie: están fuera de las referencias de `tsconfig.json` y de los filtros de `pnpm-workspace.yaml`, que solo cubren `./artifacts/**`, `./lib/**` y `./scripts`.
+
+1. **Borra el directorio `src/` completo de la raíz del repositorio.** Contiene únicamente `src/pages/caja/cuentas-destino.contract.test.ts`, que es un stub cuyo único caso afirma `1 === 1` y no prueba nada. La prueba de contrato real y buena ya vive en `artifacts/mariana-textil/src/pages/caja/cuentas-destino.contract.test.ts` y **no se toca**.
+
+2. **Borra `test_variation.js` de la raíz.** Son ocho líneas de borrador que replicaban a mano el cálculo de variación porcentual. Ese cálculo es del servidor y no debe existir una segunda copia, ni siquiera como borrador.
+
+Antes de borrar, confirma que ningún archivo del repositorio importa o referencia a ninguno de los dos. Si algo los referencia, **detente y repórtalo sin borrar nada**.
+
+No toques `attached_assets/`, `reports/`, `screenshots/` ni `docs/`: son historial y material de referencia.
+
+## Bloque 2 — Mostrar el importe del periodo anterior en las tarjetas de cuenta
+
+En `artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx`, las tres tarjetas de la segunda fila —Caja física, Cuenta no fiscal y Cuenta fiscal— muestran su variación como "X% vs ant." sin decir contra qué se comparó. Un porcentaje de cuatro dígitos sobre una base diminuta no informa nada.
+
+Las tres tarjetas del encabezado ya resuelven esto mostrando `Ant: $X` al lado del porcentaje. Aplica **el mismo tratamiento y el mismo formato** a las tres tarjetas de cuenta, usando el campo **`importeAnterior`** que el servidor ya devuelve en cada renglón de `resumen` y que la pantalla hoy ignora.
+
+No calcules nada: el importe anterior y el porcentaje vienen ambos del servidor. La prueba de contrato existente verifica que esta pantalla no contenga fórmulas financieras; no la rompas.
+
+## Verificación
+
+Ejecuta cada punto y reporta el resultado. No des ninguno por aprobado sin correrlo.
+
+1. `pnpm run typecheck` completo.
+2. Las suites de caja y de analytics de administración, incluida `cuentas-destino.contract.test.ts` en `artifacts/`.
+3. Confirma que la raíz del repositorio ya no tiene `src/` ni `test_variation.js`, y que los directorios que sí van —`artifacts`, `attached_assets`, `docs`, `lib`, `reports`, `screenshots`, `scripts`— siguen intactos.
+4. En pantalla, las tres tarjetas de cuenta muestran su importe anterior junto al porcentaje, con el mismo formato que las del encabezado.
+5. Comprueba que las cifras de la pantalla no cambiaron con este trabajo: la matriz sigue cerrando por renglón y por columna, y Cobrado más Por cobrar sigue siendo igual a Vendido.
+
+## Al terminar
+
+En `replit.md`, en la sección de Cuentas Destino, agrega una línea a la nota del cambio del 7 de septiembre: que se retiraron los borradores sueltos de la raíz y que **ningún cálculo de variación se replica fuera del servidor**, ni siquiera como archivo de prueba manual. Añade también que las tarjetas de cuenta muestran el importe del periodo anterior junto a su porcentaje, por la misma razón que el encabezado.

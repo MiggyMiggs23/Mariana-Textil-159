@@ -1,0 +1,175 @@
+# REDISEÑO — Etiqueta de rollo
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> **Se adjunta la imagen de referencia del diseño aprobado.**
+> Trabaja de forma autónoma. Al terminar, la aplicación debe compilar y arrancar.
+
+---
+
+# QUÉ CAMBIA
+
+Se rediseña la etiqueta de rollo siguiendo la imagen adjunta. **Es un cambio estético.** El contenido y la lógica no cambian: mismos datos, mismo QR, misma serie.
+
+Aplica en **todos** los lugares donde se genera una etiqueta: al confirmar una entrada, al reimprimir desde el detalle del rollo, y desde el módulo de Etiquetas.
+
+**Nota sobre la imagen de referencia:** el logo aparece en azul con degradado únicamente para ilustrar el acomodo y las proporciones. **La etiqueta real se imprime completamente en negro.** Ver la sección de impresión monocromática.
+
+---
+
+# FORMATO
+
+**Horizontal, 100 mm de ancho × 70 mm de alto.** Esquinas redondeadas, borde tenue gris claro, fondo blanco.
+
+Este es el tamaño físico exacto para el que hay que programar la impresión.
+
+---
+
+# ESTRUCTURA DEL DISEÑO
+
+## Franja superior — Nombre del producto
+
+- **TELA - COLOR** en mayúsculas. Ejemplo: `TAFETA - AMARILLO`
+- Tipografía **sans-serif muy gruesa (bold o black)**, negro
+- **El texto más grande de toda la etiqueta.** Ocupa el ancho completo, centrado.
+- Debajo, una **línea horizontal negra gruesa** que separa esta franja del resto
+- Si el nombre es largo, **reduce el tamaño de fuente automáticamente** hasta que quepa en una sola línea. Nunca lo partas en dos renglones ni lo cortes con puntos suspensivos. Ejemplo de nombre largo que debe caber: `MANTA CRESPONADA BLANCA CRUDA - VERDE BANDERA`
+
+## Cuerpo — Tres columnas separadas por líneas verticales delgadas grises
+
+### Columna izquierda (aproximadamente 30% del ancho)
+
+Tres bloques apilados, separados entre sí por líneas horizontales delgadas grises. Cada bloque tiene:
+- Una **etiqueta descriptiva** arriba: texto chico, gris oscuro, mayúsculas, peso normal
+- El **valor** debajo: negro, muy grande, bold
+
+De arriba hacia abajo:
+
+1. **SKU** → el SKU del producto. Ejemplo: `TAF-AMA`
+2. **NO. DE SERIE** → el número de serie. Ejemplo: `1002294`
+3. **METROS DEL ROLLO** o **KILOS DEL ROLLO**, según la unidad del producto → la cantidad con tres decimales. Ejemplo: `42.000`
+
+**El tercer bloque es el de valor más grande de la columna.** La cantidad es el dato que más se consulta a distancia.
+
+Si el producto se mide en kilos, la etiqueta dice **KILOS DEL ROLLO**, no metros. Aplica a los productos por kilo del catálogo: polar, soccer, sportoc, dublin, flannel, piqué vera, toalla y relleno.
+
+### Columna central (aproximadamente 35% del ancho)
+
+- **Logo** de Mariana Textil, centrado, ocupando la mayor parte del bloque
+- Debajo: **MARIANA** en bold y grande, y **TEXTIL S.A. DE C.V.** debajo en tamaño menor, con espaciado entre letras
+- Todo en negro
+
+### Columna derecha (aproximadamente 35% del ancho)
+
+- **Código QR** dentro de un recuadro de esquinas redondeadas con borde delgado
+- El QR codifica `SKU-SERIE`. Ejemplo: `TAF-AMA-1002294`
+- Debajo del recuadro, el **texto legible** de ese mismo valor, en negro, bold, tamaño mediano: `TAF-AMA-1002294`
+
+## Aprovechamiento del alto
+
+El formato es de 70 mm de alto, 10 mm más de lo que ocuparía el diseño mínimo. **Usa ese espacio adicional para dar aire al nombre del producto y a la cantidad**, que son los dos datos que se leen a distancia en una estiba. No lo dejes como margen muerto ni lo llenes con información nueva.
+
+---
+
+# IMPRESIÓN MONOCROMÁTICA
+
+La etiqueta se imprime en **impresora térmica, que solo imprime negro**. No hay variante en color.
+
+- **Todo el diseño en negro sobre blanco**, sin excepción
+- **El logo va en negro sólido, sin degradado.** Si no existe una versión monocromática del logo, genera una silueta limpia de la letra M en negro plano.
+- El texto "MARIANA" y "TEXTIL S.A. DE C.V." también en negro
+- Sin degradados, sin transparencias, sin grises intermedios en el logo
+- Los únicos grises permitidos son los de las líneas divisorias delgadas y las etiquetas descriptivas pequeñas
+
+**No implementes ajuste de tipo de impresora.** Siempre es térmica, siempre monocromática.
+
+---
+
+# REQUISITOS TÉCNICOS DEL QR
+
+No son negociables: determinan si la etiqueta se puede escanear en el piso.
+
+- **Corrección de errores nivel M o superior.** Las etiquetas van sobre rollos que se estiban, se ensucian y se raspan.
+- **Tamaño mínimo impreso de 25 × 25 mm**
+- **Margen blanco de al menos 4 módulos** alrededor del QR, **por dentro** del recuadro redondeado. El recuadro no puede invadir esa zona.
+- **Negro puro sobre blanco.** Sin fondo, sin marca de agua detrás.
+- Generado del lado del cliente con librería empaquetada. **Sin llamadas a servicios externos ni CDN**: las etiquetas deben imprimirse aunque el sitio se quede sin internet.
+
+---
+
+# JERARQUÍA VISUAL
+
+De mayor a menor tamaño de texto:
+
+1. **Nombre del producto** en la franja superior — el más grande
+2. **Cantidad** (metros o kilos) — segundo más grande
+3. **Número de serie** — tercero
+4. **SKU** — cuarto
+5. **Texto legible del QR** — quinto
+6. **Etiquetas descriptivas** (SKU, NO. DE SERIE, METROS DEL ROLLO) — las más chicas
+
+El criterio: el personal identifica el rollo a distancia por **nombre y cantidad**. Esos dos deben leerse desde tres metros.
+
+---
+
+# HOJA DE IMPRESIÓN
+
+- Acomoda varias etiquetas por página con **guías de corte** discretas
+- CSS `@media print` con el tamaño físico exacto de **100 × 70 mm**
+- Sin encabezados, pies ni elementos de navegación al imprimir
+- Al pie de la hoja, nota de referencia: *"Etiquetas recomendadas: papel térmico adhesivo 100 × 70 mm"*
+- Exportable a PDF
+
+---
+
+# MARCA DE REIMPRESIÓN
+
+Cuando la etiqueta se genera desde el módulo de Etiquetas o desde el detalle de un rollo, lleva en la **esquina inferior derecha**, en letra pequeña y gris, la leyenda **"REIMPRESA"** con la fecha.
+
+Debe ser discreta: no puede competir con los datos principales ni invadir la zona del QR.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- No uses color en ninguna parte de la etiqueta
+- No uses degradados ni transparencias en el logo
+- No cambies el contenido de la etiqueta: los mismos datos de siempre
+- No cambies la serie ni el valor que codifica el QR
+- No pongas fondo ni marca de agua detrás del QR
+- No reduzcas el QR por debajo de 25 mm ni invadas su zona silenciosa
+- No partas el nombre del producto en dos renglones
+- No dependas de servicios externos para generar el QR
+- No cambies el tamaño físico de 100 × 70 mm
+- No implementes selector de tipo de impresora
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+1. La etiqueta reproduce el diseño de la imagen: franja superior con el nombre, tres columnas, logo al centro, QR a la derecha
+2. El tamaño físico impreso es exactamente 100 mm de ancho × 70 mm de alto
+3. Un producto en metros dice "METROS DEL ROLLO"; uno en kilos dice "KILOS DEL ROLLO"
+4. La cantidad se muestra con tres decimales
+5. Un nombre de producto largo se ajusta en tamaño sin partirse en dos renglones
+6. El QR codifica `SKU-SERIE` y se escanea correctamente
+7. El QR mide al menos 25 mm y conserva su margen blanco dentro del recuadro
+8. **Toda la etiqueta sale en negro**, sin degradados ni colores
+9. El logo aparece en negro sólido, legible, sin manchas grises
+10. La vista de impresión respeta el tamaño de 100 × 70 mm
+11. Varias etiquetas caben por página con sus guías de corte
+12. Una etiqueta reimpresa muestra la marca "REIMPRESA" discreta, sin invadir el QR
+13. El QR se genera sin llamar a servicios externos
+14. Las etiquetas se generan igual desde entradas, desde el detalle del rollo y desde el módulo de Etiquetas
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila y arranca?
+2. Lista de archivos modificados
+3. Cómo resolviste la versión monocromática del logo
+4. Confirmación de que el QR conserva su tamaño mínimo y su zona silenciosa
+5. Confirmación de que el tamaño de impresión es 100 × 70 mm
+6. Salida de la corrida de pruebas
+7. Cómo imprimo una etiqueta de prueba

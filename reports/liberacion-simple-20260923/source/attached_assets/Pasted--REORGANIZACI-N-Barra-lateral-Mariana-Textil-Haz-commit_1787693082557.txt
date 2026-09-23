@@ -1,0 +1,181 @@
+# REORGANIZACIÓN — Barra lateral
+### Mariana Textil
+
+> Haz commit en Git antes de empezar.
+> **Este prompt NO modifica ninguna función.** Solo reordena el menú, consolida entradas y mueve Notificaciones fuera de la barra lateral.
+> Trabaja de forma autónoma. Al terminar, la aplicación debe compilar, arrancar y permitir iniciar sesión.
+
+---
+
+# NUEVA ESTRUCTURA
+
+Reordena la barra lateral exactamente así, de arriba hacia abajo:
+
+```
+DASHBOARD                    ← entrada suelta, sin encabezado de sección
+
+INVENTARIO
+  Productos
+  Inventario
+  Ajustes
+  Etiquetas
+
+OPERACIÓN
+  Ventas / POS
+  Entradas
+  Salidas
+  Movimientos
+
+CAJA
+  Cobros
+  Cortes
+  Cuentas
+  Tiempo Real
+
+DIRECTORIO
+  Clientes
+  Proveedores
+
+REPORTES                     ← entrada suelta, sin encabezado de sección
+
+PRÓXIMOS CONTENEDORES        ← entrada suelta, sin encabezado de sección
+
+CONFIGURACIÓN
+  Sitios
+  Usuarios
+  Permisos
+  Conciliación
+```
+
+---
+
+# CAMBIOS Y SU RAZÓN
+
+**Etiquetas pasa de Operación a Inventario.** Reimprimir la etiqueta de un rollo es una tarea de inventario, no una operación de venta.
+
+**Caja se vuelve sección propia** con cuatro entradas: Cobros, Cortes, Cuentas y Tiempo Real. Antes estaban dispersas dentro de Administración. Las cuatro son un mismo flujo de trabajo.
+
+**"Cuentas Destino" se renombra a "Cuentas"** y se mueve a la sección Caja. Cambia solo la etiqueta visible; **no cambies el identificador del módulo de permisos** ni los nombres internos.
+
+**"Cobros (POS)" se renombra a "Cobros"** a secas. El paréntesis confunde: esa pantalla es de caja, no del POS.
+
+**Directorio es una sección nueva** con Clientes y Proveedores. Son los dos catálogos de contactos del negocio.
+
+**Comparativo y Diferencias salen de la barra lateral** y pasan a ser pestañas dentro de Reportes. Son reportes; tenían entrada propia solo porque nacieron dentro del módulo de Caja.
+
+**Próximos Contenedores queda como entrada suelta**, sin sección propia.
+
+**Conciliación pasa a Configuración.** Es una herramienta de diagnóstico que se usa muy de vez en cuando, no algo del día a día.
+
+**Se elimina la sección "Administración"** como tal. Sus entradas se redistribuyeron.
+
+---
+
+# NOTIFICACIONES FUERA DE LA BARRA LATERAL
+
+Notificaciones deja de ocupar un renglón del menú y pasa a la **barra superior, arriba a la derecha**, junto al bloque de usuario.
+
+**Cómo debe quedar:**
+
+- Un **ícono de campana** a la izquierda del nombre del usuario
+- **Badge con el número de notificaciones sin leer**, en rojo. Si no hay ninguna, sin badge.
+- Al tocarlo se abre un panel desplegable con las notificaciones recientes
+- Cada notificación muestra su contenido, la hora, y es clicable para ir al detalle correspondiente
+- Las no leídas se distinguen visualmente de las leídas
+- Botón **"Marcar todas como leídas"** al pie del panel
+- Enlace **"Ver todas"** que lleva a la pantalla completa de notificaciones, que se conserva aunque ya no tenga entrada en el menú
+- Solo visible para **ADMIN**, que es quien recibe notificaciones hoy
+
+El orden en la barra superior queda: **campana · nombre del usuario con su rol y sitio · botón de cerrar sesión**.
+
+---
+
+# REPORTES CON PESTAÑAS
+
+Reportes es una entrada suelta que abre una pantalla con pestañas. Por ahora incorpora las dos que se movieron:
+
+- **Comparativo** — la pantalla de comparativo entre sitios que ya existe
+- **Diferencias** — la pantalla de control de diferencias de caja que ya existe
+
+**No construyas reportes nuevos en este prompt.** Solo mueve las dos pantallas existentes a pestañas dentro de Reportes, conservando su funcionalidad completa.
+
+Deja la estructura preparada para agregar después: Ventas, Inventario y rotación, Utilidad y márgenes, Compras, y Clientes y crédito.
+
+---
+
+# PERMISOS
+
+Los módulos conservan sus identificadores actuales. **No renombres nada del sistema de permisos.**
+
+Verifica que cada rol siga viendo únicamente las entradas que le corresponden según su matriz, con la nueva agrupación:
+
+- **CAJA** sigue viendo solo Cobros, Cortes, Inventario y Salidas recibidas. No ve Cuentas ni Tiempo Real.
+- **TERMINAL** sigue sin barra lateral, entrando directo al POS
+- **BODEGA** e **INVENTARIOS** ven lo que ya tenían asignado, reubicado en las nuevas secciones
+- **ADMIN** ve todo
+
+Si una sección completa queda sin entradas visibles para un rol, **el encabezado de esa sección tampoco debe aparecer**. No dejes títulos de sección huérfanos.
+
+---
+
+# LO QUE NO DEBES HACER
+
+- **No modifiques ninguna función existente.** Este prompt solo reorganiza navegación.
+- No elimines pantallas, rutas ni código. Comparativo y Diferencias siguen existiendo, ahora como pestañas.
+- No cambies identificadores de módulos de permisos ni nombres de tablas
+- No dejes encabezados de sección sin entradas visibles
+- No le devuelvas la barra lateral a TERMINAL
+- No construyas reportes nuevos
+- No dejes entradas duplicadas ni sobrantes de la estructura anterior
+
+---
+
+# PRUEBAS OBLIGATORIAS
+
+**Estructura:**
+1. Como ADMIN, la barra lateral muestra las secciones y entradas en el orden exacto especificado
+2. No queda ninguna entrada de la estructura anterior sin reubicar
+3. No existe ya la sección "Administración"
+4. Etiquetas está en Inventario
+5. Conciliación está en Configuración
+6. "Cuentas" abre la pantalla que antes se llamaba Cuentas Destino, y funciona igual
+7. "Cobros" abre la pantalla de cobros, sin el paréntesis en la etiqueta
+
+**Reportes:**
+8. Reportes abre una pantalla con las pestañas Comparativo y Diferencias
+9. Ambas conservan toda su funcionalidad y filtros
+10. Ya no aparecen como entradas sueltas en la barra lateral
+
+**Notificaciones:**
+11. La campana aparece arriba a la derecha, solo para ADMIN
+12. El badge muestra el conteo correcto de no leídas
+13. Sin notificaciones pendientes, no hay badge
+14. El panel se abre y muestra las notificaciones recientes
+15. "Marcar todas como leídas" funciona y el badge desaparece
+16. "Ver todas" lleva a la pantalla completa
+17. Notificaciones ya no aparece en la barra lateral
+
+**Permisos:**
+18. CAJA ve solo sus entradas: Cobros, Cortes, Inventario y Salidas
+19. CAJA no ve Cuentas ni Tiempo Real
+20. CAJA no ve la campana de notificaciones
+21. TERMINAL entra al POS sin barra lateral
+22. BODEGA ve sus entradas reubicadas en las nuevas secciones
+23. Ningún rol ve encabezados de sección vacíos
+
+**Regresión:**
+24. Todas las pantallas siguen funcionando igual: no se modificó ninguna función
+25. Las 12 pruebas del motor siguen pasando
+26. Las pruebas de permisos, POS, salidas, clientes y caja siguen pasando
+
+---
+
+# ENTREGABLE
+
+1. Estado general: ¿compila, arranca, permite iniciar sesión?
+2. Lista de archivos modificados
+3. Confirmación de que no se eliminó ninguna función ni pantalla
+4. Cómo se llega ahora a Comparativo y a Diferencias
+5. Confirmación de que ningún identificador de permisos cambió
+6. Salida de la corrida de pruebas
+7. Confirmación de que las pruebas corrieron en base aislada

@@ -1,0 +1,237 @@
+# Prompt C — Cobranza en el tablero, orden de Cuentas Destino y presentación del estado de nota
+
+## Contexto
+
+La revisión del 15 de septiembre dejó claro que «Cobrado» nombra hoy dos mediciones
+distintas. Con datos reales de Cruces, ese mismo día:
+
+- **Caja en Tiempo Real** mostró Cobrado (Caja) **$0.00**, con la letra chica
+  «0 tickets cobrados». Está midiendo tickets de contado.
+- **Cuentas Destino** mostró Cobrado **$25,000.00**, desglosado en de ventas del
+  periodo $0.00 y abonos a notas $25,000.00. Está midiendo dinero que entró.
+
+Las dos son correctas para su propia pregunta. El defecto es que comparten nombre y
+que el tablero, que es la pantalla que más se mira, no muestra en ninguna parte los
+$25,000 en efectivo que entraron ese día.
+
+**Nada de esto se resuelve cambiando un cálculo.** Se resuelve nombrando bien cada
+medición y haciendo que las dos pantallas lean la misma fuente.
+
+Reglas que este trabajo **no** puede romper:
+
+- La identidad **Ventas = Contado + Ventas a crédito** se conserva intacta. Un abono
+  nunca entra en Ventas: la venta ya se contó el día que caja autorizó la nota, y
+  volver a sumarla al cobrarse sería contar dos veces la misma venta.
+- **Ventas a crédito no disminuye cuando el cliente paga.** Describe lo que se vendió
+  en el periodo. Lo que baja al cobrar es la cartera, que es otra cifra.
+- Ninguna cifra es un callejón sin salida: toda cifra abre el detalle de los
+  documentos que la componen, y de ahí se llega al documento por su folio.
+- El color codifica información, nunca decora.
+- Ninguna cifra financiera se calcula en el navegador.
+- Una sola función por hecho, usada por todos los consumidores.
+
+---
+
+## Bloque 1 — El tablero debe mostrar el dinero que entró
+
+### 1.1 Renombrar lo que ya existe
+
+La tarjeta **COBRADO (CAJA)** mide tickets de contado cobrados, no dinero recibido.
+Su propio subtítulo ya lo dice. Renómbrala a lo que mide —por ejemplo **Contado
+cobrado**, con su subtítulo de tickets— para que deje de prometer una cifra de
+cobranza total que no contiene. No cambies su cálculo ni su desglose: sigue usando
+`collectedTicketPredicate` y sigue conciliando con su detalle.
+
+La primera fila conserva sus cuatro tarjetas y su identidad:
+**Ventas (Total) = Contado cobrado + Ventas a crédito**, más Utilidad.
+
+### 1.2 Tarjeta nueva de cobranza
+
+Agrega una **tarjeta de cobranza del periodo** que responda «cuánto dinero entró
+hoy». Debe mostrar el total y, debajo, el mismo desglose que ya usa Cuentas Destino:
+de ventas del periodo, abonos a notas, y a cuenta sin aplicar.
+
+**Requisito central, y es el punto de toda la entrega:** esa tarjeta **no calcula
+nada nuevo**. Debe llamar exactamente la misma función del servidor que alimenta el
+encabezado Cobrado de Cuentas Destino. Si las dos pantallas muestran ese número, lo
+muestran desde una sola consulta. Si para lograrlo hay que extraer esa consulta a una
+función compartida, hazlo; lo que no se acepta es una segunda consulta que hoy
+coincida.
+
+Ubicación: **no** la metas en la primera fila. Esa fila es la identidad de ventas y
+agregarle una cifra de cobranza invita justo a la suma incorrecta que queremos
+evitar. Ponla en una banda propia, entre la fila de ventas y la fila de señales
+operativas, con un encabezado que diga que responde una pregunta distinta —qué dinero
+entró, contra qué se vendió—.
+
+La tarjeta es clicable y abre el mismo detalle canónico de movimientos que ya abre
+Cuentas Destino, con sus filtros, y desde ahí el folio lleva al documento. La suma del
+detalle debe cuadrar al centavo con la cifra que lo abrió.
+
+### 1.3 Prueba de conciliación
+
+Agrega una prueba que, con el mismo periodo y el mismo sitio, afirme que la cifra de
+la tarjeta nueva del tablero y la cifra Cobrado del encabezado de Cuentas Destino son
+**idénticas al centavo**, y que su desglose por fuente coincide renglón por renglón.
+No basta con que ambas funcionen: la prueba debe fallar si alguien introduce una
+segunda consulta.
+
+Verifica también que las tarjetas existentes no cambiaron de valor: Ventas (Total),
+Contado cobrado, Ventas a crédito y Utilidad deben dar exactamente lo mismo que antes
+de este cambio, con los mismos datos. Pega el antes y el después.
+
+---
+
+## Bloque 2 — Orden visual de Cuentas Destino
+
+**No rehagas esta pantalla.** Su contenido es correcto y es la única que hoy dice la
+verdad completa. El trabajo es de orden, no de sustancia: **ninguna cifra, desglose,
+tabla, gráfica ni enlace existente puede desaparecer ni cambiar de valor.**
+
+Qué sí hacer:
+
+1. Separar visualmente las dos preguntas que la pantalla contesta: **venta** —Vendido,
+   con su desglose contado/crédito, y la Matriz de Operaciones— contra **cobranza**
+   —Cobrado, con su desglose, y las tres cuentas reales—. Hoy las seis tarjetas viven
+   en dos filas que no declaran esa diferencia. Agrega encabezados de sección que la
+   nombren.
+2. **Por cobrar (notas de crédito al día)** no es ni venta ni cobranza: es cartera.
+   Debe leerse como tercera cosa, no como una tarjeta más entre las otras dos.
+   Conserva su valor y su leyenda actual.
+3. Las tres tarjetas de cuenta —Efectivo, Cuentas No Fiscales, Cuentas Fiscales— son
+   el desglose de Cobrado por destino. Deben leerse como subordinadas a Cobrado, no
+   como un nivel paralelo. Conserva sus porcentajes, calculados sobre Cobrado, y la
+   declaración de facturado de la caja física.
+4. Conserva el orden fijo de destinos: Efectivo, Cuentas No Fiscales, Cuentas
+   Fiscales, Ventas a Crédito, con sus etiquetas resueltas desde
+   `@workspace/number-format`.
+5. Revisa el comportamiento en teléfono: las tarjetas apilan conservando ese orden y
+   las tablas anchas conservan desplazamiento horizontal.
+
+Entrega una captura del antes y del después, y una lista explícita de cada cifra de la
+pantalla con su valor antes y después. Deben ser iguales.
+
+---
+
+## Bloque 3 — La insignia de estado de nota
+
+Hoy `ClienteNotaEstadoBadge` pinta la insignia **y**, pegado a su derecha, el texto
+«· Saldo pendiente $X» en rojo. Eso se ve amontonado en las dos superficies donde
+aparece, y además duplica información que ya está al lado.
+
+### 3.1 La insignia queda sola
+
+La insignia muestra únicamente su estado: **PENDIENTE**, **ABONO PARCIAL**,
+**PAGADA** o **CON RETRASO**, con su icono y su color. Nada más.
+
+**Esto modifica una regla vigente y hay que reescribirla, no ignorarla.** `replit.md`
+dice hoy que en las tres condiciones impagas se muestra el saldo pendiente actual
+junto al estado. La intención de esa regla era que nadie viera el estado sin saber
+cuánto se debe, y que no se mostrara el importe original en su lugar. Esa intención se
+sigue cumpliendo: en el detalle de la nota el saldo pendiente tiene su propia tarjeta
+grande al lado, y en el estado de cuenta tiene su propia columna. La regla nueva que
+debe quedar escrita es: **el saldo pendiente actual siempre está visible junto al
+estado, en su propio campo, y nunca dentro de la insignia ni sustituido por el importe
+original.**
+
+Antes de quitar el texto de la insignia en cada superficie, **comprueba que el saldo
+pendiente sigue visible ahí**. Si en alguna vista no lo está, ese es el lugar donde
+hay que agregarlo como campo propio, no donde hay que conservar el texto pegado.
+
+### 3.2 Superficies a revisar
+
+Recorre las cinco y déjalas consistentes:
+
+- `cliente-detail.tsx`, columna Estado del estado de cuenta.
+- `cliente-nota-credito.tsx`, tarjeta «Estado de Nota» del detalle de la nota.
+- `cobros.tsx`, `alertas.tsx` y `notificaciones.tsx`.
+
+En la columna Estado del estado de cuenta, los movimientos que no son nota —abonos,
+reversos, ajustes— siguen mostrando guion, alineado igual que las insignias.
+
+### 3.3 Defectos de composición concretos
+
+1. En el detalle de la nota, el encabezado de la tarjeta contigua se está pintando
+   como **«SALDO PENDIENTEDE $22,022.00»**, sin separación entre el título y el
+   importe original. Corrige esa composición: título e importe original necesitan
+   separación real y jerarquía distinta, y el importe original debe leerse como
+   secundario frente al saldo pendiente.
+2. Las tres tarjetas del detalle de la nota —Estado de Nota, Saldo pendiente y
+   Vencimiento— deben quedar alineadas entre sí: misma altura, mismo tratamiento de
+   encabezado, el contenido centrado de la misma forma. Hoy la insignia queda suelta
+   dentro de su tarjeta mientras las otras dos traen una cifra grande.
+3. En el estado de cuenta, la columna **Saldo** muestra dos renglones por fila,
+   «Deudor $X» y «A favor $Y». Revisa que se lean como un par y no como dos datos
+   sueltos, y que no compitan visualmente con la columna Importe.
+4. En teléfono, las tarjetas y la tabla no deben desbordar. Comprueba a 402 px.
+
+### 3.4 Lo que no cambia
+
+Los estados siguen derivándose en `deriveEstadoNota` en el servidor. **Ninguna vista
+puede recalcularlos.** Se conservan los cuatro estados, sus colores y la precedencia
+de Con retraso sobre Abono parcial. Amarillo sigue significando cobro pendiente dentro
+del plazo, verde liquidación y rojo atraso.
+
+---
+
+## Bloque 4 — Hallazgo a documentar, no a corregir
+
+Al revisar el corte de caja se encontró que `cuadrarCaja` calcula el efectivo esperado
+como fondo inicial, más los pagos en efectivo de **tickets**, menos las salidas de
+dinero. Los abonos de clientes viven en `movimientos_credito` y no entran en esa
+cuenta.
+
+Consecuencia: el 15 de septiembre entraron $25,000 en efectivo al cajón de Cruces por
+abonos, y el corte de ese día esperaría únicamente el fondo inicial. El cajero
+aparecería con un sobrante de $25,000 sin explicación en pantalla.
+
+**No lo corrijas en esta entrega.** Verifica si es exacto leyendo el código, y
+documéntalo en `replit.md` y en `reports/` como pendiente abierto de alta prioridad,
+anterior al piloto, con la evidencia de dónde está la omisión. Si al verificarlo
+resulta que los abonos sí entran por alguna vía que no vi, dilo y corrige la
+descripción.
+
+---
+
+## Verificación
+
+1. `pnpm run typecheck` completo. Reporta el conteo. Los cuatro errores preexistentes
+   —dos en la API, dos en Alertas— **no se corrigen aquí**; confirma que no aparecieron
+   otros.
+2. Codegen sin diferencias, o con las que este cambio justifique.
+3. Prueba de identidad entre la tarjeta nueva del tablero y el Cobrado de Cuentas
+   Destino, en importe y en desglose por fuente.
+4. Prueba de que **Ventas (Total) = Contado cobrado + Ventas a crédito** sigue
+   cumpliéndose y de que ningún abono entra en Ventas.
+5. Conciliación tarjeta/detalle de la tarjeta nueva: mismo conteo y mismo importe a
+   través de todas las páginas.
+6. Tabla del antes y el después de cada cifra de Cuentas Destino y de las cuatro
+   tarjetas existentes del tablero. Deben ser idénticas.
+7. Comprobación en navegador de las tres superficies del Bloque 3, en escritorio y a
+   402 px, con los cuatro estados representados. Las notas 1004 y 1005 están hoy en
+   **ABONO PARCIAL** y sirven como caso real. Si no hay sesión autenticada
+   disponible, dilo y **no lo presentes como aprobado**.
+
+## Restricciones
+
+- No crees usuarios, ADMIN ni sesiones de prueba en development.
+- No ejecutes escrituras en la base, ni migraciones, ni `executeSql` de escritura.
+- No toques los movimientos 43 a 50 ni el veto de las notas históricas.
+- No corrijas el corte de caja, los cuatro errores de tipos, las seis copias del
+  predicado contabilizado, los 69 vetos ni las pruebas frágiles. Son entregas propias.
+- **No unifiques las dos definiciones de Cobrado por tu cuenta.** Este trabajo las
+  nombra y las hace leer la misma fuente donde corresponde; cualquier cambio de
+  significado es decisión del propietario.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. Que el tablero distingue **Contado cobrado** —tickets de contado— de **la cobranza
+   del periodo** —dinero recibido, incluidos abonos—, que la segunda lee la misma
+   función que Cuentas Destino, y que la identidad Ventas = Contado + Ventas a crédito
+   queda intacta porque un abono no es una venta nueva.
+2. Reescribir la regla del saldo pendiente junto al estado según el Bloque 3.1: la
+   insignia muestra solo el estado, el saldo pendiente actual siempre está visible
+   junto a ella en su propio campo, y nunca se sustituye por el importe original.
+3. El hallazgo del corte de caja del Bloque 4, como pendiente abierto anterior al
+   piloto.
+4. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

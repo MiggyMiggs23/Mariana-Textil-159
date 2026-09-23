@@ -1,0 +1,45 @@
+PREPARADO NO EJECUTADO. Sólo MAIN ejecuta PostgreSQL, candidatos, SQL real y workflows.
+Autorización: reports/autorizacion-procedimiento-simple-y-liberacion-e3-tanda-b-20260923.txt.
+
+1. Revisar fixture.sql y main.mjs. Fixture mínimo previo r5 + dependencias E1/E2
+   copiadas de captura cruda anterior; tablas Fondo E10 ya presentes. No catálogo
+   completo, B0/B1, preflight ni manifiestos/hashes cruzados.
+2. PG16 bin absoluto; elegir puerto candidato libre y nombre de intento nuevo.
+   SIMPLE_MAIN=AUTHORIZED SIMPLE_PG_BIN=/ruta/pg16/bin SIMPLE_CANDIDATE_PORT=18096 \
+     node reports/liberacion-simple-20260923/main.mjs rehearse e3 primer-ensayo
+   Ejecuta fixture, E3 01+03 completos, candidato E3 existente directo, health 200,
+   compara filas exactas antes/después del arranque, destruye cluster socket aislado.
+   Ante FAIL detener; no corregir SQL ni continuar por cuenta propia.
+3. Tras PASS, comprobar API efectiva sigue PID195 dist-e2 (si cambió, identificar
+   PID efectivo, no usar PID supuesto). URL sólo de /proc/PID/environ a env libpq:
+   SIMPLE_MAIN=AUTHORIZED SIMPLE_PG_BIN=/ruta/pg16/bin SIMPLE_API_PID=195 \
+   SIMPLE_REHEARSAL_RECEIPT=reports/liberacion-simple-20260923/rehearse-e3-primer-ensayo/status.json \
+     node reports/liberacion-simple-20260923/main.mjs apply e3 primera-aplicacion
+   Nunca mostrar entorno, URL ni secretos. Logs SQL restringidos: ruta y línea
+   psql exactas por archivo; ejecución secuencial con ON_ERROR_STOP.
+4. MAIN cambia workflow API a ejecución directa del bundle conservado:
+   cd /home/runner/workspace && API_STARTUP_MODE=NORMAL API_INSPECTION_BOOT=1 NODE_ENV=development exec node artifacts/api-server/dist-e3-apertura-20260922/index.mjs
+   Conservar DATABASE_URL y PORT efectivos en entorno; no heredarlos a argumentos.
+   UI debe servir artifacts/mariana-textil/dist-e3-apertura-20260922 (NO vite dev).
+   Usar vite preview con --outDir dist-e3-apertura-20260922 --host 0.0.0.0
+   y PORT/BASE_PATH actuales. MAIN comprueba puertos/artifact routing antes cambio.
+   No wrapper api-start-audit ni preflight de catálogo.
+   Verificar health y pantalla E3 antes de comenzar Tanda B.
+5. Con E3 efectiva verificada y candidato combinado disponible:
+   SIMPLE_MAIN=AUTHORIZED SIMPLE_PG_BIN=/ruta/pg16/bin SIMPLE_CANDIDATE_PORT=18096 \
+     node reports/liberacion-simple-20260923/main.mjs rehearse tanda-b primer-ensayo
+   Cluster nuevo: mismo fixture + E3 01+03 + r5 sql/1..5 íntegros; candidato combinado.
+6. Sólo tras PASS y comprobación E3 efectiva:
+   SIMPLE_MAIN=AUTHORIZED SIMPLE_PG_BIN=/ruta/pg16/bin SIMPLE_API_PID=<PID_E3_EFECTIVO> \
+   SIMPLE_REHEARSAL_RECEIPT=reports/liberacion-simple-20260923/rehearse-tanda-b-primer-ensayo/status.json \
+     node reports/liberacion-simple-20260923/main.mjs apply tanda-b primera-aplicacion
+   Si archivo falla, previos pueden estar comprometidos: detener, registrar
+   status.json y archivo/línea del log. No rollback SQL ni recorte automático.
+7. MAIN sirve API/UI dist-simple-e3-tanda-b-20260923 directamente y verifica.
+   E3 ordinary/matriz/UI ON; dirigido/retenido/devolución/atribución/Fondo/remate
+   y todas las puertas Tanda B permanecen OFF.
+
+Preservar todos bundles anteriores. Reversión autorizada de tráfico: bundle previo,
+no deshacer SQL automáticamente. Preparación no acredita ejecución ni prueba UI.
+El runner no cambia workflows ni sirve la UI. La prueba health no sustituye pruebas
+funcionales de abono ordinario/recibo desde pantalla.

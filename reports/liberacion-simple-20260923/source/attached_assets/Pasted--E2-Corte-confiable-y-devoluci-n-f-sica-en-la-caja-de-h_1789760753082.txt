@@ -1,0 +1,154 @@
+# E2 — Corte confiable y devolución física en la caja de hoy
+
+Corresponde a la entrega **E2** de `reports/prompt-u-plan-de-implementacion.md`.
+Depende de **E1**, ya aplicado. La esperan E3, E4, E12 y, por cadena, E9.
+
+Es el pendiente más viejo del proyecto: desde que se encontró que `cuadrarCaja` calcula
+el efectivo esperado sin ver los abonos en efectivo. **Es el único punto donde el
+sistema se desalinea del dinero físico.**
+
+---
+
+## Las decisiones que gobiernan esta entrega
+
+Firmes. No se replantean.
+
+**Caja abierta exigida para efectivo, no para transferencia.** Un abono en efectivo sin
+sesión abierta es dinero en un cajón que no pertenece a ningún corte: se rechaza con un
+mensaje que diga qué falta. Una transferencia no toca el cajón y no la exige.
+
+**La devolución física sale de la caja abierta de hoy** y **no modifica el corte donde el
+dinero entró originalmente**.
+
+**Solo se devuelve dinero a favor y sin aplicar.** Si el dinero ya se aplicó a una nota,
+**no se devuelve nunca**. Eso protege lo mismo que la decisión sobre reasignación:
+ninguna nota que el cliente recibió como pagada vuelve a tener saldo.
+
+**La devolución es del abono completo, no parcial.**
+
+**Solo ADMIN autoriza una devolución física**, con motivo obligatorio.
+
+**Un cobro retenido es devolvible** mientras siga sin aplicarse, por la misma regla. Si
+el cliente cambia de opinión antes de que un ADMIN decida su destino, se le regresa
+completo.
+
+**Las correcciones contables quedan separadas de los movimientos del cajón.** Una
+recaptura contable no es dinero que entró ni salió. E1 ya guarda esa naturaleza; aquí se
+usa.
+
+---
+
+## La fórmula
+
+El efectivo esperado de una sesión pasa a ser:
+
+> fondo inicial de la sesión
+> **+** cobros físicos de tickets en efectivo
+> **+** abonos físicos en efectivo
+> **+** cobros físicos pendientes de aplicación
+> **−** salidas físicas de la sesión
+
+Tres condiciones que hay que demostrar, no suponer:
+
+1. **Los grupos son disjuntos.** Un mismo cobro no puede entrar como pendiente y como
+   abono a la vez.
+2. **Una devolución ya incluida en salidas no se resta dos veces.**
+3. **Un pago que liquidó varias notas se suma una sola vez**, no una por cada nota.
+
+Y lo que **no** es cobro nuevo: transferencias, la aplicación posterior de un pendiente,
+y el traslado al Fondo.
+
+---
+
+## Bloque 0 — Confirmar antes de escribir
+
+1. La fórmula actual de `cuadrarCaja`, con su archivo y su línea, y de dónde sale hoy
+   cada sumando.
+2. Cómo se relacionan hoy los abonos con la sesión después de E1, y si esa relación basta
+   o hay que completarla.
+3. Qué consume el efectivo esperado además del corte: historial, detalle, impresión,
+   reportes diarios. **Todos deben leer la misma función**, no cada uno la suya.
+4. Qué pasa hoy con un **cierre concurrente**: un abono o una devolución registrados
+   mientras alguien cierra la caja.
+5. Si existe hoy alguna vía de devolución física de dinero, o hay que construirla entera.
+
+**Presenta el resultado antes de implementar.**
+
+---
+
+## Bloque 1 — Implementar
+
+1. **La fórmula nueva**, en una sola función usada por todos los consumidores.
+2. **Caja abierta exigida para efectivo**, con mensaje que diga qué falta. Transferencia
+   no la exige.
+3. **La devolución física**, con sus reglas: solo dinero a favor sin aplicar, importe
+   completo, solo ADMIN, motivo obligatorio, y evidencia.
+4. **El corte original no se modifica nunca** por una devolución posterior.
+5. **Las correcciones contables no entran al cajón.** Se leen de la naturaleza que E1 ya
+   guarda.
+6. **El desglose del corte debe ser trazable**: de cada sumando se llega a los documentos
+   que lo componen, y de ahí al documento por su folio. Incluye la impresión.
+
+---
+
+## Lo que NO cambia
+
+- **Ventas, Contado cobrado y Cobranza del periodo no aumentan** por incorporar al corte
+  un cobro que ya estaba registrado. Solo cambia el efectivo esperado de la sesión.
+- FIFO, la deuda global, el saldo a favor y la validación del límite de crédito.
+- **Los cortes ya cerrados.** Ninguno cambia de valor por esta entrega. Si alguno cambia,
+  **detente y repórtalo**: sería un defecto, no una migración.
+- Las tres guardas de E1 siguen activas. Esta entrega **no habilita** la captura de
+  efectivo de crédito: eso es E3.
+- Los candados por par producto y ubicación.
+
+---
+
+## Verificación
+
+1. **Los cortes históricos conservan su valor exacto.** Es la verificación principal.
+2. La fórmula, con: dos cajas de dos sitios; efectivo contra transferencia; caja cerrada
+   rechazando efectivo y aceptando transferencia; **cierre simultáneo** con un abono y con
+   una devolución.
+3. **Los grupos disjuntos**, demostrado: un cobro que fue pendiente y luego se aplicó no
+   se cuenta dos veces.
+4. **Un pago que liquidó tres notas se suma una vez**, no tres.
+5. **Una devolución ya en salidas no se resta dos veces.**
+6. Devolución hoy de un pago recibido antes: **el corte antiguo permanece idéntico**.
+7. Devolución rechazada sobre dinero ya aplicado, con su mensaje.
+8. Devolución rechazada a quien no es ADMIN.
+9. Una corrección contable **no mueve el efectivo esperado**.
+10. La misma operación repetida no duplica nada.
+11. El desglose del corte, su historial y **el papel impreso** coinciden y son trazables.
+12. Typecheck completo en cero y suite sin rojos nuevos contra la línea base
+    **80eaa93d**. Cada prueba nueva **vista fallar** con su defecto introducido.
+
+**Lo que solo puede verificar el propietario:** el conteo físico del cajón, el comprobante
+de la devolución, y confirmar que el dinero realmente salió.
+
+---
+
+## Restricciones
+
+- **No habilites la captura de efectivo de crédito.** Las guardas de E1 siguen puestas;
+  retirarlas es E3 y requiere autorización aparte.
+- **No modifiques ningún corte cerrado**, por ninguna razón.
+- No toques FIFO, la proyección de crédito, el saldo a favor ni la validación del límite.
+- No construyas nada de E3 a E12: ni botón de abono en Caja, ni recibo, ni salidas
+  extraordinarias, ni Fondo operativo, ni pago a proveedor mixto.
+- No habilites la pantalla del Fondo.
+- No reanudes el Prompt P ni cierres su Grupo 1.
+- No crees usuarios ni sesiones de prueba.
+- **Cualquier escritura en la base requiere autorización textual guardada en `reports/`
+  antes de la primera escritura.** Preséntame el alcance y espera, como en E1 y E10.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. La fórmula nueva del efectivo esperado, con sus tres condiciones de disjunción.
+2. Que el efectivo exige caja abierta y la transferencia no, con la razón.
+3. Las reglas de la devolución física: solo dinero a favor sin aplicar, importe completo,
+   solo ADMIN, motivo obligatorio, y que **el corte original nunca se modifica**.
+4. Que un cobro retenido es devolvible mientras siga sin aplicarse.
+5. Que incorporar un cobro al corte **no aumenta** Ventas, Contado cobrado ni Cobranza.
+6. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión, con la
+   revisión exacta sobre la que se ejecutó.

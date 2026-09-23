@@ -1,0 +1,28 @@
+Cuando termines la validación PostgreSQL de A+C y guardes su informe, sigue con esta tanda. Trabajo largo, sin supervisión. Reglas para todas las tareas:
+
+- No accedas a la base de la API, no ejecutes SQL contra ninguna base, no reinicies la API y no cambies el bundle en ejecución.
+- No toques los archivos de A+C, de devolución, de las guardas E1 ni del corte E2.
+- El frontend servido no debe mostrar nada que la API en ejecución no soporte: todo lo que dependa de API nueva queda apagado hasta que se libere.
+- Cada tarea en su propio commit. Toda prueba nueva se ve fallar con su defecto introducido antes de aceptarla. No cambies una expectativa solo para obtener verde.
+- Si una tarea choca con una regla de replit.md o necesita una decisión del propietario, detén solo esa tarea, anótalo y sigue con la siguiente.
+
+TAREA 1 — E8, Inventario solo productos activos.
+Según reports/prompt-u-plan-de-implementacion.md (E8 y anexo A10): la consulta agrupada de la pantalla principal de Inventario, con y sin existencia y en búsqueda, filtra productos activos. No extiendas el filtro a kardex, detalle por serie, auditorías, reconstrucción de existencias ni reportes históricos.
+
+TAREA 2 — E6, nombres de cobranza.
+Según el plan (E6 y anexo A9): Cuentas Destino, sus exportaciones y documentos distinguen "Contado cobrado" de "Cobranza del periodo". En replit.md, la identidad canónica queda como Ventas = Contado + Ventas a crédito. Es solo renombre: comprueba igualdad al centavo antes y después en cada componente y total, y no renombres claves técnicas del contrato. Aclara también la discrepancia del título "Cobros de periodos anteriores" (R6 del plan): dónde aparece hoy, si aparece.
+
+TAREA 3 — Pruebas conocidas en rojo.
+De los 5 fallos conocidos contra 80eaa93d: reescribe las 4 pruebas textuales frágiles para que comprueben comportamiento observable, no la forma del código. Sobre la 5ª, clientes-pagos.contract.test.ts, determina si su rechazo de formaPago EFECTIVO es el comportamiento correcto por las guardas E1. Si lo es, corrige la prueba para que lo exija; si no, reporta el defecto sin arreglarlo.
+
+TAREA 4 — Remate, precio mínimo y borrado de producto (decisiones en reports/prompt-u-respuestas-2026-09-18.md).
+Construye en código, inactivo:
+a) "Marcar remate" como permiso de la matriz, que por defecto solo tiene ADMIN, por rollo, con motivo obligatorio. Solo esos rollos se venden por debajo del costo; la venta queda señalada como remate y su pérdida aparece en utilidad.
+b) Precios bloquea un precio de lista menor al costo.
+c) Un producto sin ningún movimiento se puede borrar junto con su precio_historial; con cualquier movimiento sigue bloqueado.
+Si necesita cambios de esquema, deja el SQL preparado y sin ejecutar, con su reversión.
+
+TAREA 5 — Las 28 suites que crean usuarios.
+Clasifica cada una: (a) se puede adaptar para no crear ADMIN, usuarios ni sesiones; (b) necesita una base desechable aparte. Adapta las del grupo (a) y ejecútalas solo si no tocan ninguna base real. Para las del grupo (b), deja escrito qué necesitan. No crees usuarios en development.
+
+Al terminar, deja un informe único en reports/tanda-nocturna-20260919.md con, por tarea: resultado, commit, revisión exacta, pruebas corridas, y lo que quedó detenido y por qué. Typecheck raíz al final contra 80eaa93d.

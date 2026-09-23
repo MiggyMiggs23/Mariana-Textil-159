@@ -1,0 +1,190 @@
+# PARTE 9 — Cuadre fiscal, especificaciones de producto y enlaces
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Tienes autorización previa para crear y eliminar ramas Neon desechables durante esta tarea. Confirma `current_database()` antes de cada operación y que sea distinta de `DATABASE_URL`.
+
+---
+
+## BLOQUE 1 — Entrar al detalle de cada cuenta
+
+En la pantalla de **Cuentas**, las cuatro tarjetas —Efectivo, Cuentas No Fiscales, Cuentas Fiscales y Ventas a Crédito— se vuelven **clicables**.
+
+Al entrar a cualquiera, se muestra el detalle de sus movimientos en el periodo seleccionado:
+
+| Fecha | Tipo | Documento | Cliente | Sitio | Monto | Registró |
+|---|---|---|---|---|---|---|
+
+- Ordenado del más reciente al más antiguo, paginado.
+- El **documento es un enlace** al ticket, nota o corte que originó el movimiento.
+- Filtros por fecha y sitio, heredados de la pantalla.
+- Exportación a Excel.
+- Totales al pie.
+
+Aplica a las cuatro cuentas por igual.
+
+---
+
+## BLOQUE 2 — Cuadre fiscal del contador
+
+Dentro de **Cuentas Fiscales**, un apartado para que el contador confirme que sus cuentas cuadran con las del sistema.
+
+### Las tres cifras
+
+Para el periodo elegido —día, semana o rango libre:
+
+| Cifra | Qué es |
+|---|---|
+| **Facturado del periodo** | Suma de subtotal e IVA de los tickets y notas marcados como facturados, por fecha de venta |
+| **Cobrado a cuenta fiscal** | Dinero que efectivamente entró a la cuenta fiscal en el periodo |
+| **Por cobrar de ventas fiscales** | Ventas facturadas con saldo pendiente |
+
+**Facturado es la cifra principal**, la que se confirma. Las otras dos son contexto.
+
+### Por qué las tres, y no una
+
+Una venta facturada a crédito **causa IVA el día de la venta y el dinero entra semanas después.** Si el contador compara lo facturado contra lo que hay en el banco, nunca le va a dar igual mientras haya cartera.
+
+La tercera cifra explica la brecha. Rotúlalo en pantalla con claridad: **la diferencia entre facturado y cobrado es cartera, no un descuadre.**
+
+### Confirmar
+
+Botón **"Confirmar cuentas"**. El contador lo oprime cuando su propia contabilidad coincide con lo facturado del periodo.
+
+Se registra: quién confirmó, cuándo, qué periodo, y **la cifra de facturado contra la que confirmó**, congelada. Si mañana ese número cambia, se debe poder ver que cambió después de la confirmación.
+
+Aparece en el histórico de confirmaciones, con su periodo y su cifra.
+
+### Reportar diferencia
+
+Botón **"Reportar diferencia"**. Pide:
+
+- Monto de la diferencia
+- Descripción, obligatoria, mínimo 20 caracteres
+- Si el contador tiene más o menos que el sistema
+
+Al guardarse, **alerta a ADMIN** con la notificación de la familia "solicitud" y su sonido.
+
+Queda en el mismo histórico, marcada como diferencia y con su estado: pendiente o resuelta. ADMIN la marca resuelta con una nota.
+
+### Permisos
+
+Confirmar y reportar: **CONTADOR y ADMIN.**
+Ver el histórico: CONTADOR, ADMIN y SISTEMAS.
+Marcar una diferencia como resuelta: **solo ADMIN.**
+
+Todo queda en la Bitácora.
+
+### Hallazgo a revisar
+
+Hoy el sistema **rechaza marcar como facturada cualquier venta con líneas metreadas** (`lib/pos.ts`, error `METREADO_FACTURADO`).
+
+Puede ser intencional. **No lo cambies en esta tarea**, pero déjalo anotado en `replit.md` como decisión a confirmar con el usuario: si algún día un cliente pide factura de un corte, hoy no se puede emitir.
+
+---
+
+## BLOQUE 3 — Especificaciones del producto
+
+Agrega tres campos al producto, los tres **opcionales**:
+
+| Campo | Tipo | Notas |
+|---|---|---|
+| **Ancho** | Numérico con 2 decimales, en centímetros | Rotula la unidad en pantalla |
+| **Composición** | Texto libre | Ejemplo: "100% poliéster" |
+| **Gramaje** | Numérico con 2 decimales, en gramos por metro cuadrado | Rotula la unidad |
+
+Se editan desde el catálogo de Productos, por ADMIN y SISTEMAS.
+
+Se muestran en el detalle del producto, junto con lo que ya tiene: SKU, tela, color, unidad, precios y existencias.
+
+Los productos existentes quedan con los tres campos vacíos. **No inventes valores ni los deduzcas del nombre de la tela.**
+
+En la lista de Productos, agrégalos como columnas **ocultables**, no visibles por defecto. La lista ya tiene bastantes columnas.
+
+---
+
+## BLOQUE 4 — Enlaces en todas las tablas
+
+En Clientes y Proveedores ya se aplicó: se quitó la columna "Ver detalle" y el nombre quedó como enlace. Hay un componente y una prueba de contrato que lo respaldan.
+
+**Aplica el mismo criterio a todo el sistema.**
+
+### La regla
+
+> En cada tabla, **el identificador principal del renglón** es un enlace al detalle de ese registro. En azul, subrayado, usando el mismo componente que ya existe.
+>
+> **Un solo enlace por renglón.** Si un renglón de movimientos podría llevar al rollo y al producto, elige el más importante para esa tabla. Varios enlaces por renglón confunden más de lo que ayudan.
+
+### Dónde aplicarlo
+
+Recorre **todas** las tablas del sistema. Como mínimo:
+
+| Tabla | Enlace en |
+|---|---|
+| Productos | Nombre del producto |
+| Inventario | Serie del rollo |
+| Movimientos | Serie del rollo |
+| Entradas | Folio |
+| Salidas | Folio |
+| Ventas y tickets | Folio |
+| Cobros | Folio de la nota |
+| Cortes | Folio del corte |
+| Viajes | Folio del viaje |
+| Contenedores | Identificador |
+| Usuarios | Nombre de usuario |
+| Camionetas | Nombre o alias |
+| Choferes | Nombre |
+| Auditorías de inventario | Folio |
+| Reportes, donde haya un registro con detalle | Su identificador |
+
+### Cuando no haya detalle
+
+Si una tabla muestra un registro que **no tiene pantalla de detalle**, no inventes una ni pongas un enlace muerto. Déjalo como texto y anótalo en el reporte.
+
+### Verificación
+
+Extiende la prueba de contrato existente para que verifique que **ninguna tabla del sistema conserva una columna de "Ver detalle"** y que el identificador principal es enlace.
+
+Deja en el commit la lista completa de tablas revisadas, con qué columna quedó de enlace en cada una.
+
+---
+
+## BLOQUE 5 — Verificación
+
+**Cuentas**
+- Las cuatro tarjetas entran a su detalle de movimientos
+- El documento de cada movimiento es enlace y lleva al registro correcto
+- Los filtros y la exportación funcionan
+
+**Cuadre fiscal**
+- Las tres cifras se calculan bien; una venta facturada a crédito aparece en facturado y en por cobrar, no en cobrado
+- El rótulo explica que la brecha es cartera
+- Confirmar congela la cifra y queda en el histórico
+- Reportar diferencia exige descripción de 20 caracteres y alerta a ADMIN con sonido
+- Un CONTADOR puede confirmar y reportar; **no** puede marcar resuelta
+- Todo queda en la Bitácora
+
+**Producto**
+- Los tres campos se capturan y se muestran en el detalle
+- Los productos existentes quedan vacíos, sin valores inventados
+- Las columnas nuevas están ocultas por defecto
+
+**Enlaces**
+- Ninguna tabla conserva columna de "Ver detalle"
+- Cada tabla tiene **un** enlace en su identificador principal
+- No hay enlaces muertos
+- Lista completa de tablas revisadas
+
+Para pruebas que necesiten usuarios o sesiones, rama Neon desechable según `replit.md`. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> El contador confirma **contra lo facturado**, no contra lo cobrado. La diferencia entre facturado y cobrado es cartera de ventas fiscales a crédito, no un descuadre, y la pantalla debe decirlo. Al confirmar se congela la cifra contra la que se confirmó.
+>
+> En toda tabla del sistema, el identificador principal del renglón es un enlace al detalle: un solo enlace por renglón, y ninguna columna de "Ver detalle".
+>
+> Pendiente de confirmar con el usuario: hoy no se puede marcar como facturada una venta con líneas metreadas.

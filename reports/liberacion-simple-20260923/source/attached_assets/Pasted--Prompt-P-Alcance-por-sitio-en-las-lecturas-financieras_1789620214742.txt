@@ -1,0 +1,173 @@
+# Prompt P — Alcance por sitio en las lecturas financieras de clientes
+
+## Contexto
+
+El Prompt N protegió la pantalla de Cartera: resumen, tabla y exportaciones resuelven
+alcance mediante `loadClientesCartera`. Su Bloque 3 dejó inventariados **diez endpoints
+más** que entregan información económica sin resolver alcance por sitio, documentados en
+`reports/portfolio-scope/pendientes.md`.
+
+Hoy tienes **una pantalla filtrada y diez que no**. Esta entrega cierra el resto.
+
+Reglas del proyecto en juego:
+
+- Toda consulta resuelve su alcance en el servidor, con `resolveReadScope`.
+- Las cifras económicas se filtran en el servidor, no se tapan en pantalla.
+- La matriz de permisos decide qué acción; el alcance decide dónde.
+- Una sola función por hecho, usada por todos los consumidores.
+
+Y una observación del propio inventario que hay que respetar: **comprobar que el cliente
+existe no autoriza el sitio.** Que un cliente sea visible no significa que sus
+operaciones de otra tienda lo sean.
+
+---
+
+## Bloque 0 — La decisión que hay que tomar antes de programar
+
+**No todos estos endpoints deben filtrarse igual, y filtrar de más es peligroso.**
+
+El límite de crédito se valida contra la **deuda total** del cliente, no contra la de un
+sitio. Si el estado de cuenta se filtra por sitio, un cajero vería una deuda menor que
+la real y creería que hay margen de crédito donde no lo hay. El servidor rechazaría la
+autorización por límite y el cajero no entendería por qué. **Ocultar parte de la deuda
+de un cliente es más peligroso que mostrarla.**
+
+Por eso hay dos familias y no una:
+
+**Familia A — Agregados y listados.** Aquí el alcance sí aplica: son sumas de
+operaciones y cada operación tiene sitio.
+`/clientes` (saldos y límite en el directorio), `/analitica`, `/analitica.xlsx`,
+`/comportamiento-pago`.
+
+**Familia B — La situación de un cliente concreto.** Aquí el alcance por sitio puede
+ser contraproducente.
+`/clientes/:id`, `/:id/credito`, `/:id/estado-cuenta` y sus cuatro salidas,
+`/:id/comportamiento-pago`, `/:id/compras`, `/:id/analitica`, `/:id/estadisticas`,
+`/:id/pagos`, `/:id/pagos/:pagoId`, `/:id/notas/:ticketId` y su reimpresión.
+
+**Lo que tienes que entregar antes de escribir código:**
+
+1. Para cada uno de los diez endpoints, di a qué familia pertenece y por qué.
+2. Para la Familia B, propón el criterio. Opciones a evaluar, no son las únicas:
+   mostrar el total siempre porque es la cifra contra la que se valida el crédito;
+   mostrar el total y **declarar** qué parte corresponde al sitio del usuario; o
+   filtrar el detalle y conservar el total con su leyenda.
+3. Señala **cuáles de los diez alimentan una decisión operativa** —autorizar una nota,
+   dar crédito, cobrar— porque en esos el riesgo de mostrar de menos supera el de
+   mostrar de más.
+4. Comprueba en el código si el cálculo del límite de crédito y la validación al
+   autorizar usan el total global. Si es así, cualquier pantalla que muestre una cifra
+   distinta a la que valida el servidor debe decirlo.
+
+**Presenta la propuesta y espera aprobación.** No escribas código en este bloque.
+
+---
+
+## Bloque 1 — Un solo criterio, una sola función
+
+Sea cual sea la decisión del Bloque 0:
+
+1. El alcance se resuelve con **la misma función y el mismo criterio** que estableció
+   `loadClientesCartera`. Si diez endpoints resuelven alcance por su cuenta, en tres
+   meses divergen — y ese es el patrón de falla más caro de este proyecto.
+2. Si el criterio de la Familia B resulta distinto del de la Familia A, **también es
+   una sola función**, compartida por todos los de esa familia.
+3. **El filtro va en la consulta, no en el navegador.** Lo que el usuario no debe ver
+   nunca sale del servidor.
+4. Cada respuesta declara el alcance aplicado, como ya hace Cartera, para que la
+   pantalla pueda decirlo y dos usuarios no vean cifras distintas sin saber por qué.
+
+---
+
+## Bloque 2 — Orden de ejecución
+
+Ejecuta por grupos, verificando cada uno antes de pasar al siguiente. Si un grupo
+resulta más grande de lo previsto, detente y repórtalo.
+
+**Grupo 1 — Exportaciones.** `/analitica.xlsx`, `/:id/estado-cuenta.xlsx`,
+`/:id/estado-cuenta.pdf` y `/:id/estado-cuenta/imprimir`.
+
+Van primero porque **un archivo sale del sistema**: se manda por correo, se guarda, se
+reenvía. Ninguna pantalla lo contiene después. Un Excel mal filtrado es el peor caso de
+toda esta lista.
+
+**Grupo 2 — Directorio y agregados.** `/clientes`, `/analitica`,
+`/comportamiento-pago`.
+
+El directorio expone saldo actual, saldo a favor y límite de crédito de cada cliente a
+cualquiera con permiso financiero.
+
+**Grupo 3 — La ficha del cliente.** `/clientes/:id`, `/:id/credito`,
+`/:id/comportamiento-pago`, `/:id/analitica`, `/:id/estadisticas`, `/:id/compras`.
+
+**Grupo 4 — Operaciones y documentos.** `/:id/estado-cuenta`, `/:id/pagos`,
+`/:id/pagos/:pagoId`, `/:id/notas/:ticketId` y su reimpresión.
+
+---
+
+## Bloque 3 — Lo que NO se toca
+
+- **Las rutas administrativas globales intencionales y el catálogo de precios
+  negociados**, que el inventario del Prompt N excluyó expresamente. Si encuentras
+  alguna otra que deba ser global por diseño, **repórtala en vez de filtrarla**.
+- El cálculo de cartera, de vencido, de margen, de riesgo o de comportamiento de pago.
+  **Solo cambia su alcance, nunca su definición.**
+- El reparto FIFO, la proyección de crédito y las reglas de saldo a favor.
+- La validación del límite de crédito al autorizar. Sigue siendo dura, sin override, y
+  contra lo que hoy valida.
+- El ocultamiento económico que ya existe por rol: costo, precio, margen y utilidad se
+  siguen resolviendo en el servidor. **El alcance por sitio se suma a eso, no lo
+  sustituye.**
+
+---
+
+## Verificación
+
+**Por grupo, antes de pasar al siguiente:**
+
+1. **No-regresión con alcance global: las cifras son idénticas a las de hoy, campo por
+   campo.** Esta es la principal y la que más importa. Un usuario ADMIN no debe notar
+   ningún cambio.
+2. Alcance de una ubicación: la respuesta contiene solo lo que corresponde, y una
+   operación de otro sitio no aparece.
+3. Alcance de varias ubicaciones.
+4. **Ninguna cifra fuera del alcance viaja en la respuesta del servidor**, no solo que
+   no se pinta. Compruébalo sobre la respuesta, no sobre la pantalla.
+5. Para cada exportación: **abre el archivo generado y comprueba que no contiene una
+   sola fila de otro sitio.** Que el archivo se genere no acredita su contenido.
+6. Para los endpoints de la Familia B: que la cifra mostrada y la que usa el servidor
+   para validar el crédito **no se contradigan**, o que la diferencia esté declarada en
+   la respuesta.
+
+**Al final:**
+
+7. `pnpm run typecheck` completo en cero. Codegen sin diferencias o con las que
+   justifique el cambio de contrato.
+8. Las pruebas existentes de cartera, crédito, cobros y alertas siguen pasando, con su
+   conteo antes y después.
+9. Comprobación autenticada si hay sesión disponible. Si no, **dilo y no la presentes
+   como aprobada**; separa lo verificado de lo no verificado, como vienes haciendo.
+
+## Restricciones
+
+- No crees usuarios, ADMIN ni sesiones de prueba en development.
+- No ejecutes escrituras en la base, ni migraciones.
+- No construyas el tablero de Clientes.
+- No corrijas la asimetría de reversos sin ubicación, el corte de caja ni las copias del
+  predicado contabilizado. Son entregas propias.
+- **No tapes cifras en el navegador como sustituto del filtro en el servidor.**
+- **No filtres de más.** Si un filtro hiciera que el usuario vea una deuda menor a la
+  real y pudiera tomar una decisión de crédito con ella, ese endpoint pertenece a la
+  Familia B y su tratamiento lo decide el propietario en el Bloque 0.
+
+## Al terminar — qué debe quedar escrito en `replit.md`
+
+1. El criterio de alcance de cada familia, con la lista de qué endpoints están en cada
+   una y por qué.
+2. **La regla derivada:** en información de crédito, filtrar de menos expone datos y
+   filtrar de más induce decisiones equivocadas; la cifra que ve quien autoriza debe ser
+   la misma contra la que valida el servidor, o la diferencia debe estar declarada.
+3. Qué rutas quedan globales por diseño y por qué.
+4. El estado del inventario de `reports/portfolio-scope/pendientes.md`: qué quedó
+   cerrado y qué sigue abierto.
+5. Ninguna afirmación de verificación que no hayas ejecutado en esta sesión.

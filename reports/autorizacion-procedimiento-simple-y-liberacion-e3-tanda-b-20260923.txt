@@ -1,0 +1,22 @@
+miguelestza: Cambio de procedimiento autorizado por el propietario. Guarda este texto tal cual en reports/ antes de la primera escritura.
+
+Mientras nadie opere el sistema y sus datos sean de prueba, las liberaciones se hacen de forma simple. Regístralo en replit.md como regla vigente, con su fecha y su condición de término.
+
+Se conserva siempre:
+- Autorización escrita del propietario antes de cualquier escritura en la base de la API.
+- El SQL se prueba en una base PostgreSQL desechable antes de aplicarse, y se destruye al terminar.
+- El candidato se arranca de verdad y responde /api/healthz 200 antes de abrir tráfico.
+- Las puertas nuevas quedan apagadas salvo las que el propietario abra por escrito.
+- Si algo falla, se detiene y se reporta: no se repara ni se recorta SQL por cuenta propia.
+
+Se suspende mientras dure esa condición:
+- Manifiestos y hashes cruzados entre paquete, wrapper e inventarios.
+- Expectativas B0/B1 y preflight de catálogo.
+- Respaldo con restauración de ensayo y ventana formal de liberación.
+La recuperación ante un fallo es volver al bundle anterior, que se conserva.
+
+Cuando el propietario decida empezar a operar con datos reales: purga de datos de prueba y se restablece el procedimiento completo. Anótalo como condición de término de esta regla.
+
+Autorización del propietario: con ese procedimiento simple, autorizo liberar E3 con apertura de efectivo ordinario y, después, la Tanda B (E4, E12, E9, E5, E11, E7), aplicando su SQL preparado a la base de la API. Dirigido, retenido, devolución, atribución, Fondo y remate siguen cerrados.
+
+Libera primero E3 y verifícala; después la Tanda B. Si al liberar la Tanda B algo falla a medio SQL, detente, déjalo documentado y repórtame el estado exacto. Al terminar, dime qué quedó liberado, qué puertas están abiertas y qué falta probar desde la pantalla.

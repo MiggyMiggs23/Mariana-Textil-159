@@ -1,0 +1,121 @@
+# PRODUCTOS — El precio deja de ser obligatorio al importar
+
+Un commit por bloque. Ante ambigüedad, decisión conservadora anotada en `replit.md`. **Nunca dejes la aplicación sin compilar ni caída.**
+
+Rama Neon desechable para lo que necesite usuarios o sesiones. **Prohibido crear ADMIN temporales con `executeSql` en development.**
+
+---
+
+## El problema
+
+Hoy no se puede importar un catálogo sin precios. Y no es solo una validación del archivo: **`precio_sugerido` está declarado `notNull` en la base** (`lib/db/src/schema/productos.ts:35`). La columna no admite vacío.
+
+Eso obliga a inventar precios para poder dar de alta productos, y un precio inventado que entra al sistema es indistinguible de uno real. Si alguien vende con él, contamina el histórico de ventas y la utilidad.
+
+El precio se debe poder poner después, con el producto ya dado de alta.
+
+---
+
+## BLOQUE 1 — El precio pasa a ser opcional
+
+### Base de datos
+
+Quita la restricción `notNull` de `precio_sugerido`.
+
+Los productos que ya existen tienen precio, así que la migración **no destruye datos**. Verifícalo y repórtalo.
+
+**No toques `precio_mayoreo`**, que ya admite vacío.
+
+### Importación
+
+El Excel exige **exactamente tres columnas**: `tela`, `color` y `unidad`. Nada más.
+
+- `precio_sugerido` es **opcional**: si viene, se usa; si no, el producto queda sin precio.
+- Un archivo **sin la columna de precio** se importa correctamente.
+- Un archivo **con la columna vacía** en algunos renglones importa esos sin precio y los demás con el suyo.
+- Si el precio viene con un valor inválido —texto, negativo—, **rechaza ese renglón con mensaje claro** en la previsualización, no lo tomes como vacío.
+
+La unidad sigue siendo obligatoria y debe ser uno de los valores válidos. Un renglón sin unidad, o con una que no existe, se rechaza en la previsualización.
+
+**El comportamiento aditivo no cambia:** los productos existentes se saltan, no se modifican ni se borran.
+
+### El resto del sistema
+
+Recorre las pantallas, reportes y exportaciones donde se muestra el precio sugerido.
+
+**Un producto sin precio debe verse como "Sin precio", nunca como $0.00.** Cero es un precio; vacío es la ausencia de uno, y confundirlos hace que nadie note que falta capturarlo.
+
+Aplica el mismo criterio que ya usa la utilidad, que muestra "Pendiente" cuando falta el costo.
+
+---
+
+## BLOQUE 2 — Qué pasa al vender un producto sin precio
+
+**Un producto sin precio sugerido no se puede vender.**
+
+- El POS lo **rechaza con un mensaje claro** que diga que falta capturar el precio, no con un error genérico ni con un total en cero.
+- El cajero se entera **al agregarlo al carrito**, no al momento de cobrar con el cliente enfrente.
+- Idealmente el producto se distingue en la búsqueda del POS antes de seleccionarlo.
+
+**No permitas capturar el precio desde el POS.** El precio se define en Precios, que es donde vive esa responsabilidad y donde queda el historial.
+
+Revisa el resto de operaciones y **reporta cuáles se rompen** con un producto sin precio: entradas, salidas, ajustes, valuación de inventario, reportes. **Repórtalas antes de corregirlas todas**; quiero ver la lista.
+
+---
+
+## BLOQUE 3 — Poner el precio después
+
+Capturar el precio de un producto que no lo tenía debe funcionar igual que cambiarlo, **incluido el registro en el historial de precios**.
+
+Verifica que `precio_historial` reciba correctamente el primer precio de un producto que nació sin él. Un producto cuyo primer precio no queda registrado pierde el punto de partida de su historia.
+
+Si hay una forma de capturar precios en lote para varios productos, **repórtala**. Con 419 productos importados sin precio, hacerlo uno por uno es varias horas.
+
+---
+
+## BLOQUE 4 — Verificación
+
+**Importación**
+
+- Un Excel con solo `tela`, `color` y `unidad` se importa correctamente
+- Los productos quedan **sin precio**, no en cero
+- Un archivo con precios en algunos renglones y vacíos en otros funciona
+- Un precio inválido rechaza ese renglón con mensaje claro en la previsualización
+- Un renglón sin unidad, o con unidad inválida, se rechaza
+- Los productos existentes siguen sin modificarse
+
+**Presentación**
+
+- Un producto sin precio se muestra como "Sin precio" en pantallas, reportes y exportaciones
+- **En ningún lugar aparece como $0.00**
+
+**Venta**
+
+- El POS rechaza un producto sin precio con mensaje claro
+- El aviso llega al agregarlo al carrito, no al cobrar
+- No se puede capturar el precio desde el POS
+- Está la lista de otras operaciones que se rompen, sin corregir
+
+**Precio posterior**
+
+- Capturar el primer precio funciona y **queda en el historial**
+- Está reportado si existe captura en lote
+
+**General**
+
+- La migración no destruyó datos, verificado y reportado
+- `pnpm run typecheck` y `pnpm run build` completos aprueban
+- Las suites de productos, precios y POS pasan enteras
+- Si alguna prueba afirmaba que el precio es obligatorio, **actualízala, no la borres**
+
+---
+
+## Al terminar
+
+En `replit.md`:
+
+> **El precio sugerido es opcional.** Un producto se da de alta con **tela, color y unidad**; el precio se captura después, en Precios. Obligar a un precio en la importación fuerza a inventar números que después no se distinguen de los reales y contaminan el histórico de ventas y la utilidad.
+>
+> **Sin precio no es cero.** Un producto sin precio se muestra como "Sin precio" en toda pantalla, reporte y exportación; mostrarlo como $0.00 esconde que falta capturarlo.
+>
+> **Un producto sin precio no se puede vender.** El POS lo rechaza con mensaje claro al agregarlo al carrito, no al cobrar, y **no permite capturar el precio ahí**: eso pertenece a Precios, que es donde queda el historial.
