@@ -1,1 +1,1 @@
-export const E3_ENABLED = false;
+export const E3_ENABLED = true;

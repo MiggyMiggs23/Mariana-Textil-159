@@ -5,25 +5,28 @@ type Props = {
   rolloId: number;
   marked: boolean;
   canMark: boolean;
+  canRemove?: boolean;
+  onRemove?: (rolloId: number, motivo: string) => Promise<void>;
   // Release must supply a generated OpenAPI mutation, never ad-hoc fetch.
   onMark: (rolloId: number, motivo: string) => Promise<void>;
 };
 
-/** Unmounted until sales/profit integration and the API contract are approved. */
+/** Explicit roll-level action; status is refreshed by the generated API caller. */
 export function RemateControl(props: Props) {
   const [motivo, setMotivo] = useState("");
   const [pending, setPending] = useState(false);
   const [error, setError] = useState("");
   if (!REMATE_UI_RELEASED) return null;
-  if (props.marked) return <p role="status">Rollo marcado como remate</p>;
-  if (!props.canMark) return null;
+  if (props.marked && !props.canRemove) return <p role="status">Rollo marcado como remate</p>;
+  if (!props.marked && !props.canMark) return null;
   return <form onSubmit={async event => {
     event.preventDefault();
     if (pending || !motivo.trim()) return;
     setPending(true);
     setError("");
     try {
-      await props.onMark(props.rolloId, motivo.trim());
+      if (props.marked) await props.onRemove!(props.rolloId, motivo.trim());
+      else await props.onMark(props.rolloId, motivo.trim());
       setMotivo("");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "No se pudo marcar el rollo.");
@@ -37,7 +40,7 @@ export function RemateControl(props: Props) {
     </label>
     {error && <p role="alert">{error}</p>}
     <button type="submit" disabled={pending || !motivo.trim()}>
-      {pending ? "Guardando…" : "Marcar remate"}
+      {pending ? "Guardando…" : props.marked ? "Retirar remate" : "Marcar remate"}
     </button>
   </form>;
 }

@@ -1,4 +1,6 @@
 import { Router } from "express";
+import { createMarkRemateHandler } from "../lib/tarea4-remate";
+import { createRemateStore } from "../lib/tarea4-remate-store";
 import ExcelJS from "exceljs";
 import {
   and,
@@ -130,6 +132,28 @@ import {
 } from "@workspace/number-format";
 
 export const inventarioRouter = Router();
+for (const method of ["post", "delete"] as const) {
+  inventarioRouter[method]("/rollos/:id/remate", requireSession, (req, res, next) =>
+    createMarkRemateHandler(createRemateStore(
+      async (_tx, _actor, roll) => !checkOperationalScope(req.auth!, [roll.ubicacion_id]),
+      getRequestIp(req),
+    ), method === "delete")(req, res, next));
+}
+inventarioRouter.get("/rollos/:id/remate", requireSession, requierePermiso("inventario", "ver"), async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      res.status(400).json({ error: "Rollo inválido." }); return;
+    }
+    const [roll] = await db.select().from(rollosTable).where(eq(rollosTable.id, id));
+    const scope = resolveReadScope(req.auth!, roll?.ubicacionId);
+    if (!roll || scope.scopeError || (scope.ubicacionId != null && scope.ubicacionId !== roll.ubicacionId)) {
+      res.status(404).json({ error: "Rollo no accesible." }); return;
+    }
+    const result = await db.execute(sql`SELECT rollo_id FROM tarea4_rollo_remate WHERE rollo_id = ${id}`);
+    res.json({ rolloId: id, remate: result.rows.length > 0 });
+  } catch (error) { next(error); }
+});
 
 // ── Scope helpers ─────────────────────────────────────────────────────────────
 //

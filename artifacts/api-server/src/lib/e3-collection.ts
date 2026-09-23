@@ -4,7 +4,7 @@ import { centsToMoney, projectCreditLedger, type CreditLedgerMovement } from "./
 import { canonicalCreditContent, type CreditEvidenceInput } from "./credit-evidence-contract";
 
 /** Source controlled, independent from E1 cash/refund/retained gates. */
-export const E3_ENABLED = false;
+export const E3_ENABLED = true;
 export const E3_DIRECTED_ENABLED = false;
 export class E3Error extends Error {
   constructor(public code: string, message: string, public status = 409) { super(message); }

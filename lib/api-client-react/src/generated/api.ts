@@ -394,6 +394,8 @@ import type {
   RolloEtiqueta,
   RolloListResult,
   RolloPisoUpdate,
+  RolloRemate,
+  RolloRemateInput,
   RolloSummary,
   SalidaDetail,
   SalidaDetailResponseResponse,
@@ -477,6 +479,209 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetRolloRemateUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/remate`
+}
+
+export const getRolloRemate = async (id: number, options?: Parameters<typeof customFetch>[1]): Promise<RolloRemate> => {
+
+  return customFetch<RolloRemate>(getGetRolloRemateUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetRolloRemateQueryKey = (id: number,) => {
+    return [
+    `/api/inventario/rollos/${id}/remate`
+    ] as const;
+    }
+
+
+export const getGetRolloRemateQueryOptions = <TData = Awaited<ReturnType<typeof getRolloRemate>>, TError = ErrorType<unknown>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRolloRemate>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetRolloRemateQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getRolloRemate>>> = ({ signal }) => getRolloRemate(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getRolloRemate>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetRolloRemateQueryResult = NonNullable<Awaited<ReturnType<typeof getRolloRemate>>>
+export type GetRolloRemateQueryError = ErrorType<unknown>
+
+
+
+export function useGetRolloRemate<TData = Awaited<ReturnType<typeof getRolloRemate>>, TError = ErrorType<unknown>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getRolloRemate>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetRolloRemateQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getMarcarRolloRemateUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/remate`
+}
+
+export const marcarRolloRemate = async (id: number,
+    rolloRemateInput: RolloRemateInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloRemate> => {
+
+  return customFetch<RolloRemate>(getMarcarRolloRemateUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(rolloRemateInput)
+  }
+);}
+
+
+
+
+
+export const getMarcarRolloRemateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof marcarRolloRemate>>, TError,{id: number;data: BodyType<RolloRemateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof marcarRolloRemate>>, TError,{id: number;data: BodyType<RolloRemateInput>}, TContext> => {
+
+const mutationKey = ['marcarRolloRemate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof marcarRolloRemate>>, {id: number;data: BodyType<RolloRemateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  marcarRolloRemate(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MarcarRolloRemateMutationResult = NonNullable<Awaited<ReturnType<typeof marcarRolloRemate>>>
+    export type MarcarRolloRemateMutationBody = BodyType<RolloRemateInput>
+    export type MarcarRolloRemateMutationError = ErrorType<unknown>
+
+    export const useMarcarRolloRemate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof marcarRolloRemate>>, TError,{id: number;data: BodyType<RolloRemateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof marcarRolloRemate>>,
+        TError,
+        {id: number;data: BodyType<RolloRemateInput>},
+        TContext
+      > => {
+      return useMutation(getMarcarRolloRemateMutationOptions(options));
+    }
+
+export const getRetirarRolloRemateUrl = (id: number,) => {
+
+
+
+
+  return `/api/inventario/rollos/${id}/remate`
+}
+
+export const retirarRolloRemate = async (id: number,
+    rolloRemateInput: RolloRemateInput, options?: Parameters<typeof customFetch>[1]): Promise<RolloRemate> => {
+
+  return customFetch<RolloRemate>(getRetirarRolloRemateUrl(id),
+  {
+    ...options,
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(rolloRemateInput)
+  }
+);}
+
+
+
+
+
+export const getRetirarRolloRemateMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof retirarRolloRemate>>, TError,{id: number;data: BodyType<RolloRemateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof retirarRolloRemate>>, TError,{id: number;data: BodyType<RolloRemateInput>}, TContext> => {
+
+const mutationKey = ['retirarRolloRemate'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof retirarRolloRemate>>, {id: number;data: BodyType<RolloRemateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  retirarRolloRemate(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RetirarRolloRemateMutationResult = NonNullable<Awaited<ReturnType<typeof retirarRolloRemate>>>
+    export type RetirarRolloRemateMutationBody = BodyType<RolloRemateInput>
+    export type RetirarRolloRemateMutationError = ErrorType<unknown>
+
+    export const useRetirarRolloRemate = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof retirarRolloRemate>>, TError,{id: number;data: BodyType<RolloRemateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof retirarRolloRemate>>,
+        TError,
+        {id: number;data: BodyType<RolloRemateInput>},
+        TContext
+      > => {
+      return useMutation(getRetirarRolloRemateMutationOptions(options));
+    }
 
 export const getGetE7DisponibilidadUrl = () => {
 

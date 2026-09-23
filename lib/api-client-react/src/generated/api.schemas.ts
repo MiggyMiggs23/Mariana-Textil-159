@@ -5,6 +5,16 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+export interface RolloRemateInput {
+  /** @minLength 1 */
+  motivo: string;
+}
+
+export interface RolloRemate {
+  rolloId: number;
+  remate: boolean;
+}
+
 /**
  * @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$
  */
@@ -5295,6 +5305,8 @@ export interface TicketPago {
 }
 
 export type TicketDetalle = TicketResumen & TicketCredito & ({
+  remate?: boolean;
+  rollosRemate?: number[];
   documentoTipo: DocumentoTipoTicket;
   /** Estado de autorización persistido del documento; se omite en respuestas antiguas. */
   autorizacionEstado?: TicketDetalleAutorizacionEstado;

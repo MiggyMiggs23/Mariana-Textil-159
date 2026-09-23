@@ -1,0 +1,17 @@
+✔ real locked price mutation: three modes, equality, unlimited increase, unknown decision and closed gate (106.129851ms)
+✔ real remate handler: closed gate, all roles, permission override, reason, replay, scope and rollback (123.133394ms)
+✔ actual purge: only price history exempt, movement/stock blocks, credentials, atomic rollback and permanent audit (119.889288ms)
+✔ real remate component: closed gate exposes nothing, permitted form requires reason and reports failure (33.183063ms)
+✔ OFF conserva las dos conductas previas y no consulta esquema remate (2.483528ms)
+✔ ON autoriza bajo costo solo por cada rollo activo leído del store (0.633969ms)
+✔ BOLSA ON usa costos físicos: el promedio no oculta una fuente bajo costo (1.395905ms)
+✔ producto o payload no sustituyen una fuente física activa (0.251591ms)
+✔ precio no bajo costo no se etiqueta como remate (0.344458ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1341.713283

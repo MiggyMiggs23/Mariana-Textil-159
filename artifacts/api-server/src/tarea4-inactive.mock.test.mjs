@@ -56,7 +56,9 @@ test("real locked price mutation: three modes, equality, unlimited increase, unk
       assert.equal(writes[2].accion, "CAMBIAR_PRECIO");
     }
     cost = null;
-    await assert.rejects(mutation(true)(tx, { id: 1 }, input), { code: "COSTO_PENDIENTE_DECISION" });
+    writes = [];
+    await mutation(true)(tx, { id: 1 }, input);
+    assert.equal(writes.length, 3, "precio sin costo permitido por decisión del 21/09");
     cost = "10.00";
     writes = [];
     await mutation(false)(tx, { id: 1 }, input);

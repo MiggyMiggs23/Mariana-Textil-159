@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { RolloRematePanel } from "@/components/rollo-remate-panel";
 import { useParams, Link, useSearch } from "wouter";
 import { AppBackLink } from "@/lib/internal-navigation";
 import { AppLayout } from "@/components/layout/app-layout";
@@ -174,6 +175,7 @@ export default function RolloDetail() {
   return (
     <AppLayout>
       <div className="max-w-5xl mx-auto space-y-6">
+        <RolloRematePanel rolloId={rollo.id} />
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <AppBackLink fallbackHref="/inventario" className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />

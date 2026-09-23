@@ -74,6 +74,46 @@ tags:
   - name: equipos
     description: Registro de equipo del sistema y su configuración por sitio
 paths:
+  /inventario/rollos/{id}/remate:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema: { type: integer }
+    get:
+      operationId: getRolloRemate
+      responses:
+        "200":
+          description: Estado vigente del remate
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RolloRemate" }
+    post:
+      operationId: marcarRolloRemate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RolloRemateInput" }
+      responses:
+        "201":
+          description: Marca auditada
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RolloRemate" }
+    delete:
+      operationId: retirarRolloRemate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RolloRemateInput" }
+      responses:
+        "201":
+          description: Retiro ADMIN auditado
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RolloRemate" }
   /e7/disponibilidad:
     get:
       operationId: getE7Disponibilidad
@@ -7493,6 +7533,18 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    RolloRemateInput:
+      type: object
+      additionalProperties: false
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 1 }
+    RolloRemate:
+      type: object
+      required: [rolloId, remate]
+      properties:
+        rolloId: { type: integer }
+        remate: { type: boolean }
     E7Importe:
       type: string
       pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$'
@@ -15659,6 +15711,10 @@ components:
         - type: object
           required: [lineas, documentoTipo, convertidoANotaPorCobro]
           properties:
+            remate: { type: boolean }
+            rollosRemate:
+              type: array
+              items: { type: integer }
             documentoTipo:
               $ref: "#/components/schemas/DocumentoTipoTicket"
             autorizacionEstado:

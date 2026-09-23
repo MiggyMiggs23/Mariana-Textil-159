@@ -1,0 +1,67 @@
+✔ OFF conserva las dos conductas previas y no consulta esquema remate (1.792238ms)
+✖ ON autoriza bajo costo solo por cada rollo activo leído del store (1.116888ms)
+✖ BOLSA ON usa costos físicos: el promedio no oculta una fuente bajo costo (0.676756ms)
+✖ producto o payload no sustituyen una fuente física activa (0.389846ms)
+✔ precio no bajo costo no se etiqueta como remate (0.25852ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 12.315838
+
+✖ failing tests:
+
+test at artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:94:1
+✖ ON autoriza bajo costo solo por cada rollo activo leído del store (1.116888ms)
+  AssertionError [ERR_ASSERTION]: una fuente no marcada bloquea toda la línea metreada
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:122:10)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:135:1
+✖ BOLSA ON usa costos físicos: el promedio no oculta una fuente bajo costo (0.676756ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection: marcar solo la caja barata no autoriza la caja cara
+      at async TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:182:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /PRICE_BELOW_COST/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:216:1
+✖ producto o payload no sustituyen una fuente física activa (0.389846ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///home/runner/workspace/artifacts/api-server/src/tarea4-remate-sale.mock.test.mjs:228:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,53 @@
+
+ RUN  v5.0.1 /home/runner/workspace/tmp/tarea1-ui-mutant
+
+ ❯ src/components/tarea4-remate.dom.test.tsx (2 tests | 2 failed) 148ms
+   × marca exige motivo y envía el rollo exacto; muestra error real 128ms
+   × solo control autorizado puede retirar y requiere motivo 17ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/components/tarea4-remate.dom.test.tsx > marca exige motivo y envía el rollo exacto; muestra error real
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/tarea4-remate.dom.test.tsx:12:50
+     10|   render(<RemateControl rolloId={7} marked={false} canMark onMark={onM…
+     11|   const button = screen.getByRole("button", { name: "Marcar remate" });
+     12|   expect((button as HTMLButtonElement).disabled).toBe(true);
+       |                                                  ^
+     13|   fireEvent.change(screen.getByRole("textbox"), { target: { value: "  …
+     14|   fireEvent.click(button);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/components/tarea4-remate.dom.test.tsx > solo control autorizado puede retirar y requiere motivo
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/components/tarea4-remate.dom.test.tsx:25:50
+     23|   view.rerender(<RemateControl rolloId={9} marked canMark canRemove on…
+     24|   const button = screen.getByRole("button", { name: "Retirar remate" }…
+     25|   expect((button as HTMLButtonElement).disabled).toBe(true);
+       |                                                  ^
+     26|   fireEvent.change(screen.getByRole("textbox"), { target: { value: "Er…
+     27|   fireEvent.click(button);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  17:14:11
+   Duration  1.57s (environment 63%, transform 17%, tests 11%, import 9%)
+

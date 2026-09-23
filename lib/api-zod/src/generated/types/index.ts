@@ -889,6 +889,8 @@ export * from './rolloEtiqueta';
 export * from './rolloEtiquetaUnidad';
 export * from './rolloListResult';
 export * from './rolloPisoUpdate';
+export * from './rolloRemate';
+export * from './rolloRemateInput';
 export * from './rolloSummary';
 export * from './salidaDetail';
 export * from './salidaDetailPisosRetornoItem';

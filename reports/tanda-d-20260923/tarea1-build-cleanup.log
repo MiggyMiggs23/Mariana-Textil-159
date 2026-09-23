@@ -1,0 +1,5 @@
+Disposable directory: /tmp/tarea1-pg.KKZoty
+pg_ctl: no server running
+pg_ctl status exit 3: not running
+/proc inspection: no PostgreSQL process for owned directory
+Removed disposable cluster directory; exists=false

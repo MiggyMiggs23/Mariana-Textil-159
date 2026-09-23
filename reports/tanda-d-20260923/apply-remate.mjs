@@ -1,0 +1,17 @@
+import fs from "node:fs";
+import {spawnSync} from "node:child_process";
+import assert from "node:assert/strict";
+const pid=process.argv[2];
+assert(/^\d+$/.test(pid));
+assert(fs.readFileSync(`/proc/${pid}/cmdline`,"utf8").includes("dist-simple-e3-tanda-b-20260923/index.mjs"));
+const value=fs.readFileSync(`/proc/${pid}/environ`,"utf8").split("\0").find(v=>v.startsWith("DATABASE_URL="));
+assert(value);
+const u=new URL(value.slice(13));
+const env={PATH:process.env.PATH,PGHOST:u.searchParams.get("host")||u.hostname,PGPORT:u.port||"5432",PGUSER:decodeURIComponent(u.username),PGPASSWORD:decodeURIComponent(u.password),PGDATABASE:decodeURIComponent(u.pathname.slice(1)),PGSSLMODE:u.searchParams.get("sslmode")||"prefer"};
+assert.equal(env.PGDATABASE,"heliumdb");
+assert(fs.existsSync("reports/tanda-d-20260923/autorizacion.txt"));
+assert(fs.existsSync("reports/tanda-d-20260923/tarea1-build-cleanup.log"));
+const r=spawnSync("/nix/store/bgwr5i8jf8jpg75rr53rz3fqv5k8yrwp-postgresql-16.10/bin/psql",["-X","-v","ON_ERROR_STOP=1","-f","reports/tanda-d-20260923/tarea1-up.sql"],{env,encoding:"utf8",timeout:60000});
+fs.writeFileSync("reports/tanda-d-20260923/tarea1-live-sql.log",(r.stdout||"")+(r.stderr||""),{flag:"wx"});
+console.log(JSON.stringify({exit:r.status,pid:Number(pid),database:env.PGDATABASE}));
+process.exitCode=r.status===0?0:1;

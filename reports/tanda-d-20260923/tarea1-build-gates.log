@@ -1,0 +1,35 @@
+PASS artifacts/api-server/src/lib/e3-collection.ts E3_ENABLED = true
+PASS artifacts/api-server/src/lib/e3-collection.ts E3_DIRECTED_ENABLED = false
+PASS artifacts/api-server/src/lib/e3-ordinary-cash-release.ts E3_ORDINARY_CASH_ENABLED = true
+PASS artifacts/api-server/src/lib/permisos.ts E3_MATRIX_RELEASED = true
+PASS artifacts/api-server/src/lib/permisos.ts REMATE_MATRIX_RELEASED = true
+PASS artifacts/mariana-textil/src/lib/e3-feature-flags.ts E3_ENABLED = true
+PASS artifacts/api-server/src/lib/tarea4-gates.ts REMATE_RELEASED = true
+PASS artifacts/api-server/src/lib/tarea4-gates.ts PRICE_FLOOR_RELEASED = true
+PASS artifacts/api-server/src/lib/tarea4-gates.ts PRODUCT_HISTORY_DELETE_RELEASED = true
+PASS artifacts/mariana-textil/src/lib/tarea4-gates.ts REMATE_UI_RELEASED = true
+PASS artifacts/mariana-textil/src/lib/tarea4-gates.ts PRICE_FLOOR_UI_RELEASED = true
+PASS artifacts/mariana-textil/src/lib/tarea4-gates.ts PRODUCT_HISTORY_DELETE_UI_RELEASED = true
+PASS artifacts/api-server/src/lib/e11-feature.ts E11_ENABLED = true
+PASS artifacts/api-server/src/lib/e11-feature.ts E11_RECONCILIATION_ENABLED = true
+PASS artifacts/api-server/src/lib/e11-feature.ts E11_PROFILE_ASSIGNMENT_ENABLED = false
+PASS artifacts/api-server/src/lib/e11-feature.ts E11_E5_PREPARATION_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts E11_ENABLED = true
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts E11_UI_ENABLED = true
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts E11_RECONCILIATION_ENABLED = true
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts E11_PROFILE_ASSIGNMENT_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts E11_E5_PREPARATION_ENABLED = false
+PASS artifacts/api-server/src/lib/e5-feature.ts E5_ENABLED = false
+PASS artifacts/api-server/src/lib/e5-feature.ts E5_CONTADOR_A_ENABLED = false
+PASS artifacts/api-server/src/lib/e7-feature.ts E7_ENABLED = false
+PASS artifacts/api-server/src/lib/e9-feature.ts E9_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e12-feature-flags.ts E12_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e4-feature-flags.ts E4_CASH_OUT_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e5-feature-flags.ts E5_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e7-feature-flags.ts E7_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e7-feature-flags.ts E7_UI_ENABLED = false
+PASS artifacts/mariana-textil/src/lib/e9-feature-flags.ts E9_ENABLED = false
+E1 CREDIT_CASH_INCOME_CAPTURE_ENABLED false
+E1 CREDIT_CASH_RETURN_CAPTURE_ENABLED false
+E1 CREDIT_PENDING_RECEIPTS_ENABLED false
+Gate inventory PASS; no runtime imports, no DB

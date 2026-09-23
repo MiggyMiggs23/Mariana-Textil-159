@@ -1,0 +1,2 @@
+5ac1a46a48e1b92b83a39c60ff4a729deb1d6bee137d356b8a810f9563914c98  artifacts/api-server/dist-tanda-d-20260923/index.mjs
+e6ddc024cc987aaca9b851dca1b165bc257dc4553366173967b900956275d9e2  artifacts/mariana-textil/dist-tanda-d-20260923/index.html

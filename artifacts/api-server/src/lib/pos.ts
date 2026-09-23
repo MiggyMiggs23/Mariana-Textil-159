@@ -470,8 +470,14 @@ export async function buildTicketDetail(
   const salidas = await database.select({ id: salidasTable.id, folio: salidasTable.folio, origenId: salidasTable.origenId, nombreOrigen: ubicacionesTable.nombre, iniciales: ubicacionesTable.iniciales, href: sql<string>`('/salidas/' || ${salidasTable.id})` })
     .from(salidasTable).innerJoin(ubicacionesTable, eq(salidasTable.origenId, ubicacionesTable.id)).where(eq(salidasTable.ticketId, ticketId));
 
+  const remateEvidence = REMATE_RELEASED
+    ? await database.select({ datos: auditoriaTable.datosDespues }).from(auditoriaTable)
+        .where(and(eq(auditoriaTable.entidad, "tickets"), eq(auditoriaTable.entidadId, String(ticketId)), eq(auditoriaTable.accion, "VENDER"))).limit(1)
+    : [];
+  const remateData = remateEvidence[0]?.datos as { remate?: boolean; rollosRemate?: number[] } | undefined;
   return {
     ...ticket,
+    ...(REMATE_RELEASED ? { remate: remateData?.remate === true, rollosRemate: remateData?.rollosRemate ?? [] } : {}),
     ...credit,
     estadoNota,
     viaje: viaje ?? null,

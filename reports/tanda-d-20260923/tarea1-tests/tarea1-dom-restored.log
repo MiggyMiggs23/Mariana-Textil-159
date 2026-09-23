@@ -1,0 +1,9 @@
+
+ RUN  v5.0.1 /home/runner/workspace/tmp/tarea1-ui-mutant
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  17:14:39
+   Duration  1.33s (environment 57%, transform 19%, tests 14%, import 10%)
+

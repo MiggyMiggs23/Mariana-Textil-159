@@ -16,6 +16,8 @@ import type { TicketResumen } from './ticketResumen';
 import type { ViajeTicketLink } from './viajeTicketLink';
 
 export type TicketDetalle = TicketResumen & TicketCredito & ({
+  remate?: boolean;
+  rollosRemate?: number[];
   documentoTipo: DocumentoTipoTicket;
   /** Estado de autorización persistido del documento; se omite en respuestas antiguas. */
   autorizacionEstado?: TicketDetalleAutorizacionEstado;

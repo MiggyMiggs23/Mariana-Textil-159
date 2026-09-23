@@ -390,6 +390,7 @@ export default function TicketDetailPage() {
         <CardHeader className="flex flex-col items-start justify-between gap-4 border-b bg-sidebar/5 sm:flex-row">
           <div>
             <CardTitle>Detalle de Operación</CardTitle>
+            {ticket.remate && <p role="status" className="font-semibold text-amber-700">Venta de remate · Rollos {ticket.rollosRemate?.join(", ")}</p>}
             <CardDescription>
               Emitido por {ticket.nombreUsuarioTerminal}
             </CardDescription>

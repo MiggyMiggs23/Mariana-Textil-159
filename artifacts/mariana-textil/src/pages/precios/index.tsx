@@ -155,9 +155,8 @@ export default function PreciosList() {
 
   const confirmBulkChange = () => {
     if (!isBulkValid) return;
-    if (PRICE_FLOOR_UI_RELEASED && (belowCostCount > 0 ||
-        selectedProducts.some(product => product.preciosPorModo[activeMode].costoUnitarioBase == null))) {
-      toast.error("No se puede guardar: precio bajo costo o costo pendiente de decisión.");
+    if (PRICE_FLOOR_UI_RELEASED && belowCostCount > 0) {
+      toast.error("No se puede guardar un precio de lista bajo costo.");
       return;
     }
     changePreciosMasivo.mutate(

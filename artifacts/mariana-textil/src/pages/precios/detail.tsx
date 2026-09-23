@@ -160,8 +160,8 @@ export default function PrecioDetail() {
   }
 
   const handleNextStep = () => {
-    if (PRICE_FLOOR_UI_RELEASED && (!modeData?.costoUnitarioBase || liveMetrics?.advertenciaBajoCosto)) {
-      toast.error("No se puede guardar: precio bajo costo o costo pendiente de decisión.");
+    if (PRICE_FLOOR_UI_RELEASED && liveMetrics?.advertenciaBajoCosto) {
+      toast.error("No se puede guardar un precio de lista bajo costo.");
       return;
     }
     if (Number(precioNuevo) <= 0) {
@@ -176,8 +176,8 @@ export default function PrecioDetail() {
   };
 
   const handleConfirm = () => {
-    if (PRICE_FLOOR_UI_RELEASED && (!modeData?.costoUnitarioBase || liveMetrics?.advertenciaBajoCosto)) {
-      toast.error("No se puede guardar: precio bajo costo o costo pendiente de decisión.");
+    if (PRICE_FLOOR_UI_RELEASED && liveMetrics?.advertenciaBajoCosto) {
+      toast.error("No se puede guardar un precio de lista bajo costo.");
       return;
     }
     changePrecio.mutate({

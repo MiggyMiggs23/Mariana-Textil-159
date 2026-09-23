@@ -8,6 +8,50 @@
 import * as zod from 'zod';
 
 
+export const GetRolloRemateParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+export const GetRolloRemateResponse = zod.object({
+  "rolloId": zod.number().int(),
+  "remate": zod.boolean()
+})
+
+
+export const MarcarRolloRemateParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+
+
+
+export const MarcarRolloRemateBody = zod.object({
+  "motivo": zod.string().min(1)
+})
+
+export const MarcarRolloRemateResponse = zod.object({
+  "rolloId": zod.number().int(),
+  "remate": zod.boolean()
+})
+
+
+export const RetirarRolloRemateParams = zod.object({
+  "id": zod.coerce.number().int()
+})
+
+
+
+
+export const RetirarRolloRemateBody = zod.object({
+  "motivo": zod.string().min(1)
+})
+
+export const RetirarRolloRemateResponse = zod.object({
+  "rolloId": zod.number().int(),
+  "remate": zod.boolean()
+})
+
+
 export const GetE7DisponibilidadResponse = zod.object({
   "enabled": zod.boolean()
 })
@@ -11140,6 +11184,8 @@ export const GetClienteNotaCreditoResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "remate": zod.boolean().optional(),
+  "rollosRemate": zod.array(zod.number().int()).optional(),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
   "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
@@ -11875,6 +11921,8 @@ export const CrearTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "remate": zod.boolean().optional(),
+  "rollosRemate": zod.array(zod.number().int()).optional(),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
   "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
@@ -12140,6 +12188,8 @@ export const ObtenerTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "remate": zod.boolean().optional(),
+  "rollosRemate": zod.array(zod.number().int()).optional(),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
   "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
@@ -12367,6 +12417,8 @@ export const CancelarTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "remate": zod.boolean().optional(),
+  "rollosRemate": zod.array(zod.number().int()).optional(),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
   "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
@@ -12485,6 +12537,8 @@ export const CobrarTicketResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "remate": zod.boolean().optional(),
+  "rollosRemate": zod.array(zod.number().int()).optional(),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
   "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
@@ -12634,6 +12688,8 @@ export const AutorizarNotaResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "remate": zod.boolean().optional(),
+  "rollosRemate": zod.array(zod.number().int()).optional(),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
   "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),
@@ -14072,6 +14128,8 @@ export const GenerarVentaDesdeSalidasResponse = zod.object({
   "correoCliente": zod.string().nullable(),
   "direccionCliente": zod.string().nullable()
 }).describe('Datos persistidos y saldo de ledger de la porción a crédito del ticket.')).and(zod.object({
+  "remate": zod.boolean().optional(),
+  "rollosRemate": zod.array(zod.number().int()).optional(),
   "documentoTipo": zod.enum(['TICKET', 'NOTA']).describe('Tipo documental persistido del comprobante de venta.'),
   "autorizacionEstado": zod.enum(['NO_APLICA', 'PENDIENTE', 'AUTORIZADA']).optional().describe('Estado de autorización persistido del documento; se omite en respuestas antiguas.'),
   "nombreDestinatario": zod.string().nullish(),

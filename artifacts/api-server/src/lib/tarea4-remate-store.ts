@@ -6,7 +6,7 @@ import type { RemateActor, RemateStore } from "./tarea4-remate";
 type Tx = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
 /**
- * Unregistered adapter. Scope is supplied by the future inventory route's
+ * Transactional adapter. Scope is supplied by the inventory route's
  * canonical site authorizer; it must use this transaction, not a stale preflight.
  * No call and no schema registration occur during startup.
  */
@@ -31,10 +31,13 @@ export function createRemateStore(
         await tx.execute(sql`INSERT INTO tarea4_rollo_remate (rollo_id, motivo, usuario_id)
           VALUES (${mark.rolloId}, ${mark.motivo}, ${mark.usuarioId})`);
       },
-      audit: async mark => {
+      removeMark: async id => {
+        await tx.execute(sql`DELETE FROM tarea4_rollo_remate WHERE rollo_id = ${id}`);
+      },
+      audit: async (mark, removed) => {
         await tx.execute(sql`INSERT INTO auditoria
           (usuario_id, accion, entidad, entidad_id, datos_despues, ip)
-          VALUES (${mark.usuarioId}, 'MARCAR_REMATE', 'rollos', ${String(mark.rolloId)},
+          VALUES (${mark.usuarioId}, ${removed ? "RETIRAR_REMATE" : "MARCAR_REMATE"}, 'rollos', ${String(mark.rolloId)},
             ${JSON.stringify(mark)}::jsonb, ${ip})`);
       },
     })),

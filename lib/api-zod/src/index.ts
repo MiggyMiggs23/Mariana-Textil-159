@@ -859,6 +859,8 @@ export * from "./generated/types/rolloEtiqueta";
 export * from "./generated/types/rolloEtiquetaUnidad";
 export * from "./generated/types/rolloListResult";
 export * from "./generated/types/rolloPisoUpdate";
+export * from "./generated/types/rolloRemate";
+export * from "./generated/types/rolloRemateInput";
 export * from "./generated/types/rolloSummary";
 export * from "./generated/types/salidaDetail";
 export * from "./generated/types/salidaDetailPisosRetornoItem";

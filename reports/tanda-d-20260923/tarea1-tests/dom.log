@@ -1,0 +1,9 @@
+
+ RUN  v5.0.1 /home/runner/workspace/artifacts/mariana-textil
+
+
+ Test Files  3 passed (3)
+      Tests  4 passed (4)
+   Start at  17:16:18
+   Duration  8.59s (environment 57%, import 22%, transform 18%, tests 3%)
+

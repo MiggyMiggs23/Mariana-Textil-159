@@ -1,0 +1,11 @@
+miguelestza: Tanda D, trabajo largo. Con el procedimiento simple ya autorizado. Cada tarea en su propio commit. No abras puertas nuevas. Si una se atora, anótala y sigue con la siguiente.
+
+1. Conecta el remate con la venta y libéralo junto con el precio mínimo y el borrado de producto sin movimientos. La marca de remate es permiso de matriz, solo ADMIN de inicio, y ADMIN puede quitarla con motivo. Déjalo funcionando, no apagado.
+
+2. Libera lo que quedó construido y apagado de la Tanda B donde no dependa de una decisión del propietario, y dime exactamente qué puertas quedan por abrir y qué decide cada una.
+
+3. Cierra la suite pagos-dirigidos ahora que hay puertas abiertas, si ya se puede. Si sigue dependiendo de una puerta cerrada, dilo y no la fuerces.
+
+4. Deja lista, sin ejecutar, la purga final de datos de prueba según el procedimiento que documentaste: qué se borra, qué se conserva, en qué orden y cómo se verifica.
+
+Informe único en reports/ con resultado por tarea, commits y lo detenido con su motivo.

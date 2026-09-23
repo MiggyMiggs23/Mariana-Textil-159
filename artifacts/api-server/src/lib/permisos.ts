@@ -71,8 +71,8 @@ export function mergePermissionValues(
 }
 
 /** All configurable module identifiers. */
-const REMATE_MATRIX_RELEASED: boolean = false;
-const E3_MATRIX_RELEASED: boolean = false;
+const REMATE_MATRIX_RELEASED: boolean = true;
+const E3_MATRIX_RELEASED: boolean = true;
 export const MODULOS = [
   ...(REMATE_MATRIX_RELEASED ? ["marcar_remate"] : []),
   "dashboard",
