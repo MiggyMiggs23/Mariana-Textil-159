@@ -11,7 +11,7 @@ import {
   e11SecurityLock, e11Snapshot, e11SnapshotSales, e11UserRoleChange, E11RecoveryTarget, type E11Sql,
 } from "./e11-repository";
 import { createE11LegacyBoundary, e11LegacyAllowed } from "../middlewares/e11-legacy";
-import type { E11RuntimeOptions } from "./e11-runtime";
+import { createE11Runtime, type E11RuntimeOptions } from "./e11-runtime";
 import {
   E11_ENABLED, E11_PROFILE_ASSIGNMENT_ENABLED, E11_RECONCILIATION_ENABLED, E11_E5_PREPARATION_ENABLED,
 } from "./e11-feature";
@@ -160,18 +160,24 @@ const frozen = (items = [sale()]) => ({
   cantidadVentas: items.length, evidenciaHash: e11Hash(items), decisiones: [],
 });
 
-test("E11-OFF-ALL-GATES", () => {
+test("E11-TANDA-D-READERS-RECONCILIATION-ONLY", () => {
   assert.deepEqual([E11_ENABLED, E11_PROFILE_ASSIGNMENT_ENABLED, E11_RECONCILIATION_ENABLED,
-    E11_E5_PREPARATION_ENABLED], [false, false, false, false]);
+    E11_E5_PREPARATION_ENABLED], [true, false, true, false]);
 });
 test("E11-OFF-SECURITY-NO-SQL", async () => {
   const s = spySequence();
-  await assert.doesNotReject(() => e11SecurityLock(s.tx));
+  await createE11Runtime({ flags: { enabled: false, profiles: false, reconciliation: false,
+    preparation: false, e5Enabled: false, e5ContadorA: false } }).run(async () => {
+    await assert.doesNotReject(() => e11SecurityLock(s.tx));
+  });
   assert.equal(s.queries.length, 0);
 });
 test("E11-OFF-ROLE-CHANGE-NO-SQL", async () => {
   const s = spySequence();
-  await assert.doesNotReject(() => e11UserRoleChange(s.tx, 2, "CONTADOR", true, 1));
+  await createE11Runtime({ flags: { enabled: false, profiles: false, reconciliation: false,
+    preparation: false, e5Enabled: false, e5ContadorA: false } }).run(async () => {
+    await assert.doesNotReject(() => e11UserRoleChange(s.tx, 2, "CONTADOR", true, 1));
+  });
   assert.equal(s.queries.length, 0);
 });
 test("E11-CANONICAL-KEY-ORDER", () => {
