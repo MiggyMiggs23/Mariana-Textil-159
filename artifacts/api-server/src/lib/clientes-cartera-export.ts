@@ -42,6 +42,7 @@ export async function renderClientesCarteraXlsx(
     { header: "Sin plazo definido", key: "sinPlazo", width: 18 },
   ];
   sheet.getColumn("saldo").numFmt = EXCEL_NUMBER_FORMAT.money;
+  sheet.getColumn("saldoAFavor").numFmt = EXCEL_NUMBER_FORMAT.money;
   sheet.getColumn("vencido").numFmt = EXCEL_NUMBER_FORMAT.money;
   sheet.getColumn("sinPlazo").numFmt = EXCEL_NUMBER_FORMAT.money;
   sheet.addRows(result.clientes.map((row) => ({

@@ -135,6 +135,20 @@ test("global read preserves legacy active/system and nonzero-debt behavior", asy
   assert.equal(result.alcance.saldoAFavorDisponible, true);
 });
 
+test("S-26: global cartera XLSX applies money format to real saldo a favor cells", async () => {
+  const result = await loadClientesCartera(auth(), {}, dependencies);
+  const xlsx = await renderClientesCarteraXlsx(result);
+  const workbook = new ExcelJS.Workbook();
+  const excelInput = xlsx as unknown as Parameters<typeof workbook.xlsx.load>[0];
+  await workbook.xlsx.load(excelInput);
+  const sheet = workbook.getWorksheet("Cartera");
+
+  assert.ok(sheet);
+  assert.equal(sheet.getCell("C2").value, 0);
+  assert.equal(sheet.getCell("C2").numFmt, '"$"#,##0.00');
+  assert.equal(sheet.getColumn(3).numFmt, '"$"#,##0.00');
+});
+
 test("scope guards reject conflicts, arrays, blanks, zero, and missing assignment", async () => {
   for (const query of [
     { ubicacionId: "1", ubicacionIds: "1,2" },
