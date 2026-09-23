@@ -1,0 +1,11 @@
+[frontend-test-runner] 1 file(s); tsconfig=/home/runner/workspace/artifacts/mariana-textil/tsconfig.render-tests.json
+✔ E7 read-only UI is open while E5 operations stay closed (1.153595ms)
+✔ client detail consumes E7 JSON and exports without mounting attribution (1.251169ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 210.672448

@@ -14,6 +14,8 @@ const supplierDetail = read("../../mariana-textil/src/pages/proveedor-detail.tsx
 const reportPage = read("../../mariana-textil/src/pages/reportes.tsx");
 const app = read("../../mariana-textil/src/App.tsx");
 const history = read("../../mariana-textil/src/components/directed-payment-history.tsx");
+const reportScope = read("../../mariana-textil/src/components/reportes/report-scope.ts");
+const clientesTab = read("../../mariana-textil/src/components/reportes/tabs/clientes-tab.tsx");
 const routes = read("./routes/index.ts");
 
 test("directed payment feed exposes structured admin actions", () => {
@@ -42,7 +44,9 @@ test("existing payment dialogs preserve FIFO and offer directed mode", () => {
 test("entity histories and historical report route are wired", () => {
   assert.match(clientDetail, /DirectedPaymentHistory tipo="CLIENTE"/);
   assert.match(supplierDetail, /DirectedPaymentHistory tipo="PROVEEDOR"/);
-  assert.match(reportPage, /id: "pagos-dirigidos"/);
+  assert.doesNotMatch(reportPage, /id: "pagos-dirigidos"/);
+  assert.match(reportScope, /candidate === "pagos-dirigidos"[\s\S]*tab: "clientes", legacy: true/);
+  assert.match(clientesTab, /useGetReporteSeccion\("pagos-dirigidos"/);
   assert.match(app, /setLocation\("\/reportes\?tab=pagos-dirigidos"\)/);
   assert.match(history, /useListSolicitudesPagoDirigido/);
   for (const label of ["Fecha", "Documento", "Importe", "Estado", "Motivo", "Solicitante", "Autorizador"]) {
@@ -56,7 +60,9 @@ test("report includes only resolved directed requests with date and site scope",
   assert.match(reports, /s\.ubicacion_id=ANY\(\$3::int\[\]\)/);
   assert.match(reports, /Solicitudes resueltas/);
   assert.match(reports, /las pendientes se atienden desde notificaciones/);
-  assert.match(reportPage, /\/api\/reportes\/\$\{activeTab\}\/export\.\$\{format\}/);
+  assert.match(reportPage,
+    /\/api\/reportes\/vistas\/\$\{encodeURIComponent\(activeTab\)\}\/export\.\$\{format\}/);
+  assert.match(reportPage, /buildReportExportParams\(apiParams, viewMode, cashControls\)/);
   assert.match(reportPage, /ubicacionIds/);
 });
 

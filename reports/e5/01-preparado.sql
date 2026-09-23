@@ -411,9 +411,10 @@ BEGIN
             AND a.importe<=(s.value->>'importe')::numeric)
       THEN RAISE EXCEPTION 'E5: destino exacto/subconjunto de propuesta'; END IF;
     END IF;
-    SELECT mc.* INTO m FROM public.e5_vinculos_credito v
-      JOIN public.movimientos_credito mc ON mc.id=v.movimiento_id
-      WHERE v.aplicacion_id=a.id AND v.birth_xid=a.birth_xid;
+    SELECT mc.* INTO m FROM public.e5_vinculos_credito application_link
+      JOIN public.movimientos_credito mc ON mc.id=application_link.movimiento_id
+      WHERE application_link.aplicacion_id=a.id
+        AND application_link.birth_xid=a.birth_xid;
     IF NOT FOUND OR m.operacion_productor IS DISTINCT FROM 'E5_APLICACION_RETENIDA'
       OR m.operacion_clave IS DISTINCT FROM a.id OR m.tipo::text IS DISTINCT FROM 'ABONO'
       OR m.naturaleza::text IS DISTINCT FROM 'OPERACION_CREDITO_SIN_DINERO'
@@ -479,13 +480,16 @@ BEGIN
   END LOOP;
   IF EXISTS (SELECT 1 FROM public.operaciones_credito_e1 op
     WHERE op.productor='E5_APLICACION_RETENIDA' AND NOT EXISTS (
-      SELECT 1 FROM public.e5_aplicaciones a WHERE a.id=op.clave AND a.actor_id=op.usuario_id
+      SELECT 1 FROM public.e5_aplicaciones app_source
+      WHERE app_source.id=op.clave AND app_source.actor_id=op.usuario_id
         AND op.naturaleza::text='OPERACION_CREDITO_SIN_DINERO'))
   THEN RAISE EXCEPTION 'E5: operación E1 sin fuente propia'; END IF;
-  IF EXISTS (SELECT 1 FROM public.movimientos_credito m
-    WHERE m.operacion_productor='E5_APLICACION_RETENIDA' AND NOT EXISTS (
-      SELECT 1 FROM public.e5_vinculos_credito v JOIN public.e5_aplicaciones a ON a.id=v.aplicacion_id
-      WHERE v.movimiento_id=m.id AND a.id=m.operacion_clave))
+  IF EXISTS (SELECT 1 FROM public.movimientos_credito credit_source
+    WHERE credit_source.operacion_productor='E5_APLICACION_RETENIDA' AND NOT EXISTS (
+      SELECT 1 FROM public.e5_vinculos_credito credit_link
+      JOIN public.e5_aplicaciones linked_application ON linked_application.id=credit_link.aplicacion_id
+      WHERE credit_link.movimiento_id=credit_source.id
+        AND linked_application.id=credit_source.operacion_clave))
   THEN RAISE EXCEPTION 'E5: crédito huérfano'; END IF;
   FOR d IN SELECT * FROM public.e5_devoluciones LOOP
     SELECT * INTO r FROM public.e5_recepciones WHERE id=d.cobro_id;
@@ -532,7 +536,8 @@ BEGIN
     THEN RAISE EXCEPTION 'E5: devolución sin operación idempotente'; END IF;
   END LOOP;
   IF EXISTS (SELECT 1 FROM public.e5_salidas_bancarias s WHERE NOT EXISTS (
-    SELECT 1 FROM public.e5_devoluciones d WHERE d.clave=s.clave AND d.fuente->>'tipo'='CUENTA'))
+    SELECT 1 FROM public.e5_devoluciones bank_refund
+    WHERE bank_refund.clave=s.clave AND bank_refund.fuente->>'tipo'='CUENTA'))
   THEN RAISE EXCEPTION 'E5: salida bancaria huérfana'; END IF;
   FOR v IN SELECT * FROM public.e5_documentos LOOP
     SELECT * INTO r FROM public.e5_recepciones WHERE id=v.cobro_id;
@@ -541,13 +546,14 @@ BEGIN
       IF v.snapshot->k IS DISTINCT FROM r.snapshot->k
       THEN RAISE EXCEPTION 'E5: documento difiere de recepción (%)',k; END IF;
     END LOOP;
-    IF v.tipo='CONSTANCIA' AND NOT EXISTS (SELECT 1 FROM public.e5_aplicaciones a
-      WHERE a.cobro_id=v.cobro_id AND a.snapshot->>'constanciaId'=v.id::text
-        AND v.snapshot->'autorizador'=a.snapshot->'actor'
-        AND v.snapshot->'fechaAplicacion'=a.snapshot->'fechaAplicacion'
-        AND v.snapshot->'evidencia'=a.snapshot->'evidencia'
+    IF v.tipo='CONSTANCIA' AND NOT EXISTS (SELECT 1 FROM public.e5_aplicaciones document_application
+      WHERE document_application.cobro_id=v.cobro_id
+        AND document_application.snapshot->>'constanciaId'=v.id::text
+        AND v.snapshot->'autorizador'=document_application.snapshot->'actor'
+        AND v.snapshot->'fechaAplicacion'=document_application.snapshot->'fechaAplicacion'
+        AND v.snapshot->'evidencia'=document_application.snapshot->'evidencia'
         AND (v.snapshot->>'importeFavorGenerado')::numeric=
-          coalesce((a.snapshot->>'importeFavorGenerado')::numeric,0))
+          coalesce((document_application.snapshot->>'importeFavorGenerado')::numeric,0))
     THEN RAISE EXCEPTION 'E5: constancia huérfana o alterada'; END IF;
   END LOOP;
   FOR o IN SELECT * FROM public.e5_operaciones ORDER BY cobro_id,revision LOOP
@@ -619,9 +625,11 @@ BEGIN
         RAISE EXCEPTION 'E5: recepción no repetible';
       END IF;
       IF o.accion='AUTORIZAR' AND NOT EXISTS (
-        SELECT 1 FROM public.e5_aplicaciones a
-        WHERE a.cobro_id=o.cobro_id AND a.birth_xid=o.birth_xid
-          AND a.propuesta_id::text=prev->>'propuestaVigenteId' AND a.actor_id=o.actor_id)
+        SELECT 1 FROM public.e5_aplicaciones authorized_application
+        WHERE authorized_application.cobro_id=o.cobro_id
+          AND authorized_application.birth_xid=o.birth_xid
+          AND authorized_application.propuesta_id::text=prev->>'propuestaVigenteId'
+          AND authorized_application.actor_id=o.actor_id)
       THEN RAISE EXCEPTION 'E5: autorización de propuesta vigente requerida'; END IF;
     END IF;
   END LOOP;

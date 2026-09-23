@@ -1,0 +1,17 @@
+✔ released gates enable ADMIN profile assignment but keep E5 preparation closed (2.289086ms)
+✔ Tanda D: default CONTADOR is F with fiscal read and documentary reconciliation only (3.144172ms)
+✔ Tanda D: existing explicit A reads sanitized finance but cannot prepare E5 (0.77594ms)
+✔ ADMIN receives profile assignment without receiving E5 preparation (0.628285ms)
+✔ Tanda D: other roles receive no E11 capabilities (1.459273ms)
+✔ Tanda D: fiscal query contract stays read-only and invoice-filtered (1.678606ms)
+✔ Tanda D: documentary period policy keeps daily optional and week/month mandatory (0.915512ms)
+✔ Tanda D: legacy finance and payment surfaces remain denied to CONTADOR (0.230436ms)
+✔ Tanda D: explicit OFF runtime still performs no security or role-change SQL (0.70064ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2790.899947

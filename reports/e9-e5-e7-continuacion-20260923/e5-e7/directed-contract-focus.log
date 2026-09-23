@@ -1,0 +1,14 @@
+✔ directed payment feed exposes structured admin actions (2.512301ms)
+✔ existing payment dialogs preserve FIFO and offer directed mode (0.201157ms)
+✔ entity histories and historical report route are wired (0.301887ms)
+✔ report includes only resolved directed requests with date and site scope (0.198749ms)
+✔ payment request routes are mounted with the notification and report surfaces (0.14902ms)
+✔ pagos dirigidos publishes queue and review contract (193.996732ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 542.684385
