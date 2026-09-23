@@ -1,0 +1,8 @@
+workflow: artifacts/mariana-textil: web
+status: RUNNING
+run_id: 3-UamQpX8p3mcGBkssge9
+timestamp: 2026-09-23T18:59:45.045Z
+
+  ➜  Local:   http://localhost:20329/
+  ➜  Network: http://172.24.0.2:20329/
+  ➜  press h + enter to show help

@@ -1,0 +1,41 @@
+PASS artifacts/api-server/src/lib/e9-feature.ts :: export const E9_ENABLED = false;
+PASS artifacts/api-server/src/lib/e9-feature.ts :: export const E9_FONDO_INGRESS_ENABLED = false;
+PASS artifacts/mariana-textil/src/lib/e9-feature-flags.ts :: export const E9_ENABLED = false;
+PASS artifacts/api-server/src/lib/e7-feature.ts :: export const E7_ENABLED: boolean = true;
+PASS artifacts/api-server/src/lib/e7-feature.ts :: export const E7_CLIENT_FINANCIAL_READS_ENABLED: boolean = true;
+PASS artifacts/api-server/src/lib/e7-feature.ts :: export const E7_ATTRIBUTION_ENABLED: boolean = false;
+PASS artifacts/mariana-textil/src/lib/e7-feature-flags.ts :: export const E7_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e7-feature-flags.ts :: export const E7_UI_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e7-feature-flags.ts :: export const E7_CLIENT_FINANCIAL_READS_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e7-feature-flags.ts :: export const E7_ATTRIBUTION_ENABLED = false;
+PASS artifacts/api-server/src/lib/e11-feature.ts :: export const E11_ENABLED: boolean = true;
+PASS artifacts/api-server/src/lib/e11-feature.ts :: export const E11_PROFILE_ASSIGNMENT_ENABLED: boolean = true;
+PASS artifacts/api-server/src/lib/e11-feature.ts :: export const E11_RECONCILIATION_ENABLED: boolean = true;
+PASS artifacts/api-server/src/lib/e11-feature.ts :: export const E11_E5_PREPARATION_ENABLED: boolean = false;
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts :: export const E11_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts :: export const E11_UI_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts :: export const E11_PROFILE_ASSIGNMENT_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts :: export const E11_RECONCILIATION_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e11-feature-flags.ts :: export const E11_E5_PREPARATION_ENABLED = false;
+PASS artifacts/api-server/src/lib/e5-feature.ts :: export const E5_ENABLED = false;
+PASS artifacts/api-server/src/lib/e5-feature.ts :: export const E5_CONTADOR_A_ENABLED = false;
+PASS artifacts/mariana-textil/src/lib/e5-feature-flags.ts :: export const E5_ENABLED = false;
+PASS artifacts/api-server/src/lib/e4-cash-out.ts :: export const E4_CASH_OUT_ENABLED = true;
+PASS artifacts/mariana-textil/src/lib/e4-feature-flags.ts :: export const E4_CASH_OUT_ENABLED = true;
+PASS artifacts/api-server/src/lib/e12-supplier-cash.ts :: export const E12_SUPPLIER_CASH_ENABLED = false;
+PASS artifacts/mariana-textil/src/lib/e12-feature-flags.ts :: export const E12_ENABLED = false;
+PASS artifacts/api-server/src/lib/e3-collection.ts :: export const E3_ENABLED = true;
+PASS artifacts/api-server/src/lib/e3-collection.ts :: export const E3_DIRECTED_ENABLED = false;
+PASS artifacts/api-server/src/lib/e3-ordinary-cash-release.ts :: export const E3_ORDINARY_CASH_ENABLED = true;
+PASS artifacts/api-server/src/lib/permisos.ts :: const E3_MATRIX_RELEASED: boolean = true;
+PASS artifacts/api-server/src/lib/permisos.ts :: const REMATE_MATRIX_RELEASED: boolean = true;
+PASS artifacts/mariana-textil/src/lib/e3-feature-flags.ts :: export const E3_ENABLED = true;
+PASS artifacts/api-server/src/lib/tarea4-gates.ts :: export const REMATE_RELEASED: boolean = true;
+PASS artifacts/api-server/src/lib/tarea4-gates.ts :: export const PRICE_FLOOR_RELEASED: boolean = true;
+PASS artifacts/api-server/src/lib/tarea4-gates.ts :: export const PRODUCT_HISTORY_DELETE_RELEASED: boolean = true;
+PASS artifacts/mariana-textil/src/lib/tarea4-gates.ts :: export const REMATE_UI_RELEASED: boolean = true;
+PASS artifacts/mariana-textil/src/lib/tarea4-gates.ts :: export const PRICE_FLOOR_UI_RELEASED: boolean = true;
+PASS artifacts/mariana-textil/src/lib/tarea4-gates.ts :: export const PRODUCT_HISTORY_DELETE_UI_RELEASED: boolean = true;
+PASS final target bundle paths absent; prior bundles and discarded E9-ON attempt preserved
+PASS UI Fondo/E10 build gate absent/false
+PASS final source gate inventory E7+E11; E9 blocked OFF; no runtime imports, no DB

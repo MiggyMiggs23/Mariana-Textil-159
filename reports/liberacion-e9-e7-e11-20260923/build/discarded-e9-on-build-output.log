@@ -1,0 +1,31 @@
+COMBINED_CANDIDATE=dist-e9-e7-e11-20260923
+PASS API_ENTRY artifacts/api-server/dist-e9-e7-e11-20260923/index.mjs
+PASS UI_ENTRY artifacts/mariana-textil/dist-e9-e7-e11-20260923/index.html
+API_FILE_COUNT=12
+UI_FILE_COUNT=11
+API_BYTES=27544922
+UI_BYTES=5584421
+PRESERVED_API_DIST_DIRS:
+  dist
+  dist-e2-20260927
+  dist-e2-control-7cb77f8-20260927
+  dist-e3-20260922
+  dist-e3-apertura-20260922
+  dist-e4-20260923
+  dist-e9-e7-e11-20260923
+  dist-simple-e3-tanda-b-20260923
+  dist-tanda-b-b0-b1-20260923
+  dist-tanda-b-off-20260923
+  dist-tanda-d-20260923
+PRESERVED_UI_DIST_DIRS:
+  dist
+  dist-e3-20260922
+  dist-e3-apertura-20260922
+  dist-e4-20260923
+  dist-e9-e7-e11-20260923
+  dist-simple-e3-tanda-b-20260923
+  dist-tanda-b-b0-b1-20260923
+  dist-tanda-b-off-20260923
+  dist-tanda-d-20260923
+PASS prior bundle directories retained
+PASS no workflow/runtime/DB operation performed by build task

@@ -1,0 +1,11 @@
+miguelestza: Sigue con lo que no depende de una decisión del propietario, con el procedimiento simple. Cada tarea en su propio commit; si una se atora, anótala y sigue.
+
+1. Libera E9: entrega del efectivo de un corte cerrado de una tienda hacia Mariana, con autorización de ADMIN e investigación si no coincide. El ingreso al Fondo queda cerrado, así que deja esa parte apagada y dime hasta dónde llega E9 sin ella.
+
+2. Libera E7: los endpoints financieros de clientes, con resumen de crédito global y detalle por sitio.
+
+3. Libera lo que quede de E11 que no dependa de una decisión: lectores y conciliación ya están; dime qué falta exactamente para asignar los perfiles ContadorF y ContadorA y qué decide el propietario.
+
+4. Dime qué queda del plan de doce entregas sin liberar, y para cada cosa qué la detiene: una decisión del propietario, otra entrega o trabajo pendiente.
+
+Informe único en reports/ con resultado por tarea, commits y lo detenido con su motivo.

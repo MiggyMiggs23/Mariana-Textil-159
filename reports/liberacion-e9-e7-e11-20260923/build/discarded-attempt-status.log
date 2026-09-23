@@ -1,0 +1,6 @@
+DISCARDED: dist-e9-e7-e11-20260923
+Reason: E9 disposable AUTORIZAR failed with PostgreSQL 22P02 after this offline build completed.
+Source gates at build time: E9 ON API/UI, Fondo ingress OFF.
+Usage status: FORBIDDEN; this is not the release candidate and must not be served.
+Build exits: API 0, UI 0. These successful build exits do not override the SQL failure.
+No SQL repair attempted.

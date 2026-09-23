@@ -1,0 +1,25 @@
+$ (cd artifacts/mariana-textil && BASE_PATH=/ NODE_ENV=production PORT=20329 pnpm exec vite build --outDir dist-e7-e11-20260923)
+vite v7.3.6 building client environment for production...
+transforming...
+src/components/ui/tooltip.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/calendar.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/toggle-group.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/sheet.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+src/components/ui/command.tsx (2:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+✓ 5667 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-e7-e11-20260923/index.html                                              1.33 kB │ gzip:   0.53 kB
+dist-e7-e11-20260923/assets/mariana-textil-logo-monochrome-_7AVoW2A.png    166.39 kB
+dist-e7-e11-20260923/assets/mariana-textil-logo-FFOiXRd3.png               818.20 kB
+dist-e7-e11-20260923/assets/index-C6yDHUng.css                             243.37 kB │ gzip:  35.93 kB
+dist-e7-e11-20260923/assets/index-CJ5sQYvB.js                              458.30 kB │ gzip: 117.57 kB
+dist-e7-e11-20260923/assets/index-CafoQi_H.js                            3,043.39 kB │ gzip: 733.47 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 17.05s
+
+BUILD_UI_EXIT=0

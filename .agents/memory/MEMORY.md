@@ -67,6 +67,7 @@
 - [Caché financiera y cambios de sesión](financial-cache-auth-transitions.md) — invalidar al iniciar sesión no impide mostrar datos previos; separar identidad/alcance y validar la respuesta.
 - [Calendario y filtros generados](calendar-contract-query-compatibility.md) — quitar coerción Date también afecta queries; conservar límites históricos, no cambiar qué registros seleccionan.
 - [Resumen global de crédito y detalle por sitio](customer-credit-scope-exception.md) — excepción limitada a cuatro cifras; FIFO global, detalle restringido y leyendas dentro de archivos.
+- [Separar lectura, custodia y habilitación](financial-boundary-enablement.md) — E9 documental no ingresa al Fondo, leer evidencia E5 no abre E5 y habilitar el selector E11 no asigna usuarios.
 - [Pruebas negativas de guardias](source-guard-negative-proof.md) — exigir fallo del proceso real en un árbol aislado y cubrir las extensiones mantenidas.
 - [Naturaleza del crédito](credit-movement-nature-decisions.md) — venta a crédito y cancelación sin dinero no son correcciones; cuatro categorías obligatorias, diseño aprobado.
 - [Puertas de captura y SQL directo](database-capture-gates.md) — probar INSERT válidos con rollback; flags cerrados en la aplicación no demuestran cierre en PostgreSQL.
