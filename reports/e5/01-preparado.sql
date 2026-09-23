@@ -343,8 +343,8 @@ BEGIN
       OR (c.detail->>'importePendiente')::numeric IS DISTINCT FROM r.importe-total-returned
       OR (c.detail->>'algunaVezAplicado')::boolean IS DISTINCT FROM (total>0)
       OR c.detail->>'estado' IS DISTINCT FROM
-        CASE WHEN returned>0 THEN 'DEVUELTO' WHEN total=0 THEN 'PENDIENTE'
-          WHEN total=r.importe THEN 'APLICADO' ELSE 'PARCIAL' END
+        (CASE WHEN returned>0 THEN 'DEVUELTO' WHEN total=0 THEN 'PENDIENTE'
+          WHEN total=r.importe THEN 'APLICADO' ELSE 'PARCIAL' END)
     THEN RAISE EXCEPTION 'E5: conservación/estado/irreversibilidad'; END IF;
     IF NOT EXISTS (SELECT 1 FROM public.e5_documentos doc
       WHERE doc.id=(c.detail->>'reciboId')::uuid AND doc.cobro_id=r.id AND doc.tipo='RECIBO'
