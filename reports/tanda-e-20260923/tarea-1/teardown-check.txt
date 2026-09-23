@@ -1,0 +1,11 @@
+Sanitized teardown verification
+
+- Browser target 127.0.0.1:43820: stopped.
+- Isolated PostgreSQL target 127.0.0.1:55439: stopped.
+- Private tarea-1 directory: removed.
+- Frozen private worktree: removed.
+- Disposable database cluster/copy: removed with the private directory.
+- Task dump, credentials, session secret and private runtime logs: removed.
+- Versioned tarea-1 credential/secret pattern hits: 0.
+- Versioned tarea-1 sensitive artifact names (logs, dumps, credentials, cookies): 0.
+- Existing unrelated workspace backups were not modified.

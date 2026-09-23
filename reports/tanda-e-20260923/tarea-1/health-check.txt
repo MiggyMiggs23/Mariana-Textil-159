@@ -1,0 +1,8 @@
+Isolated launcher validation:
+GET http://127.0.0.1:43820/api/healthz -> 200 {"status":"ok"}
+GET http://127.0.0.1:43820/ -> 200
+PostgreSQL current_database() -> tanda_e_e2e_copy
+Launcher process remained alive through the validation.
+
+The validation process was then stopped by its local validation trap. MAIN must
+run launch-isolated.sh as its persistent background task for the browser handoff.

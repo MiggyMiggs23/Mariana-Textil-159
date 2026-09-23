@@ -1,0 +1,18 @@
+tanda_e_e2e_copy|4|4|2|1|10|10
+
+Fields:
+database|active_users|active_expected_synthetic_users|synthetic_sites|synthetic_products|synthetic_rolls|synthetic_inventory_movements
+
+Supplier trace repair:
+provider_id=226|entry_id=468|entry_rolls=5|entry_total=500.00|complete_trace_rolls=5|missing_trace_rolls=0
+All five fixture rolls retain DISPONIBLE, 1.000, cost 100.00 and now resolve
+through rollos.recepcion_id -> entradas.proveedor_id -> active proveedores.
+No ticket_lineas existed for fixture rolls when provenance was attached.
+
+Remaining-flow fixture:
+site_id=839|admin_id=240|caja_id=241|provider_id=227|entry_id=469
+roll_ids=6248,6249,6250,6251,6252|complete_trace_rolls=5|missing_trace_rolls=0
+The new site has zero prior cash sessions. Its five rolls each have one canonical
+RECEPCION movement tied to entry 469; existence cache is 5.000 / 5 rolls.
+Both users are active with the natural ADMIN and CAJA roles; credential hashes
+were verified against the separately stored private credentials.

@@ -1,0 +1,20 @@
+Final sanitized read-only snapshot before teardown
+
+Database identity: tanda_e_e2e_copy
+
+Original site:
+- Session 46: CERRADA; fund 500.00; counted 0.00.
+- Two cash exits totaling 525.00.
+- Derived expected cash: -25.00; difference: 25.00.
+
+Second site:
+- Session 47: ABIERTA; fund 500.00; counted NULL.
+- Ticket 112: VENDIDO; total 150.00; document TICKET; not credit; not charged;
+  no cash-session association.
+- One line/physical consumption for roll 6248, quantity 1.000, amount 150.00.
+- Roll 6248 has one VENTA movement and is VENDIDO.
+- Rolls 6249-6252 remain DISPONIBLE.
+- No second-fixture remate exists.
+
+This is partial business state, not successful completion of the cash-sale
+test. The browser runner was canceled after stalling without new evidence.

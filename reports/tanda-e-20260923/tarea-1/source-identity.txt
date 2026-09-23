@@ -1,0 +1,11 @@
+Source read-only identity:
+heliumdb|postgres|160010|107|31|11|1234|740|3
+
+Restored copy before any write:
+tanda_e_e2e_copy|postgres|160010|107|31|11|1234|740|3
+
+Fields:
+database|user|server_version_num|public_tables|users|locations|products|rolls|tickets
+
+Capture semantics:
+transactionally consistent pg_dump capture; no quiescence or continuing exact equality claimed.

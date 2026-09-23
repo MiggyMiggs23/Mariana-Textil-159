@@ -1,0 +1,38 @@
+{
+  "database": "tanda_e_e2e_copy",
+  "sourceDatabase": "heliumdb",
+  "site": { "id": 837, "name": "TANDA E E2E TIENDA", "initials": "TEE" },
+  "actors": [
+    { "id": 238, "username": "admin", "role": "ADMIN", "credentialKey": "admin" },
+    { "id": 239, "role": "CAJA", "credentialKey": "caja" }
+  ],
+  "client": { "id": 10, "name": "TANDA E CLIENTE CREDITO" },
+  "provider": { "id": 226, "name": "TANDA E E2E PROVEEDOR", "active": true },
+  "entry": { "id": 468, "folio": 1, "providerId": 226, "rollCount": 5, "totalCost": "500.00" },
+  "product": { "id": 2080, "sku": "TANDA-E-POS", "listPrice": "150.00", "physicalUnitCost": "100.00" },
+  "rolls": [
+    { "id": 6243, "serial": "991000001", "purpose": "VENTA EFECTIVO" },
+    { "id": 6244, "serial": "991000002", "purpose": "VENTA TRANSFERENCIA" },
+    { "id": 6245, "serial": "991000003", "purpose": "NOTA CREDITO E3" },
+    { "id": 6246, "serial": "991000004", "purpose": "DENEGACION REMATE SIN MARCA" },
+    { "id": 6247, "serial": "991000005", "purpose": "VENTA REMATE MARCADA" }
+  ],
+  "remainingFlowFixture": {
+    "site": { "id": 839, "name": "TANDA E E2E TIENDA 2", "initials": "TES" },
+    "actors": [
+      { "id": 240, "username": "tandae-admin2", "role": "ADMIN", "credentialKey": "admin2" },
+      { "id": 241, "username": "tandae-caja2", "role": "CAJA", "credentialKey": "caja2" }
+    ],
+    "provider": { "id": 227, "name": "TANDA E E2E PROVEEDOR 2", "active": true },
+    "entry": { "id": 469, "folio": 1, "providerId": 227, "rollCount": 5, "totalCost": "500.00" },
+    "rolls": [
+      { "id": 6248, "serial": "992000001", "purpose": "VENTA EFECTIVO" },
+      { "id": 6249, "serial": "992000002", "purpose": "VENTA TRANSFERENCIA" },
+      { "id": 6250, "serial": "992000003", "purpose": "NOTA CREDITO E3" },
+      { "id": 6251, "serial": "992000004", "purpose": "DENEGACION REMATE SIN MARCA" },
+      { "id": 6252, "serial": "992000005", "purpose": "VENTA REMATE MARCADA" }
+    ]
+  },
+  "disabledRestoredUsers": 31,
+  "credentialValuesIncluded": false
+}
