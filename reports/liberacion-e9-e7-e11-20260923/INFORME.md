@@ -17,11 +17,11 @@ prueba y sin purga. Autorización literal: `autorization.txt`.
 | 1. E9 entrega de corte a Mariana | **BLOQUEADA — OFF restaurado.** Implementación preservada, no liberada. Fondo permanece OFF. | `43946e3` |
 | 2. E7 endpoints financieros | **LIBERADA.** Lectura financiera ON; atribución y operaciones E5 OFF. | `940e5d1` |
 | 3. E11 asignación de perfiles | **LIBERADA.** Selector ADMIN ON; ningún usuario asignado. | `d98381a` |
-| 4. Inventario E1–E12 e informe | **DOCUMENTADO**, con E9 detenido y E7/E11 servidos. | Commit documental que incorpora este informe y la integración; identificable con `git log -1 -- reports/liberacion-e9-e7-e11-20260923/INFORME.md`. |
+| 4. Inventario E1–E12 e informe | **DOCUMENTADO**, con E9 detenido y E7/E11 servidos. | `4b1b598` |
 
-Una tarea detenida no impide continuar las demás. Cada una debe conservar su
-commit separado; el commit documental no puede usarse para afirmar que un
-bundle fue construido o servido.
+Las cuatro tareas tienen commits separados. Un commit adicional de integración
+conserva los bundles y TOML servidos y completa las referencias de este informe;
+no abre ninguna puerta adicional.
 
 ## 1. E9 sin ingreso al Fondo
 
@@ -170,7 +170,7 @@ como decisión de negocio del propietario.
 | **E7** | Lectores financieros liberados ON; atribución OFF | La atribución integral posterior requiere la semántica E5. | **Trabajo técnico dependiente de E5**. |
 | **E8** | **Completa** | Nada. | Cerrada. |
 | **E9** | **OFF; liberación bloqueada.** Implementación documental preservada; ingreso Fondo OFF. | Corregir y volver a ensayar `e9_validate_detail`: AUTORIZAR falla 22P02 después de ENVIAR/CONTAR reales. Solo después podría retomarse la liberación documental. La incorporación monetaria seguiría dependiendo de E10. | **Defecto técnico pendiente**, no decisión del propietario. La conexión monetaria posterior depende de **E10**. P8 ya está decidida. |
-| **E10** | Fondo construido y DDL instalado, pero OFF | Abrir movimientos, historial y arqueo juntos; conciliar saldo inicial sin duplicar Caja/remesas. | **Trabajo técnico**; el propietario debe contar/reconocer el importe físico real. |
+| **E10** | Fondo construido y DDL instalado, pero OFF por cierre expreso vigente | Cuando se autorice, abrir movimientos, historial y arqueo juntos; conciliar saldo inicial sin duplicar Caja/remesas. | **Cierre del propietario**: no se autoriza abrir Fondo en esta tanda. Después habrá trabajo técnico y reconocimiento del importe físico real. |
 | **E11** | Lectores/conciliación y selector A/F liberados ON; E5 preparación OFF | Aceptación por perfil. Elegir usuarios A reales. Puente A→E5 después. | Nombres A son **actuación del propietario**; puente depende de **E5**; aceptación es trabajo técnico. |
 | **E12** | OFF; E4 ya cubre caja de forma independiente | Pago desde Fondo/caja/mixto e inversos atómicos por origen. | **Trabajo técnico dependiente de E10** y de su saldo físico conciliado. P12–P14 ya están decididas. |
 
