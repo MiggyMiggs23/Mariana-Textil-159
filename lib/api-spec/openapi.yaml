@@ -13,7 +13,12 @@ x-e11-gates:
   E11_RECONCILIATION_ENABLED: false
   E11_E5_PREPARATION_ENABLED: false
   description: Contrato solamente; ninguna puerta activa implementación, migración o permisos.
+x-e7-gates:
+  E7_ENABLED: false
+  description: Lectura E7 OFF; no activa E3, E4, E5 ni atribución histórica. Grupo 1 únicamente.
 tags:
+  - name: e7
+    description: Atribución de lecturas y exportaciones Grupo 1, construcción OFF
   - name: e11
     description: Contrato OFF de perfiles CONTADOR A/F, lectores dedicados y conciliación facturada
   - name: e9
@@ -69,6 +74,102 @@ tags:
   - name: equipos
     description: Registro de equipo del sistema y su configuración por sitio
 paths:
+  /e7/disponibilidad:
+    get:
+      operationId: getE7Disponibilidad
+      tags: [e7]
+      responses:
+        "200":
+          description: Gate de fuente, sin auth ni DB estando OFF
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [enabled]
+                properties:
+                  enabled: { type: boolean }
+  /e7/atribucion:
+    get:
+      operationId: getE7Atribucion
+      tags: [e7]
+      description: >
+        ADMIN/SISTEMAS según lectura Cuentas Destino; no concede acceso al tablero
+        Tiempo real. CONTADOR sólo E11. Scope canónico Cartera; sin FIFO local.
+        Periodo inclusive America/Mexico_City, máximo 366 días. Puente separa
+        recepción física, registro histórico no atestado, corrección, devolución
+        y aplicaciones. cobranzaTotal y recepcionesFisicas son null en SITIOS: allí no se llama
+        recepción al reparto a notas. Aplicaciones nunca se suman a ingreso.
+        Stock retenido y antigüedad son actuales al generadoEn, no sólo recepciones
+        dentro del periodo. No son favor ni reducen deuda. Sin sitio sólo global.
+      parameters:
+        - { name: desde, in: query, required: true, schema: { type: string, format: date } }
+        - { name: hasta, in: query, required: true, schema: { type: string, format: date } }
+        - { name: ubicacionId, in: query, schema: { type: string, pattern: '^[1-9]\d*$' } }
+        - { name: ubicacionIds, in: query, schema: { type: string, pattern: '^[1-9]\d*(,[1-9]\d*)*$' } }
+      responses:
+        "200":
+          description: Puente saneado, no suma aplicación como segundo ingreso
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E7Atribucion" }
+        default: { $ref: "#/components/responses/E7ErrorResponse" }
+  /e7/atribucion.xlsx:
+    get:
+      operationId: exportE7AtribucionXlsx
+      tags: [e7]
+      description: Mismo lector, autorización, puente, detalle y leyendas que getE7Atribucion. No exporta una fuente legacy alternativa.
+      parameters:
+        - { name: desde, in: query, required: true, schema: { type: string, format: date } }
+        - { name: hasta, in: query, required: true, schema: { type: string, format: date } }
+        - { name: ubicacionId, in: query, schema: { type: string, pattern: '^[1-9]\d*$' } }
+        - { name: ubicacionIds, in: query, schema: { type: string, pattern: '^[1-9]\d*(,[1-9]\d*)*$' } }
+      responses:
+        "200":
+          description: XLSX de atribución con cifras exactas y leyendas internas
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema: { type: string, format: binary }
+        default: { $ref: "#/components/responses/E7ErrorResponse" }
+  /e7/atribucion.pdf:
+    get:
+      operationId: exportE7AtribucionPdf
+      tags: [e7]
+      description: Mismo lector y contenido monetario que getE7Atribucion; conserva las leyendas dentro del archivo.
+      parameters:
+        - { name: desde, in: query, required: true, schema: { type: string, format: date } }
+        - { name: hasta, in: query, required: true, schema: { type: string, format: date } }
+        - { name: ubicacionId, in: query, schema: { type: string, pattern: '^[1-9]\d*$' } }
+        - { name: ubicacionIds, in: query, schema: { type: string, pattern: '^[1-9]\d*(,[1-9]\d*)*$' } }
+      responses:
+        "200":
+          description: PDF de atribución y retenido separado
+          content:
+            application/pdf:
+              schema: { type: string, format: binary }
+        default: { $ref: "#/components/responses/E7ErrorResponse" }
+  /e7/clientes/{clienteId}/exportacion:
+    get:
+      operationId: getE7ClienteExportacion
+      tags: [e7]
+      description: >
+        Proyección usada por XLSX/PDF/imprimir de Grupo 1. Requiere permiso real
+        clientes_finanzas.ver; CONTADOR sólo E11. No habilita grupos 2–4.
+        Resumen global contiene exactamente cuatro cifras; todo otro dato es
+        del alcance. Proyección FIFO siempre completa antes de filtrar detalle,
+        incluye porciones de abonos sin ticket y saldo pendiente de notas permitidas.
+        Misma semántica en los tres archivos existentes cuando E7 esté habilitado.
+      parameters:
+        - { name: clienteId, in: path, required: true, schema: { type: integer, minimum: 1, maximum: 2147483647 } }
+        - { name: ubicacionId, in: query, schema: { type: string, pattern: '^[1-9]\d*$' } }
+        - { name: ubicacionIds, in: query, schema: { type: string, pattern: '^[1-9]\d*(,[1-9]\d*)*$' } }
+      responses:
+        "200":
+          description: Cuatro cifras globales y detalle autorizado compartido con archivos
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/E7ClienteExportacion" }
+        default: { $ref: "#/components/responses/E7ErrorResponse" }
   /e11/operaciones/{actorId}/{accion}/{uuidOriginal}:
     parameters:
       - { name: actorId, in: path, required: true, schema: { type: integer, minimum: 1, maximum: 2147483647 } }
@@ -7324,6 +7425,19 @@ components:
       schema:
         type: number
   responses:
+    E7ErrorResponse:
+      description: Error explícito; jamás fallback a lectura legacy global
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: false
+            required: [code, message]
+            properties:
+              code:
+                type: string
+                enum: [E7_DISABLED, E7_DEPENDENCIA_NO_DISPONIBLE, E7_FUENTE_INVALIDA, NO_AUTENTICADO, PERFIL_DENEGADO, PERMISO_DENEGADO, PERFIL_CAMBIADO, VALIDACION, ALCANCE_DENEGADO, NO_ENCONTRADO]
+              message: { type: string }
     E5ErrorResponse:
       description: Error E5 explícito; no inferir éxito ni dinero cero
       content: { application/json: { schema: { $ref: "#/components/schemas/E5Error" } } }
@@ -7379,6 +7493,82 @@ components:
           schema:
             $ref: "#/components/schemas/Error"
   schemas:
+    E7Importe:
+      type: string
+      pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$'
+    E7Retenido:
+      type: object
+      additionalProperties: false
+      required: [cobroId, fechaRecepcion, ubicacionId, importePendiente, antiguedadDias]
+      properties:
+        cobroId: { type: string, format: uuid }
+        fechaRecepcion: { type: string, format: date-time }
+        ubicacionId: { type: integer }
+        importePendiente: { $ref: "#/components/schemas/E7Importe" }
+        antiguedadDias: { type: integer, minimum: 0 }
+    E7Movimiento:
+      type: object
+      additionalProperties: false
+      required: [id, fecha, tipo, importe, ubicacionId, cuentaDestino]
+      properties:
+        id: { type: string }
+        fecha: { type: string, format: date-time }
+        tipo: { type: string }
+        importe: { $ref: "#/components/schemas/E7Importe" }
+        ubicacionId: { type: [integer, "null"] }
+        cuentaDestino: { type: [string, "null"] }
+        folio: { type: [string, "null"] }
+        saldoPendiente: { type: [string, "null"], pattern: '^-?(0|[1-9][0-9]*)\.[0-9]{2}$' }
+    E7ClienteExportacion:
+      type: object
+      additionalProperties: false
+      required: [clienteId, alcance, generadoEn, leyendas, resumenGlobal, movimientos, retenidos, totalRetenido]
+      properties:
+        clienteId: { type: integer }
+        alcance: { $ref: "#/components/schemas/CarteraAlcance" }
+        generadoEn: { type: string, format: date-time }
+        leyendas: { type: array, items: { type: string } }
+        resumenGlobal:
+          type: object
+          additionalProperties: false
+          required: [deudaActual, saldoAFavor, limiteCredito, creditoDisponible]
+          properties:
+            deudaActual: { $ref: "#/components/schemas/E7Importe" }
+            saldoAFavor: { $ref: "#/components/schemas/E7Importe" }
+            limiteCredito: { $ref: "#/components/schemas/E7Importe" }
+            creditoDisponible: { $ref: "#/components/schemas/E7Importe" }
+        movimientos: { type: array, items: { $ref: "#/components/schemas/E7Movimiento" } }
+        retenidos: { type: array, items: { $ref: "#/components/schemas/E7Retenido" } }
+        totalRetenido: { $ref: "#/components/schemas/E7Importe" }
+    E7Atribucion:
+      type: object
+      additionalProperties: false
+      required: [alcance, generadoEn, leyendas, cobranzaTotal, recepcionesFisicas, aplicacionesNotas, movimientos, puente, retenidos, totalRetenido]
+      properties:
+        alcance: { $ref: "#/components/schemas/CarteraAlcance" }
+        generadoEn: { type: string, format: date-time }
+        leyendas: { type: array, items: { type: string } }
+        cobranzaTotal:
+          type: [string, "null"]
+          description: Global, incluye puente histórico/correcciones sin atestarlos como dinero físico nuevo; null en SITIOS.
+        recepcionesFisicas:
+          type: [string, "null"]
+          description: Sólo POS y recepción explícitamente física, sin históricos indeterminados ni correcciones; null en SITIOS.
+        aplicacionesNotas: { $ref: "#/components/schemas/E7Importe" }
+        movimientos: { type: array, items: { $ref: "#/components/schemas/E7Movimiento" } }
+        puente:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [tipo, cuentaDestino, ubicacionId, total]
+            properties:
+              tipo: { type: string }
+              cuentaDestino: { type: [string, "null"] }
+              ubicacionId: { type: [integer, "null"] }
+              total: { $ref: "#/components/schemas/E7Importe" }
+        retenidos: { type: array, items: { $ref: "#/components/schemas/E7Retenido" } }
+        totalRetenido: { $ref: "#/components/schemas/E7Importe" }
     E11Disponibilidad:
       type: object
       additionalProperties: false

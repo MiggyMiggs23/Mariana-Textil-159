@@ -1,0 +1,274 @@
+{
+  "status": "PASS_23_EXACT_GROUPED_NATIVE_CYCLES_NOT_BROWSER_NOT_POSTGRES",
+  "scope": "E7 OFF construction; real mounted UI only. MAIN exclusively executes cases.",
+  "sources": [
+    "reports/prompt-u-plan-de-implementacion.md:224-236",
+    "replit.md:1406-1418",
+    "reports/e7/contrato.md",
+    "Current delegated restriction: A stays on sanitized E11 without E7; F remains fiscal; E7 rejects both including overrides; ClienteDetail export preview only"
+  ],
+  "caseCount": 23,
+  "mutantCount": 23,
+  "countPolicy": "Exactly 23 registered IDs/declarations/mutants have one audited complete GREEN, specific ERR_ASSERTION RED, restored GREEN cycle: 14 prior plus final nine, contributed by four runs as 8+1+5+9. 69 accepted native phases; 72 attempts include three preserved failed GREENs. Not a single clean 23-case rerun or complete authenticated E7 acceptance.",
+  "completion": {
+    "auditor": "reports/e7/audit-frontend-completion.mjs",
+    "reproduce": "node reports/e7/audit-frontend-completion.mjs",
+    "evidence": "reports/e7/frontend-completion-audit-2026-09-23T03-50-40.976Z.json",
+    "finalMainRun": "reports/e7/frontend-native-2026-09-23T03-43-51.239Z/manifest.json",
+    "terminalCycles": 23,
+    "acceptedNativePhases": 69,
+    "mainAttemptedNativePhases": 72,
+    "duplicateKeyWarningsAcrossAll72Phases": 0,
+    "remainingIds": [],
+    "helperCasesExecuted": 0,
+    "browserAcceptance": false,
+    "postgresAcceptance": false,
+    "preservation": "Three original MAIN FAILs retained unchanged. Every accepted AST, productive/mutant phase hash, native JSON/log/metafile and final source/helper hash audited. Each intervening preparation change reconstructed back to its original SHA; no affected prior terminal was silently reused. Auditor's preliminary classifier FAIL also retained."
+  },
+  "historicalResumeBeforeFinalNine": {
+    "failedRun": "reports/e7/frontend-native-2026-09-23T03-31-40.181Z/manifest.json",
+    "previousFailedRuns": ["reports/e7/frontend-native-2026-09-23T03-06-55.940Z/manifest.json", "reports/e7/frontend-native-2026-09-23T03-16-45.147Z/manifest.json"],
+    "audit": "reports/e7/frontend-resume-audit-2026-09-23T03-42-05.439Z.json",
+    "domContextReview": "reports/e7/frontend-remaining-dom-review.json",
+    "historicalTerminalCycles": 14,
+    "requeuedPriorIds": [],
+    "remainingIds": ["E7-RANGE", "E7-SCOPE-QUERY", "E7-AVAILABILITY", "E7-COUNTER-BOUNDARY", "E7-SISTEMAS-TIEMPO", "E7-LEGENDS", "E7-DOWNLOAD-REAL-BINARIES", "E7-DOWNLOAD-LATE-REVOCATION", "E7-DOWNLOAD-LATE-SCOPE"],
+    "diagnosis": "RANGE assumed date inputs on default hoy; real parent only renders them under custom. Failure occurred before productive validation. Full nine-case review also found the two pending direct-parent cases used inner E11SessionProvider with gates OFF, which cannot finish its disabled identity query.",
+    "repair": "RANGE starts with valid custom dates, verifies exact controls and request, changes only start date and preserves all range/no-request assertions. The two-use helper uses the same productive E11ApplicationBoundary as App; its real OFF branch is honored. No policy implementation or permission controls changed.",
+    "dependencyChange": "Latest run differs only in suite source. Reversing pending RANGE body, two-use wrapper/import and explanatory comment reproduces the latest MAIN source SHA. Fourteen accepted declaration/productive hashes unchanged. Only pending COUNTER-BOUNDARY and SISTEMAS-TIEMPO call the changed helper."
+  },
+  "downloadExtension": {
+    "ids": ["E7-DOWNLOAD-REAL-BINARIES", "E7-DOWNLOAD-LATE-REVOCATION", "E7-DOWNLOAD-LATE-SCOPE"],
+    "status": "THREE_MAIN_NATIVE_GREEN_SPECIFIC_RED_RESTORED_CYCLES_AUDITED",
+    "staticEvidence": "reports/e7/frontend-preflight-2026-09-23T03-41-09.186Z/manifest.json",
+    "nativeBuildEvidence": "reports/e7/frontend-native-2026-09-23T03-41-54.618Z/manifest.json",
+    "nativeExecutionEvidence": "reports/e7/frontend-native-2026-09-23T03-43-51.239Z/manifest.json",
+    "original20HistoricalAstEvidence": "reports/e7/frontend-download-preparation-2026-09-23T03-01-53.378Z.json",
+    "realDocumentEvidence": "reports/e7/frontend-document-preflight-2026-09-23T02-56-23.609Z/manifest.json",
+    "bytes": "reports/e7/frontend-document-bytes.json",
+    "semantics": "Real backend e7-export PDF/XLSX serializers, global and site-2 synthetic projections; real Blob bytes/MIME/SHA and actual object-URL creation/revocation observed at terminal anchor-save boundary. Pending XLSX is released after identity revocation or actual parent selector scope change; old global file must produce neither object URL nor save, and a new scoped download remains usable.",
+    "ownerHandoff": "9758 confirmed current handler stable and unchanged. Mutants corrupt the saved binary, remove only post-response identity comparison, or remove only post-response alive check. No productive source change required."
+  },
+  "preparedInventory": "reports/e7/frontend-mutants-cases.mjs",
+  "suite": "artifacts/mariana-textil/src/components/e7-node.dom.test.tsx",
+  "operationalDetailBoundary": "CuentaDestinoDetalle stays on its existing operational reader. E7-OPERATIONAL-BOUNDARY checks the explicit non-addition/no-E5-retention notice, return link, actual legacy GET and absence of E7 requests. It DOES NOT claim replacement of that detail. E7 has no account/invoiced/payment-method filter; replacing operational detail requires additional contract.",
+  "executionLimits": [
+    "Only MAIN executed cases. All 23 grouped native cycles audited; three original overall FAILs remain FAIL. No single clean full-suite rerun, live/authenticated acceptance, PostgreSQL transaction proof or real-browser acceptance.",
+    "Real serialized binary success and pending identity/scope races passed MAIN native cycles. Backend bytes/provenance verified; terminal anchor/object-URL save is observed in Node DOM, not a real browser filesystem download.",
+    "OFF mounted case currently targets Cuentas Destino; no claim of independently mutated OFF coverage for every parent.",
+    "A/F and SISTEMAS use authorized real-App positive controls, then direct actual parents under real providers to reach independent reader vetoes otherwise masked by route guards.",
+    "No exhaustive pending-request client/identity/scope race or cache-inventory claim. Grupo 4 is observed only as an unchanged adjacent surface."
+  ],
+  "observedExistingMounts": [
+    {
+      "route": "/caja/cuentas-destino",
+      "componentFile": "artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx",
+      "ancestor": "Real App / ProtectedRoute / Modules.COBROS_PAGOS"
+    },
+    {
+      "route": "/caja/tiempo-real",
+      "componentFile": "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx",
+      "ancestor": "Real App / ProtectedRoute / Modules.RESUMEN_CAJA"
+    },
+    {
+      "route": "/clientes/:id",
+      "componentFile": "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+      "ancestor": "Real App / existing financial permissions and LocationScope; ONLY Grupo 1 export actions/preview, not interactive statement replacement"
+    },
+    {
+      "route": "/contabilidad/finanzas/clientes/:id",
+      "componentFile": "artifacts/mariana-textil/src/pages/e11.tsx",
+      "ancestor": "Unchanged E11 A positive control only; assert NO E7 hooks/requests/links, not an E7 integration"
+    }
+  ],
+  "bindingPolicy": "Five MAIN-generated GET operations only. ON E7 replaces legacy collection cards/bands/breakdowns/links in actual Cuentas Destino/Tiempo Real, without error fallback or adding the two sources. Other sales indicators remain legacy. ClienteDetail is Grupo 1 export preview only. Stable source anchors recorded in static/native manifests.",
+  "globalCreditException": [
+    "deuda actual",
+    "saldo a favor",
+    "límite",
+    "crédito disponible"
+  ],
+  "literalLegends": [
+    "El resumen global de crédito considera todos los sitios.",
+    "El detalle corresponde solo a los sitios autorizados y no representa la deuda total del cliente.",
+    "Sin sitio determinado"
+  ],
+  "groups": [
+    {
+      "id": "E7-OFF",
+      "preparedCases": ["E7-OFF"],
+      "obligations": [
+        "E7 OFF exposes no E7 links, panels or requests on the three real parents; E11 remains unchanged with no E7 integration.",
+        "Existing authorized legacy behavior remains available where its own gates allow it."
+      ],
+      "positiveControl": "The same authentic parent, user and route display its existing authorized content; OFF is not proved by an unmounted, unauthorized or missing route.",
+      "bindingNeeded": "Owner-provided E7 gate and actual integration points."
+    },
+    {
+      "id": "E7-REAL-PARENT-READ",
+      "preparedCases": ["E7-PARENT-CUENTAS", "E7-PARENT-TIEMPO", "E7-OPERATIONAL-BOUNDARY", "E7-SISTEMAS-TIEMPO"],
+      "obligations": [
+        "Cuentas Destino and Tiempo Real render E7 in actual parents and remove replaced legacy collection/desgloses, including on E7 error; ClienteDetail exposes only Grupo 1 export actions/preview.",
+        "Existing sales/ticket/note/comparison indicators and interactive statement remain unchanged; SISTEMAS attribution permission does not grant Tiempo Real access.",
+        "Card/detail selection preserves the real source, period and authorized-site query parameters.",
+        "Visible amounts come from the contracted read model rather than a test-built approximate component."
+      ],
+      "positiveControl": "A distinct authorized record and amount are visible in each real integration; verify its exact generated request before adverse scenarios.",
+      "bindingNeeded": "Stable component locations, generated readers, final routing and permission contracts."
+    },
+    {
+      "id": "E7-FOUR-GLOBAL-CREDIT",
+      "preparedCases": ["E7-GROUP1-FOUR", "E7-LEGENDS"],
+      "obligations": [
+        "Only the approved four global credit values are globally visible to a financially authorized restricted-site user.",
+        "Changing export-preview scope does not recalculate available credit from local debt or prorate the global limit; do not expand Grupo 4 interactive statement.",
+        "Keep both mandatory credit/detail legends literal and identify the limit as global.",
+        "No unrestricted global money-waiting total is introduced as a fifth exception."
+      ],
+      "positiveControl": "A multi-site client has intentionally different global and authorized-detail totals; display the global four and only the authorized detail.",
+      "bindingNeeded": "Final global-credit and scoped-detail response fields."
+    },
+    {
+      "id": "E7-ATTRIBUTION-AFTER-GLOBAL-PROJECTION",
+      "preparedCases": ["E7-SITES-NOT-RECEIPTS", "E7-SCOPE-QUERY", "E7-GROUP1-LINKS"],
+      "obligations": [
+        "Show the authorized portion of an ordinary payment without a ticket when attributed by the global projection.",
+        "Preserve pending amounts of authorized notes and split-payment portions.",
+        "Do not expose unauthorized movements, payment details, links or documents merely because a client or ID is known.",
+        "Represent store applications as applications, not money received at that store; retain the global Sin sitio determinado category.",
+        "A receipt's known origin site does not assign collection to that store; SITIOS cobranzaTotal and recepcionesFisicas remain null."
+      ],
+      "positiveControl": "Two authorized/foreign records have different IDs, sites and visible markers, including a payment split between sites.",
+      "bindingNeeded": "Contracted attribution provenance and server-resolved scope. UI does not implement or certify FIFO."
+    },
+    {
+      "id": "E7-E5-RECEIPT-THEN-APPLICATION",
+      "preparedCases": ["E7-RECEIPT-APPLICATION"],
+      "obligations": [
+        "An E5 receipt pending application appears as received money once in its receipt period.",
+        "Pending money is not presented as available favor and does not reduce debt or increase available credit before application.",
+        "Application on a later day changes debt/available credit only as the authoritative response states, without another receipt or relocation of original collection to the application day.",
+        "Keep cards, detail and source/period bridge consistent for pre-receipt, retained and applied states."
+      ],
+      "positiveControl": "Use distinct nonzero received, applied, retained, debt and favor values across the contracted sequence; observe real readers after each authoritative transition.",
+      "bindingNeeded": "Backend-owner approved E5/E7 sequence fixtures and final reader invalidation behavior. No fabricated business endpoints or live writes."
+    },
+    {
+      "id": "E7-REVERSAL-CORRECTION-HISTORY",
+      "preparedCases": ["E7-PHYSICAL-HISTORY"],
+      "obligations": [
+        "Display net reversals and accounting corrections without labeling them fresh physical customer collection.",
+        "Keep Fondo capital and transfers out of customer collection.",
+        "Changing attribution alone does not change global debt, favor, available credit, sales or total collection.",
+        "Historical recapture and the three undetermined historical movements are not promoted to newly verified cash receipts.",
+        "The historical 25000-by-site versus zero-global observation is never described as newly found cash."
+      ],
+      "positiveControl": "A verified receipt, a reversal, a non-cash correction and undetermined provenance have distinguishable amounts and labels.",
+      "bindingNeeded": "Actual provenance categories and immutable history contract. No invented historical production rows."
+    },
+    {
+      "id": "E7-RETAINED-AGING-AND-SCOPE",
+      "preparedCases": ["E7-RETAINED-STOCK", "E7-SITES-NOT-RECEIPTS"],
+      "obligations": [
+        "Display money waiting for application and its contracted aging without confusing it with favor.",
+        "Restricted users receive only waiting-money detail for authorized sites.",
+        "Unknown origin remains explicit rather than being assigned to the current store.",
+        "Aging refers to the authoritative receipt origin, not an arbitrary UI reload or later application date."
+      ],
+      "positiveControl": "Two receipts with different allowed sites and receipt dates give distinguishable scope and aging observations.",
+      "bindingNeeded": "Approved dates, aging categories and unknown-origin representation; no guessed buckets."
+    },
+    {
+      "id": "E7-QUERY-CONTEXT-AND-ERRORS",
+      "preparedCases": ["E7-QUERY-ERROR", "E7-FOREIGN-PREVIEW", "E7-AVAILABILITY", "E7-RANGE", "E7-SCOPE-QUERY", "E7-DOWNLOAD-IDENTITY", "E7-DOWNLOAD-LATE-REVOCATION", "E7-DOWNLOAD-LATE-SCOPE"],
+      "obligations": [
+        "Changing client, period, site or authorization cannot reuse private previous detail under a new context.",
+        "Contracted reads and export actions retain exact authorized scope and period; E7 currently defines no cursor, so do not invent pagination or modify legacy Grupo 4 movement pagination.",
+        "Loading, denied, stale and failed reads remain explicit rather than becoming a successful zero or a fallback to broader legacy data.",
+        "Revocation removes private rendered content as well as cached or persisted data."
+      ],
+      "positiveControl": "First show a nonempty authorized response; change one context dimension and verify a distinguishable response or explicit error.",
+      "bindingNeeded": "Actual query keys, cursor contract and scope invalidation from final UI; no hypothetical anchor edits."
+    },
+    {
+      "id": "E7-E11-A-F-SEGREGATION",
+      "preparedCases": ["E7-COUNTER-BOUNDARY"],
+      "obligations": [
+        "A retains the existing sanitized E11 reader with NO E7 hook, request or added retention.",
+        "F retains fiscal E11 only. Both CONTADOR profiles are denied all E7 readers even with permission overrides; neither gains legacy administrative access.",
+        "Neither counter projection exposes identification/address, free private details, margins, Fondo or links to prohibited documents.",
+        "Do not infer a general E7-reader permission merely from a CONTADOR role or global E11 scope."
+      ],
+      "positiveControl": "Mount real E11 authorization with explicit A and F identities; both get their actual permitted content before adverse access checks.",
+      "bindingNeeded": "Restriction resolved by contrato.md and MAIN: no E7 reader for either A or F. Final UI anchors pending."
+    },
+    {
+      "id": "E7-GROUP1-DOCUMENT-HANDOFF",
+      "preparedCases": ["E7-GROUP1-LINKS", "E7-DOWNLOAD-CONTEXT", "E7-LEGENDS", "E7-DOWNLOAD-REAL-BINARIES"],
+      "obligations": [
+        "Existing authorized document actions carry the same client/site/period context as the mounted detail.",
+        "Both literal credit/detail legends and global-limit labeling remain in real document rendering owned by this delivery.",
+        "No global classification forbidden to the restricted viewer leaks into a scoped XLSX/PDF/print representation.",
+        "Cards, detail and document values agree, including ordinary payments without tickets and pending authorized notes."
+      ],
+      "positiveControl": "UI verifies actual export actions/context and Grupo 1 preview. Backend helper verifies real PDF/XLSX construction with synthetic data; never fabricate document blobs as evidence.",
+      "bindingNeeded": "Link backend helper real-document evidence; UI does not claim independent PDF/XLSX contents or interactive Grupo 4 coverage.",
+      "limit": "Does not close Prompt P Grupo 1 by itself and does not resume Grupos 2-4."
+    }
+  ],
+  "harnessRequirements": [
+    "Real App/parents, real generated hooks, real authorization and QueryClient; replace only finite network transport and construction gates.",
+    "Each adverse scenario first proves the expected authorized route and ancestor render. Use exact registered routes.",
+    "Known finite valid foreign responses cover mutation-induced alternate IDs; unknown transport is infrastructure, never accepted assertion RED.",
+    "Only MAIN executes exact selected native cases. Require GREEN, specific ERR_ASSERTION ID RED, and restored GREEN.",
+    "Each run owns a fresh mkdtemp; persist reports, native evidence, logs, metafiles and hashes before deleting only its registered trees after each terminal cycle and build-only.",
+    "Zero duplicate/nonunique React-key warnings across all phases; no arbitrary sleeps to conceal stale content.",
+    "Snapshot each source/helper and case AST; changed shared providers invalidate affected terminal evidence rather than being declared equivalent by unchanged tests.",
+    "Observe E5/E7 UI against typed staged authoritative responses; do not claim this proves ledger transactions or live financial effects."
+  ],
+  "preflightGates": [
+    {
+      "gate": "CONTRACT_READY",
+      "status": "READY_FIVE_GENERATED_GETS",
+      "needs": "Contract read and five actual generated hooks identified; typed synthetic contract fixtures prepared separately."
+    },
+    {
+      "gate": "UI_STABLE",
+      "status": "OWNER_9758_CONFIRMED_CURRENT_HANDLER_STABLE_UNCHANGED",
+      "needs": "Current pre/post identity and alive protection unchanged. Completion audit preserves exact MAIN execution/source history; helper executes no cases."
+    },
+    {
+      "gate": "MUTANT_ANCHORS",
+      "status": "23_EXACT_AST_CASES_AND_UNIQUE_PER_MUTANT_ANCHORS_VALIDATED",
+      "needs": "MAIN completed all 23 cycles; final auditor verifies exact unique IDs, native exits, ERR_ASSERTION labels, productive/mutant/restored hashes and zero infrastructure in accepted cycles."
+    },
+    {
+      "gate": "STATIC_TESTS_NO_EMIT",
+      "status": "PASS_FULL_SOURCE_NO_EMIT_ZERO_DIAGNOSTICS_23_CASES",
+      "needs": "reports/e7/frontend-preflight-2026-09-23T03-41-09.186Z/manifest.json. Fourteen prior ASTs preserved; RANGE was repaired while unaccepted and subsequently completed in the final nine."
+    },
+    {
+      "gate": "GENERATED_ZOD_FIXTURES",
+      "status": "PASS_27_TYPED_SCHEMA_CHECKS",
+      "needs": "reports/e7/frontend-preflight-2026-09-23T03-41-09.186Z/manifest.json. All transport/document fixtures unchanged."
+    },
+    {
+      "gate": "PHYSICAL_BUILD_ONLY",
+      "status": "PASS_FINAL_23_CASE_REAL_NATIVE_BUNDLE_ZERO_EXECUTION",
+      "needs": "reports/e7/frontend-native-2026-09-23T03-41-54.618Z/manifest.json. Import-only: reports/e7/frontend-runtime-imports-2026-09-23T03-41-55.953Z/manifest.json. Zero helper cases, App renders or requests; no drift and clean owned-tree removal."
+    }
+  ],
+  "ownerHandoffRequested": [
+    "Received contrato.md and MAIN-generated five GET operations; do not regenerate.",
+    "Final parent integrations and exact authorized routes, preserving unchanged E11 A/F surfaces with no E7 access.",
+    "Source/period/attribution and retained-to-applied sequence fixtures with cent-exact expected values.",
+    "Assignment of real document-output checks between UI and backend auditors."
+  ],
+  "testsExecuted": 23,
+  "testsExecutedMeaning": "Distinct MAIN IDs with audited complete native cycles across four runs. Original three failed GREEN attempts retained separately. Helper executed none.",
+  "mainNativePhasesExecuted": 72,
+  "helperCasesExecuted": 0,
+  "appsStarted": 0,
+  "apiOrDbCalls": 0,
+  "activation": "OFF; no workflow, production/generated-source or commit changes authorized."
+}

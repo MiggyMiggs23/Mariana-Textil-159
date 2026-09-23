@@ -10,6 +10,8 @@ import {
   AdminPendingSummaryTiendasItem
 } from "@workspace/api-client-react";
 import { useSharedCuentasDestino } from "@/hooks/use-shared-cuentas-destino";
+import { E7Attribution } from "@/components/e7-readers";
+import { e7On } from "@/lib/e7-feature-flags";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useLocationScope } from "@/lib/location-scope";
 import { attentionCardTone } from "./attention-card-tone";
@@ -237,6 +239,7 @@ export default function CajaTiempoReal() {
           </div>
         </div>
 
+        <E7Attribution desde={todayStr} hasta={todayStr} surface="tiempo-real" />
         {isLoading ? (
           <div className="h-[400px] flex items-center justify-center">
             <Loader2 className="h-12 w-12 animate-spin text-primary opacity-50" />
@@ -430,7 +433,7 @@ export default function CajaTiempoReal() {
               </div>
             </div>
 
-             {(cuentasLoading || cuentasError) && (
+             {!e7On() && (cuentasLoading || cuentasError) && (
                <div aria-label="Cobranza del periodo" aria-live="polite">
                  {cuentasError ? (
                    <Alert variant="destructive">
@@ -446,7 +449,7 @@ export default function CajaTiempoReal() {
                  )}
                </div>
              )}
-             {!cuentasLoading && !cuentasError && cobranzaStat && (
+             {!e7On() && !cuentasLoading && !cuentasError && cobranzaStat && (
                <div className="py-6 border-y border-sidebar/10">
                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                    <div>

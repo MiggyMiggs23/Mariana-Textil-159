@@ -1,0 +1,52 @@
+{
+  "status": "PASS_REAL_PDF_XLSX_FIXTURES_ZERO_UI_CASES",
+  "testsExecuted": 0,
+  "apiCalls": 0,
+  "dbCalls": 0,
+  "sandbox": "/tmp/e7-document-fixtures-ARQKVV",
+  "sourceHashes": {
+    "reports/e7/serialize-frontend-document-fixtures.mjs": "def3519040d4d4b172d054bedd1df2582258db8b53f1119b8d5714dbdbd823b6",
+    "reports/e7/frontend-fixtures.ts": "5f0d923b328c116d9e242ed802f28aa0d67e2b72c00fa7bb22bf641d8a6efcd0",
+    "artifacts/api-server/src/lib/e7-export.ts": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+    "artifacts/api-server/src/lib/pdf.ts": "2e6201f26286e7342ab9c45cb60aaeb19d384e9694cc478425e602e550b532f8",
+    "artifacts/api-server/src/lib/report-presentation.ts": "4c7368e7effed441926d4d3ce8df6a63a95f3888383e7be7fd8be1c2345eb864",
+    "lib/api-zod/src/generated/api.ts": "49581a2d93f941a668f469f0ac0aa5aba32f88203f1dbef032265f964269c9d2",
+    "lib/number-format/src/index.test.ts": "69bed6ee4a3468bcfe50e88169c0c659848a074a6601735e6b00820cfa7a876a",
+    "lib/number-format/src/index.ts": "94b2be43d275796cbeb3be209541ceaabb4a9c085dcc1ed4d8f0cfc4551db60a"
+  },
+  "helperHashes": {
+    "reports/e7/prepare-frontend-documents.mjs": "5b72529a190f16d730fc548e3880dea4e0bb9bc6ce4dbce3eef90639971e3e17",
+    "reports/tanda-b-20260922/e12/frontend-offline-guard.cjs": "b33cbd5cdd2826ad85c8241fd112522dc5b5cb5705e04906607b99c38f848e7b"
+  },
+  "cleanupErrors": [],
+  "bundleHash": "c45096ee9a98871118cb961d45fa468d7eea7321999f2796ae5bf5f64239ebbc",
+  "documentFixtureHash": "39390b2bd4a6a5e6b85cdcad41743588e7618a66312123422aa5cd2dfef7d0d0",
+  "documents": {
+    "global": {
+      "pdf": {
+        "sha256": "710a85d49e3fdb055841f7175376e95c7ee5014a459e97ebc5af675d6d81e7e7",
+        "bytes": 2056,
+        "mime": "application/pdf"
+      },
+      "xlsx": {
+        "sha256": "b0a09c9acced339370d12698b27175050260cb3700970846081cd6a9ae850187",
+        "bytes": 9217,
+        "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      }
+    },
+    "site2": {
+      "pdf": {
+        "sha256": "fb61fc8c30f7b0f7744e11bb328fa773c24d8c3addd3eb2183ace6137014483b",
+        "bytes": 1623,
+        "mime": "application/pdf"
+      },
+      "xlsx": {
+        "sha256": "fa64d9f4db46be105da12e29b6b925a734a9476c00ff586fdc22860c7d2d1f45",
+        "bytes": 8991,
+        "mime": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      }
+    }
+  },
+  "changedSources": [],
+  "sandboxRemoved": true
+}

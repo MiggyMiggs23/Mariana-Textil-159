@@ -1,4 +1,6 @@
 import { AppLayout } from "@/components/layout/app-layout";
+import { E7Attribution } from "@/components/e7-readers";
+import { e7On } from "@/lib/e7-feature-flags";
 import {
   exportAdminCuentasDestinoXlsx,
   exportAdminCuentasDestinoPdf,
@@ -479,15 +481,16 @@ export default function CajaCuentasDestino() {
             >
               <RefreshCw className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="sm" onClick={handleExportXlsx}>
+            {!e7On() && <Button variant="outline" size="sm" onClick={handleExportXlsx}>
               <Download className="h-4 w-4 mr-2" /> Excel
-            </Button>
-            <Button variant="outline" size="sm" onClick={handleExportPdf}>
+            </Button>}
+            {!e7On() && <Button variant="outline" size="sm" onClick={handleExportPdf}>
               <FileText className="h-4 w-4 mr-2" /> PDF
-            </Button>
+            </Button>}
           </div>
         </div>
 
+        <E7Attribution desde={desde} hasta={hasta} surface="cuentas" />
         {isLoading ? (
           <div className="h-[400px] flex items-center justify-center">
             <Loader2 className="h-12 w-12 animate-spin text-primary opacity-50" />
@@ -513,7 +516,7 @@ export default function CajaCuentasDestino() {
             <div className="space-y-12">
 
               {/* SECTION: COBRANZA (FIRST) */}
-              <section className="space-y-6">
+              {!e7On() && <section className="space-y-6">
                 <h2 className="text-2xl font-bold tracking-tight text-sidebar border-b pb-2 mb-4">Cobranza del periodo</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
@@ -857,7 +860,7 @@ export default function CajaCuentasDestino() {
                   })()}
                 </div>
 
-              </section>
+              </section>}
 
               <section className="space-y-6">
                 <div>
@@ -1060,6 +1063,7 @@ export default function CajaCuentasDestino() {
               <div data-preview="collection-detail-row" className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 <Card className="flex-1 flex flex-col">
                     <CardContent className="p-0 flex-1 flex flex-col">
+                        {!e7On() && <>
                             <div className="px-4 py-3 bg-muted/40 font-semibold text-sm flex items-center justify-between">
                               Cobros por abonos y saldos a favor
                               <span className="text-muted-foreground font-normal text-xs">
@@ -1153,6 +1157,7 @@ export default function CajaCuentasDestino() {
                             Sin abonos en el periodo
                           </div>
                         )}
+                        </>}
 
                         <div className="p-4 border-t bg-muted/10 grid grid-cols-2 gap-4">
                           <div>
@@ -1225,7 +1230,7 @@ export default function CajaCuentasDestino() {
               </Alert>
             )}
 
-              <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 pt-6">
+              {!e7On() && <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 pt-6">
                 {/* Stacked Chart */}
                 <div className="xl:col-span-3">
                   <Card className="h-full">
@@ -1361,10 +1366,9 @@ export default function CajaCuentasDestino() {
                         </div>
                       )}
                     </CardContent>
-                  </Card>
+                </Card>
                 </div>
-              </div>
-
+              </div>}
             {/* Tiendas Breakdown */}
             <section className="space-y-4">
               <h2 className="text-xl font-bold tracking-tight text-sidebar border-b pb-2">Desglose por Tienda</h2>
@@ -1372,7 +1376,7 @@ export default function CajaCuentasDestino() {
                 <CardHeader>
                   <CardTitle>Acumulados</CardTitle>
                   <CardDescription>
-                    Venta y cobro a nivel ubicación
+                    {e7On() ? "Ventas por ubicación. La atribución de aplicaciones se consulta en el puente E7." : "Venta y cobro a nivel ubicación"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -1381,7 +1385,7 @@ export default function CajaCuentasDestino() {
                     <TableHeader>
                       <TableRow className="bg-muted/40">
                         <TableHead>Tienda</TableHead>
-                        <TableHead className="text-right">Cobranza del periodo</TableHead>
+                        {!e7On() && <TableHead className="text-right">Cobranza del periodo</TableHead>}
                         <TableHead className="text-right border-l">
                           Por Cobrar
                         </TableHead>
@@ -1397,9 +1401,9 @@ export default function CajaCuentasDestino() {
                             <Store className="w-4 h-4 text-muted-foreground" />
                             {t.nombreUbicacion}
                           </TableCell>
-                          <TableCell className="text-right font-mono">
+                          {!e7On() && <TableCell className="text-right font-mono">
                             {formatNumber(t.cobrado, { kind: "money" })}
-                          </TableCell>
+                          </TableCell>}
                           <TableCell className="text-right font-mono border-l text-muted-foreground">
                             {formatNumber(t.porCobrar, { kind: "money" })}
                           </TableCell>

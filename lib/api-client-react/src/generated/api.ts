@@ -162,6 +162,9 @@ import type {
   E5RecepcionInput,
   E5RechazarInput,
   E5VistaPrevia,
+  E7Atribucion,
+  E7ClienteExportacion,
+  E7ErrorResponseResponse,
   E9AutorizacionInput,
   E9CierreInput,
   E9ConteoInput,
@@ -195,6 +198,8 @@ import type {
   ExportClientesCarteraPdfParams,
   ExportContenedoresPdfParams,
   ExportContenedoresXlsxParams,
+  ExportE7AtribucionPdfParams,
+  ExportE7AtribucionXlsxParams,
   ExportFondoCsvParams,
   ExportKardexXlsxParams,
   ExportReporteSeccionPdfParams,
@@ -235,6 +240,9 @@ import type {
   GetE11FinanzasEstadoCuentaParams,
   GetE5ContextoParams,
   GetE5DisponibilidadParams,
+  GetE7AtribucionParams,
+  GetE7ClienteExportacionParams,
+  GetE7Disponibilidad200,
   GetE9DisponibilidadParams,
   GetExistenciasAgrupadasParams,
   GetExistenciasParams,
@@ -469,6 +477,406 @@ const withQueryKey = <T extends object, K>(query: T, queryKey: K): T & { queryKe
   }
   return result;
 };
+
+export const getGetE7DisponibilidadUrl = () => {
+
+
+
+
+  return `/api/e7/disponibilidad`
+}
+
+export const getE7Disponibilidad = async ( options?: Parameters<typeof customFetch>[1]): Promise<GetE7Disponibilidad200> => {
+
+  return customFetch<GetE7Disponibilidad200>(getGetE7DisponibilidadUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE7DisponibilidadQueryKey = () => {
+    return [
+    `/api/e7/disponibilidad`
+    ] as const;
+    }
+
+
+export const getGetE7DisponibilidadQueryOptions = <TData = Awaited<ReturnType<typeof getE7Disponibilidad>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE7Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE7DisponibilidadQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE7Disponibilidad>>> = ({ signal }) => getE7Disponibilidad({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE7Disponibilidad>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE7DisponibilidadQueryResult = NonNullable<Awaited<ReturnType<typeof getE7Disponibilidad>>>
+export type GetE7DisponibilidadQueryError = ErrorType<unknown>
+
+
+
+export function useGetE7Disponibilidad<TData = Awaited<ReturnType<typeof getE7Disponibilidad>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE7Disponibilidad>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE7DisponibilidadQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE7AtribucionUrl = (params: GetE7AtribucionParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e7/atribucion?${stringifiedParams}` : `/api/e7/atribucion`
+}
+
+/**
+ * ADMIN/SISTEMAS según lectura Cuentas Destino; no concede acceso al tablero Tiempo real. CONTADOR sólo E11. Scope canónico Cartera; sin FIFO local. Periodo inclusive America/Mexico_City, máximo 366 días. Puente separa recepción física, registro histórico no atestado, corrección, devolución y aplicaciones. cobranzaTotal y recepcionesFisicas son null en SITIOS: allí no se llama recepción al reparto a notas. Aplicaciones nunca se suman a ingreso. Stock retenido y antigüedad son actuales al generadoEn, no sólo recepciones dentro del periodo. No son favor ni reducen deuda. Sin sitio sólo global.
+ */
+export const getE7Atribucion = async (params: GetE7AtribucionParams, options?: Parameters<typeof customFetch>[1]): Promise<E7Atribucion> => {
+
+  return customFetch<E7Atribucion>(getGetE7AtribucionUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE7AtribucionQueryKey = (params?: GetE7AtribucionParams,) => {
+    return [
+    `/api/e7/atribucion`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetE7AtribucionQueryOptions = <TData = Awaited<ReturnType<typeof getE7Atribucion>>, TError = ErrorType<E7ErrorResponseResponse>>(params: GetE7AtribucionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE7Atribucion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE7AtribucionQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE7Atribucion>>> = ({ signal }) => getE7Atribucion(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE7Atribucion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE7AtribucionQueryResult = NonNullable<Awaited<ReturnType<typeof getE7Atribucion>>>
+export type GetE7AtribucionQueryError = ErrorType<E7ErrorResponseResponse>
+
+
+
+export function useGetE7Atribucion<TData = Awaited<ReturnType<typeof getE7Atribucion>>, TError = ErrorType<E7ErrorResponseResponse>>(
+ params: GetE7AtribucionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE7Atribucion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE7AtribucionQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportE7AtribucionXlsxUrl = (params: ExportE7AtribucionXlsxParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e7/atribucion.xlsx?${stringifiedParams}` : `/api/e7/atribucion.xlsx`
+}
+
+/**
+ * Mismo lector, autorización, puente, detalle y leyendas que getE7Atribucion. No exporta una fuente legacy alternativa.
+ */
+export const exportE7AtribucionXlsx = async (params: ExportE7AtribucionXlsxParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportE7AtribucionXlsxUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportE7AtribucionXlsxQueryKey = (params?: ExportE7AtribucionXlsxParams,) => {
+    return [
+    `/api/e7/atribucion.xlsx`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportE7AtribucionXlsxQueryOptions = <TData = Awaited<ReturnType<typeof exportE7AtribucionXlsx>>, TError = ErrorType<E7ErrorResponseResponse>>(params: ExportE7AtribucionXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportE7AtribucionXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportE7AtribucionXlsxQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportE7AtribucionXlsx>>> = ({ signal }) => exportE7AtribucionXlsx(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportE7AtribucionXlsx>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportE7AtribucionXlsxQueryResult = NonNullable<Awaited<ReturnType<typeof exportE7AtribucionXlsx>>>
+export type ExportE7AtribucionXlsxQueryError = ErrorType<E7ErrorResponseResponse>
+
+
+
+export function useExportE7AtribucionXlsx<TData = Awaited<ReturnType<typeof exportE7AtribucionXlsx>>, TError = ErrorType<E7ErrorResponseResponse>>(
+ params: ExportE7AtribucionXlsxParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportE7AtribucionXlsx>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportE7AtribucionXlsxQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getExportE7AtribucionPdfUrl = (params: ExportE7AtribucionPdfParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e7/atribucion.pdf?${stringifiedParams}` : `/api/e7/atribucion.pdf`
+}
+
+/**
+ * Mismo lector y contenido monetario que getE7Atribucion; conserva las leyendas dentro del archivo.
+ */
+export const exportE7AtribucionPdf = async (params: ExportE7AtribucionPdfParams, options?: Parameters<typeof customFetch>[1]): Promise<Blob> => {
+
+  return customFetch<Blob>(getExportE7AtribucionPdfUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getExportE7AtribucionPdfQueryKey = (params?: ExportE7AtribucionPdfParams,) => {
+    return [
+    `/api/e7/atribucion.pdf`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getExportE7AtribucionPdfQueryOptions = <TData = Awaited<ReturnType<typeof exportE7AtribucionPdf>>, TError = ErrorType<E7ErrorResponseResponse>>(params: ExportE7AtribucionPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportE7AtribucionPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getExportE7AtribucionPdfQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof exportE7AtribucionPdf>>> = ({ signal }) => exportE7AtribucionPdf(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof exportE7AtribucionPdf>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ExportE7AtribucionPdfQueryResult = NonNullable<Awaited<ReturnType<typeof exportE7AtribucionPdf>>>
+export type ExportE7AtribucionPdfQueryError = ErrorType<E7ErrorResponseResponse>
+
+
+
+export function useExportE7AtribucionPdf<TData = Awaited<ReturnType<typeof exportE7AtribucionPdf>>, TError = ErrorType<E7ErrorResponseResponse>>(
+ params: ExportE7AtribucionPdfParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof exportE7AtribucionPdf>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getExportE7AtribucionPdfQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetE7ClienteExportacionUrl = (clienteId: number,
+    params?: GetE7ClienteExportacionParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/e7/clientes/${clienteId}/exportacion?${stringifiedParams}` : `/api/e7/clientes/${clienteId}/exportacion`
+}
+
+/**
+ * Proyección usada por XLSX/PDF/imprimir de Grupo 1. Requiere permiso real clientes_finanzas.ver; CONTADOR sólo E11. No habilita grupos 2–4. Resumen global contiene exactamente cuatro cifras; todo otro dato es del alcance. Proyección FIFO siempre completa antes de filtrar detalle, incluye porciones de abonos sin ticket y saldo pendiente de notas permitidas. Misma semántica en los tres archivos existentes cuando E7 esté habilitado.
+ */
+export const getE7ClienteExportacion = async (clienteId: number,
+    params?: GetE7ClienteExportacionParams, options?: Parameters<typeof customFetch>[1]): Promise<E7ClienteExportacion> => {
+
+  return customFetch<E7ClienteExportacion>(getGetE7ClienteExportacionUrl(clienteId,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetE7ClienteExportacionQueryKey = (clienteId: number,
+    params?: GetE7ClienteExportacionParams,) => {
+    return [
+    `/api/e7/clientes/${clienteId}/exportacion`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetE7ClienteExportacionQueryOptions = <TData = Awaited<ReturnType<typeof getE7ClienteExportacion>>, TError = ErrorType<E7ErrorResponseResponse>>(clienteId: number,
+    params?: GetE7ClienteExportacionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE7ClienteExportacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetE7ClienteExportacionQueryKey(clienteId,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getE7ClienteExportacion>>> = ({ signal }) => getE7ClienteExportacion(clienteId,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: clienteId !== null && clienteId !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getE7ClienteExportacion>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetE7ClienteExportacionQueryResult = NonNullable<Awaited<ReturnType<typeof getE7ClienteExportacion>>>
+export type GetE7ClienteExportacionQueryError = ErrorType<E7ErrorResponseResponse>
+
+
+
+export function useGetE7ClienteExportacion<TData = Awaited<ReturnType<typeof getE7ClienteExportacion>>, TError = ErrorType<E7ErrorResponseResponse>>(
+ clienteId: number,
+    params?: GetE7ClienteExportacionParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getE7ClienteExportacion>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetE7ClienteExportacionQueryOptions(clienteId,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
 
 export const getGetE11OperacionRecuperacionUrl = (actorId: number,
     accion: E11OperacionAccion,

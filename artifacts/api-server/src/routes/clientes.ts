@@ -36,6 +36,10 @@ import {
   type CreditLedgerCharge,
 } from "../lib/credit-allocation";
 import { requireSession } from "../middlewares/auth";
+import { E7_ENABLED } from "../lib/e7-feature";
+import { e7Reader, E7ScopeQuery } from "../lib/e7-read-model";
+import { e7StatementWorkbook, e7StatementPdf, e7StatementHtml } from "../lib/e7-export";
+import { e7Error } from "./e7";
 import { requierePermiso, resolvePermiso } from "../lib/permisos";
 import { getRequestIp } from "../lib/request";
 import { createLatin1TextPdf } from "../lib/pdf";
@@ -103,6 +107,30 @@ import {
 const router: IRouter = Router();
 
 router.use("/clientes", requireSession);
+// Group 1 only. OFF delegates unchanged; ON never falls back after a read failure.
+router.get([
+  "/clientes/:id/estado-cuenta.xlsx", "/clientes/:id/estado-cuenta.pdf", "/clientes/:id/estado-cuenta/imprimir",
+], async (req, res, next) => {
+  if (!E7_ENABLED) { next(); return; }
+  try {
+    const data = await e7Reader.statement({ userId: req.auth!.user.id, sessionId: req.auth!.sessionId },
+      Number(req.params.id), E7ScopeQuery.parse(req.query));
+    res.setHeader("Cache-Control", "no-store");
+    if (req.path.endsWith(".xlsx")) {
+      res.type("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.attachment(`estado-cuenta-${data.clienteId}.xlsx`);
+      await e7StatementWorkbook(data).xlsx.write(res); res.end();
+    } else if (req.path.endsWith(".pdf")) {
+      res.type("application/pdf"); res.attachment(`estado-cuenta-${data.clienteId}.pdf`); res.send(e7StatementPdf(data));
+    } else res.type("html").send(e7StatementHtml(data));
+  } catch (error) { e7Error(error, res, next); }
+});
+router.get("/clientes/analitica.xlsx", (req, res, next) => {
+  if (E7_ENABLED && req.auth!.user.rol === "CONTADOR") {
+    res.status(403).json({ code: "PERFIL_DENEGADO", message: "CONTADOR utiliza exclusivamente E11." }); return;
+  }
+  next();
+});
 
 // ── helpers ───────────────────────────────────────────────────────────────────
 

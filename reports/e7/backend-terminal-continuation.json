@@ -1,0 +1,46 @@
+{
+  "status": "CLOSED_BY_CURRENT_TWO_DOCUMENT_CYCLE",
+  "preservedPrefix": {
+    "directory": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z",
+    "manifestSha256": "c7814789356ab130647b9ddef1d7a7a60d81be253080a27092d9e39d43bf5edd",
+    "verifiedCases": 13,
+    "verificationReport": "reports/e7/backend-prefix-verification.json",
+    "verificationReportSha256": "d1ae51410207ffc7e3094998d5b653942d79352f62d946fc172e303c123e97d8",
+    "terminalGreenSha256": "f7c415432849936c4d234f737eb46762b7c60131651bf7a876e40f4cece8603c",
+    "terminalSurvivedRedSha256": "8ec51bf6103482afc50e51d8df3775ba0f299716c180bb3189c24dd4b3e1c044"
+  },
+  "diagnosis": {
+    "classification": "MUTANT_SPECIFIC_ASSERTION_GAP",
+    "productionDefect": false,
+    "fixtureDefect": false,
+    "policyRelaxed": false,
+    "cause": "The attribution document test inspected semantic totals and worksheet structure but did not assert the five literal legends. Removing attributionHeadings leyendas therefore survived.",
+    "minimalCorrection": "Parse XLSX cells and PDF text operators, then assert every E7_LEYENDAS literal in both serializers."
+  },
+  "currentReplacementIds": [
+    "E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS",
+    "E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS"
+  ],
+  "terminalEvidence": {
+    "directory": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z",
+    "manifestSha256": "3f7a8fb8934060a4019c566b1120edaef9e2280f1653e7f76929c5cb70643a78",
+    "status": "COMPLETE_EXPLICIT_SUBSET",
+    "cases": 2
+  },
+  "correctedTestSourceSha256": "980bf3657a11eb98bc2e7546365706a0990488c36bb6baf7a157ab4ea211e940",
+  "preflight": {
+    "sourceOnlyTypecheckRoots": 357,
+    "sourceOnlyTypecheckDiagnostics": 0,
+    "isolatedBundleInputs": 1772,
+    "runtimeImports": "PASS",
+    "auditorCatalog": "PASS",
+    "testsExecutedByCorrection": 0
+  },
+  "consolidatedAudit": {
+    "status": "PASS_14_OF_14",
+    "json": "reports/e7/backend-audit-consolidado.json",
+    "jsonSha256": "0b819fd0184965aadc39c0d7f71150f48c6144ad3c15972e3fb0120c1f7b2440",
+    "markdown": "reports/e7/backend-audit-consolidado.md",
+    "markdownSha256": "589b44b5c1e2c5234253c9877684914b8f865d145308793b7f292fa78063317e"
+  }
+}

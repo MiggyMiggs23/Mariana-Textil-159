@@ -8,6 +8,191 @@
 import * as zod from 'zod';
 
 
+export const GetE7DisponibilidadResponse = zod.object({
+  "enabled": zod.boolean()
+})
+
+
+/**
+ * ADMIN/SISTEMAS según lectura Cuentas Destino; no concede acceso al tablero Tiempo real. CONTADOR sólo E11. Scope canónico Cartera; sin FIFO local. Periodo inclusive America/Mexico_City, máximo 366 días. Puente separa recepción física, registro histórico no atestado, corrección, devolución y aplicaciones. cobranzaTotal y recepcionesFisicas son null en SITIOS: allí no se llama recepción al reparto a notas. Aplicaciones nunca se suman a ingreso. Stock retenido y antigüedad son actuales al generadoEn, no sólo recepciones dentro del periodo. No son favor ni reducen deuda. Sin sitio sólo global.
+ */
+export const getE7AtribucionQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getE7AtribucionQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const getE7AtribucionQueryUbicacionIdRegExp = new RegExp('^[1-9]\\d*$');
+export const getE7AtribucionQueryUbicacionIdsRegExp = new RegExp('^[1-9]\\d*(,[1-9]\\d*)*$');
+
+
+export const GetE7AtribucionQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(getE7AtribucionQueryDesdeRegExp),
+  "hasta": zod.coerce.string().regex(getE7AtribucionQueryHastaRegExp),
+  "ubicacionId": zod.coerce.string().regex(getE7AtribucionQueryUbicacionIdRegExp).optional(),
+  "ubicacionIds": zod.coerce.string().regex(getE7AtribucionQueryUbicacionIdsRegExp).optional()
+})
+
+
+export const getE7AtribucionResponseAplicacionesNotasRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7AtribucionResponseMovimientosItemImporteRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7AtribucionResponseMovimientosItemSaldoPendienteRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7AtribucionResponsePuenteItemTotalRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7AtribucionResponseRetenidosItemImportePendienteRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7AtribucionResponseRetenidosItemAntiguedadDiasMin = 0;
+
+export const getE7AtribucionResponseTotalRetenidoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const GetE7AtribucionResponse = zod.object({
+  "alcance": zod.object({
+  "tipo": zod.enum(['GLOBAL', 'SITIOS']),
+  "ubicaciones": zod.array(zod.object({
+  "id": zod.number().min(1),
+  "nombre": zod.string()
+})),
+  "generadoEn": zod.coerce.date(),
+  "saldoAFavorDisponible": zod.boolean()
+}),
+  "generadoEn": zod.coerce.date(),
+  "leyendas": zod.array(zod.string()),
+  "cobranzaTotal": zod.string().nullable().describe('Global, incluye puente histórico\/correcciones sin atestarlos como dinero físico nuevo; null en SITIOS.'),
+  "recepcionesFisicas": zod.string().nullable().describe('Sólo POS y recepción explícitamente física, sin históricos indeterminados ni correcciones; null en SITIOS.'),
+  "aplicacionesNotas": zod.string().regex(getE7AtribucionResponseAplicacionesNotasRegExp),
+  "movimientos": zod.array(zod.object({
+  "id": zod.string(),
+  "fecha": zod.coerce.date(),
+  "tipo": zod.string(),
+  "importe": zod.string().regex(getE7AtribucionResponseMovimientosItemImporteRegExp),
+  "ubicacionId": zod.number().int().nullable(),
+  "cuentaDestino": zod.string().nullable(),
+  "folio": zod.string().nullish(),
+  "saldoPendiente": zod.string().regex(getE7AtribucionResponseMovimientosItemSaldoPendienteRegExp).nullish()
+})),
+  "puente": zod.array(zod.object({
+  "tipo": zod.string(),
+  "cuentaDestino": zod.string().nullable(),
+  "ubicacionId": zod.number().int().nullable(),
+  "total": zod.string().regex(getE7AtribucionResponsePuenteItemTotalRegExp)
+})),
+  "retenidos": zod.array(zod.object({
+  "cobroId": zod.string().uuid(),
+  "fechaRecepcion": zod.coerce.date(),
+  "ubicacionId": zod.number().int(),
+  "importePendiente": zod.string().regex(getE7AtribucionResponseRetenidosItemImportePendienteRegExp),
+  "antiguedadDias": zod.number().int().min(getE7AtribucionResponseRetenidosItemAntiguedadDiasMin)
+})),
+  "totalRetenido": zod.string().regex(getE7AtribucionResponseTotalRetenidoRegExp)
+})
+
+
+/**
+ * Mismo lector, autorización, puente, detalle y leyendas que getE7Atribucion. No exporta una fuente legacy alternativa.
+ */
+export const exportE7AtribucionXlsxQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportE7AtribucionXlsxQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportE7AtribucionXlsxQueryUbicacionIdRegExp = new RegExp('^[1-9]\\d*$');
+export const exportE7AtribucionXlsxQueryUbicacionIdsRegExp = new RegExp('^[1-9]\\d*(,[1-9]\\d*)*$');
+
+
+export const ExportE7AtribucionXlsxQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportE7AtribucionXlsxQueryDesdeRegExp),
+  "hasta": zod.coerce.string().regex(exportE7AtribucionXlsxQueryHastaRegExp),
+  "ubicacionId": zod.coerce.string().regex(exportE7AtribucionXlsxQueryUbicacionIdRegExp).optional(),
+  "ubicacionIds": zod.coerce.string().regex(exportE7AtribucionXlsxQueryUbicacionIdsRegExp).optional()
+})
+
+export const ExportE7AtribucionXlsxResponse = zod.unknown()
+
+
+/**
+ * Mismo lector y contenido monetario que getE7Atribucion; conserva las leyendas dentro del archivo.
+ */
+export const exportE7AtribucionPdfQueryDesdeRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportE7AtribucionPdfQueryHastaRegExp = new RegExp('^(?:(?:\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|02-(?:0[1-9]|1\\d|2[0-8])))|(?:(?:\\d{2}(?:0[48]|[2468][048]|[13579][26])|(?:[02468][048]|[13579][26])00)-02-29))$');
+export const exportE7AtribucionPdfQueryUbicacionIdRegExp = new RegExp('^[1-9]\\d*$');
+export const exportE7AtribucionPdfQueryUbicacionIdsRegExp = new RegExp('^[1-9]\\d*(,[1-9]\\d*)*$');
+
+
+export const ExportE7AtribucionPdfQueryParams = zod.object({
+  "desde": zod.coerce.string().regex(exportE7AtribucionPdfQueryDesdeRegExp),
+  "hasta": zod.coerce.string().regex(exportE7AtribucionPdfQueryHastaRegExp),
+  "ubicacionId": zod.coerce.string().regex(exportE7AtribucionPdfQueryUbicacionIdRegExp).optional(),
+  "ubicacionIds": zod.coerce.string().regex(exportE7AtribucionPdfQueryUbicacionIdsRegExp).optional()
+})
+
+export const ExportE7AtribucionPdfResponse = zod.unknown()
+
+
+/**
+ * Proyección usada por XLSX/PDF/imprimir de Grupo 1. Requiere permiso real clientes_finanzas.ver; CONTADOR sólo E11. No habilita grupos 2–4. Resumen global contiene exactamente cuatro cifras; todo otro dato es del alcance. Proyección FIFO siempre completa antes de filtrar detalle, incluye porciones de abonos sin ticket y saldo pendiente de notas permitidas. Misma semántica en los tres archivos existentes cuando E7 esté habilitado.
+ */
+export const getE7ClienteExportacionPathClienteIdMax = 2147483647;
+
+
+
+export const GetE7ClienteExportacionParams = zod.object({
+  "clienteId": zod.coerce.number().int().min(1).max(getE7ClienteExportacionPathClienteIdMax)
+})
+
+export const getE7ClienteExportacionQueryUbicacionIdRegExp = new RegExp('^[1-9]\\d*$');
+export const getE7ClienteExportacionQueryUbicacionIdsRegExp = new RegExp('^[1-9]\\d*(,[1-9]\\d*)*$');
+
+
+export const GetE7ClienteExportacionQueryParams = zod.object({
+  "ubicacionId": zod.coerce.string().regex(getE7ClienteExportacionQueryUbicacionIdRegExp).optional(),
+  "ubicacionIds": zod.coerce.string().regex(getE7ClienteExportacionQueryUbicacionIdsRegExp).optional()
+})
+
+
+export const getE7ClienteExportacionResponseResumenGlobalDeudaActualRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7ClienteExportacionResponseResumenGlobalSaldoAFavorRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7ClienteExportacionResponseResumenGlobalLimiteCreditoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7ClienteExportacionResponseResumenGlobalCreditoDisponibleRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7ClienteExportacionResponseMovimientosItemImporteRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7ClienteExportacionResponseMovimientosItemSaldoPendienteRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7ClienteExportacionResponseRetenidosItemImportePendienteRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+export const getE7ClienteExportacionResponseRetenidosItemAntiguedadDiasMin = 0;
+
+export const getE7ClienteExportacionResponseTotalRetenidoRegExp = new RegExp('^-?(0|[1-9][0-9]*)\\.[0-9]{2}$');
+
+
+export const GetE7ClienteExportacionResponse = zod.object({
+  "clienteId": zod.number().int(),
+  "alcance": zod.object({
+  "tipo": zod.enum(['GLOBAL', 'SITIOS']),
+  "ubicaciones": zod.array(zod.object({
+  "id": zod.number().min(1),
+  "nombre": zod.string()
+})),
+  "generadoEn": zod.coerce.date(),
+  "saldoAFavorDisponible": zod.boolean()
+}),
+  "generadoEn": zod.coerce.date(),
+  "leyendas": zod.array(zod.string()),
+  "resumenGlobal": zod.object({
+  "deudaActual": zod.string().regex(getE7ClienteExportacionResponseResumenGlobalDeudaActualRegExp),
+  "saldoAFavor": zod.string().regex(getE7ClienteExportacionResponseResumenGlobalSaldoAFavorRegExp),
+  "limiteCredito": zod.string().regex(getE7ClienteExportacionResponseResumenGlobalLimiteCreditoRegExp),
+  "creditoDisponible": zod.string().regex(getE7ClienteExportacionResponseResumenGlobalCreditoDisponibleRegExp)
+}),
+  "movimientos": zod.array(zod.object({
+  "id": zod.string(),
+  "fecha": zod.coerce.date(),
+  "tipo": zod.string(),
+  "importe": zod.string().regex(getE7ClienteExportacionResponseMovimientosItemImporteRegExp),
+  "ubicacionId": zod.number().int().nullable(),
+  "cuentaDestino": zod.string().nullable(),
+  "folio": zod.string().nullish(),
+  "saldoPendiente": zod.string().regex(getE7ClienteExportacionResponseMovimientosItemSaldoPendienteRegExp).nullish()
+})),
+  "retenidos": zod.array(zod.object({
+  "cobroId": zod.string().uuid(),
+  "fechaRecepcion": zod.coerce.date(),
+  "ubicacionId": zod.number().int(),
+  "importePendiente": zod.string().regex(getE7ClienteExportacionResponseRetenidosItemImportePendienteRegExp),
+  "antiguedadDias": zod.number().int().min(getE7ClienteExportacionResponseRetenidosItemAntiguedadDiasMin)
+})),
+  "totalRetenido": zod.string().regex(getE7ClienteExportacionResponseTotalRetenidoRegExp)
+})
+
+
 /**
  * Gate E11_ENABLED OFF por defecto. No devuelve payload ni IDs financieros. PENDIENTE significa ausencia observada, NO ausencia definitiva de efectos. Sólo CONFIRMADA o CERRADA_SIN_EFECTO con resolucionId no null permiten liberar cuarentena de la terna exacta actorId/accion/uuidOriginal. Un 404 o timeout nunca la libera. Sesión/identidad ADMIN se revalidan antes de entregar. No otorga mutación financiera.
  * @summary Consultar metadata de intención exacta, sólo ADMIN real con FISCAL_LEER

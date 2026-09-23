@@ -1,0 +1,188 @@
+{
+  "inputs": {
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/lib/number-format/src/index.ts": {
+      "bytes": 5787,
+      "imports": [],
+      "format": "esm"
+    },
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/report-presentation.ts": {
+      "bytes": 7592,
+      "imports": [
+        {
+          "path": "../../../tmp/e7-document-fixtures-ARQKVV/source/lib/number-format/src/index.ts",
+          "kind": "import-statement",
+          "original": "@workspace/number-format"
+        }
+      ],
+      "format": "esm"
+    },
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/pdf.ts": {
+      "bytes": 21718,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "pdfkit",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/report-presentation.ts",
+          "kind": "import-statement",
+          "original": "./report-presentation"
+        }
+      ],
+      "format": "esm"
+    },
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/e7-export.ts": {
+      "bytes": 6008,
+      "imports": [
+        {
+          "path": "exceljs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/pdf.ts",
+          "kind": "import-statement",
+          "original": "./pdf"
+        }
+      ],
+      "format": "esm"
+    },
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/lib/api-zod/src/generated/api.ts": {
+      "bytes": 767906,
+      "imports": [
+        {
+          "path": "zod",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/reports/e7/frontend-fixtures.ts": {
+      "bytes": 7279,
+      "imports": [],
+      "format": "esm"
+    },
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/reports/e7/serialize-frontend-document-fixtures.mjs": {
+      "bytes": 2654,
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "exceljs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/e7-export.ts",
+          "kind": "import-statement",
+          "original": "../../artifacts/api-server/src/lib/e7-export"
+        },
+        {
+          "path": "../../../tmp/e7-document-fixtures-ARQKVV/source/lib/api-zod/src/generated/api.ts",
+          "kind": "import-statement",
+          "original": "../../lib/api-zod/src/generated/api"
+        },
+        {
+          "path": "../../../tmp/e7-document-fixtures-ARQKVV/source/reports/e7/frontend-fixtures.ts",
+          "kind": "import-statement",
+          "original": "./frontend-fixtures"
+        }
+      ],
+      "format": "esm"
+    }
+  },
+  "outputs": {
+    "../../../tmp/e7-document-fixtures-ARQKVV/source/serialize.mjs": {
+      "imports": [
+        {
+          "path": "node:fs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:crypto",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "exceljs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "exceljs",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:path",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "node:url",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "pdfkit",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "zod",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "exports": [],
+      "entryPoint": "../../../tmp/e7-document-fixtures-ARQKVV/source/reports/e7/serialize-frontend-document-fixtures.mjs",
+      "inputs": {
+        "../../../tmp/e7-document-fixtures-ARQKVV/source/reports/e7/serialize-frontend-document-fixtures.mjs": {
+          "bytesInOutput": 2319
+        },
+        "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/e7-export.ts": {
+          "bytesInOutput": 2554
+        },
+        "../../../tmp/e7-document-fixtures-ARQKVV/source/artifacts/api-server/src/lib/pdf.ts": {
+          "bytesInOutput": 2460
+        },
+        "../../../tmp/e7-document-fixtures-ARQKVV/source/lib/number-format/src/index.ts": {
+          "bytesInOutput": 566
+        },
+        "../../../tmp/e7-document-fixtures-ARQKVV/source/lib/api-zod/src/generated/api.ts": {
+          "bytesInOutput": 741609
+        },
+        "../../../tmp/e7-document-fixtures-ARQKVV/source/reports/e7/frontend-fixtures.ts": {
+          "bytesInOutput": 5753
+        }
+      },
+      "bytes": 756084
+    }
+  }
+}

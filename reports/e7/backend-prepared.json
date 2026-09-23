@@ -1,0 +1,49 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "mode": "OFFLINE_SYNTHETIC_FINITE_SQL_CAPTURE_NO_DB_NO_APP_NO_POSTGRES_OR_HTTP_PROOF",
+  "cardinality": {
+    "obligations": 14,
+    "mutants": 14,
+    "testsExecuted": 0,
+    "reachableBuildInputs": 1772
+  },
+  "ids": [
+    "E7-OFF-NO-READS",
+    "E7-E5-DEPENDENCY-NO-FALLBACK",
+    "E7-SESSION-MUST-BE-CURRENT",
+    "E7-CONTADOR-A-F-HARD-DENY",
+    "E7-CENTRAL-PERMISSION-AND-SITE-SCOPE",
+    "E7-REAUTHORIZES-BEFORE-DELIVERY",
+    "E7-FOUR-GLOBALS-SITE-DETAIL",
+    "E7-CANONICAL-FIFO-PORTIONS",
+    "E7-RECEIPT-APPLICATION-NOT-DOUBLE-INCOME",
+    "E7-RETAINED-STOCK-NOT-RANGE-FLOW",
+    "E7-HISTORIC-51-53-UNLOCATED-GLOBAL-ONLY",
+    "E7-MISSING-MONETARY-SOURCE-FAILS",
+    "E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS",
+    "E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS"
+  ],
+  "preflight": {
+    "cardinalityAndUniqueAnchors": true,
+    "sourceOnlyTypecheckDiagnostics": 0,
+    "isolatedBuild": true,
+    "runtimeImportProbe": true,
+    "nodeCheck": true,
+    "generatedAliasCollision": false,
+    "finiteSqlAllowlist": true,
+    "positiveControlsWrapped": true,
+    "openApiResponseParentsParsed": true,
+    "durableExecutionEvidencePrepared": true
+  },
+  "sourceSha256": {
+    "artifacts/api-server/src/lib/e7.test.ts": "980bf3657a11eb98bc2e7546365706a0990488c36bb6baf7a157ab4ea211e940",
+    "artifacts/api-server/src/lib/e7-read-model.ts": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+    "artifacts/api-server/src/lib/e7-export.ts": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+    "artifacts/api-server/src/lib/e7-feature.ts": "25ce25f45c2c480804d4c0a21b3d392d0f72c52bf8d33d1f6f51fbb48473a334",
+    "artifacts/api-server/src/lib/clientes-cartera-read-model.ts": "262d24d8f4ad1b505a6a7a2bb90350067dea5e376f942ba14c9c7b3d573df8ba",
+    "artifacts/api-server/src/lib/credit-allocation.ts": "3748b1489259cea9b199784148687d207d7fff55a1d7a09ceae46c683af80599",
+    "lib/api-zod/src/generated/api.ts": "49581a2d93f941a668f469f0ac0aa5aba32f88203f1dbef032265f964269c9d2",
+    "reports/e7/backend-mutants.mjs": "00cceafbaa99ad9f66c79f5d533957ee7d7ea06f466a81ad68b1b1f55b10112d",
+    "reports/e7/run-backend-offline.mjs": "24e2cb082d2f827bd91c8be506edf1fec9da2d8b24e42cc6d071f90d5b2e1357"
+  }
+}

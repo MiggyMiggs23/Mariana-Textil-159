@@ -1,0 +1,95 @@
+{
+  "status": "STATIC_SOURCE_DOM_CONTEXT_REVIEW_ALL_NINE_NOT_EXECUTED",
+  "helperCasesExecuted": 0,
+  "boundary": "This reviews exact prerequisites and assertions, not only endpoints. Real productive policies/providers remain unchanged. Static review does not substitute for MAIN's GREEN/RED/restored execution.",
+  "obligations": [
+    {
+      "id": "E7-RANGE",
+      "failureLocation": "The first synchronous input-count assertion, before any edit or range-validator assertion.",
+      "sourcePrerequisite": "CuentasDestino renders its two type=date inputs only when preset===custom. Default route selects hoy and correctly renders no dates.",
+      "preparationRepair": "Start real App with preset=custom&desde=2026-09-22&hasta=2026-09-24. Require exactly two controls with those values and verify the initial real generated request carries that valid range. Change only the first input to 2024-01-01; the end date remains fixed. Two batched history updates from the same render are intentionally avoided.",
+      "assertion": "Actual e7-range-error appears; end date remains 2026-09-24; no e7-collection and no further E7 attribution request. The >366 to >3660 mutant and its business assertion are unchanged.",
+      "policy": "No productive range validation changed. This case had no accepted terminal."
+    },
+    {
+      "id": "E7-SCOPE-QUERY",
+      "sourcePrerequisite": "Initial ADMIN/TODAS produces GLOBAL attribution. Real LocationScopeProvider forces user.ubicacion.id for PROPIA.",
+      "positiveControl": "Actual e7-collection exists before auth response changes.",
+      "transition": "Set finite auth response to ADMIN/PROPIA/site 2 and use actual Query focusManager to revalidate.",
+      "assertion": "Observe actual attribution GET with ubicacionId=2, applications mounted, collection absent and no RECEPCION movement. Scope-removal mutant leaves the request global and must fail this assertion.",
+      "preparationRepair": "None."
+    },
+    {
+      "id": "E7-AVAILABILITY",
+      "sourcePrerequisite": "Real Available reads enabled from finite disponibilidad and returns its explicit closed alert when false.",
+      "positiveControl": "Real attribution is mounted before toggling the response and refocusing.",
+      "assertion": "Exact E7 está cerrado. text, no movements, no legacy collection fallback. Mutant removes the enabled veto; no policy mock is substituted.",
+      "preparationRepair": "None."
+    },
+    {
+      "id": "E7-COUNTER-BOUNDARY",
+      "sourcePrerequisite": "First real App A/F routes use the real E11 application/session boundary and typed identities. After resetE7, E11 gates are OFF. The inner E11SessionProvider alone cannot mount children while its identity query is disabled.",
+      "positiveControl": "Existing real App A and F projections each show the authorized client name with no E7 request before the direct real-parent obligation.",
+      "preparationRepair": "The direct-parent wrapper now uses productive E11ApplicationBoundary, exactly as App does, instead of mounting the inner SessionProvider with E11 OFF. Its real OFF branch renders children; no identity, policy, permission hook or context is fabricated.",
+      "assertion": "Real ClienteDetail renders under QueryClient/Router/LocationScope and the actual application boundary. CONTADOR with explicit clientes_finanzas permission still receives Consulta E7 no autorizada. and causes no E7 request. Real hasPermission honors that explicit permission, so removing the independent CONTADOR veto is observable rather than masked.",
+      "queryNotes": "F fiscal initial range uses desde/hastaExclusivo plus limit=20. The direct parent uses prepararAtribucion=false; it does not mount ADMIN-only INEManager."
+    },
+    {
+      "id": "E7-SISTEMAS-TIEMPO",
+      "sourcePrerequisite": "SISTEMAS is permitted by the real Cuentas reader but the real Tiempo reader requires ADMIN. Explicit resumen_caja permission does not change that role ceiling.",
+      "positiveControl": "Real App Cuentas attribution appears first. Requests are cleared before mounting actual CajaTiempoReal.",
+      "preparationRepair": "Same two-use direct-parent wrapper correction to productive E11ApplicationBoundary. E11 is OFF, matching the real App composition; no E11 profile is fabricated for SISTEMAS.",
+      "assertion": "Actual Tiempo h1 is reached, explicit E7 unauthorized alert appears, no attribution section or E7 request. The SISTEMAS-allowing reader mutant should fail those unchanged assertions."
+    },
+    {
+      "id": "E7-LEGENDS",
+      "sourcePrerequisite": "One real Cuentas attribution renders Legends as a Set of productive base literals and DTO literals; default movements include a receipt with ubicacionId=null.",
+      "positiveControl": "Actual applications marker is mounted first.",
+      "assertion": "Literal fixture legends and both productive separation notices exist in e7-legends; e7-movements contains Sin sitio determinado. The todos los sitios replacement mutant contradicts the literal assertion.",
+      "preparationRepair": "None."
+    },
+    {
+      "id": "E7-DOWNLOAD-REAL-BINARIES",
+      "sourcePrerequisite": "Real E7 buttons always render after successful attribution, independent of custom-date inputs. Generated exporters reach the finite transport as Blob, not the JSON bridge used by adjacent legacy fetches.",
+      "positiveControl": "Real App attribution precedes clicks; await the real button becoming enabled between formats.",
+      "assertion": "Actual Node Blob/object URL implementation retained; only terminal anchor.click is observed. Exact backend-serialized bytes/MIME/size/SHA, URL, filename, equal read/export parameters and revocation are required for both formats.",
+      "preparationRepair": "None. Node DOM helper does not replace global Blob/URL; HTMLAnchorElement is correctly obtained from window."
+    },
+    {
+      "id": "E7-DOWNLOAD-LATE-REVOCATION",
+      "sourcePrerequisite": "PDF success first establishes that capture/dispatch/save work. XLSX is held at the finite transport after its request is recorded.",
+      "transition": "Change auth response to CONTADOR only after dispatch, then release the genuine XLSX. A single event-loop checkpoint drains the known resolved promise chain, not a sleep-based privacy assertion.",
+      "assertion": "No second object URL or anchor save; actual revocation/modification/discard error is visible. Post-response identity comparison mutant would save and violate the count assertion.",
+      "preparationRepair": "None."
+    },
+    {
+      "id": "E7-DOWNLOAD-LATE-SCOPE",
+      "sourcePrerequisite": "ADMIN/TODAS renders the real AppLayout site combobox containing Vista Global. The finite inventory catalog has one typed site-2 option. Query date preset is a different combobox.",
+      "positiveControl": "Real PDF saved before holding XLSX. Require the new site-2 GET and applications/no-collection DOM before releasing the old GLOBAL response. Require a genuine site-2 XLSX save afterward.",
+      "interactionReview": "Installed Radix Select opens on ArrowDown; item pointer type initially touch allows its click handler to select without a fabricated pointer-down. Existing DOM prelude supplies DocumentFragment, pointer-capture and ResizeObserver facilities. No synthetic provider setter is used.",
+      "assertion": "Identity is unchanged; real scope-key remount clears old alive ref. Old response must create neither object URL nor save. Final new Blob must match the actual site-2 serialized bytes. Post-response alive-check mutant is directly observable.",
+      "preparationRepair": "None."
+    }
+  ],
+  "reviewedSources": [
+    "artifacts/mariana-textil/src/components/e7-node.dom.test.tsx",
+    "artifacts/mariana-textil/src/components/e7-readers.tsx",
+    "artifacts/mariana-textil/src/components/e7-node-test-transport.ts",
+    "artifacts/mariana-textil/src/components/e7-node-download-support.ts",
+    "artifacts/mariana-textil/src/components/e11-node-test-transport.ts",
+    "artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx",
+    "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx",
+    "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "artifacts/mariana-textil/src/pages/e11.tsx",
+    "artifacts/mariana-textil/src/lib/e11-session.tsx",
+    "artifacts/mariana-textil/src/lib/permisos.ts",
+    "artifacts/mariana-textil/src/lib/location-scope.tsx",
+    "artifacts/mariana-textil/src/components/layout/app-layout.tsx",
+    "lib/api-client-react/src/generated/api.ts",
+    "reports/e7/frontend-fixtures.ts",
+    "reports/e7/frontend-mutants-cases.mjs",
+    "reports/e11/frontend-node-build.mjs",
+    "reports/tanda-b-20260922/e12/frontend-node-dom.cjs",
+    "node_modules/.pnpm/@radix-ui+react-select@2.3.7_@types+react-dom@19.2.3_@types+react@19.2.17__@types+react_f5b3091c59bf8f8e4c38e87739cdccd4/node_modules/@radix-ui/react-select/dist/index.js"
+  ]
+}

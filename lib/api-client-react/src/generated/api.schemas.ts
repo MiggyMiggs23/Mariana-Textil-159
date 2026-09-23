@@ -5,6 +5,107 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+/**
+ * @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$
+ */
+export type E7Importe = string;
+
+export interface E7Retenido {
+  cobroId: string;
+  fechaRecepcion: string;
+  ubicacionId: number;
+  importePendiente: E7Importe;
+  /** @minimum 0 */
+  antiguedadDias: number;
+}
+
+export interface E7Movimiento {
+  id: string;
+  fecha: string;
+  tipo: string;
+  importe: E7Importe;
+  /** @nullable */
+  ubicacionId: number | null;
+  /** @nullable */
+  cuentaDestino: string | null;
+  /** @nullable */
+  folio?: string | null;
+  /**
+     * @nullable
+     * @pattern ^-?(0|[1-9][0-9]*)\.[0-9]{2}$
+     */
+  saldoPendiente?: string | null;
+}
+
+export type E7ClienteExportacionResumenGlobal = {
+  deudaActual: E7Importe;
+  saldoAFavor: E7Importe;
+  limiteCredito: E7Importe;
+  creditoDisponible: E7Importe;
+};
+
+export type CarteraAlcanceTipo = typeof CarteraAlcanceTipo[keyof typeof CarteraAlcanceTipo];
+
+
+export const CarteraAlcanceTipo = {
+  GLOBAL: 'GLOBAL',
+  SITIOS: 'SITIOS',
+} as const;
+
+export type CarteraAlcanceUbicacionesItem = {
+  /** @minimum 1 */
+  id: number;
+  nombre: string;
+};
+
+export interface CarteraAlcance {
+  tipo: CarteraAlcanceTipo;
+  ubicaciones: CarteraAlcanceUbicacionesItem[];
+  generadoEn: string;
+  saldoAFavorDisponible: boolean;
+}
+
+export interface E7ClienteExportacion {
+  clienteId: number;
+  alcance: CarteraAlcance;
+  generadoEn: string;
+  leyendas: string[];
+  resumenGlobal: E7ClienteExportacionResumenGlobal;
+  movimientos: E7Movimiento[];
+  retenidos: E7Retenido[];
+  totalRetenido: E7Importe;
+}
+
+export type E7AtribucionPuenteItem = {
+  tipo: string;
+  /** @nullable */
+  cuentaDestino: string | null;
+  /** @nullable */
+  ubicacionId: number | null;
+  total: E7Importe;
+};
+
+export interface E7Atribucion {
+  alcance: CarteraAlcance;
+  generadoEn: string;
+  leyendas: string[];
+  /**
+     * Global, incluye puente histórico/correcciones sin atestarlos como dinero físico nuevo; null en SITIOS.
+     * @nullable
+     */
+  cobranzaTotal: string | null;
+  /**
+     * Sólo POS y recepción explícitamente física, sin históricos indeterminados ni correcciones; null en SITIOS.
+     * @nullable
+     */
+  recepcionesFisicas: string | null;
+  aplicacionesNotas: E7Importe;
+  movimientos: E7Movimiento[];
+  puente: E7AtribucionPuenteItem[];
+  retenidos: E7Retenido[];
+  totalRetenido: E7Importe;
+}
+
 export interface E11Disponibilidad {
   enabled: boolean;
   perfiles: boolean;
@@ -5486,27 +5587,6 @@ export interface ClienteAnalitica {
   [key: string]: unknown;
  }
 
-export type CarteraAlcanceTipo = typeof CarteraAlcanceTipo[keyof typeof CarteraAlcanceTipo];
-
-
-export const CarteraAlcanceTipo = {
-  GLOBAL: 'GLOBAL',
-  SITIOS: 'SITIOS',
-} as const;
-
-export type CarteraAlcanceUbicacionesItem = {
-  /** @minimum 1 */
-  id: number;
-  nombre: string;
-};
-
-export interface CarteraAlcance {
-  tipo: CarteraAlcanceTipo;
-  ubicaciones: CarteraAlcanceUbicacionesItem[];
-  generadoEn: string;
-  saldoAFavorDisponible: boolean;
-}
-
 export interface ClientesResumen {
   totalClientes: number;
   clientesConSaldo: number;
@@ -9434,6 +9514,27 @@ export interface AuditoriaInventarioEscaneoResult {
   estadoActual: string;
 }
 
+export type E7ErrorResponseResponseCode = typeof E7ErrorResponseResponseCode[keyof typeof E7ErrorResponseResponseCode];
+
+
+export const E7ErrorResponseResponseCode = {
+  E7_DISABLED: 'E7_DISABLED',
+  E7_DEPENDENCIA_NO_DISPONIBLE: 'E7_DEPENDENCIA_NO_DISPONIBLE',
+  E7_FUENTE_INVALIDA: 'E7_FUENTE_INVALIDA',
+  NO_AUTENTICADO: 'NO_AUTENTICADO',
+  PERFIL_DENEGADO: 'PERFIL_DENEGADO',
+  PERMISO_DENEGADO: 'PERMISO_DENEGADO',
+  PERFIL_CAMBIADO: 'PERFIL_CAMBIADO',
+  VALIDACION: 'VALIDACION',
+  ALCANCE_DENEGADO: 'ALCANCE_DENEGADO',
+  NO_ENCONTRADO: 'NO_ENCONTRADO',
+} as const;
+
+export type E7ErrorResponseResponse = {
+  code: E7ErrorResponseResponseCode;
+  message: string;
+};
+
 /**
  * Error E5 explícito; no inferir éxito ni dinero cero
  */
@@ -9554,6 +9655,60 @@ export type AnalyticsDesdeParameter = string;
 export type AnalyticsHastaParameter = string;
 
 export type AnalyticsUbicacionIdParameter = number;
+
+export type GetE7Disponibilidad200 = {
+  enabled: boolean;
+};
+
+export type GetE7AtribucionParams = {
+desde: CalendarDate;
+hasta: CalendarDate;
+/**
+ * @pattern ^[1-9]\d*$
+ */
+ubicacionId?: string;
+/**
+ * @pattern ^[1-9]\d*(,[1-9]\d*)*$
+ */
+ubicacionIds?: string;
+};
+
+export type ExportE7AtribucionXlsxParams = {
+desde: CalendarDate;
+hasta: CalendarDate;
+/**
+ * @pattern ^[1-9]\d*$
+ */
+ubicacionId?: string;
+/**
+ * @pattern ^[1-9]\d*(,[1-9]\d*)*$
+ */
+ubicacionIds?: string;
+};
+
+export type ExportE7AtribucionPdfParams = {
+desde: CalendarDate;
+hasta: CalendarDate;
+/**
+ * @pattern ^[1-9]\d*$
+ */
+ubicacionId?: string;
+/**
+ * @pattern ^[1-9]\d*(,[1-9]\d*)*$
+ */
+ubicacionIds?: string;
+};
+
+export type GetE7ClienteExportacionParams = {
+/**
+ * @pattern ^[1-9]\d*$
+ */
+ubicacionId?: string;
+/**
+ * @pattern ^[1-9]\d*(,[1-9]\d*)*$
+ */
+ubicacionIds?: string;
+};
 
 export type ListE11PerfilHistorialParams = {
 /**

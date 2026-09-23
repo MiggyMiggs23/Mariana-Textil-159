@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useRoute, useSearch } from "wouter";
+import { e7On } from "@/lib/e7-feature-flags";
 import {
   exportAdminCuentaDestinoMovimientosXlsx,
   getListAdminCuentaDestinoMovimientosQueryKey,
@@ -281,6 +282,11 @@ export default function CuentaDestinoDetalle() {
   return (
     <AppLayout>
       <div className="max-w-[1600px] mx-auto space-y-6">
+        {e7On() && <aside role="note" data-testid="e7-legacy-detail-notice" className="rounded border p-4">
+          Este desglose operativo conserva su lector anterior y no representa la cobranza ni las recepciones E7; no incluye el dinero retenido E5.
+          <Link className="ml-2 underline" href={`/caja/cuentas-destino?${parentParams.toString()}`}>Consultar atribución, puente y archivos E7 del periodo</Link>.
+          No sumar este subtotal a la cobranza E7.
+        </aside>}
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Link

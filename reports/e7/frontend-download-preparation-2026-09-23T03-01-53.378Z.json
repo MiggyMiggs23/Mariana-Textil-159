@@ -1,0 +1,116 @@
+{
+  "status": "PASS_STATIC_PREPARATION_WAITING_OWNER_STABLE_ANCHORS",
+  "testsExecuted": 0,
+  "caseCount": 23,
+  "originalDeclarationsPreserved": true,
+  "changedOriginalDeclarations": [],
+  "documentSourceDrift": [],
+  "baselinePath": "reports/e7/frontend-native-2026-09-23T02-49-27.032Z/manifest.json",
+  "documentsPath": "reports/e7/frontend-document-preflight-2026-09-23T02-56-23.609Z/manifest.json",
+  "inventory": [
+    {
+      "id": "E7-PARENT-CUENTAS",
+      "astHash": "4e6c4c8a4af18884a527f5b81a8cc18d2a13cce4b2f445b7f7a1c66382a782ee"
+    },
+    {
+      "id": "E7-OFF",
+      "astHash": "820c619c3c969a873c50b8bc4e65843ecdae787267e88047b70c6d407f3a32c5"
+    },
+    {
+      "id": "E7-RECEIPT-APPLICATION",
+      "astHash": "b6ff138164fbfb52929b57223eda7cc9ae2e36b54a8a615cd5e5f33aec50ce8f"
+    },
+    {
+      "id": "E7-SITES-NOT-RECEIPTS",
+      "astHash": "1d77675f58898e4d9af7194dadb3c0969efdc8e8720da503ae1ff62667435847"
+    },
+    {
+      "id": "E7-RETAINED-STOCK",
+      "astHash": "0d81f72d57387268ad40b1dbf94dbb387d19d95603d6230aff74b237d78dbe76"
+    },
+    {
+      "id": "E7-PHYSICAL-HISTORY",
+      "astHash": "804256fa426091c8c3c02991e0a19f84c7f9e66ab3d0d715ee6fa187593fc6d1"
+    },
+    {
+      "id": "E7-QUERY-ERROR",
+      "astHash": "0d4079a90ef7382acabd17a1e8e3969dface85184aacc5b85d12c826342874c6"
+    },
+    {
+      "id": "E7-PARENT-TIEMPO",
+      "astHash": "bddbfcd848d73989deebce9a88bac623125c28df224ea213ddce437007917fff"
+    },
+    {
+      "id": "E7-GROUP1-FOUR",
+      "astHash": "f02cb137c92212eb2f56721238e4f506fab06b8769b51d676b63fa157156c8ef"
+    },
+    {
+      "id": "E7-GROUP1-LINKS",
+      "astHash": "c51ae81da7accf709d2918a860ea5b5cda9c9570d03b6a7972c6f2c1e4f7d658"
+    },
+    {
+      "id": "E7-FOREIGN-PREVIEW",
+      "astHash": "04c675154573c8c17630373e7aae440f9ae5fee530808ab0a80de5b509e95c31"
+    },
+    {
+      "id": "E7-DOWNLOAD-CONTEXT",
+      "astHash": "3a6f47cbedbc31e47fb01ef1a4fddb7f892e496576cd1d65d2d4063d6067a296"
+    },
+    {
+      "id": "E7-DOWNLOAD-IDENTITY",
+      "astHash": "f82f3876df797075c89554e478c2ada8c5ae8ea8cee68be83f210a510f67a0df"
+    },
+    {
+      "id": "E7-OPERATIONAL-BOUNDARY",
+      "astHash": "fc218703cc9e395d141fc5e7b95d9ef6dad60d7eb6feb4d9922c86c08c019e14"
+    },
+    {
+      "id": "E7-RANGE",
+      "astHash": "7046528deff47af15190e620dd3d10c1cfb3a20f3ee32120e3a7ba174551d4d2"
+    },
+    {
+      "id": "E7-SCOPE-QUERY",
+      "astHash": "245ebcecaa85a78cc7748670e4df67b10c178a7be148bb911b86629eab7d1e97"
+    },
+    {
+      "id": "E7-AVAILABILITY",
+      "astHash": "309a824112d8f7bfe0aca09e080438dfdd1fa897aa6533bcf8fd2646743190df"
+    },
+    {
+      "id": "E7-COUNTER-BOUNDARY",
+      "astHash": "0a8281826d4758beb28edbddee6dc16e5e7c703f900eee3da008f10391f0623e"
+    },
+    {
+      "id": "E7-SISTEMAS-TIEMPO",
+      "astHash": "40672364dc77c4d22e14b4bfd44288ed14215d64517fa6f6075d4d7b75866612"
+    },
+    {
+      "id": "E7-LEGENDS",
+      "astHash": "970a0300abd57139c988b4d239d6fc1f061615e91e08df53dc0cd9061a2904e1"
+    },
+    {
+      "id": "E7-DOWNLOAD-REAL-BINARIES",
+      "astHash": "00b2524b0acbd55f2b333ccc55d7de4360be6a5832cc240543f527b402b47605"
+    },
+    {
+      "id": "E7-DOWNLOAD-LATE-REVOCATION",
+      "astHash": "0d785c46c7d0b6c36c43bc435c9a7f92a676376c5c8e856fef26a6e2598a23de"
+    },
+    {
+      "id": "E7-DOWNLOAD-LATE-SCOPE",
+      "astHash": "4b69778f2115491f0511ee1ea69ceee4c11b90ef125d837fe0891e0870ba2b8b"
+    }
+  ],
+  "diagnosticCount": 0,
+  "diagnostics": [],
+  "hashes": {
+    "artifacts/mariana-textil/src/components/e7-node.dom.test.tsx": "e2d2441a7e9e776038515b3af90424db2e030dec23d440181cc2e391fa7af0a8",
+    "artifacts/mariana-textil/src/components/e7-node-download-support.ts": "cb59bfd7a1b9fc5f8ae6bd5581de5621a5e96fb30c5874f26292ee8435eaeca1",
+    "reports/e7/frontend-document-bytes.json": "39390b2bd4a6a5e6b85cdcad41743588e7618a66312123422aa5cd2dfef7d0d0",
+    "artifacts/mariana-textil/src/components/e7-readers.tsx": "6b3433d8dc2c8a22247738578f84c62a084f9d41a34f6c62068024c3a818ef2e",
+    "reports/e7/check-frontend-download-preparation.mjs": "f95d90f75ed1d625e51cb1c800f4762bd277e6aef7df708d8ac0521a2aad63f5",
+    "reports/e7/prepare-frontend-documents.mjs": "5b72529a190f16d730fc548e3880dea4e0bb9bc6ce4dbce3eef90639971e3e17",
+    "reports/e7/serialize-frontend-document-fixtures.mjs": "def3519040d4d4b172d054bedd1df2582258db8b53f1119b8d5714dbdbd823b6"
+  },
+  "boundary": "No GREEN claims. Registry still has 20 prior anchors; three new binary/late-revocation/late-scope cases await productive handler freeze."
+}

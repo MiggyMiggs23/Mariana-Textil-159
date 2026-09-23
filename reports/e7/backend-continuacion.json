@@ -1,0 +1,48 @@
+{
+  "status": "SUPERSEDED_HISTORICAL_INFRASTRUCTURE_CONTINUATION",
+  "preservedFailure": {
+    "directory": "reports/e7/logs/backend-2026-09-23T02-34-57.108Z",
+    "phase": "E7-OFF-NO-READS green bootstrap",
+    "testsRegistered": 0,
+    "cause": "ESM bundle lacked createRequire for ExcelJS CommonJS dynamic require of node:crypto",
+    "classification": "PRE_TEST_RUNTIME_IMPORT_INFRASTRUCTURE"
+  },
+  "minimalCorrection": {
+    "bundleFormat": "esm",
+    "banner": "createRequire(import.meta.url)",
+    "reason": "Preserves top-level await required by the physical @workspace/db snapshot while supporting CommonJS dependencies",
+    "productionChanged": false,
+    "fixturePolicyChanged": false,
+    "offlineGateChanged": false
+  },
+  "runtimePreflight": {
+    "result": "PASS",
+    "imports": [
+      "exceljs",
+      "e7-read-model",
+      "e7-export",
+      "GetE7AtribucionResponse",
+      "GetE7ClienteExportacionResponse"
+    ],
+    "guardedOffline": true,
+    "guardedNoWrites": true,
+    "testFileImported": false,
+    "testsExecuted": 0
+  },
+  "continuationIds": [
+    "E7-OFF-NO-READS",
+    "E7-E5-DEPENDENCY-NO-FALLBACK",
+    "E7-SESSION-MUST-BE-CURRENT",
+    "E7-CONTADOR-A-F-HARD-DENY",
+    "E7-CENTRAL-PERMISSION-AND-SITE-SCOPE",
+    "E7-REAUTHORIZES-BEFORE-DELIVERY",
+    "E7-FOUR-GLOBALS-SITE-DETAIL",
+    "E7-CANONICAL-FIFO-PORTIONS",
+    "E7-RECEIPT-APPLICATION-NOT-DOUBLE-INCOME",
+    "E7-RETAINED-STOCK-NOT-RANGE-FLOW",
+    "E7-HISTORIC-51-53-UNLOCATED-GLOBAL-ONLY",
+    "E7-MISSING-MONETARY-SOURCE-FAILS",
+    "E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS",
+    "E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS"
+  ]
+}

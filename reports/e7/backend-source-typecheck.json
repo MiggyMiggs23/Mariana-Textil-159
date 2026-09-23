@@ -1,0 +1,11 @@
+{
+  "sourceOnly": true,
+  "noEmit": true,
+  "configFilePath": "/home/runner/workspace/artifacts/api-server/tsconfig.json",
+  "rootDir": "/home/runner/workspace",
+  "projectReferences": [],
+  "rootFileCount": 357,
+  "diagnosticCount": 0,
+  "diagnostics": [],
+  "testsExecuted": 0
+}

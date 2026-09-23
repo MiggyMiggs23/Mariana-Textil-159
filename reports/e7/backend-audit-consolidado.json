@@ -1,0 +1,352 @@
+{
+  "status": "PASS",
+  "mode": "AUDITED_DURABLE_12_PREFIX_PLUS_2_CURRENT_DOCUMENTS",
+  "cardinality": {
+    "obligations": 14,
+    "mutants": 14,
+    "green": 14,
+    "red": 14,
+    "restoredGreen": 14
+  },
+  "evidence": {
+    "prefixManifest": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/manifest.json",
+    "terminalManifest": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z/manifest.json",
+    "preservedTerminalFailure": {
+      "green": {
+        "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS-green.log",
+        "sha256": "f7c415432849936c4d234f737eb46762b7c60131651bf7a876e40f4cece8603c"
+      },
+      "survivedRed": {
+        "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS-red.log",
+        "sha256": "8ec51bf6103482afc50e51d8df3775ba0f299716c180bb3189c24dd4b3e1c044"
+      }
+    },
+    "supersededHistoricalStatementCycle": {
+      "id": "E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS",
+      "source": "artifacts/api-server/src/lib/e7-export.ts",
+      "sourceSha256": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+      "mutantSha256": "532f6c08845bad0961527c78bce3407caa91f07043c3f7be4b7a4f241235f87d",
+      "restoredSha256": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-green.log",
+          "sha256": "2dec4663121f400fd8c5d6674c01b630da6f0d20b0db3ca220d0d647081d687e"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-red.log",
+          "sha256": "39b4a9a0f6c5d3f7048ef07d03126b8ab5402be10bc3c480bc1e81d764120ec2"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-restored-green.log",
+          "sha256": "632fc2885b177bf44e9a230caa2c782bcbe5280c3c206c47aa295fe6ca2021f7"
+        }
+      }
+    }
+  },
+  "testsSource": {
+    "prefixHistoricalSha256": "28312c7b2c2f75b8c211c02638cbac1666a92fe028bb1904e6cac8d55413ad58",
+    "terminalAndCurrentSha256": "980bf3657a11eb98bc2e7546365706a0990488c36bb6baf7a157ab4ea211e940",
+    "reasonForDifference": "Final document assertion was strengthened to inspect all literal legends in parsed XLSX cells and parsed PDF text operators."
+  },
+  "cases": [
+    {
+      "id": "E7-OFF-NO-READS",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "9d62c9982ad4433b2375bcdd2608137fa70c381f6d80f2adc1d5bf5b411a8e85",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-OFF-NO-READS-green.log",
+          "sha256": "b545b5a7de207bc6a32a6fe093e4e49be62d8b576517420a4327e017d36f03e1"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-OFF-NO-READS-red.log",
+          "sha256": "a91e320b727d98b866982182c3e00f76b1e94d8d34fc010f632cb03dffa03764"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-OFF-NO-READS-restored-green.log",
+          "sha256": "755088fb7efe09b11691bd3e47d6c3138a1342b717c5f25f96227009acc0973c"
+        }
+      }
+    },
+    {
+      "id": "E7-E5-DEPENDENCY-NO-FALLBACK",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "977e3c883e872e65a679a509b900fb2d8b25e23cf020cf307df6513e80feac47",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-E5-DEPENDENCY-NO-FALLBACK-green.log",
+          "sha256": "f7772f204cf92d4349da42ec11e04974d00aa08743dc31e39b7ce7f68bd0fad8"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-E5-DEPENDENCY-NO-FALLBACK-red.log",
+          "sha256": "49c3f7f4cc9da4b6d8b59802dcff6d2a39075623932598cc314adb00d2614c18"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-E5-DEPENDENCY-NO-FALLBACK-restored-green.log",
+          "sha256": "f5126157798ef25607eab311bed55cf124c9766f8f365b7925a0e9894803955e"
+        }
+      }
+    },
+    {
+      "id": "E7-SESSION-MUST-BE-CURRENT",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "5783e2f78041c8f263f164a95888deb9afa8c6f21ee7035beecba2fea961381f",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-SESSION-MUST-BE-CURRENT-green.log",
+          "sha256": "20823bc3ccf1df6afd6f7fdbd56d8c8448440cbed8e29feadc3bc066096a199c"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-SESSION-MUST-BE-CURRENT-red.log",
+          "sha256": "ecb573a2f37fc331565a22c9d8b65dccf18249d27bbca2eae08b459e71eaa5ad"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-SESSION-MUST-BE-CURRENT-restored-green.log",
+          "sha256": "60b70f0ea3b73e198dd47fa77c17a55d62cd03853a61e85a0ee24c7c1a882339"
+        }
+      }
+    },
+    {
+      "id": "E7-CONTADOR-A-F-HARD-DENY",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "9b8c5ffa2e8fb620554b7249fb22b34e542fe4b97744f1970b20587f6607401d",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CONTADOR-A-F-HARD-DENY-green.log",
+          "sha256": "8a2863677688c1996ab4eca9cc09bb7fcfcff877f35043c21a93bd211420bd54"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CONTADOR-A-F-HARD-DENY-red.log",
+          "sha256": "c03f3f9a604031abdf64979759f9036c6e21fc61d14943b473c58f00c4376456"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CONTADOR-A-F-HARD-DENY-restored-green.log",
+          "sha256": "196e39330e2e3534e39a66a4e8e26852474b7b35cb78b80732b5c695ca584312"
+        }
+      }
+    },
+    {
+      "id": "E7-CENTRAL-PERMISSION-AND-SITE-SCOPE",
+      "source": "artifacts/api-server/src/lib/clientes-cartera-read-model.ts",
+      "sourceSha256": "262d24d8f4ad1b505a6a7a2bb90350067dea5e376f942ba14c9c7b3d573df8ba",
+      "mutantSha256": "39406a81aad865dfceb480820d81ae71dc7e6045cf860a2c7bebbd15520d01ab",
+      "restoredSha256": "262d24d8f4ad1b505a6a7a2bb90350067dea5e376f942ba14c9c7b3d573df8ba",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CENTRAL-PERMISSION-AND-SITE-SCOPE-green.log",
+          "sha256": "f19a6e6c988649c4c05f22972e19356a346e8c9d8df088652603ea76ccae3a66"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CENTRAL-PERMISSION-AND-SITE-SCOPE-red.log",
+          "sha256": "768425d3baf9ee69a9e1e8c1bdac88031d6072ba1cb857a634696678f44ed414"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CENTRAL-PERMISSION-AND-SITE-SCOPE-restored-green.log",
+          "sha256": "8ef262bed1ce5c86d401fcaef4962bb4b645ee203e667581fd881b54853254a1"
+        }
+      }
+    },
+    {
+      "id": "E7-REAUTHORIZES-BEFORE-DELIVERY",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "b810f4d6ef60c6b2702040bc7baa96a7d85ddd84776a0211684fc35360780b5b",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-REAUTHORIZES-BEFORE-DELIVERY-green.log",
+          "sha256": "9809762325fdee19a0b82870282e1ba23dd4388f9e4ab514d5a03408090ddd81"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-REAUTHORIZES-BEFORE-DELIVERY-red.log",
+          "sha256": "5b79ca94525e20dd4538921a4a47b1882d30ae09be579d1fe4eaa6a9d648617b"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-REAUTHORIZES-BEFORE-DELIVERY-restored-green.log",
+          "sha256": "26e76184620c349b41e73a8cb8bd087be35089c60e664ebc30db673bb29722ca"
+        }
+      }
+    },
+    {
+      "id": "E7-FOUR-GLOBALS-SITE-DETAIL",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "1c1cab6ae53015f86859c53709010067849bb9b94fd367eef0b3311293a34013",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-FOUR-GLOBALS-SITE-DETAIL-green.log",
+          "sha256": "a5ce5a4de5b4ecb68f844bcf3195b7cd8b7a31508a61d1bbc26d540f2a29439e"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-FOUR-GLOBALS-SITE-DETAIL-red.log",
+          "sha256": "87c102a4d584de58c0aca702fedad9b769d9353016d3e492e90af7f0063f0ec5"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-FOUR-GLOBALS-SITE-DETAIL-restored-green.log",
+          "sha256": "dd827f6dfe3f7a4845276aabe2fcab2a6c14c5c48759ddf463321fbe90974ee0"
+        }
+      }
+    },
+    {
+      "id": "E7-CANONICAL-FIFO-PORTIONS",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "de2d35dfcc10be3b7948bfa535a3b846469c53435263dfbe44d9edc5bef02243",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CANONICAL-FIFO-PORTIONS-green.log",
+          "sha256": "6a4b0ed63f698f13dd922a6d50318d43124e3dda154d33f16d7893455132eb66"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CANONICAL-FIFO-PORTIONS-red.log",
+          "sha256": "3fc51bcfd2f0782805927879a895d07a033629e6cc5e1f1c334a66e0ddd26000"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-CANONICAL-FIFO-PORTIONS-restored-green.log",
+          "sha256": "117ced3299e60cc87844c3bcdaf4291262a537ebc0937f7896c8f90390afd78c"
+        }
+      }
+    },
+    {
+      "id": "E7-RECEIPT-APPLICATION-NOT-DOUBLE-INCOME",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "23e9b01b91d51a85be08a46e653df1df45ce353aa85555993004d4f860bd5185",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-RECEIPT-APPLICATION-NOT-DOUBLE-INCOME-green.log",
+          "sha256": "48941d819dad5dc55051afa57859f65048d03740b46ca118571df4b0675a8310"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-RECEIPT-APPLICATION-NOT-DOUBLE-INCOME-red.log",
+          "sha256": "edd828a9e3ade63990abe14291c1558e4c6bc27909a7e408165e9f23a7421030"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-RECEIPT-APPLICATION-NOT-DOUBLE-INCOME-restored-green.log",
+          "sha256": "bf24012fe9082222ce4860a6ced3fc0a845bc3bac1eab2a1be4437e1e57d0524"
+        }
+      }
+    },
+    {
+      "id": "E7-RETAINED-STOCK-NOT-RANGE-FLOW",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "d85d0138dabab4b5e53259916e2240f4d679b074d19db9e521ec4bb2c0f594c6",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-RETAINED-STOCK-NOT-RANGE-FLOW-green.log",
+          "sha256": "4d3c32ec92713901c99a3da0edf633e958399f82fde6490f96ee2cb3ac9a0735"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-RETAINED-STOCK-NOT-RANGE-FLOW-red.log",
+          "sha256": "56cd027c7a1fe3cfa1b9aa5f4e7d5394fd154b4b14fc99011e96fd4048411d9c"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-RETAINED-STOCK-NOT-RANGE-FLOW-restored-green.log",
+          "sha256": "06f73cfb7c91c990bfdd49257422d11a05509c6ae1433abd24f8648cb1bacb3f"
+        }
+      }
+    },
+    {
+      "id": "E7-HISTORIC-51-53-UNLOCATED-GLOBAL-ONLY",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "0c5633f18a36c37f5a18e12dab20346de8bc59e1dd681c453901a27943b7be2f",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-HISTORIC-51-53-UNLOCATED-GLOBAL-ONLY-green.log",
+          "sha256": "5b1fafda1ba9e00011411c82d2af31c0edb45731b857010d3852d39374da5a1c"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-HISTORIC-51-53-UNLOCATED-GLOBAL-ONLY-red.log",
+          "sha256": "b913ba20d473d085344aa67b7194e9d081319fff5f8b3bc3e68b5b5aa5875485"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-HISTORIC-51-53-UNLOCATED-GLOBAL-ONLY-restored-green.log",
+          "sha256": "28969b883a1fc9de2faae0ab160e1f8dc35fa3e49ee97ed4c210d3d607897136"
+        }
+      }
+    },
+    {
+      "id": "E7-MISSING-MONETARY-SOURCE-FAILS",
+      "source": "artifacts/api-server/src/lib/e7-read-model.ts",
+      "sourceSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "mutantSha256": "59acf2529bcac265fd305b132e04c30f227b62530a1e29d6f40c3a501d4609e2",
+      "restoredSha256": "e6efa4195be0a61bc087d68eef5aae514d8925b2202b5dc78f618c0f3b67e0fc",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-MISSING-MONETARY-SOURCE-FAILS-green.log",
+          "sha256": "830f50cf14b770cf39325af935a316de380ce2db2859393197e42a3289134ed1"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-MISSING-MONETARY-SOURCE-FAILS-red.log",
+          "sha256": "6a1f9574a980ea9d9fbf5045c4ba285e5cb3af50792e875567cbeaf434496fa9"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-38-38.579Z/E7-MISSING-MONETARY-SOURCE-FAILS-restored-green.log",
+          "sha256": "6c0ab0516197abe18c9cff6bd6cf9687bb945a8dded916da910c8554128f61df"
+        }
+      }
+    },
+    {
+      "id": "E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS",
+      "source": "artifacts/api-server/src/lib/e7-export.ts",
+      "sourceSha256": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+      "mutantSha256": "532f6c08845bad0961527c78bce3407caa91f07043c3f7be4b7a4f241235f87d",
+      "restoredSha256": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-green.log",
+          "sha256": "f6984b344e5d5f8eab126117355419c74815a813c14d64e1b9c8eed6d5c6cde0"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-red.log",
+          "sha256": "98d177f99ec3199f0c2a7612db22a73682ba64e419ba7fac24b76727e61c7a7b"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-restored-green.log",
+          "sha256": "595cfa04f33ee0093e61ea1dbb14b6885228cf994d345ac082c0bed8a4b01d49"
+        }
+      }
+    },
+    {
+      "id": "E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS",
+      "source": "artifacts/api-server/src/lib/e7-export.ts",
+      "sourceSha256": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+      "mutantSha256": "b5db3580211088d2a8788c76a25d45c9854e2a3bb7ebefba9904275173030ca9",
+      "restoredSha256": "1a6fa464166943a449180f6d6da621597399a6711c0b6284b88a6f1fb3e6c9cb",
+      "logs": {
+        "green": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z/E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS-green.log",
+          "sha256": "66fcd65adeb5e0bda5d9a4325179b5f6f2548139396df25cd606ef498ac2f342"
+        },
+        "red": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z/E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS-red.log",
+          "sha256": "9aab7d4c7c567a76fe7372c6c62042e45af68454d651244aaf51152351b58d52"
+        },
+        "restoredGreen": {
+          "path": "reports/e7/logs/backend-2026-09-23T02-52-46.308Z/E7-ATTRIBUTION-REAL-DOCUMENTS-AND-LEGENDS-restored-green.log",
+          "sha256": "b2d939e549456421407c199d07b9deb740c9651f260791b26ee130aeea902d70"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Synthetic finite SQL capture; not PostgreSQL, HTTP, authenticated acceptance, locks, or real database isolation proof.",
+    "Grupo 1 exports only; no Grupo 4 interactive surface claim.",
+    "Execution logs are durable under reports/e7/logs; transient snapshots were cleaned."
+  ]
+}

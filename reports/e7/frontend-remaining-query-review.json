@@ -1,0 +1,116 @@
+{
+  "status": "STATIC_REVIEW_OF_ALL_FOURTEEN_REMAINING_IDS_NOT_UI_EXECUTION",
+  "helperCasesExecuted": 0,
+  "boundary": "Review covers initial mounts, explicit transitions and the registered mutant branches of the fourteen prepared IDs. It is not an assertion that runtime GREEN is guaranteed. No generalized fallback or authorization replacement is introduced.",
+  "diagnosis": "The second missing request is not a site-scope variation. ClienteDetail's default Datos tab mounts ADMIN-only INEManager; ?tab=estado does not. INEManager calls GET /api/clientes/21/documentos with no query parameters.",
+  "newFiniteResponse": {
+    "method": "GET",
+    "path": "/api/clientes/21/documentos",
+    "query": {},
+    "response": "legacyDocuments: ClienteDocumento[] = []",
+    "guard": "Any query parameter remains an infrastructure error. No upload, document-content or other-client route is added."
+  },
+  "realParentControls": [
+    {
+      "ids": ["E7-GROUP1-LINKS", "E7-FOREIGN-PREVIEW"],
+      "mount": "Real App /clientes/21, Datos default; ADMIN at site 2 for LINKS, global ADMIN for FOREIGN.",
+      "positiveControl": "Existing tests await the real E7 client-export section before asserting scoped links or replacing the preview with foreign clienteId.",
+      "queries": [
+        "GET /api/auth/me; no query",
+        "GET /api/clientes/21; no query",
+        "GET /api/clientes/21/estado-cuenta; no query",
+        "GET /api/clientes/21/documentos; no query; new exact response",
+        "GET /api/clientes/21/evidencia-credito?prepararAtribucion=true",
+        "GET /api/pagos-dirigidos?tipo=CLIENTE&entidadId=21",
+        "GET /api/e7/disponibilidad; no query",
+        "GET /api/e7/clientes/21/exportacion; GLOBAL has no query; site 2 has only ubicacionId=2",
+        "GET /api/clientes/21/credito, comportamiento-pago, pagos, precios; each has no query and an existing explicit legacy service failure",
+        "GET /api/clientes/21/compras, estadisticas, analitica; each uses only desde/hasta from the parent's initial 12-month period and existing explicit service failures",
+        "GET /api/clientes/cartera; no query; existing explicit legacy service failure"
+      ],
+      "transitions": "Focus repeats the same reads. A foreign DTO changes response clienteId only: it does not navigate to client 22. LINKS inspects hrefs; it does not request Grupo-1 document contents. The link and foreign-preview mutants introduce no new endpoint."
+    },
+    {
+      "ids": ["E7-DOWNLOAD-CONTEXT", "E7-DOWNLOAD-IDENTITY", "E7-RANGE", "E7-SCOPE-QUERY", "E7-AVAILABILITY", "E7-LEGENDS", "E7-DOWNLOAD-REAL-BINARIES", "E7-DOWNLOAD-LATE-REVOCATION", "E7-DOWNLOAD-LATE-SCOPE"],
+      "mount": "Real App /caja/cuentas-destino with actual LocationScopeProvider and real selector.",
+      "positiveControl": "Each existing test awaits real attribution content; late races first save a real PDF. Late-scope additionally saves a real scoped XLSX after the transition.",
+      "queries": [
+        "GET /api/e7/disponibilidad; no query",
+        "GET /api/e7/atribucion; desde/hasta from actual date controls, with ubicacionId omitted globally or exactly 2 at site 2",
+        "GET /api/admin/cuentas-destino; same date bindings, preset=hoy, compare=false, ubicacionId omitted or 2",
+        "GET /api/e7/atribucion.pdf and /api/e7/atribucion.xlsx; exactly the reader's desde/hasta/optional ubicacionId parameters",
+        "GET /api/auth/me; no query, including pre/post-download authorization"
+      ],
+      "transitions": "Range case changes dates to 2024-01-01/2026-09-24; E7 rejects before query except in its range mutant, whose existing exact endpoint fixture remains available. Scope-query's mutation omits ubicacionId, exercising the existing GLOBAL response. Availability repeats reads without introducing paths. Role revocation changes the auth response, not its URL. Late-scope changes only the real selected site; inventory catalog already has its explicit site-2 fixture. Swapped export-kind and removed guard mutants use the same two finite file paths."
+    },
+    {
+      "ids": ["E7-OPERATIONAL-BOUNDARY"],
+      "mount": "Real App /caja/cuentas-destino/CAJA_FISICA?desde=2026-09-22&hasta=2026-09-24",
+      "positiveControl": "Existing case waits for the real operational movements request before checking the non-addition notice.",
+      "queries": [
+        "GET /api/admin/cuentas-destino/CAJA_FISICA/movimientos?desde=2026-09-22&hasta=2026-09-24&page=1&pageSize=100&preset=custom"
+      ],
+      "disabledBranches": "CUENTA_FISCAL-only fiscal query is disabled; no selected movement, lookup, drill-down or mutations are activated. No E7 reader is mounted. Notice mutant changes only text."
+    },
+    {
+      "ids": ["E7-COUNTER-BOUNDARY"],
+      "mount": "Real App /contabilidad/finanzas (A) and /contabilidad/fiscal (F) positive ancestors; then real ClienteDetail under real providers as CONTADOR.",
+      "positiveControl": "Existing case awaits the real E11 client's name for both profiles before mounting the independent E7-reader veto.",
+      "queries": [
+        "GET /api/auth/me, /api/e11/disponibilidad, /api/e11/identidad; no query",
+        "GET /api/e11/finanzas/clientes?limit=20; initial cursor omitted",
+        "GET /api/e11/fiscal/clientes?limit=20; initial cursor omitted",
+        "GET /api/e11/fiscal/ventas; initial range desde/hasta and limit=20; cursor and clienteId omitted",
+        "Direct-parent client-21 legacy readers use the same exact routes as above; evidencia-credito has prepararAtribucion=false",
+        "The reader-veto mutant can additionally reach the already configured E7 disponibilidad and client-21 exportacion reads"
+      ],
+      "disabledBranches": "No E11 row navigation, pagination, profile edit or write action. CONTADOR never mounts ADMIN-only INEManager. Existing E11 transport and policy are unchanged."
+    },
+    {
+      "ids": ["E7-SISTEMAS-TIEMPO"],
+      "mount": "Real App Cuentas positive ancestor, followed by real CajaTiempoReal under real providers with SISTEMAS.",
+      "positiveControl": "Existing test awaits attribution in Cuentas before testing Tiempo's independent role veto.",
+      "queries": [
+        "GET /api/admin/cuentas-destino; today=today, preset=hoy, compare=false; global scope",
+        "GET /api/admin/dashboard/realtime and /api/admin/dashboard/realtime/pendientes; global, no query",
+        "The role-veto mutant can reach already configured E7 disponibilidad/atribucion with the real same-day period"
+      ],
+      "disabledBranches": "No breakdown dialog is opened. SISTEMAS uses the unchanged real policy; no synthetic permission module is introduced."
+    }
+  ],
+  "sharedMountedReaders": {
+    "queries": [
+      "GET /api/auth/me; no query",
+      "GET /api/locations; no query for actual ADMIN credit-evidence controls",
+      "GET /api/inventario/ubicaciones; no query when alcanceConsulta=TODAS; existing finite catalog, replaced with one typed site only in late-scope",
+      "GET /api/inventario/ajustes/pendientes; no query when actual permission allows",
+      "GET /api/inventario/entradas/pendientes-costo/count and /api/etiquetas/alertas/count; no query for ADMIN",
+      "GET /api/notificaciones and /api/notificaciones/feed; no query"
+    ],
+    "disabledBranches": "No CAJA actor, approval click, notification mutation, upload, credit write, E3 collection dialog, fiscal drill-down, or product search. Notification approval's unfiltered pagos-dirigidos read is not activated and remains unconfigured. Existing runtime DOM helper already supplies the real selector's DocumentFragment/PointerEvent/capture/ResizeObserver facilities."
+  },
+  "reviewedSources": [
+    "artifacts/mariana-textil/src/components/e7-node.dom.test.tsx",
+    "artifacts/mariana-textil/src/components/e7-node-test-transport.ts",
+    "artifacts/mariana-textil/src/components/e11-node-test-transport.ts",
+    "artifacts/mariana-textil/src/pages/cliente-detail.tsx",
+    "artifacts/mariana-textil/src/components/cliente-credit-evidence.tsx",
+    "artifacts/mariana-textil/src/components/directed-payment-history.tsx",
+    "artifacts/mariana-textil/src/components/credit-evidence-fields.tsx",
+    "artifacts/mariana-textil/src/components/cliente-pago-dialog.tsx",
+    "artifacts/mariana-textil/src/lib/clientes-api.ts",
+    "artifacts/mariana-textil/src/pages/caja/cuentas-destino.tsx",
+    "artifacts/mariana-textil/src/pages/caja/cuenta-destino-detalle.tsx",
+    "artifacts/mariana-textil/src/pages/caja/tiempo-real.tsx",
+    "artifacts/mariana-textil/src/hooks/use-shared-cuentas-destino.ts",
+    "artifacts/mariana-textil/src/pages/e11.tsx",
+    "artifacts/mariana-textil/src/lib/e11-session.tsx",
+    "artifacts/mariana-textil/src/lib/location-scope.tsx",
+    "artifacts/mariana-textil/src/components/layout/app-layout.tsx",
+    "artifacts/mariana-textil/src/components/notifications-bell.tsx",
+    "artifacts/mariana-textil/src/components/notification-audio-controller.tsx",
+    "artifacts/mariana-textil/src/components/e7-readers.tsx",
+    "lib/api-client-react/src/generated/api.ts",
+    "reports/tanda-b-20260922/e12/frontend-node-dom.cjs"
+  ]
+}

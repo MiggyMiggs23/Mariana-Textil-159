@@ -41,12 +41,14 @@ import { requierePermiso } from "../lib/permisos";
 import e9Router from "./e9";
 import e5Router from "./e5";
 import e11Router from "./e11";
+import e7Router from "./e7";
 import { E11_ENABLED } from "../lib/e11-feature";
 import { createE11LegacyBoundary } from "../middlewares/e11-legacy";
 
 const router: IRouter = Router();
 // OFF route boundary must run before auth or sidecar access.
 router.use(e11Router);
+router.use(e7Router);
 // Closed-world CONTADOR policy also protects handlers without a permission middleware,
 // aliases, exports and document resolvers. It cannot be reopened by custom overrides.
 router.use(createE11LegacyBoundary(E11_ENABLED, requireSession));

@@ -71,10 +71,15 @@ import {
 } from "../lib/admin-analytics";
 import { accountedDocumentAt, accountedDocumentPredicate } from "../lib/accounted-document";
 import { resolveReadScope } from "./inventario";
+import { E7_ENABLED } from "../lib/e7-feature";
 
 const router: IRouter = Router();
 router.use("/admin", requireSession);
 router.use("/admin", (req, res, next) => {
+  if (E7_ENABLED && req.auth?.user.rol === "CONTADOR" && req.path.startsWith("/cuentas-destino")) {
+    res.status(403).json({ code: "PERFIL_DENEGADO", message: "CONTADOR utiliza exclusivamente E11." });
+    return;
+  }
   if (req.path.startsWith("/cuadre-fiscal")) {
     next();
     return;

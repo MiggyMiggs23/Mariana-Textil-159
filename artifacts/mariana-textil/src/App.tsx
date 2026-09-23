@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect } from "react";
+import { e7On } from "@/lib/e7-feature-flags";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { AppLayout } from "@/components/layout/app-layout";
@@ -553,8 +554,8 @@ function Router() {
             <ProtectedRoute
               component={CuentaDestinoDetalle}
               allowedModule={Modules.COBROS_PAGOS}
-              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
-              requiredRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+              allowedRoles={e7On() ? ["ADMIN", "SISTEMAS"] : ["ADMIN", "CONTADOR", "SISTEMAS"]}
+              requiredRoles={e7On() ? ["ADMIN", "SISTEMAS"] : ["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}
         />
@@ -564,8 +565,8 @@ function Router() {
             <ProtectedRoute
               component={CajaCuentasDestino}
               allowedModule={Modules.COBROS_PAGOS}
-              allowedRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
-              requiredRoles={["ADMIN", "CONTADOR", "SISTEMAS"]}
+              allowedRoles={e7On() ? ["ADMIN", "SISTEMAS"] : ["ADMIN", "CONTADOR", "SISTEMAS"]}
+              requiredRoles={e7On() ? ["ADMIN", "SISTEMAS"] : ["ADMIN", "CONTADOR", "SISTEMAS"]}
             />
           )}
         />

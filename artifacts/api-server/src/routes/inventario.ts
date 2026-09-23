@@ -95,6 +95,8 @@ import {
 } from "@workspace/db";
 import { requireSession } from "../middlewares/auth";
 import type { AuthContext } from "../middlewares/auth";
+import { resolveReadScope } from "../lib/read-scope";
+export { resolveReadScope } from "../lib/read-scope";
 import { getRequestIp } from "../lib/request";
 import { parseMexicoDateQuery } from "../lib/mexico-date";
 import { omitTerminalSensitiveFields } from "../lib/sensitive-data";
@@ -151,41 +153,6 @@ export const inventarioRouter = Router();
  * - If the user has no assigned location and scope is PROPIA, returns null
  *   (caller should return an empty set or 400).
  */
-export function resolveReadScope(
-  auth: AuthContext,
-  requestedUbicacionId?: number,
-): { ubicacionId: number | null | undefined; scopeError: string | null } {
-  const alcance = auth.user.alcanceConsulta;
-  const assigned = auth.user.ubicacionId;
-
-  // ADMIN is always unrestricted; alcanceConsulta never limits this role.
-  if (auth.user.rol === "ADMIN" || auth.user.rol === "SUPERVISOR") {
-    return { ubicacionId: requestedUbicacionId, scopeError: null };
-  }
-
-  // CAJA is always restricted to its assigned store, even if a legacy user
-  // record still has alcanceConsulta=TODAS.
-  if (auth.user.rol === "CAJA") {
-    return assigned == null
-      ? { ubicacionId: null, scopeError: "No tienes una ubicación asignada." }
-      : { ubicacionId: assigned, scopeError: null };
-  }
-
-  // alcanceConsulta TODAS (non-ADMIN): honor the requested filter
-  if (alcance === "TODAS") {
-    return { ubicacionId: requestedUbicacionId, scopeError: null };
-  }
-
-  // alcanceConsulta PROPIA: force assigned location regardless of request
-  if (assigned == null) {
-    return {
-      ubicacionId: null,
-      scopeError: "No tienes una ubicación asignada.",
-    };
-  }
-  return { ubicacionId: assigned, scopeError: null };
-}
-
 /**
  * For mutations: verifies that all implicated ubicacionIds are within the
  * user's operational scope.
