@@ -1,0 +1,27 @@
+[
+  {
+    "route": "healthz",
+    "status": 200,
+    "body": "{\"status\":\"ok\"}"
+  },
+  {
+    "route": "e7/disponibilidad",
+    "status": 200,
+    "body": "{\"enabled\":false}"
+  },
+  {
+    "route": "e7/atribucion",
+    "status": 403,
+    "body": "{\"code\":\"E7_DISABLED\",\"message\":\"E7 no est\u00e1 habilitado.\"}"
+  },
+  {
+    "route": "e5/cobros",
+    "status": 401,
+    "body": "{\"error\":\"Debes iniciar sesi\u00f3n.\"}"
+  },
+  {
+    "route": "e11/identidad",
+    "status": 401,
+    "body": "{\"code\":\"NO_AUTENTICADO\",\"message\":\"Debes iniciar sesi\u00f3n.\",\"requestId\":\"d526eaa8-7d06-4743-b9e4-ccaaa74d16e8\"}"
+  }
+]
