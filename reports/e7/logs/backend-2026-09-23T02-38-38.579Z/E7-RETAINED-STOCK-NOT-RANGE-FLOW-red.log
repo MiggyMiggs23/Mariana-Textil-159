@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: E7-RETAINED-STOCK-NOT-RANGE-FLOW
+not ok 1 - E7-RETAINED-STOCK-NOT-RANGE-FLOW
+  ---
+  duration_ms: 59.542199
+  type: 'test'
+  location: '/tmp/e7-native-DUVg70/E7-RETAINED-STOCK-NOT-RANGE-FLOW-red/test.mjs:258919:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        {
+          antiguedadDias: 43,
+          cobroId: '70000000-0000-4000-8000-000000000010',
+          fechaRecepcion: '2025-12-20T12:00:00.000Z',
+    +     importePendiente: '120.00',
+    -     importePendiente: '15.00',
+          ubicacionId: 1
+        }
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0:
+      cobroId: '70000000-0000-4000-8000-000000000010'
+      fechaRecepcion: '2025-12-20T12:00:00.000Z'
+      ubicacionId: 1
+      importePendiente: '15.00'
+      antiguedadDias: 43
+  actual:
+    0:
+      cobroId: '70000000-0000-4000-8000-000000000010'
+      fechaRecepcion: '2025-12-20T12:00:00.000Z'
+      ubicacionId: 1
+      importePendiente: '120.00'
+      antiguedadDias: 43
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e7-native-DUVg70/E7-RETAINED-STOCK-NOT-RANGE-FLOW-red/test.mjs:258922:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 358.636427
+

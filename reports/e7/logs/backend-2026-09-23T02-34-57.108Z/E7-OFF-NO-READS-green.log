@@ -1,0 +1,29 @@
+TAP version 13
+# Subtest: /tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs
+not ok 1 - /tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs
+  ---
+  duration_ms: 0.643211
+  type: 'test'
+  error: 'Dynamic require of "crypto" is not supported'
+  stack: |-
+    file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:11:9
+    node_modules/.pnpm/exceljs@4.4.0/node_modules/exceljs/lib/utils/encryptor.js (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:2910:19)
+    __require2 (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:17:50)
+    node_modules/.pnpm/exceljs@4.4.0/node_modules/exceljs/lib/doc/worksheet.js (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:3012:21)
+    __require2 (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:17:50)
+    node_modules/.pnpm/exceljs@4.4.0/node_modules/exceljs/lib/doc/workbook.js (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:33496:21)
+    __require2 (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:17:50)
+    node_modules/.pnpm/exceljs@4.4.0/node_modules/exceljs/lib/exceljs.nodejs.js (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:57430:17)
+    __require2 (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:17:50)
+    node_modules/.pnpm/exceljs@4.4.0/node_modules/exceljs/excel.js (file:///tmp/e7-native-ypvnf7/E7-OFF-NO-READS-green/test.mjs:57452:23)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 165.876082
+

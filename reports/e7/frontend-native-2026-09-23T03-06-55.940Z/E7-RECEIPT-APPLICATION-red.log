@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E7-RECEIPT-APPLICATION
+not ok 1 - E7-RECEIPT-APPLICATION
+  ---
+  duration_ms: 328.461994
+  type: 'test'
+  location: '/tmp/e7-native-166jiC/E7-RECEIPT-APPLICATION-red/artifacts/mariana-textil/case.test.cjs:71554:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E7-RECEIPT-APPLICATION
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    check (/tmp/e7-native-166jiC/E7-RECEIPT-APPLICATION-red/artifacts/mariana-textil/case.test.cjs:71501:46)
+    TestContext.<anonymous> (/tmp/e7-native-166jiC/E7-RECEIPT-APPLICATION-red/artifacts/mariana-textil/case.test.cjs:71558:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2493.655938

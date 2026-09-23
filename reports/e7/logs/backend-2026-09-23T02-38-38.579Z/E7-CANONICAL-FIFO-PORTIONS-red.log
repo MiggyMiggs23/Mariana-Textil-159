@@ -1,0 +1,44 @@
+TAP version 13
+# Subtest: E7-CANONICAL-FIFO-PORTIONS
+not ok 1 - E7-CANONICAL-FIFO-PORTIONS
+  ---
+  duration_ms: 63.238758
+  type: 'test'
+  location: '/tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:258898:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Got unwanted rejection.
+    Actual message: "Falta traza canónica global."
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+    status: 503
+  error: 'Falta traza canónica global.'
+  code: 'E7_FUENTE_INVALIDA'
+  stack: |-
+    projectedPortions (file:///tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:235428:36)
+    loadClient (file:///tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:235481:52)
+    async file:///tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:235576:22
+    async read (file:///tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:235556:20)
+    async file:///tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:258902:14
+    async waitForActual (node:assert:646:5)
+    async strict.doesNotReject (node:assert:789:33)
+    async TestContext.<anonymous> (file:///tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:258901:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  operator: 'doesNotReject'
+  stack: |-
+    async TestContext.<anonymous> (file:///tmp/e7-native-DUVg70/E7-CANONICAL-FIFO-PORTIONS-red/test.mjs:258901:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 406.593872
+

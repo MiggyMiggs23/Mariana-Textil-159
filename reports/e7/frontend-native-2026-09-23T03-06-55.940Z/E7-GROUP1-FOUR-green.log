@@ -1,0 +1,32 @@
+TAP version 13
+E11_UNCONFIGURED_TRANSPORT GET /api/clientes/21/evidencia-credito
+E11_UNCONFIGURED_TRANSPORT GET /api/pagos-dirigidos
+# Subtest: E7-GROUP1-FOUR
+not ok 1 - E7-GROUP1-FOUR
+  ---
+  duration_ms: 443.548108
+  type: 'test'
+  location: '/tmp/e7-native-166jiC/E7-GROUP1-FOUR-green/artifacts/mariana-textil/case.test.cjs:71606:27'
+  failureType: 'hookFailed'
+  error: 'E7_INFRASTRUCTURE_OR_DUPLICATE_KEY_NOT_ASSERTION_RED'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    TestContext.<anonymous> (/tmp/e7-native-166jiC/E7-GROUP1-FOUR-green/artifacts/mariana-textil/case.test.cjs:71495:11)
+    TestHook.runInAsyncScope (node:async_hooks:214:14)
+    TestHook.run (node:internal/test_runner/test:1106:25)
+    TestHook.run (node:internal/test_runner/test:1427:18)
+    Test.runHook (node:internal/test_runner/test:1024:20)
+    node:internal/test_runner/test:1069:27
+    node:internal/util:585:20
+    Test.run (node:internal/test_runner/test:1131:13)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2647.955804

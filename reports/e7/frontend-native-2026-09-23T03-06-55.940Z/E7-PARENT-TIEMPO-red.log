@@ -1,0 +1,33 @@
+TAP version 13
+# Subtest: E7-PARENT-TIEMPO
+not ok 1 - E7-PARENT-TIEMPO
+  ---
+  duration_ms: 329.463297
+  type: 'test'
+  location: '/tmp/e7-native-166jiC/E7-PARENT-TIEMPO-red/artifacts/mariana-textil/case.test.cjs:71598:27'
+  failureType: 'testCodeFailure'
+  error: |-
+    E7-PARENT-TIEMPO
+    
+    false !== true
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: 'strictEqual'
+  stack: |-
+    check (/tmp/e7-native-166jiC/E7-PARENT-TIEMPO-red/artifacts/mariana-textil/case.test.cjs:71501:46)
+    TestContext.<anonymous> (/tmp/e7-native-166jiC/E7-PARENT-TIEMPO-red/artifacts/mariana-textil/case.test.cjs:71602:3)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2739.315376

@@ -1,0 +1,17 @@
+TAP version 13
+# Subtest: E7-RETAINED-STOCK-NOT-RANGE-FLOW
+ok 1 - E7-RETAINED-STOCK-NOT-RANGE-FLOW
+  ---
+  duration_ms: 106.042513
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 459.013445
+

@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: E7-FOUR-GLOBALS-SITE-DETAIL
+not ok 1 - E7-FOUR-GLOBALS-SITE-DETAIL
+  ---
+  duration_ms: 85.170234
+  type: 'test'
+  location: '/tmp/e7-native-DUVg70/E7-FOUR-GLOBALS-SITE-DETAIL-red/test.mjs:258881:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+        creditoDisponible: '235.00',
+    +   deudaActual: '0.00',
+    -   deudaActual: '65.00',
+        limiteCredito: '300.00',
+        saldoAFavor: '0.00'
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    deudaActual: '65.00'
+    saldoAFavor: '0.00'
+    limiteCredito: '300.00'
+    creditoDisponible: '235.00'
+  actual:
+    deudaActual: '0.00'
+    saldoAFavor: '0.00'
+    limiteCredito: '300.00'
+    creditoDisponible: '235.00'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e7-native-DUVg70/E7-FOUR-GLOBALS-SITE-DETAIL-red/test.mjs:258885:11)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 682.02217
+

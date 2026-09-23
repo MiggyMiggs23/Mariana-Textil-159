@@ -1,0 +1,48 @@
+TAP version 13
+# Subtest: E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS
+not ok 1 - E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS
+  ---
+  duration_ms: 180.109365
+  type: 'test'
+  location: '/tmp/e7-native-DUVg70/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-red/test.mjs:258953:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input did not match the regular expression /El resumen global de crédito considera todos los sitios\./. Input:
+    
+    '\n' +
+      'Alcance aplicado: SITIOS; sitios autorizados: 1 - Tienda 1\n' +
+      'Generado en: 2026-02-01T12:00:00.000Z\n' +
+      'Deuda actual global: 65.00\n' +
+      'Saldo a favor global: 0.00\n' +
+      'Límite de crédito global: 300.00\n' +
+      'Crédito disponible global: 235.00\n' +
+      'Retenido pendiente del alcance: 15.00 (separado de deuda y favor)'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    
+    Alcance aplicado: SITIOS; sitios autorizados: 1 - Tienda 1
+    Generado en: 2026-02-01T12:00:00.000Z
+    Deuda actual global: 65.00
+    Saldo a favor global: 0.00
+    Límite de crédito global: 300.00
+    Crédito disponible global: 235.00
+    Retenido pendiente del alcance: 15.00 (separado de deuda y favor)
+  operator: 'match'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/e7-native-DUVg70/E7-STATEMENT-REAL-DOCUMENTS-AND-LEGENDS-red/test.mjs:258959:45)
+    async Test.run (node:internal/test_runner/test:1113:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 660.166291
+

@@ -332,6 +332,24 @@ registro. SQL y reversión están preparados, no aplicados.
 E7 y la adaptación de las 28 suites aún no están realizados. Este cierre de
 construcción OFF no equivale a autorización de activación ni cierre integral.
 
+### Cierre posterior E7 OFF
+
+E7 implementado en `762c219`, separado de E11 `3a36592`.
+Auditores reproducidos por MAIN: backend 14/14; interfaz 23/23 con
+69 fases aceptadas. Incluye archivos PDF/XLSX reales sobre datos sintéticos y
+descarte de descargas pendientes tras revocación o cambio de sitio.
+Los intentos FAIL quedan conservados y no se afirma una corrida única limpia.
+No acredita PostgreSQL ni navegador/HTTP autenticado.
+
+Grupo 1 incorpora preview/exportación; no se sustituye el estado interactivo
+de Grupo 4. El detalle operativo de cuenta conserva su lector y un aviso
+explícito: no representa recepción/cobranza E7 ni debe sumarse al nuevo lector.
+No se amplía acceso de Contador A/F ni se cierran grupos 2–4 o los 69 vetos.
+No se ejecutó SQL, activación, fase B ni reinicio por MAIN.
+
+Pendiente actual: adaptar y verificar las 28 suites creadoras de actores
+exclusivamente en PostgreSQL local desechable, y consolidar el cierre global.
+
 Avance de revisión posterior:
 - MAIN ejecutó prefijos de 48 casos backend: 36 ciclos terminales históricos;
   12 pendientes. Los tres manifiestos interrumpidos siguen FAIL. Se corrigieron
