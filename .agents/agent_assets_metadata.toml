@@ -2019,3 +2019,17 @@ mtime_ms = 1790149285593
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/f92fb64a-45e7-43c3-9b81-baf9c7fecee4/6d392aa5-04df-40e4-be5e-94ae6a049f2f"
 storage_version_token = "1790149290091124"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "3eNMTFKH_t4uwBxTvjXF8"
+uri = "file://reports/tanda-c-20260923/informe-unico.md"
+type = "text"
+title = "Tanda C — informe único de los once puntos"
+description = "Resultados, commits y evidencia: 27/28 suites, diagnósticos completos y paquete OFF detenido por fidelidad del ensayo."
+logical_id = "6523d5d8-90c4-4f7c-bdcf-e79e80c63142"
+content_hash = "sha256:d4b810cd0191e1f49b4633648c6812cc0ff0315a27a283bd4813e290a173d1fb"
+size = 9154
+mtime_ms = 1790151095701
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6523d5d8-90c4-4f7c-bdcf-e79e80c63142/58c638df-7c56-4a6b-8a06-6c524d799359"
+storage_version_token = "1790151126223072"
+content_type = "text/markdown"
