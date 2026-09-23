@@ -5,13 +5,13 @@ import { readFileSync } from "node:fs";
 const read = (relative: string) =>
   readFileSync(new URL(relative, import.meta.url), "utf8");
 
-test("E7 client finance UI is open while attribution and E5 operations stay closed", () => {
+test("E7 read-only UI is open while E5 operations stay closed", () => {
   const flags = read("../lib/e7-feature-flags.ts");
   const e5 = read("../lib/e5-feature-flags.ts");
   assert.match(flags, /E7_ENABLED = true/);
   assert.match(flags, /E7_UI_ENABLED = true/);
   assert.match(flags, /E7_CLIENT_FINANCIAL_READS_ENABLED = true/);
-  assert.match(flags, /E7_ATTRIBUTION_ENABLED = false/);
+  assert.match(flags, /E7_ATTRIBUTION_ENABLED = true/);
   assert.match(flags, /e7ClientFinancialOn/);
   assert.match(e5, /E5_ENABLED = false/);
 });

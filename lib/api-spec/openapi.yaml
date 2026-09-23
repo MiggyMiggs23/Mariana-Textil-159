@@ -16,9 +16,9 @@ x-e11-gates:
 x-e7-gates:
   E7_ENABLED: true
   E7_CLIENT_FINANCIAL_READS_ENABLED: true
-  E7_ATTRIBUTION_ENABLED: false
+  E7_ATTRIBUTION_ENABLED: true
   E7_E5_READ_SOURCE_ENABLED: true
-  description: Lecturas financieras de clientes ON; atribución y operaciones E5 permanecen OFF.
+  description: Lecturas financieras y atribución E7 de solo lectura ON; operaciones E5 permanecen OFF.
 tags:
   - name: e7
     description: Lecturas financieras de clientes; atribución operativa cerrada

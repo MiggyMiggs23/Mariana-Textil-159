@@ -8,7 +8,6 @@ import App from "../App";
 import ClienteDetail from "../pages/cliente-detail";
 import CajaTiempoReal from "../pages/caja/tiempo-real";
 import { LocationScopeProvider } from "../lib/location-scope";
-import { E11ApplicationBoundary } from "../pages/e11";
 import * as t from "./e7-node-test-transport";
 import { captureDownloads, deferred, downloadSites, exactSerializedBlob, serializedBlob } from "./e7-node-download-support";
 
@@ -59,7 +58,7 @@ async function directParent(element: React.ReactNode, actor: ReturnType<typeof t
   cleanup(); window.history.replaceState(null, "", route);
   const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: Infinity } } }); clients.push(client);
   t.respond("/api/auth/me", actor);
-  render(<QueryClientProvider client={client}><Router><LocationScopeProvider><E11ApplicationBoundary>{element}</E11ApplicationBoundary></LocationScopeProvider></Router></QueryClientProvider>);
+  render(<QueryClientProvider client={client}><Router><LocationScopeProvider>{element}</LocationScopeProvider></Router></QueryClientProvider>);
   await waitFor(() => { if (!document.querySelector("h1")) throw Error(`E7_REAL_PARENT_CONTROL ${id}`); });
 }
 
@@ -194,7 +193,7 @@ test("E7-SCOPE-QUERY", async () => {
 test("E7-AVAILABILITY", async () => {
   await app("E7-AVAILABILITY"); await attribution();
   t.respond("/api/e7/disponibilidad", t.f.unavailable); await focus();
-  await until(() => text().includes("E7 está cerrado."));
+  await until(() => text().includes("Esta lectura E7 está cerrada."));
   check(!node("e7-movements") && !node("text-monto-cobrado"));
 });
 test("E7-COUNTER-BOUNDARY", async () => {
@@ -208,7 +207,7 @@ test("E7-COUNTER-BOUNDARY", async () => {
     check(e7Requests().length === 0);
     cleanup(); t.resetE7();
     const actor = { ...t.user("CONTADOR"), permisos: [{ modulo: "clientes_finanzas", puedeVer: true, puedeCrear: true, puedeEditar: true, puedeAutorizar: true }] };
-    await directParent(<ClienteDetail />, actor, "/clientes/21");
+    await directParent(<ClienteDetail />, actor, "/clientes/21?tab=estado");
     await until(() => text().includes("Consulta E7 no autorizada."));
     check(!node("e7-client-export") && e7Requests().length === 0);
   }

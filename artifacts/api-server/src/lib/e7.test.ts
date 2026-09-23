@@ -152,7 +152,7 @@ test("E7-PRODUCTION-GATES-CLIENT-READ-ONLY", () => {
     e7: true,
     clientFinancialReads: true,
     installedE5ReadSource: true,
-    attribution: false,
+    attribution: true,
     e5Operations: false,
   });
 });
