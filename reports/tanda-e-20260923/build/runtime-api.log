@@ -1,0 +1,38 @@
+workflow: artifacts/api-server: API Server
+status: RUNNING
+run_id: m46MtRmPydrQmMj45tKV0
+timestamp: 2026-09-23T23:34:53.709Z
+
+[23:34:43.381] WARN (21218): Inspection boot: schema initializers, purchase backfill and stock-minimum monitor are paused; no startup maintenance will run.
+[23:34:43.385] INFO (21218): Server listening
+    port: 8080
+[23:34:43.804] INFO (21218): request completed
+    req: {
+      "id": 1,
+      "method": "GET",
+      "url": "/"
+    }
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 4
+[23:34:48.337] INFO (21218): request completed
+    req: {
+      "id": 2,
+      "method": "GET",
+      "url": "/"
+    }
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 1
+[23:34:50.772] INFO (21218): request completed
+    req: {
+      "id": 3,
+      "method": "GET",
+      "url": "/"
+    }
+    res: {
+      "statusCode": 404
+    }
+    responseTime: 1

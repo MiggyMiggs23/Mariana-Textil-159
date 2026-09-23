@@ -690,7 +690,7 @@ export async function validarPrecioPos(
       const result = await database.execute(sql`
         SELECT rollo_id
         FROM tarea4_rollo_remate
-        WHERE rollo_id = ANY(${ids}::int[])
+        WHERE rollo_id IN (${sql.join(ids.map(id => sql`${id}`), sql`, `)})
       `);
       return result.rows.map(row => Number(row.rollo_id));
     },
@@ -929,7 +929,7 @@ export async function crearTicket(
       const result = await tx.execute(sql`
         SELECT rollo_id
         FROM tarea4_rollo_remate
-        WHERE rollo_id = ANY(${ids}::int[])
+        WHERE rollo_id IN (${sql.join(ids.map(id => sql`${id}`), sql`, `)})
       `);
       return result.rows.map(row => Number(row.rollo_id));
     },

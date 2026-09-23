@@ -1,0 +1,34 @@
+BUILD_GATE_PREFLIGHT=BEGIN
+API_DESTINATION_ABSENT=PASS
+UI_DESTINATION_ABSENT=PASS
+7:export const E3_ENABLED = true;
+2:export const E3_ORDINARY_CASH_ENABLED = true;
+8:export const E3_DIRECTED_ENABLED = false;
+1:export const E3_ENABLED = true;
+2:export const E4_CASH_OUT_ENABLED = true;
+1:export const E4_CASH_OUT_ENABLED = true;
+2:export const E7_ENABLED: boolean = true;
+4:export const E7_ATTRIBUTION_ENABLED: boolean = true;
+2:export const E7_ENABLED = true;
+5:export const E7_ATTRIBUTION_ENABLED = true;
+2:export const E9_ENABLED = true;
+3:export const E9_FONDO_INGRESS_ENABLED = false;
+2:export const E9_ENABLED = true;
+2:export const E5_ENABLED = false;
+4:export const E5_CONTADOR_A_ENABLED = false;
+2:export const E5_ENABLED = false;
+5:export const E11_E5_PREPARATION_ENABLED: boolean = false;
+6:export const E11_E5_PREPARATION_ENABLED = false;
+2:export const E12_SUPPLIER_CASH_ENABLED = false;
+1:export const E12_ENABLED = false;
+artifacts/api-server/src/routes/fondo.ts:82:  const enabled = options.enabled ?? (() => process.env.FONDO_E10_ENABLED === "true");
+artifacts/mariana-textil/src/App.tsx:529:        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo" component={() => <ProtectedRoute component={FondoSummary} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+artifacts/mariana-textil/src/App.tsx:530:        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/movimientos" component={() => <ProtectedRoute component={FondoMovimientos} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+artifacts/mariana-textil/src/App.tsx:531:        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/movimientos/:id" component={() => <ProtectedRoute component={FondoMovimientoDetail} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+artifacts/mariana-textil/src/App.tsx:532:        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos" component={() => <ProtectedRoute component={FondoArqueos} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+artifacts/mariana-textil/src/App.tsx:533:        {import.meta.env.VITE_FONDO_E10_ENABLED === "true" && <Route path="/fondo/arqueos/:id" component={() => <ProtectedRoute component={FondoArqueoDetail} allowedRoles={["ADMIN"]} requiredRoles={["ADMIN"]} />} />}
+artifacts/mariana-textil/src/hooks/fondo.ts:35:  const isFondoEnabled = import.meta.env?.VITE_FONDO_E10_ENABLED === "true" || (typeof window !== "undefined" && (window as any).__test_FondoEnabled);
+artifacts/mariana-textil/src/hooks/fondo.ts:155:  const isFondoEnabled = import.meta.env?.VITE_FONDO_E10_ENABLED === "true" || (typeof window !== "undefined" && (window as any).__test_FondoEnabled);
+E5_MONETARY_DIRECTED_RETAINED=OFF via E5=false, E3_DIRECTED=false, and retained producer remains unavailable
+FONDO_E10=OFF build environment will explicitly set FONDO_E10_ENABLED=false and VITE_FONDO_E10_ENABLED=false
+BUILD_GATE_PREFLIGHT=PASS

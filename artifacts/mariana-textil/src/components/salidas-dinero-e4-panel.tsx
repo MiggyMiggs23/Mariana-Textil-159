@@ -6,9 +6,8 @@ import {
   useListarSalidasDineroCaja,
   useListarProveedoresActivosCaja,
   useGetCurrentUser,
-  useObtenerCorteCaja,
+  useObtenerSesionCajaActual,
   getListarSalidasDineroCajaQueryKey,
-  getObtenerCorteCajaQueryKey,
   getObtenerSesionCajaActualQueryKey,
   getListarSesionesCajaQueryKey,
   getListarProveedoresActivosCajaQueryKey,
@@ -57,9 +56,10 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
   const { data: proveedores = [] } = useListarProveedoresActivosCaja({ query: { enabled: isMariana, queryKey: getListarProveedoresActivosCajaQueryKey() } });
   const crear = useCrearSalidaDineroCaja();
   const requiresCashValidation = E4_CASH_OUT_ENABLED && cuentaOrigen === "CAJA_FISICA";
-  const disponibilidad = useObtenerCorteCaja(sesionId, { query: {
+  const currentSessionParams = tiendaId == null ? undefined : { ubicacionId: tiendaId };
+  const disponibilidad = useObtenerSesionCajaActual(currentSessionParams, { query: {
     enabled: requiresCashValidation && canCreate && !!user,
-    queryKey: [...getObtenerCorteCajaQueryKey(sesionId), JSON.stringify(user)],
+    queryKey: [...getObtenerSesionCajaActualQueryKey(currentSessionParams), JSON.stringify(user)],
     staleTime: 0, refetchOnMount: "always", refetchOnWindowFocus: true,
     refetchInterval: requiresCashValidation && canCreate ? 15000 : false,
   } });
@@ -92,8 +92,10 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
         if (importe === null || importe <= 0) throw new Error("Captura un importe positivo con máximo dos decimales.");
         const fresh = await disponibilidad.refetch();
         if (fresh.error) throw fresh.error;
-        if (fresh.data?.sesion.estado !== "ABIERTA") throw new Error("La sesión de Caja ya no está abierta.");
-        const saldo = fresh.data?.efectivoEsperado;
+        if (fresh.data?.sesion?.id !== sesionId || fresh.data.sesion.estado !== "ABIERTA") {
+          throw new Error("La sesión de Caja ya no está abierta.");
+        }
+        const saldo = fresh.data.resumen?.efectivoEsperado;
         if (saldo == null || !Number.isFinite(Number(saldo))) throw new Error("Saldo de Caja no disponible.");
         const isInsufficient = importe > Math.round(Number(saldo) * 100);
         if (isInsufficient) {
@@ -151,7 +153,6 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
           setDesbloqueoMotivo("");
           lastIntention.current = { snapshot: "", uuid: crypto.randomUUID() };
           queryClient.invalidateQueries({ queryKey: getListarSalidasDineroCajaQueryKey(sesionId) });
-          queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
           queryClient.invalidateQueries({ queryKey: getObtenerSesionCajaActualQueryKey() });
           queryClient.invalidateQueries({ queryKey: getListarSesionesCajaQueryKey() });
           queryClient.invalidateQueries({ predicate: ({ queryKey }) => {
@@ -239,7 +240,7 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
             </div>
 
 
-            {requiresCashValidation && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {canViewCorte && disponibilidad.data?.efectivoEsperado != null ? <Link className="text-primary underline" href={`/caja/cortes?sesionId=${sesionId}`}>{disponibilidad.data.efectivoEsperado}</Link> : disponibilidad.data?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar; la API conserva la autoridad final.</p>}
+            {requiresCashValidation && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {canViewCorte && disponibilidad.data?.resumen?.efectivoEsperado != null ? <Link className="text-primary underline" href={`/caja/cortes?sesionId=${sesionId}`}>{disponibilidad.data.resumen.efectivoEsperado}</Link> : disponibilidad.data?.resumen?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar; la API conserva la autoridad final.</p>}
             {requiresCashValidation && disponibilidad.error && <p role="alert" className="text-destructive">{getApiErrorMessage(disponibilidad.error)}</p>}
             {(isAdmin && requiresCashValidation && tipo === "EXTRAORDINARIA") && (
               /* Amber identifies the exceptional insufficient-cash unlock, not the E4 module. */

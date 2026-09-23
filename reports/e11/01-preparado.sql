@@ -699,8 +699,8 @@ BEGIN
       THEN RAISE EXCEPTION 'E11: aceptación no coincide/aviso impropio'; END IF;
     ELSE
       IF nullif(btrim(j->>'observacion'),'') IS NULL OR NOT EXISTS(
-        SELECT 1 FROM public.e11_avisos a WHERE a.id=(j->>'avisoAdminId')::uuid
-          AND a.decision_id=d.id AND a.conciliacion_id=d.conciliacion_id AND a.birth_xid=d.birth_xid)
+        SELECT 1 FROM public.e11_avisos aviso WHERE aviso.id=(j->>'avisoAdminId')::uuid
+          AND aviso.decision_id=d.id AND aviso.conciliacion_id=d.conciliacion_id AND aviso.birth_xid=d.birth_xid)
       THEN RAISE EXCEPTION 'E11: discrepancia requiere aviso ADMIN atómico'; END IF;
     END IF;
     IF d.birth_xid=pg_current_xact_id() THEN
@@ -729,7 +729,7 @@ BEGIN
     THEN RAISE EXCEPTION 'E11: aviso/decisión/notificación no coherentes'; END IF;
   END LOOP;
   IF EXISTS (SELECT 1 FROM public.notificaciones_sistema n WHERE n.tipo='E11_NO_CUADRA'
-    AND NOT EXISTS(SELECT 1 FROM public.e11_avisos a WHERE a.conciliacion_id::text=n.entidad_id))
+    AND NOT EXISTS(SELECT 1 FROM public.e11_avisos aviso WHERE aviso.conciliacion_id::text=n.entidad_id))
   THEN RAISE EXCEPTION 'E11: notificación huérfana'; END IF;
   FOR o IN SELECT * FROM public.e11_operaciones LOOP
     IF o.estado='CERRADA_SIN_EFECTO' THEN CONTINUE; END IF;

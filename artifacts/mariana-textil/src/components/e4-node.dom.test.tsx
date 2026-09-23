@@ -4,7 +4,7 @@ import React from "react";
 import { render, screen, fireEvent, cleanup, act, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Role } from "@workspace/api-client-react";
-import { GetCurrentUserResponse, ObtenerSesionCajaActualResponse, ListarSalidasDineroCajaResponse,
+import { GetCurrentUserResponse, ListarSalidasDineroCajaResponse,
   ListarProveedoresActivosCajaResponse, CrearSalidaDineroCajaBody, RevisarSalidaDineroCajaBody } from "@workspace/api-zod";
 import { SalidaDineroE4Item } from "./salidas-dinero-e4-item";
 import { SalidasDineroE4Panel } from "./salidas-dinero-e4-panel";
@@ -28,11 +28,18 @@ beforeEach(() => {
   user();
   hooks.useListarSalidasDineroCaja = () => ({ data: ListarSalidasDineroCajaResponse.parse({ salidas: [] }), isLoading: false });
   hooks.useListarProveedoresActivosCaja = () => ({ data: ListarProveedoresActivosCajaResponse.parse([{ id: 1, nombre: "Proveedor activo fixture" }]) });
-  hooks.useObtenerSesionCajaActual = () => ({ data: wire(ObtenerSesionCajaActualResponse.parse({
-    sesion: { id: 10, ubicacionId: state.tienda, nombreUbicacion: "Tienda fixture", usuarioId: 10,
-      nombreUsuario: "Operador fixture", abiertaAt: new Date().toISOString(), cerradaAt: null,
-      fondoInicial: "0.00", efectivoContado: null, estado: "ABIERTA" }, resumen: null,
-  })), isLoading: false, isError: false });
+  hooks.useObtenerSesionCajaActual = () => {
+    const current = () => state.balanceError
+      ? { data: undefined, error: state.balanceError }
+      : { data: {
+          sesion: { id: 10, ubicacionId: state.tienda, nombreUbicacion: "Tienda fixture", usuarioId: 10,
+            nombreUsuario: "Operador fixture", abiertaAt: new Date().toISOString(), cerradaAt: null,
+            fondoInicial: "0.00", efectivoContado: null, estado: "ABIERTA" },
+          resumen: { ticketsCobrados: 0, documentosPendientes: 0, totalCobrado: "0.00", efectivoEsperado: state.balance },
+        }, error: null };
+    const result = current();
+    return { ...result, isLoading: false, isError: !!result.error, refetch: async () => current() };
+  };
 });
 afterEach(() => { cleanup(); client.clear(); });
 function mount(node: React.ReactNode) {
@@ -179,6 +186,12 @@ test("E4-CAPTURE-PERMISSION", async () => {
   cleanup(); state.balance = "10.00"; user(Role.CAJA); panel(); fill();
   await act(async () => { submit(); await Promise.resolve(); await Promise.resolve(); });
   assert.equal(captureCalls.length, 0);
+  cleanup(); state.balance = "500.00";
+  panel(); fill("Gasto permitido de Caja"); submit();
+  await waitFor(() => assert.equal(captureCalls.length, 1));
+  assert.ok(visits.includes("useObtenerSesionCajaActual"));
+  assert.equal(visits.includes("useObtenerCorteCaja"), false);
+  assert.equal(captureCalls[0][0].data.monto, "150.50");
 });
 test("E4-PROVIDER-LOCATION", () => {
   panel(true, 2);

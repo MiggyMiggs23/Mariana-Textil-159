@@ -68,8 +68,11 @@ export default function Login() {
           setLocation(returnTo);
         },
         onError: (err: any) => {
+          const isServerError = typeof err?.status === "number" && err.status >= 500;
           toast.error("Error de acceso", {
-            description: err?.error || "Usuario o contraseña incorrectos",
+            description: isServerError
+              ? "No se pudo iniciar sesión por un error del servidor. Intenta de nuevo."
+              : err?.error || "Usuario o contraseña incorrectos",
           });
         },
       }

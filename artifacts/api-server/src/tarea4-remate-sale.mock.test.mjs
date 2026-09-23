@@ -5,6 +5,7 @@ import ts from "typescript";
 
 const defect = process.argv.find(arg => arg.startsWith("--defect="))?.split("=")[1];
 const sourceUrl = new URL("./lib/tarea4-remate-sale.ts", import.meta.url);
+const posSource = readFileSync(new URL("./lib/pos.ts", import.meta.url), "utf8");
 let source = readFileSync(sourceUrl, "utf8");
 if (defect === "product-wide") {
   source = source.replace(
@@ -31,6 +32,16 @@ const {
   decideRemateSale,
   loadActiveRemateRollIds,
 } = loaded.exports;
+
+test("POS expande IDs escalares sin enviar un número como literal de arreglo", () => {
+  assert.doesNotMatch(posSource, /ANY\\(\\$\\{ids\\}::int\\[\\]\\)/);
+  assert.equal(
+    posSource.split(
+      "WHERE rollo_id IN (${sql.join(ids.map(id => sql`${id}`), sql`, `)})",
+    ).length - 1,
+    2,
+  );
+});
 
 test("OFF conserva las dos conductas previas y no consulta esquema remate", async () => {
   let reads = 0;
