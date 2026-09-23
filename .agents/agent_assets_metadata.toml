@@ -2103,3 +2103,17 @@ mtime_ms = 1790182772710
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/c4a06d7d-7e27-47d5-907a-c7745ebf647b/e214bb1e-034e-4a30-a9f7-3dc733498130"
 storage_version_token = "1790182785556623"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "e30teMZpwcp6RL7r7VGRW"
+uri = "file://reports/tanda-d-20260923/INFORME.md"
+type = "text"
+title = "Tanda D — informe único con resultados y commits"
+description = "Remate, precio mínimo, borrado individual y E11 limitado liberados. Bloqueos de E4/pagos dirigidos y plan de purga sin ejecutar."
+logical_id = "220710c6-454d-4697-ae85-4a1c12ed2914"
+content_hash = "sha256:5ef113c94e7882e76eaa55d2e0ec3e3d81eb5cd2497907cbd62db5c6892f358e"
+size = 11443
+mtime_ms = 1790184745786
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/220710c6-454d-4697-ae85-4a1c12ed2914/b09fe39c-feba-4535-a0bc-5fc07188a0f0"
+storage_version_token = "1790184930291797"
+content_type = "text/markdown"
