@@ -2033,3 +2033,31 @@ mtime_ms = 1790151095701
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/6523d5d8-90c4-4f7c-bdcf-e79e80c63142/58c638df-7c56-4a6b-8a06-6c524d799359"
 storage_version_token = "1790151126223072"
 content_type = "text/markdown"
+
+[[outputs]]
+id = "DtQcclsQLRW66Xoi02wPn"
+uri = "file://reports/tanda-c-20260923/07-resultado-paquete-b0-b1.md"
+type = "text"
+title = "Tanda B — resultado de preparación OFF"
+description = "PASS del ensayo aislado, B0/B1, cuatro reemplazos autorizados, hashes, revisiones y límites de la validación."
+logical_id = "36003c9b-66fc-42d4-a09f-c75148915371"
+content_hash = "sha256:b6aae50adc748b9b469cca579eb5f54c346b39d62eecc85bd089c6eb7c19a14b"
+size = 10401
+mtime_ms = 1790179843602
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/36003c9b-66fc-42d4-a09f-c75148915371/e05e9d0e-e513-4517-af90-7d9c641cfdff"
+storage_version_token = "1790179985182807"
+content_type = "text/markdown"
+
+[[outputs]]
+id = "kSUa3X_l1m3A-60dOQrFp"
+uri = "file://reports/tanda-b-b0-b1-20260923/fase-b-texto-para-revision.txt"
+type = "text"
+title = "Fase B — texto para revisión, no ejecutado"
+description = "Alcance exacto y condiciones de una futura fase B; no autoriza instalación ni liberación."
+logical_id = "8b8b9719-3cf7-4960-9c94-e3795fcb9eec"
+content_hash = "sha256:7e523d4a3dfa0706afcc07839ac268e5968139d30dce3147b2d4bae3f9146bbc"
+size = 7014
+mtime_ms = 1790179839226
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8b8b9719-3cf7-4960-9c94-e3795fcb9eec/846465db-a692-49ef-aa67-6ed7dbd6553f"
+storage_version_token = "1790179985785255"
+content_type = "text/plain"
