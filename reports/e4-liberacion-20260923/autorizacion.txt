@@ -1,0 +1,5 @@
+miguelestza: Separa la comprobación de saldo de caja para que E4 la use sin depender de E12. E12 queda cerrado, incluidos pagos con Fondo y combinaciones de ambos orígenes.
+
+Pruébala en base desechable, libérala con el procedimiento simple y abre E4: salidas extraordinarias en las tres tiendas, con supervisor y cajero, motivo obligatorio, y ADMIN acepta o reclama. Si el efectivo no alcanza, se bloquea, y ADMIN puede desbloquear con motivo obligatorio que queda en el historial. Pago a proveedor sigue duro y solo Mariana.
+
+Al terminar, dime qué me toca probar de E4 desde la pantalla.

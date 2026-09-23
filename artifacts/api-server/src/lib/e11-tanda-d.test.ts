@@ -37,8 +37,9 @@ test("Tanda D: API/UI enable only E11 readers and reconciliation", () => {
     uiFlag("E11_RECONCILIATION_ENABLED")], [true, true, true, true, true]);
   assert.deepEqual([E11_PROFILE_ASSIGNMENT_ENABLED, E11_E5_PREPARATION_ENABLED,
     uiFlag("E11_PROFILE_ASSIGNMENT_ENABLED"), uiFlag("E11_E5_PREPARATION_ENABLED"),
-    E5_ENABLED, E5_CONTADOR_A_ENABLED, E7_ENABLED, E9_ENABLED, E4_CASH_OUT_ENABLED,
-    E12_SUPPLIER_CASH_ENABLED], Array(10).fill(false));
+    E5_ENABLED, E5_CONTADOR_A_ENABLED, E7_ENABLED, E9_ENABLED,
+    E12_SUPPLIER_CASH_ENABLED], Array(9).fill(false));
+  assert.equal(E4_CASH_OUT_ENABLED, true);
 });
 test("Tanda D: default CONTADOR is F with fiscal read and documentary reconciliation only", async () => {
   const f = fixture("CONTADOR");

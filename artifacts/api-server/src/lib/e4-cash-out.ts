@@ -1,5 +1,5 @@
-/** E4 is prepared only. Release requires separate authorization and prepared SQL. */
-export const E4_CASH_OUT_ENABLED = false;
+/** Owner-authorized E4 API release. E12 remains independently gated OFF. */
+export const E4_CASH_OUT_ENABLED = true;
 export const E4_MARIANA_LOCATION_ID = 1;
 
 /** Select the existing operational permission only for E4 capture/list/catalog.
@@ -25,12 +25,16 @@ export type E4Event = {
 };
 export type E4Revision = {
   tipo: E4Kind; estado: E4State; version: number; claveOperacion: string; historial: E4Event[];
+  desbloqueoCaja: E4CashUnlock | null;
+};
+export type E4CashUnlock = {
+  motivo: string; usuarioId: number; createdAt: string; saldoAntes: string; egreso: string;
 };
 export type E4CreateInput = {
   sesionCajaId: number; monto: string; motivo: string;
   proveedorId?: number | null; cuentaOrigen: "CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL";
   tipo?: E4Kind; claveOperacion?: string; ip: string;
-  desbloqueoCajaE12?: { motivo: string };
+  desbloqueoCaja?: { motivo: string };
 };
 export type E4ReviewInput = {
   sesionCajaId: number; salidaId: number; accion: E4Action; version: number;
@@ -48,8 +52,13 @@ export interface E4Repository {
   lockOperation(key: string): Promise<void>;
   session(id: number): Promise<E4Session | undefined>;
   operation(key: string): Promise<E4Operation | undefined>;
-  providerActive(id: number): Promise<boolean>;
-  insert(input: E4CreateInput & { tipo: E4Kind; claveOperacion: string }, actor: E4Actor): Promise<E4Salida>;
+  /** Locks the canonical supplier ledger and returns current debt, or undefined when inactive. */
+  providerDebt(id: number): Promise<string | undefined>;
+  /** Canonical open-session cash, evaluated while the session row is locked. */
+  cashBalance(session: E4Session): Promise<string>;
+  insert(input: E4CreateInput & {
+    tipo: E4Kind; claveOperacion: string; desbloqueoCajaEvidence: E4CashUnlock | null;
+  }, actor: E4Actor): Promise<E4Salida>;
   lockSalida(id: number): Promise<{ salida: E4Salida; ubicacionId: number } | undefined>;
   updateRevision(id: number, revision: E4Revision): Promise<void>;
   saveOperation(key: string, salidaId: number, operation: E4Operation): Promise<void>;
@@ -83,6 +92,14 @@ function retry(operation: E4Operation, actor: E4Actor, request: string) {
     fail("La clave de operación ya se utilizó con otro contenido o actor.", "E4_IDEMPOTENCY_CONFLICT", 409);
   return operation.response;
 }
+function money(raw: string): bigint {
+  const negative = raw.startsWith("-");
+  const value = negative ? raw.slice(1) : raw;
+  if (!/^\d+(?:\.\d{1,2})?$/.test(value)) fail("Saldo de caja inválido.", "E4_INVALID_BALANCE", 500);
+  const [whole, fraction = ""] = value.split(".");
+  const cents = BigInt(whole!) * 100n + BigInt(fraction.padEnd(2, "0"));
+  return negative ? -cents : cents;
+}
 export async function createE4CashOut(
   repo: E4Repository, actor: E4Actor, input: E4CreateInput, enabled = E4_CASH_OUT_ENABLED,
 ): Promise<E4Salida> {
@@ -105,13 +122,22 @@ export async function createE4CashOut(
     fail("La extraordinaria sale de caja física y no admite proveedor ni Fondo.", "E4_EXTRAORDINARY_ACCOUNT");
   if (input.tipo === "PROVEEDOR" && (!Number.isInteger(proveedorId) || Number(proveedorId) <= 0))
     fail("El pago a proveedor exige un proveedor activo.", "E4_PROVIDER_REQUIRED");
-  const normalized = { ...input, monto, motivo, proveedorId, tipo: input.tipo, claveOperacion };
+  if (input.desbloqueoCaja && actor.rol !== "ADMIN")
+    fail("Solo ADMIN puede desbloquear una insuficiencia de caja.", "E4_UNLOCK_FORBIDDEN", 403);
+  if (input.tipo === "PROVEEDOR" && input.desbloqueoCaja)
+    fail("Los pagos a proveedor no admiten desbloqueo de caja.", "E4_PROVIDER_HARD_CASH", 403);
+  if (input.tipo === "PROVEEDOR" && input.cuentaOrigen !== "CAJA_FISICA")
+    fail("El pago a proveedor de caja es exclusivamente en efectivo.", "E4_PROVIDER_ACCOUNT");
+  const unlockReason = input.desbloqueoCaja ? text(input.desbloqueoCaja.motivo, 1000) : undefined;
+  const normalized = { ...input, monto, motivo, proveedorId, tipo: input.tipo, claveOperacion,
+    ...(unlockReason ? { desbloqueoCaja: { motivo: unlockReason } } : {}) };
   const request = JSON.stringify({
     kind: "CREAR", sesionCajaId: input.sesionCajaId, monto, motivo, proveedorId,
     cuentaOrigen: input.cuentaOrigen, tipo: input.tipo,
-    ...(input.desbloqueoCajaE12 ? { desbloqueoCajaE12: input.desbloqueoCajaE12 } : {}),
+    ...(unlockReason ? { desbloqueoCaja: { motivo: unlockReason } } : {}),
   });
   await repo.lockOperation(claveOperacion);
+  const providerDebt = proveedorId === null ? undefined : await repo.providerDebt(proveedorId);
   const session = await repo.session(input.sesionCajaId);
   if (!session) fail("Sesión no encontrada.", "E4_SESSION_NOT_FOUND", 404);
   scope(actor, session.ubicacionId);
@@ -121,9 +147,23 @@ export async function createE4CashOut(
   const previous = await repo.operation(claveOperacion);
   if (previous) return retry(previous, actor, request) as E4Salida;
   if (session.estado !== "ABIERTA") fail("La sesión de caja está cerrada.", "E4_SESSION_CLOSED", 409);
-  if (proveedorId !== null && !await repo.providerActive(proveedorId))
+  if (proveedorId !== null && providerDebt === undefined)
     fail("El proveedor no existe o está inactivo.", "E4_PROVIDER_INACTIVE");
-  const created = await repo.insert(normalized, actor);
+  if (input.tipo === "PROVEEDOR" && money(providerDebt!) < cents)
+    fail("El pago no puede exceder la deuda actual del proveedor.", "E4_PROVIDER_OVERPAY", 409);
+  const balance = await repo.cashBalance(session);
+  const insufficient = money(balance) < cents;
+  if (insufficient && input.tipo === "PROVEEDOR")
+    fail("Saldo de caja insuficiente para pagar al proveedor.", "E4_CAJA_INSUFICIENTE", 409);
+  if (insufficient && !unlockReason)
+    fail("Saldo de caja insuficiente; requiere desbloqueo ADMIN motivado.", "E4_CAJA_INSUFICIENTE", 409);
+  if (!insufficient && unlockReason)
+    fail("El desbloqueo solo procede cuando el saldo de caja es insuficiente.", "E4_UNLOCK_UNUSED", 409);
+  const desbloqueoCaja: E4CashUnlock | null = insufficient ? {
+    motivo: unlockReason!, usuarioId: actor.id, createdAt: new Date().toISOString(),
+    saldoAntes: balance, egreso: monto,
+  } : null;
+  const created = await repo.insert({ ...normalized, desbloqueoCajaEvidence: desbloqueoCaja }, actor);
   await repo.saveOperation(claveOperacion, created.id, { actorId: actor.id, request, response: created });
   await repo.audit(created.id, actor.id, "SALIDA_DINERO_CAJA", {
     ...created, ubicacionId: session.ubicacionId,

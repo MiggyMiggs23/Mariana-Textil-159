@@ -85,3 +85,4 @@
 - [Vida de árboles aislados](isolated-test-tree-lifetime.md) — espacio libre no descarta cuotas; archivar evidencia antes de limpiar los temporales propios de cada ciclo.
 - [Identidad y preparación en workers](disposable-worker-readiness.md) — verificar aislamiento no exige que los datos del seed permanezcan intactos durante un caso.
 - [Registro del runner nativo](native-runner-lifecycle.md) — con isolation=none, esperar node:test durante el import puede bloquear el bootstrap; cerrar recursos en hooks.
+- [Integridad de suites concurrentes](concurrent-suite-source-integrity.md) — congelar o aislar el árbol antes de una comparación global; cambios paralelos ajenos pueden invalidar la corrida.

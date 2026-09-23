@@ -5,6 +5,7 @@
  * API para el sistema interno de Mariana Textil.
  * OpenAPI spec version: 0.1.0
  */
+import type { E4DesbloqueoCaja } from './e4DesbloqueoCaja';
 import type { SalidaDineroRevisionEstado } from './salidaDineroRevisionEstado';
 import type { SalidaDineroRevisionEvento } from './salidaDineroRevisionEvento';
 import type { SalidaDineroRevisionTipo } from './salidaDineroRevisionTipo';
@@ -16,4 +17,5 @@ export interface SalidaDineroRevision {
   version: number;
   claveOperacion: string;
   historial: SalidaDineroRevisionEvento[];
+  desbloqueoCaja: E4DesbloqueoCaja | null;
 }

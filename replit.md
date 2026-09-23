@@ -874,8 +874,8 @@ Un registro inactivo solo puede eliminarse si no tiene ninguna referencia en el 
 
 **Una sola sesión de caja por sitio y por día:** se registra el fondo de caja chica en la mañana, se opera, y se corta al terminar. Únicamente Tienda Mariana registra salidas de dinero a proveedores, y el sitio autorizado es una constante nombrada. Al cerrar se imprime la hoja de ventas del día, agrupada por producto y sin series.
 
-**E4 — implementación preparada, no liberada:** `E4_CASH_OUT_ENABLED=false` conserva
-la experiencia previa y evita consultar el esquema E4 en OFF. Al liberarse,
+**E4 — liberado por autorización del propietario del 2026-09-23:**
+`reports/e4-liberacion-20260923/autorizacion.txt`; `E4_CASH_OUT_ENABLED=true` en API/UI.
 SUPERVISOR/CAJA capturan extraordinarias en su propia tienda y ADMIN puede
 capturar en tiendas autorizadas, con motivo, sesión abierta y caja física;
 Coco/Cruces no usan Fondo. La clasificación EXTRAORDINARIA/PROVEEDOR es explícita:
@@ -891,7 +891,14 @@ mínimo usan `cobros_pagos` (ver/crear según acción), para no exigir permisos
 administrativos de cortes a CAJA; OFF conserva sus permisos anteriores.
 La revisión mantiene `cortes/ver` más autoridad/alcance del dominio.
 No se conceden filas ni permisos nuevos. Los históricos no se reclasifican.
-SQL y reversión preparados en `reports/tanda-b-20260922/e4/`, sin ejecución.
+El SQL E4 de `reports/tanda-b-20260922/e4/` ya fue instalado en la liberación
+simple anterior; esta apertura no agrega ni repite SQL en la base API.
+La comprobación canónica de saldo es obligatoria en E4 e independiente de E12,
+bajo candado de sesión. Insuficiencia bloquea; únicamente ADMIN puede desbloquear
+una extraordinaria con motivo obligatorio y evidencia durable de actor, fecha,
+saldo anterior y egreso. La revisión posterior conserva esa evidencia.
+Proveedor es exclusivamente Mariana y caja física, sin desbloqueo, limitado
+por efectivo y deuda; registra pago real y salida en una sola transacción.
 No habilita E12, pagos partidos, Fondo, inventario, ni amplía los 69 vetos.
 
 **Historial de compras:** vive en una **pestaña dentro de Proveedores**, no en la barra lateral. Muestra **un renglón por línea de entrada** —por producto, no por rollo—: una entrada de 750 rollos en dos productos son dos renglones. Solo existe para proveedores; a los clientes se les vende, no se les compra.

@@ -1083,7 +1083,9 @@ router.post(
   async (req, res, next): Promise<void> => {
     try {
       const sesionId = CrearSalidaDineroCajaParams.parse(req.params).id;
-      const body = CrearSalidaDineroCajaBody.parse(req.body);
+      // Fail closed at the HTTP boundary: deprecated E12/Fondo split fields must
+      // not be silently stripped by Zod and then accepted as an E4 request.
+      const body = CrearSalidaDineroCajaBody.strict().parse(req.body);
       if (!E4_CASH_OUT_ENABLED && (body.tipo !== undefined || body.claveOperacion !== undefined)) requireE4();
       const session = await getSesion(sesionId);
       if (!session) { res.status(404).json({ error: "Sesión no encontrada." }); return; }
@@ -1092,7 +1094,7 @@ router.post(
         sesionCajaId: sesionId, monto: body.monto, motivo: body.motivo, proveedorId: body.proveedorId,
         cuentaOrigen: body.cuentaOrigen, creadoPorId: req.auth!.user.id, ip: getRequestIp(req),
         tipo: body.tipo, claveOperacion: body.claveOperacion, actor: req.auth!.user,
-        desbloqueoCajaE12: body.desbloqueoCajaE12,
+        desbloqueoCaja: body.desbloqueoCaja,
       }));
       res.status(201).json(CrearSalidaDineroCajaResponse.parse({
         ...salida, createdAt: salida.createdAt,

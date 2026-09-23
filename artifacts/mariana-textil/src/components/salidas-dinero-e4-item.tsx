@@ -133,6 +133,10 @@ export function SalidaDineroE4Item({
           queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
           queryClient.invalidateQueries({ queryKey: getObtenerSesionCajaActualQueryKey() });
           queryClient.invalidateQueries({ queryKey: getListarSesionesCajaQueryKey() });
+          queryClient.invalidateQueries({ predicate: ({ queryKey }) => {
+            const url = queryKey[0];
+            return typeof url === "string" && /^\/api\/(salidas-dinero-caja|caja|sesiones-caja|cortes)(\/|$|\?)/.test(url);
+          } });
           if (dialogState.accion) {
             toast({ title: `Salida ${dialogState.accion.toLowerCase()} exitosamente.` });
           }
@@ -205,6 +209,16 @@ export function SalidaDineroE4Item({
         </div>
       )}
 
+      {isE4 && e4?.desbloqueoCaja && (
+        <div className="mt-1 rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-950">
+          <p className="font-semibold">Desbloqueo extraordinario de Caja</p>
+          <p>{e4.desbloqueoCaja.motivo}</p>
+          <p className="text-amber-800">
+            Usuario #{e4.desbloqueoCaja.usuarioId} · saldo {formatNumber(e4.desbloqueoCaja.saldoAntes, { kind: "money" })} · egreso {formatNumber(e4.desbloqueoCaja.egreso, { kind: "money" })} · {format(new Date(e4.desbloqueoCaja.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}
+          </p>
+        </div>
+      )}
+
       {isE4 && e4 && e4.historial && e4.historial.length > 0 && (
         <div className="bg-muted/30 p-2 rounded text-xs">
           <div className="flex justify-between items-center mb-1">
@@ -260,6 +274,7 @@ export function SalidaDineroE4Item({
                     <span className="font-bold">{evt.accion}</span>
                     <span className="text-xs text-muted-foreground">{format(new Date(evt.createdAt), "dd MMM yyyy, HH:mm", { locale: es })}</span>
                   </div>
+                   <p className="text-xs text-muted-foreground">Usuario #{evt.usuarioId} · versión {evt.version}</p>
                   {evt.explicacion && <p className="mt-1 text-muted-foreground">{evt.explicacion}</p>}
                   {evt.comprobanteUrl && (
                     <a href={evt.comprobanteUrl} target="_blank" rel="noreferrer" className="text-primary hover:underline mt-2 inline-flex items-center text-xs">

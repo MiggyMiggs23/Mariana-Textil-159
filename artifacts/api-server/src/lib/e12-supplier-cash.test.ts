@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { PgDialect } from "drizzle-orm/pg-core";
 import {
   payE12, returnE12, e12CashGuard, e12Money, e12Format, omitE12PrivateFields,
+  E12_SUPPLIER_CASH_ENABLED,
   type E12Repository, type E12Actor, type E12Input, type E12Detail, type E12Result,
   type E12Payment, type E12ReturnKind,
 } from "./e12-supplier-cash";
@@ -117,12 +118,9 @@ test("E12-PARAMETER-ADAPTER", async () => { const dialect = new PgDialect(); let
   await tx.query("SELECT $1::text motivo, $2::integer actor", [dangerous, 10]);
   assert.equal(query!.sql.includes(dangerous), false); assert.deepEqual(query!.params, [dangerous, 10]);
 });
-test("E12-E4-GUARD-BEFORE-WRITE", async () => { let writes = 0;
-  const repo = e4CashOutRepository({ execute: async () => { writes++; return { rows: [{ id: 1, sesionCajaId: 1, monto: "1.00", motivo: "Gasto", proveedorId: null, cuentaOrigen: "CAJA_FISICA", creadoPorId: 11, createdAt: new Date(0) }] }; } } as never, {
-    beforeInsert: async () => { e12CashGuard("0.00", "1.00", cashier); }, afterInsert: async () => {},
-  });
-  await assert.rejects(() => repo.insert({ sesionCajaId: 1, monto: "1.00", motivo: "Gasto", cuentaOrigen: "CAJA_FISICA", tipo: "EXTRAORDINARIA", claveOperacion: key(9), ip: "offline" }, cashier), code("E12_CAJA_INSUFICIENTE"));
-  assert.equal(writes, 0);
+test("E12-E4-DECOUPLED", () => {
+  assert.equal(E12_SUPPLIER_CASH_ENABLED, false);
+  assert.equal(e4CashOutRepository.length, 1);
 });
 test("E12-DIRECTED-SOURCE", () => { const source = input().split; const approved = e12ApprovedSplit(source, { claveOperacion: key(2) });
   assert.equal(approved.caja, source.caja); assert.equal(approved.fondo, source.fondo); assert.equal(approved.sesionCajaId, source.sesionCajaId); assert.equal(source.claveOperacion, key(1));

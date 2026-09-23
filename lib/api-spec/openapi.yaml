@@ -16101,7 +16101,7 @@ components:
         nombre: { type: string }
     SalidaDineroCajaInput:
       type: object
-      required: [monto, motivo, cuentaOrigen]
+      required: [monto, motivo, cuentaOrigen, tipo, claveOperacion]
       properties:
         monto: { type: string, pattern: "^[0-9]+(\\.[0-9]{1,2})?$" }
         motivo: { type: string, minLength: 1, maxLength: 500 }
@@ -16115,8 +16115,22 @@ components:
           type: string
           format: uuid
           description: Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar.
-        desbloqueoCajaE12:
-          $ref: "#/components/schemas/E12DesbloqueoCajaInput"
+        desbloqueoCaja:
+          $ref: "#/components/schemas/E4DesbloqueoCajaInput"
+    E4DesbloqueoCajaInput:
+      type: object
+      required: [motivo]
+      properties:
+        motivo: { type: string, minLength: 1, maxLength: 1000 }
+    E4DesbloqueoCaja:
+      type: object
+      required: [motivo, usuarioId, createdAt, saldoAntes, egreso]
+      properties:
+        motivo: { type: string, minLength: 1, maxLength: 1000 }
+        usuarioId: { type: integer }
+        createdAt: { type: string, format: date-time }
+        saldoAntes: { type: string }
+        egreso: { type: string }
     SalidaDineroRevisionInput:
       type: object
       required: [accion, version, claveOperacion]
@@ -16145,7 +16159,7 @@ components:
         comprobanteUrl: { type: ["string", "null"] }
     SalidaDineroRevision:
       type: object
-      required: [tipo, estado, version, claveOperacion, historial]
+      required: [tipo, estado, version, claveOperacion, historial, desbloqueoCaja]
       properties:
         tipo: { type: string, enum: [EXTRAORDINARIA, PROVEEDOR] }
         estado: { type: string, enum: [PENDIENTE, RECLAMADA, RESPONDIDA, ACEPTADA, NO_APLICA] }
@@ -16154,19 +16168,25 @@ components:
         historial:
           type: array
           items: { $ref: "#/components/schemas/SalidaDineroRevisionEvento" }
+        desbloqueoCaja:
+          oneOf:
+            - $ref: "#/components/schemas/E4DesbloqueoCaja"
+            - type: "null"
     SalidaDineroCaja:
-      allOf:
-        - $ref: "#/components/schemas/SalidaDineroCajaInput"
-        - type: object
-          required: [id, sesionCajaId, creadoPorId, createdAt]
-          properties:
-            id: { type: number }
-            sesionCajaId: { type: number }
-            creadoPorId: { type: number }
-            createdAt: { type: string, format: date-time }
-            e4: { $ref: "#/components/schemas/SalidaDineroRevision" }
-            pagoProveedorIdE12: { type: integer, description: "Vínculo E12 solo ADMIN; ausente OFF." }
-            e12DesbloqueoCaja: { $ref: "#/components/schemas/E12DesbloqueoCaja" }
+      type: object
+      required: [id, sesionCajaId, monto, motivo, proveedorId, cuentaOrigen, creadoPorId, createdAt, e4]
+      properties:
+        id: { type: number }
+        sesionCajaId: { type: number }
+        monto: { type: string, pattern: "^[0-9]+(\\.[0-9]{1,2})?$" }
+        motivo: { type: string, minLength: 1, maxLength: 500 }
+        proveedorId: { type: ["number", "null"] }
+        cuentaOrigen: { type: string, enum: [CAJA_FISICA, CUENTA_NO_FISCAL, CUENTA_FISCAL] }
+        creadoPorId: { type: number }
+        createdAt: { type: string, format: date-time }
+        e4: { $ref: "#/components/schemas/SalidaDineroRevision" }
+        pagoProveedorIdE12: { type: integer, description: "Vínculo E12 solo ADMIN; ausente OFF." }
+        e12DesbloqueoCaja: { $ref: "#/components/schemas/E12DesbloqueoCaja" }
     SalidasDineroCajaResponse:
       type: object
       required: [salidas]

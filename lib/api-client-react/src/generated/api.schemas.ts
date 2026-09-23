@@ -8856,6 +8856,14 @@ export const SalidaDineroCajaInputTipo = {
   PROVEEDOR: 'PROVEEDOR',
 } as const;
 
+export interface E4DesbloqueoCajaInput {
+  /**
+     * @minLength 1
+     * @maxLength 1000
+     */
+  motivo: string;
+}
+
 export interface SalidaDineroCajaInput {
   /** @pattern ^[0-9]+(\.[0-9]{1,2})?$ */
   monto: string;
@@ -8868,10 +8876,22 @@ export interface SalidaDineroCajaInput {
   proveedorId?: number | null;
   cuentaOrigen: SalidaDineroCajaInputCuentaOrigen;
   /** Obligatorio al liberar E4; nunca se infiere a partir de proveedorId. */
-  tipo?: SalidaDineroCajaInputTipo;
+  tipo: SalidaDineroCajaInputTipo;
   /** Obligatoria al liberar E4; conservar la misma clave y contenido al reintentar. */
-  claveOperacion?: string;
-  desbloqueoCajaE12?: E12DesbloqueoCajaInput;
+  claveOperacion: string;
+  desbloqueoCaja?: E4DesbloqueoCajaInput;
+}
+
+export interface E4DesbloqueoCaja {
+  /**
+     * @minLength 1
+     * @maxLength 1000
+     */
+  motivo: string;
+  usuarioId: number;
+  createdAt: string;
+  saldoAntes: string;
+  egreso: string;
 }
 
 export type SalidaDineroRevisionInputAccion = typeof SalidaDineroRevisionInputAccion[keyof typeof SalidaDineroRevisionInputAccion];
@@ -8949,18 +8969,38 @@ export interface SalidaDineroRevision {
   version: number;
   claveOperacion: string;
   historial: SalidaDineroRevisionEvento[];
+  desbloqueoCaja: E4DesbloqueoCaja | null;
 }
 
-export type SalidaDineroCaja = SalidaDineroCajaInput & {
+export type SalidaDineroCajaCuentaOrigen = typeof SalidaDineroCajaCuentaOrigen[keyof typeof SalidaDineroCajaCuentaOrigen];
+
+
+export const SalidaDineroCajaCuentaOrigen = {
+  CAJA_FISICA: 'CAJA_FISICA',
+  CUENTA_NO_FISCAL: 'CUENTA_NO_FISCAL',
+  CUENTA_FISCAL: 'CUENTA_FISCAL',
+} as const;
+
+export interface SalidaDineroCaja {
   id: number;
   sesionCajaId: number;
+  /** @pattern ^[0-9]+(\.[0-9]{1,2})?$ */
+  monto: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+  /** @nullable */
+  proveedorId: number | null;
+  cuentaOrigen: SalidaDineroCajaCuentaOrigen;
   creadoPorId: number;
   createdAt: string;
-  e4?: SalidaDineroRevision;
+  e4: SalidaDineroRevision;
   /** Vínculo E12 solo ADMIN; ausente OFF. */
   pagoProveedorIdE12?: number;
   e12DesbloqueoCaja?: E12DesbloqueoCaja;
-};
+}
 
 export interface SalidasDineroCajaResponse {
   salidas: SalidaDineroCaja[];

@@ -1,8 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createRequire } from "node:module";
-import { Socket } from "node:net";
-import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
 import { PgDialect } from "drizzle-orm/pg-core";
 import {
   createE4CashOut, reviewE4CashOut, e4CashOutPermission, E4CashOutError,
@@ -36,6 +34,8 @@ class MemoryRepo implements E4Repository {
   audits: unknown[] = [];
   locks: string[] = [];
   activeProvider = true;
+  cash = "100.00";
+  providerBalance = "100.00";
   failAudit = false;
   private tail: Promise<unknown> = Promise.resolve();
   async transaction<T>(fn: () => Promise<T>): Promise<T> {
@@ -52,14 +52,19 @@ class MemoryRepo implements E4Repository {
   async lockOperation(value: string) { this.locks.push(value); }
   async session(id: number) { return id === this.currentSession.id ? this.currentSession : undefined; }
   async operation(value: string) { return this.operations.get(value); }
-  async providerActive() { return this.activeProvider; }
-  async insert(value: E4CreateInput & { tipo: "EXTRAORDINARIA" | "PROVEEDOR"; claveOperacion: string }, user: E4Actor) {
+  async providerDebt() { return this.activeProvider ? this.providerBalance : undefined; }
+  async cashBalance() { return this.cash; }
+  async insert(value: E4CreateInput & {
+    tipo: "EXTRAORDINARIA" | "PROVEEDOR"; claveOperacion: string;
+    desbloqueoCajaEvidence: E4Revision["desbloqueoCaja"];
+  }, user: E4Actor) {
     const record: E4Salida = {
       id: this.salidas.size + 1, sesionCajaId: value.sesionCajaId, monto: value.monto, motivo: value.motivo,
       proveedorId: value.proveedorId ?? null, cuentaOrigen: value.cuentaOrigen, creadoPorId: user.id,
       createdAt: "2026-09-22T12:00:00.000Z", e4: {
         tipo: value.tipo, estado: value.tipo === "EXTRAORDINARIA" ? "PENDIENTE" : "NO_APLICA",
         version: 0, claveOperacion: value.claveOperacion, historial: [],
+        desbloqueoCaja: value.desbloqueoCajaEvidence,
       },
     };
     this.salidas.set(record.id, record); return structuredClone(record);
@@ -90,17 +95,17 @@ const revise = (repo: MemoryRepo, user = admin, data = review()) =>
 
 test("E4-OFF-CREATE", async () => {
   const repo = new MemoryRepo();
-  assert.equal(await errorCode(() => createE4CashOut(repo, actor, input())), "E4_DISABLED");
+  assert.equal(await errorCode(() => createE4CashOut(repo, actor, input(), false)), "E4_DISABLED");
   assert.equal(repo.locks.length, 0); assert.equal(repo.salidas.size, 0);
 });
 test("E4-OFF-REVIEW", async () => {
   const repo = new MemoryRepo();
-  assert.equal(await errorCode(() => reviewE4CashOut(repo, admin, review())), "E4_DISABLED");
+  assert.equal(await errorCode(() => reviewE4CashOut(repo, admin, review(), false)), "E4_DISABLED");
   assert.equal(repo.locks.length, 0);
 });
 test("E4-OFF-READ", async () => {
   let reads = 0;
-  assert.equal((await readE4CashOutRevisions({ execute: async () => { reads++; return { rows: [] }; } }, 10)).size, 0);
+  assert.equal((await readE4CashOutRevisions({ execute: async () => { reads++; return { rows: [] }; } }, 10, false)).size, 0);
   assert.equal(reads, 0);
 });
 test("E4-CAPTURE-ROLE", async () => {
@@ -115,11 +120,24 @@ test("E4-OWN-STORE", async () => {
   assert.equal(await errorCode(() => create(repo, { ...actor, ubicacionId: 3 })), "E4_LOCATION_FORBIDDEN");
   assert.equal(repo.salidas.size, 0);
 });
+test("E4-EXTRAORDINARY-ALL-STORES-AND-AUTHORIZED-ROLES", async () => {
+  let operation = 100;
+  for (const location of [1, 2, 3]) {
+    for (const rol of ["ADMIN", "SUPERVISOR", "CAJA"]) {
+      const repo = new MemoryRepo();
+      repo.currentSession.ubicacionId = location;
+      const user = { id: operation, rol, ubicacionId: rol === "ADMIN" ? null : location };
+      const created = await create(repo, user, input({ claveOperacion: key(operation++) }));
+      assert.equal(created.e4.tipo, "EXTRAORDINARIA");
+      assert.equal(created.e4.estado, "PENDIENTE");
+    }
+  }
+});
 test("E4-PROVIDER-LOCATION", async () => {
   const repo = new MemoryRepo();
   assert.equal(await errorCode(() => create(repo, actor, input({ tipo: "PROVEEDOR", proveedorId: 7 }))), "E4_PROVIDER_LOCATION");
   repo.currentSession.ubicacionId = 1;
-  const out = await create(repo, admin, input({ tipo: "PROVEEDOR", proveedorId: 7, cuentaOrigen: "CUENTA_FISCAL" }));
+  const out = await create(repo, admin, input({ tipo: "PROVEEDOR", proveedorId: 7 }));
   assert.equal(out.e4.estado, "NO_APLICA");
 });
 test("E4-PROVIDER-REQUIRED", async () => {
@@ -144,6 +162,29 @@ test("E4-REASON", async () => {
 });
 test("E4-AMOUNT", async () => {
   assert.equal(await errorCode(() => create(new MemoryRepo(), actor, input({ monto: "0.00" }))), "E4_INVALID_AMOUNT");
+});
+test("E4-CASH-GUARD-AND-NATIVE-ADMIN-UNLOCK", async () => {
+  const repo = new MemoryRepo(); repo.cash = "9.99";
+  assert.equal(await errorCode(() => create(repo)), "E4_CAJA_INSUFICIENTE");
+  assert.equal(await errorCode(() => create(repo, actor, input({
+    claveOperacion: key(20), desbloqueoCaja: { motivo: "Urgencia autorizada" },
+  }))), "E4_UNLOCK_FORBIDDEN");
+  const created = await create(repo, admin, input({
+    claveOperacion: key(21), desbloqueoCaja: { motivo: "Urgencia autorizada" },
+  }));
+  assert.equal(created.e4.desbloqueoCaja?.saldoAntes, "9.99");
+  assert.equal(created.e4.desbloqueoCaja?.usuarioId, admin.id);
+});
+test("E4-PROVIDER-HARD-CASH-AND-DEBT", async () => {
+  const repo = new MemoryRepo(); repo.currentSession.ubicacionId = 1; repo.cash = "9.99";
+  const supplier = input({ tipo: "PROVEEDOR", proveedorId: 7 });
+  assert.equal(await errorCode(() => create(repo, admin, supplier)), "E4_CAJA_INSUFICIENTE");
+  assert.equal(await errorCode(() => create(repo, admin, {
+    ...supplier, claveOperacion: key(22), desbloqueoCaja: { motivo: "No permitido" },
+  })), "E4_PROVIDER_HARD_CASH");
+  repo.cash = "100.00"; repo.providerBalance = "9.99";
+  assert.equal(await errorCode(() => create(repo, admin, { ...supplier, claveOperacion: key(23) })),
+    "E4_PROVIDER_OVERPAY");
 });
 test("E4-CLOSED", async () => {
   const repo = new MemoryRepo(); repo.currentSession.estado = "CERRADA";
@@ -262,6 +303,7 @@ test("E4-ADAPTER-CAS", async () => {
   const repo = e4CashOutRepository({ execute: async () => ({ rows: [] }) } as never);
   assert.equal(await errorCode(() => repo.updateRevision(1, {
     tipo: "EXTRAORDINARIA", estado: "ACEPTADA", version: 1, claveOperacion: key(1), historial: [],
+    desbloqueoCaja: null,
   })), "E4_VERSION_CONFLICT");
 });
 test("E4-READER", async () => {
@@ -273,6 +315,9 @@ test("E4-CONTRACT", async () => {
   const repo = new MemoryRepo(); const created = await create(repo);
   const sent = CrearSalidaDineroCajaBody.parse(input());
   assert.equal(sent.tipo, "EXTRAORDINARIA"); assert.equal(sent.claveOperacion, key(1));
+  assert.throws(() => CrearSalidaDineroCajaBody.strict().parse({
+    ...input(), fondoId: 7, split: { caja: "10.00" }, desbloqueoCajaE12: { motivo: "legacy" },
+  }));
   assert.equal(CrearSalidaDineroCajaResponse.parse(created).e4!.estado, "PENDIENTE");
   assert.equal(ListarSalidasDineroCajaResponse.parse({ salidas: [created] }).salidas[0]!.e4!.estado, "PENDIENTE");
   const fixture = {
@@ -291,11 +336,13 @@ test("E4-CONTRACT", async () => {
   assert.equal(RevisarSalidaDineroCajaBody.parse(review()).accion, "RECLAMAR");
   assert.equal(RevisarSalidaDineroCajaResponse.parse(await revise(repo)).estado, "RECLAMADA");
 });
-test("E4-OFFLINE-GUARD", () => {
-  assert.throws(() => Reflect.apply(Socket.prototype.connect, {}, []), /E4_OFFLINE_ACCESS_BLOCKED/);
-  assert.throws(() => fetch("https://example.invalid"), /E4_OFFLINE_ACCESS_BLOCKED/);
-  assert.throws(() => createRequire(import.meta.url)("pg"), /E4_OFFLINE_ACCESS_BLOCKED/);
-  assert.throws(() => spawn("true"), /E4_OFFLINE_ACCESS_BLOCKED/);
+test("E4-ROUTE-REJECTS-UNKNOWN-LEGACY-FIELDS", async () => {
+  const route = await readFile(new URL("../routes/pos.ts", import.meta.url), "utf8");
+  assert.match(route, /CrearSalidaDineroCajaBody\.strict\(\)\.parse\(req\.body\)/);
+  assert.throws(() => CrearSalidaDineroCajaBody.strict().parse({
+    ...input(), fondoId: 7, split: { caja: "10.00" },
+    desbloqueoCajaE12: { motivo: "campo legado prohibido" },
+  }));
 });
 test("E4-ADAPTER-WRITE", async () => {
   const queries: { sql: string; params: unknown[] }[] = [];
@@ -308,7 +355,8 @@ test("E4-ADAPTER-WRITE", async () => {
     return { rows: [{ salida_id: 1 }] };
   } };
   const repo = e4CashOutRepository(tx as never);
-  const created = await repo.insert({ ...input(), tipo: "EXTRAORDINARIA", claveOperacion: key(1) }, actor);
+  const created = await repo.insert({ ...input(), tipo: "EXTRAORDINARIA", claveOperacion: key(1),
+    desbloqueoCajaEvidence: null }, actor);
   await repo.saveOperation(key(1), 1, { actorId: actor.id, request: "fixture", response: created });
   await repo.audit(1, actor.id, "SALIDA_DINERO_CAJA", created, "offline");
   assert.equal(created.e4.estado, "PENDIENTE");
@@ -340,7 +388,7 @@ test("E4-PERMISSIONS-OFF", () => {
     calls.push(`${module}/${action}`);
     return () => module === "cortes";
   };
-  assert.equal(e4CashOutPermission("ver", resolver)(), true);
-  assert.equal(e4CashOutPermission("crear", resolver)(), true);
+  assert.equal(e4CashOutPermission("ver", resolver, false)(), true);
+  assert.equal(e4CashOutPermission("crear", resolver, false)(), true);
   assert.deepEqual(calls, ["cortes/ver", "cortes/crear"]);
 });

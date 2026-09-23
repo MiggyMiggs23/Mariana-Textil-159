@@ -6,16 +6,26 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { E12DesbloqueoCaja } from './e12DesbloqueoCaja';
-import type { SalidaDineroCajaInput } from './salidaDineroCajaInput';
+import type { SalidaDineroCajaCuentaOrigen } from './salidaDineroCajaCuentaOrigen';
 import type { SalidaDineroRevision } from './salidaDineroRevision';
 
-export type SalidaDineroCaja = SalidaDineroCajaInput & {
+export interface SalidaDineroCaja {
   id: number;
   sesionCajaId: number;
+  /** @pattern ^[0-9]+(\.[0-9]{1,2})?$ */
+  monto: string;
+  /**
+     * @minLength 1
+     * @maxLength 500
+     */
+  motivo: string;
+  /** @nullable */
+  proveedorId: number | null;
+  cuentaOrigen: SalidaDineroCajaCuentaOrigen;
   creadoPorId: number;
   createdAt: Date;
-  e4?: SalidaDineroRevision;
+  e4: SalidaDineroRevision;
   /** Vínculo E12 solo ADMIN; ausente OFF. */
   pagoProveedorIdE12?: number;
   e12DesbloqueoCaja?: E12DesbloqueoCaja;
-};
+}

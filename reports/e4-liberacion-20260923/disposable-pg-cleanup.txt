@@ -1,0 +1,2 @@
+Command: find /tmp -maxdepth 1 -type d -name workspace-isolated-pg-* -print
+PASS: zero disposable PostgreSQL cluster directories remain.

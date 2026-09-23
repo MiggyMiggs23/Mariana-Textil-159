@@ -22,9 +22,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { formatAccountDestination } from "@workspace/number-format";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { E12_ENABLED } from "@/lib/e12-feature-flags";
 import { E4_CASH_OUT_ENABLED } from "@/lib/e4-feature-flags";
-import { cajaOverrideProblem, cents, invalidateE12 } from "@/components/proveedor-efectivo-e12";
+import { cents } from "@/components/proveedor-efectivo-e12";
 import { SalidaDineroE4Item } from "./salidas-dinero-e4-item";
 
 export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesionId: number; canCreate: boolean; tiendaId?: number }) {
@@ -45,21 +44,26 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
   // If MARIANA_LOCATION_ID = 1, it's defined in cobros.tsx but we can check if it's 1
   const isMariana = tiendaId === 1;
 
-  const { data, isLoading, isError, error } = useListarSalidasDineroCaja(sesionId, { query: { queryKey: E12_ENABLED ? [...getListarSalidasDineroCajaQueryKey(sesionId), JSON.stringify(user)] : getListarSalidasDineroCajaQueryKey(sesionId), ...(E12_ENABLED ? { refetchOnMount: "always" as const, refetchOnWindowFocus: true, refetchInterval: 15000 } : {}) } });
+  const { data, isLoading, isError, error } = useListarSalidasDineroCaja(sesionId, { query: {
+    queryKey: [...getListarSalidasDineroCajaQueryKey(sesionId), JSON.stringify(user)],
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    refetchInterval: 15000,
+  } });
   const { data: proveedores = [] } = useListarProveedoresActivosCaja({ query: { enabled: isMariana, queryKey: getListarProveedoresActivosCajaQueryKey() } });
   const crear = useCrearSalidaDineroCaja();
-  const p12Enabled = E4_CASH_OUT_ENABLED && E12_ENABLED && cuentaOrigen === "CAJA_FISICA";
+  const requiresCashValidation = E4_CASH_OUT_ENABLED && cuentaOrigen === "CAJA_FISICA";
   const disponibilidad = useObtenerCorteCaja(sesionId, { query: {
-    enabled: p12Enabled && canCreate && !!user,
+    enabled: requiresCashValidation && canCreate && !!user,
     queryKey: [...getObtenerCorteCajaQueryKey(sesionId), JSON.stringify(user)],
-    staleTime: 0, refetchOnMount: "always", refetchOnWindowFocus: true, refetchInterval: p12Enabled && canCreate ? 15000 : false,
+    staleTime: 0, refetchOnMount: "always", refetchOnWindowFocus: true,
+    refetchInterval: requiresCashValidation && canCreate ? 15000 : false,
   } });
 
   useEffect(() => {
-    if (tipo === "EXTRAORDINARIA") {
-      setProveedorId("none");
-      setCuentaOrigen("CAJA_FISICA");
-    }
+    setCuentaOrigen("CAJA_FISICA");
+    if (tipo === "EXTRAORDINARIA") setProveedorId("none");
   }, [tipo]);
 
   const submit = async (event: React.FormEvent) => {
@@ -77,7 +81,8 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
       return;
     }
     isSubmitting.current = true;
-    if (p12Enabled) {
+    let applyCashUnlock = false;
+    if (requiresCashValidation) {
       setChecking(true);
       try {
         const importe = cents(monto);
@@ -85,8 +90,18 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
         const fresh = await disponibilidad.refetch();
         if (fresh.error) throw fresh.error;
         if (fresh.data?.sesion.estado !== "ABIERTA") throw new Error("La sesión de Caja ya no está abierta.");
-        const problem = cajaOverrideProblem(p12Enabled, importe, fresh.data.efectivoEsperado, isAdmin, desbloqueoMotivo);
-        if (problem) throw new Error(problem);
+        const saldo = fresh.data?.efectivoEsperado;
+        if (saldo == null || !Number.isFinite(Number(saldo))) throw new Error("Saldo de Caja no disponible.");
+        const isInsufficient = importe > Math.round(Number(saldo) * 100);
+        if (isInsufficient) {
+          if (tipo === "PROVEEDOR") {
+            throw new Error("Saldo de Caja insuficiente. Las salidas a proveedor no admiten desbloqueo.");
+          }
+          if (!isAdmin || !desbloqueoMotivo.trim()) {
+            throw new Error("Saldo de Caja insuficiente. Solo ADMIN puede autorizar una salida extraordinaria con motivo explícito.");
+          }
+          applyCashUnlock = true;
+        }
       } catch (err) {
         toast({ title: "No se pudo registrar la salida", description: getApiErrorMessage(err), variant: "destructive" });
         isSubmitting.current = false;
@@ -121,12 +136,11 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
           proveedorId: proveedorId !== "none" ? Number(proveedorId) : null,
           tipo,
           claveOperacion: lastIntention.current.uuid,
-          ...(isAdmin && p12Enabled && desbloqueoMotivo.trim() ? { desbloqueoCajaE12: { motivo: desbloqueoMotivo.trim() } } : {}),
+          ...(applyCashUnlock ? { desbloqueoCaja: { motivo: desbloqueoMotivo.trim() } } : {}),
         },
       },
       {
         onSuccess: () => {
-          if (p12Enabled) void invalidateE12(queryClient, isAdmin);
           setMonto("");
           setMotivo("");
           setProveedorId("none");
@@ -137,6 +151,10 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
           queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
           queryClient.invalidateQueries({ queryKey: getObtenerSesionCajaActualQueryKey() });
           queryClient.invalidateQueries({ queryKey: getListarSesionesCajaQueryKey() });
+          queryClient.invalidateQueries({ predicate: ({ queryKey }) => {
+            const url = queryKey[0];
+            return typeof url === "string" && /^\/api\/(salidas-dinero-caja|caja|sesiones-caja|cortes)(\/|$|\?)/.test(url);
+          } });
           toast({ title: "Salida de dinero registrada." });
         },
         onError: (err: unknown) => {
@@ -186,19 +204,13 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
 
             <div>
               <Label htmlFor="salida-cuenta">Cuenta de origen</Label>
-              <Select value={cuentaOrigen} onValueChange={(v) => setCuentaOrigen(v as typeof cuentaOrigen)} disabled={tipo === "EXTRAORDINARIA" || crear.isPending || checking}>
+              <Select value={cuentaOrigen} onValueChange={(v) => setCuentaOrigen(v as typeof cuentaOrigen)} disabled>
                 <SelectTrigger id="salida-cuenta"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="CAJA_FISICA">{formatAccountDestination("CAJA_FISICA")}</SelectItem>
-                  {tipo === "PROVEEDOR" && (
-                    <>
-                      <SelectItem value="CUENTA_NO_FISCAL">{formatAccountDestination("CUENTA_NO_FISCAL")}</SelectItem>
-                      <SelectItem value="CUENTA_FISCAL">{formatAccountDestination("CUENTA_FISCAL")}</SelectItem>
-                    </>
-                  )}
                 </SelectContent>
               </Select>
-              {tipo === "EXTRAORDINARIA" && <p className="text-xs text-muted-foreground mt-1">Siempre Caja Física.</p>}
+              <p className="text-xs text-muted-foreground mt-1">E4 opera exclusivamente con Caja Física; Fondo y mezcla E12 están desactivados.</p>
             </div>
 
             <div>
@@ -224,11 +236,11 @@ export function SalidasDineroE4Panel({ sesionId, canCreate, tiendaId }: { sesion
             </div>
 
 
-            {p12Enabled && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {disponibilidad.data?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar.</p>}
-            {p12Enabled && disponibilidad.error && <p role="alert" className="text-destructive">{getApiErrorMessage(disponibilidad.error)}</p>}
-            {(isAdmin && p12Enabled) && (
+            {requiresCashValidation && <p className="md:col-span-2 text-sm">Saldo Caja (servidor): {disponibilidad.data?.efectivoEsperado ?? "Consultando disponibilidad"}. Se revalida al confirmar; la API conserva la autoridad final.</p>}
+            {requiresCashValidation && disponibilidad.error && <p role="alert" className="text-destructive">{getApiErrorMessage(disponibilidad.error)}</p>}
+            {(isAdmin && requiresCashValidation && tipo === "EXTRAORDINARIA") && (
               <div className="md:col-span-2 space-y-1 mt-2 bg-amber-50 border border-amber-200 p-3 rounded-lg">
-                <Label htmlFor="salida-desbloqueo" className="text-xs font-bold text-amber-900">Motivo Desbloqueo Caja E12 (Solo si hay insuficiencia)</Label>
+                <Label htmlFor="salida-desbloqueo" className="text-xs font-bold text-amber-900">Motivo de desbloqueo extraordinario (solo si hay insuficiencia)</Label>
                 <Input id="salida-desbloqueo" maxLength={1000} value={desbloqueoMotivo} onChange={(e) => setDesbloqueoMotivo(e.target.value)} disabled={crear.isPending || checking} placeholder="Justificación obligatoria cuando Caja es insuficiente" className="bg-white" />
               </div>
             )}

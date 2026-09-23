@@ -1146,48 +1146,7 @@ export function SalidasDineroPanel({ sesionId, canCreate, tiendaId }: { sesionId
   if (E4_CASH_OUT_ENABLED) {
     return <SalidasDineroE4Panel sesionId={sesionId} canCreate={canCreate} tiendaId={tiendaId} />;
   }
-
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const [monto, setMonto] = useState("");
-  const [motivo, setMotivo] = useState("");
-  const [proveedorId, setProveedorId] = useState<string>("");
-  const [cuentaOrigen, setCuentaOrigen] = useState<"CAJA_FISICA" | "CUENTA_NO_FISCAL" | "CUENTA_FISCAL">("CAJA_FISICA");
-  const { data, isLoading, isError, error } = useListarSalidasDineroCaja(sesionId, { query: { queryKey: getListarSalidasDineroCajaQueryKey(sesionId) } });
-  const { data: proveedores = [] } = useListarProveedoresActivosCaja();
-  const crear = useCrearSalidaDineroCaja();
-  const submit = (event: React.FormEvent) => {
-    event.preventDefault();
-    const valor = Number(monto);
-    if (!Number.isFinite(valor) || valor <= 0 || !motivo.trim()) {
-      toast({ title: "Captura un monto mayor a cero y un motivo.", variant: "destructive" }); return;
-    }
-    crear.mutate({ id: sesionId, data: { monto: valor.toFixed(2), motivo: motivo.trim(), cuentaOrigen, proveedorId: proveedorId ? Number(proveedorId) : null } }, {
-      onSuccess: () => {
-        setMonto(""); setMotivo(""); setProveedorId("");
-        queryClient.invalidateQueries({ queryKey: getListarSalidasDineroCajaQueryKey(sesionId) });
-        queryClient.invalidateQueries({ queryKey: getObtenerCorteCajaQueryKey(sesionId) });
-        toast({ title: "Salida de dinero registrada." });
-      },
-      onError: (err: unknown) => toast({ title: "No se pudo registrar la salida", description: getApiErrorMessage(err, "Intenta nuevamente."), variant: "destructive" }),
-    });
-  };
-  return <Card className="border-amber-200">
-    <CardHeader><CardTitle className="text-lg">Salidas de dinero</CardTitle><CardDescription>Solo pagos operativos de Tienda Mariana.</CardDescription></CardHeader>
-    <CardContent className="space-y-4">
-      {canCreate && <form onSubmit={submit} className="grid gap-3 md:grid-cols-2" aria-label="Registrar salida de dinero">
-        <div><Label htmlFor="salida-monto">Monto</Label><Input id="salida-monto" type="number" min="0.01" step="0.01" required value={monto} onChange={(e) => setMonto(e.target.value)} /></div>
-        <div><Label htmlFor="salida-cuenta">Cuenta de origen</Label><Select value={cuentaOrigen} onValueChange={(v) => setCuentaOrigen(v as typeof cuentaOrigen)}><SelectTrigger id="salida-cuenta"><SelectValue /></SelectTrigger><SelectContent>{(["CAJA_FISICA", "CUENTA_NO_FISCAL", "CUENTA_FISCAL"] as const).map((cuenta) => <SelectItem key={cuenta} value={cuenta}>{formatAccountDestination(cuenta)}</SelectItem>)}</SelectContent></Select></div>
-        <div><Label htmlFor="salida-motivo">Motivo</Label><Input id="salida-motivo" required maxLength={500} value={motivo} onChange={(e) => setMotivo(e.target.value)} /></div>
-        <div><Label htmlFor="salida-proveedor">Proveedor (opcional)</Label><Select value={proveedorId} onValueChange={setProveedorId}><SelectTrigger id="salida-proveedor"><SelectValue placeholder="Sin proveedor" /></SelectTrigger><SelectContent>{proveedores.map((p) => <SelectItem key={p.id} value={String(p.id)}>{p.nombre}</SelectItem>)}</SelectContent></Select></div>
-        <Button type="submit" disabled={crear.isPending} className="md:col-span-2">{crear.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}Registrar salida</Button>
-      </form>}
-      {isLoading ? <p className="text-sm text-muted-foreground">Cargando salidas…</p> : isError ? <p role="alert" className="text-sm text-destructive">{getApiErrorMessage(error, "No se pudieron cargar las salidas.")}</p> : <div className="space-y-2">{data?.salidas.length ? data.salidas.map((salida) => {
-        const nombreProveedor = proveedores.find((proveedor) => proveedor.id === salida.proveedorId)?.nombre;
-        return <div key={salida.id} className="flex flex-wrap justify-between gap-2 border-t pt-2 text-sm"><span>{salida.motivo}{nombreProveedor ? ` · ${nombreProveedor}` : ""}</span><span className="font-medium">{formatAccountDestination(salida.cuentaOrigen)} · {formatNumber(salida.monto, { kind: "money" })}</span></div>;
-      }) : <p className="text-sm text-muted-foreground">Sin salidas registradas.</p>}</div>}
-    </CardContent>
-  </Card>;
+  return <span data-testid="e4-disabled" className="hidden" aria-hidden="true">E4 desactivado</span>;
 }
 
 function AutorizacionNotaDialog({

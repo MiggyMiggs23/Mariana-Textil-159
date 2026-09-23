@@ -4,6 +4,9 @@ import {
   E4_CASH_OUT_ENABLED, E4CashOutError,
   type E4Repository, type E4Revision, type E4Salida, type E4Session, type E4Operation,
 } from "./e4-cash-out";
+import { readSessionCash } from "./caja-corte-reader";
+import { registrarPago } from "./compras-proveedor";
+import { transactionAdvisoryLock, ADVISORY_LOCK_NAMESPACES } from "@workspace/db/advisory-locks";
 
 type Executor = { execute(query: SQL): Promise<{ rows: Record<string, unknown>[] }> };
 const baseColumns = sql`s.id, s.sesion_caja_id AS "sesionCajaId", s.monto, s.motivo,
@@ -11,10 +14,7 @@ const baseColumns = sql`s.id, s.sesion_caja_id AS "sesionCajaId", s.monto, s.mot
   s.creado_por_id AS "creadoPorId", s.created_at AS "createdAt"`;
 
 /** Only instantiate inside db.transaction. No connection or schema work at import time. */
-export function e4CashOutRepository(tx: Tx, integration?: {
-  beforeInsert(input: Parameters<E4Repository["insert"]>[0], actor: Parameters<E4Repository["insert"]>[1]): Promise<void>;
-  afterInsert(id: number): Promise<void>;
-}): E4Repository {
+export function e4CashOutRepository(tx: Tx): E4Repository {
   return {
     async lockOperation(key) {
       // All E4 intents share a namespace, so reuse across creation/review cannot collide silently.
@@ -32,12 +32,33 @@ export function e4CashOutRepository(tx: Tx, integration?: {
         FROM caja_salidas_e4_operaciones WHERE clave = ${key}::uuid`);
       return result.rows[0];
     },
-    async providerActive(id) {
-      const result = await tx.execute(sql`SELECT id FROM proveedores WHERE id = ${id} AND activo FOR SHARE`);
-      return result.rows.length === 1;
+    async providerDebt(id) {
+      await transactionAdvisoryLock(tx, ADVISORY_LOCK_NAMESPACES.SUPPLIER_LEDGER, id);
+      const result = await tx.execute<{ deuda: string }>(sql`SELECT COALESCE(SUM(pp.importe),0)::text AS deuda
+        FROM proveedores p LEFT JOIN pagos_proveedor pp ON pp.proveedor_id=p.id
+        WHERE p.id=${id} AND p.activo GROUP BY p.id`);
+      return result.rows[0]?.deuda;
+    },
+    async cashBalance(session) {
+      const rows = await tx.execute<{ fondoInicial: string; efectivoContado: string | null; abiertaAt: Date; usuarioId: number }>(sql`
+        SELECT fondo_inicial AS "fondoInicial", efectivo_contado AS "efectivoContado",
+          abierta_at AS "abiertaAt", usuario_id AS "usuarioId"
+        FROM sesiones_caja WHERE id=${session.id}`);
+      const row = rows.rows[0];
+      if (!row) throw new E4CashOutError("Sesión no encontrada.", "E4_SESSION_NOT_FOUND", 404);
+      const abiertaAt = row.abiertaAt instanceof Date ? row.abiertaAt : new Date(row.abiertaAt);
+      if (Number.isNaN(abiertaAt.getTime()))
+        throw new E4CashOutError("Fecha de apertura de caja inválida.", "E4_INVALID_SESSION_DATE", 500);
+      return (await readSessionCash(tx, { ...session, ...row, abiertaAt },
+        { efectivoEsperado: "0.00", diferencia: null })).efectivoEsperado;
     },
     async insert(input, actor) {
-      await integration?.beforeInsert(input, actor);
+      if (input.tipo === "PROVEEDOR") {
+        await registrarPago(tx, {
+          proveedorId: input.proveedorId!, importe: Number(input.monto), formaPago: "EFECTIVO",
+          notas: input.motivo, usuarioId: actor.id, ip: input.ip,
+        });
+      }
       // The original financial producer remains the sole source of the egreso.
       const result = await tx.execute<Omit<E4Salida, "e4">>(sql`INSERT INTO salidas_dinero_caja
         (sesion_caja_id, monto, motivo, proveedor_id, cuenta_origen, creado_por_id)
@@ -46,10 +67,10 @@ export function e4CashOutRepository(tx: Tx, integration?: {
         RETURNING id, sesion_caja_id AS "sesionCajaId", monto, motivo, proveedor_id AS "proveedorId",
           cuenta_origen AS "cuentaOrigen", creado_por_id AS "creadoPorId", created_at AS "createdAt"`);
       const created = result.rows[0]!;
-      await integration?.afterInsert(created.id);
       const revision: E4Revision = {
         tipo: input.tipo, estado: input.tipo === "EXTRAORDINARIA" ? "PENDIENTE" : "NO_APLICA",
         version: 0, claveOperacion: input.claveOperacion, historial: [],
+        desbloqueoCaja: input.desbloqueoCajaEvidence,
       };
       await tx.execute(sql`INSERT INTO caja_salidas_e4 (salida_id, revision)
         VALUES (${created.id}, ${JSON.stringify(revision)}::jsonb)`);
