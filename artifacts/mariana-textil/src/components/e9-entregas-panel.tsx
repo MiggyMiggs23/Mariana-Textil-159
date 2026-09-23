@@ -48,7 +48,7 @@ function E9List({ user, site }: { user: CurrentUser; site: number }) {
   return <Card data-testid="e9-entregas-panel">
     <CardHeader><CardTitle>Entregas de efectivo a Mariana</CardTitle></CardHeader>
     <CardContent className="space-y-4">
-      <p className="text-sm text-muted-foreground">Custodia y recepción del efectivo completo de cortes cerrados. El envío no modifica caja histórica ni acredita dinero. Una investigación se cierra sólo documentalmente.</p>
+      <p className="text-sm text-muted-foreground">Custodia y recepción documental del efectivo completo de cortes cerrados. El envío no modifica caja histórica ni ingresa dinero al Fondo. Una investigación se cierra sólo documentalmente.</p>
       {availability.isLoading && <p role="status">Consultando disponibilidad…</p>}
       {availability.error && <p role="alert" className="text-destructive">{e9Error(availability.error)}</p>}
       {availability.error && <Button variant="outline" disabled={availability.isFetching} onClick={() => void availability.refetch()}>Reintentar disponibilidad</Button>}
@@ -174,7 +174,7 @@ function E9Detail({ id, site, user, onClose }: { id: string; site: number; user:
       if (!row || row.ubicacionId !== site) throw new Error("Entrega fuera del alcance vigente.");
       if (!replay && action === "conteo" && (!row.capacidades.puedeContar || row.estado === "AUTORIZADA")) throw new Error("La entrega ya no admite conteos.");
       if (!replay && action === "autorizar" && (!row.capacidades.puedeAutorizar || row.estado === "AUTORIZADA" || !expectedCount || row.conteoVigenteId !== expectedCount)) throw new Error("El conteo cambió o ya fue autorizado. Revisa el detalle antes de confirmar otra intención.");
-      if (action === "autorizar" && (!intendedCount || (e9Cents(intendedCount.importeRecibido) ?? 0n) <= 0n)) throw new Error("Un conteo cero permanece pendiente y no admite ingreso.");
+      if (action === "autorizar" && (!intendedCount || (e9Cents(intendedCount.importeRecibido) ?? 0n) <= 0n)) throw new Error("Un conteo cero permanece pendiente y no admite autorización.");
       if (!replay && action === "cerrar" && (!row.capacidades.puedeCerrarInvestigacion || row.investigacion?.estado !== "ABIERTA")) throw new Error("La investigación ya no admite cierre documental.");
       if (intention.current.snapshot !== snapshot) intention.current = { snapshot, uuid: crypto.randomUUID() };
       const claveOperacion = intention.current.uuid;
@@ -184,10 +184,10 @@ function E9Detail({ id, site, user, onClose }: { id: string; site: number; user:
       else result = await close.mutateAsync({ id, data: { claveOperacion, conclusion: reason.trim(), evidencia: e9Evidence(description, references) } });
       if (result.id !== id || result.ubicacionId !== site) throw new Error("La respuesta no corresponde a la entrega de este contexto. Consulta el estado antes de continuar.");
       client.setQueryData(key, result);
-      void invalidateE9(client, active.current && admin && action === "autorizar");
+      void invalidateE9(client);
       intention.current = { snapshot: "", uuid: "" };
       if (active.current) {
-        setSuccess(action === "cerrar" ? "Cierre documental registrado. No se modificaron importes ni saldos." : action === "autorizar" ? "Recepción autorizada según respuesta del servidor." : "Conteo registrado como nueva evidencia.");
+        setSuccess(action === "cerrar" ? "Cierre documental registrado. No se modificaron importes ni saldos." : action === "autorizar" ? "Recepción documental autorizada. No se ingresó dinero al Fondo." : "Conteo registrado como nueva evidencia.");
         setAction(null);
       }
     } catch (err) { if (active.current) setError(e9Error(err)); }
@@ -202,12 +202,11 @@ function E9Detail({ id, site, user, onClose }: { id: string; site: number; user:
       {data && <div className="space-y-4">
         <div className="rounded border p-3"><p className="font-semibold">{data.ubicacionNombre} · Corte #{data.corteId}</p><p>Corte: {data.fechaCorte} · Versión {data.versionCorte}</p>{/^\/caja\/cortes(?:\?|$)/.test(data.corteHref) && <a className="underline" href={data.corteHref}>Ver corte exacto</a>}<p>Enviado: {data.importeEnviado} · Recepción: {data.estado}</p><p>Recibido vigente: {current?.importeRecibido ?? "Sin conteo"} · Diferencia: {current?.diferencia ?? "Sin conteo"}</p><p>Investigación: {data.investigacion?.estado ?? "Sin investigación"}</p></div>
         <E9History data={data} />
-        {admin && data.fondo && /^\/fondo\/movimientos\/[^/?#]+$/.test(data.fondo.href) && <a className="underline" data-testid="link-e9-fondo" href={data.fondo.href}>Ver ingreso autorizado en Fondo</a>}
-        {current && e9Cents(current.importeRecibido) === 0n && data.estado !== "AUTORIZADA" && <p className="text-sm">Conteo cero: recepción pendiente; no se autoriza ni se registra un ingreso cero.</p>}
+        {current && e9Cents(current.importeRecibido) === 0n && data.estado !== "AUTORIZADA" && <p className="text-sm">Conteo cero: recepción pendiente; no se autoriza.</p>}
         <div className="flex flex-wrap gap-2">{canCount && <Button disabled={pending} data-testid="button-e9-conteo" onClick={() => begin("conteo")}>Registrar conteo</Button>}{canAuthorize && <Button disabled={pending} data-testid="button-e9-autorizar" onClick={() => begin("autorizar")}>Autorizar recepción</Button>}{canClose && <Button disabled={pending} variant="outline" data-testid="button-e9-cierre" onClick={() => begin("cerrar")}>Cerrar investigación documentalmente</Button>}</div>
         {action && <fieldset disabled={pending} className="rounded border p-4 space-y-3">
           {action === "conteo" && <Label>Importe físicamente recibido en Mariana<Input aria-label="Importe recibido" data-testid="input-e9-recibido" inputMode="decimal" value={amount} onChange={event => setAmount(event.target.value)} /></Label>}
-          {action === "autorizar" && <p>Confirmar ingreso único por {intendedCount?.importeRecibido ?? "Sin conteo"} recibido. No es ingreso de caja y no requiere turno. {intendedCount?.diferencia !== "0.00" && "Hay discrepancia: la investigación permanecerá abierta."}</p>}
+          {action === "autorizar" && <p>Confirmar documentalmente {intendedCount?.importeRecibido ?? "Sin conteo"} recibido en Mariana. Esta autorización no registra un ingreso al Fondo ni modifica el corte. {intendedCount?.diferencia !== "0.00" && "Hay discrepancia: la investigación permanecerá abierta."}</p>}
           {action !== "conteo" && <Label>{action === "cerrar" ? "Conclusión documental obligatoria" : "Motivo de autorización (obligatorio con discrepancia)"}<Textarea aria-label="Motivo o conclusión" data-testid="input-e9-motivo" maxLength={2000} value={reason} onChange={event => setReason(event.target.value)} /></Label>}
           {action !== "autorizar" && <E9EvidenceFields description={description} setDescription={setDescription} references={references} setReferences={setReferences} />}
           {action === "cerrar" && <p className="text-sm">Este cierre sólo documenta la conclusión. No perdona faltantes, ajusta saldos, recupera dinero ni declara conciliada la diferencia.</p>}

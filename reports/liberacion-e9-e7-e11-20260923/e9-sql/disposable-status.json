@@ -1,0 +1,12 @@
+{
+  "exitCode": 1,
+  "producerPass": false,
+  "sqlAppliedInDisposable": true,
+  "failedOperation": "AUTORIZAR",
+  "postgresCode": "22P02",
+  "postgresMessage": "invalid input syntax for type json",
+  "trigger": "e9_validate_detail",
+  "realDatabaseSqlApplied": false,
+  "clusterDestroyed": true,
+  "clusterCleanupProof": "No workspace-isolated-pg-* directory remained under /tmp after runner cleanup."
+}

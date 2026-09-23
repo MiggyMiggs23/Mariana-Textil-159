@@ -306,7 +306,7 @@ test("E9-DETAIL-IDENTITY", async t => {
 test("E9-AUTH-INVALIDATION", async t => {
   for (const url of ["/api/fondo/movimientos", "/api/e9/entregas", "/api/admin/cortes"]) client.setQueryData([url], {});
   await actionForm("autorizar"); await confirm(); await settle(AUTH, f.authorizedResponse());
-  assert.equal(client.getQueryState(["/api/fondo/movimientos"])?.isInvalidated, true, t.name);
+  assert.equal(client.getQueryState(["/api/fondo/movimientos"])?.isInvalidated, false, t.name);
   assert.equal(client.getQueryState(["/api/e9/entregas"])?.isInvalidated, true, t.name);
   assert.equal(client.getQueryState(["/api/admin/cortes"])?.isInvalidated, true, t.name);
 });
@@ -351,7 +351,8 @@ test("E9-AUTH-RESPONSE-FINAL", async t => {
   await actionForm("autorizar"); await confirm(); await settle(AUTH, f.authorizedResponse());
   assert.equal(Boolean(screen.queryByText("Enviado: 150.50 · Recepción: AUTORIZADA")), true, t.name);
   assert.equal(Boolean(screen.queryByText("Investigación: ABIERTA")), true, t.name);
-  assert.equal(screen.getByTestId("link-e9-fondo").getAttribute("href"), `/fondo/movimientos/${f.FUND_ENTRY}`, t.name);
+  assert.equal(absent("link-e9-fondo"), true, t.name);
+  assert.equal(Boolean(screen.queryByText("Recepción documental autorizada. No se ingresó dinero al Fondo.")), true, t.name);
   assert.equal(absent("button-e9-autorizar") && absent("button-e9-conteo"), true, t.name);
 });
 test("E9-CLOSE-RESPONSE", async t => {

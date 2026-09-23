@@ -1,9 +1,7 @@
 import { sql } from "drizzle-orm";
 import { readE9FrozenCut, type E9Sql, type E9CutSession } from "./e9-cut";
 import { E9_ENABLED } from "./e9-feature";
-import { E9Error, e9Scope, e9View, e9FundKey, type E9Repository, type E9Detail, type E9Actor, type E9Operation } from "./e9";
-import { e12FondoExecutor } from "./e12-fondo-executor";
-import { crearMovimientoFondoEnTransaccion } from "./fondo";
+import { E9Error, e9Scope, e9View, type E9Repository, type E9Detail, type E9Actor, type E9Operation } from "./e9";
 
 /** The caller owns the transaction. No pool, connect, begin, commit or nested tx. */
 export function e9Repository(tx: E9Sql): E9Repository {
@@ -46,21 +44,12 @@ export function e9Repository(tx: E9Sql): E9Repository {
         if (result.rows.length !== 1) throw new E9Error("E9_STATE_CONFLICT", "La entrega cambió concurrentemente.");
       }
     },
-    async income(detail, amount, key, actor) {
-      const result = await crearMovimientoFondoEnTransaccion(e12FondoExecutor(tx), actor, {
-        idempotencyKey: e9FundKey(key), categoria: "OTRO_INGRESO", importe: amount,
-        motivo: `Recepción E9 ${detail.id}; corte ${detail.corteId}; tienda ${detail.ubicacionId}`,
-      });
-      // Never attach an unrelated prior movement to a new authorization.
-      if (result.replay) throw new E9Error("E9_STATE_CONFLICT", "Ingreso Fondo ya existente sin operación E9 coincidente.");
-      return result.value.id;
-    },
     async operation(key, action, content, detail, actor) {
       await tx.execute(sql`INSERT INTO e9_operaciones (clave,entrega_id,revision,actor_id,accion,content,response)
         SELECT ${key}::uuid,id,revision,${actor.id},${action},${content},${JSON.stringify(detail)}::jsonb
         FROM e9_entregas WHERE id=${detail.id}::uuid`);
       await tx.execute(sql`INSERT INTO auditoria (usuario_id,modulo,accion,entidad,entidad_id,datos_despues,ip)
-        VALUES (${actor.id},'FONDO',${'E9_' + action},'e9_entregas',${detail.id},
+        VALUES (${actor.id},'E9',${'E9_' + action},'e9_entregas',${detail.id},
           ${JSON.stringify(detail)}::jsonb,${actor.ip})`);
     },
   };

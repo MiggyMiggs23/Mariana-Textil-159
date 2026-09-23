@@ -1,0 +1,172 @@
+Preparación: aplicar schema vigente...
+
+> @workspace/db@0.0.0 push-force /home/runner/workspace/lib/db
+> drizzle-kit push --force --config ./drizzle.config.ts
+
+Reading config file '/home/runner/workspace/lib/db/drizzle.config.ts'
+Using 'pg' driver for database querying
+[⣷] Pulling schema from database...
+[2K[1G[✓] Pulling schema from database...
+[✓] Changes applied
+Preparación: ejecutar seed completo...
+
+> @workspace/db@0.0.0 seed /home/runner/workspace/lib/db
+> node ./src/seed.mjs
+
+Seed completado: ubicaciones, admin, ticket_folio y matriz de permisos para TERMINAL, CAJA, SUPERVISOR, BODEGA, SISTEMAS y CONTADOR.
+Usuarios existentes con rol CAJA conservados sin cambios: 0.
+Usuarios que tenían el rol SOPORTE antes de migrar a SISTEMAS: 0.
+ADVERTENCIA: cambia la contraseña inicial del usuario admin inmediatamente después del primer acceso.
+Preparación: ejecutar inicializadores y comprobar readiness...
+[18:55:20.660] [32mINFO[39m (40283): [36mSchema initializer complete: ensureAuditSchema[39m
+    [35mdurationMs[39m: 25
+[18:55:20.663] [32mINFO[39m (40283): [36mSchema initializer complete: ensureNotificacionesSchema[39m
+    [35mdurationMs[39m: 3
+[18:55:20.669] [32mINFO[39m (40283): [36mSchema initializer complete: ensureStockMinimosSchema[39m
+    [35mdurationMs[39m: 6
+[18:55:20.670] [32mINFO[39m (40283): [36mSchema initializer complete: ensureCamionetasSchema[39m
+    [35mdurationMs[39m: 1
+[18:55:20.672] [32mINFO[39m (40283): [36mSchema initializer complete: ensureChoferesSchema[39m
+    [35mdurationMs[39m: 1
+[18:55:20.673] [32mINFO[39m (40283): [36mSchema initializer complete: ensureViajesSchema[39m
+    [35mdurationMs[39m: 2
+[18:55:20.703] [32mINFO[39m (40283): [36mSchema initializer complete: ensureEquiposSchema[39m
+    [35mdurationMs[39m: 30
+[18:55:20.717] [32mINFO[39m (40283): [36mSchema initializer complete: ensurePagosProveedorSchema[39m
+    [35mdurationMs[39m: 14
+[18:55:20.728] [32mINFO[39m (40283): [36mSchema initializer complete: ensureSolicitudesPagoDirigidoSchema[39m
+    [35mdurationMs[39m: 11
+[18:55:20.735] [32mINFO[39m (40283): [36mSchema initializer complete: ensureAplicacionesPagoProveedorSchema[39m
+    [35mdurationMs[39m: 7
+[18:55:20.735] [32mINFO[39m (40283): [36mSchema startup phase complete: audit and logistics[39m
+    [35mdurationMs[39m: 100
+[18:55:20.738] [32mINFO[39m (40283): [36mSchema initializer complete: ensureEstadoRolloSchema[39m
+    [35mdurationMs[39m: 3
+[18:55:20.744] [32mINFO[39m (40283): [36mSchema initializer complete: ensureExtraordinaryExitsSchema[39m
+    [35mdurationMs[39m: 5
+[18:55:20.748] [32mINFO[39m (40283): [36mSchema initializer complete: ensureProductUnitSchema[39m
+    [35mdurationMs[39m: 4
+[18:55:20.753] [32mINFO[39m (40283): [36mSchema initializer complete: ensureProductMeterSchema[39m
+    [35mdurationMs[39m: 5
+[18:55:20.761] [32mINFO[39m (40283): [36mSchema initializer complete: ensureProductPricingSchema[39m
+    [35mdurationMs[39m: 8
+[18:55:20.766] [32mINFO[39m (40283): [36mSchema initializer complete: ensureProductColorSchema[39m
+    [35mdurationMs[39m: 5
+[18:55:20.771] [32mINFO[39m (40283): [36mSchema initializer complete: ensureProductSpecificationsSchema[39m
+    [35mdurationMs[39m: 5
+[18:55:20.771] [32mINFO[39m (40283): [36mSchema startup phase complete: inventory and products[39m
+    [35mdurationMs[39m: 36
+[18:55:20.776] [32mINFO[39m (40283): [36mSchema initializer complete: ensureSupervisorRole[39m
+    [35mdurationMs[39m: 5
+[18:55:20.784] [32mINFO[39m (40283): [36mSchema initializer complete: ensureAuditoriaInventarioSchema[39m
+    [35mdurationMs[39m: 7
+[18:55:20.788] [32mINFO[39m (40283): [36mSchema initializer complete: ensurePisosSchema[39m
+    [35mdurationMs[39m: 4
+[18:55:20.788] [32mINFO[39m (40283): [36mRoles SUPERVISOR, SISTEMAS y CONTADOR verificados[39m
+    [35mmigratedSupportUsers[39m: 0
+[18:55:20.788] [32mINFO[39m (40283): [36mSchema startup phase complete: roles and inventory audit[39m
+    [35mdurationMs[39m: 17
+[18:55:20.832] [32mINFO[39m (40283): [36mSchema initializer complete: ensureClientesSchema[39m
+    [35mdurationMs[39m: 44
+[18:55:20.836] [32mINFO[39m (40283): [36mSchema initializer complete: ensureTicketIvaSchema[39m
+    [35mdurationMs[39m: 4
+[18:55:20.841] [32mINFO[39m (40283): [36mSchema initializer complete: ensureCashSessionSchema[39m
+    [35mdurationMs[39m: 4
+[18:55:20.845] [32mINFO[39m (40283): [36mSchema initializer complete: ensureTicketAuthorizationSchema[39m
+    [35mdurationMs[39m: 4
+[18:55:20.851] [32mINFO[39m (40283): [36mSchema initializer complete: ensureTicketLineTypesSchema[39m
+    [35mdurationMs[39m: 7
+[18:55:20.875] [32mINFO[39m (40283): [36mSchema initializer complete: ensureSalidasSchema[39m
+    [35mdurationMs[39m: 23
+[18:55:20.890] [32mINFO[39m (40283): [36mSchema initializer complete: ensureAuditoriaResolucionesSchema[39m
+    [35mdurationMs[39m: 15
+[18:55:20.912] [32mINFO[39m (40283): [36mSchema initializer complete: ensureDocumentFoliosSchema[39m
+    [35mdurationMs[39m: 22
+[18:55:20.912] [32mINFO[39m (40283): [36mSchema startup phase complete: customers and tickets[39m
+    [35mdurationMs[39m: 124
+[18:55:20.916] [32mINFO[39m (40283): [36mSchema initializer complete: ensurePendingCostsSchema[39m
+    [35mdurationMs[39m: 4
+[18:55:20.928] [32mINFO[39m (40283): [36mSchema initializer complete: ensureAdminAnalyticsSchema[39m
+    [35mdurationMs[39m: 12
+[18:55:20.948] [32mINFO[39m (40283): [36mSchema initializer complete: ensureCuadreFiscalSchema[39m
+    [35mdurationMs[39m: 20
+[18:55:20.955] [32mINFO[39m (40283): [36mSchema initializer complete: ensureEtiquetasSchema[39m
+    [35mdurationMs[39m: 7
+[18:55:20.958] [32mINFO[39m (40283): [36mSchema initializer complete: ensureCajaPermissions[39m
+    [35mdurationMs[39m: 4
+[18:55:20.962] [32mINFO[39m (40283): [36mSchema initializer complete: ensureSalidasVentaPermissions[39m
+    [35mdurationMs[39m: 4
+[18:55:20.962] [32mINFO[39m (40283): [36mSchema startup phase complete: reporting and labels[39m
+    [35mdurationMs[39m: 51
+[18:55:20.962] [32mINFO[39m (40283): [36mSchema startup complete[39m
+    [35mdurationMs[39m: 338
+Inicializadores y readiness de base de pruebas completados.
+Base de pruebas preparada completamente: isolated_test_a9d8626e56259346f103.
+/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:73
+				throw new DrizzleQueryError(queryString, params, e as Error);
+				      ^
+
+DrizzleQueryError: Failed query: UPDATE e9_entregas SET detail=$1::jsonb,revision=revision+1
+          WHERE id=$2::uuid AND revision=$3 RETURNING id
+params: {"id":"9dec4928-889b-445e-9990-f37b97adbf06","estado":"AUTORIZADA","conteos":[{"id":"0e3fa826-18ad-4652-8eba-ba85603d369a","actor":{"id":1,"nombre":"Administrador"},"createdAt":"2026-09-23T18:55:22.631Z","evidencia":{"descripcion":"E9 disposable PostgreSQL proof","referencias":["isolated"]},"diferencia":"-5.00","importeRecibido":"95.00"}],"corteId":1,"corteHref":"/caja/cortes?sesionId=1","enviadoAt":"2026-09-23T18:55:22.603Z","enviadoPor":{"id":1,"nombre":"Administrador"},"fechaCorte":"2026-09-23T18:55:22.571Z","ubicacionId":1,"autorizacion":{"actor":{"id":1,"nombre":"Administrador"},"motivo":"Diferencia documentada para investigación","conteoId":"0e3fa826-18ad-4652-8eba-ba85603d369a","createdAt":"2026-09-23T18:55:22.643Z","importeRecibido":"95.00"},"versionCorte":"e9:v1:52978e9805da75bbaa8dc1f9d3ddecc7b3654a862341158718cfd0041718c45b","investigacion":{"id":"465b2b32-a9d7-4b5d-bb50-34f7f0987b80","estado":"CERRADA_DOCUMENTAL","abiertaAt":"2026-09-23T18:55:22.631Z","conteoOrigenId":"0e3fa826-18ad-4652-8eba-ba85603d369a","cierre":{"conclusion":"Diferencia investigada y documentada","evidencia":{"descripcion":"E9 disposable PostgreSQL proof","referencias":["isolated"]},"actor":{"id":1,"nombre":"Administrador"},"createdAt":"2026-09-23T18:55:22.653Z"}},"evidenciaEnvio":{"descripcion":"E9 disposable PostgreSQL proof","referencias":["isolated"]},"fechaOperativa":"2026-09-23","importeEnviado":"100.00","conteoVigenteId":"0e3fa826-18ad-4652-8eba-ba85603d369a","ubicacionNombre":"Mariana"},9dec4928-889b-445e-9990-f37b97adbf06,3
+    at NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:73:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Object.save (/home/runner/workspace/artifacts/api-server/src/lib/e9-repository.ts:42:24)
+    ... 2 lines matching cause stack trace ...
+    at async <anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/e9.pg.integration.ts:71:16) {
+  query: 'UPDATE e9_entregas SET detail=$1::jsonb,revision=revision+1\n' +
+    '          WHERE id=$2::uuid AND revision=$3 RETURNING id',
+  params: [
+    '{"id":"9dec4928-889b-445e-9990-f37b97adbf06","estado":"AUTORIZADA","conteos":[{"id":"0e3fa826-18ad-4652-8eba-ba85603d369a","actor":{"id":1,"nombre":"Administrador"},"createdAt":"2026-09-23T18:55:22.631Z","evidencia":{"descripcion":"E9 disposable PostgreSQL proof","referencias":["isolated"]},"diferencia":"-5.00","importeRecibido":"95.00"}],"corteId":1,"corteHref":"/caja/cortes?sesionId=1","enviadoAt":"2026-09-23T18:55:22.603Z","enviadoPor":{"id":1,"nombre":"Administrador"},"fechaCorte":"2026-09-23T18:55:22.571Z","ubicacionId":1,"autorizacion":{"actor":{"id":1,"nombre":"Administrador"},"motivo":"Diferencia documentada para investigación","conteoId":"0e3fa826-18ad-4652-8eba-ba85603d369a","createdAt":"2026-09-23T18:55:22.643Z","importeRecibido":"95.00"},"versionCorte":"e9:v1:52978e9805da75bbaa8dc1f9d3ddecc7b3654a862341158718cfd0041718c45b","investigacion":{"id":"465b2b32-a9d7-4b5d-bb50-34f7f0987b80","estado":"CERRADA_DOCUMENTAL","abiertaAt":"2026-09-23T18:55:22.631Z","conteoOrigenId":"0e3fa826-18ad-4652-8eba-ba85603d369a","cierre":{"conclusion":"Diferencia investigada y documentada","evidencia":{"descripcion":"E9 disposable PostgreSQL proof","referencias":["isolated"]},"actor":{"id":1,"nombre":"Administrador"},"createdAt":"2026-09-23T18:55:22.653Z"}},"evidenciaEnvio":{"descripcion":"E9 disposable PostgreSQL proof","referencias":["isolated"]},"fechaOperativa":"2026-09-23","importeEnviado":"100.00","conteoVigenteId":"0e3fa826-18ad-4652-8eba-ba85603d369a","ubicacionNombre":"Mariana"}',
+    '9dec4928-889b-445e-9990-f37b97adbf06',
+    3
+  ],
+  cause: error: invalid input syntax for type json
+      at /home/runner/workspace/node_modules/.pnpm/pg@8.22.0/node_modules/pg/lib/client.js:652:17
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:149:14)
+      at async NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:71:12)
+      at async Object.save (/home/runner/workspace/artifacts/api-server/src/lib/e9-repository.ts:42:24)
+      at async e9Command (/home/runner/workspace/artifacts/api-server/src/lib/e9.ts:130:3)
+      at async NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+      at async <anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/e9.pg.integration.ts:71:16) {
+    length: 817,
+    severity: 'ERROR',
+    code: '22P02',
+    detail: 'Token "investigacion" is invalid.',
+    hint: undefined,
+    position: undefined,
+    internalPosition: '212',
+    internalQuery: "(d-'investigacion') IS DISTINCT FROM (oldd-'investigacion')\n" +
+      "      OR coalesce(oldd#>>'{investigacion,estado}','')<>'ABIERTA'\n" +
+      "      OR coalesce(d#>>'{investigacion,estado}','')<>'CERRADA_DOCUMENTAL'\n" +
+      "      OR (d->'investigacion'-ARRAY['estado','cierre']) IS DISTINCT FROM (oldd->'investigacion'-ARRAY['estado','cierre'])\n" +
+      "      OR nullif(btrim(d#>>'{investigacion,cierre,conclusion}'),'') IS NULL\n" +
+      "      OR NOT e9_evidence_valid(d#>'{investigacion,cierre,evidencia}')\n" +
+      "      OR NOT EXISTS (SELECT 1 FROM usuarios WHERE id=(d#>>'{investigacion,cierre,actor,id}')::integer AND rol::text='ADMIN')",
+    where: 'JSON data, line 1: investigacion\n' +
+      'PL/pgSQL function e9_validate_detail() line 82 at IF',
+    schema: undefined,
+    table: undefined,
+    column: undefined,
+    dataType: undefined,
+    constraint: undefined,
+    file: 'jsonfuncs.c',
+    line: '650',
+    routine: 'json_errsave_error'
+  }
+}
+
+Node.js v24.13.0
+undefined
+/home/runner/workspace/artifacts/api-server:
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command failed with exit code 1: tsx src/lib/e9.pg.integration.ts
+file:///home/runner/workspace/lib/db/src/run-e9-isolated-tests.mjs:50
+  if (status !== 0) throw new Error(`E9 disposable suite exited ${status}`);
+                          ^
+
+Error: E9 disposable suite exited 1
+    at file:///home/runner/workspace/lib/db/src/run-e9-isolated-tests.mjs:50:27
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+Node.js v24.13.0

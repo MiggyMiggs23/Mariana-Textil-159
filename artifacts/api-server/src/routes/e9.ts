@@ -7,7 +7,6 @@ import { getRequestIp } from "../lib/request";
 import { e9OffBoundary } from "../lib/e9-http";
 import { E9Error, e9Command, e9Scope, e9Capabilities, type E9Action } from "../lib/e9";
 import { e9Repository, readE9Detail, listE9 } from "../lib/e9-repository";
-import { FondoError } from "../lib/fondo";
 import { E9CutError } from "../lib/e9-cut";
 
 const router = Router();
@@ -58,7 +57,6 @@ router.post("/e9/entregas/:id/investigacion/cierre", command("CERRAR"));
 router.use("/e9", (error: unknown, _req: Request, res: Response, next: NextFunction) => {
   if (error instanceof E9Error || error instanceof E9CutError) { res.status(error.status).json({ error: { code: error.code, message: error.message } }); return; }
   if (error instanceof z.ZodError) { res.status(400).json({ error: { code: "E9_VALIDATION", message: "Datos E9 inválidos." } }); return; }
-  if (error instanceof FondoError) { res.status(error.status).json({ error: { code: "E9_STATE_CONFLICT", message: error.message } }); return; }
   next(error);
 });
 export default router;

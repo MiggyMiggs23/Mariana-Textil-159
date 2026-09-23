@@ -1,4 +1,4 @@
-import { randomUUID, createHash } from "node:crypto";
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { E9_ENABLED } from "./e9-feature";
 import { e9Canonical } from "./e9-cut";
@@ -25,6 +25,7 @@ export type E9Detail = {
   autorizacion?: { conteoId: string; importeRecibido: string; actor: Author; createdAt: string; motivo?: string };
   investigacion?: { id: string; estado: "ABIERTA" | "CERRADA_DOCUMENTAL"; abiertaAt: string; conteoOrigenId: string;
     cierre?: { conclusion: string; evidencia: Evidence; actor: Author; createdAt: string } };
+  /** Historical compatibility only. New E9 authorizations never create Fondo ingress. */
   fondo?: { movimientoId: string; href: string };
 };
 export type E9Cut = { corteId: number; versionCorte: string; fechaCorte: string; fechaOperativa: string; importeEnviado: string; ubicacionId: number; ubicacionNombre: string };
@@ -37,7 +38,6 @@ export interface E9Repository {
   sent(cut: number): Promise<boolean>;
   load(id: string): Promise<{ revision: number; detail: E9Detail } | undefined>;
   save(detail: E9Detail, revision: number | null): Promise<void>;
-  income(detail: E9Detail, amount: string, key: string, actor: E9Actor): Promise<string>;
   operation(key: string, action: E9Action, content: string, detail: E9Detail, actor: E9Actor): Promise<void>;
 }
 export function requireE9(enabled = E9_ENABLED) {
@@ -114,11 +114,10 @@ export async function e9Command(repo: E9Repository, actor: E9Actor, action: E9Ac
       const count = detail.conteos.at(-1);
       if (detail.estado !== "CONTADA" || !count || count.id !== value.conteoId || detail.conteoVigenteId !== count.id)
         throw new E9Error("E9_CONTEO_STALE", "Confirma el conteo vigente.");
-      if (e9Cents(count.importeRecibido) <= 0n) throw new E9Error("E9_RECEIVED_ZERO", "Conteo cero: continúa pendiente sin ingreso.", 400);
+      if (e9Cents(count.importeRecibido) <= 0n) throw new E9Error("E9_RECEIVED_ZERO", "Conteo cero: continúa pendiente sin autorización.", 400);
       if (count.diferencia !== "0.00" && !value.motivo) throw new E9Error("E9_VALIDATION", "La diferencia requiere motivo de autorización.", 400);
-      const movement = await repo.income(detail, count.importeRecibido, input.claveOperacion, actor);
       detail.autorizacion = { conteoId: count.id, importeRecibido: count.importeRecibido, actor: author, createdAt: now, ...(value.motivo ? { motivo: value.motivo } : {}) };
-      detail.fondo = { movimientoId: movement, href: `/fondo/movimientos/${movement}` };
+      delete detail.fondo;
       detail.estado = "AUTORIZADA";
     } else {
       const value = e9Close.parse(input);
@@ -131,9 +130,4 @@ export async function e9Command(repo: E9Repository, actor: E9Actor, action: E9Ac
   await repo.save(detail, revision);
   await repo.operation(input.claveOperacion, action, content, detail, actor);
   return e9View(detail, actor);
-}
-/** Separate namespace from manually supplied E10 keys, stable across retries. */
-export function e9FundKey(key: string) {
-  const hex = createHash("sha256").update(`E9:RECEPCION:${key}`).digest("hex");
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-5${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`;
 }

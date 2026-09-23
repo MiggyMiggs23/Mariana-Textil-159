@@ -71,7 +71,7 @@ function E9Send({ user, site, corteId }: { user: CurrentUser; site: number; cort
       const result = await create.mutateAsync({ data: { ...body, claveOperacion: intention.current.uuid } });
       if (result.ubicacionId !== site || result.corteId !== corteId || result.versionCorte !== versionCorte) throw new Error("La respuesta no corresponde al corte confirmado. Consulta las entregas antes de continuar.");
       client.setQueryData([...getGetE9EntregaQueryKey(result.id), identity, site], result);
-      void invalidateE9(client, false);
+      void invalidateE9(client);
       if (active.current) setSaved(result);
       intention.current = { snapshot: "", uuid: "" };
     } catch (err) { if (active.current) setError(e9Error(err)); }

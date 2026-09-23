@@ -39,13 +39,12 @@ export function e9Site(user: CurrentUser, requested?: number | null): number | n
   return requested && Number.isSafeInteger(requested) && requested > 0 ? requested : null;
 }
 
-export function invalidateE9(client: QueryClient, admin: boolean) {
+export function invalidateE9(client: QueryClient) {
   return client.invalidateQueries({ predicate: query => {
     const url = query.queryKey[0];
     return typeof url === "string" && (
       url === "/api/e9/disponibilidad" || url.startsWith("/api/e9/entregas") ||
-      url.startsWith("/api/admin/cortes") || url.startsWith("/api/sesiones-caja") ||
-      (admin && url.startsWith("/api/fondo"))
+      url.startsWith("/api/admin/cortes") || url.startsWith("/api/sesiones-caja")
     );
   } });
 }
