@@ -2061,3 +2061,17 @@ mtime_ms = 1790179839226
 storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/8b8b9719-3cf7-4960-9c94-e3795fcb9eec/846465db-a692-49ef-aa67-6ed7dbd6553f"
 storage_version_token = "1790179985785255"
 content_type = "text/plain"
+
+[[outputs]]
+id = "4t-GaH1WMoMj3du2lQSFE"
+uri = "file://reports/tanda-c-20260923/fase-b-TANDA-B-FINAL-PARA-AUTORIZAR.txt"
+type = "text"
+title = "Fase B de Tanda B — texto final para pegar"
+description = "23 de septiembre de 2026. Destino, ventana, respaldo restaurado, SQL y hashes, pruebas E1, arranque OFF y restauración obligatoria ante fallo. Archivo fuera del paquete sellado."
+logical_id = "da7abdad-f5a2-46c8-a724-44674542fdad"
+content_hash = "sha256:5717e57301cdc290dc6d875e81d4d94cc6eb2c40deb19bf41563779f1e235b58"
+size = 14553
+mtime_ms = 1790180891915
+storage_uri = "gcs://replit-rams-assets-janeway/rams/assets/repl:bbe2f950-6669-465f-923a-d9d36477279c/da7abdad-f5a2-46c8-a724-44674542fdad/3543d696-086c-4c23-8770-2849221c37d1"
+storage_version_token = "1790180908067376"
+content_type = "text/plain"

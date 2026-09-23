@@ -1,0 +1,243 @@
+a partir del momento en que el propietario pegue el texto
+
+Fecha de preparación: 23 de septiembre de 2026, America/Mexico_City.
+
+Autorizo la FASE B de instalación técnica de Tanda B (E4, E12, E9, E5,
+E11 y E7), con TODAS SUS PUERTAS APAGADAS, exclusivamente para las
+identidades, archivos, destino y condiciones siguientes.
+Este texto no constituye autorización ejecutada por haber sido redactado,
+guardado o presentado. Solo entra en vigor cuando el propietario lo pegue.
+Al recibirlo, guardar íntegramente el texto y registrar fecha/hora efectiva
+UTC y America/Mexico_City y operador MAIN, antes de cualquier escritura.
+No se autoriza abrir funcionalidad financiera ni tráfico mutador durante
+la intervención. Los ensayos y condiciones siguientes son obligatorios;
+esta autorización NO permite omitirlos si aún no existen o fallan.
+
+DESTINO E IDENTIDADES
+1. Destino único: la base efectiva de la API de Mariana Textil de este
+workspace, no una base elegida por nombre de conector ni una publicación
+distinta. Identidad esperada de la captura B0: database heliumdb,
+databaseOid 16384, schema public, role postgres, serverVersionNum 160010.
+Resolver de nuevo proceso, inicio, comando, conexión efectiva y modo,
+sin registrar credenciales. PID195 y los PID históricos no son selectores
+vigentes por sí mismos. Si la identidad no coincide, detener sin escritura.
+
+Paquete: /home/runner/workspace/reports/tanda-b-b0-b1-20260923
+Versión de entrega vigente dentro del paquete: r5.
+Commit de entrega: fc936bb729de14c0f5c66c2a0d89e4a3cde8aa6c
+Fuente API/UI: cc628aed315a4bbfd3e6cb8766d28200ce400842
+Fuente SQL: 91dfbd26e544d1fc4d0a1e57d95ec61ecad3af6f
+Comparación semántica enum: 817830d3f8d4ce2d00434c0d2e9433b47dd38a9a
+No confundir la revisión SQL con una recompilación de API.
+
+r5/final-manifest.json SHA256:
+b8550e72e090cfbebde64f09375737868b94260409180f0d325c6a144cfe6716
+delivery-inventory.json SHA256:
+731ef1476517f8f3ca423e3d25086dfc7c16537a50d9ccc95aa9caec38dba72a
+r5/preparation-inputs.json SHA256:
+a17ee88d4e686754a84354721ac4935086d469caf1dad0d80e58a64b9dac7d09
+API: /home/runner/workspace/artifacts/api-server/dist-tanda-b-b0-b1-20260923/index.mjs
+API SHA256:
+deaa31522316a38baff0bebfbcf2a418565e9b031775abe0249a51f520bfc670
+UI: /home/runner/workspace/artifacts/mariana-textil/dist-tanda-b-b0-b1-20260923
+UI index.html SHA256:
+118cfee92b28955f81685aeb0bc6d5c4d99f7233e5e5c681403aad5feaa64af6
+Verificar además TODOS los assets/worker/fonts y enlaces inventariados:
+el hash de index.html por sí solo no verifica la UI completa.
+No editar archivos sellados ni recompilar desde HEAD o fuentes móviles.
+
+BASE ANTES Y DESPUÉS
+2. B0 esquema:
+89c445d53c3db7d8cb3a45bdab49f82acb12943d62084eced21ab3af5cf5a358
+B0 atributos comparables:
+a8389a4be6f0765a58849a425e742fc941821fbdf9c6fab0fa9c1eeb428d5ec6
+B0 auxiliar multiset:
+1dcf2b7af43a30c5912940d138e17fcccd76bc98a3b29c9dcb292b1c30dd0b24
+B1 esquema:
+82fb728b58ee70d04b5fc6b20a359e0f01697aab2917eb626bf763e32f522f95
+B1 atributos comparables:
+a545824d9e3eceaa9138ac0e2854bf0763175e05bb97c4788900c0dc2997b323
+B1 auxiliar multiset:
+28e9f236af2c29c838c7bead1df5b879b84a2eeded3e4f8668c71b851219d112
+Comparar etiquetas de enums por orden, no numeración interna. Conservar
+captura cruda y multiplicidad de dependencias; no ignorar cambios de
+etiquetas, orden, triggers, ACL, owners o atributos ajenos a esa numeración.
+Estas huellas no autorizan normalizar ni reparar el destino para coincidir.
+
+VENTANA EXCLUSIVA Y RESPALDO RESTAURADO
+3. Ventana: a partir del momento en que el propietario pegue el texto,
+hasta terminar todas las verificaciones o la restauración por fallo.
+Antes de SQL o cambio de runtime, verificar integridad de la entrega,
+inventariar API/UI/workflows/configuración y gates vigentes, y retener sus
+bytes y comandos exactos para reversión. Los secretos se conservan en su
+almacenamiento privado; no se imprimen ni se copian a reportes.
+Cerrar tráfico mutador y detener escritores, tareas y monitores, incluidos
+los de otras conexiones. Drenar y comprobar transacciones escritoras y
+mantener exclusión durante respaldo, ensayo, instalación y verificación.
+Si no puede garantizarse ausencia de escrituras, abortar antes del SQL.
+
+4. Crear respaldo PostgreSQL completo y consistente de esquema/datos y
+respaldo de configuración/API/UI/workflows actuales, en ubicación privada
+durable, permisos restrictivos y SHA256 registrado. Conservar respaldos
+anteriores; no publicarlos en Library ni exponer datos o credenciales.
+Restaurar el respaldo en un PostgreSQL NUEVO DESECHABLE, comprobar:
+esquema, funciones, constraints, ACL/owners, enums ordenados, triggers
+(definición y estado), auxiliares semánticos con multiplicidad, hashes
+deterministas de TODAS las filas por tabla y last_value/is_called de TODAS
+las secuencias. La identidad física/OID del clúster de ensayo puede diferir;
+no presentarla como identidad real del destino.
+Un dump creado o un exit0 SIN comparación de restauración NO basta.
+Conservar evidencia y acreditar parada/limpieza de los desechables.
+Si falta capacidad de restaurar, si la restauración no coincide o si falla
+la limpieza, NO proceder al destino. El respaldo debe seguir representando
+exactamente el estado preventana: no reiniciar escritores entre pasos.
+
+PRUEBA OBLIGATORIA DE LAS CUATRO GUARDAS E1
+5. Antes de instalar en el destino, ejecutar y documentar una matriz
+comparativa de rechazo ANTES y DESPUÉS del SQL exacto en copias desechables
+derivadas de la restauración verificada. No efectuar INSERT de prueba ni
+crear actores sintéticos en la base operativa.
+Los cuatro reemplazos autorizados son exclusivamente:
+- public.validar_movimiento_credito_e1()
+- CHECK operaciones_productor_naturaleza_ck_e1 de public.operaciones_credito_e1
+- public.e1_guard_pending_receipts_closed()
+- trigger zz_e1_pending_receipts_closed de public.cobros_credito_pendientes_e1
+El trigger ya era AFTER INSERT STATEMENT: añade transition relation.
+
+La matriz debe demostrar con los MISMOS casos y precondiciones que siguen
+rechazando exactamente los supuestos que rechazaban antes, salvo las
+combinaciones nuevas legítimas de E5 previstas en estos SQL. Incluir
+productor/naturaleza incompatibles, signos y tipos inválidos, origen o
+procedencia ausente/falsa/ajena, actor/cliente/sitio/importes divergentes,
+inserción directa que eluda la fuente propia, lotes, duplicados/repeticiones
+y evidencia incompleta. Comprobar hasta COMMIT las restricciones diferidas,
+SAVEPOINT/subtransacciones y preservación de guardas E1/E2 no sustituidas.
+Identificar para cada caso guarda, entrada, rechazo/SQLSTATE e invariante;
+la existencia del trigger o un 403 HTTP NO demuestra rechazo PostgreSQL.
+
+La única excepción a los rechazos previos será la operación E5 válida con
+su grafo, evidencia y procedencia completos, tal como la define el SQL:
+no ampliar por rol, permiso, variable de sesión, bypass o naturaleza
+genérica. "Naturalezas nuevas de E5" significa las combinaciones y fuentes
+E5 expresamente previstas; NO agregar ni relajar etiquetas del enum.
+Probar positivos E5 válidos y negativos casi idénticos sin su procedencia.
+Conservar también casos válidos anteriores para detectar regresiones.
+El PASS_PREPARED_OFF existente NO acredita esta matriz funcional exhaustiva:
+obtenerla y revisarla antes de la primera escritura en el destino.
+Si algún rechazo se pierde fuera de la excepción E5 o no puede acreditarse
+la matriz, detener sin SQL real. No convertir evidencia pendiente en PASS.
+
+6. Volver a fijar B0 actual mediante READ ONLY, junto con hashes de filas y
+secuencias, bajo la misma ventana. Exigir identidad y B0 exactos y prueba
+positiva de ejecución del preflight; exit0 sin resultado explícito no vale.
+El CLI del paquete valida B0, no reemplaza un comparador B1 posterior.
+No ejecutar run-main.mjs como instalador: es un arnés de ensayo desechable.
+Si E3 ya alteró catálogo, permisos o guardas, este B0 deja de ser aplicable:
+abortar, sin rebaselinar automáticamente ni usar esta autorización para
+otro paquete.
+
+SQL EXACTO Y ORDEN OBLIGATORIO
+7. Aplicar una sola vez los cinco archivos completos siguientes, desde
+el directorio del paquete, con conexión efectiva verificada, psql -X y
+ON_ERROR_STOP=1. Guardar inicio, fin, salida y estado durable de cada etapa.
+No usar db:push, seed, migradores, initializers ni SQL no listado.
+
+1) E4: r5/sql/1.sql
+SHA256 046c8dcdd02310b5590c3182f26c5dd7a653454021596caeaa96ef0ff2d27d60
+2) E12: r5/sql/2.sql
+SHA256 85993f89f7304ccb975998602b3d17217656781dcc0d48206e73838824bed85a
+3) E9: r5/sql/3.sql
+SHA256 232fb182ee8394a0c0a72a852ef5815e5a56d5451f7c8e00ba1662745751bba4
+4) E5: r5/sql/4.sql
+SHA256 b3c5f1d772ec95222db995ff1678f8e43afdf7509cb4b938230174e7998bd1a0
+5) E11: r5/sql/5.sql
+SHA256 546714912da33a22e39ea1c40dc7e5eceba5f9ebd4d68db50258c2b8f77baed0
+
+E7 no tiene SQL propio en esta entrega. No instalar E3 ni E10 ni repetir
+E1/E2 como parte de esta intervención. E11 extiende una función NUEVA E5
+de esta misma tanda, no otro objeto antiguo de B0.
+CADA SQL TIENE SU TRANSACCIÓN: NO EXISTE ATOMICIDAD GLOBAL ENTRE LOS CINCO.
+SI CUALQUIERA FALLA: DETENER LA OPERACIÓN, NO EJECUTAR LOS SIGUIENTES Y
+RESTAURAR EL RESPALDO PREVENTANA VERIFICADO. NO HAY REPARACIÓN MANUAL,
+RECORTE DE SQL, REINTENTO PARCIAL NI DDL COMPENSATORIO IMPROVISADO.
+Un timeout o resultado incierto exige resolver/detener sesiones tardías
+bajo exclusión antes de restaurar; nunca restaurar mientras un SQL pueda
+seguir ejecutándose ni asumir rollback por pérdida de conexión.
+
+VERIFICACIÓN TRAS SQL Y ARRANQUE CONTROLADO
+8. Antes de cambiar runtime, comparar catálogo real contra B1, delta
+exacto, cuatro definiciones before/after y atributo asociado a la función
+autorizada; ningún otro reemplazo B0 está permitido. Comparar filas y
+secuencias con B0: no deben aparecer movimientos, actores, sesiones,
+cobros o recibos por la migración. Inventariar por separado nuevos objetos
+y metadatos DDL esperados e5_ddl_originales/e11_e5_definiciones; no llamar
+"tabla vacía preservada" a tablas nuevas que archivan definiciones.
+Exigir identidad/definición de las cuatro guardas instaladas idéntica a
+la versión que pasó la matriz comparativa. Una diferencia bloquea arranque.
+
+9. Con escritores y tráfico aún cerrados, autorizo únicamente cambiar los
+workflows API/UI para servir los outputs finales fijados arriba y realizar
+un arranque controlado, verificando de nuevo todos sus hashes justo antes.
+Conservar configuración anterior completa. API en modo INSPECTION:
+API_INSPECTION_BOOT=1 y NODE_ENV=development, sin inicializadores/backfill/
+monitor ni selectores alternativos de DB o modos de arranque heredados.
+Invocar el bundle API por su ruta absoluta, manteniendo PORT/rutas/proxy.
+Servir UI precompilada del directorio final indicado, NO Vite dev ni fuentes
+posteriores. No improvisar proxy/autenticación ni reconstruir assets.
+El wrapper loopback del ensayo no es un workflow de producción aprobado.
+Preparar fuera del paquete sellado y validar previamente en aislamiento
+el wrapper de integridad/servicio, comandos exactos y configuración de
+preview estático que se usarán; registrar sus hashes antes de la primera
+escritura en el destino.
+Si no están validados, detener antes de la instalación, no improvisarlos
+después de aplicar SQL. Esta autorización no cubre arranque normal.
+
+10. TODAS las puertas de Tanda B y las demás puertas cerradas permanecen
+OFF, tanto en fuente compilada como en configuración efectiva; verificar
+contra el inventario completo, no solo variables de entorno.
+Incluye E3_ENABLED, E3_DIRECTED_ENABLED y E3_ORDINARY_CASH_ENABLED si E3
+todavía no se liberó; este candidato las tiene compiladas OFF.
+No abrir E3, Fondo, remate, devolución, retenidos o atribución por completar
+la instalación. Si E3 ya está liberado, DETENER: no apagarlo tácitamente ni
+sustituirlo por este candidato OFF; se necesita otro paquete compatible,
+expectativas nuevas y autorización específica.
+
+11. Exigir PID/comando/hash/modo correctos, preflight B1 positivo, salud
+/api/healthz 200, assets y workers accesibles y registro efectivo de
+arranque. Verificar:
+- /api/e7/disponibilidad: 200 y exactamente {"enabled":false}.
+- /api/e7/atribucion: 403 con E7_DISABLED.
+- /api/e5/cobros: 403 con error.code E5_DISABLED.
+- /api/e11/identidad: 403 con E11_DISABLED y requestId válido.
+No aceptar un 404 del candidato como prueba de gate cerrado.
+Revisar además inventario completo de gates y UI/API sin apertura financiera.
+Comparar catálogo, filas y secuencias antes/después del arranque, sin
+escritores. No login ni escritura sintética en destino para fabricar smoke
+tests; cualquier verificación con efectos debe ensayarse en desechable.
+Solo tras todos los PASS podrá restablecerse el servicio previamente
+permitido; Tanda B/E3 permanecen OFF. Registrar cierre de la ventana.
+
+ABORTO Y REVERSIÓN OBLIGATORIA
+12. Ante fallo de cualquiera de los cinco SQL, o de controles posteriores
+antes de reabrir escritores, detener la cadena y los procesos candidatos,
+mantener exclusión y restaurar íntegramente el respaldo preventana probado,
+incluyendo esquema, datos y secuencias. No basta ROLLBACK del último SQL.
+Restaurar workflows/configuración/API/UI anteriores desde sus copias
+verificadas; no arrancar el bundle anterior contra catálogo parcialmente
+migrado. Comparar restauración con B0 y sus hashes de filas/secuencias,
+verificar gates y preflight del runtime anterior y solo entonces arrancarlo
+y comprobar conservación. No declarar recuperación por simple health200.
+Si falla la restauración, conservar el servicio cerrado y escalar al
+propietario con evidencia; no reparar a mano ni reanudar tráfico.
+
+Si aparecen escrituras de negocio inesperadas pese a la exclusión, detener
+y preservar una copia del estado del incidente antes de restaurar; no
+destruir operaciones sin identificar. La obligación de restaurar permanece,
+pero la recuperación debe proteger esas operaciones con una decisión
+explícita del propietario, sin reabrir ni continuar los SQL mientras tanto.
+Después de reabrir tráfico, una restauración del respaldo antiguo podría
+perder operaciones: no usar esta autorización como permiso de sobrescritura
+posterior indiscriminada. Mantener cerrado y solicitar recuperación segura.
+Registrar todos los resultados, comandos, tiempos y hashes fuera del
+paquete sellado. Esta autorización no modifica ninguno de sus archivos,
+no autoriza otras migraciones y no permite omitir controles por conveniencia.
