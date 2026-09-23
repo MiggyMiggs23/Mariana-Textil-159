@@ -1,0 +1,446 @@
+▶ Etiquetas HTTP + DB: casos obligatorios 1-24
+  ✔ 1 búsqueda por serie exacta (61.761362ms)
+[07:51:13.565] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 31
+[07:51:13.603] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 21
+  ✔ 2 búsqueda por SKU y total real aunque la página limite a 50 (27.038596ms)
+[07:51:13.617] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+  ✔ 3 búsqueda por tela y color (25.336225ms)
+[07:51:13.629] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+  ✔ 4 búsqueda por QR SKU-SERIE (12.024933ms)
+[07:51:13.641] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[07:51:13.658] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+  ✔ 5 PROPIA ve únicamente rollos del sitio asignado (15.773666ms)
+[07:51:13.672] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+[07:51:13.684] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+  ✔ 6 PROPIA no puede sobreescribir alcance mandando otro sitio (25.949951ms)
+  ✔ 7 ADMIN reimprime directamente con motivo (34.956956ms)
+[07:51:13.720] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 25
+[07:51:13.730] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 7
+  ✔ sitioId arbitrario no es aceptado en el body (10.10266ms)
+[07:51:13.739] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 7
+[07:51:13.747] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 7
+  ✔ 8 motivo ausente o menor a diez se rechaza (16.208598ms)
+  ✔ 9 misma serie, QR y marca REIMPRESA (12.177669ms)
+[07:51:13.759] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 10
+[07:51:13.769] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+  ✔ 10 BODEGA sin credenciales se rechaza (8.97073ms)
+  ✔ 11 BODEGA con contraseña incorrecta se rechaza (26.246954ms)
+[07:51:13.795] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 25
+[07:51:13.804] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+  ✔ 12 credenciales válidas de no-ADMIN se rechazan (9.716441ms)
+  ✔ 13 BODEGA con ADMIN válido registra autorizador (36.98089ms)
+  ✔ 14 API directa SUPERVISOR sin credenciales devuelve 403 (9.127334ms)
+  ✔ 15 registro contiene rollo, solicitante, sitio, motivo y fecha (1.635237ms)
+[07:51:13.841] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 34
+[07:51:13.851] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+  ✔ auditoría rechaza UPDATE y DELETE directos fuera del bypass de cleanup (21.686119ms)
+[07:51:13.901] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[07:51:13.953] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 51
+  ✔ 16 historial ADMIN camelCase y export XLSX filtrado (106.552032ms)
+  ✔ 17 detalle muestra contador y última fecha (21.549407ms)
+[07:51:14.002] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 19
+[07:51:14.017] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 12
+[07:51:14.028] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 9
+[07:51:14.041] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+  ✔ 18 tercera reimpresión activa aviso y alert count (46.716208ms)
+[07:51:14.050] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 25,
+      "method": "GET",
+      "url": "/api/etiquetas/alertas/count"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[07:51:14.060] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 26,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[07:51:14.070] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 27,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[07:51:14.078] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 28,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[07:51:14.083] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 29,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[07:51:14.092] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 30,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+  ✔ 19 TERMINAL recibe 403 en todos los endpoints (50.412687ms)
+[07:51:14.100] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 31,
+      "method": "GET",
+      "url": "/api/etiquetas/alertas/count"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[07:51:14.109] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 32,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[07:51:14.117] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 33,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[07:51:14.128] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 34,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[07:51:14.134] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 35,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[07:51:14.140] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 36,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+  ✔ 20 CAJA recibe 403 en todos los endpoints (44.675942ms)
+[07:51:14.145] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 37,
+      "method": "GET",
+      "url": "/api/etiquetas/alertas/count"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+[07:51:14.151] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 38,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[07:51:14.156] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 39,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+  ✔ 21 BODEGA no puede consultar historial ni exportarlo (10.60963ms)
+  ✔ 22 batch ADMIN multisite devuelve cinco etiquetas (16.101622ms)
+  ✔ 23 batch de cinco crea cinco filas con el sitio real de cada rollo (1.427184ms)
+  ✔ 24 más de 50 rollos se rechazan con 400 y no insertan (7.89729ms)
+✔ Etiquetas HTTP + DB: casos obligatorios 1-24 (899.958333ms)
+[07:51:14.172] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 40,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 14
+[07:51:14.181] [32mINFO[39m (5556): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 41,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 5
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4176.097728

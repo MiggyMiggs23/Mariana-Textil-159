@@ -1,0 +1,68 @@
+  ✓ P-01: ADMIN tiene acceso total a dashboard
+✔ P-01: ADMIN tiene acceso total a dashboard (1.59123ms)
+  ✓ P-02: CAJA no usa dashboard administrativo
+✔ P-02: CAJA no usa dashboard administrativo (3.694796ms)
+  ✓ P-03: BODEGA no puede acceder a POS
+✔ P-03: BODEGA no puede acceder a POS (2.197816ms)
+  ✓ P-04: BODEGA no puede ver clientes
+✔ P-04: BODEGA no puede ver clientes (2.374589ms)
+  ✓ P-05: CAJA no puede ver proveedores
+✔ P-05: CAJA no puede ver proveedores (1.990452ms)
+  ✓ P-06: CAJA puede ver cobros_pagos pero no POS
+✔ P-06: CAJA puede ver cobros_pagos pero no POS (3.720989ms)
+  ✓ P-06A: CAJA conserva exactamente los permisos operativos documentados
+✔ P-06A: CAJA conserva exactamente los permisos operativos documentados (2.663329ms)
+  ✓ P-06B: TERMINAL conserva la matriz operativa configurada
+✔ P-06B: TERMINAL conserva la matriz operativa configurada (2.513711ms)
+  ✓ P-06C: SUPERVISOR conserva exactamente sus permisos base
+✔ P-06C: SUPERVISOR conserva exactamente sus permisos base (2.015435ms)
+  ✓ P-07: módulo sin fila en ninguna tabla → denegar (null)
+✔ P-07: módulo sin fila en ninguna tabla → denegar (null) (1.746747ms)
+  ✓ P-08: usuario override sobrescribe permiso del rol
+✔ P-08: usuario override sobrescribe permiso del rol (8.094239ms)
+  ✓ P-09: null override means inherit from role
+  ✓ P-10: ADMIN cannot be configured in permisos_rol
+  ✓ P-11: ADMIN rejects partial permission updates
+  ✓ P-12: ADMIN rejects even redundant full-access rows
+  ✓ P-13: ADMIN cannot be configured for any module
+  ✓ P-14: validateAdminInvariants allows any value for non-ADMIN roles
+  ✓ P-15: buildPermissionMatrix returns every configured module
+  ✓ P-16: ADMIN matrix has full access to all modules
+✔ P-09: null override means inherit from role (5.019179ms)
+✔ P-10: ADMIN cannot be configured in permisos_rol (0.174607ms)
+✔ P-11: ADMIN rejects partial permission updates (0.105282ms)
+✔ P-12: ADMIN rejects even redundant full-access rows (0.098496ms)
+✔ P-13: ADMIN cannot be configured for any module (0.158961ms)
+✔ P-14: validateAdminInvariants allows any value for non-ADMIN roles (0.084386ms)
+✔ P-15: buildPermissionMatrix returns every configured module (0.197249ms)
+✔ P-16: ADMIN matrix has full access to all modules (0.194307ms)
+  ✓ P-17: CAJA has no access to proveedores_finanzas
+✔ P-17: CAJA has no access to proveedores_finanzas (1.884309ms)
+  ✓ P-18: CAJA cannot access clientes_finanzas
+✔ P-18: CAJA cannot access clientes_finanzas (1.622214ms)
+  ✓ P-19: CAJA cannot see clientes_credito
+✔ P-19: CAJA cannot see clientes_credito (1.622331ms)
+  ✓ P-20: Dynamically updating role matrix affects future permission checks
+✔ P-20: Dynamically updating role matrix affects future permission checks (11.154729ms)
+  ✓ P-21: BODEGA cannot see proveedores_finanzas
+✔ P-21: BODEGA cannot see proveedores_finanzas (1.559132ms)
+  ✓ P-22: BODEGA has exactly the operational baseline including etiquetas but not contenedores
+✔ P-22: BODEGA has exactly the operational baseline including etiquetas but not contenedores (1.947908ms)
+  ✓ P-23: CAJA cannot see clientes_precios
+✔ P-23: CAJA cannot see clientes_precios (1.908035ms)
+  ✓ P-24: CAJA cannot see clientes_finanzas
+✔ P-24: CAJA cannot see clientes_finanzas (1.667859ms)
+  ✓ P-25: user override with explicit true overrides role false
+✔ P-25: user override with explicit true overrides role false (6.959763ms)
+  ✓ P-26: ADMIN ignores a false override on an ordinary module
+✔ P-26: ADMIN ignores a false override on an ordinary module (7.478558ms)
+
+Permisos tests: 29/29 passed
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1092.881346

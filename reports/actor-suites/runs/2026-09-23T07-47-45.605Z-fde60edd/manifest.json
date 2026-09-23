@@ -1,0 +1,283 @@
+{
+  "version": 2,
+  "runId": "2026-09-23T07-47-45.605Z-fde60edd",
+  "status": "PASS",
+  "selectionSha256": "2eb7b2b771ce740f99196061674f61a357f5b6132d8625d0080df0596934a4fe",
+  "selectedCount": 2,
+  "selectedPaths": [
+    "artifacts/api-server/src/lib/permisos.test.ts",
+    "artifacts/api-server/src/security-api.test.ts"
+  ],
+  "completedCount": 2,
+  "assertionFailures": 0,
+  "cases": [
+    {
+      "ordinal": 1,
+      "path": "artifacts/api-server/src/lib/permisos.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha256": "a9284e0ece98c948aa6034b173376e8c929db948cfae2218e873208cdfa6208a",
+      "provenance": {
+        "start": {
+          "suiteSha256": "a9284e0ece98c948aa6034b173376e8c929db948cfae2218e873208cdfa6208a",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "a9284e0ece98c948aa6034b173376e8c929db948cfae2218e873208cdfa6208a",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 29,
+        "pass": 29,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "P-01: ADMIN tiene acceso total a dashboard",
+          "P-02: CAJA no usa dashboard administrativo",
+          "P-03: BODEGA no puede acceder a POS",
+          "P-04: BODEGA no puede ver clientes",
+          "P-05: CAJA no puede ver proveedores",
+          "P-06: CAJA puede ver cobros_pagos pero no POS",
+          "P-06A: CAJA conserva exactamente los permisos operativos documentados",
+          "P-06B: TERMINAL conserva la matriz operativa configurada",
+          "P-06C: SUPERVISOR conserva exactamente sus permisos base",
+          "P-07: módulo sin fila en ninguna tabla → denegar (null)",
+          "P-08: usuario override sobrescribe permiso del rol",
+          "P-09: null override means inherit from role",
+          "P-10: ADMIN cannot be configured in permisos_rol",
+          "P-11: ADMIN rejects partial permission updates",
+          "P-12: ADMIN rejects even redundant full-access rows",
+          "P-13: ADMIN cannot be configured for any module",
+          "P-14: validateAdminInvariants allows any value for non-ADMIN roles",
+          "P-15: buildPermissionMatrix returns every configured module",
+          "P-16: ADMIN matrix has full access to all modules",
+          "P-17: CAJA has no access to proveedores_finanzas",
+          "P-18: CAJA cannot access clientes_finanzas",
+          "P-19: CAJA cannot see clientes_credito",
+          "P-20: Dynamically updating role matrix affects future permission checks",
+          "P-21: BODEGA cannot see proveedores_finanzas",
+          "P-22: BODEGA has exactly the operational baseline including etiquetas but not contenedores",
+          "P-23: CAJA cannot see clientes_precios",
+          "P-24: CAJA cannot see clientes_finanzas",
+          "P-25: user override with explicit true overrides role false",
+          "P-26: ADMIN ignores a false override on an ordinary module"
+        ]
+      },
+      "targetDatabaseSha256": "00a39dd4cc43a296400641ede8eb47dfe9084cec949ba6c32065b562f0a8411e",
+      "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "00a39dd4cc43a296400641ede8eb47dfe9084cec949ba6c32065b562f0a8411e",
+        "targetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "00a39dd4cc43a296400641ede8eb47dfe9084cec949ba6c32065b562f0a8411e",
+        "preparationTargetDatabaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "00a39dd4cc43a296400641ede8eb47dfe9084cec949ba6c32065b562f0a8411e",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "00a39dd4cc43a296400641ede8eb47dfe9084cec949ba6c32065b562f0a8411e",
+              "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "00a39dd4cc43a296400641ede8eb47dfe9084cec949ba6c32065b562f0a8411e",
+            "databaseOidSha256": "ca902d4a8acbdea132ada81a004081f51c5c9279d409cee414de5a39a139fab6"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "01-stdout.log",
+        "stdoutSha256": "a3b254b1de45c167e1150ba0d9df66663eb538b419c5c09cdd13ea53ef6f95d0",
+        "stderr": "01-stderr.log",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "postflightIdentityVerified": true
+    },
+    {
+      "ordinal": 2,
+      "path": "artifacts/api-server/src/security-api.test.ts",
+      "status": "PASS",
+      "exitCode": 0,
+      "sourceSha256": "322155aa7de036a8819803469eb0bb8eb299049119438d1c184644bbbbb03069",
+      "provenance": {
+        "start": {
+          "suiteSha256": "322155aa7de036a8819803469eb0bb8eb299049119438d1c184644bbbbb03069",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "end": {
+          "suiteSha256": "322155aa7de036a8819803469eb0bb8eb299049119438d1c184644bbbbb03069",
+          "runnerSha256": "b89bbf4af5a2ffc313f73fdffb71a40ebbc428e406e2e388afd09e9e4f666c2b",
+          "helpersSha256": "b45529d9563d8ee19cf4ac2be08308b9ea5b17a1ac5b1ba177e0e572c85e6b8c",
+          "schema": {
+            "sha256": "72726d498f8ad1335a1787424e3b935de13467d1d6b8f64fbc4e9c0d3939ba34",
+            "fileCount": 35
+          }
+        },
+        "unchanged": true
+      },
+      "native": {
+        "tests": 49,
+        "pass": 49,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "testNames": [
+          "S-01: All four roles login → 200 + permisos array present",
+          "S-01A: session lasts eight idle hours, stops at sixteen, and logout invalidates it",
+          "S-02: ADMIN /auth/me effective matrix — all modules have full access",
+          "S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores denied",
+          "S-03A: Caja ticket list is location-scoped and denied to BODEGA",
+          "S-03AA: Store sales requires an explicit override for CAJA and remains scoped",
+          "S-03B: TERMINAL API responses omit costs, margins and profits",
+          "S-03C: POS price rejection is JSON, visible and contains no cost",
+          "S-03D: legacy zero-cost roll is blocked by advance and definitive POS validation",
+          "S-03E: entrada without costoUnitario is rejected without creating a roll",
+          "S-04: BODEGA — POST /inventario/rollos/:id/vender → 403",
+          "S-05: BODEGA GET /clientes → 403",
+          "S-05A: BODEGA POST /clientes → 403",
+          "S-05B: concurrent normalized client creates → 201 + structured 409",
+          "S-06: CAJA direct inventory sale is denied; ticketing is mandatory",
+          "S-07: CAJA GET /proveedores → 403",
+          "S-08: SUPERVISOR GET /proveedores → 200, no financial JSON keys",
+          "S-08A: SUPERVISOR operational JSON is recursively redacted",
+          "S-08AA: SUPERVISOR creates and edits clients/providers without sensitive data",
+          "S-08AB: SUPERVISOR role-matrix grants flow into the effective matrix",
+          "S-08B: SUPERVISOR creates a pending-cost entry at any real location",
+          "S-08C: SUPERVISOR XLSX/PDF exports contain no financial fields or sentinel",
+          "S-09: BODEGA entry catalogs → 200; /productos and /proveedores → 403",
+          "S-09A: BODEGA stages, owns, and sends a null-cost roll in one final action",
+          "S-09B: CAJA only lists and opens outputs received at its assigned store",
+          "S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied by matrix)",
+          "S-10A: SUPERVISOR matrix denies store-sales without resumen_caja grant",
+          "S-11: SUPERVISOR finance override is honored by the matrix",
+          "S-12: false override denies and DELETE restores the matrix role default",
+          "S-13: Override true beats role false: BODEGA clientes 403 → override → 200",
+          "S-14: DELETE override → BODEGA clientes reverts to role 403",
+          "S-15: Deny-by-default — BODEGA inventario allowed; remove denies; restore allows",
+          "S-16: PUT /permisos/roles/ADMIN/usuarios with puedeVer=false → 403",
+          "S-17: PUT /permisos/roles/ADMIN/permisos with puedeCrear=false → 403",
+          "S-18: Self-override modification → 403 (cannot modify own permissions)",
+          "S-19: Last active ADMIN — deactivate → 409 (must keep at least one)",
+          "S-20: BODEGA PROPIA — GET /inventario/rollos?ubicacionId=other → forced to own",
+          "S-21: BODEGA PROPIA — GET /inventario/existencias?ubicacionId=other → forced to own",
+          "S-22: BODEGA PROPIA — GET /inventario/kardex → ignores other ubicacionId param",
+          "S-23: BODEGA alcanceConsulta=TODAS — GET /inventario/rollos?ubicacionId=other → honors filter",
+          "S-23A: operational locations allow TODAS selection; grouped inventory still enforces PROPIA",
+          "S-24: Non-ADMIN mutation on other-location → 403; ADMIN same → succeeds",
+          "S-25: GET /clientes/:id — no limiteCredito / saldoCredito in response",
+          "S-26: clientes_credito / clientes_precios / clientes_finanzas independently gated",
+          "S-27: SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA revert + cache reconcile",
+          "S-28: Non-ADMIN with usuarios permissions cannot escalate to ADMIN",
+          "S-29: promotion to ADMIN removes overrides and ADMIN override routes → 403",
+          "S-30: explicit CAJA CORTES override authorizes cash management while location rules remain enforced",
+          "S-30A: extraordinary exits require direct ADMIN despite full salidas overrides"
+        ]
+      },
+      "targetDatabaseSha256": "924b3619f7b26608f7c93754d1e7cfe8aa767e2f5a1f2bc26aa90592e0225eab",
+      "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+      "preflight": {
+        "identityVerified": true,
+        "targetControlDistinct": true,
+        "preparationMatchedTarget": true,
+        "targetDatabaseSha256": "924b3619f7b26608f7c93754d1e7cfe8aa767e2f5a1f2bc26aa90592e0225eab",
+        "targetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+        "controlDatabaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+        "controlDatabaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+        "preparationTargetDatabaseSha256": "924b3619f7b26608f7c93754d1e7cfe8aa767e2f5a1f2bc26aa90592e0225eab",
+        "preparationTargetDatabaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62",
+        "preparation": {
+          "before": {
+            "target": {
+              "databaseSha256": "924b3619f7b26608f7c93754d1e7cfe8aa767e2f5a1f2bc26aa90592e0225eab",
+              "databaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "after": {
+            "target": {
+              "databaseSha256": "924b3619f7b26608f7c93754d1e7cfe8aa767e2f5a1f2bc26aa90592e0225eab",
+              "databaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62"
+            },
+            "control": {
+              "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+              "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+            }
+          },
+          "target": {
+            "databaseSha256": "924b3619f7b26608f7c93754d1e7cfe8aa767e2f5a1f2bc26aa90592e0225eab",
+            "databaseOidSha256": "d46f96cf8889e77cc2a96debf46511493658f8dc4bf03c758816663c1856dc62"
+          },
+          "control": {
+            "databaseSha256": "a942b37ccfaf5a813b1432caa209a43b9d144e47ad0de1549c289c253e556cd5",
+            "databaseOidSha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d"
+          },
+          "matched": true
+        }
+      },
+      "logs": {
+        "stdout": "02-stdout.log",
+        "stdoutSha256": "faa9ac2f1ea420d52a5e3e0d634068e3111a310acf6057e16350020e1663eba3",
+        "stderr": "02-stderr.log",
+        "stderrSha256": "a9f0fe931e842a50c6394a4559037f540fc01538f8d94acd4bd0665ca78afdb7"
+      },
+      "postflightIdentityVerified": true
+    }
+  ],
+  "identity": {
+    "provider": "local-disposable-postgresql",
+    "freshTargetPerSuite": true,
+    "controlDistinct": true,
+    "tcpListening": false
+  },
+  "note": "One explicit route per child and fresh target; cluster destruction remains runner-owned.",
+  "terminal": {
+    "status": "PASS",
+    "executionPassed": true,
+    "clusterDestroyed": true
+  }
+}

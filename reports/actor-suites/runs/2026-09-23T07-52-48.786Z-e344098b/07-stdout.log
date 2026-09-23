@@ -1,0 +1,279 @@
+[07:54:31.931] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/productos/import/confirm"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 37
+[07:54:31.969] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/purga/productos/1/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[07:54:31.990] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 18
+[07:54:32.030] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 35
+[07:54:32.069] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 36
+[07:54:32.106] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 34
+[07:54:32.143] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 34
+[07:54:32.152] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[07:54:32.195] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 41
+[07:54:32.207] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "GET",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[07:54:32.216] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "GET",
+      "url": "/api/pos/buscar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[07:54:32.223] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "GET",
+      "url": "/api/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 6
+[07:54:32.234] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/productos/import/confirm"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[07:54:32.250] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "GET",
+      "url": "/api/purga/productos/2/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 14
+[07:54:32.287] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "DELETE",
+      "url": "/api/purga/productos/2"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 36
+[07:54:32.300] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "POST",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 12
+[07:54:32.308] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 6
+[07:54:32.321] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "PATCH",
+      "url": "/api/productos/3"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 12
+[07:54:32.343] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "GET",
+      "url": "/api/purga/productos/4/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 15
+[07:54:32.357] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "DELETE",
+      "url": "/api/purga/productos/4"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 13
+[07:54:32.433] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "GET",
+      "url": "/api/purga/productos/5/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+[07:54:32.456] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "DELETE",
+      "url": "/api/purga/productos/5"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 21
+[07:54:32.468] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "GET",
+      "url": "/api/tickets/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[07:54:32.486] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "GET",
+      "url": "/api/purga/productos/6/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+✔ producto solo se borra sin existencia ni historia y su SKU queda reservado (3059.486073ms)
+[07:54:32.681] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 25,
+      "method": "DELETE",
+      "url": "/api/purga/productos/6"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 193
+[07:54:32.703] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 26,
+      "method": "POST",
+      "url": "/api/precios/7/cambiar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 15
+[07:54:32.719] [32mINFO[39m (7700): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 27,
+      "method": "GET",
+      "url": "/api/purga/productos/7/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 14
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3279.786863
