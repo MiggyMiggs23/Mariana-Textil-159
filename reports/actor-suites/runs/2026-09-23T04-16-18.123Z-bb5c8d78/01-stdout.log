@@ -1,0 +1,26 @@
+✖ compras y reportes respetan PROPIA y las compras usan fecha de recepción (2765.124622ms)
+ℹ Error: Test "compras y reportes respetan PROPIA y las compras usan fecha de recepción" at artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts:1:936 generated asynchronous activity after the test ended. This activity created the error "Error: the worker thread exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "compras y reportes respetan PROPIA y las compras usan fecha de recepción" at artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts:1:936 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "compras y reportes respetan PROPIA y las compras usan fecha de recepción" at artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts:1:936 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "compras y reportes respetan PROPIA y las compras usan fecha de recepción" at artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts:1:936 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "compras y reportes respetan PROPIA y las compras usan fecha de recepción" at artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts:1:936 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3681.089826
+
+✖ failing tests:
+
+test at artifacts/api-server/src/proveedores-alcance-fechas.integration.test.ts:1:936
+✖ compras y reportes respetan PROPIA y las compras usan fecha de recepción (2765.124622ms)
+  Error: TEST_DATABASE_URL y DATABASE_URL deben identificar bases locales distintas.
+      at assertActorSuiteEnvironmentSync (file:///home/runner/workspace/lib/db/src/actor-suite-preflight.mjs:56:11)
+      at file:///home/runner/workspace/lib/db/src/actor-suite-bootstrap.mjs:5:1
+      at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)
+      at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:96:9)

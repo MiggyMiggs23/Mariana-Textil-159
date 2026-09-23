@@ -1,0 +1,100 @@
+✔ migración conserva dirección y helper usa entrega/fallback (266.550439ms)
+✔ API acepta y expone alias temporal direccion (45.576831ms)
+✔ ensure siembra seis clientes y GET clientes aplica español/sistema (51.99852ms)
+✔ baja: elimina sin historial, desactiva historial saldo cero y bloquea saldo vigente (325.261206ms)
+✔ resúmenes y baja usan aging ante reverso de ticket y ABONO revertido (86.057137ms)
+✖ crearTicket y baja se serializan con el mismo lock de cliente (229.816414ms)
+✖ baja vencida requiere ADMIN activo/motivo y conserva historial como incobrable; reactivar no revierte (30.764275ms)
+✔ Venta a Público permanece protegido (7.77101ms)
+✖ INE: ADMIN, MIME/tamaño, slots/reemplazo, privacidad y auditoría (42.54558ms)
+ℹ Error: A resource generated asynchronous activity after the test ended. This activity created the error "Error: TEST_DATABASE_URL y DATABASE_URL deben identificar bases locales distintas." which triggered an uncaughtException event, caught by the test runner.
+ℹ Error: A resource generated asynchronous activity after the test ended. This activity created the error "Error: the worker thread exited" which triggered an uncaughtException event, caught by the test runner.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/clientes-ajustes-api.test.ts:3:113 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ tests 9
+ℹ suites 0
+ℹ pass 6
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4241.473173
+
+✖ failing tests:
+
+test at artifacts/api-server/src/clientes-ajustes-api.test.ts:32:1289
+✖ crearTicket y baja se serializan con el mismo lock de cliente (229.816414ms)
+  AssertionError [ERR_ASSERTION]: {"error":"Las líneas METREADO de tela METRO deben indicar los rollos físicos consumidos.","code":"SOURCE_ROLLO_REQUIRED"}
+  
+  400 !== 201
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/clientes-ajustes-api.test.ts:312:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 400,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/src/clientes-ajustes-api.test.ts:32:2582
+✖ baja vencida requiere ADMIN activo/motivo y conserva historial como incobrable; reactivar no revierte (30.764275ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'INCOBRABLE_REASON_REQUIRED'
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/clientes-ajustes-api.test.ts:344:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'INCOBRABLE_REASON_REQUIRED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/src/clientes-ajustes-api.test.ts:34:1111
+✖ INE: ADMIN, MIME/tamaño, slots/reemplazo, privacidad y auditoría (42.54558ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  500 !== 201
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/clientes-ajustes-api.test.ts:388:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

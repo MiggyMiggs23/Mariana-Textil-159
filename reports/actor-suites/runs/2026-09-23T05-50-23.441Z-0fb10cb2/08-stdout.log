@@ -1,0 +1,219 @@
+[05:52:29.188] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 48
+[05:52:29.227] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[05:52:29.264] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 31
+[05:52:29.298] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 31
+[05:52:29.333] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 32
+[05:52:29.364] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 29
+[05:52:29.392] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[05:52:29.403] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "GET",
+      "url": "/api/inventario/ubicaciones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[05:52:29.415] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "GET",
+      "url": "/api/equipos/ubicaciones"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[05:52:29.433] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "POST",
+      "url": "/api/equipos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 16
+[05:52:29.441] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "POST",
+      "url": "/api/equipos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[05:52:29.456] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "POST",
+      "url": "/api/equipos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 14
+[05:52:29.470] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/equipos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 13
+[05:52:29.477] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "GET",
+      "url": "/api/equipos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[05:52:29.486] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "GET",
+      "url": "/api/equipos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[05:52:29.495] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "PATCH",
+      "url": "/api/equipos/2/checklist/ETIQUETA_REAL"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[05:52:29.504] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "PATCH",
+      "url": "/api/equipos/1/checklist/TICKET_REAL"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[05:52:29.512] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "PATCH",
+      "url": "/api/equipos/1/checklist/TICKET_REAL"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 7
+[05:52:29.526] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "PATCH",
+      "url": "/api/equipos/1/checklist/TICKET_REAL"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+[05:52:29.538] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "PATCH",
+      "url": "/api/equipos/1/checklist/PAPEL_80MM"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[05:52:29.552] [32mINFO[39m (5133): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "PATCH",
+      "url": "/api/equipos/1/checklist/PAPEL_80MM"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+✔ equipment scope, derived active state, attribution and edit denial (679.593769ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3326.76204

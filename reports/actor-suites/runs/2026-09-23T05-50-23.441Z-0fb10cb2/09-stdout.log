@@ -1,0 +1,478 @@
+▶ Etiquetas HTTP + DB: casos obligatorios 1-24
+  ✔ 1 búsqueda por serie exacta (61.456368ms)
+[05:52:41.171] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 38
+[05:52:41.190] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+  ✖ 2 búsqueda por SKU y total real aunque la página limite a 50 (16.591595ms)
+[05:52:41.204] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+  ✖ 3 búsqueda por tela y color (16.08747ms)
+  ✔ 4 búsqueda por QR SKU-SERIE (9.096347ms)
+[05:52:41.219] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+  ✔ 5 PROPIA ve únicamente rollos del sitio asignado (13.819815ms)
+[05:52:41.233] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+[05:52:41.244] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+  ✔ 6 PROPIA no puede sobreescribir alcance mandando otro sitio (21.12623ms)
+[05:52:41.254] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+  ✔ 7 ADMIN reimprime directamente con motivo (27.891551ms)
+  ✔ sitioId arbitrario no es aceptado en el body (8.139644ms)
+[05:52:41.282] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 20
+[05:52:41.291] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 6
+[05:52:41.299] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 6
+  ✔ 8 motivo ausente o menor a diez se rechaza (14.696387ms)
+[05:52:41.306] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 6
+[05:52:41.316] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 8
+  ✔ 9 misma serie, QR y marca REIMPRESA (10.845554ms)
+  ✔ 10 BODEGA sin credenciales se rechaza (7.996482ms)
+[05:52:41.325] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+  ✔ 11 BODEGA con contraseña incorrecta se rechaza (33.027262ms)
+[05:52:41.358] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 29
+[05:52:41.368] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+  ✔ 12 credenciales válidas de no-ADMIN se rechazan (9.468902ms)
+[05:52:41.400] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 30
+  ✔ 13 BODEGA con ADMIN válido registra autorizador (32.980794ms)
+  ✔ 14 API directa SUPERVISOR sin credenciales devuelve 403 (9.508649ms)
+  ✔ 15 registro contiene rollo, solicitante, sitio, motivo y fecha (1.1154ms)
+[05:52:41.410] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+  ✔ auditoría rechaza UPDATE y DELETE directos fuera del bypass de cleanup (10.5484ms)
+[05:52:41.444] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+  ✔ 16 historial ADMIN camelCase y export XLSX filtrado (87.625178ms)
+[05:52:41.479] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 31
+[05:52:41.518] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+  ✔ 17 detalle muestra contador y última fecha (8.399303ms)
+[05:52:41.531] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 11
+[05:52:41.542] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 10
+[05:52:41.549] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+  ✔ 18 tercera reimpresión activa aviso y alert count (36.047485ms)
+[05:52:41.555] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "GET",
+      "url": "/api/etiquetas/alertas/count"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 5
+[05:52:41.563] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 25,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[05:52:41.568] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 26,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[05:52:41.575] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 27,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[05:52:41.580] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 28,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+[05:52:41.585] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 29,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+[05:52:41.590] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 30,
+      "method": "GET",
+      "url": "/api/etiquetas/alertas/count"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+  ✔ 19 TERMINAL recibe 403 en todos los endpoints (35.219165ms)
+[05:52:41.597] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 31,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[05:52:41.603] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 32,
+      "method": "GET",
+      "url": "/api/etiquetas/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[05:52:41.611] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 33,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[05:52:41.616] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 34,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[05:52:41.621] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 35,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+[05:52:41.626] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 36,
+      "method": "GET",
+      "url": "/api/etiquetas/alertas/count"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+  ✔ 20 CAJA recibe 403 en todos los endpoints (35.868208ms)
+  ✔ 21 BODEGA no puede consultar historial ni exportarlo (13.937314ms)
+[05:52:41.635] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 37,
+      "method": "GET",
+      "url": "/api/etiquetas/historial"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[05:52:41.640] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 38,
+      "method": "GET",
+      "url": "/api/etiquetas/historial/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+  ✔ 22 batch ADMIN multisite devuelve cinco etiquetas (13.647956ms)
+  ✔ 23 batch de cinco crea cinco filas con el sitio real de cada rollo (1.112509ms)
+[05:52:41.653] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 39,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 11
+[05:52:41.661] [32mINFO[39m (5288): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 40,
+      "method": "POST",
+      "url": "/api/etiquetas/reimpresiones"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 4
+  ✔ 24 más de 50 rollos se rechazan con 400 y no insertan (7.547483ms)
+✖ Etiquetas HTTP + DB: casos obligatorios 1-24 (772.884538ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 24
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3506.968152
+
+✖ failing tests:
+
+test at artifacts/api-server/src/etiquetas-api.integration.test.ts:1:5813
+✖ 2 búsqueda por SKU y total real aunque la página limite a 50 (16.591595ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 50
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/etiquetas-api.integration.test.ts:275:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/etiquetas-api.integration.test.ts:272:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 50,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/src/etiquetas-api.integration.test.ts:1:6110
+✖ 3 búsqueda por tela y color (16.08747ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(result.body.items.length > 0)
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/etiquetas-api.integration.test.ts:282:14)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/etiquetas-api.integration.test.ts:278:3)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

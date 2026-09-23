@@ -1,0 +1,10 @@
+✔ Task 57: auditoría concurrente y purga fail-closed usan únicamente la DB aislada (811.676718ms)
+✔ Task 57: caja diaria serializa aperturas y descuenta salidas una vez (183.920074ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1434.676392

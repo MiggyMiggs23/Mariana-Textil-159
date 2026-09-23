@@ -1,0 +1,49 @@
+✖ pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte (1806.690323ms)
+[06:08:27.406] [32mINFO[39m (9670): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/pagos-dirigidos"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 27
+[06:08:27.421] [32mINFO[39m (9670): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/pagos-dirigidos"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 9
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2725.370786
+
+✖ failing tests:
+
+test at artifacts/api-server/src/pagos-dirigidos.integration.test.ts:1:938
+✖ pagos dirigidos conserva FIFO, autorización, alcance, reversos y reporte (1806.690323ms)
+  AssertionError [ERR_ASSERTION]: La solicitud debe validar el saldo antes de quedar pendiente.
+  
+  400 !== 409
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/pagos-dirigidos.integration.test.ts:260:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 400,
+    expected: 409,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

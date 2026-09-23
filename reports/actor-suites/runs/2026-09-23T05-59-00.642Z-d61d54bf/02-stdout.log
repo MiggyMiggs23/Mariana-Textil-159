@@ -1,0 +1,249 @@
+[05:59:40.030] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 72
+[05:59:40.062] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "PATCH",
+      "url": "/api/users/4"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 20
+[05:59:40.084] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "PATCH",
+      "url": "/api/users/3"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 19
+[05:59:40.104] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "PATCH",
+      "url": "/api/users/3"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 17
+[05:59:40.126] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "PATCH",
+      "url": "/api/users/3"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 20
+[05:59:40.149] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "PATCH",
+      "url": "/api/users/3"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 21
+[05:59:40.169] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "PUT",
+      "url": "/api/permisos/roles/ADMIN/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 15
+[05:59:40.193] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "PUT",
+      "url": "/api/permisos/roles/SISTEMAS/pos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 22
+[05:59:40.213] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/5/pos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 17
+[05:59:40.230] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "PATCH",
+      "url": "/api/users/5"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 15
+[05:59:40.253] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "PATCH",
+      "url": "/api/users/3"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 21
+[05:59:40.271] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "PATCH",
+      "url": "/api/users/2"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 17
+[05:59:40.283] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "PATCH",
+      "url": "/api/users/2"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[05:59:40.295] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/2/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[05:59:40.306] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "PUT",
+      "url": "/api/permisos/roles/ADMIN/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[05:59:40.606] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 294
+[05:59:40.967] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 352
+[05:59:41.270] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 298
+[05:59:41.566] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 294
+[05:59:41.863] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 295
+[05:59:42.148] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 282
+✔ ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales (5370.446366ms)
+[05:59:42.444] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 293
+[05:59:42.460] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "PUT",
+      "url": "/api/permisos/roles/CAJA/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 13
+[05:59:42.484] [32mINFO[39m (6762): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/4/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 16
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5796.240536

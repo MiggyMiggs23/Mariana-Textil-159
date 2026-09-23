@@ -1,0 +1,52 @@
+✔ clientes maps a barrier-forced concurrent unique conflict to 409 (2592.512412ms)
+[06:12:01.390] [32mINFO[39m (10660): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 981
+✔ productos maps a barrier-forced concurrent unique conflict to 400 (1019.010012ms)
+[06:12:02.415] [32mINFO[39m (10660): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 1013
+✔ ubicaciones maps a barrier-forced concurrent unique conflict to 400 (1014.886981ms)
+[06:12:03.430] [32mINFO[39m (10660): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/locations"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 1005
+✔ usuarios maps a barrier-forced concurrent unique conflict to 400 (1008.332409ms)
+[06:12:04.438] [32mINFO[39m (10660): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 1004
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6702.326758

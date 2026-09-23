@@ -1,0 +1,224 @@
+[06:08:57.475] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/locations/10/pisos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 37
+[06:08:57.510] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/locations/10/pisos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 22
+[06:08:57.533] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/locations/10/pisos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 19
+[06:08:57.582] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/locations/10/pisos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 38
+[06:08:57.602] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "POST",
+      "url": "/api/locations/11/pisos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 14
+[06:08:57.613] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "PATCH",
+      "url": "/api/locations/10/pisos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:08:57.629] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "PATCH",
+      "url": "/api/locations/10/pisos/2"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+[06:08:57.658] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "PATCH",
+      "url": "/api/locations/10/pisos/3"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:08:57.669] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "GET",
+      "url": "/api/locations/10/pisos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+▶ Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex
+  ✔ CRUD/listado usa sesión real, ADMIN administra y no ADMIN es rechazado (271.181645ms)
+[06:08:57.681] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "GET",
+      "url": "/api/locations/10/pisos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:08:57.705] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "POST",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 17
+[06:08:57.721] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "POST",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 14
+[06:08:57.734] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 11
+[06:08:57.777] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "POST",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 41
+  ✔ entrada exige piso sólo si el sitio lo tiene y valida pertenencia/actividad (163.21356ms)
+[06:08:57.847] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "POST",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 42
+[06:08:57.871] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "PATCH",
+      "url": "/api/inventario/rollos/2/piso"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 20
+  ✔ cambio y filtro por piso son físicos: Bitácora sí, movimientos/existencias no (36.267227ms)
+[06:08:57.884] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:08:57.997] [32mINFO[39m (10201): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "POST",
+      "url": "/api/salidas/1/recibir"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+  ✔ tránsito limpia piso y recepción exige/asigna el piso destino (179.794729ms)
+  ✖ auditoría reporta MAL_ACOMODADO, confirma sólo piso y deja carreras manuales (207.356914ms)
+✖ Task 58: pisos funcionan de extremo a extremo sin contaminar el kardex (4580.006059ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 4
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4894.960874
+
+✖ failing tests:
+
+test at artifacts/api-server/src/task58.integration.test.ts:7:2348
+✖ auditoría reporta MAL_ACOMODADO, confirma sólo piso y deja carreras manuales (207.356914ms)
+  AssertionError [ERR_ASSERTION]: los sobrantes disponibles o en tránsito usan el piso real capturado
+  + actual - expected
+  
+    {
+      estado: 'DISPONIBLE',
+  +   pisoId: 4,
+  +   ubicacionId: 11
+  -   pisoId: 2,
+  -   ubicacionId: 10
+    }
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/task58.integration.test.ts:548:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/task58.integration.test.ts:401:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: [Object],
+    expected: [Object],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

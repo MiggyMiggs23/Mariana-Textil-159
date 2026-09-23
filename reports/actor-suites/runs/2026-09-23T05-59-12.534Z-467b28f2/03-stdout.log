@@ -1,0 +1,259 @@
+[06:00:02.769] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 61
+[06:00:02.794] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 17
+[06:00:02.805] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "GET",
+      "url": "/api/proveedores"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:00:02.835] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[06:00:02.848] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "GET",
+      "url": "/api/caja/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:00:02.857] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:00:02.887] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[06:00:02.898] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "GET",
+      "url": "/api/proveedores"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[06:00:02.906] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "GET",
+      "url": "/api/proveedores/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:00:02.935] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:00:02.945] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:00:02.953] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "GET",
+      "url": "/api/proveedores"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:00:02.980] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:00:02.989] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "GET",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:00:02.998] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "POST",
+      "url": "/api/pos/validar-precio"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:00:03.017] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "GET",
+      "url": "/api/precios"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 18
+[06:00:03.027] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/precios/1/cambiar"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 9
+[06:00:03.040] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "POST",
+      "url": "/api/locations"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 12
+[06:00:03.053] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "PATCH",
+      "url": "/api/locations/10"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+[06:00:03.081] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:00:03.091] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "GET",
+      "url": "/api/proveedores/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:00:03.101] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "GET",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:00:03.111] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "GET",
+      "url": "/api/precios"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:00:03.120] [32mINFO[39m (7385): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "POST",
+      "url": "/api/precios/1/cambiar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+┌─────────┬──────────────┬───────┬──────────────────────────────────────────┬───────────────┬────────────────────────────┬──────────────┬────────────┐
+│ (index) │ role         │ login │ allowed                                  │ allowedStatus │ denied                     │ deniedStatus │ money      │
+├─────────┼──────────────┼───────┼──────────────────────────────────────────┼───────────────┼────────────────────────────┼──────────────┼────────────┤
+│ 0       │ 'TERMINAL'   │ 200   │ 'GET /inventario/rollos?serie=976154830' │ 200           │ 'GET /proveedores'         │ 403          │ 'redacted' │
+│ 1       │ 'CAJA'       │ 200   │ 'GET /caja/tickets'                      │ 200           │ 'GET /inventario/rollos'   │ 403          │ 'entitled' │
+│ 2       │ 'SUPERVISOR' │ 200   │ 'GET /proveedores'                       │ 200           │ 'GET /proveedores/resumen' │ 403          │ 'redacted' │
+│ 3       │ 'BODEGA'     │ 200   │ 'GET /inventario/rollos?serie=976154830' │ 200           │ 'GET /proveedores'         │ 403          │ 'redacted' │
+│ 4       │ 'SISTEMAS'   │ 200   │ 'GET /users'                             │ 200           │ 'POST /pos/validar-precio' │ 403          │ 'entitled' │
+│ 5       │ 'CONTADOR'   │ 200   │ 'GET /proveedores/resumen'               │ 200           │ 'GET /users'               │ 403          │ 'entitled' │
+└─────────┴──────────────┴───────┴──────────────────────────────────────────┴───────────────┴────────────────────────────┴──────────────┴────────────┘
+✔ Task 54 Block 6: configurable roles have real HTTP access boundaries (607.252572ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3030.877531

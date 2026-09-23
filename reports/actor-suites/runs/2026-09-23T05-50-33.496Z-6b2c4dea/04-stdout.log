@@ -1,0 +1,222 @@
+[05:51:41.279] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/productos/import/confirm"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 42
+[05:51:41.328] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/purga/productos/1/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 35
+[05:51:41.361] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 28
+[05:51:41.405] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 37
+[05:51:41.450] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 41
+[05:51:41.487] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 34
+[05:51:41.522] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 33
+[05:51:41.530] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[05:51:41.571] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "DELETE",
+      "url": "/api/purga/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 39
+[05:51:41.583] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "GET",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[05:51:41.592] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "GET",
+      "url": "/api/pos/buscar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[05:51:41.600] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "GET",
+      "url": "/api/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 7
+[05:51:41.612] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "POST",
+      "url": "/api/productos/import/confirm"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[05:51:41.628] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "GET",
+      "url": "/api/purga/productos/2/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 14
+[05:51:41.666] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "DELETE",
+      "url": "/api/purga/productos/2"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 36
+[05:51:41.678] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "POST",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 11
+[05:51:41.687] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 7
+[05:51:41.699] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "PATCH",
+      "url": "/api/productos/3"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 11
+[05:51:41.720] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "GET",
+      "url": "/api/purga/productos/4/preflight"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 14
+[05:51:41.735] [32mINFO[39m (4341): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "DELETE",
+      "url": "/api/purga/productos/4"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 14
+✖ producto solo se borra sin existencia ni historia y su SKU queda reservado (3112.196102ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3429.641873
+
+✖ failing tests:
+
+test at artifacts/api-server/src/productos-purge.integration.test.ts:1:961
+✖ producto solo se borra sin existencia ni historia y su SKU queda reservado (3112.196102ms)
+  Error: Falta evidencia de entrada/proveedor para la línea 1.
+      at recordTicketLineConsumption (/home/runner/workspace/artifacts/api-server/src/lib/supplier-trace.ts:236:13)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async crearTicket (/home/runner/workspace/artifacts/api-server/src/lib/pos.ts:1350:5)
+      at async NodePgSession.transaction (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:259:19)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/productos-purge.integration.test.ts:362:26)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)

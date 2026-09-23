@@ -1,0 +1,359 @@
+[05:51:53.008] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 51
+[05:51:53.045] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+✔ migración conserva dirección y helper usa entrega/fallback (282.04019ms)
+[05:51:53.110] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 21
+✔ API acepta y expone alias temporal direccion (49.263548ms)
+[05:51:53.136] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "PATCH",
+      "url": "/api/clientes/9"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 23
+✔ ensure siembra seis clientes y GET clientes aplica español/sistema (62.963126ms)
+[05:51:53.198] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "GET",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 19
+[05:51:53.220] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "POST",
+      "url": "/api/clientes/12/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 14
+✔ baja: elimina sin historial, desactiva historial saldo cero y bloquea saldo vigente (78.736333ms)
+[05:51:53.257] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "POST",
+      "url": "/api/clientes/13/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[05:51:53.278] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "POST",
+      "url": "/api/clientes/14/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 10
+[05:51:53.327] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "GET",
+      "url": "/api/clientes/15"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 20
+[05:51:53.348] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "GET",
+      "url": "/api/clientes/15/credito"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 39
+[05:51:53.354] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "GET",
+      "url": "/api/clientes/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 42
+[05:51:53.358] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "GET",
+      "url": "/api/clientes/15/estado-cuenta"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 50
+✔ resúmenes y baja usan aging ante reverso de ticket y ABONO revertido (92.049942ms)
+[05:51:53.366] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "POST",
+      "url": "/api/clientes/15/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 52
+[05:51:53.368] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "GET",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 57
+[05:51:53.397] [33mWARN[39m (4605): [36mInvalid API request[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "POST",
+      "url": "/api/tickets"
+    }
+    [35missues[39m: [
+      {
+        "code": "invalid_type",
+        "path": "lineas.0.fuentesRollo.0.cantidad"
+      }
+    ]
+[05:51:53.398] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "POST",
+      "url": "/api/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 7
+✖ crearTicket y baja se serializan con el mismo lock de cliente (237.343158ms)
+[05:51:53.604] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "POST",
+      "url": "/api/clientes/16/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 113
+[05:51:53.629] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/clientes/17/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 401
+    }
+    [35mresponseTime[39m: 9
+[05:51:53.637] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "POST",
+      "url": "/api/clientes/17/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 6
+[05:51:53.705] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "POST",
+      "url": "/api/clientes/17/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 65
+✔ baja vencida requiere ADMIN activo/motivo y conserva historial como incobrable; reactivar no revierte (117.612388ms)
+[05:51:53.717] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "POST",
+      "url": "/api/clientes/17/reactivar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[05:51:53.725] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "GET",
+      "url": "/api/clientes/incobrables"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+✔ Venta a Público permanece protegido (9.436781ms)
+[05:51:53.734] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "POST",
+      "url": "/api/clientes/1/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 7
+[05:51:53.750] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "POST",
+      "url": "/api/clientes/18/documentos/FRENTE"
+    }
+    [35mres[39m: {
+      "statusCode": 415
+    }
+    [35mresponseTime[39m: 10
+[05:51:53.778] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "POST",
+      "url": "/api/clientes/18/documentos/FRENTE"
+    }
+    [35mres[39m: {
+      "statusCode": 413
+    }
+    [35mresponseTime[39m: 19
+[05:51:53.799] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 25,
+      "method": "POST",
+      "url": "/api/clientes/18/documentos/FRENTE"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 20
+[05:51:53.816] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 26,
+      "method": "POST",
+      "url": "/api/clientes/18/documentos/REVERSO"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 15
+[05:51:53.833] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 27,
+      "method": "POST",
+      "url": "/api/clientes/18/documentos/FRENTE"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 16
+[05:51:53.844] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 28,
+      "method": "GET",
+      "url": "/api/clientes/18/documentos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[05:51:53.852] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 29,
+      "method": "GET",
+      "url": "/api/cliente-documentos/7efcab87-b911-41b4-bbcd-39d0a4c96461/ver"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[05:51:53.863] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 30,
+      "method": "GET",
+      "url": "/api/cliente-documentos/7efcab87-b911-41b4-bbcd-39d0a4c96461/ver"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+✔ INE: ADMIN, MIME/tamaño, slots/reemplazo, privacidad y auditoría (138.321157ms)
+[05:51:53.872] [32mINFO[39m (4605): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 31,
+      "method": "GET",
+      "url": "/api/cliente-documentos/7efcab87-b911-41b4-bbcd-39d0a4c96461/descargar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+ℹ tests 9
+ℹ suites 0
+ℹ pass 8
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3721.564988
+
+✖ failing tests:
+
+test at artifacts/api-server/src/clientes-ajustes-api.test.ts:32:1289
+✖ crearTicket y baja se serializan con el mismo lock de cliente (237.343158ms)
+  AssertionError [ERR_ASSERTION]: {"error":"Revisa los datos enviados e intenta de nuevo.","code":"VALIDATION_ERROR"}
+  
+  400 !== 201
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/clientes-ajustes-api.test.ts:339:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 400,
+    expected: 201,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

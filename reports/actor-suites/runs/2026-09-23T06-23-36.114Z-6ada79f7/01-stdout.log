@@ -1,0 +1,2839 @@
+[06:23:51.673] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 44
+[06:23:51.710] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[06:23:51.743] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 31
+[06:23:51.777] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 32
+✔ S-01: All four roles login → 200 + permisos array present (196.113234ms)
+[06:23:51.805] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:51.838] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[06:23:51.851] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:51.863] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "POST",
+      "url": "/api/auth/logout"
+    }
+    [35mres[39m: {
+      "statusCode": 204
+    }
+    [35mresponseTime[39m: 10
+✔ S-01A: session lasts eight idle hours, stops at sixteen, and logout invalidates it (60.781168ms)
+[06:23:51.866] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 401
+    }
+    [35mresponseTime[39m: 2
+✔ S-02: ADMIN /auth/me effective matrix — all modules have full access (32.041153ms)
+[06:23:51.893] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:51.899] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 5
+[06:23:51.927] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+✔ S-03: CAJA /auth/me effective matrix — cobros OK, POS/proveedores denied (37.194332ms)
+[06:23:51.936] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 13,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:23:51.988] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 14,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 37
+[06:23:52.000] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 15,
+      "method": "GET",
+      "url": "/api/caja/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:23:52.010] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 16,
+      "method": "GET",
+      "url": "/api/caja/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:23:52.040] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 17,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+✔ S-03A: Caja ticket list is location-scoped and denied to BODEGA (111.018528ms)
+[06:23:52.047] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 18,
+      "method": "GET",
+      "url": "/api/caja/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:52.094] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 19,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:52.106] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 20,
+      "method": "GET",
+      "url": "/api/caja/tiendas/1/ventas"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:52.155] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 21,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:52.177] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 22,
+      "method": "GET",
+      "url": "/api/caja/tiendas/1/ventas"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 21
+[06:23:52.189] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 23,
+      "method": "GET",
+      "url": "/api/caja/tiendas/10/ventas"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:52.218] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 24,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+✔ S-03AA: Store sales requires an explicit override for CAJA and remains scoped (183.131318ms)
+[06:23:52.231] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 25,
+      "method": "GET",
+      "url": "/api/caja/tiendas/10/ventas"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+[06:23:52.262] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 26,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[06:23:52.276] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 27,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+[06:23:52.289] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 28,
+      "method": "GET",
+      "url": "/api/inventario/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:23:52.297] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 29,
+      "method": "GET",
+      "url": "/api/inventario/existencias"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:52.308] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 30,
+      "method": "GET",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[06:23:52.321] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 31,
+      "method": "GET",
+      "url": "/api/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+[06:23:52.328] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 32,
+      "method": "GET",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:52.336] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 33,
+      "method": "GET",
+      "url": "/api/inventario/kardex"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:52.345] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 34,
+      "method": "GET",
+      "url": "/api/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+✔ S-03B: TERMINAL API responses omit costs, margins and profits (123.544291ms)
+[06:23:52.354] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 35,
+      "method": "GET",
+      "url": "/api/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:23:52.381] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 36,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:52.404] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 37,
+      "method": "POST",
+      "url": "/api/pos/validar-precio"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 7
+[06:23:52.414] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 38,
+      "method": "POST",
+      "url": "/api/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 9
+[06:23:52.422] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 39,
+      "method": "POST",
+      "url": "/api/pos/validar-precio"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:52.435] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 40,
+      "method": "POST",
+      "url": "/api/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 12
+✔ S-03C: POS price rejection is JSON, visible and contains no cost (89.247385ms)
+[06:23:52.443] [33mWARN[39m (13532): [36mInvalid API request[39m
+    [35mreq[39m: {
+      "id": 41,
+      "method": "POST",
+      "url": "/api/pos/validar-precio"
+    }
+    [35missues[39m: [
+      {
+        "code": "too_small",
+        "path": "precioUnitario"
+      }
+    ]
+[06:23:52.443] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 41,
+      "method": "POST",
+      "url": "/api/pos/validar-precio"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 7
+[06:23:52.488] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 42,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+✔ S-03D: legacy zero-cost roll is blocked by advance and definitive POS validation (149.656273ms)
+✔ S-03E: entrada without costoUnitario is rejected without creating a roll (37.7421ms)
+[06:23:52.581] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 43,
+      "method": "POST",
+      "url": "/api/pos/validar-precio"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 92
+[06:23:52.592] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 44,
+      "method": "POST",
+      "url": "/api/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 10
+[06:23:52.623] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 45,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:52.630] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 46,
+      "method": "POST",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 5
+[06:23:52.660] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 47,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:23:52.669] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 48,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+✔ S-04: BODEGA — POST /inventario/rollos/:id/vender → 403 (45.363984ms)
+[06:23:52.677] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 49,
+      "method": "POST",
+      "url": "/api/inventario/rollos/1/vender"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:52.705] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 50,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+✔ S-05: BODEGA GET /clientes → 403 (39.218341ms)
+[06:23:52.716] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 51,
+      "method": "GET",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:23:52.743] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 52,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+✔ S-05A: BODEGA POST /clientes → 403 (40.008704ms)
+[06:23:52.756] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 53,
+      "method": "POST",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 12
+[06:23:52.782] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 54,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:52.803] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 56,
+      "method": "POST",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 19
+[06:23:52.808] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 55,
+      "method": "POST",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 25
+✔ S-05B: concurrent normalized client creates → 201 + structured 409 (61.145307ms)
+✔ S-06: CAJA direct inventory sale is denied; ticketing is mandatory (50.275802ms)
+[06:23:52.861] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 57,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:52.868] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 58,
+      "method": "POST",
+      "url": "/api/inventario/rollos/4/vender"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+✔ S-07: CAJA GET /proveedores → 403 (35.965458ms)
+[06:23:52.897] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 59,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[06:23:52.904] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 60,
+      "method": "GET",
+      "url": "/api/proveedores"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:52.930] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 61,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+✔ S-08: SUPERVISOR GET /proveedores → 200, no financial JSON keys (35.44722ms)
+[06:23:52.939] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 62,
+      "method": "GET",
+      "url": "/api/proveedores"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:23:52.966] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 63,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:52.976] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 64,
+      "method": "GET",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:23:52.992] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 65,
+      "method": "GET",
+      "url": "/api/productos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 15
+[06:23:53.002] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 66,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:23:53.011] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 67,
+      "method": "GET",
+      "url": "/api/inventario/rollos/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:23:53.022] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 68,
+      "method": "GET",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[06:23:53.030] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 69,
+      "method": "GET",
+      "url": "/api/inventario/existencias"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:23:53.039] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 70,
+      "method": "GET",
+      "url": "/api/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+✔ S-08A: SUPERVISOR operational JSON is recursively redacted (131.93849ms)
+[06:23:53.070] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 71,
+      "method": "GET",
+      "url": "/api/reportes/inventario"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[06:23:53.097] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 72,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:53.117] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 73,
+      "method": "POST",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 19
+[06:23:53.142] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 74,
+      "method": "PATCH",
+      "url": "/api/clientes/10"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:53.151] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 75,
+      "method": "POST",
+      "url": "/api/clientes/10/baja"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:53.163] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 76,
+      "method": "POST",
+      "url": "/api/proveedores"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 11
+✔ S-08AA: SUPERVISOR creates and edits clients/providers without sensitive data (106.629729ms)
+[06:23:53.178] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 77,
+      "method": "PATCH",
+      "url": "/api/proveedores/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 14
+[06:23:53.232] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 78,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[06:23:53.240] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 79,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+✔ S-08AB: SUPERVISOR role-matrix grants flow into the effective matrix (72.020764ms)
+[06:23:53.275] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 80,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+✔ S-08B: SUPERVISOR creates a pending-cost entry at any real location (49.115351ms)
+[06:23:53.298] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 81,
+      "method": "POST",
+      "url": "/api/inventario/entradas"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 22
+[06:23:53.325] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 82,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:53.402] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 83,
+      "method": "GET",
+      "url": "/api/reportes/inventario/export.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 76
+✔ S-08C: SUPERVISOR XLSX/PDF exports contain no financial fields or sentinel (296.583452ms)
+✔ S-09: BODEGA entry catalogs → 200; /productos and /proveedores → 403 (59.512953ms)
+[06:23:53.595] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 84,
+      "method": "GET",
+      "url": "/api/reportes/inventario/export.pdf"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 146
+[06:23:53.633] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 85,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 36
+[06:23:53.641] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 86,
+      "method": "GET",
+      "url": "/api/inventario/entradas/catalogos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:23:53.649] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 87,
+      "method": "GET",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:53.655] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 88,
+      "method": "GET",
+      "url": "/api/proveedores"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:53.683] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 89,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:53.690] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 90,
+      "method": "GET",
+      "url": "/api/salidas/ubicaciones"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:53.696] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 91,
+      "method": "GET",
+      "url": "/api/locations"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:53.746] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 92,
+      "method": "POST",
+      "url": "/api/salidas/borrador/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 31
+[06:23:53.774] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 93,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:53.783] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 94,
+      "method": "DELETE",
+      "url": "/api/salidas/1/rollos/6"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:23:53.793] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 95,
+      "method": "POST",
+      "url": "/api/salidas/1/enviar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[06:23:53.800] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 96,
+      "method": "GET",
+      "url": "/api/salidas/1/documento"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 7
+✔ S-09A: BODEGA stages, owns, and sends a null-cost roll in one final action (171.814081ms)
+[06:23:53.826] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 97,
+      "method": "POST",
+      "url": "/api/salidas/1/enviar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:53.886] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 98,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:23:53.912] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 99,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:53.949] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 100,
+      "method": "POST",
+      "url": "/api/salidas/borrador/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 21
+[06:23:53.979] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 101,
+      "method": "POST",
+      "url": "/api/salidas/2/enviar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 29
+[06:23:54.027] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 102,
+      "method": "POST",
+      "url": "/api/salidas/borrador/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:23:54.051] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 103,
+      "method": "POST",
+      "url": "/api/salidas/3/enviar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 23
+[06:23:54.076] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 104,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:54.093] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 105,
+      "method": "GET",
+      "url": "/api/salidas"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 16
+[06:23:54.113] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 106,
+      "method": "GET",
+      "url": "/api/salidas/3"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 20
+[06:23:54.122] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 107,
+      "method": "GET",
+      "url": "/api/salidas/2"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:23:54.128] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 108,
+      "method": "POST",
+      "url": "/api/salidas/borrador/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+✔ S-09B: CAJA only lists and opens outputs received at its assigned store (308.779211ms)
+[06:23:54.136] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 109,
+      "method": "POST",
+      "url": "/api/salidas/3/cancelar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.162] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 110,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:54.176] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 111,
+      "method": "GET",
+      "url": "/api/proveedores/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.184] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 112,
+      "method": "GET",
+      "url": "/api/proveedores/analitica-global"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.191] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 113,
+      "method": "GET",
+      "url": "/api/proveedores/1/compras"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.198] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 114,
+      "method": "GET",
+      "url": "/api/proveedores/1/pagos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.206] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 115,
+      "method": "POST",
+      "url": "/api/proveedores/1/pagos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.213] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 116,
+      "method": "GET",
+      "url": "/api/proveedores/1/estado-cuenta"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.225] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 117,
+      "method": "GET",
+      "url": "/api/clientes/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.237] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 118,
+      "method": "GET",
+      "url": "/api/clientes/cartera"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.248] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 119,
+      "method": "GET",
+      "url": "/api/clientes/analitica"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:23:54.260] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 120,
+      "method": "GET",
+      "url": "/api/clientes/1/credito"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.272] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 121,
+      "method": "GET",
+      "url": "/api/clientes/1/precios"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.283] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 122,
+      "method": "GET",
+      "url": "/api/clientes/1/estado-cuenta"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:23:54.295] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 123,
+      "method": "GET",
+      "url": "/api/clientes/1/pagos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.307] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 124,
+      "method": "POST",
+      "url": "/api/clientes/1/pagos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.313] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 125,
+      "method": "GET",
+      "url": "/api/pos/buscar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.332] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 126,
+      "method": "GET",
+      "url": "/api/tickets/1"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 18
+[06:23:54.339] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 127,
+      "method": "GET",
+      "url": "/api/caja/tickets"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.349] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 128,
+      "method": "GET",
+      "url": "/api/caja/tiendas/1/ventas"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[06:23:54.355] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 129,
+      "method": "GET",
+      "url": "/api/sesiones-caja/actual"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.361] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 130,
+      "method": "GET",
+      "url": "/api/precios"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.368] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 131,
+      "method": "GET",
+      "url": "/api/locations"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.373] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 132,
+      "method": "GET",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.379] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 133,
+      "method": "GET",
+      "url": "/api/permisos/roles"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.386] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 134,
+      "method": "GET",
+      "url": "/api/inventario/conciliacion"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.392] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 135,
+      "method": "GET",
+      "url": "/api/inventario/entradas/pendientes-costo"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.400] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 136,
+      "method": "POST",
+      "url": "/api/inventario/entradas/1/costos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.412] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 137,
+      "method": "GET",
+      "url": "/api/clientes/1/documentos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+✔ S-10: SUPERVISOR GET /proveedores/resumen → 403 (proveedores_finanzas.ver denied by matrix) (283.290168ms)
+[06:23:54.419] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 138,
+      "method": "POST",
+      "url": "/api/productos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.449] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 139,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[06:23:54.456] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 140,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+✔ S-10A: SUPERVISOR matrix denies store-sales without resumen_caja grant (47.475904ms)
+[06:23:54.467] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 141,
+      "method": "GET",
+      "url": "/api/caja/tiendas/1/ventas"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:23:54.495] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 142,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:23:54.507] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 143,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/5/proveedores_finanzas"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.534] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 144,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:54.542] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 145,
+      "method": "GET",
+      "url": "/api/proveedores/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.549] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 146,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+✔ S-11: SUPERVISOR finance override is honored by the matrix (82.456821ms)
+[06:23:54.574] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 147,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 23
+[06:23:54.585] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 148,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/5/proveedores_finanzas"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[06:23:54.614] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 149,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[06:23:54.621] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 150,
+      "method": "GET",
+      "url": "/api/proveedores/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:54.629] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 151,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.641] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 152,
+      "method": "DELETE",
+      "url": "/api/permisos/usuarios/5/proveedores_finanzas"
+    }
+    [35mres[39m: {
+      "statusCode": 204
+    }
+    [35mresponseTime[39m: 12
+✔ S-12: false override denies and DELETE restores the matrix role default (122.661247ms)
+[06:23:54.666] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 153,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:54.672] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 154,
+      "method": "GET",
+      "url": "/api/proveedores/resumen"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.700] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 155,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:54.711] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 156,
+      "method": "GET",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:23:54.736] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 157,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:54.747] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 158,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/6/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[06:23:54.775] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 159,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+✔ S-13: Override true beats role false: BODEGA clientes 403 → override → 200 (114.166005ms)
+[06:23:54.787] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 160,
+      "method": "GET",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:23:54.810] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 161,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 22
+[06:23:54.820] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 162,
+      "method": "DELETE",
+      "url": "/api/permisos/usuarios/6/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 204
+    }
+    [35mresponseTime[39m: 9
+[06:23:54.845] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 163,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:54.856] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 164,
+      "method": "GET",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+✔ S-14: DELETE override → BODEGA clientes reverts to role 403 (68.982374ms)
+[06:23:54.880] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 165,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 23
+[06:23:54.887] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 166,
+      "method": "GET",
+      "url": "/api/permisos/preview/6"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:54.897] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 167,
+      "method": "GET",
+      "url": "/api/permisos/preview/6"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 5
+✔ S-15: Deny-by-default — BODEGA inventario allowed; remove denies; restore allows (51.63449ms)
+[06:23:54.907] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 168,
+      "method": "GET",
+      "url": "/api/permisos/preview/6"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 5
+[06:23:54.937] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 169,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[06:23:54.947] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 170,
+      "method": "PUT",
+      "url": "/api/permisos/roles/ADMIN/usuarios"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:23:54.954] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 171,
+      "method": "GET",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+✔ S-16: PUT /permisos/roles/ADMIN/usuarios with puedeVer=false → 403 (55.6569ms)
+[06:23:54.963] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 172,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:23:54.991] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 173,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:23:55.000] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 174,
+      "method": "PUT",
+      "url": "/api/permisos/roles/ADMIN/permisos"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:23:55.012] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 175,
+      "method": "GET",
+      "url": "/api/permisos/roles"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:23:55.019] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 176,
+      "method": "GET",
+      "url": "/api/auth/me"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+✔ S-17: PUT /permisos/roles/ADMIN/permisos with puedeCrear=false → 403 (59.410882ms)
+[06:23:55.048] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 177,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+✔ S-18: Self-override modification → 403 (cannot modify own permissions) (34.747337ms)
+[06:23:55.057] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 178,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/2/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:23:55.082] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 179,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 23
+[06:23:55.096] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 180,
+      "method": "PATCH",
+      "url": "/api/users/2"
+    }
+    [35mres[39m: {
+      "statusCode": 409
+    }
+    [35mresponseTime[39m: 9
+✔ S-19: Last active ADMIN — deactivate → 409 (must keep at least one) (41.484833ms)
+✔ S-20: BODEGA PROPIA — GET /inventario/rollos?ubicacionId=other → forced to own (42.705475ms)
+[06:23:55.134] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 181,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 34
+[06:23:55.141] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 182,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.167] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 183,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+✔ S-21: BODEGA PROPIA — GET /inventario/existencias?ubicacionId=other → forced to own (32.168576ms)
+[06:23:55.174] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 184,
+      "method": "GET",
+      "url": "/api/inventario/existencias"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.200] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 185,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:55.210] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 186,
+      "method": "GET",
+      "url": "/api/inventario/kardex"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+✔ S-22: BODEGA PROPIA — GET /inventario/kardex → ignores other ubicacionId param (36.429581ms)
+[06:23:55.237] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 187,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:55.244] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 188,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.253] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 189,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+✔ S-23: BODEGA alcanceConsulta=TODAS — GET /inventario/rollos?ubicacionId=other → honors filter (42.857351ms)
+[06:23:55.281] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 190,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:55.288] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 191,
+      "method": "GET",
+      "url": "/api/inventario/ubicaciones"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.336] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 192,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:55.342] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 193,
+      "method": "GET",
+      "url": "/api/locations"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.349] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 194,
+      "method": "GET",
+      "url": "/api/inventario/ubicaciones"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:55.357] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 195,
+      "method": "GET",
+      "url": "/api/inventario/rollos"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 8
+[06:23:55.394] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 196,
+      "method": "GET",
+      "url": "/api/inventario/rollos/10"
+    }
+    [35mres[39m: {
+      "statusCode": 404
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.400] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 197,
+      "method": "POST",
+      "url": "/api/inventario/rollos/1/ajustar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:55.425] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 198,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+✔ S-23A: operational locations allow TODAS selection; grouped inventory still enforces PROPIA (178.66337ms)
+[06:23:55.432] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 199,
+      "method": "GET",
+      "url": "/api/inventario/existencias/agrupadas"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.475] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 200,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 28
+[06:23:55.481] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 201,
+      "method": "POST",
+      "url": "/api/salidas/mostrador"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:55.506] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 202,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+✔ S-24: Non-ADMIN mutation on other-location → 403; ADMIN same → succeeds (100.455712ms)
+[06:23:55.532] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 203,
+      "method": "POST",
+      "url": "/api/salidas/mostrador"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 25
+[06:23:55.558] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 204,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:55.575] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 205,
+      "method": "POST",
+      "url": "/api/clientes"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 16
+✔ S-25: GET /clientes/:id — no limiteCredito / saldoCredito in response (54.066184ms)
+[06:23:55.587] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 206,
+      "method": "GET",
+      "url": "/api/clientes/11"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:23:55.612] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 207,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:55.637] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 208,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:55.660] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 209,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 22
+[06:23:55.671] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 210,
+      "method": "GET",
+      "url": "/api/clientes/11/credito"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:23:55.680] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 211,
+      "method": "GET",
+      "url": "/api/clientes/11/precios"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:23:55.692] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 212,
+      "method": "GET",
+      "url": "/api/clientes/11/estado-cuenta"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:55.716] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 213,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 23
+[06:23:55.726] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 214,
+      "method": "GET",
+      "url": "/api/clientes/11/precios"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:23:55.736] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 215,
+      "method": "GET",
+      "url": "/api/pos/clientes/11/credito-disponible"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:23:55.788] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 216,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:55.798] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 217,
+      "method": "GET",
+      "url": "/api/clientes/11/credito"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[06:23:55.805] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 218,
+      "method": "GET",
+      "url": "/api/pos/clientes/11/credito-disponible"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:55.818] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 219,
+      "method": "GET",
+      "url": "/api/clientes/11"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 12
+[06:23:55.830] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 220,
+      "method": "GET",
+      "url": "/api/clientes/11/credito"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:55.840] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 221,
+      "method": "GET",
+      "url": "/api/clientes/11/precios"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 9
+[06:23:55.853] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 222,
+      "method": "GET",
+      "url": "/api/clientes/11/credito"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+[06:23:55.867] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 223,
+      "method": "GET",
+      "url": "/api/clientes/11/estado-cuenta"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 14
+[06:23:55.893] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 224,
+      "method": "POST",
+      "url": "/api/clientes/11/ajustes"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 25
+[06:23:55.921] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 225,
+      "method": "GET",
+      "url": "/api/clientes/analitica.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 17
+✖ S-26: clientes_credito / clientes_precios / clientes_finanzas independently gated (378.600586ms)
+[06:23:55.954] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 226,
+      "method": "GET",
+      "url": "/api/clientes/11/estado-cuenta.xlsx"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 17
+[06:23:55.991] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 227,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:56.037] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 228,
+      "method": "POST",
+      "url": "/api/salidas/mostrador"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 21
+[06:23:56.047] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 229,
+      "method": "POST",
+      "url": "/api/inventario/rollos/12/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 9
+[06:23:56.054] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 230,
+      "method": "GET",
+      "url": "/api/inventario/rollos/12"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:56.075] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 231,
+      "method": "GET",
+      "url": "/api/inventario/rollos/13"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:23:56.092] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 232,
+      "method": "POST",
+      "url": "/api/inventario/rollos/13/vender"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 16
+[06:23:56.109] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 233,
+      "method": "POST",
+      "url": "/api/inventario/rollos/13/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 15
+[06:23:56.129] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 234,
+      "method": "GET",
+      "url": "/api/inventario/rollos/14"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:23:56.145] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 235,
+      "method": "POST",
+      "url": "/api/inventario/rollos/14/ajustar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 15
+✔ S-27: SALIDA_MOSTRADOR reversal fails (MOSTRADOR stays); VENTA+BAJA revert + cache reconcile (206.986301ms)
+[06:23:56.162] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 236,
+      "method": "POST",
+      "url": "/api/inventario/rollos/14/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 16
+[06:23:56.172] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 237,
+      "method": "GET",
+      "url": "/api/inventario/kardex"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+[06:23:56.201] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 238,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:56.214] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 239,
+      "method": "POST",
+      "url": "/api/users"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:56.226] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 240,
+      "method": "PATCH",
+      "url": "/api/users/6"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:56.238] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 241,
+      "method": "PATCH",
+      "url": "/api/users/8"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+✔ S-28: Non-ADMIN with usuarios permissions cannot escalate to ADMIN (80.038368ms)
+[06:23:56.249] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 242,
+      "method": "PATCH",
+      "url": "/api/users/2"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+[06:23:56.303] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 243,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 22
+[06:23:56.316] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 244,
+      "method": "PATCH",
+      "url": "/api/users/14"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+[06:23:56.323] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 245,
+      "method": "GET",
+      "url": "/api/permisos/usuarios/14"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:56.332] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 246,
+      "method": "PUT",
+      "url": "/api/permisos/usuarios/14/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+[06:23:56.341] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 247,
+      "method": "DELETE",
+      "url": "/api/permisos/usuarios/14/dashboard"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 8
+✔ S-29: promotion to ADMIN removes overrides and ADMIN override routes → 403 (89.350689ms)
+[06:23:56.401] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 248,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 27
+[06:23:56.407] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 249,
+      "method": "POST",
+      "url": "/api/sesiones-caja/abrir"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:56.455] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 250,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 24
+[06:23:56.479] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 251,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 23
+[06:23:56.496] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 252,
+      "method": "POST",
+      "url": "/api/sesiones-caja/abrir"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 16
+[06:23:56.514] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 253,
+      "method": "GET",
+      "url": "/api/sesiones-caja/1/corte"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 17
+[06:23:56.540] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 254,
+      "method": "POST",
+      "url": "/api/sesiones-caja/1/cerrar"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 25
+[06:23:56.556] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 255,
+      "method": "GET",
+      "url": "/api/sesiones-caja/1/corte"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 16
+[06:23:56.569] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 256,
+      "method": "POST",
+      "url": "/api/sesiones-caja/abrir"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 12
+[06:23:56.574] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 257,
+      "method": "GET",
+      "url": "/api/sesiones-caja"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 4
+[06:23:56.585] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 258,
+      "method": "GET",
+      "url": "/api/sesiones-caja"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 10
+[06:23:56.599] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 259,
+      "method": "GET",
+      "url": "/api/sesiones-caja/1/corte"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+✔ S-30: explicit CAJA CORTES override authorizes cash management while location rules remain enforced (269.21587ms)
+[06:23:56.611] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 260,
+      "method": "GET",
+      "url": "/api/sesiones-caja/2/corte"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:23:56.658] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 261,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 26
+[06:23:56.661] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 262,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 29
+[06:23:56.663] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 263,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 30
+[06:23:56.670] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 264,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:56.676] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 265,
+      "method": "GET",
+      "url": "/api/inventario/salidas-extraordinarias"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:56.683] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 266,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:56.689] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 267,
+      "method": "GET",
+      "url": "/api/inventario/salidas-extraordinarias"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 5
+[06:23:56.712] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 268,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 21
+[06:23:56.728] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 269,
+      "method": "GET",
+      "url": "/api/inventario/salidas-extraordinarias"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 15
+[06:23:56.738] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 270,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias/28/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 9
+[06:23:56.745] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 271,
+      "method": "POST",
+      "url": "/api/inventario/rollos/15/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 400
+    }
+    [35mresponseTime[39m: 6
+[06:23:56.752] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 272,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias/28/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:56.758] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 273,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias/28/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 6
+[06:23:56.775] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 274,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias/28/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 17
+✔ S-30A: extraordinary exits require direct ADMIN despite full salidas overrides (177.117939ms)
+[06:23:56.788] [32mINFO[39m (13532): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 275,
+      "method": "POST",
+      "url": "/api/inventario/salidas-extraordinarias/28/revertir"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 12
+ℹ tests 49
+ℹ suites 0
+ℹ pass 48
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8033.104686
+
+✖ failing tests:
+
+test at artifacts/api-server/src/security-api.test.ts:1:2726
+✖ S-26: clientes_credito / clientes_precios / clientes_finanzas independently gated (378.600586ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'object' !== 'number'
+  
+      at <anonymous> (/home/runner/workspace/artifacts/api-server/src/security-api.test.ts:2591:10)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/security-api.test.ts:129:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'object',
+    expected: 'number',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

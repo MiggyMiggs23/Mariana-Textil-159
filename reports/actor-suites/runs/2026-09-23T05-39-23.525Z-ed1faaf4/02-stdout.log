@@ -1,0 +1,35 @@
+▶ reportes build committed, isolated decision reports
+  ✔ sales and margin use frozen, valid lines and filter correctly (118.229481ms)
+  ✖ inventory, color, heat map, purchase and client blocks are coherent (50.844301ms)
+  ✔ ranges, helper invariants, access redaction, exports and timing (657.53022ms)
+✖ reportes build committed, isolated decision reports (1153.723728ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2614.667498
+
+✖ failing tests:
+
+test at artifacts/api-server/src/reportes.integration.test.ts:21:2400
+✖ inventory, color, heat map, purchase and client blocks are coherent (50.844301ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 4
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/reportes.integration.test.ts:259:16)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/reportes.integration.test.ts:241:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 4,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

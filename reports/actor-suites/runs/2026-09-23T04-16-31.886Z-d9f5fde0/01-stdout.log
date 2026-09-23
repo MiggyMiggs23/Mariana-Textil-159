@@ -1,0 +1,26 @@
+✖ notification endpoints preserve calendar dates, authorization, and persistence (0.436473ms)
+ℹ Error: A resource generated asynchronous activity after the test ended. This activity created the error "Error: TEST_DATABASE_URL y DATABASE_URL deben identificar bases locales distintas." which triggered an uncaughtException event, caught by the test runner.
+ℹ Error: A resource generated asynchronous activity after the test ended. This activity created the error "Error: the worker thread exited" which triggered an uncaughtException event, caught by the test runner.
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2676.510413
+
+✖ failing tests:
+
+test at artifacts/api-server/src/lib/notificaciones-credito.test.ts:33:1213
+✖ notification endpoints preserve calendar dates, authorization, and persistence (0.436473ms)
+  Error: TEST_DATABASE_URL debe ser distinta de DATABASE_URL.
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/notificaciones-credito.test.ts:72:11)
+      at TestHook.runInAsyncScope (node:async_hooks:214:14)
+      at TestHook.run (node:internal/test_runner/test:1106:25)
+      at TestHook.run (node:internal/test_runner/test:1427:18)
+      at TestHook.run (node:internal/util:585:20)
+      at Test.createHook (node:internal/test_runner/test:930:33)
+      at node:internal/test_runner/harness:397:12
+      at <anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/notificaciones-credito.test.ts:69:1)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)

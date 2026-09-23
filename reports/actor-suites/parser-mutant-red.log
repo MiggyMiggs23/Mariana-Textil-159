@@ -1,0 +1,46 @@
+✖ native reporter parser accepts real terminals and rejects false names (2.674483ms)
+✖ custom file-only terminal never qualifies as native case evidence (1.964549ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 82.225926
+
+✖ failing tests:
+
+test at .local/actor-parser-mutant/lib/db/src/run-isolated-tests.test.mjs:33:1
+✖ native reporter parser accepts real terminals and rejects false names (2.674483ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/runner/workspace/.local/actor-parser-mutant/lib/db/src/run-isolated-tests.test.mjs:43:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.start (node:internal/test_runner/test:1003:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:358:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /no corresponden a nombres declarados/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at .local/actor-parser-mutant/lib/db/src/run-isolated-tests.test.mjs:52:1
+✖ custom file-only terminal never qualifies as native case evidence (1.964549ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///home/runner/workspace/.local/actor-parser-mutant/lib/db/src/run-isolated-tests.test.mjs:57:10)
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:788:18)
+      at Test.postRun (node:internal/test_runner/test:1235:19)
+      at Test.run (node:internal/test_runner/test:1163:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /exactamente 49 terminales node:test/,
+    operator: 'throws',
+    diff: 'simple'
+  }

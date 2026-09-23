@@ -1,0 +1,49 @@
+✖ store sales global reports isolated sold-line hierarchy and enforces scope (2612.464182ms)
+[06:08:32.947] [32mINFO[39m (9801): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 49
+[06:08:32.974] [32mINFO[39m (9801): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/caja/tiendas/10/ventas/global"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 19
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2909.255214
+
+✖ failing tests:
+
+test at artifacts/api-server/src/store-sales-global.integration.test.ts:1:1854
+✖ store sales global reports isolated sold-line hierarchy and enforces scope (2612.464182ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  '0.00' !== '210.00'
+  
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/store-sales-global.integration.test.ts:176:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '0.00',
+    expected: '210.00',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

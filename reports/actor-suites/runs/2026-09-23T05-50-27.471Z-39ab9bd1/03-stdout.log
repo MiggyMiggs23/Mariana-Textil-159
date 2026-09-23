@@ -1,0 +1,35 @@
+  ✓ P-01: ADMIN tiene acceso total a dashboard
+✔ P-01: ADMIN tiene acceso total a dashboard (1.003725ms)
+  ✓ P-02: CAJA no usa dashboard administrativo
+✔ P-02: CAJA no usa dashboard administrativo (7.20443ms)
+  ✓ P-03: BODEGA no puede acceder a POS
+✔ P-03: BODEGA no puede acceder a POS (2.76082ms)
+  ✓ P-04: BODEGA no puede ver clientes
+✔ P-04: BODEGA no puede ver clientes (3.712305ms)
+  ✓ P-05: CAJA no puede ver proveedores
+✔ P-05: CAJA no puede ver proveedores (4.335103ms)
+  ✓ P-06: CAJA puede ver cobros_pagos pero no POS
+✔ P-06: CAJA puede ver cobros_pagos pero no POS (5.180085ms)
+✖ /home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts (1087.461112ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1098.191114
+
+✖ failing tests:
+
+test at artifacts/api-server/src/lib/permisos.test.ts:1:1
+✖ /home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts (1087.461112ms)
+  Error: Unable to deserialize cloned data due to invalid or unsupported version.
+      at #processRawBuffer (node:internal/test_runner/runner:375:20)
+      at FileTest.parseMessage (node:internal/test_runner/runner:311:27)
+      at Socket.<anonymous> (node:internal/test_runner/runner:421:15)
+      at Socket.emit (node:events:508:28)
+      at addChunk (node:internal/streams/readable:559:12)
+      at readableAddChunkPushByteMode (node:internal/streams/readable:510:3)
+      at Readable.push (node:internal/streams/readable:390:5)
+      at Pipe.onStreamRead (node:internal/stream_base_commons:189:23)

@@ -1,0 +1,37 @@
+✖ history covers types, order, pagination, search, documents and safe fields (190.180677ms)
+✔ scope, inactive policy and filter metadata are enforced (91.611683ms)
+✔ XLSX export is a real filtered workbook without sensitive columns (65.163164ms)
+ℹ Error: A resource generated asynchronous activity after the test ended. This activity created the error "Error: TEST_DATABASE_URL y DATABASE_URL deben identificar bases locales distintas." which triggered an uncaughtException event, caught by the test runner.
+ℹ Error: A resource generated asynchronous activity after the test ended. This activity created the error "Error: the worker thread exited" which triggered an uncaughtException event, caught by the test runner.
+ℹ Error: Test hook "before" at artifacts/api-server/src/kardex-api.test.ts:1:2614 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/kardex-api.test.ts:1:2614 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/kardex-api.test.ts:1:2614 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/kardex-api.test.ts:1:2614 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/kardex-api.test.ts:1:2614 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/kardex-api.test.ts:1:2614 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test hook "before" at artifacts/api-server/src/kardex-api.test.ts:1:2614 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3015.269935
+
+✖ failing tests:
+
+test at artifacts/api-server/src/kardex-api.test.ts:1:8502
+✖ history covers types, order, pagination, search, documents and safe fields (190.180677ms)
+  AssertionError [ERR_ASSERTION]: The "string" argument must be of type string. Received type object (null)
+      at TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/kardex-api.test.ts:361:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: /\/entradas\/\d+\/documento/,
+    operator: 'match',
+    diff: 'simple'
+  }

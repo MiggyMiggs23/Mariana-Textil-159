@@ -1,0 +1,13 @@
+▶ reportes build committed, isolated decision reports
+  ✔ sales and margin use frozen, valid lines and filter correctly (117.922623ms)
+  ✔ inventory, color, heat map, purchase and client blocks are coherent (98.610535ms)
+  ✔ ranges, helper invariants, access redaction, exports and timing (740.702983ms)
+✔ reportes build committed, isolated decision reports (2000.126778ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2547.999385

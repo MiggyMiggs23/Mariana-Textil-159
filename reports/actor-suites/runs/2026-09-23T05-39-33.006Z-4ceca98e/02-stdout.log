@@ -1,0 +1,28 @@
+✖ ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales (2925.21284ms)
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker thread exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ Error: Test "ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales" at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832 generated asynchronous activity after the test ended. This activity created the error "Error: the worker has exited" and would have caused the test to fail, but instead triggered an uncaughtException event.
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6497.064288
+
+✖ failing tests:
+
+test at artifacts/api-server/src/admin-invariants.integration.test.ts:1:832
+✖ ADMIN invariants: rechazos auditados, transaccionales y sin cambios parciales (2925.21284ms)
+  Error: Base de pruebas incompleta: falta el ADMIN canónico activo (usuarios.usuario='admin', rol='ADMIN'). La preparación debe completar schema, seed e inicializadores antes de ejecutar suites.
+      at assertPreparedTestDatabase (/home/runner/workspace/lib/db/src/lib/test-database-guard.ts:255:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async <anonymous> (/home/runner/workspace/lib/db/src/index.ts:138:5)

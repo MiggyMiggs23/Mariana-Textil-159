@@ -1,0 +1,194 @@
+[06:09:10.663] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 48
+[06:09:10.703] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "POST",
+      "url": "/api/auth/login"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 33
+[06:09:10.722] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/camionetas"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 16
+[06:09:10.738] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/camionetas"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 14
+[06:09:10.751] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "POST",
+      "url": "/api/choferes"
+    }
+    [35mres[39m: {
+      "statusCode": 201
+    }
+    [35mresponseTime[39m: 11
+[06:09:10.763] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "PATCH",
+      "url": "/api/camionetas/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:09:10.778] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "PATCH",
+      "url": "/api/choferes/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 13
+[06:09:10.795] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "GET",
+      "url": "/api/viajes/catalogo-operativo"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 16
+[06:09:10.804] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "GET",
+      "url": "/api/camionetas/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 7
+[06:09:10.811] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "GET",
+      "url": "/api/choferes/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 6
+[06:09:10.824] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "PATCH",
+      "url": "/api/camionetas/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 11
+[06:09:10.835] [32mINFO[39m (10349): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "PATCH",
+      "url": "/api/choferes/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 9
+✖ Task 51 Block 6: catalogs and viaje projection preserve dispatch invariants (349.147912ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2847.130773
+
+✖ failing tests:
+
+test at artifacts/api-server/src/viajes.integration.test.ts:1:3583
+✖ Task 51 Block 6: catalogs and viaje projection preserve dispatch invariants (349.147912ms)
+  DrizzleQueryError: Failed query: insert into "tickets" ("id", "folio", "ubicacion_id", "usuario_terminal_id", "cliente_id", "documento_tipo", "nota_sin_precios", "nombre_destinatario", "direccion_entrega_snapshot", "subtotal", "iva", "tasa_iva", "total", "estado", "cobrado", "cobrado_at", "usuario_caja_id", "facturado", "credito", "dias_plazo", "fecha_vencimiento", "sesion_caja_id", "uuid_cliente", "created_at", "cancelado_at", "cancelado_por", "motivo_cancelacion", "autorizado_por", "autorizado_at", "autorizacion_estado") values (default, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, default, $11, default, default, default, default, default, default, default, default, default, $12, default, default, default, default, default, default, default), (default, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, default, $23, default, default, default, default, default, default, default, default, default, $24, default, default, default, default, default, default, default), (default, $25, $26, $27, $28, $29, default, default, default, $30, $31, default, $32, default, default, default, default, default, default, default, default, default, $33, default, default, default, default, default, default, default), (default, $34, $35, $36, $37, $38, $39, default, default, $40, $41, default, $42, default, default, default, default, default, default, default, default, default, $43, default, default, default, default, default, default, default) returning "id"
+  params: 800002,10,2,2,NOTA,true,Destino nota metro,Calle Metro,10,0,10,5a7afa5f-0720-4f06-830f-beaa50fa2265,810002,10,2,2,NOTA,true,Destino nota kilo,Calle Kilo,10,0,10,f5a81886-85a6-42a6-a83f-e7eefadce426,820002,10,2,2,TICKET,10,0,10,d5d4bdca-67dd-4025-9bea-c207b6634f66,821002,11,2,2,NOTA,true,10,0,10,9172c8ca-5008-4331-901c-cd77fc0ed179
+      at NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:73:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:154:19)
+      ... 2 lines matching cause stack trace ...
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+    query: 'insert into "tickets" ("id", "folio", "ubicacion_id", "usuario_terminal_id", "cliente_id", "documento_tipo", "nota_sin_precios", "nombre_destinatario", "direccion_entrega_snapshot", "subtotal", "iva", "tasa_iva", "total", "estado", "cobrado", "cobrado_at", "usuario_caja_id", "facturado", "credito", "dias_plazo", "fecha_vencimiento", "sesion_caja_id", "uuid_cliente", "created_at", "cancelado_at", "cancelado_por", "motivo_cancelacion", "autorizado_por", "autorizado_at", "autorizacion_estado") values (default, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, default, $11, default, default, default, default, default, default, default, default, default, $12, default, default, default, default, default, default, default), (default, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, default, $23, default, default, default, default, default, default, default, default, default, $24, default, default, default, default, default, default, default), (default, $25, $26, $27, $28, $29, default, default, default, $30, $31, default, $32, default, default, default, default, default, default, default, default, default, $33, default, default, default, default, default, default, default), (default, $34, $35, $36, $37, $38, $39, default, default, $40, $41, default, $42, default, default, default, default, default, default, default, default, default, $43, default, default, default, default, default, default, default) returning "id"',
+    params: [
+      800002,                                 10,
+      2,                                      2,
+      'NOTA',                                 true,
+      'Destino nota metro',                   'Calle Metro',
+      '10',                                   '0',
+      '10',                                   '5a7afa5f-0720-4f06-830f-beaa50fa2265',
+      810002,                                 10,
+      2,                                      2,
+      'NOTA',                                 true,
+      'Destino nota kilo',                    'Calle Kilo',
+      '10',                                   '0',
+      '10',                                   'f5a81886-85a6-42a6-a83f-e7eefadce426',
+      820002,                                 10,
+      2,                                      2,
+      'TICKET',                               '10',
+      '0',                                    '10',
+      'd5d4bdca-67dd-4025-9bea-c207b6634f66', 821002,
+      11,                                     2,
+      2,                                      'NOTA',
+      true,                                   '10',
+      '0',                                    '10',
+      '9172c8ca-5008-4331-901c-cd77fc0ed179'
+    ],
+    cause: error: new row for relation "tickets" violates check constraint "tickets_autorizacion_documento_check"
+        at /home/runner/workspace/node_modules/.pnpm/pg-pool@3.14.0_pg@8.22.0/node_modules/pg-pool/index.js:45:11
+        at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:161:13)
+        at async NodePgPreparedQuery.queryWithCache (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/pg-core/session.ts:71:12)
+        at async <anonymous> (/home/runner/workspace/node_modules/.pnpm/drizzle-orm@0.45.2_@types+pg@8.20.0_pg@8.22.0/node_modules/src/node-postgres/session.ts:154:19)
+        at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/viajes.integration.test.ts:131:60)
+        at async Test.run (node:internal/test_runner/test:1113:7)
+        at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3) {
+      length: 486,
+      severity: 'ERROR',
+      code: '23514',
+      detail: 'Failing row contains (1, 800002, 10, 2, 2, NOTA, t, Destino nota metro, Calle Metro, 10.00, 0.00, 0.1600, 10.00, VENDIDO, f, null, null, f, f, null, null, null, 5a7afa5f-0720-4f06-830f-beaa50fa2265, 2026-09-23 06:09:10.841347+00, null, null, null, null, null, NO_APLICA).',
+      hint: undefined,
+      position: undefined,
+      internalPosition: undefined,
+      internalQuery: undefined,
+      where: undefined,
+      schema: 'public',
+      table: 'tickets',
+      column: undefined,
+      dataType: undefined,
+      constraint: 'tickets_autorizacion_documento_check',
+      file: 'execMain.c',
+      line: '2062',
+      routine: 'ExecConstraints'
+    }
+  }

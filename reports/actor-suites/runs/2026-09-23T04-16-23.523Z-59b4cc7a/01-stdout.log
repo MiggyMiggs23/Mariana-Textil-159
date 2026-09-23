@@ -1,0 +1,27 @@
+/home/runner/workspace/artifacts/api-server/src/contenedores.integration.test.ts:24
+  throw new Error("TEST_DATABASE_URL must visibly identify an isolated test/CI database.");
+        ^
+
+Error: TEST_DATABASE_URL must visibly identify an isolated test/CI database.
+    at <anonymous> (/home/runner/workspace/artifacts/api-server/src/contenedores.integration.test.ts:24:9)
+    at ModuleJob.run (node:internal/modules/esm/module_job:413:25)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:660:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.13.0
+✖ /home/runner/workspace/artifacts/api-server/src/contenedores.integration.test.ts (250.867093ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 259.253396
+
+✖ failing tests:
+
+test at artifacts/api-server/src/contenedores.integration.test.ts:1:1
+✖ /home/runner/workspace/artifacts/api-server/src/contenedores.integration.test.ts (250.867093ms)
+  'test failed'

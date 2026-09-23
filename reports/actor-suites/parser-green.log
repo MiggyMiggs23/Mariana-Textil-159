@@ -1,0 +1,10 @@
+✔ native reporter parser accepts real terminals and rejects false names (2.559412ms)
+✔ custom file-only terminal never qualifies as native case evidence (1.602261ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77.817502

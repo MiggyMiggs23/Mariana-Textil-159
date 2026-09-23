@@ -1,0 +1,10 @@
+✔ aplicaciones_pago_proveedor valida PAGO→COMPRA, límites y append-only (782.183109ms)
+✔ ensure materializa pago legado dirigido una sola vez (21.560389ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1064.576074

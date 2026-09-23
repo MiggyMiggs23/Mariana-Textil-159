@@ -1,0 +1,140 @@
+  ✓ P-01: ADMIN tiene acceso total a dashboard
+✔ P-01: ADMIN tiene acceso total a dashboard (1.554782ms)
+  ✓ P-02: CAJA no usa dashboard administrativo
+✔ P-02: CAJA no usa dashboard administrativo (4.363839ms)
+  ✓ P-03: BODEGA no puede acceder a POS
+✔ P-03: BODEGA no puede acceder a POS (2.344365ms)
+  ✓ P-04: BODEGA no puede ver clientes
+✔ P-04: BODEGA no puede ver clientes (2.019511ms)
+  ✓ P-05: CAJA no puede ver proveedores
+✔ P-05: CAJA no puede ver proveedores (2.045152ms)
+  ✓ P-06: CAJA puede ver cobros_pagos pero no POS
+✔ P-06: CAJA puede ver cobros_pagos pero no POS (3.522581ms)
+  ✓ P-06A: CAJA conserva exactamente los permisos operativos documentados
+✔ P-06A: CAJA conserva exactamente los permisos operativos documentados (2.7818ms)
+  ✓ P-06B: TERMINAL conserva la matriz operativa configurada
+✔ P-06B: TERMINAL conserva la matriz operativa configurada (2.501419ms)
+  ✗ P-06C: SUPERVISOR conserva exactamente sus permisos base
+Error:
+AssertionError [ERR_ASSERTION]: viajes.ver
+
+true !== false
+
+    at <anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:287:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:59:7)
+    at async Test.run (node:internal/test_runner/test:1113:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+PostgreSQL diagnostics:
+  SQLSTATE: ERR_ASSERTION
+  message: viajes.ver
+
+true !== false
+
+✖ P-06C: SUPERVISOR conserva exactamente sus permisos base (5.458693ms)
+  ✓ P-07: módulo sin fila en ninguna tabla → denegar (null)
+✔ P-07: módulo sin fila en ninguna tabla → denegar (null) (2.112451ms)
+  ✓ P-08: usuario override sobrescribe permiso del rol
+✔ P-08: usuario override sobrescribe permiso del rol (7.406175ms)
+  ✓ P-09: null override means inherit from role
+  ✓ P-10: ADMIN cannot be configured in permisos_rol
+  ✓ P-11: ADMIN rejects partial permission updates
+  ✓ P-12: ADMIN rejects even redundant full-access rows
+  ✓ P-13: ADMIN cannot be configured for any module
+  ✓ P-14: validateAdminInvariants allows any value for non-ADMIN roles
+  ✓ P-15: buildPermissionMatrix returns every configured module
+  ✓ P-16: ADMIN matrix has full access to all modules
+✔ P-09: null override means inherit from role (5.265787ms)
+✔ P-10: ADMIN cannot be configured in permisos_rol (0.55838ms)
+✔ P-11: ADMIN rejects partial permission updates (0.21944ms)
+✔ P-12: ADMIN rejects even redundant full-access rows (0.113947ms)
+✔ P-13: ADMIN cannot be configured for any module (0.090572ms)
+✔ P-14: validateAdminInvariants allows any value for non-ADMIN roles (0.121595ms)
+✔ P-15: buildPermissionMatrix returns every configured module (0.21786ms)
+✔ P-16: ADMIN matrix has full access to all modules (0.18339ms)
+  ✓ P-17: CAJA has no access to proveedores_finanzas
+✔ P-17: CAJA has no access to proveedores_finanzas (2.190517ms)
+  ✓ P-18: CAJA cannot access clientes_finanzas
+✔ P-18: CAJA cannot access clientes_finanzas (3.257131ms)
+  ✓ P-19: CAJA cannot see clientes_credito
+✔ P-19: CAJA cannot see clientes_credito (2.08508ms)
+  ✓ P-20: Dynamically updating role matrix affects future permission checks
+✔ P-20: Dynamically updating role matrix affects future permission checks (12.013409ms)
+  ✓ P-21: BODEGA cannot see proveedores_finanzas
+✔ P-21: BODEGA cannot see proveedores_finanzas (1.973082ms)
+  ✗ P-22: BODEGA has exactly the operational baseline including etiquetas
+Error:
+AssertionError [ERR_ASSERTION]: contenedores.ver
+
+false !== true
+
+    at <anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:507:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:59:7)
+    at async Test.run (node:internal/test_runner/test:1113:7)
+    at async Test.processPendingSubtests (node:internal/test_runner/test:788:7)
+PostgreSQL diagnostics:
+  SQLSTATE: ERR_ASSERTION
+  message: contenedores.ver
+
+false !== true
+
+✖ P-22: BODEGA has exactly the operational baseline including etiquetas (2.153098ms)
+  ✓ P-23: CAJA cannot see clientes_precios
+✔ P-23: CAJA cannot see clientes_precios (2.209734ms)
+  ✓ P-24: CAJA cannot see clientes_finanzas
+✔ P-24: CAJA cannot see clientes_finanzas (2.338971ms)
+  ✓ P-25: user override with explicit true overrides role false
+✔ P-25: user override with explicit true overrides role false (6.990991ms)
+  ✓ P-26: ADMIN ignores a false override on an ordinary module
+✔ P-26: ADMIN ignores a false override on an ordinary module (6.968356ms)
+
+Permisos tests: 27/29 passed, 2 failed
+ℹ tests 29
+ℹ suites 0
+ℹ pass 27
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1052.596233
+
+✖ failing tests:
+
+test at artifacts/api-server/src/lib/permisos.test.ts:1:1327
+✖ P-06C: SUPERVISOR conserva exactamente sus permisos base (5.458693ms)
+  AssertionError [ERR_ASSERTION]: viajes.ver
+  
+  true !== false
+  
+      at <anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:287:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:59:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at artifacts/api-server/src/lib/permisos.test.ts:1:1327
+✖ P-22: BODEGA has exactly the operational baseline including etiquetas (2.153098ms)
+  AssertionError [ERR_ASSERTION]: contenedores.ver
+  
+  false !== true
+  
+      at <anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:507:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+      at async TestContext.<anonymous> (/home/runner/workspace/artifacts/api-server/src/lib/permisos.test.ts:59:7)
+      at async Test.run (node:internal/test_runner/test:1113:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

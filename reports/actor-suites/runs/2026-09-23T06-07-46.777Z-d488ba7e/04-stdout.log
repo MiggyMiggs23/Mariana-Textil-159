@@ -1,0 +1,134 @@
+[06:08:40.629] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 1,
+      "method": "GET",
+      "url": "/api/tickets/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 54
+▶ CONTADOR y SISTEMAS leen tickets globalmente pero no operan fuera de ubicación
+  ✔ CONTADOR tiene lectura global inmutable (98.151207ms)
+[06:08:40.656] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 2,
+      "method": "GET",
+      "url": "/api/tickets/1/documento-impresion"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 19
+[06:08:40.685] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 3,
+      "method": "POST",
+      "url": "/api/tickets/1/cobrar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 19
+[06:08:40.725] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 4,
+      "method": "POST",
+      "url": "/api/tickets/1/cancelar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 38
+[06:08:40.738] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 5,
+      "method": "POST",
+      "url": "/api/sesiones-caja/1/cerrar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+  ✔ CONTADOR no opera fuera de ubicación aunque tenga permisos (95.978465ms)
+[06:08:40.754] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 6,
+      "method": "POST",
+      "url": "/api/sesiones-caja/1/salidas-dinero"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 14
+[06:08:40.776] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 7,
+      "method": "GET",
+      "url": "/api/tickets/1"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 20
+[06:08:40.793] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 8,
+      "method": "GET",
+      "url": "/api/tickets/1/documento-impresion"
+    }
+    [35mres[39m: {
+      "statusCode": 200
+    }
+    [35mresponseTime[39m: 16
+  ✔ SISTEMAS tiene lectura global inmutable (38.968835ms)
+[06:08:40.807] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 9,
+      "method": "POST",
+      "url": "/api/tickets/1/cobrar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 11
+  ✔ SISTEMAS no opera fuera de ubicación aunque tenga permisos (79.86711ms)
+[06:08:40.850] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 10,
+      "method": "POST",
+      "url": "/api/tickets/1/cancelar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 41
+[06:08:40.862] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 11,
+      "method": "POST",
+      "url": "/api/sesiones-caja/1/cerrar"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+[06:08:40.874] [32mINFO[39m (9974): [36mrequest completed[39m
+    [35mreq[39m: {
+      "id": 12,
+      "method": "POST",
+      "url": "/api/sesiones-caja/1/salidas-dinero"
+    }
+    [35mres[39m: {
+      "statusCode": 403
+    }
+    [35mresponseTime[39m: 10
+✔ CONTADOR y SISTEMAS leen tickets globalmente pero no operan fuera de ubicación (2131.036783ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3096.375692
