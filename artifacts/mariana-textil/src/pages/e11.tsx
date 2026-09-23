@@ -229,7 +229,7 @@ function ProfileEditor({ s, id }: { s: E11Session; id: number }) {
     <ReadResult query={profile}>{profile.data && (profile.data.usuarioId !== id || profile.data.rolBase !== "CONTADOR" ? <E11Error error="Perfil ajeno o usuario no CONTADOR." /> : <>
       <p>Perfil efectivo {profile.data.perfil} · versión {profile.data.perfilVersion}. F es el defecto; A sólo se asigna manualmente. No se cambia el rol base.</p>
       <fieldset disabled={action.blocked} className="space-y-3">
-        {!review ? <><label>Perfil<select className={select} value={choice} onChange={e => setChoice(e.target.value as "A" | "F")}><option value="F">F · sólo facturado</option><option value="A">A · lectura financiera limitada y preparación autorizada</option></select></label>
+        {!review ? <><label>Perfil<select className={select} value={choice} onChange={e => setChoice(e.target.value as "A" | "F")}><option value="F">F · sólo facturado</option><option value="A">A · lectura financiera limitada; preparación E5 cerrada</option></select></label>
           <label>Motivo obligatorio<Textarea maxLength={1000} value={reason} onChange={e => setReason(e.target.value)} /></label>
           <Button disabled={!reason.trim()} onClick={() => { const body = { revisionEsperada: profile.data!.perfilVersion, perfil: choice, motivo: reason.trim() }; setReview({ ...body, uuid: intention.uuid(body) }); }}>Revisar cambio de perfil</Button>
         </> : <><p>Confirmar {profile.data.perfil} → {review.perfil} para usuario #{id}. Motivo: {review.motivo}. A→F revoca datos, capacidades e intenciones A.</p>

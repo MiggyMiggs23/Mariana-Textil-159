@@ -5,11 +5,11 @@ import { PgDialect } from "drizzle-orm/pg-core";
 import { E11_ENABLED, E11_PROFILE_ASSIGNMENT_ENABLED, E11_RECONCILIATION_ENABLED, E11_E5_PREPARATION_ENABLED } from "./e11-feature";
 import { createE11Runtime, e11Runtime } from "./e11-runtime";
 import { E5_ENABLED, E5_CONTADOR_A_ENABLED } from "./e5-feature";
-import { E7_ENABLED } from "./e7-feature";
+import { E7_ATTRIBUTION_ENABLED, E7_CLIENT_FINANCIAL_READS_ENABLED, E7_ENABLED } from "./e7-feature";
 import { E9_ENABLED } from "./e9-feature";
 import { E4_CASH_OUT_ENABLED } from "./e4-cash-out";
 import { E12_SUPPLIER_CASH_ENABLED } from "./e12-supplier-cash";
-import { e11Identity, e11AssignProfile, e11FiscalClients, e11FiscalSales, e11SecurityLock, e11UserRoleChange, type E11Sql } from "./e11-repository";
+import { e11Identity, e11FiscalClients, e11FiscalSales, e11SecurityLock, e11UserRoleChange, type E11Sql } from "./e11-repository";
 import { e11Period, e11Capability } from "./e11";
 import { e11LegacyAllowed } from "../middlewares/e11-legacy";
 
@@ -32,13 +32,15 @@ function fixture(role: string, profile: string | null = null) {
   } };
   return { tx, queries };
 }
-test("Tanda D: API/UI enable only E11 readers and reconciliation", () => {
+test("released gates enable ADMIN profile assignment but keep E5 preparation closed", () => {
   assert.deepEqual([E11_ENABLED, E11_RECONCILIATION_ENABLED, uiFlag("E11_ENABLED"), uiFlag("E11_UI_ENABLED"),
     uiFlag("E11_RECONCILIATION_ENABLED")], [true, true, true, true, true]);
-  assert.deepEqual([E11_PROFILE_ASSIGNMENT_ENABLED, E11_E5_PREPARATION_ENABLED,
-    uiFlag("E11_PROFILE_ASSIGNMENT_ENABLED"), uiFlag("E11_E5_PREPARATION_ENABLED"),
-    E5_ENABLED, E5_CONTADOR_A_ENABLED, E7_ENABLED, E9_ENABLED,
-    E12_SUPPLIER_CASH_ENABLED], Array(9).fill(false));
+  assert.deepEqual([E11_PROFILE_ASSIGNMENT_ENABLED, uiFlag("E11_PROFILE_ASSIGNMENT_ENABLED")], [true, true]);
+  assert.deepEqual([E11_E5_PREPARATION_ENABLED, uiFlag("E11_E5_PREPARATION_ENABLED"),
+    E5_ENABLED, E5_CONTADOR_A_ENABLED, E7_ATTRIBUTION_ENABLED,
+    E12_SUPPLIER_CASH_ENABLED], Array(6).fill(false));
+  assert.deepEqual([E7_ENABLED, E7_CLIENT_FINANCIAL_READS_ENABLED], [true, true]);
+  assert.equal(E9_ENABLED, false);
   assert.equal(E4_CASH_OUT_ENABLED, true);
 });
 test("Tanda D: default CONTADOR is F with fiscal read and documentary reconciliation only", async () => {
@@ -56,15 +58,10 @@ test("Tanda D: existing explicit A reads sanitized finance but cannot prepare E5
   assert.throws(() => e11Capability(actor, "FISCAL_CONCILIAR"));
   assert.throws(() => e11Capability(actor, "E5_PREPARAR"));
 });
-test("Tanda D: ADMIN has read capabilities but profile assignment fails before SQL", async () => {
+test("ADMIN receives profile assignment without receiving E5 preparation", async () => {
   const actor = await e11Identity(fixture("ADMIN").tx, 7);
-  assert.deepEqual(actor.capacidades, ["FISCAL_LEER", "FINANZAS_LIMITADAS_LEER"]);
-  const blocked = fixture("ADMIN");
-  await assert.rejects(() => e11AssignProfile(blocked.tx, actor, 9, {
-    uuid: "10000000-0000-4000-8000-000000000001", perfil: "A", motivo: "Must stay blocked", revisionEsperada: 0,
-  }), (error: unknown) =>
-    (error as { code?: string }).code === "E11_DISABLED");
-  assert.equal(blocked.queries.length, 0);
+  assert.deepEqual(actor.capacidades, ["FISCAL_LEER", "FINANZAS_LIMITADAS_LEER", "PERFILES_ADMINISTRAR"]);
+  assert.ok(!actor.capacidades.includes("E5_PREPARAR"));
 });
 test("Tanda D: other roles receive no E11 capabilities", async () => {
   for (const role of ["SISTEMAS", "SUPERVISOR", "CAJA", "TERMINAL"]) {

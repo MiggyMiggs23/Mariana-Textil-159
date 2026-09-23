@@ -160,9 +160,9 @@ const frozen = (items = [sale()]) => ({
   cantidadVentas: items.length, evidenciaHash: e11Hash(items), decisiones: [],
 });
 
-test("E11-TANDA-D-READERS-RECONCILIATION-ONLY", () => {
+test("E11-RELEASE-PROFILES-ON-E5-PREPARATION-OFF", () => {
   assert.deepEqual([E11_ENABLED, E11_PROFILE_ASSIGNMENT_ENABLED, E11_RECONCILIATION_ENABLED,
-    E11_E5_PREPARATION_ENABLED], [true, false, true, false]);
+    E11_E5_PREPARATION_ENABLED], [true, true, true, false]);
 });
 test("E11-OFF-SECURITY-NO-SQL", async () => {
   const s = spySequence();
@@ -384,6 +384,35 @@ test("E11-ASSIGN-STALE-CAS-NO-WRITE", async () => {
     perfil: "A", motivo: "stale",
   }), code("REVISION_OBSOLETA"));
   assert.equal(db.queries.some(q => /INSERT INTO e11_perfiles/.test(q.sql)), false);
+});
+test("E11-ASSIGN-NON-ADMIN-DENIED-BEFORE-WRITE", async () => {
+  const db = routedTx(identityRoute("F", 1, "CONTADOR"));
+  const api = service(), contador = await api.identity(db.tx, 7);
+  await assert.rejects(() => api.assignProfile(db.tx, contador, 8, {
+    uuid: "20000000-0000-4000-8000-000000000003", revisionEsperada: 0,
+    perfil: "A", motivo: "No autorizado",
+  }), code("PERFIL_DENEGADO"));
+  assert.equal(db.queries.some(q => /\b(INSERT|UPDATE|DELETE)\b/.test(q.sql)), false);
+});
+test("E11-ASSIGN-REQUIRES-ACTIVE-CONTADOR-TARGET", async () => {
+  for (const target of [{ rol: "CONTADOR", activo: false }, { rol: "CAJA", activo: true }]) {
+    const db = routedTx((text, params) => {
+      if (/FROM usuarios WHERE id=.*FOR SHARE/.test(text))
+        return [{ id: Number(params[0]), rol: "ADMIN", activo: true }];
+      if (/FROM e11_perfiles .*FOR SHARE/.test(text)) return [];
+      if (/FROM usuarios WHERE id=.*FOR UPDATE/.test(text))
+        return [{ id: 7, ...target }];
+      return [];
+    });
+    const api = service(), admin = await api.identity(db.tx, 1);
+    await assert.rejects(() => api.assignProfile(db.tx, admin, 7, {
+      uuid: target.activo
+        ? "20000000-0000-4000-8000-000000000004"
+        : "20000000-0000-4000-8000-000000000005",
+      revisionEsperada: 0, perfil: "A", motivo: "Destino inválido",
+    }), code("USUARIO_NO_CONTADOR"));
+    assert.equal(db.queries.some(q => /INSERT INTO e11_(?:perfiles|perfil_eventos|operaciones)/.test(q.sql)), false);
+  }
 });
 test("E11-ROLE-CHANGE-REVOKES-A", async () => {
   const writes: unknown[][] = [];
